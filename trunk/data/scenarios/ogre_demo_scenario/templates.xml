@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComponentContainers>
+  <TerrainObject type ="SceneObject">
+    <Components>
+      <TerrainGeom type="OgreTerrainComponent">
+        <TerrainConfigFile value="gfx/terrain/terrain.cfg"/>
+      </TerrainGeom>
+      <TerrainLocation type="LocationComponent">
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </TerrainLocation>
+      <PhysicsGeom type="ODEGeometry">
+        <GeometryType value="terrain"/>
+      </PhysicsGeom>
+    </Components>
+  </TerrainObject>
+  <SunObject type ="SceneObject">
+    <Components>
+      <LightComp type="LightComponent">
+        <LightType value="0"/>
+        <CastShadow value="1"/>
+      </LightComp>
+      <LightLocation type="LocationComponent">
+        <Position value="0 0 0"/>
+        <Rotation value="45 45 0"/>
+      </LightLocation>
+    </Components>
+  </SunObject>
+</ComponentContainers>

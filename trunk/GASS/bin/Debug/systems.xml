@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Systems>
+  <GraphicsSystem type="OgreGraphicsSystem">
+    <Plugin value="RenderSystem_GL"/>
+    <Plugin value="Plugin_CgProgramManager"/>
+    <Plugin value="Plugin_BSPSceneManager"/>
+    <Plugin value="RenderSystem_Direct3D9"/>
+    <Plugin value="Plugin_OctreeSceneManager"/>
+    <Plugin value="Plugin_ParticleFX"/>
+  </GraphicsSystem>
+  <ResourceSystem type="OgreResourceSystem">
+    <AddResourceLocation Path="%GASS_DATA_PATH%/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/materials" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/textures" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/3dmodels/GENESIS" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/3dmodels/Vodnik" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_PATH%/Fonts" Group="HiFi" Type="FileSystem" Recursive="false"/>
+  </ResourceSystem>
+  <InputSystem type="OISInputSystem">
+  </InputSystem>
+  <CollisionSystem type="ODECollisionSystem">
+  </CollisionSystem>
+</Systems>

@@ -1,0 +1,20 @@
+
+material AfricaSkybox
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			texture_unit
+			{
+
+				cubic_texture gfx/textures/skybox/africa_SB_North.dds gfx/textures/skybox/africa_SB_South.dds gfx/textures/skybox/africa_SB_west.dds gfx/textures/skybox/africa_SB_East.dds gfx/textures/skybox/africa_SB_Up.dds gfx/textures/skybox/africa_SB_Down.dds separateUV
+					tex_address_mode clamp
+			}
+		}
+	}
+}
+
+

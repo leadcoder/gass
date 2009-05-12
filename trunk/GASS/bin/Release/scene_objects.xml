@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComponentContainers>
+	<FreeCameraObject type ="SceneObject">
+		<Components>
+			<TheCamera type="CameraComponent">
+			</TheCamera>
+      <CameraLocation type="LocationComponent">
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </CameraLocation>
+      <Controller type="FreeCamControlComponent">
+      </Controller>
+    </Components>
+	</FreeCameraObject>
+  <ContainerObject type ="SceneObject">
+    <Components>
+      <ContainerGeom type="MeshComponent">
+        <Filename value="container_01.mesh"/>
+        <CastShadow value="1"/>
+      </ContainerGeom>
+      <ContainerLocation type="LocationComponent">
+      <Position value="1720.49 41.8169 2875.78"/>
+      <!--<Position value="10 1000 10"/>-->
+      <Rotation value="45 45 45"/>
+      </ContainerLocation>
+      <ContainerPhysicsGeom type="ODEGeometry">
+        <GeometryType value="box"/>
+      </ContainerPhysicsGeom>
+      <ContainerPhysicsBody type="ODEBody">
+        <GeometryType value="box"/>
+      </ContainerPhysicsBody>
+  </Components>
+  </ContainerObject>
+</ComponentContainers>

@@ -1,0 +1,15 @@
+
+material TerrainMat 
+{
+	technique
+	{
+		pass 
+		{
+			texture_unit
+			{
+				texture gfx/terrain/terrain_color.dds
+			}
+			
+		}
+	}
+}

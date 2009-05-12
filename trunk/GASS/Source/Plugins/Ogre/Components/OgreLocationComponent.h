@@ -1,0 +1,90 @@
+/****************************************************************************
+* This file is part of GASS.                                                *
+* See http://sourceforge.net/projects/gass/                                 *
+*                                                                           *
+* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+*                                                                           *
+* GASS is free software: you can redistribute it and/or modify              *
+* it under the terms of the GNU Lesser General Public License as published  *
+* by the Free Software Foundation, either version 3 of the License, or      *
+* (at your option) any later version.                                       *
+*                                                                           *
+* GASS is distributed in the hope that it will be useful,                   *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+* GNU Lesser General Public License for more details.                       *
+*                                                                           *
+* You should have received a copy of the GNU Lesser General Public License  *
+* along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
+*****************************************************************************/
+
+#pragma once
+#include "Sim/Common.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Quaternion.h"
+#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/Components/BaseSceneComponent.h"
+#include "Core/MessageSystem/Message.h"
+
+
+namespace Ogre
+{
+	class SceneNode;
+}
+
+namespace GASS
+{
+	class OgreLocationComponent;
+	typedef boost::shared_ptr<OgreLocationComponent> OgreLocationComponentPtr;
+
+	class OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent
+	{
+	public:
+		OgreLocationComponent();
+		virtual ~OgreLocationComponent();
+		static void RegisterReflection();
+		virtual void OnCreate();
+	
+		virtual void SetPosition(const Vec3 &value);
+		virtual Vec3 GetPosition() const;
+		virtual void SetEulerRotation(const Vec3 &value);
+		virtual Vec3 GetEulerRotation() const;
+		virtual void SetScale(const Vec3 &value);
+		virtual Vec3 GetScale(){return m_Scale;}
+		virtual void SetRotation(const Quaternion &value);
+		virtual Quaternion GetRotation() const;
+
+		virtual void SetAttachToParent(bool value);
+		virtual bool GetAttachToParent() const;
+		
+		
+		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
+		void SetVisibility(bool visibility);
+	protected:
+		void SetPositionByMessage(const Vec3 &value);
+		void SetEulerRotationByMessage(const Vec3 &value);
+		void OnLoad(MessagePtr message);
+		void PositionMessage(MessagePtr message);
+		void RotationMessage(MessagePtr message);
+		void VisibilityMessage(MessagePtr message);
+
+		//helper function to get first parent with location component
+		OgreLocationComponentPtr GetParentLocation();
+
+		Vec3 m_Pos;
+		Vec3 m_LastPos;
+
+		//! relative rotation of the scene node.
+		Vec3 m_Rot;
+		Vec3 m_LastRot;
+
+		//! relative scale of the scene node.
+		Vec3 m_Scale;
+		Ogre::SceneNode* m_OgreNode;
+
+		//Should this location node be attached to parent?
+		bool m_AttachToParent;
+
+	};
+}
+

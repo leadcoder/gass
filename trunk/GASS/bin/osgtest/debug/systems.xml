@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Systems>
+  <GraphicsSystem type="OSGGraphicsSystem">
+  </GraphicsSystem>
+  <ResourceSystem type="OSGResourceSystem">
+   <!-- <AddResourceLocation Path="C:/temp/OSG/NPS_Tutorials_src/NPS_Tutorials_src/NPS_Data" Group="HiFi" Type="FileSystem" Recursive="false"/>-->
+    <AddResourceLocation Path="c:/root/projects/data/textures" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="c:/root/projects/data/3dmodels/GENESIS" Group="HiFi" Type="FileSystem" Recursive="false"/>
+  </ResourceSystem>
+  <InputSystem type="OISInputSystem">
+  </InputSystem>
+</Systems>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComponentContainers>
+	<FreeCameraObject type="SceneObject">
+		<Components>
+			<TheCamera type="CameraComponent">
+			</TheCamera>
+      <CameraLocation type="LocationComponent">
+        <Posistion value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </CameraLocation>
+      <Controller type="FreeCamControlComponent">
+      </Controller>
+    </Components>
+	</FreeCameraObject>
+</ComponentContainers>
