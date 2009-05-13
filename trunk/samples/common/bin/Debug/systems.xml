@@ -9,13 +9,10 @@
     <Plugin value="Plugin_ParticleFX"/>
   </GraphicsSystem>
   <ResourceSystem type="OgreResourceSystem">
-    <AddResourceLocation Path="%GASS_DATA_PATH%/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/materials" Group="HiFi" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/textures" Group="HiFi" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/3dmodels/GENESIS" Group="HiFi" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/3dmodels/Vodnik" Group="HiFi" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_PATH%/Fonts" Group="HiFi" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
   <InputSystem type="OISInputSystem">
   </InputSystem>
