@@ -1,0 +1,10 @@
+copy ..\..\..\Dependencies\ogre\lib\OgreMain_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\lib\Plugin_BSPSceneManager_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\lib\Plugin_CgProgramManager_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\lib\Plugin_OctreeSceneManager_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\lib\Plugin_ParticleFX_d.dll ..\..\common\bin\debug\
+copy ..\..\..\Dependencies\ogre\lib\RenderSystem_Direct3D9_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\lib\RenderSystem_GL_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\Samples\Common\bin\debug\OIS_d.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\ogre\Samples\Common\bin\debug\cg.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\tbb\bin\tbb_debug.dll ..\..\common\bin\Debug\

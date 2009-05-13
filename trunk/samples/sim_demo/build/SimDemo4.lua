@@ -31,7 +31,8 @@ project "SimDemo"
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" 
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"postbuild_debug.bat" 
 		}
 	
 	
@@ -47,5 +48,6 @@ project "SimDemo"
 					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\..\\common\\bin\\$(ConfigurationName)" 
+					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+					"postbuild_release.bat" 
 		}
