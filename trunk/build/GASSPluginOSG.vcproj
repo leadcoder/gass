@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="PluginOSG"
+	Name="GASSPluginOSG"
 	ProjectGUID="{3829937D-E63F-49B9-8EEF-7D72A712CF38}"
 	RootNamespace="PluginOgre"
 	Keyword="Win32Proj"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/tinyxml;../../Dependencies/boost;&quot;C:\temp\OSG\OpenSceneGraph-2.6.1\OpenSceneGraph-2.6.1\include&quot;;&quot;C:\temp\OSG\OpenSceneGraph-2.6.1\OpenSceneGraph-2.6.1\build\include&quot;"
+				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\OSG\include;../Dependencies\OSG\build\include"
 				PreprocessorDefinitions="_LIB;WIN32;_WINDOWS;_DEBUG;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;OSG_DEBUG_POSTFIX=\&quot;d\&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,10 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="HFECore_d.lib HFE_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib"
-				OutputFile="$(OutDir)/PluginOSG_d.dll"
+				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib"
+				OutputFile="$(OutDir)/GASSPluginOSG_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../lib/vs2005;../../Dependencies;../../Dependencies/tinyxml/lib;../../Dependencies/boost/lib;&quot;C:\temp\OSG\OpenSceneGraph-2.6.1\OpenSceneGraph-2.6.1\build\lib&quot;"
+				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;../Dependencies/OSG/lib;../Dependencies/OSG/build/lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/PluginOSG_d.pdb"
 				SubSystem="2"
@@ -125,12 +125,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/ogre/OgreMain/include;../../Dependencies/ogre/Dependencies/include;../../Dependencies/ogre/PlugIns/OctreeSceneManager/include;../../Dependencies/tinyxml;../../Dependencies/boost"
+				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\OSG\include;../Dependencies\OSG\build\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;HFE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
@@ -149,15 +149,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="HFECore.lib ../lib/vs2005/HFE.lib OGREMain.lib Plugin_OctreeSceneManager.lib tinyxml.lib"
-				OutputFile="$(OutDir)/PluginOgre.dll"
+				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib"
+				OutputFile="$(OutDir)/GASSPluginOSG.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../lib/vs2005;../../Dependencies;../../Dependencies/ogre/lib;../../Dependencies/Ogre/Dependencies/lib/$(ConfigurationName);../../Dependencies/tinyxml/lib;../../Dependencies/boost/lib"
+				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;../Dependencies/OSG/lib;../Dependencies/OSG/build/lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="../lib/vs2005/PluginOgre.lib"
+				ImportLibrary="../lib/vs2005/GASSPluginOSG.lib"
 				TargetMachine="1"
 			/>
 			<Tool
