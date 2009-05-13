@@ -11,21 +11,21 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/ogre/OgreMain/include",
-		"../../Dependencies/ogre/Dependencies/include",
-		"../../Dependencies/ogre/PlugIns/OctreeSceneManager/include",
-		"../../Dependencies/tinyxml",
-		"../../Dependencies/boost"
+		"../Dependencies/ogre/OgreMain/include",
+		"../Dependencies/ogre/Dependencies/include",
+		"../Dependencies/ogre/PlugIns/OctreeSceneManager/include",
+		"../Dependencies/tinyxml",
+		"../Dependencies/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../../Dependencies",
-		"../../Dependencies/ogre/lib",
-		"../../Dependencies/Ogre/Dependencies/lib/$(ConfigurationName)",
-		"../../Dependencies/tinyxml/lib",
-		"../../Dependencies/boost/lib"
+		"../Dependencies",
+		"../Dependencies/ogre/lib",
+		"../Dependencies/Ogre/Dependencies/lib/$(ConfigurationName)",
+		"../Dependencies/tinyxml/lib",
+		"../Dependencies/boost/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -35,17 +35,17 @@ else
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/include/OGRE",
-		"../../Dependencies/include/OctreeSceneManager",
-		"../../Dependencies/include/tinyxml",
-		"../../Dependencies/boost"
+		"../Dependencies/include/OGRE",
+		"../Dependencies/include/OctreeSceneManager",
+		"../Dependencies/include/tinyxml",
+		"../Dependencies/boost"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../../Dependencies/lib/",
-		"../../Dependencies/lib/OGRE"
+		"../Dependencies/lib/",
+		"../Dependencies/lib/OGRE"
 	}
 
 end

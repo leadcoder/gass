@@ -11,17 +11,17 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/ode/include",
-		"../../Dependencies/tinyxml",
-		"../../Dependencies/boost"
+		"../Dependencies/ode/include",
+		"../Dependencies/tinyxml",
+		"../Dependencies/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../../Dependencies",
-		"../../Dependencies/tinyxml/lib",
-		"../../Dependencies/ode/lib/$(ConfigurationName)DoubleLib"
+		"../Dependencies",
+		"../Dependencies/tinyxml/lib",
+		"../Dependencies/ode/lib/$(ConfigurationName)DoubleLib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -31,17 +31,17 @@ else
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/include/OGRE",
-		"../../Dependencies/include/OctreeSceneManager",
-		"../../Dependencies/include/tinyxml",
-		"../../Dependencies/boost"
+		"../Dependencies/include/OGRE",
+		"../Dependencies/include/OctreeSceneManager",
+		"../Dependencies/include/tinyxml",
+		"../Dependencies/boost"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../../Dependencies/lib/",
-		"../../Dependencies/lib/OGRE"
+		"../Dependencies/lib/",
+		"../Dependencies/lib/OGRE"
 	}
 
 end

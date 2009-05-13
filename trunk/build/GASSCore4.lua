@@ -13,16 +13,16 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/tinyxml",
-		"../../Dependencies/boost",
-		"../../Dependencies/tbb/include"
+		"../Dependencies/tinyxml",
+		"../Dependencies/boost",
+		"../Dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
-		"../../Dependencies/tinyxml/lib",
-		"../../Dependencies/boost/lib",
-		"../../Dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../Dependencies/tinyxml/lib",
+		"../Dependencies/boost/lib",
+		"../Dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_CORE_EXPORTS" }
@@ -49,14 +49,14 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/include/tinyxml",
-		"../../Dependencies/include/boost",
-		"../../Dependencies/include"
+		"../Dependencies/include/tinyxml",
+		"../Dependencies/include/boost",
+		"../Dependencies/include"
 	}
 
 	libdirs 
 	{ 
-		"../../Dependencies/lib"
+		"../Dependencies/lib"
 	}
 
 

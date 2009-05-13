@@ -28,8 +28,8 @@ goto start
 
 :GENERATE
 @echo on
-..\..\Tools\premake4.exe --file=GASSSim4sln.lua  --os=windows %target%
-..\..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows %target%
-..\..\Tools\premake4.exe --file=SimTest4sln.lua  --os=windows %target%
+..\Tools\premake4.exe --file=GASSSim4sln.lua  --os=windows %target%
+..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows %target%
+..\Tools\premake4.exe --file=SimTest4sln.lua  --os=windows %target%
 
 pause

@@ -9,8 +9,8 @@ project "SimTest"
 	includedirs 
 	{ 
 		"../Source", 		
---		"../../Dependencies/tinyxml",
-		"../../Dependencies/boost" 
+--		"../Dependencies/tinyxml",
+		"../Dependencies/boost" 
 	}
 
 	libdirs 

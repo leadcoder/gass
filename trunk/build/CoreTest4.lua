@@ -10,13 +10,13 @@ project "CoreTest"
 	includedirs 
 	{ 
 		"../Source",
-		"../../Dependencies/boost" 
+		"../Dependencies/boost" 
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../../Dependencies/boost/lib"
+		"../Dependencies/boost/lib"
 	}
 
 
