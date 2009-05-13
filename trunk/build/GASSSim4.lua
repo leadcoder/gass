@@ -31,15 +31,6 @@ if (os.is("windows")) then
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 
 
-		links 
-		{
-			"GASSCore_d",
-			"Winmm",
-			"tinyxmld",
-			"tbb_debug"
-
-		}
-
 else
 
 	includedirs 
