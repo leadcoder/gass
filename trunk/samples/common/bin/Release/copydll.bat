@@ -8,7 +8,3 @@ copy ..\..\..\..\Dependencies\ogre\lib\RenderSystem_GL.dll
 copy ..\..\..\..\Dependencies\ogre\Samples\Common\bin\release\OIS.dll
 copy ..\..\..\..\Dependencies\ogre\Samples\Common\bin\release\cg.dll
 copy ..\..\..\..\Dependencies\tbb\bin\tbb.dll
-
-
-
-pause
