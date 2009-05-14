@@ -54,7 +54,8 @@ namespace GASS
 		
 
 		*/
-		bool Init();
+		bool Init(const std::string &plugin_file = std::string("plugins.xml"), 
+				  const std::string &system_file = std::string("systems.xml"));
 
 		/**
 		Main update for GASS.
