@@ -22,6 +22,10 @@
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgGA/NodeTrackerManipulator>
+#include <osg/MatrixTransform>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 
@@ -29,6 +33,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
+#include "Core/Utils/Log.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -62,7 +67,46 @@ namespace GASS
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
 		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGCameraComponent::OnLoad, this, _1 ),1);
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGCameraComponent::OnPositionChanged, this, _1 ),10);
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGCameraComponent::OnRotationChanged, this, _1 ),10);
 		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, address,  boost::bind( &OSGCameraComponent::OnUpdate, this, _1 ),1);
+	}
+
+	void OSGCameraComponent::OnPositionChanged(MessagePtr message)
+	{
+		UpdateFromLocation();
+	}
+
+	void OSGCameraComponent::OnRotationChanged(MessagePtr message)
+	{
+		UpdateFromLocation();
+	}
+
+	void OSGCameraComponent::UpdateFromLocation()
+	{
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		//lc->GetOSGNode()->getAttitude();
+
+		osg::Vec3f pos = lc->GetOSGNode()->getPosition();
+		osg::Quat rot = lc->GetOSGNode()->getAttitude();
+
+		osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
+
+		rot = q*rot;
+		osg::Transform* trans = lc->GetOSGNode()->asTransform();
+		osg::MatrixTransform* trans2 = lc->GetOSGNode()->asTransform()->asMatrixTransform();
+
+		osg::Matrixf cameraMatrix;
+
+		cameraMatrix.setTrans(pos);
+		cameraMatrix.setRotate(rot);
+
+		osg::Matrixf final_cam_view= cameraMatrix.inverse(cameraMatrix);
+
+		m_OSGCamera->setViewMatrix(final_cam_view);
+		//m_OSGCamera->getInverseViewMatrix().setRotate(lc->GetOSGNode()->getAttitude());
+
+
 	}
 
 	bool OSGCameraComponent::GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const
@@ -71,25 +115,28 @@ namespace GASS
 		{
 			osg::Vec3d origin; 
 			osg::Vec3d direction;
-	 	    /*osg::Matrix mat = osg::Matrix::inverse(m_OSGCamera->getProjectionMatrix()); 
-			osg::Matrix cameramatrix = m_OSGCamera->getViewMatrix(); 
+			osg::Matrix mat = osg::Matrix::inverse(m_OSGCamera->getProjectionMatrix()); 
+			osg::Matrix cameramatrix = m_OSGCamera->getInverseViewMatrix(); 
 			osg::Matrix cameramatrixnotrans = cameramatrix; 
 			cameramatrixnotrans.setTrans(0,0,0); 
-			osg::Vec4d d = osg::Vec4( 
-                screenx * 2.0 - 1.0, 
-                -screeny * 2.0 - 1.0, 
-                0.0,1.0); 
+			osg::Vec4 d = osg::Vec4(
+				screenx * 2.0f - 1.0f, 
+				(1.0f-screeny) * 2.0f - 1.0f, 
+				0.0f,1.0f); 
 			d = d * mat; 
 			d = d * cameramatrixnotrans; 
+
 			direction.set(d[0],d[1],d[2]); 
-	        direction.normalize(); 
-		    origin = cameramatrix.getTrans(); */
+			direction.normalize(); 
+			origin = cameramatrix.getTrans(); 
+
 			ray_start = OSGConvert::ToGASS(origin);
 			ray_dir = OSGConvert::ToGASS(direction);
+			ray_dir.Normalize();
 			return true;
 		}
 		else 
-		return false;
+			return false;
 	}
 
 	void OSGCameraComponent::OnLoad(MessagePtr message)
@@ -104,18 +151,19 @@ namespace GASS
 		osgViewer::ViewerBase::Views views;
 		gfx_sys->GetViewer()->getViews(views);
 		//set same scene in all viewports for the moment 
-		
+
 		for(int i = 0; i < views.size(); i++)
 		{
 			osgGA::NodeTrackerManipulator* tm = new osgGA::NodeTrackerManipulator;
 			tm->setTrackerMode(osgGA::NodeTrackerManipulator::NODE_CENTER_AND_ROTATION);
-				tm->setRotationMode(osgGA::NodeTrackerManipulator::ELEVATION_AZIM);
+			tm->setRotationMode(osgGA::NodeTrackerManipulator::ELEVATION_AZIM);
 			tm->setTrackNode(lc->GetOSGNode().get());
 			//uhh?
 			m_OSGCamera = views[i]->getCamera();
-			
+			//m_OSGCamera->setViewMatrix(
+
 			//views[i]->getCamera()->addParent(lc->GetOSGNode());
-			views[i]->setCameraManipulator(tm);
+			//views[i]->setsetCameraManipulator(tm);
 			//->addChild(views[i]->getCamera());
 		}
 

@@ -330,10 +330,14 @@ namespace GASS
 			forward_vel.Normalize();
 		}*/
 
+		//std::cout << "vel:" << forward_vel << std::endl;
+
 		forward_vel = forward_vel * (forward_speed);
 		strafe_vel = strafe_vel * (strafe_speed);
 
 		tot_vel = forward_vel + strafe_vel;
+
+		
 
 		//Vec3 heading_vec = east*turn_speed_x;
 		//Vec3 pitch_vec = up*turn_speed_y;

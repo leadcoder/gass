@@ -112,7 +112,7 @@ namespace GASS
 		if(m_TransformNode.valid())
 			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
 		m_Pos = value;
-		std::cout << "Pos " << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
+	//	std::cout << "Pos " << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
 	Vec3 OSGLocationComponent::GetPosition() const 
@@ -124,13 +124,13 @@ namespace GASS
 	{
 		if(m_TransformNode.valid())
 		{
-			Quaternion q(value.y,value.z,-value.w,-value.x);
-			Quaternion trans;
-			trans.FromEulerAngles(Vec3(Math::Deg2Rad(180),0,0));
+			//Quaternion q(value.y,value.z,-value.w,-value.x);
+		//	Quaternion trans;
+		//	trans.FromEulerAngles(Vec3(Math::Deg2Rad(180),0,0));
 			//q = value*trans;
 			//osg::Quat final = osg::Quat(q.x,-q.z,-q.y,q.w);
-			//osg::Quat final = osg::Quat(q.x,-q.z,-q.y,q.w);
-			osg::Quat final = osg::Quat(value.z,value.x,value.w,value.y);
+		//	osg::Quat final = osg::Quat(value.x,-value.z,-value.y,value.w);
+			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
 			
 			m_TransformNode->setAttitude(final);
 		}

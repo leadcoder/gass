@@ -170,7 +170,6 @@ namespace GASS
 			GetMessageManager()->SendImmediate(window_msg);
 		}
 
-
 		/*	IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
 		if(is)
 		{

@@ -37,8 +37,13 @@ namespace GASS
 		virtual void OnCreate();
 		//ICameraComponent interface
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
+
 	protected:
+		void OnPositionChanged(MessagePtr message);
+		void OnRotationChanged(MessagePtr message);
 		void OnLoad(MessagePtr message);
+		void UpdateFromLocation();
+	
 		osg::Camera* m_OSGCamera;
 	};
 }

@@ -54,7 +54,7 @@ namespace GASS
 		virtual Vec3 GetEulerRotation() const;
 		virtual Quaternion GetRotation() const;
 		virtual Vec3 GetScale(){return m_Scale;}
-		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_RotTransformNode;}
+		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
 	protected:
 		void OnLoad(MessagePtr message);
 		void PositionChanged(MessagePtr message);
