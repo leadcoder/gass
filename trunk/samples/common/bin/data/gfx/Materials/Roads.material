@@ -1,3 +1,5 @@
+import * from  "terrain.material"	 
+
 material RoadMat : DiffuseTemplate
 { 
 	//receive_shadows off 

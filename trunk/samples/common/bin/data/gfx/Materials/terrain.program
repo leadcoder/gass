@@ -6,7 +6,7 @@ vertex_program DiffuseVP unified
 
 vertex_program DiffuseVP_HLSL hlsl 
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_vp 
    target vs_2_0
    preprocessor_defines INTEGRATED_SHADOWS=1 
@@ -20,7 +20,7 @@ vertex_program DiffuseVP_HLSL hlsl
 
 vertex_program DiffuseVP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_vp 
    profiles vs_2_0 arbvp1
    compile_arguments -DINTEGRATED_SHADOWS=1
@@ -40,7 +40,7 @@ vertex_program DiffuseLightMapVP unified
 
 vertex_program DiffuseLightMapVP_HLSL hlsl 
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_vp 
    target vs_2_0
    preprocessor_defines INTEGRATED_SHADOWS=1,LIGHT_MAP=1 
@@ -52,7 +52,7 @@ vertex_program DiffuseLightMapVP_HLSL hlsl
 
 vertex_program DiffuseLightMapVP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_vp 
    profiles vs_2_0 arbvp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DLIGHT_MAP=1
@@ -69,7 +69,7 @@ fragment_program DiffuseFP unified
 
 fragment_program DiffuseFP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_fp
    preprocessor_defines INTEGRATED_SHADOWS=1 
    target ps_2_0
@@ -78,7 +78,7 @@ fragment_program DiffuseFP_HLSL hlsl
 
 fragment_program DiffuseFP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point diffuse_one_light_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1
@@ -97,7 +97,7 @@ fragment_program TerrainBaseFP unified
 
 fragment_program TerrainBaseFP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=0
    target ps_2_0
@@ -105,7 +105,7 @@ fragment_program TerrainBaseFP_HLSL hlsl
 
 fragment_program TerrainBaseFP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=0
@@ -126,7 +126,7 @@ fragment_program TerrainSplat1FP unified
 
 fragment_program TerrainSplat1FP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=1
    target ps_2_0
@@ -135,7 +135,7 @@ fragment_program TerrainSplat1FP_HLSL hlsl
 
 fragment_program TerrainSplat1FP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=1
@@ -154,7 +154,7 @@ fragment_program TerrainSplat2FP unified
 
 fragment_program TerrainSplat2FP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=2
    target ps_2_0
@@ -163,7 +163,7 @@ fragment_program TerrainSplat2FP_HLSL hlsl
 
 fragment_program TerrainSplat2FP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=2
@@ -184,15 +184,15 @@ fragment_program TerrainSplat3FP unified
 
 fragment_program TerrainSplat3FP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=3
-   target ps_2_0
+   target ps_2_a
 }
 
 fragment_program TerrainSplat3FP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=3
@@ -213,7 +213,7 @@ fragment_program TerrainSplat3LightMapFP unified
 
 fragment_program TerrainSplat3LightMapFP_HLSL hlsl
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=3,LIGHT_MAP=1
 
@@ -222,7 +222,7 @@ fragment_program TerrainSplat3LightMapFP_HLSL hlsl
 
 fragment_program TerrainSplat3LightMapFP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point terrain_fp
    profiles ps_2_x arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=3 -DLIGHT_MAP=1
@@ -236,7 +236,7 @@ fragment_program TerrainSplat3LightMapFP_Cg cg
 
 fragment_program VegetationFP_Cg cg
 { 
-   source Terrain.shader
+   source terrain.shader
    entry_point vegetation_fp
    profiles ps_2_0 arbfp1
    compile_arguments -DINTEGRATED_SHADOWS=1 
