@@ -181,7 +181,8 @@ namespace GASS
 			{
 				Ogre::Bone* bone_cand = bone_iter.getNext();
 				//Ogre::Vector3 bone_pos = bone->getWorldPosition();
-				Vec3 bone_pos = Convert::ToGASS(bone_cand->getWorldPosition());
+				//Vec3 bone_pos = Convert::ToGASS(bone_cand->getWorldPosition());
+				Vec3 bone_pos = Convert::ToGASS(bone_cand->_getDerivedPosition());
 				//add node pos?
 				float  dist = (pos - bone_pos).SquaredLength();
 				if(dist < min_dist || bone == NULL)
