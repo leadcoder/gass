@@ -24,7 +24,6 @@
 #include <OgreVector4.h>
 #include <OgreMatrix4.h>
 #include <OgreQuaternion.h>
-#include <OgreNoMemoryMacros.h> 
 #include <OgreSphere.h>
 #include <OgreAxisAlignedBox.h>
 #include <iostream>
