@@ -45,12 +45,10 @@ namespace GASS
 	{
 		m_Scenario = NULL;
 		m_SceneMessageManager = new MessageManager();
-		m_ObjectManager = new SceneObjectManager(this);
+		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(this));
 		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS);
 		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_OBJECT);
 		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_UPDATE);
-		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_UNLOAD);
-
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GFX_COMPONENTS);
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GAME_COMPONENTS);
@@ -60,8 +58,12 @@ namespace GASS
 
 	ScenarioScene::~ScenarioScene()
 	{
+		m_ObjectManager->Clear();
+		int from_id = (int)this;
+		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,from_id));
+		scenario_msg->SetData("ScenarioScene",this);
+		GetMessageManager()->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
-		delete m_ObjectManager;
 	}
 
 	void ScenarioScene::RegisterReflection()

@@ -47,9 +47,7 @@ namespace GASS
 		virtual float GetSizeX(){return m_WorldWidth;}
 		virtual float GetSizeZ(){return m_WorldHeight;}
 		virtual void GetHeightAndNormal(float x, float z, float &height,Vec3 &normal){}
-		//virtual int GetMaterialId(float x, float z);
 		virtual bool CheckOnTerrain(float x, float z){return true;}
-		//virtual void PreRender(Ogre::Viewport* vp);
 		
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual unsigned int GetSamplesX();
@@ -61,13 +59,12 @@ namespace GASS
 		int GetNodesPerSideAllPagesW()const {return m_NodesPerSideAllPagesW;}
 		int GetNodesPerSideAllPagesH()const  {return m_NodesPerSideAllPagesH;}
 		Vec3 GetScale() const {return m_Scale;}
-		//void CreateCollisionData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
 	protected:
 		void OnLoad(MessagePtr message);
-		//CustomTerrainPageListener* m_PageListener;
+		bool m_PageListenerAdded;
 		Vec3 m_Scale;
 		bool m_Center;
 		float m_WorldWidth;
@@ -85,21 +82,6 @@ namespace GASS
 		float m_MaxHeight;
 	};
 
-	/*class CustomTerrainPageListener : public Ogre::TerrainPageSourceListener
-	{
-	private:
-		OgreSceneManagerTerrainComponent *m_TSMGeometry;
-	public:
-		CustomTerrainPageListener(OgreSceneManagerTerrainComponent* tsm_geom)
-		{
-			m_TSMGeometry = tsm_geom;
-		}
-		virtual void pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData)
-		{
-//			m_TSMGeometry->CreateCollisionData(manager, pagex, pagez, heightData);
-			m_TSMGeometry->CreateHeightData(manager, pagex, pagez, heightData);
-		}
 
-	};*/
 }
 

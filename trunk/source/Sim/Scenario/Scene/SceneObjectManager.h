@@ -48,6 +48,7 @@ namespace GASS
 		SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
 		void SyncMessages(double delta_time);
 		ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
+		void Clear();
 	protected:
 		void LoadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);

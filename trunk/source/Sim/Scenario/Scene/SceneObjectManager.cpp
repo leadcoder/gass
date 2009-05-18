@@ -161,4 +161,16 @@ namespace GASS
 		SceneObjectPtr empty;
 		return empty;
 	}
+
+	void SceneObjectManager::Clear()
+	{
+		//Send shutdonw message to all components
+		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
+		{
+			int from_id = (int)this;
+			MessagePtr msg(new Message(ScenarioScene::SM_MESSAGE_UNLOAD_COMPONENTS,from_id));
+			m_SceneObjectVector[i]->GetMessageManager()->SendImmediate(msg);
+		}
+		m_SceneObjectVector.clear();
+	}
 }

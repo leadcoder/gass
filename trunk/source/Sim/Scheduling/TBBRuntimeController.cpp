@@ -61,6 +61,32 @@ namespace GASS
 		}
 	}
 
+	void TBBRuntimeController::Unregister(UpdateFunc callback)
+	{
+		std::vector<UpdateFunc>::iterator iter = m_TaskUpdateVector.begin();
+		while(iter != m_TaskUpdateVector.end())
+		{
+			if((*iter).functor.func_ptr == callback.functor.func_ptr)
+			{
+				iter = m_TaskUpdateVector.erase(iter);
+			}
+			else
+				iter++;
+		}
+
+		iter = m_PrimaryUpdateVector.begin();
+		while(iter != m_PrimaryUpdateVector.end())
+		{
+			if((*iter).functor.func_ptr == callback.functor.func_ptr)
+			{
+				iter = m_PrimaryUpdateVector.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
+
+
 	void TBBRuntimeController::Update(double delta_time)
 	{
 		m_TasksRoot->set_ref_count(1);

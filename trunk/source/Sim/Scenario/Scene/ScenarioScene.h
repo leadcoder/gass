@@ -35,6 +35,7 @@ namespace GASS
 	class SceneObject;
 	class SceneObjectManager;
 
+	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
 	class ScenarioUpdateMessage : public Message
@@ -59,11 +60,12 @@ namespace GASS
 			SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,
 			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,
 			SCENARIO_MESSAGE_UPDATE,
-			SCENARIO_MESSAGE_UNLOAD,
+			SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,
 			SCENARIO_MESSAGE_CHANGE_CAMERA,
 			SM_MESSAGE_LOAD_GFX_COMPONENTS,
 			SM_MESSAGE_LOAD_PHYSICS_COMPONENTS,
 			SM_MESSAGE_LOAD_USER_COMPONENTS,
+			SM_MESSAGE_UNLOAD_COMPONENTS,
 			OBJECT_MESSAGE_POSITION,
 			OBJECT_MESSAGE_ROTATION,
 			OBJECT_MESSAGE_PHYSICS,
@@ -114,7 +116,7 @@ namespace GASS
 		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
 		Scenario* GetOwner() {return m_Scenario;}
 		MessageManager* GetMessageManager() {return m_SceneMessageManager;}
-		SceneObjectManager* GetObjectManager() {return m_ObjectManager;}
+		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
@@ -143,12 +145,11 @@ namespace GASS
 		MessageManager* m_SceneMessageManager;
 		Scenario* m_Scenario;
 		std::string m_Name;
-		SceneObjectManager* m_ObjectManager;
+		SceneObjectManagerPtr m_ObjectManager;
 
 		Vec3 m_Up;
 		Vec3 m_North;
 		Vec3 m_East;
-		
 	};
 }
 

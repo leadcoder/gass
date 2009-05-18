@@ -79,7 +79,7 @@ namespace GASS
 
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &ODEPhysicsSceneManager::OnLoad, this, _1 ),0);
 		//m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UPDATE, address,  boost::bind( &ODEPhysicsSceneManager::OnUpdate, this, _1 ),0);
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD, address,  boost::bind( &ODEPhysicsSceneManager::OnUnload, this, _1 ),0);
+		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &ODEPhysicsSceneManager::OnUnload, this, _1 ),0);
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &ODEPhysicsSceneManager::OnLoadSceneObject, this, _1 ),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
 	}
 
@@ -93,11 +93,7 @@ namespace GASS
 		obj->GetMessageManager()->SendImmediate(phy_msg);
 	}
 
-	void ODEPhysicsSceneManager::OnUnload(MessagePtr message)
-	{
-
-	}
-
+	
 	void ODEPhysicsSceneManager::Update(double delta_time)
 	{
 		
@@ -109,42 +105,10 @@ namespace GASS
 		dJointGroupEmpty(m_ContactGroup);
 	}
 
-	//int ODEPhysicsSceneManager::ThreadProc()
-	//{
-	//	float current_time = Root::GetPtr()->GetTime()/1000.0f;
-	//	float last_time = 0;
-	//	float frame_time = 0.1;
-	//	float time_elapsed  = 0;
-	//	double time_step = 0.01;
-	//	if(!m_Paused)
-	//	{
-	//		while(true)
-	//		{
-	//			if(time_elapsed > time_step) 
-	//			{
-	//				time_elapsed = 0;
-	//				dSpaceCollide(m_Space,0,&NearCallback);
-	//				//if(frame_time > 1/30.f) frame_time = 1/30.f;
-	//				//dWorldStep(m_World, frame_time);
-	//				dWorldQuickStep(m_World, time_step);
-	//				dJointGroupEmpty(m_ContactGroup);
-	//			}
-	//			
-	//			last_time = current_time;
-	//			current_time = Root::GetPtr()->GetTime()/1000.0f;
-	//			frame_time = current_time - last_time;
-	//			time_elapsed += frame_time;
-	//			//if(frame_time < 0.001)
-	//			//Sleep(1000*(0.001 - frame_time));
-	//		}
-	//	}
-	//	return 1;
-	//}
-
 	void ODEPhysicsSceneManager::OnLoad(MessagePtr message)
 	{
-		
-	
+		ScenarioScene* scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
+
 		dInitODE2(0);
 		m_Space = 0;
 		m_StaticSpace = 0;
@@ -155,8 +119,6 @@ namespace GASS
 		m_CollisionSpace = dHashSpaceCreate(m_CollisionSpace);
 		m_ContactGroup = dJointGroupCreate(0);
 
-
-		ScenarioScene* scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
 		Vec3 gravity_vec = scene->GetSceneUp()*m_Gravity;
 
 		dWorldSetGravity(m_World, gravity_vec.x,gravity_vec.y, gravity_vec.z);
@@ -169,6 +131,19 @@ namespace GASS
 		
 		m_Init = true;
 	}
+
+	void ODEPhysicsSceneManager::OnUnload(MessagePtr message)
+	{
+		dJointGroupDestroy (m_ContactGroup);
+		dSpaceDestroy (m_CollisionSpace);
+		dSpaceDestroy (m_StaticSpace);
+		dWorldDestroy (m_World);
+		dCloseODE();
+
+		int address = (int) this;
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ));
+	}
+
 
 #define MAX_CONTACTS 25		// maximum number of contact points per body
 	void ODEPhysicsSceneManager::NearCallback(void *data, dGeomID o1, dGeomID o2)

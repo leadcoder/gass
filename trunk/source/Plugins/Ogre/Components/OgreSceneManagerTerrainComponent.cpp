@@ -43,19 +43,19 @@
 namespace GASS
 {
 	OgreSceneManagerTerrainComponent::OgreSceneManagerTerrainComponent() :
-		m_CreateCollisionMesh (true)
-		//m_PageListener (NULL)
+		m_CreateCollisionMesh (true),
+		m_PageListenerAdded (false)
 	{
+		
 
 	}
 
 	OgreSceneManagerTerrainComponent::~OgreSceneManagerTerrainComponent()
 	{
-		/*if(m_PageListener)
+		if(m_PageListenerAdded)
 		{
-			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(m_PageListener);
-			delete m_PageListener;
-		}*/
+			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
+		}
 	}
 
 	void OgreSceneManagerTerrainComponent::RegisterReflection()
@@ -90,8 +90,8 @@ namespace GASS
 
 		if(m_CreateCollisionMesh)
 		{
-			//m_PageListener = new CustomTerrainPageListener(this); // your custom page source listener class
 			Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(this);
+			m_PageListenerAdded = true;
 		}
 		sm->setWorldGeometry(full_path);
 		Ogre::Vector3 scale = Ogre::Vector3::ZERO;

@@ -39,6 +39,7 @@ namespace GASS
 		void Init();
 		void Update(double delta_time);
 		void Register(UpdateFunc callback, bool force_primary_thread);
+		void Unregister(UpdateFunc callback);
 	private:
 		tbb::task* m_TasksRoot;
 		tbb::spin_mutex m_Mutex;

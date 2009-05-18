@@ -38,6 +38,7 @@ namespace GASS
 		virtual void Init() = 0;
 		virtual void Update(double delta_time) = 0;
 		virtual void Register(UpdateFunc callback, bool force_primary_thread = true) = 0;
+		virtual void Unregister(UpdateFunc callback) = 0;
 	private:
 	};
 }

@@ -31,6 +31,9 @@ namespace GASS
 	class ScenarioScene;
 	class MessageManager;
 
+	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	typedef std::vector<ScenarioScenePtr> ScenarioSceneVector;
+
 	class GASSExport Scenario : public Reflection<Scenario, BaseReflectionObject>
 	{
 	public:
@@ -39,11 +42,10 @@ namespace GASS
 		bool Load(const std::string &filename);
 		std::string GetPath(){return m_ScenarioPath;}
 		void OnUpdate(double delta_time);
-		ScenarioScene* GetScene(int i) { return m_Scenes[i];}
-		int GetNumScenes(){ return (int) m_Scenes.size();}
+		ScenarioSceneVector GetScenarioScenes() { return m_Scenes;}
 	protected:
-		ScenarioScene* LoadScene(TiXmlElement *sm_elem);
-		std::vector<ScenarioScene*> m_Scenes;
+		ScenarioScenePtr LoadScene(TiXmlElement *sm_elem);
+		ScenarioSceneVector m_Scenes;
 		MessageManager* m_ScenarioMessageManager;
 		std::string m_ScenarioPath;
 	};

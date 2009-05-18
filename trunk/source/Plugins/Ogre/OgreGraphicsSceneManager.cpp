@@ -102,7 +102,7 @@ namespace GASS
 		
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &OgreGraphicsSceneManager::OnLoadSceneObject, this, _1 ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &OgreGraphicsSceneManager::OnLoad, this, _1 ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD, address,  boost::bind( &OgreGraphicsSceneManager::OnUnload, this, _1 ),0);
+		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &OgreGraphicsSceneManager::OnUnload, this, _1 ),0);
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA, address,  boost::bind( &OgreGraphicsSceneManager::OnChangeCamera, this, _1 ),0);
 		
 	}

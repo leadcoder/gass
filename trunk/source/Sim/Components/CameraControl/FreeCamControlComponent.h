@@ -44,7 +44,8 @@ namespace GASS
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
 		void OnInit(MessagePtr message);
-		//void OnUpdate(MessagePtr message);
+		void OnUnload(MessagePtr message);
+
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
 		bool TopCameraActive(){if(m_TopCam == 1) return true; else return false;}

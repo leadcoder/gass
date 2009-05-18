@@ -42,6 +42,8 @@ namespace GASS
 
 	Scenario::~Scenario()
 	{
+
+
 	
 	}
 
@@ -81,7 +83,7 @@ namespace GASS
 			//Loop through each template
 			while(scene_elem)
 			{
-				ScenarioScene* scene = LoadScene(scene_elem);
+				ScenarioScenePtr scene = LoadScene(scene_elem);
 				if(scene)
 				{
 					scene->SetOwner(this);
@@ -106,11 +108,11 @@ namespace GASS
 		return 1;
 	}
 
-	ScenarioScene* Scenario::LoadScene(TiXmlElement *scene_elem)
+	ScenarioScenePtr Scenario::LoadScene(TiXmlElement *scene_elem)
 	{
 		std::string scene_name = scene_elem->Value();
 		
-		ScenarioScene* scene = new ScenarioScene();
+		ScenarioScenePtr scene(new ScenarioScene());
 		if(scene)
 		{
 			scene->SetName(scene_name);
