@@ -62,9 +62,11 @@ namespace GASS
 		//----------------------------------------------------------------------------------------------
 		// Returns true if the RTTI structure is of the type specified by CLID.
 		inline bool				IsTypeOf( RTTI *rtti);
+		inline bool				IsTypeOf( const std::string &class_name);
 
 		// Returns true if the RTTI structure is derived from the type specified by CLID.
 		inline bool				IsDerivedFrom( RTTI *rtti);
+		inline bool				IsDerivedFrom( const std::string &class_name);
 
 		//----------------------------------------------------------------------------------------------
 		// Gets base class' RTTI structure.
@@ -130,9 +132,23 @@ namespace GASS
 		return false;
 	}
 
+	inline bool RTTI::IsDerivedFrom( const std::string &class_name)
+	{
+		if( class_name == GetClassName())
+			return true;
+		else if( m_BaseRTTI )
+			return m_BaseRTTI->IsDerivedFrom( class_name);
+		return false;
+	}
+
 	inline bool RTTI::IsTypeOf( RTTI* rtti )
 	{
 		return this == rtti;
+	}
+
+	inline bool RTTI::IsTypeOf(const std::string &class_name)
+	{
+		return class_name == GetClassName();
 	}
 
 	inline std::list<AbstractProperty*>::iterator RTTI::GetLastProperty()
