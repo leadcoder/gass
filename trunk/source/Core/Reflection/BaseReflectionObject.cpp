@@ -47,6 +47,26 @@ namespace GASS
 		}
 	}
 
+	void BaseReflectionObject::SaveProperties(TiXmlElement *parent)
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				AbstractProperty * prop = (*iter);
+
+				TiXmlElement * prop_elem;
+				prop_elem = new TiXmlElement( prop->GetName().c_str());  
+				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
+				parent->LinkEndChild( prop_elem);
+				iter++;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+	}
+
 	bool BaseReflectionObject::SerializeProperties(ISerializer* serializer)
 	{
 		RTTI* pRTTI = GetRTTI();

@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Core/ComponentSystem/BaseComponent.h"
+#include "tinyxml.h"
 
 namespace GASS
 {
@@ -86,7 +87,11 @@ namespace GASS
 
 	void BaseComponent::SaveXML(TiXmlElement *xml_elem)
 	{
-
+		TiXmlElement * this_elem;
+		this_elem = new TiXmlElement( GetName().c_str() );  
+		xml_elem->LinkEndChild( this_elem );  
+		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
+		SaveProperties(this_elem);
 	}
 
 	ComponentPtr BaseComponent::CreateCopy()

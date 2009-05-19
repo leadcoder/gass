@@ -200,7 +200,37 @@ namespace GASS
 
 	void BaseObject::SaveXML(TiXmlElement *obj_elem)
 	{
+		
+		TiXmlElement* this_elem = new TiXmlElement( GetName().c_str() );  
+		obj_elem->LinkEndChild( this_elem );  
+		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
+		SaveProperties(this_elem);
+
+		TiXmlElement* comp_elem = new TiXmlElement("Components");
+		this_elem->LinkEndChild(comp_elem);
+
+		ComponentVector::iterator iter; 
+		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
+		{
+			ComponentPtr comp = (*iter);
+			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
+			if(s_comp)
+				s_comp->SaveXML(comp_elem);
+		}
+
+
+		TiXmlElement* cc_elem = new TiXmlElement("ComponentContainers");
+		this_elem->LinkEndChild(cc_elem);
 	
+		BaseObject::ComponentContainerVector::iterator cc_iter;
+		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); cc_iter++)
+		{
+			XMLSerializePtr child = boost::shared_dynamic_cast<IXMLSerialize>(*cc_iter);
+			if(child)
+			{
+				child->SaveXML(cc_elem);
+			}
+		}
 	}
 
 	void BaseObject::LoadXML(TiXmlElement *obj_elem)

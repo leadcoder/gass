@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include "tinyxml.h"
 
 #include "Core/Reflection/Reflection.h"
 
@@ -64,7 +65,7 @@ public:
 	void SetSize(const float &size){m_Size = size;}
 	void OnCreate()
 	{
-		
+
 	}
 private:
 	float m_Size;
@@ -114,7 +115,7 @@ public:
 		mm.RegisterForMessage(MESSAGE_INIT, address,  boost::bind( &LocationComponent::OnInit, this, _1 ),m_InitPriority);
 		mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
-	
+
 	void OnInit(GASS::MessagePtr message)
 	{
 		std::cout << "init:" << m_Name << std::endl;
@@ -122,10 +123,10 @@ public:
 
 	void OnUpdate(GASS::MessagePtr message)
 	{
-				
+
 		//if(((int) update_msg->m_Tick) % 10 == 0)
 		//std::cout << "update:" << m_Name << " tick:" << update_msg->m_Tick <<std::endl;
-		
+
 	}
 
 private:
@@ -225,12 +226,12 @@ int main(int argc, char* argv[])
 	pm.LoadFromFile("core_test_plugins.xml");
 
 	//////////////////test message system
-	
+
 	boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT,100));
 	mm.SendGlobalMessage(init_msg);
 
 	/////////////////////////////////////////////////
-	
+
 	if (!template_manager->Load("test.xml"))
 		GASS::Log::Warning("main(...) - Couldn't load file: test.xml");
 	MyGameObjectPtr go1 = boost::shared_static_cast<MyGameObject>(template_manager->CreateFromTemplate("GO2"));
@@ -248,7 +249,7 @@ int main(int argc, char* argv[])
 	for(int i = 0 ; i < 100; i++)
 	{
 		if(i % 10 == 0)
-		  std::cout << "update:" << i <<std::endl;
+			std::cout << "update:" << i <<std::endl;
 		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage(MESSAGE_UPDATE,99));
 		update_msg->m_TypeID = MESSAGE_UPDATE;
 		update_msg->m_Tick = i;
@@ -269,7 +270,7 @@ int main(int argc, char* argv[])
 	assert(test_comp2);
 	std::cout << "size " << test_comp2->GetSize() << std::endl;
 	boost::shared_ptr<LocationComponent> test_comp3 = boost::shared_static_cast<LocationComponent>(GASS::ComponentPtr(go1->GetComponent("TestComponent3")));
-	
+
 	std::cout << "pos " << test_comp3->GetPos() << std::endl;
 
 	//Test serializing
@@ -311,10 +312,50 @@ int main(int argc, char* argv[])
 	test_comp2 = boost::shared_static_cast<TestComponent>(GASS::ComponentPtr(bin_go->GetComponent("TestComponent2")));
 	std::cout << "size " << test_comp2->GetSize() << std::endl;
 	test_comp3 = boost::shared_static_cast<LocationComponent>( GASS::ComponentPtr(bin_go->GetComponent("TestComponent3")));
-	
+
 	std::cout << "pos " << test_comp3->GetPos() << std::endl;
 
 	bin_go->DebugPrint();
+
+
+	//go1->SaveXML(objelem);
+
+
+	///////////test xml save
+
+
+	TiXmlDocument doc;  
+
+	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+	doc.LinkEndChild( decl );  
+
+	TiXmlElement * objects = new TiXmlElement( "Objects" );  
+	doc.LinkEndChild( objects );  
+
+	go1->SaveXML(objects);
+	doc.SaveFile("save.xml" ); 
+
+	MyGameObjectPtr xml_go (new MyGameObject());
+
+
+	TiXmlDocument *xmlDoc = new TiXmlDocument("save.xml");
+	xmlDoc->LoadFile();
+	objects = xmlDoc->FirstChildElement("Objects");
+	TiXmlElement* obj = objects->FirstChildElement();
+	xml_go->LoadXML(obj);
+	// Loop through each template
+	/*while(obj)
+	{
+
+	obj  = obj->NextSiblingElement();
+	}*/
+	xmlDoc->Clear();
+	// Delete our allocated document and return success ;)
+	delete xmlDoc;
+
+	xml_go->DebugPrint();
+
+
 
 	///////////test timer
 
@@ -342,8 +383,8 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	
-	
+
+
 	return 0;
 }
 

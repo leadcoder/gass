@@ -40,6 +40,7 @@ namespace GASS
 		
 		//helpers to modify properties
 		void LoadProperties(TiXmlElement *elem);
+		void SaveProperties(TiXmlElement *parent);
 		bool SetPropertyByString(const std::string &attrib_name,const std::string &attrib_val);
 		bool GetPropertyByString(const std::string &attrib_name, std::string &value);
 		bool SetPropertyByType(const std::string &attrib_name, boost::any attribute);
