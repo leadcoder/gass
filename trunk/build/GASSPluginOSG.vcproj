@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\OSG\include;../Dependencies\OSG\build\include"
+				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;&quot;$(OSG_PATH)\include&quot;;&quot;$(OSG_PATH)\build\include&quot;"
 				PreprocessorDefinitions="_LIB;WIN32;_WINDOWS;_DEBUG;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;OSG_DEBUG_POSTFIX=\&quot;d\&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,10 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib"
+				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/GASSPluginOSG_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;../Dependencies/OSG/lib;../Dependencies/OSG/build/lib"
+				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/PluginOSG_d.pdb"
 				SubSystem="2"
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\OSG\include;../Dependencies\OSG\build\include"
+				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;&quot;$(OSG_PATH)\include&quot;;&quot;$(OSG_PATH)\build\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;HFE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -149,10 +149,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib"
+				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib"
 				OutputFile="$(OutDir)/GASSPluginOSG.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;../Dependencies/OSG/lib;../Dependencies/OSG/build/lib"
+				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"

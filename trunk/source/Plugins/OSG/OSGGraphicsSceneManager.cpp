@@ -98,7 +98,7 @@ namespace GASS
 
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &OSGGraphicsSceneManager::OnLoadGameObject, this, _1 ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
 		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnLoad, this, _1 ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD, address,  boost::bind( &OSGGraphicsSceneManager::OnUnload, this, _1 ),0);
+		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnUnload, this, _1 ),0);
 
 		m_SceneTransform->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
