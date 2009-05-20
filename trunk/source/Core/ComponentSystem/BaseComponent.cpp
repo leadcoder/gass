@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Core/ComponentSystem/BaseComponent.h"
+#include "Core/ComponentSystem/ComponentFactory.h"
 #include "tinyxml.h"
 
 namespace GASS
@@ -90,7 +91,9 @@ namespace GASS
 		TiXmlElement * this_elem;
 		this_elem = new TiXmlElement( GetName().c_str() );  
 		xml_elem->LinkEndChild( this_elem );  
-		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
+		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassNameNoNamespace());
+		//this_elem->SetAttribute("type", GetRTTI()->GetClassNameNoNamespace().c_str());
+		this_elem->SetAttribute("type", factoryname.c_str());
 		SaveProperties(this_elem);
 	}
 

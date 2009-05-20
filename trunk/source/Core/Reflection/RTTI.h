@@ -76,6 +76,7 @@ namespace GASS
 		//----------------------------------------------------------------------------------------------
 		// Gets the class name.
 		inline std::string		GetClassName();
+		inline std::string		GetClassNameNoNamespace();
 
 		//----------------------------------------------------------------------------------------------
 		// Gets the class factory function.
@@ -109,6 +110,16 @@ namespace GASS
 
 	inline std::string RTTI::GetClassName()
 	{
+		return m_ClassName;
+	}
+
+	inline std::string RTTI::GetClassNameNoNamespace()
+	{
+		size_t pos = m_ClassName.find("::");
+		if(pos != -1)
+		{
+			return m_ClassName.substr(pos+2);
+		}
 		return m_ClassName;
 	}
 

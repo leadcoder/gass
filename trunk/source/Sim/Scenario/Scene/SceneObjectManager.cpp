@@ -25,9 +25,12 @@
 #include "Sim/Scenario/Scene/ISceneManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
+#include "Sim/Components/BaseSceneComponent.h"
+
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 #include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/ComponentContainerFactory.h"
 
 #include "Core/Utils/Log.h"
 #include "tinyxml.h"
@@ -80,6 +83,7 @@ namespace GASS
 		return true;
 	}
 
+
 	void SceneObjectManager::LoadObject(SceneObjectPtr obj)
 	{
 		//add some default messages to objects, this could also be done in each component but we save some jobb
@@ -122,8 +126,19 @@ namespace GASS
 
 	SceneObjectPtr SceneObjectManager::LoadSceneObject(TiXmlElement *so_elem)
 	{
+
+		//check if we want create object by template or type
 		std::string so_name = so_elem->Value();
-		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(so_name));
+		SceneObjectPtr so;
+		if(so_elem->Attribute("type"))
+		{
+			std::string object_type = so_elem->Attribute("type");
+			so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create(object_type));
+		}
+		else
+		{
+			so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(so_name));
+		}
 		if(so)
 		{
 			XMLSerializePtr s_so = boost::shared_dynamic_cast<IXMLSerialize>(so);
@@ -151,15 +166,76 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr SceneObjectManager::GetObjectByName(const std::string &name)
+	void SceneObjectManager::GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name)
 	{
 		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
 		{
-			if(m_SceneObjectVector[i]->GetName()== name)
-				return m_SceneObjectVector[i];
+			GetObjectByClass(m_SceneObjectVector[i],objects,class_name);
 		}
-		SceneObjectPtr empty;
-		return empty;
+	}
+
+	void SceneObjectManager::GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name)
+	{
+		if(obj->GetRTTI()->IsDerivedFrom(class_name))
+			objects.push_back(obj);
+
+		//Check all components
+		BaseObject::ComponentVector components =  obj->GetComponents();
+		BaseObject::ComponentVector::iterator comp_iter = components.begin();
+		for(;comp_iter != components.end();comp_iter++)
+		{
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
+			if(comp->GetRTTI()->IsDerivedFrom(class_name))
+			{				
+				objects.push_back(obj);
+				break;
+			}
+		}
+		
+		BaseObject::ComponentContainerVector children = obj->GetChildren();
+		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		for(;iter != children.end();iter++)
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			GetObjectByClass(child, objects, class_name);
+		}
+	}
+
+	SceneObjectPtr SceneObjectManager::GetObjectByName(const std::string &name)
+	{
+		SceneObjectPtr obj;
+
+		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
+		{
+			if(GetObjectByName(m_SceneObjectVector[i],name))
+			{
+				obj = m_SceneObjectVector[i];
+				break;
+			}
+		}
+		return obj;
+	}
+
+
+	SceneObjectPtr SceneObjectManager::GetObjectByName(SceneObjectPtr obj, const std::string &name)
+	{
+		SceneObjectPtr ret;
+		if(obj->GetName()== name)
+			return obj;
+
+		//check children also
+		BaseObject::ComponentContainerVector children = obj->GetChildren();
+		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		for(;iter != children.end();iter++)
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			if(GetObjectByName(child,name))
+			{
+					ret = child;
+					break;
+			}
+		}
+		return ret;
 	}
 
 	void SceneObjectManager::Clear()
@@ -167,10 +243,35 @@ namespace GASS
 		//Send shutdonw message to all components
 		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
 		{
-			int from_id = (int)this;
-			MessagePtr msg(new Message(ScenarioScene::SM_MESSAGE_UNLOAD_COMPONENTS,from_id));
-			m_SceneObjectVector[i]->GetMessageManager()->SendImmediate(msg);
+			UnloadObject(m_SceneObjectVector[i]);
 		}
 		m_SceneObjectVector.clear();
 	}
+
+	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
+	{
+		int from_id = (int)this;
+		MessagePtr msg(new Message(ScenarioScene::SM_MESSAGE_UNLOAD_COMPONENTS,from_id));
+		obj->GetMessageManager()->SendImmediate(msg);
+
+		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,from_id));
+		unload_msg->SetData("SceneObject",obj);
+		m_ScenarioScene->GetMessageManager()->SendImmediate(unload_msg);
+	}
+
+
+	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)
+	{
+		UnloadObject(obj);
+		std::vector<SceneObjectPtr>::iterator iter = m_SceneObjectVector.begin();
+		for(; iter != m_SceneObjectVector.end();iter++)
+		{
+			if(obj == *iter)
+			{
+				m_SceneObjectVector.erase(iter);
+				return;
+			}
+		}
+	}
+
 }

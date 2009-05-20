@@ -40,6 +40,7 @@ namespace GASS
 		typedef boost::shared_ptr<Base> BasePtr;
 		virtual ~CreatorBase() {}
 		virtual BasePtr Create() const = 0;
+		virtual std::string GetClassName() const = 0;
 	};
 
 
@@ -48,15 +49,26 @@ namespace GASS
 	class Creator : public CreatorBase<Base>
 	{
 
-		
+
 	public:
 		typedef boost::shared_ptr<Base> BasePtr;
 		typedef boost::shared_ptr<Product> ProductPtr;
+		Creator()
+		{
+			m_ClassName = std::string(typeid(Product).name()).substr(6);
+			size_t pos = m_ClassName.find("::");
+			if(pos != -1)
+			{
+				m_ClassName = m_ClassName.substr(pos+2);
+			}
+		}
 		virtual BasePtr Create() const 
 		{ 
 			ProductPtr obj(new Product);
 			return boost::shared_static_cast<Base>(obj);
 		}
+		virtual std::string GetClassName() const {return m_ClassName;}
+		std::string m_ClassName;
 	};
 
 
@@ -69,6 +81,7 @@ namespace GASS
 		typedef boost::shared_ptr<Base> BasePtr;
 		BasePtr Create(ObjectType type);
 		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
+		std::string GetFactoryName(const std::string &class_name);
 	private:
 		typedef std::map<ObjectType, CreatorBase<Base> *> CreatorMap;
 		CreatorMap m_creatorMap;
@@ -76,9 +89,8 @@ namespace GASS
 
 
 	template<class Base>
-		bool Factory<Base>::Register(ObjectType type, CreatorBase<Base> * pCreator)
+	bool Factory<Base>::Register(ObjectType type, CreatorBase<Base> * pCreator)
 	{
-		//type = Misc::ToLower(type);
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it != m_creatorMap.end()) 
 		{
@@ -90,9 +102,25 @@ namespace GASS
 	}
 
 
+	template<class Base>
+	std::string Factory<Base>::GetFactoryName(const std::string &class_name) 
+	{
+		typename CreatorMap::iterator it = m_creatorMap.begin();
+		while(it != m_creatorMap.end()) 
+		{
+			if((*it).second->GetClassName() == class_name)
+			{
+				return (*it).first;
+			}
+			it++;
+		}
+		return std::string("");
+	}
+
+
 
 	template<class Base>
-		boost::shared_ptr<Base> Factory<Base>::Create(ObjectType type)
+	boost::shared_ptr<Base> Factory<Base>::Create(ObjectType type)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end()) 

@@ -123,6 +123,8 @@ namespace GASS
 			serializer->IO(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
+
+				//need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
 				ComponentContainerPtr child  = boost::shared_dynamic_cast<IComponentContainer> (CreateInstance());
 				if(child)
 				{
@@ -203,7 +205,7 @@ namespace GASS
 		
 		TiXmlElement* this_elem = new TiXmlElement( GetName().c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
-		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
+		this_elem->SetAttribute("type", GetRTTI()->GetClassNameNoNamespace().c_str());
 		SaveProperties(this_elem);
 
 		TiXmlElement* comp_elem = new TiXmlElement("Components");

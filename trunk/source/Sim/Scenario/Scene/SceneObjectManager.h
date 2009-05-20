@@ -48,9 +48,15 @@ namespace GASS
 		SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
 		void SyncMessages(double delta_time);
 		ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
+		void GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void Clear();
+		void DeleteObject(SceneObjectPtr obj);
 	protected:
+		void GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
+		SceneObjectPtr GetObjectByName(SceneObjectPtr obj, const std::string &name);
+		void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void LoadObject(SceneObjectPtr obj);
+		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
 		ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);

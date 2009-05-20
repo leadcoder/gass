@@ -51,6 +51,20 @@ namespace GASS
 
 	OgreLocationComponent::~OgreLocationComponent()
 	{
+
+		if(m_OgreNode)
+		{
+			Ogre::SceneNode* parent = m_OgreNode->getParentSceneNode();
+			if(parent)
+			{	
+				parent->removeChild(m_OgreNode);
+			}
+			else
+			{
+				Ogre::SceneManager* sm = m_OgreNode->getCreator();
+				sm->destroySceneNode(m_OgreNode->getName());
+			}
+		}
 		
 	}
 
