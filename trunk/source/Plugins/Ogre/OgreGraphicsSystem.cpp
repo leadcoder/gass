@@ -218,8 +218,8 @@ namespace GASS
 			
 		}*/
 	}
-	
-	
+
+
 
 
 	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)

@@ -35,11 +35,12 @@ namespace GASS
 {
 	BaseObject::BaseObject()
 	{
-
+		
 	}
 
 	BaseObject::~BaseObject(void)
 	{
+		
 
 	}
 
@@ -171,6 +172,19 @@ namespace GASS
 			}
 		}
 		return true;
+	}
+
+	void BaseObject::RemoveChild(ComponentContainerPtr child)
+	{
+		BaseObject::ComponentContainerVector::iterator bo_iter;
+		for(bo_iter = m_ComponentContainerVector.begin(); bo_iter!= m_ComponentContainerVector.end(); bo_iter++)
+		{
+			if(child == *bo_iter)
+			{
+				m_ComponentContainerVector.erase(bo_iter);
+				return;
+			}
+		}
 	}
 
 	void BaseObject::OnCreate()

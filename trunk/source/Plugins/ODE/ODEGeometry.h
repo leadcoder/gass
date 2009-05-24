@@ -59,8 +59,8 @@ namespace GASS
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
-		void OnPositionChanged(MessagePtr message);
-		void OnRotationChanged(MessagePtr message);
+		void OnTransformationChanged(MessagePtr message);
+		//void OnRotationChanged(MessagePtr message);
 		void OnLoad(MessagePtr message);
 		void OnCollisionSettings(MessagePtr message);
 		void CreateODEGeomFromGeom(IGeometryComponent* geom, 

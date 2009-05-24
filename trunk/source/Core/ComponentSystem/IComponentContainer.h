@@ -46,6 +46,7 @@ namespace GASS
 		virtual void SetName(const std::string &name) = 0;
 		virtual void OnCreate() = 0;
 		virtual void AddChild(ComponentContainerPtr child) = 0;
+		virtual void RemoveChild(ComponentContainerPtr child) = 0;
 		virtual void AddComponent(ComponentPtr comp) = 0;
 		virtual ComponentContainerVector GetChildren() = 0;
 		virtual ComponentPtr GetComponent(const std::string &name) = 0;

@@ -54,6 +54,7 @@ namespace GASS
 
 		if(m_OgreNode)
 		{
+			m_OgreNode->setListener(NULL);
 			Ogre::SceneNode* parent = m_OgreNode->getParentSceneNode();
 			if(parent)
 			{	
@@ -64,6 +65,7 @@ namespace GASS
 				Ogre::SceneManager* sm = m_OgreNode->getCreator();
 				sm->destroySceneNode(m_OgreNode->getName());
 			}
+			
 		}
 		
 	}
@@ -85,6 +87,10 @@ namespace GASS
 		
 		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OgreLocationComponent::PositionMessage, this, _1 ),0);
 		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::RotationMessage, this, _1 ),0);
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_SET_WORLD_POSITION, obj_id,  boost::bind( &OgreLocationComponent::WorldPositionMessage, this, _1 ),0);
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_SET_WORLD_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::WorldRotationMessage, this, _1 ),0);
+		
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_PARENT_CHANGED, obj_id,  boost::bind( &OgreLocationComponent::ParentChangedMessage, this, _1 ),0);
 		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_VISIBILITY, obj_id,  boost::bind( &OgreLocationComponent::VisibilityMessage, this, _1 ),0);
 	}
 
@@ -116,6 +122,8 @@ namespace GASS
 		{
 			m_OgreNode = sm->getRootSceneNode()->createChildSceneNode(name);
 		}
+
+		m_OgreNode->setListener(this);
 		
 		int from_id = (int)this;
 		MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
@@ -128,6 +136,13 @@ namespace GASS
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
+	void OgreLocationComponent::ParentChangedMessage(MessagePtr message)
+	{
+		SetAttachToParent(m_AttachToParent);
+		
+	}
+
+
 	void OgreLocationComponent::PositionMessage(MessagePtr message)
 	{
 		m_Pos = boost::any_cast<Vec3>(message->GetData("Position"));
@@ -136,6 +151,57 @@ namespace GASS
 			m_OgreNode->setPosition(Convert::ToOgre(m_Pos));
 		}
 	}
+
+	void OgreLocationComponent::WorldPositionMessage(MessagePtr message)
+	{
+		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		SetWorldPosition(pos);
+	}
+
+	void OgreLocationComponent::SetWorldPosition(const Vec3 &pos)
+	{
+		if(m_OgreNode)
+		{
+			Ogre::Vector3 opos = Convert::ToOgre(pos);
+			Ogre::Node* op = m_OgreNode->getParent();
+			if(op) //check that we dont have sm root node?
+			{
+				Ogre::Matrix4 trans = op->_getFullTransform();
+				Ogre::Matrix4 inv_trans = trans.inverse();
+				opos = inv_trans*opos;
+			}
+			m_OgreNode->setPosition(opos);
+			m_Pos = Convert::ToGASS(opos);
+		}
+	}
+
+	void OgreLocationComponent::WorldRotationMessage(MessagePtr message)
+	{
+		Quaternion q = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		SetWorldRotation(q);
+	}
+
+	void OgreLocationComponent::SetWorldRotation(const Quaternion &rot)
+	{
+		if(m_OgreNode)
+		{
+			Ogre::Quaternion orot = Convert::ToOgre(rot);
+			Ogre::Node* op = m_OgreNode->getParent();
+			if(op) //check that we dont have sm root node?
+			{
+				Ogre::Matrix4 trans = op->_getFullTransform();
+				Ogre::Matrix4 inv_trans = trans.inverse();
+				Ogre::Matrix3 rot_mat;
+				orot.ToRotationMatrix(rot_mat);
+				Ogre::Matrix3 tmp;
+				inv_trans.extract3x3Matrix(tmp);
+				rot_mat = tmp*rot_mat;
+				orot.FromRotationMatrix(rot_mat);
+			}
+			m_OgreNode->setOrientation(orot);
+		}
+	}
+
 
 	void OgreLocationComponent::RotationMessage(MessagePtr message)
 	{
@@ -173,11 +239,22 @@ namespace GASS
 
 	Vec3 OgreLocationComponent::GetPosition() const 
 	{
-		//if(m_OgreNode)
-		//	return Convert::ToGASS(m_OgreNode->getPosition());
-		//else return m_Pos;
 		return m_Pos;
 	}
+
+	Vec3 OgreLocationComponent::GetWorldPosition() const 
+	{
+		Vec3 pos = m_Pos;
+		if(m_OgreNode)
+		{
+			pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
+		}
+		return pos;
+	}
+
+
+
+	//nodeUpdated
 	/*void OgreLocationComponent::SetEulerRotation(const Vec3 &value)
 	{
 		m_Rot = value;
@@ -231,6 +308,16 @@ namespace GASS
 		return q;
 	}
 
+	Quaternion OgreLocationComponent::GetWorldRotation() const
+	{
+		Quaternion q;
+		if(m_OgreNode)
+		{
+			q = Convert::ToGASS(m_OgreNode->_getDerivedOrientation());
+		}
+		return q;
+	}
+
 	OgreLocationComponentPtr OgreLocationComponent::GetParentLocation()
 	{
 		OgreLocationComponentPtr parent_location;
@@ -246,14 +333,46 @@ namespace GASS
 
 	}
 
-
 	void OgreLocationComponent::SetAttachToParent(bool value)
 	{
 		m_AttachToParent = value;
+		if(m_OgreNode)
+		{
+			Vec3 world_pos = GetWorldPosition();
+			Quaternion world_rot = GetWorldRotation();
+			if(m_OgreNode->getParent())
+				m_OgreNode->getParent()->removeChild(m_OgreNode);
+
+			OgreLocationComponentPtr parent = GetParentLocation();
+			if(parent && value)
+				parent->GetOgreNode()->addChild(m_OgreNode);
+			else 
+				m_OgreNode->getCreator()->getRootSceneNode()->addChild(m_OgreNode );
+			
+			//should we preserve old world position and orientenation???
+			SetWorldPosition(world_pos);
+			SetWorldRotation(world_rot);
+			m_OgreNode->needUpdate();
+		}
 	}
+
 	bool OgreLocationComponent::GetAttachToParent() const
 	{
 		return m_AttachToParent;
 	}
 
+	void OgreLocationComponent::nodeUpdated(const Ogre::Node* node)
+	{
+		//send transformation message
+		int from_id = (int)this;
+		MessagePtr trans_msg(new Message(ScenarioScene::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
+		//Get abs pos
+		Vec3 pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
+		Vec3 scale = Convert::ToGASS(m_OgreNode->_getDerivedScale());
+		Quaternion rot = Convert::ToGASS(m_OgreNode->_getDerivedOrientation());
+		trans_msg->SetData("Position",pos);
+		trans_msg->SetData("Rotation",rot);
+		trans_msg->SetData("Scale",scale);
+		GetMessageManager()->SendGlobalMessage(trans_msg);
+	}
 }

@@ -183,6 +183,9 @@ namespace GASS
 
 	void OISInputSystem::Update(double double_delta)
 	{
+		if(m_Window == 0)
+			return;
+
 		if(!m_Active) //check if we are out of focus
 		{
 			//feed console and gui?

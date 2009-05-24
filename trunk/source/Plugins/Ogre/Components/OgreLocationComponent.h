@@ -25,6 +25,7 @@
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Core/MessageSystem/Message.h"
+#include <OgreNode.h>
 
 
 namespace Ogre
@@ -37,7 +38,7 @@ namespace GASS
 	class OgreLocationComponent;
 	typedef boost::shared_ptr<OgreLocationComponent> OgreLocationComponentPtr;
 
-	class OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent
+	class OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener
 	{
 	public:
 		OgreLocationComponent();
@@ -47,12 +48,14 @@ namespace GASS
 	
 		virtual void SetPosition(const Vec3 &value);
 		virtual Vec3 GetPosition() const;
+		virtual Vec3 GetWorldPosition() const;
 		virtual void SetEulerRotation(const Vec3 &value);
 		virtual Vec3 GetEulerRotation() const;
 		virtual void SetScale(const Vec3 &value);
 		virtual Vec3 GetScale(){return m_Scale;}
 		virtual void SetRotation(const Quaternion &value);
 		virtual Quaternion GetRotation() const;
+		virtual Quaternion GetWorldRotation() const;
 
 		virtual void SetAttachToParent(bool value);
 		virtual bool GetAttachToParent() const;
@@ -60,13 +63,27 @@ namespace GASS
 		
 		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
 		void SetVisibility(bool visibility);
+
+		//Ogre node listener interface
+		virtual void nodeUpdated(const Ogre::Node* node);
+		/** Node is being destroyed */
+		virtual void nodeDestroyed(const Ogre::Node* node) {}
+		/** Node has been attached to a parent */
+		virtual void nodeAttached(const Ogre::Node* node) {}
+		/** Node has been detached from a parent */
+		virtual void nodeDetached(const Ogre::Node* node) {}
 	protected:
-		void SetPositionByMessage(const Vec3 &value);
-		void SetEulerRotationByMessage(const Vec3 &value);
+		void SetWorldRotation(const Quaternion &rot);
+		void SetWorldPosition(const Vec3 &pos);
 		void OnLoad(MessagePtr message);
 		void PositionMessage(MessagePtr message);
 		void RotationMessage(MessagePtr message);
 		void VisibilityMessage(MessagePtr message);
+		void ParentChangedMessage(MessagePtr message);
+		void WorldPositionMessage(MessagePtr message);
+		void WorldRotationMessage(MessagePtr message);
+	
+	
 
 		//helper function to get first parent with location component
 		OgreLocationComponentPtr GetParentLocation();

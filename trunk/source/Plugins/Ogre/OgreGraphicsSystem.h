@@ -47,6 +47,7 @@ namespace GASS
 		SystemType GetSystemType() {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		void Update(double delta);
+		Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
 	protected:
 		void OnDebugPrint(MessagePtr message);
 		void SetActiveSceneManger(Ogre::SceneManager *sm);

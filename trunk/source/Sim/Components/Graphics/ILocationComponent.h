@@ -31,9 +31,11 @@ namespace GASS
 		virtual ~ILocationComponent(){}
 		virtual void SetPosition(const Vec3 &value) = 0;
 		virtual Vec3 GetPosition() const = 0;
+		virtual Vec3 GetWorldPosition() const = 0;
 		virtual void SetEulerRotation(const Vec3 &value) = 0;
 		virtual Vec3 GetEulerRotation() const = 0;
 		virtual Quaternion GetRotation() const = 0;
+		virtual Quaternion GetWorldRotation() const = 0;
 	protected:
 	};
 

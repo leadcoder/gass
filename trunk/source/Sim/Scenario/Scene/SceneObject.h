@@ -31,6 +31,7 @@ namespace GASS
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef std::vector<SceneObjectPtr> SceneObjectVector;
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseObject>
 	{
 	public:
@@ -39,12 +40,10 @@ namespace GASS
 		static	void RegisterReflection();
 		void SyncMessages(double delta_time);
 
-	
-		//void SetPartId(int part_id) {m_PartId = part_id;}
-		//int GetPartId() const {return m_PartId;}
 		SceneObjectManager* GetSceneObjectManager() {return m_Manager;}
 		MessageManager* GetMessageManager(){return m_MessageManager;}
 		void OnCreate();
+	
 
 		//public for now, not possible to get derived manager to get hold of this otherwise
 		void SetSceneObjectManager(SceneObjectManager* manager);
@@ -67,12 +66,19 @@ namespace GASS
 
 
 
-		//convenience function, 
-		//no dynamic cast because we are sure that all objects are derived from the SceneObject
+		//convenience functions 
 		SceneObjectPtr GetParentSceneObject()
 		{
+			//no dynamic cast because we are sure that all objects are derived from the SceneObject
 			return boost::shared_static_cast<SceneObject>(GetParent());
 		}
+		void GetComponentsByClass(ComponentVector &components, const std::string &class_name);
+
+		//should we return result or pass it as ref arg?
+		SceneObjectVector GetObjectsByName(const std::string &name);
+		void GetObjectsByName(SceneObjectVector &objects, const std::string &name); 
+
+
 	protected:
 		SceneObjectManager* m_Manager;
 		MessageManager* m_MessageManager;

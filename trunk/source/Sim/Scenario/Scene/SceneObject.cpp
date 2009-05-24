@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Components/BaseSceneComponent.h"
 #include "Core/Common.h"
 #include "Core/Serialize/Serialize.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -87,6 +88,61 @@ namespace GASS
 			child->SyncMessages(delta_time);
 		}
 	}
+
+	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name)
+	{
+		//Check all components
+		BaseObject::ComponentVector cv =  GetComponents();
+		BaseObject::ComponentVector::iterator comp_iter = cv.begin();
+		for(;comp_iter != cv.end();comp_iter++)
+		{
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
+			if(comp->GetRTTI()->IsDerivedFrom(class_name))
+			{				
+				cv.push_back(comp);
+			}
+		}
+
+		BaseObject::ComponentContainerVector children = GetChildren();
+		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		for(;iter != children.end();iter++)
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			GetComponentsByClass(components, class_name);
+		}
+	}
+
+
+	SceneObjectVector SceneObject::GetObjectsByName(const std::string &name)
+	{
+		SceneObjectVector objects;
+		GetObjectsByName(objects, name);
+		return objects;
+	}
+
+	void SceneObject::GetObjectsByName(SceneObjectVector &objects, const std::string &name)
+	{
+		SceneObjectPtr ret;
+		if(GetName()== name)
+		{
+			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+			objects.push_back(obj);
+		}
+
+		BaseObject::ComponentContainerVector children = GetChildren();
+		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		for(;iter != children.end();iter++)
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			child->GetObjectsByName(objects,name);
+		}
+	}
+
+
+
+	
+		
+
 }
 
 

@@ -42,18 +42,21 @@ namespace GASS
 		virtual ~SceneObjectManager();
 		bool LoadFromFile(const std::string filename);
 		MessageManager* GetMessageManager();
-		SceneObjectPtr GetObjectByName(const std::string &name);
+		//SceneObjectPtr GetObjectByName(const std::string &name);
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name);
-		unsigned int GetNumObjects() {return (unsigned int) m_SceneObjectVector.size();}
-		SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
+		//unsigned int GetNumObjects() {return (unsigned int) m_SceneObjectVector.size();}
+		//SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
 		void SyncMessages(double delta_time);
 		ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
-		void GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name);
+		//void GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void Clear();
 		void DeleteObject(SceneObjectPtr obj);
+		//void DetachObject(SceneObjectPtr obj);
+		//void AddObject(SceneObjectPtr obj);
+		SceneObjectPtr GetSceneRoot() {return m_Root;}
 	protected:
-		void GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
-		SceneObjectPtr GetObjectByName(SceneObjectPtr obj, const std::string &name);
+		//void GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
+		//SceneObjectPtr GetObjectByName(SceneObjectPtr obj, const std::string &name);
 		void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void LoadObject(SceneObjectPtr obj);
 		void UnloadObject(SceneObjectPtr obj);
@@ -61,7 +64,8 @@ namespace GASS
 		void Load(TiXmlElement *scene_elem);
 		ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
 		ScenarioScene* m_ScenarioScene;
-		std::vector<SceneObjectPtr> m_SceneObjectVector;
+		//std::vector<SceneObjectPtr> m_SceneObjectVector;
+		SceneObjectPtr m_Root;
 	};
 }
 

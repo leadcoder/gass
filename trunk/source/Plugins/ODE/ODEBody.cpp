@@ -81,8 +81,6 @@ namespace GASS
 		{
 			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
 			SetPosition(pos);
-
-			
 		}
 	}
 
@@ -93,8 +91,6 @@ namespace GASS
 		{
 			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
 			SetRotation(rot);
-
-			
 		}
 	}
 

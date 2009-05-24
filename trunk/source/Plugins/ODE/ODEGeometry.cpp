@@ -81,23 +81,26 @@ namespace GASS
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
 		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEGeometry::OnLoad, this, _1 ),1);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEGeometry::OnPositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEGeometry::OnRotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, obj_id,  boost::bind( &ODEGeometry::OnTransformationChanged, this, _1 ),0);
+		//mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEGeometry::OnRotationChanged, this, _1 ),0);
 		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_COLLISION_SETTINGS, obj_id,  boost::bind( &ODEGeometry::OnCollisionSettings, this, _1 ),0);
 		
 	}
 
-	void ODEGeometry::OnPositionChanged(MessagePtr message)
+	void ODEGeometry::OnTransformationChanged(MessagePtr message)
 	{
 		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
 		SetPosition(pos);
-	}
 
-	void ODEGeometry::OnRotationChanged(MessagePtr message)
-	{
 		Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
 		SetRotation(rot);
 	}
+
+	/*void ODEGeometry::OnRotationChanged(MessagePtr message)
+	{
+		Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		SetRotation(rot);
+	}*/
 
 	void ODEGeometry::OnCollisionSettings(MessagePtr message)
 	{
