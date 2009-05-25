@@ -35,6 +35,9 @@ namespace GASS
 	typedef BaseReflectionObject*	(*ClassFactoryFunc)( ClassID );
 	typedef bool			(*RegisterReflectionFunc)();
 
+
+	
+
 	class GASSCoreExport RTTI
 	{
 
@@ -76,7 +79,7 @@ namespace GASS
 		//----------------------------------------------------------------------------------------------
 		// Gets the class name.
 		inline std::string		GetClassName();
-		inline std::string		GetClassNameNoNamespace();
+		//inline std::string		GetClassNameNoNamespace();
 
 		//----------------------------------------------------------------------------------------------
 		// Gets the class factory function.
@@ -113,15 +116,7 @@ namespace GASS
 		return m_ClassName;
 	}
 
-	inline std::string RTTI::GetClassNameNoNamespace()
-	{
-		size_t pos = m_ClassName.find("::");
-		if(pos != -1)
-		{
-			return m_ClassName.substr(pos+2);
-		}
-		return m_ClassName;
-	}
+	
 
 	inline std::list<AbstractProperty*>::iterator RTTI::GetFirstProperty()
 	{

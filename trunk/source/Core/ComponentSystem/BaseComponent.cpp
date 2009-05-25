@@ -91,7 +91,7 @@ namespace GASS
 		TiXmlElement * this_elem;
 		this_elem = new TiXmlElement( GetName().c_str() );  
 		xml_elem->LinkEndChild( this_elem );  
-		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassNameNoNamespace());
+		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassNameNoNamespace().c_str());
 		this_elem->SetAttribute("type", factoryname.c_str());
 		SaveProperties(this_elem);

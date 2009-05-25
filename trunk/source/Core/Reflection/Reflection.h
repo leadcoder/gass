@@ -42,6 +42,23 @@ class TiXmlElement;
 
 namespace GASS
 {
+
+	static std::string UnDecorateClassName(const std::string &name)
+	{
+		//substr(6) is used for removing "class_" from string returned by typeid,
+		//we dont want to use any prefix when accessing classes by name,
+		//To be invesitgated if typeid return same prefix in gcc
+		std::string ret = name.substr(6);
+
+		//remove namespace
+		size_t pos = ret.find("::");
+		if(pos != -1)
+		{
+			ret =  ret.substr(pos+2);
+		}
+		return ret;
+	}
+
 	class BaseReflectionObject;
 	template <class T, class TInClass>
 	class Reflection : public TInClass
@@ -127,11 +144,8 @@ namespace GASS
 		}
 	}*/
 	
-	//substr(6) is used for removing "class_" from string returned by typeid,
-	//we dont want to use any prefix when accessing classes by name,
-	//To be invesitgated if typeid return same prefix in gcc
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(std::string(typeid(T).name()).substr(6), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
+		(UnDecorateClassName(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
 		(RegisterReflectionFunc)T::RegisterReflection );
 
 	template <class T, class TInClass>
