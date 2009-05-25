@@ -21,6 +21,9 @@
 #include "Core/MessageSystem/Message.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "tbb/spin_mutex.h"
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
 
 namespace GASS
 {
@@ -138,6 +141,8 @@ namespace GASS
 		if(m_MessageQueue.size() == 0) 
 			return;
 
+
+		std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
 		MessageQueue::iterator iter = m_MessageQueue.begin();
 
 		while (iter !=  m_MessageQueue.end())
@@ -154,8 +159,10 @@ namespace GASS
 
 				if(message_type == m_MessageTypes.end())
 				{
-					iter++;
-					continue;
+					AddMessageToSystem((*iter)->m_TypeID);
+					message_type = m_MessageTypes.find((*iter)->m_TypeID);
+					//iter++;
+					//continue;
 				}
 
 				MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();

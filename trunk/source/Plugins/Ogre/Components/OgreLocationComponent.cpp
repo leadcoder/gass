@@ -31,8 +31,11 @@
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
+
 
 
 namespace GASS
@@ -374,5 +377,11 @@ namespace GASS
 		trans_msg->SetData("Rotation",rot);
 		trans_msg->SetData("Scale",scale);
 		GetMessageManager()->SendGlobalMessage(trans_msg);
+
+
+	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,from_id));
+		debug_msg->SetData("Text",GetSceneObject()->GetName());
+		SimEngine::Get().GetSystemManager()->GetMessageManager()->SendImmediate(debug_msg);*/
+		
 	}
 }

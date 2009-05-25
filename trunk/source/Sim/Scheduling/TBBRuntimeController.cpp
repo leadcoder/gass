@@ -40,7 +40,7 @@ namespace GASS
 
 	void TBBRuntimeController::Init()
 	{
-		int nthread = tbb::task_scheduler_init::automatic;
+		//int nthread = tbb::task_scheduler_init::automatic;
 		int  default_num_t = tbb::task_scheduler_init::default_num_threads();
 		m_Scheduler = new tbb::task_scheduler_init(default_num_t);
 		m_TasksRoot = new( tbb::task::allocate_root() ) tbb::empty_task;
