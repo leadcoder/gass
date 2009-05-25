@@ -99,7 +99,7 @@ namespace GASS
 			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{				
-				cv.push_back(comp);
+				components.push_back(comp);
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace GASS
 		for(;iter != children.end();iter++)
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
-			GetComponentsByClass(components, class_name);
+			child->GetComponentsByClass(components, class_name);
 		}
 	}
 
