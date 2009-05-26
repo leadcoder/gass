@@ -261,9 +261,23 @@ namespace GASS
 				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
 				while(comp_elem)
 				{
-					ComponentPtr comp = LoadComponent(comp_elem);
-					if(comp)
-						AddComponent(comp);
+					std::string comp_name = comp_elem->Value();
+					ComponentPtr target_comp (GetComponent(comp_name));
+					if(target_comp) //over loading component
+					{
+						ComponentPtr comp = LoadComponent(comp_elem);
+						ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+						if(template_comp)
+						{
+							template_comp->Assign(target_comp);
+						}
+					}
+					else
+					{
+						ComponentPtr comp = LoadComponent(comp_elem);
+						if(comp)
+							AddComponent(comp);
+					}
 					comp_elem = comp_elem->NextSiblingElement();
 				}
 			}
