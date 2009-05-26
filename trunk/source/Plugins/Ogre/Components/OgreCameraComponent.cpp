@@ -24,6 +24,9 @@
 #include <OgreSceneManager.h>
 #include <OgreRay.h>
 
+//SSAO
+#include <OgreCompositorManager.h>
+
 
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -33,6 +36,7 @@
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
@@ -60,8 +64,8 @@ namespace GASS
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
 		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OgreCameraComponent::OnLoad, this, _1 ),1);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
+
 
 	void OgreCameraComponent::OnLoad(MessagePtr message)
 	{
@@ -71,7 +75,7 @@ namespace GASS
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
 		m_Camera = sm->createCamera(m_Name);
 		m_Camera->setNearClipDistance(1.0);
-		m_Camera->setFarClipDistance(5000);
+		m_Camera->setFarClipDistance(1150);
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 
@@ -87,4 +91,7 @@ namespace GASS
 		else 
 		return false;
 	}
+
+
+
 }

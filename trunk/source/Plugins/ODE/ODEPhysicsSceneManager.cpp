@@ -174,16 +174,23 @@ namespace GASS
 			if(!(geom1 && geom2)) 
 				return;
 
-			if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent()) 
+			if((geom1 == geom2)) 
+				return;
+
+		/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent()) 
 				return;
 
 
-			if(geom1->GetSceneObject()->GetRoot() == geom2->GetSceneObject()->GetRoot()) 
+			*/
+
+			// check if part of same object
+
+			if(geom1->GetSceneObject()->GetObjectUnderRoot() == geom2->GetSceneObject()->GetObjectUnderRoot()) 
 			{
 				return;
 			}
 
-			if((geom1 == geom2)) return;
+			
 
 			dBodyID b1 = dGeomGetBody(o1);
 			dBodyID b2 = dGeomGetBody(o2);

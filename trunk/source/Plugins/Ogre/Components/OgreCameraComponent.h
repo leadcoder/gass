@@ -19,12 +19,13 @@
 *****************************************************************************/
 
 #pragma once
+
+
 #include "Sim/Common.h"
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Core/MessageSystem/Message.h"
-
 
 namespace Ogre
 {
@@ -42,6 +43,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 		inline Ogre::Camera* GetOgreCamera(){return m_Camera;}
+		
 	protected:
 		void OnLoad(MessagePtr message);
 		Ogre::Camera* m_Camera;

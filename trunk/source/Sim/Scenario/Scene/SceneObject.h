@@ -48,7 +48,10 @@ namespace GASS
 		//public for now, not possible to get derived manager to get hold of this otherwise
 		void SetSceneObjectManager(SceneObjectManager* manager);
 
-		SceneObjectPtr GetRoot();
+		/**
+			Get owner object that is direct under scene root
+		*/
+		SceneObjectPtr GetObjectUnderRoot();
 
 		template <class T>
 		boost::shared_ptr<T> GetFirstComponent()

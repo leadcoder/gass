@@ -142,7 +142,7 @@ namespace GASS
 			return;
 
 
-		std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
+		//std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
 		MessageQueue::iterator iter = m_MessageQueue.begin();
 
 		while (iter !=  m_MessageQueue.end())

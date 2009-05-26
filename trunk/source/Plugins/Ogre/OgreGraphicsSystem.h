@@ -36,6 +36,8 @@ namespace Ogre
 namespace GASS
 {
 	class OgreDebugTextOutput;
+	class OgrePostProcess;
+	typedef boost::shared_ptr<OgrePostProcess> OgrePostProcessPtr;
 	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
 	{
 		friend class OgreGraphicsSceneManager;
@@ -48,6 +50,7 @@ namespace GASS
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		void Update(double delta);
 		Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
+		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
 		void OnDebugPrint(MessagePtr message);
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
@@ -55,20 +58,24 @@ namespace GASS
 		void AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
+		std::vector<std::string> GetPostFilters() const;
+		void SetPostFilters(const std::vector<std::string> &filters);
+	
 
 		void OnInit(MessagePtr message);
 		void OnCreateRenderWindow(MessagePtr message);
 		void OnWindowMovedOrResized(MessagePtr message);
-	
 	
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		Ogre::RenderWindow* m_Window;
 		Ogre::SceneManager* m_SceneMgr;
 		std::vector<std::string> m_Plugins;
+		std::vector<std::string> m_PostFilters;
 		OgreDebugTextOutput* m_DebugTextBox;
 		std::vector<ISceneManager*> m_SceneManagers;
 		bool m_CreateMainWindowOnInit;
+		OgrePostProcessPtr m_PostProcess;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 }

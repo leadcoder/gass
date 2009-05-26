@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/BaseSceneComponent.h"
+
 #include "Core/Common.h"
 #include "Core/Serialize/Serialize.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -68,10 +70,13 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr SceneObject::GetRoot()
+	SceneObjectPtr SceneObject::GetObjectUnderRoot()
 	{
 		ComponentContainerPtr container = shared_from_this();
-		while(ComponentContainerPtr(container->GetParent()))
+
+		SceneObjectPtr root = GetSceneObjectManager()->GetSceneRoot();
+		
+		while(ComponentContainerPtr(container->GetParent()) != root)
 		{
 			container = ComponentContainerPtr(container->GetParent());
 		}

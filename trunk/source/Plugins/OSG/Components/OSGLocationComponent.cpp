@@ -112,13 +112,26 @@ namespace GASS
 		if(m_TransformNode.valid())
 			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
 		m_Pos = value;
-	//	std::cout << "Pos " << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
 	Vec3 OSGLocationComponent::GetPosition() const 
 	{
 		return m_Pos;
 	}
+
+	void OSGLocationComponent::SetWorldPosition(const Vec3 &value)
+	{
+		if(m_TransformNode.valid())
+			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+		m_Pos = value;
+	}
+
+	Vec3 OSGLocationComponent::GetWorldPosition() const 
+	{
+		return m_Pos;
+	}
+
+	
 
 	void OSGLocationComponent::SetRotation(const Quaternion &value)
 	{
@@ -135,6 +148,8 @@ namespace GASS
 			m_TransformNode->setAttitude(final);
 		}
 	}
+
+
 
 	void OSGLocationComponent::SetEulerRotation(const Vec3 &value)
 	{
@@ -161,6 +176,27 @@ namespace GASS
 	}
 	
 	Quaternion OSGLocationComponent::GetRotation() const
+	{
+		Quaternion q;
+		osg::Quat rot = m_TransformNode->getAttitude();
+		q.x = rot.x();
+		q.z = -rot.y();
+		q.y = -rot.z();
+		q.w = rot.w();
+		return q;
+	}
+
+	void OSGLocationComponent::SetWorldRotation(const Quaternion &value)
+	{
+		if(m_TransformNode.valid())
+		{
+			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
+			
+			m_TransformNode->setAttitude(final);
+		}
+	}
+
+	Quaternion OSGLocationComponent::GetWorldRotation() const
 	{
 		Quaternion q;
 		osg::Quat rot = m_TransformNode->getAttitude();

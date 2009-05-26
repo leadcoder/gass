@@ -20,6 +20,7 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
+#include "Plugins/Ogre/OgrePostProcess.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
@@ -44,6 +45,8 @@ namespace GASS
 		m_CreateMainWindowOnInit(true)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
+		
+		
 	}
 
 	OgreGraphicsSystem::~OgreGraphicsSystem(void)
@@ -55,6 +58,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OgreGraphicsSystem",new GASS::Creator<OgreGraphicsSystem, ISystem>);
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
+		RegisterProperty<std::vector<std::string>>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 	}
 
@@ -151,6 +155,10 @@ namespace GASS
 			window_msg->SetData("RenderHandle",(int)windowHnd); 
 			window_msg->SetData("MainHandle",(int)windowHnd); 
 			GetMessageManager()->SendImmediate(window_msg);
+
+		
+			
+			
 		}
 		else
 		{
@@ -168,7 +176,6 @@ namespace GASS
 		m_DebugTextBox->Print(debug_text.c_str());
 		m_DebugTextBox->SetActive(true);
 	}
-
 
 	void OgreGraphicsSystem::OnCreateRenderWindow(MessagePtr message)
 	{
@@ -201,7 +208,7 @@ namespace GASS
 			window_msg->SetData("MainHandle",main_handel); 
 			GetMessageManager()->SendImmediate(window_msg);
 
-
+			
 		}
 	}
 
@@ -280,6 +287,24 @@ namespace GASS
 		vp->setBackgroundColour(colour);
 		//Alter the camera aspect ratio to match the viewport
 		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
+
+		if(m_PostProcess)
+		{
+			m_PostProcess.reset();
+		}
+		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
+		m_PostProcess->SetActiveCompositors(GetPostFilters());
+		
+	}
+
+	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
+	{
+		return m_PostFilters;
+	}
+
+	void OgreGraphicsSystem::SetPostFilters(const std::vector<std::string> &filters)
+	{
+		m_PostFilters = filters;
 	}
 }
 

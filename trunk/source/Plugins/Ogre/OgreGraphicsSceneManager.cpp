@@ -26,6 +26,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
@@ -172,6 +173,8 @@ namespace GASS
 		SceneObjectPtr cam_obj = boost::any_cast<SceneObjectPtr>(message->GetData("CameraObject"));
 		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponent<OgreCameraComponent>();
 		OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
+
+		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp->GetOgreCamera());
 	}
 
 	void OgreGraphicsSceneManager::OnLoadSceneObject(MessagePtr message)

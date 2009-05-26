@@ -45,14 +45,17 @@ namespace GASS
 		virtual void OnCreate();
 	
 		virtual void SetScale(const Vec3 &value);
-		//virtual void SetVisible(bool value);
-		//virtual bool GetVisible();
 		virtual void SetPosition(const Vec3 &value);
 		virtual Vec3 GetPosition() const;
+		virtual void SetWorldPosition(const Vec3 &value);
+		virtual Vec3 GetWorldPosition() const;
+		
 		virtual void SetEulerRotation(const Vec3 &value);
-		virtual void SetRotation(const Quaternion &value);
 		virtual Vec3 GetEulerRotation() const;
+		virtual void SetRotation(const Quaternion &value);
 		virtual Quaternion GetRotation() const;
+		virtual void SetWorldRotation(const Quaternion &value);
+		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale(){return m_Scale;}
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
 	protected:
