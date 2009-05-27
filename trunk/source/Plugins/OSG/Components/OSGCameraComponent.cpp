@@ -66,9 +66,9 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGCameraComponent::OnLoad, this, _1 ),1);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGCameraComponent::OnPositionChanged, this, _1 ),10);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGCameraComponent::OnRotationChanged, this, _1 ),10);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGCameraComponent::OnLoad, this, _1 ),1);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGCameraComponent::OnPositionChanged, this, _1 ),10);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGCameraComponent::OnRotationChanged, this, _1 ),10);
 		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, address,  boost::bind( &OSGCameraComponent::OnUpdate, this, _1 ),1);
 	}
 

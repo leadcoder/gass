@@ -96,9 +96,9 @@ namespace GASS
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &OSGGraphicsSceneManager::OnLoadGameObject, this, _1 ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnLoad, this, _1 ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnUnload, this, _1 ),0);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &OSGGraphicsSceneManager::OnLoadGameObject, this, _1 ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnLoad, this, _1 ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &OSGGraphicsSceneManager::OnUnload, this, _1 ),0);
 
 		m_SceneTransform->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
@@ -138,11 +138,11 @@ namespace GASS
 
 		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,(int) this));
 		camera_msg->SetData("CameraObject",scene_object);
-		m_Scene->GetMessageManager()->SendImmediate(camera_msg);
+		m_Scene->SendImmediate(camera_msg);
 
 		
 //move camera to spawn position
-		boost::shared_ptr<Message> pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,(int) this));
+		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
 		pos_msg->SetData("Position",GetOwner()->GetStartPos());
 		scene_object->GetMessageManager()->SendImmediate(pos_msg);
 		
@@ -162,7 +162,7 @@ namespace GASS
 		loaded_msg->SetData("RootNode",boost::any(root));
 		loaded_msg->SetData("RenderSystem",boost::any(std::string("OSG")));
 		SimSystemManager* sim_sm = static_cast<SimSystemManager*>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
-		sim_sm->GetMessageManager()->SendImmediate(loaded_msg);
+		sim_sm->SendImmediate(loaded_msg);
 	}
 
 	void OSGGraphicsSceneManager::OnLoadGameObject(MessagePtr message)
@@ -170,7 +170,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
 		assert(obj);
-		boost::shared_ptr<Message> gfx_msg(new Message(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS,(int) this));
+		boost::shared_ptr<Message> gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,(int) this));
 		gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		obj->GetMessageManager()->SendImmediate(gfx_msg);
 	}

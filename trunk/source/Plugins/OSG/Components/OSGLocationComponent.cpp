@@ -28,6 +28,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 
 
 namespace GASS
@@ -58,9 +59,9 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGLocationComponent::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGLocationComponent::OnLoad, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
 		
 	}
 
@@ -83,9 +84,9 @@ namespace GASS
 		}
 		int from_id = (int)this;
 
-		boost::shared_ptr<Message> pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
-		boost::shared_ptr<Message> rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_ROTATION,from_id));
+		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
 		GetMessageManager()->SendGlobalMessage(pos_msg);

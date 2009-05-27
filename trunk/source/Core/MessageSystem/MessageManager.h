@@ -50,7 +50,7 @@ namespace GASS
 		void UnRegisterForMessage(int type, int object_id);
 		void Update(float dt);
 	private:
-		#pragma deprecated(AddMessageToSystem)
+		//#pragma deprecated(AddMessageToSystem)
 		void AddMessageToSystem(int type);
 		MessageQueue m_MessageQueue;
 		MessageTypeMap m_MessageTypes;

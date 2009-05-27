@@ -87,8 +87,8 @@ namespace GASS
 		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OSGGraphicsSystem::RTCUpdate, this, _1 ),true);
 
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OSGGraphicsSystem::OnInit, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, address,  boost::bind( &OSGGraphicsSystem::OnCreateRenderWindow, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OSGGraphicsSystem::OnInit, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, address,  boost::bind( &OSGGraphicsSystem::OnCreateRenderWindow, this, _1 ),0);
 		//GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, address,  boost::bind( &OgreGraphicsSystem::OnWindowMovedOrResized, this, _1 ),0);
 
 		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_MESSAGE_UPDATE, address,  boost::bind( &OSGGraphicsSystem::OnUpdate, this, _1 ),0);
@@ -167,7 +167,7 @@ namespace GASS
 			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
 			window_msg->SetData("RenderHandle",(int)windowHnd); 
 			window_msg->SetData("MainHandle",(int)windowHnd); 
-			GetMessageManager()->SendImmediate(window_msg);
+			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 
 		/*	IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
@@ -283,7 +283,7 @@ namespace GASS
 			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
 			window_msg->SetData("RenderHandle",(int)handel); 
 			window_msg->SetData("MainHandle",main_handel); 
-			GetMessageManager()->SendImmediate(window_msg);
+			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 	}
 

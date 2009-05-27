@@ -52,7 +52,7 @@ namespace GASS
 	void OSGResourceSystem::OnCreate()
 	{
 		int address = (int) this;
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OSGResourceSystem::OnInit, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OSGResourceSystem::OnInit, this, _1 ),0);
 	}
 
 	//Create custom load
