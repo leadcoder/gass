@@ -34,7 +34,7 @@ namespace GASS
 	class GASSExport SimSystemManager : public BaseSystemManager
 	{
 	public:
-		enum
+		enum SystemMessages
 		{
 			SYSTEM_MESSAGE_INIT,
 			SYSTEM_MESSAGE_UPDATE,
@@ -51,8 +51,13 @@ namespace GASS
 	public:
 		SimSystemManager();
 		virtual ~SimSystemManager();
-		MessageManager* GetMessageManager() {return m_SystemMessageManager;}
+		//MessageManager* GetMessageManager() {return m_SystemMessageManager;}
 		void Init();
+
+		int RegisterForMessage(SystemMessages type, int object_id, MessageFunc callback, int priority);
+		void UnRegisterForMessage(SystemMessages type, int object_id);
+		void SendGlobalMessage(MessagePtr message);
+		void SendImmediate(MessagePtr message);
 		void Update(float delta_time);		
 	private:
 		MessageManager* m_SystemMessageManager;

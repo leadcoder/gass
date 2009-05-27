@@ -41,7 +41,6 @@ namespace GASS
 		SceneObjectManager(ScenarioScene* ss);
 		virtual ~SceneObjectManager();
 		bool LoadFromFile(const std::string filename);
-		MessageManager* GetMessageManager();
 		//SceneObjectPtr GetObjectByName(const std::string &name);
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name);
 		//unsigned int GetNumObjects() {return (unsigned int) m_SceneObjectVector.size();}

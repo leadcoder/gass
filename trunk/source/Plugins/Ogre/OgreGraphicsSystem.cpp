@@ -65,10 +65,10 @@ namespace GASS
 	void OgreGraphicsSystem::OnCreate()
 	{
 		int address = (int) this;
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OgreGraphicsSystem::OnInit, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, address,  boost::bind( &OgreGraphicsSystem::OnCreateRenderWindow, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, address,  boost::bind( &OgreGraphicsSystem::OnWindowMovedOrResized, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT, address,  boost::bind( &OgreGraphicsSystem::OnDebugPrint, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OgreGraphicsSystem::OnInit, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, address,  boost::bind( &OgreGraphicsSystem::OnCreateRenderWindow, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, address,  boost::bind( &OgreGraphicsSystem::OnWindowMovedOrResized, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT, address,  boost::bind( &OgreGraphicsSystem::OnDebugPrint, this, _1 ),0);
 	}
 
 	//Create custom load
@@ -154,7 +154,7 @@ namespace GASS
 			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
 			window_msg->SetData("RenderHandle",(int)windowHnd); 
 			window_msg->SetData("MainHandle",(int)windowHnd); 
-			GetMessageManager()->SendImmediate(window_msg);
+			GetSimSystemManager()->SendImmediate(window_msg);
 
 		
 			
@@ -206,7 +206,7 @@ namespace GASS
 			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
 			window_msg->SetData("RenderHandle",(int)handel); 
 			window_msg->SetData("MainHandle",main_handel); 
-			GetMessageManager()->SendImmediate(window_msg);
+			GetSimSystemManager()->SendImmediate(window_msg);
 
 			
 		}

@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class MessageManager;
+	class SimSystemManager;
 	class GASSExport SimSystem : public BaseSystem
 	{
 	public:
@@ -34,7 +34,7 @@ namespace GASS
 		virtual ~SimSystem();
 		static void RegisterReflection();
 		virtual SystemType GetSystemType(){return "SimSystem";}
-		MessageManager* GetMessageManager() const;
+		SimSystemManager* GetSimSystemManager() const;
 	protected:
 	};
 }

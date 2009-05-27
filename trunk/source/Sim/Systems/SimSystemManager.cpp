@@ -45,12 +45,31 @@ namespace GASS
 	void SimSystemManager::Init()
 	{
 		MessagePtr init_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_INIT,(int)this));
-		GetMessageManager()->SendImmediate(init_msg);
+		m_SystemMessageManager->SendImmediate(init_msg);
 	}	
 
 	void SimSystemManager::Update(float delta_time)
 	{
-		GetMessageManager()->Update(delta_time);
+		m_SystemMessageManager->Update(delta_time);
 	}
 
+	int SimSystemManager::RegisterForMessage(SystemMessages type, int object_id, MessageFunc callback, int priority)
+	{
+		return m_SystemMessageManager->RegisterForMessage((int)type, object_id, callback, priority); 
+	}
+
+	void SimSystemManager::UnRegisterForMessage(SystemMessages type, int object_id)
+	{
+		m_SystemMessageManager->UnRegisterForMessage((int)type, object_id);
+	}
+
+	void SimSystemManager::SendGlobalMessage( MessagePtr message )
+	{
+		m_SystemMessageManager->SendGlobalMessage(message);
+	}
+
+	void SimSystemManager::SendImmediate( MessagePtr message )
+	{
+		m_SystemMessageManager->SendImmediate(message);
+	}
 }

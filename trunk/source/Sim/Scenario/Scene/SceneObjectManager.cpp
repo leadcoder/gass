@@ -48,11 +48,6 @@ namespace GASS
 		
 	}
 	
-	MessageManager* SceneObjectManager::GetMessageManager()
-	{
-		return m_ScenarioScene->GetMessageManager();
-	}
-	
 	bool SceneObjectManager::LoadFromFile(const std::string filename)
 	{
 		if(filename =="") return false;
@@ -89,9 +84,9 @@ namespace GASS
 	{
 		//add some default messages to objects, this could also be done in each component but we save some jobb
 		//by doing it here,  maybee a custom message manager for objects should be created?
-		obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS);
-		obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
-		obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_USER_COMPONENTS);
+		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS);
+		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
+		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_USER_COMPONENTS);
 
 		obj->SetSceneObjectManager(this);
 		obj->OnCreate();
@@ -104,10 +99,10 @@ namespace GASS
 		
 		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,from_id));
 		load_msg->SetData("SceneObject",obj);
-		m_ScenarioScene->GetMessageManager()->SendImmediate(load_msg);
+		m_ScenarioScene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
-		MessagePtr obj_msg(new Message(ScenarioScene::SM_MESSAGE_LOAD_USER_COMPONENTS,from_id));
+		MessagePtr obj_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS,from_id));
 		obj->GetMessageManager()->SendImmediate(obj_msg);
 		//Pump initial messages around
 		obj->GetMessageManager()->Update(0);
@@ -256,11 +251,11 @@ namespace GASS
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
 	{
 		int from_id = (int)this;
-		MessagePtr msg(new Message(ScenarioScene::SM_MESSAGE_UNLOAD_COMPONENTS,from_id));
+		MessagePtr msg(new Message(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS,from_id));
 		obj->GetMessageManager()->SendImmediate(msg);
 		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,from_id));
 		unload_msg->SetData("SceneObject",obj);
-		m_ScenarioScene->GetMessageManager()->SendImmediate(unload_msg);
+		m_ScenarioScene->SendImmediate(unload_msg);
 	}
 
 

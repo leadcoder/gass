@@ -68,10 +68,11 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEBody::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEBody::OnPositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEBody::OnRotationChanged, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER, obj_id,  boost::bind( &ODEBody::OnParameterMessage, this, _1 ),0);
+		// Todo: 
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEBody::OnLoad, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEBody::OnPositionChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEBody::OnRotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER, obj_id,  boost::bind( &ODEBody::OnParameterMessage, this, _1 ),0);
 	}
 
 	void ODEBody::OnPositionChanged(MessagePtr message)
@@ -96,18 +97,18 @@ namespace GASS
 
 	void ODEBody::OnParameterMessage(MessagePtr message)
 	{
-		ScenarioScene::PhysicsParameterType type = boost::any_cast<ScenarioScene::PhysicsParameterType>(message->GetData("Parameter"));
+		SceneObject::PhysicsParameterType type = boost::any_cast<SceneObject::PhysicsParameterType>(message->GetData("Parameter"));
 		//wake body!!
 		Enable();
 		switch(type)
 		{
-		case ScenarioScene::FORCE:
+		case SceneObject::FORCE:
 			{
 				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
 				AddForce(value,true);
 			}
 			break;
-		case ScenarioScene::TORQUE:
+		case SceneObject::TORQUE:
 			{
 				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
 				AddTorque(value,true);
@@ -187,19 +188,19 @@ namespace GASS
 	void ODEBody::BodyMoved()
 	{
 		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		Vec3 pos = GetPosition();
 
 		
 		pos_msg->SetData("Position",pos);
 		GetMessageManager()->SendGlobalMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",GetRotation());
 		GetMessageManager()->SendGlobalMessage(rot_msg);
 
 
-		MessagePtr physics_msg(new Message(ScenarioScene::OBJECT_MESSAGE_PHYSICS,from_id));
+		MessagePtr physics_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS,from_id));
 		physics_msg->SetData("Velocity",GetVelocity(true));
 		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
 		GetMessageManager()->SendGlobalMessage(physics_msg);

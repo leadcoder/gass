@@ -86,15 +86,15 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OgreLocationComponent::OnLoad, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OgreLocationComponent::OnLoad, this, _1 ),0);
 		
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OgreLocationComponent::PositionMessage, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::RotationMessage, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_SET_WORLD_POSITION, obj_id,  boost::bind( &OgreLocationComponent::WorldPositionMessage, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_SET_WORLD_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::WorldRotationMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OgreLocationComponent::PositionMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::RotationMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION, obj_id,  boost::bind( &OgreLocationComponent::WorldPositionMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION, obj_id,  boost::bind( &OgreLocationComponent::WorldRotationMessage, this, _1 ),0);
 		
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_PARENT_CHANGED, obj_id,  boost::bind( &OgreLocationComponent::ParentChangedMessage, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_VISIBILITY, obj_id,  boost::bind( &OgreLocationComponent::VisibilityMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PARENT_CHANGED, obj_id,  boost::bind( &OgreLocationComponent::ParentChangedMessage, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_VISIBILITY, obj_id,  boost::bind( &OgreLocationComponent::VisibilityMessage, this, _1 ),0);
 	}
 
 	void OgreLocationComponent::OnLoad(MessagePtr message)
@@ -129,9 +129,9 @@ namespace GASS
 		m_OgreNode->setListener(this);
 		
 		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
-		MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
 		GetMessageManager()->SendGlobalMessage(pos_msg);
@@ -233,7 +233,7 @@ namespace GASS
 		if(m_OgreNode) //initialzed?
 		{
 			int from_id = (int)this;
-			MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+			MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 			pos_msg->SetData("Position",value);
 			GetMessageManager()->SendGlobalMessage(pos_msg);
 		}
@@ -281,7 +281,7 @@ namespace GASS
 		if(m_OgreNode) //initialzed?
 		{
 			int from_id = (int)this;
-			MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_ROTATION,from_id));
+			MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 			rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(value)));
 			GetMessageManager()->SendGlobalMessage(rot_msg);
 		}
@@ -368,7 +368,7 @@ namespace GASS
 	{
 		//send transformation message
 		int from_id = (int)this;
-		MessagePtr trans_msg(new Message(ScenarioScene::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
 		//Get abs pos
 		Vec3 pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
 		Vec3 scale = Convert::ToGASS(m_OgreNode->_getDerivedScale());

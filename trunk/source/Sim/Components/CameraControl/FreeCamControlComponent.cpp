@@ -92,14 +92,12 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		
-		MessageManager * mm =  GetSceneObject()->GetSceneObjectManager()->GetMessageManager();
 		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &FreeCamControlComponent::Update, this, _1 ));
 
-		//mm->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UPDATE, obj_id,  boost::bind( &FreeCamControlComponent::OnUpdate, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &FreeCamControlComponent::PositionChange, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &FreeCamControlComponent::RotationChange, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_USER_COMPONENTS, obj_id,  boost::bind( &FreeCamControlComponent::OnInit, this, _1 ),0);
-		GetMessageManager()->RegisterForMessage(ScenarioScene::SM_MESSAGE_UNLOAD_COMPONENTS, obj_id,  boost::bind( &FreeCamControlComponent::OnUnload, this, _1 ),0);
+		GetMessageManager()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &FreeCamControlComponent::PositionChange, this, _1 ),0);
+		GetMessageManager()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &FreeCamControlComponent::RotationChange, this, _1 ),0);
+		GetMessageManager()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS, obj_id,  boost::bind( &FreeCamControlComponent::OnInit, this, _1 ),0);
+		GetMessageManager()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS, obj_id,  boost::bind( &FreeCamControlComponent::OnUnload, this, _1 ),0);
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 
 		int id = (int) this;
@@ -107,7 +105,7 @@ namespace GASS
 
 		
 		m_Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA, id,  boost::bind( &FreeCamControlComponent::OnChangeCamera, this, _1 ),0);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA, id,  boost::bind( &FreeCamControlComponent::OnChangeCamera, this, _1 ),0);
 	}
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
@@ -359,11 +357,11 @@ namespace GASS
 		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
 		GetMessageManager()->SendGlobalMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 
 		rot_msg->SetData("Rotation",Quaternion(m_Rot));
 		GetMessageManager()->SendGlobalMessage(rot_msg);

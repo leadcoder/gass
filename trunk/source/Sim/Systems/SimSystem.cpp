@@ -37,9 +37,9 @@ namespace GASS
 	{
 	}
 
-	MessageManager* SimSystem::GetMessageManager() const
+	SimSystemManager* SimSystem::GetSimSystemManager() const
 	{
-		return static_cast<SimSystemManager*>(m_Owner)->GetMessageManager();
+		return static_cast<SimSystemManager*>(m_Owner);
 	}
 	
 }

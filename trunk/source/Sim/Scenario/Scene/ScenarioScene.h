@@ -55,41 +55,17 @@ namespace GASS
 	{
 		friend class Scenario;
 	public:
-		enum
+		enum ScenarioMessages
 		{
 			SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,
 			SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,
-			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,
+			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, // message data: "SceneObject" = SceneObjectPtr 
 			SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,
 			SCENARIO_MESSAGE_UPDATE,
-			SCENARIO_MESSAGE_CHANGE_CAMERA,
-			SM_MESSAGE_LOAD_GFX_COMPONENTS,
-			SM_MESSAGE_LOAD_PHYSICS_COMPONENTS,
-			SM_MESSAGE_LOAD_USER_COMPONENTS,
-			SM_MESSAGE_UNLOAD_COMPONENTS,
-			OBJECT_MESSAGE_POSITION, 
-			OBJECT_MESSAGE_ROTATION,
-			OBJECT_MESSAGE_SET_WORLD_POSITION, //create postion message and merge this with OBJECT_MESSAGE_POSITION
-			OBJECT_MESSAGE_SET_WORLD_ROTATION,
-			OBJECT_MESSAGE_TRANSFORMATION_CHANGED,
-			OBJECT_MESSAGE_PHYSICS,
-			OBJECT_MESSAGE_VISIBILITY,
-			OBJECT_MESSAGE_COLLISION_SETTINGS,
-			OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER,
-			OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER,
-			OBJECT_MESSAGE_PARENT_CHANGED,
+			SCENARIO_MESSAGE_CHANGE_CAMERA
 		};
 
-		enum PhysicsParameterType
-		{
-			AXIS1_VELOCITY,
-			AXIS2_VELOCITY,
-			AXIS1_FORCE,
-			AXIS2_FORCE,
-			TORQUE,
-			FORCE,
-		};
-
+		// Priorities for system loading
 		enum
 		{ 
 			GFX_COMPONENT_LOAD_PRIORITY = 0,
@@ -120,7 +96,12 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name = name;}
 		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
 		Scenario* GetOwner() {return m_Scenario;}
-		MessageManager* GetMessageManager() {return m_SceneMessageManager;}
+		//MessageManager* GetMessageManager() {return m_SceneMessageManager;}
+		int RegisterForMessage(ScenarioMessages type, int object_id, MessageFunc callback, int priority);
+		void UnRegisterForMessage(ScenarioMessages type, int object_id);
+		void SendGlobalMessage(MessagePtr message);
+		void SendImmediate(MessagePtr message);
+
 		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
 		Vec3 GetSceneUp() {return m_Up;}

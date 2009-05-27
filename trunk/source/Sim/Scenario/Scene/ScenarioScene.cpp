@@ -46,9 +46,9 @@ namespace GASS
 		m_Scenario = NULL;
 		m_SceneMessageManager = new MessageManager();
 		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(this));
-		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS);
-		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_OBJECT);
-		m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_UPDATE);
+		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS);
+		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_OBJECT);
+		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_UPDATE);
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GFX_COMPONENTS);
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
 		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GAME_COMPONENTS);
@@ -62,8 +62,28 @@ namespace GASS
 		int from_id = (int)this;
 		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,from_id));
 		scenario_msg->SetData("ScenarioScene",this);
-		GetMessageManager()->SendImmediate(scenario_msg);
+		m_SceneMessageManager->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
+	}
+
+	int ScenarioScene::RegisterForMessage( ScenarioMessages type, int object_id, MessageFunc callback, int priority )
+	{
+		return m_SceneMessageManager->RegisterForMessage((int)type, object_id, callback, priority); 
+	}
+
+	void ScenarioScene::UnRegisterForMessage(ScenarioMessages type, int object_id)
+	{
+		m_SceneMessageManager->UnRegisterForMessage((int)type, object_id);
+	}
+
+	void ScenarioScene::SendGlobalMessage( MessagePtr message )
+	{
+		m_SceneMessageManager->SendGlobalMessage(message);
+	}
+
+	void ScenarioScene::SendImmediate( MessagePtr message )
+	{
+		m_SceneMessageManager->SendImmediate(message);
 	}
 
 	void ScenarioScene::RegisterReflection()
@@ -207,13 +227,13 @@ namespace GASS
 		int from_id = (int)this;
 		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD,from_id));
 		enter_load_msg->SetData("ScenarioScene",this);
-		SimEngine::Get().GetSystemManager()->GetMessageManager()->SendImmediate(enter_load_msg);
+		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
 
 		
 		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,from_id));
 		scenario_msg->SetData("ScenarioScene",this);
 		//send load message
-		GetMessageManager()->SendImmediate(scenario_msg);
+		SendImmediate(scenario_msg);
 		
 	
 		// Load default camera ect
@@ -224,7 +244,7 @@ namespace GASS
 		GetMessageManager()->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new Message(ScenarioScene::OBJECT_MESSAGE_POSITION,(int) this));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
 		pos_msg->SetData("Position",GetStartPos());
 		scene_object->GetMessageManager()->SendImmediate(pos_msg);*/
 
@@ -233,15 +253,15 @@ namespace GASS
 
 		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_LOADED,from_id));
 		system_msg->SetData("ScenarioScene",this);
-		SimEngine::Get().GetSystemManager()->GetMessageManager()->SendImmediate(system_msg);
+		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
 	}
 
 	void ScenarioScene::OnUpdate(double delta_time)
 	{
 		int from_id = (int)this;
 		boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_MESSAGE_UPDATE,from_id,delta_time));
-		GetMessageManager()->SendImmediate(update_msg);
-		GetMessageManager()->Update(delta_time);
+		m_SceneMessageManager->SendImmediate(update_msg);
+		m_SceneMessageManager->Update(delta_time);
 		m_ObjectManager->SyncMessages(delta_time);
 	}
 

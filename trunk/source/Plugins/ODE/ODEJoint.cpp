@@ -132,44 +132,44 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEJoint::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER, obj_id,  boost::bind( &ODEJoint::OnParameterMessage, this, _1 ),0);
-		//mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEJoint::OnPositionChanged, this, _1 ),0);
-		//mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEJoint::OnRotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEJoint::OnLoad, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER, obj_id,  boost::bind( &ODEJoint::OnParameterMessage, this, _1 ),0);
+		//mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEJoint::OnPositionChanged, this, _1 ),0);
+		//mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEJoint::OnRotationChanged, this, _1 ),0);
 	}
 
 	
 	void ODEJoint::OnParameterMessage(MessagePtr message)
 	{
-		ScenarioScene::PhysicsParameterType type = boost::any_cast<ScenarioScene::PhysicsParameterType>(message->GetData("Parameter"));
+		SceneObject::PhysicsParameterType type = boost::any_cast<SceneObject::PhysicsParameterType>(message->GetData("Parameter"));
 
 		//wake body!!
 		
 		m_Body1->Enable();
 		switch(type)
 		{
-		case ScenarioScene::AXIS1_VELOCITY:
+		case SceneObject::AXIS1_VELOCITY:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Vel(value);
 				
 			}
 			break;
-		case ScenarioScene::AXIS2_VELOCITY:
+		case SceneObject::AXIS2_VELOCITY:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Vel(value);
 				
 			}
 			break;
-		case ScenarioScene::AXIS1_FORCE:
+		case SceneObject::AXIS1_FORCE:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Force(value);
 				
 			}
 			break;
-		case ScenarioScene::AXIS2_FORCE:
+		case SceneObject::AXIS2_FORCE:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Force(value);

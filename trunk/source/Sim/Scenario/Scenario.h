@@ -46,7 +46,6 @@ namespace GASS
 	protected:
 		ScenarioScenePtr LoadScene(TiXmlElement *sm_elem);
 		ScenarioSceneVector m_Scenes;
-		MessageManager* m_ScenarioMessageManager;
 		std::string m_ScenarioPath;
 	};
 }

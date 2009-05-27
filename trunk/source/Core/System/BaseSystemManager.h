@@ -34,14 +34,6 @@ namespace GASS
 	class GASSCoreExport BaseSystemManager : public ISystemManager
 	{
 	public:
-		enum
-		{
-			SYSTEM_MESSAGE_INIT,
-			SYSTEM_MESSAGE_UPDATE,
-			SYSTEM_MESSAGE_SHUTDOWN,
-			SYSTEM_MESSAGE_USER,
-		};
-	public:
 		BaseSystemManager();
 		virtual ~BaseSystemManager();
 		bool Load(const std::string &filename);

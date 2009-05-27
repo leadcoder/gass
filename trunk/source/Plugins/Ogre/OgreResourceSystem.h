@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Core/System/BaseSystem.h"
+#include "Sim/Systems/SimSystem.h"
 #include "Core/Utils/FilePath.h"
 
 #include "Core/MessageSystem/MessageType.h"
@@ -43,7 +43,7 @@ namespace GASS
 		bool m_Recursive;
 	};
 
-	class OgreResourceSystem : public Reflection<OgreResourceSystem, BaseSystem>, public IResourceSystem
+	class OgreResourceSystem : public Reflection<OgreResourceSystem, SimSystem>, public IResourceSystem
 	{
 	public:
 		OgreResourceSystem();

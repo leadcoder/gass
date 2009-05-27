@@ -80,10 +80,10 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEGeometry::OnLoad, this, _1 ),1);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, obj_id,  boost::bind( &ODEGeometry::OnTransformationChanged, this, _1 ),0);
-		//mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEGeometry::OnRotationChanged, this, _1 ),0);
-		mm->RegisterForMessage(ScenarioScene::OBJECT_MESSAGE_COLLISION_SETTINGS, obj_id,  boost::bind( &ODEGeometry::OnCollisionSettings, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEGeometry::OnLoad, this, _1 ),1);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, obj_id,  boost::bind( &ODEGeometry::OnTransformationChanged, this, _1 ),0);
+		//mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEGeometry::OnRotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_COLLISION_SETTINGS, obj_id,  boost::bind( &ODEGeometry::OnCollisionSettings, this, _1 ),0);
 		
 	}
 
