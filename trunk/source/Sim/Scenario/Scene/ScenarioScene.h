@@ -55,12 +55,15 @@ namespace GASS
 	{
 		friend class Scenario;
 	public:
+		// Todo: Explain each individual message
 		enum ScenarioMessages
 		{
 			SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,
 			SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,
-			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, // message data: "SceneObject" = SceneObjectPtr 
-			SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,
+			// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
+			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,
+			// message data: SceneObject that is removed: "SceneObject" = SceneObjectPtr
+			SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,	
 			SCENARIO_MESSAGE_UPDATE,
 			SCENARIO_MESSAGE_CHANGE_CAMERA
 		};

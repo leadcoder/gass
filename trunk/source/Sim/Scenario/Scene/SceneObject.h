@@ -35,13 +35,32 @@ namespace GASS
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseObject>
 	{
 	public:
+
+		// Todo: Explain each individual message
 		enum ObjectMessage
 		{
+			/** \brief Message data: 
+				Vec3 = "Position" - Position (relative to parent) change for SceneObject is requested */
 			OBJECT_MESSAGE_POSITION, 
+
+			/** \brief Message data: 
+				Quaternion = "Rotation" - Rotation (relative to parent) change for SceneObject is requested */
 			OBJECT_MESSAGE_ROTATION,
-			OBJECT_MESSAGE_SET_WORLD_POSITION, //create postion message and merge this with OBJECT_MESSAGE_POSITION
+
+			//create position message and merge this with OBJECT_MESSAGE_POSITION
+			OBJECT_MESSAGE_SET_WORLD_POSITION, 
 			OBJECT_MESSAGE_SET_WORLD_ROTATION,
+
+			/** \brief message data: 
+				Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
+				Vec3 = "Scale"			- Scale is changed for SceneObject
+				Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
+			*/
 			OBJECT_MESSAGE_TRANSFORMATION_CHANGED,
+			
+			/** \brief message data: 
+				Vec3 = "Velocity"
+				Vec3 = "AngularVelocity" */
 			OBJECT_MESSAGE_PHYSICS,
 			OBJECT_MESSAGE_VISIBILITY,
 			OBJECT_MESSAGE_COLLISION_SETTINGS,

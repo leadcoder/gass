@@ -57,7 +57,10 @@ namespace GASS
 		virtual Quaternion GetRotation() const;
 		virtual Quaternion GetWorldRotation() const;
 
+		/** Set if position should be relative to first LocationComponent that is 
+		  * found in component hierarchy (true) or absolut position (false) */
 		virtual void SetAttachToParent(bool value);
+		/** Get value indicating if position is relative to first LocationComponent that is found in component hierarchy */
 		virtual bool GetAttachToParent() const;
 		
 		
@@ -99,7 +102,7 @@ namespace GASS
 		Vec3 m_Scale;
 		Ogre::SceneNode* m_OgreNode;
 
-		//Should this location node be attached to parent?
+		// Should this location node be relative to parent's location? First with a LocationComponent
 		bool m_AttachToParent;
 
 	};
