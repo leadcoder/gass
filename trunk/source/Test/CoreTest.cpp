@@ -317,10 +317,7 @@ int main(int argc, char* argv[])
 
 	bin_go->DebugPrint();
 
-
 	//go1->SaveXML(objelem);
-
-
 	///////////test xml save
 
 
