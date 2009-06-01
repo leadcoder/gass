@@ -127,8 +127,8 @@ namespace GASS
 		void GetComponentsByClass(ComponentVector &components, const std::string &class_name);
 
 		//should we return result or pass it as ref arg?
-		SceneObjectVector GetObjectsByName(const std::string &name);
-		void GetObjectsByName(SceneObjectVector &objects, const std::string &name); 
+		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
+		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true); 
 
 
 	protected:

@@ -42,7 +42,7 @@ namespace GASS
 		virtual ~SceneObjectManager();
 		bool LoadFromFile(const std::string filename);
 		//SceneObjectPtr GetObjectByName(const std::string &name);
-		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name);
+		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		//unsigned int GetNumObjects() {return (unsigned int) m_SceneObjectVector.size();}
 		//SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
 		void SyncMessages(double delta_time);

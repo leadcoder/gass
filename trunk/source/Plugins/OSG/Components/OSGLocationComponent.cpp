@@ -62,6 +62,8 @@ namespace GASS
 		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGLocationComponent::OnLoad, this, _1 ),0);
 		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
 		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
+		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
 		
 	}
 
@@ -71,6 +73,8 @@ namespace GASS
 		assert(osg_sm);
 		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = osg_sm->GetOSGRootNode();
 		m_TransformNode = new osg::PositionAttitudeTransform();
+
+		//m_TransformNode->setEventCallback(this);
 
 		//m_TransformNode->setAttitude(osg_sm->GetSceneTransformatation()->getAttitude());
 		m_RotTransformNode = new osg::PositionAttitudeTransform();
@@ -110,9 +114,32 @@ namespace GASS
 
 	void OSGLocationComponent::SetPosition(const Vec3 &value)
 	{
-		if(m_TransformNode.valid())
-			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
 		m_Pos = value;
+		if(m_TransformNode.valid())
+		{
+			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			SendTransMessage();
+		}
+		
+	}
+
+	void OSGLocationComponent::SendTransMessage()
+	{
+
+		int from_id = (int)this;
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
+		//Get abs pos
+		Vec3 pos = GetWorldPosition();
+		Vec3 scale = Vec3(1,1,1);//GetScale();
+		Quaternion rot = GetWorldRotation();
+		trans_msg->SetData("Position",pos);
+		trans_msg->SetData("Rotation",rot);
+		trans_msg->SetData("Scale",scale);
+		GetMessageManager()->SendGlobalMessage(trans_msg);
+
+		//send for all child tranforms also?
+
+		//GetSceneObject()->Getcomponents(
 	}
 
 	Vec3 OSGLocationComponent::GetPosition() const 
@@ -122,9 +149,13 @@ namespace GASS
 
 	void OSGLocationComponent::SetWorldPosition(const Vec3 &value)
 	{
-		if(m_TransformNode.valid())
-			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
 		m_Pos = value;
+		if(m_TransformNode.valid())
+		{
+			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			SendTransMessage();
+		}
+		
 	}
 
 	Vec3 OSGLocationComponent::GetWorldPosition() const 
@@ -147,6 +178,7 @@ namespace GASS
 			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
 			
 			m_TransformNode->setAttitude(final);
+			SendTransMessage();
 		}
 	}
 
@@ -167,7 +199,6 @@ namespace GASS
 			rot_mat.Rotate(rot.x,rot.y,rot.z);
 			q.FromRotationMatrix(rot_mat);
 			m_TransformNode->setAttitude(osg::Quat(-q.w,q.x,q.y,q.z));*/
-			
 		}
 	}
 
@@ -194,7 +225,9 @@ namespace GASS
 			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
 			
 			m_TransformNode->setAttitude(final);
+			SendTransMessage();
 		}
+
 	}
 
 	Quaternion OSGLocationComponent::GetWorldRotation() const
@@ -207,4 +240,14 @@ namespace GASS
 		q.w = rot.w();
 		return q;
 	}
+
+
+	void OSGLocationComponent::operator()(osg::Node* node, osg::NodeVisitor* nv) 
+     {  
+          //std::cout<<"update callback - pre traverse"<<node<<std::endl; 
+		 std::cout<<"update callback for:" << GetSceneObject()->GetName() <<std::endl; 
+          traverse(node,nv); 
+          //std::cout<<"update callback - post traverse"<<node<<std::endl; 
+      } 
+
 }

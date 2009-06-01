@@ -85,6 +85,8 @@ namespace GASS
 		void ParentChangedMessage(MessagePtr message);
 		void WorldPositionMessage(MessagePtr message);
 		void WorldRotationMessage(MessagePtr message);
+
+		
 	
 	
 

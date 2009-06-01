@@ -118,20 +118,32 @@ namespace GASS
 	}
 
 
-	SceneObjectVector SceneObject::GetObjectsByName(const std::string &name)
+	SceneObjectVector SceneObject::GetObjectsByName(const std::string &name, bool exact_math)
 	{
 		SceneObjectVector objects;
-		GetObjectsByName(objects, name);
+		GetObjectsByName(objects, name,exact_math);
 		return objects;
 	}
 
-	void SceneObject::GetObjectsByName(SceneObjectVector &objects, const std::string &name)
+	void SceneObject::GetObjectsByName(SceneObjectVector &objects, const std::string &name, bool exact_math)
 	{
 		SceneObjectPtr ret;
-		if(GetName()== name)
+
+		if(exact_math)
 		{
-			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-			objects.push_back(obj);
+			if(GetName()== name)
+			{
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+				objects.push_back(obj);
+			}
+		}
+		else
+		{
+			if(GetName().find(name) >= 0)
+			{
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+				objects.push_back(obj);
+			}
 		}
 
 		BaseObject::ComponentContainerVector children = GetChildren();
@@ -139,7 +151,7 @@ namespace GASS
 		for(;iter != children.end();iter++)
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
-			child->GetObjectsByName(objects,name);
+			child->GetObjectsByName(objects,name,exact_math);
 		}
 	}
 

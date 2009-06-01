@@ -238,6 +238,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.h"
+							>
+						</File>
+						<File
 							RelativePath="..\Source\Plugins\OSG\Components\OSGLocationComponent.cpp"
 							>
 						</File>

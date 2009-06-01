@@ -36,7 +36,7 @@ namespace Ogre
 
 namespace GASS
 {
-	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent
+	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public osg::NodeCallback
 	{
 	public:
 		OSGLocationComponent();
@@ -58,10 +58,14 @@ namespace GASS
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale(){return m_Scale;}
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
+
+		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+
 	protected:
 		void OnLoad(MessagePtr message);
 		void PositionChanged(MessagePtr message);
 		void RotationChanged(MessagePtr message);
+		void SendTransMessage();
 		Vec3 m_Pos;
 		Vec3 m_LastPos;
 

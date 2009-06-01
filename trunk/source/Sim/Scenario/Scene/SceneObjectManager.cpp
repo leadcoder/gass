@@ -146,11 +146,17 @@ namespace GASS
 		return so;
 	}
 
-	SceneObjectPtr SceneObjectManager::LoadFromTemplate(const std::string &go_template_name)
+	SceneObjectPtr SceneObjectManager::LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent)
 	{
 		SceneObjectPtr go = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(go_template_name));
 		if(go)
 		{
+			if(parent)
+			{
+				//go->SetParent(parent);
+				parent->AddChild(go);
+				
+			}
 			LoadObject(go);
 		}
 		return go;

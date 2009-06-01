@@ -45,4 +45,6 @@ namespace GASS
 	typedef boost::shared_ptr<Message> MessagePtr;
 	typedef boost::function<void (MessagePtr)> MessageFunc;
 	
+
+	#define BIND(X) boost::bind( &X, this, _1 )
 }
