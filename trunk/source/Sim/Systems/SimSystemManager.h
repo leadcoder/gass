@@ -54,8 +54,8 @@ namespace GASS
 		//MessageManager* GetMessageManager() {return m_SystemMessageManager;}
 		void Init();
 
-		int RegisterForMessage(SystemMessages type, int object_id, MessageFunc callback, int priority);
-		void UnRegisterForMessage(SystemMessages type, int object_id);
+		int RegisterForMessage(SystemMessages type,  MessageFunc callback, int priority = 0);
+		void UnregisterForMessage(SystemMessages type,  MessageFunc callback);
 		void SendGlobalMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void Update(float delta_time);		

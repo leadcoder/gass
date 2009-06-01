@@ -66,13 +66,10 @@ namespace GASS
 
 	void ODEBody::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		// Todo: 
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEBody::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEBody::OnPositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEBody::OnRotationChanged, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER, obj_id,  boost::bind( &ODEBody::OnParameterMessage, this, _1 ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, MESSAGE_FUNC( ODEBody::OnLoad ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION,				MESSAGE_FUNC( ODEBody::OnPositionChanged));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION,				MESSAGE_FUNC( ODEBody::OnRotationChanged ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(ODEBody::OnParameterMessage));
 	}
 
 	void ODEBody::OnPositionChanged(MessagePtr message)
@@ -193,17 +190,17 @@ namespace GASS
 
 		
 		pos_msg->SetData("Position",pos);
-		GetMessageManager()->SendGlobalMessage(pos_msg);
+		GetSceneObject()->SendGlobalMessage(pos_msg);
 
 		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",GetRotation());
-		GetMessageManager()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->SendGlobalMessage(rot_msg);
 
 
 		MessagePtr physics_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS,from_id));
 		physics_msg->SetData("Velocity",GetVelocity(true));
 		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
-		GetMessageManager()->SendGlobalMessage(physics_msg);
+		GetSceneObject()->SendGlobalMessage(physics_msg);
 		//msg->SetData("Rotation",Vec3(0,0,0));
 		
 	}

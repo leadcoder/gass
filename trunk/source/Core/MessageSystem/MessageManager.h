@@ -46,8 +46,8 @@ namespace GASS
 		virtual ~MessageManager();
 		void SendGlobalMessage(MessagePtr  message);
 		void SendImmediate(MessagePtr  message);
-		int RegisterForMessage(int type, int object_id,  MessageFunc callback, int priority);
-		void UnRegisterForMessage(int type, int object_id);
+		int RegisterForMessage(int type,  MessageFunc callback, int priority = 0);
+		void UnregisterForMessage(int type, MessageFunc callback);
 		void Update(float dt);
 	private:
 		//#pragma deprecated(AddMessageToSystem)

@@ -64,12 +64,12 @@ namespace GASS
 
 	void OSGCameraComponent::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGCameraComponent::OnLoad, this, _1 ),1);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGCameraComponent::OnPositionChanged, this, _1 ),10);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGCameraComponent::OnRotationChanged, this, _1 ),10);
-		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, address,  boost::bind( &OSGCameraComponent::OnUpdate, this, _1 ),1);
+		
+		
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGCameraComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged),10);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged),10);
+		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, MESSAGE_FUNC(OSGCameraComponent::OnUpdate),1);
 	}
 
 	void OSGCameraComponent::OnPositionChanged(MessagePtr message)

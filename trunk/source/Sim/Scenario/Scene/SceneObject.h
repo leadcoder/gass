@@ -23,6 +23,7 @@
 #include "Sim/Common.h"
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/ComponentSystem/BaseObject.h"
+#include "Core/MessageSystem/Message.h"
 
 
 namespace GASS
@@ -90,7 +91,7 @@ namespace GASS
 		void SyncMessages(double delta_time);
 
 		SceneObjectManager* GetSceneObjectManager() {return m_Manager;}
-		MessageManager* GetMessageManager(){return m_MessageManager;}
+		//MessageManager* GetMessageManager(){return m_MessageManager;}
 		void OnCreate();
 	
 
@@ -130,7 +131,10 @@ namespace GASS
 		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
 		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true); 
 
-
+		int RegisterForMessage(ObjectMessage type, MessageFunc callback, int priority = 0);
+		void UnregisterForMessage(ObjectMessage type, MessageFunc callback);
+		void SendGlobalMessage(MessagePtr message);
+		void SendImmediate(MessagePtr message);
 	protected:
 		SceneObjectManager* m_Manager;
 		MessageManager* m_MessageManager;

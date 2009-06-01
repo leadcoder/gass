@@ -61,10 +61,8 @@ namespace GASS
 
 	void OSGMeshComponent::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGMeshComponent::OnLoad, this, _1 ),1);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGMeshComponent::OnLoad),1);
+		//mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnUpdate),m_InitPriority);
 	}
 
 	void OSGMeshComponent::OnLoad(MessagePtr message)

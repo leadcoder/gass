@@ -25,11 +25,13 @@
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
+#include <boost/bind.hpp>
 
 
 namespace GASS
 {
 	typedef boost::function<void(double delta_time)> UpdateFunc;
+	#define	UPDATE_FUNC(X) boost::bind(&X, this, _1 )
 
 	class GASSExport IRuntimeController 
 	{

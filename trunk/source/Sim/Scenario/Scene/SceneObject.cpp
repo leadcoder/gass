@@ -85,7 +85,7 @@ namespace GASS
 
 	void SceneObject::SyncMessages(double delta_time)
 	{
-		GetMessageManager()->Update(delta_time);
+		m_MessageManager->Update(delta_time);
 		IComponentContainer::ComponentContainerVector::iterator go_iter;
 		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
 		{
@@ -153,6 +153,27 @@ namespace GASS
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
 			child->GetObjectsByName(objects,name,exact_math);
 		}
+	}
+
+
+	int SceneObject::RegisterForMessage( ObjectMessage type, MessageFunc callback, int priority )
+	{
+		return m_MessageManager->RegisterForMessage((int)type, callback, priority); 
+	}
+
+	void SceneObject::UnregisterForMessage(ObjectMessage type, MessageFunc callback)
+	{
+		m_MessageManager->UnregisterForMessage((int)type, callback);
+	}
+
+	void SceneObject::SendGlobalMessage( MessagePtr message )
+	{
+		m_MessageManager->SendGlobalMessage(message);
+	}
+
+	void SceneObject::SendImmediate( MessagePtr message )
+	{
+		m_MessageManager->SendImmediate(message);
 	}
 
 

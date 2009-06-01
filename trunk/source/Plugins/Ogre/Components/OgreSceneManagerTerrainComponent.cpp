@@ -68,10 +68,7 @@ namespace GASS
 
 	void OgreSceneManagerTerrainComponent::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OgreSceneManagerTerrainComponent::OnLoad, this, _1 ),1);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreSceneManagerTerrainComponent::OnLoad ),1);
 	}
 
 	void OgreSceneManagerTerrainComponent::OnLoad(MessagePtr message)

@@ -74,13 +74,10 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ),false);
-
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &ODEPhysicsSceneManager::OnLoad, this, _1 ),0);
-		//m_Scene->GetMessageManager()->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UPDATE, address,  boost::bind( &ODEPhysicsSceneManager::OnUpdate, this, _1 ),0);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &ODEPhysicsSceneManager::OnUnload, this, _1 ),0);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &ODEPhysicsSceneManager::OnLoadSceneObject, this, _1 ),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad ));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
 	}
 
 	void ODEPhysicsSceneManager::OnLoadSceneObject(MessagePtr message)
@@ -90,7 +87,7 @@ namespace GASS
 		assert(obj);
 		MessagePtr phy_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,(int) this));
 		phy_msg->SetData("PhysicsSceneManager",boost::any(this));
-		obj->GetMessageManager()->SendImmediate(phy_msg);
+		obj->SendImmediate(phy_msg);
 	}
 
 	

@@ -51,8 +51,7 @@ namespace GASS
 
 	void OgreResourceSystem::OnCreate()
 	{
-		int address = (int) this;
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED, address,  boost::bind( &OgreResourceSystem::OnInit, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED, MESSAGE_FUNC( OgreResourceSystem::OnInit ));
 	}
 
 	void OgreResourceSystem::Update()

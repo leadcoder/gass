@@ -130,12 +130,8 @@ namespace GASS
 
 	void ODEJoint::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, obj_id,  boost::bind( &ODEJoint::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER, obj_id,  boost::bind( &ODEJoint::OnParameterMessage, this, _1 ),0);
-		//mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &ODEJoint::OnPositionChanged, this, _1 ),0);
-		//mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &ODEJoint::OnRotationChanged, this, _1 ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC( ODEJoint::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER,  MESSAGE_FUNC( ODEJoint::OnParameterMessage));
 	}
 
 	

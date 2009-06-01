@@ -56,7 +56,7 @@ namespace GASS
 		friend class Scenario;
 	public:
 		// Todo: Explain each individual message
-		enum ScenarioMessages
+		enum ScenarioMessage
 		{
 			SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,
 			SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,
@@ -99,9 +99,8 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name = name;}
 		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
 		Scenario* GetOwner() {return m_Scenario;}
-		//MessageManager* GetMessageManager() {return m_SceneMessageManager;}
-		int RegisterForMessage(ScenarioMessages type, int object_id, MessageFunc callback, int priority);
-		void UnRegisterForMessage(ScenarioMessages type, int object_id);
+		int RegisterForMessage(ScenarioMessage type, MessageFunc callback, int priority = 0);
+		void UnregisterForMessage(ScenarioMessage type, MessageFunc callback);
 		void SendGlobalMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 

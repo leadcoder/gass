@@ -84,14 +84,14 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnCreate()
 	{
-		int address = (int) this;
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OSGGraphicsSystem::RTCUpdate, this, _1 ),true);
+	
+		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(OSGGraphicsSystem::RTCUpdate),true);
 
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, address,  boost::bind( &OSGGraphicsSystem::OnInit, this, _1 ),0);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, address,  boost::bind( &OSGGraphicsSystem::OnCreateRenderWindow, this, _1 ),0);
-		//GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, address,  boost::bind( &OgreGraphicsSystem::OnWindowMovedOrResized, this, _1 ),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, MESSAGE_FUNC(OSGGraphicsSystem::OnCreateRenderWindow),0);
+		//GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, MESSAGE_FUNC(OgreGraphicsSystem::OnWindowMovedOrResized),0);
 
-		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_MESSAGE_UPDATE, address,  boost::bind( &OSGGraphicsSystem::OnUpdate, this, _1 ),0);
+		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_MESSAGE_UPDATE, MESSAGE_FUNC(OSGGraphicsSystem::OnUpdate),0);
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)

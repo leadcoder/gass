@@ -46,5 +46,5 @@ namespace GASS
 	typedef boost::function<void (MessagePtr)> MessageFunc;
 	
 
-	#define BIND(X) boost::bind( &X, this, _1 )
+	#define MESSAGE_FUNC(X) boost::bind( &X, this, _1 )
 }

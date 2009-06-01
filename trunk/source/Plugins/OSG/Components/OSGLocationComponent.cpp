@@ -57,13 +57,12 @@ namespace GASS
 
 	void OSGLocationComponent::OnCreate()
 	{
-		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &OSGLocationComponent::OnLoad, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION, obj_id,  boost::bind( &OSGLocationComponent::PositionChanged, this, _1 ),0);
-		mm->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION, obj_id,  boost::bind( &OSGLocationComponent::RotationChanged, this, _1 ),0);
+		
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLocationComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
 		
 	}
 
@@ -93,8 +92,8 @@ namespace GASS
 		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
-		GetMessageManager()->SendGlobalMessage(pos_msg);
-		GetMessageManager()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->SendGlobalMessage(pos_msg);
+		GetSceneObject()->SendGlobalMessage(rot_msg);
 	}
 
 	void OSGLocationComponent::PositionChanged(MessagePtr message)
@@ -135,7 +134,7 @@ namespace GASS
 		trans_msg->SetData("Position",pos);
 		trans_msg->SetData("Rotation",rot);
 		trans_msg->SetData("Scale",scale);
-		GetMessageManager()->SendGlobalMessage(trans_msg);
+		GetSceneObject()->SendGlobalMessage(trans_msg);
 
 		//send for all child tranforms also?
 

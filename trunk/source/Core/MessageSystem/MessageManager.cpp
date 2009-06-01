@@ -77,7 +77,7 @@ namespace GASS
 		return lhs->m_Priority < rhs->m_Priority;
 	}
 
-	int MessageManager::RegisterForMessage(int type, int object_id, MessageFunc callback, int priority)
+	int MessageManager::RegisterForMessage(int type, MessageFunc callback, int priority)
 	{
 		MessageTypeMap::iterator message_type;
 
@@ -92,7 +92,8 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			if((*msg_reg)->m_ObjectID == object_id)
+			
+			if((*msg_reg)->m_Callback.functor.func_ptr == callback.functor.func_ptr)
 			{
 				return 1;
 			}
@@ -100,7 +101,7 @@ namespace GASS
 		}
 		MessageReg* new_reg = new MessageReg();
 		new_reg->m_Callback = callback;
-		new_reg->m_ObjectID = object_id;
+		//new_reg->m_ObjectID = object_id;
 		new_reg->m_Priority = priority;
 
 		message_type->second->m_MessageRegistrations.push_back(new_reg);
@@ -109,7 +110,7 @@ namespace GASS
 		return 0;
 	}
 
-	void MessageManager::UnRegisterForMessage(int type, int object_id)
+	void MessageManager::UnregisterForMessage(int type, MessageFunc callback)
 	{
 
 		MessageTypeMap::iterator message_type;
@@ -124,7 +125,7 @@ namespace GASS
 
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			if((*msg_reg)->m_ObjectID == object_id)
+			if((*msg_reg)->m_Callback.functor.func_ptr == callback.functor.func_ptr)
 			{
 				delete (*msg_reg);
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);

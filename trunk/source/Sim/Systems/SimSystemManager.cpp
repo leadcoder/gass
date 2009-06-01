@@ -53,14 +53,14 @@ namespace GASS
 		m_SystemMessageManager->Update(delta_time);
 	}
 
-	int SimSystemManager::RegisterForMessage(SystemMessages type, int object_id, MessageFunc callback, int priority)
+	int SimSystemManager::RegisterForMessage(SystemMessages type, MessageFunc callback, int priority)
 	{
-		return m_SystemMessageManager->RegisterForMessage((int)type, object_id, callback, priority); 
+		return m_SystemMessageManager->RegisterForMessage((int)type, callback, priority); 
 	}
 
-	void SimSystemManager::UnRegisterForMessage(SystemMessages type, int object_id)
+	void SimSystemManager::UnregisterForMessage(SystemMessages type,  MessageFunc callback)
 	{
-		m_SystemMessageManager->UnRegisterForMessage((int)type, object_id);
+		m_SystemMessageManager->UnregisterForMessage((int)type,  callback);
 	}
 
 	void SimSystemManager::SendGlobalMessage( MessagePtr message )

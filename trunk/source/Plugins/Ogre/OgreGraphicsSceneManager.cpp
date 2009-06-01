@@ -101,10 +101,10 @@ namespace GASS
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
 		
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, address,  boost::bind( &OgreGraphicsSceneManager::OnLoadSceneObject, this, _1 ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, address,  boost::bind( &OgreGraphicsSceneManager::OnLoad, this, _1 ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, address,  boost::bind( &OgreGraphicsSceneManager::OnUnload, this, _1 ),0);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA, address,  boost::bind( &OgreGraphicsSceneManager::OnChangeCamera, this, _1 ),0);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoadSceneObject ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnChangeCamera));
 		
 	}
 
@@ -151,7 +151,7 @@ namespace GASS
 		//move camera to spawn position
 		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
 		pos_msg->SetData("Position",GetOwner()->GetStartPos());
-		scene_object->GetMessageManager()->SendImmediate(pos_msg);
+		scene_object->SendImmediate(pos_msg);
 		
 		/*MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_EULER_ROTATION,(int) this));
 		rot_msg->SetData("EulerRotation",GetOwner()->GetStartRot());
@@ -185,7 +185,7 @@ namespace GASS
 		MessagePtr gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,(int) this));
 		gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		gfx_msg->SetData("OgreSceneManager",boost::any(m_SceneMgr));
-		obj->GetMessageManager()->SendImmediate(gfx_msg);
+		obj->SendImmediate(gfx_msg);
 	}
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()

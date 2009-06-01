@@ -34,7 +34,7 @@ namespace GASS
 	public:
 		BaseSceneComponent();
 		virtual ~BaseSceneComponent();
-		MessageManager* GetMessageManager() const;
+		//MessageManager* GetMessageManager() const;
 		SceneObjectPtr GetSceneObject() const;
 	protected:
 

@@ -33,7 +33,7 @@ namespace GASS
 			return m_Priority < other->m_Priority;
 		}*/
 
-		int m_ObjectID;
+		//int m_ObjectID;
 		MessageFunc m_Callback;
 		int m_Priority;
 

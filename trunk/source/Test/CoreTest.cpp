@@ -92,9 +92,9 @@ public:
 
 	~LocationComponent()
 	{
-		int address = (int) this;
-		mm.UnRegisterForMessage(MESSAGE_INIT,address);
-		mm.UnRegisterForMessage(MESSAGE_UPDATE,address);
+		
+		mm.UnregisterForMessage(MESSAGE_INIT,MESSAGE_FUNC(LocationComponent::OnInit));
+		mm.UnregisterForMessage(MESSAGE_UPDATE,MESSAGE_FUNC(LocationComponent::OnInit));
 	}
 
 	static void RegisterReflection()
@@ -111,9 +111,8 @@ public:
 
 	void OnCreate()
 	{
-		int address = (int) this;
-		mm.RegisterForMessage(MESSAGE_INIT, address,  boost::bind( &LocationComponent::OnInit, this, _1 ),m_InitPriority);
-		mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		mm.RegisterForMessage(MESSAGE_INIT,  MESSAGE_FUNC(LocationComponent::OnInit),m_InitPriority);
+		mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnInit),m_InitPriority);
 	}
 
 	void OnInit(GASS::MessagePtr message)
@@ -217,8 +216,6 @@ int main(int argc, char* argv[])
 	TestReflection();
 	/////////////////TEST plugin manager/////////////
 	template_manager.reset ( new GASS::BaseObjectTemplateManager());
-	mm.AddMessageToSystem(MESSAGE_INIT);
-	mm.AddMessageToSystem(MESSAGE_UPDATE);
 
 
 	TestComponentSystem();
@@ -351,8 +348,6 @@ int main(int argc, char* argv[])
 	delete xmlDoc;
 
 	xml_go->DebugPrint();
-
-
 
 	///////////test timer
 

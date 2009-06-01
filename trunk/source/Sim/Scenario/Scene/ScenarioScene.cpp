@@ -66,14 +66,14 @@ namespace GASS
 		delete m_SceneMessageManager;
 	}
 
-	int ScenarioScene::RegisterForMessage( ScenarioMessages type, int object_id, MessageFunc callback, int priority )
+	int ScenarioScene::RegisterForMessage( ScenarioMessage type, MessageFunc callback, int priority )
 	{
-		return m_SceneMessageManager->RegisterForMessage((int)type, object_id, callback, priority); 
+		return m_SceneMessageManager->RegisterForMessage((int)type, callback, priority); 
 	}
 
-	void ScenarioScene::UnRegisterForMessage(ScenarioMessages type, int object_id)
+	void ScenarioScene::UnregisterForMessage(ScenarioMessage type, MessageFunc callback)
 	{
-		m_SceneMessageManager->UnRegisterForMessage((int)type, object_id);
+		m_SceneMessageManager->UnregisterForMessage((int)type, callback);
 	}
 
 	void ScenarioScene::SendGlobalMessage( MessagePtr message )
