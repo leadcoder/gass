@@ -39,7 +39,16 @@ namespace GASS
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
 
 	/**\
-	* \brief Base class for Sim.
+	* \brief Main class for GASS Sim.
+		The SimEngine is a singleton class that hold some basic functionality
+		of the Sim module like plugin management, runtime execution and system management.
+		When using the GASS sim module this class is the first one that should be instantiated 
+		and initialized. The user is the responsible to call the update function of this 
+		class each frame, this will ensure that all system get updated through the RTC scheduling
+		class. 
+		This class has no knowledge of scenarios and/or scenario scenes, this could be changed in the future
+		but for now scenario information is capsulated in the Scenario class. 
+
 	*/
 
 	class GASSExport SimEngine  : public Singleton<SimEngine>
@@ -51,7 +60,7 @@ namespace GASS
 		static SimEngine& Get();
 
 		/**
-		
+					
 
 		*/
 		bool Init(const std::string &plugin_file = std::string("plugins.xml"), 
@@ -61,12 +70,6 @@ namespace GASS
 		Main update for GASS.
 		@remarks
 			The application is responsible for calling this function each frame
-			Then function will then update GASS at a speed set by m_SimulationUpdateInterval
-			If the framerate is below m_SimulationUpdateInterval only one simulation step i executed
-			otherwise time slicing is used.
-			This function also prepare the scene for smooth rendering. This is achived by
-			interpolation between the last two simulation steps, this leads to a small lag in rendering time
-			This will of cause change if we change simulataion update interval
 		@param delta is the frame time.
 		*/
 		void Update(float delta_time);
