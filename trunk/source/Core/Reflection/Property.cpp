@@ -22,7 +22,7 @@
 
 namespace GASS
 {
-	//Specialized template implementation to catch std::string 
+	//Specialized template implementation to catch std::string
 
 	template <>
 	bool GetValueFromString<std::string>(std::string &res,const std::string &s)
@@ -31,47 +31,54 @@ namespace GASS
 		return true;
 	}
 
-	bool GASSCoreExport GetValueFromString<std::vector<int>>(std::vector<int> &res,const std::string &s)
-	{
-		GetVectorFromString(res,s);
-		return true;
-	}
-	bool GASSCoreExport GetValueFromString<std::vector<float>>(std::vector<float> &res,const std::string &s)
-	{
-		GetVectorFromString(res,s);
-		return true;
-	}
-	bool GASSCoreExport GetValueFromString<std::vector<double>>(std::vector<double> &res,const std::string &s)
-	{
-		GetVectorFromString(res,s);
-		return true;
-	}
-	bool GASSCoreExport GetValueFromString<std::vector<std::string>>(std::vector<std::string> &res,const std::string &s)
+    template <>
+	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s)
 	{
 		GetVectorFromString(res,s);
 		return true;
 	}
 
 	template <>
-	bool GetStringFromValue<std::vector<std::string>>(const std::vector<std::string> &val,std::string &s)
+	bool GASSCoreExport GetValueFromString<std::vector<float> >(std::vector<float> &res,const std::string &s)
+	{
+		GetVectorFromString(res,s);
+		return true;
+	}
+
+	template <>
+	bool GASSCoreExport GetValueFromString<std::vector<double> >(std::vector<double> &res,const std::string &s)
+	{
+		GetVectorFromString(res,s);
+		return true;
+	}
+
+	template <>
+	bool GASSCoreExport GetValueFromString<std::vector<std::string> >(std::vector<std::string> &res,const std::string &s)
+	{
+		GetVectorFromString(res,s);
+		return true;
+	}
+
+	template <>
+	bool GetStringFromValue<std::vector<std::string> >(const std::vector<std::string> &val,std::string &s)
 	{
 		GetStringFromVector(val,s);
 		return true;
 	}
 	template <>
-	bool GetStringFromValue<std::vector<int>>(const std::vector<int> &val,std::string &s)
+	bool GetStringFromValue<std::vector<int> >(const std::vector<int> &val,std::string &s)
 	{
 		GetStringFromVector(val,s);
 		return true;
 	}
 	template <>
-	bool GetStringFromValue<std::vector<float>>(const std::vector<float> &val,std::string &s)
+	bool GetStringFromValue<std::vector<float> >(const std::vector<float> &val,std::string &s)
 	{
 		GetStringFromVector(val,s);
 		return true;
 	}
 	template <>
-	bool GetStringFromValue<std::vector<double>>(const std::vector<double> &val,std::string &s)
+	bool GetStringFromValue<std::vector<double> >(const std::vector<double> &val,std::string &s)
 	{
 		GetStringFromVector(val,s);
 		return true;

@@ -39,7 +39,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 namespace GASS
 {
-	template <class OwnerType, class T> 
+	template <class OwnerType, class T>
 	class Property : public TypedProperty<T>
 	{
 
@@ -60,7 +60,7 @@ namespace GASS
 		virtual T		GetValue( BaseReflectionObject* pObject ) const;
 		virtual void	SetValue( BaseReflectionObject* pObject, const T &Value );
 		void Serialize(BaseReflectionObject* pObject,ISerializer* serializer);
-		
+
 		void SetValueByString(BaseReflectionObject* pObject, const std::string &s);
 		std::string GetValueAsString(BaseReflectionObject* pObject);
 		void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src);
@@ -68,7 +68,7 @@ namespace GASS
 		void GetValue(BaseReflectionObject* pOwner, boost::any &attribute);
 	protected:
 		std::vector<std::string> Tokenize(const std::string & str, const std::string & delim);
-	
+
 
 		GetterType		m_Getter;
 		SetterType		m_Setter;
@@ -94,13 +94,13 @@ namespace GASS
 	{
 	}
 
-	template <class OwnerType, class T> 
+	template <class OwnerType, class T>
 	T Property<OwnerType, T>::GetValue( BaseReflectionObject* pOwner ) const
 	{
 		return (((OwnerType*)pOwner)->*m_Getter)();
 	}
 
-	template <class OwnerType, class T> 
+	template <class OwnerType, class T>
 	void Property<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, const T &Value )
 	{
 		if(m_SetterConst)
@@ -113,7 +113,7 @@ namespace GASS
 		}
 	}
 
-	template <class OwnerType, class T> 
+	template <class OwnerType, class T>
 	void Property<OwnerType, T>::SetValue(BaseReflectionObject* dest, BaseReflectionObject* src)
 	{
 		SetValue(dest,GetValue(src));
@@ -136,27 +136,27 @@ namespace GASS
 		//SetValue(pOwner,res);
 		return true;
 	}
-	//Use specialized template to catch std::string 
+	//Use specialized template to catch std::string
 	template <>
 	bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
 	//Use specialized template to catch vector
 	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<int>>(std::vector<int> &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s);
 
 	//Use specialized template to catch vector
 	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<float>>(std::vector<float> &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<std::vector<float> >(std::vector<float> &res,const std::string &s);
 
 	//Use specialized template to catch vector
 	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<double>>(std::vector<double> &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<std::vector<double> >(std::vector<double> &res,const std::string &s);
 
 	//Use specialized template to catch vector
 	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<std::string>>(std::vector<std::string> &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<std::vector<std::string> >(std::vector<std::string> &res,const std::string &s);
 
-	
+
 	template <class OwnerType, class T>
 	void Property<OwnerType, T>::SetValueByString(BaseReflectionObject* pOwner,const std::string &s)
 	{
@@ -179,13 +179,13 @@ namespace GASS
 	}
 
 	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<std::string>>(const std::vector<std::string> &val,std::string &s);
+	bool GASSCoreExport GetStringFromValue<std::vector<std::string> >(const std::vector<std::string> &val,std::string &s);
 	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<int>>(const std::vector<int> &val,std::string &s);
+	bool GASSCoreExport GetStringFromValue<std::vector<int> >(const std::vector<int> &val,std::string &s);
 	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<float>>(const std::vector<float> &val,std::string &s);
+	bool GASSCoreExport GetStringFromValue<std::vector<float> >(const std::vector<float> &val,std::string &s);
 	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<double>>(const std::vector<double> &val,std::string &s);
+	bool GASSCoreExport GetStringFromValue<std::vector<double> >(const std::vector<double> &val,std::string &s);
 
 	template <class OwnerType, class T>
 	std::string Property<OwnerType, T>::GetValueAsString(BaseReflectionObject* pOwner)
@@ -222,10 +222,10 @@ namespace GASS
 		return tokens;
 	}
 
-	template <class OwnerType, class T> 
+	template <class OwnerType, class T>
 	void Property<OwnerType, T>::Serialize(BaseReflectionObject* pOwner,ISerializer* serializer)
 	{
-		
+
 		if(serializer->Loading())
 		{
 			T val;
