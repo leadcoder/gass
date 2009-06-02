@@ -64,8 +64,8 @@ namespace GASS
 					system->SetOwner(this);
 					system->OnCreate();
 					m_Systems.push_back(system);
-					systems  = systems->NextSiblingElement();
 				}
+				systems  = systems->NextSiblingElement();
 			}
 		}
 		xmlDoc->Clear();

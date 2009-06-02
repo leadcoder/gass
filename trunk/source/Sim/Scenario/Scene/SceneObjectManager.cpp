@@ -103,9 +103,9 @@ namespace GASS
 
 		//Move this to user scene manager!!
 		MessagePtr obj_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS,from_id));
-		obj->GetMessageManager()->SendImmediate(obj_msg);
+		obj->SendImmediate(obj_msg);
 		//Pump initial messages around
-		obj->GetMessageManager()->Update(0);
+		obj->SyncMessages(0);
 		//send load message for all child game object also?
 
 		BaseObject::ComponentContainerVector children = obj->GetChildren();
@@ -258,7 +258,7 @@ namespace GASS
 	{
 		int from_id = (int)this;
 		MessagePtr msg(new Message(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS,from_id));
-		obj->GetMessageManager()->SendImmediate(msg);
+		obj->SendImmediate(msg);
 		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,from_id));
 		unload_msg->SetData("SceneObject",obj);
 		m_ScenarioScene->SendImmediate(unload_msg);

@@ -92,10 +92,12 @@ namespace GASS
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(FreeCamControlComponent::Update));
 
+
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnUnload));
+
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( FreeCamControlComponent::OnInput));
