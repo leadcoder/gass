@@ -56,9 +56,6 @@ namespace GASS
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
-		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 		void OnLoad(MessagePtr message);
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);

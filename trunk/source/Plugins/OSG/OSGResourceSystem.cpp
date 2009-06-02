@@ -67,7 +67,7 @@ namespace GASS
 			{
 				ResourceLocation rl;
 
-				rl.m_Path = attrib->Attribute("Path");
+				rl.m_Path = FilePath(attrib->Attribute("Path"));
 				rl.m_Type = attrib->Attribute("Type");
 				rl.m_Group = attrib->Attribute("Group");
 				std::string rec = attrib->Attribute("Recursive");
@@ -130,7 +130,7 @@ namespace GASS
 			for(int i  = 0; i < m_ResourceLocations.size(); i++)
 			{
 				
-				std::string temp_file_path = m_ResourceLocations[i].m_Path + "/" +  file_name;
+				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
 				if(fp = fopen(temp_file_path.c_str(),"rb"))
 				{
 					fclose(fp);

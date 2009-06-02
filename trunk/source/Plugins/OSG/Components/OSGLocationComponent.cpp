@@ -45,7 +45,14 @@ namespace GASS
 
 	OSGLocationComponent::~OSGLocationComponent()
 	{
-		
+		//m_TransformNode.release();
+		//m_RotTransformNode.release();
+
+		if(m_TransformNode.valid() && m_TransformNode->getParent(0))
+		{
+			osg::Group* parent = m_TransformNode->getParent(0);
+			parent->removeChild(m_TransformNode.get());
+		}
 	}
 
 	void OSGLocationComponent::RegisterReflection()

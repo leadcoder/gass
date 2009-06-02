@@ -23,6 +23,7 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Core/Utils/FilePath.h"
 
 #include <string>
 namespace Ogre
@@ -36,7 +37,7 @@ namespace GASS
 {
 	struct ResourceLocation
 	{
-		std::string m_Path;
+		FilePath m_Path;
 		std::string m_Type;
 		std::string m_Group;
 		bool m_Recursive;

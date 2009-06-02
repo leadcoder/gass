@@ -139,7 +139,8 @@ namespace GASS
 		}
 		else
 		{
-			if(GetName().find(name) >= 0)
+			int pos = GetName().find(name);
+			if(pos  >= 0)
 			{
 				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 				objects.push_back(obj);

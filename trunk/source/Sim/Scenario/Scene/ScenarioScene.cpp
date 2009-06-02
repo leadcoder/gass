@@ -246,7 +246,7 @@ namespace GASS
 		//move camera to spawn position
 		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
 		pos_msg->SetData("Position",GetStartPos());
-		scene_object->GetMessageManager()->SendImmediate(pos_msg);*/
+		scene_object->SendImmediate(pos_msg);*/
 
 		//Create game objects instances from templates
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");

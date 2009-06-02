@@ -155,7 +155,7 @@ namespace GASS
 		
 		/*MessagePtr rot_msg(new Message(ScenarioScene::OBJECT_MESSAGE_EULER_ROTATION,(int) this));
 		rot_msg->SetData("EulerRotation",GetOwner()->GetStartRot());
-		scene_object->GetMessageManager()->SendImmediate(rot_msg);*/
+		scene_object->SendImmediate(rot_msg);*/
 
 		MessagePtr loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED,(int) this));
 		

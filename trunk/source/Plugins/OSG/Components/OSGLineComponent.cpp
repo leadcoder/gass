@@ -69,8 +69,6 @@ namespace GASS
 
 	void OSGLineComponent::OnLoad(MessagePtr message)
 	{
-
-
 		OSGGraphicsSceneManager* sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(sm);
 		/*
@@ -92,15 +90,27 @@ namespace GASS
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		osg::LineWidth* linewidth = new osg::LineWidth(); 
+		osg::ref_ptr<osg::LineWidth> linewidth = new osg::LineWidth(); 
 		linewidth->setWidth(2); 
-		ss->setAttributeAndModes(linewidth,osg::StateAttribute::ON); 
+		ss->setAttributeAndModes(linewidth.get(),osg::StateAttribute::ON); 
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
 
 
 		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
+
+
+		osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+		osg::ref_ptr<osg::Vec4Array> colors= new osg::Vec4Array;
+		
+		m_OSGGeometry->setVertexArray(vertices.get());
+		m_OSGGeometry->setColorArray(colors.get());
+
+
+		osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays();
+		m_OSGGeometry->addPrimitiveSet(drawable.get());
+
 
 
 		if(m_ControlPointList != "")
@@ -138,7 +148,6 @@ namespace GASS
 		if(m_OSGGeometry == NULL)
 			return;
 
-
 		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
@@ -158,18 +167,12 @@ namespace GASS
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
-		else
-		{
-			vertices = new osg::Vec3Array();
-		}
+		
 		if(colors)
 		{
 			colors->clear();
 		}
-		else
-		{
-			colors = new osg::Vec4Array;
-		}
+		
 
 		if(m_ControlPoints.size() > 0)
 		{
@@ -220,26 +223,23 @@ namespace GASS
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
-		else
-		{
-			vertices = new osg::Vec3Array();
-		}
 		if(colors)
 		{
 			colors->clear();
 		}
-		else
-		{
-			colors = new osg::Vec4Array;
-		}
+		
 
 		if(m_ControlPoints.size() > 0)
 		{
 			vertices->resize(m_ControlPoints.size());
 			colors->resize(m_ControlPoints.size());
 
-			osg::DrawArrays* drawable = new osg::DrawArrays(op, 0, m_ControlPoints.size());
-			m_OSGGeometry->addPrimitiveSet(drawable);
+			//osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays(op, 0, m_ControlPoints.size());
+
+			
+			
+			osg::DrawArrays* drawable = static_cast<osg::DrawArrays*>(m_OSGGeometry->getPrimitiveSet(0));//drawable.get());
+			drawable->set(op, 0, m_ControlPoints.size());
 
 			osg::Vec3Array::iterator vitr = vertices->begin();
 
