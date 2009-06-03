@@ -37,9 +37,6 @@ namespace GASS
 	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
 	typedef boost::shared_ptr<IComponent> ComponentPtr;
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
-	
-
-
 
 	class GASSCoreExport BaseComponent : public Reflection<BaseComponent, BaseReflectionObject>, public IComponent , public IXMLSerialize, public ISerialize, public IComponentTemplate
 	{

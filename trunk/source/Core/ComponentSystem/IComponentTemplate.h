@@ -53,8 +53,14 @@ namespace GASS
 	{
 	public:
 		virtual ~IComponentTemplate(){}
-
+		/**
+		 Return a component created from this component container template 
+		*/
 		virtual ComponentPtr CreateCopy() = 0;
+
+		/**
+			Assing this template to existing component
+		*/
 		virtual void Assign(ComponentPtr) = 0;
 	protected:
 	};

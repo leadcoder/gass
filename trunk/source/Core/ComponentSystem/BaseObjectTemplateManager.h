@@ -37,6 +37,17 @@ namespace GASS
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 	
 
+	/**
+		  Implementaion of the IComponentContainerTemplateManager interface
+		  This implementaion extened IComponentContainerTemplateManager 
+		  interface with Load function that assume that component containers
+		  that should be able to load from file has the IXML serialization 
+		  interface implemented like the BaseObject.
+		  The name BaseObjectTemplateManager is therefor used to
+		  indicate that BaseObject component container implementaion 
+		  will work with this implementation.
+	*/
+
 	class GASSCoreExport BaseObjectTemplateManager: public boost::enable_shared_from_this<BaseObjectTemplateManager> , public IComponentContainerTemplateManager
 	{
 		friend class IComponentContainerTemplate;
@@ -55,9 +66,23 @@ namespace GASS
 //		void SetNameCheck(bool value){m_NameCheck = value;}
 		void AddTemplate(ComponentContainerTemplatePtr obj);
 		ComponentContainerTemplatePtr GetTemplate(const std::string &name);
+
+		/** 
+			Load templates from xml-file
+		*/
 		bool Load(const std::string &filename);
 
+		/** 
+			Check if each new component container instance returned 
+			from the CreateFromTemplate function should have a
+			unique name.
+		*/
 		bool GetForceUniqueName() const{return m_ForceUniqueName;}
+		/** 
+			Set whether each new component container instance returned 
+			from the CreateFromTemplate function should have a
+			unique name or not.
+		*/
 		void SetForceUniqueName(bool value) {m_ForceUniqueName = value;}
 	protected:
 		//void AddRecursive(IComponentContainer* ct);

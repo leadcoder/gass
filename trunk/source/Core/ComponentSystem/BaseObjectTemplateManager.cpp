@@ -20,9 +20,10 @@
 
 #include "Core/Common.h"
 #include "Core/ComponentSystem/BaseObjectTemplateManager.h"
-#include "Core/ComponentSystem/BaseObject.h"
 #include "Core/ComponentSystem/IComponentContainerTemplate.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/Serialize/IXMLSerialize.h"
+
 #include "Core/Utils/Log.h"
 #include "tinyxml.h"
 
