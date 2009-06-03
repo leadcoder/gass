@@ -32,14 +32,49 @@ namespace GASS
 	class IComponentContainerTemplateManager;
 	typedef boost::shared_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
+
+	/** 
+	Interface that component-containers should derive from 
+	if template functionality is desired. 
+	This interface should be seen as a extension to 
+	the component-container interface and 
+	is by design not intended to be used on it's own. 
+	
+	A component-container that is derived from this interface
+	has the ability to instance new component-containers 
+	of the exact same configuration. This way archetypes of objects
+	can be created trough configuration files and the goal of   
+	more data driven design is achieved.
+
+	@remarks This interface should probably change name if we want to have a 
+	separate component-container-template implementation. By current design it's 
+	not possible to separate component-container-template implementation 
+	from component-container implementation. 
+	This choice was made to make new implementations as convenient as possible,
+	otherwise the two implementations would have been nearly identical.
+	*/
+
 	
 	class GASSCoreExport IComponentContainerTemplate
 	{
 	public:
 		virtual ~IComponentContainerTemplate(){}
+
+		/**
+			Return the name of this template
+		*/
 		virtual std::string GetName() const  = 0;
+		
+		/**
+			Return a component container created from this template.
+		*/
 		//Manager argument needed if we want to used inheritance
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) = 0;
+
+		/**
+			Return a component container created from this template 
+			without including child component containers.
+		*/
 		virtual ComponentContainerPtr CreateCopy() = 0;
 	protected:
 	};

@@ -35,6 +35,14 @@ namespace GASS
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
 	
 	
+	/**
+		Interface that a component container should implement
+		A component container is a owner of components and child
+		components containers. This way a tree structure can be created
+		with component containers where each node in the tree represented by a
+		component container that can have it's own set of components 
+		giving the node unique functionality
+	*/
 	class GASSCoreExport IComponentContainer
 	{
 	public:
@@ -42,16 +50,61 @@ namespace GASS
 		typedef std::vector<ComponentContainerPtr> ComponentContainerVector;
 	public:
 		virtual ~IComponentContainer(){}
+		/**
+		Get component container name
+		*/
 		virtual std::string GetName() const = 0;
+		
+		/**
+		Set component container name
+		*/
 		virtual void SetName(const std::string &name) = 0;
+
+		/**
+			This function is called when a 
+			component conatiner is instantiated
+		*/
 		virtual void OnCreate() = 0;
+
+		/**
+			Add a child component conatiner. 
+		*/
 		virtual void AddChild(ComponentContainerPtr child) = 0;
+		
+		/**
+			Remove a child component conatiner
+		*/
 		virtual void RemoveChild(ComponentContainerPtr child) = 0;
+
+		/**
+			Add a component to this component container
+		*/
 		virtual void AddComponent(ComponentPtr comp) = 0;
+
+		/**
+			Get child component containers, 
+			this will only return the ones owned by this container i.e.
+			no grandchildren will be returned
+		*/
 		virtual ComponentContainerVector GetChildren() = 0;
+		/**
+			Get component by name, 
+			only serach this containers components and first one is returned
+		*/
 		virtual ComponentPtr GetComponent(const std::string &name) = 0;
+
+		/**
+			Get all components owned by this container
+		*/
 		virtual ComponentVector GetComponents() = 0;
+		/**
+			Get possible parent component container
+		*/
 		virtual ComponentContainerPtr GetParent()const  = 0;
+
+		/**
+			Set parent component container
+		*/
 		virtual void SetParent(ComponentContainerWeakPtr parent) = 0;
 	};
 

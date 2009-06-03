@@ -29,15 +29,43 @@ namespace GASS
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
 	
-
+	/**
+		Interface that every component have to implement
+		A component is the core building block in the component system,
+		here we find actual functionality like vehicle models, 
+		graphics, network capability etc. All components that should work together is 
+		owned by a ComponentContainer. A ComponentContainer can be seen as a object 
+		that has it's functionality in it's components.
+	*/
 	class GASSCoreExport IComponent
 	{
 	public:
 		virtual ~IComponent(){}
+
+		/**
+			Return the name of the component
+		*/
 		virtual std::string GetName() const = 0;
+		
+		/**
+			Set the name of the component
+		*/
 		virtual void SetName(const std::string &name) = 0;
+		
+		/**
+			Set the owner of the component 
+		*/
 		virtual void SetOwner(ComponentContainerPtr owner) = 0;
+		
+		/**
+			Get the owner of the component 
+		*/
 		virtual ComponentContainerPtr GetOwner() const = 0;
+
+		/**
+			This function is called when a 
+			component is instantiated
+		*/
 		virtual void OnCreate() = 0;
 	};
 
