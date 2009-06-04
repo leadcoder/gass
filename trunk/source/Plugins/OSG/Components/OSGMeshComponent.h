@@ -175,7 +175,7 @@ namespace GASS
 		std::string m_Filename;
 		bool m_CastShadow;
 		osg::ref_ptr<osg::Group> m_MeshNode;
-		bool checkDrawable(osg::Geode *geode);
+		//bool checkDrawable(osg::Geode *geode);
 		AABox m_BBox;
 	 
 	};

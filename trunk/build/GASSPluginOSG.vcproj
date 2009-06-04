@@ -230,6 +230,14 @@
 						Name="Components"
 						>
 						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGBillboardComponent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGBillboardComponent.h"
+							>
+						</File>
+						<File
 							RelativePath="..\Source\Plugins\OSG\Components\OSGCameraComponent.cpp"
 							>
 						</File>
@@ -259,6 +267,14 @@
 						</File>
 						<File
 							RelativePath="..\Source\Plugins\OSG\Components\OSGMeshComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGTextComponent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGTextComponent.h"
 							>
 						</File>
 					</Filter>

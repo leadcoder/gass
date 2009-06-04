@@ -173,7 +173,7 @@ namespace GASS
 	}
 
 
-	bool OSGMeshComponent::checkDrawable(osg::Geode *geode)
+/*	bool OSGMeshComponent::checkDrawable(osg::Geode *geode)
 	{
 		if( 1 < geode->getNumDrawables())
 		{
@@ -200,7 +200,7 @@ namespace GASS
 			}
 			return true;
 		}
-	}
+	}*/
 
 	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
