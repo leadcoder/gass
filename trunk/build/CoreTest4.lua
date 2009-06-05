@@ -5,21 +5,35 @@ project "CoreTest"
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	targetdir ( "../bin/$(ConfigurationName)" )
 
-	files { "../Source/Test/CoreTest.cpp" }
+	files { "../source/Test/CoreTest.cpp" }
 
+
+if (os.is("windows")) then
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/boost" 
+		"../source",
+		"../dependencies/boost" 
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../Dependencies/boost/lib"
+		"../dependencies/boost/lib"
 	}
 
+else
+	includedirs 
+	{ 
+		"../source",
+		"../dependencies/include/boost"
+	}
 
+	libdirs 
+	{ 
+		"../lib/" .. _ACTION,
+		"../dependencies/lib"
+	}
+end
 
 	configuration "Debug"
 		targetname "CoreTest_d"

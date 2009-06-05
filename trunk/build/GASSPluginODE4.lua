@@ -3,7 +3,7 @@ project "GASSPluginODE"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../Source/Plugins/ODE/**.cpp", "../Source/Plugins/ODE/**.h" }
+	files { "../source/Plugins/ODE/**.cpp", "../source/Plugins/ODE/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
@@ -11,17 +11,17 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../Source",
-		"../Dependencies/ode/include",
-		"../Dependencies/tinyxml",
-		"../Dependencies/boost"
+		"../dependencies/ode/include",
+		"../dependencies/tinyxml",
+		"../dependencies/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../Dependencies",
-		"../Dependencies/tinyxml/lib",
-		"../Dependencies/ode/lib/$(ConfigurationName)DoubleLib"
+		"../dependencies",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -30,18 +30,19 @@ if (os.is("windows")) then
 else
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/include/OGRE",
-		"../Dependencies/include/OctreeSceneManager",
-		"../Dependencies/include/tinyxml",
-		"../Dependencies/boost"
+		"../source",
+		"../dependencies/include",
+		"../dependencies/include/boost",
+--		"../dependencies/include/OGRE",
+--		"../dependencies/include/OctreeSceneManager",
+		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../Dependencies/lib/",
-		"../Dependencies/lib/OGRE"
+		"../dependencies/lib/",
+		"../dependencies/lib/OGRE"
 	}
 
 end

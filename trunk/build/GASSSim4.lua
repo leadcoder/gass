@@ -3,7 +3,7 @@ project "GASSSim"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../Source/Sim/**.cpp", "../Source/Sim/**.h" }
+	files { "../source/Sim/**.cpp", "../source/Sim/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
@@ -12,19 +12,19 @@ if (os.is("windows")) then
 
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/tinyxml",
-		"../Dependencies/boost",
-		"../Dependencies/tbb/include"
+		"../source",
+		"../dependencies/tinyxml",
+		"../dependencies/boost",
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../Dependencies",
-		"../Dependencies/tinyxml/lib",
-		"../Dependencies/boost/lib",
-		"../Dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/boost/lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_EXPORTS" }
@@ -35,17 +35,16 @@ else
 
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/tinyxml",
-		"../Dependencies/boost",
-		"../Dependencies/tbb/include"
+		"../source",
+		"../dependencies/include/tinyxml",
+		"../dependencies/include/boost",
+		"../dependencies/include"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../Dependencies/lib",
-		"../Dependencies/tinyxml/lib"
+		"../dependencies/lib"
 	}
 
 end

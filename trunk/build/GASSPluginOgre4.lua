@@ -3,29 +3,29 @@ project "GASSPluginOgre"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../Source/Plugins/Ogre/**.cpp", "../Source/Plugins/Ogre/**.h" }
+	files { "../source/Plugins/Ogre/**.cpp", "../source/Plugins/Ogre/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
 if (os.is("windows")) then
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/ogre/OgreMain/include",
-		"../Dependencies/ogre/Dependencies/include",
-		"../Dependencies/ogre/PlugIns/OctreeSceneManager/include",
-		"../Dependencies/tinyxml",
-		"../Dependencies/boost"
+		"../source",
+		"../dependencies/ogre/OgreMain/include",
+		"../dependencies/ogre/dependencies/include",
+		"../dependencies/ogre/PlugIns/OctreeSceneManager/include",
+		"../dependencies/tinyxml",
+		"../dependencies/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../Dependencies",
-		"../Dependencies/ogre/lib",
-		"../Dependencies/Ogre/Dependencies/lib/$(ConfigurationName)",
-		"../Dependencies/tinyxml/lib",
-		"../Dependencies/boost/lib"
+		"../dependencies",
+		"../dependencies/ogre/lib",
+		"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/boost/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -34,18 +34,18 @@ if (os.is("windows")) then
 else
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/include/OGRE",
-		"../Dependencies/include/OctreeSceneManager",
-		"../Dependencies/include/tinyxml",
-		"../Dependencies/boost"
+		"../source",
+		"../dependencies/include/boost",
+		"../dependencies/include/OGRE",
+		"../dependencies/include/OctreeSceneManager",
+		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../Dependencies/lib/",
-		"../Dependencies/lib/OGRE"
+		"../dependencies/lib/",
+		"../dependencies/lib/OGRE"
 	}
 
 end

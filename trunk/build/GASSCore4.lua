@@ -3,7 +3,7 @@ project "GASSCore"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../Source/Core/**.cpp", "../Source/Core/**.h" }
+	files { "../source/Core/**.cpp", "../source/Core/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
@@ -12,17 +12,17 @@ if (os.is("windows")) then
 
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/tinyxml",
-		"../Dependencies/boost",
-		"../Dependencies/tbb/include"
+		"../source",
+		"../dependencies/tinyxml",
+		"../dependencies/boost",
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
-		"../Dependencies/tinyxml/lib",
-		"../Dependencies/boost/lib",
-		"../Dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tinyxml/lib",
+		"../dependencies/boost/lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_CORE_EXPORTS" }
@@ -48,15 +48,15 @@ if (os.is("windows")) then
 
 	includedirs 
 	{ 
-		"../Source",
-		"../Dependencies/include/tinyxml",
-		"../Dependencies/include/boost",
-		"../Dependencies/include"
+		"../source",
+		"../dependencies/include",
+		"../dependencies/include/tinyxml",
+		"../dependencies/include/boost"
 	}
 
 	libdirs 
 	{ 
-		"../Dependencies/lib"
+		"../dependencies/lib"
 	}
 
 
@@ -64,7 +64,7 @@ if (os.is("windows")) then
 		targetname "GASSCore_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
-		links { "tinyxml" }
+		links { "tinyxmld" }
 
 
 	
