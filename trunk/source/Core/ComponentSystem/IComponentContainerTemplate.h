@@ -21,16 +21,19 @@
 #pragma once
 
 #include "Core/Common.h"
+#include "Core/Utils/Iterators.h"
 
 namespace GASS
 {
-	/*
-
-	*/
+	
 	class IComponent;
 	class IComponentContainer;
+	class IComponentContainerTemplate;
 	class IComponentContainerTemplateManager;
+	typedef boost::shared_ptr<IComponent> ComponentPtr;
 	typedef boost::shared_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
+	typedef boost::shared_ptr<IComponentContainerTemplate> ComponentContainerTemplatePtr;
+	typedef boost::weak_ptr<IComponentContainerTemplate> ComponentContainerTemplateWeakPtr;
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 
 	/** 
@@ -58,12 +61,64 @@ namespace GASS
 	class GASSCoreExport IComponentContainerTemplate
 	{
 	public:
+		typedef std::vector<ComponentPtr> ComponentVector;
+		typedef VectorIterator<ComponentVector>  ComponentIterator;
+		typedef std::vector<ComponentContainerTemplatePtr> ComponentContainerTemplateVector;
+		typedef VectorIterator<ComponentContainerTemplateVector> ComponentContainerTemplateIterator;
+
 		virtual ~IComponentContainerTemplate(){}
 
 		/**
-			Return the name of this template
+		Get component container name
 		*/
-		virtual std::string GetName() const  = 0;
+		virtual std::string GetName() const = 0;
+		
+		/**
+		Set component container name
+		*/
+		virtual void SetName(const std::string &name) = 0;
+
+	
+		/**
+			Add a child component conatiner. 
+		*/
+		virtual void AddChild(ComponentContainerTemplatePtr child) = 0;
+		
+		/**
+			Remove a child component conatiner
+		*/
+		virtual void RemoveChild(ComponentContainerTemplatePtr child) = 0;
+
+		/**
+			Add a component to this component container
+		*/
+		virtual void AddComponent(ComponentPtr comp) = 0;
+
+		/**
+			Get child component containers templates, 
+			this will only return the ones owned by this container i.e.
+			no grandchildren will be returned
+		*/
+		virtual ComponentContainerTemplateIterator GetChildren() = 0;
+		/**
+			Get component by name, 
+			only serach this containers components and first one is returned
+		*/
+		virtual ComponentPtr GetComponent(const std::string &name) = 0;
+
+		/**
+			Get all components owned by this container
+		*/
+		virtual ComponentIterator GetComponents() = 0;
+		/**
+			Get possible parent component container
+		*/
+		virtual ComponentContainerTemplatePtr GetParent()const  = 0;
+
+		/**
+			Set parent component container
+		*/
+		virtual void SetParent(ComponentContainerTemplateWeakPtr parent) = 0;
 		
 		/**
 			Return a component container created from this template.
@@ -75,7 +130,7 @@ namespace GASS
 			Return a component container created from this template 
 			without including child component containers.
 		*/
-		virtual ComponentContainerPtr CreateCopy() = 0;
+		//virtual ComponentContainerPtr CreateCopy() = 0;
 	protected:
 	};
 

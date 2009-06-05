@@ -2,8 +2,9 @@
 //
 #include <boost/bind.hpp>
 
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
-#include "Core/ComponentSystem/BaseObject.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
+#include "Core/ComponentSystem/BaseComponentContainer.h"
 #include "Core/ComponentSystem/BaseComponent.h"
 
 #include "Core/ComponentSystem/IComponent.h"
@@ -15,6 +16,7 @@
 #include "Core/Utils/Timer.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 
@@ -35,15 +37,30 @@ enum
 };
 
 GASS::MessageManager mm;
-boost::shared_ptr<GASS::BaseObjectTemplateManager> template_manager;
+boost::shared_ptr<GASS::BaseComponentContainerTemplateManager> template_manager;
 
-class MyGameObject : public GASS::Reflection<MyGameObject,GASS::BaseObject> 
+class MyGameObject : public GASS::Reflection<MyGameObject,GASS::BaseComponentContainer> 
 {
 public:
 	static void RegisterReflection()
 	{
 		GASS::ComponentContainerFactory::GetPtr()->Register("MyGameObject",new GASS::Creator<MyGameObject, IComponentContainer>);
 		RegisterProperty<std::string>("Description", &MyGameObject::GetDescription, &MyGameObject::SetDescription);
+	}
+	std::string GetDescription()const {return m_Des;}
+	void SetDescription(const std::string &des){m_Des = des;}
+private:
+	std::string m_Des;
+};
+
+
+class MyGameObjectTemplate : public GASS::Reflection<MyGameObjectTemplate,GASS::BaseComponentContainerTemplate> 
+{
+public:
+	static void RegisterReflection()
+	{
+		GASS::ComponentContainerTemplateFactory::GetPtr()->Register("MyGameObjectTemplate",new GASS::Creator<MyGameObjectTemplate, IComponentContainerTemplate>);
+		RegisterProperty<std::string>("Description", &MyGameObjectTemplate::GetDescription, &MyGameObjectTemplate::SetDescription);
 	}
 	std::string GetDescription()const {return m_Des;}
 	void SetDescription(const std::string &des){m_Des = des;}
@@ -134,14 +151,15 @@ private:
 };
 
 typedef boost::shared_ptr<MyGameObject> MyGameObjectPtr;
+typedef boost::shared_ptr<MyGameObjectTemplate> MyGameObjectTemplatePtr;
 typedef boost::shared_ptr<TestComponent> TestComponentPtr;
 typedef boost::weak_ptr<TestComponent> TestComponentWeakPtr;
 
 void TestComponentSystem()
 {
-	MyGameObjectPtr go1(new MyGameObject());
+	MyGameObjectTemplatePtr go1(new MyGameObjectTemplate());
 	go1->SetName("MyManualGameObject");
-	MyGameObjectPtr child_go (new MyGameObject());
+	MyGameObjectTemplatePtr child_go (new MyGameObjectTemplate());
 	child_go->SetName("child_game_object");
 	go1->AddChild(child_go);
 	TestComponentPtr tc (new TestComponent());
@@ -158,7 +176,7 @@ void TestComponentSystem()
 	//mm.SendImmediate(init_msg);
 	template_manager->AddTemplate(go1);
 
-	boost::shared_ptr<GASS::BaseObject> bo = boost::shared_static_cast<GASS::BaseObject>( template_manager->CreateFromTemplate("MyManualGameObject"));
+	boost::shared_ptr<GASS::BaseComponentContainer> bo = boost::shared_static_cast<GASS::BaseComponentContainer>( template_manager->CreateFromTemplate("MyManualGameObject"));
 	bo->DebugPrint();
 	//delete go1;
 }
@@ -215,7 +233,7 @@ int main(int argc, char* argv[])
 
 	TestReflection();
 	/////////////////TEST plugin manager/////////////
-	template_manager.reset ( new GASS::BaseObjectTemplateManager());
+	template_manager.reset ( new GASS::BaseComponentContainerTemplateManager());
 
 
 	TestComponentSystem();

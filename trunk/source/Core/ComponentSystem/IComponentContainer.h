@@ -23,6 +23,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "Core/Common.h"
+#include "Core/Utils/Iterators.h"
 
 namespace GASS
 {
@@ -47,7 +48,9 @@ namespace GASS
 	{
 	public:
 		typedef std::vector<ComponentPtr> ComponentVector;
+		typedef VectorIterator<ComponentVector>  ComponentIterator;
 		typedef std::vector<ComponentContainerPtr> ComponentContainerVector;
+		typedef VectorIterator<ComponentContainerVector> ComponentContainerIterator;
 	public:
 		virtual ~IComponentContainer(){}
 		/**
@@ -86,7 +89,7 @@ namespace GASS
 			this will only return the ones owned by this container i.e.
 			no grandchildren will be returned
 		*/
-		virtual ComponentContainerVector GetChildren() = 0;
+		virtual ComponentContainerIterator GetChildren() = 0;
 		/**
 			Get component by name, 
 			only serach this containers components and first one is returned
@@ -96,7 +99,7 @@ namespace GASS
 		/**
 			Get all components owned by this container
 		*/
-		virtual ComponentVector GetComponents() = 0;
+		virtual ComponentIterator GetComponents() = 0;
 		/**
 			Get possible parent component container
 		*/

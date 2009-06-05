@@ -18,12 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Core/ComponentSystem/BaseObject.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
 #include "Core/Serialize/Serialize.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/ComponentSystem/IComponentTemplate.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/MessageManager.h"
@@ -33,53 +34,32 @@
 
 namespace GASS
 {
-	BaseObject::BaseObject()
+	BaseComponentContainerTemplate::BaseComponentContainerTemplate()
 	{
 		
 	}
 
-	BaseObject::~BaseObject(void)
+	BaseComponentContainerTemplate::~BaseComponentContainerTemplate(void)
 	{
 		
 
 	}
 
-	void BaseObject::AddChild(ComponentContainerPtr child)
+	void BaseComponentContainerTemplate::AddChild(ComponentContainerTemplatePtr child)
 	{
-		ComponentContainerWeakPtr parent = ComponentContainerWeakPtr(shared_from_this());
+		ComponentContainerTemplateWeakPtr parent = ComponentContainerTemplateWeakPtr(shared_from_this());
 		child->SetParent(parent);
 		m_ComponentContainerVector.push_back(child);
 	}
 
-/*	ComponentContainerPtr BaseObject::GetChild(const std::string &name)
-	{
-		
-		for(int i = 0 ; i < m_ComponentContainerVector.size(); i++)
-		{
-			
-			if(m_ComponentContainerVector[i]->GetName() == name) 
-			{
-				return m_ComponentContainerVector[i];
-			}
-		}
-		ComponentContainerPtr cc;
-		return cc;
-	}*/
 
-	void BaseObject::RegisterReflection()
+	void BaseComponentContainerTemplate::RegisterReflection()
 	{
-		//IComponentContainerFactory::GetPtr()->Register("IComponentContainer",new Creator<IComponentContainer, IComponentContainer>);
-		RegisterProperty<std::string>("Name", &GASS::BaseObject::GetName, &GASS::BaseObject::SetName);
-		RegisterProperty<std::string>("Inheritance", &GASS::BaseObject::GetInheritance, &GASS::BaseObject::SetInheritance);
+		RegisterProperty<std::string>("Name", &GASS::BaseComponentContainerTemplate::GetName, &GASS::BaseComponentContainerTemplate::SetName);
+		RegisterProperty<std::string>("Inheritance", &GASS::BaseComponentContainerTemplate::GetInheritance, &GASS::BaseComponentContainerTemplate::SetInheritance);
 	}
 
-
-	IComponentContainer::ComponentVector BaseObject::GetComponents()
-	{
-		return m_ComponentVector;
-	}
-
-	ComponentPtr BaseObject::GetComponent(const std::string &name)
+	ComponentPtr BaseComponentContainerTemplate::GetComponent(const std::string &name)
 	{
 		ComponentPtr comp;
 		for(int i = 0 ; i < m_ComponentVector.size(); i++)
@@ -91,13 +71,12 @@ namespace GASS
 	}
 
 
-	void BaseObject::AddComponent(ComponentPtr comp)
+	void BaseComponentContainerTemplate::AddComponent(ComponentPtr comp)
 	{
-		comp->SetOwner(shared_from_this());
 		m_ComponentVector.push_back(comp);
 	}
 
-	bool BaseObject::Serialize(ISerializer* serializer)
+	bool BaseComponentContainerTemplate::Serialize(ISerializer* serializer)
 	{
 		if(!BaseReflectionObject::SerializeProperties(serializer))
 			return false;
@@ -126,7 +105,7 @@ namespace GASS
 			{
 
 				//need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
-				ComponentContainerPtr child  = boost::shared_dynamic_cast<IComponentContainer> (CreateInstance());
+				ComponentContainerTemplatePtr child  = boost::shared_dynamic_cast<IComponentContainerTemplate> (CreateInstance());
 				if(child)
 				{
 					SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
@@ -159,10 +138,10 @@ namespace GASS
 
 			int num_children = m_ComponentContainerVector.size();
 			serializer->IO(num_children);
-			BaseObject::ComponentContainerVector::iterator go_iter;
+			BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
 			{
-				ComponentContainerPtr child = *go_iter;
+				ComponentContainerTemplatePtr child = *go_iter;
 				SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
 				if(s_child)
 				{
@@ -174,9 +153,9 @@ namespace GASS
 		return true;
 	}
 
-	void BaseObject::RemoveChild(ComponentContainerPtr child)
+	void BaseComponentContainerTemplate::RemoveChild(ComponentContainerTemplatePtr child)
 	{
-		BaseObject::ComponentContainerVector::iterator bo_iter;
+		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator bo_iter;
 		for(bo_iter = m_ComponentContainerVector.begin(); bo_iter!= m_ComponentContainerVector.end(); bo_iter++)
 		{
 			if(child == *bo_iter)
@@ -187,34 +166,18 @@ namespace GASS
 		}
 	}
 
-	void BaseObject::OnCreate()
+	IComponentContainer::ComponentIterator BaseComponentContainerTemplate::GetComponents()
 	{
-		ComponentVector::iterator iter = m_ComponentVector.begin();
-		while (iter != m_ComponentVector.end())
-		{
-			ComponentPtr comp = (*iter);
-			comp->OnCreate();
-			++iter;
-		}
-		BaseObject::ComponentContainerVector::iterator go_iter;
-		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
-		{
-			ComponentContainerPtr child = *go_iter;
-			child->OnCreate();
-		}
+		return ComponentIterator(m_ComponentVector.begin(), m_ComponentVector.end());
 	}
 
-/*	void BaseObject::SetAttributes(BaseReflectionObject* obj)
+
+	IComponentContainerTemplate::ComponentContainerTemplateIterator BaseComponentContainerTemplate::GetChildren()
 	{
-		BaseReflectionObject::SetProperties(obj);
+		return IComponentContainerTemplate::ComponentContainerTemplateIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
 
-	bool BaseObject::SetAttribute(const std::string &attrib_name,const std::string &attrib_val)
-	{
-		return BaseReflectionObject::SetProperty(attrib_name, attrib_val);
-	}*/
-
-	void BaseObject::SaveXML(TiXmlElement *obj_elem)
+	void BaseComponentContainerTemplate::SaveXML(TiXmlElement *obj_elem)
 	{
 		
 		TiXmlElement* this_elem = new TiXmlElement( GetName().c_str() );  
@@ -238,7 +201,7 @@ namespace GASS
 		TiXmlElement* cc_elem = new TiXmlElement("ComponentContainers");
 		this_elem->LinkEndChild(cc_elem);
 	
-		BaseObject::ComponentContainerVector::iterator cc_iter;
+		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator cc_iter;
 		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); cc_iter++)
 		{
 			XMLSerializePtr child = boost::shared_dynamic_cast<IXMLSerialize>(*cc_iter);
@@ -249,7 +212,7 @@ namespace GASS
 		}
 	}
 
-	void BaseObject::LoadXML(TiXmlElement *obj_elem)
+	void BaseComponentContainerTemplate::LoadXML(TiXmlElement *obj_elem)
 	{
 		m_Name = obj_elem->Value();
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
@@ -287,7 +250,7 @@ namespace GASS
 				while(cc_elem )
 				{
 					std::string type = cc_elem->Attribute("type");
-					ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
 					AddChild(container);
 					XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
 					if(s_container)
@@ -305,7 +268,7 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr BaseObject::LoadComponent(TiXmlElement *comp_template)
+	ComponentPtr BaseComponentContainerTemplate::LoadComponent(TiXmlElement *comp_template)
 	{
 		std::string comp_name = comp_template->Value();
 		std::string comp_type = comp_template->Attribute("type");
@@ -320,8 +283,7 @@ namespace GASS
 		return comp;
 	}
 
-
-	std::string BaseObject::CreateUniqueName()
+	std::string BaseComponentContainerTemplate::CreateUniqueName()
 	{
 		static int object_counter = 0;
 		std::stringstream ss;
@@ -332,7 +294,7 @@ namespace GASS
 		return u_name ;
 	}
 
-	void BaseObject::InheritComponentData(ComponentContainerPtr cc)
+	void BaseComponentContainerTemplate::InheritComponentData(ComponentContainerPtr cc)
 	{
 		ComponentVector::iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
@@ -359,7 +321,7 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr BaseObject::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager)
+	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager)
 	{
 		ComponentContainerPtr new_object;
 		if(m_Inheritance != "")
@@ -382,14 +344,14 @@ namespace GASS
 		}
 		else
 		{
-			new_object = CreateCopy();//ComponentContainerFactory::Get().Create(m_Type);
+			new_object = CreateComponentContainer();//ComponentContainerFactory::Get().Create(m_Type);
 			if(new_object)
 			{
 				//AddComponentData(new_object);
 				
 				/*if(m_NameCheck)
 				{
-				BaseObject* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
+				BaseComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
 				while(obj)
 				{
 				sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
@@ -416,7 +378,7 @@ namespace GASS
 			}
 		}
 		//recursive add children
-		BaseObject::ComponentContainerVector::iterator iter;
+		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator iter;
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); iter++)
 		{
 			ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(*iter);
@@ -434,10 +396,15 @@ namespace GASS
 	}
 
 
-	ComponentContainerPtr BaseObject::CreateCopy()
+	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer()
 	{
-		BaseObjectPtr new_obj = boost::shared_static_cast<BaseObject>(CreateInstance());
-		BaseReflectionObject::SetProperties(new_obj);
+		std::string type = GetRTTI()->GetClassName();
+		//remove template from name
+		int pos = type.find("Template");
+		type = type.substr(0,pos);
+		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
+		BaseReflectionObject::SetProperties(ref_obj);
 		
 		ComponentVector::iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
@@ -447,14 +414,14 @@ namespace GASS
 			if(temp_comp)
 			{
 				ComponentPtr new_comp = temp_comp->CreateCopy();
-				new_obj->AddComponent(new_comp);
+				container->AddComponent(new_comp);
 			}
 		}
-		return new_obj;
+		return container;
 	}
 
 	#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
-	void BaseObject::DebugPrint(int tc)
+	void BaseComponentContainerTemplate::DebugPrint(int tc)
 	{
 
 		TAB(tc) << GetRTTI()->GetClassName() <<" - " << GetName() << std::endl;
@@ -475,14 +442,14 @@ namespace GASS
 		}
 		tc--;
 		//TAB(tc) << "Components - " << std::endl;
-		BaseObject::ComponentContainerVector::iterator iter;
+		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator iter;
 		if(m_ComponentContainerVector.size() > 0)
 		{
 			TAB(tc) << "Children" << std::endl;
 		}
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); iter++)
 		{
-			BaseObjectPtr child = boost::shared_static_cast<BaseObject>( *iter);
+			BaseComponentContainerTemplatePtr child = boost::shared_static_cast<BaseComponentContainerTemplate>( *iter);
 			child->DebugPrint(tc+1);
 		}
 		//TAB(tc) << "Children - " << std::endl;

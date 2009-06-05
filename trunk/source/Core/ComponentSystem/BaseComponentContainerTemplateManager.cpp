@@ -19,9 +19,9 @@
 *****************************************************************************/
 
 #include "Core/Common.h"
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/IComponentContainerTemplate.h"
-#include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/Serialize/IXMLSerialize.h"
 
 #include "Core/Utils/Log.h"
@@ -32,42 +32,37 @@
 namespace GASS
 {
 
-	BaseObjectTemplateManager::BaseObjectTemplateManager() : m_ForceUniqueName(true)
+	BaseComponentContainerTemplateManager::BaseComponentContainerTemplateManager() : m_ForceUniqueName(true)
 	{
 		//m_NameCheck = false;
 	}
 
-	BaseObjectTemplateManager::~BaseObjectTemplateManager()
+	BaseComponentContainerTemplateManager::~BaseComponentContainerTemplateManager()
 	{
 
 	}
 
-	void BaseObjectTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
+	void BaseComponentContainerTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
 	{
 		m_TemplateMap[obj->GetName()] = obj;
 		
-		ComponentContainerPtr cc = boost::shared_dynamic_cast<IComponentContainer>(obj);
-		if(cc)
+		IComponentContainerTemplate::ComponentContainerTemplateIterator children = obj->GetChildren();
+
+		while(children.hasMoreElements())
 		{
-			IComponentContainer::ComponentContainerVector children = cc->GetChildren();
-			IComponentContainer::ComponentContainerVector::iterator iter;
-			for(iter  = children.begin(); iter != children.end(); iter++)
-			{
-				ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(*iter);
-				if(child)
-					AddTemplate(child);
-			}
+			ComponentContainerTemplatePtr child = children.getNext();
+			AddTemplate(child);
 		}
 	}
 
-	ComponentContainerPtr BaseObjectTemplateManager::CreateFromTemplate(const std::string &name)
+	ComponentContainerPtr BaseComponentContainerTemplateManager::CreateFromTemplate(const std::string &name)
 	{
 		ComponentContainerPtr new_cc;
 		ComponentContainerTemplatePtr temp =  GetTemplate(name);
 		int part_id = 0;
 		if(temp)
 		{
-			BaseObjectTemplateManagerPtr manager = shared_from_this();
+			BaseComponentContainerTemplateManagerPtr manager = shared_from_this();
 			new_cc = temp->CreateComponentContainer(part_id,manager);
 		}
 		else
@@ -75,7 +70,7 @@ namespace GASS
 		return new_cc;
 	}
 
-	ComponentContainerTemplatePtr BaseObjectTemplateManager::GetTemplate(const std::string &name)
+	ComponentContainerTemplatePtr BaseComponentContainerTemplateManager::GetTemplate(const std::string &name)
 	{
 		TemplateMap::iterator pos;
 		//find the template
@@ -89,17 +84,17 @@ namespace GASS
 		return temp;
 	}
 
-	bool BaseObjectTemplateManager::Load(const std::string &filename)
+	bool BaseComponentContainerTemplateManager::Load(const std::string &filename)
 	{
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
 			// Fatal error, cannot load
-			Log::Warning("BaseObjectTemplateManager::Load() - Couldn't load: %s", filename.c_str());
+			Log::Warning("BaseComponentContainerTemplateManager::Load() - Couldn't load: %s", filename.c_str());
 			return 0;
 		}
-		TiXmlElement *templates = xmlDoc->FirstChildElement("ComponentContainers");
+		TiXmlElement *templates = xmlDoc->FirstChildElement("Templates");
 
 		if(templates)
 		{
@@ -108,20 +103,15 @@ namespace GASS
 			while(templates)
 			{
 				std::string type = templates->Attribute("type");
-				ComponentContainerPtr container = boost::shared_static_cast<IComponentContainer>(ComponentContainerFactory::Get().Create(type));
-				
-				
-				//if(temp)
+				ComponentContainerTemplatePtr container = (ComponentContainerTemplateFactory::Get().Create(type));
+				if(container)
 				{
 					XMLSerializePtr s_cont = boost::shared_dynamic_cast<IXMLSerialize>(container);
 					if(s_cont)
 						s_cont->LoadXML(templates);
-					
-					ComponentContainerTemplatePtr temp = boost::shared_dynamic_cast<IComponentContainerTemplate>(container);
-					if(temp)
-						AddTemplate(temp);
-					templates  = templates->NextSiblingElement();
+					AddTemplate(container);
 				}
+				templates  = templates->NextSiblingElement();
 			}
 		}
 		xmlDoc->Clear();
@@ -130,7 +120,7 @@ namespace GASS
 		return 1;
 	}
 
-	/*void BaseObjectTemplateManager::AddRecursive(IComponentContainer* cc)
+	/*void BaseComponentContainerTemplateManager::AddRecursive(IComponentContainer* cc)
 	{
 		IComponentContainerTemplate* temp = dynamic_cast<IComponentContainerTemplate*>(cc);
 		if(temp)

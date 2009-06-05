@@ -29,7 +29,7 @@
 
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 
 #include "Core/Utils/Log.h"
@@ -82,12 +82,7 @@ namespace GASS
 
 	void SceneObjectManager::LoadObject(SceneObjectPtr obj)
 	{
-		//add some default messages to objects, this could also be done in each component but we save some jobb
-		//by doing it here,  maybee a custom message manager for objects should be created?
-		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS);
-		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
-		//obj->GetMessageManager()->AddMessageToSystem(ScenarioScene::SM_MESSAGE_LOAD_USER_COMPONENTS);
-
+	
 		obj->SetSceneObjectManager(this);
 		obj->OnCreate();
 		
@@ -108,11 +103,10 @@ namespace GASS
 		obj->SyncMessages(0);
 		//send load message for all child game object also?
 
-		BaseObject::ComponentContainerVector children = obj->GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
+		IComponentContainer::ComponentContainerIterator children = obj->GetChildren();
+		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 			LoadObject(child); 
 		}
 	}
@@ -185,8 +179,8 @@ namespace GASS
 			objects.push_back(obj);
 
 		//Check all components
-		BaseObject::ComponentVector components =  obj->GetComponents();
-		BaseObject::ComponentVector::iterator comp_iter = components.begin();
+		BaseComponentContainer::ComponentVector components =  obj->GetComponents();
+		BaseComponentContainer::ComponentVector::iterator comp_iter = components.begin();
 		for(;comp_iter != components.end();comp_iter++)
 		{
 			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
@@ -197,8 +191,8 @@ namespace GASS
 			}
 		}
 		
-		BaseObject::ComponentContainerVector children = obj->GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		BaseComponentContainer::ComponentContainerVector children = obj->GetChildren();
+		BaseComponentContainer::ComponentContainerVector::iterator iter = children.begin();
 		for(;iter != children.end();iter++)
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
@@ -229,8 +223,8 @@ namespace GASS
 			return obj;
 
 		//check children also
-		BaseObject::ComponentContainerVector children = obj->GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
+		BaseComponentContainer::ComponentContainerVector children = obj->GetChildren();
+		BaseComponentContainer::ComponentContainerVector::iterator iter = children.begin();
 		for(;iter != children.end();iter++)
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
@@ -267,11 +261,10 @@ namespace GASS
 
 	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)
 	{
-		BaseObject::ComponentContainerVector children = obj->GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
+		BaseComponentContainer::ComponentContainerIterator children = obj->GetChildren();
+		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 			DeleteObject(child);
 		}
 

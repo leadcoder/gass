@@ -39,23 +39,23 @@ namespace GASS
 
 	/**
 		  Implementaion of the IComponentContainerTemplateManager interface
-		  This implementaion extened IComponentContainerTemplateManager 
-		  interface with Load function that assume that component containers
-		  that should be able to load from file has the IXML serialization 
-		  interface implemented like the BaseObject.
-		  The name BaseObjectTemplateManager is therefor used to
+		  This implementaion extened the IComponentContainerTemplateManager 
+		  interface with a Load function that assume that component containers
+		  that should be loaded from file has the IXML serialization 
+		  interface implemented, like the BaseObject implementaion.
+		  The name BaseComponentContainerTemplateManager is therefor used to
 		  indicate that BaseObject component container implementaion 
 		  will work with this implementation.
 	*/
 
-	class GASSCoreExport BaseObjectTemplateManager: public boost::enable_shared_from_this<BaseObjectTemplateManager> , public IComponentContainerTemplateManager
+	class GASSCoreExport BaseComponentContainerTemplateManager: public boost::enable_shared_from_this<BaseComponentContainerTemplateManager> , public IComponentContainerTemplateManager
 	{
 		friend class IComponentContainerTemplate;
 	public:
 		typedef std::map<std::string,ComponentContainerTemplatePtr> TemplateMap;
 	public:
-		BaseObjectTemplateManager();
-		virtual ~BaseObjectTemplateManager();
+		BaseComponentContainerTemplateManager();
+		virtual ~BaseComponentContainerTemplateManager();
 		/**
 			Create a new object from the template archive.
 		@remarks
@@ -89,6 +89,6 @@ namespace GASS
 		bool m_ForceUniqueName;
 		TemplateMap m_TemplateMap;
 	};
-	typedef boost::shared_ptr<BaseObjectTemplateManager> BaseObjectTemplateManagerPtr;
+	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 }
 

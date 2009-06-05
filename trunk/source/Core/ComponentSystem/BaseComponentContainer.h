@@ -35,7 +35,7 @@ namespace GASS
 
 	/**
 			This is the class that a game or simulation object should be derive from.
-			The BaseObject is a convinience class that implements a couple of 
+			The BaseComponentContainer is a convinience class that implements a couple of 
 			usefull interfaces such as that the	IComponentContainer and 
 			IComponentContainerTemplate it also inherite from the reflection template class 
 			which enables attribute reflection in a easy way. The inheritance from 
@@ -45,15 +45,11 @@ namespace GASS
 			class see the documentation for each interface
 
 	*/
-	class GASSCoreExport BaseObject : public Reflection<BaseObject, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseObject>, public IComponentContainer, public IXMLSerialize, public ISerialize, public IComponentContainerTemplate
+	class GASSCoreExport BaseComponentContainer : public Reflection<BaseComponentContainer, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseComponentContainer>, public IComponentContainer, public IXMLSerialize, public ISerialize
 	{
 	public:
-		//typedef std::vector<IComponent*> ComponentVector;
-		//typedef std::vector<IComponentContainer*> ComponentContainerVector;
-	public:
-		BaseObject();
-		virtual ~BaseObject();
-		
+		BaseComponentContainer();
+		virtual ~BaseComponentContainer();
 		static	void RegisterReflection();
 		
 		//ComponentContainer interface
@@ -62,12 +58,12 @@ namespace GASS
 		virtual void SetName(const std::string &name) {m_Name = name;}
 		virtual void AddChild(ComponentContainerPtr child);
 		virtual void RemoveChild(ComponentContainerPtr child);
-		virtual ComponentContainerVector GetChildren(){return m_ComponentContainerVector;}
+		virtual ComponentContainerIterator GetChildren();
 		virtual ComponentContainerPtr GetParent() const {return ComponentContainerPtr(m_Parent,boost::detail::sp_nothrow_tag());}//allow null pointer}
 		virtual void SetParent(ComponentContainerWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
 		virtual ComponentPtr GetComponent(const std::string &name);
-		virtual ComponentVector GetComponents();
+		virtual ComponentIterator GetComponents();
 	
 		//xml serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);
@@ -76,10 +72,6 @@ namespace GASS
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
 
-		//IComponentContainerTemplate interface
-		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager);
-		virtual ComponentContainerPtr CreateCopy();
-	
 		//print object
 		void DebugPrint(int tc = 0);
 
@@ -94,14 +86,12 @@ namespace GASS
 		void InheritComponentData(ComponentContainerPtr cc);
 
 		ComponentPtr LoadComponent(TiXmlElement *comp_template);
-		//ComponentContainerPtr GetChild(const std::string &name);
-		
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;
 		std::string m_Name;
 		std::string m_Inheritance;
 		ComponentContainerWeakPtr m_Parent;
 	};
-	typedef boost::shared_ptr<BaseObject> BaseObjectPtr;
+	typedef boost::shared_ptr<BaseComponentContainer> BaseComponentContainerPtr;
 
 }

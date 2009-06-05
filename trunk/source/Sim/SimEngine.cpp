@@ -24,7 +24,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 #include "Core/System/ISystemManager.h"
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/Utils/Log.h"
 
 //include to ensure interface export
@@ -45,7 +45,7 @@ namespace GASS
 		//m_SimulationUpdateInterval = 1.0f/30.0f; //30Hz
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SystemManagerPtr(new SimSystemManager());
-		m_SimObjectManager = BaseObjectTemplateManagerPtr(new BaseObjectTemplateManager());
+		m_SimObjectManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
 	}

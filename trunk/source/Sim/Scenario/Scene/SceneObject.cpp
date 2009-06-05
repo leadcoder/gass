@@ -97,22 +97,20 @@ namespace GASS
 	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name)
 	{
 		//Check all components
-		BaseObject::ComponentVector cv =  GetComponents();
-		BaseObject::ComponentVector::iterator comp_iter = cv.begin();
-		for(;comp_iter != cv.end();comp_iter++)
+		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{				
 				components.push_back(comp);
 			}
 		}
 
-		BaseObject::ComponentContainerVector children = GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
+		IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+		while(cc_iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
 			child->GetComponentsByClass(components, class_name);
 		}
 	}
@@ -147,11 +145,10 @@ namespace GASS
 			}
 		}
 
-		BaseObject::ComponentContainerVector children = GetChildren();
-		BaseObject::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
+		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 			child->GetObjectsByName(objects,name,exact_math);
 		}
 	}

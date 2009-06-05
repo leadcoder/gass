@@ -29,12 +29,12 @@ namespace GASS
 {
 	class PluginManager;
 	class SimSystemManager;
-	class BaseObjectTemplateManager;
+	class BaseComponentContainerTemplateManager;
 	class IRuntimeController;
 	
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SystemManagerPtr;
-	typedef boost::shared_ptr<BaseObjectTemplateManager> BaseObjectTemplateManagerPtr;
+	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
 
@@ -77,13 +77,13 @@ namespace GASS
 		bool Shutdown();
 
 		SystemManagerPtr GetSystemManager() {return m_SystemManager;}
-		BaseObjectTemplateManagerPtr GetSimObjectManager() {return m_SimObjectManager;}
+		BaseComponentContainerTemplateManagerPtr GetSimObjectManager() {return m_SimObjectManager;}
 		ControlSettingsManagerPtr GetControlSettingsManager() {return m_ControlSettingsManager;}
 		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
 	private:
 		PluginManagerPtr m_PluginManager;
 		SystemManagerPtr m_SystemManager;
-		BaseObjectTemplateManagerPtr m_SimObjectManager;
+		BaseComponentContainerTemplateManagerPtr m_SimObjectManager;
 		ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 	};

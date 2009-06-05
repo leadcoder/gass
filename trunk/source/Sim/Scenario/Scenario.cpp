@@ -30,7 +30,7 @@
 
 #include "Core/Utils/Log.h"
 #include "Core/System/ISystem.h"
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "tinyxml.h"
 
 namespace GASS

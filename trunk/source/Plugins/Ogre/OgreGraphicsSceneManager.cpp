@@ -22,6 +22,7 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -30,7 +31,8 @@
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
-
+#include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
@@ -129,8 +131,32 @@ namespace GASS
 		UpdateFogSettings();
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 
-		// Load default camera ect
+		// Try to load default camera
 		SceneObjectPtr scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+
+		if(!scene_object) //If no FreeCameraObject template found, create one
+		{
+			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
+			fre_cam_template->SetName("FreeCameraObject");
+			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
+			location_comp->SetName("LocationComp");
+	
+			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
+			camera_comp->SetName("FreeCameraComp");
+
+			ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
+			cc_comp->SetName("FreeCameraCtrlComp");
+
+			fre_cam_template->AddComponent(location_comp);
+			fre_cam_template->AddComponent(camera_comp);
+			fre_cam_template->AddComponent(cc_comp);
+
+			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
+
+			scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+
+		}
+			
 		
 		assert(scene_object);
 		//SceneObject* scene_object = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("FreeCameraObject");

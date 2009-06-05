@@ -22,7 +22,7 @@
 
 #include "Sim/Common.h"
 #include "Core/Reflection/BaseReflectionObject.h"
-#include "Core/ComponentSystem/BaseObject.h"
+#include "Core/ComponentSystem/BaseComponentContainer.h"
 #include "Core/MessageSystem/Message.h"
 
 
@@ -33,7 +33,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
-	class GASSExport SceneObject : public Reflection<SceneObject, BaseObject>
+	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer>
 	{
 	public:
 
