@@ -32,11 +32,9 @@ namespace GASS
 	class MessageManager;
 
 	/**
-			This is the class that a game or simulation object should be derive from.
-			The BaseComponentContainerTemplate is a convinience class that implements a couple of 
-			usefull interfaces such as that the	IComponentContainer and 
-			IComponentContainerTemplate it also inherite from the reflection template class 
-			which enables attribute reflection in a easy way. The inheritance from 
+			The BaseComponentContainerTemplate is a convinience class that implements 
+			the	IComponentContainerTemplate it also inherite from the reflection template 
+			class which enables attribute reflection in a easy way. The inheritance from 
 			boost::enable_shared_from_this is used to get hold of ourself (this) as 
 			a shared pointer with the shared_from_this() function. 
 			To get more information what you get by inherit from this 

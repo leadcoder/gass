@@ -35,12 +35,12 @@ namespace GASS
 
 	/**
 			This is the class that a game or simulation object should be derive from.
-			The BaseComponentContainer is a convinience class that implements a couple of 
-			usefull interfaces such as that the	IComponentContainer and 
-			IComponentContainerTemplate it also inherite from the reflection template class 
-			which enables attribute reflection in a easy way. The inheritance from 
-			boost::enable_shared_from_this is used to get hold of ourself (this) as 
-			a shared pointer with the shared_from_this() function. 
+			The BaseComponentContainer is a convinience class that implements the
+			IComponentContainer it also inherite from the reflection template class 
+			which enables attribute reflection in a easy way. 
+			The inheritance from boost::enable_shared_from_this is used to 
+			get hold of ourself (this) as a shared pointer with the 
+			shared_from_this() function. 
 			To get more information what you get by inherit from this 
 			class see the documentation for each interface
 
