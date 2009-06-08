@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SPHERE_HH
+#define SPHERE_HH
 
 #include "Core/Common.h"
 #include "Core/Math/Vector.h"
@@ -28,7 +29,7 @@ namespace GASS
 {
 
 	class AABox;
-	class GASSCoreExport Sphere  
+	class GASSCoreExport Sphere
 	{
 	public:
 		Sphere();
@@ -39,10 +40,9 @@ namespace GASS
 		bool AABoxInside(const AABox &box);
 		bool SphereInside(const Sphere &sphere);
 		void Union(const Sphere &sphere);
-	
+
 		float m_Radius;
 		Vec3 m_Pos;
 	};
 }
-
-
+#endif // #ifndef SPHERE_HH

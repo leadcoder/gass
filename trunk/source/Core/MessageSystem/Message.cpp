@@ -28,7 +28,7 @@ namespace GASS
 			m_ToID(0),
 			m_Timer(0)
 	{
-	
+
 	}
 
 	Message::~Message()
@@ -50,8 +50,8 @@ namespace GASS
 	{
 		m_Data[data_name] = data;
 	}
-	
 
-		
-	
+
+
+
 }

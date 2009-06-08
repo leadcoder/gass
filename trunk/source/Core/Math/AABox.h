@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef AABOX_HH
+#define AABOX_HH
 
 #include "Core/Common.h"
 #include <vector>
@@ -29,7 +30,7 @@ namespace GASS
 {
 	class Polygon;
 
-	class GASSCoreExport AABox  
+	class GASSCoreExport AABox
 	{
 	public:
 		AABox();
@@ -38,7 +39,7 @@ namespace GASS
 		void Union(const AABox &aabox);
 		void Union(Float x,Float y,Float z);
 		void Union(const Vec3 &point);
-		bool PolyInside(const Polygon &poly) const; 
+		bool PolyInside(const Polygon &poly) const;
 		bool LineInside(const Vec3 &p1,const Vec3 &p2) const;
 		bool PointInside(const Vec3 &point) const;
 		void Transform(const Mat4 &mat);
@@ -49,8 +50,7 @@ namespace GASS
 		static AABox GetAABox(const Polygon &poly);
 		Vec3 m_Max;
 		Vec3 m_Min;
-	
+
 	};
 }
-
-
+#endif // #ifndef AABOX_HH

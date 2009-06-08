@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ROTATIONSPLINE_HH
+#define ROTATIONSPLINE_HH
 
 #include "Core/Math/Quaternion.h"
 #include <vector>
@@ -42,3 +43,4 @@ namespace GASS
 		bool m_AutoCalc;
 	};
 }
+#endif // #ifndef ROTATIONSPLINE_HH

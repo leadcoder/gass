@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASECOMPONENT_HH
+#define BASECOMPONENT_HH
 
 #include <Core/Common.h>
 
@@ -50,11 +51,11 @@ namespace GASS
 		virtual void SetName(const std::string &name);
 		virtual ComponentContainerPtr GetOwner() const;
 		virtual void SetOwner(ComponentContainerPtr owner);
-		
+
 
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
-		
+
 		//xml-serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);
 		virtual void SaveXML(TiXmlElement *obj_elem);
@@ -66,11 +67,12 @@ namespace GASS
 		//template interface
 		virtual ComponentPtr CreateCopy();
 		virtual void Assign(ComponentPtr comp);
-		
+
 	protected:
 		std::string m_Name;
 		ComponentContainerWeakPtr m_Owner;
 	};
 	typedef boost::shared_ptr<BaseComponent> BaseComponentPtr;
-	
+
 }
+#endif // #ifndef BASECOMPONENT_HH

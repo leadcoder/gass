@@ -22,6 +22,8 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "tinyxml.h"
 
+#include "Core/Reflection/PropertyTypes.h"
+
 namespace GASS
 {
 	BaseComponent::BaseComponent(void) : m_Owner(ComponentContainerWeakPtr())

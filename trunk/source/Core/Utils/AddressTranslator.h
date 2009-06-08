@@ -18,11 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-
-#pragma once
-
-#pragma warning (disable : 4786)  
+#ifndef ADDRESSTRANSLATOR_HH
+#define ADDRESSTRANSLATOR_HH
 
 #include "Core/Common.h"
 #include <map>
@@ -44,5 +41,4 @@ namespace GASS
 		static AddressTable m_AddressTable;
 	};
 }
-
-
+#endif // #ifndef ADDRESSTRANSLATOR_HH

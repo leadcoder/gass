@@ -17,8 +17,14 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
+#ifndef PREREQUISITS_HH
+#define PREREQUISITS_HH
+
 #ifdef WIN32
     #include <windows.h>
 #else
     #include <sys/time.h>
 #endif
+
+#endif // #ifndef PREREQUISITS_HH

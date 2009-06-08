@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef MESSAGE_HH
+#define MESSAGE_HH
+
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
@@ -26,7 +29,7 @@
 
 namespace GASS
 {
-	
+
 	class GASSCoreExport Message
 	{
 	public:
@@ -34,7 +37,7 @@ namespace GASS
 		virtual ~Message();
 		boost::any GetData(const std::string &data_name);
 		void SetData(const std::string &data_name, boost::any data);
-	
+
 		//public for fast access
 		int m_TypeID;
 		int m_FromID;
@@ -44,7 +47,8 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<Message> MessagePtr;
 	typedef boost::function<void (MessagePtr)> MessageFunc;
-	
+
 
 	#define MESSAGE_FUNC(X) boost::bind( &X, this, _1 )
 }
+#endif // #ifndef MESSAGE_HH

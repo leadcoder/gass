@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef IXMLSERIALIZE_HH
+#define IXMLSERIALIZE_HH
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix.h"
@@ -40,5 +42,4 @@ namespace GASS
 
 	typedef boost::shared_ptr<IXMLSerialize> XMLSerializePtr;
 }
-
-
+#endif // #ifndef IXMLSERIALIZE_HH

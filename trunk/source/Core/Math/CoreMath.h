@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef COREMATH_HH
+#define COREMATH_HH
 
 #include "Core/Common.h"
 
@@ -32,8 +33,8 @@
 namespace GASS
 {
 	class Polygon;
-	
-	
+
+
 
 	/**\class Math
 	* \brief Class with a couple of math functions.
@@ -55,7 +56,7 @@ namespace GASS
 		*/
 		static float Deg2Rad(float deg);
 
-		
+
 		static Vec3 Deg2Rad(const Vec3 &vec);
 		static Vec3 Rad2Deg(const Vec3 &vec);
 
@@ -92,7 +93,7 @@ namespace GASS
 		static bool TriangleIsectTriangle(const Vec3 &t1_v1,const Vec3 &t1_v2,const Vec3 &t1_v3,const Vec3 &t2_v1,const Vec3 &t2_v2,const Vec3 &t2_v3,Vec3 &isect_point);
 		static float Min(const float &v1,const float &v2);
 		static float Max(const float &v1,const float &v2);
-		
+
 		static inline float InvSqrt(float x)
 		{
 			float xhalf = 0.5f*x;
@@ -114,5 +115,4 @@ namespace GASS
 	};
 }
 
-
-
+#endif // #ifndef COREMATH_HH

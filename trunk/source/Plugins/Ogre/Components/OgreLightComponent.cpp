@@ -52,7 +52,7 @@ namespace GASS
 
 	}
 
-	OgreLightComponent::~OgreLightComponent() 
+	OgreLightComponent::~OgreLightComponent()
 	{
 
 	}
@@ -60,19 +60,19 @@ namespace GASS
 	void OgreLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OgreLightComponent, IComponent>);
-		RegisterProperty<LightType>("LightType", &GetLightType, &SetLightType);
+		RegisterProperty<LightType>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType);
 
-		RegisterProperty<Vec4>("AttenuationParmas", &GetAttenuationParams, &SetAttenuationParams);
-		RegisterProperty<Vec3>("SpotlightParams", &GetSpotParams, &SetSpotParams);
-		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
+		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams);
+		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams);
+		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow);
 
-		RegisterProperty<Vec3>("DiffuseLightColor", &GetDiffuse, &SetDiffuse);
-		RegisterProperty<Vec3>("SpecularLightColor", &GetSpecular, &SetSpecular);
+		RegisterProperty<Vec3>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse);
+		RegisterProperty<Vec3>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular);
 	}
 
 	void OgreLightComponent::OnCreate()
 	{
-	
+
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC( OgreLightComponent::OnLoad),1);
 	}
 
@@ -127,7 +127,7 @@ namespace GASS
 	void OgreLightComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
-		if(m_OgreLight) 
+		if(m_OgreLight)
 			m_OgreLight->setCastShadows(m_CastShadow);
 	}
 
@@ -152,6 +152,6 @@ namespace GASS
 		m_OgreLight->setVisible(true);
 		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
 		//m_OgreLight->setDirection(0,1,0);
-		
+
 	}
 }

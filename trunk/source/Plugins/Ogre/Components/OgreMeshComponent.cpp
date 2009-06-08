@@ -49,7 +49,7 @@ namespace GASS
 		m_CastShadow(true)
 	{
 
-	}	
+	}
 
 	OgreMeshComponent::~OgreMeshComponent()
 	{
@@ -59,9 +59,9 @@ namespace GASS
 	void OgreMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
-		RegisterProperty<std::string>("RenderQueue", &GetRenderQueue, &SetRenderQueue);
-		RegisterProperty<std::string>("Filename", &GetFilename, &SetFilename);
-		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
+		RegisterProperty<std::string>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
+		RegisterProperty<std::string>("Filename", &GASS::OgreMeshComponent::GetFilename, &GASS::OgreMeshComponent::SetFilename);
+		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
 
 	void OgreMeshComponent::OnCreate()
@@ -74,7 +74,7 @@ namespace GASS
 	{
 		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(ogsm);
-	
+
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 
 		static unsigned int obj_id = 0;
@@ -87,7 +87,7 @@ namespace GASS
 		m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
 		//LoadLightmap();
-		if(m_CastShadow) 
+		if(m_CastShadow)
 		{
 			m_OgreEntity->setCastShadows(true);
 			//??
@@ -165,7 +165,7 @@ namespace GASS
 
 
 
-	
+
 	Ogre::Bone* OgreMeshComponent::GetClosestBone(const Vec3 &pos)
 	{
 		assert(m_OgreEntity);
@@ -238,7 +238,7 @@ namespace GASS
 				AddIndexData(sub_mesh->indexData,mesh_data->NumVertex,mesh_data);
 				AddVertexData(sub_mesh->vertexData,mesh_data);
 			}
-			else 
+			else
 			{
 				AddIndexData(sub_mesh->indexData,0,mesh_data);
 			}
@@ -248,7 +248,7 @@ namespace GASS
 
 	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
 	{
-		if (!vertex_data) 
+		if (!vertex_data)
 			return;
 
 		const VertexData *data = vertex_data;
@@ -265,8 +265,8 @@ namespace GASS
 		mesh->VertexVector = tmp_vert;
 
 		// Get the positional buffer element
-		{	
-			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);			
+		{
+			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
 			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
 			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
 
@@ -290,7 +290,7 @@ namespace GASS
 			vbuf->unlock();
 		}
 	}
-	
+
 	void OgreMeshComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
 	{
 		const unsigned int prev_size = mesh->NumFaces;
@@ -305,11 +305,11 @@ namespace GASS
 		mesh->FaceVector = tmp_ind;
 
 		const unsigned int numTris = (unsigned int) data->indexCount / 3;
-		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;	
+		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
 		const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
 		unsigned int index_offset = prev_size;
 
-		if (use32bitindexes) 
+		if (use32bitindexes)
 		{
 			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
 			for(unsigned int k = 0; k < numTris; ++k)
@@ -320,7 +320,7 @@ namespace GASS
 			}
 			ibuf->unlock();
 		}
-		else 
+		else
 		{
 			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
 			for(unsigned int k = 0; k < numTris; ++k)

@@ -56,7 +56,7 @@ namespace GASS
 		m_Height(1.0f)
 	{
 
-	}	
+	}
 
 	OgreBillboardComponent::~OgreBillboardComponent()
 	{
@@ -66,9 +66,9 @@ namespace GASS
 	void OgreBillboardComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, IComponent>);
-		RegisterProperty<std::string>("RenderQueue", &GetRenderQueue, &SetRenderQueue);
-		RegisterProperty<std::string>("Material", &GetMaterial, &SetMaterial);
-		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
+		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
+		RegisterProperty<std::string>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
+		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 	}
 
 	void OgreBillboardComponent::OnCreate()
@@ -81,7 +81,7 @@ namespace GASS
 	{
 		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(ogsm);
-	
+
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 
 		static unsigned int obj_id = 0;
@@ -96,7 +96,7 @@ namespace GASS
 			std::string material_name = m_Material;
 			Ogre::MaterialPtr material;
 			if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
-			else 
+			else
 			{
 				material = Ogre::MaterialManager::getSingleton().create(material_name, "GASS",false, 0); // Manual, loader
 				// Remove pre-created technique from defaults
@@ -109,7 +109,7 @@ namespace GASS
 				material->setCullingMode(Ogre::CULL_NONE);
 				std::string fullpath;
 				IResourceSystem* rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>().get();
-		
+
 				if(rs->GetFullPath(m_Material,fullpath))
 				{
 					Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material,0);
@@ -121,7 +121,7 @@ namespace GASS
 			/*int elem = 0;
 			//char billboard_set_name[255];
 			sprintf(billboard_set_name,"%s_%s",m_Material.c_str(),GetName().c_str());
-			
+
 			if(ogsm->GetSceneManger()->hasBillboardSet(billboard_set_name))
 			{
 				m_BillboardSet = ogsm->GetSceneManger()->getBillboardSet(billboard_set_name);
@@ -167,8 +167,8 @@ namespace GASS
 
 	void OgreBillboardComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
-	
+
 	}
 
-	
+
 }

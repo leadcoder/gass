@@ -46,7 +46,7 @@ namespace GASS
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
 		m_LastRot(0,0,0),
-		m_LastPos(0,0,0), 
+		m_LastPos(0,0,0),
 		m_Scale(1,1,1),
 		m_OgreNode (NULL)
 	{
@@ -60,7 +60,7 @@ namespace GASS
 			m_OgreNode->setListener(NULL);
 			Ogre::SceneNode* parent = m_OgreNode->getParentSceneNode();
 			if(parent)
-			{	
+			{
 				parent->removeChild(m_OgreNode);
 			}
 			else
@@ -68,30 +68,30 @@ namespace GASS
 				Ogre::SceneManager* sm = m_OgreNode->getCreator();
 				sm->destroySceneNode(m_OgreNode->getName());
 			}
-			
+
 		}
-		
+
 	}
 
 	void OgreLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, IComponent>);
-		RegisterProperty<Vec3>("Position", &GetPosition, &SetPosition);
-		RegisterProperty<Vec3>("Rotation", &GetEulerRotation, &SetEulerRotation);
-		RegisterProperty<bool>("AttachToParent", &GetAttachToParent, &SetAttachToParent);
+		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition);
+		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation);
+		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent);
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
 	}
 
 	void OgreLocationComponent::OnCreate()
 	{
-	
+
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreLocationComponent::OnLoad ),0);
-		
+
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC( OgreLocationComponent::PositionMessage),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC( OgreLocationComponent::RotationMessage),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION,  MESSAGE_FUNC( OgreLocationComponent::WorldPositionMessage ),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION,   MESSAGE_FUNC( OgreLocationComponent::WorldRotationMessage ),0);
-		
+
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PARENT_CHANGED, MESSAGE_FUNC( OgreLocationComponent::ParentChangedMessage ),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_VISIBILITY,  MESSAGE_FUNC( OgreLocationComponent::VisibilityMessage ),0);
 	}
@@ -113,7 +113,7 @@ namespace GASS
 		{
 			OgreLocationComponentPtr parent = GetParentLocation();
 			if(parent)
-			{	
+			{
 				m_OgreNode = parent->GetOgreNode()->createChildSceneNode(name);
 			}
 			else
@@ -126,7 +126,7 @@ namespace GASS
 		}
 
 		m_OgreNode->setListener(this);
-		
+
 		int from_id = (int)this;
 		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
@@ -141,7 +141,7 @@ namespace GASS
 	void OgreLocationComponent::ParentChangedMessage(MessagePtr message)
 	{
 		SetAttachToParent(m_AttachToParent);
-		
+
 	}
 
 
@@ -225,7 +225,7 @@ namespace GASS
 		m_Scale = value;
 		if(m_OgreNode) m_OgreNode->setScale(Convert::ToOgre(value));
 	}
-	
+
 	void OgreLocationComponent::SetPosition(const Vec3 &value)
 	{
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
@@ -239,12 +239,12 @@ namespace GASS
 		m_Pos = value;
 	}
 
-	Vec3 OgreLocationComponent::GetPosition() const 
+	Vec3 OgreLocationComponent::GetPosition() const
 	{
 		return m_Pos;
 	}
 
-	Vec3 OgreLocationComponent::GetWorldPosition() const 
+	Vec3 OgreLocationComponent::GetWorldPosition() const
 	{
 		Vec3 pos = m_Pos;
 		if(m_OgreNode)
@@ -269,7 +269,7 @@ namespace GASS
 			m_OgreNode->roll(Ogre::Radian(rot.z));
 
 			// send rotation changed message
-	
+
 		}
 	}*/
 
@@ -348,9 +348,9 @@ namespace GASS
 			OgreLocationComponentPtr parent = GetParentLocation();
 			if(parent && value)
 				parent->GetOgreNode()->addChild(m_OgreNode);
-			else 
+			else
 				m_OgreNode->getCreator()->getRootSceneNode()->addChild(m_OgreNode );
-			
+
 			//should we preserve old world position and orientenation???
 			SetWorldPosition(world_pos);
 			SetWorldRotation(world_rot);
@@ -381,6 +381,6 @@ namespace GASS
 	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,from_id));
 		debug_msg->SetData("Text",GetSceneObject()->GetName());
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
-		
+
 	}
 }

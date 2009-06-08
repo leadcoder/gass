@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASECOMPONENTCONTAINERTEMPLATE_HH
+#define BASECOMPONENTCONTAINERTEMPLATE_HH
+
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Reflection/Reflection.h"
 #include "Core/Reflection/BaseReflectionObject.h"
@@ -32,12 +34,12 @@ namespace GASS
 	class MessageManager;
 
 	/**
-			The BaseComponentContainerTemplate is a convinience class that implements 
-			the	IComponentContainerTemplate it also inherite from the reflection template 
-			class which enables attribute reflection in a easy way. The inheritance from 
-			boost::enable_shared_from_this is used to get hold of ourself (this) as 
-			a shared pointer with the shared_from_this() function. 
-			To get more information what you get by inherit from this 
+			The BaseComponentContainerTemplate is a convinience class that implements
+			the	IComponentContainerTemplate it also inherite from the reflection template
+			class which enables attribute reflection in a easy way. The inheritance from
+			boost::enable_shared_from_this is used to get hold of ourself (this) as
+			a shared pointer with the shared_from_this() function.
+			To get more information what you get by inherit from this
 			class see the documentation for each interface
 
 	*/
@@ -49,9 +51,9 @@ namespace GASS
 	public:
 		BaseComponentContainerTemplate();
 		virtual ~BaseComponentContainerTemplate();
-		
+
 		static	void RegisterReflection();
-		
+
 		//IComponentContainerTemplate interface
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
@@ -64,16 +66,16 @@ namespace GASS
 		virtual ComponentPtr GetComponent(const std::string &name);
 		virtual ComponentIterator GetComponents();
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager);
-		
-	
+
+
 		//xml serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);
 		virtual void SaveXML(TiXmlElement *obj_elem);
-		
+
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
 
-		
+
 		//print object
 		void DebugPrint(int tc = 0);
 
@@ -90,7 +92,7 @@ namespace GASS
 		void InheritComponentData(ComponentContainerPtr cc);
 
 		ComponentPtr LoadComponent(TiXmlElement *comp_template);
-	
+
 		ComponentVector m_ComponentVector;
 		ComponentContainerTemplateVector m_ComponentContainerVector;
 		std::string m_Name;
@@ -100,3 +102,4 @@ namespace GASS
 	typedef boost::shared_ptr<BaseComponentContainerTemplate> BaseComponentContainerTemplatePtr;
 
 }
+#endif // #ifndef BASECOMPONENTCONTAINERTEMPLATE_HH

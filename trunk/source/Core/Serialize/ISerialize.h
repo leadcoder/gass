@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef ISERIALIZE_HH
+#define ISERIALIZE_HH
 
 #include "Core/Common.h"
 
@@ -33,4 +35,4 @@ namespace GASS
 	typedef boost::shared_ptr<ISerialize> SerializePtr;
 }
 
-
+#endif // #ifndef ISERIALIZE_HH

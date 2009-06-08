@@ -18,11 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-//
-// PropertySystem.h
-//
-
-#pragma once
+#ifndef PROPERTYSYSTEM_HH
+#define PROPERTYSYSTEM_HH
 
 #include "Core/Common.h"
 #include <list>
@@ -67,3 +64,4 @@ namespace GASS
 	}
 
 }
+#endif // #ifndef PROPERTYSYSTEM_HH

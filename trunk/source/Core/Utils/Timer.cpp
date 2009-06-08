@@ -18,12 +18,16 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#ifdef WIN32
 #include <windows.h>
+#else
+#include <sys/time.h>
+#endif
 #include "Timer.h"
 
 namespace GASS
 {
-	Timer::Timer()								
+	Timer::Timer()
 	{
 #ifdef WIN32
 		m_PerfTimerStart = 0;
@@ -68,7 +72,7 @@ namespace GASS
 	}
 
 	// Get Time In Seconds
-	double Timer::GetTime()								
+	double Timer::GetTime()
 	{
 #ifdef WIN32
 
@@ -77,12 +81,12 @@ namespace GASS
 		if (m_PerfTimer)						// Are We Using The Performance Timer?
 		{
 			QueryPerformanceCounter((LARGE_INTEGER *) &time);		// Grab The Current Performance Time
-			// Return The Current Time Minus The Start Time Multiplied By The Resolution 
+			// Return The Current Time Minus The Start Time Multiplied By The Resolution
 			return ( (double) ( time - m_PerfTimerStart) * m_Resolution);
 		}
 		else
 		{
-			// Return The Current Time Minus The Start Time Multiplied By The Resolution 
+			// Return The Current Time Minus The Start Time Multiplied By The Resolution
 			return( (double) ( timeGetTime() - m_MMTimerStart) * m_Resolution);
 		}
 

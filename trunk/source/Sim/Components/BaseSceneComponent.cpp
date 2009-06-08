@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
 
 #include "Sim/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"

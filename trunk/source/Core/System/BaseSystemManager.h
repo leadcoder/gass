@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef BASESYSTEMMANAGER_HH
+#define BASESYSTEMMANAGER_HH
+
 #include <list>
 #include <map>
 #include <vector>
@@ -37,7 +40,7 @@ namespace GASS
 		BaseSystemManager();
 		virtual ~BaseSystemManager();
 		bool Load(const std::string &filename);
-		
+
 		//ISystemInterface
 		virtual void Init();
 		virtual void Update(double delta_time);
@@ -60,3 +63,4 @@ namespace GASS
 		std::vector<SystemPtr> m_Systems;
 	};
 }
+#endif // #ifndef BASESYSTEMMANAGER_HH

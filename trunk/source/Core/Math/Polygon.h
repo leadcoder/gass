@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef POLYGON_HH
+#define POLYGON_HH
 
 #include "Core/Common.h"
 #include <vector>
@@ -45,3 +46,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef POLYGON_HH

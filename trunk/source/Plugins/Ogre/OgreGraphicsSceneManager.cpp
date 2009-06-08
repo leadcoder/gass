@@ -81,21 +81,21 @@ namespace GASS
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
-		RegisterProperty<float>( "FogStart", &GetFogStart, &SetFogStart);
-		RegisterProperty<float>( "FogEnd", &GetFogEnd, &SetFogEnd);
-		RegisterProperty<float>( "FogDensity", &GetFogDensity, &SetFogDensity);
-		RegisterProperty<Vec3>( "FogColor", &GetFogColor, &SetFogColor);
-		RegisterProperty<Vec3>( "AmbientColor", &GetAmbientColor, &SetAmbientColor);
-		RegisterProperty<std::string>("SceneManagerType", &GetSceneManagerType, &SetSceneManagerType);
-		RegisterProperty<std::string>("SkyboxMaterial", &GetSkyboxMaterial, &SetSkyboxMaterial);
-		RegisterProperty<bool> ("SelfShadowing", &GetSelfShadowing ,&SetSelfShadowing );
-		RegisterProperty<float> ("FarShadowDistance", &GetFarShadowDistance,&SetFarShadowDistance);
-		RegisterProperty<float> ("OptimalAdjustFactor", &GetOptimalAdjustFactor,&SetOptimalAdjustFactor);
-		RegisterProperty<int>("NumShadowTextures",&GetNumShadowTextures,&SetNumShadowTextures);
-		RegisterProperty<int>("TextureShadowSize",&GetTextureShadowSize,&SetTextureShadowSize);
-		RegisterProperty<std::string>("ShadowProjType",&GetShadowProjType,&SetShadowProjType);
-		RegisterProperty<std::string>("ShadowType",&GetShadowType,&SetShadowType);
-		RegisterProperty<std::string>("ShadowCasterMaterial",&GetShadowCasterMaterial,&SetShadowCasterMaterial);
+		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart);
+		RegisterProperty<float>( "FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd);
+		RegisterProperty<float>( "FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity);
+		RegisterProperty<Vec3>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor);
+		RegisterProperty<Vec3>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor);
+		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType);
+		RegisterProperty<std::string>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
+		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing );
+		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance);
+		RegisterProperty<float> ("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor,&GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor);
+		RegisterProperty<int>("NumShadowTextures",&GASS::OgreGraphicsSceneManager::GetNumShadowTextures,&GASS::OgreGraphicsSceneManager::SetNumShadowTextures);
+		RegisterProperty<int>("TextureShadowSize",&GASS::OgreGraphicsSceneManager::GetTextureShadowSize,&GASS::OgreGraphicsSceneManager::SetTextureShadowSize);
+		RegisterProperty<std::string>("ShadowProjType",&GASS::OgreGraphicsSceneManager::GetShadowProjType,&GASS::OgreGraphicsSceneManager::SetShadowProjType);
+		RegisterProperty<std::string>("ShadowType",&GASS::OgreGraphicsSceneManager::GetShadowType,&GASS::OgreGraphicsSceneManager::SetShadowType);
+		RegisterProperty<std::string>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()

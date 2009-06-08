@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef LOG_HH
+#define LOG_HH
 
 #include "Core/Common.h"
 #include "stdio.h"
@@ -72,4 +72,5 @@ namespace GASS
 	};
 
 }
-#endif
+#endif // #ifndef LOG_HH
+

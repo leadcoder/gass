@@ -24,7 +24,7 @@
 #include <ode/ode.h>
 #include <map>
 #include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Core/system/BaseSystem.h"
+#include "Core/System/BaseSystem.h"
 
 namespace GASS
 {
@@ -48,6 +48,6 @@ namespace GASS
 		unsigned int m_HandleCount;
 	};
 
-	
+
 }
 

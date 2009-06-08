@@ -46,7 +46,7 @@ namespace GASS
 		m_CreateCollisionMesh (true),
 		m_PageListenerAdded (false)
 	{
-		
+
 
 	}
 
@@ -62,7 +62,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainComponent",new Creator<OgreSceneManagerTerrainComponent, IComponent>);
 		//RegisterProperty<std::string>("RenderQueue", &GetRenderQueue, &SetRenderQueue);
-		RegisterProperty<std::string>("TerrainConfigFile", &GetFilename, &SetFilename);
+		RegisterProperty<std::string>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetFilename, &GASS::OgreSceneManagerTerrainComponent::SetFilename);
 		//RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 	}
 
@@ -78,11 +78,11 @@ namespace GASS
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
 		IResourceSystem* rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>().get();
-		
+
 		std::string full_path;
 		if(!rs->GetFullPath(m_TerrainConfigFile,full_path))
 			Log::Error("Faild to load terrain %s",m_TerrainConfigFile.c_str());
-	
+
 		std::string base_path = Misc::RemoveFilename(full_path);
 
 		if(m_CreateCollisionMesh)
@@ -93,7 +93,7 @@ namespace GASS
 		sm->setWorldGeometry(full_path);
 		Ogre::Vector3 scale = Ogre::Vector3::ZERO;
 		int nodes_per_side = 0;
-		int nodes_per_side_all_pagesW = 0; 
+		int nodes_per_side_all_pagesW = 0;
 		int nodes_per_side_all_pagesH = 0;
 		sm->getOption("Scale", &scale);
 		sm->getOption("PageSize", &nodes_per_side);
@@ -127,12 +127,12 @@ namespace GASS
 
 			}
 		}
-		
+
 		m_Scale = Convert::ToGASS(scale);
 		m_MaxHeight = m_Scale.y;
 		m_WorldWidth  = m_Scale.x * (nodes_per_side-1);
-		m_WorldHeight = m_Scale.z * (nodes_per_side-1); 
-		m_NodesPerSideAllPagesW = nodes_per_side; 
+		m_WorldHeight = m_Scale.z * (nodes_per_side-1);
+		m_NodesPerSideAllPagesW = nodes_per_side;
 		m_NodesPerSideAllPagesH = nodes_per_side;
 	}
 
@@ -142,7 +142,7 @@ namespace GASS
 		min.x = 0;
 		min.y = 0;
 		min.z = 0;
-		
+
 		max.x = m_WorldWidth;
 		max.y = m_MaxHeight;
 		max.z = m_WorldHeight;
@@ -154,13 +154,13 @@ namespace GASS
 		aabox.m_Min.x = 0;
 		aabox.m_Min.y = 0;
 		aabox.m_Min.z = 0;
-		
+
 		aabox.m_Max.x = m_WorldWidth;
 		aabox.m_Max.y = m_MaxHeight;
 		aabox.m_Max.z = m_WorldHeight;
 		return aabox;
 	}
-	
+
 	Sphere OgreSceneManagerTerrainComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
@@ -187,7 +187,7 @@ namespace GASS
 		// Create vertices
 		size_t vertex_size = m_HMDim * m_HMDim;
 		m_HeightData = new float[vertex_size];
-		Ogre::Vector3 offset(0,0,0); 
+		Ogre::Vector3 offset(0,0,0);
 		for(size_t x = 0; x < m_HMDim; x++)
 		{
 			for(size_t z = 0; z < m_HMDim; z++)
@@ -226,14 +226,14 @@ namespace GASS
 		mesh_data->VertexVector = new Vec3[vertex_size];
 		mesh_data->NumVertex = vertex_size;
 		size_t index = 0;
-		Ogre::Vector3 offset(0,0,0); 
+		Ogre::Vector3 offset(0,0,0);
 		for(size_t x = 0; x < tWidth; x++)
 		{
 			for(size_t z = 0; z < tHeight; z++)
 			{
 //				m_HeightData[z*m_HMDim+x] = heightData[z*m_HMDim+x]*scale.y;
 				//Ogre::Vector3 pos = Ogre::Vector3(x,heightData[z*tWidth+x],z)*scale+offset;
-				Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset; 
+				Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset;
 				mesh_data->VertexVector[index] = Convert::ToGASS(pos);
 				index++;
 			}
@@ -277,7 +277,7 @@ namespace GASS
 
 		float h00, h01, h10, h11;
 
-				
+
 		h00 = m_HeightData[z0*m_HMDim+x0];
 		h01 = m_HeightData[z0*m_HMDim+x1];
 		h10 = m_HeightData[z1*m_HMDim+x0];
@@ -287,7 +287,7 @@ namespace GASS
 		tx = x - x0;
 		ty = z - z0;
 
-		
+
 		float height = LERP(LERP(h00, h01, tx), LERP(h10, h11, tx), ty);
 
 		return height;

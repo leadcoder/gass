@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef FILEPATH_HH
+#define FILEPATH_HH
 
 #include "Core/Common.h"
 #include "stdio.h"
@@ -49,3 +50,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef FILEPATH_HH

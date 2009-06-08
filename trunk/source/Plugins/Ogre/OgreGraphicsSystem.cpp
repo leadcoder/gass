@@ -41,12 +41,12 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_Window(NULL), 
+	OgreGraphicsSystem::OgreGraphicsSystem(void): m_Window(NULL),
 		m_CreateMainWindowOnInit(true)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
-		
-		
+
+
 	}
 
 	OgreGraphicsSystem::~OgreGraphicsSystem(void)
@@ -58,7 +58,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OgreGraphicsSystem",new GASS::Creator<OgreGraphicsSystem, ISystem>);
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
-		RegisterProperty<std::vector<std::string>>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
+		RegisterProperty<std::vector<std::string> >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 	}
 
@@ -111,7 +111,7 @@ namespace GASS
 			std::string plugin_name = m_Plugins[i];
 #ifdef _DEBUG
 			plugin_name += "_d";
-#endif 
+#endif
 			m_Root->loadPlugin(plugin_name);
 		}
 
@@ -128,7 +128,7 @@ namespace GASS
 		bool primary_thread = true;
 		if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 			primary_thread = true;
-		
+
 		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OgreGraphicsSystem::Update, this, _1 ),primary_thread);
 
 		if(m_CreateMainWindowOnInit)
@@ -152,13 +152,13 @@ namespace GASS
 			//IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
 			//is->SetWindow(windowHnd);
 			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
-			window_msg->SetData("RenderHandle",(int)windowHnd); 
-			window_msg->SetData("MainHandle",(int)windowHnd); 
+			window_msg->SetData("RenderHandle",(int)windowHnd);
+			window_msg->SetData("MainHandle",(int)windowHnd);
 			GetSimSystemManager()->SendImmediate(window_msg);
 
-		
-			
-			
+
+
+
 		}
 		else
 		{
@@ -169,7 +169,7 @@ namespace GASS
 		//m_Owner->GetMessageManager()->SendGlobalMessage(update_msg);
 	}
 
-	
+
 	void OgreGraphicsSystem::OnDebugPrint(MessagePtr message)
 	{
 		std::string debug_text = boost::any_cast<std::string>(message->GetData("Text"));
@@ -183,7 +183,7 @@ namespace GASS
 		int height = boost::any_cast<int>(message->GetData("Height"));
 		int width = boost::any_cast<int>(message->GetData("Width"));
 		int handel = boost::any_cast<int>(message->GetData("Handle"));
-		
+
 		if(m_Window == NULL) // first window
 		{
 			int main_handel = boost::any_cast<int>(message->GetData("MainHandle"));
@@ -202,13 +202,13 @@ namespace GASS
 			vp->setBackgroundColour(ColourValue(0.5,0,0));
 			// Alter the camera aspect ratio to match the viewport
 			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
-			
+
 			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
-			window_msg->SetData("RenderHandle",(int)handel); 
-			window_msg->SetData("MainHandle",main_handel); 
+			window_msg->SetData("RenderHandle",(int)handel);
+			window_msg->SetData("MainHandle",main_handel);
 			GetSimSystemManager()->SendImmediate(window_msg);
 
-			
+
 		}
 	}
 
@@ -222,7 +222,7 @@ namespace GASS
 
 		if(handel == main_window_handel)
 		{
-			
+
 		}*/
 	}
 
@@ -276,13 +276,13 @@ namespace GASS
 			sm->getCamera(name);
 		else
 			cam = sm->createCamera(name);
-		
+
 		cam->setPosition(Ogre::Vector3(0,0,0));
 		cam->setNearClipDistance(0.02f);
 		cam->setFarClipDistance(5000);
 		assert(cam && win);
 		Ogre::Viewport* vp = win->addViewport(cam, num_viewports, left , top, width , height);
-		
+
 		// Create one viewport, entire window
 		vp->setBackgroundColour(colour);
 		//Alter the camera aspect ratio to match the viewport
@@ -294,7 +294,7 @@ namespace GASS
 		}
 		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
 		m_PostProcess->SetActiveCompositors(GetPostFilters());
-		
+
 	}
 
 	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const

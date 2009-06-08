@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef TYPEPROPERTY_HH
+#define TYPEPROPERTY_HH
 
 #include "Core/Reflection/AbstractProperty.h"
 
@@ -65,6 +66,7 @@ namespace GASS
 		return PropertyType<T>::GetTypeID();
 	}
 
+#ifdef WIN32
 	template<class T> ePropertyType PropertyType<T>::m_TypeID = eptPTR;
 	template<> ePropertyType PropertyType<bool>::m_TypeID		= eptBOOL;
 	//template<> ePropertyType PropertyType<DWORD>::m_TypeID	= eptDWORD;
@@ -72,5 +74,6 @@ namespace GASS
 	template<> ePropertyType PropertyType<float>::m_TypeID	= eptFLOAT;
 	template<> ePropertyType PropertyType<std::string>::m_TypeID	= eptSTRING;
 	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;
-
+#endif
 }
+#endif // TYPEPROPERTY_HH

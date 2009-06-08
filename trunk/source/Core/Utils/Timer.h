@@ -18,14 +18,19 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once 
+#ifndef TIMER_HH
+#define TIMER_HH
 
 #include "Core/Common.h"
 //#include "Core/Prerequisits.h"
 
+#ifndef WIN32
+#include <inttypes.h>
+#endif
+
 namespace GASS
 {
-	class GASSCoreExport Timer  
+	class GASSCoreExport Timer
 	{
 	public:
 		Timer();
@@ -43,9 +48,10 @@ namespace GASS
 	    __int64			m_PerfTimerStart;	// Performance Timer Start Value
 		__int64			m_PerfTimerElapsed;	// Performance Timer Elapsed Time
 		bool			m_PerfTimer;		// Using The Performance Timer?
-#endif
-
 		__int64			m_Frequency;		// Timer Frequency
+#else
+        int64_t         m_Frequency;		// Timer Frequency
+#endif
 		float			m_Resolution;		// Timer Resolution
 		unsigned long	m_MMTimerStart;		// Multimedia Timer Start Value
 		unsigned long	m_MMTimerElapsed;	// Multimedia Timer Elapsed Time
@@ -54,3 +60,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef TIMER_HH

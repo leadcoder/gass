@@ -18,11 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef FACTORY_H_
-#define FACTORY_H_
-#ifdef WIN32
-#pragma warning (disable : 4786)  
-#endif
+#ifndef FACTORY_HH
+#define FACTORY_HH
+
+#include "Core/Common.h"
 #include <map>
 #include <string>
 #include "Core/Utils/Misc.h"
@@ -62,8 +61,8 @@ namespace GASS
 				m_ClassName = m_ClassName.substr(pos+2);
 			}
 		}
-		virtual BasePtr Create() const 
-		{ 
+		virtual BasePtr Create() const
+		{
 			ProductPtr obj(new Product);
 			return boost::shared_static_cast<Base>(obj);
 		}
@@ -92,7 +91,7 @@ namespace GASS
 	bool Factory<Base>::Register(ObjectType type, CreatorBase<Base> * pCreator)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
-		if (it != m_creatorMap.end()) 
+		if (it != m_creatorMap.end())
 		{
 			delete pCreator;
 			return false;
@@ -103,10 +102,10 @@ namespace GASS
 
 
 	template<class Base>
-	std::string Factory<Base>::GetFactoryName(const std::string &class_name) 
+	std::string Factory<Base>::GetFactoryName(const std::string &class_name)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.begin();
-		while(it != m_creatorMap.end()) 
+		while(it != m_creatorMap.end())
 		{
 			if((*it).second->GetClassName() == class_name)
 			{
@@ -123,7 +122,7 @@ namespace GASS
 	boost::shared_ptr<Base> Factory<Base>::Create(ObjectType type)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
-		if (it == m_creatorMap.end()) 
+		if (it == m_creatorMap.end())
 		{
 			boost::shared_ptr<Base> ret;
 			return ret;
@@ -133,4 +132,5 @@ namespace GASS
 		return pCreator->Create();
 	}
 }
-#endif
+#endif // #ifndef FACTORY_HH
+

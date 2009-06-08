@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ICOMPONENTCONTAINERTEMPLATEMANAGER_HH
+#define ICOMPONENTCONTAINERTEMPLATEMANAGER_HH
 
 #include "Core/Common.h"
 #include <boost/shared_ptr.hpp>
@@ -33,7 +34,7 @@ namespace GASS
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 
 	/**
-	A component container template manager is responsible for holding component container templates 
+	A component container template manager is responsible for holding component container templates
 	and creating component containers.
 	For more information on container templates see the IComponentContainerTemplate interface
 	The component container template manager interface is very simple and a implementation only
@@ -56,13 +57,13 @@ namespace GASS
 		/**
 			Add a template the template archive.
 		@remarks
-		@param obj 
+		@param obj
 		*/
 		virtual void AddTemplate(ComponentContainerTemplatePtr obj) = 0;
 		/**
 			Get a template from template archive.
 		@remarks
-		@param name Name of the template 
+		@param name Name of the template
 		*/
 		virtual ComponentContainerTemplatePtr GetTemplate(const std::string &name) = 0;
 
@@ -82,3 +83,4 @@ namespace GASS
 	typedef boost::weak_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerWeakPtr;
 }
 
+#endif // #ifndef ICOMPONENTCONTAINERTEMPLATEMANAGER_HH

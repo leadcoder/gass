@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef MESSAGETYPE_HH
+#define MESSAGETYPE_HH
 
 
 #include <list>
@@ -27,7 +29,7 @@ namespace GASS
 {
 	class MessageReg
 	{
-	public: 
+	public:
 	/*	bool operator < (MessageReg *other)
 		{
 			return m_Priority < other->m_Priority;
@@ -43,9 +45,10 @@ namespace GASS
 	class MessageType
 	{
 	public:
-		
+
 		int m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
-	
+
 }
+#endif // #ifndef MESSAGETYPE_HH

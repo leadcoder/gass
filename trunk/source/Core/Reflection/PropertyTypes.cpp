@@ -22,11 +22,14 @@
 
 namespace GASS
 {
-	/*template<class T> ePropertyType PropertyType<T>::m_TypeID = eptPTR;
+#ifndef WIN32
+	// For some reason these deklarations must be in the cpp file to compile with gcc
+	//template<class T> ePropertyType GASSCoreExport PropertyType<T>::m_TypeID = eptPTR;
 	template<> ePropertyType PropertyType<bool>::m_TypeID		= eptBOOL;
 	//template<> ePropertyType PropertyType<DWORD>::m_TypeID	= eptDWORD;
 	template<> ePropertyType PropertyType<int>::m_TypeID		= eptINT;
 	template<> ePropertyType PropertyType<float>::m_TypeID	= eptFLOAT;
 	template<> ePropertyType PropertyType<std::string>::m_TypeID	= eptSTRING;
-	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;*/
+	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;
+#endif
 }

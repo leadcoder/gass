@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once 
+#ifndef RTTI_HH
+#define RTTI_HH
 
 #include <list>
 #include <vector>
@@ -36,7 +37,7 @@ namespace GASS
 	typedef bool			(*RegisterReflectionFunc)();
 
 
-	
+
 
 	class GASSCoreExport RTTI
 	{
@@ -46,7 +47,7 @@ namespace GASS
 		//----------------------------------------------------------------------------------------------
 		// RTTI constructor.
 		// The first paramter is a stub. I am not sure why this stub is necessary - removing ths stub will
-		// confuse the .NET compiler and produce compile errors with subsequent parameters. If anybody knows 
+		// confuse the .NET compiler and produce compile errors with subsequent parameters. If anybody knows
 		// why this is so, feel free to e-mail me at dfilion@hotmail.com
 		//
 		// The RTTI structure constructor takes in the following parameters:
@@ -116,7 +117,7 @@ namespace GASS
 		return m_ClassName;
 	}
 
-	
+
 
 	inline std::list<AbstractProperty*>::iterator RTTI::GetFirstProperty()
 	{
@@ -163,3 +164,4 @@ namespace GASS
 	}
 
 }
+#endif // #ifndef RTTI_HH

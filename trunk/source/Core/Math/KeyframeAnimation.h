@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef KEYFRAMEANIMATION_HH
+#define KEYFRAMEANIMATION_HH
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Spline.h"
@@ -77,3 +78,4 @@ namespace GASS
 		bool m_RotToPath;
 	};
 }
+#endif // #ifndef KEYFRAMEANIMATION_HH

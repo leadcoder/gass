@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef SERIALIZE_HH
+#define SERIALIZE_HH
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix.h"
@@ -442,10 +444,10 @@ namespace GASS
 			length += (int) str.length();
 		}
 
-		
+
 		void IO(std::vector<float> &value)
 		{
-			
+
 			for(int i = 0 ; i < value.size(); i++)
 			{
 				IO(value[i]);
@@ -453,7 +455,7 @@ namespace GASS
 		}
 		void IO(std::vector<double> &value)
 		{
-		
+
 			for(int i = 0 ; i < value.size(); i++)
 			{
 				IO(value[i]);
@@ -462,7 +464,7 @@ namespace GASS
 
 		void IO(std::vector<int> &value)
 		{
-		
+
 			for(int i = 0 ; i < value.size(); i++)
 			{
 				IO(value[i]);
@@ -471,7 +473,7 @@ namespace GASS
 
 		void IO(std::vector<std::string> &value)
 		{
-		
+
 			for(int i = 0 ; i < value.size(); i++)
 			{
 				IO(value[i]);
@@ -484,4 +486,4 @@ namespace GASS
 	};
 }
 
-
+#endif // #ifndef SERIALIZE_HH

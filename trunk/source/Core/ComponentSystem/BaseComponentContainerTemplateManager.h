@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH
+#define BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH
+
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Common.h"
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
@@ -35,16 +37,16 @@ namespace GASS
 	class BaseObjectTemplate;
 
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
-	
+
 
 	/**
 		  Implementaion of the IComponentContainerTemplateManager interface
-		  This implementaion extened the IComponentContainerTemplateManager 
+		  This implementaion extened the IComponentContainerTemplateManager
 		  interface with a Load function that assume that component containers
-		  that should be loaded from file has the IXML serialization 
+		  that should be loaded from file has the IXML serialization
 		  interface implemented, like the BaseObject implementaion.
 		  The name BaseComponentContainerTemplateManager is therefor used to
-		  indicate that BaseObject component container implementaion 
+		  indicate that BaseObject component container implementaion
 		  will work with this implementation.
 	*/
 
@@ -67,19 +69,19 @@ namespace GASS
 		void AddTemplate(ComponentContainerTemplatePtr obj);
 		ComponentContainerTemplatePtr GetTemplate(const std::string &name);
 
-		/** 
+		/**
 			Load templates from xml-file
 		*/
 		bool Load(const std::string &filename);
 
-		/** 
-			Check if each new component container instance returned 
+		/**
+			Check if each new component container instance returned
 			from the CreateFromTemplate function should have a
 			unique name.
 		*/
 		bool GetForceUniqueName() const{return m_ForceUniqueName;}
-		/** 
-			Set whether each new component container instance returned 
+		/**
+			Set whether each new component container instance returned
 			from the CreateFromTemplate function should have a
 			unique name or not.
 		*/
@@ -92,3 +94,4 @@ namespace GASS
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 }
 
+#endif // #ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH

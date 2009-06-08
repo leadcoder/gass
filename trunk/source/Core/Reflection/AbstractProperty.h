@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef ABSTRACTPROPERTY_HH
+#define ABSTRACTPROPERTY_HH
+
 #include <boost/any.hpp>
 #include "Core/Common.h"
 #include "Core/Reflection/PropertyTypes.h"
@@ -51,3 +54,5 @@ namespace GASS
 		return m_Name;
 	}
 }
+
+#endif // #ifndef ABSTRACTPROPERTY_HH

@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef MESSAGEMANAGER_HH
+#define MESSAGEMANAGER_HH
+
 #include <list>
 //#include <tbb/concurrent_queue.h>
 #include <map>
@@ -37,7 +40,7 @@ namespace GASS
 	class GASSCoreExport MessageManager
 	{
 	public:
-		typedef MessagePtr MessagePtr;
+        typedef boost::shared_ptr<Message> MessagePtr;
 		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
 		typedef std::map<int,MessageType*> MessageTypeMap;
@@ -57,3 +60,4 @@ namespace GASS
 		tbb::spin_mutex *m_Mutex;
 	};
 }
+#endif // #ifndef MESSAGEMANAGER_HH

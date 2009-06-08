@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SPLINE_HH
+#define SPLINE_HH
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix.h"
@@ -44,3 +45,4 @@ private:
 	float m_TanStrength;
 };
 }
+#endif // #ifndef SPLINE_HH

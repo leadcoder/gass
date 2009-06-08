@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASESYSTEM_HH
+#define BASESYSTEM_HH
 
 #include "Core/Reflection/RTTI.h"
 #include "Core/Reflection/Reflection.h"
@@ -34,13 +35,13 @@ namespace GASS
 	public:
 		BaseSystem();
 		virtual ~BaseSystem();
-		
+
 		static void RegisterReflection();
-		
+
 		//ISystem interface
 		virtual void OnCreate(){};
 		virtual SystemType GetSystemType(){return "BaseSystem";}
-		
+
 		std::string GetName() const {return m_Name;}
 		void SetName(const std::string &name) {m_Name = name;}
 		ISystemManager* GetOwner() const {return m_Owner;}
@@ -54,3 +55,4 @@ namespace GASS
 		ISystemManager* m_Owner;
 	};
 }
+#endif // #ifndef BASESYSTEM_HH

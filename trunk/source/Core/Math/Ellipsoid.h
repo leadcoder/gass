@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ELLIPSOID_HH
+#define ELLIPSOID_HH
 
 #include "Core/Math/Vector.h"
 namespace GASS
@@ -33,3 +34,4 @@ namespace GASS
 		Vec3 m_Pos;
 	};
 }
+#endif // #ifndef ELLIPSOID_HH

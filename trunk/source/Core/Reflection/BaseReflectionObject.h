@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASEREFLECTIONOBJECT_HH
+#define BASEREFLECTIONOBJECT_HH
+
 #include <boost/any.hpp>
 #include "Core/Common.h"
 #include "Core/Serialize/Serialize.h"
@@ -37,7 +39,7 @@ namespace GASS
 	public:
 		BaseReflectionObject();
 		virtual ~BaseReflectionObject();
-		
+
 		//helpers to modify properties
 		void LoadProperties(TiXmlElement *elem);
 		void SaveProperties(TiXmlElement *parent);
@@ -47,8 +49,9 @@ namespace GASS
 		bool GetPropertyByType(const std::string &attrib_name, boost::any &attribute);
 		bool SerializeProperties(ISerializer* serializer);
 		void SetProperties(BaseReflectionObjectPtr dest);
-	
+
 	};
 
-	
+
 }
+#endif // #ifndef BASEREFLECTIONOBJECT_HH

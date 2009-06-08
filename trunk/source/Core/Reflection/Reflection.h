@@ -18,11 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-//
-// Reflection.h
-//
-
-#pragma once
+#ifndef REFLECTION_HH
+#define REFLECTION_HH
 
 #include <typeinfo>
 #include "Core/Reflection/RTTI.h"
@@ -122,7 +119,7 @@ namespace GASS
 			return &m_RTTI;
 		}
 
-		
+
 
 	protected :
 		static RTTI	m_RTTI;				// RTTI structure
@@ -143,7 +140,7 @@ namespace GASS
 			attrib  = attrib->NextSiblingElement();
 		}
 	}*/
-	
+
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
 		(UnDecorateClassName(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
 		(RegisterReflectionFunc)T::RegisterReflection );
@@ -183,10 +180,5 @@ namespace GASS
 	void Reflection<T, TInClass>::RegisterReflection()
 	{
 	}
-
-
-
-
-
-
 }
+#endif // #ifndef REFLECTION_HH

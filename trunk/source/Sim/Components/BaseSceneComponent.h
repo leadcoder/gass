@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASESCENECOMPONENT_HH
+#define BASESCENECOMPONENT_HH
 
 #include "Sim/Common.h"
 #include "Core/ComponentSystem/BaseComponent.h"
@@ -41,3 +42,4 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<BaseSceneComponent> BaseSceneComponentPtr;
 }
+#endif // #ifndef BASESCENECOMPONENT_HH

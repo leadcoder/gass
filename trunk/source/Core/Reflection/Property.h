@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
+
+#ifndef PROPERTY_HH
+#define PROPERTY_HH
+
 #include <boost/any.hpp>
 #include "Core/Common.h"
 #include "Core/Serialize/Serialize.h"
@@ -267,3 +270,4 @@ namespace GASS
 		return true;
 	}
 }
+#endif // #ifndef PROPERTY_HH

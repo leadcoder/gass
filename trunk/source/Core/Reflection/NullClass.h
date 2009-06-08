@@ -17,7 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once 
+
+#ifndef NULLCLASS_HH
+#define NULLCLASS_HH
+
 #include "Core/Common.h"
 
 namespace GASS
@@ -30,6 +33,8 @@ namespace GASS
 
 		// It is necessary to implement this to avoid compilation errors in the templatized RTTI code
 		// In any case no RTTI support is provided from this class
-		static inline RTTI* GetClassRTTI()			{ return NULL;};	
+		static inline RTTI* GetClassRTTI()			{ return NULL;};
 	};
 }
+
+#endif // NULLCLASS_HH

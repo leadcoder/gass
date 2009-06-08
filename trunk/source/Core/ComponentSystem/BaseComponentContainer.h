@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef BASECOMPONENTCONTAINER_HH
+#define BASECOMPONENTCONTAINER_HH
+
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Reflection/Reflection.h"
 #include "Core/Reflection/BaseReflectionObject.h"
@@ -36,12 +38,12 @@ namespace GASS
 	/**
 			This is the class that a game or simulation object should be derive from.
 			The BaseComponentContainer is a convinience class that implements the
-			IComponentContainer it also inherite from the reflection template class 
-			which enables attribute reflection in a easy way. 
-			The inheritance from boost::enable_shared_from_this is used to 
-			get hold of ourself (this) as a shared pointer with the 
-			shared_from_this() function. 
-			To get more information what you get by inherit from this 
+			IComponentContainer it also inherite from the reflection template class
+			which enables attribute reflection in a easy way.
+			The inheritance from boost::enable_shared_from_this is used to
+			get hold of ourself (this) as a shared pointer with the
+			shared_from_this() function.
+			To get more information what you get by inherit from this
 			class see the documentation for each interface
 
 	*/
@@ -51,7 +53,7 @@ namespace GASS
 		BaseComponentContainer();
 		virtual ~BaseComponentContainer();
 		static	void RegisterReflection();
-		
+
 		//ComponentContainer interface
 		virtual void OnCreate();
 		virtual std::string GetName() const {return m_Name;}
@@ -64,11 +66,11 @@ namespace GASS
 		virtual void AddComponent(ComponentPtr comp);
 		virtual ComponentPtr GetComponent(const std::string &name);
 		virtual ComponentIterator GetComponents();
-	
+
 		//xml serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);
 		virtual void SaveXML(TiXmlElement *obj_elem);
-		
+
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
 
@@ -95,3 +97,4 @@ namespace GASS
 	typedef boost::shared_ptr<BaseComponentContainer> BaseComponentContainerPtr;
 
 }
+#endif // #ifndef BASECOMPONENTCONTAINER_HH

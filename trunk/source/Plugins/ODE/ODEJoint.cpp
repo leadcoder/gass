@@ -55,26 +55,26 @@ namespace GASS
 
 	ODEJoint::~ODEJoint()
 	{
-		if(m_ODEJoint) dJointDestroy(m_ODEJoint); 
+		if(m_ODEJoint) dJointDestroy(m_ODEJoint);
 	}
 
 	void ODEJoint::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ODEJoint",new Creator<ODEJoint, IComponent>);
 
-		RegisterProperty<std::string>("Type", &GetType, &SetType);
-		RegisterProperty<std::string>("Body1Name", &GetBody1Name, &SetBody1Name);
-		RegisterProperty<std::string>("Body2Name", &GetBody2Name, &SetBody2Name);
-		RegisterProperty<float>("Axis1Force", &GetAxis1Force, &SetAxis1Force);
-		RegisterProperty<float>("Axis2Force", &GetAxis2Force, &SetAxis2Force);
-		RegisterProperty<float>("Damping", &GetDamping, &SetDamping);
-		RegisterProperty<float>("Strength", &GetStrength, &SetStrength);
-		RegisterProperty<float>("HighStop", &GetHighStop, &SetHighStop);
-		RegisterProperty<float>("LowStop", &GetLowStop, &SetLowStop);
-		RegisterProperty<float>("SwayForce", &GetSwayForce, &SetSwayForce);
-		RegisterProperty<Vec3>("Axis1", &GetAxis1, &SetAxis1);
-		RegisterProperty<Vec3>("Axis2", &GetAxis2, &SetAxis2);
-		RegisterProperty<Vec3>("Anchor", &GetAnchor, &SetAnchor);
+		RegisterProperty<std::string>("Type", &GASS::ODEJoint::GetType, &GASS::ODEJoint::SetType);
+		RegisterProperty<std::string>("Body1Name", &GASS::ODEJoint::GetBody1Name, &GASS::ODEJoint::SetBody1Name);
+		RegisterProperty<std::string>("Body2Name", &GASS::ODEJoint::GetBody2Name, &GASS::ODEJoint::SetBody2Name);
+		RegisterProperty<float>("Axis1Force", &GASS::ODEJoint::GetAxis1Force, &GASS::ODEJoint::SetAxis1Force);
+		RegisterProperty<float>("Axis2Force", &GASS::ODEJoint::GetAxis2Force, &GASS::ODEJoint::SetAxis2Force);
+		RegisterProperty<float>("Damping", &GASS::ODEJoint::GetDamping, &GASS::ODEJoint::SetDamping);
+		RegisterProperty<float>("Strength", &GASS::ODEJoint::GetStrength, &GASS::ODEJoint::SetStrength);
+		RegisterProperty<float>("HighStop", &GASS::ODEJoint::GetHighStop, &GASS::ODEJoint::SetHighStop);
+		RegisterProperty<float>("LowStop", &GASS::ODEJoint::GetLowStop, &GASS::ODEJoint::SetLowStop);
+		RegisterProperty<float>("SwayForce", &GASS::ODEJoint::GetSwayForce, &GASS::ODEJoint::SetSwayForce);
+		RegisterProperty<Vec3>("Axis1", &GASS::ODEJoint::GetAxis1, &GASS::ODEJoint::SetAxis1);
+		RegisterProperty<Vec3>("Axis2", &GASS::ODEJoint::GetAxis2, &GASS::ODEJoint::SetAxis2);
+		RegisterProperty<Vec3>("Anchor", &GASS::ODEJoint::GetAnchor, &GASS::ODEJoint::SetAnchor);
 	}
 
 	std::string ODEJoint::GetType()const
@@ -104,24 +104,24 @@ namespace GASS
 		std::string jointTypeNameLowerCase = Misc::ToLower(type);
 		if(jointTypeNameLowerCase.compare("ball") == 0)
 		{
-			m_Type = BALL_JOINT; 
+			m_Type = BALL_JOINT;
 		}
 		//else if(strcmpi(m_JointTypeName.c_str(), "Hinge")== 0)
 		else if(jointTypeNameLowerCase.compare("hinge")== 0)
 		{
-			m_Type = HINGE_JOINT; 
+			m_Type = HINGE_JOINT;
 		}
 		else if(jointTypeNameLowerCase.compare("universal") == 0)
 		{
-			m_Type = UNIVERSAL_JOINT; 
+			m_Type = UNIVERSAL_JOINT;
 		}
 		else if(jointTypeNameLowerCase.compare("slider") == 0)
 		{
-			m_Type = SLIDER_JOINT; 
+			m_Type = SLIDER_JOINT;
 		}
 		else if(jointTypeNameLowerCase.compare("suspension")== 0)
 		{
-			m_Type = SUSPENSION_JOINT; 
+			m_Type = SUSPENSION_JOINT;
 		}
 		if(m_ODEJoint && recreate) //recreate if we have changed type
 			CreateJoint();
@@ -134,13 +134,13 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER,  MESSAGE_FUNC( ODEJoint::OnParameterMessage));
 	}
 
-	
+
 	void ODEJoint::OnParameterMessage(MessagePtr message)
 	{
 		SceneObject::PhysicsParameterType type = boost::any_cast<SceneObject::PhysicsParameterType>(message->GetData("Parameter"));
 
 		//wake body!!
-		
+
 		m_Body1->Enable();
 		switch(type)
 		{
@@ -148,28 +148,28 @@ namespace GASS
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Vel(value);
-				
+
 			}
 			break;
 		case SceneObject::AXIS2_VELOCITY:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Vel(value);
-				
+
 			}
 			break;
 		case SceneObject::AXIS1_FORCE:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Force(value);
-				
+
 			}
 			break;
 		case SceneObject::AXIS2_FORCE:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Force(value);
-				
+
 			}
 			break;
 		}
@@ -193,8 +193,8 @@ namespace GASS
 		dBodyID b1 = m_Body1->GetODEBody();
 		dBodyID b2 = m_Body2->GetODEBody();
 
-		if(m_ODEJoint) 
-			dJointDestroy(m_ODEJoint); 
+		if(m_ODEJoint)
+			dJointDestroy(m_ODEJoint);
 
 		switch(m_Type)
 		{
@@ -478,7 +478,7 @@ namespace GASS
 	}
 
 
-	float ODEJoint::GetAxis2Force() const 
+	float ODEJoint::GetAxis2Force() const
 	{
 		if(m_ODEJoint)
 		{
@@ -564,7 +564,7 @@ namespace GASS
 	}
 
 
-	void ODEJoint::JointCorrectHinge2() 
+	void ODEJoint::JointCorrectHinge2()
 	{
 
 		// A fix to correct wheel bending, it works by turning a hinge2's axis 1
@@ -576,7 +576,7 @@ namespace GASS
 		//assert(joint);
 		//assert(joint->vtable == &__dhinge2_vtable,"joint is not a hinge2");
 
-		//if(joint->node[1].body) 
+		//if(joint->node[1].body)
 		{
 			// Get the current turn angle of the joint
 			dReal rAng=dJointGetHinge2Angle1(m_ODEJoint);
@@ -590,20 +590,20 @@ namespace GASS
 			dJointGetHinge2Axis1(m_ODEJoint,Axis);
 
 			// Calculate the angle the wheel has be turned PAST its limit.
-			if(rAng<rLoStop) 
+			if(rAng<rLoStop)
 			{
 				rAng=rAng-rLoStop;
-			} 
-			else if(rAng>rHiStop) 
+			}
+			else if(rAng>rHiStop)
 			{
 				rAng=rAng-rHiStop;
-			} 
-			else 
+			}
+			else
 			{
 				rAng=0.0;
 			}
 
-			if(rAng) 
+			if(rAng)
 			{
 				// Here's the fix!
 				// If there's a value in rAng, this angle is the angle PAST the wheel stops

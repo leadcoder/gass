@@ -18,6 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#ifdef WIN32
+#define NOMINMAX
+#include <algorithm>
+#endif
 
 #include "Plugins/ODE/ODEGeometry.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
@@ -33,9 +37,10 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include <boost/bind.hpp>
 
+
 namespace GASS
 {
-	ODEGeometry::ODEGeometry() 
+	ODEGeometry::ODEGeometry()
 		:m_ODESecondarySpaceID(NULL),
 		m_ODESpaceID (NULL),
 		m_Body (NULL),
@@ -63,11 +68,11 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("ODEGeometry",new Creator<ODEGeometry, IComponent>);
 
-		RegisterProperty<Vec3>("Offset", &GetOffset, &SetOffset);
+		RegisterProperty<Vec3>("Offset", &GASS::ODEGeometry::GetOffset, &GASS::ODEGeometry::SetOffset);
 		//RegisterProperty<std::string>("GeometryComponent", &SetGeometryComponent, &GetGeometryComponent);
-		RegisterProperty<float>("Friction", &GetFriction, &SetFriction);
-		RegisterProperty<float>("Slip", &GetSlip, &SetSlip);
-		RegisterProperty<std::string>("GeometryType", &GetGeometryType, &SetGeometryType);
+		RegisterProperty<float>("Friction", &GASS::ODEGeometry::GetFriction, &GASS::ODEGeometry::SetFriction);
+		RegisterProperty<float>("Slip", &GASS::ODEGeometry::GetSlip, &GASS::ODEGeometry::SetSlip);
+		RegisterProperty<std::string>("GeometryType", &GASS::ODEGeometry::GetGeometryType, &GASS::ODEGeometry::SetGeometryType);
 
 		//REGISTER_PROP(String,IPhysicsGeometry,m_AddToBody,"AddToBody",CProperty::STREAM|CProperty::READONLY,"");
 		//REGISTER_PROP(String,IPhysicsGeometry,m_GeometryTemplate,"GeometryTemplate",CProperty::STREAM|CProperty::READONLY,"");
@@ -81,7 +86,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC(ODEGeometry::OnLoad ),1);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,  MESSAGE_FUNC(ODEGeometry::OnTransformationChanged ));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_COLLISION_SETTINGS,  MESSAGE_FUNC(ODEGeometry::OnCollisionSettings ));
-		
+
 	}
 
 	void ODEGeometry::OnTransformationChanged(MessagePtr message)
@@ -104,7 +109,7 @@ namespace GASS
 		bool value = boost::any_cast<bool>(message->GetData("Enable"));
 		if(value)
 			Enable();
-		else 
+		else
 			Disable();
 	}
 
@@ -139,7 +144,7 @@ namespace GASS
 	}
 
 
-	
+
 
 	dSpaceID ODEGeometry::GetStaticSpace()
 	{
@@ -159,10 +164,10 @@ namespace GASS
 		return m_ODESecondarySpaceID;
 	}
 
-	void ODEGeometry::CreateODEGeomFromGeom(IGeometryComponent* geom, 
+	void ODEGeometry::CreateODEGeomFromGeom(IGeometryComponent* geom,
 		dSpaceID space,
 		dGeomID &geom_id,
-		dGeomID &trans_geom_id, 
+		dGeomID &trans_geom_id,
 		ODEBody* body)
 	{
 
@@ -171,7 +176,7 @@ namespace GASS
 		//Vec3 min = box.m_Min - m_Owner->GetPosition();
 		Vec3 bb_size = (box.m_Max - box.m_Min)*m_CollisionGeomScale;
 		//bb_size = bb_size*m_Owner->GetScale();
-		
+
 		Sphere sphere = geom->GetBoundingSphere();
 		sphere.m_Radius *= m_CollisionGeomScale.x;//*m_Owner->GetScale().x;
 		m_BBSize = bb_size;
@@ -191,11 +196,11 @@ namespace GASS
 			break;
 		case PGT_CYLINDER:
 			{
-				
+
 				geom_offset = box.m_Max + box.m_Min;
 				geom_offset = geom_offset*0.5f;
 
-				float radius=max(bb_size.x/2.f,bb_size.y/2.f);
+				float radius=std::max(bb_size.x/2.f,bb_size.y/2.f);
 				float length=bb_size.z-radius;
 				geom_id = dCreateCCylinder (0, radius, length);
 
@@ -221,15 +226,15 @@ namespace GASS
 			}
 			break;
 		case PGT_TERRAIN:
-				geom_id = CreateTerrain(geom,  0);	
+				geom_id = CreateTerrain(geom,  0);
 			break;
-			
+
 		}
 
 		m_Offset = m_Offset + geom_offset;
-		//Set the clean-up mode of geometry transform. If the clean-up mode is 1, 
-		//then the encapsulated object will be destroyed when the geometry transform is destroyed. 
-		//If the clean-up mode is 0 this does not happen. The default clean-up mode is 0. 
+		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
+		//then the encapsulated object will be destroyed when the geometry transform is destroyed.
+		//If the clean-up mode is 0 this does not happen. The default clean-up mode is 0.
 		trans_geom_id = dCreateGeomTransform(space);
 		dGeomTransformSetCleanup(trans_geom_id, 1 );
 		dGeomTransformSetGeom(trans_geom_id,geom_id);
@@ -238,7 +243,7 @@ namespace GASS
 		{
 			dGeomSetBody(trans_geom_id, body->GetODEBody());
 		}
-		else 
+		else
 		{
 			//SetGeomTransformation(trans_geom_id,m_Owner);
 			dGeomSetBody(trans_geom_id, NULL);
@@ -381,7 +386,7 @@ namespace GASS
 
 		case PGT_SPHERE:
 			{
-				Sphere sphere = geom->GetBoundingSphere();	
+				Sphere sphere = geom->GetBoundingSphere();
 				sphere.m_Radius *= m_CollisionGeomScale.x;
 				dMassSetSphereTotal(&ode_mass, body->GetMass(), sphere.m_Radius);
 				break;
@@ -415,14 +420,14 @@ namespace GASS
 			float thickness = m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
 
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
-			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space), 
+			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space),
 				this, // pUserData ?
-				ODEGeometry::TerrainHeightCallback, 
+				ODEGeometry::TerrainHeightCallback,
 				size_x, //X
 				size_z, //Z
 				samples_x, // w // Vertex count along edge >= 2
 				samples_z, // h // Vertex count along edge >= 2
-				1.0,     //vScale 
+				1.0,     //vScale
 				0.0,	// vOffset
 				thickness,	// vThickness
 				0); // nWrapMode
@@ -433,7 +438,7 @@ namespace GASS
 			dGeomHeightfieldDataSetBounds( heightid, m_TerrainBounds.m_Min.y,  m_TerrainBounds.m_Max.y);
 			geom_id = dCreateHeightfield( space, heightid, 1 );
 
-			Vec3 center_position;	
+			Vec3 center_position;
 			center_position.x = m_TerrainBounds.m_Min.x + (m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x)*0.5;
 			center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
 			center_position.y = 0;
@@ -459,7 +464,7 @@ namespace GASS
 
 	/*	bool ODEGeometry::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest )
 	{
-	if(m_Slip < 0) 
+	if(m_Slip < 0)
 	return true;
 
 	//Calcaulte slip param
@@ -485,15 +490,15 @@ namespace GASS
 	contact.surface.mode |= dContactApprox1;
 	//  re-tweak mu and mu2
 	contact.surface.mu = contact.surface.mu2 = m_Friction;
-	//  The theory is that it doesn't matter if "front" points "up" 
-	//  because we want fdir2 to be orthogonal to "front" and contact 
-	//  normal. Of course, if "front" points in the direction of the 
+	//  The theory is that it doesn't matter if "front" points "up"
+	//  because we want fdir2 to be orthogonal to "front" and contact
+	//  normal. Of course, if "front" points in the direction of the
 	//  contact, this can be a problem. In that case, choose "up".
-	if( fabsf( dDot( contact.geom.normal, &front.x, 3 ) ) > 0.5f ) 
+	if( fabsf( dDot( contact.geom.normal, &front.x, 3 ) ) > 0.5f )
 	{
 	((Vec3 &)contact.fdir1) = up;
 	}
-	else 
+	else
 	{
 	((Vec3 &)contact.fdir1) = front;
 	}

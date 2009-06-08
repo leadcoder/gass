@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SINGLETON_HH
+#define SINGLETON_HH
 
 #include <assert.h>
 #include "Core/Common.h"
@@ -56,4 +57,4 @@ class Singleton
 };
 }
 //template <typename T> T* Singleton <T>::m_Instance = 0;
-
+#endif // #ifndef SINGLETON_HH

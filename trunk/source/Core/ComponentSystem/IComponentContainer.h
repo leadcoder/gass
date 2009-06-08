@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ICOMPONENTCONTAINER_HH
+#define ICOMPONENTCONTAINER_HH
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -34,14 +35,14 @@ namespace GASS
 	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
 	typedef boost::shared_ptr<IComponent> ComponentPtr;
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
-	
-	
+
+
 	/**
 		Interface that a component container should implement
 		A component container is a owner of components and child
 		components containers. This way a tree structure can be created
 		with component containers where each node in the tree represented by a
-		component container that can have it's own set of components 
+		component container that can have it's own set of components
 		giving the node unique functionality
 	*/
 	class GASSCoreExport IComponentContainer
@@ -57,23 +58,23 @@ namespace GASS
 		Get component container name
 		*/
 		virtual std::string GetName() const = 0;
-		
+
 		/**
 		Set component container name
 		*/
 		virtual void SetName(const std::string &name) = 0;
 
 		/**
-			This function is called when a 
+			This function is called when a
 			component conatiner is instantiated
 		*/
 		virtual void OnCreate() = 0;
 
 		/**
-			Add a child component conatiner. 
+			Add a child component conatiner.
 		*/
 		virtual void AddChild(ComponentContainerPtr child) = 0;
-		
+
 		/**
 			Remove a child component conatiner
 		*/
@@ -85,13 +86,13 @@ namespace GASS
 		virtual void AddComponent(ComponentPtr comp) = 0;
 
 		/**
-			Get child component containers, 
+			Get child component containers,
 			this will only return the ones owned by this container i.e.
 			no grandchildren will be returned
 		*/
 		virtual ComponentContainerIterator GetChildren() = 0;
 		/**
-			Get component by name, 
+			Get component by name,
 			only serach this containers components and first one is returned
 		*/
 		virtual ComponentPtr GetComponent(const std::string &name) = 0;
@@ -113,3 +114,4 @@ namespace GASS
 
 
 }
+#endif // #ifndef ICOMPONENTCONTAINER_HH

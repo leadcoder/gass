@@ -18,14 +18,14 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef DYNAMIC_MODULE_HH
-#define DYNAMIC_MODULE_HH
+#ifndef PLUGINMANAGER_HH
+#define PLUGINMANAGER_HH
 
 #include "Core/Common.h"
 #include <string>
 #include <vector>
 
-namespace GASS 
+namespace GASS
 {
 	class DynamicModule;
 	class GASSCoreExport PluginManager
@@ -41,4 +41,5 @@ namespace GASS
 	};
 }
 
-#endif
+#endif // #ifndef PLUGINMANAGER_HH
+

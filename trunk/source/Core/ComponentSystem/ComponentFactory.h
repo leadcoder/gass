@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef COMPONENTFACTORY_HH
+#define COMPONENTFACTORY_HH
 
 #include "Core/Common.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -29,11 +30,11 @@ namespace GASS
 	/**
 		The one and only factory holding components.
 		This is a singleton implementation of the Factory template.
-		By using the singleton pattern each new component type can 
+		By using the singleton pattern each new component type can
 		register it	self in a easy way.
-		A component have to reigister it self to this 
+		A component have to reigister it self to this
 		factory	if it want any type of serialization behavior.
-		See Factory class for more information on how to 
+		See Factory class for more information on how to
 		do the actual registration.
 	*/
 	class GASSCoreExport ComponentFactory : public Factory<IComponent>
@@ -49,3 +50,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef COMPONENTFACTORY_HH

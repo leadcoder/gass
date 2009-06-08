@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ISYSTEM_HH
+#define ISYSTEM_HH
 
 #include "Core/Reflection/BaseReflectionObject.h"
 #include <string>
@@ -42,3 +43,4 @@ namespace GASS
 
 	typedef boost::shared_ptr<ISystem> SystemPtr;
 }
+#endif // #ifndef ISYSTEM_HH

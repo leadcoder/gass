@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef MISC_H
-#define MISC_H
+#ifndef MISC_HH
+#define MISC_HH
 
 #include <string>
 #include <algorithm>
@@ -44,7 +44,7 @@ namespace GASS
 	const int GASS_MAX_EXT	= 256;
 
 
-	class GASSCoreExport Misc  
+	class GASSCoreExport Misc
 	{
 	public:
 		Misc();
@@ -61,7 +61,7 @@ namespace GASS
 		static bool FindTexture(std::string &name);
 		inline static std::string ToLower(const std::string &str)
 		{
-			std::string new_str = str;    
+			std::string new_str = str;
 			std::transform(str.begin(), str.end(), new_str.begin(),::tolower);
 			return new_str;
 		}
@@ -78,4 +78,5 @@ namespace GASS
 	};
 }
 
-#endif 
+#endif // #ifndef MISC_HH
+

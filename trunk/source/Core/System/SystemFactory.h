@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SYSTEMFACTORY_HH
+#define SYSTEMFACTORY_HH
 
 #include "Core/Common.h"
 #include "Core/System/ISystem.h"
@@ -38,4 +39,4 @@ namespace GASS
 	protected:
 	};
 }
-
+#endif // #ifndef SYSTEMFACTORY_HH

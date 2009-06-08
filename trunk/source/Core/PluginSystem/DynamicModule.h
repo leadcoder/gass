@@ -18,14 +18,15 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef DYNAMICMODULE_HH
+#define DYNAMICMODULE_HH
 
 #include "Core/Common.h"
 #include <string>
 
-namespace GASS 
+namespace GASS
 {
-	/*class GASSCoreExport EnginePlugin 
+	/*class GASSCoreExport EnginePlugin
 	{
 	public:
 		EnginePlugin();
@@ -55,3 +56,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef DYNAMICMODULE_HH

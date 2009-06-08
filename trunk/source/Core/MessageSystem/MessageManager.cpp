@@ -92,7 +92,7 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			
+
 			if((*msg_reg)->m_Callback.functor.func_ptr == callback.functor.func_ptr)
 			{
 				return 1;
@@ -129,17 +129,17 @@ namespace GASS
 			{
 				delete (*msg_reg);
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
-				
+
 				return;
 			}
 			msg_reg++;
 		}
 	}
-	
+
 	// Updates the message handler and sends any messages than need to be sent
 	void MessageManager::Update(float dt)
 	{
-		if(m_MessageQueue.size() == 0) 
+		if(m_MessageQueue.size() == 0)
 			return;
 
 

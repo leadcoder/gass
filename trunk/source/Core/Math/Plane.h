@@ -18,19 +18,20 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef PLANE_HH
+#define PLANE_HH
 
 
 #include "Core/Math/CoreMath.h"
 namespace GASS
 {
 
-	class GASSCoreExport Plane4  
+	class GASSCoreExport Plane4
 	{
 	public:
 		Plane4();
 		Plane4(Vec3 p1,Vec3 p2,Vec3 p3);
-		Plane4(const Vec3& origin, const Vec3& normal) 
+		Plane4(const Vec3& origin, const Vec3& normal)
 		{
 			m_Normal = normal;
 			m_Origin = origin;
@@ -41,12 +42,12 @@ namespace GASS
 		};
 		virtual ~Plane4();
 
-		bool IsFrontFacingTo(const Vec3& direction) const 
+		bool IsFrontFacingTo(const Vec3& direction) const
 		{
 			double dot = Math::Dot(m_Normal,direction);
 			return (dot <= 0);
 		};
-		double SignedDistanceTo(const Vec3& point) const 
+		double SignedDistanceTo(const Vec3& point) const
 		{
 			return Math::Dot(point,m_Normal) + d;
 		};
@@ -57,3 +58,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef PLANE_HH

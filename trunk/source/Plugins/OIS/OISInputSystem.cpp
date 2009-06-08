@@ -29,18 +29,15 @@
 #include "Core/MessageSystem/Message.h"
 #include <boost/bind.hpp>
 
-
-
-
 #include <OgreRenderWindow.h>
 
 
 namespace GASS
 {
 	OISInputSystem::OISInputSystem() :
-		m_Window(0), 
-		m_Inverted (false), 
-		m_Active (true), 
+		m_Window(0),
+		m_Inverted (false),
+		m_Active (true),
 		m_OnlyUpdateWhenFocued (true),
 		m_MouseSpeed(20),
 		m_ExclusiveMode(true)
@@ -102,8 +99,8 @@ namespace GASS
 		m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject( OIS::OISKeyboard, bufferedKeys ));
 		m_Keyboard->setEventCallback(this);
 		m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject( OIS::OISMouse, bufferedMouse ));
-		m_Mouse->setEventCallback(this);		
-		
+		m_Mouse->setEventCallback(this);
+
 #ifdef WIN32
 		if (m_InputManager->numJoySticks() > 0) {
 			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->numJoySticks());
@@ -136,7 +133,7 @@ namespace GASS
 					m_JoyState.push_back(joy->getJoyStickState());
 					m_OldJoyState.push_back(joy->getJoyStickState());
 				}
-			} catch(exception& e) {
+			} catch(std::exception& e) {
 				Log::Warning("OISInputSystem: Exception caught while initializing joysticks: %s", e.what());
 			} catch(...) {
 				Log::Warning("OISInputSystem: Something caught while initializing joysticks");
@@ -249,7 +246,7 @@ namespace GASS
 	void OISInputSystem::AddKeyListener(IKeyListener* key_listener)
 	{
 		m_KeyListeners.push_back(key_listener);
-		
+
 	}
 	void OISInputSystem::RemoveKeyListener(IKeyListener* key_listener)
 	{
@@ -304,9 +301,9 @@ namespace GASS
 	}
 
 
-	bool OISInputSystem::keyPressed( const OIS::KeyEvent &arg ) 
+	bool OISInputSystem::keyPressed( const OIS::KeyEvent &arg )
 	{
-		
+
 		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
@@ -316,10 +313,10 @@ namespace GASS
 		}
 		return true;
 	}
-	
+
 	bool OISInputSystem::keyReleased( const OIS::KeyEvent &arg )
 	{
-		
+
 		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
@@ -337,7 +334,7 @@ namespace GASS
 			IMouseListener* ml = *iter;
 
 			//Normalize values
-			
+
 			ml->MouseMoved(NormalizeMouse(arg.state.X.rel),NormalizeMouse(arg.state.Y.rel));
 			iter++;
 		}
@@ -411,7 +408,7 @@ namespace GASS
 
 		while(iter != m_GameControllerListeners.end())
 		{
-		
+
 			IGameControllerListener* ml = *iter;
 
 			ml->AxisMoved(arg.device->getID(),axis, value);

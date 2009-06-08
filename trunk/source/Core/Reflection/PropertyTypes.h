@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef PROPERTYTYPES_HH
+#define PROPERTYTYPES_HH
+
 #include <string>
 #include "Core/Common.h"
 #include "Core/Math/Vector.h"
@@ -54,9 +56,9 @@ namespace GASS
 		// Returns type ID associated with the templatized type.
 		static	ePropertyType	GetTypeID();
 
-	private:
+	//private:
 
-		static			ePropertyType    m_TypeID;
+		static ePropertyType    m_TypeID;
 
 	};
 
@@ -67,3 +69,4 @@ namespace GASS
 	}
 
 }
+#endif //PROPERTYTYPES_HH

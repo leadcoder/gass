@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ENUMLOOKUP_HH
+#define ENUMLOOKUP_HH
 
 #include "Core/Common.h"
 #include <string>
@@ -27,7 +28,7 @@
 namespace GASS
 {
 
-	class GASSCoreExport EnumLookup 
+	class GASSCoreExport EnumLookup
 	{
 
 	public:
@@ -44,3 +45,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef ENUMLOOKUP_HH

@@ -57,7 +57,7 @@ namespace GASS
 	void ODEPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
-		RegisterProperty<float>( "Gravity", &GetGravity, &SetGravity);
+		RegisterProperty<float>( "Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 	}
 
 	void ODEPhysicsSceneManager::SetGravity(float gravity)
@@ -90,10 +90,10 @@ namespace GASS
 		obj->SendImmediate(phy_msg);
 	}
 
-	
+
 	void ODEPhysicsSceneManager::Update(double delta_time)
 	{
-		
+
 		if (m_Paused)
 			return;
 		dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
@@ -125,7 +125,7 @@ namespace GASS
 		dWorldSetAutoDisableSteps(m_World, 10);
 		dWorldSetAutoDisableTime(m_World, 0);
 		dAllocateODEDataForThread(dAllocateMaskAll);
-		
+
 		m_Init = true;
 	}
 
@@ -153,7 +153,7 @@ namespace GASS
 	{
 		int i;
 		// if (o1->body && o2->body) return;
-		if(dGeomIsSpace(o1) &&  dGeomIsSpace(o2) && o1 == o2) 
+		if(dGeomIsSpace(o1) &&  dGeomIsSpace(o2) && o1 == o2)
 		{
 			return;
 		}
@@ -168,13 +168,13 @@ namespace GASS
 			ODEGeometry* geom1 = static_cast<ODEGeometry*>(dGeomGetData(o1));
 			ODEGeometry* geom2 = static_cast<ODEGeometry*>(dGeomGetData(o2));
 
-			if(!(geom1 && geom2)) 
+			if(!(geom1 && geom2))
 				return;
 
-			if((geom1 == geom2)) 
+			if((geom1 == geom2))
 				return;
 
-		/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent()) 
+		/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent())
 				return;
 
 
@@ -182,12 +182,12 @@ namespace GASS
 
 			// check if part of same object
 
-			if(geom1->GetSceneObject()->GetObjectUnderRoot() == geom2->GetSceneObject()->GetObjectUnderRoot()) 
+			if(geom1->GetSceneObject()->GetObjectUnderRoot() == geom2->GetSceneObject()->GetObjectUnderRoot())
 			{
 				return;
 			}
 
-			
+
 
 			dBodyID b1 = dGeomGetBody(o1);
 			dBodyID b2 = dGeomGetBody(o2);
@@ -218,18 +218,18 @@ namespace GASS
 			dContactGeom contacts[MAX_CONTACTS];
 			int numc = dCollide(o1,o2,MAX_CONTACTS,contacts,sizeof(dContactGeom));
 
-			for (i=0; i < numc; i++) 
+			for (i=0; i < numc; i++)
 			{
 				contact.geom = contacts[i];
 
-				/*if( (WantsContact(geom1, contact, geom2, o1, o2, true )) && 
-				(WantsContact(geom2, contact, geom1, o2, o1, true )) ) 
+				/*if( (WantsContact(geom1, contact, geom2, o1, o2, true )) &&
+				(WantsContact(geom2, contact, geom1, o2, o1, true )) )
 				*/{
 					dJointID tempJoint = dJointCreateContact( m_World, m_ContactGroup, &contact );
 					dJointAttach( tempJoint, b1, b2 );
 				}
 			}
-			/*if(numc > 0) 
+			/*if(numc > 0)
 			{
 			Vec3 pos = Vec3(contacts[0].pos[0],contacts[0].pos[1],contacts[0].pos[2]);
 			Vec3 normal = Vec3(contacts[0].normal[0],contacts[0].normal[1],contacts[0].normal[2]);
@@ -237,12 +237,12 @@ namespace GASS
 			geom2->CallCollsionListeners(pos,normal);
 			}*/
 		}
-		
+
 	}
 
 	void ODEPhysicsSceneManager::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
 	{
-		//Make ODE rotation matrix 
+		//Make ODE rotation matrix
 		ode_mat[0] = m.m_Data2[0];
 		ode_mat[1] = m.m_Data2[4];
 		ode_mat[2] = m.m_Data2[8];
@@ -321,7 +321,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::MakeODERotationMatrix(const Mat4 &m, float *ode_mat)
 	{
-	//Make ODE rotation matrix 
+	//Make ODE rotation matrix
 	ode_mat[0] = m.m_Data2[0];
 	ode_mat[1] = m.m_Data2[4];
 	ode_mat[2] = m.m_Data2[8];
@@ -381,8 +381,8 @@ namespace GASS
 			&(mesh_data->VertexVector[0]),
 			sizeof(float)*3,
 			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0], 
-			mesh_data->NumFaces*3, 
+			(unsigned int*)&mesh_data->FaceVector[0],
+			mesh_data->NumFaces*3,
 			3 * sizeof(unsigned int));
 		//Save id for this collision mesh
 
@@ -400,7 +400,7 @@ namespace GASS
 		if (iter!= m_ColMeshMap.end()) //in map.
 		{
 			return true;
-		}		
+		}
 		return false;
 	}
 }

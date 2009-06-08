@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef QUARTERNION_HH
+#define QUARTERNION_HH
 
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Vector.h"
@@ -100,3 +101,4 @@ namespace GASS
 
 	};
 }
+#endif // #ifndef QUARTERNION_HH

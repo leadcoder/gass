@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ISYSTEMMANAGER_HH
+#define ISYSTEMMANAGER_HH
+
 #include <list>
 #include <map>
 #include <vector>
@@ -35,7 +37,8 @@ namespace GASS
 	public:
 		virtual ~ISystemManager(){}
 		virtual void Init() = 0;
-		virtual void Update(float delta_time) = 0;		
+		virtual void Update(float delta_time) = 0;
 	private:
 	};
 }
+#endif // #ifndef ISYSTEMMANAGER_HH

@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef TBBRUNTIMECONTROLLER_HH
+#define TBBRUNTIMECONTROLLER_HH
 
 #include "Sim/Common.h"
 #include <vector>
@@ -49,3 +50,4 @@ namespace GASS
 	};
 }
 
+#endif // TBBRUNTIMECONTROLLER_HH

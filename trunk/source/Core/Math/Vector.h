@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef VECTOR_HH
+#define VECTOR_HH
 
 #include "Core/Common.h"
 #include "Core/Math/Matrix.h"
@@ -462,3 +463,4 @@ namespace GASS
 	};
 }
 
+#endif // #ifndef VECTOR_HH
