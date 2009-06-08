@@ -81,7 +81,14 @@ namespace GASS
 
 	protected:
 
-		ComponentContainerPtr CreateComponentContainer();
+		//Its possible to override this function if custom creation proccess is needed.
+		//By default the container factory name used is the same as the template
+		//with the Template part removed, however if thats not the case you have to
+		//override this function and supply your own instance. 
+		//Another case could be that some attributes have to be transfered 
+		//from template to instance in a custom way.
+		
+		virtual ComponentContainerPtr CreateComponentContainer();
 
 		//Get/Set section
 		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}

@@ -28,6 +28,7 @@
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/MessageManager.h"
+#include "Core/Utils/Log.h"
 #include <iostream>
 #include <iomanip>
 #include <tinyxml.h>
@@ -399,10 +400,15 @@ namespace GASS
 	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer()
 	{
 		std::string type = GetRTTI()->GetClassName();
+		type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
+			
 		//remove template from name
 		int pos = type.find("Template");
 		type = type.substr(0,pos);
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+
+		if(!container)
+			Log::Error("Failed to create instance %s",type.c_str());
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
 		
