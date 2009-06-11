@@ -17,37 +17,27 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
+#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 
-#ifndef COMPONENTCONTAINERTEMPLATEFACTORY_HH
-#define COMPONENTCONTAINERTEMPLATEFACTORY_HH
 
-#include "Core/Common.h"
-#include "Core/ComponentSystem/IComponentContainerTemplate.h"
-#include "Core/Utils/Factory.h"
 
 namespace GASS
 {
-	/**
-		The one and only factory holding component containers.
-		This is a singleton implementation of the Factory template.
-		By using the singleton pattern each component container
-		type can register it self in a easy way.
-		A component container have to reigister it self to this
-		factory	if it want any type of serialization behavior.
-		See Factory class for more information on how to
-		do the actual registration.
-	*/
-	class GASSCoreExport ComponentContainerTemplateFactory : public Factory<IComponentContainerTemplate>
+	SceneObjectTemplate::SceneObjectTemplate()
 	{
-	public:
-		ComponentContainerTemplateFactory();
-		virtual ~ComponentContainerTemplateFactory();
-		static ComponentContainerTemplateFactory* GetPtr();
-		static ComponentContainerTemplateFactory& Get();
-	protected:
-		static ComponentContainerTemplateFactory* m_Instance;
-	protected:
-	};
+		
+	}
+	SceneObjectTemplate::~SceneObjectTemplate(void)
+	{
+	}
+
+	void SceneObjectTemplate::RegisterReflection()
+	{
+		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
+	}
 }
 
-#endif // #ifndef COMPONENTCONTAINERTEMPLATEFACTORY_HH
+
+
+

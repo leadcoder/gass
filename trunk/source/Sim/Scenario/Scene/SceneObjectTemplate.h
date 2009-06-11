@@ -18,36 +18,23 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef COMPONENTCONTAINERTEMPLATEFACTORY_HH
-#define COMPONENTCONTAINERTEMPLATEFACTORY_HH
+#pragma once
 
-#include "Core/Common.h"
-#include "Core/ComponentSystem/IComponentContainerTemplate.h"
-#include "Core/Utils/Factory.h"
+#include "Sim/Common.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
 
 namespace GASS
-{
-	/**
-		The one and only factory holding component containers.
-		This is a singleton implementation of the Factory template.
-		By using the singleton pattern each component container
-		type can register it self in a easy way.
-		A component container have to reigister it self to this
-		factory	if it want any type of serialization behavior.
-		See Factory class for more information on how to
-		do the actual registration.
-	*/
-	class GASSCoreExport ComponentContainerTemplateFactory : public Factory<IComponentContainerTemplate>
+{	
+	
+	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate, BaseComponentContainerTemplate>
 	{
 	public:
-		ComponentContainerTemplateFactory();
-		virtual ~ComponentContainerTemplateFactory();
-		static ComponentContainerTemplateFactory* GetPtr();
-		static ComponentContainerTemplateFactory& Get();
-	protected:
-		static ComponentContainerTemplateFactory* m_Instance;
-	protected:
+		SceneObjectTemplate();
+		virtual ~SceneObjectTemplate();
+		static	void RegisterReflection();
 	};
-}
+	
+	typedef boost::shared_ptr<SceneObjectTemplate> SceneObjectTemplatePtr;
+	typedef boost::weak_ptr<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
 
-#endif // #ifndef COMPONENTCONTAINERTEMPLATEFACTORY_HH
+}

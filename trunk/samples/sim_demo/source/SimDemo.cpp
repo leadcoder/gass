@@ -30,8 +30,9 @@
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/BaseComponent.h"
-#include "Core/ComponentSystem/BaseObject.h"
-#include "Core/ComponentSystem/BaseObjectTemplateManager.h"
+#include "Core/ComponentSystem/BaseComponentContainer.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 
@@ -61,7 +62,7 @@ GASS::MessageManager mm;
 
 void CreateManualObject()
 {
-	GASS::SceneObjectPtr container = boost::shared_static_cast<GASS::SceneObject>( GASS::ComponentContainerFactory::Get().Create("SceneObject"));
+	GASS::BaseComponentContainerTemplatePtr container( new GASS::BaseComponentContainerTemplate()); //boost::shared_static_cast<GASS::BaseComponentContainer>( GASS::ComponentContainerTemplateFactory::Get().Create("BaseComponentContainer"));
 	container->SetName("ContainerTemplate");
 	GASS::BaseComponentPtr lc = boost::shared_static_cast<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("LocationComponent"));
 	lc->SetName("ContainerLocation");
@@ -117,13 +118,38 @@ void TestCollision(GASS::ScenarioScene* scene)
 
 int main(int argc, char* argv[])
 {
+	std::string plugin_file = "plugins.xml";
+	std::string sys_conf_file ="systems.xml";
+	std::string scenario_path ="../data/scenarios/ogre_demo_scenario";
+
+	int index = 1;
+	//check if arguments are provided 
+	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scenario ../data/scenarios/osg_demo_scenario 
+	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scenario ../data/scenarios/ogre_demo_scenario 
+	while(index < argc)
+	{
+		char* arg = argv[index];
+		if(_strcmpi(arg, "--Plugins") == 0)
+		{
+			plugin_file = argv[index+1];
+		}
+		else if(_strcmpi(arg, "--SystemConfiguration") == 0)
+		{
+			sys_conf_file = argv[index+1];
+		}
+		else if(_strcmpi(arg, "--Scenario") == 0)
+		{
+			scenario_path = argv[index+1];
+		}
+		index += 2;
+	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
-	engine->Init();
+	engine->Init(plugin_file,sys_conf_file);
 	GASS::Scenario* scenario = new GASS::Scenario();
 
 	//CreateManualObject();
-
-	scenario->Load("../data/scenarios/ogre_demo_scenario");
+	
+	scenario->Load(scenario_path);
 	//scenario->Load("../../../data/scenarios/camp_genesis");
 	//scenario->Load("../../../data/advantage_scenario");
 	
@@ -161,6 +187,13 @@ int main(int argc, char* argv[])
 			prev = time;
 			//TestCollision(scenario->GetScene(0));
 		}
+
+	/*	delete scenario;
+		scenario = new GASS::Scenario();
+
+		//CreateManualObject();
+
+		scenario->Load("../data/scenarios/ogre_demo_scenario");*/
 		
 		/*if(check_reset && time > 5.0)
 		{

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ComponentContainers>
-	<FreeCameraObject type ="SceneObject">
+<Templates>
+	<FreeCameraObject type ="SceneObjectTemplate">
 		<Components>
 			<TheCamera type="CameraComponent">
 			</TheCamera>
@@ -12,7 +12,7 @@
       </Controller>
     </Components>
 	</FreeCameraObject>
-  <ContainerObject type ="SceneObject">
+  <ContainerObject type ="SceneObjectTemplate">
     <Components>
       <ContainerGeom type="MeshComponent">
         <Filename value="container_01.mesh"/>
@@ -31,4 +31,4 @@
       </ContainerPhysicsBody>
   </Components>
   </ContainerObject>
-</ComponentContainers>
+</Templates>

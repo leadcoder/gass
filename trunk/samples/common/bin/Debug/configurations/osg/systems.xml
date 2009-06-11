@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Systems>
+  <GraphicsSystem type="OSGGraphicsSystem">
+  </GraphicsSystem>
+  <ResourceSystem type="OSGResourceSystem">
+  </ResourceSystem>
+  <InputSystem type="OISInputSystem">
+  </InputSystem>
+  <CollisionSystem type="ODECollisionSystem">
+  </CollisionSystem>
+</Systems>

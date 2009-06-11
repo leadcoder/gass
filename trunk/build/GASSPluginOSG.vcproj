@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="GASSPluginOSG"
 	ProjectGUID="{3829937D-E63F-49B9-8EEF-7D72A712CF38}"
 	RootNamespace="PluginOgre"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -17,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../lib/vs2005"
+			OutputDirectory="../lib/vs2008"
 			IntermediateDirectory="obj/Debug"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -68,10 +69,12 @@
 				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/GASSPluginOSG_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
+				AdditionalLibraryDirectories="../lib/vs2008;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/PluginOSG_d.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="../lib/vs2005/PluginOSG_d.lib"
 				TargetMachine="1"
 			/>
@@ -92,9 +95,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -152,11 +152,13 @@
 				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib"
 				OutputFile="$(OutDir)/GASSPluginOSG.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
+				AdditionalLibraryDirectories="../lib/vs2008;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="../lib/vs2005/GASSPluginOSG.lib"
 				TargetMachine="1"
 			/>
@@ -177,9 +179,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -243,14 +242,6 @@
 						</File>
 						<File
 							RelativePath="..\Source\Plugins\OSG\Components\OSGCameraComponent.h"
-							>
-						</File>
-						<File
-							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.h"
 							>
 						</File>
 						<File
