@@ -20,6 +20,7 @@
 
 /* FIXME Fading doesn't work with multiple grass layers */
 
+#include <boost/bind.hpp>
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
 #include "GrassGeometry.h"
@@ -28,6 +29,10 @@
 #include "BatchPage.h"
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/ComponentSystem/IComponent.h"
+#include "Core/MessageSystem/MessageManager.h"
 
 namespace GASS
 {
@@ -59,13 +64,10 @@ namespace GASS
 		}
 	}
 
-	void GrassGeometry::OnCreate()
-	{
-
-	}
 
 	void GrassGeometry::RegisterReflection()
 	{
+		ComponentFactory::GetPtr()->Register("GrassGeometry",new Creator<GrassGeometry, IComponent>);
 		RegisterProperty<std::string>("DensityMap", &GetDensityMap, &SetDensityMap);
 		RegisterProperty<float>("DensityFactor", &GetDensityFactor, &SetDensityFactor);
 		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
@@ -86,6 +88,11 @@ namespace GASS
 
 	}
 
+	void GrassGeometry::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(GrassGeometry::OnLoad),1);
+	}
+
 	std::string GrassGeometry::GetDensityMap() const
 	{
 
@@ -102,7 +109,7 @@ namespace GASS
 
 	float GrassGeometry::GetDensityFactor() const
 	{
-
+		return m_DensityFactor;
 	}
 
 	void GrassGeometry::SetDensityFactor(float factor)
@@ -114,20 +121,22 @@ namespace GASS
 
 	float GrassGeometry::GetPageSize() const
 	{
-
+		return m_PageSize;
 	}
 
 	void GrassGeometry::SetPageSize(float size)
 	{
-
+		m_PageSize = size;
 
 	}
 	float GrassGeometry::GetImposterAlphaRejectionValue() const
 	{
+		return m_ImposterAlphaRejectionValue;
 	}
 
 	void GrassGeometry::SetImposterAlphaRejectionValue(float value)
 	{
+		m_ImposterAlphaRejectionValue =value;
 	}
 
 	Vec4 GrassGeometry::GetBounds() const
@@ -299,8 +308,9 @@ namespace GASS
 	}
 
 
-	void GrassGeometry::Init()
+	void GrassGeometry::OnLoad(MessagePtr message)
 	{
+	
 		bool user_bounds = true;
 		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
 		{
@@ -309,7 +319,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			ITerrainComponent * terrain;//  = FindTerrain();
+			ITerrainComponent * terrain =NULL;//  = FindTerrain();
 			if(terrain)
 			{
 				Vec3 bmin,bmax;
@@ -337,7 +347,7 @@ namespace GASS
 		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist); 
 		m_PagedGeometry->setPageLoader(loader);
 
-		loader->setHeightFunction(PagedGeometryManager::GetTerrainHeight);
+		loader->setHeightFunction(GrassGeometry::GetTerrainHeight);
 		m_GrassLayer = loader->addLayer(m_Material); 
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y); 
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y); 
@@ -351,12 +361,19 @@ namespace GASS
 		UpdateSway();
 		
 		m_GrassLoader = loader;
-		Root::Get().AddRenderListener(this);
+//		Root::Get().AddRenderListener(this);
 	}
+
+	float GrassGeometry::GetTerrainHeight(float x, float z)
+	{
+		return 0;
+	}
+
+
 
 	void GrassGeometry::UpdateSway()
 	{
-		if(m_GrassLoader)
+		/*if(m_GrassLoader)
 		{
 			if(m_EnableSway)
 			{
@@ -369,18 +386,18 @@ namespace GASS
 			{
 				m_GrassLoader->setAnimationEnabled(false);
 			}
-		}
+		}*/
 	}
 
-	void GrassGeometry::RenderUpdate(float delta)
+/*	void GrassGeometry::RenderUpdate(float delta)
 	{
 		if(m_GrassLoader ) m_GrassLoader->updateAnimation();
-	}
+	}*/
 
-	void GrassGeometry::Update()
+/*	void GrassGeometry::Update()
 	{
 		IPagedGeometry::Update();
-	}
+	}*/
 }
 
 

@@ -18,37 +18,53 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <boost/bind.hpp>
 #include <OgreEntity.h>
 #include <Ogre.h>
 #include <OgreSceneManager.h>
+#include <OgreHardwarePixelBuffer.h>
 #include "TreeGeometry.h"
-#include "Main/SceneNodes/ICameraNode.h"
-#include "Main/SceneNodes/Players/BasePlayer.h"
-#include "PagedGeometryManager.h"
-#include "Main/SceneNodes/FreeCamera.h"
-#include "Main/Terrain/Image.h"
-#include "Main/Geometry/ITerrainGeometry.h"
-
-#include "Main/Level.h"
 #include "PagedGeometry.h"
 #include "ImpostorPage.h"
 #include "BatchPage.h"
-//#include "EntityPage.h"
 #include "TreeLoader2D.h"
 #include "TreeLoader3D.h"
 #include "GrassLoader.h"
-#include <OgreHardwarePixelBuffer.h>
+#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 
-namespace HiFi
+
+//#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/ComponentSystem/IComponent.h"
+#include "Core/MessageSystem/MessageManager.h"
+#include "Core/MessageSystem/Message.h"
+
+
+namespace GASS
 {
-	IMPLEMENT_RTTI_PROP(TreeGeometry,IPagedGeometry);
-	IMPLEMENT_PROPERTIES(TreeGeometry,CExtraProp);
 
-	bool TreeGeometry::OnRegister()
+	void TreeGeometry::RegisterReflection()
 	{
-		REGISTER_PROP(String,TreeGeometry,m_ColorMapFilename,"ColorMap",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(String,TreeGeometry,m_DensityMapFilename,"DensityMap",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometry,m_DensityFactor,"DensityFactor",CProperty::STREAM|CProperty::READONLY,"");
+		ComponentFactory::GetPtr()->Register("TreeGeometry",new Creator<TreeGeometry, IComponent>);
+	
+		RegisterProperty<std::string>("ColorMap", &TreeGeometry::GetColorMap, &TreeGeometry::SetColorMap);
+		RegisterProperty<std::string>("DensityMap", &TreeGeometry::GetDensityMap, &TreeGeometry::SetDensityMap);
+		RegisterProperty<float>("DensityFactor", &TreeGeometry::GetDensityFactor, &TreeGeometry::SetDensityFactor);
+		RegisterProperty<float>("MeshDistance", &TreeGeometry::GetMeshDistance, &TreeGeometry::SetMeshDistance);
+		RegisterProperty<float>("MeshFadeDistance", &TreeGeometry::GetMeshFadeDistance, &TreeGeometry::SetMeshFadeDistance);
+		RegisterProperty<float>("ImposterDistance", &TreeGeometry::GetImposterDistance, &TreeGeometry::SetImposterDistance);
+		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometry::GetImposterFadeDistance, &TreeGeometry::SetImposterFadeDistance);
+		RegisterProperty<Vec4>("Bounds", &TreeGeometry::GetBounds, &TreeGeometry::SetBounds);
+		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometry::GetMaxMinScale, &TreeGeometry::SetMaxMinScale);
+		RegisterProperty<bool>("CastShadows", &TreeGeometry::GetCastShadows, &TreeGeometry::SetCastShadows);
+		RegisterProperty<bool>("CreateShadowMap", &TreeGeometry::GetCreateShadowMap, &TreeGeometry::SetCreateShadowMap);
+		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometry::GetPrecalcHeight, &TreeGeometry::SetPrecalcHeight);
+		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
+		RegisterProperty<float>("ImposterAlphaRejectionValue", &GetImposterAlphaRejectionValue, &SetImposterAlphaRejectionValue);
+		
+		//REGISTER_PROP(String,TreeGeometry,m_DensityMapFilename,"DensityMap",CProperty::STREAM|CProperty::READONLY,"");
+		/*REGISTER_PROP(Float,TreeGeometry,m_DensityFactor,"DensityFactor",CProperty::STREAM|CProperty::READONLY,"");
 		REGISTER_PROP(Float,TreeGeometry,m_MeshDist,"MeshDistance",CProperty::STREAM|CProperty::READONLY,"");
 		REGISTER_PROP(Float,TreeGeometry,m_MeshFadeDist,"MeshFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
 		REGISTER_PROP(Float,TreeGeometry,m_ImposterDist,"ImposterDistance",CProperty::STREAM|CProperty::READONLY,"");
@@ -57,11 +73,14 @@ namespace HiFi
 		REGISTER_PROP(Vect2D,TreeGeometry,m_MaxMinScale,"MaxMinScale",CProperty::STREAM|CProperty::READONLY,"");
 		REGISTER_PROP(Bool,TreeGeometry,m_CastShadows,"CastShadows",CProperty::STREAM|CProperty::READONLY,"");
 		REGISTER_PROP(Bool,TreeGeometry,m_CreateShadowMap,"CreateShadowMap",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometry,m_PrecalcHeight,"SetHeightAtStartup",CProperty::STREAM|CProperty::READONLY,"");
-		return true;
+		REGISTER_PROP(Bool,TreeGeometry,m_PrecalcHeight,"SetHeightAtStartup",CProperty::STREAM|CProperty::READONLY,"");*/
 	}
 
-	TreeGeometry::TreeGeometry(void) : IPagedGeometry()
+	
+	
+
+
+	TreeGeometry::TreeGeometry(void)
 	{
 		m_DensityFactor = 0.001;
 		m_MaxMinScale.x = 1.1;
@@ -81,15 +100,14 @@ namespace HiFi
 	{
 	}
 
-	void TreeGeometry::Shutdown()
+
+	void TreeGeometry::OnLoad(MessagePtr message)
 	{
-
-	}
-
-	void TreeGeometry::Init(ISceneNode* node)
-	{
-		IPagedGeometry::Init(node);
-
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		//assert(ogsm);
+		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
+	
 		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.5,0.5,0.5,1));
 		assert(m_PagedGeometry);
 		m_PagedGeometry->setImposterAlphaRejectValue(m_ImposterAlphaRejectionValue);
@@ -113,7 +131,7 @@ namespace HiFi
 		else
 		{
 			treeLoader2d = new TreeLoader2D(m_PagedGeometry, m_MapBounds);
-			treeLoader2d->setHeightFunction(PagedGeometryManager::GetTerrainHeight);
+			treeLoader2d->setHeightFunction(TreeGeometry::GetTerrainHeight);
 			if(m_ColorMapFilename!= "") treeLoader2d->setColorMap(m_ColorMapFilename);
 			m_PagedGeometry->setPageLoader(treeLoader2d);
 		}
@@ -122,14 +140,14 @@ namespace HiFi
 		if(m_DensityMapFilename != "")
 			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 
-		ITerrainGeometry * terrain = FindTerrain();
-		Image shadowMap;
+		ITerrainComponent * terrain = NULL;//FindTerrain();
+		/*Image shadowMap;
 		int shadow_size = 4096;
 		if(m_CreateShadowMap)
 		{
 			shadowMap.Allocate(shadow_size, shadow_size, 24);
-		}
-		Ogre::Entity *myTree = Root::Get().GetOgreSceneManager()->createEntity(m_Name, m_FileName);
+		}*/
+		Ogre::Entity *myTree = sm->createEntity(m_Name, m_MeshFileName);
 		myTree->setCastShadows(m_CastShadows);
 		if (m_DensityMap != NULL)
 		{
@@ -152,7 +170,7 @@ namespace HiFi
 					}
 					else treeLoader2d->addTree(myTree,  Ogre::Vector2(x, z) ,Ogre::Degree(yaw), scale);
 					//treeLoader->addTree(myTree, x, z,yaw, scale);
-					if(m_CreateShadowMap)
+				/*	if(m_CreateShadowMap)
 					{
 						float u = (x -  m_MapBounds.left) / fabs(m_MapBounds.left - m_MapBounds.right);
 						float v = (z - m_MapBounds.top) / fabs(m_MapBounds.top - m_MapBounds.bottom);
@@ -182,22 +200,24 @@ namespace HiFi
 							shadowMap.SetPixel(c_pix_x-1,c_pix_y, tmpVec);
 							shadowMap.SetPixel(c_pix_x,c_pix_y-1, tmpVec);
 						}
-					}
+					}*/
 				}
 			}
 
-			if(m_CreateShadowMap)
+			/*if(m_CreateShadowMap)
 			{
 				shadowMap.SaveTGA("ShadowMap" + m_FileName + ".tga");
-			}
+			}*/
 			delete[] m_DensityMap->data;
 			delete m_DensityMap;
 			m_DensityMap = NULL;
 		}
 	}
 
-
-
+	void TreeGeometry::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(TreeGeometry::OnLoad),1);
+	}
 
 	void TreeGeometry::LoadDensityMap(const std::string &mapFile, int channel)
 	{
@@ -270,14 +290,11 @@ namespace HiFi
 		return val;
 	}
 
-
-
-
-
-	void TreeGeometry::Update()
+	float TreeGeometry::GetTerrainHeight(float x, float z)
 	{
-		IPagedGeometry::Update();
+		return 0;
 	}
+
 }
 
 

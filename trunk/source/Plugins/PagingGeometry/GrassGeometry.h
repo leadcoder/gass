@@ -19,9 +19,12 @@
 *****************************************************************************/
 #pragma once 
 
+
+
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Core/MessageSystem/Message.h"
 
 class PagedGeometry;
 class GrassLoader;
@@ -31,15 +34,15 @@ namespace GASS
 {
 	class ITerrainGeometry;
 
-	class GrassGeometry : public Reflection<GrassGeometry,BaseSceneComponent>, public IGeometryComponent
+	class GrassGeometry : public Reflection<GrassGeometry,BaseSceneComponent>
 	{
 	public:
 		GrassGeometry(void);
 		~GrassGeometry(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void Init();
 	protected:
+		void OnLoad(MessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;
@@ -75,6 +78,7 @@ namespace GASS
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
 protected:
+		static float GetTerrainHeight(float x, float z);
 		void UpdateSway();
 		std::string m_ColorMapFilename;
 		std::string m_Material;

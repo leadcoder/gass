@@ -18,29 +18,183 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once 
-#include "IPagedGeometry.h"
 #include "PagedGeometry.h"
+#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Core/MessageSystem/Message.h"
 
 class Ogre::PixelBox;
 class PagedGeometry;
-namespace HiFi
+
+namespace GASS
 {
-	class ITerrainGeometry;
-	class HFEPluginExport TreeGeometry : public IPagedGeometry
+	class TreeGeometry : public Reflection<TreeGeometry,BaseSceneComponent>
 	{
-	public:
-		DECLARE_RTTI;
-		DECLARE_PROPERTIES(TreeGeometry,CExtraProp);
-		GEOM_DUPLICATE(TreeGeometry)
 	public:
 		TreeGeometry(void);
 		~TreeGeometry(void);
-		virtual void Init(ISceneNode* node);
-		virtual void Shutdown();
-		virtual void Update();
+		static void RegisterReflection();
+		virtual void OnCreate();
+	protected:
 		void LoadDensityMap(const std::string &mapFile, int channel);
 		float GetDensityAt(float x, float z);
-	protected:
+
+		void OnLoad(MessagePtr message);
+		static float GetTerrainHeight(float x, float z);
+
+		std::string GetMesh() const 
+		{
+			return m_MeshFileName;
+		}
+
+		void SetMesh(const std::string &mesh) 
+		{
+			m_MeshFileName = mesh;
+		}
+
+		std::string GetColorMap() const 
+		{
+			return m_ColorMapFilename;
+		}
+
+		void SetColorMap(const std::string &colormap) 
+		{
+			m_ColorMapFilename = colormap;
+		}
+
+		std::string GetDensityMap() const 
+		{
+			return m_DensityMapFilename;
+		}
+
+		void SetDensityMap(const std::string &colormap)
+		{
+			m_DensityMapFilename = colormap;
+		}
+
+		float GetDensityFactor() const
+		{
+			return m_DensityFactor;
+		}
+
+		void SetDensityFactor(float value)
+		{
+			m_DensityFactor = value;
+		}
+
+		float GetMeshDistance() const 
+		{
+			return m_MeshDist;
+		}
+
+		void SetMeshDistance(float value)
+		{
+			m_MeshDist = value;
+		}
+
+		float GetMeshFadeDistance() const 
+		{
+			return m_MeshFadeDist;
+		}
+
+		void SetMeshFadeDistance(float value)
+		{
+			m_MeshFadeDist = value;
+		}
+
+
+		float GetImposterDistance() const 
+		{
+			return m_ImposterDist;
+		}
+
+		void SetImposterDistance(float value)
+		{
+			m_ImposterDist = value;
+		}
+
+
+		float GetImposterFadeDistance() const 
+		{
+			return m_ImposterFadeDist;
+		}
+
+		void SetImposterFadeDistance(float value)
+		{
+			m_ImposterFadeDist = value;
+		}
+
+		Vec4 GetBounds() const 
+		{
+			return m_Bounds;
+		}
+
+		void SetBounds(const Vec4 &value)
+		{
+			m_Bounds = value;
+		}
+
+
+		Vec2 GetMaxMinScale() const 
+		{
+			return m_MaxMinScale;
+		}
+
+		void SetMaxMinScale(const Vec2 &value)
+		{
+			m_MaxMinScale = value;
+		}
+
+		bool GetCastShadows() const 
+		{
+			return m_CastShadows;
+		}
+
+		void SetCastShadows(bool value)
+		{
+			m_CastShadows = value;
+		}	
+
+		bool GetCreateShadowMap() const 
+		{
+			return m_CreateShadowMap;
+		}
+
+		void SetCreateShadowMap(bool value)
+		{
+			m_CreateShadowMap = value;
+		}
+
+		bool GetPrecalcHeight() const 
+		{
+			return m_PrecalcHeight;
+		}
+
+		void SetPrecalcHeight(bool value)
+		{
+			m_PrecalcHeight = value;
+		}
+
+		float GetPageSize() const
+		{
+			return m_PageSize;
+		}
+
+		void SetPageSize(float size)
+		{
+			m_PageSize = size;
+
+		}
+		float GetImposterAlphaRejectionValue() const
+		{
+			return m_ImposterAlphaRejectionValue;
+		}
+
+		void SetImposterAlphaRejectionValue(float value)
+		{
+			m_ImposterAlphaRejectionValue =value;
+		}
+
 		Ogre::PixelBox *m_DensityMap;
 		Vec2 m_MaxMinScale;
 		bool m_CastShadows;
@@ -50,8 +204,16 @@ namespace HiFi
 		float m_ImposterFadeDist;
 		bool m_PrecalcHeight;
 		std::string m_ColorMapFilename;
+		std::string m_DensityMapFilename;
+		float m_DensityFactor;
 		bool m_CreateShadowMap;
-		
+		float m_PageSize;
+		Vec4 m_Bounds;
+		PagedGeometry *m_PagedGeometry;
+		TBounds m_MapBounds;
+		float m_ImposterAlphaRejectionValue;
+		std::string m_MeshFileName;
+
 
 	};
 }

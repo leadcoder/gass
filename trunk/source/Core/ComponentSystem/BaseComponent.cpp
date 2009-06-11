@@ -106,7 +106,7 @@ namespace GASS
 		return new_comp;
 	}
 
-	void BaseComponent::Assign(ComponentPtr obj)
+	void BaseComponent::AssignFrom(ComponentPtr obj)
 	{
 		BaseComponentPtr  base_comp = boost::shared_static_cast<BaseComponent>(obj);
 		BaseReflectionObject::SetProperties(base_comp);

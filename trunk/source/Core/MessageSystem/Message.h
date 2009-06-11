@@ -29,13 +29,37 @@
 
 namespace GASS
 {
+	/**
+		Base class for all messages in the message system.
+		If you want to make custom messages you should derive 
+		from this class. Note however by using boost::any this 
+		class support custom data, see setData for details.  
+	*/
 
 	class GASSCoreExport Message
 	{
 	public:
+		/**
+		Constructor
+			type unique id for each Message type.
+			from id to identify sender. To be removed
+		*/
 		Message(int type, int from);
 		virtual ~Message();
+
+		/**
+		Get data by name
+		To get the actual data you have to know what kind
+		of data is connected to the name, and then use boost::any_cast
+		get hold of it.
+		*/
 		boost::any GetData(const std::string &data_name);
+		
+		/**
+		Set data by name, name has to be unique for each new data
+		this message should contain. The boost::any field mean
+		that you can provide any data type you want. 
+		*/
 		void SetData(const std::string &data_name, boost::any data);
 
 		//public for fast access

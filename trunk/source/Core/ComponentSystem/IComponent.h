@@ -35,8 +35,8 @@ namespace GASS
 		A component is the core building block in the component system,
 		here we find actual functionality like vehicle models,
 		graphics, network capability etc. All components that should work together is
-		owned by a ComponentContainer. A ComponentContainer can be seen as a object
-		that has it's functionality in it's components.
+		owned by a ComponentContainer. A ComponentContainer is the owner of 
+		the components and has it's functionality in it's components.
 	*/
 	class GASSCoreExport IComponent
 	{

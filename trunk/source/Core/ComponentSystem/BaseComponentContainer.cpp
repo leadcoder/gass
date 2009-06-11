@@ -241,7 +241,7 @@ namespace GASS
 						ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
 						if(template_comp)
 						{
-							template_comp->Assign(target_comp);
+							template_comp->AssignFrom(target_comp);
 						}
 					}
 					else
