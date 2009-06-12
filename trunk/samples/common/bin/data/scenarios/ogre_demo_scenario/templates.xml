@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ComponentContainers>
-  <TerrainObject type ="SceneObject">
+<Templates>
+  <TerrainObject type ="SceneObjectTemplate">
     <Components>
       <TerrainGeom type="OgreTerrainComponent">
         <TerrainConfigFile value="gfx/terrain/terrain.cfg"/>
@@ -14,7 +14,7 @@
       </PhysicsGeom>
     </Components>
   </TerrainObject>
-  <SunObject type ="SceneObject">
+  <SunObject type ="SceneObjectTemplate">
     <Components>
       <LightComp type="LightComponent">
         <LightType value="0"/>
@@ -26,4 +26,4 @@
       </LightLocation>
     </Components>
   </SunObject>
-</ComponentContainers>
+</Templates>
