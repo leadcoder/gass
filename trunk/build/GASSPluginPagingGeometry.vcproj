@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/ogre/OgreMain/include;../../Dependencies/ogre/Dependencies/include;../../Dependencies/ogre/PlugIns/OctreeSceneManager/include;../../Dependencies/tinyxml;../../Dependencies/boost"
+				AdditionalIncludeDirectories="../Source;../Dependencies/ogre/OgreMain/include;../Dependencies/tinyxml;../Dependencies/boost;C:\root\Projects\GASS\dependencies\PagedGeometry\include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,10 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib OGREMain_d.lib Plugin_OctreeSceneManager_d.lib tinyxmld.lib"
+				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib OGREMain_d.lib Plugin_OctreeSceneManager_d.lib PagedGeometry_d.lib tinyxmld.lib"
 				OutputFile="$(OutDir)\GASSPluginOgre_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\..\Dependencies;..\..\Dependencies\ogre\lib;..\..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName);..\..\Dependencies\tinyxml\lib;..\..\Dependencies\boost\lib"
+				AdditionalLibraryDirectories="..\lib\vs2005;..\..\Dependencies;..\..\Dependencies\ogre\lib;&quot;..\..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName)&quot;;..\..\Dependencies\tinyxml\lib;..\..\Dependencies\boost\lib;C:\root\Projects\Dependencies\PagedGeometry\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
 				SubSystem="2"
@@ -201,26 +201,6 @@
 				</File>
 				<File
 					RelativePath="..\Source\Plugins\PagingGeometry\GrassGeometry.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\Plugins\PagingGeometry\IPagedGeometry.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\Plugins\PagingGeometry\IPagedGeometry.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\Plugins\PagingGeometry\PagedGeometryManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\Plugins\PagingGeometry\PagedGeometryManager.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\Plugins\PagingGeometry\PagedGeometryPluginEntry.cpp"
 					>
 				</File>
 				<File
