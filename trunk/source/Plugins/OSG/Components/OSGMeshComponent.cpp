@@ -72,6 +72,13 @@ namespace GASS
 		//TODO: get resource manager and get full path
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
+
+		//check if extenstion exist?
+		std::string extesion =  Misc::GetExtension(m_Filename);
+		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
+		{
+			m_Filename = Misc::Replace(m_Filename,".mesh",".3ds");
+		}
 		if(rs->GetFullPath(m_Filename,full_path))
 		{
 			m_MeshNode = (osg::Group*) osgDB::readNodeFile(full_path);
@@ -204,6 +211,16 @@ namespace GASS
 
 	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
+		mesh_data->NumVertex = 0;
+		mesh_data->VertexVector = NULL;
+		mesh_data->NumFaces = 0;
+		mesh_data->FaceVector = NULL;
+
+		if(!m_MeshNode.valid())
+		{
+			Log::Warning("You have to load mesh before trying to fetch mesh data. Mesh name %s",GetName().c_str());
+			return;
+		}
 		DrawableVisitor<TriangleRecorder> mv;	
 		m_MeshNode->accept(mv);
 

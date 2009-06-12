@@ -24,6 +24,7 @@
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
+#include <boost/bind.hpp>
 #include <map>
 #include "Core/Common.h"
 

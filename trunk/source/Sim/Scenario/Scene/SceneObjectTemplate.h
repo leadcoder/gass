@@ -21,20 +21,24 @@
 #pragma once
 
 #include "Sim/Common.h"
+#include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
+#include "Core/MessageSystem/Message.h"
+
 
 namespace GASS
 {	
-	
-	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate, BaseComponentContainerTemplate>
+	class SceneObjectTemplate;
+	typedef boost::shared_ptr<SceneObjectTemplate> SceneObjectTemplatePtr;
+	typedef boost::weak_ptr<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
+	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
+	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate , BaseComponentContainerTemplate>
 	{
 	public:
 		SceneObjectTemplate();
 		virtual ~SceneObjectTemplate();
 		static	void RegisterReflection();
+	protected:
 	};
-	
-	typedef boost::shared_ptr<SceneObjectTemplate> SceneObjectTemplatePtr;
-	typedef boost::weak_ptr<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
 
 }

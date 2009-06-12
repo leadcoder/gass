@@ -18,9 +18,14 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/Scenario/Scene/SceneObjectTemplate.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Components/BaseSceneComponent.h"
+
+#include "Core/Common.h"
+#include "Core/Serialize/Serialize.h"
+#include "Core/ComponentSystem/IComponent.h"
+#include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
-
-
 
 namespace GASS
 {
@@ -28,6 +33,7 @@ namespace GASS
 	{
 		
 	}
+
 	SceneObjectTemplate::~SceneObjectTemplate(void)
 	{
 	}
@@ -36,6 +42,7 @@ namespace GASS
 	{
 		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
 	}
+
 }
 
 
