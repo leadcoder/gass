@@ -56,7 +56,7 @@ namespace GASS
 
 		int RegisterForMessage(SystemMessages type,  MessageFunc callback, int priority = 0);
 		void UnregisterForMessage(SystemMessages type,  MessageFunc callback);
-		void SendGlobalMessage(MessagePtr message);
+		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void Update(float delta_time);		
 	private:

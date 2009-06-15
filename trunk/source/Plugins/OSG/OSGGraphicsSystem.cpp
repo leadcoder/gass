@@ -164,7 +164,7 @@ namespace GASS
 			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_GraphicsContext.get());
 			windowHnd = (size_t) win32_window->getHWND();
 #endif
-			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
+			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)windowHnd); 
 			window_msg->SetData("MainHandle",(int)windowHnd); 
 			GetSimSystemManager()->SendImmediate(window_msg);
@@ -178,7 +178,7 @@ namespace GASS
 
 		/*boost::shared_ptr<Message> update_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_UPDATE,(int) this));
 		update_msg->m_Timer = 1.0/30.0f; //update with 100hz
-		GetMessageManager()->SendGlobalMessage(update_msg);*/
+		GetMessageManager()->PostMessage(update_msg);*/
 	}
 
 	void OSGGraphicsSystem::CreateView(osgViewer::CompositeViewer *viewer,
@@ -280,7 +280,7 @@ namespace GASS
 
 			m_Viewer->frame();
 
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,(int) this));
+			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)handel); 
 			window_msg->SetData("MainHandle",main_handel); 
 			GetSimSystemManager()->SendImmediate(window_msg);

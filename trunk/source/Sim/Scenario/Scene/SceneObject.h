@@ -133,7 +133,7 @@ namespace GASS
 
 		int RegisterForMessage(ObjectMessage type, MessageFunc callback, int priority = 0);
 		void UnregisterForMessage(ObjectMessage type, MessageFunc callback);
-		void SendGlobalMessage(MessagePtr message);
+		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 	protected:
 		SceneObjectManager* m_Manager;

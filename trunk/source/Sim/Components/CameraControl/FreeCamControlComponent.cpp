@@ -113,8 +113,8 @@ namespace GASS
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
 	{
-		if(message->m_FromID == (int) this)
-			return;
+		//if(message->m_FromID == (int) this)
+		//	return;
 		SceneObjectPtr cam_obj = boost::any_cast<SceneObjectPtr>(message->GetData("CameraObject"));
 
 		if(GetSceneObject() == cam_obj)
@@ -130,7 +130,7 @@ namespace GASS
 
 	void FreeCamControlComponent::PositionChange(MessagePtr message)
 	{
-		if(message->m_FromID != (int) this)
+		if(message->GetSenderID() != (int) this)
 		   m_Pos = boost::any_cast<Vec3>(message->GetData("Position"));
 	}
 
@@ -357,12 +357,12 @@ namespace GASS
 		int from_id = (int)this;
 		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
-		GetSceneObject()->SendGlobalMessage(pos_msg);
+				GetSceneObject()->PostMessage(pos_msg);
 
 		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
-
+		
 		rot_msg->SetData("Rotation",Quaternion(m_Rot));
-		GetSceneObject()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->PostMessage(rot_msg);
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
 	}

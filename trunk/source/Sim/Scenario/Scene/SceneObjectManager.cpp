@@ -88,16 +88,16 @@ namespace GASS
 		
 		if(!obj->GetParent()) // we are top level object
 			m_Root->AddChild(obj);
-		//AddObject(obj);
+	
 		//Send load message so that all scene manager can initilze it's components
-		int from_id = (int)this;
+	
 		
-		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,from_id));
+		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT));
 		load_msg->SetData("SceneObject",obj);
 		m_ScenarioScene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
-		MessagePtr obj_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS,from_id));
+		MessagePtr obj_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS));
 		obj->SendImmediate(obj_msg);
 		//Pump initial messages around
 		obj->SyncMessages(0);
@@ -111,10 +111,6 @@ namespace GASS
 		}
 	}
 
-	/*void SceneObjectManager::AddObject(SceneObjectPtr obj)
-	{
-		m_SceneObjectVector.push_back(obj);
-	}*/
 
 	SceneObjectPtr SceneObjectManager::LoadSceneObject(TiXmlElement *so_elem)
 	{
@@ -250,10 +246,10 @@ namespace GASS
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
 	{
-		int from_id = (int)this;
-		MessagePtr msg(new Message(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS,from_id));
+		
+		MessagePtr msg(new Message(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS));
 		obj->SendImmediate(msg);
-		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,from_id));
+		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT));
 		unload_msg->SetData("SceneObject",obj);
 		m_ScenarioScene->SendImmediate(unload_msg);
 	}

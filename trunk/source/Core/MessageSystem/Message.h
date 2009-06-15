@@ -36,16 +36,26 @@ namespace GASS
 		from this class. Note however by using boost::any this 
 		class support custom data, see setData for details.  
 	*/
+	class MessageManager;
 
 	class GASSCoreExport Message
 	{
+		friend class MessageManager;
 	public:
 		/**
 		Constructor
 			type unique id for each Message type.
-			from id to identify sender. To be removed
+			
 		*/
-		Message(int type, int from);
+		Message(int type);
+
+		/**
+		Constructor
+			type unique id for each Message type.
+			sender_id to identify sender, usefull if you want to filter messages by sender
+			@remark 
+		*/
+		Message(int type, int sender_id);
 		virtual ~Message();
 
 		/**
@@ -63,12 +73,18 @@ namespace GASS
 		*/
 		void SetData(const std::string &data_name, boost::any data);
 
-		//public for fast access
-		int m_TypeID;
-		int m_FromID;
-		int m_ToID;
-		float m_Timer;
-		std::map<std::string,boost::any> m_Data;
+
+		/**
+		Get the sender id, -1 is returned if no sender id was provided in message constructor.
+		*/
+		int GetSenderID()const;
+		
+		protected: //give fast access to message manager
+			int m_TypeID;
+			float m_Timer;
+		private:
+			int m_SenderID;
+			std::map<std::string,boost::any> m_Data;
 	};
 	typedef boost::shared_ptr<Message> MessagePtr;
 	typedef boost::function<void (MessagePtr)> MessageFunc;

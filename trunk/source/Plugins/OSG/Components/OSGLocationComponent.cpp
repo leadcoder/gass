@@ -92,15 +92,15 @@ namespace GASS
 			//						     Math::Deg2Rad(180),osg::Vec3(0,1,0),
 			//							 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
 		}
-		int from_id = (int)this;
+		
 
-		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
+		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
 		pos_msg->SetData("Position",m_Pos);
-		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
+		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
-		GetSceneObject()->SendGlobalMessage(pos_msg);
-		GetSceneObject()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->PostMessage(pos_msg);
+		GetSceneObject()->PostMessage(rot_msg);
 	}
 
 	void OSGLocationComponent::PositionChanged(MessagePtr message)
@@ -132,8 +132,8 @@ namespace GASS
 	void OSGLocationComponent::SendTransMessage()
 	{
 
-		int from_id = (int)this;
-		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
+	
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED));
 		//Get abs pos
 		Vec3 pos = GetWorldPosition();
 		Vec3 scale = Vec3(1,1,1);//GetScale();
@@ -141,7 +141,7 @@ namespace GASS
 		trans_msg->SetData("Position",pos);
 		trans_msg->SetData("Rotation",rot);
 		trans_msg->SetData("Scale",scale);
-		GetSceneObject()->SendGlobalMessage(trans_msg);
+		GetSceneObject()->PostMessage(trans_msg);
 
 		//send for all child tranforms also?
 

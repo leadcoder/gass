@@ -91,7 +91,7 @@ private:
 class UpdateMessage : public GASS::Message
 {
 public:
-	UpdateMessage(int type, int from): Message(type,from)
+	UpdateMessage(int type): Message(type)
 	{
 
 	}
@@ -242,7 +242,7 @@ int main(int argc, char* argv[])
 
 	//////////////////test message system
 
-	boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT,100));
+	boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT));
 	mm.SendGlobalMessage(init_msg);
 
 	/////////////////////////////////////////////////
@@ -265,7 +265,7 @@ int main(int argc, char* argv[])
 	{
 		if(i % 10 == 0)
 			std::cout << "update:" << i <<std::endl;
-		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage(MESSAGE_UPDATE,99));
+		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage(MESSAGE_UPDATE));
 		update_msg->m_TypeID = MESSAGE_UPDATE;
 		update_msg->m_Tick = i;
 		mm.SendGlobalMessage(update_msg);

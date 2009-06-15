@@ -59,8 +59,7 @@ namespace GASS
 	ScenarioScene::~ScenarioScene()
 	{
 		m_ObjectManager->Clear();
-		int from_id = (int)this;
-		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,from_id));
+		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS));
 		scenario_msg->SetData("ScenarioScene",this);
 		m_SceneMessageManager->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
@@ -76,9 +75,9 @@ namespace GASS
 		m_SceneMessageManager->UnregisterForMessage((int)type, callback);
 	}
 
-	void ScenarioScene::SendGlobalMessage( MessagePtr message )
+	void ScenarioScene::PostMessage( MessagePtr message )
 	{
-		m_SceneMessageManager->SendGlobalMessage(message);
+		m_SceneMessageManager->PostMessage(message);
 	}
 
 	void ScenarioScene::SendImmediate( MessagePtr message )
@@ -224,13 +223,12 @@ namespace GASS
 	{
 		std::string scenario_path = m_Scenario->GetPath();
 
-		int from_id = (int)this;
-		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD,from_id));
+		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD));
 		enter_load_msg->SetData("ScenarioScene",this);
 		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
 
 		
-		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,from_id));
+		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS));
 		scenario_msg->SetData("ScenarioScene",this);
 		//send load message
 		SendImmediate(scenario_msg);
@@ -251,15 +249,15 @@ namespace GASS
 		//Create game objects instances from templates
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
 
-		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_LOADED,from_id));
+		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_LOADED));
 		system_msg->SetData("ScenarioScene",this);
 		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
 	}
 
 	void ScenarioScene::OnUpdate(double delta_time)
 	{
-		int from_id = (int)this;
-		boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_MESSAGE_UPDATE,from_id,delta_time));
+	
+		boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_MESSAGE_UPDATE,delta_time));
 		m_SceneMessageManager->SendImmediate(update_msg);
 		m_SceneMessageManager->Update(delta_time);
 		m_ObjectManager->SyncMessages(delta_time);

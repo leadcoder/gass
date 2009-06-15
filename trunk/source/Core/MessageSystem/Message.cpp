@@ -22,14 +22,22 @@
 #include "Core/MessageSystem/Message.h"
 namespace GASS
 {
-	Message::Message(int type, int from) :
+	Message::Message(int type) :
 			m_TypeID(type),
-			m_FromID(from),
-			m_ToID(0),
+			m_SenderID(-1),
 			m_Timer(0)
 	{
 
 	}
+
+	Message::Message(int type, int sender_id) :
+			m_TypeID(type),
+			m_SenderID(sender_id),
+			m_Timer(0)
+	{
+
+	}
+
 
 	Message::~Message()
 	{
@@ -49,6 +57,11 @@ namespace GASS
 	void Message::SetData(const std::string &data_name, boost::any data)
 	{
 		m_Data[data_name] = data;
+	}
+
+	int Message::GetSenderID() const
+	{
+		return m_SenderID;
 	}
 
 

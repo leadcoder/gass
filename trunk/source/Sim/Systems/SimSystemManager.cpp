@@ -44,7 +44,7 @@ namespace GASS
 	
 	void SimSystemManager::Init()
 	{
-		MessagePtr init_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_INIT,(int)this));
+		MessagePtr init_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_INIT));
 		m_SystemMessageManager->SendImmediate(init_msg);
 	}	
 
@@ -63,9 +63,9 @@ namespace GASS
 		m_SystemMessageManager->UnregisterForMessage((int)type,  callback);
 	}
 
-	void SimSystemManager::SendGlobalMessage( MessagePtr message )
+	void SimSystemManager::PostMessage( MessagePtr message )
 	{
-		m_SystemMessageManager->SendGlobalMessage(message);
+		m_SystemMessageManager->PostMessage(message);
 	}
 
 	void SimSystemManager::SendImmediate( MessagePtr message )

@@ -164,9 +164,9 @@ namespace GASS
 		m_MessageManager->UnregisterForMessage((int)type, callback);
 	}
 
-	void SceneObject::SendGlobalMessage( MessagePtr message )
+	void SceneObject::PostMessage( MessagePtr message )
 	{
-		m_MessageManager->SendGlobalMessage(message);
+		m_MessageManager->PostMessage(message);
 	}
 
 	void SceneObject::SendImmediate( MessagePtr message )

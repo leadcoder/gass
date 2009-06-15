@@ -74,8 +74,8 @@ namespace GASS
 
 	void ODEBody::OnPositionChanged(MessagePtr message)
 	{
-		void* address = (void*) message->m_FromID;
-		if(address != this)
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
 			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
 			SetPosition(pos);
@@ -84,8 +84,8 @@ namespace GASS
 
 	void ODEBody::OnRotationChanged(MessagePtr message)
 	{
-		void* address = (void*) message->m_FromID;
-		if(address != this)
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
 			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
 			SetRotation(rot);
@@ -184,23 +184,22 @@ namespace GASS
 
 	void ODEBody::BodyMoved()
 	{
-		int from_id = (int)this;
+		int from_id = (int)this; //use address as id
 		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
 		Vec3 pos = GetPosition();
-
 		
 		pos_msg->SetData("Position",pos);
-		GetSceneObject()->SendGlobalMessage(pos_msg);
+		GetSceneObject()->PostMessage(pos_msg);
 
 		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
 		rot_msg->SetData("Rotation",GetRotation());
-		GetSceneObject()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->PostMessage(rot_msg);
 
 
 		MessagePtr physics_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS,from_id));
 		physics_msg->SetData("Velocity",GetVelocity(true));
 		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
-		GetSceneObject()->SendGlobalMessage(physics_msg);
+		GetSceneObject()->PostMessage(physics_msg);
 		//msg->SetData("Rotation",Vec3(0,0,0));
 		
 	}

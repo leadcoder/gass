@@ -170,12 +170,12 @@ namespace GASS
 		//Send message to load all gfx components
 		
 		//m_GFXSystem->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
-		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,(int) this));
+		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA));
 		camera_msg->SetData("CameraObject",scene_object);
 		m_Scene->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
 		pos_msg->SetData("Position",GetOwner()->GetStartPos());
 		scene_object->SendImmediate(pos_msg);
 		
@@ -183,7 +183,7 @@ namespace GASS
 		rot_msg->SetData("EulerRotation",GetOwner()->GetStartRot());
 		scene_object->SendImmediate(rot_msg);*/
 
-		MessagePtr loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED,(int) this));
+		MessagePtr loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED));
 		
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
@@ -208,7 +208,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
 		assert(obj);
-		MessagePtr gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,(int) this));
+		MessagePtr gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS));
 		gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		gfx_msg->SetData("OgreSceneManager",boost::any(m_SceneMgr));
 		obj->SendImmediate(gfx_msg);

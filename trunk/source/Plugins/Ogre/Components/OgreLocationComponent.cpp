@@ -127,14 +127,13 @@ namespace GASS
 
 		m_OgreNode->setListener(this);
 
-		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
 		pos_msg->SetData("Position",m_Pos);
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
-		GetSceneObject()->SendGlobalMessage(pos_msg);
-		GetSceneObject()->SendGlobalMessage(rot_msg);
+		GetSceneObject()->PostMessage(pos_msg);
+		GetSceneObject()->PostMessage(rot_msg);
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
@@ -231,10 +230,10 @@ namespace GASS
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
 		if(m_OgreNode) //initialzed?
 		{
-			int from_id = (int)this;
-			MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
+		
+			MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
 			pos_msg->SetData("Position",value);
-			GetSceneObject()->SendGlobalMessage(pos_msg);
+			GetSceneObject()->PostMessage(pos_msg);
 		}
 		m_Pos = value;
 	}
@@ -279,10 +278,9 @@ namespace GASS
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
 		if(m_OgreNode) //initialzed?
 		{
-			int from_id = (int)this;
-			MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
+			MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
 			rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(value)));
-			GetSceneObject()->SendGlobalMessage(rot_msg);
+			GetSceneObject()->PostMessage(rot_msg);
 		}
 		m_Rot = value;
 	}
@@ -366,8 +364,7 @@ namespace GASS
 	void OgreLocationComponent::nodeUpdated(const Ogre::Node* node)
 	{
 		//send transformation message
-		int from_id = (int)this;
-		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,from_id));
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED));
 		//Get abs pos
 		Vec3 pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
 		Vec3 scale = Convert::ToGASS(m_OgreNode->_getDerivedScale());
@@ -375,7 +372,7 @@ namespace GASS
 		trans_msg->SetData("Position",pos);
 		trans_msg->SetData("Rotation",rot);
 		trans_msg->SetData("Scale",scale);
-		GetSceneObject()->SendGlobalMessage(trans_msg);
+		GetSceneObject()->PostMessage(trans_msg);
 
 
 	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,from_id));

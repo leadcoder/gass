@@ -105,11 +105,11 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+			
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",1.0f);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}
@@ -118,11 +118,11 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",0.0f);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}
@@ -173,11 +173,11 @@ namespace GASS
 				switch(m_Device)
 				{
 				case DEVICE_MOUSE:
-					int id = (int) this;
-					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 					system_msg->SetData("Controller",m_Name);
 					system_msg->SetData("Value",1.0f);
-					m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
 			}
@@ -190,11 +190,11 @@ namespace GASS
 				switch(m_Device)
 				{
 				case DEVICE_MOUSE:
-					int id = (int) this;
-					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 					system_msg->SetData("Controller",m_Name);
 					system_msg->SetData("Value",0.0f);
-					m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
 			}
@@ -206,11 +206,11 @@ namespace GASS
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",1.0f);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
 		}
@@ -218,11 +218,11 @@ namespace GASS
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",0.0f);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
 		}
@@ -293,11 +293,11 @@ namespace GASS
 				{
 					value = -1.0f;
 				}
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",value);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}
@@ -306,11 +306,11 @@ namespace GASS
 		{
 			if(key == m_PosKey || key == m_NegKey)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+			
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",0.0f);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}
@@ -370,11 +370,11 @@ namespace GASS
 				default:
 					value  = 0;
 				}
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				system_msg->SetData("Value",value);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 				break;
 			}
 			return true;
@@ -405,12 +405,12 @@ namespace GASS
 		{
 			if(device == m_Device-DEVICE_GAME_CONTROLLER_0 && axis == m_Axis-INPUT_AXIS_0)
 			{
-				int id = (int) this;
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT,id));
+				
+				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
 				system_msg->SetData("Controller",m_Name);
 				value = value*m_Invert;
 				system_msg->SetData("Value",value);
-				m_Owner->GetMessageManager()->SendGlobalMessage(system_msg);
+				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}

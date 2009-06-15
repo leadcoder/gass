@@ -48,7 +48,7 @@ namespace GASS
 		}
 	}
 
-	void MessageManager::SendGlobalMessage(MessagePtr  message)
+	void MessageManager::PostMessage(MessagePtr  message)
 	{
 		//lock
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);

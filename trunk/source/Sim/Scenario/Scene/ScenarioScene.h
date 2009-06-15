@@ -41,7 +41,7 @@ namespace GASS
 	class ScenarioUpdateMessage : public Message
 	{
 	public:
-		ScenarioUpdateMessage(int type, int from, double delta_time): Message(type,from) ,m_DeltaTime (delta_time)
+		ScenarioUpdateMessage(int type, double delta_time): Message(type) ,m_DeltaTime (delta_time)
 		{
 			
 		}
@@ -101,7 +101,7 @@ namespace GASS
 		Scenario* GetOwner() {return m_Scenario;}
 		int RegisterForMessage(ScenarioMessage type, MessageFunc callback, int priority = 0);
 		void UnregisterForMessage(ScenarioMessage type, MessageFunc callback);
-		void SendGlobalMessage(MessagePtr message);
+		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 
 		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}

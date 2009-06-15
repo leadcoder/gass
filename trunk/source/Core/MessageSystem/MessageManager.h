@@ -47,10 +47,43 @@ namespace GASS
 	public:
 		MessageManager();
 		virtual ~MessageManager();
-		void SendGlobalMessage(MessagePtr  message);
+
+		/**
+			This function will put the message in the message queue
+			of the message manager. When the update function is called 
+			the message queue is processed and the message is handled
+
+		*/
+		void PostMessage(MessagePtr  message);
+		
+		/**
+			This function will skip the message queue and let 
+			the message manager deliver this message immediately
+		*/
 		void SendImmediate(MessagePtr  message);
+		
+		/**
+			Register to listen to messages of certain type.
+			The message callback has to be of the follwing type
+			void MyClass::MyMessageCallback(MessagePtr messsage)
+			Priority argument let you tell the message manager if 
+			you want to be called early or late when a message is
+			processed. This could for instance be useful if you have 
+			Initialization message  want a certain call order*/
+
 		int RegisterForMessage(int type,  MessageFunc callback, int priority = 0);
+
+		/**
+			Unregister to listen to messages of certain type.
+			The callback function used during registration has to 
+			be provided again because its used as identifier.
+		*/
 		void UnregisterForMessage(int type, MessageFunc callback);
+
+		/**
+			Process the message queue and deliver messages to 
+			registred listeners.
+		*/
 		void Update(float dt);
 	private:
 		//#pragma deprecated(AddMessageToSystem)

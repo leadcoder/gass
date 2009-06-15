@@ -136,13 +136,13 @@ namespace GASS
 		std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
 		SceneObjectPtr scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
-		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,(int) this));
+		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA));
 		camera_msg->SetData("CameraObject",scene_object);
 		m_Scene->SendImmediate(camera_msg);
 
 		
 //move camera to spawn position
-		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
+		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
 		pos_msg->SetData("Position",GetOwner()->GetStartPos());
 		scene_object->SendImmediate(pos_msg);
 		
@@ -156,7 +156,7 @@ namespace GASS
 		pos_msg->SetData("EulerRotation",GetOwner()->GetStartRot());
 		game_object->GetMessageManager()->SendImmediate(pos_msg);*/
 
-		boost::shared_ptr<Message> loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED,(int) this));
+		boost::shared_ptr<Message> loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED));
 
 		void* root = static_cast<void*>(m_RootNode.get());
 		loaded_msg->SetData("RootNode",boost::any(root));
@@ -170,7 +170,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
 		assert(obj);
-		boost::shared_ptr<Message> gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,(int) this));
+		boost::shared_ptr<Message> gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS));
 		gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		obj->SendImmediate(gfx_msg);
 	}
