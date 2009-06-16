@@ -67,7 +67,7 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			(*msg_reg)->m_Callback(message);
+			(*msg_reg)->m_Callback.Fire(message);
 				msg_reg++;
 		}
 	}
@@ -93,7 +93,8 @@ namespace GASS
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
 
-			if((*msg_reg)->m_Callback.functor.func_ptr == callback.functor.func_ptr)
+			//if((*msg_reg)->m_Callback == callback)
+			if((*msg_reg)->m_Callback == callback)
 			{
 				return 1;
 			}
@@ -125,7 +126,7 @@ namespace GASS
 
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			if((*msg_reg)->m_Callback.functor.func_ptr == callback.functor.func_ptr)
+			if((*msg_reg)->m_Callback == callback)
 			{
 				delete (*msg_reg);
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
@@ -169,7 +170,7 @@ namespace GASS
 				MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 				while(msg_reg != message_type->second->m_MessageRegistrations.end())
 				{
-					(*msg_reg)->m_Callback(*iter);
+					(*msg_reg)->m_Callback.Fire(*iter);
 					msg_reg++;
 				}
 				//delete (*iter);

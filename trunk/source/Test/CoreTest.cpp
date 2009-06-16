@@ -243,7 +243,7 @@ int main(int argc, char* argv[])
 	//////////////////test message system
 
 	boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT));
-	mm.SendGlobalMessage(init_msg);
+	mm.PostMessage(init_msg);
 
 	/////////////////////////////////////////////////
 
@@ -266,9 +266,8 @@ int main(int argc, char* argv[])
 		if(i % 10 == 0)
 			std::cout << "update:" << i <<std::endl;
 		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage(MESSAGE_UPDATE));
-		update_msg->m_TypeID = MESSAGE_UPDATE;
 		update_msg->m_Tick = i;
-		mm.SendGlobalMessage(update_msg);
+		mm.PostMessage(update_msg);
 		mm.Update(i);
 	}
 

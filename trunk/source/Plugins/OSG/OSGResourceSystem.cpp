@@ -138,25 +138,6 @@ namespace GASS
 					return true;
 				}
 			}
-			/*for(iter = groups.begin(); iter != groups.end();iter++)
-			{
-				std::string gname = *iter;
-				bool found = rsm->resourceExists(gname,file_name);
-
-				if(found)
-				{
-					Ogre::FileInfoListPtr files = rsm->findResourceFileInfo(gname, file_name);
-					if(files->size() > 0)
-					{
-						Ogre::FileInfo info = *files->begin();
-						if(info.archive)
-							file_path = info.archive->getName();
-						file_path += "/";
-						file_path += info.filename;
-						return true;
-					}
-				}
-			}*/
 		}
 		Log::Warning("Failed to find resource: %s",file_name.c_str());
 		return false;

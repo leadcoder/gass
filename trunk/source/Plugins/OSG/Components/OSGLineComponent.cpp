@@ -64,7 +64,7 @@ namespace GASS
 
 	void OSGLineComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, boost::bind( &OSGLineComponent::OnLoad, this, _1 ),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLineComponent::OnLoad),1);
 	}
 
 	void OSGLineComponent::OnLoad(MessagePtr message)

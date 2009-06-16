@@ -87,9 +87,37 @@ namespace GASS
 			std::map<std::string,boost::any> m_Data;
 	};
 	typedef boost::shared_ptr<Message> MessagePtr;
-	typedef boost::function<void (MessagePtr)> MessageFunc;
+	typedef boost::function<void (MessagePtr)> BoostMessageFunc;
+
+	class MessageFunc
+	{
+	public:
+		MessageFunc() : m_Object(NULL)
+		{
+
+		}
+
+		MessageFunc(BoostMessageFunc func, void* object) : m_Func(func), m_Object(object)
+		{
+
+		}
+		virtual ~MessageFunc()
+		{
+		}
+		void Fire(MessagePtr message)
+		{
+			m_Func(message);
+		}
+		bool operator== (const MessageFunc& func) const
+		{
+			return (func.m_Object == m_Object) && 
+				(m_Func.functor.func_ptr == func.m_Func.functor.func_ptr);
+		}
+		void* m_Object;
+		BoostMessageFunc m_Func;
+	};
 
 
-	#define MESSAGE_FUNC(X) boost::bind( &X, this, _1 )
+#define MESSAGE_FUNC(X) GASS::MessageFunc(boost::bind( &X, this, _1 ),this)
 }
 #endif // #ifndef MESSAGE_HH

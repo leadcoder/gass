@@ -218,6 +218,18 @@ namespace GASS
 					}
 				}
 			}
+
+			for(int i  = 0; i < m_ResourceLocations.size(); i++)
+			{
+				
+				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
+				if(fp = fopen(temp_file_path.c_str(),"rb"))
+				{
+					fclose(fp);
+					file_path = temp_file_path;
+					return true;
+				}
+			}
 		}
 		Log::Warning("Failed to find resource: %s",file_name.c_str());
 		return false;
