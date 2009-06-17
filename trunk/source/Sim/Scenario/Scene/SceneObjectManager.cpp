@@ -262,6 +262,8 @@ namespace GASS
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 			DeleteObject(child);
+			//update iteratrator
+			children = obj->GetChildren();
 		}
 
 		UnloadObject(obj);
