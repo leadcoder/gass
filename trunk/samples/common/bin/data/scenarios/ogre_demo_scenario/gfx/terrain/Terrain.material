@@ -1,15 +1,9 @@
+import DiffuseTemplate from "terrain.material"
 
-material TerrainMat 
+material TerrainMat : DiffuseTemplate
 {
-	technique
-	{
-		pass 
-		{
-			texture_unit
-			{
-				texture gfx/terrain/terrain_color.dds
-			}
-			
-		}
-	}
+    //set_texture_alias ambient_tex gfx/terrain/terrain_color.dds
+    set_texture_alias diffuse_tex gfx/terrain/terrain_color.dds
 }
+
+

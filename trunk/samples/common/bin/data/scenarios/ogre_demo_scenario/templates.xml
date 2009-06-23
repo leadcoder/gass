@@ -12,6 +12,23 @@
       <PhysicsGeom type="ODEGeometry">
         <GeometryType value="terrain"/>
       </PhysicsGeom>
+      <GrassLayer1 type="GrassGeometry">
+        <PageSize value = "15"/>
+        <ViewDistance value ="35"/>
+        <Material value="FadeGrass"/>
+        <DensityMap value= "gfx/terrain/grassmask.dds"/>
+        <ColorMap value= "gfx/terrain/terrain_color.dds"/>
+        <DensityFactor value= "15"/>
+        <MaxSize value="1.0 0.7"/>
+        <MinSize value="0.5 0.4"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="AlphaGrow"/>
+        <RenderTechnique value ="CrossQuads"/>
+        <BlendWithGround value="false"/>
+      </GrassLayer1>
     </Components>
   </TerrainObject>
   <SunObject type ="SceneObjectTemplate">
@@ -26,4 +43,6 @@
       </LightLocation>
     </Components>
   </SunObject>
+ 
 </Templates>
+
