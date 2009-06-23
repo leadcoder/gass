@@ -1,3 +1,105 @@
+// Shadow mapping pixel shader
+/*float calcShadow(float4 shadowUV,sampler2D shadowMap)
+{
+   // Generate the 9 texture co-ordinates for a 3x3 PCF kernel
+   float4 vTexCoords[21];
+   // Texel size
+   float fTexelSize = 1.0f /1024.0f;
+
+   float fTexelSize2 = fTexelSize*2;
+
+   shadowUV = shadowUV / shadowUV.w;
+
+   // Generate the tecture co-ordinates for the specified depth-map size
+   // 4 3 5
+   // 1 0 2
+   // 7 6 8
+   vTexCoords[0] = shadowUV;
+   vTexCoords[1] = shadowUV+ float4( -fTexelSize, 0.0f, 0.0f, 0.0f );
+   vTexCoords[2] = shadowUV + float4(  fTexelSize, 0.0f, 0.0f, 0.0f );
+   vTexCoords[3] = shadowUV + float4( 0.0f, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[6] = shadowUV + float4( 0.0f,  fTexelSize, 0.0f, 0.0f );
+   vTexCoords[4] = shadowUV + float4( -fTexelSize, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[5] = shadowUV + float4(  fTexelSize, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[7] = shadowUV + float4( -fTexelSize,  fTexelSize, 0.0f, 0.0f );
+   vTexCoords[8] = shadowUV + float4(  fTexelSize,  fTexelSize, 0.0f, 0.0f );
+
+   vTexCoords[9] = shadowUV+ float4( -fTexelSize2, 0.0f, 0.0f, 0.0f );
+   vTexCoords[10] = shadowUV + float4( -fTexelSize2, fTexelSize, 0.0f, 0.0f );
+   vTexCoords[11] = shadowUV + float4( -fTexelSize2, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[12] = shadowUV + float4( 	fTexelSize2, 0.0f, 0.0f, 0.0f );
+   vTexCoords[13] = shadowUV + float4(  fTexelSize2, fTexelSize, 0.0f, 0.0f );
+   vTexCoords[14] = shadowUV + float4(  fTexelSize2, -fTexelSize, 0.0f, 0.0f );
+
+   vTexCoords[15] = shadowUV+   float4(0.0f, -fTexelSize2,  0.0f, 0.0f );
+   vTexCoords[16] = shadowUV + float4( -fTexelSize,-fTexelSize2, 0.0f, 0.0f );
+   vTexCoords[17] = shadowUV + float4(fTexelSize, -fTexelSize2,  0.0f, 0.0f );
+   vTexCoords[18] = shadowUV+   float4(0.0f, fTexelSize2,  0.0f, 0.0f );
+   vTexCoords[19] = shadowUV + float4( -fTexelSize,fTexelSize2, 0.0f, 0.0f );
+   vTexCoords[20] = shadowUV + float4(fTexelSize, fTexelSize2,  0.0f, 0.0f );
+      
+   
+   // Sample each of them checking whether the pixel under test is shadowed or not
+   float fShadowTerms[21];
+   float fShadowTerm = 0.0f;
+   float fixedDepthBias = 0.0000001;
+   float compareDepth = shadowUV.z - fixedDepthBias;
+   for( int i = 0; i < 21; i++ )
+   {
+      float A = tex2D( shadowMap, vTexCoords[i].xy ).x;
+      float B = compareDepth;
+
+      // Texel is shadowed
+      fShadowTerms[i] = A < B ? 0.0f : 1.0f;
+      fShadowTerm     += fShadowTerms[i];
+   }
+   // Get the average
+   fShadowTerm /= 21.0f;
+   return fShadowTerm;
+}*/
+
+
+float calcShadow(float4 shadowUV,sampler2D shadowMap)
+{
+   // Generate the 9 texture co-ordinates for a 3x3 PCF kernel
+   float4 vTexCoords[9];
+   // Texel size
+   float fTexelSize = 1.0f /2048.0f;
+
+   shadowUV = shadowUV / shadowUV.w;
+
+   // Generate the tecture co-ordinates for the specified depth-map size
+   // 4 3 5
+   // 1 0 2
+   // 7 6 8
+   vTexCoords[0] = shadowUV;
+   vTexCoords[1] = shadowUV+ float4( -fTexelSize, 0.0f, 0.0f, 0.0f );
+   vTexCoords[2] = shadowUV + float4(  fTexelSize, 0.0f, 0.0f, 0.0f );
+   vTexCoords[3] = shadowUV + float4( 0.0f, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[6] = shadowUV + float4( 0.0f,  fTexelSize, 0.0f, 0.0f );
+   vTexCoords[4] = shadowUV + float4( -fTexelSize, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[5] = shadowUV + float4(  fTexelSize, -fTexelSize, 0.0f, 0.0f );
+   vTexCoords[7] = shadowUV + float4( -fTexelSize,  fTexelSize, 0.0f, 0.0f );
+   vTexCoords[8] = shadowUV + float4(  fTexelSize,  fTexelSize, 0.0f, 0.0f );
+   // Sample each of them checking whether the pixel under test is shadowed or not
+   float fShadowTerms[9];
+   float fShadowTerm = 0.0f;
+   float fixedDepthBias = 0.0000001;
+   float compareDepth = shadowUV.z - fixedDepthBias;
+   for( int i = 0; i < 9; i++ )
+   {
+      float A = tex2D( shadowMap, vTexCoords[i].xy ).x;
+      float B = compareDepth;
+
+      // Texel is shadowed
+      fShadowTerms[i] = A < B ? 0.0f : 1.0f;
+      fShadowTerm     += fShadowTerms[i];
+   }
+   // Get the average
+   fShadowTerm /= 9.0f;
+   return fShadowTerm;
+}
+/*
 float calcShadow(float4 shadowUV,sampler2D shadowMap)
 {
 	float gradientClamp = 0.0098;
@@ -39,7 +141,10 @@ float calcShadow(float4 shadowUV,sampler2D shadowMap)
 			lerp( values.z, values.w, lerps.x ),
 			lerps.y );
 	return 1.0-final;
-}
+}*/
+
+
+
 
 float calcVarianceShadow(float4 shadowUV,sampler2D shadowMap)
 {

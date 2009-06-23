@@ -1,0 +1,35 @@
+
+
+material SkyTemplate
+{ 
+	technique light
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			texture_unit SkyboxTex
+			{
+			}
+		}
+	}
+
+
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref geom_sky_vs
+	      {
+	      }
+
+	      fragment_program_ref geom_sky_ps
+	      {
+	      }
+	    }
+	}
+
+}
+

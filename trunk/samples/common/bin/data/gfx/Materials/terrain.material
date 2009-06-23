@@ -286,7 +286,7 @@ material TerrainSplat3LightMap
 
 material DiffuseTemplate
 { 
-	technique 
+	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
@@ -313,10 +313,9 @@ material DiffuseTemplate
 				//param_named shadowParams float4 0.98 0.01 0 0.00048828125
 			} 
 
-			texture_unit
+			texture_unit diffuse_tex
 			{
-				// coverage texture : rgba handling alpha for each splat
-				texture Cover.tga
+
 			}
 			// shadowmap 1
 			texture_unit
@@ -330,6 +329,23 @@ material DiffuseTemplate
 
 		}
 	}
+
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref geom_vs
+	      {
+	      }
+
+	      fragment_program_ref geom_ps
+	      {
+	      }
+	    }
+	}
+
 }
 
 material VegetationTemplate
@@ -361,5 +377,23 @@ material VegetationTemplate
 			}
 		}
 	}
+
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref geom_sky_vs
+	      {
+	      }
+
+	      fragment_program_ref geom_sky_ps
+	      {
+	      }
+	    }
+	}
+
+
 } 
 

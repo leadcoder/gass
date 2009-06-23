@@ -72,7 +72,7 @@ fragment_program DiffuseFP_HLSL hlsl
    source terrain.shader
    entry_point diffuse_one_light_fp
    preprocessor_defines INTEGRATED_SHADOWS=1 
-   target ps_2_0
+   target ps_2_b
 }
 
 
