@@ -84,13 +84,11 @@ namespace GASS
 		m_LineObject->setCastShadows(false);*/
 
 		m_OSGGeometry = new osg::Geometry();
-
-
-
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
 		osg::ref_ptr<osg::LineWidth> linewidth = new osg::LineWidth(); 
+		
 		linewidth->setWidth(2); 
 		ss->setAttributeAndModes(linewidth.get(),osg::StateAttribute::ON); 
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
@@ -107,11 +105,8 @@ namespace GASS
 		m_OSGGeometry->setVertexArray(vertices.get());
 		m_OSGGeometry->setColorArray(colors.get());
 
-
 		osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays();
 		m_OSGGeometry->addPrimitiveSet(drawable.get());
-
-
 
 		if(m_ControlPointList != "")
 		{

@@ -50,7 +50,8 @@ namespace GASS
 		m_TexScale(0.1,1),
 		m_HeightOffset (0),
 		m_MaterialName("BaseWhiteNoLighting"),
-		m_Type("line_list")
+		m_Type("line_list"),
+		m_Closed(false)
 	{
 
 	}

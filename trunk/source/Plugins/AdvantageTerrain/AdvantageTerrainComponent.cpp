@@ -68,8 +68,8 @@ namespace GASS
 	void AdvantageTerrainComponent::OnCreate()
 	{
 		int obj_id = (int) this;
-		MessageManager * mm = GetMessageManager();
-		mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_LOAD_GFX_COMPONENTS, obj_id,  boost::bind( &AdvantageTerrainComponent::OnLoad, this, _1 ),1);
+		
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad),1);
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
@@ -184,8 +184,11 @@ namespace GASS
 
 	float AdvantageTerrainComponent::GetHeight(float x, float z)
 	{
-		mAVTerrainSceneMgr->bidForCollisionData(Ogre::Vector3(x,0,z), 500);
-		Ogre::AVTerrainSceneManager::RayHitInfo rayHitInfo;
+		//mAVTerrainSceneMgr->bidForCollisionData(Ogre::Vector3(x,0,z), 500);
+		Ogre::Sphere sphere(Ogre::Vector3(x,0,z), 500);
+
+		mAVTerrainSceneMgr->bidForCollisionData(sphere);
+		Ogre::AVRayHitInfo rayHitInfo;
 		if(mAVTerrainSceneMgr->intersectRayVertical(x, z, 0,rayHitInfo))
 		{
 			return rayHitInfo.hitPos.y + m_Offset;
