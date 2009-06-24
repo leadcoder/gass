@@ -38,7 +38,23 @@ material TerrainBase
 				filtering none	
 			}
 		}
-	} 
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
 }
 
 material TerrainSplat1
@@ -92,7 +108,23 @@ material TerrainSplat1
 				filtering none	
 			}
 		}
-	} 
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
 }
 
 material TerrainSplat2
@@ -151,7 +183,23 @@ material TerrainSplat2
 				filtering none	
 			}
 		}
-	} 
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
 }
 
 material TerrainSplat3
@@ -216,7 +264,22 @@ material TerrainSplat3
 				filtering none	
 			}
 		}
-	} 
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
 }
 
 
@@ -281,6 +344,21 @@ material TerrainSplat3LightMap
 			}
 		}
 	} 
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
 }
 
 
@@ -336,15 +414,16 @@ material DiffuseTemplate
 
 	    pass
 	    {
-	      vertex_program_ref geom_vs
+	      vertex_program_ref depthmap_vs
 	      {
 	      }
 
-	      fragment_program_ref geom_ps
+	      fragment_program_ref depthmap_ps
 	      {
 	      }
 	    }
 	}
+
 
 }
 
@@ -384,16 +463,14 @@ material VegetationTemplate
 
 	    pass
 	    {
-	      vertex_program_ref geom_sky_vs
+	      vertex_program_ref depthmap_max_vs
 	      {
 	      }
 
-	      fragment_program_ref geom_sky_ps
+	      fragment_program_ref depthmap_max_ps
 	      {
 	      }
 	    }
 	}
-
-
 } 
 

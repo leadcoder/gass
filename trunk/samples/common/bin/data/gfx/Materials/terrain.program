@@ -129,7 +129,7 @@ fragment_program TerrainSplat1FP_HLSL hlsl
    source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=1
-   target ps_2_0
+   target ps_2_b
 }
 
 
@@ -157,7 +157,7 @@ fragment_program TerrainSplat2FP_HLSL hlsl
    source terrain.shader
    entry_point terrain_fp
    preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=2
-   target ps_2_0
+   target ps_2_b
 }
 
 

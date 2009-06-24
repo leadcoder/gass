@@ -21,11 +21,11 @@ material SkyTemplate
 
 	    pass
 	    {
-	      vertex_program_ref geom_sky_vs
+	      vertex_program_ref depthmap_max_vs
 	      {
 	      }
 
-	      fragment_program_ref geom_sky_ps
+	      fragment_program_ref depthmap_max_ps
 	      {
 	      }
 	    }
