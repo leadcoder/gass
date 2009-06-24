@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="GASSPluginPagingGeometry"
 	ProjectGUID="{E306453F-FB11-4B56-AB42-2C36899DDAFD}"
 	RootNamespace="GASSPluginOgre"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\lib\vs2005"
-			IntermediateDirectory="obj\Debug\GASSPluginOgre"
+			OutputDirectory="..\lib\vs2008"
+			IntermediateDirectory="obj\Debug\GASSPluginPagedGeometry"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -40,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Source;../Dependencies/ogre/OgreMain/include;../Dependencies/tinyxml;../Dependencies/boost;C:\root\Projects\GASS\dependencies\PagedGeometry\include"
+				AdditionalIncludeDirectories="../Source;../Dependencies/ogre/OgreMain/include;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\PagedGeometry\include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,12 +67,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib OGREMain_d.lib Plugin_OctreeSceneManager_d.lib PagedGeometry_d.lib tinyxmld.lib"
-				OutputFile="$(OutDir)\GASSPluginOgre_d.dll"
+				OutputFile="$(OutDir)\GASSPluginPagedGeometry_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\..\Dependencies;..\..\Dependencies\ogre\lib;&quot;..\..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName)&quot;;..\..\Dependencies\tinyxml\lib;..\..\Dependencies\boost\lib;C:\root\Projects\Dependencies\PagedGeometry\lib"
+				AdditionalLibraryDirectories="..\lib\vs2008;..\Dependencies\ogre\lib;&quot;..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName)&quot;;..\Dependencies\tinyxml\lib;..\Dependencies\PagedGeometry\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\vs2005\GASSPluginOgre_d.lib"
 				TargetMachine="1"
 			/>
@@ -94,16 +97,13 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\lib\vs2005"
-			IntermediateDirectory="obj\Release\GASSPluginOgre"
+			OutputDirectory="..\lib\vs2008"
+			IntermediateDirectory="obj\Release\GASSPluginPagedGeometry"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/ogre/OgreMain/include;../../Dependencies/ogre/Dependencies/include;../../Dependencies/ogre/PlugIns/OctreeSceneManager/include;../../Dependencies/tinyxml;../../Dependencies/boost"
+				AdditionalIncludeDirectories="../Source;../Dependencies/ogre/OgreMain/include;../Dependencies/tinyxml;../Dependencies/boost;../Dependencies\PagedGeometry\include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -149,14 +149,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\lib\vs2005\GASSCore.lib ..\lib\vs2005\GASSSim.lib OGREMain.lib Plugin_OctreeSceneManager.lib tinyxml.lib"
-				OutputFile="$(OutDir)\GASSPluginOgre.dll"
+				AdditionalDependencies="GASSCore.lib GASSSim.lib OGREMain.lib Plugin_OctreeSceneManager.lib tinyxml.lib PagedGeometry.lib"
+				OutputFile="$(OutDir)\GASSPluginPagedGeometry.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\..\Dependencies;..\..\Dependencies\ogre\lib;..\..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName);..\..\Dependencies\tinyxml\lib;..\..\Dependencies\boost\lib"
+				AdditionalLibraryDirectories="..\lib\vs2008;..\Dependencies\ogre\lib;&quot;..\Dependencies\Ogre\Dependencies\lib\$(ConfigurationName)&quot;;..\Dependencies\tinyxml\lib;..\Dependencies\PagedGeometry\lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\vs2005\GASSPluginOgre.lib"
 				TargetMachine="1"
 			/>
@@ -177,9 +179,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
