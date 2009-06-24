@@ -44,9 +44,12 @@
 
 namespace GASS
 {
-	OgreCameraComponent::OgreCameraComponent()
+	OgreCameraComponent::OgreCameraComponent(): 
+		m_NearClip(0.5),
+		m_FarClip(1000),
+		m_Camera(NULL)
 	{
-		m_Camera = NULL;
+		
 	}
 
 	OgreCameraComponent::~OgreCameraComponent()
@@ -57,6 +60,8 @@ namespace GASS
 	void OgreCameraComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, IComponent>);
+		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance);
+		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance);
 	}
 
 	void OgreCameraComponent::OnCreate()
@@ -74,8 +79,8 @@ namespace GASS
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
 		m_Camera = sm->createCamera(m_Name);
-		m_Camera->setNearClipDistance(1.0);
-		m_Camera->setFarClipDistance(1150);
+		SetNearClipDistance(m_NearClip);
+		SetFarClipDistance(m_FarClip);
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 
@@ -90,6 +95,32 @@ namespace GASS
 		}
 		else 
 		return false;
+	}
+
+	float OgreCameraComponent::GetFarClipDistance() const
+	{
+		return  m_FarClip;
+	}
+	void OgreCameraComponent::SetFarClipDistance(float value)
+	{
+		m_FarClip = value;
+		if(m_Camera)
+		{
+			m_Camera->setFarClipDistance(value);
+		}
+	}
+
+	float OgreCameraComponent::GetNearClipDistance() const
+	{
+		return  m_NearClip;
+	}
+	void OgreCameraComponent::SetNearClipDistance(float value)
+	{
+		m_NearClip = value;
+		if(m_Camera)
+		{
+			m_Camera->setNearClipDistance(value);
+		}
 	}
 
 

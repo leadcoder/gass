@@ -97,9 +97,7 @@ namespace GASS
 			Log::Error("Faild to load terrain %s",GetFilename().c_str());
 
 		Ogre::SceneManager* sm = boost::any_cast<Ogre::SceneManager*>(message->GetData("OgreSceneManager"));
-		
 		mAVTerrainSceneMgr = static_cast<Ogre::AVTerrainSceneManager*>(sm);
-
 		std::string base_path = Misc::RemoveFilename(full_path);
 
 		//What camera should be used?

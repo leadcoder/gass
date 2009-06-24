@@ -38,13 +38,13 @@
 namespace GASS
 {
 
-	ODEPhysicsSceneManager::ODEPhysicsSceneManager() :
-		m_Space(0),
+	ODEPhysicsSceneManager::ODEPhysicsSceneManager() :m_Space(0),
 		m_StaticSpace(0),
 		m_World(0),
 		m_CollisionSpace(0),
 		m_ContactGroup (0),
 		m_Paused(false),
+		m_PrimaryThread(false),
 		m_Gravity(-9.81f)
 	{
 
@@ -58,6 +58,8 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>( "Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
+		RegisterProperty<bool>( "PrimaryThread", &GASS::ODEPhysicsSceneManager::GetPrimaryThread, &GASS::ODEPhysicsSceneManager::SetPrimaryThread);
+
 	}
 
 	void ODEPhysicsSceneManager::SetGravity(float gravity)
@@ -74,7 +76,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ),false);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ),m_PrimaryThread);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
@@ -174,8 +176,8 @@ namespace GASS
 			if((geom1 == geom2))
 				return;
 
-		/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent())
-				return;
+			/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent())
+			return;
 
 
 			*/
@@ -240,6 +242,15 @@ namespace GASS
 
 	}
 
+	void ODEPhysicsSceneManager::SetPrimaryThread(bool value)
+	{
+		m_PrimaryThread = value;
+	}
+	bool ODEPhysicsSceneManager::GetPrimaryThread() const
+	{
+		return m_PrimaryThread;
+	}
+
 	void ODEPhysicsSceneManager::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
 	{
 		//Make ODE rotation matrix
@@ -278,85 +289,6 @@ namespace GASS
 
 	}
 
-
-	/*bool ODEPhysicsSceneManager::WantsContact(IPhysicsObject *current,  dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
-	{
-	ODEGeometry* odegeom = DYNAMIC_CAST(ODEGeometry, current);
-	if(odegeom)
-	{
-	return odegeom->WantsContact(contact,other,you,him,firstTest);
-	}
-	return true;
-	}*/
-
-	/*	void ODEPhysicsSceneManager::SetNodeTransformation(const dBodyID body,ISceneNode* node)
-	{
-	Mat4 trans;
-	ODEPhysicsSceneManager::ConvertToMatrix44(dBodyGetPosition(body),dBodyGetRotation(body),trans.m_Data2);
-	node->SetAbsoluteTransformation(trans);
-	}
-
-	void ODEPhysicsSceneManager::SetBodyTransformation(const dBodyID body,ISceneNode* node)
-	{
-	dReal ode_rot_mat[12];
-	Vec3 abs_pos = node->GetAbsoluteTransformation().GetTranslation();
-	float *m = node->GetAbsoluteTransformation().m_Data2;
-	MakeODERotationMatrix(node->GetAbsoluteTransformation(),(float*)ode_rot_mat);
-	//dBodySetPosition(body, abs_pos.x - offset.x, abs_pos.y - offset.y, abs_pos.z - offset.z);
-	dBodySetPosition(body, abs_pos.x, abs_pos.y, abs_pos.z);
-	dBodySetRotation(body, ode_rot_mat);
-	}
-
-	void ODEPhysicsSceneManager::SetGeomTransformation(const dGeomID geom,ISceneNode* node)
-	{
-	dReal ode_rot_mat[12];
-	Vec3 abs_pos = node->GetAbsoluteTransformation().GetTranslation();
-	float *m = node->GetAbsoluteTransformation().m_Data2;
-	MakeODERotationMatrix(node->GetAbsoluteTransformation(),(float*)ode_rot_mat);
-	//dBodySetPosition(body, abs_pos.x - offset.x, abs_pos.y - offset.y, abs_pos.z - offset.z);
-	dGeomSetPosition(geom, abs_pos.x, abs_pos.y, abs_pos.z);
-	dGeomSetRotation(geom, ode_rot_mat);
-	}
-
-
-	void ODEPhysicsSceneManager::MakeODERotationMatrix(const Mat4 &m, float *ode_mat)
-	{
-	//Make ODE rotation matrix
-	ode_mat[0] = m.m_Data2[0];
-	ode_mat[1] = m.m_Data2[4];
-	ode_mat[2] = m.m_Data2[8];
-	ode_mat[3] = 0;
-	ode_mat[4] = m.m_Data2[1];
-	ode_mat[5] = m.m_Data2[5];
-	ode_mat[6] = m.m_Data2[9];
-	ode_mat[7] = 0;
-	ode_mat[8] = m.m_Data2[2];
-	ode_mat[9] = m.m_Data2[6];
-	ode_mat[10]= m.m_Data2[10];
-	ode_mat[11] = 0;
-	}
-
-	void ODEPhysicsSceneManager::ConvertToMatrix44(const dReal pos[3], const dReal R[12], float *m)
-	{
-
-	m[0] = R[0];
-	m[1] = R[4];
-	m[2] = R[8];
-	m[3] = 0;
-	m[4] = R[1];
-	m[5] = R[5];
-	m[6]= R[9];
-	m[7]= 0;
-	m[8] = R[2];
-	m[9] = R[6];
-	m[10] = R[10];
-	m[11] = 0;
-	m[12] = pos[0];
-	m[13] = pos[1];
-	m[14] = pos[2];
-	m[15] = 1;
-
-	}*/
 
 	//TODO: move this to physics system instead of scenatio manager, mesh data should be same between scenes and therefore shareable
 	ODECollisionMesh ODEPhysicsSceneManager::CreateCollisionMesh(IMeshComponent* mesh)

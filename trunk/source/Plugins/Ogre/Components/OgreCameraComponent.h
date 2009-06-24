@@ -45,8 +45,14 @@ namespace GASS
 		inline Ogre::Camera* GetOgreCamera(){return m_Camera;}
 		
 	protected:
+		float GetFarClipDistance() const;
+		void SetFarClipDistance(float value);
+		float GetNearClipDistance() const;
+		void SetNearClipDistance(float value);
 		void OnLoad(MessagePtr message);
 		Ogre::Camera* m_Camera;
+		float m_NearClip;
+		float m_FarClip;
 	};
 
 	typedef boost::shared_ptr<OgreCameraComponent> OgreCameraComponentPtr;

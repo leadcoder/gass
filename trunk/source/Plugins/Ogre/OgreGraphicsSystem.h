@@ -60,8 +60,9 @@ namespace GASS
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
+		void SetPrimaryThread(bool value);
+		bool GetPrimaryThread() const;
 	
-
 		void OnInit(MessagePtr message);
 		void OnCreateRenderWindow(MessagePtr message);
 		void OnWindowMovedOrResized(MessagePtr message);
@@ -76,6 +77,7 @@ namespace GASS
 		std::vector<ISceneManager*> m_SceneManagers;
 		bool m_CreateMainWindowOnInit;
 		OgrePostProcessPtr m_PostProcess;
+		bool m_PrimaryThread;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 }

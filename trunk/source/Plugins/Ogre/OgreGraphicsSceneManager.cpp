@@ -48,7 +48,7 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void)
+	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) 
 	{
 		m_FogStart = 200;
 		m_FogEnd = 400;
@@ -96,6 +96,7 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowProjType",&GASS::OgreGraphicsSceneManager::GetShadowProjType,&GASS::OgreGraphicsSceneManager::SetShadowProjType);
 		RegisterProperty<std::string>("ShadowType",&GASS::OgreGraphicsSceneManager::GetShadowType,&GASS::OgreGraphicsSceneManager::SetShadowType);
 		RegisterProperty<std::string>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
+		
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()
@@ -330,6 +331,7 @@ namespace GASS
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 	}
+
 }
 
 

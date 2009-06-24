@@ -97,7 +97,7 @@ namespace GASS
 		void SetShadowProjType(const std::string &name) {m_ShadowProjType = name;UpdateShadowSettings();}
 		void SetShadowType(const std::string &name) {m_ShadowType = name;UpdateShadowSettings();}
 		void SetShadowCasterMaterial(const std::string &name) {m_ShadowCasterMaterial = name;UpdateShadowSettings();}
-
+		
 	
 	private:	
 		//fog

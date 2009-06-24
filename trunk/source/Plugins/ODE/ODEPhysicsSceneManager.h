@@ -61,27 +61,13 @@ namespace GASS
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
-		
 		void SetGravity(float gravity);
 		float GetGravity() const;
-		
-	//	virtual void Raycast(RaycastInfo* info,TriangleVector *tri_vec = NULL);
-	//	virtual bool SphereCollision(Sphere sphere, CollisionData *coldata = NULL);
-	//	bool GetTriDataID(CollisionMesh *cm,dTriMeshDataID &id);
-	//	static void ConvertToMatrix44(const dReal pos[3], const dReal R[12], float *m);
+		void SetPrimaryThread(bool value);
+		bool GetPrimaryThread() const;
+
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
-
-		
-		//static void SetBodyTransformation(const dBodyID body,ISceneNode* node);
-		//static void SetGeomTransformation(const dGeomID geom,ISceneNode* node);
-		//static void SetNodeTransformation(const dBodyID body,ISceneNode* node);
-	//	bool CheckVisibility(BaseObject* obj_from,BaseObject* obj_to);
-		//virtual int ThreadProc();
-//		static bool WantsContact(IPhysicsObject *current,  dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest);
-//		ODECollisionSystem* m_Collision;
-		
-		
 	private:
 		dWorldID m_World;
 		dSpaceID m_Space;
@@ -90,6 +76,7 @@ namespace GASS
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;
 		bool m_Paused;
+		bool m_PrimaryThread;
 		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		

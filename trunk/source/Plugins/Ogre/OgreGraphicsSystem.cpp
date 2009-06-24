@@ -42,7 +42,8 @@ using namespace Ogre;
 namespace GASS
 {
 	OgreGraphicsSystem::OgreGraphicsSystem(void): m_Window(NULL),
-		m_CreateMainWindowOnInit(true)
+		m_CreateMainWindowOnInit(true),
+		m_PrimaryThread(false)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
 
@@ -60,6 +61,7 @@ namespace GASS
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
 		RegisterProperty<std::vector<std::string> >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
+		RegisterProperty<bool>( "PrimaryThread", &GASS::OgreGraphicsSystem::GetPrimaryThread, &GASS::OgreGraphicsSystem::SetPrimaryThread);
 	}
 
 	void OgreGraphicsSystem::OnCreate()
@@ -124,8 +126,7 @@ namespace GASS
 		}
 
 		//Force register in primary thread if ogl
-
-		bool primary_thread = true;
+		bool primary_thread = m_PrimaryThread;
 		if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 			primary_thread = true;
 
@@ -211,7 +212,6 @@ namespace GASS
 
 		}
 	}
-
 
 	void OgreGraphicsSystem::OnWindowMovedOrResized(MessagePtr message)
 	{
@@ -305,6 +305,16 @@ namespace GASS
 	void OgreGraphicsSystem::SetPostFilters(const std::vector<std::string> &filters)
 	{
 		m_PostFilters = filters;
+	}
+
+	void OgreGraphicsSystem::SetPrimaryThread(bool value)
+	{
+		m_PrimaryThread = value;
+	}
+
+	bool OgreGraphicsSystem::GetPrimaryThread() const
+	{
+		return m_PrimaryThread;
 	}
 }
 

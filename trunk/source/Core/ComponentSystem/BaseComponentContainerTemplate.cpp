@@ -42,7 +42,6 @@ namespace GASS
 
 	BaseComponentContainerTemplate::~BaseComponentContainerTemplate(void)
 	{
-		
 
 	}
 
