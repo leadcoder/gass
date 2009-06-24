@@ -54,8 +54,8 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			Log::Error("No Resource Manager Found");
-		rs->AddResourceLocation(scenario_path,scenario_path,"FileSystem",true);
-		rs->LoadResourceGroup(scenario_path);
+		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
+		rs->LoadResourceGroup("GASSScenario");
 
 		std::string filename = scenario_path + "/scenario.xml";
 

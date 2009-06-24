@@ -84,62 +84,12 @@ namespace GASS
 		return true;
 	}
 
-/*	bool SimEngine::Update(float delta)
-	{
-		PROFILE("Main loop");
-		m_CurrentTime += delta;
-		m_CurrentDelta = delta;
-		//m_Timer.Update();//Init();
-
-		static bool first_frame = true;
-		static float time_to_make_up = 0;
-
-		time_to_make_up += delta;
-		int num_steps = (int) (time_to_make_up / m_SimulationUpdateInterval);
-		int clamp_num_steps = num_steps;
-		if(num_steps > 10) clamp_num_steps = 10;
-
-		// Make sure we do an update on everything before we render scene first time
-		if(first_frame)
-		{
-			clamp_num_steps = 1;
-			first_frame = false;
-		}
-
-		for (int i = 0; i < clamp_num_steps; ++i)
-		{
-			//take one simulation step
-			UpdateSimulation(m_SimulationUpdateInterval);
-			for(int j=0; j< m_SimulationListeners.size();j++)
-			{
-				m_SimulationListeners[j]->SimulationUpdate(m_SimulationUpdateInterval);
-			}
-			Font::GetInstance()->UpdateDebugText();
-		}
-		time_to_make_up -= m_SimulationUpdateInterval * num_steps;
-
-		float render_time = m_CurrentTime - m_SimulationUpdateInterval;
-		float last_update_time = m_CurrentTime - time_to_make_up;
-		float frame_index = (last_update_time - render_time)/m_SimulationUpdateInterval;
-		GetPlayerContainer()->PrepareForRender(frame_index);
-		GetLevel()->PrepareForRender(frame_index);
-
-		//Console::GetInstance()->Render();
-
-		for(int i=0; i< m_RenderListeners.size();i++)
-		{
-			m_RenderListeners[i]->RenderUpdate(delta);
-		}
-
-		return true;
-	}*/
-
 	void SimEngine::Update(float delta_time)
 	{
 		m_RTC->Update(delta_time);
 
-		//this should not be done here
-
+		//TODO: this should not be done here
+	
 		m_ControlSettingsManager->Update(delta_time);
 
 	}

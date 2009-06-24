@@ -25,6 +25,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/Message.h"
+#include <OgreRenderTargetListener.h>
 
 class PagedGeometry;
 class GrassLoader;
@@ -32,15 +33,16 @@ class GrassLayer;
 
 namespace GASS
 {
-	class ITerrainGeometry;
+	class ITerrainComponent;
 
-	class GrassGeometry : public Reflection<GrassGeometry,BaseSceneComponent>
+	class GrassGeometry : public Reflection<GrassGeometry,BaseSceneComponent> , public Ogre::RenderTargetListener
 	{
 	public:
 		GrassGeometry(void);
 		~GrassGeometry(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 	protected:
 		void OnLoad(MessagePtr message);
 		std::string GetDensityMap() const;
@@ -103,6 +105,7 @@ protected:
 		std::string m_DensityMapFilename;
 		Vec4 m_Bounds;
 		float m_ImposterAlphaRejectionValue;
+		static ITerrainComponent *m_Terrain;
 		
 	};
 }

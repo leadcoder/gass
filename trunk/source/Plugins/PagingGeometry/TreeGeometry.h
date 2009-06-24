@@ -22,13 +22,16 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/Message.h"
+#include <OgreRenderTargetListener.h>
 
 class Ogre::PixelBox;
 class PagedGeometry;
 
 namespace GASS
 {
-	class TreeGeometry : public Reflection<TreeGeometry,BaseSceneComponent>
+	class ITerrainComponent;
+
+	class TreeGeometry : public Reflection<TreeGeometry,BaseSceneComponent>  , public Ogre::RenderTargetListener
 	{
 	public:
 		TreeGeometry(void);
@@ -36,6 +39,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
+		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		void LoadDensityMap(const std::string &mapFile, int channel);
 		float GetDensityAt(float x, float z);
 
@@ -213,6 +217,7 @@ namespace GASS
 		TBounds m_MapBounds;
 		float m_ImposterAlphaRejectionValue;
 		std::string m_MeshFileName;
+		static ITerrainComponent *m_Terrain;
 
 
 	};

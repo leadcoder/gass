@@ -36,6 +36,7 @@
 
 namespace GASS
 {
+	ITerrainComponent* GrassGeometry::m_Terrain = NULL;
 	GrassGeometry::GrassGeometry(void) : m_DensityFactor(0.001),
 		m_Bounds(0,0,0,0),
 		m_PageSize(50),
@@ -49,7 +50,9 @@ namespace GASS
 		m_SwayDistribution(10),
 		m_ViewDist(50),
 		m_RenderTechnique("Quad"),
-		m_Blend(false)
+		m_Blend(false),
+		m_GrassLayer(NULL)
+//		m_Terrain(NULL)
 	{
 
 	}	
@@ -90,7 +93,7 @@ namespace GASS
 
 	void GrassGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(GrassGeometry::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(GrassGeometry::OnLoad),999);
 	}
 
 	std::string GrassGeometry::GetDensityMap() const
@@ -310,6 +313,11 @@ namespace GASS
 
 	void GrassGeometry::OnLoad(MessagePtr message)
 	{
+		
+		//assert(ogsm);
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		ocam->getViewport()->getTarget()->addListener(this);
 	
 		bool user_bounds = true;
 		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
@@ -319,7 +327,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			ITerrainComponent * terrain =NULL;//  = FindTerrain();
+			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
 			if(terrain)
 			{
 				Vec3 bmin,bmax;
@@ -330,6 +338,8 @@ namespace GASS
 
 				m_Bounds.z = bmax.x;
 				m_Bounds.w = bmax.z;
+				//for speed we save the raw pointer , we will access this for each height callback 
+				m_Terrain = terrain.get();
 			}
 			else
 			{
@@ -339,7 +349,7 @@ namespace GASS
 		}
 		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 		//What camera should be used?
-		Ogre::Camera* ocam = NULL;
+		
 		
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 		
@@ -366,7 +376,18 @@ namespace GASS
 
 	float GrassGeometry::GetTerrainHeight(float x, float z)
 	{
-		return 0;
+		if(m_Terrain)
+			return m_Terrain->GetHeight(x,z);
+		else 
+			return 0;
+	}
+
+	void GrassGeometry::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+	{
+		Ogre::Viewport *vp = evt.source;
+		m_PagedGeometry->update();
+		if(vp) 
+			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
 

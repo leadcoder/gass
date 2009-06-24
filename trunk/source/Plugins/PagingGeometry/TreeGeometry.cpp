@@ -43,11 +43,13 @@
 
 namespace GASS
 {
+	ITerrainComponent* TreeGeometry::m_Terrain = NULL;
 
 	void TreeGeometry::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TreeGeometry",new Creator<TreeGeometry, IComponent>);
-	
+		
+		RegisterProperty<std::string>("Mesh", &TreeGeometry::GetMesh, &TreeGeometry::SetMesh);
 		RegisterProperty<std::string>("ColorMap", &TreeGeometry::GetColorMap, &TreeGeometry::SetColorMap);
 		RegisterProperty<std::string>("DensityMap", &TreeGeometry::GetDensityMap, &TreeGeometry::SetDensityMap);
 		RegisterProperty<float>("DensityFactor", &TreeGeometry::GetDensityFactor, &TreeGeometry::SetDensityFactor);
@@ -80,7 +82,7 @@ namespace GASS
 	
 
 
-	TreeGeometry::TreeGeometry(void)
+	TreeGeometry::TreeGeometry(void) : m_Bounds(0,0,0,0)
 	{
 		m_DensityFactor = 0.001;
 		m_MaxMinScale.x = 1.1;
@@ -94,6 +96,7 @@ namespace GASS
 		m_ImposterFadeDist = 0;
 		m_ImposterAlphaRejectionValue = 50;
 		m_CreateShadowMap = false;
+
 	}
 
 	TreeGeometry::~TreeGeometry(void)
@@ -103,10 +106,46 @@ namespace GASS
 
 	void TreeGeometry::OnLoad(MessagePtr message)
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(ogsm);
 		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		ocam->getViewport()->getTarget()->addListener(this);
+
+		bool user_bounds = true;
+		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
+		{
+			user_bounds = false;
+		}
+
+		if(!user_bounds)
+		{
+			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+			if(terrain)
+			{
+				Vec3 bmin,bmax;
+				terrain->GetBounds(bmin,bmax);
+
+				m_Bounds.x = bmin.x;
+				m_Bounds.y = bmin.z;
+
+				m_Bounds.z = bmax.x;
+				m_Bounds.w = bmax.z;
+				//for speed we save the raw pointer , we will access this for each height callback 
+				m_Terrain = terrain.get();
+			}
+			else
+			{
+				m_Bounds.Set(0,0,2000,2000);
+			}
+			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+		}
+		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+
+
+		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 	
 		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.5,0.5,0.5,1));
 		assert(m_PagedGeometry);
@@ -140,7 +179,8 @@ namespace GASS
 		if(m_DensityMapFilename != "")
 			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 
-		ITerrainComponent * terrain = NULL;//FindTerrain();
+		//TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+		//m_Terrain = terrain.get();
 		/*Image shadowMap;
 		int shadow_size = 4096;
 		if(m_CreateShadowMap)
@@ -165,7 +205,7 @@ namespace GASS
 					scale = Ogre::Math::RangeRandom(m_MaxMinScale.x, m_MaxMinScale.y);
 					if(m_PrecalcHeight)
 					{
-						float y = terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
+						float y = m_Terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
 						treeLoader3d->addTree(myTree,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
 					else treeLoader2d->addTree(myTree,  Ogre::Vector2(x, z) ,Ogre::Degree(yaw), scale);
@@ -211,6 +251,8 @@ namespace GASS
 			delete[] m_DensityMap->data;
 			delete m_DensityMap;
 			m_DensityMap = NULL;
+			//make update to create imposters
+			m_PagedGeometry->update();
 		}
 	}
 
@@ -271,6 +313,15 @@ namespace GASS
 		}
 	}
 
+	void TreeGeometry::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+	{
+		Ogre::Viewport *vp = evt.source;
+		m_PagedGeometry->update();
+		if(vp) 
+			m_PagedGeometry->setCamera(vp->getCamera());
+	}
+
+
 	float TreeGeometry::GetDensityAt(float x, float z)
 	{
 		assert(m_DensityMap);
@@ -292,7 +343,10 @@ namespace GASS
 
 	float TreeGeometry::GetTerrainHeight(float x, float z)
 	{
-		return 0;
+		if(m_Terrain)
+			return m_Terrain->GetHeight(x,z);
+		else 
+			return 0;
 	}
 
 }

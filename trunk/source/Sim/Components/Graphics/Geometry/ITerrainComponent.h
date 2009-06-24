@@ -39,5 +39,7 @@ namespace GASS
 		virtual void GetHeightAndNormal(float x, float z, float &height,Vec3 &normal) = 0;
 	private:
 	};
+
+	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
 }
 
