@@ -66,6 +66,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LineComponent",new Creator<OgreLineComponent, IComponent>);
 		RegisterProperty<std::string>("MaterialName", &OgreLineComponent::GetMaterialName, &OgreLineComponent::SetMaterialName);
 		RegisterProperty<std::string>("Type", &OgreLineComponent::GetType, &OgreLineComponent::SetType);
+		RegisterProperty<float>("HeightOffset", &OgreLineComponent::GetHeightOffset, &OgreLineComponent::SetHeightOffset);
+		
 	}
 
 	void OgreLineComponent::OnCreate()
