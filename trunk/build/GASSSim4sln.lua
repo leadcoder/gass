@@ -6,6 +6,7 @@ dofile "GASSSim4.lua"
 dofile "GASSPluginOgre4.lua"
 dofile "GASSPluginODE4.lua"
 dofile "GASSPluginOIS4.lua"
+dofile "GASSPluginPagedGeometry4.lua"
 --[[newoption {
    trigger     = "gfxapi",
    value       = "API",
