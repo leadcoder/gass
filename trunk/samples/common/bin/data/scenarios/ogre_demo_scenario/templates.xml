@@ -12,19 +12,19 @@
       <PhysicsGeom type="ODEGeometry">
         <GeometryType value="terrain"/>
       </PhysicsGeom>
-      <TreeLayer1 type="TreeGeometry">
-        <Mesh value= "LOD01_stob_3_tall1_m1-1.mesh"/>
+     <TreeLayer1 type="TreeGeometry">
+        <Mesh value= "fir06_30.mesh"/>
         <DensityMap value= "gfx/terrain/grassmask.dds"/>
         <ImposterAlphaRejectionValue value ="40"/>
-        <!--<ColorMap value= "hills_tree_lightmap.png"/>-->
         <DensityFactor value= "0.002"/>
         <MeshDistance value ="200"/>
         <PageSize value ="200"/>
-        <MeshFadeDistance value ="0"/>
+        <MeshFadeDistance value ="20"/>
         <ImposterDistance value ="2000"/>
-        <ImposterFadeDistance value ="0"/>
+        <ImposterFadeDistance value ="20"/>
         <SetHeightAtStartup value = "true"/>
-      </TreeLayer1>
+        <MaxMinScale value ="0.05 0.1"/>
+     </TreeLayer1>
       <GrassLayer1 type="GrassGeometry">
         <PageSize value = "15"/>
         <ViewDistance value ="35"/>

@@ -54,11 +54,7 @@
 #include <iostream>
 #include <fstream>
 
-
-
 GASS::MessageManager mm;
-
-
 
 void CreateManualObject()
 {
