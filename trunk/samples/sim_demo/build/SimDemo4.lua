@@ -32,6 +32,7 @@ project "SimDemo"
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"postbuild_debug.bat" 
 		}
 	
@@ -43,11 +44,12 @@ project "SimDemo"
 	 	flags { "Optimize"}
 		links { "GASSCore","GASSSim" }
 		postbuildcommands 
-				{
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-					"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-					"postbuild_release.bat" 
+		{
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"postbuild_release.bat" 
 		}
