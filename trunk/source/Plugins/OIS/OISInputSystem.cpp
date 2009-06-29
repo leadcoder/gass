@@ -62,7 +62,6 @@ namespace GASS
 
 	void OISInputSystem::OnCreate()
 	{
-		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC( OISInputSystem::Update));
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED, MESSAGE_FUNC( OISInputSystem::OnInit),1);
 	}

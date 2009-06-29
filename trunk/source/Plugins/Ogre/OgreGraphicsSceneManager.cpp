@@ -108,7 +108,6 @@ namespace GASS
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnChangeCamera));
-		
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)

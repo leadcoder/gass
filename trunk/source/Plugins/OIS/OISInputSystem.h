@@ -121,8 +121,6 @@ namespace GASS
 		SystemType GetSystemType() {return "InputSystem";}
 	private:
 		float NormalizeMouse(float value);
-	
-
 		void OnInit(MessagePtr message);		
 		void Update(double delta_time);
 
