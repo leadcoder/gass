@@ -14,26 +14,14 @@ namespace GASS
 	{
 		m_Buffer = 0;
 		m_Source = 0;
-//		m_RandomPlay = 0;
-//		m_EffectVolume = 1;
 		m_Volume = 1;
 		m_Pitch = 1;
-		m_Priority = 10;
 		m_Loop = false;
 		m_Stereo = 0;
-//		m_Release = false;
-//		m_Start = false;
 		m_MinDistance = 1; //meter
 		m_MaxDistance = 200;//meter
 		m_Rolloff = 1;
 
-		//m_TriggerName = "";
-		//m_Trigger = -1;
-		m_3D = 1;
-//		m_RandPitchVal1 = -1;
-//		m_RandPitchVal2 = -1;
-//		m_FirstRelease = true;
-//		m_BaseFreq = 1.0;
 	}
 
 	OpenALSoundComponent::~OpenALSoundComponent(void)
@@ -77,7 +65,6 @@ namespace GASS
 	void OpenALSoundComponent::OnPhysicsUpdate(MessagePtr message)
 	{
 		Vec3 vel = boost::any_cast<Vec3>(message->GetData("Velocity"));
-		//Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
 		SetVelocity(vel);
 	}
 
@@ -142,8 +129,6 @@ namespace GASS
 		if (m_Source) 
 		{
 			alSourcef(m_Source,AL_GAIN,m_Volume); 
-//			if ((error = alGetError()) != AL_NO_ERROR)
-//				DisplayALError((ALbyte *) "alSourcef 0 AL_GAIN : ", error);
 		}
 	}
 
@@ -158,8 +143,6 @@ namespace GASS
 		if (m_Source) 
 		{
 			alSourcef(m_Source,AL_PITCH,pitch);
-		//	if ((error = alGetError()) != AL_NO_ERROR)
-		//		DisplayALError((ALbyte *) "OpenALSoundComponent::SetPitch() - alSourcef: ", error);
 		}
 	}
 
@@ -168,9 +151,6 @@ namespace GASS
 		return m_Pitch;
 	}
 		
-			
-
-
 	bool OpenALSoundComponent::GetStereo() const
 	{
 		return m_Stereo;
@@ -215,11 +195,6 @@ namespace GASS
 
 	void OpenALSoundComponent::OnLoad(MessagePtr message)
 	{
-		if(m_Stereo)
-		{
-			//disable 3d if stereo?
-			m_3D = 0;
-		}
 		bool wasSoundLoaded  = LoadWaveSound(m_Filename);//, 0);
 		//sound loaded, update sound settings
 		SetLoop(m_Loop); 
@@ -227,21 +202,6 @@ namespace GASS
 		SetMinDistance(m_MinDistance); 
 		SetRolloff(m_Rolloff); 
 		//Play();
-
-		//Check if we have engine attached, don't now if this is used?
-		/*if(m_SoundNode->GetParent()->IsExactClass(&VehicleEngine::m_RTTI))
-		{
-			m_Engine = (VehicleEngine*) m_SoundNode->GetParent();
-		}*/
-
-		//Convert string to enum for faster check!
-		/*if(m_TriggerName == "release") m_Trigger = TRIGGER_RELEASE;
-		else if(m_TriggerName == "volume") m_Trigger = TRIGGER_VOLUME;
-
-		for(int i = 0; i < m_SoundModifierVector.size();i++)
-		{
-			m_SoundModifierVector[i]->Init();
-		}*/
 	}
 
 	void OpenALSoundComponent::Update(float delta)
@@ -255,7 +215,6 @@ namespace GASS
 		if(IsPlaying())
 			return;
 
-		// Allocate source each play?
 		if (m_Source == 0)
 		{
 			Log::Warning("OpenALSoundComponent::Play() called without m_Source set");
@@ -279,53 +238,7 @@ namespace GASS
 
 	}
 
-	//bool OpenALSoundComponent::SetOpenALParameter(ALenum param = -1, float fVal = -1)
-	//{
-	//	ALint	error;
-	//	alGetError();
-	//
-	//	if (m_Source == 0)
-	//	{
-	//		Log::Warning("OpenALSoundComponent::StopPlaying() called without m_Source set");
-	//		return;
-	//	}
-	//
-	//
-	//	if ()
-	//		alSourcef(m_Source, param, fVal);
-	//
-	//	if ((error = alGetError()) != AL_NO_ERROR)
-	//		DisplayALError("OpenALSoundComponent::StopPlaying() - alSourceStop: ", error);
-	//}
-
-	/*void OpenALSoundComponent::StopPlaying()
-	{
-		ALint	error;
-		
-		if (m_Source == 0)
-		{
-			Log::Warning("OpenALSoundComponent::ww() called without m_Source set");
-			return;
-		}
-
-		alSourceStop(m_Source);
-		if ((error = alGetError()) != AL_NO_ERROR)
-			DisplayALError("OpenALSoundComponent::StopPlaying() - alSourceStop: ", error);
-
-		// Release source each stop play?
-	}*/
-
-	/*void OpenALSoundComponent::ScaleVolume(float scaleVal)
-	{
-		m_EffectVolume *= scaleVal; 
-	}
-
-	void OpenALSoundComponent::ScaleFrequency(float scaleVal)
-	{
-		m_EffectFreq *= scaleVal;
-	}*/
-
-
+	
 	bool OpenALSoundComponent::IsPlaying()
 	{
 		ALint	error;
@@ -377,40 +290,6 @@ namespace GASS
 		return true;
 	}
 
-	/*void OpenALSoundComponent::testSound( const char* wavFile )
-	{
-		ALuint buffer;
-		ALuint source;
-		ALenum format;
-		ALsizei size;
-		ALvoid* data;
-		ALsizei freq;
-		ALboolean loop;
-		alGenBuffers( 1, &buffer );
-		OpenALSoundComponentManager* sound_man = (OpenALSoundComponentManager*)Root::Get().GetSoundManager();
-		if ( sound_man->CheckAlError( "testSound()" ) )
-			return;
-
-		// This is the same for alutLoadWAVMemory
-		alutLoadWAVFile( (ALbyte*) wavFile, &format, &data, &size, &freq, &loop );
-
-		alBufferData( buffer, format, data, size, freq );
-
-		alutUnloadWAV( format, data, size, freq );
-		alGenSources( 1, &source );
-		alSourcei( source, AL_BUFFER, buffer );
-		alSourcef( source, AL_PITCH, 1.0f );
-		alSourcef( source, AL_GAIN, 1.0f );
-
-		alSourcei( source, AL_LOOPING, loop );
-
-		alSourcePlay( source );
-
-		//Or else we risk to destroy the manager too quickly to here anything !
-		for (int i=0;i<50000; i++) {printf(".");};
-	}*/
-
-
 	void OpenALSoundComponent::StopLooping()
 	{
 		if (m_Source == 0) return;
@@ -420,10 +299,6 @@ namespace GASS
 	void OpenALSoundComponent::Stop()
 	{
 		if (m_Source == 0) return;
-		/*if(m_Loop)  
-		{
-			StopLooping();
-		}*/
 		alSourceStop(m_Source);
 	}
 } 

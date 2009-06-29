@@ -24,16 +24,18 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 
+		//create sound interface for this?
 		virtual void Update(float delta);
 		virtual void Play();
 		virtual void Stop();
 		virtual void StopLooping();
-
-		//virtual void ScaleVolume(float scaleVal);
-		//virtual void ScaleFrequency(float scaleVal);
 		virtual bool IsPlaying();
-		bool LoadWaveSound(const std::string &filePath);//, int mode);
+
+		
 	protected:
+		//Helper to load sound from wave-file
+		bool LoadWaveSound(const std::string &filePath);
+
 		float GetMinDistance() const;
 		void SetMinDistance(float min_dist);
 		float GetMaxDistance() const;
@@ -49,67 +51,38 @@ namespace GASS
 		void SetRolloff(float rolloff);
 		float GetRolloff() const;
 		std::string GetSoundFile() const;
+		void SetSoundFile(const std::string &file);
 
 		void SetPosition(const Vec3 &pos);
 		void SetVelocity(const Vec3 &vel);
 
+		//Message functions
 		void OnPositionChanged(MessagePtr message);
 		void OnPhysicsUpdate(MessagePtr message);
-	
-	
-		void SetSoundFile(const std::string &file);
-	
-
 		void OnLoad(MessagePtr message);
 
 		ALvoid DisplayALError(ALchar *szText, ALint errorcode);
-		/*ALboolean LoadWave(char *szWaveFile, ALuint BufferID);
-		ALvoid getWAVData(const ALbyte *file,ALenum *format,ALvoid **data,ALsizei *size,ALsizei *freq, ALboolean *loop);
-		ALvoid unloadWAVData(ALvoid *data);*/
-		//bool loadWAV( std::string filename, ALuint pDestAudioBuffer );
 
-		void ImplementRelease();
-		void ImplementStart();
-		void testSound( const char* wavFile );	 // for debug
+		//void ImplementRelease();
+		//void ImplementStart();
+		//void testSound( const char* wavFile );	 // for debug
 
 		//
 		ALuint		m_Buffer;
-
 		// Source for current sound, allocated when sample is to be played, 0 otherwise
 		ALuint m_Source;
 
 		std::string m_Filename;
 		float m_Pitch;
 		int m_Frequency;
-		
+
 		float m_MinDistance;
 		float m_MaxDistance;
 		float m_Rolloff;
 		int m_Stereo;
 		bool m_Loop;
-		int m_Priority; 
+		//int m_Priority; 
 		float m_Volume;
-
-		int m_3D;
-	
-	/*	float m_StartTime;
-		float m_StopTime;
-	
-		int m_Trigger;
-		std::string m_TriggerName;
-		std::string m_StopString;
-		int m_RandomPlay;
-		Vec3 m_RelativePosition; 
-		float m_EffectVolume;
-		float m_BaseFreq;
-		int m_DopplerOff;
-		bool m_Start;
-		bool m_Release;
-		
-		float m_RandPitchVal1;
-		float m_RandPitchVal2;
-		bool m_FirstRelease;*/
 	};
-
-} // namespace HiFi
-#endif //OpenALSoundComponent_HH
+} 
+#endif
