@@ -79,6 +79,9 @@ namespace GASS
 		bool m_PrimaryThread;
 		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
+		double m_SimulationUpdateInterval;
+		double m_TimeToProcess;
+		int m_MaxSimSteps;
 		
 	};
 }

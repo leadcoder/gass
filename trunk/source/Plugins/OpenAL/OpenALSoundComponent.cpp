@@ -53,6 +53,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OpenALSoundComponent::OnLoad),1);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SOUND_PARAMETER, MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage));
 	}
 
 	void OpenALSoundComponent::OnPositionChanged(MessagePtr message)
@@ -66,6 +67,30 @@ namespace GASS
 	{
 		Vec3 vel = boost::any_cast<Vec3>(message->GetData("Velocity"));
 		SetVelocity(vel);
+	}
+
+	void OpenALSoundComponent::OnParameterMessage(MessagePtr message)
+	{
+		SceneObject::SoundParameterType type = boost::any_cast<SceneObject::SoundParameterType>(message->GetData("Parameter"));
+		switch(type)
+		{
+		case SceneObject::PLAY:
+			{
+				Play();
+			}
+			break;
+		case SceneObject::STOP:
+			{
+				Stop();
+			}
+		case SceneObject::PITCH:
+			{
+				float value = boost::any_cast<float>(message->GetData("Value"));
+				//float pitch = GetPitch();
+				SetPitch(value);
+			}
+			break;
+		}
 	}
 
 	float OpenALSoundComponent::GetMinDistance() const
@@ -134,7 +159,7 @@ namespace GASS
 
 	void OpenALSoundComponent::SetPitch(float pitch) 
 	{
-		if(pitch <  0 || pitch > 1)
+		if(pitch <=  0)
 		{
 			Log::Warning("Invalid pitch %.3f",pitch);
 			return;

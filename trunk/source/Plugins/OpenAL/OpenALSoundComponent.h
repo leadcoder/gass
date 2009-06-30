@@ -33,6 +33,7 @@ namespace GASS
 
 		
 	protected:
+
 		//Helper to load sound from wave-file
 		bool LoadWaveSound(const std::string &filePath);
 
@@ -60,6 +61,7 @@ namespace GASS
 		void OnPositionChanged(MessagePtr message);
 		void OnPhysicsUpdate(MessagePtr message);
 		void OnLoad(MessagePtr message);
+		void OnParameterMessage(MessagePtr message);
 
 		ALvoid DisplayALError(ALchar *szText, ALint errorcode);
 

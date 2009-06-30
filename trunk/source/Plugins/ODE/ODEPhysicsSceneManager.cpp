@@ -45,7 +45,10 @@ namespace GASS
 		m_ContactGroup (0),
 		m_Paused(false),
 		m_PrimaryThread(false),
-		m_Gravity(-9.81f)
+		m_Gravity(-9.81f),
+		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
+		m_TimeToProcess(0),
+		m_MaxSimSteps(4)
 	{
 
 	}
@@ -95,14 +98,29 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::Update(double delta_time)
 	{
-
+		
 		if (m_Paused)
 			return;
-		dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-		dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-		dWorldQuickStep(m_World, delta_time);
-		dJointGroupEmpty(m_ContactGroup);
+
+		//do some time slicing
+		m_TimeToProcess += delta_time;
+		int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
+		int clamp_num_steps = num_steps;
+
+		//Take max 4 simulation step each frame
+		if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
+
+		for (int i = 0; i < clamp_num_steps; ++i)
+		{
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
+			dWorldQuickStep(m_World, m_SimulationUpdateInterval);
+			dJointGroupEmpty(m_ContactGroup);
+		}
+		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
+		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
 	}
+
 
 	void ODEPhysicsSceneManager::OnLoad(MessagePtr message)
 	{

@@ -83,11 +83,11 @@ namespace GASS
 		std::string GetBody2Name()const {return m_Body2Name;}
 		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
 		
-		float GetDamping()const {return m_JointForce;}
+		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value);
 		float GetStrength()const {return m_Strength;}
 		void SetStrength(float value);
-		float GetSwayForce()const {return m_Strength;}
+		float GetSwayForce()const {return m_SwayForce;}
 		void SetSwayForce(float value);
 		Vec3 GetAxis1()const {return m_Axis1;}
 		void SetAxis1(const Vec3 &value);

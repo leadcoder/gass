@@ -41,6 +41,7 @@ namespace GASS
 
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD, MESSAGE_FUNC(OpenALSoundSystem::OnSceneLoaded));
+
 	}
 
 	void OpenALSoundSystem::OnSceneLoaded(MessagePtr message)
