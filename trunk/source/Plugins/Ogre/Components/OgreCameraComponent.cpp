@@ -78,7 +78,15 @@ namespace GASS
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
-		m_Camera = sm->createCamera(m_Name);
+
+		static unsigned int obj_id = 0;
+		obj_id++;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << obj_id;
+		ss >> name;
+
+		m_Camera = sm->createCamera(name);
 		SetNearClipDistance(m_NearClip);
 		SetFarClipDistance(m_FarClip);
         lc->GetOgreNode()->attachObject(m_Camera);

@@ -49,6 +49,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual std::string GetFilename()const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data);
+		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
@@ -60,7 +61,7 @@ namespace GASS
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 		void OnLoad(MessagePtr message);
-		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
+		
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
 
@@ -69,5 +70,7 @@ namespace GASS
 		std::string m_Filename;
 		bool m_CastShadow;
 	};
+	
+	typedef boost::shared_ptr<OgreMeshComponent> OgreMeshComponentPtr;
 }
 
