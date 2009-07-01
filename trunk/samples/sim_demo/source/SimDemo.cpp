@@ -146,6 +146,23 @@ int main(int argc, char* argv[])
 	//CreateManualObject();
 	
 	scenario->Load(scenario_path);
+
+
+	for(int i = 0; i < 14; i++)
+	{
+		engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
+		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
+		if(scene_object)
+		{
+			boost::shared_ptr<GASS::Message> pos_msg(new GASS::Message(GASS::SceneObject::OBJECT_MESSAGE_POSITION));
+			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
+			pos.x = pos.x + i*7;
+			pos_msg->SetData("Position",pos);
+			scene_object->SendImmediate(pos_msg);
+		}
+	}
+
+	
 	//scenario->Load("../../../data/scenarios/camp_genesis");
 	//scenario->Load("../../../data/advantage_scenario");
 	
@@ -163,6 +180,9 @@ int main(int argc, char* argv[])
 			scene_object->GetMessageManager()->SendImmediate(pos_msg);
 		}
 	}*/
+
+
+	
 	
 	GASS::Timer timer;
 
@@ -171,17 +191,18 @@ int main(int argc, char* argv[])
 	double prev = 0;
 	double temp_t = 0;
 	bool check_reset = true;
+	double update_time = 1.0/60.0;
+
 	while(timer.GetTime() < 200)
 	{
 		double time = timer.GetTime();
-		engine->Update(time - temp_t);
-		scenario->OnUpdate(time - temp_t);
 		temp_t = time;
-		if(time - prev > 1.0)
+		if(time - prev > update_time)
 		{
-			std::cout << "Time is:" << time << std::endl;
+			engine->Update(update_time);
+			scenario->OnUpdate(update_time);
+			//std::cout << "Time is:" << time << std::endl;
 			prev = time;
-			//TestCollision(scenario->GetScene(0));
 		}
 
 	/*	delete scenario;

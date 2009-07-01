@@ -10,18 +10,21 @@
     <PostFilters value="HDR"/>
   </GraphicsSystem>
   <ResourceSystem type="OgreResourceSystem">
-    <AddResourceLocation Path="../data/gfx/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../data/gfx/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../data/gfx/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <!--<AddResourceLocation Path="../data/gfx/ssao_mat" Group="GASS" Type="FileSystem" Recursive="true"/>-->
-    <AddResourceLocation Path="../data/gfx/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../data/gfx/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data" Group="GASS" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
   <InputSystem type="OISInputSystem">
   </InputSystem>
   <CollisionSystem type="ODECollisionSystem">
   </CollisionSystem>
+  <SoundSystem type="OpenALSoundSystem">
+  </SoundSystem>
 </Systems>

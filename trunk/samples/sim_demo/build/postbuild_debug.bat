@@ -8,3 +8,4 @@ copy ..\..\..\Dependencies\ogre\lib\RenderSystem_GL_d.dll ..\..\common\bin\Debug
 copy ..\..\..\Dependencies\ogre\Samples\Common\bin\debug\OIS_d.dll ..\..\common\bin\Debug\
 copy ..\..\..\Dependencies\ogre\Samples\Common\bin\debug\cg.dll ..\..\common\bin\Debug\
 copy ..\..\..\Dependencies\tbb\bin\tbb_debug.dll ..\..\common\bin\Debug\
+copy ..\..\..\Dependencies\OpenAL1.1\dll\*.dll ..\..\common\bin\Debug\

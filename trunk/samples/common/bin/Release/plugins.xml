@@ -3,5 +3,6 @@
   <Plugin PluginFile = "GASSPluginOgre.dll"/>
   <Plugin PluginFile = "GASSPluginOIS.dll"/>
   <Plugin PluginFile = "GASSPluginODE.dll"/>
- <!-- <Plugin PluginFile = "GASSPluginPagedGeometry.dll"/>-->
+  <Plugin PluginFile = "GASSPluginPagedGeometry.dll"/>
+  <Plugin PluginFile = "GASSPluginOpenAL.dll"/>
 </Plugins>
