@@ -167,16 +167,6 @@ namespace GASS
 		m_InputManager = 0;
 	}
 
-	int OISInputSystem::CurButton(int index)
-	{
-		return (m_MouseState.buttonDown((OIS::MouseButtonID)index));
-	}
-
-	int OISInputSystem::OldButton(int index)
-	{
-		return (m_OldMouseState.buttonDown((OIS::MouseButtonID)index));
-	}
-
 	void OISInputSystem::Update(double double_delta)
 	{
 		if(m_Window == 0)
@@ -203,43 +193,6 @@ namespace GASS
 			m_OldJoyState[i] = m_JoyState[i];
 			m_JoyState[i] = m_Joys[i]->getJoyStickState();
 		}
-	}
-
-	float OISInputSystem::GetCursorDeltaX()
-	{
-		return NormalizeMouse(m_MouseState.X.rel);
-	}
-
-	float OISInputSystem::GetCursorDeltaY()
-	{
-		return NormalizeMouse(m_MouseState.Y.rel);
-	}
-
-	float OISInputSystem::GetScrollWheelDelta()
-	{
-		return m_MouseState.Z.rel;
-	}
-
-
-	int OISInputSystem::CurKey(int index)
-	{
-		return m_KeyBuffer[index];
-	}
-
-	float OISInputSystem::GetJoystickAxis(int device, int axis)
-	{
-		if (device >= m_Joys.size() || axis > m_JoyState[device].mAxes.size())
-			return 0.0;
-		else
-			return ((float)m_JoyState[device].mAxes[axis].abs) / 32768.0;
-	}
-
-	int OISInputSystem::GetJoystickPOV(int device, int pov)
-	{
-		if (device >= m_Joys.size() || pov > 3)
-			return 0;
-		else
-			return m_JoyState[device].mPOV[pov].direction;
 	}
 
 	void OISInputSystem::AddKeyListener(IKeyListener* key_listener)

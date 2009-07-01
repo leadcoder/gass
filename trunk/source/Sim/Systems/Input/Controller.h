@@ -33,25 +33,13 @@ namespace GASS
 	{
 	public:
 		Controller(const std::string &name,ControlSetting* owner) :
-			m_Override(false), 
-			m_Value(0),
-			m_LastValue(0),
 			m_Name(name),
 			m_Owner(owner)
 		{
 
 		}
 		virtual ~Controller(){}
-		virtual float GetValue(){return 0;};
-		virtual void SetValue(float value){m_Override = true; m_Value = value;}
-		virtual void DisableOverride(){m_Override = false; m_Value = 0;}
-		virtual void TryValue(float value){if(!m_Override) m_Value = value;}
-		virtual void SetLastValue(float value){m_LastValue = value;}
-		virtual bool HasChanged(){return (m_LastValue != GetValue());}
 		int m_Device;
-		bool m_Override;
-		float m_Value;
-		float m_LastValue;
 		bool m_NonRepeating;
 		ControlSetting* m_Owner;
 		std::string m_Name;
@@ -62,8 +50,7 @@ namespace GASS
 	public:
 		RemoteController(const std::string &name,ControlSetting* owner):Controller(name,owner){}
 		virtual ~RemoteController(){}
-		float virtual GetValue(){return m_Value;};
-		void virtual DisableOverride(){m_Override = false;}
+
 	};
 
 
@@ -125,24 +112,7 @@ namespace GASS
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
-		}
-
-		float virtual GetValue()
-		{
-			if(m_Override) return m_Value;
-			int ret = 0;
-			switch(m_Device)
-			{
-			case DEVICE_KEYBOARD:
-				if(m_NonRepeating) ret = m_Owner->m_Input->KeyDown(m_Key);
-				else ret = m_Owner->m_Input->KeyStillDown(m_Key);
-				break;
-			default:
-				ret = 0;
-			}
-			if(m_Override) ret = m_Value;
-			return (float) ret;
-		};
+		}		
 		int m_Key;
 	};
 
@@ -241,29 +211,6 @@ namespace GASS
 			return true;	
 		}
 
-		float virtual GetValue()
-		{
-			if(m_Override) return m_Value;
-			int ret = 0;
-			switch(m_Device)
-			{
-			case DEVICE_MOUSE:
-				if(m_NonRepeating) ret = m_Owner->m_Input->ButtonDown(m_Button);
-				else ret = m_Owner->m_Input->ButtonStillDown(m_Button);
-				break;
-			case DEVICE_GAME_CONTROLLER_0:
-			case DEVICE_GAME_CONTROLLER_1:
-			case DEVICE_GAME_CONTROLLER_2:
-			case DEVICE_GAME_CONTROLLER_3:
-			case DEVICE_GAME_CONTROLLER_4:
-				if(m_NonRepeating) ret = m_Owner->m_Input->JoystickButtonDown(m_Device-DEVICE_GAME_CONTROLLER_0, m_Button);
-				else ret = m_Owner->m_Input->JoystickButtonStillDown(m_Device-DEVICE_GAME_CONTROLLER_0, m_Button);
-				break;
-			default:
-				ret = 0;
-			}
-			return (float) ret;
-		};
 		int m_Button;
 	};
 
@@ -315,22 +262,6 @@ namespace GASS
 			return true;
 		}
 
-
-		float virtual GetValue()
-		{
-			if(m_Override) return m_Value;
-			int ret = 0;
-			switch(m_Device)
-			{	
-			case DEVICE_KEYBOARD:
-				if(m_Owner->m_Input->CurKey(m_PosKey)) ret = 1;
-				if(m_Owner->m_Input->CurKey(m_NegKey)) ret = -1;
-				break;
-			default:
-				ret = 0;
-			}
-			return (float) ret;
-		};
 		int m_PosKey;
 		int m_NegKey;
 	};
@@ -425,126 +356,6 @@ namespace GASS
 			return true;	
 		}
 
-		float virtual GetValue()
-		{
-			if(m_Override) return m_Value;
-			float ret = 0;
-			switch(m_Device)
-			{
-			case DEVICE_MOUSE:
-				switch(m_Axis)
-				{
-				case INPUT_AXIS_0:
-					ret = m_Invert* m_Owner->m_Input->GetCursorDeltaX();
-					break;
-				case INPUT_AXIS_1:
-					ret = m_Invert* m_Owner->m_Input->GetCursorDeltaY();
-					break;
-				case INPUT_AXIS_2:
-					ret = m_Invert* m_Owner->m_Input->GetScrollWheelDelta();
-					break;
-				default:
-					ret = 0;
-				}
-				break;
-			case DEVICE_GAME_CONTROLLER_0:
-			case DEVICE_GAME_CONTROLLER_1:
-			case DEVICE_GAME_CONTROLLER_2:
-			case DEVICE_GAME_CONTROLLER_3:
-			case DEVICE_GAME_CONTROLLER_4:
-				switch(m_Axis)
-				{
-				case INPUT_AXIS_0:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,0);
-					break;
-				case INPUT_AXIS_1:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,1);
-					break;
-				case INPUT_AXIS_2:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,2);
-					break;
-				case INPUT_AXIS_3:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,3);
-					break;
-				case INPUT_AXIS_4:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,4);
-					break;
-				case INPUT_AXIS_5:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,5);
-					break;
-				case INPUT_AXIS_6:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,6);
-					break;
-				case INPUT_AXIS_7:
-					ret = m_Invert*m_Owner->m_Input->GetJoystickAxis(m_Device-DEVICE_GAME_CONTROLLER_0,7);
-					break;
-
-				case INPUT_POV_0_X:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,0) & POV_EAST)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,0) & POV_WEST)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_0_Y:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,0) & POV_SOUTH)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,0) & POV_NORTH)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_1_X:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,1) & POV_EAST)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,1) & POV_WEST)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_1_Y:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,1) & POV_SOUTH)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,1) & POV_NORTH)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_2_X:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,2) & POV_EAST)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,2) & POV_WEST)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_2_Y:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,2) & POV_SOUTH)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,2) & POV_NORTH)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_3_X:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,3) & POV_EAST)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,3) & POV_WEST)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-				case INPUT_POV_3_Y:
-					if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,3) & POV_SOUTH)
-						ret = 1;
-					else if (m_Owner->m_Input->GetJoystickPOV(m_Device-DEVICE_GAME_CONTROLLER_0,3) & POV_NORTH)
-						ret = -1;
-					ret *= m_Invert;
-					break;
-
-				default:
-					ret = 0;
-				}
-				break;
-			default:
-				ret = 0;
-			}
-			return (float) ret;
-		}
 		int m_Axis;
 		int m_Invert;
 	};
@@ -556,26 +367,6 @@ namespace GASS
 		{
 
 		}
-		float virtual GetValue()
-		{
-			if(m_Override) return m_Value;
-			int ret = 0;
-			switch(m_Device)
-			{	
-			case DEVICE_GAME_CONTROLLER_0:
-			case DEVICE_GAME_CONTROLLER_1:
-			case DEVICE_GAME_CONTROLLER_2:
-			case DEVICE_GAME_CONTROLLER_3:
-			case DEVICE_GAME_CONTROLLER_4:
-				if (m_Owner->m_Input->CurJoystickButton(m_Device-DEVICE_GAME_CONTROLLER_0, m_PosKey)) ret = 1;
-				if (m_Owner->m_Input->CurJoystickButton(m_Device-DEVICE_GAME_CONTROLLER_0, m_NegKey)) ret = -1;
-				break;
-			default:
-				ret = 0;
-			}
-			return (float) ret;
-		};
-
 		int m_PosKey;
 		int m_NegKey;
 	};

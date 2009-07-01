@@ -42,7 +42,7 @@ namespace GASS
 		m_MM->Update(delta_time);
 	}
 
-	float ControlSetting::Get(const std::string &input)
+	/*float ControlSetting::Get(const std::string &input)
 	{
 	
 		ControllerMap::iterator pos;
@@ -59,7 +59,7 @@ namespace GASS
 			//if(m_Log) Log::Warning("Unknown object type: %s",name.c_str());
 			return 0;
 		}
-	}
+	}*/
 
 	void ControlSetting::AddController(Controller *controller, const std::string &name,int action)
 	{
@@ -90,24 +90,24 @@ namespace GASS
 		}
 	}
 
-	void ControlSetting::Set(const std::string &input,float value)
+	/*void ControlSetting::Set(const std::string &input,float value)
 	{
 		Controller* controller = GetController(input);
 		if(controller) controller->SetValue(value);
-	};
+	};*/
 
-	void ControlSetting::TrySet(const std::string &input,float value)
+	/*void ControlSetting::TrySet(const std::string &input,float value)
 	{
 		Controller* controller = GetController(input);
 		if(controller) controller->TryValue(value);
-	};
+	};*/
 
-	void ControlSetting::DisableOverride(const std::string &input)
+	/*void ControlSetting::DisableOverride(const std::string &input)
 	{
 		Controller* controller = GetController(input);
 		if(controller) 
 		{
 			controller->DisableOverride();
 		}
-	};
+	};*/
 }

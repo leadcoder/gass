@@ -433,7 +433,7 @@ namespace GASS
 			{
 				std::string name = (std::string) iter->first;
 				Controller* remote_controller  = new RemoteController("remotecontroller",local);
-				remote_controller->SetValue(0);
+			//	remote_controller->SetValue(0);
 				remote->m_ControllerMap[name] = remote_controller;
 				Controller* controller = (Controller*) iter->second;
 				*remote_controller  = *controller;

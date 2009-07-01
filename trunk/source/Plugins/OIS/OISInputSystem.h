@@ -42,38 +42,6 @@ namespace GASS
 		virtual void OnCreate();
 
 		void Shutdown();
-		//some helper functions to make certain things easier
-		int inline KeyDown(int index)		{ return ( CurKey(index))&&(!OldKey(index)); }
-		int inline KeyStillDown(int index)	{ return ( CurKey(index))&&( OldKey(index)); }
-		int inline KeyUp(int index)		{ return (!CurKey(index))&&( OldKey(index)); }
-		int inline KeyStillUp(int index)	{ return (!CurKey(index))&&(!OldKey(index)); }
-		int CurKey(int index);
-
-		int inline ButtonDown(int index)		{ return (CurButton(index)) && (!OldButton(index)); }
-		int inline ButtonStillDown(int index)	{ return (CurButton(index)) && (OldButton(index)); }
-		int inline ButtonUp(int index)		{ return (!CurButton(index)) && (OldButton(index)); }
-		int inline ButtonStillUp(int index)	{ return (!CurButton(index)) && (!OldButton(index)); }
-		int CurButton(int index);
-		float GetCursorDeltaX() ;
-		float GetCursorDeltaY() ;
-		float GetScrollWheelDelta() ;
-
-		int inline JoystickButtonDown(int device, int index)		{ return (CurJoystickButton(device, index)) && (!OldJoystickButton(device, index)); }
-		int inline JoystickButtonStillDown(int device, int index)	{ return (CurJoystickButton(device, index)) && (OldJoystickButton(device, index)); }
-		int inline JoystickButtonUp(int device, int index)		{ return (!CurJoystickButton(device, index)) && (OldJoystickButton(device, index)); }
-		int inline JoystickButtonStillUp(int device, int index)	{ return (!CurJoystickButton(device, index)) && (!OldJoystickButton(device, index)); }
-		int inline CurJoystickButton(int device, int index) 
-		{ 
-			if (device >= m_Joys.size())
-				return 0;
-			return m_JoyState[device].buttonDown(index);
-		}
-		float GetJoystickAxis(int device, int axis);
-		int GetJoystickPOV(int device, int pov);
-
-		// Deprecated:
-		float GetGameController0Axis(int axis) { return GetJoystickAxis(0, axis); }
-		float GetGameController1Axis(int axis) { return GetJoystickAxis(1, axis); }
 		
 		virtual void AddKeyListener(IKeyListener* key_listener);
 		virtual void RemoveKeyListener(IKeyListener* key_listener);
@@ -86,7 +54,6 @@ namespace GASS
 	
 		OIS::Mouse*    GetMouse(){return m_Mouse;}
 		OIS::Keyboard* GetKeyboard(){return m_Keyboard;}
-
 
 		virtual bool keyPressed( const OIS::KeyEvent &arg );
 		virtual bool keyReleased( const OIS::KeyEvent &arg );
@@ -132,8 +99,6 @@ namespace GASS
 		
 		int OldButton(int index);
 	
-	
-		
 		int inline OldJoystickButton(int device, int index) 
 		{ 
 			if (device >= m_Joys.size())
@@ -158,8 +123,6 @@ namespace GASS
 		std::vector<IMouseListener*> m_MouseListeners;
 		std::vector<IGameControllerListener*> m_GameControllerListeners;
 		
-
-
 		int m_JoystickDeviceCount;
 		bool m_Inverted;
 		bool m_OnlyUpdateWhenFocued;

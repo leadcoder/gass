@@ -204,8 +204,8 @@ namespace GASS
 	void FreeCamControlComponent::UpdateFPCam(double delta)
 	{
 		//Get default input, this must be moved to a input update function if we run in multi thread mode
-		float toggle_collision = m_ControlSetting->Get("ToggleFreeCameraCollision");
-		float toggle_fly = m_ControlSetting->Get("ToggleFreeCameraFly");
+		//float toggle_collision = m_ControlSetting->Get("ToggleFreeCameraCollision");
+		//float toggle_fly = m_ControlSetting->Get("ToggleFreeCameraFly");
 	
 		//float yaw = m_ControlSetting->Get("FreeCameraStrafe");
 		float joyLookY = 0;//m_ControlSetting->Get("FreeCameraPitch");

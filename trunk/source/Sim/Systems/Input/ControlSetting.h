@@ -50,10 +50,10 @@ namespace GASS
 		~ControlSetting(void);
 		void Update(double delta_time);
 		void AddController(Controller *controller, const std::string &name,int action);
-		virtual void Set(const std::string &input,float value);
-		virtual void TrySet(const std::string &input,float value);
-		virtual void DisableOverride(const std::string &input);
-		virtual float Get(const std::string &input);
+		//virtual void Set(const std::string &input,float value);
+		//virtual void TrySet(const std::string &input,float value);
+		//virtual void DisableOverride(const std::string &input);
+		//virtual float Get(const std::string &input);
 		virtual Controller* GetController(const std::string &input);
 		IInputSystem* GetInputSystem(){return m_Input;}
 		MessageManager* GetMessageManager(){return m_MM;}

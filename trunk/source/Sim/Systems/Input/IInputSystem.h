@@ -278,51 +278,13 @@ namespace GASS
 	{
 	public:
 		virtual ~IInputSystem(){}
-		
-		//some helper functions to make things easier
-		virtual int KeyDown(int index) = 0;
-		virtual int KeyStillDown(int index)	= 0;
-		virtual int KeyUp(int index) = 0;
-		virtual int KeyStillUp(int index) = 0;
-
-		//just check if key is down
-		virtual int CurKey(int index) =0;
-		virtual int ButtonDown(int index) =0;
-		virtual int ButtonStillDown(int index)=0;
-		virtual int ButtonUp(int index)=0;
-		virtual int ButtonStillUp(int index)=0;
-		virtual int CurButton(int index) =0;
-		virtual float GetCursorDeltaX() =0;
-		virtual float GetCursorDeltaY() =0;
-		virtual float GetScrollWheelDelta() =0;
-
-		virtual int JoystickButtonDown(int device, int index) = 0;
-		virtual int JoystickButtonStillDown(int device, int index)=0;
-		virtual int JoystickButtonUp(int device, int index)=0;
-		virtual int JoystickButtonStillUp(int device, int index)=0;
-		virtual int CurJoystickButton(int device, int index) = 0;
-		virtual float GetJoystickAxis(int device, int index) = 0;
-		virtual int GetJoystickPOV(int device, int pov) = 0;
-
 		virtual void AddKeyListener(IKeyListener* key_listener) = 0;
 		virtual void RemoveKeyListener(IKeyListener* key_listener) = 0;
 		virtual void AddMouseListener(IMouseListener* mouse_listener)=0;
 		virtual void RemoveMouseListener(IMouseListener* mouse_listener)=0;
-
 		virtual void AddGameControllerListener(IGameControllerListener* mouse_listener)=0;
 		virtual void RemoveGameControllerListener(IGameControllerListener* mouse_listener)=0;
-
-
 		virtual void SetWindow(int window) = 0;
-
-		// Deprecated:
-		virtual float GetGameController0Axis(int axis)=0;
-		virtual float GetGameController1Axis(int axis)=0;
-
-		
-
-	protected:
-
 		
 	};
 	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;
