@@ -1,0 +1,143 @@
+import * from "terrain.material"
+
+
+material JIM_TANK_hatches : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.694118 0.662745 0.564706 
+			diffuse 0.694118 0.662745 0.564706 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture JIM_TANK_hatches.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_TANK_hull : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0
+			diffuse 1 1 1
+			specular 1 1 1 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture JIM_TANK_hull.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_TANK_turret : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0
+			diffuse 1 1 1
+			specular 1 1 1 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture JIM_TANK_turret.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_gattling : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0
+			diffuse 1 1 1
+			specular 1 1 1 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture JIM_gattling.jpg
+			}
+		}
+	}
+}
+
+
+material Material#41 : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0
+			diffuse 1 1 1
+			specular 1 1 1 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture T72_wheels.jpg
+			}
+		}
+	}
+}
+
+
+material T72_band : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 
+			diffuse 0.2 0.2 0.2 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture T72_band.jpg
+			}
+		}
+	}
+}
+
+
+material T72_wheels : DiffuseTemplate
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0
+			diffuse 1 1 1
+			specular 1 1 1 10
+			emissive 0 0 0 
+
+			texture_unit 
+			{
+				texture T72_wheels.jpg
+			}
+		}
+	}
+}
+
+

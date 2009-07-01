@@ -1,0 +1,252 @@
+vertex_program DiffuseVP unified
+{
+	delegate DiffuseVP_HLSL
+	delegate DiffuseVP_Cg
+}
+
+vertex_program DiffuseVP_HLSL hlsl 
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_vp 
+   target vs_2_0
+   preprocessor_defines INTEGRATED_SHADOWS=1 
+   default_params
+   {
+	//param_named_auto shadowDepthRange shadow_scene_depth_range 1
+	//param_named_auto shadowDepthRange scene_depth_range
+   }
+}
+ 
+
+vertex_program DiffuseVP_Cg cg
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_vp 
+   profiles vs_2_0 arbvp1
+   compile_arguments -DINTEGRATED_SHADOWS=1
+   default_params
+   {
+        
+	  //param_named_auto shadowDepthRange scene_depth_range
+	
+   }
+}
+
+vertex_program DiffuseLightMapVP unified
+{
+	delegate DiffuseLightMapVP_HLSL	
+	delegate DiffuseLightMapVP_Cg
+}
+
+vertex_program DiffuseLightMapVP_HLSL hlsl 
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_vp 
+   target vs_2_0
+   preprocessor_defines INTEGRATED_SHADOWS=1,LIGHT_MAP=1 
+   default_params
+   {
+   }
+}
+ 
+
+vertex_program DiffuseLightMapVP_Cg cg
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_vp 
+   profiles vs_2_0 arbvp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DLIGHT_MAP=1
+   default_params
+   {
+   }
+}
+
+fragment_program DiffuseFP unified
+{
+	delegate DiffuseFP_HLSL
+	delegate DiffuseFP_Cg
+}
+
+fragment_program DiffuseFP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1 
+   target ps_2_b
+}
+
+
+fragment_program DiffuseFP_Cg cg
+{ 
+   source terrain.shader
+   entry_point diffuse_one_light_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1
+   default_params
+   {
+	param_named_auto fogParams fog_params 
+        param_named_auto fogColor fog_colour
+   }
+}
+
+fragment_program TerrainBaseFP unified
+{
+	delegate TerrainBaseFP_HLSL
+	delegate TerrainBaseFP_Cg
+}
+
+fragment_program TerrainBaseFP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=0
+   target ps_2_0
+}
+
+fragment_program TerrainBaseFP_Cg cg
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=0
+   
+
+   default_params
+   {
+	  param_named_auto fogParams fog_params 
+        param_named_auto fogColor fog_colour
+   }
+}
+
+fragment_program TerrainSplat1FP unified
+{
+	delegate TerrainSplat1FP_HLSL
+	delegate TerrainSplat1FP_Cg
+}
+
+fragment_program TerrainSplat1FP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=1
+   target ps_2_b
+}
+
+
+fragment_program TerrainSplat1FP_Cg cg
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=1
+   
+   default_params
+   {
+	param_named_auto fogParams fog_params 
+      	param_named_auto fogColor fog_colour
+   }
+}
+fragment_program TerrainSplat2FP unified
+{
+	delegate TerrainSplat2FP_HLSL
+	delegate TerrainSplat2FP_Cg
+}
+
+fragment_program TerrainSplat2FP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=2
+   target ps_2_b
+}
+
+
+fragment_program TerrainSplat2FP_Cg cg
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=2
+   
+
+   default_params
+   {
+	param_named_auto fogParams fog_params 
+      	param_named_auto fogColor fog_colour
+   }
+}
+
+fragment_program TerrainSplat3FP unified
+{
+	delegate TerrainSplat3FP_HLSL
+	delegate TerrainSplat3FP_Cg
+}
+
+fragment_program TerrainSplat3FP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=3
+   target ps_2_a
+}
+
+fragment_program TerrainSplat3FP_Cg cg
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=3
+   
+
+   default_params
+   {
+	 param_named_auto fogParams fog_params 
+       param_named_auto fogColor fog_colour
+   }
+}
+
+fragment_program TerrainSplat3LightMapFP unified
+{
+	delegate TerrainSplat3LightMapFP_HLSL
+	delegate TerrainSplat3LightMapFP_Cg
+}
+
+fragment_program TerrainSplat3LightMapFP_HLSL hlsl
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   preprocessor_defines INTEGRATED_SHADOWS=1,NUM_SPLATS=3,LIGHT_MAP=1
+
+   target ps_2_0
+}
+
+fragment_program TerrainSplat3LightMapFP_Cg cg
+{ 
+   source terrain.shader
+   entry_point terrain_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1 -DNUM_SPLATS=3 -DLIGHT_MAP=1
+   
+   default_params
+   {
+	param_named_auto fogParams fog_params 
+	param_named_auto fogColor fog_colour
+   }
+}
+
+fragment_program VegetationFP_Cg cg
+{ 
+   source terrain.shader
+   entry_point vegetation_fp
+   profiles ps_2_0 arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 
+}
+
+
+
+
+
+
+
+
+

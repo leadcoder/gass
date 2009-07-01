@@ -1,0 +1,49 @@
+vertex_program depthmap_vs cg
+{
+    source depthmap.shader
+    profiles vs_1_1 arbvp1
+    entry_point depthmap_vs
+
+    default_params
+    {
+        param_named_auto wvpMat worldviewproj_matrix
+        param_named_auto wvMat worldview_matrix
+    }
+}
+
+fragment_program depthmap_ps cg
+{
+    source depthmap.shader
+    profiles ps_2_0 arbfp1
+    entry_point depthmap_ps
+
+    default_params
+    {
+        param_named_auto far far_clip_distance
+    }
+}
+
+
+vertex_program depthmap_max_vs cg
+{
+    source depthmap.shader
+    profiles vs_1_1 arbvp1
+    entry_point depthmap_max_vs
+
+    default_params
+    {
+        param_named_auto wvpMat worldviewproj_matrix
+    }
+}
+
+fragment_program depthmap_max_ps cg
+{
+    source depthmap.shader
+    profiles ps_2_0 arbfp1
+    entry_point depthmap_max_ps
+
+    default_params
+    {
+        param_named_auto far far_clip_distance
+    }
+}
