@@ -49,6 +49,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
+		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
@@ -57,11 +58,7 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLoad(MessagePtr message);
-		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
-		Ogre::Bone* GetClosestBone(const Vec3 &pos);
-		bool HasSkeleton() const;
-
-		Ogre::Entity* m_OgreEntity;
+		
 		std::string m_RenderQueue;
 		std::string m_Material;
 		bool m_CastShadow;
@@ -71,5 +68,8 @@ namespace GASS
 		float m_Height;
 
 	};
+
+	typedef boost::shared_ptr<OgreBillboardComponent> OgreBillboardComponentPtr;
+	
 }
 

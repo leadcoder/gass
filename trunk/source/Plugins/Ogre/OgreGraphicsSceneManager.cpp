@@ -131,6 +131,9 @@ namespace GASS
 		UpdateFogSettings();
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 
+
+		
+
 		// Try to load default camera
 		SceneObjectPtr scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 

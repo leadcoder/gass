@@ -73,6 +73,8 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,				MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint));
 	}
 
+
+
 	//Create custom load
 	/*void OgreGraphicsSystem::Load(TiXmlElement *elem)
 	{

@@ -49,7 +49,6 @@ namespace GASS
 {
 
 	OgreBillboardComponent::OgreBillboardComponent() :
-		m_OgreEntity(NULL),
 		m_CastShadow(true),
 		m_BillboardSet (NULL),
 		m_Width(1.0f),
