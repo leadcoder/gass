@@ -1,7 +1,7 @@
 project "SimDemo"
 	kind "ConsoleApp"
 	language "C++"
-	files { "../Source/*" }
+	files { "../Source/*.cpp", "../Source/*.h" }
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	targetdir ( "../../common/bin/$(ConfigurationName)" )
