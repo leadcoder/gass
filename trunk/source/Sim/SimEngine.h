@@ -43,7 +43,7 @@ namespace GASS
 		The SimEngine is a singleton class that hold some basic functionality
 		of the Sim module like plugin management, runtime execution and system management.
 		When using the GASS sim module this class is the first one that should be instantiated 
-		and initialized. The user is the responsible to call the update function of this 
+		and initialized. The user is responsible to call the update function of this 
 		class each frame, this will ensure that all system get updated through the RTC scheduling
 		class. 
 		This class has no knowledge of scenarios and/or scenario scenes, this could be changed in the future
@@ -60,8 +60,12 @@ namespace GASS
 		static SimEngine& Get();
 
 		/**
-					
-
+			This function will initialize the sim engine. When this function is called
+			the plugin manager will first try to load all GASS plugins listed in the 
+			plugin_file. After that the system manager try to load all systems
+			listed in the system_file. 
+			@param plugin_file xml-file listing all plugins to load.
+			@param system_file xml-file listing all systems to load.
 		*/
 		bool Init(const std::string &plugin_file = std::string("plugins.xml"), 
 				  const std::string &system_file = std::string("systems.xml"));
@@ -74,11 +78,37 @@ namespace GASS
 		*/
 		void Update(float delta_time);
 		
+		/**
+		Shutdown GASS.
+		*/
+		
 		bool Shutdown();
 
+		/**
+		Get the sim system mananger. 
+		This is the first step to get hold of a sim system,
+		see SystemManager for more details of how to find a 
+		certain system.
+		*/
+
 		SystemManagerPtr GetSystemManager() {return m_SystemManager;}
+		
+		/**
+		Get the object template manager. 
+		The oject template manager holds templates for sim objects that can be created.
+		See BaseComponentContainerTemplateManager inside the component system from more info.
+		*/
 		BaseComponentContainerTemplateManagerPtr GetSimObjectManager() {return m_SimObjectManager;}
+		
+		/**
+		Get the control settings manager. 
+		*/
+		//TODO: This should be moved to it's own system
 		ControlSettingsManagerPtr GetControlSettingsManager() {return m_ControlSettingsManager;}
+
+		/**
+			Get the runtime control manager. See RuntimeController class for more information
+		*/
 		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
 	private:
 		PluginManagerPtr m_PluginManager;

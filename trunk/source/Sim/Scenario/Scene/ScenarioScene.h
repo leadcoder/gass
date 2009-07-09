@@ -38,6 +38,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
+	
 	class ScenarioUpdateMessage : public Message
 	{
 	public:
@@ -50,6 +51,11 @@ namespace GASS
 	private:
 		double m_DeltaTime;
 	};
+
+	/**
+		Scenario scene class 
+	*/
+
 
 	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>
 	{

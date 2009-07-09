@@ -34,14 +34,46 @@ namespace GASS
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef std::vector<ScenarioScenePtr> ScenarioSceneVector;
 
+	/**
+		A scenario in GASS is divided in scenarios scenes. The scenario class is
+		therefore only a container of scenario scenes and the actual scenario 
+		functionality is capsulated in its scenario scenes,
+		By dividing the scenario in scenes the user can have different 
+		representations of the same scene, for instance one visual representation
+		and one infrared. In another application the user might want to have a 
+		separate scene for the menu-system or divided the scenario in different zones
+		each represented by it's own scene.
+		See ScenarioScene class for more information about scenario scenes. 
+
+	*/
+
 	class GASSExport Scenario : public Reflection<Scenario, BaseReflectionObject>
 	{
 	public:
 		Scenario();
 		virtual ~Scenario();
-		bool Load(const std::string &filename);
+		/**
+		Load a new scenario from path
+		*/
+		bool Load(const std::string &scenario_parh);
+		/**
+		Get path to current loaded scenario
+		@param absolute or relative path to the scenario
+		*/
 		std::string GetPath(){return m_ScenarioPath;}
+		
+		/**
+		Update the scenario
+		@param delta_time time scince lat update
+		*/
 		void OnUpdate(double delta_time);
+		/**
+		Get vector of all loaded scenario scenes. 
+		This vector hold shared pointers to scenario scenes 
+		so if you save this vector the scenario scene memory 
+		will not be released when a new scenario is loaded.
+		TODO:Change this to iterator
+		*/
 		ScenarioSceneVector GetScenarioScenes() { return m_Scenes;}
 	protected:
 		ScenarioScenePtr LoadScene(TiXmlElement *sm_elem);
