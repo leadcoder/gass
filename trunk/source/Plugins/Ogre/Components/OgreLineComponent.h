@@ -51,7 +51,7 @@ namespace GASS
 		std::string GetMaterialName()const {return m_MaterialName;}
 		void SetType(const std::string &name){m_Type = name;}
 		std::string GetType()const {return m_Type;}
-	
+		Ogre::ManualObject* GetLineObject() const {return m_LineObject;}
 	protected:
 		void SetHeightOffset(float value){m_HeightOffset = value;}
 		float GetHeightOffset()const {return m_HeightOffset;}

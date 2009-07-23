@@ -29,6 +29,7 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
+#include "Plugins/Ogre/Components/OgreLineComponent.h"
 
 
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -120,9 +121,14 @@ namespace GASS
 		m_TextToDisplay = text;
 		if(m_TextObject)
 		{
+
 			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
 			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
-			//m_TextObject->setCaption(ConvertToUTF(m_TextToDisplay));
+			if(m_TextToDisplay != "")
+			{
+				m_TextObject->enable(true);
+				m_TextObject->setCaption(ConvertToUTF(m_TextToDisplay));
+			}
 		}
 	}
 
@@ -196,7 +202,14 @@ namespace GASS
 		else
 		{
 			OgreBillboardComponentPtr billboard = GetSceneObject()->GetFirstComponent<OgreBillboardComponent>();
-			mobj = billboard->GetBillboardSet();
+			if(billboard)
+				mobj = billboard->GetBillboardSet();
+			else
+			{
+				boost::shared_ptr<OgreLineComponent> line = GetSceneObject()->GetFirstComponent<OgreLineComponent>();
+				if(line)
+					mobj = line->GetLineObject();
+			}
 		}
 		if(mobj == NULL)
 			Log::Error("Failed to find moveable object for text component");
@@ -217,15 +230,16 @@ namespace GASS
 	void OgreTextComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{
 		Ogre::Viewport *vp = evt.source;
-		if(vp && m_TextObject) 
+		if(vp && m_TextObject)
 		{
+			
 			m_Attribs->mpCam = vp->getCamera();
 			RectLayoutManager m(0,0,vp->getActualWidth(),
 			vp->getActualHeight());
 			m.setDepth(0);
 
 			m_TextObject->update(0.1);
-			if (m_TextObject->isOnScreen())
+			if (m_TextObject->isOnScreen() && m_TextToDisplay != "")
 			{
 				//visible++;
 

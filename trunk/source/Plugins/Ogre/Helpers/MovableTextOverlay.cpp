@@ -201,7 +201,9 @@ void MovableTextOverlay::update(Real timeSincelastFrame)
 	Ogre::Real min_x, max_x, min_y, max_y;
 	_getMinMaxEdgesOfTopAABBIn2D(min_x, min_y, max_x, max_y);
 
-	if ((min_x>0.0) && (max_x<1.0) && (min_y>0.0) && (max_y<1.0))
+	//if ((min_x>0.0) && (max_x<1.0) && (min_y>0.0) && (max_y<1.0))
+	if ((((min_x > 0.0) && (min_x <1.0) && (min_y>0.0) && (min_y<1.0))) ||
+	     (((max_x > 0.0) && (max_x <1.0) && (max_y>0.0) && (max_y<1.0))))
 	   mOnScreen = true;
 	else
 	   mOnScreen = false;
