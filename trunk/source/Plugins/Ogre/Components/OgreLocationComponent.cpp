@@ -85,15 +85,15 @@ namespace GASS
 	void OgreLocationComponent::OnCreate()
 	{
 
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreLocationComponent::OnLoad ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreLocationComponent::OnLoad ),0);
 
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC( OgreLocationComponent::PositionMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC( OgreLocationComponent::RotationMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION,  MESSAGE_FUNC( OgreLocationComponent::WorldPositionMessage ),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION,   MESSAGE_FUNC( OgreLocationComponent::WorldRotationMessage ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC( OgreLocationComponent::PositionMessage),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC( OgreLocationComponent::RotationMessage),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_POSITION,  MESSAGE_FUNC( OgreLocationComponent::WorldPositionMessage ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_ROTATION,   MESSAGE_FUNC( OgreLocationComponent::WorldRotationMessage ),0);
 
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PARENT_CHANGED, MESSAGE_FUNC( OgreLocationComponent::ParentChangedMessage ),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_VISIBILITY,  MESSAGE_FUNC( OgreLocationComponent::VisibilityMessage ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PARENT_CHANGED, MESSAGE_FUNC( OgreLocationComponent::ParentChangedMessage ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OgreLocationComponent::VisibilityMessage ),0);
 	}
 
 	void OgreLocationComponent::OnLoad(MessagePtr message)
@@ -127,9 +127,9 @@ namespace GASS
 
 		m_OgreNode->setListener(this);
 
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
 		pos_msg->SetData("Position",m_Pos);
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
 		GetSceneObject()->PostMessage(pos_msg);
@@ -231,7 +231,7 @@ namespace GASS
 		if(m_OgreNode) //initialzed?
 		{
 		
-			MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
+			MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
 			pos_msg->SetData("Position",value);
 			GetSceneObject()->PostMessage(pos_msg);
 		}
@@ -278,7 +278,7 @@ namespace GASS
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
 		if(m_OgreNode) //initialzed?
 		{
-			MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
+			MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION));
 			rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(value)));
 			GetSceneObject()->PostMessage(rot_msg);
 		}
@@ -364,7 +364,7 @@ namespace GASS
 	void OgreLocationComponent::nodeUpdated(const Ogre::Node* node)
 	{
 		//send transformation message
-		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED));
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED));
 		//Get abs pos
 		Vec3 pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
 		Vec3 scale = Convert::ToGASS(m_OgreNode->_getDerivedScale());
@@ -375,7 +375,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(trans_msg);
 
 
-	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,from_id));
+	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,from_id));
 		debug_msg->SetData("Text",GetSceneObject()->GetName());
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
 

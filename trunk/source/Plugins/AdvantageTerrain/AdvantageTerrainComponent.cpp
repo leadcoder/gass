@@ -69,7 +69,7 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad),1);
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 

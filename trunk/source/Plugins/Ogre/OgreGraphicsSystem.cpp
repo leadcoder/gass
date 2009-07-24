@@ -67,10 +67,10 @@ namespace GASS
 	void OgreGraphicsSystem::OnCreate()
 	{
 		int address = (int) this;
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT,					MESSAGE_FUNC( OgreGraphicsSystem::OnInit));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW,	MESSAGE_FUNC( OgreGraphicsSystem::OnCreateRenderWindow ));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, MESSAGE_FUNC( OgreGraphicsSystem::OnWindowMovedOrResized ));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT,				MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT,					MESSAGE_FUNC( OgreGraphicsSystem::OnInit));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_CREATE_RENDER_WINDOW,	MESSAGE_FUNC( OgreGraphicsSystem::OnCreateRenderWindow ));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_WINDOW_MOVED_OR_RESIZED, MESSAGE_FUNC( OgreGraphicsSystem::OnWindowMovedOrResized ));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,				MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint));
 	}
 
 
@@ -154,7 +154,7 @@ namespace GASS
 
 			//IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
 			//is->SetWindow(windowHnd);
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
+			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)windowHnd);
 			window_msg->SetData("MainHandle",(int)windowHnd);
 			GetSimSystemManager()->SendImmediate(window_msg);
@@ -167,7 +167,7 @@ namespace GASS
 		{
 			m_Root->initialise(false);
 		}
-		//MessagePtr update_msg(new Message(SystemManager::SYSTEM_MESSAGE_UPDATE,(int) this));
+		//MessagePtr update_msg(new Message(SystemManager::SYSTEM_RM_UPDATE,(int) this));
 		//update_msg->m_Timer = 1.0/100.0f; //update with 100hz
 		//m_Owner->GetMessageManager()->PostMessage(update_msg);
 	}
@@ -206,7 +206,7 @@ namespace GASS
 			// Alter the camera aspect ratio to match the viewport
 			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
+			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)handel);
 			window_msg->SetData("MainHandle",main_handel);
 			GetSimSystemManager()->SendImmediate(window_msg);

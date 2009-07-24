@@ -93,17 +93,17 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(FreeCamControlComponent::Update));
 
 
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnUnload));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 		
 		m_Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA, MESSAGE_FUNC( FreeCamControlComponent::OnChangeCamera));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( FreeCamControlComponent::OnChangeCamera));
 	}
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
@@ -355,11 +355,11 @@ namespace GASS
 		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,from_id));
 		pos_msg->SetData("Position",m_Pos);
 				GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,from_id));
 		
 		rot_msg->SetData("Rotation",Quaternion(m_Rot));
 		GetSceneObject()->PostMessage(rot_msg);

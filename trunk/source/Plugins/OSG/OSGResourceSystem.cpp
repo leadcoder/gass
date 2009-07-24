@@ -52,7 +52,7 @@ namespace GASS
 	void OSGResourceSystem::OnCreate()
 	{
 		
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, MESSAGE_FUNC(OSGResourceSystem::OnInit));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC(OSGResourceSystem::OnInit));
 	}
 
 	//Create custom load

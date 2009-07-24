@@ -104,10 +104,10 @@ namespace GASS
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
 		
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT, MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoadSceneObject ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnChangeCamera));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoadSceneObject ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnChangeCamera));
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)
@@ -173,12 +173,12 @@ namespace GASS
 		//Send message to load all gfx components
 		
 		//m_GFXSystem->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
-		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA));
+		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA));
 		camera_msg->SetData("CameraObject",scene_object);
 		m_Scene->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
 		pos_msg->SetData("Position",GetOwner()->GetStartPos());
 		scene_object->SendImmediate(pos_msg);
 		
@@ -186,7 +186,7 @@ namespace GASS
 		rot_msg->SetData("EulerRotation",GetOwner()->GetStartRot());
 		scene_object->SendImmediate(rot_msg);*/
 
-		MessagePtr loaded_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_GFX_SM_LOADED));
+		MessagePtr loaded_msg(new Message(SimSystemManager::SYSTEM_NM_GFX_SM_LOADED));
 		
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
@@ -211,7 +211,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
 		assert(obj);
-		MessagePtr gfx_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS));
+		MessagePtr gfx_msg(new Message(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS));
 		gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		gfx_msg->SetData("OgreSceneManager",boost::any(m_SceneMgr));
 		obj->SendImmediate(gfx_msg);

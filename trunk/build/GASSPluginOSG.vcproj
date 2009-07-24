@@ -152,7 +152,7 @@
 				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib"
 				OutputFile="$(OutDir)/GASSPluginOSG.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../lib/vs2008;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
+				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"

@@ -87,11 +87,8 @@ namespace GASS
 	
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(OSGGraphicsSystem::RTCUpdate),true);
 
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_CREATE_RENDER_WINDOW, MESSAGE_FUNC(OSGGraphicsSystem::OnCreateRenderWindow),0);
-		//GetMessageManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED, MESSAGE_FUNC(OgreGraphicsSystem::OnWindowMovedOrResized),0);
-
-		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_MESSAGE_UPDATE, MESSAGE_FUNC(OSGGraphicsSystem::OnUpdate),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_CREATE_RENDER_WINDOW, MESSAGE_FUNC(OSGGraphicsSystem::OnCreateRenderWindow),0);
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
@@ -164,7 +161,7 @@ namespace GASS
 			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_GraphicsContext.get());
 			windowHnd = (size_t) win32_window->getHWND();
 #endif
-			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
+			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)windowHnd); 
 			window_msg->SetData("MainHandle",(int)windowHnd); 
 			GetSimSystemManager()->SendImmediate(window_msg);
@@ -280,7 +277,7 @@ namespace GASS
 
 			m_Viewer->frame();
 
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_MAIN_WINDOW_CREATED));
+			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
 			window_msg->SetData("RenderHandle",(int)handel); 
 			window_msg->SetData("MainHandle",main_handel); 
 			GetSimSystemManager()->SendImmediate(window_msg);

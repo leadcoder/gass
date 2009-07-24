@@ -90,14 +90,12 @@ namespace GASS
 			m_Root->AddChild(obj);
 	
 		//Send load message so that all scene manager can initilze it's components
-	
-		
-		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_LOAD_SCENE_OBJECT));
+		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED));
 		load_msg->SetData("SceneObject",obj);
 		m_ScenarioScene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
-		MessagePtr obj_msg(new Message(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS));
+		MessagePtr obj_msg(new Message(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS));
 		obj->SendImmediate(obj_msg);
 		//Pump initial messages around
 		obj->SyncMessages(0);
@@ -155,105 +153,24 @@ namespace GASS
 	void SceneObjectManager::SyncMessages(double delta_time)
 	{
 		m_Root->SyncMessages(delta_time);
-		/*for(int i =  0 ; i < m_SceneObjectVector.size();i++)
-		{
-			m_SceneObjectVector[i]->SyncMessages(delta_time);
-		}*/
 	}
-
-	/*void SceneObjectManager::GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name)
-	{
-		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
-		{
-			GetObjectByClass(m_SceneObjectVector[i],objects,class_name);
-		}
-	}*/
-
-	/*void SceneObjectManager::GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name)
-	{
-		if(obj->GetRTTI()->IsDerivedFrom(class_name))
-			objects.push_back(obj);
-
-		//Check all components
-		BaseComponentContainer::ComponentVector components =  obj->GetComponents();
-		BaseComponentContainer::ComponentVector::iterator comp_iter = components.begin();
-		for(;comp_iter != components.end();comp_iter++)
-		{
-			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(*comp_iter);
-			if(comp->GetRTTI()->IsDerivedFrom(class_name))
-			{				
-				objects.push_back(obj);
-				break;
-			}
-		}
-		
-		BaseComponentContainer::ComponentContainerVector children = obj->GetChildren();
-		BaseComponentContainer::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
-		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
-			GetObjectByClass(child, objects, class_name);
-		}
-	}*/
-
-	/*SceneObjectPtr SceneObjectManager::GetObjectByName(const std::string &name)
-	{
-		SceneObjectPtr obj;
-
-		for(int i =  0 ; i < m_SceneObjectVector.size();i++)
-		{
-			if(GetObjectByName(m_SceneObjectVector[i],name))
-			{
-				obj = m_SceneObjectVector[i];
-				break;
-			}
-		}
-		return obj;
-	}*/
-
-
-/*	SceneObjectPtr SceneObjectManager::GetObjectByName(SceneObjectPtr obj, const std::string &name)
-	{
-		SceneObjectPtr ret;
-		if(obj->GetName()== name)
-			return obj;
-
-		//check children also
-		BaseComponentContainer::ComponentContainerVector children = obj->GetChildren();
-		BaseComponentContainer::ComponentContainerVector::iterator iter = children.begin();
-		for(;iter != children.end();iter++)
-		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
-			if(GetObjectByName(child,name))
-			{
-					ret = child;
-					break;
-			}
-		}
-		return ret;
-	}*/
 
 	void SceneObjectManager::Clear()
 	{
 		UnloadObject(m_Root);
-		//Send shutdown message to all components
-		/*for(int i =  0 ; i < m_SceneObjectVector.size();i++)
-		{
-			UnloadObject(m_SceneObjectVector[i]);
-		}
-		m_SceneObjectVector.clear();*/
 	}
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
 	{
 		
-		MessagePtr msg(new Message(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS));
+		MessagePtr msg(new Message(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS));
 		obj->SendImmediate(msg);
-		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT));
+
+		//notify that this object is to be removed
+		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_REMOVED));
 		unload_msg->SetData("SceneObject",obj);
 		m_ScenarioScene->SendImmediate(unload_msg);
 	}
-
 
 	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)
 	{
@@ -272,37 +189,5 @@ namespace GASS
 		{
 			obj->GetParent()->RemoveChild(obj);
 		}
-		/*else
-		{
-			std::vector<SceneObjectPtr>::iterator iter = m_SceneObjectVector.begin();
-			for(; iter != m_SceneObjectVector.end();iter++)
-			{
-				if(obj == *iter)
-				{
-					m_SceneObjectVector.erase(iter);
-					return;
-				}
-			}
-		}*/
 	}
-
-	/*void SceneObjectManager::DetachObject(SceneObjectPtr obj)
-	{
-		if(obj->GetParent())
-		{
-			obj->GetParent()->RemoveChild(obj);
-		}
-		else
-		{
-			std::vector<SceneObjectPtr>::iterator iter = m_SceneObjectVector.begin();
-			for(; iter != m_SceneObjectVector.end();iter++)
-			{
-				if(obj == *iter)
-				{
-					m_SceneObjectVector.erase(iter);
-					return;
-				}
-			}
-		}
-	}*/
 }

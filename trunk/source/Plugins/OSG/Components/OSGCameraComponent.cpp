@@ -66,9 +66,9 @@ namespace GASS
 	{
 		
 		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGCameraComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged),10);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged),10);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGCameraComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged),10);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged),10);
 		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, MESSAGE_FUNC(OSGCameraComponent::OnUpdate),1);
 	}
 

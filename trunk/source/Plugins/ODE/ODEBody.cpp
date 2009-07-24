@@ -66,10 +66,10 @@ namespace GASS
 
 	void ODEBody::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS, MESSAGE_FUNC( ODEBody::OnLoad ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION,				MESSAGE_FUNC( ODEBody::OnPositionChanged));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION,				MESSAGE_FUNC( ODEBody::OnRotationChanged ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(ODEBody::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS, MESSAGE_FUNC( ODEBody::OnLoad ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION,				MESSAGE_FUNC( ODEBody::OnPositionChanged));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION,				MESSAGE_FUNC( ODEBody::OnRotationChanged ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(ODEBody::OnParameterMessage));
 	}
 
 	void ODEBody::OnPositionChanged(MessagePtr message)
@@ -185,18 +185,18 @@ namespace GASS
 	void ODEBody::BodyMoved()
 	{
 		int from_id = (int)this; //use address as id
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,from_id));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,from_id));
 		Vec3 pos = GetPosition();
 		
 		pos_msg->SetData("Position",pos);
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION,from_id));
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,from_id));
 		rot_msg->SetData("Rotation",GetRotation());
 		GetSceneObject()->PostMessage(rot_msg);
 
 
-		MessagePtr physics_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS,from_id));
+		MessagePtr physics_msg(new Message(SceneObject::OBJECT_NM_PHYSICS_VELOCITY,from_id));
 		physics_msg->SetData("Velocity",GetVelocity(true));
 		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
 		GetSceneObject()->PostMessage(physics_msg);

@@ -72,7 +72,7 @@ namespace GASS
 	void OgreDynamicLineComponent::OnCreate()
 	{
 		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreDynamicLineComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreDynamicLineComponent::OnLoad),1);
 	}
 
 	void OgreDynamicLineComponent::OnLoad(MessagePtr message)

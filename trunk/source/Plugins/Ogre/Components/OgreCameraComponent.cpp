@@ -68,7 +68,7 @@ namespace GASS
 	{
 		
 		//priorty = 1 -> load this one after nodes
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreCameraComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreCameraComponent::OnLoad),1);
 	}
 
 

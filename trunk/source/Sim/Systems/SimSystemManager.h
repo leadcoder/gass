@@ -34,19 +34,23 @@ namespace GASS
 	class GASSExport SimSystemManager : public BaseSystemManager
 	{
 	public:
+		//Divided messages in two catagories, notify and request
+		//Messages with prefix SYSTEM_RM, is a request message
+		//Messages with prefix SYSTEM_NM, is a notify message
 		enum SystemMessages
 		{
-			SYSTEM_MESSAGE_INIT,
-			SYSTEM_MESSAGE_UPDATE,
-			SYSTEM_MESSAGE_SHUTDOWN,
-			SYSTEM_MESSAGE_GFX_SM_LOADED,
-			SYSTEM_MESSAGE_CREATE_RENDER_WINDOW,
-			SYSTEM_MESSAGE_MAIN_WINDOW_CREATED,
-			SYSTEM_MESSAGE_WINDOW_MOVED_OR_RESIZED,
-			SYSTEM_MESSAGE_SCENARIO_SCENE_LOADED,
-			SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD,
-			SYSTEM_MESSAGE_DEBUG_PRINT,
-			SYSTEM_MESSAGE_USER,
+			//-----------------Request section-------------
+			SYSTEM_RM_INIT,
+			SYSTEM_RM_SHUTDOWN,
+			SYSTEM_RM_CREATE_RENDER_WINDOW,
+			SYSTEM_RM_DEBUG_PRINT,
+
+			//--------------------Notify section------------------------
+			SYSTEM_NM_GFX_SM_LOADED,
+			SYSTEM_NM_MAIN_WINDOW_CREATED,
+			SYSTEM_NM_WINDOW_MOVED_OR_RESIZED,
+			SYSTEM_NM_SCENARIO_SCENE_LOADED,
+			SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD
 		};
 	public:
 		SimSystemManager();

@@ -42,14 +42,14 @@ namespace GASS
 		m_WheelObject(wheel)
 	{
 		if(wheel)
-			wheel->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage));
+			wheel->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage));
 	}
 
 	VehicleWheel::~VehicleWheel()
 	{
 		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
 		if(wheel_obj)
-			wheel_obj->UnregisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage));
+			wheel_obj->UnregisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage));
 
 	}
 
@@ -316,9 +316,9 @@ namespace GASS
 			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngine::OnInput));
 		else 
 			Log::Warning("Failed to find control settings: VehicleEngineInputSettings");
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnUnload));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(VehicleEngine::OnPhysicsMessage));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnUnload));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleEngine::OnPhysicsMessage));
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(VehicleEngine::Update));
 		m_Initialized = true;
 	}
@@ -329,7 +329,7 @@ namespace GASS
 		SetWheels(m_WheelNames);
 
 		//Play engine sound
-		MessagePtr sound_msg(new Message(SceneObject::OBJECT_MESSAGE_SOUND_PARAMETER));
+		MessagePtr sound_msg(new Message(SceneObject::OBJECT_RM_SOUND_PARAMETER));
 		sound_msg->SetData("Parameter",SceneObject::PLAY);
 		GetSceneObject()->PostMessage(sound_msg);
 	}
@@ -412,7 +412,7 @@ namespace GASS
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0;
-		MessagePtr sound_msg(new Message(SceneObject::OBJECT_MESSAGE_SOUND_PARAMETER));
+		MessagePtr sound_msg(new Message(SceneObject::OBJECT_RM_SOUND_PARAMETER));
 		sound_msg->SetData("Parameter",SceneObject::PITCH);
 		sound_msg->SetData("Value",pitch);
 		GetSceneObject()->PostMessage(sound_msg);
@@ -437,7 +437,7 @@ namespace GASS
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce);
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
 		
-		MessagePtr force_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER));
+		MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER));
 		force_msg->SetData("Parameter",SceneObject::TORQUE);
 		force_msg->SetData("Value",Vec3(0,turn_torque,0));
 		GetSceneObject()->PostMessage(force_msg);
@@ -553,11 +553,11 @@ namespace GASS
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
 
 		//send physics data to wheels and update mean wheel rpm
-		MessagePtr force_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER));
+		MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
 		force_msg->SetData("Parameter",SceneObject::AXIS2_FORCE);
 		force_msg->SetData("Value",wheel_torque+brake_torque);
 
-		MessagePtr vel_msg(new Message(SceneObject::OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER));
+		MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
 			
 		vel_msg->SetData("Parameter",SceneObject::AXIS2_VELOCITY);
 		vel_msg->SetData("Value",wheel_vel);

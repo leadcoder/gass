@@ -33,56 +33,78 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
+
+	/**
+		This class is derived from the BaseComponentContainer class and extend
+		the BaseComponentContainer with message functionality. 
+		To communicate with components owned by the SceneObject a message manager is used.
+		Some basic object messages is enumerated below.
+
+		As the name indicates a SceneObject is a object in a scenario scene.
+		The SceneObject is owned by a SceneObjectManager which in turn is owned
+		by a ScenarioScene. 
+		By design the SceneObject class is not intended to be derived from, 
+		Instead new functionality should be added through components
+	*/
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer>
 	{
 	public:
 
 		// Todo: Explain each individual message
+
+		//We divided messages in two catagories, notify and request
+		//Messages with prefix OBJECT_RM, is a request message
+		//Messages with prefix OBJECT_NM, is a notify message
 		enum ObjectMessage
 		{
-
-			//Request section
+			//-----------------Request section-------------
 			/** \brief Message data: 
 				Vec3 = "Position" - Position (relative to parent) change for SceneObject is requested */
-			OBJECT_MESSAGE_POSITION, 
+			OBJECT_RM_POSITION, 
 
 			/** \brief Message data: 
 				Quaternion = "Rotation" - Rotation (relative to parent) change for SceneObject is requested */
-			OBJECT_MESSAGE_ROTATION,
+			OBJECT_RM_ROTATION,
 
-			//create position message and merge this with OBJECT_MESSAGE_POSITION
-			OBJECT_MESSAGE_SET_WORLD_POSITION, 
-			OBJECT_MESSAGE_SET_WORLD_ROTATION,
+			OBJECT_RM_WORLD_POSITION, 
+			OBJECT_RM_WORLD_ROTATION,
+
+			OBJECT_RM_VISIBILITY,
+			OBJECT_RM_COLLISION_SETTINGS,
+			OBJECT_RM_PHYSICS_JOINT_PARAMETER,
+			OBJECT_RM_PHYSICS_BODY_PARAMETER,
+			OBJECT_RM_SOUND_PARAMETER,
+			
+			/** \brief Message data: 
+			MeshParameterType = "Type" - See MeshParameterType for data fields*/
+			OBJECT_RM_MESH_PARAMETER,
+
+			
+			OBJECT_RM_LOAD_USER_COMPONENTS,
+			OBJECT_RM_LOAD_PHYSICS_COMPONENTS,
+			OBJECT_RM_LOAD_GFX_COMPONENTS,
+			OBJECT_RM_UNLOAD_COMPONENTS,
+
+			
+			//--------------------Notify section------------------------
+			OBJECT_NM_PARENT_CHANGED,
+			
+			/** \brief message data: 
+				Vec3 = "Velocity"
+				Vec3 = "AngularVelocity" */
+			OBJECT_NM_PHYSICS_VELOCITY,
 
 			/** \brief message data: 
 				Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
 				Vec3 = "Scale"			- Scale is changed for SceneObject
 				Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
 			*/
-			OBJECT_MESSAGE_TRANSFORMATION_CHANGED,
+			OBJECT_NM_TRANSFORMATION_CHANGED,
 			
-			/** \brief message data: 
-				Vec3 = "Velocity"
-				Vec3 = "AngularVelocity" */
-			OBJECT_MESSAGE_PHYSICS,
 			
-			OBJECT_MESSAGE_VISIBILITY,
-			OBJECT_MESSAGE_COLLISION_SETTINGS,
-			OBJECT_MESSAGE_PHYSICS_JOINT_PARAMETER,
-			OBJECT_MESSAGE_PHYSICS_BODY_PARAMETER,
-			OBJECT_MESSAGE_SOUND_PARAMETER,
-			OBJECT_MESSAGE_PARENT_CHANGED,
-			OBJECT_MESSAGE_LOAD_USER_COMPONENTS,
-			OBJECT_MESSAGE_UNLOAD_COMPONENTS,
-			OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,
-			OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,
-
-			/** \brief Message data: 
-			MeshParameterType = "Type" - See MeshParameterType for data fields*/
-			OBJECT_MESSAGE_MESH_PARAMETER,
 		};
 
-		// parameters that belong to ObjectMessage OBJECT_MESSAGE_PHYSICS
+		// parameters that belong to ObjectMessage OBJECT_NM_PHYSICS_VELOCITY
 		enum PhysicsParameterType
 		{
 			AXIS1_VELOCITY,
@@ -93,6 +115,7 @@ namespace GASS
 			FORCE,
 		};
 
+		// parameters that belong to ObjectMessage OBJECT_RM_SOUND_PARAMETER
 		enum SoundParameterType
 		{
 			PLAY,
@@ -102,7 +125,8 @@ namespace GASS
 			LOOP,
 			VOLUME,
 		};
-
+		
+		// parameters that belong to ObjectMessage OBJECT_RM_MESH_PARAMETER
 		enum MeshParameterType
 		{
 			/** \brief Message data: 

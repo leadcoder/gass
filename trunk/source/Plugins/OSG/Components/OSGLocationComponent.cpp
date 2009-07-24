@@ -65,11 +65,11 @@ namespace GASS
 	void OSGLocationComponent::OnCreate()
 	{
 		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLocationComponent::OnLoad),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SET_WORLD_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLocationComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_POSITION, MESSAGE_FUNC(OSGLocationComponent::PositionChanged),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_ROTATION, MESSAGE_FUNC(OSGLocationComponent::RotationChanged),0);
 		
 	}
 
@@ -94,9 +94,9 @@ namespace GASS
 		}
 		
 
-		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION));
+		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
 		pos_msg->SetData("Position",m_Pos);
-		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_MESSAGE_ROTATION));
+		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION));
 		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
 
 		GetSceneObject()->PostMessage(pos_msg);
@@ -133,7 +133,7 @@ namespace GASS
 	{
 
 	
-		MessagePtr trans_msg(new Message(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED));
+		MessagePtr trans_msg(new Message(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED));
 		//Get abs pos
 		Vec3 pos = GetWorldPosition();
 		Vec3 scale = Vec3(1,1,1);//GetScale();

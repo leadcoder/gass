@@ -37,17 +37,17 @@ namespace GASS
 
 	void OpenALSoundSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_INIT, MESSAGE_FUNC(OpenALSoundSystem::OnInit));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC(OpenALSoundSystem::OnInit));
 
 		//catch camera change messages to update openal listener
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD, MESSAGE_FUNC(OpenALSoundSystem::OnSceneLoaded));
+		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD, MESSAGE_FUNC(OpenALSoundSystem::OnSceneLoaded));
 
 	}
 
 	void OpenALSoundSystem::OnSceneLoaded(MessagePtr message)
 	{
 		m_Scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,  MESSAGE_FUNC(OpenALSoundSystem::OnChangeCamera));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA,  MESSAGE_FUNC(OpenALSoundSystem::OnChangeCamera));
 	}
 
 	void OpenALSoundSystem::OnChangeCamera(MessagePtr message)
@@ -56,9 +56,9 @@ namespace GASS
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
 		if(current_cam_obj)
 		{
-			current_cam_obj->UnregisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved));
+			current_cam_obj->UnregisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved));
 		}
-		cam_obj->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved));
+		cam_obj->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved));
 		m_CurrentCamera = cam_obj;
 	}
 

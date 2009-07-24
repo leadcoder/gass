@@ -83,9 +83,9 @@ namespace GASS
 
 	void ODEGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC(ODEGeometry::OnLoad ),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED,  MESSAGE_FUNC(ODEGeometry::OnTransformationChanged ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_COLLISION_SETTINGS,  MESSAGE_FUNC(ODEGeometry::OnCollisionSettings ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC(ODEGeometry::OnLoad ),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED,  MESSAGE_FUNC(ODEGeometry::OnTransformationChanged ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_COLLISION_SETTINGS,  MESSAGE_FUNC(ODEGeometry::OnCollisionSettings ));
 
 	}
 

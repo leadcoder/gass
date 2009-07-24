@@ -50,10 +50,10 @@ namespace GASS
 
 	void OpenALSoundComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OpenALSoundComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_SOUND_PARAMETER, MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OpenALSoundComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_SOUND_PARAMETER, MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage));
 	}
 
 	void OpenALSoundComponent::OnPositionChanged(MessagePtr message)

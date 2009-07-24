@@ -62,16 +62,23 @@ namespace GASS
 		friend class Scenario;
 	public:
 		// Todo: Explain each individual message
+		//Divided messages in two catagories, notify and request
+		//Messages with prefix SCENARIO_RM, is a request message
+		//Messages with prefix SCENARIO_NM, is a notify message
 		enum ScenarioMessage
 		{
-			SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS,
-			SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS,
+			//-----------------Request section-------------
+			//Request message sent when loading a scenario scene
+			//It's up to each scene manager to catch this and load its stuff
+			SCENARIO_RM_LOAD_SCENE_MANAGERS,
+			SCENARIO_RM_UNLOAD_SCENE_MANAGERS,
+			SCENARIO_RM_CHANGE_CAMERA,
+			//--------------------Notify section------------------------
 			// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
-			SCENARIO_MESSAGE_LOAD_SCENE_OBJECT,
+			SCENARIO_NM_SCENE_OBJECT_CREATED,
 			// message data: SceneObject that is removed: "SceneObject" = SceneObjectPtr
-			SCENARIO_MESSAGE_UNLOAD_SCENE_OBJECT,	
-			SCENARIO_MESSAGE_UPDATE,
-			SCENARIO_MESSAGE_CHANGE_CAMERA
+			SCENARIO_NM_SCENE_OBJECT_REMOVED,	
+			//SCENARIO_NM_UPDATE
 		};
 
 		// Priorities for system loading

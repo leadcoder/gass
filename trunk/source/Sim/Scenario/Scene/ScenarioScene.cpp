@@ -46,12 +46,6 @@ namespace GASS
 		m_Scenario = NULL;
 		m_SceneMessageManager = new MessageManager();
 		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(this));
-		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS);
-		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_LOAD_SCENE_OBJECT);
-		//m_SceneMessageManager->AddMessageToSystem(SCENARIO_MESSAGE_UPDATE);
-		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GFX_COMPONENTS);
-		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_PHYSICS_COMPONENTS);
-		//m_SceneMessageManager->AddMessageToSystem(SM_MESSAGE_LOAD_GAME_COMPONENTS);
 	}
 
 
@@ -59,7 +53,7 @@ namespace GASS
 	ScenarioScene::~ScenarioScene()
 	{
 		m_ObjectManager->Clear();
-		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_UNLOAD_SCENE_MANAGERS));
+		MessagePtr scenario_msg(new Message(SCENARIO_RM_UNLOAD_SCENE_MANAGERS));
 		scenario_msg->SetData("ScenarioScene",this);
 		m_SceneMessageManager->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
@@ -223,12 +217,12 @@ namespace GASS
 	{
 		std::string scenario_path = m_Scenario->GetPath();
 
-		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_ABOUT_TO_LOAD));
+		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD));
 		enter_load_msg->SetData("ScenarioScene",this);
 		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
 
 		
-		MessagePtr scenario_msg(new Message(SCENARIO_MESSAGE_LOAD_SCENE_MANAGERS));
+		MessagePtr scenario_msg(new Message(SCENARIO_RM_LOAD_SCENE_MANAGERS));
 		scenario_msg->SetData("ScenarioScene",this);
 		//send load message
 		SendImmediate(scenario_msg);
@@ -237,28 +231,27 @@ namespace GASS
 		// Load default camera ect
 		/*SceneObject* scene_object = GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		assert(scene_object);
-		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_MESSAGE_CHANGE_CAMERA,(int) this));
+		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA,(int) this));
 		camera_msg->SetData("CameraObject",scene_object);
 		GetMessageManager()->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_MESSAGE_POSITION,(int) this));
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,(int) this));
 		pos_msg->SetData("Position",GetStartPos());
 		scene_object->SendImmediate(pos_msg);*/
 
 		//Create game objects instances from templates
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
 
-		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_SCENARIO_SCENE_LOADED));
+		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_NM_SCENARIO_SCENE_LOADED));
 		system_msg->SetData("ScenarioScene",this);
 		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
 	}
 
 	void ScenarioScene::OnUpdate(double delta_time)
 	{
-	
-		boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_MESSAGE_UPDATE,delta_time));
-		m_SceneMessageManager->SendImmediate(update_msg);
+		//boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_RM_UPDATE,delta_time));
+		//m_SceneMessageManager->SendImmediate(update_msg);
 		m_SceneMessageManager->Update(delta_time);
 		m_ObjectManager->SyncMessages(delta_time);
 	}

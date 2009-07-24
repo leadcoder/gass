@@ -34,6 +34,13 @@ namespace GASS
 
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
+	/**
+		The Scene object manager is owned by a scenario scene 
+		and could be seen as a decomposition (or helper class)
+		of the ScenarioScene class. 
+		In future this class may be merged into the 
+		scenario scene class.
+	*/
 	class GASSExport SceneObjectManager 
 	{
 		friend class ScenarioScene;
@@ -41,29 +48,20 @@ namespace GASS
 		SceneObjectManager(ScenarioScene* ss);
 		virtual ~SceneObjectManager();
 		bool LoadFromFile(const std::string filename);
-		//SceneObjectPtr GetObjectByName(const std::string &name);
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
-		//unsigned int GetNumObjects() {return (unsigned int) m_SceneObjectVector.size();}
-		//SceneObjectPtr GetObject(unsigned int index) {return m_SceneObjectVector[index];}
 		void SyncMessages(double delta_time);
 		ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
-		//void GetObjectsByClass(std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void Clear();
 		void DeleteObject(SceneObjectPtr obj);
-		//void DetachObject(SceneObjectPtr obj);
-		//void AddObject(SceneObjectPtr obj);
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
 	protected:
-		//void GetObjectByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
-		//SceneObjectPtr GetObjectByName(SceneObjectPtr obj, const std::string &name);
-		void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
+		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void LoadObject(SceneObjectPtr obj);
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
 		ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
 		ScenarioScene* m_ScenarioScene;
-		//std::vector<SceneObjectPtr> m_SceneObjectVector;
 		SceneObjectPtr m_Root;
 	};
 }

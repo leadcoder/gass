@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
 		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 		if(scene_object)
 		{
-			boost::shared_ptr<GASS::Message> pos_msg(new GASS::Message(GASS::SceneObject::OBJECT_MESSAGE_POSITION));
+			boost::shared_ptr<GASS::Message> pos_msg(new GASS::Message(GASS::SceneObject::OBJECT_RM_POSITION));
 			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
 			pos.x = pos.x + i*7;
 			pos_msg->SetData("Position",pos);
@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
 			GASS::SceneObjectPtr scene_object = scenario->GetScene(0)->GetObjectManager()->LoadFromTemplate("ContainerTemplate");
 	
 			int from_id = i*40 + j;
-			GASS::MessagePtr pos_msg(new GASS::Message(GASS::ScenarioScene::OBJECT_MESSAGE_POSITION,from_id));
+			GASS::MessagePtr pos_msg(new GASS::Message(GASS::ScenarioScene::OBJECT_RM_POSITION,from_id));
 			GASS::Vec3 pos(1705.18 + i*10 ,100.3, 2808+10*j);
 			pos_msg->SetData("Position",pos);
 			scene_object->GetMessageManager()->SendImmediate(pos_msg);

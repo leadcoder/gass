@@ -55,7 +55,7 @@ namespace GASS
 
 	void TrackComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_USER_COMPONENTS, MESSAGE_FUNC(TrackComponent::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(TrackComponent::OnLoad));
 		//register for physics messages on engine?
 	}
 
@@ -80,7 +80,7 @@ namespace GASS
 			if(objects.size() > 0)
 			{
 				m_DriveWheel = (objects.front());
-				objects.front()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_PHYSICS, MESSAGE_FUNC(TrackComponent::OnDriveWheelPhysicsMessage));
+				objects.front()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(TrackComponent::OnDriveWheelPhysicsMessage));
 			}
 		}
 	}
@@ -92,7 +92,7 @@ namespace GASS
 		m_AnimationValue += (ang_vel.x*m_AnimationSpeedFactor);
 		Vec2 speed(m_AnimationValue,0);
 
-		MessagePtr mesh_msg(new Message(SceneObject::OBJECT_MESSAGE_MESH_PARAMETER));
+		MessagePtr mesh_msg(new Message(SceneObject::OBJECT_RM_MESH_PARAMETER));
 		mesh_msg->SetData("Parameter",SceneObject::ANIMATE_TEX_COORD);
 		mesh_msg->SetData("Speed",speed);
 		GetSceneObject()->PostMessage(mesh_msg);

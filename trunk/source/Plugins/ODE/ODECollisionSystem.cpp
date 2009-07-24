@@ -96,7 +96,7 @@ namespace GASS
 	void ODECollisionSystem::OnCreate()
 	{
 		int address = (int) this;
-		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_MESSAGE_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
+		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_RM_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
 	}
 
 	/*void ODECollisionSystem::OnUpdate(MessagePtr message)
