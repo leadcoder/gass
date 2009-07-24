@@ -40,6 +40,8 @@ namespace GASS
 		// Todo: Explain each individual message
 		enum ObjectMessage
 		{
+
+			//Request section
 			/** \brief Message data: 
 				Vec3 = "Position" - Position (relative to parent) change for SceneObject is requested */
 			OBJECT_MESSAGE_POSITION, 
@@ -73,7 +75,11 @@ namespace GASS
 			OBJECT_MESSAGE_LOAD_USER_COMPONENTS,
 			OBJECT_MESSAGE_UNLOAD_COMPONENTS,
 			OBJECT_MESSAGE_LOAD_PHYSICS_COMPONENTS,
-			OBJECT_MESSAGE_LOAD_GFX_COMPONENTS
+			OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,
+
+			/** \brief Message data: 
+			MeshParameterType = "Type" - See MeshParameterType for data fields*/
+			OBJECT_MESSAGE_MESH_PARAMETER,
 		};
 
 		// parameters that belong to ObjectMessage OBJECT_MESSAGE_PHYSICS
@@ -96,6 +102,14 @@ namespace GASS
 			LOOP,
 			VOLUME,
 		};
+
+		enum MeshParameterType
+		{
+			/** \brief Message data: 
+			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
+			ANIMATE_TEX_COORD, 
+		};
+
 
 		SceneObject();
 		virtual ~SceneObject();

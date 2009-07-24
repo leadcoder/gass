@@ -79,6 +79,10 @@
       <JimTankTrackL type ="SceneObjectTemplate">
         <Inheritance value ="JimTankTrack"/>
         <Components>
+          <Track type="TrackComponent">
+            <DriveWheel value="JimTankWheelL5"/>
+            <AnimationSpeedFactor value="0.01"/>
+          </Track>
           <TrackLocation type="LocationComponent">
             <Position value="1.2 0.0 0.0"/>
             <AttachToParent value="1"/>
@@ -88,6 +92,10 @@
       <JimTankTrackR type ="SceneObjectTemplate">
         <Inheritance value ="JimTankTrack"/>
         <Components>
+          <Track type="TrackComponent">
+            <DriveWheel value="JimTankWheelR5"/>
+            <AnimationSpeedFactor value="0.01"/>
+          </Track>
           <TrackLocation type="LocationComponent">
             <Position value="-1.2 0.0 0.0"/>
             <AttachToParent value="1"/>

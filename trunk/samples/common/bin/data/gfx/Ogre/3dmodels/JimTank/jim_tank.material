@@ -81,7 +81,8 @@ material JIM_gattling : DiffuseTemplate
 }
 
 
-material Material#41 : DiffuseTemplate
+//material Material#41 : DiffuseTemplate
+material Material#41
 {
 	technique
 	{
@@ -101,7 +102,8 @@ material Material#41 : DiffuseTemplate
 }
 
 
-material T72_band : DiffuseTemplate
+//material T72_band : DiffuseTemplate
+material T72_band 
 {
 	technique
 	{

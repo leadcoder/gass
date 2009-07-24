@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ControlSettings>
   <VehicleEngineInputSettings>
-    <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
-    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_0" Invert="false"/>
+    <!--<MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_0" Invert="false"/>-->
+    <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
   </VehicleEngineInputSettings>
   <FreeCameraInputSettings>
     <MapControllerToInput Controller="ToggleFreeCameraCollision" InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>

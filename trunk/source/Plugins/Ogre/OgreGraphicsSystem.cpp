@@ -259,10 +259,10 @@ namespace GASS
 		m_DebugTextBox->UpdateTextBox();
 
 		//Update all scene managers
-		for(int  i = 0 ;  m_SceneManagers.size(); i++)
+		/*for(int  i = 0 ;  m_SceneManagers.size(); i++)
 		{
 			m_SceneManagers[i]->Update(delta_time);
-		}
+		}*/
 	}
 
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour)

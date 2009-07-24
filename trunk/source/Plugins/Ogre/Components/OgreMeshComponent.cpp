@@ -67,6 +67,8 @@ namespace GASS
 	void OgreMeshComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(OgreMeshComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_MESSAGE_MESH_PARAMETER,  MESSAGE_FUNC(OgreMeshComponent::OnParameterMessage));
+
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
@@ -142,29 +144,7 @@ namespace GASS
 	}
 	}*/
 
-	/*bool OgreMeshComponent::AddCollisionMesh()
-	{
-	if(m_Mesh)
-	{
-	CollisionMesh* cm = m_Mesh->GetCollisionMesh();
-	if(cm == NULL)
-	{
-	m_Mesh->CreatCollisionMesh();
-	cm = m_Mesh->GetCollisionMesh();
-	Root::Get().GetPhysicsManager()->InitCollisionMesh(cm);
-	}
-	if(cm)
-	{
-	IGeometry::AddCollisionMesh(cm);
-	return true;
-	}
-	}
-	return false;
-	}*/
-
-
-
-
+	
 
 	Ogre::Bone* OgreMeshComponent::GetClosestBone(const Vec3 &pos)
 	{
@@ -330,6 +310,33 @@ namespace GASS
 				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
 			}
 			ibuf->unlock();
+		}
+	}
+
+	void OgreMeshComponent::SetTexCoordSpeed(const Vec2 &speed)
+	{
+		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+		{
+			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+			Ogre::MaterialPtr mat = se->getMaterial();
+			Ogre::Technique * technique = mat->getTechnique(0);
+			Ogre::Pass* pass = technique->getPass(0);
+			Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
+			textureUnit->setTextureScroll(speed.x,speed.y);
+		}
+	}
+
+	void OgreMeshComponent::OnParameterMessage(MessagePtr message)
+	{
+		SceneObject::MeshParameterType type = boost::any_cast<SceneObject::MeshParameterType>(message->GetData("Parameter"));
+		switch(type)
+		{
+		case SceneObject::ANIMATE_TEX_COORD:
+
+			Vec2 speed = boost::any_cast<Vec2>(message->GetData("Speed"));
+			SetTexCoordSpeed(speed);
+			//std::cout << "speed2:" << speed.x << std::endl;
+			break;
 		}
 	}
 }

@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 	scenario->Load(scenario_path);
 
 
-	for(int i = 0; i < 14; i++)
+	for(int i = 0; i < 1; i++)
 	{
 		engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
 		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");

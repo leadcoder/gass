@@ -74,7 +74,7 @@ namespace GASS
 		std::vector<std::string> m_Plugins;
 		std::vector<std::string> m_PostFilters;
 		OgreDebugTextOutput* m_DebugTextBox;
-		std::vector<ISceneManager*> m_SceneManagers;
+		//std::vector<ISceneManager*> m_SceneManagers;
 		bool m_CreateMainWindowOnInit;
 		OgrePostProcessPtr m_PostProcess;
 		bool m_PrimaryThread;
