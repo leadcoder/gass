@@ -42,8 +42,6 @@ namespace GASS
 		virtual std::string GetClassName() const = 0;
 	};
 
-
-
 	template<class Product, class  Base>
 	class Creator : public CreatorBase<Base>
 	{
@@ -81,6 +79,7 @@ namespace GASS
 		BasePtr Create(ObjectType type);
 		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
 		std::string GetFactoryName(const std::string &class_name);
+		std::vector<std::string> GetFactoryNames();
 	private:
 		typedef std::map<ObjectType, CreatorBase<Base> *> CreatorMap;
 		CreatorMap m_creatorMap;
@@ -102,7 +101,7 @@ namespace GASS
 
 
 	template<class Base>
-	std::string Factory<Base>::GetFactoryName(const std::string &class_name)
+	std::string Factory<Base>::GetFactoryName(const std::string &class_name) 
 	{
 		typename CreatorMap::iterator it = m_creatorMap.begin();
 		while(it != m_creatorMap.end())
@@ -114,6 +113,19 @@ namespace GASS
 			it++;
 		}
 		return std::string("");
+	}
+
+	template<class Base>
+	std::vector<std::string> Factory<Base>::GetFactoryNames() 
+	{
+		std::vector<std::string> names;
+		typename CreatorMap::iterator it = m_creatorMap.begin();
+		while(it != m_creatorMap.end())
+		{
+			names.push_back((*it).second->GetClassName());
+			it++;
+		}
+		return names;
 	}
 
 

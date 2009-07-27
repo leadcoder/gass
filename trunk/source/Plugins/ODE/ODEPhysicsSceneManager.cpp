@@ -62,7 +62,6 @@ namespace GASS
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>( "Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 		RegisterProperty<bool>( "PrimaryThread", &GASS::ODEPhysicsSceneManager::GetPrimaryThread, &GASS::ODEPhysicsSceneManager::SetPrimaryThread);
-
 	}
 
 	void ODEPhysicsSceneManager::SetGravity(float gravity)
@@ -126,7 +125,7 @@ namespace GASS
 	{
 		ScenarioScene* scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
 
-		dInitODE2(0);
+		//dInitODE2(0);
 		m_Space = 0;
 		m_StaticSpace = 0;
 		m_World = dWorldCreate();
@@ -144,7 +143,7 @@ namespace GASS
 		dWorldSetAutoDisableAngularThreshold(m_World, 0.01);
 		dWorldSetAutoDisableSteps(m_World, 10);
 		dWorldSetAutoDisableTime(m_World, 0);
-		dAllocateODEDataForThread(dAllocateMaskAll);
+		//dAllocateODEDataForThread(dAllocateMaskAll);
 
 		m_Init = true;
 	}
@@ -155,7 +154,7 @@ namespace GASS
 		dSpaceDestroy (m_CollisionSpace);
 		dSpaceDestroy (m_StaticSpace);
 		dWorldDestroy (m_World);
-		dCloseODE();
+		//dCloseODE();
 
 		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ));

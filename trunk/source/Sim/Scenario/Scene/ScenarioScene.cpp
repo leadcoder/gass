@@ -185,24 +185,39 @@ namespace GASS
 	void ScenarioScene::LoadXML(TiXmlElement *scene_elem)
 	{
 		TiXmlElement *settings = scene_elem->FirstChildElement("SceneSettings");
-		if(settings == NULL) Log::Error("Failed to get SceneSettings tag");
+		if(settings == NULL) 
+			Log::Error("Failed to get SceneSettings tag");
+		
 		BaseReflectionObject::LoadProperties(settings);
-
 		TiXmlElement *scenemanager = scene_elem->FirstChildElement("SceneManagers");
+		
 		if(scenemanager)
 		{
+			//Try to create all registered scene manangers
+
+			std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
+
+			for(int i = 0; i < managers.size();i++)
+			{
+				SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
+				m_SceneManagers.push_back(sm);
+				sm->SetOwner(this);
+				sm->SetName(managers[i]);
+			}
 			scenemanager = scenemanager->FirstChildElement();
-			//Loop through each template
+			//Load scene manager settings
 			while(scenemanager)
 			{
 				SceneManagerPtr sm = LoadSceneManager(scenemanager);
-				if(sm)
+				/*if(sm)
 				{
-					sm->SetOwner(this);
-					sm->OnCreate();
 					m_SceneManagers.push_back(sm);
-				}
+				}*/
 				scenemanager = scenemanager->NextSiblingElement();
+			}
+			for(int i = 0; i < m_SceneManagers.size();i++)
+			{
+				m_SceneManagers[i]->OnCreate();
 			}
 		}
 	}
@@ -258,16 +273,30 @@ namespace GASS
 
 	SceneManagerPtr ScenarioScene::LoadSceneManager(TiXmlElement *sm_elem)
 	{
+		SceneManagerPtr sm;
 		std::string sm_name = sm_elem->Value();
 		std::string sm_type = sm_elem->Attribute("type");
-		SceneManagerPtr sm = SceneManagerFactory::Get().Create(sm_type);
+		for(int i = 0; i < m_SceneManagers.size() ; i++)
+		{
+			if(m_SceneManagers[i]->GetName() == sm_type)
+			{
+				sm =m_SceneManagers[i];
+				XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
+				if(serialize)
+					serialize->LoadXML(sm_elem);
+				return sm;
+
+			}
+		}
+		return sm;
+		/*SceneManagerPtr sm = GetSceneManager(sm_type);
 		if(sm)
 		{
 			sm->SetName(sm_name);
 			XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
 			if(serialize)
 				serialize->LoadXML(sm_elem);
-		}
+		}*/
 		return sm;
 	}
 
