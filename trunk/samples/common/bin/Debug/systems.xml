@@ -4,7 +4,6 @@
     <Plugin value="RenderSystem_GL"/>
     <Plugin value="Plugin_CgProgramManager"/>
     <Plugin value="Plugin_BSPSceneManager"/>
-    <Plugin value="RenderSystem_Direct3D9"/>
     <Plugin value="Plugin_OctreeSceneManager"/>
     <Plugin value="Plugin_ParticleFX"/>
     <PostFilters value="HDR"/>
@@ -21,6 +20,8 @@
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
+  <PhysicsSystem type="ODEPhysicsSystem">
+  </PhysicsSystem>
   <InputSystem type="OISInputSystem">
   </InputSystem>
   <CollisionSystem type="ODECollisionSystem">

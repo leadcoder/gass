@@ -21,6 +21,8 @@
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
+  <PhysicsSystem type="ODEPhysicsSystem">
+  </PhysicsSystem>
   <InputSystem type="OISInputSystem">
   </InputSystem>
   <CollisionSystem type="ODECollisionSystem">
