@@ -49,11 +49,15 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
+		void OnLoad(MessagePtr message);
+		void OnParameterMessage(GASS::MessagePtr message);
+
+
 		void SetFont(const std::string &font);
 		std::string GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;
 		void SetCharacterSize(float size);
-		void OnLoad(MessagePtr message);
+		
 		std::string m_Font;
 		float m_Width;
 		float m_Height;

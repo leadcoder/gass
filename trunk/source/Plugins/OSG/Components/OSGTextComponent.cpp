@@ -47,7 +47,7 @@ namespace GASS
 {
 
 	OSGTextComponent::OSGTextComponent() :	m_OSGText(NULL),
-		m_CharSize(1.0f),
+		m_CharSize(32.0f),
 		m_Font("arial.ttf")
 	{
 
@@ -63,13 +63,25 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, IComponent>);
 		RegisterProperty<std::string>("Font", &GetFont, &SetFont);
 		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
-		
 	}
 
 	void OSGTextComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OSGTextComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_TEXT_PARAMETER, MESSAGE_FUNC(OSGTextComponent::OnParameterMessage));
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+	}
+
+	void OSGTextComponent::OnParameterMessage(GASS::MessagePtr message)
+	{
+		SceneObject::TextParameterType type = boost::any_cast<SceneObject::TextParameterType>(message->GetData("Parameter"));
+		switch(type)
+		{
+		case SceneObject::CAPTION:
+			std::string caption = boost::any_cast<std::string>(message->GetData("Caption"));
+			m_OSGText->setText(caption.c_str());
+			break;
+		}
 	}
 
 	void OSGTextComponent::OnLoad(MessagePtr message)
@@ -83,27 +95,32 @@ namespace GASS
 		{
 			Log::Error("Failed to find texture:%s",full_path.c_str());
 		}*/
-		float characterSize=200.0f;
-
-
+		
 		m_OSGText = new osgText::Text;
 
-		m_OSGText->setFontResolution(300.0f,300.0f);
-		m_OSGText->setFont("");
-		osg::Vec4 characterSizeModeColor(1.0f,0.0f,0.5f,1.0f);
+		//osgText::Font* font =	osgText::readFontFile( "c:/fonts/times.ttf");
+		//m_OSGText->setFont( font);
+		SetFont(m_Font);
+		//m_OSGText->setFont("fonts/times.ttf");
+		//m_OSGText->setFontResolution(300.0f,300.0f);
+		//osg::Vec4 characterSizeModeColor(1.0f,0.0f,0.5f,1.0f);
 
-		m_OSGText->setColor(characterSizeModeColor);
-		//m_OSGText->setCharacterSize(characterSize);
-		m_OSGText->setPosition(osg::Vec3(0,0,1));
-		m_OSGText->setBackdropColor(osg::Vec4(0,0,0,1));
+		//m_OSGText->setColor(characterSizeModeColor);
+		//m_OSGText->setCharacterSize(100);
+		//m_OSGText->setPosition(osg::Vec3(0,0,0.1));
+		//m_OSGText->setBackdropColor(osg::Vec4(0,0,0,1));
 
 		//m_OSGText->setAxisAlignment(osgText::Text::YZ_PLANE);
-		m_OSGText->setCharacterSize(30.0f);
+		/*m_OSGText->setCharacterSize(30.0f);
 		//m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
-		m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
+		m_OSGText->setCharacterSizeMode(osgText::Text::SCREEN_COORDS);
 		m_OSGText->setAutoRotateToScreen(true);
-		m_OSGText->setText("YZ_PLANE");
+		m_OSGText->setText("YZ_PLANE");*/
 
+		m_OSGText->setCharacterSize(m_CharSize);
+		m_OSGText->setAxisAlignment(osgText::Text::SCREEN);
+		m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
+		
 		m_OSGGeode = new osg::Geode;
 		m_OSGGeode->addDrawable(m_OSGText.get());
     
@@ -114,7 +131,7 @@ namespace GASS
 	void OSGTextComponent::SetFont(const std::string &font) 
 	{
 		m_Font = font;
-		/*if(m_OSGText.valid())
+		if(m_OSGText.valid())
 		{
 			std::string full_path;
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
@@ -124,9 +141,8 @@ namespace GASS
 			}
 			else
 				m_OSGText->setFont(full_path);
-		}*/
+		}
 	}
-
 
 	void OSGTextComponent::SetCharacterSize(float size) 
 	{

@@ -50,6 +50,7 @@ namespace GASS
 
 	void SceneObject::OnCreate()
 	{
+		RegisterForMessage(OBJECT_RM_SCENE_OBJECT_NAME,MESSAGE_FUNC(SceneObject::OnChangeName)); 
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
@@ -174,11 +175,11 @@ namespace GASS
 		m_MessageManager->SendImmediate(message);
 	}
 
-
-
-	
-		
-
+	void SceneObject::OnChangeName(MessagePtr message)
+	{
+		std::string name = boost::any_cast<std::string>(message->GetData("Name"));
+		SetName(name);
+	}
 }
 
 

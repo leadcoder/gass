@@ -59,7 +59,7 @@ namespace GASS
 		}
 	private:
 		SystemPtr LoadSystem(TiXmlElement *system_elem);
-	private:
+	protected:
 		std::vector<SystemPtr> m_Systems;
 	};
 }

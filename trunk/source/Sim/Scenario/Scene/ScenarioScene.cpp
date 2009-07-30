@@ -302,7 +302,7 @@ namespace GASS
 
 	SceneManagerPtr ScenarioScene::GetSceneManager(const std::string &name)
 	{
-		for(int i = 0; m_SceneManagers.size(); i++)
+		for(int i = 0; i < m_SceneManagers.size(); i++)
 		{
 			if(m_SceneManagers[i]->GetName() == name)
 				return m_SceneManagers[i];

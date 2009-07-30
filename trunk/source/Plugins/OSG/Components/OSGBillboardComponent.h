@@ -49,6 +49,10 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
+		float GetWidth() const;
+		void SetWidth(float width);
+		float GetHeight() const;
+		void SetHeight(float height);
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}

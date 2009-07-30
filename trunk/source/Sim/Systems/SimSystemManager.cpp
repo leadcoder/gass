@@ -46,6 +46,11 @@ namespace GASS
 	{
 		MessagePtr init_msg(new Message(SimSystemManager::SYSTEM_RM_INIT));
 		m_SystemMessageManager->SendImmediate(init_msg);
+		//Log all systems loaded
+		for(int i = 0 ;i< m_Systems.size(); i++)
+		{
+			Log::Print("%s Loaded",m_Systems[i]->GetName().c_str());
+		}
 	}	
 
 	void SimSystemManager::Update(float delta_time)

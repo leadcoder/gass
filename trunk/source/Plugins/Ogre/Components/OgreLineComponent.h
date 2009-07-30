@@ -45,7 +45,6 @@ namespace GASS
 		virtual void Clear();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-
 		void OnLoad(MessagePtr message);
 		void SetMaterialName(const std::string &name){m_MaterialName = name;}
 		std::string GetMaterialName()const {return m_MaterialName;}

@@ -51,6 +51,7 @@ namespace GASS
 	OgreBillboardComponent::OgreBillboardComponent() :
 		m_CastShadow(true),
 		m_BillboardSet (NULL),
+		m_Billboard(NULL),
 		m_Width(1.0f),
 		m_Height(1.0f)
 	{
@@ -68,6 +69,8 @@ namespace GASS
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
 		RegisterProperty<std::string>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
+		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
+		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
 	}
 
 	void OgreBillboardComponent::OnCreate()
@@ -75,6 +78,28 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreBillboardComponent::OnLoad),1);
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
+
+	float OgreBillboardComponent::GetWidth() const 
+	{
+		return m_Width;
+	}
+	void OgreBillboardComponent::SetWidth(float width)
+	{
+		m_Width = width;
+		if(m_Billboard) 
+			m_Billboard->setDimensions(m_Width,m_Height);
+	}
+	float OgreBillboardComponent::GetHeight() const
+	{
+		return m_Height;
+	}
+	void OgreBillboardComponent::SetHeight(float height)
+	{
+		m_Height = height;
+		if(m_Billboard) 
+			m_Billboard->setDimensions(m_Width,m_Height);
+	}
+
 
 	void OgreBillboardComponent::OnLoad(MessagePtr message)
 	{
@@ -141,6 +166,7 @@ namespace GASS
 			billboard->setColour(color);
 			billboard->setDimensions(m_Width,m_Height);
 			billboard->setTexcoordRect(0, 0,1, 1);
+			m_Billboard = billboard;
 			float bbsize = m_Height;
 			if(m_Width > m_Height) bbsize = m_Width;
 			bbsize *=  0.5f;

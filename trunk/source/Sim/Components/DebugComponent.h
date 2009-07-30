@@ -12,47 +12,28 @@
 * contact author. Abuse against the HiFiEngine license is prohibited by law.*
 *                                                                           *
 *****************************************************************************/ 
-#ifndef OGRE_TEXT_COMPONENT_H
-#define OGRE_TEXT_COMPONENT_H
+#ifndef DEBUG_COMPONENT_H
+#define DEBUG_COMPONENT_H
 
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/Message.h"
-#include <OgreRenderTargetListener.h>
-
-class MovableTextOverlay;
-class MovableTextOverlayAttributes;
 
 namespace GASS
 {
-	
-	class OgreTextComponent : public Reflection<OgreTextComponent,BaseSceneComponent> ,  public Ogre::RenderTargetListener
+	class DebugComponent : public Reflection<DebugComponent,BaseSceneComponent>
 	{
 	public:
-		OgreTextComponent(void);
-		~OgreTextComponent(void);
+		DebugComponent(void);
+		~DebugComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere() const;
 	protected:
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		void OnLoad(MessagePtr message);
-		void OnParameterMessage(GASS::MessagePtr message);
-		std::string GetText() const;
-		void SetText(const std::string  &text);
-		float GetOffset() const;
-		void SetOffset(float offset);
-		float GetCharacterSize() const;
-		void SetCharacterSize(float size);
-	
-		MovableTextOverlay* m_TextObject;
-		MovableTextOverlayAttributes* m_Attribs;
-		std::string m_TextToDisplay;
-		float m_Offset;
-		float m_Size;
-		Vec4 m_Color;
+		void OnChangeName(MessagePtr message);
+		bool GetShowNodeName() const;
+		void SetShowNodeName(bool value);
+		bool m_ShowNodeName;
 	private:
 	};
 }

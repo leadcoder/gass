@@ -63,7 +63,31 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OSGBillboardComponent, IComponent>);
 		RegisterProperty<std::string>("Material", &GetMaterial, &SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
+		RegisterProperty<float>("Height", &GASS::OSGBillboardComponent::GetHeight, &GASS::OSGBillboardComponent::SetHeight);
+		RegisterProperty<float>("Width", &GASS::OSGBillboardComponent::GetWidth, &GASS::OSGBillboardComponent::SetWidth);
 	}
+
+	float OSGBillboardComponent::GetWidth() const 
+	{
+		return m_Width;
+	}
+	void OSGBillboardComponent::SetWidth(float width)
+	{
+		m_Width = width;
+
+		//TODO::support run time change
+		
+	}
+	float OSGBillboardComponent::GetHeight() const
+	{
+		return m_Height;
+	}
+	void OSGBillboardComponent::SetHeight(float height)
+	{
+		m_Height = height;
+		//TODO::support run time change
+	}
+
 
 	void OSGBillboardComponent::OnCreate()
 	{
@@ -83,7 +107,6 @@ namespace GASS
 			Log::Error("Failed to find texture:%s",full_path.c_str());
 		}
 
-
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
 		m_OSGBillboard->addDrawable(
@@ -96,58 +119,7 @@ namespace GASS
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
-
-
-		
-
-
-		
-
-		/*if(m_Material != "")
-		{
-		std::string material_name = m_Material;
-		Ogre::MaterialPtr material;
-		if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
-		else 
-		{
-		material = Ogre::MaterialManager::getSingleton().create(material_name, "GASS",false, 0); // Manual, loader
-		// Remove pre-created technique from defaults
-		material->removeAllTechniques();
-		// Create a techinique and a pass and a texture unit
-		Ogre::Technique * technique = material->createTechnique();
-		Ogre::Pass* pass = technique->createPass();
-		material->setLightingEnabled(false);
-		material->setDepthWriteEnabled(true);
-		material->setCullingMode(Ogre::CULL_NONE);
-		std::string fullpath;
-		IResourceSystem* rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>().get();
-
-		if(rs->GetFullPath(m_Material,fullpath))
-		{
-		Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material,0);
-		//pass->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
-		//pass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-		pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
-		}
-		}
-
-
-		m_BillboardSet = ogsm->GetSceneManger()->createBillboardSet(name);
-		m_BillboardSet->setMaterialName(material_name);
-
-		Vec3 pos = Vec3(0,m_Height/2.0,0);
-		Ogre::ColourValue color = Ogre::ColourValue::White;
-		Ogre::Billboard* billboard = m_BillboardSet->createBillboard(Convert::ToOgre(pos),color);
-		billboard->mPosition = Convert::ToOgre(pos);
-		billboard->setColour(color);
-		billboard->setDimensions(m_Width,m_Height);
-		billboard->setTexcoordRect(0, 0,1, 1);
-		float bbsize = m_Height;
-		if(m_Width > m_Height) bbsize = m_Width;
-		bbsize *=  0.5f;
-		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
-		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
-		}*/
+	
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const

@@ -148,7 +148,6 @@ namespace GASS
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Vel(value);
-
 			}
 			break;
 		case SceneObject::AXIS2_VELOCITY:

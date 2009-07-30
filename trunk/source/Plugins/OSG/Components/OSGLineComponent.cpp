@@ -60,6 +60,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LineComponent",new Creator<OSGLineComponent, IComponent>);
 		RegisterProperty<std::string>("MaterialName", &OSGLineComponent::GetMaterialName, &OSGLineComponent::SetMaterialName);
 		RegisterProperty<std::string>("Type", &OSGLineComponent::GetType, &OSGLineComponent::SetType);
+		RegisterProperty<float>("HeightOffset", &OSGLineComponent::GetHeightOffset, &OSGLineComponent::SetHeightOffset);
 	}
 
 	void OSGLineComponent::OnCreate()
@@ -71,18 +72,7 @@ namespace GASS
 	{
 		OSGGraphicsSceneManager* sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(sm);
-		/*
-		static unsigned int obj_id = 0;
-		obj_id++;
-		std::stringstream ss;
-		std::string name;
-		ss << GetName() << obj_id;
-		ss >> name;
-
-		m_LineObject = sm->createManualObject(name);
-		m_LineObject->setDynamic(true);
-		m_LineObject->setCastShadows(false);*/
-
+	
 		m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();
 
@@ -183,7 +173,7 @@ namespace GASS
 				Vec3 pos = m_ControlPoints[i].pos;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y+m_HeightOffset, pos.z);
+				(vitr++)->set(pos.x, pos.y, pos.z+m_HeightOffset);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 
@@ -246,7 +236,7 @@ namespace GASS
 				Vec3 pos = m_ControlPoints[i].pos;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y+m_HeightOffset, pos.z);
+				(vitr++)->set(pos.x, pos.y, pos.z+m_HeightOffset);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 
@@ -254,52 +244,6 @@ namespace GASS
 			m_OSGGeometry->setColorArray(colors);
 			//m_Geometry->setColorBinding(osg::Geometry::BIND_OVERALL);
 		}
-
-		/*if(m_LineObject)
-		{
-		float tex_coord = 0;
-		m_LineObject->clear();
-		Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;;
-
-		if(m_Type == "line_list")
-		{
-		op = Ogre::RenderOperation::OT_LINE_LIST;
-		}
-		if(m_Type == "point_list")
-		{
-		op = Ogre::RenderOperation::OT_POINT_LIST;
-		}
-		else
-		{
-		op = Ogre::RenderOperation::OT_LINE_STRIP;
-		}
-
-		m_LineObject->begin(m_MaterialName, op);
-		for(int i = 0; i < m_ControlPoints.size(); i++)
-		{
-		Vec3 pos = m_ControlPoints[i].pos;
-		tex_coord  = pos.FastLength();
-		m_LineObject->position(pos.x, pos.y+m_HeightOffset, pos.z);
-		m_LineObject->textureCoord(0,tex_coord);
-		Ogre::ColourValue col;
-		col.r = m_ControlPoints[i].color.x;
-		col.g = m_ControlPoints[i].color.y;
-		col.b = m_ControlPoints[i].color.z;
-		col.a = 1;
-		m_LineObject->colour(col);
-
-
-		}
-		for(int i = 0; i < m_ControlPoints.size();i++)
-		{
-		m_LineObject->index(i);
-		}
-		if(m_Closed && m_ControlPoints.size() > 0)
-		{
-		m_LineObject->index(0);
-		}
-		m_LineObject->end();
-		}*/
 	}
 
 	void OSGLineComponent::Add(const std::vector<LineData> &line_seg)

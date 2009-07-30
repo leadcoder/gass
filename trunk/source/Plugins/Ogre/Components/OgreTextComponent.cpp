@@ -49,7 +49,6 @@ namespace GASS
 {
 	OgreTextComponent::OgreTextComponent(void) : m_Size (16),
 		m_Offset (0.2),
-		m_ShowNodeName(false),
 		m_Color(1,1,1,1),
 		m_TextObject(NULL),
 		m_Attribs(NULL)
@@ -82,12 +81,9 @@ namespace GASS
 		RegisterProperty<std::string>("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
 		RegisterProperty<float>("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
 		RegisterProperty<float>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
-		RegisterProperty<bool>("ShowSceneObjectName", &GASS::OgreTextComponent::GetShowNodeName, &GASS::OgreTextComponent::SetShowNodeName);
 		//RegisterProperty<Vec4>("TextColor", &GASS::OgreTextComponent::GetTextColor, &GASS::OgreTextComponent::SetTextColor);
 		//TODO: add OSG attributes:  Font
 	}
-
-
 
 	Ogre::UTFString ConvertToUTF(Ogre::String String) 
 	{ 
@@ -107,14 +103,13 @@ namespace GASS
 	{
 		//this one should load after mesh entities
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreTextComponent::OnLoad),2);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_TEXT_PARAMETER, MESSAGE_FUNC(OgreTextComponent::OnParameterMessage));
 	}
 
 	std::string OgreTextComponent::GetText() const
 	{
 		return m_TextToDisplay;
 	}
-
 
 	void OgreTextComponent::SetText(const std::string  &text)
 	{
@@ -144,15 +139,6 @@ namespace GASS
 		//	m_TextObject->setAdditionalHeight(offset);
 	}
 
-	bool OgreTextComponent::GetShowNodeName() const
-	{
-		return m_ShowNodeName;
-	}
-
-	void OgreTextComponent::SetShowNodeName(bool value)
-	{
-		m_ShowNodeName = value;
-	}
 
 	float OgreTextComponent::GetCharacterSize() const
 	{
@@ -166,6 +152,19 @@ namespace GASS
 //			m_TextObject->setCharacterHeight(size);
 	}
 
+	void OgreTextComponent::OnParameterMessage(GASS::MessagePtr message)
+	{
+		SceneObject::TextParameterType type = boost::any_cast<SceneObject::TextParameterType>(message->GetData("Parameter"));
+		switch(type)
+		{
+		case SceneObject::CAPTION:
+
+			std::string caption = boost::any_cast<std::string>(message->GetData("Caption"));
+			SetText(caption);
+			break;
+		}
+	}
+
 	void OgreTextComponent::OnLoad(MessagePtr message)
 	{
 		//Ogre::String test = Ogre::String(new_text);
@@ -177,11 +176,6 @@ namespace GASS
 
 		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
 		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
-
-		if(m_ShowNodeName)
-		{
-			m_TextToDisplay = GetSceneObject()->GetName() + " " + m_TextToDisplay;
-		}
 
 		
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();

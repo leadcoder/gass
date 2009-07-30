@@ -63,8 +63,8 @@ namespace GASS
 
 	protected:
 		void OnLoad(MessagePtr message);
-		void PositionChanged(MessagePtr message);
-		void RotationChanged(MessagePtr message);
+		void OnPositionMessage(MessagePtr message);
+		void OnRotationMessage(MessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
 		Vec3 m_LastPos;

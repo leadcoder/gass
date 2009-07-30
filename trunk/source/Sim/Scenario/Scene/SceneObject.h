@@ -66,6 +66,7 @@ namespace GASS
 				Quaternion = "Rotation" - Rotation (relative to parent) change for SceneObject is requested */
 			OBJECT_RM_ROTATION,
 
+
 			OBJECT_RM_WORLD_POSITION, 
 			OBJECT_RM_WORLD_ROTATION,
 
@@ -74,10 +75,19 @@ namespace GASS
 			OBJECT_RM_PHYSICS_JOINT_PARAMETER,
 			OBJECT_RM_PHYSICS_BODY_PARAMETER,
 			OBJECT_RM_SOUND_PARAMETER,
+			/**
+				Change name of scene object
+				std::string = "Name" new name of component
+			*/
+			OBJECT_RM_SCENE_OBJECT_NAME,
 			
 			/** \brief Message data: 
 			MeshParameterType = "Type" - See MeshParameterType for data fields*/
 			OBJECT_RM_MESH_PARAMETER,
+
+			/** \brief Message data: 
+			TextParameterType = "Type" - See TextParameterType for data fields*/
+			OBJECT_RM_TEXT_PARAMETER,
 
 			
 			OBJECT_RM_LOAD_USER_COMPONENTS,
@@ -134,6 +144,13 @@ namespace GASS
 			ANIMATE_TEX_COORD, 
 		};
 
+		enum TextParameterType
+		{
+			/** \brief Message data: 
+			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
+			CAPTION,
+		};
+
 
 		SceneObject();
 		virtual ~SceneObject();
@@ -185,6 +202,7 @@ namespace GASS
 		void UnregisterForMessage(ObjectMessage type, MessageFunc callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
+		void OnChangeName(MessagePtr message);
 	protected:
 		SceneObjectManager* m_Manager;
 		MessageManager* m_MessageManager;

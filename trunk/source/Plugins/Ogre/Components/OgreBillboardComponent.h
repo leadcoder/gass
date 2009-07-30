@@ -33,6 +33,7 @@ class Ogre::Bone;
 class Ogre::IndexData;
 class Ogre::VertexData;
 class Ogre::BillboardSet;
+class Ogre::Billboard;
 
 namespace GASS
 {
@@ -51,6 +52,10 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
+		float GetWidth() const;
+		void SetWidth(float width);
+		float GetHeight() const;
+		void SetHeight(float height);
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
@@ -64,6 +69,7 @@ namespace GASS
 		bool m_CastShadow;
 
 		Ogre::BillboardSet* m_BillboardSet;
+		Ogre::Billboard* m_Billboard;
 		float m_Width;
 		float m_Height;
 
