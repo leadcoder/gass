@@ -75,6 +75,10 @@ namespace GASS
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
 
+		//Get/Set section
+		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}
+		std::string GetInheritance()  const {return m_Inheritance;}
+
 
 		//print object
 		void DebugPrint(int tc = 0);
@@ -90,9 +94,7 @@ namespace GASS
 		
 		virtual ComponentContainerPtr CreateComponentContainer();
 
-		//Get/Set section
-		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}
-		std::string GetInheritance()  const {return m_Inheritance;}
+		
 
 		//Help functions for template creation
 		std::string CreateUniqueName();

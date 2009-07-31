@@ -110,6 +110,15 @@ namespace GASS
 			Set parent component container
 		*/
 		virtual void SetParent(ComponentContainerWeakPtr parent) = 0;
+
+		/**
+			Get template name
+		*/
+		virtual std::string GetTemplateName() const = 0;
+		/**
+			Set template name
+		*/
+		virtual void SetTemplateName(const std::string& name) = 0;
 	};
 
 

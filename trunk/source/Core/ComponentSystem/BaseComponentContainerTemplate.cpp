@@ -335,6 +335,8 @@ namespace GASS
 					new_object->SetName(CreateUniqueName());
 				else 
 					new_object->SetName(GetName());
+				//set template name
+				new_object->SetTemplateName(GetName());
 				//if(m_ContainerData)
 				//	m_ContainerData->Assign(new_object);
 				//check if components already exist,
@@ -363,6 +365,8 @@ namespace GASS
 					new_object->SetName(CreateUniqueName());
 				else 
 					new_object->SetName(GetName());
+
+				new_object->SetTemplateName(GetName());
 				//new_object->SetPartId(part_id);
 				part_id++;
 				/*{

@@ -77,12 +77,13 @@ namespace GASS
 		//print object
 		void DebugPrint(int tc = 0);
 
+		//Get/Set section
+		void SetTemplateName(const std::string &name) {m_TemplateName = name;}
+		std::string GetTemplateName()  const {return m_TemplateName;}
+
 	protected:
 
-		//Get/Set section
-		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}
-		std::string GetInheritance()  const {return m_Inheritance;}
-
+		
 		//Help functions for template creation
 		std::string CreateUniqueName();
 		void InheritComponentData(ComponentContainerPtr cc);
@@ -91,7 +92,7 @@ namespace GASS
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;
 		std::string m_Name;
-		std::string m_Inheritance;
+		std::string m_TemplateName;
 		ComponentContainerWeakPtr m_Parent;
 	};
 	typedef boost::shared_ptr<BaseComponentContainer> BaseComponentContainerPtr;
