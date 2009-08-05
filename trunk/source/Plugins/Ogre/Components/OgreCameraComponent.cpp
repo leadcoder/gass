@@ -87,6 +87,8 @@ namespace GASS
 		ss >> name;
 
 		m_Camera = sm->createCamera(name);
+		//m_Camera->setAspectRatio(16.0/9.0);
+		m_Camera->setAutoAspectRatio(true);
 		SetNearClipDistance(m_NearClip);
 		SetFarClipDistance(m_FarClip);
         lc->GetOgreNode()->attachObject(m_Camera);

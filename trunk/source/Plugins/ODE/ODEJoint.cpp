@@ -211,6 +211,8 @@ namespace GASS
 			break;
 		case SUSPENSION_JOINT:
 			m_ODEJoint = dJointCreateHinge2(world, 0);
+			//Update suspension
+			GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(ODEJoint::UpdateSwayBars));
 			break;
 		}
 		dJointAttach(m_ODEJoint, b1,b2);
@@ -220,6 +222,7 @@ namespace GASS
 		UpdateLimits();
 		SetAxis1Force(m_JointForce);
 		UpdateSuspension();
+
 	}
 
 	void ODEJoint::SetAxis1(const Vec3 &axis)
@@ -426,21 +429,21 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
-		switch(m_Type)
-		{
-		case SLIDER_JOINT:
-			dJointSetSliderParam(m_ODEJoint,dParamVel,velocity);
-			break;
-		case HINGE_JOINT:
-			dJointSetHingeParam(m_ODEJoint,dParamVel,velocity);
-			break;
-		case UNIVERSAL_JOINT:
-			dJointSetUniversalParam(m_ODEJoint,dParamVel,velocity);
-			break;
-		case SUSPENSION_JOINT:
-			dJointSetHinge2Param(m_ODEJoint,dParamVel,velocity);
-			break;
-		}
+			switch(m_Type)
+			{
+			case SLIDER_JOINT:
+				dJointSetSliderParam(m_ODEJoint,dParamVel,velocity);
+				break;
+			case HINGE_JOINT:
+				dJointSetHingeParam(m_ODEJoint,dParamVel,velocity);
+				break;
+			case UNIVERSAL_JOINT:
+				dJointSetUniversalParam(m_ODEJoint,dParamVel,velocity);
+				break;
+			case SUSPENSION_JOINT:
+				dJointSetHinge2Param(m_ODEJoint,dParamVel,velocity);
+				break;
+			}
 		}
 	}
 
@@ -448,15 +451,15 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
-		switch(m_Type)
-		{
-		case UNIVERSAL_JOINT:
-			dJointSetUniversalParam(m_ODEJoint, dParamVel2,value);
-			break;
-		case SUSPENSION_JOINT:
-			dJointSetHinge2Param(m_ODEJoint, dParamVel2,value);
-			break;
-		}
+			switch(m_Type)
+			{
+			case UNIVERSAL_JOINT:
+				dJointSetUniversalParam(m_ODEJoint, dParamVel2,value);
+				break;
+			case SUSPENSION_JOINT:
+				dJointSetHinge2Param(m_ODEJoint, dParamVel2,value);
+				break;
+			}
 		}
 	}
 
@@ -464,15 +467,15 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
-		switch(m_Type)
-		{
-		case UNIVERSAL_JOINT:
-			dJointSetUniversalParam(m_ODEJoint, dParamFMax2,value);
-			break;
-		case SUSPENSION_JOINT:
-			dJointSetHinge2Param(m_ODEJoint, dParamFMax2,value);
-			break;
-		}
+			switch(m_Type)
+			{
+			case UNIVERSAL_JOINT:
+				dJointSetUniversalParam(m_ODEJoint, dParamFMax2,value);
+				break;
+			case SUSPENSION_JOINT:
+				dJointSetHinge2Param(m_ODEJoint, dParamFMax2,value);
+				break;
+			}
 		}
 	}
 
@@ -562,6 +565,45 @@ namespace GASS
 		// no enable for joints
 	}
 
+	void ODEJoint::UpdateSwayBars(MessagePtr message)
+	{
+		//Hack to keep vehicles from flipping upside down
+		if(m_SwayForce > 0)
+		{
+			dBodyID b1 = m_Body1->GetODEBody();
+			dBodyID b2 = m_Body2->GetODEBody();
+
+			Vec3 bodyPoint;
+			Vec3 hingePoint;
+			Vec3 axis2;
+			float displacement;
+			dReal temp[3];
+			dJointGetHinge2Anchor2( m_ODEJoint, temp);
+			bodyPoint.Set(temp[0],temp[1],temp[2]);
+			dJointGetHinge2Anchor( m_ODEJoint, temp);
+			hingePoint.Set(temp[0],temp[1],temp[2]);
+			dJointGetHinge2Axis1( m_ODEJoint, temp);
+			axis2.Set(temp[0],temp[1],temp[2]);
+			displacement = Math::Dot((hingePoint - bodyPoint) ,axis2);
+			float amt = displacement * m_SwayForce;
+			if( displacement > 0 ) 
+			{
+				if( amt > 15 ) 
+				{
+					amt = 15;
+				}
+				dBodyAddForce( b2, -axis2.x * amt, -axis2.y * amt, -axis2.z * amt );
+				dReal const * wp = dBodyGetPosition( b2 );
+
+
+				dBodyAddForceAtPos( b1, axis2.x*amt, axis2.y*amt, axis2.z*amt, wp[0], wp[1], wp[2] );
+				//dBodyAddForce( wheelBody_[ix^1], axis.x * amt, axis.y * amt, axis.z * amt );
+				wp = dBodyGetPosition( b2 );
+				dBodyAddForceAtPos( b1, -axis2.x*amt, -axis2.y*amt, -axis2.z*amt, wp[0], wp[1], wp[2] );
+			}
+		}
+
+	}
 
 	void ODEJoint::JointCorrectHinge2()
 	{

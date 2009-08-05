@@ -216,6 +216,7 @@
         <Type value="suspension"/>
         <Strength value="0.1"/>
         <Damping value="4"/>
+        <SwayForce value="100"/>
       </WheelPhysicsJoint>
     </Components>
   </JimTankWheel>

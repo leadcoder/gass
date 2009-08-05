@@ -104,6 +104,7 @@ namespace GASS
 		
 	private:
 		void JointCorrectHinge2();
+		void UpdateSwayBars(MessagePtr message);
 		dJointID m_ODEJoint;
 
 		std::string m_Body1Name;
