@@ -71,6 +71,7 @@ namespace GASS
 			OBJECT_RM_WORLD_ROTATION,
 
 			OBJECT_RM_VISIBILITY,
+			OBJECT_RM_BOUNDING_INFO,
 			OBJECT_RM_COLLISION_SETTINGS,
 			OBJECT_RM_PHYSICS_JOINT_PARAMETER,
 			OBJECT_RM_PHYSICS_BODY_PARAMETER,
@@ -84,6 +85,11 @@ namespace GASS
 			/** \brief Message data: 
 			MeshParameterType = "Type" - See MeshParameterType for data fields*/
 			OBJECT_RM_MESH_PARAMETER,
+
+			/**
+				See ManualMeshData for 	more info
+			*/
+			OBJECT_RM_MANUAL_MESH_PARAMETER,
 
 			/** \brief Message data: 
 			TextParameterType = "Type" - See TextParameterType for data fields*/
@@ -141,7 +147,7 @@ namespace GASS
 		{
 			/** \brief Message data: 
 			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
-			ANIMATE_TEX_COORD, 
+			ANIMATE_TEX_COORD,
 		};
 
 		enum TextParameterType
@@ -149,6 +155,13 @@ namespace GASS
 			/** \brief Message data: 
 			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
 			CAPTION,
+		};
+		enum ManualMeshParameterType
+		{
+			/** \brief Message data: 
+			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
+			MESH_DATA,
+			CLEAR,
 		};
 
 

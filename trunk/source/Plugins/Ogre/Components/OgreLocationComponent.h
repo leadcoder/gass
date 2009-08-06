@@ -76,6 +76,7 @@ namespace GASS
 		/** Node has been detached from a parent */
 		virtual void nodeDetached(const Ogre::Node* node) {}
 	protected:
+
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
 		void OnLoad(MessagePtr message);
@@ -85,6 +86,7 @@ namespace GASS
 		void ParentChangedMessage(MessagePtr message);
 		void WorldPositionMessage(MessagePtr message);
 		void WorldRotationMessage(MessagePtr message);
+		void BoundingInfoMessage(MessagePtr message);
 
 		
 	

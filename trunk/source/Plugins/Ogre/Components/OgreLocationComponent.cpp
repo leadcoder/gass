@@ -79,6 +79,7 @@ namespace GASS
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition);
 		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation);
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent);
+
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
 	}
 
@@ -94,6 +95,8 @@ namespace GASS
 
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PARENT_CHANGED, MESSAGE_FUNC( OgreLocationComponent::ParentChangedMessage ),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OgreLocationComponent::VisibilityMessage ),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_BOUNDING_INFO,  MESSAGE_FUNC( OgreLocationComponent::BoundingInfoMessage ),0);
+		
 	}
 
 	void OgreLocationComponent::OnLoad(MessagePtr message)
@@ -141,6 +144,15 @@ namespace GASS
 	{
 		SetAttachToParent(m_AttachToParent);
 
+	}
+
+	void OgreLocationComponent::BoundingInfoMessage(MessagePtr message)
+	{
+		bool box = boost::any_cast<bool>(message->GetData("BoundingBox"));
+		if(m_OgreNode)
+		{
+			m_OgreNode->showBoundingBox(box);
+		}
 	}
 
 

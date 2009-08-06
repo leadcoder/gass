@@ -17,50 +17,40 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
 #pragma once
 
 #include "Sim/Common.h"
-#include "Core/Math/Vector.h"
+#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Components/Graphics/MeshData.h"
+#include "Core/MessageSystem/Message.h"
+
+namespace Ogre
+{
+	class ManualObject;
+}
 
 namespace GASS
 {
-	struct GASSExport MeshData
+	class DynamicLines;
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
 	{
-		unsigned int NumVertex;
-		Vec3 *VertexVector;
-		unsigned int NumFaces;
-		unsigned int *FaceVector;
+	public:
+		OgreManualMeshComponent(void);
+		~OgreManualMeshComponent(void);
+		static void RegisterReflection();
+		virtual void OnCreate();
+		virtual AABox GetBoundingBox() const;
+		virtual Sphere GetBoundingSphere() const;
+	
+	protected:
+		void OnLoad(MessagePtr message);
+		void OnParameterMessage(MessagePtr message);
+		void CreateMesh(ManualMeshDataPtr data);
+		void Clear();
+		Ogre::ManualObject* m_MeshObject;
+		std::vector<MeshData> m_MeshData;
 	};
-	typedef MeshData* MeshDataPtr;
-
-
-	struct MeshVertex
-	{
-		Vec3 Pos;
-		Vec4 Color;
-		Vec2 TexCoord;
-	};
-
-	enum MeshType
-	{
-		LINE_LIST,
-		POINT_LIST,
-		LINE_STRIP,
-		TRIANGLE_FAN,
-		TRIANGLE_LIST,
-		TRIANGLE_STRIP,
-	};
-
-	/**
-	Used by manual mesh
-	*/
-	struct GASSExport ManualMeshData
-	{
-		std::vector<MeshVertex> VertexVector;
-		std::vector<unsigned int> IndexVector;
-		std::string Material;
-		MeshType Type;
-	};
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
 }
+

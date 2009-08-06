@@ -65,7 +65,6 @@ namespace GASS
 		std::string m_ControlPointList;
 		std::string m_Type;
 		bool m_Closed;
-		
 	};
 }
 
