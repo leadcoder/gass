@@ -354,6 +354,7 @@ namespace GASS
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 		
 		GrassLoader* loader = new GrassLoader(m_PagedGeometry);
+		loader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
 		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist); 
 		m_PagedGeometry->setPageLoader(loader);
 
@@ -369,6 +370,8 @@ namespace GASS
 
 		SetFadeTech(m_FadeTech);
 		UpdateSway();
+
+		
 		
 		m_GrassLoader = loader;
 //		Root::Get().AddRenderListener(this);

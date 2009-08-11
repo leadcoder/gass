@@ -86,10 +86,15 @@ namespace GASS
 			MeshParameterType = "Type" - See MeshParameterType for data fields*/
 			OBJECT_RM_MESH_PARAMETER,
 
+
+			OBJECT_RM_PARTICLE_SYSTEM_PARAMETER,
+
+
 			/**
 				See ManualMeshData for 	more info
 			*/
 			OBJECT_RM_MANUAL_MESH_PARAMETER,
+
 
 			/** \brief Message data: 
 			TextParameterType = "Type" - See TextParameterType for data fields*/
@@ -163,6 +168,16 @@ namespace GASS
 			MESH_DATA,
 			CLEAR,
 		};
+
+
+		enum ParticleSystemParameterType
+		{
+			/** \brief Message data: 
+			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
+			EMISSION_RATE,
+			PARTICLE_LIFE_TIME,
+		};
+
 
 
 		SceneObject();

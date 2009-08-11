@@ -47,7 +47,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-
 	OgreBillboardComponent::OgreBillboardComponent() :
 		m_CastShadow(true),
 		m_BillboardSet (NULL),
@@ -76,7 +75,6 @@ namespace GASS
 	void OgreBillboardComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreBillboardComponent::OnLoad),1);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -142,20 +140,7 @@ namespace GASS
 					pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
 				}
 			}
-			/*int elem = 0;
-			//char billboard_set_name[255];
-			sprintf(billboard_set_name,"%s_%s",m_Material.c_str(),GetName().c_str());
-
-			if(ogsm->GetSceneManger()->hasBillboardSet(billboard_set_name))
-			{
-				m_BillboardSet = ogsm->GetSceneManger()->getBillboardSet(billboard_set_name);
-			}
-			else
-			{
-				m_BillboardSet = ogsm->GetSceneManger()->createBillboardSet(billboard_set_name);
-				m_BillboardSet->setMaterialName(material_name);
-			}*/
-
+		
 			m_BillboardSet = ogsm->GetSceneManger()->createBillboardSet(name);
 			m_BillboardSet->setMaterialName(material_name);
 

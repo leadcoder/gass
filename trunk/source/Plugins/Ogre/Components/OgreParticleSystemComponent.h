@@ -28,46 +28,34 @@
 #include "Core/MessageSystem/Message.h"
 
 
-class Ogre::BillboardSet;
-class Ogre::Billboard;
+class Ogre::ParticleSystem;
 
 namespace GASS
 {
-	class OgreBillboardComponent : public Reflection<OgreBillboardComponent,BaseSceneComponent> , public IGeometryComponent
+	class OgreParticleSystemComponent : public Reflection<OgreParticleSystemComponent,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
-		OgreBillboardComponent (void);
-		~OgreBillboardComponent (void);
+		OgreParticleSystemComponent (void);
+		~OgreParticleSystemComponent (void);
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
-		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
-		float GetWidth() const;
-		void SetWidth(float width);
-		float GetHeight() const;
-		void SetHeight(float height);
-		std::string GetRenderQueue()const {return m_RenderQueue;}
-		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
-		void SetMaterial(const std::string &mat) {m_Material = mat;}
-		std::string GetMaterial()const {return m_Material;}
+		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
+		std::string GetParticleTemplate()const {return m_ParticleTemplate;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLoad(MessagePtr message);
-		
-		std::string m_RenderQueue;
-		std::string m_Material;
-		bool m_CastShadow;
+		void OnParameterMessage(MessagePtr message);
 
-		Ogre::BillboardSet* m_BillboardSet;
-		Ogre::Billboard* m_Billboard;
-		float m_Width;
-		float m_Height;
+		std::string m_RenderQueue;
+		std::string m_ParticleTemplate;
+		bool m_CastShadow;
+		Ogre::ParticleSystem* m_ParticleSystem;
 	};
 
-	typedef boost::shared_ptr<OgreBillboardComponent> OgreBillboardComponentPtr;
-	
+	typedef boost::shared_ptr<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;
 }
 
