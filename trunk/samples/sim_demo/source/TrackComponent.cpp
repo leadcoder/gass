@@ -96,6 +96,31 @@ namespace GASS
 		mesh_msg->SetData("Parameter",SceneObject::ANIMATE_TEX_COORD);
 		mesh_msg->SetData("Speed",speed);
 		GetSceneObject()->PostMessage(mesh_msg);
+
+
+		float emission = fabs(ang_vel.x)*0.3;
+
+		if(emission >12)
+			emission =12;
+		MessagePtr particle_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
+		particle_msg->SetData("Parameter",SceneObject::EMISSION_RATE);
+		particle_msg->SetData("Emitter",int(0));
+		particle_msg->SetData("Rate",emission);
+		GetSceneObject()->PostMessage(particle_msg);
+
+
+		MessagePtr particle_duration_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
+		
+		float duration = fabs(ang_vel.x)*0.05;
+
+		if(duration > 1.6)  
+			duration = 1.6;
+		particle_duration_msg->SetData("Parameter",SceneObject::PARTICLE_LIFE_TIME);
+		particle_duration_msg->SetData("Emitter",int(0));
+		particle_duration_msg->SetData("TimeToLive",duration);
+		
+		GetSceneObject()->PostMessage(particle_duration_msg);
+		
 		//std::cout << "speed:" << speed.x << std::endl;
 
 	}

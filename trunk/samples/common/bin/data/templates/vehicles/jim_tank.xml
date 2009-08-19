@@ -20,8 +20,10 @@
         <Loop value="1"/>
         <MinDistance value="5"/>
         <RolloffFactor value="1"/>
-        <!--<MaxDistance value="30"/>-->
       </EngineSound>
+      <EngineExhaustFumes type="ParticleSystemComponent">
+        <ParticleTemplate value="ExhaustFumes"/>
+      </EngineExhaustFumes>
       <Engine type="VehicleEngine">
         <Wheels value="JimTankWheelR1 JimTankWheelR2 JimTankWheelR3 JimTankWheelR4 JimTankWheelR5 JimTankWheelR6 JimTankWheelL1 JimTankWheelL2 JimTankWheelL3 JimTankWheelL4 JimTankWheelL5 JimTankWheelL6"/>
         <EngineType value="tank"/>
@@ -247,6 +249,9 @@
         <Filename value="JIM_TANK_band.mesh"/>
         <CastShadow value="true"/>
       </TrackGeom>
+      <TrackDust type="ParticleSystemComponent">
+        <ParticleTemplate value="TrackDust"/>
+      </TrackDust>
     </Components>
   </JimTankTrack>
   <JimTankCameraObject type ="SceneObjectTemplate">

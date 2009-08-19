@@ -125,6 +125,7 @@ namespace GASS
 		void UpdateDriveTrain(double delta,float throttle, float speed, float brake_torque);
 		void UpdateSteering(double delta);
 		void UpdateSound(double delta);
+		void UpdateExhaustFumes(double delta);
 
 		//Helpers
 		float RPM2AngleVel(float rpm);

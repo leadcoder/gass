@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef VEHICLE_ENGINE_H
-#define VEHICLE_ENGINE_H
+#ifndef TRACK_COMPONENT_H
+#define TRACK_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"

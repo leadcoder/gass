@@ -8,6 +8,7 @@
     <Plugin value="Plugin_OctreeSceneManager"/>
     <Plugin value="Plugin_ParticleFX"/>
     <PostFilters value="HDR"/>
+    <PrimaryThread value="1"/>
   </GraphicsSystem>
   <ResourceSystem type="OgreResourceSystem">
     <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
@@ -18,6 +19,7 @@
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>

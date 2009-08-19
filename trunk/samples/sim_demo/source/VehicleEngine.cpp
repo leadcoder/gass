@@ -400,6 +400,7 @@ namespace GASS
 		}
 
 		UpdateSound(delta);
+		UpdateExhaustFumes(delta);
 		
 		/*char dtxt[256];
 		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineRPM,m_Clutch);
@@ -416,6 +417,18 @@ namespace GASS
 		sound_msg->SetData("Parameter",SceneObject::PITCH);
 		sound_msg->SetData("Value",pitch);
 		GetSceneObject()->PostMessage(sound_msg);
+
+	}
+
+	void VehicleEngine::UpdateExhaustFumes(double delta)
+	{
+	
+		float emission = GetNormRPM()*30;
+		MessagePtr particle_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
+		particle_msg->SetData("Parameter",SceneObject::EMISSION_RATE);
+		particle_msg->SetData("Emitter",int(0));
+		particle_msg->SetData("Rate",emission);
+		GetSceneObject()->PostMessage(particle_msg);
 
 	}
 
@@ -726,7 +739,7 @@ namespace GASS
 
 	float VehicleEngine::AngleVel2RPM(float rps)
 	{
-		//Convert to radians and minut
+		//Convert to radians and minutes
 		return rps*60.0f/(2*MY_PI);
 	}
 }

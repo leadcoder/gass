@@ -11,6 +11,7 @@ material FadeGrass : VegetationTemplate
 			ambient 1 1 1 1 
 			specular 0.0 0.0 0.0 1 10 
 			emissive 0.0 1.0 0.0 0.5 
+			depth_write off
 
 			texture_unit 
 			{ 
