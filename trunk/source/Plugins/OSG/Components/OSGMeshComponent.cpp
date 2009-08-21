@@ -110,6 +110,7 @@ namespace GASS
 	{
 		Sphere sphere;
 		sphere.m_Pos = Vec3(0,0,0);
+		
 
 		if(m_MeshNode.get())
 		{

@@ -81,21 +81,15 @@ namespace GASS
 		RegisterProperty<float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
 		RegisterProperty<float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
 		RegisterProperty<float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
-
-		/*	REGISTER_OBJECT(FreeCamControlComponent);
-		REGISTER_PROP(Si, FreeCamControlComponent,m_TopCam,"TopMode",CProperty::STREAM|CProperty::EXPOSE,"Orthogonal mode (1) or perspective mode (0) ");
-		REGISTER_PROP(Float, FreeCamControlComponent, m_FovChangeSpeed, "FOVChangeSpeed" , CProperty::STREAM|CProperty::EXPOSE,"");
-		return true;*/
 	}
 
 	void FreeCamControlComponent::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(FreeCamControlComponent::Update));
 
-
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnUnload));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");

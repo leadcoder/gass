@@ -95,8 +95,9 @@ namespace GASS
 		m_ScenarioScene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
-		MessagePtr obj_msg(new Message(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS));
-		obj->SendImmediate(obj_msg);
+		//MessagePtr obj_msg(new Message(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS));
+		//obj->SendImmediate(obj_msg);
+		
 		//Pump initial messages around
 		obj->SyncMessages(0);
 		//send load message for all child game object also?

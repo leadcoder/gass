@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef ODE_LINE_COLLISION
+#define ODE_LINE_COLLISION
 
 #include <ode/ode.h>
 #include "Sim/Systems/Collision/ICollisionSystem.h"
@@ -45,3 +46,4 @@ namespace GASS
 	
 }
 
+#endif

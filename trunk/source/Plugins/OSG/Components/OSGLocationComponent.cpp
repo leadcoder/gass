@@ -69,6 +69,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_POSITION, MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage),0);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_ROTATION, MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage ),0);
 		
 	}
 
@@ -113,6 +114,7 @@ namespace GASS
 		}
 	}
 
+	
 	void OSGLocationComponent::OnRotationMessage(MessagePtr message)
 	{
 		Quaternion value = (boost::any_cast<Quaternion>(message->GetData("Rotation")));
@@ -205,6 +207,7 @@ namespace GASS
 			q.FromRotationMatrix(rot_mat);
 			m_TransformNode->setAttitude(osg::Quat(-q.w,q.x,q.y,q.z));*/
 		}
+
 	}
 
 	Vec3 OSGLocationComponent::GetEulerRotation() const
@@ -232,7 +235,6 @@ namespace GASS
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
 		}
-
 	}
 
 	Quaternion OSGLocationComponent::GetWorldRotation() const
@@ -246,7 +248,6 @@ namespace GASS
 		return q;
 	}
 
-
 	void OSGLocationComponent::operator()(osg::Node* node, osg::NodeVisitor* nv) 
      {  
           //std::cout<<"update callback - pre traverse"<<node<<std::endl; 
@@ -254,5 +255,19 @@ namespace GASS
           traverse(node,nv); 
           //std::cout<<"update callback - post traverse"<<node<<std::endl; 
       } 
+
+	void OSGLocationComponent::OnVisibilityMessage(MessagePtr message)
+	{
+		bool visibility = boost::any_cast<bool>(message->GetData("Visibility"));
+		if(visibility) 
+			m_TransformNode->setNodeMask(1);
+		else m_TransformNode->setNodeMask(0);
+	}
+
+	
+
+
+	
+
 
 }

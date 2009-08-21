@@ -65,6 +65,7 @@ namespace GASS
 		void OnLoad(MessagePtr message);
 		void OnPositionMessage(MessagePtr message);
 		void OnRotationMessage(MessagePtr message);
+		void OnVisibilityMessage(MessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
 		Vec3 m_LastPos;

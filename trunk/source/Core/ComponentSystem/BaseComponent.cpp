@@ -52,7 +52,7 @@ namespace GASS
 	
 	ComponentContainerPtr BaseComponent::GetOwner() const 
 	{
-		return ComponentContainerPtr(m_Owner);
+		return ComponentContainerPtr(m_Owner,boost::detail::sp_nothrow_tag());
 	}
 
 	void BaseComponent::SetOwner(ComponentContainerPtr owner)

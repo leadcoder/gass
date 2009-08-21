@@ -68,6 +68,7 @@ namespace GASS
 		{
 			if((*iter).functor.func_ptr == callback.functor.func_ptr)
 			{
+				tbb::spin_mutex::scoped_lock lock(m_Mutex);
 				iter = m_TaskUpdateVector.erase(iter);
 			}
 			else

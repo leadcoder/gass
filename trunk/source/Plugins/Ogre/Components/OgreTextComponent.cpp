@@ -51,7 +51,8 @@ namespace GASS
 		m_Offset (0.2),
 		m_Color(1,1,1,1),
 		m_TextObject(NULL),
-		m_Attribs(NULL)
+		m_Attribs(NULL),
+		m_Visible(true)
 	{
 
 	}
@@ -104,6 +105,7 @@ namespace GASS
 		//this one should load after mesh entities
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreTextComponent::OnLoad),2);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_TEXT_PARAMETER, MESSAGE_FUNC(OgreTextComponent::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OgreTextComponent::OnVisibilityMessage ),0);
 	}
 
 	std::string OgreTextComponent::GetText() const
@@ -216,7 +218,7 @@ namespace GASS
 		ss >> name;
 
 		m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
-		m_TextObject->enable(true); // make it invisible for now
+		m_TextObject->enable(true); 
 		m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
 	}
 
@@ -233,7 +235,7 @@ namespace GASS
 			m.setDepth(0);
 
 			m_TextObject->update(0.1);
-			if (m_TextObject->isOnScreen() && m_TextToDisplay != "")
+			if (m_TextObject->isOnScreen() && m_TextToDisplay != "" && m_Visible)
 			{
 				//visible++;
 
@@ -269,4 +271,8 @@ namespace GASS
 		return sphere;
 	}
 
+	void OgreTextComponent::OnVisibilityMessage(MessagePtr message)
+	{
+		m_Visible = boost::any_cast<bool>(message->GetData("Visibility"));
+	}
 }

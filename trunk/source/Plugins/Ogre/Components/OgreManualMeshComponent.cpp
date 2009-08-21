@@ -86,7 +86,7 @@ namespace GASS
 		m_MeshObject->setCastShadows(false);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
-		Log::Print("created");
+		
 	}
 
 	void OgreManualMeshComponent::OnParameterMessage(MessagePtr message)

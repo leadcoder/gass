@@ -42,7 +42,7 @@ namespace GASS
 
 	void DebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC( DebugComponent::OnLoad),2);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC( DebugComponent::OnLoad),2);
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_SCENE_OBJECT_NAME, MESSAGE_FUNC(DebugComponent::OnChangeName));
 	}
 

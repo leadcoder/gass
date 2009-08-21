@@ -18,70 +18,44 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SIM_SCENE_MANAGER_H
+#define SIM_SCENE_MANAGER_H
 
-#include <ode/ode.h>
 #include <map>
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 
-namespace Ogre
-{
-	class VertexData;
-}
+
 namespace GASS
 {
-	class IMeshComponent;
-	struct MeshData;
-
-	struct ODECollisionMesh
-	{
-		MeshData* Mesh;
-		dTriMeshDataID ID;
-	};
-
-	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager>
+	/**
+		Scene manager that owns all sim components.  This scene manager can 
+		also be used by plugins that only provid some new sim components but dont want to create
+		a brand new scene manager.
+	*/
+	class SimSceneManager  : public Reflection<SimSceneManager, BaseSceneManager>
 	{
 	public:
-		typedef std::map<std::string,ODECollisionMesh> CollisionMeshMap;
-	public:
-		ODEPhysicsSceneManager();
-		virtual ~ODEPhysicsSceneManager();
+		SimSceneManager();
+		virtual ~SimSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		dSpaceID GetPhysicsSpace(){return m_Space;}
-		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
-		ODECollisionMesh CreateCollisionMesh(IMeshComponent* mesh);
-		bool HasCollisionMesh(const std::string &name);
-		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
-		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
 		void Update(double delta_time);
-		dWorldID GetWorld()const {return m_World;}
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
-		void SetGravity(float gravity);
-		float GetGravity() const;
+	private:
 		void SetPrimaryThread(bool value);
 		bool GetPrimaryThread() const;
 
-		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
-		void ProcessCollision(dGeomID o1, dGeomID o2);
-	private:
-		dWorldID m_World;
-		dSpaceID m_Space;
-		dSpaceID m_StaticSpace;
-		dSpaceID m_CollisionSpace;
-		dJointGroupID m_ContactGroup;
-		float m_Gravity;
-		bool m_Paused;
-		bool m_PrimaryThread;
-		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;
 		int m_MaxSimSteps;
+		bool m_Paused;
+		bool m_PrimaryThread;
+		
 	};
 }
-
+#endif

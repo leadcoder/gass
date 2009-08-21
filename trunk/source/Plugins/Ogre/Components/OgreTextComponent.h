@@ -46,6 +46,7 @@ namespace GASS
 		void SetOffset(float offset);
 		float GetCharacterSize() const;
 		void SetCharacterSize(float size);
+		void OnVisibilityMessage(MessagePtr message);
 	
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;
@@ -53,6 +54,7 @@ namespace GASS
 		float m_Offset;
 		float m_Size;
 		Vec4 m_Color;
+		bool m_Visible;
 	private:
 	};
 }

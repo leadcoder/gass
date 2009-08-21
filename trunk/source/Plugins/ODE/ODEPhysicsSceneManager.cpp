@@ -86,7 +86,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
-		//Initlize all gfx components and send scene mananger as argument
+		//Initlize all physics components and send scene mananger as argument
 		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
 		assert(obj);
 		MessagePtr phy_msg(new Message(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,(int) this));

@@ -32,6 +32,14 @@ namespace GASS
 	class ICameraComponent;
 	class ScenarioScene;
 
+		/**
+			Basic motion modell that can be used to move a camera. 
+			By listen to a ControlSetting the motion model takes input and
+			then calculate a new postion and rotation and send a request message
+			with this new data. Its the location components jobb to listen to 
+			this kind of messages and actually implement the transformations
+		*/
+
 	class GASSExport FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>
 	{
 	public:

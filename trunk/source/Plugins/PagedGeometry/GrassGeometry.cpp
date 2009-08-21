@@ -33,6 +33,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
+#include "Core/Utils/Log.h"
 
 namespace GASS
 {
@@ -264,7 +265,10 @@ namespace GASS
 	void GrassGeometry::SetSwaySpeed(float speed)
 	{
 		m_SwaySpeed = speed;
-		UpdateSway();
+		if(m_GrassLoader)
+		{
+			m_GrassLayer->setSwaySpeed(m_SwaySpeed);
+		}
 	}
 
 	float GrassGeometry::GetSwayLength() const
@@ -275,7 +279,10 @@ namespace GASS
 	void GrassGeometry::SetSwayLength(float length)
 	{
 		m_SwayLength = length;
-		UpdateSway();
+		if(m_GrassLoader)
+		{
+			m_GrassLayer->setSwayLength(m_SwayLength);
+		}
 	}
 
 	bool GrassGeometry::GetEnableSway() const
@@ -286,7 +293,17 @@ namespace GASS
 	void GrassGeometry::SetEnableSway(bool value)
 	{
 		m_EnableSway = value;
-		UpdateSway();
+		if(m_GrassLoader)
+		{
+			if(m_EnableSway)
+			{
+				m_GrassLayer->setAnimationEnabled(true);
+			}
+			else
+			{
+				m_GrassLayer->setAnimationEnabled(false);
+			}
+		}
 	}
 
 	float GrassGeometry::GetSwayDistribution() const
@@ -297,7 +314,10 @@ namespace GASS
 	void GrassGeometry::SetSwayDistribution(float distribution)
 	{
 		m_SwayDistribution = distribution;
-		UpdateSway();
+		if(m_GrassLoader)
+		{
+			m_GrassLayer->setSwayDistribution(m_SwayDistribution);
+		}
 	}
 
 	float GrassGeometry::GetViewDistance() const
@@ -350,7 +370,6 @@ namespace GASS
 		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 		//What camera should be used?
 		
-		
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 		
 		GrassLoader* loader = new GrassLoader(m_PagedGeometry);
@@ -367,13 +386,15 @@ namespace GASS
 		m_GrassLayer->setDensityMap(m_DensityMapFilename);   
 		m_GrassLayer->setColorMap(m_ColorMapFilename); 
 
+		//loader->setRenderQueueGroup();
+
+
+		m_GrassLoader = loader;
 
 		SetFadeTech(m_FadeTech);
 		UpdateSway();
-
 		
 		
-		m_GrassLoader = loader;
 //		Root::Get().AddRenderListener(this);
 	}
 
@@ -391,26 +412,29 @@ namespace GASS
 		m_PagedGeometry->update();
 		if(vp) 
 			m_PagedGeometry->setCamera(vp->getCamera());
+		if(m_GrassLoader ) 
+			m_GrassLoader->updateAnimation();
 	}
 
 
 
 	void GrassGeometry::UpdateSway()
 	{
-		/*if(m_GrassLoader)
+		if(m_GrassLoader)
 		{
 			if(m_EnableSway)
 			{
-				m_GrassLoader->setAnimationEnabled(true);
-				m_GrassLoader->setSwaySpeed(m_SwaySpeed);
-				m_GrassLoader->setSwayLength(m_SwayLength);
-				m_GrassLoader->setSwayDistribution(m_SwayDistribution);
+				m_GrassLayer->setAnimationEnabled(true);
+				m_GrassLayer->setSwaySpeed(m_SwaySpeed);
+				m_GrassLayer->setSwayLength(m_SwayLength);
+				m_GrassLayer->setSwayDistribution(m_SwayDistribution);
+				//Log::Print("speed:%f length:%f dist:%f",m_SwaySpeed,m_SwayLength,m_SwayDistribution);
 			}
 			else
 			{
-				m_GrassLoader->setAnimationEnabled(false);
+				m_GrassLayer->setAnimationEnabled(false);
 			}
-		}*/
+		}
 	}
 
 /*	void GrassGeometry::RenderUpdate(float delta)
