@@ -50,12 +50,11 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("TrackComponent",new Creator<TrackComponent, IComponent>);
 		RegisterProperty<std::string>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
 		RegisterProperty<float>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
-		
 	}
 
 	void TrackComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(TrackComponent::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TrackComponent::OnLoad));
 		//register for physics messages on engine?
 	}
 

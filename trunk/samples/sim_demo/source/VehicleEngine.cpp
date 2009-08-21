@@ -316,7 +316,7 @@ namespace GASS
 			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngine::OnInput));
 		else 
 			Log::Warning("Failed to find control settings: VehicleEngineInputSettings");
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnUnload));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleEngine::OnPhysicsMessage));
 		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(VehicleEngine::Update));
