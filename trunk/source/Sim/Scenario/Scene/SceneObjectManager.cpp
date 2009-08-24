@@ -99,7 +99,7 @@ namespace GASS
 		//obj->SendImmediate(obj_msg);
 		
 		//Pump initial messages around
-		obj->SyncMessages(0);
+		obj->SyncMessages(0,false);
 		//send load message for all child game object also?
 
 		IComponentContainer::ComponentContainerIterator children = obj->GetChildren();

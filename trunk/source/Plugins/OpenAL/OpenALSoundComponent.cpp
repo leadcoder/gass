@@ -71,11 +71,13 @@ namespace GASS
 
 	void OpenALSoundComponent::OnParameterMessage(MessagePtr message)
 	{
+		//Log::Warning("OpenALSoundComponent::OnParameterMessage");
 		SceneObject::SoundParameterType type = boost::any_cast<SceneObject::SoundParameterType>(message->GetData("Parameter"));
 		switch(type)
 		{
 		case SceneObject::PLAY:
 			{
+				//Log::Warning("OpenALSoundComponent::Play() - play!");
 				Play();
 			}
 			break;
@@ -83,11 +85,19 @@ namespace GASS
 			{
 				Stop();
 			}
+			break;
 		case SceneObject::PITCH:
 			{
 				float value = boost::any_cast<float>(message->GetData("Value"));
 				//float pitch = GetPitch();
 				SetPitch(value);
+			}
+			break;
+		case SceneObject::VOLUME:
+			{
+				float value = boost::any_cast<float>(message->GetData("Value"));
+				//float pitch = GetPitch();
+				SetVolume(value);
 			}
 			break;
 		}
@@ -145,7 +155,7 @@ namespace GASS
 
 	void OpenALSoundComponent::SetVolume(float volume) 
 	{
-		if(volume <  0 || volume > 1)
+		if(volume <  0)
 		{
 			Log::Warning("Invalid volume %.3f",volume);
 			return;
@@ -245,6 +255,7 @@ namespace GASS
 			Log::Warning("OpenALSoundComponent::Play() called without m_Source set");
 			return;
 		}
+
 		alSourcePlay(m_Source);
 	}
 

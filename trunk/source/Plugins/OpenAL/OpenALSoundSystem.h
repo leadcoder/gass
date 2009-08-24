@@ -39,6 +39,7 @@ namespace GASS
 		bool LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
 		bool CheckAlError( void );
 		bool CheckAlError( std::string pMsg );
+		SystemType GetSystemType() {return "SoundSystem";}
 	protected:
 		/** See http://www.openal.org/windows_enumeration.html for installing other
 		*   devices. You should at least have "Generic Hardware".

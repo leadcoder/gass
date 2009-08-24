@@ -182,7 +182,7 @@ namespace GASS
 		SceneObject();
 		virtual ~SceneObject();
 		static	void RegisterReflection();
-		void SyncMessages(double delta_time);
+		void SyncMessages(double delta_time, bool recursive = true);
 
 		SceneObjectManager* GetSceneObjectManager() {return m_Manager;}
 		//MessageManager* GetMessageManager(){return m_MessageManager;}

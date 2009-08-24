@@ -84,14 +84,17 @@ namespace GASS
 		return  boost::shared_static_cast<SceneObject>(container);
 	}
 
-	void SceneObject::SyncMessages(double delta_time)
+	void SceneObject::SyncMessages(double delta_time, bool recursive)
 	{
 		m_MessageManager->Update(delta_time);
-		IComponentContainer::ComponentContainerVector::iterator go_iter;
-		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
+		if(recursive)
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject> (*go_iter);
-			child->SyncMessages(delta_time);
+			IComponentContainer::ComponentContainerVector::iterator go_iter;
+			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject> (*go_iter);
+				child->SyncMessages(delta_time);
+			}
 		}
 	}
 
