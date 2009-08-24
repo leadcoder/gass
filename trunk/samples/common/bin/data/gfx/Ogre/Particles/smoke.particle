@@ -50,8 +50,8 @@ particle_system ExhaustFumes
 particle_system TrackDust
 {
     	material        	Dust
-    	particle_width  	0.2
-    	particle_height 	0.2
+    	particle_width  	0.4
+    	particle_height 	0.4
     	cull_each       	false
     	quota           	500
     	billboard_type  	point
@@ -62,25 +62,25 @@ particle_system TrackDust
     	// Area emitter
     	emitter Point
     	{
-			width 0.2
+			width 4
 			height 4
 			depth 0.1
 
 			angle               		11
         	emission_rate       		19
-        	time_to_live        		2
+        	time_to_live        		0.5
         	direction           		0 1 0
         	velocity_min        		0.02
         	velocity_max        		0.1
-        	position 0 -0.5 1.0
+        	position 0 -0.5 -1.0
         	//position 0 -0.5 0.0
     	
 	}
 
-	affector ColourImage
-	{
-		image		dustcolors.png
-	}
+	#affector ColourImage
+	#{
+	#	image		dustcolors.png
+	#}
 
    	affector Rotator
    	{
@@ -92,7 +92,7 @@ particle_system TrackDust
 
    	affector Scaler
    	{
-       	rate 	10
+       	rate 	2
    	}
    	
    	affector DirectionRandomiser 
@@ -102,7 +102,7 @@ particle_system TrackDust
    	
    	affector ColourFader
 {
-    alpha -0.3
+    alpha -2
 }
 
 
