@@ -38,6 +38,7 @@
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 //#include "AdvantageTerrainManager.H"
 
@@ -70,7 +71,8 @@ namespace GASS
 		int obj_id = (int) this;
 		
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad),1);
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(ScenarioScene::SCENARIO_NM_CAMERA_CHANGED,  MESSAGE_FUNC(AdvantageTerrainComponent::OnChangeCamera));
+		
 	}
 
 	void AdvantageTerrainComponent::Shutdown()
@@ -86,6 +88,17 @@ namespace GASS
 		//or highres of terrain in memory?
 
 	}
+
+	void AdvantageTerrainComponent::OnChangeCamera(MessagePtr message)
+	{
+		if(mAVTerrainSceneMgr)
+		{
+			Ogre::Camera* ocam = boost::any_cast<Ogre::Camera*>(message->GetData("OgreCamera"));
+			mAVTerrainSceneMgr->setPrimaryCamera(ocam);
+		}
+	}
+
+	
 
 	void AdvantageTerrainComponent::OnLoad(MessagePtr message)
 	{
@@ -129,8 +142,9 @@ namespace GASS
 		Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(m_PageListener);
 		}*/
 
-		Ogre::Camera* ocam = NULL;
-		ocam = sm->getCamera("TheCamera");
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+
+		//ocam = sm->getCamera("TheCamera");
 		mAVTerrainSceneMgr->setPrimaryCamera(ocam);
 	
 		
@@ -199,10 +213,6 @@ namespace GASS
 		return true;
 	}
 
-/*	int AdvantageTerrainComponent::GetMaterialId(float x, float z)
-	{
-		return 0;
-	}*/
 
 
 	float AdvantageTerrainComponent::GetSizeZ()

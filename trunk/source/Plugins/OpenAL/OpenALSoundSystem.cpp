@@ -47,7 +47,7 @@ namespace GASS
 	void OpenALSoundSystem::OnSceneLoaded(MessagePtr message)
 	{
 		m_Scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA,  MESSAGE_FUNC(OpenALSoundSystem::OnChangeCamera));
+		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_CAMERA_CHANGED,  MESSAGE_FUNC(OpenALSoundSystem::OnChangeCamera));
 	}
 
 	void OpenALSoundSystem::OnChangeCamera(MessagePtr message)

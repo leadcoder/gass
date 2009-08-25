@@ -77,7 +77,8 @@ namespace GASS
 			// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
 			SCENARIO_NM_SCENE_OBJECT_CREATED,
 			// message data: SceneObject that is removed: "SceneObject" = SceneObjectPtr
-			SCENARIO_NM_SCENE_OBJECT_REMOVED,	
+			SCENARIO_NM_SCENE_OBJECT_REMOVED,
+			SCENARIO_NM_CAMERA_CHANGED,
 			//SCENARIO_NM_UPDATE
 		};
 

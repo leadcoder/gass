@@ -204,6 +204,10 @@ namespace GASS
 		OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
 
 		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp->GetOgreCamera());
+		MessagePtr cam_message(new Message(ScenarioScene::SCENARIO_NM_CAMERA_CHANGED));
+		cam_message->SetData("CameraObject",cam_obj);
+		cam_message->SetData("OgreCamera",cam_comp->GetOgreCamera());
+		m_Scene->PostMessage(cam_message);
 	}
 
 	void OgreGraphicsSceneManager::OnLoadSceneObject(MessagePtr message)

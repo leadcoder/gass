@@ -61,6 +61,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 	protected:
+		void AdvantageTerrainComponent::OnChangeCamera(MessagePtr message);
 		void OnLoad(MessagePtr message);
 		Ogre::AVTerrainSceneManager* mAVTerrainSceneMgr;
 		Vec3 m_WorldMin;

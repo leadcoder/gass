@@ -177,7 +177,6 @@ namespace GASS
 	
 	void FreeCamControlComponent::OnInit(MessagePtr message)
 	{
-		
 		//m_LocComp = GetOwner()->GetFirstComponent<ILocationComponent>();
 		//m_CameraComp = GetOwner()->GetFirstComponent<ICameraComponent>();
 	}
