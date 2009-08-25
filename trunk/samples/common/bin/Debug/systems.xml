@@ -2,6 +2,7 @@
 <Systems>
   <GraphicsSystem type="OgreGraphicsSystem">
     <Plugin value="RenderSystem_GL"/>
+    <Plugin value="RenderSystem_Direct3D9"/>
     <Plugin value="Plugin_CgProgramManager"/>
     <Plugin value="Plugin_BSPSceneManager"/>
     <Plugin value="Plugin_OctreeSceneManager"/>
@@ -17,6 +18,7 @@
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
