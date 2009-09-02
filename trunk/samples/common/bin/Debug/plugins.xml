@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Plugins>
-  <Plugin PluginFile = "GASSPluginOgre_d.dll"/>
-  <Plugin PluginFile = "GASSPluginOIS_d.dll"/>
-  <Plugin PluginFile = "GASSPluginODE_d.dll"/>
-  <Plugin PluginFile = "GASSPluginPagedGeometry_d.dll"/>
-  <Plugin PluginFile = "GASSPluginOpenAL_d.dll"/>
+  <Plugin PluginFile = "GASSPluginOgre"/>
+  <Plugin PluginFile = "GASSPluginOIS"/>
+  <Plugin PluginFile = "GASSPluginODE"/>
+  <Plugin PluginFile = "GASSPluginPagedGeometry"/>
+  <Plugin PluginFile = "GASSPluginOpenAL"/>
 </Plugins>
