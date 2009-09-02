@@ -61,7 +61,7 @@ namespace GASS
 		qr.FromAngleAxis( -rot.z, Vec3(0,0,1));
 
 		*this = qp * qh;
-		*this = *this * qr;
+		*this = qr * (*this);
 	}
 	//-----------------------------------------------------------------------
 	void Quaternion::FromRotationMatrix (const Mat4& kRot)

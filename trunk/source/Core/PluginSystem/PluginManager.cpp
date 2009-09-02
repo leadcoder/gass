@@ -54,6 +54,11 @@ namespace GASS
 			while(plugins)
 			{
 				std::string name = plugins->Attribute("PluginFile");
+
+#ifdef _DEBUG
+				name += "_d";
+#endif 
+				name += ".dll";
 				DynamicModule* module = new DynamicModule(name);
 				if(module->Load())
 					m_Plugins.push_back(module);

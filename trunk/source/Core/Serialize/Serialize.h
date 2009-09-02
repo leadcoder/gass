@@ -23,6 +23,7 @@
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix.h"
+#include "Core/Utils/FilePath.h"
 #include <cstring>
 
 // This is a modified version of serialization code from
@@ -51,6 +52,8 @@ namespace GASS
 		virtual void IO(std::vector<double> &value) = 0;
 		virtual void IO(std::vector<int> &value)  =0;
 		virtual void IO(std::vector<std::string> &value) = 0;
+		virtual void IO(FilePath &value) = 0;
+		
 		virtual bool Loading()=0;
 	};
 
@@ -223,6 +226,11 @@ namespace GASS
 			}
 		}
 
+		void IO(FilePath &path)
+		{
+			IO(path.GetPath());
+		}
+
 		bool Loading(){return false;}
 
 		bool hasOverflowed() { return bHasOverflowed; }
@@ -387,6 +395,11 @@ namespace GASS
 			}
 		}
 
+		void IO(FilePath &path)
+		{
+			IO(path.GetPath());
+		}
+
 		bool Loading(){return true;}
 
 		bool hasOverflowed() { return bHasOverflowed; }
@@ -478,6 +491,11 @@ namespace GASS
 			{
 				IO(value[i]);
 			}
+		}
+
+		void IO(FilePath &path)
+		{
+			IO(path.GetPath());
 		}
 
 		bool Loading(){return false;}

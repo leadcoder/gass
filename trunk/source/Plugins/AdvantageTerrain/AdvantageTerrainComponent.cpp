@@ -95,10 +95,10 @@ namespace GASS
 		{
 			Ogre::Camera* ocam = boost::any_cast<Ogre::Camera*>(message->GetData("OgreCamera"));
 			mAVTerrainSceneMgr->setPrimaryCamera(ocam);
+			float viewRange = ocam->getFarClipDistance();//Root::Get().GetLevel()->GetViewDist();
+			mAVTerrainSceneMgr->setViewRange(viewRange);
 		}
 	}
-
-	
 
 	void AdvantageTerrainComponent::OnLoad(MessagePtr message)
 	{

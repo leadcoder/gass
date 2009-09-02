@@ -66,7 +66,6 @@ namespace GASS
 
 	void OgreCameraComponent::OnCreate()
 	{
-		
 		//priorty = 1 -> load this one after nodes
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreCameraComponent::OnLoad),1);
 	}

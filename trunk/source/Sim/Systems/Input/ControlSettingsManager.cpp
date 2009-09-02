@@ -309,6 +309,9 @@ namespace GASS
 
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IInputSystem>();
 
+		if(!input_system)
+			Log::Error("ControlSettingsManager:: No input system found!");
+
 		// Loop through each template
 		while(control_settings)
 		{

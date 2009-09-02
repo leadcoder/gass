@@ -67,17 +67,16 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	bool SimEngine::Init(const std::string &plugin_file, const std::string &system_file)
+	bool SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings)
 	{
 	    Log::Print("SimEngine::Init -- Start");
 		m_PluginManager->LoadFromFile(plugin_file);
 		m_SystemManager->Load(system_file);
-		m_ControlSettingsManager->Load("control_settings.xml");
+		m_ControlSettingsManager->Load(control_settings);
 		//Initialize systems
 		m_SystemManager->Init();
 
 		m_RTC->Init();
-
 		//Load some base game objects
 		m_SimObjectManager->Load("scene_objects.xml");
 		Log::Print("SimEngine::Init -- Done");

@@ -43,6 +43,20 @@ namespace GASS
 		std::string GetPathNoFile() const;
 		std::string GetExtension() const;
 		std::string GetFilename() const;
+
+		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
+		{
+			os << path.GetPath();
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, FilePath& path)
+		{
+			std::string value;
+			os >> value;
+			path.SetPath(value);
+			return os;
+		}
 	private:
 		std::string ExpandEnvVariables(const std::string &inStr);
 		std::string m_ExpandPath;
