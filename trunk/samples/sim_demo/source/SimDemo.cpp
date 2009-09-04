@@ -114,8 +114,9 @@ void TestCollision(GASS::ScenarioScene* scene)
 
 int main(int argc, char* argv[])
 {
-	std::string plugin_file = "plugins.xml";
-	std::string sys_conf_file ="systems.xml";
+	std::string plugin_file = "../Configuration/plugins.xml";
+	std::string sys_conf_file ="../Configuration/systems.xml";
+	std::string ctrl_conf_file ="../Configuration/control_settings.xml";
 	std::string scenario_path ="../data/scenarios/ogre_demo_scenario";
 
 	int index = 1;
@@ -140,7 +141,7 @@ int main(int argc, char* argv[])
 		index += 2;
 	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
-	engine->Init(plugin_file,sys_conf_file);
+	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
 	GASS::Scenario* scenario = new GASS::Scenario();
 
 	//CreateManualObject();

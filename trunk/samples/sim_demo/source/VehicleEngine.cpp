@@ -319,7 +319,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnUnload));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleEngine::OnPhysicsMessage));
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(VehicleEngine::Update));
+		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(VehicleEngine::Update),MAIN_TASK_GROUP);
 		m_Initialized = true;
 	}
 
