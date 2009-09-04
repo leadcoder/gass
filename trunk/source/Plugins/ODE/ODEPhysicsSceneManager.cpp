@@ -44,7 +44,7 @@ namespace GASS
 		m_CollisionSpace(0),
 		m_ContactGroup (0),
 		m_Paused(false),
-		m_PrimaryThread(false),
+		m_TaskGroup(PHYSICS_TASK_GROUP),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
@@ -61,7 +61,7 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>( "Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
-		RegisterProperty<bool>( "PrimaryThread", &GASS::ODEPhysicsSceneManager::GetPrimaryThread, &GASS::ODEPhysicsSceneManager::SetPrimaryThread);
+		RegisterProperty<TaskGroup>("TaskGroup", &GASS::ODEPhysicsSceneManager::GetTaskGroup, &GASS::ODEPhysicsSceneManager::SetTaskGroup);
 	}
 
 	void ODEPhysicsSceneManager::SetGravity(float gravity)
@@ -78,7 +78,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ),m_PrimaryThread);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(ODEPhysicsSceneManager::Update),m_TaskGroup);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
@@ -155,9 +155,8 @@ namespace GASS
 		dSpaceDestroy (m_StaticSpace);
 		dWorldDestroy (m_World);
 		//dCloseODE();
-
 		int address = (int) this;
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(boost::bind( &ODEPhysicsSceneManager::Update, this, _1 ));
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(ODEPhysicsSceneManager::Update),m_TaskGroup);
 	}
 
 
@@ -258,15 +257,7 @@ namespace GASS
 		}
 
 	}
-
-	void ODEPhysicsSceneManager::SetPrimaryThread(bool value)
-	{
-		m_PrimaryThread = value;
-	}
-	bool ODEPhysicsSceneManager::GetPrimaryThread() const
-	{
-		return m_PrimaryThread;
-	}
+	
 
 	void ODEPhysicsSceneManager::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
 	{
@@ -351,5 +342,15 @@ namespace GASS
 			return true;
 		}
 		return false;
+	}
+
+	void ODEPhysicsSceneManager::SetTaskGroup(TaskGroup value)
+	{
+		m_TaskGroup = value;
+	}
+
+	TaskGroup ODEPhysicsSceneManager::GetTaskGroup() const
+	{
+		return m_TaskGroup;
 	}
 }

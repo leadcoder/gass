@@ -24,7 +24,9 @@
 #include "Sim/Systems/SimSystem.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Sim/Scheduling/TaskGroups.h"
 #include <string>
+
 namespace Ogre
 {
 	class Root;
@@ -60,9 +62,9 @@ namespace GASS
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
-		void SetPrimaryThread(bool value);
-		bool GetPrimaryThread() const;
-	
+		void SetTaskGroup(TaskGroup value);
+		TaskGroup GetTaskGroup() const;
+
 		void OnInit(MessagePtr message);
 		void OnCreateRenderWindow(MessagePtr message);
 		void OnWindowMovedOrResized(MessagePtr message);
@@ -74,10 +76,9 @@ namespace GASS
 		std::vector<std::string> m_Plugins;
 		std::vector<std::string> m_PostFilters;
 		OgreDebugTextOutput* m_DebugTextBox;
-		//std::vector<ISceneManager*> m_SceneManagers;
 		bool m_CreateMainWindowOnInit;
 		OgrePostProcessPtr m_PostProcess;
-		bool m_PrimaryThread;
+		TaskGroup m_TaskGroup;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 }

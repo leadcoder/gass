@@ -30,7 +30,7 @@ namespace GASS
 {
 	TBBRuntimeController::TBBRuntimeController()
 	{
-	
+
 	}
 
 	TBBRuntimeController::~TBBRuntimeController()
@@ -47,44 +47,52 @@ namespace GASS
 		//tbb::tick_count ts = tbb::tick_count::now();
 	}
 
-	void TBBRuntimeController::Register(UpdateFunc callback, bool force_primary_thread)
+	void TBBRuntimeController::Register(UpdateFunc callback,  TaskGroup group)
 	{
-		if(force_primary_thread)
+		if(group == MAIN_TASK_GROUP)
 		{
 			m_PrimaryUpdateVector.push_back(callback);
 		}
 		else
 		{
-
 			tbb::spin_mutex::scoped_lock lock(m_Mutex);
-			m_TaskUpdateVector.push_back(callback);
+			m_TaskGroups[group].push_back(callback);
 		}
 	}
 
-	void TBBRuntimeController::Unregister(UpdateFunc callback)
+	void TBBRuntimeController::Unregister(UpdateFunc callback, TaskGroup group)
 	{
-		std::vector<UpdateFunc>::iterator iter = m_TaskUpdateVector.begin();
-		while(iter != m_TaskUpdateVector.end())
+		if(group == MAIN_TASK_GROUP)
 		{
-			if((*iter).functor.func_ptr == callback.functor.func_ptr)
+			UpdateFuncVector::iterator iter = m_PrimaryUpdateVector.begin();
+			while(iter != m_PrimaryUpdateVector.end())
 			{
-				tbb::spin_mutex::scoped_lock lock(m_Mutex);
-				iter = m_TaskUpdateVector.erase(iter);
+				if((*iter).functor.func_ptr == callback.functor.func_ptr)
+				{
+					iter = m_PrimaryUpdateVector.erase(iter);
+				}
+				else
+					iter++;
 			}
-			else
-				iter++;
+			return;
+
+		}
+		else
+		{
+			UpdateFuncVector::iterator iter = m_TaskGroups[group].begin();
+			while(iter != m_TaskGroups[group].end())
+			{
+				if((*iter).functor.func_ptr == callback.functor.func_ptr)
+				{
+					tbb::spin_mutex::scoped_lock lock(m_Mutex);
+					iter = m_TaskGroups[group].erase(iter);
+				}
+				else
+					iter++;
+			}
 		}
 
-		iter = m_PrimaryUpdateVector.begin();
-		while(iter != m_PrimaryUpdateVector.end())
-		{
-			if((*iter).functor.func_ptr == callback.functor.func_ptr)
-			{
-				iter = m_PrimaryUpdateVector.erase(iter);
-			}
-			else
-				iter++;
-		}
+
 	}
 
 
@@ -92,24 +100,24 @@ namespace GASS
 	{
 		m_TasksRoot->set_ref_count(1);
 
-		std::vector<UpdateFunc> update_vec;
+		TaskGroupMap groups;
 		//mutex
 		{
 			//lock
 			tbb::spin_mutex::scoped_lock lock(m_Mutex);
-			update_vec = m_TaskUpdateVector;
+			groups = m_TaskGroups;
 		}
 
-
-		if(update_vec.size() > 0)
+		if(groups.size() > 0)
 		{
 			tbb::task_list task_list;
 
-			
-			for(int i = 0 ; i < update_vec.size();i++)
+			TaskGroupMap::iterator iter = groups.begin();
+
+			for(; iter != groups.end();iter++)
 			{
 				//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
-				TBBUpdateTask* update_task = new( m_TasksRoot->allocate_additional_child_of( *m_TasksRoot ) ) TBBUpdateTask(delta_time,update_vec[i]);
+				TBBUpdateTask* update_task = new( m_TasksRoot->allocate_additional_child_of( *m_TasksRoot ) ) TBBUpdateTask(delta_time,iter->second);
 				// affinity will increase the chances that each SystemTask will be assigned
 				// to a unique thread, regardless of PerformanceHint
 				//pSystemTask->set_affinity( m_affinityIDs[i % uAffinityCount] );
@@ -121,15 +129,15 @@ namespace GASS
 
 			m_TasksRoot->spawn( task_list);
 		}
-		
+
 		//Update primary thread here
 		for(int i = 0 ; i < m_PrimaryUpdateVector.size();i++)
 		{
 			m_PrimaryUpdateVector[i](delta_time);
 		}
-		
+
 		//wait for all tasks
-		if(update_vec.size() > 0)
+		if(groups.size() > 0)
 			m_TasksRoot->wait_for_all();
 
 		//Sync!

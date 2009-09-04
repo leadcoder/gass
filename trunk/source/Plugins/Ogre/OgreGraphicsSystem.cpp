@@ -36,14 +36,13 @@
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
 
-
 using namespace Ogre;
 
 namespace GASS
 {
 	OgreGraphicsSystem::OgreGraphicsSystem(void): m_Window(NULL),
 		m_CreateMainWindowOnInit(true),
-		m_PrimaryThread(false)
+		m_TaskGroup(GRAPHICS_TASK_GROUP)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
 
@@ -61,7 +60,7 @@ namespace GASS
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
 		RegisterProperty<std::vector<std::string> >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
-		RegisterProperty<bool>( "PrimaryThread", &GASS::OgreGraphicsSystem::GetPrimaryThread, &GASS::OgreGraphicsSystem::SetPrimaryThread);
+		RegisterProperty<TaskGroup>("TaskGroup", &GASS::OgreGraphicsSystem::GetTaskGroup, &GASS::OgreGraphicsSystem::SetTaskGroup);
 	}
 
 	void OgreGraphicsSystem::OnCreate()
@@ -126,11 +125,11 @@ namespace GASS
 		}
 
 		//Force register in primary thread if ogl
-		bool primary_thread = m_PrimaryThread;
+		TaskGroup group = m_TaskGroup;
 		if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
-			primary_thread = true;
+			group = MAIN_TASK_GROUP;
 
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OgreGraphicsSystem::Update, this, _1 ),primary_thread);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OgreGraphicsSystem::Update, this, _1 ),group);
 
 		if(m_CreateMainWindowOnInit)
 		{
@@ -307,16 +306,17 @@ namespace GASS
 		m_PostFilters = filters;
 	}
 
-	void OgreGraphicsSystem::SetPrimaryThread(bool value)
+	void OgreGraphicsSystem::SetTaskGroup(TaskGroup value)
 	{
-		m_PrimaryThread = value;
+		m_TaskGroup = value;
 	}
 
-	bool OgreGraphicsSystem::GetPrimaryThread() const
+	TaskGroup OgreGraphicsSystem::GetTaskGroup() const
 	{
-		return m_PrimaryThread;
+		return m_TaskGroup;
 	}
 }
+
 
 
 

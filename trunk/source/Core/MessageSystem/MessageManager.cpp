@@ -149,9 +149,9 @@ namespace GASS
 
 		while (iter !=  m_MessageQueue.end())
 		{
-			if((*iter)->m_Timer > 0)
+			if((*iter)->m_Delay > 0)
 			{
-				(*iter)->m_Timer -= dt;
+				(*iter)->m_Delay -= dt;
 				iter++;
 			}
 			else

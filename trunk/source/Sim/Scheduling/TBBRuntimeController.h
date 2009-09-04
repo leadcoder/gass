@@ -32,6 +32,7 @@
 
 namespace GASS
 {
+	typedef std::map<TaskGroup,UpdateFuncVector> TaskGroupMap;
 	class GASSExport TBBRuntimeController : public  IRuntimeController
 	{
 	public:
@@ -39,14 +40,14 @@ namespace GASS
 		virtual ~TBBRuntimeController();
 		void Init();
 		void Update(double delta_time);
-		void Register(UpdateFunc callback, bool force_primary_thread);
-		void Unregister(UpdateFunc callback);
+		void Register(UpdateFunc callback, TaskGroup group);
+		void Unregister(UpdateFunc callback, TaskGroup group);
 	private:
 		tbb::task* m_TasksRoot;
 		tbb::spin_mutex m_Mutex;
 		tbb::task_scheduler_init* m_Scheduler;
-		std::vector<UpdateFunc> m_TaskUpdateVector;
-		std::vector<UpdateFunc> m_PrimaryUpdateVector;
+		TaskGroupMap m_TaskGroups;
+		UpdateFuncVector m_PrimaryUpdateVector;
 	};
 }
 

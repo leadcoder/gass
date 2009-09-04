@@ -85,7 +85,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(FreeCamControlComponent::Update));
+		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(FreeCamControlComponent::Update),MAIN_TASK_GROUP);
 
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
@@ -102,7 +102,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(FreeCamControlComponent::Update));
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(FreeCamControlComponent::Update),MAIN_TASK_GROUP);
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)

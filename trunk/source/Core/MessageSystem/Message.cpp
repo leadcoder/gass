@@ -25,7 +25,7 @@ namespace GASS
 	Message::Message(int type) :
 			m_TypeID(type),
 			m_SenderID(-1),
-			m_Timer(0)
+			m_Delay(0)
 	{
 
 	}
@@ -33,7 +33,7 @@ namespace GASS
 	Message::Message(int type, int sender_id) :
 			m_TypeID(type),
 			m_SenderID(sender_id),
-			m_Timer(0)
+			m_Delay(0)
 	{
 
 	}
@@ -62,6 +62,11 @@ namespace GASS
 	int Message::GetSenderID() const
 	{
 		return m_SenderID;
+	}
+
+	void Message::SetDeliverDelay(double delay)
+	{
+		m_Delay = delay;
 	}
 
 

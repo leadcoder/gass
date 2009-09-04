@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/Common.h"
+#include "TaskGroups.h"
 #include <vector>
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
@@ -31,6 +32,7 @@
 namespace GASS
 {
 	typedef boost::function<void(double delta_time)> UpdateFunc;
+	typedef std::vector<UpdateFunc> UpdateFuncVector;
 	#define	UPDATE_FUNC(X) boost::bind(&X, this, _1 )
 
 	/**
@@ -64,16 +66,17 @@ namespace GASS
 		/**
 			Register new update callback function
 			@param callback Function to receive update calls, ie. MyClass::MyUpdate(double delta_time)
-			@param force_primary_thread Should this callback be forced to executed from the main application thread. 
-
+			@param group The task group this update callback should be executed from
+			@remarks If you want to forced the update callback to be executed 
+			from the main application thread you should use the "MAIN" task group
 		*/
-		virtual void Register(UpdateFunc callback, bool force_primary_thread = true) = 0;
+		virtual void Register(UpdateFunc callback, TaskGroup group) = 0;
 		/**
 			Unregister update callback function
 			@param callback It's necessary to provide the function again because that’s
 			the only identifier for the RTC.
 		*/
-		virtual void Unregister(UpdateFunc callback) = 0;
+		virtual void Unregister(UpdateFunc callback, TaskGroup group) = 0;
 	private:
 	};
 }

@@ -24,6 +24,7 @@
 #include <map>
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
+#include "Sim/Scheduling/TaskGroups.h"
 
 namespace Ogre
 {
@@ -63,8 +64,8 @@ namespace GASS
 		void OnLoadSceneObject(MessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
-		void SetPrimaryThread(bool value);
-		bool GetPrimaryThread() const;
+		void SetTaskGroup(TaskGroup value);
+		TaskGroup GetTaskGroup() const;
 
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
@@ -76,7 +77,7 @@ namespace GASS
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;
 		bool m_Paused;
-		bool m_PrimaryThread;
+		TaskGroup m_TaskGroup;
 		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		double m_SimulationUpdateInterval;

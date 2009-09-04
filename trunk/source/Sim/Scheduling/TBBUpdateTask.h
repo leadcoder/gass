@@ -39,10 +39,10 @@ namespace GASS
 	class GASSExport TBBUpdateTask : public tbb::task
 	{
 	public:
-		TBBUpdateTask(double delta_time, UpdateFunc func);
+		TBBUpdateTask(double delta_time, const UpdateFuncVector &update_vec);
 		tbb::task*  execute();
 	private:
-		UpdateFunc m_Callback;
+		UpdateFuncVector m_UpdateVec;
 		double m_DeltaTime;
 
 	};

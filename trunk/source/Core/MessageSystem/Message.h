@@ -73,6 +73,13 @@ namespace GASS
 		*/
 		void SetData(const std::string &data_name, boost::any data);
 
+		/**	
+		Set delay (in seconds) from current frame time until this message should be delivered.
+		Note: This time is ignored when using the SendImmediate method of the MessageManager
+		*/
+
+		void SetDeliverDelay(double delay);
+
 
 		/**
 		Get the sender id, -1 is returned if no sender id was provided in message constructor.
@@ -81,7 +88,7 @@ namespace GASS
 		
 		protected: //give fast access to message manager
 			int m_TypeID;
-			float m_Timer;
+			double m_Delay;
 		private:
 			int m_SenderID;
 			std::map<std::string,boost::any> m_Data;

@@ -24,7 +24,7 @@
 #include <map>
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
-
+#include "Sim/Scheduling/TaskGroups.h"
 
 namespace GASS
 {
@@ -46,15 +46,15 @@ namespace GASS
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
 	private:
-		void SetPrimaryThread(bool value);
-		bool GetPrimaryThread() const;
-
+		void SetTaskGroup(TaskGroup value);
+		TaskGroup GetTaskGroup() const;
+	
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;
 		int m_MaxSimSteps;
 		bool m_Paused;
-		bool m_PrimaryThread;
+		TaskGroup m_TaskGroup;
 		
 	};
 }

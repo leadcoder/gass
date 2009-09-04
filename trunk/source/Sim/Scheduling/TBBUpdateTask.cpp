@@ -23,14 +23,17 @@
 
 namespace GASS
 {
-	TBBUpdateTask::TBBUpdateTask(double delta_time, UpdateFunc func): m_DeltaTime(delta_time),m_Callback(func)
+	TBBUpdateTask::TBBUpdateTask(double delta_time, const UpdateFuncVector &update_vec): m_DeltaTime(delta_time),m_UpdateVec(update_vec)
 	{
 	
 	}
 
 	tbb::task* TBBUpdateTask::execute()
 	{
-		m_Callback(m_DeltaTime);
+		for(int i = 0; i < m_UpdateVec.size(); i++)
+		{
+			m_UpdateVec[i](m_DeltaTime);
+		}
 		return NULL;
 		//add addinonal tasks added by system
 	}

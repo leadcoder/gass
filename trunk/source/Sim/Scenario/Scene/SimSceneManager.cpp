@@ -38,7 +38,7 @@ namespace GASS
 {
 
 	SimSceneManager::SimSceneManager() :
-		m_PrimaryThread(false),
+		m_TaskGroup(MAIN_TASK_GROUP),
 		m_Paused(false),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
@@ -59,7 +59,7 @@ namespace GASS
 
 	void SimSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &SimSceneManager::Update, this, _1 ),m_PrimaryThread);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(SimSceneManager::Update),m_TaskGroup);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnLoad ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnUnload ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
@@ -88,7 +88,7 @@ namespace GASS
 
 		for (int i = 0; i < clamp_num_steps; ++i)
 		{
-			
+						
 		}
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
@@ -102,17 +102,17 @@ namespace GASS
 
 	void SimSceneManager::OnUnload(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(boost::bind( &SimSceneManager::Update, this, _1 ));
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(SimSceneManager::Update),m_TaskGroup);
 	}
 
-	void SimSceneManager::SetPrimaryThread(bool value)
+	void SimSceneManager::SetTaskGroup(TaskGroup value)
 	{
-		m_PrimaryThread = value;
+		m_TaskGroup = value;
 	}
 
-	bool SimSceneManager::GetPrimaryThread() const
+	TaskGroup SimSceneManager::GetTaskGroup() const
 	{
-		return m_PrimaryThread;
+		return m_TaskGroup;
 	}
 
 }
