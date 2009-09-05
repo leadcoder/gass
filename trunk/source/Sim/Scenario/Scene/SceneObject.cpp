@@ -76,7 +76,7 @@ namespace GASS
 		ComponentContainerPtr container = shared_from_this();
 
 		SceneObjectPtr root = GetSceneObjectManager()->GetSceneRoot();
-		
+
 		while(ComponentContainerPtr(container->GetParent()) != root)
 		{
 			container = ComponentContainerPtr(container->GetParent());
@@ -89,12 +89,21 @@ namespace GASS
 		m_MessageManager->Update(delta_time);
 		if(recursive)
 		{
+			//Create copy before update
+			IComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
 			IComponentContainer::ComponentContainerVector::iterator go_iter;
-			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
+			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); go_iter++)
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject> (*go_iter);
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
 				child->SyncMessages(delta_time);
 			}
+
+			/*IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+			while(cc_iter.hasMoreElements())
+			{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			child->SyncMessages(delta_time);
+			}*/
 		}
 	}
 

@@ -38,11 +38,12 @@ namespace GASS
 		virtual ~ODECollisionSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		virtual SystemType GetSystemType() {return "CollisionSystem";}
-		virtual CollisionHandle Request(const CollisionRequest &request);
-		virtual bool Check(CollisionHandle handle, CollisionResult &result);
-	private:
+		SystemType GetSystemType() {return "CollisionSystem";}
+		CollisionHandle Request(const CollisionRequest &request);
+		bool Check(CollisionHandle handle, CollisionResult &result);
+		void Force(CollisionRequest &request, CollisionResult &result);
 		void Process();
+	private:
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

@@ -125,15 +125,21 @@ namespace GASS
 			
 		};
 
-		// parameters that belong to ObjectMessage OBJECT_NM_PHYSICS_VELOCITY
-		enum PhysicsParameterType
+		// parameters that belong to ObjectMessage OBJECT_RM_PHYSICS_JOINT_PARAMETER
+		enum PhysicsJointParameterType
 		{
 			AXIS1_VELOCITY,
 			AXIS2_VELOCITY,
 			AXIS1_FORCE,
-			AXIS2_FORCE,
+			AXIS2_FORCE
+		};
+
+		// parameters that belong to ObjectMessage OBJECT_RM_PHYSICS_BODY_PARAMETER
+		enum PhysicsBodyParameterType
+		{
 			TORQUE,
 			FORCE,
+			VELOCITY
 		};
 
 		// parameters that belong to ObjectMessage OBJECT_RM_SOUND_PARAMETER

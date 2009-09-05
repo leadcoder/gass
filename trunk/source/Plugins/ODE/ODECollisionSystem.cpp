@@ -47,8 +47,6 @@ namespace GASS
 		assert(request.Scene);
 		CollisionHandle handle = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
 		m_RequestMap[handle] = request;
-		//Process this direct for now;
-		Process();
 		return handle;
 	}
 
@@ -86,6 +84,16 @@ namespace GASS
 			return true;
 		}
 		return false;
+	}
+
+	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
+	{
+		ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("ODEPhysicsSceneManager").get());
+		if(request.Type == COL_LINE)
+		{
+			ODELineCollision raycast(&request,&result,ode_scene);
+			raycast.Process();
+		}
 	}
 
 	void ODECollisionSystem::RegisterReflection()

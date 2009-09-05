@@ -90,13 +90,20 @@ namespace GASS
 				std::string comp_type;
 				serializer->IO(comp_type);
 				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
-				SerializePtr s_comp = boost::shared_dynamic_cast<ISerialize>(comp);
-				if(s_comp)
+				if(comp)
 				{
-					if(!s_comp->Serialize(serializer))
-						return false;
+					SerializePtr s_comp = boost::shared_dynamic_cast<ISerialize>(comp);
+					if(s_comp)
+					{
+						if(!s_comp->Serialize(serializer))
+							return false;
+					}
+					AddComponent(comp);
 				}
-				AddComponent(comp);
+				else
+				{
+					Log::Warning("Failed to create component:%s",comp_type.c_str());
+				}
 			}
 
 			int num_children;
@@ -279,6 +286,10 @@ namespace GASS
 			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->LoadXML(comp_template);
+		}
+		else
+		{
+			Log::Warning("Failed to create component:%s",comp_type.c_str());
 		}
 		return comp;
 	}

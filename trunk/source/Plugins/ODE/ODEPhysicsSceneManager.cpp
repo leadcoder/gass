@@ -30,9 +30,11 @@
 #include "Sim/Scheduling/IRuntimeController.h"
 
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 //#include "Main/Root.h"
 #include "Plugins/ODE/ODEBody.h"
+#include "Plugins/ODE/ODECollisionSystem.h"
 
 
 namespace GASS
@@ -60,7 +62,7 @@ namespace GASS
 	void ODEPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
-		RegisterProperty<float>( "Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
+		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::ODEPhysicsSceneManager::GetTaskGroup, &GASS::ODEPhysicsSceneManager::SetTaskGroup);
 	}
 
@@ -73,8 +75,6 @@ namespace GASS
 	{
 		return m_Gravity;
 	}
-
-
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
@@ -118,6 +118,15 @@ namespace GASS
 		}
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
+
+		//Temp: move this to ODEPhysicsSystem
+		
+		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
+		if(col_sys)
+		{
+			col_sys->Process();
+
+		}
 	}
 
 

@@ -137,7 +137,7 @@ namespace GASS
 
 	void ODEJoint::OnParameterMessage(MessagePtr message)
 	{
-		SceneObject::PhysicsParameterType type = boost::any_cast<SceneObject::PhysicsParameterType>(message->GetData("Parameter"));
+		SceneObject::PhysicsJointParameterType type = boost::any_cast<SceneObject::PhysicsJointParameterType>(message->GetData("Parameter"));
 
 		//wake body!!
 

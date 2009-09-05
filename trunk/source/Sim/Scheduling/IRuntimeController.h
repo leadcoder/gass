@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef I_RUNTIME_CONTROLLER_H
+#define I_RUNTIME_CONTROLLER_H
 
 #include "Sim/Common.h"
 #include "TaskGroups.h"
@@ -47,6 +48,10 @@ namespace GASS
 		a weak pointer to each client and automatically unregister clients when they 
 		die. However current implementation will not force client to inherit from jet 
 		another interface but this maybe change in the future.
+
+		Further the client also have to provide a TaskGroup when during registration.
+		Clients that belong to te same task group is grantid to get sequenze updates 
+		and 
 	*/
 
 	class GASSExport IRuntimeController 
@@ -80,4 +85,4 @@ namespace GASS
 	private:
 	};
 }
-
+#endif

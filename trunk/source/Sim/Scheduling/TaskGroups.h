@@ -17,38 +17,19 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#ifndef TBB_RUNTIME_CONTROLLER_HH
-#define TBB_RUNTIME_CONTROLLER_HH
-
-#include "Sim/Common.h"
-#include <vector>
-#include "Sim/Scheduling/IRuntimeController.h"
-
-#include "tbb/tick_count.h"
-#include "tbb/task.h"
-#include "tbb/task_scheduler_init.h"
-#include "tbb/spin_mutex.h"
+#ifndef TASK_GROUPS_H
+#define TASK_GROUPS_H
 
 namespace GASS
 {
-	typedef std::map<TaskGroup,UpdateFuncVector> TaskGroupMap;
-	class GASSExport TBBRuntimeController : public  IRuntimeController
-	{
-	public:
-		TBBRuntimeController ();
-		virtual ~TBBRuntimeController();
-		void Init();
-		void Update(double delta_time);
-		void Register(UpdateFunc callback, TaskGroup group);
-		void Unregister(UpdateFunc callback, TaskGroup group);
-	private:
-		tbb::task* m_TasksRoot;
-		tbb::spin_mutex m_Mutex;
-		tbb::task_scheduler_init* m_Scheduler;
-		TaskGroupMap m_TaskGroups;
-		UpdateFuncVector m_PrimaryUpdateVector;
-	};
+	typedef std::string TaskGroup;
+	static const TaskGroup MAIN_TASK_GROUP = "MAIN_TASK_GROUP";
+	static const TaskGroup GRAPHICS_TASK_GROUP = "GRAPHICS_TASK_GROUP";
+	static const TaskGroup PHYSICS_TASK_GROUP = "PHYSICS_TASK_GROUP";
+	static const TaskGroup INPUT_TASK_GROUP = "INPUT_TASK_GROUP";
+	static const TaskGroup SOUND_TASK_GROUP = "SOUND_TASK_GROUP";
+	static const TaskGroup SIM_TASK_GROUP = "SOUND_TASK_GROUP";
 }
 
-#endif // TBBRUNTIMECONTROLLER_HH
+
+#endif

@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef TBB_UPDATE_TASK_H
+#define TBB_UPDATE_TASK_H
 
 #include "Sim/Common.h"
 #include <boost/function.hpp>
@@ -47,4 +48,6 @@ namespace GASS
 
 	};
 }
+
+#endif
 

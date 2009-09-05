@@ -94,7 +94,7 @@ namespace GASS
 
 	void ODEBody::OnParameterMessage(MessagePtr message)
 	{
-		SceneObject::PhysicsParameterType type = boost::any_cast<SceneObject::PhysicsParameterType>(message->GetData("Parameter"));
+		SceneObject::PhysicsBodyParameterType type = boost::any_cast<SceneObject::PhysicsBodyParameterType>(message->GetData("Parameter"));
 		//wake body!!
 		Enable();
 		switch(type)
@@ -109,7 +109,15 @@ namespace GASS
 			{
 				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
 				AddTorque(value,true);
+				break;
 			}
+		case SceneObject::VELOCITY:
+			{
+				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				SetVelocity(value,true);
+				break;
+			}
+
 		}
 	}
 

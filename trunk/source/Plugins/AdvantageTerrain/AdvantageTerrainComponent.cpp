@@ -198,7 +198,6 @@ namespace GASS
 	{
 		//mAVTerrainSceneMgr->bidForCollisionData(Ogre::Vector3(x,0,z), 500);
 		Ogre::Sphere sphere(Ogre::Vector3(x,0,z), 500);
-
 		mAVTerrainSceneMgr->bidForCollisionData(sphere);
 		Ogre::AVRayHitInfo rayHitInfo;
 		if(mAVTerrainSceneMgr->intersectRayVertical(x, z, 0,rayHitInfo))
