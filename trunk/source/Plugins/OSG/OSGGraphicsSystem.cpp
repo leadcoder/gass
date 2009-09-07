@@ -84,7 +84,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(OSGGraphicsSystem::RTCUpdate),MAIN_TASK_GROUP);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_CREATE_RENDER_WINDOW, MESSAGE_FUNC(OSGGraphicsSystem::OnCreateRenderWindow),0);
 	}
@@ -297,7 +297,7 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::RTCUpdate(double delta_time)
+	void OSGGraphicsSystem::Update(double delta_time)
 	{
 		static int tick = 0;
 		m_Viewer->frame(delta_time);
@@ -309,6 +309,11 @@ namespace GASS
 		}
 		//WindowEventUtilities::messagePump();
 		//m_Root->renderOneFrame();
+	}
+
+	TaskGroup OSGGraphicsSystem::GetTaskGroup() const
+	{
+		return MAIN_TASK_GROUP;
 	}
 }
 

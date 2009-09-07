@@ -47,27 +47,28 @@ namespace GASS
 		//tbb::tick_count ts = tbb::tick_count::now();
 	}
 
-	void TBBRuntimeController::Register(UpdateFunc callback,  TaskGroup group)
+	void TBBRuntimeController::Register(ITaskListener* listener)
 	{
-		if(group == MAIN_TASK_GROUP)
+		if(listener->GetTaskGroup() == MAIN_TASK_GROUP)
 		{
-			m_PrimaryUpdateVector.push_back(callback);
+			m_PrimaryUpdateVector.push_back(listener);
 		}
 		else
 		{
 			tbb::spin_mutex::scoped_lock lock(m_Mutex);
-			m_TaskGroups[group].push_back(callback);
+			m_TaskGroups[listener->GetTaskGroup()].push_back(listener);
 		}
 	}
 
-	void TBBRuntimeController::Unregister(UpdateFunc callback, TaskGroup group)
+	void TBBRuntimeController::Unregister(ITaskListener* listener)
 	{
+		TaskGroup group =listener->GetTaskGroup();
 		if(group == MAIN_TASK_GROUP)
 		{
-			UpdateFuncVector::iterator iter = m_PrimaryUpdateVector.begin();
+			TaskListenerVector::iterator iter = m_PrimaryUpdateVector.begin();
 			while(iter != m_PrimaryUpdateVector.end())
 			{
-				if((*iter).functor.func_ptr == callback.functor.func_ptr)
+				if((*iter) == listener)
 				{
 					iter = m_PrimaryUpdateVector.erase(iter);
 				}
@@ -79,12 +80,13 @@ namespace GASS
 		}
 		else
 		{
-			UpdateFuncVector::iterator iter = m_TaskGroups[group].begin();
+			
+			tbb::spin_mutex::scoped_lock lock(m_Mutex);
+			TaskListenerVector::iterator iter = m_TaskGroups[group].begin();
 			while(iter != m_TaskGroups[group].end())
 			{
-				if((*iter).functor.func_ptr == callback.functor.func_ptr)
+				if((*iter) == listener)
 				{
-					tbb::spin_mutex::scoped_lock lock(m_Mutex);
 					iter = m_TaskGroups[group].erase(iter);
 				}
 				else
@@ -116,7 +118,7 @@ namespace GASS
 
 			for(; iter != groups.end();iter++)
 			{
-				//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
+					//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
 				TBBUpdateTask* update_task = new( m_TasksRoot->allocate_additional_child_of( *m_TasksRoot ) ) TBBUpdateTask(delta_time,iter->second);
 				// affinity will increase the chances that each SystemTask will be assigned
 				// to a unique thread, regardless of PerformanceHint
@@ -133,7 +135,7 @@ namespace GASS
 		//Update primary thread here
 		for(int i = 0 ; i < m_PrimaryUpdateVector.size();i++)
 		{
-			m_PrimaryUpdateVector[i](delta_time);
+			m_PrimaryUpdateVector[i]->Update(delta_time);
 		}
 
 		//wait for all tasks

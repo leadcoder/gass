@@ -26,13 +26,14 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Scheduling/ITaskListener.h"
 
 
 namespace GASS
 {
 
 
-	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener
+	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener, public ITaskListener
 	{
 	public:
 		OISInputSystem();
@@ -86,10 +87,15 @@ namespace GASS
         }
 
 		SystemType GetSystemType() {return "InputSystem";}
+
+		//ITaskListener interface
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
 	private:
 		float NormalizeMouse(float value);
 		void OnInit(MessagePtr message);		
-		void Update(double delta_time);
+		
 
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}
 		void SetExclusiveMode(bool value) {m_ExclusiveMode = value;}

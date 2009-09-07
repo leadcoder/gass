@@ -24,6 +24,7 @@
 #include "Sim/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Core/MessageSystem/Message.h"
+#include "Sim/Scheduling/ITaskListener.h"
 
 namespace GASS
 {
@@ -40,7 +41,7 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class GASSExport FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>
+	class GASSExport FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>, ITaskListener
 	{
 	public:
 		FreeCamControlComponent();
@@ -48,7 +49,9 @@ namespace GASS
 		static void RegisterReflection();
 		void OnCreate();
 		void Update(double delta_time);
+		TaskGroup GetTaskGroup() const;
 	protected:
+		
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
 		void OnInit(MessagePtr message);

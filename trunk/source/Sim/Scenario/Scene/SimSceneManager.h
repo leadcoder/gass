@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
+#include "Sim/Scheduling/ITaskListener.h"
 
 namespace GASS
 {
@@ -33,7 +34,7 @@ namespace GASS
 		also be used by plugins that only provid some new sim components but dont want to create
 		a brand new scene manager.
 	*/
-	class SimSceneManager  : public Reflection<SimSceneManager, BaseSceneManager>
+	class SimSceneManager  : public Reflection<SimSceneManager, BaseSceneManager>, public ITaskListener
 	{
 	public:
 		SimSceneManager();
@@ -41,13 +42,15 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void Update(double delta_time);
+		TaskGroup GetTaskGroup() const;
+
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
 	private:
 		void SetTaskGroup(TaskGroup value);
-		TaskGroup GetTaskGroup() const;
+		
 	
 		bool m_Init;
 		double m_SimulationUpdateInterval;

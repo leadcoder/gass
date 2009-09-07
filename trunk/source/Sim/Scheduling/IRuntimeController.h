@@ -22,7 +22,7 @@
 #define I_RUNTIME_CONTROLLER_H
 
 #include "Sim/Common.h"
-#include "TaskGroups.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include <vector>
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
@@ -32,9 +32,8 @@
 
 namespace GASS
 {
-	typedef boost::function<void(double delta_time)> UpdateFunc;
-	typedef std::vector<UpdateFunc> UpdateFuncVector;
-	#define	UPDATE_FUNC(X) boost::bind(&X, this, _1 )
+	class ITaskListener;
+	typedef std::vector<ITaskListener*> TaskListenerVector;
 
 	/**
 		Interface for runtime controlling. A runtime controller is responsible 
@@ -75,13 +74,13 @@ namespace GASS
 			@remarks If you want to forced the update callback to be executed 
 			from the main application thread you should use the "MAIN" task group
 		*/
-		virtual void Register(UpdateFunc callback, TaskGroup group) = 0;
+		virtual void Register(ITaskListener* listener) = 0;
 		/**
 			Unregister update callback function
 			@param callback It's necessary to provide the function again because that’s
 			the only identifier for the RTC.
 		*/
-		virtual void Unregister(UpdateFunc callback, TaskGroup group) = 0;
+		virtual void Unregister(ITaskListener* listener) = 0;
 	private:
 	};
 }

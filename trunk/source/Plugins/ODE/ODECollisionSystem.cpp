@@ -44,17 +44,32 @@ namespace GASS
 	
 	CollisionHandle ODECollisionSystem::Request(const CollisionRequest &request)
 	{
+		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
+
 		assert(request.Scene);
-		CollisionHandle handle = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
+		m_HandleCount = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
+		CollisionHandle handle = m_HandleCount;
 		m_RequestMap[handle] = request;
 		return handle;
 	}
 
 	void ODECollisionSystem::Process()
 	{
-		//double buffer this when running threaded
 		RequestMap::iterator iter;
-		for(iter = m_RequestMap.begin(); iter != m_RequestMap.end(); iter++)
+		RequestMap requestMap;
+		ResultMap resultMap;
+
+		{
+			tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
+			requestMap = m_RequestMap;
+			m_RequestMap.clear();
+		}
+		{
+			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
+			resultMap = m_ResultMap;
+		}
+
+		for(iter = requestMap.begin(); iter != requestMap.end(); iter++)
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
@@ -64,18 +79,24 @@ namespace GASS
 				CollisionResult result;
 				ODELineCollision raycast(&request,&result,ode_scene);
 				raycast.Process();
-				m_ResultMap[handle] = result;
+				resultMap[handle] = result;
 			}
 			/*else(request.Type == COL_SPHERE)
 			{
 
 			}*/
 		}
-		m_RequestMap.clear();
+		
+		{
+			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
+			m_ResultMap = resultMap;
+		}
+			
 	}
 
 	bool ODECollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
 	{
+		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
 		ResultMap::iterator iter = m_ResultMap.find(handle);
 		if(iter != m_ResultMap.end())
 		{

@@ -23,12 +23,13 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include <string>
 #include <osgViewer/Viewer>
 
 namespace GASS
 {
-	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem
+	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem, public ITaskListener
 	{
 		friend class OSGGraphicsSceneManager;
 	public:
@@ -40,6 +41,12 @@ namespace GASS
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 		osg::Group* GetActiveData() {return m_Root;}
+
+		//ITaskListener interface
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
+
 	protected:
 		void OnCreateRenderWindow(MessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
@@ -51,7 +58,6 @@ namespace GASS
                  int x, int y, int width, int height);
 		void SetActiveData(osg::Group* root);
 		void OnInit(MessagePtr message);		
-		void RTCUpdate(double delta_time);
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
 		osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;

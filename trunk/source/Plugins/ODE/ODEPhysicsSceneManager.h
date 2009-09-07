@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/Message.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
+#include "Sim/Scheduling/ITaskListener.h"
 
 namespace Ogre
 {
@@ -41,7 +42,7 @@ namespace GASS
 		dTriMeshDataID ID;
 	};
 
-	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager>
+	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager> , public ITaskListener
 	{
 	public:
 		typedef std::map<std::string,ODECollisionMesh> CollisionMeshMap;
@@ -56,8 +57,12 @@ namespace GASS
 		bool HasCollisionMesh(const std::string &name);
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
 		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
-		void Update(double delta_time);
 		dWorldID GetWorld()const {return m_World;}
+
+		//ITaskListener interface
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
@@ -65,8 +70,6 @@ namespace GASS
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		void SetTaskGroup(TaskGroup value);
-		TaskGroup GetTaskGroup() const;
-
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
 	private:

@@ -24,9 +24,11 @@
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
+
 #include <boost/bind.hpp>
 
 #include <OgreRenderWindow.h>
@@ -62,7 +64,7 @@ namespace GASS
 
 	void OISInputSystem::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC( OISInputSystem::Update),MAIN_TASK_GROUP);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED, MESSAGE_FUNC( OISInputSystem::OnInit),1);
 	}
 
@@ -378,6 +380,11 @@ namespace GASS
 	bool OISInputSystem::povMoved( const OIS::JoyStickEvent &, int )
 	{
 		return true;
+	}
+
+	TaskGroup OISInputSystem::GetTaskGroup() const
+	{
+		return MAIN_TASK_GROUP;
 	}
 }
 

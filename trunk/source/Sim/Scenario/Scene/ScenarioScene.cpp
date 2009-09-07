@@ -30,6 +30,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 #include "Core/Utils/Log.h"
+#include "Core/Math/Quaternion.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "tinyxml.h"
 
@@ -224,8 +225,8 @@ namespace GASS
 
 	void ScenarioScene::OnCreate()
 	{
-
-
+		RegisterForMessage(SCENARIO_RM_REMOVE_OBJECT, MESSAGE_FUNC( ScenarioScene::OnRemoveSceneObject));
+		RegisterForMessage(SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE, MESSAGE_FUNC( ScenarioScene::OnSpawnSceneObjectFromTemplate));
 	}
 
 	void ScenarioScene::OnLoad()
@@ -309,5 +310,37 @@ namespace GASS
 		}
 		SceneManagerPtr empty;
 		return empty;
+	}
+
+	void ScenarioScene::OnSpawnSceneObjectFromTemplate(MessagePtr message)
+	{
+		std::string obj_template = boost::any_cast<std::string>(message->GetData("Template"));
+		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template);
+		if(so)
+		{
+			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+			Vec3 vel = boost::any_cast<Vec3>(message->GetData("Velocity"));
+			int id = (int) this;
+			MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,id));
+			pos_msg->SetData("Position",pos);
+			MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,id));
+			rot_msg->SetData("Rotation",rot);
+			MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,id));
+			vel_msg->SetData("Parameter",SceneObject::VELOCITY);
+			vel_msg->SetData("Value",vel);
+			
+			so->SendImmediate(pos_msg);
+			so->SendImmediate(rot_msg);
+			so->SendImmediate(vel_msg);
+		}
+	}
+
+	void ScenarioScene::OnRemoveSceneObject(MessagePtr message)
+	{
+		SceneObjectPtr so = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
+		if(so)
+			GetObjectManager()->DeleteObject(so);
+
 	}
 }

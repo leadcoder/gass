@@ -19,11 +19,12 @@
 *****************************************************************************/
 
 #include "Sim/Scheduling/TBBUpdateTask.h"
+#include <iostream>
 
 
 namespace GASS
 {
-	TBBUpdateTask::TBBUpdateTask(double delta_time, const UpdateFuncVector &update_vec): m_DeltaTime(delta_time),m_UpdateVec(update_vec)
+	TBBUpdateTask::TBBUpdateTask(double delta_time, const TaskListenerVector &update_vec): m_DeltaTime(delta_time),m_UpdateVec(update_vec)
 	{
 	
 	}
@@ -32,7 +33,7 @@ namespace GASS
 	{
 		for(int i = 0; i < m_UpdateVec.size(); i++)
 		{
-			m_UpdateVec[i](m_DeltaTime);
+			m_UpdateVec[i]->Update(m_DeltaTime);
 		}
 		return NULL;
 		//add addinonal tasks added by system

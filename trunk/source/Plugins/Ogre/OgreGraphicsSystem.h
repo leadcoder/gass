@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include <string>
 
 namespace Ogre
@@ -40,7 +41,7 @@ namespace GASS
 	class OgreDebugTextOutput;
 	class OgrePostProcess;
 	typedef boost::shared_ptr<OgrePostProcess> OgrePostProcessPtr;
-	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
+	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem, public ITaskListener
 	{
 		friend class OgreGraphicsSceneManager;
 	public:
@@ -50,7 +51,11 @@ namespace GASS
 		virtual void OnCreate();
 		SystemType GetSystemType() {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
+		
+		//ITaskListener interface
 		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+		
 		Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
@@ -63,7 +68,7 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void SetTaskGroup(TaskGroup value);
-		TaskGroup GetTaskGroup() const;
+		
 
 		void OnInit(MessagePtr message);
 		void OnCreateRenderWindow(MessagePtr message);

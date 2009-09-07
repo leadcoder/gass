@@ -25,6 +25,7 @@
 #include <map>
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Core/System/BaseSystem.h"
+#include "tbb/spin_mutex.h"
 
 namespace GASS
 {
@@ -47,6 +48,8 @@ namespace GASS
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;
+		tbb::spin_mutex m_RequestMutex;
+		tbb::spin_mutex m_ResultMutex;
 	};
 
 

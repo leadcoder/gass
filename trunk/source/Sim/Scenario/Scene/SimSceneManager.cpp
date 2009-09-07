@@ -59,7 +59,7 @@ namespace GASS
 
 	void SimSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(SimSceneManager::Update),m_TaskGroup);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnLoad ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnUnload ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
@@ -73,6 +73,11 @@ namespace GASS
 		MessagePtr sim_msg(new Message(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS,(int) this));
 		sim_msg->SetData("SimSceneManager",boost::any(this));
 		obj->SendImmediate(sim_msg);
+	}
+
+	TaskGroup SimSceneManager::GetTaskGroup() const
+	{
+		return m_TaskGroup;
 	}
 
 
@@ -102,17 +107,12 @@ namespace GASS
 
 	void SimSceneManager::OnUnload(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(SimSceneManager::Update),m_TaskGroup);
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 	void SimSceneManager::SetTaskGroup(TaskGroup value)
 	{
 		m_TaskGroup = value;
-	}
-
-	TaskGroup SimSceneManager::GetTaskGroup() const
-	{
-		return m_TaskGroup;
 	}
 
 }

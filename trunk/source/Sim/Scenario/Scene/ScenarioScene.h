@@ -73,6 +73,8 @@ namespace GASS
 			SCENARIO_RM_LOAD_SCENE_MANAGERS,
 			SCENARIO_RM_UNLOAD_SCENE_MANAGERS,
 			SCENARIO_RM_CHANGE_CAMERA,
+			SCENARIO_RM_REMOVE_OBJECT,
+			SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE,
 			//--------------------Notify section------------------------
 			// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
 			SCENARIO_NM_SCENE_OBJECT_CREATED,
@@ -124,6 +126,9 @@ namespace GASS
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
 	protected:
+		void OnSpawnSceneObjectFromTemplate(MessagePtr message);
+		void OnRemoveSceneObject(MessagePtr message);
+	
 
 		void SetUpVector(const std::string &value);
 		std::string GetUpVector() const;

@@ -125,11 +125,10 @@ namespace GASS
 		}
 
 		//Force register in primary thread if ogl
-		TaskGroup group = m_TaskGroup;
 		if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
-			group = MAIN_TASK_GROUP;
+			m_TaskGroup = MAIN_TASK_GROUP;
 
-		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &OgreGraphicsSystem::Update, this, _1 ),group);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		if(m_CreateMainWindowOnInit)
 		{

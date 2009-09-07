@@ -78,7 +78,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(ODEPhysicsSceneManager::Update),m_TaskGroup);
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
 		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
@@ -165,7 +165,7 @@ namespace GASS
 		dWorldDestroy (m_World);
 		//dCloseODE();
 		int address = (int) this;
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(UPDATE_FUNC(ODEPhysicsSceneManager::Update),m_TaskGroup);
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 
