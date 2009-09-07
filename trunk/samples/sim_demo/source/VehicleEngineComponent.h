@@ -18,13 +18,14 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef VEHICLE_ENGINE_H
-#define VEHICLE_ENGINE_H
+#ifndef VEHICLE_ENGINE_COMPONENT_H
+#define VEHICLE_ENGINE_COMPONENT_H
 
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include "Core/MessageSystem/Message.h"
 #include "PIDControl.h"
 
@@ -56,11 +57,11 @@ namespace GASS
 		ET_TANK,
 	};
 
-	class VehicleEngine :  public Reflection<VehicleEngine,BaseSceneComponent>
+	class VehicleEngineComponent :  public Reflection<VehicleEngineComponent,BaseSceneComponent>, public ITaskListener
 	{
 	public:
-		VehicleEngine();
-		virtual ~VehicleEngine();
+		VehicleEngineComponent();
+		virtual ~VehicleEngineComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 
@@ -73,6 +74,7 @@ namespace GASS
 		float GetRPM(){return m_RPM;}
 		int GetGear(){return m_Gear;}
 		float GetNormRPM();
+		TaskGroup GetTaskGroup() const;
 	private:
 		std::vector<std::string> GetWheels() const;
 		void SetWheels(const std::vector<std::string> wheels);
@@ -132,14 +134,14 @@ namespace GASS
 		float AngleVel2RPM(float rps);
 
 		//members attributes
-		std::string m_VehicleEngineType;
+		std::string m_VehicleEngineComponentType;
 		float m_Power;
 		bool m_FakeRPMOutput;
 		float m_MaxBrakeTorque;
 		float m_MinRPM;
 		float m_MaxRPM;
 		float m_WheelRPM;
-		float m_VehicleEngineRPM;
+		float m_VehicleEngineComponentRPM;
 		float m_ThrottleAccel;
 		
 		float m_RPM;

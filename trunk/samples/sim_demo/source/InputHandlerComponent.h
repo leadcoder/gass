@@ -18,40 +18,36 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef TRACK_COMPONENT_H
-#define TRACK_COMPONENT_H
+#ifndef INPUT_HANDLER_H
+#define INPUT_HANDLER_H
 
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/Message.h"
 
+
 namespace GASS
 {
-
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class TrackComponent :  public Reflection<TrackComponent,BaseSceneComponent>
+	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
 	{
 	public:
-		TrackComponent();
-		virtual ~TrackComponent();
+		InputHandlerComponent();
+		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void OnEnter(MessagePtr message);
+		void OnExit(MessagePtr message);
+		void OnInput(MessagePtr message);
 	private:
-		std::string GetDriveWheel() const;
-		void SetDriveWheel(const std::string &wheel);
-		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
-		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
-		void OnLoad(MessagePtr message);
-		void OnDriveWheelPhysicsMessage(MessagePtr message);
+		void SetControlSetting(const std::string &controlsetting);
+		std::string GetControlSetting() const;
 
-		SceneObjectWeakPtr m_DriveWheel;
-		std::string m_DriveWheelName;
-		bool m_Initialized;
-		Vec2 m_AnimationSpeedFactor;
-		Vec2 m_AnimationValue;
+		std::string m_ControlSetting;
 	};
 }
 #endif

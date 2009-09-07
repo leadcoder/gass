@@ -50,6 +50,8 @@
 
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 
+#include "VehicleMessages.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -158,8 +160,18 @@ int main(int argc, char* argv[])
 			boost::shared_ptr<GASS::Message> pos_msg(new GASS::Message(GASS::SceneObject::OBJECT_RM_POSITION));
 			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
 			pos.x = pos.x + i*7;
+			pos.y = 11;
 			pos_msg->SetData("Position",pos);
 			scene_object->SendImmediate(pos_msg);
+
+			boost::shared_ptr<GASS::Message> enter_msg(new GASS::Message((GASS::SceneObject::ObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
+			scene_object->PostMessage(enter_msg);
+
+			GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
+			if(objs.size() > 0)
+				objs.front()->PostMessage(enter_msg);
+
+
 		}
 	}
 

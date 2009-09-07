@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef TRACK_COMPONENT_H
-#define TRACK_COMPONENT_H
+#ifndef TURRET_COMPONENT_H
+#define TURRET_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
@@ -32,26 +32,16 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class TrackComponent :  public Reflection<TrackComponent,BaseSceneComponent>
+	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
 	{
 	public:
-		TrackComponent();
-		virtual ~TrackComponent();
+		TurretComponent();
+		virtual ~TurretComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		std::string GetDriveWheel() const;
-		void SetDriveWheel(const std::string &wheel);
-		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
-		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		void OnLoad(MessagePtr message);
-		void OnDriveWheelPhysicsMessage(MessagePtr message);
-
-		SceneObjectWeakPtr m_DriveWheel;
-		std::string m_DriveWheelName;
-		bool m_Initialized;
-		Vec2 m_AnimationSpeedFactor;
-		Vec2 m_AnimationValue;
+		void OnInput(MessagePtr message);
 	};
 }
 #endif

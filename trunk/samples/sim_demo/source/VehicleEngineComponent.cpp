@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "VehicleEngine.h"
+#include "VehicleEngineComponent.h"
+#include "VehicleMessages.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -36,7 +37,6 @@
 
 namespace GASS
 {
-
 	VehicleWheel::VehicleWheel(SceneObjectPtr  wheel) : m_Velocity(0), 
 		m_AngularVelocity (0),
 		m_WheelObject(wheel)
@@ -50,7 +50,6 @@ namespace GASS
 		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
 		if(wheel_obj)
 			wheel_obj->UnregisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage));
-
 	}
 
 	void VehicleWheel::OnPhysicsMessage(MessagePtr message)
@@ -62,7 +61,7 @@ namespace GASS
 		m_AngularVelocity = ang_vel.x;
 	}
 
-	VehicleEngine::VehicleEngine() :m_Initialized(false), m_VehicleSpeed(0)
+	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), m_VehicleSpeed(0)
 	{
 		m_RPM = 0;
 		m_AutoShiftStart = 0;
@@ -102,22 +101,22 @@ namespace GASS
 		m_CurrentTime = 0;
 		m_DesiredThrottle = 0;
 		m_DesiredSteer = 0;
-		m_VehicleEngineRPM = 0;
+		m_VehicleEngineComponentRPM = 0;
 
 		m_Power = 0.2;
 		m_SteerCtrl = PIDControl(1,1,1);
 		m_AngularVelocity = Vec3(0,0,0);
 	}
 
-	VehicleEngine::~VehicleEngine()
+	VehicleEngineComponent::~VehicleEngineComponent()
 	{
 
 	}
 
-	void VehicleEngine::RegisterReflection()
+	void VehicleEngineComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VehicleEngine",new Creator<VehicleEngine, IComponent>);
-		RegisterProperty<std::vector<std::string>>("Wheels", &VehicleEngine::GetWheels, &VehicleEngine::SetWheels);
+		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
+		RegisterProperty<std::vector<std::string>>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 		RegisterProperty<std::string>("EngineType", &GetEngineType, &SetEngineType);
 		RegisterProperty<bool>("Automatic", &GetAutomatic, &SetAutomatic);
 		RegisterProperty<float>("BrakeTorque", &GetBrakeTorque, &SetBrakeTorque);
@@ -134,9 +133,23 @@ namespace GASS
 		RegisterProperty<std::vector<float>>("GearRatio", &GetGearRatio, &SetGearRatio);
 		//RegisterProperty<bool>("FakeRPMOutput", &GetFakeRPMOutput, &SetFakeRPMOutput);
 	}
+	
+	void VehicleEngineComponent::OnCreate()
+	{
+	/*	ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("VehicleEngineComponentInputSettings");
+		if(cs)
+			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
+		else 
+			Log::Warning("Failed to find control settings: VehicleEngineComponentInputSettings");*/
+		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(VehicleEngineComponent::OnLoad));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngineComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleEngineComponent::OnPhysicsMessage));
+		m_Initialized = true;
+	}
 
 
-	void VehicleEngine::SetEngineType(const std::string &type)
+	void VehicleEngineComponent::SetEngineType(const std::string &type)
 	{
 		if(type == "car")
 		{
@@ -147,7 +160,7 @@ namespace GASS
 			m_EngineType = ET_TANK;
 		}
 	}
-	std::string VehicleEngine::GetEngineType()const
+	std::string VehicleEngineComponent::GetEngineType()const
 	{
 		std::string type;
 		switch(m_EngineType )
@@ -162,110 +175,110 @@ namespace GASS
 		return type;
 	}
 
-	bool VehicleEngine::GetAutomatic() const
+	bool VehicleEngineComponent::GetAutomatic() const
 	{
 		return m_Automatic;
 	}
 
-	void VehicleEngine::SetAutomatic(bool value)
+	void VehicleEngineComponent::SetAutomatic(bool value)
 	{
 		m_Automatic = value;
 	}
 
-	float VehicleEngine::GetBrakeTorque() const
+	float VehicleEngineComponent::GetBrakeTorque() const
 	{
 		return m_MaxBrakeTorque;
 	}
 
-	void VehicleEngine::SetBrakeTorque(float value)
+	void VehicleEngineComponent::SetBrakeTorque(float value)
 	{
 		m_MaxBrakeTorque = value;
 	}
 
-	float VehicleEngine::GetDeclutchTimeChangeGear() const
+	float VehicleEngineComponent::GetDeclutchTimeChangeGear() const
 	{
 		return m_DeclutchTimeChangeGear;
 	}
 
-	void VehicleEngine::SetDeclutchTimeChangeGear(float value)
+	void VehicleEngineComponent::SetDeclutchTimeChangeGear(float value)
 	{
 		m_DeclutchTimeChangeGear = value;
 	}
 
-	float VehicleEngine::GetClutchTimeChangeGear() const
+	float VehicleEngineComponent::GetClutchTimeChangeGear() const
 	{
 		return m_ClutchTimeChangeGear;
 	}
 
-	void VehicleEngine::SetClutchTimeChangeGear(float value)
+	void VehicleEngineComponent::SetClutchTimeChangeGear(float value)
 	{
 		m_ClutchTimeChangeGear = value;
 	}
 
-	float VehicleEngine::GetMaxRPM() const
+	float VehicleEngineComponent::GetMaxRPM() const
 	{
 		return m_MaxRPM;
 	}
 
-	void VehicleEngine::SetMaxRPM(float value)
+	void VehicleEngineComponent::SetMaxRPM(float value)
 	{
 		m_MaxRPM = value;
 	}
 
-	float VehicleEngine::GetMinRPM() const
+	float VehicleEngineComponent::GetMinRPM() const
 	{
 		return m_MinRPM;
 	}
 
-	void VehicleEngine::SetMinRPM(float value)
+	void VehicleEngineComponent::SetMinRPM(float value)
 	{
 		m_MinRPM = value;
 	}
 
 
-	float VehicleEngine::GetRPMGearChangeUp() const
+	float VehicleEngineComponent::GetRPMGearChangeUp() const
 	{
 		return m_RPMGearChangeUp;
 	}
 
-	void VehicleEngine::SetRPMGearChangeUp(float value)
+	void VehicleEngineComponent::SetRPMGearChangeUp(float value)
 	{
 		m_RPMGearChangeUp = value;
 	}
 
-	float VehicleEngine::GetRPMGearChangeDown() const
+	float VehicleEngineComponent::GetRPMGearChangeDown() const
 	{
 		return m_RPMGearChangeDown;
 	}
 
-	void VehicleEngine::SetRPMGearChangeDown(float value)
+	void VehicleEngineComponent::SetRPMGearChangeDown(float value)
 	{
 		m_RPMGearChangeDown = value;
 	}
 
 
 	
-	float VehicleEngine::GetPower() const
+	float VehicleEngineComponent::GetPower() const
 	{
 		return m_Power;
 	}
 
-	void VehicleEngine::SetPower(float value)
+	void VehicleEngineComponent::SetPower(float value)
 	{
 		m_Power = value;
 	}
 
-	float VehicleEngine::GetTurnForce() const
+	float VehicleEngineComponent::GetTurnForce() const
 	{
 		return m_TurnForce;
 	}
 
-	void VehicleEngine::SetTurnForce(float value)
+	void VehicleEngineComponent::SetTurnForce(float value)
 	{
 		m_TurnForce = value;
 	}
 
-	void VehicleEngine::SetGearRatio(const std::vector<float> &gear_data)
+	void VehicleEngineComponent::SetGearRatio(const std::vector<float> &gear_data)
 	{
 		m_GearBoxRatio = gear_data;
 
@@ -280,17 +293,17 @@ namespace GASS
 		m_Gear = m_NeutralGear;
 	}
 
-	std::vector<float> VehicleEngine::GetGearRatio() const
+	std::vector<float> VehicleEngineComponent::GetGearRatio() const
 	{
 		return m_GearBoxRatio;
 	}
 
-	std::vector<std::string> VehicleEngine::GetWheels() const
+	std::vector<std::string> VehicleEngineComponent::GetWheels() const
 	{
 		return m_WheelNames;
 	}
 
-	void VehicleEngine::SetWheels(const std::vector<std::string> wheels)
+	void VehicleEngineComponent::SetWheels(const std::vector<std::string> wheels)
 	{
 		m_WheelNames = wheels;
 		//Update wheel list
@@ -309,21 +322,8 @@ namespace GASS
 		}
 	}
 
-	void VehicleEngine::OnCreate()
-	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("VehicleEngineInputSettings");
-		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngine::OnInput));
-		else 
-			Log::Warning("Failed to find control settings: VehicleEngineInputSettings");
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngine::OnUnload));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(VehicleEngine::OnPhysicsMessage));
-		SimEngine::GetPtr()->GetRuntimeController()->Register(UPDATE_FUNC(VehicleEngine::Update),MAIN_TASK_GROUP);
-		m_Initialized = true;
-	}
 
-	void VehicleEngine::OnLoad(MessagePtr message)
+	void VehicleEngineComponent::OnLoad(MessagePtr message)
 	{
 		//Get wheels from children
 		SetWheels(m_WheelNames);
@@ -332,15 +332,22 @@ namespace GASS
 		MessagePtr sound_msg(new Message(SceneObject::OBJECT_RM_SOUND_PARAMETER));
 		sound_msg->SetData("Parameter",SceneObject::PLAY);
 		GetSceneObject()->PostMessage(sound_msg);
+
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
-	void VehicleEngine::OnUnload(MessagePtr message)
+
+	void VehicleEngineComponent::OnUnload(MessagePtr message)
 	{
-		
-
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
-	void VehicleEngine::OnPhysicsMessage(MessagePtr message)
+	TaskGroup VehicleEngineComponent::GetTaskGroup() const
+	{
+		return "VEHICLE_TASK_GROUP";
+	}
+
+	void VehicleEngineComponent::OnPhysicsMessage(MessagePtr message)
 	{
 		Vec3 ang_vel  = boost::any_cast<Vec3>(message->GetData("AngularVelocity"));
 		m_AngularVelocity = ang_vel;
@@ -348,7 +355,7 @@ namespace GASS
 		m_VehicleSpeed = velocity.FastLength();
 	}
 
-	void VehicleEngine::OnInput(MessagePtr message)
+	void VehicleEngineComponent::OnInput(MessagePtr message)
 	{
 		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
 		float value = boost::any_cast<float>(message->GetData("Value"));
@@ -374,7 +381,7 @@ namespace GASS
 	}
 
 
-	void VehicleEngine::Update(double delta)
+	void VehicleEngineComponent::Update(double delta)
 	{
 		m_CurrentTime += delta;
 		//m_Throttle =  DampThrottle(delta, m_DesiredThrottle,m_Throttle, m_ThrottleAccel);
@@ -383,15 +390,15 @@ namespace GASS
 		float throttle = m_DesiredThrottle;
 		
 		//select gear if in automatic otherwise only handle clutch timing
-		UpdateGearShift(throttle, m_VehicleEngineRPM,m_CurrentTime);
+		UpdateGearShift(throttle, m_VehicleEngineComponentRPM,m_CurrentTime);
 		float brake_q = GetBreakTorq(throttle);
 		//clamp throttle 0-1 and zero out if we want to break
 		throttle = ClampThrottle(throttle);
 		UpdateDriveTrain(delta,throttle, m_VehicleSpeed, brake_q);
 
 		//clamp rpm
-		if(m_VehicleEngineRPM > m_MaxRPM) m_VehicleEngineRPM = m_MaxRPM;
-		if(m_VehicleEngineRPM < m_MinRPM) m_VehicleEngineRPM = m_MinRPM;
+		if(m_VehicleEngineComponentRPM > m_MaxRPM) m_VehicleEngineComponentRPM = m_MaxRPM;
+		if(m_VehicleEngineComponentRPM < m_MinRPM) m_VehicleEngineComponentRPM = m_MinRPM;
 		
 		//TODO: Simulate hydrostatic transmission instead
 		if(m_EngineType == ET_TANK)
@@ -403,13 +410,13 @@ namespace GASS
 		UpdateExhaustFumes(delta);
 		
 		/*char dtxt[256];
-		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineRPM,m_Clutch);
+		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineComponentRPM,m_Clutch);
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_DEBUG_PRINT));
 		debug_msg->SetData("Text",engine_data);
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
 	}
-	void VehicleEngine::UpdateSound(double delta)
+	void VehicleEngineComponent::UpdateSound(double delta)
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0;
@@ -420,7 +427,7 @@ namespace GASS
 
 	}
 
-	void VehicleEngine::UpdateExhaustFumes(double delta)
+	void VehicleEngineComponent::UpdateExhaustFumes(double delta)
 	{
 	
 		float emission = GetNormRPM()*30;
@@ -432,7 +439,7 @@ namespace GASS
 
 	}
 
-	float VehicleEngine::GetNormRPM()
+	float VehicleEngineComponent::GetNormRPM()
 	{
 		
 		float ret = (m_RPM-m_MinRPM)/(m_MaxRPM-m_MinRPM);
@@ -441,7 +448,7 @@ namespace GASS
 		return ret;
 	}
 
-	void VehicleEngine::UpdateSteering(double delta)
+	void VehicleEngineComponent::UpdateSteering(double delta)
 	{
 		//if tank, try to keep angular velocity to steer factor
 		m_SteerCtrl.setGain(m_TurnForce,0.1,0);
@@ -462,7 +469,7 @@ namespace GASS
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
 	}
 
-	float VehicleEngine::DampThrottle(float delta, float desired_throttle,float current_throttle, float throttle_accel)
+	float VehicleEngineComponent::DampThrottle(float delta, float desired_throttle,float current_throttle, float throttle_accel)
 	{
 		//damp throttle to avoid to full throttle to quick
 		if(current_throttle < desired_throttle)
@@ -478,7 +485,7 @@ namespace GASS
 		return current_throttle;
 	}
 
-	float VehicleEngine::ClampThrottle(float throttle)
+	float VehicleEngineComponent::ClampThrottle(float throttle)
 	{
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		if(throttle < 0 && current_gear_ratio > 0) //we are moving foward and want to brake, set throttle to zero
@@ -498,7 +505,7 @@ namespace GASS
 	}
 
 
-	float VehicleEngine::GetBreakTorq(float throttle)
+	float VehicleEngineComponent::GetBreakTorq(float throttle)
 	{
 		float brake_torque = 0;
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
@@ -522,7 +529,7 @@ namespace GASS
 		return brake_torque;
 	}
 
-	float VehicleEngine::GetDesiredWheelVelocity(float throttle)
+	float VehicleEngineComponent::GetDesiredWheelVelocity(float throttle)
 	{
 		throttle = fabs(throttle);
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
@@ -535,13 +542,13 @@ namespace GASS
 		return wheel_vel;
 	}
 
-	float VehicleEngine::GetWheelTorqFromEngine()
+	float VehicleEngineComponent::GetWheelTorqFromEngine()
 	{
 		
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 
 		//max power at half of max_rpm 
-		float angle= (m_VehicleEngineRPM / m_MaxRPM)*MY_PI;
+		float angle= (m_VehicleEngineComponentRPM / m_MaxRPM)*MY_PI;
 		float current_engine_power = sin(angle)*m_Power;
 		
 		float wheel_torque;
@@ -551,7 +558,7 @@ namespace GASS
 
 	}
 
-	void VehicleEngine::UpdateDriveTrain(double delta,float throttle, float speed, float brake_torque)
+	void VehicleEngineComponent::UpdateDriveTrain(double delta,float throttle, float speed, float brake_torque)
 	{
 		float wheel_torque = GetWheelTorqFromEngine();
 		float wheel_vel =  GetDesiredWheelVelocity(throttle);
@@ -592,10 +599,10 @@ namespace GASS
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		//give feedback to engine, when clutch down throttle is directly mapped to rpm, this is not correct and alternatives are to be tested
 		//this could be ok if we ha separate clutch input
-		//m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
+		//m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
 		
 		//give feedback to engine, when clutch down engine rmp is decreased by 1000rpm each second...throttle is released during shifting
-		m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineRPM-1000*delta);
+		m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineComponentRPM-1000*delta);
 
 	
 		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
@@ -611,11 +618,11 @@ namespace GASS
 		}
 		else
 		{
-			m_RPM = m_VehicleEngineRPM;
+			m_RPM = m_VehicleEngineComponentRPM;
 		}
 	}
 
-	void VehicleEngine::UpdateGearShift(float throttle, float rpm, double time)
+	void VehicleEngineComponent::UpdateGearShift(float throttle, float rpm, double time)
 	{
 		int number_of_gears = m_GearBoxRatio.size();
 		if(m_AutoClutchStart == 0 && m_AutoShiftStart == 0)
@@ -731,13 +738,13 @@ namespace GASS
 		}
 	}
 
-	float VehicleEngine::RPM2AngleVel(float rpm)
+	float VehicleEngineComponent::RPM2AngleVel(float rpm)
 	{
 		// Convert to radians and seconds
 		return rpm*2*MY_PI/60.0f;
 	}
 
-	float VehicleEngine::AngleVel2RPM(float rps)
+	float VehicleEngineComponent::AngleVel2RPM(float rps)
 	{
 		//Convert to radians and minutes
 		return rps*60.0f/(2*MY_PI);

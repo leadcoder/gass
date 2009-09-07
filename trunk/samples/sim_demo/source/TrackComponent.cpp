@@ -36,7 +36,7 @@
 
 namespace GASS
 {
-	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0), m_AnimationSpeedFactor(1)
+	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1)
 	{
 	}
 
@@ -49,7 +49,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("TrackComponent",new Creator<TrackComponent, IComponent>);
 		RegisterProperty<std::string>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
-		RegisterProperty<float>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
+		RegisterProperty<Vec2>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
 	}
 
 	void TrackComponent::OnCreate()
@@ -88,21 +88,19 @@ namespace GASS
 	{
 		Vec3 ang_vel  = boost::any_cast<Vec3>(message->GetData("AngularVelocity"));
 		//Vec2 speed(ang_vel.x,0);
-		m_AnimationValue += (ang_vel.x*m_AnimationSpeedFactor);
-		Vec2 speed(m_AnimationValue,0);
+		m_AnimationValue.x += (ang_vel.x*m_AnimationSpeedFactor.x);
+		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
 		MessagePtr mesh_msg(new Message(SceneObject::OBJECT_RM_MESH_PARAMETER));
 		mesh_msg->SetData("Parameter",SceneObject::ANIMATE_TEX_COORD);
-		mesh_msg->SetData("Speed",speed);
+		mesh_msg->SetData("Speed",m_AnimationValue);
 		GetSceneObject()->PostMessage(mesh_msg);
 
 
-		float emission = fabs(ang_vel.x)*2;
+		float emission = fabs(ang_vel.x)*0.3;
 
-		if(fabs(ang_vel.x) < 10)
-			emission  = 0;
-		if(emission >222)
-			emission =222;
+		if(emission >12)
+			emission =12;
 		MessagePtr particle_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
 		particle_msg->SetData("Parameter",SceneObject::EMISSION_RATE);
 		particle_msg->SetData("Emitter",int(0));
@@ -112,15 +110,15 @@ namespace GASS
 
 		MessagePtr particle_duration_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
 		
-		/*float duration = fabs(ang_vel.x)*0.05;
+		float duration = fabs(ang_vel.x)*0.05;
 
 		if(duration > 1.6)  
 			duration = 1.6;
 		particle_duration_msg->SetData("Parameter",SceneObject::PARTICLE_LIFE_TIME);
 		particle_duration_msg->SetData("Emitter",int(0));
-		particle_duration_msg->SetData("TimeToLive",duration);*/
+		particle_duration_msg->SetData("TimeToLive",duration);
 		
-		//GetSceneObject()->PostMessage(particle_duration_msg);
+		GetSceneObject()->PostMessage(particle_duration_msg);
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 

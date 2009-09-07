@@ -18,40 +18,20 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef TRACK_COMPONENT_H
-#define TRACK_COMPONENT_H
-
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#ifndef GAME_SYSTEM_MESSAGES_H
+#define GAME_SYSTEM_MESSAGES_H
 
 namespace GASS
 {
-
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-
-	class TrackComponent :  public Reflection<TrackComponent,BaseSceneComponent>
+	enum GameSystemObjectMessages
 	{
-	public:
-		TrackComponent();
-		virtual ~TrackComponent();
-		static void RegisterReflection();
-		virtual void OnCreate();
-	private:
-		std::string GetDriveWheel() const;
-		void SetDriveWheel(const std::string &wheel);
-		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
-		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
-		void OnLoad(MessagePtr message);
-		void OnDriveWheelPhysicsMessage(MessagePtr message);
-
-		SceneObjectWeakPtr m_DriveWheel;
-		std::string m_DriveWheelName;
-		bool m_Initialized;
-		Vec2 m_AnimationSpeedFactor;
-		Vec2 m_AnimationValue;
+		OBJECT_RM_ENTER_VEHICLE = 1000,
+		OBJECT_RM_EXIT_VEHICLE = 1001,
+		OBJECT_RM_GOTO_POSITION = 1002,
+		OBJECT_NM_PLAYER_INPUT = 1003,
+		OBJECT_RM_RELOAD = 1004,
+		OBJECT_RM_FIRE = 1005
+		
 	};
 }
 #endif
