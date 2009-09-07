@@ -7,7 +7,8 @@
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
   </VehicleEngineInputSettings>
   <TurretInputSettings>
-    <MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
+    <!--MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>-->
+    <MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_T" NegKey="INPUT_Y"/>
     <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
   </TurretInputSettings>
   <FreeCameraInputSettings>

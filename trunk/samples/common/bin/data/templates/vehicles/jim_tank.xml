@@ -75,8 +75,8 @@
           </TurretPhysicsBody>
           <TurretPhysicsJoint type="ODEJoint">
             <Type value="hinge"/>
-            <HighStop value ="1"/>
-            <LowStop value ="-1"/>
+            <HighStop value ="-1"/>
+            <LowStop value ="1"/>
           </TurretPhysicsJoint>
           <TurretInput type ="InputHandlerComponent" >
             <ControlSetting value="TurretInputSettings"/>
