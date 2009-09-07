@@ -24,7 +24,7 @@
       <EngineExhaustFumes type="ParticleSystemComponent">
         <ParticleTemplate value="ExhaustFumes"/>
       </EngineExhaustFumes>
-      <Engine type="VehicleEngine">
+      <Engine type="VehicleEngineComponent">
         <Wheels value="JimTankWheelR1 JimTankWheelR2 JimTankWheelR3 JimTankWheelR4 JimTankWheelR5 JimTankWheelR6 JimTankWheelL1 JimTankWheelL2 JimTankWheelL3 JimTankWheelL4 JimTankWheelL5 JimTankWheelL6"/>
         <EngineType value="tank"/>
         <Power value="0.02"/>
@@ -40,6 +40,9 @@
         <GearRatio value="-13.42 -16.42 0 16.42 13.15 10.52 7.17"/>
         <TurnForce value="100"/>
       </Engine>
+      <InputHandlerComponent type ="InputHandlerComponent">
+        <ControlSetting value ="VehicleEngineInputSettings"/>
+      </InputHandlerComponent>
     </Components>
     <ComponentContainers>
       <JimTankDriverCameraObject type ="SceneObjectTemplate">
@@ -55,13 +58,32 @@
       <JimTankTurret type ="SceneObjectTemplate">
         <Components>
           <TurretLocation type="LocationComponent">
-            <AttachToParent value="1"/>
+            <AttachToParent value="0"/>
             <Position value="0.0 0.45 0.7"/>
           </TurretLocation>
           <TurretMesh type="MeshComponent">
             <Filename value="turret.mesh"/>
             <CastShadow value="1"/>
           </TurretMesh>
+          <TurretComp type="TurretComponent">
+          </TurretComp>
+          <TurretPhysicsGeom type="ODEGeometry">
+            <GeometryType value="box"/>
+          </TurretPhysicsGeom>
+          <TurretPhysicsBody type="ODEBody">
+            <Mass value="0.1"/>
+          </TurretPhysicsBody>
+          <TurretPhysicsJoint type="ODEJoint">
+            <Type value="hinge"/>
+            <HighStop value ="1"/>
+            <LowStop value ="-1"/>
+          </TurretPhysicsJoint>
+          <TurretInput type ="InputHandlerComponent" >
+            <ControlSetting value="TurretInputSettings"/>
+          </TurretInput>
+          <MainGun type ="WeaponSystemComponent">
+            <ProjectileTemplate value="JimTankMainGunProjectileObject"/>
+          </MainGun>
         </Components>
         <ComponentContainers>
           <JimTankBarel type ="SceneObjectTemplate">
@@ -265,4 +287,17 @@
       </CameraLocation>
     </Components>
   </JimTankCameraObject>
+  <JimTankMainGunProjectileObject type ="SceneObjectTemplate">
+    <Components>
+      <Location type="LocationComponent">
+        <AttachToParent value="0"/>
+      </Location>
+      <Mesh type="MeshComponent">
+        <Filename value="JIM_TANK_hull.mesh"/>
+        <CastShadow value="1"/>
+      </Mesh>
+      <ProjectileComp type ="ProjectileComponent">
+      </ProjectileComp>
+    </Components>
+  </JimTankMainGunProjectileObject>
 </Templates>

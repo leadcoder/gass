@@ -6,6 +6,10 @@
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
   </VehicleEngineInputSettings>
+  <TurretInputSettings>
+    <MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
+    <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
+  </TurretInputSettings>
   <FreeCameraInputSettings>
     <MapControllerToInput Controller="ToggleFreeCameraCollision" InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>
     <MapControllerToInput Controller="ToggleFreeCameraFly" InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
@@ -18,5 +22,6 @@
     <MapControllerToInput Controller="FreeCameraZoom" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_2"/>
     <MapControllerToInput Controller="FreeCameraEnableRot" InputDevice="DEVICE_MOUSE" Button="INPUT_BUTTON_1" Repeat="true"/>
   </FreeCameraInputSettings>
+
 </ControlSettings>
 
