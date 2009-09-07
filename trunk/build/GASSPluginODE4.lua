@@ -13,7 +13,8 @@ if (os.is("windows")) then
 		"../Source",
 		"../dependencies/ode/include",
 		"../dependencies/tinyxml",
-		"../dependencies/boost"
+		"../dependencies/boost",
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
@@ -21,7 +22,8 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib"
+		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -58,7 +60,8 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"ode_doubled",
-			"tinyxmld"
+			"tinyxmld",
+			"tbb_debug"  
 		}
 
 	configuration "Release"
@@ -70,7 +73,8 @@ end
 			"GASSCore",
 			"GASSSim",
 			"ode_double",
-			"tinyxml"
+			"tinyxml",
+			"tbb" 
 		}
 
 
