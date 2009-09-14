@@ -46,77 +46,11 @@ particle_system ExhaustFumes
 
 }
 
-// smoke
-particle_system TrackDust2
-{
-    	material        	Dust
-    	particle_width  	0.4
-    	particle_height 	0.4
-    	cull_each       	false
-    	quota           	500
-    	billboard_type  	point
-		sorted				false
-		local_space			false
-		
-    
-    	// Area emitter
-    	emitter Point
-    	{
-			width 4
-			height 4
-			depth 0.1
-
-			angle               		11
-        	emission_rate       		19
-        	time_to_live        		0.5
-        	direction           		0 1 0
-        	velocity_min        		0.02
-        	velocity_max        		0.1
-        	position 0 -0.5 -1.0
-        	//position 0 -0.5 0.0
-    	
-	}
-
-	#affector ColourImage
-	#{
-	#	image		dustcolors.png
-	#}
-
-   	affector Rotator
-   	{
-        	rotation_range_start  		0
-        	rotation_range_end   	 	360
-        	rotation_speed_range_start  	-1
-        	rotation_speed_range_end    	2
-   	}
-
-   	affector Scaler
-   	{
-       	rate 	2
-   	}
-   	
-   	affector DirectionRandomiser 
-   	{
-   	keep_velocity true
-   	}
-   	
-   	affector ColourFader
-{
-    alpha -2
-}
-
-
-
-
-
-}
-
 
 particle_system TrackDust
 {
 	quota	100
 	material	Dust
-	//material	Particles/Smoke4
 	particle_width	0.1
 	particle_height	0.1
 	cull_each	false
@@ -160,22 +94,6 @@ particle_system TrackDust
 		rate	10
 	}
 
-	//affector ColourInterpolator
-	//{
-	//	colour0	1 1 1 0
-	//	time0	0
-	//	colour1	0.956863 0.956863 0.94902 1
-	//	time1	0.06
-	//	colour2	0.462745 0.447059 0.392157 0.478431
-	//	time2	0.84
-	//	colour3	0.415686 0.4 0.34902 0
-	//	time3	0.98
-	//	colour4	0.415686 0.4 0.34902 0
-	//	time4	0.99
-	//	colour5	0.415686 0.4 0.34902 0
-	//	time5	1
-	//}
-	
 	affector ColourInterpolator
 	{
 		colour0	1 1 1 0
