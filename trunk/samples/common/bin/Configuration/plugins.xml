@@ -5,4 +5,5 @@
   <Plugin PluginFile = "GASSPluginODE"/>
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
+  <Plugin PluginFile = "GASSPluginGame"/>
 </Plugins>

@@ -47,7 +47,7 @@ particle_system ExhaustFumes
 }
 
 // smoke
-particle_system TrackDust
+particle_system TrackDust2
 {
     	material        	Dust
     	particle_width  	0.4
@@ -106,4 +106,97 @@ particle_system TrackDust
 }
 
 
+
+
+
+}
+
+
+particle_system TrackDust
+{
+	quota	100
+	material	Dust
+	//material	Particles/Smoke4
+	particle_width	0.1
+	particle_height	0.1
+	cull_each	false
+	renderer	billboard
+	sorted	false
+	local_space	false
+	iteration_interval	0
+	nonvisible_update_timeout	0
+	billboard_type	point
+	billboard_origin	center
+	billboard_rotation_type	texcoord
+	common_up_vector	0 1 0
+	point_rendering	false
+	accurate_facing	false
+
+	emitter Point
+	{
+		angle	120
+		colour	1 1 1 1
+		colour_range_start	1 1 1 1
+		colour_range_end	1 1 1 1
+		direction	0 1 0
+		emission_rate	15
+		position 0 -0.5 2.0
+		velocity	0.5
+		velocity_min	0.5
+		velocity_max	0.5
+		time_to_live	0.5
+		time_to_live_min	0.5
+		time_to_live_max	0.5
+		duration	0
+		duration_min	0
+		duration_max	0
+		repeat_delay	0
+		repeat_delay_min	0
+		repeat_delay_max	0
+	}
+
+	affector Scaler
+	{
+		rate	10
+	}
+
+	//affector ColourInterpolator
+	//{
+	//	colour0	1 1 1 0
+	//	time0	0
+	//	colour1	0.956863 0.956863 0.94902 1
+	//	time1	0.06
+	//	colour2	0.462745 0.447059 0.392157 0.478431
+	//	time2	0.84
+	//	colour3	0.415686 0.4 0.34902 0
+	//	time3	0.98
+	//	colour4	0.415686 0.4 0.34902 0
+	//	time4	0.99
+	//	colour5	0.415686 0.4 0.34902 0
+	//	time5	1
+	//}
+	
+	affector ColourInterpolator
+	{
+		colour0	1 1 1 0
+		time0	0
+		colour1	0.956863 0.956863 0.94902 0.3
+		time1	0.06
+		colour2	0.956863 0.956863 0.94902 0.478431
+		time2	0.3
+		colour3	0.956863 0.956863 0.94902 0.5
+		time3	0.5
+		colour4	0.956863 0.956863 0.94902 0.1
+		time4	0.7
+		colour5	0.956863 0.956863 0.94902 0
+		time5	1
+	}
+
+	affector Rotator
+	{
+		rotation_speed_range_start	0
+		rotation_speed_range_end	0
+		rotation_range_start	0
+		rotation_range_end	99
+	}
 }
