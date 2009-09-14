@@ -47,10 +47,9 @@
 
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
-
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
+#include "Plugins/Game/GameMessages.h"
 
-#include "VehicleMessages.h"
 
 #include <stdio.h>
 #include <iostream>
