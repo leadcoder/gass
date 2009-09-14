@@ -54,7 +54,10 @@ namespace GASS
 		void OnRotationMessage(MessagePtr message);
 		void OnPhysicsParameterMessage(MessagePtr message);
 		
-		void SpawnEffect(const std::string &effect);	
+		void SpawnEffect(const std::string &effect);
+		void SetEndEffectTemplateName(const std::string &effect);
+		std::string GetEndEffectTemplateName() const;
+	
 
 		
 		Vec3 m_Velocity;

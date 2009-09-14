@@ -46,7 +46,6 @@ particle_system ExhaustFumes
 
 }
 
-
 particle_system TrackDust
 {
 	quota	100
@@ -116,5 +115,85 @@ particle_system TrackDust
 		rotation_speed_range_end	0
 		rotation_range_start	0
 		rotation_range_end	99
+	}
+}
+particle_system ProjectileDust
+{
+	quota	128
+	material	Dust
+	particle_width	1
+	particle_height	1
+	cull_each	true
+	renderer	billboard
+	sorted	true
+	local_space	false
+	iteration_interval	0
+	nonvisible_update_timeout	0
+	billboard_type	point
+	billboard_origin	center
+	billboard_rotation_type	texcoord
+	common_up_vector	0 1 0
+	point_rendering	false
+	accurate_facing	false
+
+	emitter Point
+	{
+		angle	18
+		colour	1 1 1 1
+		colour_range_start	1 1 1 1
+		colour_range_end	1 1 1 1
+		direction	0 1 0
+		emission_rate	16
+		position	0 0 0
+		velocity	8
+		velocity_min	8
+		velocity_max	8
+		time_to_live	0.6
+		time_to_live_min	0.6
+		time_to_live_max	0.5
+		duration	0.3
+		duration_min	0.3
+		duration_max	0.3
+		repeat_delay	0
+		repeat_delay_min	0
+		repeat_delay_max	0
+	}
+
+	affector ColourImage
+	{
+		image	smokecolors.png
+	}
+
+	affector DeflectorPlane
+	{
+		plane_point	0 0 0
+		plane_normal	0 1 0
+		bounce	0
+	}
+
+	affector Rotator
+	{
+		rotation_speed_range_start	22.5
+		rotation_speed_range_end	45
+		rotation_range_start	0
+		rotation_range_end	360
+	}
+
+	affector LinearForce
+	{
+		force_vector	0 30 -15
+		force_application	add
+	}
+
+	affector DirectionRandomiser
+	{
+		randomness	10
+		scope	1
+		keep_velocity	false
+	}
+
+	affector Scaler
+	{
+		rate	40
 	}
 }

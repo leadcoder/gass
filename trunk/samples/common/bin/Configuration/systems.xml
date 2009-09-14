@@ -16,6 +16,7 @@
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../../dependencies/ogre/Samples/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>

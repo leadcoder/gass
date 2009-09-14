@@ -83,6 +83,10 @@
           </TurretInput>
           <MainGun type ="WeaponSystemComponent">
             <ProjectileTemplate value="JimTankMainGunProjectileObject"/>
+            <ProjectileStartOffset value="5.0"/>
+            <ProjectileStartVelocity value="50.0"/>
+            <NumberOfMagazines value="90"/>
+            <MagazineSize value="90"/>
           </MainGun>
         </Components>
         <ComponentContainers>
@@ -297,7 +301,19 @@
         <CastShadow value="1"/>
       </Mesh>
       <ProjectileComp type ="ProjectileComponent">
+        <EndEffectTemplate value="JimTankMainGunProjectileEffect"/>
       </ProjectileComp>
     </Components>
   </JimTankMainGunProjectileObject>
+  <JimTankMainGunProjectileEffect type ="SceneObjectTemplate">
+    <Components>
+      <Location type="LocationComponent">
+        <AttachToParent value="0"/>
+      </Location>
+      <ParticleSystem type="ParticleSystemComponent">
+        <ParticleTemplate value="ProjectileDust"/>
+        <TimeToLive value="2.0"/>
+      </ParticleSystem>
+    </Components>
+  </JimTankMainGunProjectileEffect>
 </Templates>

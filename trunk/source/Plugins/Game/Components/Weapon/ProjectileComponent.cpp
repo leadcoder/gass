@@ -63,6 +63,7 @@ namespace GASS
 	void ProjectileComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ProjectileComponent",new Creator<ProjectileComponent, IComponent>);
+		RegisterProperty<std::string>("EndEffectTemplate", &ProjectileComponent::GetEndEffectTemplateName, &ProjectileComponent::SetEndEffectTemplateName);
 	}
 
 	void ProjectileComponent::OnCreate()
@@ -285,9 +286,8 @@ namespace GASS
 			remove_msg->SetData("SceneObject",GetSceneObject());
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
 
-
-			SpawnEffect("strf9040ProjectileEffect");
-
+			if(m_EndEffectTemplateName != "")
+				SpawnEffect(m_EndEffectTemplateName);
 			return;
 		}
 
@@ -311,5 +311,15 @@ namespace GASS
 		spawn_msg->SetData("Rotation",m_Rot);
 		spawn_msg->SetData("Velocity",vel);
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+	}
+
+	void ProjectileComponent::SetEndEffectTemplateName(const std::string &effect)
+	{
+		m_EndEffectTemplateName = effect;
+	}
+
+	std::string ProjectileComponent::GetEndEffectTemplateName() const 
+	{
+		return m_EndEffectTemplateName;
 	}
 }
