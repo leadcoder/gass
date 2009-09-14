@@ -45,6 +45,8 @@ namespace GASS
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
 		std::string GetParticleTemplate()const {return m_ParticleTemplate;}
+		float GetTimeToLive()const {return m_TimeToLive;}
+		void SetTimeToLive(float value) {m_TimeToLive = value;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLoad(MessagePtr message);
@@ -53,6 +55,7 @@ namespace GASS
 		std::string m_RenderQueue;
 		std::string m_ParticleTemplate;
 		bool m_CastShadow;
+		float m_TimeToLive;
 		Ogre::ParticleSystem* m_ParticleSystem;
 	};
 

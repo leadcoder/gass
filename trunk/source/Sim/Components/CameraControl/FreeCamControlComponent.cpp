@@ -34,7 +34,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 
-
+#include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/Message.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -43,19 +43,12 @@
 namespace GASS
 {
 	FreeCamControlComponent::FreeCamControlComponent() :
-		m_DrawEllipsoid(false),
-		m_EllipsoidRadius(0.1,0.1,0.1),
-		m_CollisionTest(false),
-		m_FreeMouse(true),
-		m_Fly(true),
 		m_FovChangeSpeed(10),
 		m_MaxFov(120),
 		m_MinFov(10),
-		m_TopCam(0),
 		m_RunSpeed(1000),
-		m_WalkSpeed(10),
+		m_WalkSpeed(20),
 		m_TurnSpeed(10),
-		m_Zoom(-1),
 		m_ControlSetting (NULL),
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
@@ -65,7 +58,10 @@ namespace GASS
 		m_StrafeInput(0),
 		m_PitchInput(0),
 		m_HeadingInput(0),
-		m_Active(false)
+		m_Active(false),
+		m_CurrentFov(45),
+		m_UpDownInput(0),
+		m_Mode("Aircraft")
 	{
 
 	}
@@ -81,6 +77,8 @@ namespace GASS
 		RegisterProperty<float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
 		RegisterProperty<float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
 		RegisterProperty<float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
+		RegisterProperty<std::string>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
+		
 	}
 
 	void FreeCamControlComponent::OnCreate()
@@ -123,9 +121,6 @@ namespace GASS
 		else
 			m_Active = false;
 	}
-
-	
-
 
 	void FreeCamControlComponent::PositionChange(MessagePtr message)
 	{
@@ -177,77 +172,55 @@ namespace GASS
 		{
 			m_HeadingInput = value;
 		}
+		else if(name == "FreeCameraUpDown")
+		{
+			m_UpDownInput = value;
+			Log::Print("Scroll wheel input %f",value );
+		}
+
 
 	}
 	
 	void FreeCamControlComponent::OnInit(MessagePtr message)
 	{
-		//m_LocComp = GetOwner()->GetFirstComponent<ILocationComponent>();
-		//m_CameraComp = GetOwner()->GetFirstComponent<ICameraComponent>();
 	}
 
-
-	
 
 	void FreeCamControlComponent::Update(double delta_time)
 	{
-			if(!m_ControlSetting) return;
-			//if(m_TopCam)
-			//	UpdateTopCam(delta);
-			//else
-			if(m_Active)
-				UpdateFPCam(delta_time);
+		if(!m_ControlSetting) return;
+		if(m_Active)
+		{
+			StepPhysics(delta_time);
+		}
 	}
 
-	void FreeCamControlComponent::UpdateFPCam(double delta)
+	void FreeCamControlComponent::StepPhysics(double delta)
 	{
 		//Get default input, this must be moved to a input update function if we run in multi thread mode
-		//float toggle_collision = m_ControlSetting->Get("ToggleFreeCameraCollision");
-		//float toggle_fly = m_ControlSetting->Get("ToggleFreeCameraFly");
-	
-		//float yaw = m_ControlSetting->Get("FreeCameraStrafe");
-		float joyLookY = 0;//m_ControlSetting->Get("FreeCameraPitch");
-		float joyLookX = 0;//m_ControlSetting->Get("FreeCameraHeading");
-	
 		//std::cout << "Throttle:" << throttle << std::endl;
 		//std::cout << "Strafe:" << yaw << std::endl;
 
-		if(fabs(joyLookY) < 0.2) joyLookY = 0; 
-		if(fabs(joyLookX) < 0.2) joyLookX = 0;
-		joyLookX *= 0.1;
-		joyLookY *= 0.1;
+		float turn_speed_x = 0;
+		float turn_speed_y = 0;
 
-		/*if(toggle_fly > 0.1)
-		{
-			if(m_Fly) 
-			{
-				SetFly(false);
-			}
-			else SetFly(true);
-		}*/
 
-		float turn_speed_x  =0;
-		float turn_speed_y  =0;
-
-		//turn_speed_x = (piMouseLookX+piLookX+piJoyLookX)*delta*m_TurnSpeed;
-		//turn_speed_y = (piMouseLookY+piPitch+piJoyLookY)*delta*m_TurnSpeed;
 		if(m_EnableRotInput)
 		{
 			turn_speed_x = -m_PitchInput*Math::Deg2Rad(m_TurnSpeed);
 			turn_speed_y = -m_HeadingInput*Math::Deg2Rad(m_TurnSpeed);
 		}
 
-
 		static float speed_factor = 0;
 
-		if(fabs(m_ThrottleInput) > 0.1 || fabs(m_StrafeInput) > 0.1)
+		if(fabs(m_ThrottleInput) > 0.1 || fabs(m_StrafeInput) > 0.1 || fabs(m_UpDownInput) > 0.1)
 		{
-			speed_factor += (fabs(m_ThrottleInput) + fabs(m_StrafeInput));
+			speed_factor += (fabs(m_ThrottleInput) + fabs(m_StrafeInput) + fabs(m_UpDownInput));
 			speed_factor *= 1.03;
 		}
 		else
 		{
-			speed_factor = 0.9;
+			speed_factor *= 0.9;
 		}
 
 		if(m_SpeedBoostInput) 
@@ -264,37 +237,29 @@ namespace GASS
 		}
 		
 		float forward_speed = m_ThrottleInput*delta*speed_factor;
-		//float forward_speed = (piThrottle + piJoyForward - piJoyBackward)*delta*speed_factor; 
 		float strafe_speed = m_StrafeInput*delta*speed_factor;
+		float updown_speed = m_UpDownInput*delta*speed_factor*0.4;
 
-		float up_down_speed = 0;//(piUpDown + piJoyUp - piJoyDown)*delta*speed_factor; 	
-		float teta = m_Rot.h;// Math::Deg2Rad(m_Rot.h);
-		float beta = m_Rot.p;// Math::Deg2Rad(m_Rot.p);
+		float teta = m_Rot.h;
+		float beta = m_Rot.p;
 
 		Vec3 forward_vel;
 		Vec3 strafe_vel;
 		Vec3 tot_vel;
-		Vec3 gravity;
+		//Vec3 gravity;
 
 		Vec3 up = m_Scene->GetSceneUp();
 		Vec3 north = m_Scene->GetSceneNorth();
 		Vec3 east = m_Scene->GetSceneEast();
 
-		/*Vec3 up(0,1,0);
-		Vec3 north(0,0,-1);
-		Vec3 east(1,0,0);*/
 
-		if(m_Fly)
+		if(m_Mode == "Aircraft")
 		{
-			gravity.Set(0,0,0);
+			//gravity.Set(0,0,0);
 			Vec3 cam_east = east * (-cos(beta) * sin(teta));
-			//forward_vel.x = -cos(beta) * sin(teta);
 			
 			Vec3 cam_up = up*sin(beta);
-			//forward_vel.y = sin(beta);
-
 			Vec3 cam_north = north* cos(beta)*cos(teta);
-			//forward_vel.z = -cos(beta)*cos(teta);
 
 			forward_vel = cam_east + cam_up; 
 			forward_vel = forward_vel + cam_north; 
@@ -309,12 +274,25 @@ namespace GASS
 			strafe_vel = strafe_vel + (north*north_strafe_vel);
 
 			strafe_vel = -strafe_vel;
-			
-			//strafe_vel.x = -forward_vel.z;
-			//strafe_vel.y = 0;
-			//strafe_vel.z = forward_vel.x;
 			forward_vel.Normalize();
 
+		}
+		else if(m_Mode == "RTS")
+		{
+			Vec3 cam_east = east * -sin(teta);
+			Vec3 cam_north = north* cos(teta);
+			forward_vel = cam_east + cam_north; 
+
+			Vec3 temp = north*forward_vel;
+			float east_strafe_vel = temp.x + temp.y +temp.z;
+			temp = east*forward_vel;
+			float north_strafe_vel = temp.x + temp.y +temp.z;
+			
+			strafe_vel = east*-east_strafe_vel;
+			strafe_vel = strafe_vel + (north*north_strafe_vel);
+
+			strafe_vel = -strafe_vel;
+			forward_vel.Normalize();
 		}
 		/*else
 		{
@@ -336,17 +314,12 @@ namespace GASS
 		strafe_vel = strafe_vel * (strafe_speed);
 
 		tot_vel = forward_vel + strafe_vel;
-
-		
-
-		//Vec3 heading_vec = east*turn_speed_x;
-		//Vec3 pitch_vec = up*turn_speed_y;
-		//m_Rot = m_Rot + (heading_vec+pitch_vec);
+		tot_vel  = tot_vel  + (up*updown_speed);
 		
 		m_Rot.h +=  turn_speed_x;
 		m_Rot.p +=  turn_speed_y;
 		
-		gravity = gravity * delta;
+		//gravity = gravity * delta;
 		//tot_vel.y += up_down_speed;
 		
 		m_Pos = m_Pos + tot_vel;
@@ -363,32 +336,9 @@ namespace GASS
 		GetSceneObject()->PostMessage(rot_msg);
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
+		m_UpDownInput = 0;
 	}
 
-	/*void FreeCamControlComponent::UpdateTopCam(float delta)
-	{
-		float time_step = delta;
-		float speed_factor = 0;
-		m_Rot.Set(0,-MY_PI/2.f,0);
-		if(!m_ControlSetting->Get("FreeCamControlComponentSpeedBoost")) 
-		{
-			speed_factor = 0.1*m_Fov;
-		}
-		else 
-		{
-			speed_factor = m_Fov;
-		}
-		m_Pos.z -= time_step*speed_factor * m_ControlSetting->Get("FreeCamControlComponentThrottle");
-		m_Pos.x += time_step*speed_factor * m_ControlSetting->Get("FreeCamControlComponentStrafe");
-		SetPosition(m_Pos);
-		//
-		if(m_ControlSetting->Get("FreeCamControlComponentEnableRot") > 0) 
-			m_Fov += time_step*m_FovChangeSpeed*m_ControlSetting->Get("FreeCamControlComponentHeading");
-		m_Fov -= time_step*m_FovChangeSpeed*m_ControlSetting->Get("FreeCamControlComponentZoom");
-		if(m_Fov < m_MinFov) m_Fov = m_MinFov;
-		if(m_Fov > m_MaxFov) m_Fov = m_MaxFov;
-		SetFov(m_Fov);
-	}*/
 
 
 }

@@ -41,58 +41,54 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class GASSExport FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>, ITaskListener
+	class GASSExport TopCamControlComponent  :  public Reflection<TopCamControlComponent, BaseSceneComponent>, ITaskListener
 	{
 	public:
-		FreeCamControlComponent();
-		virtual ~FreeCamControlComponent();
+		TopCamControlComponent();
+		virtual ~TopCamControlComponent();
 		static void RegisterReflection();
 		void OnCreate();
 		void Update(double delta_time);
 		TaskGroup GetTaskGroup() const;
 	protected:
-		
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
 		void OnInit(MessagePtr message);
 		void OnUnload(MessagePtr message);
 
+		float GetMaxWindowSize() const {return m_MaxWindowSize;}
+		void SetMaxWindowSize(float value) {m_MaxWindowSize = value;}
+
+		float GetMinWindowSize() const {return m_MinWindowSize;}
+		void SetMinWindowSize(float value) {m_MinWindowSize = value;}
+
+		float GetFixedHeight() const {return m_FixedHeight;}
+		void SetFixedHeight(float value) {m_FixedHeight = value;}
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
-		void SetMode(const std::string &value) {m_Mode= value;}
-		std::string GetMode()const  {return m_Mode;}
 		
-		void SetRunSpeed(float speed){ m_RunSpeed = speed;}
-		float GetRunSpeed()const { return m_RunSpeed;}
-		void SetWalkSpeed(float speed){ m_WalkSpeed = speed;}
-		float GetWalkSpeed()const { return m_WalkSpeed;}
-		void SetTurnSpeed(float speed){ m_TurnSpeed = speed;}
-		float GetTurnSpeed()const { return m_TurnSpeed;}
+		void UpdateTopCam(double delta);
 
-		void StepPhysics(double delta);
-		
-		std::string m_Mode;
 		ControlSetting* m_ControlSetting;
-		float m_FovChangeSpeed;
-		float m_RunSpeed;
-		float m_TurnSpeed;
-		float m_WalkSpeed;
-		
+		float m_ZoomSpeed;
+		float m_FixedHeight;
+
 		Vec3 m_Pos;
 		Vec3 m_Rot;
 
 		bool m_Active;
-		bool m_EnableRotInput;
-		bool m_SpeedBoostInput;
-		float m_ThrottleInput;
-		float m_StrafeInput;
-		float m_PitchInput;
-		float m_HeadingInput;
-		float m_UpDownInput;
+		bool m_EnableZoomInput;
+		float m_ScrollBoostInput;
+		float m_ScrollUpInput;
+		float m_ScrollDownInput;
+		float m_ZoomInput;
+		
 		ScenarioScene* m_Scene;
-		float m_CurrentFov;
-		float m_MaxFov;
-		float m_MinFov;
+		float m_CurrentWindowSize;
+		float m_MaxWindowSize;
+		float m_MinWindowSize;
+		
+
 	};
 }
 

@@ -24,19 +24,15 @@
 #include "Sim/Common.h"
 #include "Sim/Scheduling/TaskGroups.h"
 
+
+
 namespace GASS
 {
-	class ITaskListener
+	class GASSExport ITaskListener
 	{
 	public:
 		virtual ~ITaskListener(){}
-		
-		/**
-			Update callback
-			@param delta_time Time since last update
-		*/
 		virtual void Update(double delta_time) = 0;
-		
 		virtual TaskGroup GetTaskGroup() const = 0;
 	private:
 	};

@@ -27,7 +27,7 @@
 //SSAO
 #include <OgreCompositorManager.h>
 
-
+#include "Core/Utils/Log.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -47,6 +47,8 @@ namespace GASS
 	OgreCameraComponent::OgreCameraComponent(): 
 		m_NearClip(0.5),
 		m_FarClip(1000),
+		m_Fov(45.0),
+		m_Ortho(false),
 		m_Camera(NULL)
 	{
 		
@@ -62,12 +64,15 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, IComponent>);
 		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance);
 		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance);
+		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
+		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
 	}
 
 	void OgreCameraComponent::OnCreate()
 	{
 		//priorty = 1 -> load this one after nodes
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreCameraComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_CAMERA_PARAMETER, MESSAGE_FUNC(OgreCameraComponent::OnParameter),1);
 	}
 
 
@@ -90,7 +95,40 @@ namespace GASS
 		m_Camera->setAutoAspectRatio(true);
 		SetNearClipDistance(m_NearClip);
 		SetFarClipDistance(m_FarClip);
+		SetFov(m_Fov);
+		SetOrtho(m_Ortho);
         lc->GetOgreNode()->attachObject(m_Camera);
+	}
+
+	void OgreCameraComponent::OnParameter(MessagePtr message)
+	{
+		SceneObject::CameraParameterType type = boost::any_cast<SceneObject::CameraParameterType>(message->GetData("Parameter"));
+		switch(type)
+		{
+		case SceneObject::CAMERA_FOV:
+			{
+				float value = boost::any_cast<float>(message->GetData("Fov"));
+				SetFov(value);
+				
+			}
+			break;
+		case SceneObject::CAMERA_ORTHO_WIN_SIZE:
+			{
+				float value = boost::any_cast<float>(message->GetData("Size"));
+				//float w = boost::any_cast<float>(message->GetData("Width"));
+				if(m_Camera)
+					m_Camera->setOrthoWindowHeight(value);
+			}
+			break;
+		case SceneObject::CAMERA_CLIP_DISTANCE:
+			{
+				float farc = boost::any_cast<float>(message->GetData("Far"));
+				SetFarClipDistance(farc);
+				float nearc = boost::any_cast<float>(message->GetData("Near"));
+				SetFarClipDistance(nearc);
+			}
+			break;
+		}
 	}
 
 	bool OgreCameraComponent::GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const
@@ -123,6 +161,7 @@ namespace GASS
 	{
 		return  m_NearClip;
 	}
+
 	void OgreCameraComponent::SetNearClipDistance(float value)
 	{
 		m_NearClip = value;
@@ -132,6 +171,35 @@ namespace GASS
 		}
 	}
 
+	float OgreCameraComponent::GetFov() const
+	{
+		return  m_Fov;
+	}
 
+	void OgreCameraComponent::SetFov(float value)
+	{
+		m_Fov = value;
+		if(m_Camera)
+		{
+			m_Camera->setFOVy(Ogre::Radian(Math::Deg2Rad(value)));
+		}
+	}
+
+	bool OgreCameraComponent::GetOrtho() const
+	{
+		return  m_Ortho;
+	}
+
+	void OgreCameraComponent::SetOrtho(bool value)
+	{
+		m_Ortho = value;
+		if(m_Camera)
+		{
+			if(m_Ortho)
+				m_Camera->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+			else 
+				m_Camera->setProjectionType(Ogre::PT_PERSPECTIVE);
+		}
+	}
 
 }

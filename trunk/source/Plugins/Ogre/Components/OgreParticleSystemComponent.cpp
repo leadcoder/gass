@@ -31,6 +31,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -45,7 +46,8 @@ namespace GASS
 
 	OgreParticleSystemComponent::OgreParticleSystemComponent() :
 		m_CastShadow(true),
-		m_ParticleSystem(NULL)
+		m_ParticleSystem(NULL),
+		m_TimeToLive(-1)
 		
 		
 	{
@@ -62,6 +64,7 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("ParticleSystemComponent",new GASS::Creator<OgreParticleSystemComponent, IComponent>);
 		RegisterProperty<std::string>("ParticleTemplate", &GASS::OgreParticleSystemComponent::GetParticleTemplate, &GASS::OgreParticleSystemComponent::SetParticleTemplate);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreParticleSystemComponent::GetCastShadow, &GASS::OgreParticleSystemComponent::SetCastShadow);
+		RegisterProperty<float>("TimeToLive", &GASS::OgreParticleSystemComponent::GetTimeToLive, &GASS::OgreParticleSystemComponent::SetTimeToLive);
 	}
 
 	void OgreParticleSystemComponent::OnCreate()
@@ -85,6 +88,15 @@ namespace GASS
 
 		m_ParticleSystem  = ogsm->GetSceneManger()->createParticleSystem(name, m_ParticleTemplate);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_ParticleSystem);
+
+		if(m_TimeToLive > -1)
+		{
+			//Send remove message with delay
+			MessagePtr remove_msg(new Message(ScenarioScene::SCENARIO_RM_REMOVE_OBJECT));
+			remove_msg->SetData("SceneObject",GetSceneObject());
+			remove_msg->SetDeliverDelay(m_TimeToLive);
+			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
+		}
 		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}
 
@@ -107,8 +119,6 @@ namespace GASS
 			m_ParticleSystem->getEmitter(emitter)->setTimeToLive(duration);
 			}
 			break;
-
-			
 		}
 	}
 

@@ -256,7 +256,7 @@ namespace GASS
 	{
 	public:
 		virtual ~IMouseListener() {}
-		virtual bool MouseMoved(float x,float y)=0;
+		virtual bool MouseMoved(float x,float y, float z)=0;
 		virtual bool MousePressed( int id ) = 0;
 		virtual bool MouseReleased( int id ) = 0;
 	};

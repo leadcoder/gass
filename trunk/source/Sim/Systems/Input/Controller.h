@@ -131,7 +131,7 @@ namespace GASS
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(float x,float y)
+		virtual bool MouseMoved(float x,float y, float z)
 		{
 			return true;
 		}
@@ -281,7 +281,7 @@ namespace GASS
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(float x,float y)
+		virtual bool MouseMoved(float x,float y, float z)
 		{
 			float value = 0;
 			switch(m_Device)
@@ -296,7 +296,7 @@ namespace GASS
 					value  = m_Invert* y;
 					break;
 				case INPUT_AXIS_2:
-					//ret = m_Invert* z;
+					value  = m_Invert* z;
 					break;
 				default:
 					value  = 0;

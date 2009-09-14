@@ -289,7 +289,7 @@ namespace GASS
 
 			//Normalize values
 
-			ml->MouseMoved(NormalizeMouse(arg.state.X.rel),NormalizeMouse(arg.state.Y.rel));
+			ml->MouseMoved(NormalizeMouse(arg.state.X.rel),NormalizeMouse(arg.state.Y.rel),arg.state.Z.rel);
 			iter++;
 		}
 		return true;

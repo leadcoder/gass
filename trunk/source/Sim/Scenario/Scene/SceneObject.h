@@ -86,6 +86,7 @@ namespace GASS
 			MeshParameterType = "Type" - See MeshParameterType for data fields*/
 			OBJECT_RM_MESH_PARAMETER,
 
+			OBJECT_RM_CAMERA_PARAMETER,
 
 			OBJECT_RM_PARTICLE_SYSTEM_PARAMETER,
 
@@ -169,12 +170,16 @@ namespace GASS
 		};
 		enum ManualMeshParameterType
 		{
-			/** \brief Message data: 
-			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
 			MESH_DATA,
 			CLEAR,
 		};
 
+		enum CameraParameterType
+		{
+			CAMERA_FOV,
+			CAMERA_CLIP_DISTANCE,
+			CAMERA_ORTHO_WIN_SIZE,
+		};
 
 		enum ParticleSystemParameterType
 		{
