@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "VehicleDebugComponent.h"
-#include "VehicleMessages.h"
+#include "GameMessages.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"

@@ -27,7 +27,7 @@
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/Message.h"
-#include "PIDControl.h"
+#include "Utils/PIDControl.h"
 
 namespace GASS
 {
