@@ -39,9 +39,8 @@
 
 namespace GASS
 {
-	ProjectileComponent::ProjectileComponent() 
+	ProjectileComponent::ProjectileComponent() : m_MaxDamageValue(1)
 	{
-		m_Hit = false;
 		m_TotSquaredDist = 0;
 		m_ExplodeNearEnemyDistance = -1;
 		m_TimeLeft = 0;
@@ -49,7 +48,6 @@ namespace GASS
 		m_DamgeRadius = -1;
 		m_DieAfterColl = 1;
 		m_Velocity.Set(0,-0.1,0);
-		m_MatID = -1;
 		m_ColHandle = 0;
 		m_HasColHandle = false;
 		m_PhysicsDeltaTime = 0;
@@ -243,15 +241,14 @@ namespace GASS
 			}
 		}
 
+		GASS::CollisionResult result;
 		if(m_HasColHandle)
 		{
-			GASS::CollisionResult result;
 			if(m_ColSys->Check(m_ColHandle,result))
 			{
 				m_HasColHandle = false;
 				if(result.Coll)
 				{
-					m_Hit = true;
 					if(m_DieAfterColl)	
 						impact = true;
 					//correct postition
@@ -279,8 +276,17 @@ namespace GASS
 			}
 			else 
 			{
-			
+				Vec3 proj_dir = m_Velocity;
+				proj_dir.FastNormalize();
+
+				float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
+				float damage_value = angle_falloff*m_MaxDamageValue;
+
+				MessagePtr hit_msg(new Message(OBJECT_NM_HIT));
+				hit_msg->SetData("Damage",damage_value);
+				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
 			}
+
 			//GetSceneObject()->GetSceneObjectManager()->DeleteObject(GetSceneObject());
 			MessagePtr remove_msg(new Message(ScenarioScene::SCENARIO_RM_REMOVE_OBJECT));
 			remove_msg->SetData("SceneObject",GetSceneObject());

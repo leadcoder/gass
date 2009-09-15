@@ -18,21 +18,33 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GAME_MESSAGES_H
-#define GAME_MESSAGES_H
+#ifndef ARMOR_COMPONENT_H
+#define ARMOR_COMPONENT_H
+
+#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Common.h"
+#include "Core/MessageSystem/Message.h"
 
 namespace GASS
 {
-	enum GameSceneObjectMessages
+
+	class SceneObject;
+	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+
+	class ArmorComponent :  public Reflection<ArmorComponent,BaseSceneComponent>
 	{
-		OBJECT_RM_ENTER_VEHICLE = 1000,
-		OBJECT_RM_EXIT_VEHICLE = 1001,
-		OBJECT_RM_GOTO_POSITION = 1002,
-		OBJECT_NM_PLAYER_INPUT = 1003,
-		OBJECT_RM_RELOAD = 1004,
-		OBJECT_RM_FIRE = 1005,
-		OBJECT_NM_HIT = 1006,
-		OBJECT_RM_OUT_OF_ARMOR = 1007,
+	public:
+		ArmorComponent();
+		virtual ~ArmorComponent();
+		static void RegisterReflection();
+		virtual void OnCreate();
+	private:
+		void OnHit(MessagePtr message);
+		float GetArmor() const; 
+		void SetArmor(float value);
+		float m_Armor;
+		float m_CurrentArmor;
 	};
 }
 #endif

@@ -66,11 +66,8 @@ namespace GASS
 		std::string m_StartEffectTemplateName;
 		std::string m_EndEffectTemplateName;
 		int m_DamageType;
-		int m_Material;
 		int m_HasCollisionEffect;
-		int m_MatID;
 		int m_DieAfterColl;
-		bool m_Hit;
 		bool m_HasColHandle;
 		float m_TotSquaredDist;
 		float m_DamgeRadius;
@@ -80,6 +77,7 @@ namespace GASS
 		CollisionSystemPtr m_ColSys;
 		Vec3 m_Pos;
 		Quaternion m_Rot;
+		float m_MaxDamageValue;
 
 	};
 }
