@@ -160,6 +160,7 @@ namespace GASS
 			/** \brief Message data: 
 			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
 			ANIMATE_TEX_COORD,
+			CHANGE_MESH
 		};
 
 		enum TextParameterType

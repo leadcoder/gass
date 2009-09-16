@@ -39,7 +39,7 @@
 
 namespace GASS
 {
-	ProjectileComponent::ProjectileComponent() : m_MaxDamageValue(1)
+	ProjectileComponent::ProjectileComponent() : m_MaxDamage(10000), m_ImpactForce(0,0,0)
 	{
 		m_TotSquaredDist = 0;
 		m_ExplodeNearEnemyDistance = -1;
@@ -62,6 +62,10 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("ProjectileComponent",new Creator<ProjectileComponent, IComponent>);
 		RegisterProperty<std::string>("EndEffectTemplate", &ProjectileComponent::GetEndEffectTemplateName, &ProjectileComponent::SetEndEffectTemplateName);
+		RegisterProperty<Vec3>("ImpactForce", &ProjectileComponent::GetImpactForce, &ProjectileComponent::SetImpactForce);
+		RegisterProperty<float>("MaxDamage", &ProjectileComponent::GetMaxDamage, &ProjectileComponent::SetMaxDamage);
+
+
 	}
 
 	void ProjectileComponent::OnCreate()
@@ -80,11 +84,11 @@ namespace GASS
 			/*EffectBundle* effect = (EffectBundle*) Root::Get().GetBaseObjectTemplateManager()->CreateFromTemplate(m_StartEffectTemplateName );
 			if(effect)
 			{
-				Log::Print("Effect loaded:%s",m_StartEffectTemplateName.c_str());
-				effect->Init();
-				//ISceneNode* root = Root::GetPtr()->GetLevel()->GetParticleManager()->GetRoot();
-				AddChild(effect);
-				effect->Restart();
+			Log::Print("Effect loaded:%s",m_StartEffectTemplateName.c_str());
+			effect->Init();
+			//ISceneNode* root = Root::GetPtr()->GetLevel()->GetParticleManager()->GetRoot();
+			AddChild(effect);
+			effect->Restart();
 			}*/
 		}
 		m_TimeLeft = m_TimeToLive;
@@ -97,7 +101,7 @@ namespace GASS
 		//Send delete message?
 	}
 
-	
+
 	void ProjectileComponent::OnUnload(MessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
@@ -144,14 +148,14 @@ namespace GASS
 	{
 		Vec3 gravity;
 		gravity.Set(0,-9.82,0);
-		
+
 		Vec3 ray_start; 
 		Vec3 ray_end; 
 		Vec3 ray_dir;
 		Vec3 right,up;
 
-	
-		
+
+
 		//calc some basic physics
 		if(m_Velocity.SquaredLength() > 0.000001)
 		{
@@ -173,7 +177,7 @@ namespace GASS
 			//up
 			up = Math::Cross(dir,right);
 			up.Normalize();
-			
+
 
 			rot_mat.Identity();
 			rot_mat.m_Data2[8] = dir.x;
@@ -193,15 +197,15 @@ namespace GASS
 
 			m_Velocity = m_Velocity + gravity*time;// + drag*time;
 			Vec3 new_pos = m_Pos + m_Velocity*time;
-			
+
 			//Send collision request
 			ray_start = m_Pos; 
 			ray_end = new_pos; 
 			ray_dir = ray_end - ray_start;
 			float l = ray_dir.FastLength();
-			
+
 			GASS::CollisionRequest request;
-			
+
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_dir;
 			request.Type = COL_LINE;
@@ -210,7 +214,7 @@ namespace GASS
 
 			m_ColHandle = m_ColSys->Request(request);
 			m_HasColHandle = true;
-			
+
 			m_Pos = new_pos;
 			//std::cout << "pos:" << m_Pos.x << " y"<< m_Pos.y << " z" << m_Pos.z<< std::endl;
 			m_Rot.FromRotationMatrix(rot_mat);
@@ -272,7 +276,7 @@ namespace GASS
 		{
 			if(m_DamgeRadius > 0)
 			{
-			
+
 			}
 			else 
 			{
@@ -280,11 +284,20 @@ namespace GASS
 				proj_dir.FastNormalize();
 
 				float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
-				float damage_value = angle_falloff*m_MaxDamageValue;
+				float damage_value = angle_falloff*m_MaxDamage;
 
 				MessagePtr hit_msg(new Message(OBJECT_NM_HIT));
 				hit_msg->SetData("Damage",damage_value);
+				hit_msg->SetData("HitDirection",proj_dir);
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
+
+				//Send force message to indicate hit
+
+				Vec3 force = proj_dir*m_ImpactForce;
+				MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER));
+				force_msg->SetData("Parameter",SceneObject::FORCE);
+				force_msg->SetData("Value",force);
+				SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
 			}
 
 			//GetSceneObject()->GetSceneObjectManager()->DeleteObject(GetSceneObject());
@@ -327,5 +340,25 @@ namespace GASS
 	std::string ProjectileComponent::GetEndEffectTemplateName() const 
 	{
 		return m_EndEffectTemplateName;
+	}
+
+
+	Vec3 ProjectileComponent::GetImpactForce() const
+	{
+		return m_ImpactForce;
+	}
+	void ProjectileComponent::SetImpactForce(const Vec3 &value)
+	{
+		m_ImpactForce = value;
+	}
+
+	float ProjectileComponent::GetMaxDamage() const
+	{
+		return m_MaxDamage;
+	}
+
+	void ProjectileComponent::SetMaxDamage(float value)
+	{
+		m_MaxDamage = value;
 	}
 }

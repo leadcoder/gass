@@ -60,6 +60,10 @@ namespace GASS
 		void SetMagazineSize(int value) ;
 		void SetProjectileStartVelocity(float value);
 		float GetProjectileStartVelocity() const;
+		void SetRecoilForce(const Vec3 &value);
+		Vec3 GetRecoilForce() const;
+
+		
 
 
 		//Projectile* m_ProjectileTemplate;
@@ -87,6 +91,7 @@ namespace GASS
 		//float m_MinDamage;
 		//float m_DistToStartLoseDamage;
 		//float m_DistToMinDamage;
+		Vec3 m_RecoilForce;
 		float m_RoundOfFire;
 		float m_FireDelay;
 		int m_NumberOfMagazines;

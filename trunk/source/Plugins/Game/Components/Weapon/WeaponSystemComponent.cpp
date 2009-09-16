@@ -41,7 +41,8 @@ namespace GASS
 	WeaponSystemComponent::WeaponSystemComponent()  :m_ProjectileStartOffset(0),
 		m_ProjectileStartVelocity (50),
 		m_NumberOfMagazines (3),
-		m_MagazineSize(30)
+		m_MagazineSize(30),
+		m_RecoilForce(0,0,100)
 	{
 		m_ReloadTime = 0.3;
 		m_InputToFire = "Fire";
@@ -68,6 +69,8 @@ namespace GASS
 		RegisterProperty<float>("ProjectileStartVelocity", &WeaponSystemComponent::GetProjectileStartVelocity, &WeaponSystemComponent::SetProjectileStartVelocity);
 		RegisterProperty<int>("NumberOfMagazines", &WeaponSystemComponent::GetNumberOfMagazines, &WeaponSystemComponent::SetNumberOfMagazines);
 		RegisterProperty<int>("MagazineSize", &WeaponSystemComponent::GetMagazineSize, &WeaponSystemComponent::SetMagazineSize);
+		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
+		
 	}
 
 	void WeaponSystemComponent::OnCreate()
@@ -149,6 +152,8 @@ namespace GASS
 		}*/
 
 		
+
+		
 		//Play fire sound
 		if(m_FireSound)
 		{
@@ -171,6 +176,12 @@ namespace GASS
 		spawn_msg->SetData("Rotation",projectile_rot);
 		spawn_msg->SetData("Velocity",vel);
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+
+		//recoil
+		MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER));
+		force_msg->SetData("Parameter",SceneObject::FORCE);
+		force_msg->SetData("Value",m_RecoilForce);
+		GetSceneObject()->PostMessage(force_msg);
 
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
@@ -283,6 +294,17 @@ namespace GASS
 	{
 		return m_ProjectileStartVelocity;
 	}
+
+	void WeaponSystemComponent::SetRecoilForce(const Vec3 &value)
+	{
+		m_RecoilForce = value;
+	}
+
+	Vec3 WeaponSystemComponent::GetRecoilForce() const
+	{
+		return m_RecoilForce;
+	}
+
 
 
 

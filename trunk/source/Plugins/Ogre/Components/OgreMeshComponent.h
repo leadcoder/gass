@@ -53,7 +53,7 @@ namespace GASS
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
-		void SetFilename(const std::string &filename) {m_Filename = filename;}
+		void SetFilename(const std::string &filename);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		
@@ -72,6 +72,8 @@ namespace GASS
 		std::string m_RenderQueue;
 		std::string m_Filename;
 		bool m_CastShadow;
+		bool m_ReadyToLoadMesh;
+		bool m_UniqueMaterialCreated;
 	};
 	
 	typedef boost::shared_ptr<OgreMeshComponent> OgreMeshComponentPtr;

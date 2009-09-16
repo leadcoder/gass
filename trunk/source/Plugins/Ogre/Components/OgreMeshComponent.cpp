@@ -44,9 +44,10 @@ using namespace Ogre;
 namespace GASS
 {
 
-	OgreMeshComponent::OgreMeshComponent() :
-		m_OgreEntity(NULL),
-		m_CastShadow(true)
+	OgreMeshComponent::OgreMeshComponent() : m_OgreEntity(NULL),
+		m_CastShadow(true),
+		m_ReadyToLoadMesh(false),
+		m_UniqueMaterialCreated(false)
 	{
 
 	}
@@ -76,39 +77,51 @@ namespace GASS
 	{
 		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(ogsm);
+		m_ReadyToLoadMesh = true;
+		SetFilename(m_Filename);
+	}
 
-		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
-
-		static unsigned int obj_id = 0;
-		obj_id++;
-		std::stringstream ss;
-		std::string name;
-		ss << GetName() << obj_id;
-		ss >> name;
-
-		m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
-		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
-		//LoadLightmap();
-		if(m_CastShadow)
+	void OgreMeshComponent::SetFilename(const std::string &filename) 
+	{
+		m_Filename = filename;
+		if(m_ReadyToLoadMesh)
 		{
-			m_OgreEntity->setCastShadows(true);
-			//??
-		}
-		else
-		{
-			m_OgreEntity->setCastShadows(false);
-		}
+			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
+			if(m_OgreEntity) //release previous mesh
+			{
+				lc->GetOgreNode()->detachObject(m_OgreEntity);
+				lc->GetOgreNode()->getCreator()->destroyEntity(m_OgreEntity);
+			}
+			static unsigned int obj_id = 0;
+			obj_id++;
+			std::stringstream ss;
+			std::string name;
+			ss << GetName() << obj_id;
+			ss >> name;
 
-		if(m_RenderQueue == "SkiesLate")
-		{
-			m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-		}
-		else if(m_RenderQueue == "SkiesEarly")
-		{
-			m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-		}
 
-		//				TryLoadLightmap();
+			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
+			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
+			//LoadLightmap();
+			if(m_CastShadow)
+			{
+				m_OgreEntity->setCastShadows(true);
+				//??
+			}
+			else
+			{
+				m_OgreEntity->setCastShadows(false);
+			}
+
+			if(m_RenderQueue == "SkiesLate")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
+			}
+			else if(m_RenderQueue == "SkiesEarly")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
+			}
+		}
 	}
 
 	/*	void OgreMeshComponent::TryLoadLightmap()
@@ -144,7 +157,7 @@ namespace GASS
 	}
 	}*/
 
-	
+
 
 	Ogre::Bone* OgreMeshComponent::GetClosestBone(const Vec3 &pos)
 	{
@@ -315,6 +328,18 @@ namespace GASS
 
 	void OgreMeshComponent::SetTexCoordSpeed(const Vec2 &speed)
 	{
+		if(!m_UniqueMaterialCreated) //material clone hack to only set texcoord scroll speed for this mesh
+		{
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				Ogre::MaterialPtr mat = se->getMaterial();
+				mat = mat->clone(m_OgreEntity->getName() + mat->getName());
+				se->setMaterial(mat);
+			}
+			m_UniqueMaterialCreated = true;
+		}
+
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
@@ -332,11 +357,18 @@ namespace GASS
 		switch(type)
 		{
 		case SceneObject::ANIMATE_TEX_COORD:
-
-			Vec2 speed = boost::any_cast<Vec2>(message->GetData("Speed"));
-			SetTexCoordSpeed(speed);
-			//std::cout << "speed2:" << speed.x << std::endl;
+			{
+				Vec2 speed = boost::any_cast<Vec2>(message->GetData("Speed"));
+				SetTexCoordSpeed(speed);
+				//std::cout << "x" << speed.x << " y" << speed.y << std::endl;
+			}
 			break;
+		case SceneObject::CHANGE_MESH:
+			{
+				std::string name = boost::any_cast<std::string>(message->GetData("MeshName"));
+				SetFilename(name);
+			}
+			break;		
 		}
 	}
 }

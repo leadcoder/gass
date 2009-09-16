@@ -43,8 +43,12 @@ namespace GASS
 		void OnHit(MessagePtr message);
 		float GetArmor() const; 
 		void SetArmor(float value);
+		std::string GetDamageMesh() const;
+		void SetDamageMesh(const std::string &value);
+
 		float m_Armor;
 		float m_CurrentArmor;
+		std::string m_DamageMesh;
 	};
 }
 #endif

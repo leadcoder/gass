@@ -57,6 +57,11 @@ namespace GASS
 		void SpawnEffect(const std::string &effect);
 		void SetEndEffectTemplateName(const std::string &effect);
 		std::string GetEndEffectTemplateName() const;
+        Vec3 GetImpactForce() const; 
+		void SetImpactForce(const Vec3 &value);
+		float GetMaxDamage() const; 
+		void SetMaxDamage(float value);
+		
 	
 
 		
@@ -77,7 +82,8 @@ namespace GASS
 		CollisionSystemPtr m_ColSys;
 		Vec3 m_Pos;
 		Quaternion m_Rot;
-		float m_MaxDamageValue;
+		float m_MaxDamage;
+		Vec3 m_ImpactForce;
 
 	};
 }

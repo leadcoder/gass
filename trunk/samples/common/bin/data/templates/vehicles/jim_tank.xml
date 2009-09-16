@@ -43,6 +43,10 @@
       <InputHandlerComponent type ="InputHandlerComponent">
         <ControlSetting value ="VehicleEngineInputSettings"/>
       </InputHandlerComponent>
+      <HullArmor type ="ArmorComponent">
+        <Armor value="50"/>
+        <DamageMesh value="wheel_r.mesh"/>
+      </HullArmor>
     </Components>
     <ComponentContainers>
       <JimTankDriverCameraObject type ="SceneObjectTemplate">
@@ -87,6 +91,7 @@
             <ProjectileStartVelocity value="50.0"/>
             <NumberOfMagazines value="90"/>
             <MagazineSize value="90"/>
+            <RecoilForce value="0 0 100"/>
           </MainGun>
         </Components>
         <ComponentContainers>
@@ -109,7 +114,7 @@
         <Components>
           <Track type="TrackComponent">
             <DriveWheel value="JimTankWheelL5"/>
-            <AnimationSpeedFactor value="0.01"/>
+            <AnimationSpeedFactor value="0.01 0"/>
           </Track>
           <TrackLocation type="LocationComponent">
             <Position value="1.2 0.0 0.0"/>
@@ -122,7 +127,7 @@
         <Components>
           <Track type="TrackComponent">
             <DriveWheel value="JimTankWheelR5"/>
-            <AnimationSpeedFactor value="0.01"/>
+            <AnimationSpeedFactor value="0.01 0"/>
           </Track>
           <TrackLocation type="LocationComponent">
             <Position value="-1.2 0.0 0.0"/>
@@ -302,6 +307,8 @@
       </Mesh>
       <ProjectileComp type ="ProjectileComponent">
         <EndEffectTemplate value="JimTankMainGunProjectileEffect"/>
+        <ImpactForce value="500 500 500"/>
+        <MaxDamage value="10"/>
       </ProjectileComp>
     </Components>
   </JimTankMainGunProjectileObject>
@@ -316,4 +323,5 @@
       </ParticleSystem>
     </Components>
   </JimTankMainGunProjectileEffect>
-</Templates>
+  
+  </Templates>

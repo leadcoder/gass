@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 	scenario->Load(scenario_path);
 
 
-	for(int i = 0; i < 1; i++)
+	for(int i = 0; i < 2; i++)
 	{
 		engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
 		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
@@ -163,13 +163,15 @@ int main(int argc, char* argv[])
 			pos_msg->SetData("Position",pos);
 			scene_object->SendImmediate(pos_msg);
 
-			boost::shared_ptr<GASS::Message> enter_msg(new GASS::Message((GASS::SceneObject::ObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
-			scene_object->PostMessage(enter_msg);
+			if(i==0)
+			{
+				boost::shared_ptr<GASS::Message> enter_msg(new GASS::Message((GASS::SceneObject::ObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
+				scene_object->PostMessage(enter_msg);
 
-			GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
-			if(objs.size() > 0)
-				objs.front()->PostMessage(enter_msg);
-
+				GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
+				if(objs.size() > 0)
+					objs.front()->PostMessage(enter_msg);
+			}
 
 		}
 	}

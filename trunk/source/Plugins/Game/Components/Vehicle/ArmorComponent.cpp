@@ -50,6 +50,8 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("ArmorComponent",new Creator<ArmorComponent, IComponent>);
 		RegisterProperty<float>("Armor", &ArmorComponent::GetArmor, &ArmorComponent::SetArmor);
+		RegisterProperty<std::string>("DamageMesh", &ArmorComponent::GetDamageMesh, &ArmorComponent::SetDamageMesh);
+		
 	}
 
 	void ArmorComponent::OnCreate()
@@ -70,6 +72,23 @@ namespace GASS
 				//Send armor message
 				MessagePtr armor_msg(new Message(OBJECT_RM_OUT_OF_ARMOR));
 				GetSceneObject()->PostMessage(armor_msg);
+
+				//load damage mesh
+				MessagePtr mesh_msg(new Message(SceneObject::OBJECT_RM_MESH_PARAMETER));
+				mesh_msg->SetData("Parameter",SceneObject::CHANGE_MESH);
+				mesh_msg->SetData("MeshName",m_DamageMesh);
+				GetSceneObject()->PostMessage(mesh_msg);
+
+				
+			
+
+					/*Vec3 vel(0,0,0);
+					MessagePtr spawn_msg(new Message(ScenarioScene::SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE));
+					spawn_msg->SetData("Template",effect);
+					spawn_msg->SetData("Position",m_Pos);
+					spawn_msg->SetData("Rotation",m_Rot);
+					spawn_msg->SetData("Velocity",vel);
+					GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);*/
 			}
 		}
 	}
@@ -83,5 +102,16 @@ namespace GASS
 	{
 		m_Armor = value;
 		m_CurrentArmor = value;
+	}
+
+	
+	std::string ArmorComponent::GetDamageMesh() const
+	{
+		return m_DamageMesh;
+	}
+
+	void ArmorComponent::SetDamageMesh(const std::string &value)
+	{
+		m_DamageMesh = value;
 	}
 }
