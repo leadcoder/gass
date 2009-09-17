@@ -1,0 +1,33 @@
+material ProjMat
+{
+	receive_shadows off
+	transparency_casts_shadows off
+	technique ProjMat
+	{
+		pass Map#1
+		{
+			ambient 0.698039 0.698039 0.698039 1
+			diffuse 0.698039 0.698039 0.698039 1
+			specular 0.898039 0.898039 0.898039 1 20
+			emissive 0 0 0 1
+			scene_blend one zero
+			depth_check on
+			depth_write on
+			depth_func less_equal
+			depth_bias 0 0
+			alpha_rejection always_pass 0
+			cull_hardware clockwise
+			cull_software back
+			lighting on
+			shading gouraud
+			polygon_mode solid
+			colour_write on
+			max_lights 8
+			start_light 0
+			iteration once 
+		}
+
+	}
+
+}
+
