@@ -63,6 +63,14 @@ namespace GASS
 
 	void ArmorComponent::OnHit(MessagePtr message)
 	{
+		//notify all children also
+		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
+		while(cc_iter1.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_dynamic_cast<GASS::SceneObject>(cc_iter1.getNext());
+			child->PostMessage(message);
+		}
+
 		if(m_CurrentArmor > 0)
 		{
 			float damage = boost::any_cast<float>(message->GetData("Damage"));

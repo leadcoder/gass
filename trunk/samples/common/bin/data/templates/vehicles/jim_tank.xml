@@ -93,6 +93,10 @@
             <MagazineSize value="90"/>
             <RecoilForce value="0 0 100"/>
           </MainGun>
+          <TurretArmor type ="ArmorComponent">
+            <Armor value="50"/>
+            <DamageMesh value="turret_demolished.mesh"/>
+          </TurretArmor>
         </Components>
         <ComponentContainers>
           <FireSound type ="SceneObjectTemplate">
@@ -119,6 +123,10 @@
                 <Filename value="canon_bas.mesh"/>
                 <CastShadow value="1"/>
               </BarelMesh>
+              <BarelArmor type ="ArmorComponent">
+                <Armor value="50"/>
+                <DamageMesh value="canon_bas_demolished.mesh"/>
+              </BarelArmor>
             </Components>
           </JimTankBarel>
         </ComponentContainers>
