@@ -95,6 +95,20 @@
           </MainGun>
         </Components>
         <ComponentContainers>
+          <FireSound type ="SceneObjectTemplate">
+            <Components>
+              <FireSoundLocation type="LocationComponent">
+                <AttachToParent value="1"/>
+                <Position value="-0.05 0.4 -0.45"/>
+              </FireSoundLocation>
+              <FireSound type="OpenALSoundComponent">
+                <SoundFile value="sounds/vehicles/tank/cannon.wav"/>
+                <Loop value="0"/>
+                <MinDistance value="5"/>
+                <RolloffFactor value="1"/>
+              </FireSound>
+            </Components>
+          </FireSound>
           <JimTankBarel type ="SceneObjectTemplate">
             <Components>
               <BarelLocation type="LocationComponent">
