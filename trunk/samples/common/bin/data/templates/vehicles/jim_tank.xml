@@ -88,7 +88,7 @@
           <MainGun type ="WeaponSystemComponent">
             <ProjectileTemplate value="JimTankMainGunProjectileObject"/>
             <ProjectileStartOffset value="5.0"/>
-            <ProjectileStartVelocity value="50.0"/>
+            <ProjectileStartVelocity value="500"/>
             <NumberOfMagazines value="90"/>
             <MagazineSize value="90"/>
             <RecoilForce value="0 0 100"/>
@@ -302,13 +302,13 @@
         <AttachToParent value="0"/>
       </Location>
       <Mesh type="MeshComponent">
-        <Filename value="JIM_TANK_hull.mesh"/>
+        <Filename value="Projectile.mesh"/>
         <CastShadow value="1"/>
       </Mesh>
       <ProjectileComp type ="ProjectileComponent">
         <EndEffectTemplate value="JimTankMainGunProjectileEffect"/>
         <ImpactForce value="500 500 500"/>
-        <MaxDamage value="10"/>
+        <MaxDamage value="100"/>
       </ProjectileComp>
     </Components>
   </JimTankMainGunProjectileObject>

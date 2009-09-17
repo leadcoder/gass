@@ -180,13 +180,13 @@ namespace GASS
 
 
 			rot_mat.Identity();
-			rot_mat.m_Data2[8] = dir.x;
-			rot_mat.m_Data2[9] = dir.y;
-			rot_mat.m_Data2[10] = dir.z;
+			rot_mat.m_Data2[8] = -dir.x;
+			rot_mat.m_Data2[9] = -dir.y;
+			rot_mat.m_Data2[10] = -dir.z;
 
-			rot_mat.m_Data2[0] = right.x;
-			rot_mat.m_Data2[1] = right.y;
-			rot_mat.m_Data2[2] = right.z;
+			rot_mat.m_Data2[0] = -right.x;
+			rot_mat.m_Data2[1] = -right.y;
+			rot_mat.m_Data2[2] = -right.z;
 
 			rot_mat.m_Data2[4] = up.x;
 			rot_mat.m_Data2[5] = up.y;
@@ -223,7 +223,7 @@ namespace GASS
 
 	void ProjectileComponent::Update(double time)
 	{
-		std::cout << "Update proj:" << GetSceneObject()->GetName() << std::endl;
+		//std::cout << "Update proj:" << GetSceneObject()->GetName() << std::endl;
 		bool impact = false;
 		m_TimeLeft -= time;
 		m_PhysicsDeltaTime += time;
