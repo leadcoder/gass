@@ -90,8 +90,9 @@
             <ProjectileStartOffset value="5.0"/>
             <ProjectileStartVelocity value="500"/>
             <NumberOfMagazines value="90"/>
-            <MagazineSize value="90"/>
+            <MagazineSize value="5"/>
             <RecoilForce value="0 0 100"/>
+            <ReloadTime value="3"/>
           </MainGun>
           <TurretArmor type ="ArmorComponent">
             <Armor value="50"/>

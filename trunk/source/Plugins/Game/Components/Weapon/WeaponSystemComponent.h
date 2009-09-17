@@ -45,6 +45,8 @@ namespace GASS
 		void OnInput(MessagePtr message);
 		void OnExecuteFire(MessagePtr message);
 		void OnReload(MessagePtr message);
+		void OnReadyToFire(MessagePtr message);
+		
 		void OnTransformationChanged(MessagePtr message);
 		void OnPhysicsMessage(MessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
@@ -62,6 +64,10 @@ namespace GASS
 		float GetProjectileStartVelocity() const;
 		void SetRecoilForce(const Vec3 &value);
 		Vec3 GetRecoilForce() const;
+		float GetReloadTime() const;
+		void SetReloadTime(float offset);
+		
+		
 
 		
 
@@ -104,6 +110,9 @@ namespace GASS
 		bool m_Reloading;
 		int m_CurrentMagSize;
 		//int m_CurrentNumOfMag;
+
+		//helpers
+		bool m_ReadyToFire;
 
 		Vec3 m_CurrentVelocity;
 		float m_ProjectileStartVelocity;

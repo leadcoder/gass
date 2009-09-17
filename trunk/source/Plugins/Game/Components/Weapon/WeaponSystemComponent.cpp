@@ -42,16 +42,20 @@ namespace GASS
 		m_ProjectileStartVelocity (50),
 		m_NumberOfMagazines (3),
 		m_MagazineSize(30),
-		m_RecoilForce(0,0,100)
+		m_RecoilForce(0,0,100),
+		m_ReloadTime(0.3),
+		m_FireDelay(0),
+		m_ReadyToFire(true),
+		m_AutoReload(true)
 	{
-		m_ReloadTime = 0.3;
+		
 		m_InputToFire = "Fire";
 		m_InputToReload = "Reload";
 		m_CurrentMagSize = 0;
-		m_FireDelay = 0;
+		
 		m_RoundOfFire = 1;
 		m_Automatic = true;
-		m_AutoReload = 0;
+		
 		m_Reloading = false;
 		m_FireRequest = false;
 	}
@@ -70,7 +74,8 @@ namespace GASS
 		RegisterProperty<int>("NumberOfMagazines", &WeaponSystemComponent::GetNumberOfMagazines, &WeaponSystemComponent::SetNumberOfMagazines);
 		RegisterProperty<int>("MagazineSize", &WeaponSystemComponent::GetMagazineSize, &WeaponSystemComponent::SetMagazineSize);
 		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
-		
+		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
+		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
 
 	void WeaponSystemComponent::OnCreate()
@@ -78,6 +83,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(WeaponSystemComponent::OnLoad));
 		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_RM_FIRE, MESSAGE_FUNC(WeaponSystemComponent::OnExecuteFire));
 		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_RM_RELOAD, MESSAGE_FUNC(WeaponSystemComponent::OnReload));
+		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_READY_TO_FIRE, MESSAGE_FUNC(WeaponSystemComponent::OnReadyToFire));
+
+		
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
 		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(WeaponSystemComponent::OnInput));
 		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(WeaponSystemComponent::OnPhysicsMessage));
@@ -107,34 +115,46 @@ namespace GASS
 
 	void WeaponSystemComponent::OnExecuteFire(MessagePtr message)
 	{
-		if(m_FireRequest && !m_Reloading)
+		if(m_ReadyToFire && !m_Reloading)
 		{
 			//Send projectile if we have ammo
 			m_FireRequest = false;
 			if(m_CurrentMagSize > 0)
 			{
 				SpawnProjectile(m_ProjectileStartPos,m_ProjectileStartRot);
+				m_CurrentMagSize--;
+				
+				float time_until_fire = 1.0f/m_RoundOfFire;
+				MessagePtr ready_msg(new Message(OBJECT_NM_READY_TO_FIRE));
+				ready_msg->SetDeliverDelay(time_until_fire);
+				GetSceneObject()->PostMessage(ready_msg);
+				m_ReadyToFire = false;
 			}
 			else if(m_AutoReload)
 			{
-				float time_until_reload = 1.0f/m_RoundOfFire;
 				MessagePtr reload_msg(new Message(OBJECT_RM_RELOAD));
-				reload_msg->SetDeliverDelay(time_until_reload);
+				reload_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(reload_msg);
 				m_Reloading = true;
-				return;
+
+				MessagePtr ready_msg(new Message(OBJECT_NM_READY_TO_FIRE));
+				ready_msg->SetDeliverDelay(m_ReloadTime);
+				GetSceneObject()->PostMessage(ready_msg);
 			}
-			m_CurrentMagSize--;
-			if(m_Automatic)
+
+			
+			
+			/*if(m_Automatic)
 			{
 				float time_until_fire = 1.0f/m_RoundOfFire;
 				MessagePtr execute_fire_msg(new Message(OBJECT_RM_FIRE));
 				execute_fire_msg->SetDeliverDelay(time_until_fire);
 				GetSceneObject()->PostMessage(execute_fire_msg);
-			}
-			
+			}*/
 		}
 	}
+
+	
 
 	void WeaponSystemComponent::OnTransformationChanged(MessagePtr message)
 	{
@@ -246,6 +266,18 @@ namespace GASS
 		}
 	}
 
+	void WeaponSystemComponent::OnReadyToFire(MessagePtr message)
+	{
+		m_ReadyToFire = true;
+
+		if(m_FireSound)
+		{
+			MessagePtr sound_msg(new Message(SceneObject::OBJECT_RM_SOUND_PARAMETER));
+			sound_msg->SetData("Parameter",SceneObject::STOP);
+			m_FireSound->PostMessage(sound_msg);
+		}
+	}
+
 	std::string WeaponSystemComponent::GetProjectileTemplate() const
 	{
 		return m_ProjectileTemplateName;
@@ -303,6 +335,16 @@ namespace GASS
 	Vec3 WeaponSystemComponent::GetRecoilForce() const
 	{
 		return m_RecoilForce;
+	}
+
+	void WeaponSystemComponent::SetReloadTime(float value) 
+	{
+		m_ReloadTime = value;
+	}
+
+	float WeaponSystemComponent::GetReloadTime() const
+	{
+		return m_ReloadTime;
 	}
 
 
