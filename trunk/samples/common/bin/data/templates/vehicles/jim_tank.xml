@@ -45,7 +45,7 @@
       </InputHandlerComponent>
       <HullArmor type ="ArmorComponent">
         <Armor value="50"/>
-        <DamageMesh value="wheel_r.mesh"/>
+        <DamageMesh value="JIM_TANK_hull_demolished.mesh"/>
       </HullArmor>
     </Components>
     <ComponentContainers>

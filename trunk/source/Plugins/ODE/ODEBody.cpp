@@ -477,10 +477,19 @@ namespace GASS
 				{
 					dJointID joint = dBodyGetJoint(m_ODEBody,i);
 					dBodyID b2 = dJointGetBody (joint, 1);
-					const dReal *p = dBodyGetPosition(b2);
+					ODEBody* child_body = (ODEBody*) dBodyGetData(b2);
+					if(child_body && child_body != this)
+					{
+						const dReal *p = dBodyGetPosition(b2);
+						Vec3 pos(p[0],p[1],p[2]);
+						pos = pos + trans_vec;
+						child_body->SetPosition(pos);
+					}
+
+					/*const dReal *p = dBodyGetPosition(b2);
 					Vec3 pos(p[0],p[1],p[2]);
 					pos = pos + trans_vec;
-					dBodySetPosition(b2, pos.x, pos.y, pos.z);
+					dBodySetPosition(b2, pos.x, pos.y, pos.z);*/
 				}
 			}
 		}
