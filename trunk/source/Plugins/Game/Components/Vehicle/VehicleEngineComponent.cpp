@@ -61,7 +61,7 @@ namespace GASS
 		m_AngularVelocity = ang_vel.x;
 	}
 
-	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), m_VehicleSpeed(0)
+	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), m_VehicleSpeed(0),	m_Invert(false)
 	{
 		m_RPM = 0;
 		m_AutoShiftStart = 0;
@@ -69,7 +69,7 @@ namespace GASS
 		m_TurnForce = 10;
 		m_MaxTurnForce = 200;
 		m_FakeRPMOutput = false;
-		m_Invert = false;
+	
 
 		m_InputToThrottle = "Throttle";
 		m_InputToSteer = "Steering";
@@ -119,6 +119,7 @@ namespace GASS
 		RegisterProperty<std::vector<std::string>>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 		RegisterProperty<std::string>("EngineType", &GetEngineType, &SetEngineType);
 		RegisterProperty<bool>("Automatic", &GetAutomatic, &SetAutomatic);
+		RegisterProperty<bool>("InvertDrivetrainOutput", &GetInvert, &SetInvert);
 		RegisterProperty<float>("BrakeTorque", &GetBrakeTorque, &SetBrakeTorque);
 		RegisterProperty<float>("DeclutchTimeChangeGear", &GetDeclutchTimeChangeGear, &SetDeclutchTimeChangeGear);
 		RegisterProperty<float>("ClutchTimeChangeGear", &GetClutchTimeChangeGear, &SetClutchTimeChangeGear);
@@ -575,6 +576,9 @@ namespace GASS
 		MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
 			
 		vel_msg->SetData("Parameter",SceneObject::AXIS2_VELOCITY);
+
+		if(m_Invert)
+			wheel_vel = -wheel_vel;
 		vel_msg->SetData("Value",wheel_vel);
 	
 		m_WheelRPM = 0;
@@ -590,6 +594,10 @@ namespace GASS
 		}
 		if(num_wheels > 0)
 			m_WheelRPM = m_WheelRPM/float(num_wheels);
+
+		if(m_Invert)
+			m_WheelRPM = -m_WheelRPM;
+	
 
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		//give feedback to engine, when clutch down throttle is directly mapped to rpm, this is not correct and alternatives are to be tested

@@ -128,6 +128,9 @@ namespace GASS
 		float RPM2AngleVel(float rpm);
 		float AngleVel2RPM(float rps);
 
+		void SetInvert(bool value) {m_Invert = value;}
+		bool GetInvert() const {return m_Invert;}
+
 		//members attributes
 		std::string m_VehicleEngineComponentType;
 		float m_Power;
