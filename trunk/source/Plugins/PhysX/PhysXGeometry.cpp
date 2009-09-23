@@ -180,14 +180,12 @@ namespace GASS
 						shapeDesc.meshData= trimesh;    
 						actorDesc.shapes.pushBack(&shapeDesc);    
 						actorDesc.body= NULL;//&bodyDesc;    
-						
 					}
 				}
 			}
 			break;
 		case PGT_TERRAIN:
 			break;
-
 		}
 
 	}
