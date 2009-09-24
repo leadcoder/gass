@@ -1,290 +1,310 @@
 /****************************************************************************
+* This file is part of GASS.                                                *
+* See http://code.google.com/p/gass/                                 *
 *                                                                           *
-* HiFiEngine                                                                *
-* Copyright (C)2003 - 2005 Johan Hedstrom                                   *
-* Email: hifiengine@gmail.com                                               *
-* Web page: http://n00b.dyndns.org/HiFiEngine                               *
+* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
-* HiFiEngine is only used with knowledge from the author. This software     *
-* is not al
-lowed to redistribute without permission from the author.        *
-* For further license information, please turn to the product home page or  *
-* contact author. Abuse against the HiFiEngine license is prohibited by law.*
+* GASS is free software: you can redistribute it and/or modify              *
+* it under the terms of the GNU Lesser General Public License as published  *
+* by the Free Software Foundation, either version 3 of the License, or      *
+* (at your option) any later version.                                       *
 *                                                                           *
-*****************************************************************************/ 
+* GASS is distributed in the hope that it will be useful,                   *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+* GNU Lesser General Public License for more details.                       *
+*                                                                           *
+* You should have received a copy of the GNU Lesser General Public License  *
+* along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
+*****************************************************************************/
 
-#include "Windows_PreReq.h"
-//#include <Windows.h>
-#include "Common.h"
-#include "ODEBody.h"
-#include "ODEPhysicsManager.h"
-#include "IGeometry.h"
-#include "Dator.h"
-#include "Font.h"
-#include "Log.h"
-#include "Root.h"
-#include "Profiler.h"
-#include "BaseObject.h"
-#include "MeshGeometry.h"
-#include "MeshObject.h"
+#include "Plugins/PhysX/PhysXBody.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Core/Math/AABox.h"
+#include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/MessageSystem/MessageManager.h"
+#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
+#include <boost/bind.hpp>
 
-namespace HiFi
+
+namespace GASS
 {
-	IMPLEMENT_RTTI(ODEBody,IPhysicsBody);
-	//const CRTTI ODEBody::m_RTTI("ODEBody",2,&ODEObject::m_RTTI,&IPhysicsObject::m_RTTI);
-
-	ODEBody::ODEBody() :  IPhysicsBody()
-	{
-		m_ODESpaceID = NULL;
-		m_ODESecondarySpaceID = NULL;
-		m_ODEBody = 0;
-		m_Mass = 10;
-		m_Center.Set(0,0,0);
-		m_MassOffset = Vec3(0,0,0);
-		m_AutoDisable = false;
-	}
-
-	ODEBody::~ODEBody()
-	{
-		if(m_ODEBody) dBodyDestroy(m_ODEBody);
-	}
-
-	void ODEBody::Update(float delta)
-	{
-		bool paused = Root::Get().GetPhysicsManager()->IsPaused();
+	PhysXBody::PhysXBody() :
 		
-		if(!paused)
-		{
-			m_Owner->SetUpdateTransform(false);
-			ODEPhysicsManager::SetNodeTransformation(m_ODEBody,m_Owner);
-		}
-		else if(paused)
-		{
-			m_Owner->SetUpdateTransform(true);
-			ODEPhysicsManager::SetBodyTransformation(m_ODEBody,m_Owner);
-		}
-	
-		if(m_Debug && m_ODEBody && !((ODEPhysicsManager*)Root::Get().GetPhysicsManager())->IsRunningInOwnThread())
-		{
-			m_MassOffset.x = 0;
-			/*if(GetAsyncKeyState('O') && GetAsyncKeyState(VK_LSHIFT))
-			{
-				m_MassOffset.x += 0.01;
-				//if(fabs(m_MassOffset.y) < 0.01) m_MassOffset.y -= 0.01;
-				//else m_MassOffset.y -= m_MassOffset.y*0.01;
-			}
-			else if(GetAsyncKeyState('O')) 
-			{
-				m_MassOffset.x += -0.01;
-				//if(fabs(m_MassOffset.y) < 0.01) m_MassOffset.y += 0.01;
-				//else m_MassOffset.y += (m_MassOffset.y*0.01);
-			}*/
-
-
-			Font::DebugPrint("Mass offset y %.2f",m_MassOffset.y);
-			dMassTranslate(&m_ODEMass,m_MassOffset.x, m_MassOffset.y,m_MassOffset.z);
-			/*if(GetAsyncKeyState('G') && GetAsyncKeyState(VK_LSHIFT))
-			{
-				m_Offset.y += 0.01;
-			}
-			else if(GetAsyncKeyState('G')) 
-			{
-				m_Offset.y -= 0.01;
-			}*/
-			
-
-			float mass = GetMass();
-			/*if(GetAsyncKeyState(VK_F4))
-			{
-				mass += mass*0.05;
-				SetMass(mass);
-			}
-			if(GetAsyncKeyState(VK_F3))
-			{
-
-				mass -= mass*0.05;
-				if(mass < 0) mass = 0.1;
-				SetMass(mass);
-			}*/
-
-			//m_Engine->RegisterCommands();
-			Font::DebugPrint("Mass %.2f",mass);
-		}
-	}
-
-
-
-	bool ODEBody::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
+		m_Center(0,0,0),
+		m_MassOffset(0,0,0),
+		m_AutoDisable(true),
+		m_FastRotation(true),
+		m_SceneManager(NULL),
+		m_MassRepresentation(MR_GEOMETRY),
+		m_Mass(1)
 	{
-		BaseObject* bo = (BaseObject*)m_Owner->GetRoot();
+
+	}
+
+	PhysXBody::~PhysXBody()
+	{
 		
-		/*if(m_GeomRep == "wheel")
+	}
+
+	void PhysXBody::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("PhysXBody",new Creator<PhysXBody, IComponent>);
+		RegisterProperty<float>("Mass", &PhysXBody::GetMass, &PhysXBody::SetMass);
+		RegisterProperty<Vec3>("CGPosition",&PhysXBody::GetCGPosition, &PhysXBody::SetCGPosition);
+		RegisterProperty<Vec3>("SymmetricInertia",&PhysXBody::GetSymmetricInertia, &PhysXBody::SetSymmetricInertia);
+		RegisterProperty<Vec3>("AssymetricInertia",&PhysXBody::GetAssymetricInertia, &PhysXBody::SetAssymetricInertia);
+		RegisterProperty<bool>("EffectJoints",&PhysXBody::GetEffectJoints, &PhysXBody::SetEffectJoints);
+		
+	}
+
+	void PhysXBody::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS, MESSAGE_FUNC( PhysXBody::OnLoad ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION,				MESSAGE_FUNC( PhysXBody::OnPositionChanged));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION,				MESSAGE_FUNC( PhysXBody::OnRotationChanged ));
+		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(PhysXBody::OnParameterMessage));
+	}
+
+	void PhysXBody::OnPositionChanged(MessagePtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
-			if(bo && !bo->IsMaster()) return false;
-			//car
-			float inv = 1;
-			//PlayerControlObject* pco = ((PlayerControlObject*) GetRoot());//dBodyGetLinearVel( m_ODEBody);
-			dReal const * vel = dBodyGetLinearVel  (m_ODEBody);
-			dBodyID bid = dGeomGetBody( you );
-			//dReal const * vel = dBodyGetLinearVel( bid );
-			float colVel = Math::Dot(((Vec3 const &)*vel) , (Vec3 &)contact.geom.normal);
-			if(bo->GetPosition().x < 0) inv = -1;
-			//if( BodyIsWheel( bid, &inv ) ) 
-			{
-				Vec3 front;
-				Vec3 up;
-				//  Compute fDir1 if a wheel
-				dReal const * R = dBodyGetRotation( bid );
-				front = Vec3( R[2] * inv, R[6] * inv, R[10] * inv );
-				up = Vec3( R[1] * inv, R[5] * inv, R[9] * inv );
-				//  Set Slip2
-				contact.surface.mode |= dContactSlip2 | dContactFDir1;
-				float v = sqrtf( vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2] );
-				contact.surface.slip2 = m_TireSlip * v;
-				//  Turn on Approx1
-				contact.surface.mode |= dContactApprox1;
-				//  re-tweak mu and mu2
-				contact.surface.mu = contact.surface.mu2 = m_Friction;
-				//  The theory is that it doesn't matter if "front" points "up" 
-				//  because we want fdir2 to be orthogonal to "front" and contact 
-				//  normal. Of course, if "front" points in the direction of the 
-				//  contact, this can be a problem. In that case, choose "up".
-				if( fabsf( dDot( contact.geom.normal, (dReal*) &front.x, 3 ) ) > 0.5f ) {
-					((Vec3 &)contact.fdir1) = up;
-				}
-				else {
-					((Vec3 &)contact.fdir1) = front;
-				}
-				m_Contact = true;
-			}
-			return true;
-		}
-		else*/
-		{
-			if(bo && bo->IsMaster()) return true;
-			else return false;
+			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+			SetPosition(pos);
 		}
 	}
 
+	void PhysXBody::OnRotationChanged(MessagePtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		{
+			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+			SetRotation(rot);
+		}
+	}
 
-	Vec3 ODEBody::GetForce()
+	void PhysXBody::OnParameterMessage(MessagePtr message)
+	{
+		SceneObject::PhysicsBodyParameterType type = boost::any_cast<SceneObject::PhysicsBodyParameterType>(message->GetData("Parameter"));
+		//wake body!!
+		Enable();
+		switch(type)
+		{
+		case SceneObject::FORCE:
+			{
+				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				AddForce(value,true);
+			}
+			break;
+		case SceneObject::TORQUE:
+			{
+				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				AddTorque(value,true);
+				break;
+			}
+		case SceneObject::VELOCITY:
+			{
+				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				SetVelocity(value,true);
+				break;
+			}
+
+		}
+	}
+
+	void PhysXBody::OnLoad(MessagePtr message)
+	{
+		m_SceneManager = boost::any_cast<PhysXPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
+		assert(m_SceneManager);
+		NxBodyDesc bodyDesc;
+		NxActorDesc actorDesc;
+
+		//Get all geometries
+		IComponentContainer::ComponentIterator comp_iter = GetSceneObject->GetComponents();
+		while(comp_iter.hasMoreElements())
+		{
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
+			PhysXGeometryPtr geom = boost::shared_dynamic_cast<PhysXGeometry>(comp)
+			if(geom)
+			{				
+				actorDesc.shapes.pushBack(geom->GetShape());		
+			}
+		}
+		actorDesc.body			= &bodyDesc;
+		actorDesc.density		= 10.0f;
+		actorDesc.globalPose.t	= NxVec3(0,0,0);	
+		m_Actor = m_SceneManager->GetNxScene()->createActor(actorDesc);	
+	}
+
+
+	void PhysXBody::BodyMoved()
+	{
+		int from_id = (int)this; //use address as id
+		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,from_id));
+		Vec3 pos = GetPosition();
+		
+		pos_msg->SetData("Position",pos);
+		GetSceneObject()->PostMessage(pos_msg);
+
+		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,from_id));
+		rot_msg->SetData("Rotation",GetRotation());
+		GetSceneObject()->PostMessage(rot_msg);
+		
+		MessagePtr physics_msg(new Message(SceneObject::OBJECT_NM_PHYSICS_VELOCITY,from_id));
+		physics_msg->SetData("Velocity",GetVelocity(true));
+		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
+		GetSceneObject()->PostMessage(physics_msg);
+		//msg->SetData("Rotation",Vec3(0,0,0));
+		
+	}
+
+	void PhysXBody::SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymmetricInertia)
+	{
+		m_Mass = mass;
+		m_CGPosition = CGPosition;
+		m_SymmetricInertia = symmetricInertia;
+		m_AssymetricInertia = assymmetricInertia;
+/*		dMassSetParameters(&m_ODEMass,mass,
+			CGPosition.x,CGPosition.y,CGPosition.z,
+			symmetricInertia.x,symmetricInertia.y,symmetricInertia.z,
+			assymmetricInertia.x,assymmetricInertia.y,assymmetricInertia.z);
+		dBodySetMass(m_PhysXBody, &m_ODEMass);*/
+	}
+
+	Vec3 PhysXBody::GetForce(bool rel)
 	{
 		Vec3 force(0,0,0);
-		if(m_ODEBody)
-		{
-			const dReal *value =  dBodyGetForce(m_ODEBody);
-			force.Set(value[0],value[1],value[2]);
+		if (m_PhysXBody) {
+			const dReal *f_p = dBodyGetForce(m_PhysXBody);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorFromWorld(m_PhysXBody,f_p[0],f_p[1],f_p[2],vec);
+				force.Set(vec[0],vec[1],vec[2]);
+			} else
+				force.Set(f_p[0],f_p[1],f_p[2]);
 		}
 		return force;
 	}
 
-	void ODEBody::SetForce(const Vec3 &force)
+	void PhysXBody::SetForce(const Vec3 &force)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodySetForce(m_ODEBody,force.x,force.y,force.z);
+			dBodySetForce(m_PhysXBody,force.x,force.y,force.z);
 		}
 	}
 
-	void ODEBody::SetTorque(const Vec3 &torque)
+	void PhysXBody::SetTorque(const Vec3 &torque)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodySetTorque(m_ODEBody,torque.x,torque.y,torque.z);
+			dBodySetTorque(m_PhysXBody,torque.x,torque.y,torque.z);
 		}
 	}
 
-	void ODEBody::AddTorque(const Vec3 &torque_vec)
+	void PhysXBody::AddTorque(const Vec3 &torque_vec, bool rel)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodyAddTorque(m_ODEBody, torque_vec.x,torque_vec.y,torque_vec.z);
+			if (rel)
+				dBodyAddRelTorque(m_PhysXBody, torque_vec.x,torque_vec.y,torque_vec.z);
+			else
+				dBodyAddTorque(m_PhysXBody, torque_vec.x,torque_vec.y,torque_vec.z);
 		}
 	}
 
-	void ODEBody::SetVelocity(const Vec3 &vel)
+	void PhysXBody::SetVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodySetLinearVel(m_ODEBody,vel.x,vel.y,vel.z);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorToWorld(m_PhysXBody,vel.x,vel.y,vel.z,vec);
+				dBodySetLinearVel(m_PhysXBody,vec[0],vec[1],vec[2]);
+			} else
+				dBodySetLinearVel(m_PhysXBody,vel.x,vel.y,vel.z);
 		}
 	}
 
-	void ODEBody::SetAngularVelocity(const Vec3 &vel)
+	void PhysXBody::SetAngularVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodySetAngularVel(m_ODEBody,vel.x,vel.y,vel.z);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorToWorld(m_PhysXBody,vel.x,vel.y,vel.z,vec);
+				dBodySetAngularVel(m_PhysXBody,vec[0],vec[1],vec[2]);
+			} else
+				dBodySetAngularVel(m_PhysXBody,vel.x,vel.y,vel.z);
 		}
 	}
 
 
-	Vec3 ODEBody::GetAngularVelocity()
+	Vec3 PhysXBody::GetAngularVelocity(bool rel)
 	{
 		Vec3 vel(0,0,0);
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dReal const * vel_p = dBodyGetAngularVel( m_ODEBody);
-			vel.Set(vel_p[0],vel_p[1],vel_p[2]);
+			dReal const * vel_p = dBodyGetAngularVel( m_PhysXBody);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
+				vel.Set(vec[0],vec[1],vec[2]);
+			} else
+				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
 		}
 		return vel;
 	}
 
-	void ODEBody::Enable()
+	void PhysXBody::Enable()
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodyEnable(m_ODEBody);
+			dBodyEnable(m_PhysXBody);
 		}
 	}
-	bool ODEBody::IsEnabled()
+	bool PhysXBody::IsEnabled()
 	{
-		if(dBodyIsEnabled(m_ODEBody) == 0) return false;
+		if(dBodyIsEnabled(m_PhysXBody) == 0) return false;
 		return true;
 	}
 
-	void ODEBody::Disable()
+	void PhysXBody::Disable()
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodyDisable(m_ODEBody);
+			dBodyDisable(m_PhysXBody);
 		}
 	}
 
-	Vec3 ODEBody::GetTorque()
+	Vec3 PhysXBody::GetTorque(bool rel)
 	{
 		Vec3 torque(0,0,0);
-		if(m_ODEBody)
-		{
-			const dReal *value =  dBodyGetTorque (m_ODEBody);
-			torque.Set(value[0],value[1],value[2]);
+		if (m_PhysXBody) {
+			const dReal *f_p = dBodyGetTorque(m_PhysXBody);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorFromWorld(m_PhysXBody,f_p[0],f_p[1],f_p[2],vec);
+				torque.Set(vec[0],vec[1],vec[2]);
+			} else
+				torque.Set(f_p[0],f_p[1],f_p[2]);
 		}
 		return torque;
 	}
 
-	void ODEBody::Init(BaseObject* owner)
-	{
-		IPhysicsBody::Init(owner);
-		Vec3 abs_pos;
-		m_ODEBody = dBodyCreate(((ODEPhysicsManager*)Root::Get().GetPhysicsManager())->m_World);
-		//From car world
-		//Set the auto-disable flag of a body. If the do_auto_disable is nonzero the body will be automatically disabled when it has been idle for long enough. 
-		dBodySetAutoDisableDefaults(m_ODEBody);
-		if(m_AutoDisable) dBodySetAutoDisableFlag(m_ODEBody, 1);
-		else dBodySetAutoDisableFlag(m_ODEBody, 0);
-		//Set whether the body is influenced by the world's gravity or not. If mode is nonzero it is, if mode is zero, it isn't. Newly created bodies are always influenced by the world's gravity. 
-		dBodySetGravityMode(m_ODEBody, 1);
-		ODEPhysicsManager::SetBodyTransformation(m_ODEBody,m_Owner);
 
-		//We don't want the scenenode::update function to set te transformation from parent 
-		//because we set the transformation ourself from the physics body.
-		m_Owner->SetUpdateTransform(false);
-	}
 
-	void ODEBody::DampenBody( dBodyID body, float vScale, float aScale )
+	void PhysXBody::DampenBody( dBodyID body, float vScale, float aScale )
 	{
 		assert( vScale <= 0 && aScale <= 0 );
-		if( !dBodyIsEnabled( body ) ) 
+		if( !dBodyIsEnabled( body ) )
 		{
 			return;
 		}
@@ -294,99 +314,166 @@ namespace HiFi
 		dBodyAddTorque( body, aScale*A[0], aScale*A[1], aScale*A[2] );
 	}
 
-	dSpaceID ODEBody::GetSpace()
+	dSpaceID PhysXBody::GetSpace()
 	{
-		if(m_ODESpaceID == NULL)
+		if(m_SceneManager && m_ODESpaceID == NULL)
 		{
-			m_ODESpaceID = ODEPhysicsManager::m_Space;//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
+			m_ODESpaceID = m_SceneManager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
 		}
 		return m_ODESpaceID;
 	}
 
-	dSpaceID ODEBody::GetSecondarySpace()
+	dSpaceID PhysXBody::GetSecondarySpace()
 	{
 
 		if(m_ODESecondarySpaceID == 0)
 		{
-			m_ODESecondarySpaceID = dSimpleSpaceCreate(ODEPhysicsManager::m_CollisionSpace);
+			m_ODESecondarySpaceID = dSimpleSpaceCreate(m_SceneManager->GetCollisionSpace());
 		}
 		return m_ODESecondarySpaceID;
 	}
 
 
-	
-	void ODEBody::AddForce(const Vec3 &force_vec)
+
+	void PhysXBody::AddForce(const Vec3 &force_vec, bool rel)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			float mass = (float) m_ODEMass.mass;
-			dBodyAddForce(m_ODEBody, mass*force_vec.x,mass*force_vec.y,mass*force_vec.z);
+			if(rel)
+				dBodyAddRelForce(m_PhysXBody, force_vec.x,force_vec.y,force_vec.z);
+			else
+				dBodyAddForce(m_PhysXBody, force_vec.x,force_vec.y,force_vec.z);
 		}
 	}
 
-	void ODEBody::SetMass(float mass)
+	void PhysXBody::AddForceAtPos(const Vec3 &force_vec, const Vec3& pos_vec, bool rel_force, bool rel_pos)
 	{
-		m_Mass = mass;
-		dMassAdjust(&m_ODEMass, m_Mass);
-		dBodySetMass(m_ODEBody, &m_ODEMass);
+		if (m_PhysXBody)
+		{
+			if (rel_force) {
+				if (rel_pos)
+					dBodyAddRelForceAtRelPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
+					pos_vec.x, pos_vec.y, pos_vec.z);
+				else
+					dBodyAddRelForceAtPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
+					pos_vec.x, pos_vec.y, pos_vec.z);
+			} else {
+				if (rel_pos)
+					dBodyAddForceAtRelPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
+					pos_vec.x, pos_vec.y, pos_vec.z);
+				else
+					dBodyAddForceAtPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
+					pos_vec.x, pos_vec.y, pos_vec.z);
+			}
+		}
 	}
 
-	Vec3 ODEBody::GetVelocity()
+	void PhysXBody::SetMass(float mass)
 	{
-		Vec3 vel;
-		const dReal *odevel = dBodyGetLinearVel  (m_ODEBody);
-		vel.Set(odevel[0],odevel[1],odevel[2]);
+		m_Mass = mass;
+
+		if(m_PhysXBody)
+		{
+			dMassAdjust(&m_ODEMass, m_Mass);
+			dBodySetMass(m_PhysXBody, &m_ODEMass);
+			m_CGPosition = Vec3(m_ODEMass.c[0],m_ODEMass.c[1],m_ODEMass.c[2]);
+		}
+		// TODO: update m_SymmetricInertia and m_AssymetricInertia
+	}
+
+	void PhysXBody::SetODEMass(dMass mass)
+	{
+		m_ODEMass = mass;
+		dBodySetMass(m_PhysXBody, &m_ODEMass);
+		m_Mass = mass.mass;
+		m_CGPosition = Vec3(mass.c[0],mass.c[1],mass.c[2]);
+		// TODO: update m_SymmetricInertia and m_AssymetricInertia
+
+	}
+
+	Vec3 PhysXBody::GetVelocity(bool rel)
+	{
+		Vec3 vel(0,0,0);
+		if (m_PhysXBody) {
+			const dReal *vel_p = dBodyGetLinearVel  (m_PhysXBody);
+			if (rel) {
+				dVector3 vec;
+				dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
+				vel.Set(vec[0],vec[1],vec[2]);
+			} else
+				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
+		}
 		return vel;
 	}
 
-	void ODEBody::SetPosition(const Vec3 &value)
+	void PhysXBody::SetPosition(const Vec3 &value)
 	{
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-			dBodySetPosition(m_ODEBody, value.x, value.y, value.z);
+			Vec3 trans_vec = value - GetPosition();
+			dBodySetPosition(m_PhysXBody, value.x, value.y, value.z);
+
+			if(m_EffectJoints)
+			{
+				int num_joints = dBodyGetNumJoints(m_PhysXBody);
+				for(int i = 0 ; i < num_joints ;i++)
+				{
+					dJointID joint = dBodyGetJoint(m_PhysXBody,i);
+					dBodyID b2 = dJointGetBody (joint, 1);
+					PhysXBody* child_body = (PhysXBody*) dBodyGetData(b2);
+					if(child_body && child_body != this)
+					{
+						const dReal *p = dBodyGetPosition(b2);
+						Vec3 pos(p[0],p[1],p[2]);
+						pos = pos + trans_vec;
+						child_body->SetPosition(pos);
+					}
+
+					/*const dReal *p = dBodyGetPosition(b2);
+					Vec3 pos(p[0],p[1],p[2]);
+					pos = pos + trans_vec;
+					dBodySetPosition(b2, pos.x, pos.y, pos.z);*/
+				}
+			}
 		}
 	}
 
-	void ODEBody::UpdateTransformation()
+	Vec3  PhysXBody::GetPosition() const
 	{
-		if(m_ODEBody)
+		Vec3 pos(0,0,0);
+		if(m_PhysXBody)
 		{
-			ODEPhysicsManager::SetBodyTransformation(m_ODEBody,m_Owner);
+			const dReal *p = dBodyGetPosition(m_PhysXBody);
+			pos = Vec3(p[0],p[1],p[2]);
+		}
+		return pos;
+	}
+
+	void PhysXBody::SetRotation(const Quaternion &rot)
+	{
+		if(m_PhysXBody)
+		{
+			dReal ode_rot_mat[12];
+			Mat4 rot_mat;
+			rot_mat.Identity();
+			rot.ToRotationMatrix(rot_mat);
+			ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
+			dBodySetRotation(m_PhysXBody, ode_rot_mat);
 		}
 	}
 
-	void ODEBody::SetRotation(const Vec3 &value)
+	Quaternion PhysXBody::GetRotation()
 	{
-		/*ISceneNode::SetRotation(value);
+		Quaternion q;
 
-		if(m_ODEBody)
+		if(m_PhysXBody)
 		{
-		Mat4 rel_mat;
-		rel_mat.SetTransformation(m_Pos,m_Rot,m_Scale);
-
-		if(m_Parent)
-		{
-		m_AbsoluteTransformation = rel_mat * m_Parent->GetAbsoluteTransformation();
+			
+			const dReal *ode_rot_mat = dBodyGetRotation(m_PhysXBody);
+			Mat4 rot;
+			ODEPhysicsSceneManager::CreateGASSRotationMatrix(ode_rot_mat,rot);
+			q.FromRotationMatrix(rot);
 		}
-		else
-		{
-		m_AbsoluteTransformation = rel_mat;
-		}
-		dReal R[12];
-		float *m = m_AbsoluteTransformation.m_Data2;
-		R[0] = m[0];
-		R[1] = m[4];
-		R[2] = m[8];
-		R[3] = 0;
-		R[4] = m[1];
-		R[5] = m[5];
-		R[6] = m[9];
-		R[7] = 0;
-		R[8] = m[2];
-		R[9] = m[6];
-		R[10]= m[10];
-		R[11] = 0;
-		dBodySetRotation(m_ODEBody, R);
-		}*/
+		return q;
 	}
 }

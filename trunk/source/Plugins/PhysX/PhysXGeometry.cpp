@@ -25,6 +25,10 @@ lowed to redistribute without permission from the author.        *
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
+
+
 #include <boost/bind.hpp>
 
 
@@ -92,7 +96,7 @@ namespace GASS
 		m_SceneManager = boost::any_cast<PhysXPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
 		assert(m_SceneManager);
 
-		m_Body = GetSceneObject()->GetFirstComponent<PhysXBody>().get();
+		//m_Body = GetSceneObject()->GetFirstComponent<PhysXBody>().get();
 
 		boost::shared_ptr<IGeometryComponent> geom;
 		if(m_GeometryTemplate != "")
@@ -125,15 +129,11 @@ namespace GASS
 		//Vec3 min = box.m_Min - m_Owner->GetPosition();
 		Vec3 bb_size = (box.m_Max - box.m_Min)*m_CollisionGeomScale;
 		//bb_size = bb_size*m_Owner->GetScale();
-
 		Sphere sphere = geom->GetBoundingSphere();
 		sphere.m_Radius *= m_CollisionGeomScale.x;//*m_Owner->GetScale().x;
 		m_BBSize = bb_size;
 		m_BSSize = sphere.m_Radius;
-
 		Vec3 geom_offset(0,0,0);
-
-
 		switch(m_GeometryType)
 		{
 		case PGT_BOX:
@@ -173,11 +173,12 @@ namespace GASS
 
 				if(mesh)
 				{
-					NxTriangleMesh* trimesh = m_SceneManager->CreateCollisionMesh(mesh);
-					if(trimesh)
+					PhysXPhysicsSystemPtr sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+					NxCollisionMesh col_mesh = sys->CreateCollisionMesh(mesh);
+					if(col_mesh.NxMesh)
 					{
 						NxTriangleMeshShapeDesc shapeDesc;    
-						shapeDesc.meshData= trimesh;    
+						shapeDesc.meshData = col_mesh.NxMesh;    
 						actorDesc.shapes.pushBack(&shapeDesc);    
 						actorDesc.body= NULL;//&bodyDesc;    
 					}
@@ -187,7 +188,6 @@ namespace GASS
 		case PGT_TERRAIN:
 			break;
 		}
-
 	}
 
 	void PhysXGeometry::SetPosition(const Vec3 &pos)
@@ -203,7 +203,6 @@ namespace GASS
 	{
 		if(m_Body == NULL)
 		{
-			dReal ode_rot_mat[12];
 			Mat4 rot_mat;
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);
@@ -212,19 +211,7 @@ namespace GASS
 			//dGeomSetRotation(m_SecondTransformGeomID, ode_rot_mat);
 		}
 	}
-
-	void PhysXGeometry::Disable()
-	{
-		//dGeomDisable(m_TransformGeomID);
-		//dGeomDisable(m_SecondTransformGeomID);
-	}
-
-	void PhysXGeometry::Enable()
-	{
-		//dGeomEnable(m_TransformGeomID);
-		//dGeomEnable(m_SecondTransformGeomID);
-	}
-
+	
 	void PhysXGeometry::SetScale(const Vec3 &value)
 	{
 		//SetScale(value,m_GeomID);

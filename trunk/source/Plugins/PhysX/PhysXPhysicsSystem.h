@@ -25,8 +25,19 @@ class NxPhysicsSDK;
 
 namespace GASS
 {
+	class IMeshComponent;
+	struct MeshData;
+
+	struct NxCollisionMesh
+	{
+		MeshData* Mesh;
+		NxTriangleMesh* NxMesh;
+	};
+
 	class PhysXPhysicsSystem : public Reflection<PhysXPhysicsSystem, SimSystem>
 	{
+	public:
+		typedef std::map<std::string,NxCollisionMesh> CollisionMeshMap;
 	public:
 		PhysXPhysicsSystem();
 		virtual ~PhysXPhysicsSystem();
@@ -34,6 +45,10 @@ namespace GASS
 		//NxTriangleMesh* GetTriMesh(CollisionMesh *cm);
 		static void RegisterReflection();
 		virtual void OnCreate();
+
+		NxCollisionMesh CreateCollisionMesh(IMeshComponent* mesh);
+		bool HasCollisionMesh(const std::string &name);
+
 	protected:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -41,6 +56,7 @@ namespace GASS
 	private:
 		// Physics
 		NxPhysicsSDK* m_PhysicsSDK;
+		CollisionMeshMap m_ColMeshMap;
 		//NxScene* m_Scene;
 	};
 

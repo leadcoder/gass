@@ -31,19 +31,11 @@ class NxScene;
 
 namespace GASS
 {
-	class IMeshComponent;
-	struct MeshData;
-
-	struct PhysXCollisionMesh
-	{
-		MeshData* Mesh;
-		NxTriangleMesh* NxMesh;
-	};
+	
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager> , public ITaskListener
 	{
-	public:
-		typedef std::map<std::string,PhysXCollisionMesh> CollisionMeshMap;
+	
 	public:
 		PhysXPhysicsSceneManager();
 		virtual ~PhysXPhysicsSceneManager();
@@ -51,6 +43,8 @@ namespace GASS
 		virtual void OnCreate();
 		TaskGroup GetTaskGroup() const;
 		NxScene* GetNxScene() {return m_NxScene;}
+
+
 	protected:
 		void Update(double delta);
 		void OnLoad(MessagePtr message);
@@ -63,7 +57,7 @@ namespace GASS
 		float m_Gravity;
 		bool m_Paused;
 		TaskGroup m_TaskGroup;
-		CollisionMeshMap m_ColMeshMap;
+		
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;

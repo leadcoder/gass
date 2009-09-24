@@ -14,13 +14,16 @@
 
 #include "PhysXPhysicsSystem.h"
 #include "PhysXGeometry.h"
+
+#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "NxPhysics.h"
+
 #include "UserAllocator.h"
 #include "Core/Utils/Log.h"
 #include "ErrorStream.h"
 #include "Stream.h"
 #include "Utilities.h"
-//#include "cooking.h"
+#include "cooking.h"
 
 namespace GASS
 {
@@ -28,6 +31,7 @@ namespace GASS
 	{
 		//m_Scene = NULL;
 	}
+
 	PhysXPhysicsSystem::~PhysXPhysicsSystem()
 	{
 
@@ -77,44 +81,57 @@ namespace GASS
 
 	}
 
-	
-	/*void PhysXPhysicsSystem::InitCollisionMesh(CollisionMesh* mesh)
+	NxCollisionMesh PhysXPhysicsSystem::CreateCollisionMesh(IMeshComponent* mesh)
 	{
-		unsigned int	mVertexCount = mesh->NumVertex, mIndexCount  = mesh->NumFaces;
-		NxVec3* mMeshVertices = new NxVec3[mVertexCount];
-		NxU32* mMeshFaces = new NxU32[mIndexCount];
-		NxMaterialIndex* mMaterials = new NxMaterialIndex[mIndexCount];
+		std::string col_mesh_name = mesh->GetFilename();
+		if(HasCollisionMesh(col_mesh_name))
+		{
+			return m_ColMeshMap[col_mesh_name];
+		}
+		//not loaded, load it!
+
+		MeshDataPtr mesh_data = new MeshData;
+		mesh->GetMeshData(mesh_data);
+
+		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
+		{
+			//Log::Error("No verticies found for this mesh")
+		}
+
+		unsigned int vertexCount = mesh_data->NumVertex, indexCount  = mesh_data->NumFaces;
+		NxVec3* meshVertices = new NxVec3[vertexCount];
+		NxU32* meshFaces = new NxU32[indexCount];
+		NxMaterialIndex* materials = new NxMaterialIndex[indexCount];
 
 		NxMaterialIndex currentMaterialIndex = 0;
 //		bool use32bitindexes;
 
-		for(unsigned int  i = 0;  i < mesh->NumVertex;i++)
+		for(unsigned int  i = 0;  i < mesh_data->NumVertex;i++)
 		{
-			Vec3 pos = mesh->VertexVector[i];
-			mMeshVertices[i] = NxVec3(pos.x,pos.y,pos.z); 
+			Vec3 pos = mesh_data->VertexVector[i];
+			meshVertices[i] = NxVec3(pos.x,pos.y,pos.z); 
 		}
 
-		for(unsigned int  i = 0;  i < mesh->NumFaces;i++)
+		for(unsigned int  i = 0;  i < mesh_data->NumFaces;i++)
 		{
-			mMaterials[i] = mesh->MatIDVector[i];
-			mMeshFaces[i] = mesh->FaceVector[i]; 
+//			materials[i] = mesh_data->MatIDVector[i];
+			meshFaces[i] = mesh_data->FaceVector[i]; 
 		}
 
 		NxTriangleMeshDesc mTriangleMeshDescription;
 
 		// Vertices
-		mTriangleMeshDescription.numVertices				= mVertexCount;
-		mTriangleMeshDescription.points						= mMeshVertices;							
+		mTriangleMeshDescription.numVertices				= vertexCount;
+		mTriangleMeshDescription.points						= meshVertices;							
 		mTriangleMeshDescription.pointStrideBytes			= sizeof(NxVec3);
 		// Triangles
-		mTriangleMeshDescription.numTriangles				= mIndexCount / 3;
-		mTriangleMeshDescription.triangles					= mMeshFaces;
+		mTriangleMeshDescription.numTriangles				= indexCount / 3;
+		mTriangleMeshDescription.triangles					= meshFaces;
 		mTriangleMeshDescription.triangleStrideBytes		= 3 * sizeof(NxU32);
 		// Materials
 		//#if 0
 		mTriangleMeshDescription.materialIndexStride		= sizeof(NxMaterialIndex);
-
-		mTriangleMeshDescription.materialIndices			= mMaterials;
+		mTriangleMeshDescription.materialIndices			= materials;
 		//#endif
 		//mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;
 
@@ -126,12 +143,11 @@ namespace GASS
 		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) {
 			std::stringstream s;
 			s	<< "Mesh '"  << "' failed to cook"
-				<< "V(" << mMeshVertices << ") F(" << mMeshFaces << ")";
+				<< "V(" << meshVertices << ") F(" << meshFaces << ")";
 
 			Log::Error("%s",s.str());//NxThrow_Error(s.str());
 		}
-		trimesh = m_Scene->getPhysicsSDK().createTriangleMesh(MemoryReadBuffer(buf.data));
-
+		trimesh = m_PhysicsSDK->createTriangleMesh(MemoryReadBuffer(buf.data));
 #else
 
 		NxString filename;
@@ -163,34 +179,26 @@ namespace GASS
 
 
 #endif
-		m_TriMeshMap[mesh] = trimesh;
-
-//		delete []vertices;
-//		delete []indices;
-
-		delete []mMeshVertices;
-		delete []mMeshFaces;
-		delete []mMaterials;
-
-//		return trimesh;
-
+		NxCollisionMesh col_mesh;
+		col_mesh.NxMesh = trimesh;
+		col_mesh.Mesh = mesh_data;
+		m_ColMeshMap[col_mesh_name] = col_mesh;
+		
+		delete []meshVertices;
+		delete []meshFaces;
+		delete []materials;
+		return col_mesh;
 	}
 
-	NxTriangleMesh* PhysXPhysicsSystem::GetTriMesh(CollisionMesh *cm)
+	bool PhysXPhysicsSystem::HasCollisionMesh(const std::string &name)
 	{
-		//MeshGeometry* entity = DYNAMIC_CAST(MeshGeometry,geom);
-		//if(entity)
+		CollisionMeshMap::iterator iter;
+		iter = m_ColMeshMap.find(name);
+		if (iter!= m_ColMeshMap.end()) //in map.
 		{
-			TriMeshMap::iterator iter;
-			iter = m_TriMeshMap.find(cm);
-			if (iter!= m_TriMeshMap.end()) //in map.
-			{
-				return m_TriMeshMap[cm];
-				
-			}
+			return true;
 		}
-		return NULL;
-	}*/
-	
+		return false;
+	}
 	
 }
