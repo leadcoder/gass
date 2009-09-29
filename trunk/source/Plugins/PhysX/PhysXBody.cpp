@@ -22,6 +22,7 @@
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
 #include "Core/Math/AABox.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/ComponentSystem/IComponentContainer.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
@@ -124,23 +125,10 @@ namespace GASS
 		m_SceneManager = boost::any_cast<PhysXPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
 		assert(m_SceneManager);
 		NxBodyDesc bodyDesc;
-		NxActorDesc actorDesc;
-
-		//Get all geometries
-		IComponentContainer::ComponentIterator comp_iter = GetSceneObject->GetComponents();
-		while(comp_iter.hasMoreElements())
-		{
-			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
-			PhysXGeometryPtr geom = boost::shared_dynamic_cast<PhysXGeometry>(comp)
-			if(geom)
-			{				
-				actorDesc.shapes.pushBack(geom->GetShape());		
-			}
-		}
-		actorDesc.body			= &bodyDesc;
-		actorDesc.density		= 10.0f;
-		actorDesc.globalPose.t	= NxVec3(0,0,0);	
-		m_Actor = m_SceneManager->GetNxScene()->createActor(actorDesc);	
+		m_ActorDesc.body		= &bodyDesc;
+		m_ActorDesc.density		= 10.0f;
+		m_ActorDesc.globalPose.t= NxVec3(0,0,0);	
+		m_Actor = m_SceneManager->GetNxScene()->createActor(m_ActorDesc);	
 	}
 
 
@@ -181,23 +169,18 @@ namespace GASS
 	Vec3 PhysXBody::GetForce(bool rel)
 	{
 		Vec3 force(0,0,0);
-		if (m_PhysXBody) {
-			const dReal *f_p = dBodyGetForce(m_PhysXBody);
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorFromWorld(m_PhysXBody,f_p[0],f_p[1],f_p[2],vec);
-				force.Set(vec[0],vec[1],vec[2]);
-			} else
-				force.Set(f_p[0],f_p[1],f_p[2]);
+		if (m_Actor) 
+		{
+			m_Actor->getLinearMomentum();
 		}
 		return force;
 	}
 
 	void PhysXBody::SetForce(const Vec3 &force)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dBodySetForce(m_PhysXBody,force.x,force.y,force.z);
+			//m_Actor->addForce(setfor(m_PhysXBody,force.x,force.y,force.z);
 		}
 	}
 
@@ -462,6 +445,8 @@ namespace GASS
 		}
 	}
 
+	
+
 	Quaternion PhysXBody::GetRotation()
 	{
 		Quaternion q;
@@ -475,5 +460,10 @@ namespace GASS
 			q.FromRotationMatrix(rot);
 		}
 		return q;
+	}
+
+	void PhysXBody::AddShape(NxShapeDesc* shape)
+	{
+		m_ActorDesc.shapes.push_back(shape);
 	}
 }

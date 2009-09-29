@@ -51,8 +51,11 @@ class IGeometryComponent;
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
 
+
+
 	protected:
-		 void CreateNXShapeFromGeom(IGeometryComponent* geom,NxActorDesc &actorDesc, PhysXBody* body);
+		void CreateShape(IGeometryComponent* geom, PhysXBody* body);
+		 //void CreateNXShapeFromGeom(IGeometryComponent* geom,NxActorDesc &actorDesc, PhysXBody* body);
 		 NxActorDesc m_StaticActorDesc;
 	
 		 void SetPosition(const Vec3 &pos);
@@ -80,5 +83,7 @@ class IGeometryComponent;
 		float m_Slip;
 		PhysXPhysicsSceneManager* m_SceneManager;
 	};
+
+	typedef boost::shared_ptr<PhysXGeometry> PhysXGeometryPtr;
 }
 #endif 

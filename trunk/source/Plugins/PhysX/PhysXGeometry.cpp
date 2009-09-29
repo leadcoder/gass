@@ -13,6 +13,7 @@ lowed to redistribute without permission from the author.        *
 *                                                                           *
 *****************************************************************************/ 
 #include "Plugins/PhysX/PhysXGeometry.h"
+#include "Plugins/PhysX/PhysXBody.h"
 #include "Plugins/PhysX/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
 
@@ -81,7 +82,6 @@ namespace GASS
 		SetRotation(rot);
 	}
 
-	
 	void PhysXGeometry::OnCollisionSettings(MessagePtr message)
 	{
 		bool value = boost::any_cast<bool>(message->GetData("Enable"));
@@ -121,8 +121,7 @@ namespace GASS
 		}
 	}
 
-
-	void PhysXGeometry::CreateNXShapeFromGeom(IGeometryComponent* geom, NxActorDesc &actorDesc , PhysXBody* body)
+	void PhysXGeometry::CreateShape(IGeometryComponent* geom, PhysXBody* body)
 	{
 		AABox box = geom->GetBoundingBox();
 		//Vec3 maxVec3 = box.m_Max - m_Owner->GetPosition();
@@ -134,18 +133,20 @@ namespace GASS
 		m_BBSize = bb_size;
 		m_BSSize = sphere.m_Radius;
 		Vec3 geom_offset(0,0,0);
+		
+		NxShapeDesc* shape;
 		switch(m_GeometryType)
 		{
 		case PGT_BOX:
 			{
-				NxBoxShapeDesc boxDesc;
-				boxDesc.dimensions = NxVec3(bb_size.x, bb_size.y, bb_size.z);
-				actorDesc.shapes.pushBack(&boxDesc);
-				actorDesc.body			= NULL;//&bodyDesc;
-				actorDesc.density		= 10.0f;
-				actorDesc.globalPose.t  =  NxVec3(0,0,0);
-				
-				NxActor *actor = m_SceneManager->GetNxScene()->createActor(actorDesc);
+				NxBoxShapeDesc* boxDesc = new NxBoxShapeDesc();
+				boxDesc->dimensions = NxVec3(bb_size.x, bb_size.y, bb_size.z);
+				shape = boxDesc;
+				//actorDesc.shapes.pushBack(&boxDesc);
+				//actorDesc.body			= NULL;//&bodyDesc;
+				//actorDesc.density		= 10.0f;
+				//actorDesc.globalPose.t  =  NxVec3(0,0,0);
+				//NxActor *actor = m_SceneManager->GetNxScene()->createActor(actorDesc);
 			}
 			break;
 		case PGT_CYLINDER:
@@ -177,10 +178,9 @@ namespace GASS
 					NxCollisionMesh col_mesh = sys->CreateCollisionMesh(mesh);
 					if(col_mesh.NxMesh)
 					{
-						NxTriangleMeshShapeDesc shapeDesc;    
-						shapeDesc.meshData = col_mesh.NxMesh;    
-						actorDesc.shapes.pushBack(&shapeDesc);    
-						actorDesc.body= NULL;//&bodyDesc;    
+						NxTriangleMeshShapeDesc* meshShapeDesc = new NxTriangleMeshShapeDesc();    
+						meshShapeDesc->meshData = col_mesh.NxMesh;
+						shape = meshShapeDesc;
 					}
 				}
 			}
@@ -188,6 +188,17 @@ namespace GASS
 		case PGT_TERRAIN:
 			break;
 		}
+
+		if(shape)
+		{
+			if(body)
+				body->AddShape(shape);
+			else // static geometry
+			{
+
+			}
+		}
+		
 	}
 
 	void PhysXGeometry::SetPosition(const Vec3 &pos)

@@ -43,6 +43,7 @@ namespace GASS
 		virtual ~PhysXBody();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void AddShape(NxShapeDesc* shape);
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -90,6 +91,8 @@ namespace GASS
 		void OnParameterMessage(MessagePtr message);
 		//dBodyID GetPhysXBody(){return m_PhysXBody;}
 		//void DampenBody( dBodyID body, float vScale, float aScale );
+
+		
 		
 	protected:
 		float m_Mass;
@@ -120,6 +123,7 @@ namespace GASS
 		PhysXPhysicsSceneManager* m_SceneManager;
 
 		NxActor *m_Actor;
+		NxActorDesc m_ActorDesc;
 	};
 }
 
