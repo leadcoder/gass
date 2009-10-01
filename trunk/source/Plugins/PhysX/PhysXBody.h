@@ -57,7 +57,7 @@ namespace GASS
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void SetForce(const Vec3 &force);
-		Vec3 GetForce(bool rel = false);
+		Vec3 GetMomentum();
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
 		
 		//reflection functions

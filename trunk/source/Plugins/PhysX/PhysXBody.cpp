@@ -166,66 +166,55 @@ namespace GASS
 		dBodySetMass(m_PhysXBody, &m_ODEMass);*/
 	}
 
-	Vec3 PhysXBody::GetForce(bool rel)
+	Vec3 PhysXBody::GetMomentum()
 	{
-		Vec3 force(0,0,0);
+		Vec3 momentum(0,0,0);
 		if (m_Actor) 
 		{
-			m_Actor->getLinearMomentum();
+			NxVec3 temp = m_Actor->getLinearMomentum();
+			momentum.Set(temp.x,temp.y,temp.z); 
 		}
-		return force;
+		return momentum;
 	}
 
-	void PhysXBody::SetForce(const Vec3 &force)
+	
+	void PhysXBody::AddTorque(const Vec3 &torque_vec, bool rel)
 	{
 		if(m_Actor)
 		{
-			//m_Actor->addForce(setfor(m_PhysXBody,force.x,force.y,force.z);
-		}
-	}
-
-	void PhysXBody::SetTorque(const Vec3 &torque)
-	{
-		if(m_PhysXBody)
-		{
-			dBodySetTorque(m_PhysXBody,torque.x,torque.y,torque.z);
-		}
-	}
-
-	void PhysXBody::AddTorque(const Vec3 &torque_vec, bool rel)
-	{
-		if(m_PhysXBody)
-		{
 			if (rel)
-				dBodyAddRelTorque(m_PhysXBody, torque_vec.x,torque_vec.y,torque_vec.z);
+				m_Actor->addLocalTorque(NxVec3(torque_vec.x,torque_vec.y,torque_vec.z));
 			else
-				dBodyAddTorque(m_PhysXBody, torque_vec.x,torque_vec.y,torque_vec.z);
+				m_Actor->addTorque(NxVec3(torque_vec.x,torque_vec.y,torque_vec.z));
 		}
 	}
 
 	void PhysXBody::SetVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorToWorld(m_PhysXBody,vel.x,vel.y,vel.z,vec);
-				dBodySetLinearVel(m_PhysXBody,vec[0],vec[1],vec[2]);
-			} else
-				dBodySetLinearVel(m_PhysXBody,vel.x,vel.y,vel.z);
+			if (rel) 
+			{
+				//dVector3 vec;
+				//dBodyVectorToWorld(m_PhysXBody,vel.x,vel.y,vel.z,vec);
+				//dBodySetLinearVel(m_PhysXBody,vec[0],vec[1],vec[2]);
+			} 
+			else
+			{
+				m_Actor->setLinearVelocity(NxVec3(vel.x,vel.y,vel.z));
+			}
 		}
 	}
 
 	void PhysXBody::SetAngularVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorToWorld(m_PhysXBody,vel.x,vel.y,vel.z,vec);
-				dBodySetAngularVel(m_PhysXBody,vec[0],vec[1],vec[2]);
-			} else
-				dBodySetAngularVel(m_PhysXBody,vel.x,vel.y,vel.z);
+			if (rel) 
+			{
+			} 
+			else
+				m_Actor->setAngularVelocity(NxVec3(vel.x,vel.y,vel.z));
 		}
 	}
 
@@ -233,58 +222,43 @@ namespace GASS
 	Vec3 PhysXBody::GetAngularVelocity(bool rel)
 	{
 		Vec3 vel(0,0,0);
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dReal const * vel_p = dBodyGetAngularVel( m_PhysXBody);
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
-				vel.Set(vec[0],vec[1],vec[2]);
+			NxVec3 nxvel = m_Actor->getAngularVelocity();
+			if (rel) 
+			{
+				//dVector3 vec;
+				//dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
+				vel.Set(nxvel.x,nxvel.y,nxvel.z);
 			} else
-				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
+				vel.Set(nxvel.x,nxvel.y,nxvel.z);
 		}
 		return vel;
 	}
 
 	void PhysXBody::Enable()
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dBodyEnable(m_PhysXBody);
+			//dBodyEnable(m_PhysXBody);
 		}
 	}
 	bool PhysXBody::IsEnabled()
 	{
-		if(dBodyIsEnabled(m_PhysXBody) == 0) return false;
+		//if(dBodyIsEnabled(m_PhysXBody) == 0) return false;
 		return true;
 	}
 
 	void PhysXBody::Disable()
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dBodyDisable(m_PhysXBody);
+			//dBodyDisable(m_PhysXBody);
 		}
 	}
 
-	Vec3 PhysXBody::GetTorque(bool rel)
-	{
-		Vec3 torque(0,0,0);
-		if (m_PhysXBody) {
-			const dReal *f_p = dBodyGetTorque(m_PhysXBody);
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorFromWorld(m_PhysXBody,f_p[0],f_p[1],f_p[2],vec);
-				torque.Set(vec[0],vec[1],vec[2]);
-			} else
-				torque.Set(f_p[0],f_p[1],f_p[2]);
-		}
-		return torque;
-	}
 
-
-
-	void PhysXBody::DampenBody( dBodyID body, float vScale, float aScale )
+	/*void PhysXBody::DampenBody( dBodyID body, float vScale, float aScale )
 	{
 		assert( vScale <= 0 && aScale <= 0 );
 		if( !dBodyIsEnabled( body ) )
@@ -295,58 +269,35 @@ namespace GASS
 		dBodyAddForce( body, vScale*V[0], vScale*V[1], vScale*V[2] );
 		dReal const * A = dBodyGetAngularVel( body );
 		dBodyAddTorque( body, aScale*A[0], aScale*A[1], aScale*A[2] );
-	}
-
-	dSpaceID PhysXBody::GetSpace()
-	{
-		if(m_SceneManager && m_ODESpaceID == NULL)
-		{
-			m_ODESpaceID = m_SceneManager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
-		}
-		return m_ODESpaceID;
-	}
-
-	dSpaceID PhysXBody::GetSecondarySpace()
-	{
-
-		if(m_ODESecondarySpaceID == 0)
-		{
-			m_ODESecondarySpaceID = dSimpleSpaceCreate(m_SceneManager->GetCollisionSpace());
-		}
-		return m_ODESecondarySpaceID;
-	}
-
-
+	}*/
 
 	void PhysXBody::AddForce(const Vec3 &force_vec, bool rel)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
 			if(rel)
-				dBodyAddRelForce(m_PhysXBody, force_vec.x,force_vec.y,force_vec.z);
+				m_Actor->addLocalForce(NxVec3(force_vec.x,force_vec.y,force_vec.z));
 			else
-				dBodyAddForce(m_PhysXBody, force_vec.x,force_vec.y,force_vec.z);
+				m_Actor->addForce(NxVec3(force_vec.x,force_vec.y,force_vec.z));
 		}
 	}
 
 	void PhysXBody::AddForceAtPos(const Vec3 &force_vec, const Vec3& pos_vec, bool rel_force, bool rel_pos)
 	{
-		if (m_PhysXBody)
+		if(m_Actor)
 		{
-			if (rel_force) {
+			if (rel_force) 
+			{
 				if (rel_pos)
-					dBodyAddRelForceAtRelPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
-					pos_vec.x, pos_vec.y, pos_vec.z);
+					m_Actor->addLocalForceAtLocalPos(NxVec3(force_vec.x,force_vec.y,force_vec.z),NxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
 				else
-					dBodyAddRelForceAtPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
-					pos_vec.x, pos_vec.y, pos_vec.z);
-			} else {
+					m_Actor->addLocalForceAtPos(NxVec3(force_vec.x,force_vec.y,force_vec.z),NxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
+			} else 
+			{
 				if (rel_pos)
-					dBodyAddForceAtRelPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
-					pos_vec.x, pos_vec.y, pos_vec.z);
+					m_Actor->addForceAtLocalPos(NxVec3(force_vec.x,force_vec.y,force_vec.z),NxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
 				else
-					dBodyAddForceAtPos(m_PhysXBody, force_vec.x, force_vec.y, force_vec.z,
-					pos_vec.x, pos_vec.y, pos_vec.z);
+					m_Actor->addForceAtPos(NxVec3(force_vec.x,force_vec.y,force_vec.z),NxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
 			}
 		}
 	}
@@ -354,51 +305,43 @@ namespace GASS
 	void PhysXBody::SetMass(float mass)
 	{
 		m_Mass = mass;
-
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dMassAdjust(&m_ODEMass, m_Mass);
-			dBodySetMass(m_PhysXBody, &m_ODEMass);
-			m_CGPosition = Vec3(m_ODEMass.c[0],m_ODEMass.c[1],m_ODEMass.c[2]);
+			m_Actor->setMass(mass);
+			//dMassAdjust(&m_ODEMass, m_Mass);
+			//dBodySetMass(m_PhysXBody, &m_ODEMass);
+			//m_CGPosition = Vec3(m_ODEMass.c[0],m_ODEMass.c[1],m_ODEMass.c[2]);
 		}
 		// TODO: update m_SymmetricInertia and m_AssymetricInertia
-	}
-
-	void PhysXBody::SetODEMass(dMass mass)
-	{
-		m_ODEMass = mass;
-		dBodySetMass(m_PhysXBody, &m_ODEMass);
-		m_Mass = mass.mass;
-		m_CGPosition = Vec3(mass.c[0],mass.c[1],mass.c[2]);
-		// TODO: update m_SymmetricInertia and m_AssymetricInertia
-
 	}
 
 	Vec3 PhysXBody::GetVelocity(bool rel)
 	{
 		Vec3 vel(0,0,0);
-		if (m_PhysXBody) {
-			const dReal *vel_p = dBodyGetLinearVel  (m_PhysXBody);
-			if (rel) {
-				dVector3 vec;
-				dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
-				vel.Set(vec[0],vec[1],vec[2]);
+		if (m_Actor) 
+		{
+			NxVec3 nx_vel = m_Actor->getLinearVelocity();
+			if (rel) 
+			{
+				//dVector3 vec;
+				//dBodyVectorFromWorld(m_PhysXBody,vel_p[0],vel_p[1],vel_p[2],vec);
+				vel.Set(nx_vel.x,nx_vel.y,nx_vel.z);
 			} else
-				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
+				vel.Set(nx_vel.x,nx_vel.y,nx_vel.z);
 		}
 		return vel;
 	}
 
 	void PhysXBody::SetPosition(const Vec3 &value)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
 			Vec3 trans_vec = value - GetPosition();
-			dBodySetPosition(m_PhysXBody, value.x, value.y, value.z);
+			m_Actor->setGlobalPosition(NxVec3(value.x, value.y, value.z));
 
 			if(m_EffectJoints)
 			{
-				int num_joints = dBodyGetNumJoints(m_PhysXBody);
+				/*int num_joints = dBodyGetNumJoints(m_PhysXBody);
 				for(int i = 0 ; i < num_joints ;i++)
 				{
 					dJointID joint = dBodyGetJoint(m_PhysXBody,i);
@@ -412,11 +355,7 @@ namespace GASS
 						child_body->SetPosition(pos);
 					}
 
-					/*const dReal *p = dBodyGetPosition(b2);
-					Vec3 pos(p[0],p[1],p[2]);
-					pos = pos + trans_vec;
-					dBodySetPosition(b2, pos.x, pos.y, pos.z);*/
-				}
+				}*/
 			}
 		}
 	}
@@ -424,24 +363,21 @@ namespace GASS
 	Vec3  PhysXBody::GetPosition() const
 	{
 		Vec3 pos(0,0,0);
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			const dReal *p = dBodyGetPosition(m_PhysXBody);
-			pos = Vec3(p[0],p[1],p[2]);
+			NxVec3 nx_pos = m_Actor->getGlobalPosition();
+			pos = Vec3(nx_pos.x,nx_pos.y,nx_pos.z);
 		}
 		return pos;
 	}
 
 	void PhysXBody::SetRotation(const Quaternion &rot)
 	{
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			dReal ode_rot_mat[12];
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
-			ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
-			dBodySetRotation(m_PhysXBody, ode_rot_mat);
+			NxQuat nx_rot;
+			nx_rot.setXYZW(rot.x,rot.y,rot.z,rot.w);
+			m_Actor->setGlobalOrientationQuat(nx_rot);
 		}
 	}
 
@@ -451,13 +387,14 @@ namespace GASS
 	{
 		Quaternion q;
 
-		if(m_PhysXBody)
+		if(m_Actor)
 		{
-			
-			const dReal *ode_rot_mat = dBodyGetRotation(m_PhysXBody);
-			Mat4 rot;
-			ODEPhysicsSceneManager::CreateGASSRotationMatrix(ode_rot_mat,rot);
-			q.FromRotationMatrix(rot);
+			NxQuat nx_rot = m_Actor->getGlobalOrientationQuat();
+		
+			q.x = nx_rot.x;
+			q.y = nx_rot.y;
+			q.z = nx_rot.z;
+			q.w = nx_rot.w;
 		}
 		return q;
 	}
