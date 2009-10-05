@@ -48,9 +48,10 @@ namespace GASS
 		m_Axis2 (0,0,0),
 		m_ODEJoint (0),
 		m_HighStop(0),
-		m_LowStop(0)
+		m_LowStop(0),
+		m_Type(BALL_JOINT),
+		m_SceneManager(NULL)
 	{
-
 	}
 
 	ODEJoint::~ODEJoint()
@@ -130,53 +131,49 @@ namespace GASS
 
 	void ODEJoint::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC( ODEJoint::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER,  MESSAGE_FUNC( ODEJoint::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC( ODEJoint::OnLoad,LoadPhysicsComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_JOINT_PARAMETER,  TYPED_MESSAGE_FUNC( ODEJoint::OnParameterMessage,PhysicsJointMessage));
 	}
 
 
-	void ODEJoint::OnParameterMessage(MessagePtr message)
+	void ODEJoint::OnParameterMessage(PhysicsJointMessagePtr message)
 	{
-		SceneObject::PhysicsJointParameterType type = boost::any_cast<SceneObject::PhysicsJointParameterType>(message->GetData("Parameter"));
+		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
+
+		float value = message->GetValue();
 
 		//wake body!!
 
 		m_Body1->Enable();
 		switch(type)
 		{
-		case SceneObject::AXIS1_VELOCITY:
+		case PhysicsJointMessage::AXIS1_VELOCITY:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Vel(value);
 			}
 			break;
-		case SceneObject::AXIS2_VELOCITY:
+		case PhysicsJointMessage::AXIS2_VELOCITY:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Vel(value);
-
 			}
 			break;
-		case SceneObject::AXIS1_FORCE:
+		case PhysicsJointMessage::AXIS1_FORCE:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis1Force(value);
 
 			}
 			break;
-		case SceneObject::AXIS2_FORCE:
+		case PhysicsJointMessage::AXIS2_FORCE:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
 				SetAxis2Force(value);
-
 			}
 			break;
 		}
 	}
 
-	void ODEJoint::OnLoad(MessagePtr message)
+	void ODEJoint::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = boost::any_cast<ODEPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
+		m_SceneManager = static_cast<ODEPhysicsSceneManager*>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
 		CreateJoint();
@@ -212,7 +209,7 @@ namespace GASS
 		case SUSPENSION_JOINT:
 			m_ODEJoint = dJointCreateHinge2(world, 0);
 			//Update suspension
-			GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(ODEJoint::UpdateSwayBars));
+			GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEJoint::UpdateSwayBars,VelocityNotifyMessage));
 			break;
 		}
 		dJointAttach(m_ODEJoint, b1,b2);
@@ -565,7 +562,7 @@ namespace GASS
 		// no enable for joints
 	}
 
-	void ODEJoint::UpdateSwayBars(MessagePtr message)
+	void ODEJoint::UpdateSwayBars(VelocityNotifyMessagePtr message)
 	{
 		//Hack to keep vehicles from flipping upside down
 		if(m_SwayForce > 0)

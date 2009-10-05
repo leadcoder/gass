@@ -25,7 +25,7 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace Ogre
 {
@@ -45,7 +45,7 @@ namespace GASS
 		inline Ogre::Camera* GetOgreCamera(){return m_Camera;}
 		
 	protected:
-		void OnParameter(MessagePtr message);
+		void OnParameter(CameraParameterMessagePtr message);
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);
 		float GetNearClipDistance() const;
@@ -55,7 +55,7 @@ namespace GASS
 		bool GetOrtho() const;
 		void SetOrtho(bool value);
 	
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Camera* m_Camera;
 		float m_NearClip;
 		float m_FarClip;

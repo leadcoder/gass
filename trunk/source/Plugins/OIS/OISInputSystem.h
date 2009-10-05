@@ -27,6 +27,7 @@
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystem.h"
 #include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Systems/SimSystemMessages.h"
 
 
 namespace GASS
@@ -94,7 +95,7 @@ namespace GASS
 
 	private:
 		float NormalizeMouse(float value);
-		void OnInit(MessagePtr message);		
+		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		
 
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}

@@ -16,7 +16,7 @@
 #include "DebugComponent.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -42,8 +42,8 @@ namespace GASS
 
 	void DebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC( DebugComponent::OnLoad),2);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_SCENE_OBJECT_NAME, MESSAGE_FUNC(DebugComponent::OnChangeName));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC( DebugComponent::OnLoad),2);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_SCENE_OBJECT_NAME, MESSAGE_FUNC(DebugComponent::OnChangeName));
 	}
 
 	bool DebugComponent::GetShowNodeName() const
@@ -60,11 +60,13 @@ namespace GASS
 	{
 		if(m_ShowNodeName)
 		{
-			std::string name = boost::any_cast<std::string>(message->GetData("Name"));
-			MessagePtr text_mess(new Message(SceneObject::OBJECT_RM_TEXT_PARAMETER));
-			text_mess->SetData("Parameter",SceneObject::CAPTION);
-			text_mess->SetData("Caption",name);
-			GetSceneObject()->PostMessage(text_mess);
+			SceneObjectNameMessagePtr name_mess = boost::shared_dynamic_cast<SceneObjectNameMessage>(message);
+			if(name_mess)
+			{
+				std::string name = name_mess->GetName();
+				MessagePtr text_mess(new TextCaptionMessage(name));
+				GetSceneObject()->PostMessage(text_mess);
+			}
 		}
 	}
 	
@@ -73,9 +75,7 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			MessagePtr text_mess(new Message(SceneObject::OBJECT_RM_TEXT_PARAMETER));
-			text_mess->SetData("Parameter",SceneObject::CAPTION);
-			text_mess->SetData("Caption",name);
+			MessagePtr text_mess(new TextCaptionMessage(name));
 			GetSceneObject()->PostMessage(text_mess);
 		}
 	}

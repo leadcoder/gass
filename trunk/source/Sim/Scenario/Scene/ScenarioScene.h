@@ -22,9 +22,11 @@
 
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scenario.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Core/Math/Vector.h"
 #include "Core/Reflection/BaseReflectionObject.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+
 
 class TiXmlElement;
 
@@ -39,7 +41,7 @@ namespace GASS
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
 	
-	class ScenarioUpdateMessage : public Message
+	/*class ScenarioUpdateMessage : public BaseMessage
 	{
 	public:
 		ScenarioUpdateMessage(int type, double delta_time): Message(type) ,m_DeltaTime (delta_time)
@@ -50,40 +52,14 @@ namespace GASS
 		double GetDeltaTime() const {return  m_DeltaTime;}
 	private:
 		double m_DeltaTime;
-	};
+	};*/
 
 	/**
 		Scenario scene class 
 	*/
-
-
 	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>
 	{
-		friend class Scenario;
 	public:
-		// Todo: Explain each individual message
-		//Divided messages in two catagories, notify and request
-		//Messages with prefix SCENARIO_RM, is a request message
-		//Messages with prefix SCENARIO_NM, is a notify message
-		enum ScenarioMessage
-		{
-			//-----------------Request section-------------
-			//Request message sent when loading a scenario scene
-			//It's up to each scene manager to catch this and load its stuff
-			SCENARIO_RM_LOAD_SCENE_MANAGERS,
-			SCENARIO_RM_UNLOAD_SCENE_MANAGERS,
-			SCENARIO_RM_CHANGE_CAMERA,
-			SCENARIO_RM_REMOVE_OBJECT,
-			SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE,
-			//--------------------Notify section------------------------
-			// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
-			SCENARIO_NM_SCENE_OBJECT_CREATED,
-			// message data: SceneObject that is removed: "SceneObject" = SceneObjectPtr
-			SCENARIO_NM_SCENE_OBJECT_REMOVED,
-			SCENARIO_NM_CAMERA_CHANGED,
-			//SCENARIO_NM_UPDATE
-		};
-
 		// Priorities for system loading
 		enum
 		{ 
@@ -94,6 +70,8 @@ namespace GASS
 			PHYSICS_SYSTEM_LOAD_PRIORITY = 1,
 			SIM_SYSTEM_LOAD_PRIORITY = 1,
 		};
+
+		friend class Scenario;
 	public:
 		ScenarioScene();
 		virtual ~ScenarioScene();
@@ -115,8 +93,8 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name = name;}
 		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
 		Scenario* GetOwner() {return m_Scenario;}
-		int RegisterForMessage(ScenarioMessage type, MessageFunc callback, int priority = 0);
-		void UnregisterForMessage(ScenarioMessage type, MessageFunc callback);
+		int RegisterForMessage(ScenarioMessage type, MessageFuncPtr callback, int priority = 0);
+		void UnregisterForMessage(ScenarioMessage type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 
@@ -126,8 +104,8 @@ namespace GASS
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
 	protected:
-		void OnSpawnSceneObjectFromTemplate(MessagePtr message);
-		void OnRemoveSceneObject(MessagePtr message);
+		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
+		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 	
 
 		void SetUpVector(const std::string &value);

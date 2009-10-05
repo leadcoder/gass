@@ -26,14 +26,13 @@
 #include <vector>
 
 #include "Core/Common.h"
-#include "Core/MessageSystem/MessageType.h"
 #include "Core/System/ISystem.h"
 #include "Core/System/ISystemManager.h"
 
 class TiXmlElement;
 namespace GASS
 {
-	class MessageManager;
+	
 	class GASSCoreExport BaseSystemManager : public ISystemManager
 	{
 	public:

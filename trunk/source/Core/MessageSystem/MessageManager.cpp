@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "tbb/spin_mutex.h"
 #include <stdio.h>
@@ -37,12 +37,12 @@ namespace GASS
 	}
 	void MessageManager::AddMessageToSystem(int type)
 	{
-		MessageTypeMap::iterator message_type;
+		MessageTypeListenerMap::iterator message_type;
 
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
 		{
-			MessageType* new_type = new MessageType;
+			MessageTypeListeners* new_type = new MessageTypeListeners;
 			new_type->m_TypeID = type;
 			m_MessageTypes[type] = new_type;
 		}
@@ -58,8 +58,8 @@ namespace GASS
 
 	void MessageManager::SendImmediate(MessagePtr  message)
 	{
-		MessageTypeMap::iterator message_type;
-		message_type = m_MessageTypes.find(message->m_TypeID);
+		MessageTypeListenerMap::iterator message_type;
+		message_type = m_MessageTypes.find(message->GetType());
 		if(message_type == m_MessageTypes.end())
 		{
 			return;
@@ -67,7 +67,7 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			(*msg_reg)->m_Callback.Fire(message);
+			(*msg_reg)->m_Callback->Fire(message);
 				msg_reg++;
 		}
 	}
@@ -77,9 +77,9 @@ namespace GASS
 		return lhs->m_Priority < rhs->m_Priority;
 	}
 
-	int MessageManager::RegisterForMessage(int type, MessageFunc callback, int priority)
+	int MessageManager::RegisterForMessage(MessageType type, MessageFuncPtr callback, int priority)
 	{
-		MessageTypeMap::iterator message_type;
+		MessageTypeListenerMap::iterator message_type;
 
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
@@ -111,10 +111,9 @@ namespace GASS
 		return 0;
 	}
 
-	void MessageManager::UnregisterForMessage(int type, MessageFunc callback)
+	void MessageManager::UnregisterForMessage(MessageType type, MessageFuncPtr callback)
 	{
-
-		MessageTypeMap::iterator message_type;
+		MessageTypeListenerMap::iterator message_type;
 
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
@@ -149,20 +148,22 @@ namespace GASS
 
 		while (iter !=  m_MessageQueue.end())
 		{
-			if((*iter)->m_Delay > 0)
+			float delay = (*iter)->GetDeliverDelay();
+			if(delay > 0)
 			{
-				(*iter)->m_Delay -= dt;
+				delay -= dt;
+				(*iter)->SetDeliverDelay(delay);
 				iter++;
 			}
 			else
 			{
-				MessageTypeMap::iterator message_type;
-				message_type = m_MessageTypes.find((*iter)->m_TypeID);
+				MessageTypeListenerMap::iterator message_type;
+				message_type = m_MessageTypes.find((*iter)->GetType());
 
 				if(message_type == m_MessageTypes.end())
 				{
-					AddMessageToSystem((*iter)->m_TypeID);
-					message_type = m_MessageTypes.find((*iter)->m_TypeID);
+					AddMessageToSystem((*iter)->GetType());
+					message_type = m_MessageTypes.find((*iter)->GetType());
 					//iter++;
 					//continue;
 				}
@@ -170,7 +171,7 @@ namespace GASS
 				MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 				while(msg_reg != message_type->second->m_MessageRegistrations.end())
 				{
-					(*msg_reg)->m_Callback.Fire(*iter);
+					(*msg_reg)->m_Callback->Fire(*iter);
 					msg_reg++;
 				}
 				//delete (*iter);

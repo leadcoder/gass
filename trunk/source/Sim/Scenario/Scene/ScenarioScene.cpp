@@ -21,14 +21,16 @@
 
 
 #include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ISceneManager.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Systems/SimSystemMessages.h"
 #include "Sim/SimEngine.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Serialize/IXMLSerialize.h"
@@ -54,18 +56,17 @@ namespace GASS
 	ScenarioScene::~ScenarioScene()
 	{
 		m_ObjectManager->Clear();
-		MessagePtr scenario_msg(new Message(SCENARIO_RM_UNLOAD_SCENE_MANAGERS));
-		scenario_msg->SetData("ScenarioScene",this);
+		MessagePtr scenario_msg(new UnloadSceneManagersMessage(this));
 		m_SceneMessageManager->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
 	}
 
-	int ScenarioScene::RegisterForMessage( ScenarioMessage type, MessageFunc callback, int priority )
+	int ScenarioScene::RegisterForMessage( ScenarioMessage type, MessageFuncPtr callback, int priority )
 	{
 		return m_SceneMessageManager->RegisterForMessage((int)type, callback, priority); 
 	}
 
-	void ScenarioScene::UnregisterForMessage(ScenarioMessage type, MessageFunc callback)
+	void ScenarioScene::UnregisterForMessage(ScenarioMessage type, MessageFuncPtr callback)
 	{
 		m_SceneMessageManager->UnregisterForMessage((int)type, callback);
 	}
@@ -225,21 +226,19 @@ namespace GASS
 
 	void ScenarioScene::OnCreate()
 	{
-		RegisterForMessage(SCENARIO_RM_REMOVE_OBJECT, MESSAGE_FUNC( ScenarioScene::OnRemoveSceneObject));
-		RegisterForMessage(SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE, MESSAGE_FUNC( ScenarioScene::OnSpawnSceneObjectFromTemplate));
+		RegisterForMessage(SCENARIO_RM_REMOVE_OBJECT, TYPED_MESSAGE_FUNC(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage));
+		RegisterForMessage(SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE, TYPED_MESSAGE_FUNC( ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage));
 	}
 
 	void ScenarioScene::OnLoad()
 	{
 		std::string scenario_path = m_Scenario->GetPath();
 
-		MessagePtr enter_load_msg(new Message(SimSystemManager::SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD));
-		enter_load_msg->SetData("ScenarioScene",this);
+		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(this));
 		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
 
 		
-		MessagePtr scenario_msg(new Message(SCENARIO_RM_LOAD_SCENE_MANAGERS));
-		scenario_msg->SetData("ScenarioScene",this);
+		MessagePtr scenario_msg(new LoadSceneManagersMessage(this));
 		//send load message
 		SendImmediate(scenario_msg);
 		
@@ -259,8 +258,7 @@ namespace GASS
 		//Create game objects instances from templates
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
 
-		MessagePtr system_msg(new Message(SimSystemManager::SYSTEM_NM_SCENARIO_SCENE_LOADED));
-		system_msg->SetData("ScenarioScene",this);
+		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(this));
 		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
 	}
 
@@ -312,23 +310,20 @@ namespace GASS
 		return empty;
 	}
 
-	void ScenarioScene::OnSpawnSceneObjectFromTemplate(MessagePtr message)
+	void ScenarioScene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
 	{
-		std::string obj_template = boost::any_cast<std::string>(message->GetData("Template"));
+		std::string obj_template = message->GetTemplateName();
 		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template);
 		if(so)
 		{
-			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
-			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
-			Vec3 vel = boost::any_cast<Vec3>(message->GetData("Velocity"));
-			int id = (int) this;
-			MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,id));
-			pos_msg->SetData("Position",pos);
-			MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,id));
-			rot_msg->SetData("Rotation",rot);
-			MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,id));
-			vel_msg->SetData("Parameter",SceneObject::VELOCITY);
-			vel_msg->SetData("Value",vel);
+			Vec3 pos = message->GetPosition();
+			Quaternion rot = message->GetRotation();
+			Vec3 vel = message->GetVelocity();
+			int sender_id = (int) this;
+
+			MessagePtr pos_msg(new PositionMessage(pos,sender_id));
+			MessagePtr rot_msg(new RotationMessage(rot,sender_id));
+			MessagePtr vel_msg(new PhysicsBodyMessage(PhysicsBodyMessage::VELOCITY,vel,sender_id));
 			
 			so->SendImmediate(pos_msg);
 			so->SendImmediate(rot_msg);
@@ -336,9 +331,9 @@ namespace GASS
 		}
 	}
 
-	void ScenarioScene::OnRemoveSceneObject(MessagePtr message)
+	void ScenarioScene::OnRemoveSceneObject(RemoveSceneObjectMessagePtr message)
 	{
-		SceneObjectPtr so = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
+		SceneObjectPtr so = message->GetSceneObject();
 		if(so)
 			GetObjectManager()->DeleteObject(so);
 

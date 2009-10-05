@@ -17,7 +17,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {

@@ -23,7 +23,8 @@
 #include "Sim/Common.h"
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/ComponentSystem/BaseComponentContainer.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 
 namespace GASS
@@ -49,148 +50,6 @@ namespace GASS
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer>
 	{
 	public:
-
-		// Todo: Explain each individual message
-
-		//We divided messages in two catagories, notify and request
-		//Messages with prefix OBJECT_RM, is a request message
-		//Messages with prefix OBJECT_NM, is a notify message
-		enum ObjectMessage
-		{
-			//-----------------Request section-------------
-			/** \brief Message data: 
-				Vec3 = "Position" - Position (relative to parent) change for SceneObject is requested */
-			OBJECT_RM_POSITION, 
-
-			/** \brief Message data: 
-				Quaternion = "Rotation" - Rotation (relative to parent) change for SceneObject is requested */
-			OBJECT_RM_ROTATION,
-
-
-			OBJECT_RM_WORLD_POSITION, 
-			OBJECT_RM_WORLD_ROTATION,
-
-			OBJECT_RM_VISIBILITY,
-			OBJECT_RM_BOUNDING_INFO,
-			OBJECT_RM_COLLISION_SETTINGS,
-			OBJECT_RM_PHYSICS_JOINT_PARAMETER,
-			OBJECT_RM_PHYSICS_BODY_PARAMETER,
-			OBJECT_RM_SOUND_PARAMETER,
-			/**
-				Change name of scene object
-				std::string = "Name" new name of component
-			*/
-			OBJECT_RM_SCENE_OBJECT_NAME,
-			
-			/** \brief Message data: 
-			MeshParameterType = "Type" - See MeshParameterType for data fields*/
-			OBJECT_RM_MESH_PARAMETER,
-
-			OBJECT_RM_CAMERA_PARAMETER,
-
-			OBJECT_RM_PARTICLE_SYSTEM_PARAMETER,
-
-
-			/**
-				See ManualMeshData for 	more info
-			*/
-			OBJECT_RM_MANUAL_MESH_PARAMETER,
-
-
-			/** \brief Message data: 
-			TextParameterType = "Type" - See TextParameterType for data fields*/
-			OBJECT_RM_TEXT_PARAMETER,
-
-			OBJECT_RM_LOAD_PHYSICS_COMPONENTS,
-			OBJECT_RM_LOAD_GFX_COMPONENTS,
-			OBJECT_RM_LOAD_SIM_COMPONENTS,
-			OBJECT_RM_UPDATE_SIM_COMPONENTS,
-			OBJECT_RM_UNLOAD_COMPONENTS,
-
-			
-			//--------------------Notify section------------------------
-			OBJECT_NM_PARENT_CHANGED,
-			
-			/** \brief message data: 
-				Vec3 = "Velocity"
-				Vec3 = "AngularVelocity" */
-			OBJECT_NM_PHYSICS_VELOCITY,
-
-			/** \brief message data: 
-				Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
-				Vec3 = "Scale"			- Scale is changed for SceneObject
-				Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
-			*/
-			OBJECT_NM_TRANSFORMATION_CHANGED,
-			
-			
-		};
-
-		// parameters that belong to ObjectMessage OBJECT_RM_PHYSICS_JOINT_PARAMETER
-		enum PhysicsJointParameterType
-		{
-			AXIS1_VELOCITY,
-			AXIS2_VELOCITY,
-			AXIS1_FORCE,
-			AXIS2_FORCE
-		};
-
-		// parameters that belong to ObjectMessage OBJECT_RM_PHYSICS_BODY_PARAMETER
-		enum PhysicsBodyParameterType
-		{
-			TORQUE,
-			FORCE,
-			VELOCITY
-		};
-
-		// parameters that belong to ObjectMessage OBJECT_RM_SOUND_PARAMETER
-		enum SoundParameterType
-		{
-			PLAY,
-			STOP,
-			PAUSE,
-			PITCH,
-			LOOP,
-			VOLUME,
-		};
-		
-		// parameters that belong to ObjectMessage OBJECT_RM_MESH_PARAMETER
-		enum MeshParameterType
-		{
-			/** \brief Message data: 
-			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
-			ANIMATE_TEX_COORD,
-			CHANGE_MESH
-		};
-
-		enum TextParameterType
-		{
-			/** \brief Message data: 
-			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
-			CAPTION,
-		};
-		enum ManualMeshParameterType
-		{
-			MESH_DATA,
-			CLEAR,
-		};
-
-		enum CameraParameterType
-		{
-			CAMERA_FOV,
-			CAMERA_CLIP_DISTANCE,
-			CAMERA_ORTHO_WIN_SIZE,
-		};
-
-		enum ParticleSystemParameterType
-		{
-			/** \brief Message data: 
-			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
-			EMISSION_RATE,
-			PARTICLE_LIFE_TIME,
-		};
-
-
 
 		SceneObject();
 		virtual ~SceneObject();
@@ -238,11 +97,11 @@ namespace GASS
 		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
 		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true); 
 
-		int RegisterForMessage(ObjectMessage type, MessageFunc callback, int priority = 0);
-		void UnregisterForMessage(ObjectMessage type, MessageFunc callback);
+		int RegisterForMessage(SceneObjectMessage type, MessageFuncPtr callback, int priority = 0);
+		void UnregisterForMessage(SceneObjectMessage type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
-		void OnChangeName(MessagePtr message);
+		void OnChangeName(SceneObjectNameMessagePtr message);
 	protected:
 		SceneObjectManager* m_Manager;
 		MessageManager* m_MessageManager;

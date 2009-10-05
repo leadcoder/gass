@@ -22,7 +22,7 @@
 
 #include <ode/ode.h>
 #include <map>
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Systems/SimSystem.h"
 

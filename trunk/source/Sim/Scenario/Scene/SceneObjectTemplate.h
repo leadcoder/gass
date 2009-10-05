@@ -23,7 +23,7 @@
 #include "Sim/Common.h"
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 
 namespace GASS

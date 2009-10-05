@@ -38,7 +38,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 
 namespace GASS
@@ -104,7 +104,7 @@ namespace GASS
 	}
 
 
-	void TreeGeometry::OnLoad(MessagePtr message)
+	void TreeGeometry::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
@@ -258,7 +258,7 @@ namespace GASS
 
 	void TreeGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(TreeGeometry::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS,  TYPED_MESSAGE_FUNC(TreeGeometry::OnLoad,LoadGFXComponentsMessage),1);
 	}
 
 	void TreeGeometry::LoadDensityMap(const std::string &mapFile, int channel)

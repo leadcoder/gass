@@ -23,10 +23,11 @@
 
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Utils/PIDControl.h"
 
 namespace GASS
@@ -42,7 +43,7 @@ namespace GASS
 	public:
 		VehicleWheel(SceneObjectPtr  wheel);
 		virtual ~VehicleWheel();
-		void OnPhysicsMessage(MessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 
 		//private: //public for fast access
 		SceneObjectWeakPtr m_WheelObject;
@@ -76,10 +77,10 @@ namespace GASS
 		std::vector<std::string> GetWheels() const;
 		void SetWheels(const std::vector<std::string> wheels);
 
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnPhysicsMessage(MessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnInput(AnyMessagePtr message);
 
 
 		//set/get attributes

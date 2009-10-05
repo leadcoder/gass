@@ -23,7 +23,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -70,14 +71,14 @@ namespace GASS
 
 	void ProjectileComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(ProjectileComponent::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(ProjectileComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC( ProjectileComponent::OnPositionMessage));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC( ProjectileComponent::OnRotationMessage));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(ProjectileComponent::OnPhysicsParameterMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(ProjectileComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(ProjectileComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC( ProjectileComponent::OnPositionMessage,PositionMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC( ProjectileComponent::OnRotationMessage,RotationMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER,  TYPED_MESSAGE_FUNC(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage));
 	}
 
-	void ProjectileComponent::OnLoad(MessagePtr message)
+	void ProjectileComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		if(m_StartEffectTemplateName != "") 
 		{
@@ -108,40 +109,39 @@ namespace GASS
 		std::cout << "Unloaded:" << GetSceneObject()->GetName() << std::endl;
 	}
 
-	void ProjectileComponent::OnPhysicsParameterMessage(MessagePtr message)
+	void ProjectileComponent::OnPhysicsParameterMessage(PhysicsBodyMessagePtr message)
 	{
-		SceneObject::PhysicsBodyParameterType type = boost::any_cast<SceneObject::PhysicsBodyParameterType>(message->GetData("Parameter"));
+		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
+		Vec3 value = message->GetValue();
 		switch(type)
 		{
-		case SceneObject::FORCE:
+		case PhysicsBodyMessage::FORCE:
 			{
-				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
 				//what to do?
 			}
 			break;
-		case SceneObject::TORQUE:
+		case PhysicsBodyMessage::TORQUE:
 			{
-				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
 				//what to do?
 			}
-		case SceneObject::VELOCITY:
+		case PhysicsBodyMessage::VELOCITY:
 			{
-				m_Velocity = boost::any_cast<Vec3>(message->GetData("Value"));
+				m_Velocity = value;
 			}
 		}
 	}
 
 
-	void ProjectileComponent::OnPositionMessage(MessagePtr message)
+	void ProjectileComponent::OnPositionMessage(PositionMessagePtr message)
 	{
 		if(message->GetSenderID() != (int) this)
-			m_Pos = boost::any_cast<Vec3>(message->GetData("Position"));
+			m_Pos = message->GetPosition();
 	}
 
-	void ProjectileComponent::OnRotationMessage(MessagePtr message)
+	void ProjectileComponent::OnRotationMessage(RotationMessagePtr message)
 	{
 		if(message->GetSenderID() != (int) this)
-			m_Rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+			m_Rot = message->GetRotation();
 	}
 
 	void ProjectileComponent::StepPhysics(double time)
@@ -236,9 +236,7 @@ namespace GASS
 			}
 			else
 			{
-				//GetSceneObject()->GetSceneObjectManager()->DeleteObject(GetSceneObject());
-				MessagePtr remove_msg(new Message(ScenarioScene::SCENARIO_RM_REMOVE_OBJECT));
-				remove_msg->SetData("SceneObject",GetSceneObject());
+				MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
 
 				return;
@@ -260,10 +258,8 @@ namespace GASS
 				}
 				//send position and rotaion update
 				int id = (int) this;
-				MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,id));
-				pos_msg->SetData("Position",m_Pos);
-				MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,id));
-				rot_msg->SetData("Rotation",m_Rot);
+				MessagePtr pos_msg(new PositionMessage(m_Pos,id));
+				MessagePtr rot_msg(new RotationMessage(m_Rot,id));
 				GetSceneObject()->PostMessage(pos_msg);
 				GetSceneObject()->PostMessage(rot_msg);
 			}
@@ -286,7 +282,7 @@ namespace GASS
 				float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
 				float damage_value = angle_falloff*m_MaxDamage;
 
-				MessagePtr hit_msg(new Message(OBJECT_NM_HIT));
+				AnyMessagePtr hit_msg(new AnyMessage(OBJECT_NM_HIT));
 				hit_msg->SetData("Damage",damage_value);
 				hit_msg->SetData("HitDirection",proj_dir);
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
@@ -294,15 +290,12 @@ namespace GASS
 				//Send force message to indicate hit
 
 				Vec3 force = proj_dir*m_ImpactForce;
-				MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER));
-				force_msg->SetData("Parameter",SceneObject::FORCE);
-				force_msg->SetData("Value",force);
+				MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,force));
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
 			}
 
 			//GetSceneObject()->GetSceneObjectManager()->DeleteObject(GetSceneObject());
-			MessagePtr remove_msg(new Message(ScenarioScene::SCENARIO_RM_REMOVE_OBJECT));
-			remove_msg->SetData("SceneObject",GetSceneObject());
+			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
 
 			if(m_EndEffectTemplateName != "")
@@ -324,11 +317,7 @@ namespace GASS
 	void ProjectileComponent::SpawnEffect(const std::string &effect)
 	{
 		Vec3 vel(0,0,0);
-		MessagePtr spawn_msg(new Message(ScenarioScene::SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE));
-		spawn_msg->SetData("Template",effect);
-		spawn_msg->SetData("Position",m_Pos);
-		spawn_msg->SetData("Rotation",m_Rot);
-		spawn_msg->SetData("Velocity",vel);
+		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(effect,m_Pos,m_Rot,vel));
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 	}
 

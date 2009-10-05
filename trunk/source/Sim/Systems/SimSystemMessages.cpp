@@ -17,59 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <boost/any.hpp>
-#include "Core/Utils/Log.h"
-#include "Core/MessageSystem/Message.h"
-namespace GASS
-{
-	Message::Message(int type) :
-			m_TypeID(type),
-			m_SenderID(-1),
-			m_Delay(0)
-	{
-
-	}
-
-	Message::Message(int type, int sender_id) :
-			m_TypeID(type),
-			m_SenderID(sender_id),
-			m_Delay(0)
-	{
-
-	}
-
-
-	Message::~Message()
-	{
-
-	}
-
-	boost::any Message::GetData(const std::string &data_name)
-	{
-		if(m_Data.end() == m_Data.find(data_name))
-		{
-			Log::Error("Message data %s doesnt exist",data_name.c_str());
-			return boost::any();
-		}
-		return m_Data[data_name];
-	}
-
-	void Message::SetData(const std::string &data_name, boost::any data)
-	{
-		m_Data[data_name] = data;
-	}
-
-	int Message::GetSenderID() const
-	{
-		return m_SenderID;
-	}
-
-	void Message::SetDeliverDelay(double delay)
-	{
-		m_Delay = delay;
-	}
+#include "Core/Common.h"
+#include "Sim/Systems/SimSystemMessages.h"
 
 
 
 
-}
+

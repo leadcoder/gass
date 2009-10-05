@@ -31,7 +31,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -74,7 +74,7 @@ namespace GASS
 
 	void OgreBillboardComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreBillboardComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -99,9 +99,9 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnLoad(MessagePtr message)
+	void OgreBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();

@@ -23,7 +23,7 @@
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -66,10 +66,10 @@ namespace GASS
 	void OgreGraphicsSystem::OnCreate()
 	{
 		int address = (int) this;
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT,					MESSAGE_FUNC( OgreGraphicsSystem::OnInit));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_CREATE_RENDER_WINDOW,	MESSAGE_FUNC( OgreGraphicsSystem::OnCreateRenderWindow ));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_WINDOW_MOVED_OR_RESIZED, MESSAGE_FUNC( OgreGraphicsSystem::OnWindowMovedOrResized ));
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,				MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT,					MESSAGE_FUNC( OgreGraphicsSystem::OnInit));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_CREATE_RENDER_WINDOW,	TYPED_MESSAGE_FUNC(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_NM_WINDOW_MOVED_OR_RESIZED, TYPED_MESSAGE_FUNC( OgreGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_DEBUG_PRINT,				TYPED_MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage));
 	}
 
 
@@ -150,9 +150,7 @@ namespace GASS
 
 			//IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
 			//is->SetWindow(windowHnd);
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
-			window_msg->SetData("RenderHandle",(int)windowHnd);
-			window_msg->SetData("MainHandle",(int)windowHnd);
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(windowHnd,windowHnd));
 			GetSimSystemManager()->SendImmediate(window_msg);
 
 
@@ -169,23 +167,23 @@ namespace GASS
 	}
 
 
-	void OgreGraphicsSystem::OnDebugPrint(MessagePtr message)
+	void OgreGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
 	{
-		std::string debug_text = boost::any_cast<std::string>(message->GetData("Text"));
+		std::string debug_text = message->GetText();
 		m_DebugTextBox->Print(debug_text.c_str());
 		m_DebugTextBox->SetActive(true);
 	}
 
-	void OgreGraphicsSystem::OnCreateRenderWindow(MessagePtr message)
+	void OgreGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Name"));
-		int height = boost::any_cast<int>(message->GetData("Height"));
-		int width = boost::any_cast<int>(message->GetData("Width"));
-		int handel = boost::any_cast<int>(message->GetData("Handle"));
+		std::string name = message->GetName();
+		int height = message->GetHeight();
+		int width = message->GetWidth();
+		int handel = message->GetHandle();
 
 		if(m_Window == NULL) // first window
 		{
-			int main_handel = boost::any_cast<int>(message->GetData("MainHandle"));
+			int main_handel = message->GetMainHandle();
 			Ogre::NameValuePairList miscParams;
 			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handel);
 			m_Window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
@@ -202,16 +200,12 @@ namespace GASS
 			// Alter the camera aspect ratio to match the viewport
 			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
-			window_msg->SetData("RenderHandle",(int)handel);
-			window_msg->SetData("MainHandle",main_handel);
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handel,main_handel));
 			GetSimSystemManager()->SendImmediate(window_msg);
-
-
 		}
 	}
 
-	void OgreGraphicsSystem::OnWindowMovedOrResized(MessagePtr message)
+	void OgreGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)
 	{
 		m_Window->windowMovedOrResized();
 		/*int handel = boost::any_cast<int>(message->GetData("Handle"));

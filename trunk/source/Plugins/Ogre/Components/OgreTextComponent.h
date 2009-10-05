@@ -17,8 +17,9 @@
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
 class MovableTextOverlay;
@@ -38,15 +39,15 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		void OnLoad(MessagePtr message);
-		void OnParameterMessage(GASS::MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnCaptionMessage(TextCaptionMessagePtr message);
 		std::string GetText() const;
 		void SetText(const std::string  &text);
 		float GetOffset() const;
 		void SetOffset(float offset);
 		float GetCharacterSize() const;
 		void SetCharacterSize(float size);
-		void OnVisibilityMessage(MessagePtr message);
+		void OnVisibilityMessage(VisibilityMessagePtr message);
 	
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;

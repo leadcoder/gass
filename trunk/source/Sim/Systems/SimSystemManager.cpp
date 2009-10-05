@@ -24,7 +24,8 @@
 #include "Core/Utils/Log.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/BaseMessage.h"
 #include "Sim/Systems/SimSystemManager.h"
 
 #include "tinyxml.h"
@@ -44,7 +45,7 @@ namespace GASS
 	
 	void SimSystemManager::Init()
 	{
-		MessagePtr init_msg(new Message(SimSystemManager::SYSTEM_RM_INIT));
+		MessagePtr init_msg(new BaseMessage(SYSTEM_RM_INIT));
 		m_SystemMessageManager->SendImmediate(init_msg);
 		//Log all systems loaded
 		for(int i = 0 ;i< m_Systems.size(); i++)
@@ -58,12 +59,12 @@ namespace GASS
 		m_SystemMessageManager->Update(delta_time);
 	}
 
-	int SimSystemManager::RegisterForMessage(SystemMessages type, MessageFunc callback, int priority)
+	int SimSystemManager::RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority)
 	{
 		return m_SystemMessageManager->RegisterForMessage((int)type, callback, priority); 
 	}
 
-	void SimSystemManager::UnregisterForMessage(SystemMessages type,  MessageFunc callback)
+	void SimSystemManager::UnregisterForMessage(SimSystemMessage type,  MessageFuncPtr callback)
 	{
 		m_SystemMessageManager->UnregisterForMessage((int)type,  callback);
 	}

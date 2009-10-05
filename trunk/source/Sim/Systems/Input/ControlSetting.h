@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/Common.h"
+#include "Core/MessageSystem/BaseMessage.h"
 
 #include <map>
 #include <string>
@@ -35,16 +36,34 @@ namespace GASS
 	class MessageManager;
 	class Controller;
 
+
+	enum
+	{
+		CONTROLLER_MESSAGE_NEW_INPUT
+	};
+
+
+	class ControllerMessage : public BaseMessage
+	{
+	public:
+		ControllerMessage(const std::string &controller, float value, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(CONTROLLER_MESSAGE_NEW_INPUT, sender_id , delay), m_Controller(controller), m_Value(value)
+		  {
+
+		  }
+		  std::string GetController()const {return m_Controller;}
+		  float GetValue()const {return m_Value;} 
+	private:
+		std::string m_Controller;
+		float m_Value;
+	};
+
+	typedef boost::shared_ptr<ControllerMessage> ControllerMessagePtr;
 	
-	
+
 
 	class GASSExport ControlSetting
 	{
-	public:
-		enum
-		{
-			CONTROLLER_MESSAGE_NEW_INPUT
-		};
 	public:
 		ControlSetting(IInputSystem* input);
 		~ControlSetting(void);

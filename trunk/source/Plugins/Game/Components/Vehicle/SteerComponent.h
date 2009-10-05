@@ -22,8 +22,9 @@
 #define STEER_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
@@ -40,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnInput(MessagePtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}

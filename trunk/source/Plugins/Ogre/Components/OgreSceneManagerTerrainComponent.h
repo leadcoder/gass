@@ -63,7 +63,7 @@ namespace GASS
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
 	protected:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;
 		bool m_Center;

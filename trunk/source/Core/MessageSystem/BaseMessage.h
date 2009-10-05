@@ -18,32 +18,36 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
+#ifndef BASE_MESSAGE_HH
+#define BASE_MESSAGE_HH
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/any.hpp>
+#include <boost/bind.hpp>
+#include <map>
+#include "Core/Common.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
-	class MessageManager;
-	class GASSExport SimSystemManager : public BaseSystemManager
+	class GASSCoreExport BaseMessage : public IMessage
 	{
 	public:
-		SimSystemManager();
-		virtual ~SimSystemManager();
-		void Init();
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
-	private:
-		MessageManager* m_SystemMessageManager;
+		BaseMessage(MessageType type, SenderID sender_id = -1, double delay= 0);
+		virtual ~BaseMessage();
+
+		void SetDeliverDelay(double delay);
+		double  GetDeliverDelay() const;
+
+		SenderID GetSenderID() const;
+		MessageType GetType() const;
+		
+		private:
+			MessageType m_TypeID;
+			double m_Delay;
+			SenderID m_SenderID;
 	};
+	typedef boost::shared_ptr<BaseMessage> BaseMessagePtr;
 }
+#endif 

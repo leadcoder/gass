@@ -22,7 +22,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -54,11 +54,11 @@ namespace GASS
 
 	void TrackComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TrackComponent::OnLoad));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TrackComponent::OnLoad,LoadSimComponentsMessage));
 		//register for physics messages on engine?
 	}
 
-	void TrackComponent::OnLoad(MessagePtr message)
+	void TrackComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		m_Initialized = true;
 		SetDriveWheel(m_DriveWheelName);
@@ -79,45 +79,34 @@ namespace GASS
 			if(objects.size() > 0)
 			{
 				m_DriveWheel = (objects.front());
-				objects.front()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(TrackComponent::OnDriveWheelPhysicsMessage));
+				objects.front()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage));
 			}
 		}
 	}
 
-	void TrackComponent::OnDriveWheelPhysicsMessage(MessagePtr message)
+	void TrackComponent::OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message)
 	{
-		Vec3 ang_vel  = boost::any_cast<Vec3>(message->GetData("AngularVelocity"));
+		Vec3 ang_vel  = message->GetAngularVelocity();
 		//Vec2 speed(ang_vel.x,0);
 		m_AnimationValue.x += (ang_vel.x*m_AnimationSpeedFactor.x);
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
-		MessagePtr mesh_msg(new Message(SceneObject::OBJECT_RM_MESH_PARAMETER));
-		mesh_msg->SetData("Parameter",SceneObject::ANIMATE_TEX_COORD);
-		mesh_msg->SetData("Speed",m_AnimationValue);
+		MessagePtr mesh_msg(new TextureCoordinateMessage(m_AnimationValue));
 		GetSceneObject()->PostMessage(mesh_msg);
-
 
 		float emission = fabs(ang_vel.x)*0.3;
 
 		if(emission >12)
 			emission =12;
-		MessagePtr particle_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
-		particle_msg->SetData("Parameter",SceneObject::EMISSION_RATE);
-		particle_msg->SetData("Emitter",int(0));
-		particle_msg->SetData("Rate",emission);
+		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
 		GetSceneObject()->PostMessage(particle_msg);
 
-
-		MessagePtr particle_duration_msg(new Message(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER));
-		
 		float duration = fabs(ang_vel.x)*0.05;
 
 		if(duration > 1.6)  
 			duration = 1.6;
-		particle_duration_msg->SetData("Parameter",SceneObject::PARTICLE_LIFE_TIME);
-		particle_duration_msg->SetData("Emitter",int(0));
-		particle_duration_msg->SetData("TimeToLive",duration);
-		
+
+		MessagePtr particle_duration_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::PARTICLE_LIFE_TIME,0,duration));
 		GetSceneObject()->PostMessage(particle_duration_msg);
 		
 		//std::cout << "speed:" << speed.x << std::endl;

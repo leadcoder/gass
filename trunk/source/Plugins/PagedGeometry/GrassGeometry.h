@@ -23,8 +23,9 @@
 
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
 class PagedGeometry;
@@ -44,7 +45,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 	protected:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;

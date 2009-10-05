@@ -24,7 +24,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include <OgreNode.h>
 
 
@@ -79,14 +79,14 @@ namespace GASS
 
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
-		void OnLoad(MessagePtr message);
-		void PositionMessage(MessagePtr message);
-		void RotationMessage(MessagePtr message);
-		void VisibilityMessage(MessagePtr message);
-		void ParentChangedMessage(MessagePtr message);
-		void WorldPositionMessage(MessagePtr message);
-		void WorldRotationMessage(MessagePtr message);
-		void BoundingInfoMessage(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void PositionMessage(PositionMessagePtr message);
+		void RotationMessage(RotationMessagePtr message);
+		void VisibilityMessage(VisibilityMessagePtr message);
+		void ParentChangedMessage(BaseMessagePtr message);
+		void WorldPositionMessage(WorldPositionMessagePtr message);
+		void WorldRotationMessage(WorldRotationMessagePtr message);
+		void BoundingInfoMessage(BoundingInfoMessagePtr message);
 
 		
 	

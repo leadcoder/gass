@@ -21,7 +21,8 @@
 #pragma once 
 #include <ode/ode.h>
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Core/MessageSystem/IMessage.h"
 //#include "Core/Reflection/Reflection.h"
 
 namespace GASS
@@ -48,8 +49,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		void OnParameterMessage(MessagePtr message);
-		void OnLoad(MessagePtr message);
+		void OnParameterMessage(PhysicsJointMessagePtr message);
+		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 
 		//virtual void UpdateTransformation();
 		virtual float GetAngle();
@@ -104,7 +105,7 @@ namespace GASS
 		
 	private:
 		void JointCorrectHinge2();
-		void UpdateSwayBars(MessagePtr message);
+		void UpdateSwayBars(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
 
 		std::string m_Body1Name;

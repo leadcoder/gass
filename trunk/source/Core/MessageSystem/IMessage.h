@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef MESSAGE_HH
-#define MESSAGE_HH
+#ifndef I_MESSAGE_HH
+#define I_MESSAGE_HH
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
@@ -30,73 +30,58 @@
 
 namespace GASS
 {
-	/**
-		Base class for all messages in the message system.
-		If you want to make custom messages you should derive 
-		from this class. Note however by using boost::any this 
-		class support custom data, see setData for details.  
-	*/
 	class MessageManager;
 
-	class GASSCoreExport Message
+	typedef int MessageType;
+	typedef int SenderID;
+
+	class GASSCoreExport IMessage
 	{
-		friend class MessageManager;
 	public:
-		/**
-		Constructor
-			type unique id for each Message type.
-			
-		*/
-		Message(int type);
+		virtual ~IMessage(){};
 
-		/**
-		Constructor
-			type unique id for each Message type.
-			sender_id to identify sender, usefull if you want to filter messages by sender
-			@remark 
-		*/
-		Message(int type, int sender_id);
-		virtual ~Message();
-
-		/**
-		Get data by name
-		To get the actual data you have to know what kind
-		of data is connected to the name, and then use boost::any_cast
-		get hold of it.
-		*/
-		boost::any GetData(const std::string &data_name);
 		
-		/**
-		Set data by name, name has to be unique for each new data
-		this message should contain. The boost::any field mean
-		that you can provide any data type you want. 
-		*/
-		void SetData(const std::string &data_name, boost::any data);
-
 		/**	
 		Set delay (in seconds) from current frame time until this message should be delivered.
 		Note: This time is ignored when using the SendImmediate method of the MessageManager
 		*/
 
-		void SetDeliverDelay(double delay);
+		virtual void SetDeliverDelay(double delay) = 0;
+
+		virtual double GetDeliverDelay() const = 0;
 
 
 		/**
 		Get the sender id, -1 is returned if no sender id was provided in message constructor.
 		*/
-		int GetSenderID()const;
-		
-		protected: //give fast access to message manager
-			int m_TypeID;
-			double m_Delay;
-		private:
-			int m_SenderID;
-			std::map<std::string,boost::any> m_Data;
-	};
-	typedef boost::shared_ptr<Message> MessagePtr;
-	typedef boost::function<void (MessagePtr)> BoostMessageFunc;
+		virtual SenderID GetSenderID() const = 0;
+		virtual MessageType GetType() const = 0;
 
-	class MessageFunc
+		/**	
+		Set delay (in seconds) from current frame time until this AnyMessage should be delivered.
+		Note: This time is ignored when using the SendImmediate method of the AnyMessageManager
+		*/
+
+		
+	};
+	class IMessageFunc;
+	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
+	
+	typedef boost::shared_ptr<IMessage> MessagePtr;
+	class IMessageFunc
+	{
+	public:
+		virtual ~IMessageFunc(){};
+		virtual void Fire(MessagePtr message) = 0;
+		virtual bool operator== (MessageFuncPtr func) const = 0;
+		virtual void* GetObjectPtr() const = 0;
+		virtual void* GetFuncPtr() const  = 0;
+	};
+
+	
+	
+	template <class MESSAGE_TYPE>
+	class MessageFunc : public IMessageFunc
 	{
 	public:
 		MessageFunc() : m_Object(NULL)
@@ -104,27 +89,42 @@ namespace GASS
 
 		}
 
-		MessageFunc(BoostMessageFunc func, void* object) : m_Func(func), m_Object(object)
+		MessageFunc(boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> func, void* object) : m_Func(func), m_Object(object)
 		{
 
 		}
 		virtual ~MessageFunc()
 		{
 		}
+
 		void Fire(MessagePtr message)
 		{
-			m_Func(message);
+			//cast to this message type
+			boost::shared_ptr<MESSAGE_TYPE> typed_mess = boost::shared_static_cast<MESSAGE_TYPE>(message);
+			m_Func(typed_mess);
 		}
-		bool operator== (const MessageFunc& func) const
+		bool operator== (MessageFuncPtr func) const
 		{
-			return (func.m_Object == m_Object) && 
-				(m_Func.functor.func_ptr == func.m_Func.functor.func_ptr);
+			return (func->GetObjectPtr() == m_Object) && 
+				(m_Func.functor.func_ptr == func->GetFuncPtr());
 		}
+		void* GetObjectPtr() const
+		{
+			return m_Object;
+		}
+
+		void* GetFuncPtr() const
+		{
+			return m_Func.functor.func_ptr;
+		}
+		
 		void* m_Object;
-		BoostMessageFunc m_Func;
+		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
 	};
 
 
-#define MESSAGE_FUNC(X) GASS::MessageFunc(boost::bind( &X, this, _1 ),this)
+	//Standard message function
+#define MESSAGE_FUNC(FUNCTION) MessageFuncPtr(new GASS::MessageFunc<IMessage>(boost::bind( &FUNCTION, this, _1 ),this))
+#define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),this))
 }
 #endif // #ifndef MESSAGE_HH

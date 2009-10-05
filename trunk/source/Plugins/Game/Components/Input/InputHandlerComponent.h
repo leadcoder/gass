@@ -23,8 +23,10 @@
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 
 namespace GASS
@@ -40,9 +42,9 @@ namespace GASS
 		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnEnter(MessagePtr message);
-		void OnExit(MessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnEnter(AnyMessagePtr message);
+		void OnExit(AnyMessagePtr message);
+		void OnInput(ControllerMessagePtr message);
 	private:
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;

@@ -23,8 +23,7 @@
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
-
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 namespace Ogre
 {
 	class ManualObject;
@@ -45,7 +44,7 @@ namespace GASS
 		virtual void Clear();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void SetMaterialName(const std::string &name){m_MaterialName = name;}
 		std::string GetMaterialName()const {return m_MaterialName;}
 		void SetType(const std::string &name){m_Type = name;}

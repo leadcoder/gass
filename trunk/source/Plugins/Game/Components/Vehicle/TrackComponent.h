@@ -22,8 +22,10 @@
 #define TRACK_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
@@ -44,8 +46,8 @@ namespace GASS
 		void SetDriveWheel(const std::string &wheel);
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
-		void OnLoad(MessagePtr message);
-		void OnDriveWheelPhysicsMessage(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 
 		SceneObjectWeakPtr m_DriveWheel;
 		std::string m_DriveWheelName;

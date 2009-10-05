@@ -17,33 +17,67 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#pragma once
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
-#include "Sim/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include <boost/any.hpp>
+#include "Core/Utils/Log.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 namespace GASS
 {
-	class MessageManager;
-	class GASSExport SimSystemManager : public BaseSystemManager
+	/*AnyMessage::AnyMessage(MessageType type) :
+			m_TypeID(type),
+			m_SenderID(-1),
+			m_Delay(0)
 	{
-	public:
-		SimSystemManager();
-		virtual ~SimSystemManager();
-		void Init();
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
-	private:
-		MessageManager* m_SystemMessageManager;
-	};
+
+	}*/
+
+	AnyMessage::AnyMessage(MessageType type, SenderID sender_id, double delay) :
+			m_TypeID(type),
+			m_SenderID(sender_id),
+			m_Delay(delay)
+	{
+
+	}
+
+
+	AnyMessage::~AnyMessage()
+	{
+
+	}
+
+	boost::any AnyMessage::GetData(const std::string &data_name)
+	{
+		if(m_Data.end() == m_Data.find(data_name))
+		{
+			Log::Error("AnyMessage data %s doesnt exist",data_name.c_str());
+			return boost::any();
+		}
+		return m_Data[data_name];
+	}
+
+	void AnyMessage::SetData(const std::string &data_name, boost::any data)
+	{
+		m_Data[data_name] = data;
+	}
+
+	SenderID AnyMessage::GetSenderID() const
+	{
+		return m_SenderID;
+	}
+
+	void AnyMessage::SetDeliverDelay(double delay)
+	{
+		m_Delay = delay;
+	}
+
+	MessageType AnyMessage::GetType() const
+	{
+		return m_TypeID;
+	}
+
+	double  AnyMessage::GetDeliverDelay() const
+	{
+		return m_Delay;
+	}
+
 }

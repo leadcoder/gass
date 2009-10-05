@@ -83,39 +83,33 @@ namespace GASS
 
 	void ODEGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC(ODEGeometry::OnLoad ),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED,  MESSAGE_FUNC(ODEGeometry::OnTransformationChanged ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_COLLISION_SETTINGS,  MESSAGE_FUNC(ODEGeometry::OnCollisionSettings ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC(ODEGeometry::OnLoad,LoadPhysicsComponentsMessage ),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED,  TYPED_MESSAGE_FUNC(ODEGeometry::OnTransformationChanged,TransformationNotifyMessage ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_COLLISION_SETTINGS,  TYPED_MESSAGE_FUNC(ODEGeometry::OnCollisionSettings,CollisionSettingsMessage ));
 
 	}
 
-	void ODEGeometry::OnTransformationChanged(MessagePtr message)
+	void ODEGeometry::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
 
-		Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
 	}
 
-	/*void ODEGeometry::OnRotationChanged(MessagePtr message)
+	void ODEGeometry::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
-		Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
-		SetRotation(rot);
-	}*/
-
-	void ODEGeometry::OnCollisionSettings(MessagePtr message)
-	{
-		bool value = boost::any_cast<bool>(message->GetData("Enable"));
+		bool value = message->EnableCollision();
 		if(value)
 			Enable();
 		else
 			Disable();
 	}
 
-	void ODEGeometry::OnLoad(MessagePtr message)
+	void ODEGeometry::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = boost::any_cast<ODEPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
+		m_SceneManager = static_cast<ODEPhysicsSceneManager*>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
 		m_Body = GetSceneObject()->GetFirstComponent<ODEBody>().get();
@@ -192,6 +186,7 @@ namespace GASS
 				geom_offset = box.m_Max + box.m_Min;
 				geom_offset = geom_offset*0.5f;
 				geom_id= dCreateBox(0, bb_size.x, bb_size.y, bb_size.z);
+				//Log::Print("BBsize:%f,%f,%f",bb_size.x, bb_size.y, bb_size.z);
 			}
 			break;
 		case PGT_CYLINDER:

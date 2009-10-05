@@ -2,8 +2,11 @@
 #define OPENAL_SOUND_SYSTEM_H
 
 #include "Sim/Systems/SimSystem.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Quaternion.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Systems/SimSystemMessages.h"
 #include <al.h>
 #include <alc.h>
 #include <alut.h>
@@ -47,9 +50,9 @@ namespace GASS
 		std::string ListAvailableDevices( void );
 
 		void OnInit(MessagePtr message);
-		void OnSceneLoaded(MessagePtr message);
-		void OnChangeCamera(MessagePtr message);
-		void OnCameraMoved(MessagePtr message);
+		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
 
 		ALCdevice *m_Device;

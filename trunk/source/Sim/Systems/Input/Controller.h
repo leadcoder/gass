@@ -25,7 +25,7 @@
 #include <string>
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
@@ -92,10 +92,7 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-			
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",1.0f);
+				MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -105,10 +102,7 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",0.0f);
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -144,9 +138,7 @@ namespace GASS
 				{
 				case DEVICE_MOUSE:
 				
-					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-					system_msg->SetData("Controller",m_Name);
-					system_msg->SetData("Value",1.0f);
+					MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
 					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
@@ -161,9 +153,7 @@ namespace GASS
 				{
 				case DEVICE_MOUSE:
 				
-					MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-					system_msg->SetData("Controller",m_Name);
-					system_msg->SetData("Value",0.0f);
+					MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
 					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
@@ -177,9 +167,7 @@ namespace GASS
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
 				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",1.0f);
+				MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
@@ -189,9 +177,7 @@ namespace GASS
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
 				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",0.0f);
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
@@ -241,9 +227,7 @@ namespace GASS
 					value = -1.0f;
 				}
 				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",value);
+				MessagePtr system_msg(new ControllerMessage(m_Name,value));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -254,9 +238,7 @@ namespace GASS
 			if(key == m_PosKey || key == m_NegKey)
 			{
 			
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",0.0f);
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -302,9 +284,7 @@ namespace GASS
 					value  = 0;
 				}
 				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
-				system_msg->SetData("Value",value);
+				MessagePtr system_msg(new ControllerMessage(m_Name,value));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 				break;
 			}
@@ -336,11 +316,8 @@ namespace GASS
 		{
 			if(device == m_Device-DEVICE_GAME_CONTROLLER_0 && axis == m_Axis-INPUT_AXIS_0)
 			{
-				
-				MessagePtr system_msg(new Message(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT));
-				system_msg->SetData("Controller",m_Name);
 				value = value*m_Invert;
-				system_msg->SetData("Value",value);
+				MessagePtr system_msg(new ControllerMessage(m_Name,value));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;

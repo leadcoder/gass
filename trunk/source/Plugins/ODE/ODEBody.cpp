@@ -37,15 +37,21 @@ namespace GASS
 		:m_ODESpaceID(NULL),
 		m_ODESecondarySpaceID(NULL),
 		m_ODEBody(0),
-		m_Center(0,0,0),
-		m_MassOffset(0,0,0),
+		//m_ODEMass(0),
+		//m_MassOffset(0,0,0),
 		m_AutoDisable(true),
 		m_FastRotation(true),
 		m_SceneManager(NULL),
 		m_MassRepresentation(MR_GEOMETRY),
-		m_Mass(1)
+		m_Mass(1),
+		m_CGPosition(0,0,0),
+		m_SymmetricInertia(0,0,0),
+		m_AssymetricInertia(0,0,0),
+		m_EffectJoints(true)
 	{
-
+		
+		
+		
 	}
 
 	ODEBody::~ODEBody()
@@ -66,54 +72,54 @@ namespace GASS
 
 	void ODEBody::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS, MESSAGE_FUNC( ODEBody::OnLoad ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION,				MESSAGE_FUNC( ODEBody::OnPositionChanged));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION,				MESSAGE_FUNC( ODEBody::OnRotationChanged ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PHYSICS_BODY_PARAMETER,  MESSAGE_FUNC(ODEBody::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, TYPED_MESSAGE_FUNC( ODEBody::OnLoad,LoadPhysicsComponentsMessage ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION,				TYPED_MESSAGE_FUNC( ODEBody::OnPositionChanged,PositionMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION,				TYPED_MESSAGE_FUNC( ODEBody::OnRotationChanged,RotationMessage ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER,  TYPED_MESSAGE_FUNC(ODEBody::OnParameterMessage,PhysicsBodyMessage));
 	}
 
-	void ODEBody::OnPositionChanged(MessagePtr message)
+	void ODEBody::OnPositionChanged(PositionMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
-			Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+			Vec3 pos = message->GetPosition();
 			SetPosition(pos);
 		}
 	}
 
-	void ODEBody::OnRotationChanged(MessagePtr message)
+	void ODEBody::OnRotationChanged(RotationMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
-			Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+			Quaternion rot = message->GetRotation();
 			SetRotation(rot);
 		}
 	}
 
-	void ODEBody::OnParameterMessage(MessagePtr message)
+	void ODEBody::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
-		SceneObject::PhysicsBodyParameterType type = boost::any_cast<SceneObject::PhysicsBodyParameterType>(message->GetData("Parameter"));
+		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
 		//wake body!!
 		Enable();
 		switch(type)
 		{
-		case SceneObject::FORCE:
+		case PhysicsBodyMessage::FORCE:
 			{
-				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				Vec3 value = message->GetValue();
 				AddForce(value,true);
 			}
 			break;
-		case SceneObject::TORQUE:
+		case PhysicsBodyMessage::TORQUE:
 			{
-				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				Vec3 value = message->GetValue();
 				AddTorque(value,true);
 				break;
 			}
-		case SceneObject::VELOCITY:
+		case PhysicsBodyMessage::VELOCITY:
 			{
-				Vec3 value = boost::any_cast<Vec3>(message->GetData("Value"));
+				Vec3 value = message->GetValue();
 				SetVelocity(value,true);
 				break;
 			}
@@ -121,9 +127,9 @@ namespace GASS
 		}
 	}
 
-	void ODEBody::OnLoad(MessagePtr message)
+	void ODEBody::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = boost::any_cast<ODEPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
+		m_SceneManager = static_cast<ODEPhysicsSceneManager*> (message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
 		Vec3 abs_pos;
@@ -193,23 +199,15 @@ namespace GASS
 	void ODEBody::BodyMoved()
 	{
 		int from_id = (int)this; //use address as id
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,from_id));
 		Vec3 pos = GetPosition();
-		
-		pos_msg->SetData("Position",pos);
+		MessagePtr pos_msg(new PositionMessage(pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,from_id));
-		rot_msg->SetData("Rotation",GetRotation());
+		MessagePtr rot_msg(new RotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
-
-		MessagePtr physics_msg(new Message(SceneObject::OBJECT_NM_PHYSICS_VELOCITY,from_id));
-		physics_msg->SetData("Velocity",GetVelocity(true));
-		physics_msg->SetData("AngularVelocity",GetAngularVelocity(true));
+		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
-		//msg->SetData("Rotation",Vec3(0,0,0));
-		
 	}
 
 

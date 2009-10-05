@@ -50,52 +50,51 @@ namespace GASS
 
 	void OpenALSoundComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OpenALSoundComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED, MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_SOUND_PARAMETER, MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage ),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_SOUND_PARAMETER, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage));
 	}
 
-	void OpenALSoundComponent::OnPositionChanged(MessagePtr message)
+	void OpenALSoundComponent::OnPositionChanged(TransformationNotifyMessagePtr message)
 	{
-		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
-		//Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
 	}
 
-	void OpenALSoundComponent::OnPhysicsUpdate(MessagePtr message)
+	void OpenALSoundComponent::OnPhysicsUpdate(VelocityNotifyMessagePtr message)
 	{
-		Vec3 vel = boost::any_cast<Vec3>(message->GetData("Velocity"));
+		Vec3 vel = message->GetLinearVelocity();
 		SetVelocity(vel);
 	}
 
-	void OpenALSoundComponent::OnParameterMessage(MessagePtr message)
+	void OpenALSoundComponent::OnParameterMessage(SoundParameterMessagePtr message)
 	{
 		//Log::Warning("OpenALSoundComponent::OnParameterMessage");
-		SceneObject::SoundParameterType type = boost::any_cast<SceneObject::SoundParameterType>(message->GetData("Parameter"));
+		SoundParameterMessage::SoundParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case SceneObject::PLAY:
+		case SoundParameterMessage::PLAY:
 			{
 				//Log::Warning("OpenALSoundComponent::Play() - play!");
 				Play();
 			}
 			break;
-		case SceneObject::STOP:
+		case SoundParameterMessage::STOP:
 			{
 				Stop();
 			}
 			break;
-		case SceneObject::PITCH:
+		case SoundParameterMessage::PITCH:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
+				float value = message->GetValue();
 				//float pitch = GetPitch();
 				SetPitch(value);
 			}
 			break;
-		case SceneObject::VOLUME:
+		case SoundParameterMessage::VOLUME:
 			{
-				float value = boost::any_cast<float>(message->GetData("Value"));
+				float value = message->GetValue();
 				//float pitch = GetPitch();
 				SetVolume(value);
 			}
@@ -228,7 +227,7 @@ namespace GASS
 		m_Filename = file;
 	}
 
-	void OpenALSoundComponent::OnLoad(MessagePtr message)
+	void OpenALSoundComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		bool wasSoundLoaded  = LoadWaveSound(m_Filename);//, 0);
 		//sound loaded, update sound settings

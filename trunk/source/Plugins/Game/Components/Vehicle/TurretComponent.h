@@ -22,8 +22,9 @@
 #define TURRET_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 namespace GASS
 {
@@ -40,8 +41,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(MessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnInput(AnyMessagePtr message);
 	};
 }
 #endif

@@ -23,7 +23,7 @@
 
 #include "Sim/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scheduling/ITaskListener.h"
 
 namespace GASS

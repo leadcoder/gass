@@ -22,9 +22,10 @@
 #define PROJECTILE_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Scheduling/ITaskListener.h"
 
@@ -47,12 +48,12 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 
 	private:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void StepPhysics(double time);
-		void OnPositionMessage(MessagePtr message);
-		void OnRotationMessage(MessagePtr message);
-		void OnPhysicsParameterMessage(MessagePtr message);
+		void OnPositionMessage(PositionMessagePtr message);
+		void OnRotationMessage(RotationMessagePtr message);
+		void OnPhysicsParameterMessage(PhysicsBodyMessagePtr message);
 		
 		void SpawnEffect(const std::string &effect);
 		void SetEndEffectTemplateName(const std::string &effect);

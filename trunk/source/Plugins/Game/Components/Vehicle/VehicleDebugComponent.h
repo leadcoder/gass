@@ -22,8 +22,9 @@
 #define VEHICLE_DEBUG_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 namespace GASS
 {
@@ -39,8 +40,8 @@ namespace GASS
 		virtual ~VehicleDebugComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnGotoPosition(MessagePtr message);
-		void OnLoad(MessagePtr message);
+		void OnGotoPosition(AnyMessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 	private:
 		bool m_ShowWaypoint;

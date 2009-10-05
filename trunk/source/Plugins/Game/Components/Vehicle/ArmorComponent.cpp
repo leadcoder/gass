@@ -23,7 +23,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -57,7 +58,7 @@ namespace GASS
 	void ArmorComponent::OnCreate()
 	{
 		//GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(ArmorComponent::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::ObjectMessage(OBJECT_NM_HIT), MESSAGE_FUNC(ArmorComponent::OnHit));
+		GetSceneObject()->RegisterForMessage(SceneObjectMessage(OBJECT_NM_HIT), MESSAGE_FUNC(ArmorComponent::OnHit));
 		//register for physics messages on engine?
 	}
 
@@ -73,18 +74,18 @@ namespace GASS
 
 		if(m_CurrentArmor > 0)
 		{
-			float damage = boost::any_cast<float>(message->GetData("Damage"));
+
+			AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
+			float damage = boost::any_cast<float>(any_mess->GetData("Damage"));
 			m_CurrentArmor -= damage;
 			if(m_CurrentArmor <= 0)
 			{
 				//Send armor message
-				MessagePtr armor_msg(new Message(OBJECT_RM_OUT_OF_ARMOR));
+				AnyMessagePtr armor_msg(new AnyMessage(OBJECT_RM_OUT_OF_ARMOR));
 				GetSceneObject()->PostMessage(armor_msg);
 
 				//load damage mesh
-				MessagePtr mesh_msg(new Message(SceneObject::OBJECT_RM_MESH_PARAMETER));
-				mesh_msg->SetData("Parameter",SceneObject::CHANGE_MESH);
-				mesh_msg->SetData("MeshName",m_DamageMesh);
+				MessagePtr mesh_msg(new MeshFileMessage(m_DamageMesh));
 				GetSceneObject()->PostMessage(mesh_msg);
 
 				

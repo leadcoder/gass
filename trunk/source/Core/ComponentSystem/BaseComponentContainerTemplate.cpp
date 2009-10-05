@@ -27,7 +27,6 @@
 #include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
 
-#include "Core/MessageSystem/MessageManager.h"
 #include "Core/Utils/Log.h"
 #include <iostream>
 #include <iomanip>

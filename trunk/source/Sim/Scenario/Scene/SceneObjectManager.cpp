@@ -28,7 +28,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 
@@ -90,8 +90,8 @@ namespace GASS
 			m_Root->AddChild(obj);
 	
 		//Send load message so that all scene manager can initilze it's components
-		MessagePtr load_msg(new Message(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED));
-		load_msg->SetData("SceneObject",obj);
+		
+		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(obj));
 		m_ScenarioScene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
@@ -163,13 +163,11 @@ namespace GASS
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
 	{
-		
-		MessagePtr msg(new Message(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS));
+		MessagePtr msg(new BaseMessage(OBJECT_RM_UNLOAD_COMPONENTS));
 		obj->SendImmediate(msg);
 
 		//notify that this object is to be removed
-		MessagePtr unload_msg(new Message(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_REMOVED));
-		unload_msg->SetData("SceneObject",obj);
+		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(obj));
 		m_ScenarioScene->SendImmediate(unload_msg);
 	}
 

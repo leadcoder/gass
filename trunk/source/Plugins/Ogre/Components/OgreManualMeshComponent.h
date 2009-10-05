@@ -24,7 +24,7 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/MeshData.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace Ogre
 {
@@ -45,8 +45,10 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 	
 	protected:
-		void OnLoad(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnDataMessage(ManualMeshDataMessagePtr message);
+		void OnClearMessage(ClearManualMeshMessagePtr message);
+
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
 		Ogre::ManualObject* m_MeshObject;

@@ -22,9 +22,10 @@
 #define WEAPON_SYSTEM_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 namespace GASS
 {
@@ -41,14 +42,14 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(MessagePtr message);
-		void OnInput(MessagePtr message);
-		void OnExecuteFire(MessagePtr message);
-		void OnReload(MessagePtr message);
-		void OnReadyToFire(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnInput(AnyMessagePtr message);
+		void OnExecuteFire(AnyMessagePtr message);
+		void OnReload(AnyMessagePtr message);
+		void OnReadyToFire(AnyMessagePtr message);
 		
-		void OnTransformationChanged(MessagePtr message);
-		void OnPhysicsMessage(MessagePtr message);
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
 
 		//get/set section

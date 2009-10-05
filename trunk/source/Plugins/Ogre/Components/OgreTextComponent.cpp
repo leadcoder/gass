@@ -34,7 +34,7 @@
 
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -103,9 +103,9 @@ namespace GASS
 	void OgreTextComponent::OnCreate()
 	{
 		//this one should load after mesh entities
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreTextComponent::OnLoad),2);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_TEXT_PARAMETER, MESSAGE_FUNC(OgreTextComponent::OnParameterMessage));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OgreTextComponent::OnVisibilityMessage ),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreTextComponent::OnLoad,LoadGFXComponentsMessage),2);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXT_CAPTION, TYPED_MESSAGE_FUNC(OgreTextComponent::OnCaptionMessage,TextCaptionMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OgreTextComponent::OnVisibilityMessage,VisibilityMessage ),0);
 	}
 
 	std::string OgreTextComponent::GetText() const
@@ -154,20 +154,13 @@ namespace GASS
 //			m_TextObject->setCharacterHeight(size);
 	}
 
-	void OgreTextComponent::OnParameterMessage(GASS::MessagePtr message)
+	void OgreTextComponent::OnCaptionMessage(TextCaptionMessagePtr message)
 	{
-		SceneObject::TextParameterType type = boost::any_cast<SceneObject::TextParameterType>(message->GetData("Parameter"));
-		switch(type)
-		{
-		case SceneObject::CAPTION:
-
-			std::string caption = boost::any_cast<std::string>(message->GetData("Caption"));
-			SetText(caption);
-			break;
-		}
+		std::string caption = message->GetCaption();
+		SetText(caption);
 	}
 
-	void OgreTextComponent::OnLoad(MessagePtr message)
+	void OgreTextComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		//Ogre::String test = Ogre::String(new_text);
 		Ogre::ColourValue color;
@@ -271,8 +264,8 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreTextComponent::OnVisibilityMessage(MessagePtr message)
+	void OgreTextComponent::OnVisibilityMessage(VisibilityMessagePtr message)
 	{
-		m_Visible = boost::any_cast<bool>(message->GetData("Visibility"));
+		m_Visible = message->GetValue();
 	}
 }

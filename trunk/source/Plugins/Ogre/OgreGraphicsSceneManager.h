@@ -22,6 +22,7 @@
 
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Core/MessageSystem/MessageType.h"
 #include <string>
 
@@ -48,9 +49,9 @@ namespace GASS
 		
 	protected:
 		void OnLoad(MessagePtr message);		
-		void OnChangeCamera(MessagePtr message);
+		void OnChangeCamera(ChangeCameraMessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnLoadSceneObject(MessagePtr message);
+		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 	private:
 		void UpdateShadowSettings();
 		void UpdateFogSettings();

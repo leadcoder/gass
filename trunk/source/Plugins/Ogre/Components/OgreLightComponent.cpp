@@ -29,7 +29,7 @@
 #include "Core/Utils/Log.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -72,8 +72,7 @@ namespace GASS
 
 	void OgreLightComponent::OnCreate()
 	{
-
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC( OgreLightComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreLightComponent::OnLoad,LoadGFXComponentsMessage),1);
 	}
 
 
@@ -131,9 +130,9 @@ namespace GASS
 			m_OgreLight->setCastShadows(m_CastShadow);
 	}
 
-	void OgreLightComponent::OnLoad(MessagePtr message)
+	void OgreLightComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 

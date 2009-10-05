@@ -22,6 +22,7 @@
 
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/systems/SimSystemMessages.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
@@ -59,7 +60,7 @@ namespace GASS
 		Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
-		void OnDebugPrint(MessagePtr message);
+		void OnDebugPrint(DebugPrintMessagePtr message);
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		void AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour);
@@ -71,8 +72,8 @@ namespace GASS
 		
 
 		void OnInit(MessagePtr message);
-		void OnCreateRenderWindow(MessagePtr message);
-		void OnWindowMovedOrResized(MessagePtr message);
+		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
+		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 	
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;

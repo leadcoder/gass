@@ -23,7 +23,7 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ILightComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 
 namespace Ogre
@@ -56,7 +56,7 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 	protected:
 		
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Light* m_OgreLight;
 		LightType m_LightType;
 

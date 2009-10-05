@@ -23,7 +23,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
@@ -61,14 +61,14 @@ namespace GASS
 
 	void VehicleDebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_RM_GOTO_POSITION, MESSAGE_FUNC(VehicleDebugComponent::OnGotoPosition));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(VehicleDebugComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_GOTO_POSITION, TYPED_MESSAGE_FUNC(VehicleDebugComponent::OnGotoPosition,AnyMessage));
 		
 	}
 
-	void VehicleDebugComponent::OnLoad(MessagePtr message)
+	void VehicleDebugComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		//create waypoint text object
 		SceneObjectPtr scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("VehicleDebugWaypointTemplate");
@@ -104,11 +104,10 @@ namespace GASS
 		GetSceneObject()->GetSceneObjectManager()->DeleteObject(m_WaypointObj);
 	}
 
-	void VehicleDebugComponent::OnGotoPosition(MessagePtr message)
+	void VehicleDebugComponent::OnGotoPosition(AnyMessagePtr message)
 	{
 		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
-		pos_msg->SetData("Position",pos);
+		MessagePtr pos_msg(new PositionMessage(pos));
 		m_WaypointObj->PostMessage(pos_msg);
 	}
 }

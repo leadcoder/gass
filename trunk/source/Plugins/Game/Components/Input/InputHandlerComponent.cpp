@@ -23,7 +23,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -49,11 +50,11 @@ namespace GASS
 
 	}
 
-	void InputHandlerComponent::OnEnter(MessagePtr message)
+	void InputHandlerComponent::OnEnter(AnyMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(InputHandlerComponent::OnInput));
+			cs->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
 		else 
 			Log::Warning("Failed to find control settings: InputHandlerComponentInputSettings");
 
@@ -81,32 +82,32 @@ namespace GASS
 
 	void InputHandlerComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage)OBJECT_RM_ENTER_VEHICLE, MESSAGE_FUNC(GASS::InputHandlerComponent::OnEnter));
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage)OBJECT_RM_EXIT_VEHICLE, MESSAGE_FUNC(InputHandlerComponent::OnExit));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE, TYPED_MESSAGE_FUNC(GASS::InputHandlerComponent::OnEnter,AnyMessage));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnExit,AnyMessage));
 	}
 
-	void InputHandlerComponent::OnExit(MessagePtr message)
+	void InputHandlerComponent::OnExit(AnyMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(InputHandlerComponent::OnInput));
+			cs->GetMessageManager()->UnregisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
 	}
 
-	void InputHandlerComponent::OnInput(MessagePtr message)
+	void InputHandlerComponent::OnInput(ControllerMessagePtr message)
 	{
 		//relay message
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		std::string name = message->GetController();
+		float value = message->GetValue();
 		
 		//check if exit message
 		if(name == "Exit")
 		{
-			MessagePtr exit_message(new Message((SceneObject::ObjectMessage)OBJECT_RM_EXIT_VEHICLE));
+			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
 			GetSceneObject()->SendImmediate(exit_message);	
 		}
 		else
 		{
-			MessagePtr input_message(new Message(OBJECT_NM_PLAYER_INPUT));
+			AnyMessagePtr input_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
 			input_message->SetData("Controller",name);
 			input_message->SetData("Value",value);
 			GetSceneObject()->SendImmediate(input_message);	

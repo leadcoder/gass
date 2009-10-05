@@ -18,32 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
 
-namespace GASS
-{
-	class MessageManager;
-	class GASSExport SimSystemManager : public BaseSystemManager
-	{
-	public:
-		SimSystemManager();
-		virtual ~SimSystemManager();
-		void Init();
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
-	private:
-		MessageManager* m_SystemMessageManager;
-	};
-}
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+
+

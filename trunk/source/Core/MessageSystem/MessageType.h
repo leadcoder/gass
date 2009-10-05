@@ -23,26 +23,19 @@
 
 
 #include <list>
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
 	class MessageReg
 	{
 	public:
-	/*	bool operator < (MessageReg *other)
-		{
-			return m_Priority < other->m_Priority;
-		}*/
-
-		//int m_ObjectID;
-		MessageFunc m_Callback;
+		MessageFuncPtr m_Callback;
 		int m_Priority;
-
 	};
 
 	typedef std::list<MessageReg*> MessageRegList;
-	class MessageType
+	class MessageTypeListeners
 	{
 	public:
 
@@ -51,4 +44,4 @@ namespace GASS
 	};
 
 }
-#endif // #ifndef MESSAGETYPE_HH
+#endif 

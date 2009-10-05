@@ -27,7 +27,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -69,13 +69,13 @@ namespace GASS
 
 	void OgreParticleSystemComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreParticleSystemComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_PARTICLE_SYSTEM_PARAMETER, MESSAGE_FUNC( OgreParticleSystemComponent::OnParameterMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreParticleSystemComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_PARTICLE_SYSTEM_PARAMETER, TYPED_MESSAGE_FUNC( OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage),1);
 	}
 
-	void OgreParticleSystemComponent::OnLoad(MessagePtr message)
+	void OgreParticleSystemComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 
@@ -92,30 +92,29 @@ namespace GASS
 		if(m_TimeToLive > -1)
 		{
 			//Send remove message with delay
-			MessagePtr remove_msg(new Message(ScenarioScene::SCENARIO_RM_REMOVE_OBJECT));
-			remove_msg->SetData("SceneObject",GetSceneObject());
+			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
 			remove_msg->SetDeliverDelay(m_TimeToLive);
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
 		}
 		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}
 
-	void OgreParticleSystemComponent::OnParameterMessage(MessagePtr message)
+	void OgreParticleSystemComponent::OnParameterMessage(ParticleSystemParameterMessagePtr message)
 	{
-		SceneObject::ParticleSystemParameterType type = boost::any_cast<SceneObject::ParticleSystemParameterType>(message->GetData("Parameter"));
+		ParticleSystemParameterMessage::ParticleSystemParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case SceneObject::EMISSION_RATE:
+		case ParticleSystemParameterMessage::EMISSION_RATE:
 			{
-			int emitter = boost::any_cast<int>(message->GetData("Emitter"));
-			float rate = boost::any_cast<float>(message->GetData("Rate"));
+			int emitter = message->GetEmitter();
+			float rate = message->GetValue();
 			m_ParticleSystem->getEmitter(emitter)->setEmissionRate(rate);
 			}
 			break;
-		case SceneObject::PARTICLE_LIFE_TIME:
+		case ParticleSystemParameterMessage::PARTICLE_LIFE_TIME:
 			{
-			int emitter = boost::any_cast<int>(message->GetData("Emitter"));
-			float duration = boost::any_cast<float>(message->GetData("TimeToLive"));
+			int emitter = message->GetEmitter();
+			float duration = message->GetValue();
 			m_ParticleSystem->getEmitter(emitter)->setTimeToLive(duration);
 			}
 			break;

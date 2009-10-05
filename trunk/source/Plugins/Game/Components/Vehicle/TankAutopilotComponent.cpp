@@ -23,7 +23,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -63,15 +63,15 @@ namespace GASS
 
 	void TankAutopilotComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(TankAutopilotComponent::OnInput));
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_RM_GOTO_POSITION, MESSAGE_FUNC(TankAutopilotComponent::OnGotoPosition));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TankAutopilotComponent::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(TankAutopilotComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_PHYSICS_VELOCITY, MESSAGE_FUNC(TankAutopilotComponent::OnPhysicsMessage));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED, MESSAGE_FUNC(TankAutopilotComponent::OnTransMessage));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnInput,AnyMessage));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_GOTO_POSITION, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnGotoPosition,AnyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(TankAutopilotComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage));
 	}
 
-	void TankAutopilotComponent::OnLoad(MessagePtr message)
+	void TankAutopilotComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);	
 	}
@@ -81,32 +81,32 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);		
 	}
 
-	void TankAutopilotComponent::OnGotoPosition(MessagePtr message)
+	void TankAutopilotComponent::OnGotoPosition(AnyMessagePtr message)
 	{
 		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
 		m_DesiredPos.Set(pos.x,0,pos.z);
 	}
 
-	void TankAutopilotComponent::OnTransMessage(MessagePtr message)
+	void TankAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
 	{
 		m_LastPos = m_CurrentPos;
-
-		m_CurrentPos = boost::any_cast<Vec3>(message->GetData("Position"));
-		Quaternion  rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		m_CurrentPos = message->GetPosition();
+		Quaternion  rot = message->GetRotation();
 		m_Transformation.Identity();
 		rot.ToRotationMatrix(m_Transformation);
 		m_Transformation.SetTranslation(m_CurrentPos.x,m_CurrentPos.y,m_CurrentPos.z);
 	}
 
-	void TankAutopilotComponent::OnPhysicsMessage(MessagePtr message)
+	void TankAutopilotComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
 	{
-		Vec3 ang_vel  = boost::any_cast<Vec3>(message->GetData("AngularVelocity"));
+		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;
-		m_VehicleSpeed  = boost::any_cast<Vec3>(message->GetData("Velocity"));
+		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void TankAutopilotComponent::OnInput(MessagePtr message)
+	void TankAutopilotComponent::OnInput(AnyMessagePtr message)
 	{
+		
 		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
 		float value = boost::any_cast<float>(message->GetData("Value"));
 	}
@@ -216,12 +216,12 @@ namespace GASS
 
 			//Send input message
 
-			MessagePtr throttle_message(new Message(OBJECT_NM_PLAYER_INPUT));
+			AnyMessagePtr throttle_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
 			throttle_message->SetData("Controller",m_ThrottleInput);
 			throttle_message->SetData("Value",throttle);
 			GetSceneObject()->SendImmediate(throttle_message);	
 
-			MessagePtr steering_message(new Message(OBJECT_NM_PLAYER_INPUT));
+			AnyMessagePtr steering_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
 			steering_message->SetData("Controller",m_SteerInput);
 			steering_message->SetData("Value",turn);
 			GetSceneObject()->SendImmediate(steering_message);	

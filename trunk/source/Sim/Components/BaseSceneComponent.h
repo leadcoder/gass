@@ -27,7 +27,7 @@
 namespace GASS
 {
 	class SceneObject;
-	class MessageManager;
+	
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent>
@@ -35,7 +35,6 @@ namespace GASS
 	public:
 		BaseSceneComponent();
 		virtual ~BaseSceneComponent();
-		//MessageManager* GetMessageManager() const;
 		SceneObjectPtr GetSceneObject() const;
 	protected:
 

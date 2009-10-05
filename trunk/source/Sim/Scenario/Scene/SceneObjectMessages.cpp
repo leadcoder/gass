@@ -19,31 +19,21 @@
 *****************************************************************************/
 
 #pragma once
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace GASS
-{
-	class MessageManager;
-	class GASSExport SimSystemManager : public BaseSystemManager
-	{
-	public:
-		SimSystemManager();
-		virtual ~SimSystemManager();
-		void Init();
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
-	private:
-		MessageManager* m_SystemMessageManager;
-	};
+{	
+
+/*		class PositionMessage : public BaseMessage
+		{
+		public:
+			PositionMessage(MessageType type, const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+			  BaseMessage(type, sender_id , delay),m_Position(pos){}
+			Vec3 GetPosition() const{return m_Position;}
+		private:
+			Vec3 m_Position;
+		}
+*/
 }

@@ -20,8 +20,9 @@
 #pragma once 
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
 class Ogre::PixelBox;
@@ -43,7 +44,7 @@ namespace GASS
 		void LoadDensityMap(const std::string &mapFile, int channel);
 		float GetDensityAt(float x, float z);
 
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		static float GetTerrainHeight(float x, float z);
 
 		std::string GetMesh() const 

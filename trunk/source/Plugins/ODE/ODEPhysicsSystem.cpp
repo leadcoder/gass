@@ -20,7 +20,7 @@
 #include <boost/bind.hpp>
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/System/SystemFactory.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
@@ -58,7 +58,7 @@ namespace GASS
 	void ODEPhysicsSystem::OnCreate()
 	{
 //		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSystem::Update, this, _1 ),m_PrimaryThread);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC( ODEPhysicsSystem::OnInit));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC( ODEPhysicsSystem::OnInit));
 
 	}
 

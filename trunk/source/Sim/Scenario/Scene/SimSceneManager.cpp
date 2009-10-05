@@ -21,7 +21,7 @@
 #include "Sim/Scenario/Scene/SimSceneManager.h"
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -54,24 +54,24 @@ namespace GASS
 	void SimSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("SimSceneManager",new GASS::Creator<SimSceneManager, ISceneManager>);
-		//RegisterProperty<bool>( "PrimaryThread", &GASS::SimSceneManager::GetPrimaryThread, &GASS::SimSceneManager::SetPrimaryThread);
 	}
 
 	void SimSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnLoad ));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnUnload ));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnLoad ));
+		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnUnload ));
+		m_Scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
 	}
 
 	void SimSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		//Initlize all sim components and send scene mananger as argument
-		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
+		SceneObjectCreatedNotifyMessagePtr socnm = boost::shared_static_cast<SceneObjectCreatedNotifyMessage>(message);
+		assert(socnm);
+		SceneObjectPtr obj = socnm->GetSceneObject();
 		assert(obj);
-		MessagePtr sim_msg(new Message(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS,(int) this));
-		sim_msg->SetData("SimSceneManager",boost::any(this));
+		MessagePtr sim_msg(new LoadSimComponentsMessage(this,(int) this));
 		obj->SendImmediate(sim_msg);
 	}
 
@@ -101,7 +101,7 @@ namespace GASS
 
 	void SimSceneManager::OnLoad(MessagePtr message)
 	{
-		ScenarioScene* scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
+		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message); 
 		m_Init = true;
 	}
 

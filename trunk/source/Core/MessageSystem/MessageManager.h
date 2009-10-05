@@ -36,14 +36,14 @@ namespace tbb
 
 namespace GASS
 {
-	class Message;
+	class IMessage;
 	class GASSCoreExport MessageManager
 	{
 	public:
-        typedef boost::shared_ptr<Message> MessagePtr;
+        typedef boost::shared_ptr<IMessage> MessagePtr;
 		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
-		typedef std::map<int,MessageType*> MessageTypeMap;
+		typedef std::map<int,MessageTypeListeners*> MessageTypeListenerMap;
 	public:
 		MessageManager();
 		virtual ~MessageManager();
@@ -71,14 +71,14 @@ namespace GASS
 			processed. This could for instance be useful if you have 
 			Initialization message  want a certain call order*/
 
-		int RegisterForMessage(int type,  MessageFunc callback, int priority = 0);
+		int RegisterForMessage(MessageType type,  MessageFuncPtr callback, int priority = 0);
 
 		/**
 			Unregister to listen to messages of certain type.
 			The callback function used during registration has to 
 			be provided again because its used as identifier.
 		*/
-		void UnregisterForMessage(int type, MessageFunc callback);
+		void UnregisterForMessage(MessageType type, MessageFuncPtr callback);
 
 		/**
 			Process the message queue and deliver messages to 
@@ -89,7 +89,7 @@ namespace GASS
 		//#pragma deprecated(AddMessageToSystem)
 		void AddMessageToSystem(int type);
 		MessageQueue m_MessageQueue;
-		MessageTypeMap m_MessageTypes;
+		MessageTypeListenerMap m_MessageTypes;
 		tbb::spin_mutex *m_Mutex;
 	};
 }

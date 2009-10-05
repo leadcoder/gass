@@ -21,8 +21,9 @@
 #pragma once 
 
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
 
@@ -59,10 +60,10 @@ namespace GASS
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
-		void OnTransformationChanged(MessagePtr message);
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		//void OnRotationChanged(MessagePtr message);
-		void OnLoad(MessagePtr message);
-		void OnCollisionSettings(MessagePtr message);
+		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void CreateODEGeomFromGeom(IGeometryComponent* geom, 
 											dSpaceID space,
 											dGeomID &id_vector,

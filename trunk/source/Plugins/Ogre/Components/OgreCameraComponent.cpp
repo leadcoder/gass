@@ -33,7 +33,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -71,14 +71,14 @@ namespace GASS
 	void OgreCameraComponent::OnCreate()
 	{
 		//priorty = 1 -> load this one after nodes
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreCameraComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_CAMERA_PARAMETER, MESSAGE_FUNC(OgreCameraComponent::OnParameter),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreCameraComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_CAMERA_PARAMETER, TYPED_MESSAGE_FUNC(OgreCameraComponent::OnParameter,CameraParameterMessage),1);
 	}
 
 
-	void OgreCameraComponent::OnLoad(MessagePtr message)
+	void OgreCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
@@ -100,31 +100,30 @@ namespace GASS
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 
-	void OgreCameraComponent::OnParameter(MessagePtr message)
+	void OgreCameraComponent::OnParameter(CameraParameterMessagePtr message)
 	{
-		SceneObject::CameraParameterType type = boost::any_cast<SceneObject::CameraParameterType>(message->GetData("Parameter"));
+		CameraParameterMessage::CameraParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case SceneObject::CAMERA_FOV:
+		case CameraParameterMessage::CAMERA_FOV:
 			{
-				float value = boost::any_cast<float>(message->GetData("Fov"));
+				float value = message->GetValue1();
 				SetFov(value);
 				
 			}
 			break;
-		case SceneObject::CAMERA_ORTHO_WIN_SIZE:
+		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
 			{
-				float value = boost::any_cast<float>(message->GetData("Size"));
-				//float w = boost::any_cast<float>(message->GetData("Width"));
+				float value = message->GetValue1();
 				if(m_Camera)
 					m_Camera->setOrthoWindowHeight(value);
 			}
 			break;
-		case SceneObject::CAMERA_CLIP_DISTANCE:
+		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
 			{
-				float farc = boost::any_cast<float>(message->GetData("Far"));
+				float farc = message->GetValue1();
 				SetFarClipDistance(farc);
-				float nearc = boost::any_cast<float>(message->GetData("Near"));
+				float nearc = message->GetValue2();
 				SetFarClipDistance(nearc);
 			}
 			break;

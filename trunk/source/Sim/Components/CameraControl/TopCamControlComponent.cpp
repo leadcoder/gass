@@ -36,14 +36,13 @@
 
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/Math/Quaternion.h"
 
 namespace GASS
 {
-	TopCamControlComponent::TopCamControlComponent() :
-		m_ZoomSpeed(5),
+	TopCamControlComponent::TopCamControlComponent() : m_ZoomSpeed(5),
 		m_MaxWindowSize(520),
 		m_MinWindowSize(10),
 		m_ControlSetting (NULL),
@@ -77,17 +76,17 @@ namespace GASS
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(TopCamControlComponent::PositionChange));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(TopCamControlComponent::RotationChange));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TopCamControlComponent::OnInit));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(TopCamControlComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, MESSAGE_FUNC(TopCamControlComponent::PositionChange));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, MESSAGE_FUNC(TopCamControlComponent::RotationChange));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TopCamControlComponent::OnInit));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(TopCamControlComponent::OnUnload));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 
-		m_ControlSetting->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( TopCamControlComponent::OnInput));
-		
+		m_ControlSetting->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( TopCamControlComponent::OnInput));
+
 		m_Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( TopCamControlComponent::OnChangeCamera));
+		m_Scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( TopCamControlComponent::OnChangeCamera));
 	}
 
 	TaskGroup TopCamControlComponent::GetTaskGroup() const
@@ -102,9 +101,8 @@ namespace GASS
 
 	void TopCamControlComponent::OnChangeCamera(MessagePtr message)
 	{
-		//if(message->m_FromID == (int) this)
-		//	return;
-		SceneObjectPtr cam_obj = boost::any_cast<SceneObjectPtr>(message->GetData("CameraObject"));
+		ChangeCameraMessagePtr cc_mess = boost::shared_static_cast<ChangeCameraMessage>(message);
+		SceneObjectPtr cam_obj = cc_mess->GetCamera();
 
 		if(GetSceneObject() == cam_obj)
 		{
@@ -117,20 +115,24 @@ namespace GASS
 	void TopCamControlComponent::PositionChange(MessagePtr message)
 	{
 		if(message->GetSenderID() != (int) this)
-		   m_Pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		{
+			PositionMessagePtr pos_mess = boost::shared_static_cast<PositionMessage>(message);
+			m_Pos = pos_mess->GetPosition();
+		}
 	}
 
 	void TopCamControlComponent::RotationChange(MessagePtr message)
 	{
-		
+
 	}
 
 	void TopCamControlComponent::OnInput(MessagePtr message)
 	{
 		if(!m_Active) 
 			return;
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		ControllerMessagePtr control_mess = boost::shared_static_cast<ControllerMessage>(message);
+		std::string name = control_mess->GetController();
+		float value = control_mess->GetValue();
 
 		if(name == "FreeCameraSpeedBoost")
 		{
@@ -158,10 +160,10 @@ namespace GASS
 		else if(name == "FreeCameraHeading")
 		{
 			m_ZoomInput = value;
-			
+
 		}
 	}
-	
+
 	void TopCamControlComponent::OnInit(MessagePtr message)
 	{
 	}
@@ -191,24 +193,13 @@ namespace GASS
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;
 
 		int from_id = (int)this;
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,from_id));
-		pos_msg->SetData("Position",m_Pos);
+		MessagePtr pos_msg(new PositionMessage(m_Pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,from_id));
-		
-		rot_msg->SetData("Rotation",Quaternion(m_Rot));
+		MessagePtr rot_msg(new RotationMessage(m_Rot,from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
-		MessagePtr cam_msg(new Message(SceneObject::OBJECT_RM_CAMERA_PARAMETER,from_id));
-		
-		cam_msg->SetData("Parameter",SceneObject::CAMERA_ORTHO_WIN_SIZE);
-		cam_msg->SetData("Size",m_CurrentWindowSize);
+		MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,from_id));
 		GetSceneObject()->PostMessage(cam_msg);
-
-		//m_ScrollUpInput = 0;
-		//m_ScrollDownInput = 0;
 	}
-
-	
 }

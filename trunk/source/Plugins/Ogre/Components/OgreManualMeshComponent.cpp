@@ -37,7 +37,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
@@ -64,13 +64,14 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(OgreManualMeshComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_MANUAL_MESH_PARAMETER,  MESSAGE_FUNC(OgreManualMeshComponent::OnParameterMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_MANUAL_MESH_DATA,  TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_CLEAR_MANUAL_MESH,  TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage),1);
 	}
 
-	void OgreManualMeshComponent::OnLoad(MessagePtr message)
+	void OgreManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
@@ -89,21 +90,16 @@ namespace GASS
 		
 	}
 
-	void OgreManualMeshComponent::OnParameterMessage(MessagePtr message)
+	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{
-		SceneObject::ManualMeshParameterType type = boost::any_cast<SceneObject::ManualMeshParameterType>(message->GetData("Parameter"));
-		switch(type)
-		{
-		case SceneObject::MESH_DATA:
-			{
-				ManualMeshDataPtr data = boost::any_cast<ManualMeshDataPtr>(message->GetData("Data"));
-				CreateMesh(data);
-			}
-			break;
-		case SceneObject::CLEAR:
-			Clear();
-			break;
-		}
+		ManualMeshDataPtr data = message->GetData();
+		CreateMesh(data);
+	}
+
+
+	void OgreManualMeshComponent::OnClearMessage(ClearManualMeshMessagePtr message)
+	{
+		Clear();
 	}
 
 	void OgreManualMeshComponent::Clear()

@@ -25,7 +25,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 
 class Ogre::ParticleSystem;
@@ -49,8 +49,8 @@ namespace GASS
 		void SetTimeToLive(float value) {m_TimeToLive = value;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLoad(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnParameterMessage(ParticleSystemParameterMessagePtr message);
 
 		std::string m_RenderQueue;
 		std::string m_ParticleTemplate;

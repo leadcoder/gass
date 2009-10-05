@@ -24,9 +24,10 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Sim/Scheduling/ITaskListener.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Utils/PIDControl.h"
 
 namespace GASS
@@ -51,12 +52,12 @@ namespace GASS
 		
 
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnPhysicsMessage(MessagePtr message);
-		void OnInput(MessagePtr message);
-		void OnTransMessage(MessagePtr message);
-		void OnGotoPosition(MessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnInput(AnyMessagePtr message);
+		void OnTransMessage(TransformationNotifyMessagePtr message);
+		void OnGotoPosition(AnyMessagePtr message);
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;

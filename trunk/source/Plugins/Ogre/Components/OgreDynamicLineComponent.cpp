@@ -38,7 +38,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -71,13 +71,12 @@ namespace GASS
 
 	void OgreDynamicLineComponent::OnCreate()
 	{
-		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OgreDynamicLineComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OgreDynamicLineComponent::OnLoad,LoadGFXComponentsMessage),1);
 	}
 
-	void OgreDynamicLineComponent::OnLoad(MessagePtr message)
+	void OgreDynamicLineComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 

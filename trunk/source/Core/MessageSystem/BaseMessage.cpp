@@ -17,33 +17,43 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#pragma once
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
-#include "Sim/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include <boost/any.hpp>
+#include "Core/MessageSystem/BaseMessage.h"
 
 namespace GASS
 {
-	class MessageManager;
-	class GASSExport SimSystemManager : public BaseSystemManager
+	BaseMessage::BaseMessage(MessageType type, SenderID sender_id, double delay) :
+			m_TypeID(type),
+			m_SenderID(sender_id),
+			m_Delay(delay)
 	{
-	public:
-		SimSystemManager();
-		virtual ~SimSystemManager();
-		void Init();
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
-	private:
-		MessageManager* m_SystemMessageManager;
-	};
+
+	}
+
+	BaseMessage::~BaseMessage()
+	{
+
+	}
+
+
+	SenderID BaseMessage::GetSenderID() const
+	{
+		return m_SenderID;
+	}
+
+	void BaseMessage::SetDeliverDelay(double delay)
+	{
+		m_Delay = delay;
+	}
+
+	MessageType BaseMessage::GetType() const
+	{
+		return m_TypeID;
+	}
+
+	double  BaseMessage::GetDeliverDelay() const
+	{
+		return m_Delay;
+	}
+
 }

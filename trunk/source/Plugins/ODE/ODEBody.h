@@ -22,7 +22,9 @@
 
 #include "Plugins/ODE/ODEGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Math/Vector.h"
+
 #include <ode/ode.h>
 namespace GASS
 {
@@ -84,10 +86,10 @@ namespace GASS
 
 		void BodyMoved();
 		void static BodyMovedCallback(dBodyID id);
-		void OnLoad(MessagePtr message);
-		void OnPositionChanged(MessagePtr message);
-		void OnRotationChanged(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
+		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnPositionChanged(PositionMessagePtr message);
+		void OnRotationChanged(RotationMessagePtr message);
+		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		dBodyID GetODEBody(){return m_ODEBody;}
 		
 		void DampenBody( dBodyID body, float vScale, float aScale );
@@ -100,27 +102,13 @@ namespace GASS
 		dSpaceID m_ODESecondarySpaceID;
 		dMass m_ODEMass;
 		float m_Mass;
-		float m_Density;
-		bool m_DynamicsEnabled;
-		bool m_ReenableIfInteractedWith;
-		bool m_CollisionEnabled;
 		bool m_Debug;
 		bool m_AutoDisable;
 		bool m_FastRotation;
-		float m_BounceCoeffRestitution;
-		float m_BounceVelocityThreshold;
-		float m_LinearVelDisableThreshold;
-		float m_AngularVelDisableThreshold;
-		float m_DisableTime;
-		float m_DisableTimeEnd;
-		float m_BodyMass;
-		Vec3 m_Center;
-		Vec3 m_MassOffset;
+		
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;
 		Vec3 m_AssymetricInertia;
-		bool m_MassInitialized;
-		bool m_Initialized;
 		bool m_EffectJoints;
 		Mat4 m_LastTrans;
 		MassRepresentationType m_MassRepresentation;

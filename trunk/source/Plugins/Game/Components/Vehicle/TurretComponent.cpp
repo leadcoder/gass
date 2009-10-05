@@ -23,7 +23,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -56,33 +56,26 @@ namespace GASS
 
 	void TurretComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(TurretComponent::OnLoad));
-		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
-		GetSceneObject()->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(TurretComponent::OnInput));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TurretComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(TurretComponent::OnInput,AnyMessage));
 	}
 
-	void TurretComponent::OnLoad(MessagePtr message)
+	void TurretComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		
 
 	}
 
-	void TurretComponent::OnInput(MessagePtr message)
+	void TurretComponent::OnInput(AnyMessagePtr message)
 	{
 		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
 		float value = boost::any_cast<float>(message->GetData("Value"));
 		if (name == "Yaw")
 		{
 			//send rotaion message to physics engine
-			MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
-			force_msg->SetData("Parameter",SceneObject::AXIS1_FORCE);
-			force_msg->SetData("Value",float(10));
-
-			MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
-
-			vel_msg->SetData("Parameter",SceneObject::AXIS1_VELOCITY);
-			vel_msg->SetData("Value",value);
-
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
+			
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
 		}

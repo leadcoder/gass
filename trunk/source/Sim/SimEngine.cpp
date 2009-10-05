@@ -22,7 +22,7 @@
 #include "Sim/Scheduling/TBBRuntimeController.h"
 #include "Core/PluginSystem/PluginManager.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/System/ISystemManager.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/Utils/Log.h"

@@ -27,7 +27,6 @@
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
 
-#include "Core/MessageSystem/MessageManager.h"
 #include <iostream>
 #include <iomanip>
 #include <tinyxml.h>

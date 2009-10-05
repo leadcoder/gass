@@ -25,7 +25,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 
 class Ogre::Entity;
@@ -59,8 +59,9 @@ namespace GASS
 		
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
-		void OnLoad(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnMeshFileNameMessage(MeshFileMessagePtr message);
+		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		
 		void SetTexCoordSpeed(const Vec2 &speed);
 

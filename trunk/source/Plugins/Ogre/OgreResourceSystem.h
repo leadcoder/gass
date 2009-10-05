@@ -22,6 +22,7 @@
 
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Utils/FilePath.h"
 
 #include "Core/MessageSystem/MessageType.h"
@@ -57,7 +58,7 @@ namespace GASS
 		void AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void LoadResourceGroup(const std::string &resource_group);
 	protected:
-		void OnInit(MessagePtr message);		
+		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		//std::string ExpandEnvVariables(const std::string &inStr);
 		//void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;

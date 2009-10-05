@@ -22,7 +22,7 @@
 #define SIM_SCENE_MANAGER_H
 
 #include <map>
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"

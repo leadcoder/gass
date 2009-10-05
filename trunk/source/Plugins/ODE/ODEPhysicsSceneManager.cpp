@@ -20,7 +20,7 @@
 #include <boost/bind.hpp>
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -79,18 +79,18 @@ namespace GASS
 	void ODEPhysicsSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad ));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
-		m_Scene->RegisterForMessage(ScenarioScene::SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage ));
+		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
+		m_Scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, TYPED_MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
 	}
 
-	void ODEPhysicsSceneManager::OnLoadSceneObject(MessagePtr message)
+	void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
 		//Initlize all physics components and send scene mananger as argument
-		SceneObjectPtr obj = boost::any_cast<SceneObjectPtr>(message->GetData("SceneObject"));
+		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr phy_msg(new Message(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,(int) this));
-		phy_msg->SetData("PhysicsSceneManager",boost::any(this));
+		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(this,(int) this));
+		//phy_msg->SetData("PhysicsSceneManager",boost::any(this));
 		obj->SendImmediate(phy_msg);
 	}
 
@@ -130,9 +130,9 @@ namespace GASS
 	}
 
 
-	void ODEPhysicsSceneManager::OnLoad(MessagePtr message)
+	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioScene* scene = boost::any_cast<ScenarioScene*>(message->GetData("ScenarioScene"));
+		ScenarioScene* scene = message->GetScenarioScene();
 
 		//dInitODE2(0);
 		m_Space = 0;

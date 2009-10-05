@@ -21,11 +21,8 @@
 #include "Core/System/BaseSystemManager.h"
 #include "Core/System/ISystem.h"
 #include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
 #include "Core/Utils/Log.h"
 #include "Core/Serialize/IXMLSerialize.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
 #include "tinyxml.h"
 
 

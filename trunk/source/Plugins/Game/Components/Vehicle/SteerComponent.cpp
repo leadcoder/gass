@@ -23,7 +23,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -56,31 +57,26 @@ namespace GASS
 
 	void SteerComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(SteerComponent::OnLoad));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(SteerComponent::OnLoad,LoadSimComponentsMessage));
 	}
 
-	void SteerComponent::OnLoad(MessagePtr message)
+	void SteerComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		parent->RegisterForMessage((SceneObject::ObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(SteerComponent::OnInput));
+		parent->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(SteerComponent::OnInput));
 	}
 
 	void SteerComponent::OnInput(MessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"))*m_MaxSteerVelocity;
+		AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
+		std::string name = boost::any_cast<std::string>(any_mess->GetData("Controller"));
+		float value = boost::any_cast<float>(any_mess->GetData("Value"))*m_MaxSteerVelocity;
 		if (name == "Steer")
 		{
 			//send rotaion message to physics engine
-			MessagePtr force_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
-			force_msg->SetData("Parameter",SceneObject::AXIS1_FORCE);
-			force_msg->SetData("Value",m_SteerForce);
-
-			MessagePtr vel_msg(new Message(SceneObject::OBJECT_RM_PHYSICS_JOINT_PARAMETER));
-
-			vel_msg->SetData("Parameter",SceneObject::AXIS1_VELOCITY);
-			vel_msg->SetData("Value",value);
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
 
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);

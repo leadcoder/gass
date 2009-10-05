@@ -27,7 +27,7 @@
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 #include <boost/bind.hpp>
 
@@ -65,12 +65,12 @@ namespace GASS
 	void OISInputSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED, MESSAGE_FUNC( OISInputSystem::OnInit),1);
+		GetSimSystemManager()->RegisterForMessage((SimSystemMessage)MainWindowCreatedNotifyMessage::MID, TYPED_MESSAGE_FUNC( OISInputSystem::OnInit,MainWindowCreatedNotifyMessage),1);
 	}
 
-	void OISInputSystem::OnInit(MessagePtr message)
+	void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
-		m_Window = boost::any_cast<int>(message->GetData("MainHandle"));
+		m_Window = message->GetMainHandle();
 		OIS::ParamList pl;
 		size_t windowHnd = m_Window;
 		std::ostringstream windowHndStr;

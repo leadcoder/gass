@@ -22,7 +22,7 @@
 #include "Plugins/Ogre/OgreResourceSystem.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
@@ -51,7 +51,7 @@ namespace GASS
 
 	void OgreResourceSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED, MESSAGE_FUNC( OgreResourceSystem::OnInit ));
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_NM_MAIN_WINDOW_CREATED, TYPED_MESSAGE_FUNC( OgreResourceSystem::OnInit,MainWindowCreatedNotifyMessage ));
 	}
 
 	void OgreResourceSystem::Update()
@@ -89,7 +89,7 @@ namespace GASS
 		}
 	}
 
-	void OgreResourceSystem::OnInit(MessagePtr message)
+	void OgreResourceSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
 		{

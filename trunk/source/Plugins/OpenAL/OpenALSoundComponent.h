@@ -5,9 +5,10 @@
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/ILightComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Vector.h"
 #include "al.h"
 #include "alc.h"
@@ -58,10 +59,10 @@ namespace GASS
 		void SetVelocity(const Vec3 &vel);
 
 		//Message functions
-		void OnPositionChanged(MessagePtr message);
-		void OnPhysicsUpdate(MessagePtr message);
-		void OnLoad(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
+		void OnPositionChanged(TransformationNotifyMessagePtr message);
+		void OnPhysicsUpdate(VelocityNotifyMessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnParameterMessage(SoundParameterMessagePtr message);
 
 		ALvoid DisplayALError(ALchar *szText, ALint errorcode);
 

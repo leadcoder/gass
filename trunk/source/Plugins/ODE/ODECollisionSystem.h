@@ -24,6 +24,7 @@
 #include <ode/ode.h>
 #include <map>
 #include "Sim/Systems/Collision/ICollisionSystem.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/System/BaseSystem.h"
 #include "tbb/spin_mutex.h"
 

@@ -31,7 +31,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -67,15 +67,14 @@ namespace GASS
 
 	void OgreMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS,  MESSAGE_FUNC(OgreMeshComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_MESH_PARAMETER,  MESSAGE_FUNC(OgreMeshComponent::OnParameterMessage));
-
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_MESH_FILE,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXTURE_COORDINATES,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage));
 	}
 
-	void OgreMeshComponent::OnLoad(MessagePtr message)
+	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OgreGraphicsSceneManager* ogsm = static_cast<OgreGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(ogsm);
 		m_ReadyToLoadMesh = true;
 		SetFilename(m_Filename);
@@ -351,24 +350,15 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::OnParameterMessage(MessagePtr message)
+	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		SceneObject::MeshParameterType type = boost::any_cast<SceneObject::MeshParameterType>(message->GetData("Parameter"));
-		switch(type)
-		{
-		case SceneObject::ANIMATE_TEX_COORD:
-			{
-				Vec2 speed = boost::any_cast<Vec2>(message->GetData("Speed"));
-				SetTexCoordSpeed(speed);
-				//std::cout << "x" << speed.x << " y" << speed.y << std::endl;
-			}
-			break;
-		case SceneObject::CHANGE_MESH:
-			{
-				std::string name = boost::any_cast<std::string>(message->GetData("MeshName"));
-				SetFilename(name);
-			}
-			break;		
-		}
+		std::string name = message->GetFileName();
+		SetFilename(name);
+	}
+
+	void OgreMeshComponent::OnTexCoordMessage(TextureCoordinateMessagePtr message)
+	{
+		Vec2 uv = message->GetTextureCoordinates();
+		SetTexCoordSpeed(uv);
 	}
 }
