@@ -32,10 +32,8 @@
 namespace GASS
 {
 	/**
-		Base class for all AnyMessages in the AnyMessage system.
-		If you want to make custom AnyMessages you should derive 
-		from this class. Note however by using boost::any this 
-		class support custom data, see setData for details.  
+		Implementaion of the IMessage interface that use
+		boost::any to support any kind of data, see setData for details.  
 	*/
 
 	class GASSCoreExport AnyMessage : public IMessage
@@ -56,6 +54,8 @@ namespace GASS
 		To get the actual data you have to know what kind
 		of data is connected to the name, and then use boost::any_cast
 		get hold of it.
+		Note: If you try to get data that not exist a 
+		error is logged and the program will exit.
 		*/
 		boost::any GetData(const std::string &data_name);
 		
@@ -73,6 +73,10 @@ namespace GASS
 
 		void SetDeliverDelay(double delay);
 
+
+		/**	
+		Get delay (in seconds) util message is delivered.
+		*/
 		double  GetDeliverDelay() const;
 
 

@@ -35,6 +35,13 @@ namespace GASS
 	typedef int MessageType;
 	typedef int SenderID;
 
+
+	/**
+	Message interface that all messages should implement.
+	Most of the methods of this interface is a product of what message manager
+	needs to know about a message during message proccessing.
+	*/
+
 	class GASSCoreExport IMessage
 	{
 	public:
@@ -68,18 +75,45 @@ namespace GASS
 	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
 	
 	typedef boost::shared_ptr<IMessage> MessagePtr;
+
+	/**
+
+		Message function interface that is used by the message manager.
+	*/
 	class IMessageFunc
 	{
 	public:
 		virtual ~IMessageFunc(){};
+		/*
+		Fire is called by the message manager when a message is being delivered
+		*/
 		virtual void Fire(MessagePtr message) = 0;
+
+		/*
+		This operator is used by the message manager to identify message functions
+		*/
 		virtual bool operator== (MessageFuncPtr func) const = 0;
+		
+		
+		/*
+		This function should return a pointer to the object the class callback belongs to
+		*/
 		virtual void* GetObjectPtr() const = 0;
+		
+		/*
+		This function should return a pointer to the actual callback function
+		*/
 		virtual void* GetFuncPtr() const  = 0;
 	};
 
 	
 	
+	/**
+	Template based implementation of the message function interface. 
+	This template class is used to create message function objects for 
+	specific message types. The template paramerer  MESSAGE_TYPE, 
+	specify what kind of message the callback takes as argument. 
+	*/
 	template <class MESSAGE_TYPE>
 	class MessageFunc : public IMessageFunc
 	{
@@ -97,9 +131,15 @@ namespace GASS
 		{
 		}
 
+		/*
+		Implements the Fire function of the IMessageFunc interface. 
+		In this implementation the message is casted to the message type
+		specified by the template argument MESSAGE_TYPE
+		*/
 		void Fire(MessagePtr message)
 		{
 			//cast to this message type
+			//TODO: should we use dynamic cast instead so messages of incorrect type can be spotted?
 			boost::shared_ptr<MESSAGE_TYPE> typed_mess = boost::shared_static_cast<MESSAGE_TYPE>(message);
 			m_Func(typed_mess);
 		}
@@ -121,7 +161,6 @@ namespace GASS
 		void* m_Object;
 		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
 	};
-
 
 	//Standard message function
 #define MESSAGE_FUNC(FUNCTION) MessageFuncPtr(new GASS::MessageFunc<IMessage>(boost::bind( &FUNCTION, this, _1 ),this))

@@ -31,6 +31,12 @@
 
 namespace GASS
 {
+	/**
+	Message implementation that can be used to send messages without any data 
+	besides the default data needed to support the IMessage interface.
+	This class can also serve as a convenience class that custom message implementations
+	can inherit from
+	*/
 	class GASSCoreExport BaseMessage : public IMessage
 	{
 	public:

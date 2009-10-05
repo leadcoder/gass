@@ -34,7 +34,7 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
 
 
 #include "Core/PluginSystem/PluginManager.h"
@@ -156,16 +156,16 @@ int main(int argc, char* argv[])
 		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 		if(scene_object)
 		{
-			boost::shared_ptr<GASS::Message> pos_msg(new GASS::Message(GASS::SceneObject::OBJECT_RM_POSITION));
+			
 			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
 			pos.x = pos.x + i*7;
 			pos.y = 11;
-			pos_msg->SetData("Position",pos);
+			boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
 			scene_object->SendImmediate(pos_msg);
 
 			if(i==0)
 			{
-				boost::shared_ptr<GASS::Message> enter_msg(new GASS::Message((GASS::SceneObject::ObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
+				boost::shared_ptr<GASS::IMessage> enter_msg(new GASS::AnyMessage((GASS::SceneObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
 				scene_object->PostMessage(enter_msg);
 
 				GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
