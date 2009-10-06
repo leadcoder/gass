@@ -89,10 +89,13 @@ namespace GASS
 		*/
 		virtual void Fire(MessagePtr message) = 0;
 
+		
+
+
 		/*
 		This operator is used by the message manager to identify message functions
 		*/
-		virtual bool operator== (MessageFuncPtr func) const = 0;
+		virtual bool operator== (const IMessageFunc &func) const = 0;
 		
 		
 		/*
@@ -143,10 +146,10 @@ namespace GASS
 			boost::shared_ptr<MESSAGE_TYPE> typed_mess = boost::shared_static_cast<MESSAGE_TYPE>(message);
 			m_Func(typed_mess);
 		}
-		bool operator== (MessageFuncPtr func) const
+		bool operator== (const IMessageFunc &func) const
 		{
-			return (func->GetObjectPtr() == m_Object) && 
-				(m_Func.functor.func_ptr == func->GetFuncPtr());
+			return (func.GetObjectPtr() == m_Object) && 
+				(m_Func.functor.func_ptr == func.GetFuncPtr());
 		}
 		void* GetObjectPtr() const
 		{

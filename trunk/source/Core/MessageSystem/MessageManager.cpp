@@ -94,7 +94,7 @@ namespace GASS
 		{
 
 			//if((*msg_reg)->m_Callback == callback)
-			if((*msg_reg)->m_Callback == callback)
+			if(*(*msg_reg)->m_Callback == *callback)
 			{
 				return 1;
 			}
@@ -125,7 +125,7 @@ namespace GASS
 
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			if((*msg_reg)->m_Callback == callback)
+			if(*(*msg_reg)->m_Callback == *callback)
 			{
 				delete (*msg_reg);
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
