@@ -31,7 +31,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -70,8 +70,8 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad),1);
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(ScenarioScene::SCENARIO_NM_CAMERA_CHANGED,  MESSAGE_FUNC(AdvantageTerrainComponent::OnChangeCamera));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_NM_CAMERA_CHANGED,  TYPED_MESSAGE_FUNC(AdvantageTerrainComponent::OnChangeCamera,CameraChangedNotifyMessage));
 		
 	}
 
@@ -89,18 +89,18 @@ namespace GASS
 
 	}
 
-	void AdvantageTerrainComponent::OnChangeCamera(MessagePtr message)
+	void AdvantageTerrainComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
 	{
 		if(mAVTerrainSceneMgr)
 		{
-			Ogre::Camera* ocam = boost::any_cast<Ogre::Camera*>(message->GetData("OgreCamera"));
+			Ogre::Camera* ocam = static_cast<Ogre::Camera*>(message->GetUserData());
 			mAVTerrainSceneMgr->setPrimaryCamera(ocam);
 			float viewRange = ocam->getFarClipDistance();//Root::Get().GetLevel()->GetViewDist();
 			mAVTerrainSceneMgr->setViewRange(viewRange);
 		}
 	}
 
-	void AdvantageTerrainComponent::OnLoad(MessagePtr message)
+	void AdvantageTerrainComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
 		assert(rs);
@@ -109,7 +109,7 @@ namespace GASS
 		if(!rs->GetFullPath(GetFilename(),full_path))
 			Log::Error("Faild to load terrain %s",GetFilename().c_str());
 
-		Ogre::SceneManager* sm = boost::any_cast<Ogre::SceneManager*>(message->GetData("OgreSceneManager"));
+		Ogre::SceneManager* sm = static_cast<Ogre::SceneManager*>(message->GetUserData());
 		mAVTerrainSceneMgr = static_cast<Ogre::AVTerrainSceneManager*>(sm);
 		std::string base_path = Misc::RemoveFilename(full_path);
 

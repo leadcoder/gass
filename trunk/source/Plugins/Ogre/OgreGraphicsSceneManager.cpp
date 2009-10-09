@@ -205,7 +205,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(this));
+		MessagePtr gfx_msg(new LoadGFXComponentsMessage(this,m_SceneMgr));
 		//gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
 		//gfx_msg->SetData("OgreSceneManager",boost::any(m_SceneMgr));
 		obj->SendImmediate(gfx_msg);

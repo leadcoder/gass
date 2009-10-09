@@ -68,32 +68,32 @@ namespace GASS
 
 	void PhysXGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  MESSAGE_FUNC(PhysXGeometry::OnLoad ),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED,  MESSAGE_FUNC(PhysXGeometry::OnTransformationChanged ));
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_COLLISION_SETTINGS,  MESSAGE_FUNC(PhysXGeometry::OnCollisionSettings ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnLoad, LoadPhysicsComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnTransformationChanged, TransformationNotifyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_COLLISION_SETTINGS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnCollisionSettings,CollisionSettingsMessage ));
 	}
 
-	void PhysXGeometry::OnTransformationChanged(MessagePtr message)
+	void PhysXGeometry::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
 
-		Quaternion rot = boost::any_cast<Quaternion>(message->GetData("Rotation"));
+		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
 	}
 
-	void PhysXGeometry::OnCollisionSettings(MessagePtr message)
+	void PhysXGeometry::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
-		bool value = boost::any_cast<bool>(message->GetData("Enable"));
+		bool value = message->EnableCollision();
 		if(value)
 			Enable();
 		else
 			Disable();
 	}
 
-	void PhysXGeometry::OnLoad(MessagePtr message)
+	void PhysXGeometry::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = boost::any_cast<PhysXPhysicsSceneManager*>(message->GetData("PhysicsSceneManager"));
+		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
 		//m_Body = GetSceneObject()->GetFirstComponent<PhysXBody>().get();
@@ -151,7 +151,12 @@ namespace GASS
 			break;
 		case PGT_CYLINDER:
 			{
-
+				NxCapsuleShapeDesc capsuleDesc;
+	
+				NxCapsuleShapeDesc* capDesc = new NxCapsuleShapeDesc();
+				capDesc->radius = std::max(bb_size.x/2.f,bb_size.y/2.f);
+				capDesc->height = bb_size.z-capDesc->radius;
+				
 				geom_offset = box.m_Max + box.m_Min;
 				geom_offset = geom_offset*0.5f;
 
@@ -163,8 +168,9 @@ namespace GASS
 			break;
 		case PGT_SPHERE:
 			{
-				geom_offset = box.m_Max + box.m_Min;
-				geom_offset = geom_offset*0.5f;
+				NxSphereShapeDesc* sphereDesc = new NxSphereShapeDesc();
+				sphereDesc->radius = sphere.m_Radius;
+				shape = sphereDesc;
 				//geom_id  = dCreateSphere(0, sphere.m_Radius);
 			}
 			break;

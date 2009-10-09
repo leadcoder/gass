@@ -188,6 +188,7 @@ namespace GASS
 
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
+		  void* GetUserData() const {return m_UserData;}
 	private:
 		SceneObjectPtr m_Camera;
 		void *m_UserData;

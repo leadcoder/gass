@@ -21,8 +21,9 @@
 #pragma once
 
 #include <map>
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"
 
@@ -47,9 +48,9 @@ namespace GASS
 
 	protected:
 		void Update(double delta);
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnLoadSceneObject(MessagePtr message);
+		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		void SetTaskGroup(TaskGroup value);

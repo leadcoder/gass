@@ -17,7 +17,8 @@
 
 #include "NxPhysics.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
 
@@ -61,10 +62,9 @@ class IGeometryComponent;
 		 void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
-		void OnTransformationChanged(MessagePtr message);
-		//void OnRotationChanged(MessagePtr message);
-		void OnLoad(MessagePtr message);
-		void OnCollisionSettings(MessagePtr message);
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void SetOffset(const Vec3 &value){m_Offset = value;}
 		Vec3 GetOffset() const {return m_Offset;}
 		void SetGeometryType(const std::string &geom_type);

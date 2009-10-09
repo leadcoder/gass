@@ -473,11 +473,13 @@ namespace GASS
 	class LoadGFXComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadGFXComponentsMessage(BaseSceneManager* gfx_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, sender_id , delay), m_GFXSceneManager(gfx_scene_manager){}
+		LoadGFXComponentsMessage(BaseSceneManager* gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
 		  BaseSceneManager* GetGFXSceneManager() const {return m_GFXSceneManager;}
+		  void* GetUserData() const {return m_UserData;}
 	private:
 		BaseSceneManager* m_GFXSceneManager;
+		void *m_UserData;
 	};
 	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
 

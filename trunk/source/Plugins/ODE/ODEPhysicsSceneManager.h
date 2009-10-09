@@ -29,10 +29,7 @@
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"
 
-namespace Ogre
-{
-	class VertexData;
-}
+
 namespace GASS
 {
 	class IMeshComponent;

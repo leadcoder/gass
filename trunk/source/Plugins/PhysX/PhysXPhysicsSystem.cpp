@@ -16,14 +16,19 @@
 #include "PhysXGeometry.h"
 
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Core/System/SystemFactory.h"
+#include "Sim/Scenario/Scene/SceneManagerFactory.h"
+#include "Sim/Systems/SimSystemManager.h"
+
+
 #include "NxPhysics.h"
 
-#include "UserAllocator.h"
+#include "SDKUtils/UserAllocator.h"
 #include "Core/Utils/Log.h"
-#include "ErrorStream.h"
-#include "Stream.h"
-#include "Utilities.h"
-#include "cooking.h"
+#include "SDKUtils/ErrorStream.h"
+#include "SDKUtils/Stream.h"
+#include "SDKUtils/Utilities.h"
+#include "SDKUtils/cooking.h"
 
 namespace GASS
 {
@@ -37,32 +42,75 @@ namespace GASS
 
 	}
 
+	void PhysXPhysicsSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, ISystem>);
+	}
+
+	void PhysXPhysicsSystem::OnCreate()
+	{
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC( PhysXPhysicsSystem::OnInit));
+	}
 
 	void PhysXPhysicsSystem::OnInit(MessagePtr message)
 	{
 		// Initialize PhysicsSDK
 		NxPhysicsSDKDesc desc;
-	UserAllocator*	  gAllocator  = NULL;	
+		/*UserAllocator*	  gAllocator  = NULL;	
 		// Create a memory allocator
-    if (!gAllocator)
-	{
+		if (!gAllocator)
+		{
 		gAllocator = new UserAllocator;
 		assert(gAllocator);
-	}
-	
-	// Create the physics SDK
-	NxSDKCreateError errorCode;
-    m_PhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, gAllocator,new ErrorStream(), desc, &errorCode);
-    if (!m_PhysicsSDK)  return;
+		}*/
 
-	// Set the physics parameters
-	m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.01);
+		// Create the physics SDK
+		NxSDKCreateError errorCode;
+		m_PhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL,new ErrorStream(), desc, &errorCode);
+		//if (!m_PhysicsSDK)  
+		{
+			switch(errorCode)
+			{
+			case NXCE_NO_ERROR:
+				Log::Print("No errors occurred when creating the Physics SDK");
+				break;
+			case NXCE_PHYSX_NOT_FOUND:
+				Log::Error("Unable to find the PhysX libraries. The PhysX drivers are not installed correctly.");
+				break;
 
-	// Set the debug visualization parameters
-	m_PhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 1);
-	m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_SHAPES, 1);
-	m_PhysicsSDK->setParameter(NX_VISUALIZE_ACTOR_AXES, 1);
-	m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_FNORMALS, 1);
+			case NXCE_WRONG_VERSION:
+				Log::Error("The application supplied a version number that does not match with the libraries.");
+				break;
+
+			case NXCE_DESCRIPTOR_INVALID:
+				Log::Error("The supplied SDK descriptor is invalid.");
+				break;
+
+			case NXCE_CONNECTION_ERROR:
+				Log::Error("A PhysX card was found, but there are problems when communicating with the card.");
+				break;
+
+			case NXCE_RESET_ERROR:
+				Log::Error("A PhysX card was found, but it did not reset (or initialize) properly.");
+				break;
+
+			case NXCE_IN_USE_ERROR:
+				Log::Error("A PhysX card was found, but it is already in use by another application.");
+				break;
+
+			case NXCE_BUNDLE_ERROR:
+				Log::Error("A PhysX card was found, but there are issues with loading the firmware.");
+				break;
+			}
+		}
+		// Set the physics parameters
+		m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.01);
+
+		// Set the debug visualization parameters
+		m_PhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 1);
+		m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_SHAPES, 1);
+		m_PhysicsSDK->setParameter(NX_VISUALIZE_ACTOR_AXES, 1);
+		m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_FNORMALS, 1);
 
 
 		//m_PhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, new ErrorStream(), desc, &errorCode);
@@ -104,7 +152,7 @@ namespace GASS
 		NxMaterialIndex* materials = new NxMaterialIndex[indexCount];
 
 		NxMaterialIndex currentMaterialIndex = 0;
-//		bool use32bitindexes;
+		//		bool use32bitindexes;
 
 		for(unsigned int  i = 0;  i < mesh_data->NumVertex;i++)
 		{
@@ -114,7 +162,7 @@ namespace GASS
 
 		for(unsigned int  i = 0;  i < mesh_data->NumFaces;i++)
 		{
-//			materials[i] = mesh_data->MatIDVector[i];
+			//			materials[i] = mesh_data->MatIDVector[i];
 			meshFaces[i] = mesh_data->FaceVector[i]; 
 		}
 
@@ -183,7 +231,7 @@ namespace GASS
 		col_mesh.NxMesh = trimesh;
 		col_mesh.Mesh = mesh_data;
 		m_ColMeshMap[col_mesh_name] = col_mesh;
-		
+
 		delete []meshVertices;
 		delete []meshFaces;
 		delete []materials;
@@ -200,5 +248,4 @@ namespace GASS
 		}
 		return false;
 	}
-	
 }

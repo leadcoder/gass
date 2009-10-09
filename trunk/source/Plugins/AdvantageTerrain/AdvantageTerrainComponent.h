@@ -22,7 +22,9 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/AnyMessage.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include <OgreRenderTargetListener.h>
 
 namespace Ogre
@@ -61,8 +63,8 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 	protected:
-		void AdvantageTerrainComponent::OnChangeCamera(MessagePtr message);
-		void OnLoad(MessagePtr message);
+		void AdvantageTerrainComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::AVTerrainSceneManager* mAVTerrainSceneMgr;
 		Vec3 m_WorldMin;
 		Vec3 m_WorldMax;

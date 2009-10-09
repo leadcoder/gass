@@ -22,6 +22,7 @@
 
 #include "Plugins/PhysX/PhysXGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Math/Vector.h"
 namespace GASS
 {
@@ -84,15 +85,10 @@ namespace GASS
 		Quaternion GetRotation();
 
 		void BodyMoved();
-		//void static BodyMovedCallback(dBodyID id);
-		void OnLoad(MessagePtr message);
-		void OnPositionChanged(MessagePtr message);
-		void OnRotationChanged(MessagePtr message);
-		void OnParameterMessage(MessagePtr message);
-		//dBodyID GetPhysXBody(){return m_PhysXBody;}
-		//void DampenBody( dBodyID body, float vScale, float aScale );
-
-		
+		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnPositionChanged(PositionMessagePtr message);
+		void OnRotationChanged(RotationMessagePtr message);
+		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		
 	protected:
 		float m_Mass;
