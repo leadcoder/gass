@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\PhysXLoader\include&quot;;../Source;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Physics\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Foundation\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\Samples\SampleCommonCode\src&quot;;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\PhysXLoader\include&quot;;../Source;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Physics\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Foundation\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Cooking\include&quot;;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;dDOUBLE;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,10 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib ode_doubled.lib tinyxmld.lib tbb_debug.lib"
+				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib tbb_debug.lib NxCooking.lib &#x0A;PhysXLoader.lib"
 				OutputFile="$(OutDir)\GASSPluginPhysX_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;..\dependencies\tinyxml\lib;..\dependencies\ode\lib\$(ConfigurationName)DoubleLib;..\dependencies\tbb\ia32\vc8\lib"
+				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;..\dependencies\tinyxml\lib;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\Tools\CookedMesh\Reader\lib&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\lib\Win32&quot;;..\dependencies\tbb\ia32\vc8\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
 				SubSystem="2"
@@ -230,6 +230,46 @@
 						RelativePath="..\source\Plugins\PhysX\PhysXPhysicsSystem.h"
 						>
 					</File>
+					<Filter
+						Name="Utils"
+						>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\cooking.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\cooking.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\Stream.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\Stream.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\Terrain.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\Terrain.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\UserAllocator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\UserAllocator.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\PhysX\SDKUtils\Utilities.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>
