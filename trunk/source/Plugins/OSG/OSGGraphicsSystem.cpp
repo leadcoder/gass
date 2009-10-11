@@ -51,7 +51,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/IInputSystem.h"

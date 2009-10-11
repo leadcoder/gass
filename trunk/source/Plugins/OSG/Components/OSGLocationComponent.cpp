@@ -26,7 +26,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
@@ -64,16 +64,16 @@ namespace GASS
 
 	void OSGLocationComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLocationComponent::OnLoad),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_POSITION, MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_WORLD_ROTATION, MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_VISIBILITY,  MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage ),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnLoad,LoadGFXComponentsMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage,PositionMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage,RotationMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage ),0);
 		
 	}
 
-	void OSGLocationComponent::OnLoad(MessagePtr message)
+	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		assert(osg_sm);
@@ -103,9 +103,9 @@ namespace GASS
 		GetSceneObject()->PostMessage(rot_msg);
 	}
 
-	void OSGLocationComponent::OnPositionMessage(MessagePtr message)
+	void OSGLocationComponent::OnPositionMessage(PositionMessagePtr message)
 	{
-		Vec3 value = boost::any_cast<Vec3>(message->GetData("Position"));
+		Vec3 value = message->GetPosition();
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
@@ -115,9 +115,9 @@ namespace GASS
 	}
 
 	
-	void OSGLocationComponent::OnRotationMessage(MessagePtr message)
+	void OSGLocationComponent::OnRotationMessage(RotationMessagePtr message)
 	{
-		Quaternion value = (boost::any_cast<Quaternion>(message->GetData("Rotation")));
+		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
 		{
 			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);

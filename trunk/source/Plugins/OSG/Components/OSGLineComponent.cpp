@@ -26,7 +26,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
@@ -65,14 +65,14 @@ namespace GASS
 
 	void OSGLineComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGLineComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGLineComponent::OnLoad,LoadGFXComponentsMessage),1);
 	}
 
-	void OSGLineComponent::OnLoad(MessagePtr message)
+	void OSGLineComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		assert(sm);
-	
+		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+		assert(osgsm);
+
 		m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();
 

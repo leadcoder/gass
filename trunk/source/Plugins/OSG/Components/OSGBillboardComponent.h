@@ -25,7 +25,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 
 
 class osg::Billboard;
@@ -57,7 +57,7 @@ namespace GASS
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);
 
 		std::string m_Material;

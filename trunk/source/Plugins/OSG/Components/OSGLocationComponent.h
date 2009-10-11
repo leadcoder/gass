@@ -26,7 +26,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Core/MessageSystem/IMessage.h"
 
 
 namespace Ogre
@@ -62,9 +63,9 @@ namespace GASS
 		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	protected:
-		void OnLoad(MessagePtr message);
-		void OnPositionMessage(MessagePtr message);
-		void OnRotationMessage(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnPositionMessage(PositionMessagePtr message);
+		void OnRotationMessage(RotationMessagePtr  message);
 		void OnVisibilityMessage(MessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;

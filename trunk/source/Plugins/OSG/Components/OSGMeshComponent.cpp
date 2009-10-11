@@ -24,7 +24,7 @@
 #include "Core/Utils/Log.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"

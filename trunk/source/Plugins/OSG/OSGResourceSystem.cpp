@@ -23,7 +23,7 @@
 #include "Plugins/OSG/OSGResourceSystem.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Systems/SimSystemManager.h"
 

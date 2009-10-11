@@ -23,7 +23,8 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/Message.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Core/MessageSystem/IMessage.h"
 
 
 namespace GASS
@@ -39,9 +40,9 @@ namespace GASS
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 
 	protected:
-		void OnPositionChanged(MessagePtr message);
-		void OnRotationChanged(MessagePtr message);
-		void OnLoad(MessagePtr message);
+		void OnPositionChanged(PositionMessagePtr message);
+		void OnRotationChanged(RotationMessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void UpdateFromLocation();
 	
 		osg::Camera* m_OSGCamera;

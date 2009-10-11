@@ -32,7 +32,7 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
@@ -64,20 +64,17 @@ namespace GASS
 
 	void OSGCameraComponent::OnCreate()
 	{
-		
-		
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGCameraComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_POSITION, MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged),10);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_ROTATION, MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged),10);
-		//mm->RegisterForMessage(ScenarioScene::SM_MESSAGE_UPDATE, MESSAGE_FUNC(OSGCameraComponent::OnUpdate),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged,PositionMessage),10);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged,RotationMessage),10);
 	}
 
-	void OSGCameraComponent::OnPositionChanged(MessagePtr message)
+	void OSGCameraComponent::OnPositionChanged(PositionMessagePtr message)
 	{
 		UpdateFromLocation();
 	}
 
-	void OSGCameraComponent::OnRotationChanged(MessagePtr message)
+	void OSGCameraComponent::OnRotationChanged(RotationMessagePtr message)
 	{
 		UpdateFromLocation();
 	}
@@ -139,10 +136,10 @@ namespace GASS
 			return false;
 	}
 
-	void OSGCameraComponent::OnLoad(MessagePtr message)
+	void OSGCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		assert(osg_sm);
+		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+		assert(osgsm);
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
