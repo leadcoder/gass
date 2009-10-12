@@ -96,8 +96,6 @@ namespace GASS
 		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
-		//m_Body = GetSceneObject()->GetFirstComponent<PhysXBody>().get();
-
 		boost::shared_ptr<IGeometryComponent> geom;
 		if(m_GeometryTemplate != "")
 		{
@@ -154,7 +152,7 @@ namespace GASS
 				NxCapsuleShapeDesc capsuleDesc;
 	
 				NxCapsuleShapeDesc* capDesc = new NxCapsuleShapeDesc();
-				capDesc->radius = std::max(bb_size.x/2.f,bb_size.y/2.f);
+				capDesc->radius = max(bb_size.x/2.f,bb_size.y/2.f);
 				capDesc->height = bb_size.z-capDesc->radius;
 				
 				geom_offset = box.m_Max + box.m_Min;

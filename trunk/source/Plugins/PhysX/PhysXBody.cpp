@@ -36,10 +36,6 @@ namespace GASS
 {
 	PhysXBody::PhysXBody() :
 		
-		m_Center(0,0,0),
-		m_MassOffset(0,0,0),
-		m_AutoDisable(true),
-		m_FastRotation(true),
 		m_SceneManager(NULL),
 		m_MassRepresentation(MR_GEOMETRY),
 		m_Mass(1)
@@ -93,11 +89,12 @@ namespace GASS
 
 	void PhysXBody::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
+
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
-		//wake body!!
-		Enable();
 		Vec3 value = message->GetValue();
 
+		//wake body!!
+		Enable();
 		switch(type)
 		{
 		case PhysicsBodyMessage::FORCE:
@@ -115,7 +112,6 @@ namespace GASS
 				SetVelocity(value,true);
 				break;
 			}
-
 		}
 	}
 
@@ -134,7 +130,7 @@ namespace GASS
 	void PhysXBody::BodyMoved()
 	{
 		int from_id = (int)this; //use address as id
-		
+
 		MessagePtr pos_msg(new PositionMessage(GetPosition(),from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 

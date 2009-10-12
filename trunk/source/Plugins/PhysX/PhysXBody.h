@@ -93,28 +93,13 @@ namespace GASS
 	protected:
 		float m_Mass;
 		float m_Density;
-		bool m_DynamicsEnabled;
-		bool m_ReenableIfInteractedWith;
-		bool m_CollisionEnabled;
 		bool m_Debug;
-		bool m_AutoDisable;
-		bool m_FastRotation;
-		float m_BounceCoeffRestitution;
-		float m_BounceVelocityThreshold;
-		float m_LinearVelDisableThreshold;
-		float m_AngularVelDisableThreshold;
-		float m_DisableTime;
-		float m_DisableTimeEnd;
 		float m_BodyMass;
-		Vec3 m_Center;
-		Vec3 m_MassOffset;
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;
 		Vec3 m_AssymetricInertia;
-		bool m_MassInitialized;
 		bool m_Initialized;
 		bool m_EffectJoints;
-		Mat4 m_LastTrans;
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManager* m_SceneManager;
 

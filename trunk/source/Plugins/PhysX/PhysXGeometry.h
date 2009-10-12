@@ -56,10 +56,9 @@ class IGeometryComponent;
 
 	protected:
 		void CreateShape(IGeometryComponent* geom, PhysXBody* body);
-		 //void CreateNXShapeFromGeom(IGeometryComponent* geom,NxActorDesc &actorDesc, PhysXBody* body);
-		 NxActorDesc m_StaticActorDesc;
+		NxActorDesc m_StaticActorDesc;
 	
-		 void SetPosition(const Vec3 &pos);
+		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);

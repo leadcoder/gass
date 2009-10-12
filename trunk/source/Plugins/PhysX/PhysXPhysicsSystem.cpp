@@ -22,7 +22,6 @@
 
 
 #include "NxPhysics.h"
-
 #include "SDKUtils/UserAllocator.h"
 #include "Core/Utils/Log.h"
 #include "SDKUtils/ErrorStream.h"
