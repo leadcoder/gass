@@ -131,8 +131,8 @@ namespace GASS
 
 	void ODEJoint::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC( ODEJoint::OnLoad,LoadPhysicsComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_JOINT_PARAMETER,  TYPED_MESSAGE_FUNC( ODEJoint::OnParameterMessage,PhysicsJointMessage));
+		REGISTER_OBJECT_MESSAGE_CLASS(ODEJoint::OnLoad,LoadPhysicsComponentsMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS(ODEJoint::OnParameterMessage,PhysicsJointMessage,0);
 	}
 
 

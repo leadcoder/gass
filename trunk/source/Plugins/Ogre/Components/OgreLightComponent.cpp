@@ -72,7 +72,7 @@ namespace GASS
 
 	void OgreLightComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreLightComponent::OnLoad,LoadGFXComponentsMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreLightComponent::OnLoad,LoadGFXComponentsMessage,1);
 	}
 
 

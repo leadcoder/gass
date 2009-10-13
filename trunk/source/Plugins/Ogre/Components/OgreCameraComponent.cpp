@@ -71,8 +71,8 @@ namespace GASS
 	void OgreCameraComponent::OnCreate()
 	{
 		//priorty = 1 -> load this one after nodes
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreCameraComponent::OnLoad,LoadGFXComponentsMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_CAMERA_PARAMETER, TYPED_MESSAGE_FUNC(OgreCameraComponent::OnParameter,CameraParameterMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreCameraComponent::OnLoad,LoadGFXComponentsMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreCameraComponent::OnParameter,CameraParameterMessage,1);
 	}
 
 

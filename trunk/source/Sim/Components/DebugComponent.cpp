@@ -42,8 +42,8 @@ namespace GASS
 
 	void DebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC( DebugComponent::OnLoad),2);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_SCENE_OBJECT_NAME, MESSAGE_FUNC(DebugComponent::OnChangeName));
+		REGISTER_OBJECT_MESSAGE_TYPE(DebugComponent::OnLoad,OBJECT_RM_LOAD_SIM_COMPONENTS,2);
+		REGISTER_OBJECT_MESSAGE_TYPE(DebugComponent::OnChangeName,OBJECT_RM_SCENE_OBJECT_NAME,0);
 	}
 
 	bool DebugComponent::GetShowNodeName() const

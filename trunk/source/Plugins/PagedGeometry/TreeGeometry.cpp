@@ -258,7 +258,7 @@ namespace GASS
 
 	void TreeGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS,  TYPED_MESSAGE_FUNC(TreeGeometry::OnLoad,LoadGFXComponentsMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(TreeGeometry::OnLoad,LoadGFXComponentsMessage,1);
 	}
 
 	void TreeGeometry::LoadDensityMap(const std::string &mapFile, int channel)

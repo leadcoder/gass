@@ -69,8 +69,8 @@ namespace GASS
 
 	void OgreParticleSystemComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreParticleSystemComponent::OnLoad,LoadGFXComponentsMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_PARTICLE_SYSTEM_PARAMETER, TYPED_MESSAGE_FUNC( OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreParticleSystemComponent::OnLoad,LoadGFXComponentsMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage,1);
 	}
 
 	void OgreParticleSystemComponent::OnLoad(LoadGFXComponentsMessagePtr message)

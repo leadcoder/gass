@@ -103,9 +103,9 @@ namespace GASS
 	void OgreTextComponent::OnCreate()
 	{
 		//this one should load after mesh entities
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreTextComponent::OnLoad,LoadGFXComponentsMessage),2);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXT_CAPTION, TYPED_MESSAGE_FUNC(OgreTextComponent::OnCaptionMessage,TextCaptionMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OgreTextComponent::OnVisibilityMessage,VisibilityMessage ),0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreTextComponent::OnLoad,LoadGFXComponentsMessage,2);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreTextComponent::OnCaptionMessage,TextCaptionMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0);
 	}
 
 	std::string OgreTextComponent::GetText() const

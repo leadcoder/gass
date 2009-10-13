@@ -84,11 +84,11 @@ void FreeCamControlComponent::RegisterReflection()                         // st
 void FreeCamControlComponent::OnCreate()
 {
 	SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
-	GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, MESSAGE_FUNC(FreeCamControlComponent::PositionChange));
-	GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, MESSAGE_FUNC(FreeCamControlComponent::RotationChange));
-	GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnInit));
-	GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(FreeCamControlComponent::OnUnload));
+	
+	REGISTER_OBJECT_MESSAGE_TYPE(FreeCamControlComponent::PositionChange, OBJECT_RM_POSITION,0);
+	REGISTER_OBJECT_MESSAGE_TYPE(FreeCamControlComponent::RotationChange,OBJECT_RM_ROTATION,0);
+	REGISTER_OBJECT_MESSAGE_TYPE(FreeCamControlComponent::OnInit,OBJECT_RM_LOAD_SIM_COMPONENTS,0);
+	REGISTER_OBJECT_MESSAGE_TYPE(FreeCamControlComponent::OnUnload,OBJECT_RM_UNLOAD_COMPONENTS,0);
 
 	m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 

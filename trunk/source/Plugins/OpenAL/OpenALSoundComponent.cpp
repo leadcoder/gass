@@ -50,10 +50,10 @@ namespace GASS
 
 	void OpenALSoundComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage ),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_SOUND_PARAMETER, TYPED_MESSAGE_FUNC(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage));
+		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0);
 	}
 
 	void OpenALSoundComponent::OnPositionChanged(TransformationNotifyMessagePtr message)

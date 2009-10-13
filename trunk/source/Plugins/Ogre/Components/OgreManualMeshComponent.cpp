@@ -64,9 +64,9 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnLoad,LoadGFXComponentsMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_MANUAL_MESH_DATA,  TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_CLEAR_MANUAL_MESH,  TYPED_MESSAGE_FUNC(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1);
 	}
 
 	void OgreManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)

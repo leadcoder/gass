@@ -47,8 +47,7 @@
 
 namespace GASS
 {
-	OgreDynamicLineComponent::OgreDynamicLineComponent():
-		m_DynLines (NULL),
+	OgreDynamicLineComponent::OgreDynamicLineComponent(): m_DynLines (NULL),
 		m_TexScale(0.1,1),
 		m_HeightOffset (0),
 		m_MaterialName("BaseWhiteNoLighting"),
@@ -71,7 +70,7 @@ namespace GASS
 
 	void OgreDynamicLineComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OgreDynamicLineComponent::OnLoad,LoadGFXComponentsMessage),1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreDynamicLineComponent::OnLoad,LoadGFXComponentsMessage,1);
 	}
 
 	void OgreDynamicLineComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -105,11 +104,11 @@ namespace GASS
 		m_DynLines = new DynamicLines(op);
 
 		m_DynLines->setMaterial(m_MaterialName);
-		
+
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 
 		lc->GetOgreNode()->attachObject(m_DynLines);
-		
+
 		if(m_ControlPointList != "")
 		{
 			Vec3 new_pos;
@@ -132,17 +131,17 @@ namespace GASS
 
 	/*void OgreDynamicLineComponent::GetControlPoints()
 	{
-		m_ControlPoints.clear();
-		ISceneNode::ISceneNodeList::iterator iter;
-		for(iter = m_SceneNode->GetChildren()->begin(); iter != m_SceneNode->GetChildren()->end(); iter++)
-		{
-			BaseObject* obj = DYNAMIC_CAST(BaseObject,(*iter));
-			if(obj)
-			{
-				Vec3 pos = obj->GetPosition();
-				m_ControlPoints.push_back(pos);
-			}
-		}
+	m_ControlPoints.clear();
+	ISceneNode::ISceneNodeList::iterator iter;
+	for(iter = m_SceneNode->GetChildren()->begin(); iter != m_SceneNode->GetChildren()->end(); iter++)
+	{
+	BaseObject* obj = DYNAMIC_CAST(BaseObject,(*iter));
+	if(obj)
+	{
+	Vec3 pos = obj->GetPosition();
+	m_ControlPoints.push_back(pos);
+	}
+	}
 	}*/
 
 
@@ -167,7 +166,7 @@ namespace GASS
 	{
 		m_ControlPoints.clear();
 		if(m_DynLines)
-				m_DynLines->clear();
+			m_DynLines->clear();
 
 	}
 

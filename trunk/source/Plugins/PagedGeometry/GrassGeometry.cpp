@@ -94,7 +94,7 @@ namespace GASS
 
 	void GrassGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS,  TYPED_MESSAGE_FUNC(GrassGeometry::OnLoad,LoadGFXComponentsMessage),999);
+		REGISTER_OBJECT_MESSAGE_CLASS(GrassGeometry::OnLoad,LoadGFXComponentsMessage,999);
 	}
 
 	std::string GrassGeometry::GetDensityMap() const

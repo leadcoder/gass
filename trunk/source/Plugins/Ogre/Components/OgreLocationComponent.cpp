@@ -85,18 +85,15 @@ namespace GASS
 
 	void OgreLocationComponent::OnCreate()
 	{
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreLocationComponent::OnLoad,LoadGFXComponentsMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::PositionMessage,GASS::PositionMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::RotationMessage,GASS::RotationMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::WorldPositionMessage,GASS::WorldPositionMessage ,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::WorldRotationMessage,GASS::WorldRotationMessage ,0);
 
-		//GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OgreLocationComponent::OnLoad ),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OgreLocationComponent::OnLoad,LoadGFXComponentsMessage),0);
-
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC( OgreLocationComponent::PositionMessage,GASS::PositionMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC( OgreLocationComponent::RotationMessage,GASS::RotationMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_POSITION,  TYPED_MESSAGE_FUNC( OgreLocationComponent::WorldPositionMessage,GASS::WorldPositionMessage ),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_ROTATION,   TYPED_MESSAGE_FUNC( OgreLocationComponent::WorldRotationMessage,GASS::WorldRotationMessage ),0);
-
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PARENT_CHANGED, TYPED_MESSAGE_FUNC( OgreLocationComponent::ParentChangedMessage ,GASS::BaseMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OgreLocationComponent::VisibilityMessage,GASS::VisibilityMessage ),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_BOUNDING_INFO,  TYPED_MESSAGE_FUNC( OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ),0);
+		REGISTER_OBJECT_MESSAGE_TYPE(OgreLocationComponent::ParentChangedMessage,OBJECT_NM_PARENT_CHANGED,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::VisibilityMessage,GASS::VisibilityMessage ,0);
+		REGISTER_OBJECT_MESSAGE_CLASS( OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0);
 		
 	}
 
@@ -138,10 +135,9 @@ namespace GASS
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
-	void OgreLocationComponent::ParentChangedMessage(BaseMessagePtr message)
+	void OgreLocationComponent::ParentChangedMessage(MessagePtr message)
 	{
 		SetAttachToParent(m_AttachToParent);
-
 	}
 
 	void OgreLocationComponent::BoundingInfoMessage(BoundingInfoMessagePtr message)

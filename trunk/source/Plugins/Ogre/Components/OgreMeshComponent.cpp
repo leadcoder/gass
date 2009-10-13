@@ -67,9 +67,9 @@ namespace GASS
 
 	void OgreMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_MESH_FILE,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXTURE_COORDINATES,  TYPED_MESSAGE_FUNC(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage));
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage,1);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0);
 	}
 
 	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
