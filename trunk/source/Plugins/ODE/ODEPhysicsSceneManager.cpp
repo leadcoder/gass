@@ -79,9 +79,9 @@ namespace GASS
 	void ODEPhysicsSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage ));
-		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( ODEPhysicsSceneManager::OnUnload ));
-		m_Scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, TYPED_MESSAGE_FUNC( ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_TYPE(ODEPhysicsSceneManager::OnUnload,SCENARIO_RM_UNLOAD_SCENE_MANAGERS,0));
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 	}
 
 	void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)

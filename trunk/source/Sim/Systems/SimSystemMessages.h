@@ -54,7 +54,7 @@ namespace GASS
 	{
 	public:
 		CreateRenderWindowMessage(const std::string &name, int height,int width, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(CreateRenderWindowMessage::MID , sender_id , delay), 
+		  BaseMessage(CreateRenderWindowMessage::SSMID , sender_id , delay), 
 			  m_Name(name),
 			  m_Height(height),
 			  m_Width(width),
@@ -65,7 +65,7 @@ namespace GASS
 		  int GetHeight() const {return m_Height;}
 		  int GetHandle() const {return m_Handle;}
 		  int GetMainHandle() const {return m_MainHandle;}
-		  enum { MID = SYSTEM_RM_CREATE_RENDER_WINDOW};
+		  enum { SSMID = SYSTEM_RM_CREATE_RENDER_WINDOW};
 	private:
 		std::string m_Name;
 		int m_Height;
@@ -79,10 +79,10 @@ namespace GASS
 	{
 	public:
 		DebugPrintMessage(const std::string &text, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(DebugPrintMessage::MID , sender_id , delay), 
+		  BaseMessage(DebugPrintMessage::SSMID , sender_id , delay), 
 			  m_Text(text)  { }
 		  std::string GetText()const {return m_Text;}
-		  enum { MID = SYSTEM_RM_DEBUG_PRINT};
+		  enum { SSMID = SYSTEM_RM_DEBUG_PRINT};
 	private:
 		std::string m_Text;
 
@@ -94,11 +94,11 @@ namespace GASS
 	{
 	public:
 		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(GFXSceneManagerLoadedNotifyMessage::MID , sender_id , delay), 
+		  BaseMessage(GFXSceneManagerLoadedNotifyMessage::SSMID , sender_id , delay), 
 			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
-		  enum { MID = SYSTEM_NM_GFX_SM_LOADED};
+		  enum { SSMID = SYSTEM_NM_GFX_SM_LOADED};
 	private:
 		void* m_RootNode;
 		std::string m_RenderSystem;
@@ -109,11 +109,11 @@ namespace GASS
 	{
 	public:
 		MainWindowCreatedNotifyMessage(int render_window_handle, int main_window_handle,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(MainWindowCreatedNotifyMessage::MID , sender_id , delay), 
+		  BaseMessage(MainWindowCreatedNotifyMessage::SSMID , sender_id , delay), 
 			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
 		  int GetRenderWindowHandle() const {return m_Handle;}
 		  int GetMainHandle() const {return m_MainHandle;}
-		  enum { MID = SYSTEM_NM_MAIN_WINDOW_CREATED};
+		  enum { SSMID = SYSTEM_NM_MAIN_WINDOW_CREATED};
 	private:
 		int m_Handle;
 		int m_MainHandle;
@@ -126,8 +126,8 @@ namespace GASS
 	{
 	public:
 		MainWindowMovedOrResizedNotifyMessage (SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(MainWindowMovedOrResizedNotifyMessage::MID , sender_id , delay)  {}
-		  enum { MID = SYSTEM_NM_WINDOW_MOVED_OR_RESIZED};
+		  BaseMessage(MainWindowMovedOrResizedNotifyMessage::SSMID , sender_id , delay)  {}
+		  enum { SSMID = SYSTEM_NM_WINDOW_MOVED_OR_RESIZED};
 	private:
 	};
 	typedef boost::shared_ptr<MainWindowMovedOrResizedNotifyMessage> MainWindowMovedOrResizedNotifyMessagePtr;
@@ -136,9 +136,9 @@ namespace GASS
 	{
 	public:
 		ScenarioSceneLoadedNotifyMessage (ScenarioScene* scenario_scene,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(ScenarioSceneLoadedNotifyMessage::MID , sender_id , delay) , 
+		  BaseMessage(ScenarioSceneLoadedNotifyMessage::SSMID , sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
-		  enum { MID = SYSTEM_NM_SCENARIO_SCENE_LOADED};
+		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_LOADED};
 		  ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
 	private:
 		ScenarioScene* m_ScenarioScene;		
@@ -149,14 +149,25 @@ namespace GASS
 	{
 	public:
 		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScene* scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(ScenarioSceneAboutToLoadNotifyMessage::MID , sender_id , delay) , 
+		  BaseMessage(ScenarioSceneAboutToLoadNotifyMessage::SSMID , sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
-		  enum { MID = SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD};
+		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD};
 		  ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
 	private:
 		ScenarioScene* m_ScenarioScene;		
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
+
+	/**
+Convenience macro used for registration of scene object message callbacks for specific scene object message class
+*/
+
+#define REGISTER_SYSTEM_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSimSystemManager()->RegisterForMessage((SimSystemMessage)TYPED_MESSAGE::SSMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
+
+/**
+Convenience macro used for registration of scene object message callbacks for specific scene object message type
+*/
+#define REGISTER_SYSTEM_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSimSystemManager()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
 
 }
 #endif

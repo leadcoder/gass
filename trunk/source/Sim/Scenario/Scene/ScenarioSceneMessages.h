@@ -59,7 +59,7 @@ namespace GASS
 
 
 
-	
+
 
 
 	class LoadSceneManagersMessage : public BaseMessage
@@ -71,6 +71,7 @@ namespace GASS
 
 		  }
 		  ScenarioScene* GetScenarioScene() const {return m_SS;}
+		  enum {SMID = SCENARIO_RM_LOAD_SCENE_MANAGERS};
 	private:
 		ScenarioScene* m_SS;
 	};
@@ -86,6 +87,7 @@ namespace GASS
 
 		  }
 		  ScenarioScene* GetScenarioScene() const {return m_SS;}
+		  enum {SMID = SCENARIO_RM_UNLOAD_SCENE_MANAGERS};
 	private:
 		ScenarioScene* m_SS;
 	};
@@ -101,6 +103,7 @@ namespace GASS
 
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
+		  enum {SMID = SCENARIO_RM_CHANGE_CAMERA};
 	private:
 		SceneObjectPtr m_Camera;
 	};
@@ -115,6 +118,7 @@ namespace GASS
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+		  enum {SMID = SCENARIO_RM_REMOVE_OBJECT};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -142,6 +146,7 @@ namespace GASS
 		Vec3 GetPosition() const {return m_Position;}
 		Quaternion GetRotation() const {return m_Rotation;}
 		Vec3 GetVelocity() const {return m_Velocity;}
+		enum {SMID = SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE};
 	private:
 		std::string m_Tempalate;
 		Vec3 m_Position;
@@ -160,6 +165,7 @@ namespace GASS
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+		  enum {SMID = SCENARIO_NM_SCENE_OBJECT_CREATED};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -174,6 +180,7 @@ namespace GASS
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+		  enum {SMID = SCENARIO_NM_SCENE_OBJECT_REMOVED};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -189,12 +196,23 @@ namespace GASS
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
 		  void* GetUserData() const {return m_UserData;}
+		  enum {SMID = SCENARIO_NM_CAMERA_CHANGED};
 	private:
 		SceneObjectPtr m_Camera;
 		void *m_UserData;
 	};
 	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
 
+/**
+Convenience macro used during registration for scenario message callbacks for specific scenario message class
+*/
+
+#define SCENARIO_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) (ScenarioMessage)TYPED_MESSAGE::SMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
+
+/**
+Convenience macro used for registration of scene object message callbacks for specific scene object message type
+*/
+#define SCENARIO_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY
 
 }
 

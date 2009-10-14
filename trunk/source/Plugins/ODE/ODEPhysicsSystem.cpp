@@ -57,9 +57,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::OnCreate()
 	{
-//		SimEngine::GetPtr()->GetRuntimeController()->Register(boost::bind( &ODEPhysicsSystem::Update, this, _1 ),m_PrimaryThread);
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC( ODEPhysicsSystem::OnInit));
-
+		REGISTER_SYSTEM_MESSAGE_TYPE(ODEPhysicsSystem::OnInit,SYSTEM_RM_INIT,0);
 	}
 
 	void ODEPhysicsSystem::OnInit(MessagePtr message)

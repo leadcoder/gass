@@ -66,10 +66,11 @@ namespace GASS
 	void OgreGraphicsSystem::OnCreate()
 	{
 		int address = (int) this;
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT,					MESSAGE_FUNC( OgreGraphicsSystem::OnInit));
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_CREATE_RENDER_WINDOW,	TYPED_MESSAGE_FUNC(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage));
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_NM_WINDOW_MOVED_OR_RESIZED, TYPED_MESSAGE_FUNC( OgreGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage));
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_DEBUG_PRINT,				TYPED_MESSAGE_FUNC( OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage));
+		
+		REGISTER_SYSTEM_MESSAGE_TYPE(OgreGraphicsSystem::OnInit,SYSTEM_RM_INIT,0);
+		REGISTER_SYSTEM_MESSAGE_CLASS(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage,0);
+		REGISTER_SYSTEM_MESSAGE_CLASS(OgreGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0);
+		REGISTER_SYSTEM_MESSAGE_CLASS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0);
 	}
 
 

@@ -226,8 +226,8 @@ namespace GASS
 
 	void ScenarioScene::OnCreate()
 	{
-		RegisterForMessage(SCENARIO_RM_REMOVE_OBJECT, TYPED_MESSAGE_FUNC(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage));
-		RegisterForMessage(SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE, TYPED_MESSAGE_FUNC( ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage));
+		RegisterForMessage(SCENARIO_MESSAGE_CLASS(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage,0));
+		RegisterForMessage(SCENARIO_MESSAGE_CLASS(ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage,0));
 	}
 
 	void ScenarioScene::OnLoad()

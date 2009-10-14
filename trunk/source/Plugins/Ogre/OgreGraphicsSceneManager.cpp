@@ -103,11 +103,11 @@ namespace GASS
 	{
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
-		
-		m_Scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, TYPED_MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ),ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY);
 		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
 		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
-		m_Scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA,  TYPED_MESSAGE_FUNC(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage));
+
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)

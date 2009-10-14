@@ -65,7 +65,7 @@ namespace GASS
 	void OISInputSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		GetSimSystemManager()->RegisterForMessage((SimSystemMessage)MainWindowCreatedNotifyMessage::MID, TYPED_MESSAGE_FUNC( OISInputSystem::OnInit,MainWindowCreatedNotifyMessage),1);
+		REGISTER_SYSTEM_MESSAGE_CLASS(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage,1);
 	}
 
 	void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)

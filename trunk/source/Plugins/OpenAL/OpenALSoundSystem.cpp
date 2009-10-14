@@ -37,16 +37,15 @@ namespace GASS
 
 	void OpenALSoundSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC(OpenALSoundSystem::OnInit));
-
+		REGISTER_SYSTEM_MESSAGE_TYPE(OpenALSoundSystem::OnInit,SYSTEM_RM_INIT,0);
 		//catch camera change messages to update openal listener
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD, TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage));
+		REGISTER_SYSTEM_MESSAGE_CLASS(OpenALSoundSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0);
 	}
 
 	void OpenALSoundSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
 	{
 		m_Scene = message->GetScenarioScene();
-		m_Scene->RegisterForMessage(SCENARIO_NM_CAMERA_CHANGED, TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage));
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)

@@ -517,7 +517,15 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
 
+/**
+Convenience macro used for registration of scene object message callbacks for specific scene object message class
+*/
+
 #define REGISTER_OBJECT_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSceneObject()->RegisterForMessage((SceneObjectMessage)TYPED_MESSAGE::OMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
+
+/**
+Convenience macro used for registration of scene object message callbacks for specific scene object message type
+*/
 #define REGISTER_OBJECT_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSceneObject()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
 
 }
