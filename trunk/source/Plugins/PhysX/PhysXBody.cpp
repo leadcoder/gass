@@ -38,7 +38,8 @@ namespace GASS
 		
 		m_SceneManager(NULL),
 		m_MassRepresentation(MR_GEOMETRY),
-		m_Mass(1)
+		m_Mass(1),
+		m_Actor(NULL)
 	{
 
 	}
@@ -61,7 +62,7 @@ namespace GASS
 
 	void PhysXBody::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, TYPED_MESSAGE_FUNC( PhysXBody::OnLoad ,LoadPhysicsComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, TYPED_MESSAGE_FUNC( PhysXBody::OnLoad ,LoadPhysicsComponentsMessage),1);
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION,				TYPED_MESSAGE_FUNC( PhysXBody::OnPositionChanged,PositionMessage));
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION,				TYPED_MESSAGE_FUNC( PhysXBody::OnRotationChanged,RotationMessage ));
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER,  TYPED_MESSAGE_FUNC(PhysXBody::OnParameterMessage,PhysicsBodyMessage));
@@ -245,6 +246,8 @@ namespace GASS
 		}
 	}
 
+	
+
 
 	/*void PhysXBody::DampenBody( dBodyID body, float vScale, float aScale )
 	{
@@ -389,6 +392,6 @@ namespace GASS
 
 	void PhysXBody::AddShape(NxShapeDesc* shape)
 	{
-		m_ActorDesc.shapes.push_back(shape);
+		m_ActorDesc.shapes.pushBack(shape);
 	}
 }

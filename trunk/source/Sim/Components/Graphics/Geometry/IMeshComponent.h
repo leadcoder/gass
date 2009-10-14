@@ -31,5 +31,6 @@ namespace GASS
 		virtual std::string GetFilename()const=0;
 		virtual void GetMeshData(MeshDataPtr mesh_data) =0;
 	};
+	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
 }
 

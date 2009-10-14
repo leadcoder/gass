@@ -23,14 +23,6 @@
 
 namespace GASS
 {
-	/*AnyMessage::AnyMessage(MessageType type) :
-			m_TypeID(type),
-			m_SenderID(-1),
-			m_Delay(0)
-	{
-
-	}*/
-
 	AnyMessage::AnyMessage(MessageType type, SenderID sender_id, double delay) :
 			m_TypeID(type),
 			m_SenderID(sender_id),

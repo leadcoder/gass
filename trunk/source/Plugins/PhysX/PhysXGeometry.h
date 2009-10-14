@@ -27,8 +27,10 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-class PhysXBody;
-class IGeometryComponent;
+	class PhysXBody;
+	class IGeometryComponent;
+	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef boost::shared_ptr<PhysXBody> PhysXBodyPtr;
 	class PhysXGeometry : public Reflection<PhysXGeometry,BaseSceneComponent>
 	{
 	public:
@@ -55,9 +57,9 @@ class IGeometryComponent;
 
 
 	protected:
-		void CreateShape(IGeometryComponent* geom, PhysXBody* body);
+		void CreateShape(GeometryComponentPtr geom, PhysXBodyPtr body);
 		NxActorDesc m_StaticActorDesc;
-	
+
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
@@ -68,11 +70,11 @@ class IGeometryComponent;
 		Vec3 GetOffset() const {return m_Offset;}
 		void SetGeometryType(const std::string &geom_type);
 		std::string GetGeometryType() const;
-	
-		PhysXBody* m_Body;
+
+		PhysXBodyPtr m_Body;
 		Vec3 m_BBSize; // bounding box start size
 		float m_BSSize; // bounding sphere start size
-		
+
 		PhysicsGeometryType m_GeometryType;
 		std::string m_GeometryTemplate;
 		std::string m_AddToBody;

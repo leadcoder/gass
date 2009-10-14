@@ -68,7 +68,7 @@ namespace GASS
 
 	void PhysXGeometry::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnLoad, LoadPhysicsComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnLoad, LoadPhysicsComponentsMessage),0);
 		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnTransformationChanged, TransformationNotifyMessage));
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_COLLISION_SETTINGS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnCollisionSettings,CollisionSettingsMessage ));
 	}
@@ -102,6 +102,8 @@ namespace GASS
 			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
+
+		m_Body  = GetSceneObject()->GetFirstComponent<PhysXBody>();
 		if(geom)
 		{
 			if(m_Body)
@@ -110,6 +112,7 @@ namespace GASS
 				//CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
 				//if (m_Body->GetMassRepresentation() == ODEBody::MR_GEOMETRY)
 				//	CreateODEMassFromGeom(geom.get(),m_Body);
+				CreateShape(geom,m_Body);
 			}
 			else
 			{
@@ -119,7 +122,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXGeometry::CreateShape(IGeometryComponent* geom, PhysXBody* body)
+	void PhysXGeometry::CreateShape(GeometryComponentPtr geom, PhysXBodyPtr body)
 	{
 		AABox box = geom->GetBoundingBox();
 		//Vec3 maxVec3 = box.m_Max - m_Owner->GetPosition();
@@ -174,12 +177,12 @@ namespace GASS
 			break;
 		case PGT_MESH:
 			{
-				IMeshComponent* mesh  = dynamic_cast<IMeshComponent*>(geom);
+				MeshComponentPtr mesh  = boost::shared_dynamic_cast<IMeshComponent>(geom);
 
 				if(mesh)
 				{
 					PhysXPhysicsSystemPtr sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
-					NxCollisionMesh col_mesh = sys->CreateCollisionMesh(mesh);
+					NxCollisionMesh col_mesh = sys->CreateCollisionMesh(mesh.get());
 					if(col_mesh.NxMesh)
 					{
 						NxTriangleMeshShapeDesc* meshShapeDesc = new NxTriangleMeshShapeDesc();    

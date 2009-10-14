@@ -208,7 +208,8 @@ namespace GASS
 						float y = m_Terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
 						treeLoader3d->addTree(myTree,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
-					else treeLoader2d->addTree(myTree,  Ogre::Vector2(x, z) ,Ogre::Degree(yaw), scale);
+					else 
+						treeLoader2d->addTree(myTree,  Ogre::Vector2(x, z) ,Ogre::Degree(yaw), scale);
 					//treeLoader->addTree(myTree, x, z,yaw, scale);
 				/*	if(m_CreateShadowMap)
 					{
@@ -255,6 +256,123 @@ namespace GASS
 			m_PagedGeometry->update();
 		}
 	}
+
+
+/*	void TreeGeometry::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
+	{
+		mesh_data->NumVertex = 0;
+		mesh_data->VertexVector = NULL;
+		mesh_data->NumFaces = 0;
+		mesh_data->FaceVector = NULL;
+
+		if(mesh->sharedVertexData)
+		{
+			AddVertexData(mesh->sharedVertexData,mesh_data);
+		}
+
+		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
+		{
+			SubMesh *sub_mesh = mesh->getSubMesh(i);
+
+			if (!sub_mesh->useSharedVertices)
+			{
+				AddIndexData(sub_mesh->indexData,mesh_data->NumVertex,mesh_data);
+				AddVertexData(sub_mesh->vertexData,mesh_data);
+			}
+			else
+			{
+				AddIndexData(sub_mesh->indexData,0,mesh_data);
+			}
+		}
+		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
+	}
+
+	void TreeGeometry::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
+	{
+		if (!vertex_data)
+			return;
+
+		const VertexData *data = vertex_data;
+
+		const unsigned int prev_size = mesh->NumVertex;
+		mesh->NumVertex += (unsigned int)data->vertexCount;
+
+		Vec3* tmp_vert = new Vec3[mesh->NumVertex];
+		if (mesh->VertexVector)
+		{
+			memcpy(tmp_vert,mesh->VertexVector,sizeof(Vec3) * prev_size);
+			delete[] mesh->VertexVector;
+		}
+		mesh->VertexVector = tmp_vert;
+
+		// Get the positional buffer element
+		{
+			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
+			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
+			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
+
+			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			float* pReal;
+			Vec3 * curVertices = &mesh->VertexVector[prev_size];
+			const unsigned int vertexCount = (unsigned int)data->vertexCount;
+			for(unsigned int j = 0; j < vertexCount; ++j)
+			{
+				posElem->baseVertexPointerToElement(vertex, &pReal);
+				vertex += vSize;
+
+				curVertices->x = (*pReal++);
+				curVertices->y = (*pReal++);
+				curVertices->z = (*pReal++);
+
+				//*curVertices = _transform * (*curVertices);
+
+				curVertices++;
+			}
+			vbuf->unlock();
+		}
+	}
+
+	void TreeGeometry::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
+	{
+		const unsigned int prev_size = mesh->NumFaces;
+		mesh->NumFaces += (unsigned int)data->indexCount;
+
+		unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
+		if (mesh->FaceVector)
+		{
+			memcpy (tmp_ind, mesh->FaceVector, sizeof(unsigned int) * prev_size);
+			delete[] mesh->FaceVector;
+		}
+		mesh->FaceVector = tmp_ind;
+
+		const unsigned int numTris = (unsigned int) data->indexCount / 3;
+		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
+		const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
+		unsigned int index_offset = prev_size;
+
+		if (use32bitindexes)
+		{
+			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+			for(unsigned int k = 0; k < numTris; ++k)
+			{
+				mesh->FaceVector[index_offset ++] = offset + *pInt++;
+				mesh->FaceVector[index_offset ++] = offset + *pInt++;
+				mesh->FaceVector[index_offset ++] = offset + *pInt++;
+			}
+			ibuf->unlock();
+		}
+		else
+		{
+			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+			for(unsigned int k = 0; k < numTris; ++k)
+			{
+				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
+				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
+				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
+			}
+			ibuf->unlock();
+		}
+	}*/
 
 	void TreeGeometry::OnCreate()
 	{
