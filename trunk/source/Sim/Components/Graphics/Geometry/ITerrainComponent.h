@@ -22,13 +22,14 @@
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/MeshData.h"
 
+
 namespace GASS
 {
-	class GASSExport ITerrainComponent 
+	class GASSExport ITerrainComponent
 	{
 	public:
 		virtual ~ITerrainComponent(){}
-		virtual void GetMeshData(MeshDataPtr mesh_data) = 0;
+		//virtual void GetMeshData(MeshDataPtr mesh_data) = 0;
 		virtual float GetHeight(float x, float z) = 0;
 		virtual bool CheckOnTerrain(float x, float z)= 0;
 		virtual float GetSizeZ() = 0;

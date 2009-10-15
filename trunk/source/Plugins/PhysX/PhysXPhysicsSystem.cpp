@@ -55,6 +55,7 @@ namespace GASS
 	{
 		// Initialize PhysicsSDK
 		NxPhysicsSDKDesc desc;
+		
 		/*UserAllocator*	  gAllocator  = NULL;	
 		// Create a memory allocator
 		if (!gAllocator)
@@ -102,14 +103,12 @@ namespace GASS
 				break;
 			}
 		}
-		// Set the physics parameters
-		m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.01);
-
+		
 		// Set the debug visualization parameters
-		m_PhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 1);
+		/*m_PhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 1);
 		m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_SHAPES, 1);
 		m_PhysicsSDK->setParameter(NX_VISUALIZE_ACTOR_AXES, 1);
-		m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_FNORMALS, 1);
+		m_PhysicsSDK->setParameter(NX_VISUALIZE_COLLISION_FNORMALS, 1);*/
 
 
 		//m_PhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, new ErrorStream(), desc, &errorCode);
@@ -124,7 +123,11 @@ namespace GASS
 			m_PhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect(SAMPLES_VRD_HOST, SAMPLES_VRD_PORT, SAMPLES_VRD_EVENTMASK);
 #endif
 
-		m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.05f);
+		m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.01f);
+
+		//m_PhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
+ 
+
 
 	}
 
@@ -145,7 +148,8 @@ namespace GASS
 			//Log::Error("No verticies found for this mesh")
 		}
 
-		unsigned int vertexCount = mesh_data->NumVertex, indexCount  = mesh_data->NumFaces;
+		unsigned int vertexCount = mesh_data->NumVertex;
+		unsigned int indexCount  = mesh_data->NumFaces*3;
 		NxVec3* meshVertices = new NxVec3[vertexCount];
 		NxU32* meshFaces = new NxU32[indexCount];
 		NxMaterialIndex* materials = new NxMaterialIndex[indexCount];
@@ -156,19 +160,21 @@ namespace GASS
 		for(unsigned int  i = 0;  i < mesh_data->NumVertex;i++)
 		{
 			Vec3 pos = mesh_data->VertexVector[i];
-			meshVertices[i] = NxVec3(pos.x,pos.y,pos.z); 
+			//if(i > 10)
+			//	meshVertices[i] = NxVec3(pos.x, 10, pos.z); 
+			meshVertices[i] = NxVec3(pos.x, pos.y, pos.z); 
 		}
 
-		for(unsigned int  i = 0;  i < mesh_data->NumFaces;i++)
+		for(unsigned int  i = 0;  i < indexCount;i++)
 		{
-			//			materials[i] = mesh_data->MatIDVector[i];
+			materials[i] = 0;
 			meshFaces[i] = mesh_data->FaceVector[i]; 
 		}
 
 		NxTriangleMeshDesc mTriangleMeshDescription;
 
 		// Vertices
-		mTriangleMeshDescription.numVertices				= vertexCount;
+	/*	mTriangleMeshDescription.numVertices				= vertexCount;
 		mTriangleMeshDescription.points						= meshVertices;							
 		mTriangleMeshDescription.pointStrideBytes			= sizeof(NxVec3);
 		// Triangles
@@ -179,22 +185,75 @@ namespace GASS
 		//#if 0
 		mTriangleMeshDescription.materialIndexStride		= sizeof(NxMaterialIndex);
 		mTriangleMeshDescription.materialIndices			= materials;
-		//#endif
+	*/	//#endif
 		//mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;
+
+			mTriangleMeshDescription.numVertices			= vertexCount;
+	mTriangleMeshDescription.pointStrideBytes		= sizeof(NxVec3);
+	mTriangleMeshDescription.points				= meshVertices;
+	mTriangleMeshDescription.numTriangles			= indexCount/3;
+	mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;//NX_MF_FLIPNORMALS;
+	mTriangleMeshDescription.triangles				= meshFaces;
+	mTriangleMeshDescription.triangleStrideBytes	= 3 * sizeof(NxU32);
+	
+
 
 		NxTriangleMesh* trimesh;
 
 #ifndef NX_DEBUG
 
-		MemoryWriteBuffer buf;
-		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) {
+
+	
+	
+	//Alternative:	see NxMeshFlags
+	//triangleMeshDesc->flags				= NX_MF_16_BIT_INDICES
+	//triangleMeshDesc->triangles			= indices16;
+	//triangleMeshDesc->triangleStrideBytes	= 3 * sizeof(NxU16);
+
+	// The actor has one shape, a triangle mesh
+	NxInitCooking();
+	MemoryWriteBuffer buf;
+
+	/*bool status = NxCookTriangleMesh(mTriangleMeshDescription, buf);
+	if (status)
+	{
+		trimesh = m_PhysicsSDK->createTriangleMesh(MemoryReadBuffer(buf.data));
+	}
+	else
+	{
+		assert(false);
+		trimesh = NULL;
+	}*/
+
+    bool status = NxCookTriangleMesh(mTriangleMeshDescription, UserStream("c:/temp/text.bin", false));
+	if (status)
+	{
+		
+		trimesh = m_PhysicsSDK->createTriangleMesh(UserStream("c:/temp/text.bin", true));
+	}
+	else
+	{
+		assert(false);
+		trimesh = NULL;
+	}
+
+	NxCloseCooking();
+
+
+
+
+
+
+	/*	MemoryWriteBuffer buf;
+		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) 
+		{
 			std::stringstream s;
 			s	<< "Mesh '"  << "' failed to cook"
 				<< "V(" << meshVertices << ") F(" << meshFaces << ")";
 
-			Log::Error("%s",s.str());//NxThrow_Error(s.str());
+			Log::Error("%s",s.str().c_str());//NxThrow_Error(s.str());
 		}
-		trimesh = m_PhysicsSDK->createTriangleMesh(MemoryReadBuffer(buf.data));
+		trimesh = m_PhysicsSDK->createTriangleMesh(MemoryReadBuffer(buf.data));*/
 #else
 
 		NxString filename;
@@ -226,14 +285,17 @@ namespace GASS
 
 
 #endif
+
+
+
 		NxCollisionMesh col_mesh;
 		col_mesh.NxMesh = trimesh;
 		col_mesh.Mesh = mesh_data;
 		m_ColMeshMap[col_mesh_name] = col_mesh;
 
-		delete []meshVertices;
-		delete []meshFaces;
-		delete []materials;
+		//delete []meshVertices;
+		//delete []meshFaces;
+		//delete []materials;
 		return col_mesh;
 	}
 

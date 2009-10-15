@@ -128,7 +128,7 @@ namespace GASS
 	}
 
 
-	void PhysXBody::BodyMoved()
+	void PhysXBody::SendTransformation()
 	{
 		int from_id = (int)this; //use address as id
 
@@ -165,7 +165,6 @@ namespace GASS
 		}
 		return momentum;
 	}
-
 	
 	void PhysXBody::AddTorque(const Vec3 &torque_vec, bool rel)
 	{

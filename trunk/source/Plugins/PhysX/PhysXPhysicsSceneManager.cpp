@@ -20,7 +20,7 @@
 
 #include "Plugins/PhysX/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
-//#include "Plugins/PhysX/PhysXBody.h"
+#include "Plugins/PhysX/PhysXBody.h"
 //#include "Plugins/PhysX/PhysXCollisionSystem.h"
 
 #include <boost/bind.hpp>
@@ -93,6 +93,11 @@ namespace GASS
 
 		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(this,(int) this));
 		obj->SendImmediate(phy_msg);
+
+		//Save all bodies
+		PhysXBodyPtr body = obj->GetFirstComponent<PhysXBody>();
+		if(body)
+			m_Bodies.push_back(body);
 	}
 
 
@@ -112,8 +117,18 @@ namespace GASS
 
 		for (int i = 0; i < clamp_num_steps; ++i)
 		{
-		
+			while (!m_NxScene->fetchResults(NX_RIGID_BODY_FINISHED, false));
+			// Start collision and dynamics for delta time since the last frame
+			m_NxScene->simulate(m_SimulationUpdateInterval);
+			m_NxScene->flushStream();
+
 		}
+
+		for(int i = 0 ; i < m_Bodies.size();i++)
+		{
+			m_Bodies[i]->SendTransformation();
+		}
+
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
 
@@ -136,6 +151,7 @@ namespace GASS
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		NxSceneDesc sceneDesc;
 		sceneDesc.gravity = NxVec3(gravity_vec.x, gravity_vec.y, gravity_vec.z);
+		sceneDesc.flags = NX_SIMULATION_SW;
 		m_NxScene = system->GetNxSDK()->createScene(sceneDesc);
 		if(m_NxScene == NULL) 
 		{
@@ -147,6 +163,9 @@ namespace GASS
 		defaultMaterial->setRestitution(0.0f);
 		defaultMaterial->setStaticFriction(0.5f);
 		defaultMaterial->setDynamicFriction(0.5f);
+
+		m_NxScene->simulate(m_SimulationUpdateInterval);
+		m_NxScene->flushStream();
 		m_Init = true;
 	}
 

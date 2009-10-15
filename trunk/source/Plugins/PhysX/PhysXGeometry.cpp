@@ -36,7 +36,7 @@ lowed to redistribute without permission from the author.        *
 namespace GASS
 {
 
-	PhysXGeometry::PhysXGeometry() 
+	PhysXGeometry::PhysXGeometry() :m_StaticActor(NULL)
 	{
 		m_Offset.Set(0,0,0);
 		m_CollisionGeomScale = Vec3(1,1,1);
@@ -106,13 +106,14 @@ namespace GASS
 		m_Body  = GetSceneObject()->GetFirstComponent<PhysXBody>();
 		if(geom)
 		{
+			CreateShape(geom,m_Body);
 			if(m_Body)
 			{
 				//CreateODEGeomFromGeom(geom.get(),m_Body->GetSpace(),m_GeomID,m_TransformGeomID,m_Body);
 				//CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
 				//if (m_Body->GetMassRepresentation() == ODEBody::MR_GEOMETRY)
 				//	CreateODEMassFromGeom(geom.get(),m_Body);
-				CreateShape(geom,m_Body);
+				
 			}
 			else
 			{
@@ -175,6 +176,7 @@ namespace GASS
 				//geom_id  = dCreateSphere(0, sphere.m_Radius);
 			}
 			break;
+		case PGT_TERRAIN:
 		case PGT_MESH:
 			{
 				MeshComponentPtr mesh  = boost::shared_dynamic_cast<IMeshComponent>(geom);
@@ -187,12 +189,15 @@ namespace GASS
 					{
 						NxTriangleMeshShapeDesc* meshShapeDesc = new NxTriangleMeshShapeDesc();    
 						meshShapeDesc->meshData = col_mesh.NxMesh;
+						meshShapeDesc->meshFlags = NX_MESH_DOUBLE_SIDED;
+						//meshShapeDesc->localPose.t	= NxVec3(0, 0, 0);
+						
+						//meshShapeDesc->meshPagingMode = NX_MESH_PAGING_AUTO;
 						shape = meshShapeDesc;
+						
 					}
 				}
 			}
-			break;
-		case PGT_TERRAIN:
 			break;
 		}
 
@@ -202,6 +207,17 @@ namespace GASS
 				body->AddShape(shape);
 			else // static geometry
 			{
+				NxActorDesc adesc;
+				//adesc.body		= NULL;
+				//adesc.globalPose.t = NxVec3(0,0,0);
+				adesc.shapes.pushBack(shape);
+				m_StaticActor = m_SceneManager->GetNxScene()->createActor(adesc);
+
+
+				NxPlaneShapeDesc planeDesc;
+			    NxActorDesc actorDesc;
+				actorDesc.shapes.pushBack(&planeDesc);
+				m_SceneManager->GetNxScene()->createActor(actorDesc);
 
 			}
 		}

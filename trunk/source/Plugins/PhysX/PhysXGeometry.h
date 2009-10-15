@@ -22,7 +22,7 @@
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
 
-
+class NxActor;
 
 namespace GASS
 {
@@ -59,6 +59,7 @@ namespace GASS
 	protected:
 		void CreateShape(GeometryComponentPtr geom, PhysXBodyPtr body);
 		NxActorDesc m_StaticActorDesc;
+		NxActor *m_StaticActor;
 
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);

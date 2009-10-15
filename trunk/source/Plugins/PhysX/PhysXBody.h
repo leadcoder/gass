@@ -45,6 +45,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void AddShape(NxShapeDesc* shape);
+		void SendTransformation();
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -84,7 +85,7 @@ namespace GASS
 		void SetRotation(const Quaternion &rot);
 		Quaternion GetRotation();
 
-		void BodyMoved();
+		
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);

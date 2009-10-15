@@ -22,6 +22,8 @@
 
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
 #include <OgreTerrainPageSource.h>
@@ -32,7 +34,7 @@ namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
+	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
 	{
 	public:
 		OgreSceneManagerTerrainComponent();
