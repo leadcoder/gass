@@ -23,6 +23,7 @@
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Core/MessageSystem/MessageType.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include <osg/Node>
 #include <osg/PositionAttitudeTransform>
 #include <string>
@@ -45,7 +46,7 @@ namespace GASS
 		void OnLoad(MessagePtr message);		
 		void Update(double delta_time);
 		void OnUnload(MessagePtr message);
-		void OnLoadGameObject(MessagePtr message);
+		void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
 
 	private:
 		void UpdateShadowSettings();

@@ -31,6 +31,7 @@
 #include <osgViewer/CompositeViewer>
 #include <osgGA/StateSetManipulator>
 
+
 #if defined(WIN32) && !defined(__CYGWIN__) 
 #include <osgViewer/api/Win32/GraphicsWindowWin32> 
 typedef HWND WindowHandle; 
@@ -48,11 +49,9 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 
 
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -85,8 +84,8 @@ namespace GASS
 	void OSGGraphicsSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
-		GetSimSystemManager()->RegisterForMessage(SimSystemManager::SYSTEM_RM_CREATE_RENDER_WINDOW, MESSAGE_FUNC(OSGGraphicsSystem::OnCreateRenderWindow),0);
+		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
+		REGISTER_SYSTEM_MESSAGE_CLASS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0);
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
@@ -159,9 +158,7 @@ namespace GASS
 			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_GraphicsContext.get());
 			windowHnd = (size_t) win32_window->getHWND();
 #endif
-			boost::shared_ptr<Message> window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
-			window_msg->SetData("RenderHandle",(int)windowHnd); 
-			window_msg->SetData("MainHandle",(int)windowHnd); 
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)windowHnd,(int)windowHnd));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 
@@ -224,16 +221,16 @@ namespace GASS
 
 	}
 
-	void OSGGraphicsSystem::OnCreateRenderWindow(MessagePtr message)
+	void OSGGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Name"));
-		int height = boost::any_cast<int>(message->GetData("Height"));
-		int width = boost::any_cast<int>(message->GetData("Width"));
-		int handel = boost::any_cast<int>(message->GetData("Handle"));
+		std::string name = message->GetName();
+		int height = message->GetHeight();
+		int width = message->GetWidth();
+		int handel = message->GetHandle();
 
 		if(!m_GraphicsContext) // first window
 		{
-			int main_handel = boost::any_cast<int>(message->GetData("MainHandle"));
+			int main_handel = message->GetMainHandle();
 			// Init the Windata Variable that holds the handle for the Window to display OSG in.
 			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)handel);
 			osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
@@ -275,9 +272,7 @@ namespace GASS
 
 			m_Viewer->frame();
 
-			MessagePtr window_msg(new Message(SimSystemManager::SYSTEM_NM_MAIN_WINDOW_CREATED));
-			window_msg->SetData("RenderHandle",(int)handel); 
-			window_msg->SetData("MainHandle",main_handel); 
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(message->GetHandle(),message->GetMainHandle()));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 	}

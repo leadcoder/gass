@@ -66,7 +66,12 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
-		void OnVisibilityMessage(MessagePtr message);
+		
+		void OnWorldPositionMessage(WorldPositionMessagePtr message);
+		void OnWorldRotationMessage(WorldRotationMessagePtr message);
+		
+		
+		void OnVisibilityMessage(VisibilityMessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
 		Vec3 m_LastPos;

@@ -23,6 +23,7 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Systems/SimSystemMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include <string>
 #include <osgViewer/Viewer>
@@ -48,7 +49,7 @@ namespace GASS
 
 
 	protected:
-		void OnCreateRenderWindow(MessagePtr message);
+		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 

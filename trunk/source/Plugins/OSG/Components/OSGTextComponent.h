@@ -51,7 +51,7 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
 		void OnLoad(MessagePtr message);
-		void OnParameterMessage(GASS::MessagePtr message);
+		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);
 
 
 		void SetFont(const std::string &font);

@@ -67,15 +67,15 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnLoad,LoadGFXComponentsMessage),0);
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage,PositionMessage),0);
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage,RotationMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage ),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnWorldRotationMessage,WorldRotationMessage),0);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage,VisibilityMessage),0);
 		
 	}
 
 	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		OSGGraphicsSceneManager* osg_sm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
 		assert(osg_sm);
 		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = osg_sm->GetOSGRootNode();
 		m_TransformNode = new osg::PositionAttitudeTransform();
@@ -94,16 +94,26 @@ namespace GASS
 		}
 		
 
-		boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
-		pos_msg->SetData("Position",m_Pos);
-		boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION));
-		rot_msg->SetData("Rotation",Quaternion(Math::Deg2Rad(m_Rot)));
-
+		MessagePtr pos_msg(new PositionMessage(m_Pos));
+		MessagePtr rot_msg(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+	
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
 	}
 
 	void OSGLocationComponent::OnPositionMessage(PositionMessagePtr message)
+	{
+		Vec3 value = message->GetPosition();
+		m_Pos = value;
+		if(m_TransformNode.valid())
+		{
+			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			SendTransMessage();
+		}
+	}
+
+
+	void OSGLocationComponent::OnWorldPositionMessage(WorldPositionMessagePtr message)
 	{
 		Vec3 value = message->GetPosition();
 		m_Pos = value;
@@ -126,6 +136,17 @@ namespace GASS
 		}
 	}
 
+	void OSGLocationComponent::OnWorldRotationMessage(WorldRotationMessagePtr message)
+	{
+		Quaternion value = message->GetRotation();
+		if(m_TransformNode.valid())
+		{
+			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
+			m_TransformNode->setAttitude(final);
+			SendTransMessage();
+		}
+	}
+
 	void OSGLocationComponent::SetScale(const Vec3 &value)
 	{
 		m_Scale = value;
@@ -136,29 +157,19 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			boost::shared_ptr<Message> pos_msg(new Message(SceneObject::OBJECT_RM_POSITION));
-			pos_msg->SetData("Position",value);
+			MessagePtr pos_msg(new PositionMessage(value));
 			GetSceneObject()->PostMessage(pos_msg);
 		}
 	}
 
 	void OSGLocationComponent::SendTransMessage()
 	{
-
-	
-		MessagePtr trans_msg(new Message(SceneObject::OBJECT_NM_TRANSFORMATION_CHANGED));
-		//Get abs pos
 		Vec3 pos = GetWorldPosition();
 		Vec3 scale = Vec3(1,1,1);//GetScale();
 		Quaternion rot = GetWorldRotation();
-		trans_msg->SetData("Position",pos);
-		trans_msg->SetData("Rotation",rot);
-		trans_msg->SetData("Scale",scale);
+		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
 		GetSceneObject()->PostMessage(trans_msg);
-
 		//send for all child tranforms also?
-
-		//GetSceneObject()->Getcomponents(
 	}
 
 	Vec3 OSGLocationComponent::GetPosition() const 
@@ -185,8 +196,7 @@ namespace GASS
 	{
 		if(m_TransformNode.valid())
 		{
-			boost::shared_ptr<Message> rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION));
-			rot_msg->SetData("Rotation",Quaternion(value));
+			MessagePtr rot_msg(new RotationMessage(Quaternion(value)));
 			GetSceneObject()->PostMessage(rot_msg);
 		}
 	}
@@ -256,9 +266,9 @@ namespace GASS
           //std::cout<<"update callback - post traverse"<<node<<std::endl; 
       } 
 
-	void OSGLocationComponent::OnVisibilityMessage(MessagePtr message)
+	void OSGLocationComponent::OnVisibilityMessage(VisibilityMessagePtr message)
 	{
-		bool visibility = boost::any_cast<bool>(message->GetData("Visibility"));
+		bool visibility = message->GetValue();
 		if(visibility) 
 			m_TransformNode->setNodeMask(1);
 		else m_TransformNode->setNodeMask(0);

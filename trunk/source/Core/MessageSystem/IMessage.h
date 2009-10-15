@@ -166,7 +166,8 @@ namespace GASS
 	};
 
 	//Standard message function
-#define MESSAGE_FUNC(FUNCTION) MessageFuncPtr(new GASS::MessageFunc<IMessage>(boost::bind( &FUNCTION, this, _1 ),this))
-#define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),this))
 }
+
+#define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &FUNCTION, this, _1 ),this))
+#define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),this))
 #endif // #ifndef MESSAGE_HH

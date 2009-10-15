@@ -67,28 +67,23 @@ namespace GASS
 
 	void OSGTextComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC( OSGTextComponent::OnLoad),1);
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_TEXT_PARAMETER, MESSAGE_FUNC(OSGTextComponent::OnParameterMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGTextComponent::OnLoad),1);
+		//GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXT_PARAMETER, TYPED_MESSAGE_FUNC(OSGTextComponent::OnParameterMessage));
+		REGISTER_OBJECT_MESSAGE_CLASS(OSGTextComponent::OnTextCaptionMessage, TextCaptionMessage,0);
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
-	void OSGTextComponent::OnParameterMessage(GASS::MessagePtr message)
+	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionMessagePtr message)
 	{
-		SceneObject::TextParameterType type = boost::any_cast<SceneObject::TextParameterType>(message->GetData("Parameter"));
-		switch(type)
-		{
-		case SceneObject::CAPTION:
-			std::string caption = boost::any_cast<std::string>(message->GetData("Caption"));
-			m_OSGText->setText(caption.c_str());
-			break;
-		}
+		
+		std::string caption = message->GetCaption();
+		m_OSGText->setText(caption.c_str());
 	}
 
 	void OSGTextComponent::OnLoad(MessagePtr message)
 	{
-		OSGGraphicsSceneManager* ogsm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		assert(ogsm);
-
+		//OSGGraphicsSceneManager* ogsm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		//assert(ogsm);
 		/*std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath(m_Font,full_path))

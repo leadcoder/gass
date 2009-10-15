@@ -61,14 +61,14 @@ namespace GASS
 
 	void OSGMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGMeshComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGMeshComponent::OnLoad),1);
 		//mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnUpdate),m_InitPriority);
 	}
 
 	void OSGMeshComponent::OnLoad(MessagePtr message)
 	{
-		OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		assert(osg_sm);
+		//OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
+		//assert(osg_sm);
 		//TODO: get resource manager and get full path
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
