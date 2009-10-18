@@ -44,18 +44,18 @@ namespace GASS
 
 	PhysXGeometry::~PhysXGeometry()
 	{
-		
+
 	}
 
 
 	void PhysXGeometry::Enable()
 	{
-		
+
 	}
 
 	void PhysXGeometry::Disable()
 	{
-		
+
 	}
 
 	void PhysXGeometry::RegisterReflection()
@@ -113,7 +113,7 @@ namespace GASS
 				//CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
 				//if (m_Body->GetMassRepresentation() == ODEBody::MR_GEOMETRY)
 				//	CreateODEMassFromGeom(geom.get(),m_Body);
-				
+
 			}
 			else
 			{
@@ -135,7 +135,7 @@ namespace GASS
 		m_BBSize = bb_size;
 		m_BSSize = sphere.m_Radius;
 		Vec3 geom_offset(0,0,0);
-		
+
 		NxShapeDesc* shape;
 		switch(m_GeometryType)
 		{
@@ -154,11 +154,11 @@ namespace GASS
 		case PGT_CYLINDER:
 			{
 				NxCapsuleShapeDesc capsuleDesc;
-	
+
 				NxCapsuleShapeDesc* capDesc = new NxCapsuleShapeDesc();
 				capDesc->radius = max(bb_size.x/2.f,bb_size.y/2.f);
 				capDesc->height = bb_size.z-capDesc->radius;
-				
+
 				geom_offset = box.m_Max + box.m_Min;
 				geom_offset = geom_offset*0.5f;
 
@@ -177,6 +177,77 @@ namespace GASS
 			}
 			break;
 		case PGT_TERRAIN:
+			{
+
+			TerrainComponentPtr terrain  = boost::shared_dynamic_cast<ITerrainComponent>(geom);
+
+			if(terrain)
+			{
+				NxReal sixtyFourKb = 65536.0f;
+				NxReal thirtyTwoKb = 32767.5f;
+
+				NxU32 nbRows = terrain->GetSamplesZ();
+				NxU32 nbColumns =terrain->GetSamplesX();
+
+				NxHeightFieldDesc heightFieldDesc;
+				heightFieldDesc.nbColumns		= nbColumns;
+				heightFieldDesc.nbRows			= nbRows;
+				heightFieldDesc.convexEdgeThreshold = 0;
+
+				// allocate storage for samples
+				heightFieldDesc.samples	= new NxU32[heightFieldDesc.nbColumns*heightFieldDesc.nbRows];
+				heightFieldDesc.sampleStride	= sizeof(NxU32);
+
+				char* currentByte = (char*)heightFieldDesc.samples;
+				for (NxU32 row = 0; row < nbRows; row++)
+				{
+					for (NxU32 column = 0; column < nbColumns; column++)
+					{
+						//NxReal s = NxReal(row) / NxReal(nbRows);
+						//NxReal t = NxReal(column) / NxReal(nbColumns);
+						float posx = terrain->GetSizeX()*((float)column/(float)nbColumns);
+						float posz = terrain->GetSizeZ()*((float)row/(float)nbRows);
+
+						float h = terrain->GetHeight(posx,posz);
+						NxI16 height = (NxI32)(sixtyFourKb * terrain->GetHeight(posz,posx)/1000.f);
+						//NxI16 height = (NxI32)(sixtyFourKb * 10/1000.f);
+						
+							//NxI16 height = - (nbRows / 2 - row) * (nbRows / 2 - row) - (nbColumns / 2 - column) * (nbColumns / 2 - column);
+
+						NxHeightFieldSample* currentSample = (NxHeightFieldSample*)currentByte;
+						currentSample->height = height;
+						currentByte += heightFieldDesc.sampleStride;
+					}
+				}
+
+				PhysXPhysicsSystemPtr sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+				NxHeightField* heightField = sys->GetNxSDK()->createHeightField(heightFieldDesc);
+
+				// data has been copied, we can free our buffer
+				delete [] heightFieldDesc.samples;
+
+
+				
+				NxHeightFieldShapeDesc* heightFieldShapeDesc = new NxHeightFieldShapeDesc();
+				heightFieldShapeDesc->heightField	= heightField;
+				heightFieldShapeDesc->shapeFlags		= NX_SF_FEATURE_INDICES | NX_SF_VISUALIZATION;
+				heightFieldShapeDesc->heightScale	= 1000.0f / sixtyFourKb;
+				heightFieldShapeDesc->rowScale		= terrain->GetSizeZ() / NxReal(nbRows-1);
+				heightFieldShapeDesc->columnScale	= terrain->GetSizeX() / NxReal(nbColumns-1);
+				
+				shape =heightFieldShapeDesc;
+				//heightFieldShapeDesc.meshFlags	= NX_MESH_SMOOTH_SPHERE_COLLISIONS;
+				//heightFieldShapeDesc.materialIndexHighBits = 0;
+				//heightFieldShapeDesc.holeMaterial = 2;
+
+				//NxActorDesc actorDesc;
+				//actorDesc.shapes.pushBack(&heightFieldShapeDesc);
+				//actorDesc.body		   = NULL;
+				//actorDesc.globalPose.t = pos;
+				//NxActor* newActor = m_SceneManager->GetNxScene()->createActor(actorDesc);
+			}
+			}
+			break;
 		case PGT_MESH:
 			{
 				MeshComponentPtr mesh  = boost::shared_dynamic_cast<IMeshComponent>(geom);
@@ -191,10 +262,10 @@ namespace GASS
 						meshShapeDesc->meshData = col_mesh.NxMesh;
 						meshShapeDesc->meshFlags = NX_MESH_DOUBLE_SIDED;
 						//meshShapeDesc->localPose.t	= NxVec3(0, 0, 0);
-						
+
 						//meshShapeDesc->meshPagingMode = NX_MESH_PAGING_AUTO;
 						shape = meshShapeDesc;
-						
+
 					}
 				}
 			}
@@ -215,13 +286,13 @@ namespace GASS
 
 
 				NxPlaneShapeDesc planeDesc;
-			    NxActorDesc actorDesc;
+				NxActorDesc actorDesc;
 				actorDesc.shapes.pushBack(&planeDesc);
 				m_SceneManager->GetNxScene()->createActor(actorDesc);
 
 			}
 		}
-		
+
 	}
 
 	void PhysXGeometry::SetPosition(const Vec3 &pos)
@@ -245,7 +316,7 @@ namespace GASS
 			//dGeomSetRotation(m_SecondTransformGeomID, ode_rot_mat);
 		}
 	}
-	
+
 	void PhysXGeometry::SetScale(const Vec3 &value)
 	{
 		//SetScale(value,m_GeomID);

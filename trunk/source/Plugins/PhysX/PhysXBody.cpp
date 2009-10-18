@@ -384,7 +384,7 @@ namespace GASS
 			q.x = nx_rot.x;
 			q.y = nx_rot.y;
 			q.z = nx_rot.z;
-			q.w = nx_rot.w;
+			q.w = -nx_rot.w;
 		}
 		return q;
 	}

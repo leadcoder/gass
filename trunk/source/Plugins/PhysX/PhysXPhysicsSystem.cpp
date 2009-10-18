@@ -125,7 +125,7 @@ namespace GASS
 
 		m_PhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.01f);
 
-		//m_PhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
+		m_PhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
  
 
 
