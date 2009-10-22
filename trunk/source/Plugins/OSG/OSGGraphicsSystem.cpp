@@ -26,6 +26,7 @@
 #include <osgDB/ReadFile>
 #include <osgSim/MultiSwitch>
 #include <osg/MatrixTransform>
+#include <osg/CullSettings>
 #include <osg/PositionAttitudeTransform>
 #include <osgGA/TrackballManipulator>
 #include <osgViewer/CompositeViewer>
@@ -185,9 +186,11 @@ namespace GASS
 		//		bool gotfrustum;
 		osgViewer::View* view = new osgViewer::View;
 		viewer->addView(view);
+		
 		//view->setCameraManipulator(Tman);
 		//view->setSceneData(scene.get());
 		view->getCamera()->setViewport(new osg::Viewport(x, y, width,height));
+		view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 
 		/*osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
 
@@ -290,6 +293,13 @@ namespace GASS
 			left = traits->x;
 			top = traits->y;
 		}
+	}
+
+
+	void OSGGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)
+	{
+		//m_Window->windowMovedOrResized();
+		//m_Viewer->getView(0)->
 	}
 
 	void OSGGraphicsSystem::Update(double delta_time)

@@ -49,6 +49,7 @@ namespace GASS
 
 
 	protected:
+		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}

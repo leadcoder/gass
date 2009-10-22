@@ -101,9 +101,8 @@ namespace GASS
 		osg::Matrixf final_cam_view= cameraMatrix.inverse(cameraMatrix);
 
 		m_OSGCamera->setViewMatrix(final_cam_view);
+	
 		//m_OSGCamera->getInverseViewMatrix().setRotate(lc->GetOSGNode()->getAttitude());
-
-
 	}
 
 	bool OSGCameraComponent::GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const
@@ -157,6 +156,7 @@ namespace GASS
 			tm->setTrackNode(lc->GetOSGNode().get());
 			//uhh?
 			m_OSGCamera = views[i]->getCamera();
+			
 			//m_OSGCamera->setViewMatrix(
 
 			//views[i]->getCamera()->addParent(lc->GetOSGNode());

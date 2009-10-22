@@ -32,6 +32,7 @@
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
@@ -136,9 +137,6 @@ namespace GASS
 		}
 	}
 
-
-
-
 	dSpaceID ODEGeometry::GetStaticSpace()
 	{
 		if(m_ODESpaceID == NULL)
@@ -180,6 +178,13 @@ namespace GASS
 
 		switch(m_GeometryType)
 		{
+		case PGT_PLANE:
+			{
+				Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
+				geom_id = dCreatePlane(space, plane_normal.x, plane_normal.y, plane_normal.z,1);
+				//geom_id = dCreatePlane(space, 0, 0, 1,1);
+			}
+			break;
 		case PGT_BOX:
 			{
 				geom_offset = box.m_Max + box.m_Min;
@@ -229,10 +234,18 @@ namespace GASS
 		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
 		//then the encapsulated object will be destroyed when the geometry transform is destroyed.
 		//If the clean-up mode is 0 this does not happen. The default clean-up mode is 0.
-		trans_geom_id = dCreateGeomTransform(space);
-		dGeomTransformSetCleanup(trans_geom_id, 1 );
-		dGeomTransformSetGeom(trans_geom_id,geom_id);
-		dGeomSetPosition(geom_id, m_Offset.x, m_Offset.y, m_Offset.z);
+
+		if(m_GeometryType != PGT_PLANE)
+		{
+			trans_geom_id = dCreateGeomTransform(space);
+			dGeomTransformSetCleanup(trans_geom_id, 1 );
+			dGeomTransformSetGeom(trans_geom_id,geom_id);
+			dGeomSetPosition(geom_id, m_Offset.x, m_Offset.y, m_Offset.z);
+		}
+		else
+			trans_geom_id = geom_id;
+		
+
 		if(body)
 		{
 			dGeomSetBody(trans_geom_id, body->GetODEBody());
@@ -247,7 +260,7 @@ namespace GASS
 
 	void ODEGeometry::SetPosition(const Vec3 &pos)
 	{
-		if(m_Body == NULL && m_TransformGeomID)
+		if(m_Body == NULL && m_TransformGeomID && m_GeometryType != PGT_PLANE)
 		{
 			dGeomSetPosition(m_TransformGeomID, pos.x, pos.y, pos.z);
 			dGeomSetPosition(m_SecondTransformGeomID, pos.x, pos.y, pos.z);
@@ -256,7 +269,7 @@ namespace GASS
 
 	void ODEGeometry::SetRotation(const Quaternion &rot)
 	{
-		if(m_Body == NULL && m_TransformGeomID)
+		if(m_Body == NULL && m_TransformGeomID && m_GeometryType != PGT_PLANE)
 		{
 			dReal ode_rot_mat[12];
 			Mat4 rot_mat;
@@ -299,6 +312,8 @@ namespace GASS
 			dGeomSphereSetRadius(id,radius);
 			dGeomSetPosition(id, m_Offset.x*value.x, m_Offset.y*value.y, m_Offset.z*value.z);
 			break;
+		case PGT_PLANE:
+			break;
 		}
 	}
 
@@ -331,6 +346,10 @@ namespace GASS
 		{
 			m_GeometryType = PGT_SPHERE;
 		}
+		else if(geometryTypeNameLC.compare("plane")==0)
+		{
+			m_GeometryType = PGT_PLANE;
+		}
 		else
 		{
 			Log::Error("Unknown geometry type %s",geometryTypeNameLC.c_str());
@@ -352,6 +371,8 @@ namespace GASS
 			return "sphere";
 		case PGT_TERRAIN:
 			return "terrain";
+		case PGT_PLANE:
+			return "plane";
 		default:
 			return "unknown";
 		}
@@ -366,6 +387,7 @@ namespace GASS
 		dMass ode_mass;
 		switch(m_GeometryType)
 		{
+		//case PGT_PLANE:
 		case PGT_MESH:
 		case PGT_BOX:
 			{

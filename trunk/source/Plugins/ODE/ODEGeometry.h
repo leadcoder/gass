@@ -42,7 +42,8 @@ namespace GASS
 			PGT_BOX,
 			PGT_TERRAIN,
 			PGT_CYLINDER,
-			PGT_SPHERE
+			PGT_SPHERE,
+			PGT_PLANE
 		};
 
 		ODEGeometry();
