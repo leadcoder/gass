@@ -74,9 +74,9 @@ FreeCamControlComponent::~FreeCamControlComponent()
 void FreeCamControlComponent::RegisterReflection()                         // static
 {
 	ComponentFactory::GetPtr()->Register("FreeCamControlComponent",new Creator<FreeCamControlComponent, IComponent>);
-	RegisterProperty<float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
-	RegisterProperty<float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
-	RegisterProperty<float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
+	RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
+	RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
+	RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
 	RegisterProperty<std::string>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
 
 }
@@ -207,8 +207,8 @@ void FreeCamControlComponent::StepPhysics(double delta)
 	//std::cout << "Throttle:" << throttle << std::endl;
 	//std::cout << "Strafe:" << yaw << std::endl;
 
-	float turn_speed_x = 0;
-	float turn_speed_y = 0;
+	Float turn_speed_x = 0;
+	Float turn_speed_y = 0;
 
 
 	if(m_EnableRotInput)
@@ -217,7 +217,7 @@ void FreeCamControlComponent::StepPhysics(double delta)
 		turn_speed_y = -m_HeadingInput*Math::Deg2Rad(m_TurnSpeed);
 	}
 
-	static float speed_factor = 0;
+	static Float speed_factor = 0;
 
 	if(fabs(m_ThrottleInput) > 0.1 || fabs(m_StrafeInput) > 0.1 || fabs(m_UpDownInput) > 0.1)
 	{
@@ -242,12 +242,12 @@ void FreeCamControlComponent::StepPhysics(double delta)
 			speed_factor = m_WalkSpeed;
 	}
 
-	float forward_speed = m_ThrottleInput*delta*speed_factor;
-	float strafe_speed = m_StrafeInput*delta*speed_factor;
-	float updown_speed = m_UpDownInput*delta*speed_factor*0.4;
+	Float forward_speed = m_ThrottleInput*delta*speed_factor;
+	Float strafe_speed = m_StrafeInput*delta*speed_factor;
+	Float updown_speed = m_UpDownInput*delta*speed_factor*0.4;
 
-	float teta = m_Rot.h;
-	float beta = m_Rot.p;
+	Float teta = m_Rot.h;
+	Float beta = m_Rot.p;
 
 	Vec3 forward_vel;
 	Vec3 strafe_vel;
@@ -271,9 +271,9 @@ void FreeCamControlComponent::StepPhysics(double delta)
 		forward_vel = forward_vel + cam_north; 
 
 		Vec3 temp = north*forward_vel;
-		float east_strafe_vel = temp.x + temp.y +temp.z;
+		Float east_strafe_vel = temp.x + temp.y +temp.z;
 		temp = east*forward_vel;
-		float north_strafe_vel = temp.x + temp.y +temp.z;
+		Float north_strafe_vel = temp.x + temp.y +temp.z;
 
 
 		strafe_vel = east*-east_strafe_vel;
@@ -290,9 +290,10 @@ void FreeCamControlComponent::StepPhysics(double delta)
 		forward_vel = cam_east + cam_north; 
 
 		Vec3 temp = north*forward_vel;
-		float east_strafe_vel = temp.x + temp.y +temp.z;
+		
+		Float east_strafe_vel = temp.x + temp.y +temp.z;
 		temp = east*forward_vel;
-		float north_strafe_vel = temp.x + temp.y +temp.z;
+		Float north_strafe_vel = temp.x + temp.y +temp.z;
 
 		strafe_vel = east*-east_strafe_vel;
 		strafe_vel = strafe_vel + (north*north_strafe_vel);

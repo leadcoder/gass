@@ -51,7 +51,7 @@ Spline::~Spline(void)
 
 }
 
-Vec3 Spline::Interpolate(unsigned int fromIndex, float t) const
+Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
     {
         // Bounds check
         assert(fromIndex >= 0 && fromIndex < m_Points.size() &&
@@ -75,9 +75,9 @@ Vec3 Spline::Interpolate(unsigned int fromIndex, float t) const
             return m_Points[fromIndex + 1];
         }
 
-        // float interpolation
+        // Float interpolation
         // Form a vector of powers of t
-        float t2, t3;
+        Float t2, t3;
         t2 = t * t;
         t3 = t2 * t;
 

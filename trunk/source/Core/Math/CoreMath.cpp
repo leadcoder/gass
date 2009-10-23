@@ -29,6 +29,7 @@ namespace GASS
 	{
 		return Float(360*rad/(2*MY_PI));
 	}
+
 	Float Math::Deg2Rad(Float deg)
 	{
 		return Float(2*MY_PI * deg/360.f);

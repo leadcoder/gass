@@ -77,7 +77,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 void KeyframeAnimation::Render()
 {
 	RenderKeys();
-	float steps = 25;
+	Float steps = 25;
 
 	glBegin(GL_LINE_STRIP);							
 
@@ -85,9 +85,9 @@ void KeyframeAnimation::Render()
 		{
 			//Key *k1 = &m_KeyVector[i];
 			//Key *k2 = &m_KeyVector[i%m_KeyVector.size()];
-			//float t = GetKeys(timeIndex, k1, k2, NULL);
+			//Float t = GetKeys(timeIndex, k1, k2, NULL);
 			
-			for(float t = 0; t <= (1 + (1.0f / steps)); t += 1.0f / steps)
+			for(Float t = 0; t <= (1 + (1.0f / steps)); t += 1.0f / steps)
 			{
 				Vec3 vPoint =  m_PositionSpline.Interpolate(i, t);
 				//Vec3 vPoint = PointOnCurve(g_vStartPoint, g_vControlPoint1, g_vControlPoint2, g_vEndPoint, t);
@@ -116,7 +116,7 @@ void KeyframeAnimation::RenderKeys()
 
 */
 
-float KeyframeAnimation::GetKeys(float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex)  const
+Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex)  const
 {
 	int i;
 	int firstIndex = -1;
@@ -173,7 +173,7 @@ float KeyframeAnimation::GetKeys(float timePos, const Key* &key1, const Key* &ke
 	// Parametric time
 	// t1 = time of previous keyframe
 	// t2 = time of next keyframe 
-	float t1, t2;
+	Float t1, t2;
 
 	// Find first keyframe after the time
 	// If no next keyframe, wrap back to first
@@ -205,7 +205,7 @@ float KeyframeAnimation::GetKeys(float timePos, const Key* &key1, const Key* &ke
 	}
 }
 
-Key KeyframeAnimation::GetBoneKeyFrame(float weight,int index0, int index1) const
+Key KeyframeAnimation::GetBoneKeyFrame(Float weight,int index0, int index1) const
 {
 	assert(!(index0 < 0 || index0 >=  m_KeyVector.size()));
 	assert(!(index1 < 0 || index1 >=  m_KeyVector.size()));
@@ -236,7 +236,7 @@ Key KeyframeAnimation::GetBoneKeyFrame(float weight,int index0, int index1) cons
 }
 
 
-Key KeyframeAnimation::GetInterpolatedKeyFrame(float timeIndex)
+Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 {
 	// Return value
 	Key kret = Key();
@@ -246,7 +246,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(float timeIndex)
 	const Key *k2 = NULL;
 	int firstKeyIndex;
 
-	float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
+	Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
 
 	if (t == 0.0)
 	{

@@ -194,7 +194,7 @@ namespace GASS
 		max = m_WorldMax;
 	}
 
-	float AdvantageTerrainComponent::GetHeight(float x, float z)
+	Float AdvantageTerrainComponent::GetHeight(Float x, Float z)
 	{
 		//mAVTerrainSceneMgr->bidForCollisionData(Ogre::Vector3(x,0,z), 500);
 		Ogre::Sphere sphere(Ogre::Vector3(x,0,z), 500);
@@ -207,22 +207,24 @@ namespace GASS
 		return 0;
 	}
 
-	bool AdvantageTerrainComponent::CheckOnTerrain(float x, float z)
+	bool AdvantageTerrainComponent::CheckOnTerrain(Float x, Float z)
 	{
 		return true;
 	}
 
 
 
-	float AdvantageTerrainComponent::GetSizeZ()
+	Float AdvantageTerrainComponent::GetSizeZ()
 	{
 		return 0;
 	}
-	float AdvantageTerrainComponent::GetSizeX()
+
+	Float AdvantageTerrainComponent::GetSizeX()
 	{
 		return 0;
 	}
-	void AdvantageTerrainComponent::GetHeightAndNormal(float x, float z, float &height,Vec3 &normal)
+
+	void AdvantageTerrainComponent::GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal)
 	{
 		height = GetHeight(x, z);
 		normal = Vec3(0,1,0);

@@ -62,21 +62,21 @@ namespace GASS
 		void SetMode(const std::string &value) {m_Mode= value;}
 		std::string GetMode()const  {return m_Mode;}
 		
-		void SetRunSpeed(float speed){ m_RunSpeed = speed;}
-		float GetRunSpeed()const { return m_RunSpeed;}
-		void SetWalkSpeed(float speed){ m_WalkSpeed = speed;}
-		float GetWalkSpeed()const { return m_WalkSpeed;}
-		void SetTurnSpeed(float speed){ m_TurnSpeed = speed;}
-		float GetTurnSpeed()const { return m_TurnSpeed;}
+		void SetRunSpeed(Float speed){ m_RunSpeed = speed;}
+		Float GetRunSpeed()const { return m_RunSpeed;}
+		void SetWalkSpeed(Float speed){ m_WalkSpeed = speed;}
+		Float GetWalkSpeed()const { return m_WalkSpeed;}
+		void SetTurnSpeed(Float speed){ m_TurnSpeed = speed;}
+		Float GetTurnSpeed()const { return m_TurnSpeed;}
 
 		void StepPhysics(double delta);
 		
 		std::string m_Mode;
 		ControlSetting* m_ControlSetting;
-		float m_FovChangeSpeed;
-		float m_RunSpeed;
-		float m_TurnSpeed;
-		float m_WalkSpeed;
+		Float m_FovChangeSpeed;
+		Float m_RunSpeed;
+		Float m_TurnSpeed;
+		Float m_WalkSpeed;
 		
 		Vec3 m_Pos;
 		Vec3 m_Rot;
@@ -84,15 +84,15 @@ namespace GASS
 		bool m_Active;
 		bool m_EnableRotInput;
 		bool m_SpeedBoostInput;
-		float m_ThrottleInput;
-		float m_StrafeInput;
-		float m_PitchInput;
-		float m_HeadingInput;
-		float m_UpDownInput;
+		Float m_ThrottleInput;
+		Float m_StrafeInput;
+		Float m_PitchInput;
+		Float m_HeadingInput;
+		Float m_UpDownInput;
 		ScenarioScene* m_Scene;
-		float m_CurrentFov;
-		float m_MaxFov;
-		float m_MinFov;
+		Float m_CurrentFov;
+		Float m_MaxFov;
+		Float m_MinFov;
 	};
 }
 

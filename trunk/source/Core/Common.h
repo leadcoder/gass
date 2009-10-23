@@ -103,8 +103,10 @@ typedef struct HINSTANCE__* hInstance;
 #    define DYNLIB_UNLOAD( a ) dlclose( a )
 #endif
 
-
-typedef float Float;
+namespace GASS
+{
+	typedef double Float;
+}
 
 //stl
 #include <string>

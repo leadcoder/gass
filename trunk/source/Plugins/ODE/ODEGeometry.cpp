@@ -421,8 +421,8 @@ namespace GASS
 
 			int samples_x;
 			int samples_z;
-			float size_x;
-			float size_z;
+			Float size_x;
+			Float size_z;
 			Vec3 center_pos;
 
 			m_TerrainGeom->GetBounds(m_TerrainBounds.m_Min,m_TerrainBounds.m_Max);
@@ -470,11 +470,10 @@ namespace GASS
 		return ode_terrain->GetTerrainHeight(x,z);
 	}
 
-
-	float ODEGeometry::GetTerrainHeight(unsigned int x,unsigned int z)
+	Float ODEGeometry::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
-		float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
-		float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.x;
+		Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
+		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		return m_TerrainGeom->GetHeight(world_x,world_z);
 	}
 

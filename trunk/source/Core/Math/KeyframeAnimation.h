@@ -49,7 +49,7 @@ namespace GASS
 		Vec3 m_Pos;
 		Quaternion m_Rot;
 		Vec3 m_Scale;
-		float m_Time;
+		Float m_Time;
 		bool m_UsePos;
 		bool m_UseRot;
 		bool m_UseTime;
@@ -60,11 +60,11 @@ namespace GASS
 	public:
 		KeyframeAnimation(void);
 		~KeyframeAnimation(void);
-		float GetKeys(float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex) const;
-		Key GetInterpolatedKeyFrame(float timeIndex);
+		Float GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex) const;
+		Key GetInterpolatedKeyFrame(Float timeIndex);
 		void BuildInterpolationSplines(void);
 		void AutoCalulateRotation() ;
-		Key GetBoneKeyFrame(float weight,int index0, int index1) const;
+		Key GetBoneKeyFrame(Float weight,int index0, int index1) const;
 
 	private:
 		std::vector<Key> m_KeyVector;
@@ -73,7 +73,7 @@ namespace GASS
 		Spline m_PositionSpline;
 		RotationSpline m_RotationSpline;
 		Spline m_ScaleSpline;
-		float m_Length;
+		Float m_Length;
 		bool m_SplineBuildNeeded;
 		bool m_RotToPath;
 	};

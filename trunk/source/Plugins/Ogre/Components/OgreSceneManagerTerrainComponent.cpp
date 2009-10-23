@@ -242,7 +242,7 @@ namespace GASS
 		#define LERP(a, b, t) (a + (b - a) * t)
 	#endif
 
-	float OgreSceneManagerTerrainComponent::GetHeight(float x, float z)
+	Float OgreSceneManagerTerrainComponent::GetHeight(Float x, Float z)
 	{
 		//Factor in our horizontal scaling
 		x /= m_Scale.x;
@@ -273,7 +273,7 @@ namespace GASS
 			return -1.0;
 
 
-		float h00, h01, h10, h11;
+		Float h00, h01, h10, h11;
 
 
 		h00 = m_HeightData[z0*m_HMDim+x0];
@@ -281,12 +281,12 @@ namespace GASS
 		h10 = m_HeightData[z1*m_HMDim+x0];
 		h11 = m_HeightData[z1*m_HMDim+x1];
 
-		float tx, ty;
+		Float tx, ty;
 		tx = x - x0;
 		ty = z - z0;
 
 
-		float height = LERP(LERP(h00, h01, tx), LERP(h10, h11, tx), ty);
+		Float height = LERP(LERP(h00, h01, tx), LERP(h10, h11, tx), ty);
 
 		return height;
 	}

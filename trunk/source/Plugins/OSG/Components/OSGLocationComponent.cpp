@@ -107,7 +107,7 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
 			SendTransMessage();
 		}
 	}
@@ -119,7 +119,7 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
 			SendTransMessage();
 		}
 	}
@@ -182,7 +182,7 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3(value.x,value.y,value.z));
+			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
 			SendTransMessage();
 		}
 	}

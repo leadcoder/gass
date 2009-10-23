@@ -48,13 +48,13 @@ namespace GASS
 		virtual void Shutdown();
 		//virtual void Update();
 		//ITerrainComponent
-		virtual float GetHeight(float x, float z);
-		virtual bool CheckOnTerrain(float x, float z);
-		virtual float GetSizeZ();
-		virtual float GetSizeX();
+		virtual Float GetHeight(Float x, Float z);
+		virtual bool CheckOnTerrain(Float x, Float z);
+		virtual Float GetSizeZ();
+		virtual Float GetSizeX();
 		virtual unsigned int GetSamplesX();
 		virtual unsigned int GetSamplesZ();
-		virtual void GetHeightAndNormal(float x, float z, float &height,Vec3 &normal);
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal);
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
@@ -70,7 +70,7 @@ namespace GASS
 		Vec3 m_WorldMax;
 		unsigned int m_SamplesX;
 		unsigned int m_SamplesZ;
-		float m_Offset;
+		Float m_Offset;
 		std::string m_Filename;
 	};
 }

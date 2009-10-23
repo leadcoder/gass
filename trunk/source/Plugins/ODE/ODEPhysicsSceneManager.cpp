@@ -326,13 +326,30 @@ namespace GASS
 		}
 		// This should equal above code, but without Opcode dependency and no duplicating data
 		dTriMeshDataID id = dGeomTriMeshDataCreate();
-		dGeomTriMeshDataBuildSingle(id,
+
+		
+		int float_size = sizeof(Float);
+		if(float_size == 8) //double precision
+		{
+			
+			dGeomTriMeshDataBuildDouble(id,
 			&(mesh_data->VertexVector[0]),
-			sizeof(float)*3,
+			sizeof(Float)*3,
 			mesh_data->NumVertex,
 			(unsigned int*)&mesh_data->FaceVector[0],
 			mesh_data->NumFaces*3,
 			3 * sizeof(unsigned int));
+		}
+		else
+		{
+			dGeomTriMeshDataBuildSingle(id,
+			&(mesh_data->VertexVector[0]),
+			sizeof(Float)*3,
+			mesh_data->NumVertex,
+			(unsigned int*)&mesh_data->FaceVector[0],
+			mesh_data->NumFaces*3,
+			3 * sizeof(unsigned int));
+		}
 		//Save id for this collision mesh
 
 		ODECollisionMesh col_mesh;

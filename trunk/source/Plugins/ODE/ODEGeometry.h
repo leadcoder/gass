@@ -83,7 +83,7 @@ namespace GASS
 		dGeomID CreateTerrain(IGeometryComponent* geom, dSpaceID space);
 
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
-		float GetTerrainHeight(unsigned int x,unsigned int z);
+		Float GetTerrainHeight(unsigned int x,unsigned int z);
 
 	protected:
 		
@@ -107,8 +107,8 @@ namespace GASS
 		ODEPhysicsSceneManager* m_SceneManager;
 
 		//Terrain data
-		float m_SampleWidth;
-		float m_SampleHeight;
+		Float m_SampleWidth;
+		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		ITerrainComponent* m_TerrainGeom;
 	};

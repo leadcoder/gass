@@ -201,8 +201,6 @@ namespace GASS
 				col.b = m_ControlPoints[i].color.z;
 				col.a = 1;
 				m_LineObject->colour(col);
-
-
 			}
 			for(int i = 0; i < m_ControlPoints.size();i++)
 			{

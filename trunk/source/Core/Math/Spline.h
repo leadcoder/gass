@@ -33,16 +33,17 @@ class GASSCoreExport Spline
 public:
 	Spline(void);
 	~Spline(void);
-	Vec3 Interpolate(unsigned int fromIndex, float t) const;
+	Vec3 Interpolate(unsigned int fromIndex, Float t) const;
 	void Clear();
 	void AddPoint(Vec3 &p);
 	void RecalcTangents(void);
+	void SetAutoCalc(bool value){m_AutoCalc = value;}
 private:
 	std::vector<Vec3> m_Points;
 	std::vector<Vec3> m_Tangents;
 	Mat4 m_Coeffs;
 	bool m_AutoCalc;
-	float m_TanStrength;
+	Float m_TanStrength;
 };
 }
 #endif // #ifndef SPLINE_HH

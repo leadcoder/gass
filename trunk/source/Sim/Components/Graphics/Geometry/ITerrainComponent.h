@@ -29,15 +29,14 @@ namespace GASS
 	{
 	public:
 		virtual ~ITerrainComponent(){}
-		//virtual void GetMeshData(MeshDataPtr mesh_data) = 0;
-		virtual float GetHeight(float x, float z) = 0;
-		virtual bool CheckOnTerrain(float x, float z)= 0;
-		virtual float GetSizeZ() = 0;
-		virtual float GetSizeX() = 0;
+		virtual Float GetHeight(Float x, Float z) = 0;
+		virtual bool CheckOnTerrain(Float x, Float z)= 0;
+		virtual Float GetSizeZ() = 0;
+		virtual Float GetSizeX() = 0;
 		virtual unsigned int GetSamplesX()=0;
 		virtual unsigned int GetSamplesZ()=0;
 		virtual void  GetBounds(Vec3 &min,Vec3 &max) = 0;
-		virtual void GetHeightAndNormal(float x, float z, float &height,Vec3 &normal) = 0;
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) = 0;
 	private:
 	};
 

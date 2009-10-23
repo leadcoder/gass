@@ -24,12 +24,12 @@
 
 namespace GASS
 {
-	const float Quaternion::ms_fEpsilon = (float) 1e-03;
+	const Float Quaternion::ms_fEpsilon = (Float) 1e-03;
 	const Quaternion Quaternion::ZERO(0.0,0.0,0.0,0.0);
 	const Quaternion Quaternion::IDENTITY(1.0,0.0,0.0,0.0);
 
 	//-----------------------------------------------------------------------
-	Quaternion::Quaternion (float fW, float fX, float fY, float fZ)
+	Quaternion::Quaternion (Float fW, Float fX, Float fY, Float fZ)
 	{
 		w = fW;
 		x = fX;
@@ -69,13 +69,13 @@ namespace GASS
 		// Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
 		// article "Quaternion Calculus and Fast Animation".
 
-		float fTrace = kRot.m_Data[0][0]+kRot.m_Data[1][1]+kRot.m_Data[2][2];
-		float froot;
+		Float fTrace = kRot.m_Data[0][0]+kRot.m_Data[1][1]+kRot.m_Data[2][2];
+		Float froot;
 
 		if ( fTrace > 0.0 )
 		{
 			// |w| > 1/2, may as well choose w > 1/2
-			froot = (float) sqrt(fTrace + 1.0);  // 2w
+			froot = (Float) sqrt(fTrace + 1.0);  // 2w
 			w = 0.5f *froot;
 			froot = 0.5f/froot;  // 1/(4w)
 			x = (kRot.m_Data[2][1]-kRot.m_Data[1][2])*froot;
@@ -95,7 +95,7 @@ namespace GASS
 			int k = s_iNext[j];
 
 			froot = sqrt(kRot.m_Data[i][i]-kRot.m_Data[j][j]-kRot.m_Data[k][k] + 1.0);
-			float* apkQuat[3] = { &x, &y, &z };
+			Float* apkQuat[3] = { &x, &y, &z };
 			*apkQuat[i] = 0.5*froot;
 			froot = 0.5/froot;
 			w = (kRot.m_Data[k][j]-kRot.m_Data[j][k])*froot;
@@ -216,7 +216,7 @@ namespace GASS
 
 	}
 	//-----------------------------------------------------------------------
-	void Quaternion::FromAngleAxis (const float& rfAngle,
+	void Quaternion::FromAngleAxis (const Float& rfAngle,
 		const Vec3& rkAxis)
 	{
 		// assert:  axis[] is unit length
@@ -224,24 +224,24 @@ namespace GASS
 		// The quaternion representing the rotation is
 		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
-		float fHalfAngle = 0.5*rfAngle;
-		float fSin = sin(fHalfAngle);
+		Float fHalfAngle = 0.5*rfAngle;
+		Float fSin = sin(fHalfAngle);
 		w = cos(fHalfAngle);
 		x = fSin*rkAxis.x;
 		y = fSin*rkAxis.y;
 		z = fSin*rkAxis.z;
 	}
 	//-----------------------------------------------------------------------
-	void Quaternion::ToAngleAxis (float& rfAngle, Vec3& rkAxis) const
+	void Quaternion::ToAngleAxis (Float& rfAngle, Vec3& rkAxis) const
 	{
 		// The quaternion representing the rotation is
 		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
-		float fSqrLength = x*x+y*y+z*z;
+		Float fSqrLength = x*x+y*y+z*z;
 		if ( fSqrLength > 0.0)
 		{
 			rfAngle = 2.0*acos(w);
-			float fInvLength = 1.0/sqrt(fSqrLength);
+			Float fInvLength = 1.0/sqrt(fSqrLength);
 			rkAxis.x = x*fInvLength;
 			rkAxis.y = y*fInvLength;
 			rkAxis.z = z*fInvLength;
@@ -357,12 +357,12 @@ namespace GASS
 			);
 	}
 	//-----------------------------------------------------------------------
-	Quaternion Quaternion::operator* (float fScalar) const
+	Quaternion Quaternion::operator* (Float fScalar) const
 	{
 		return Quaternion(fScalar*w,fScalar*x,fScalar*y,fScalar*z);
 	}
 	//-----------------------------------------------------------------------
-	Quaternion operator* (float fScalar, const Quaternion& rkQ)
+	Quaternion operator* (Float fScalar, const Quaternion& rkQ)
 	{
 		return Quaternion(fScalar*rkQ.w,fScalar*rkQ.x,fScalar*rkQ.y,
 			fScalar*rkQ.z);
@@ -373,22 +373,22 @@ namespace GASS
 		return Quaternion(-w,-x,-y,-z);
 	}
 	//-----------------------------------------------------------------------
-	float Quaternion::Dot (const Quaternion& rkQ) const
+	Float Quaternion::Dot (const Quaternion& rkQ) const
 	{
 		return w*rkQ.w+x*rkQ.x+y*rkQ.y+z*rkQ.z;
 	}
 	//-----------------------------------------------------------------------
-	float Quaternion::Norm () const
+	Float Quaternion::Norm () const
 	{
 		return w*w+x*x+y*y+z*z;
 	}
 	//-----------------------------------------------------------------------
 	Quaternion Quaternion::Inverse () const
 	{
-		float fNorm = w*w+x*x+y*y+z*z;
+		Float fNorm = w*w+x*x+y*y+z*z;
 		if ( fNorm > 0.0 )
 		{
-			float fInvNorm = 1.0/fNorm;
+			Float fInvNorm = 1.0/fNorm;
 			return Quaternion(w*fInvNorm,-x*fInvNorm,-y*fInvNorm,-z*fInvNorm);
 		}
 		else
@@ -410,15 +410,15 @@ namespace GASS
 		// exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
 		// use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
 
-		float fAngle = sqrt(x*x+y*y+z*z);
-		float fSin = sin(fAngle);
+		Float fAngle = sqrt(x*x+y*y+z*z);
+		Float fSin = sin(fAngle);
 
 		Quaternion kResult;
 		kResult.w = cos(fAngle);
 
 		if ( fabs(fSin) >= ms_fEpsilon )
 		{
-			float fCoeff = fSin/fAngle;
+			Float fCoeff = fSin/fAngle;
 			kResult.x = fCoeff*x;
 			kResult.y = fCoeff*y;
 			kResult.z = fCoeff*z;
@@ -444,11 +444,11 @@ namespace GASS
 
 		if ( fabs(w) < 1.0 )
 		{
-			float fAngle = acos(w);
-			float fSin = sin(fAngle);
+			Float fAngle = acos(w);
+			Float fSin = sin(fAngle);
 			if ( fabs(fSin) >= ms_fEpsilon )
 			{
-				float fCoeff = fAngle/fSin;
+				Float fCoeff = fAngle/fSin;
 				kResult.x = fCoeff*x;
 				kResult.y = fCoeff*y;
 				kResult.z = fCoeff*z;
@@ -478,36 +478,36 @@ namespace GASS
 
 	}
 	//-----------------------------------------------------------------------
-	Quaternion Quaternion::Slerp (float fT, const Quaternion& rkP,
+	Quaternion Quaternion::Slerp (Float fT, const Quaternion& rkP,
 		const Quaternion& rkQ)
 	{
-		float fCos = rkP.Dot(rkQ);
-		float fAngle = acos(fCos);
+		Float fCos = rkP.Dot(rkQ);
+		Float fAngle = acos(fCos);
 
 		if ( fabs(fAngle) < ms_fEpsilon )
 			return rkP;
 
-		float fSin = sin(fAngle);
-		float fInvSin = 1.0/fSin;
-		float fCoeff0 = sin((1.0-fT)*fAngle)*fInvSin;
-		float fCoeff1 = sin(fT*fAngle)*fInvSin;
+		Float fSin = sin(fAngle);
+		Float fInvSin = 1.0/fSin;
+		Float fCoeff0 = sin((1.0-fT)*fAngle)*fInvSin;
+		Float fCoeff1 = sin(fT*fAngle)*fInvSin;
 		return fCoeff0*rkP + fCoeff1*rkQ;
 	}
 	//-----------------------------------------------------------------------
-	Quaternion Quaternion::SlerpExtraSpins (float fT,
+	Quaternion Quaternion::SlerpExtraSpins (Float fT,
 		const Quaternion& rkP, const Quaternion& rkQ, int iExtraSpins)
 	{
-		float fCos = rkP.Dot(rkQ);
-		float fAngle = acos(fCos);
+		Float fCos = rkP.Dot(rkQ);
+		Float fAngle = acos(fCos);
 
 		if ( fabs(fAngle) < ms_fEpsilon )
 			return rkP;
 
-		float fSin = sin(fAngle);
-		float fPhase = MY_PI*iExtraSpins*fT;
-		float fInvSin = 1.0/fSin;
-		float fCoeff0 = sin((1.0-fT)*fAngle - fPhase)*fInvSin;
-		float fCoeff1 = sin(fT*fAngle + fPhase)*fInvSin;
+		Float fSin = sin(fAngle);
+		Float fPhase = MY_PI*iExtraSpins*fT;
+		Float fInvSin = 1.0/fSin;
+		Float fCoeff0 = sin((1.0-fT)*fAngle - fPhase)*fInvSin;
+		Float fCoeff1 = sin(fT*fAngle + fPhase)*fInvSin;
 		return fCoeff0*rkP + fCoeff1*rkQ;
 	}
 	//-----------------------------------------------------------------------
@@ -528,11 +528,11 @@ namespace GASS
 		rkB = rkQ1*kMinusArg.Exp();
 	}
 	//-----------------------------------------------------------------------
-	Quaternion Quaternion::Squad (float fT,
+	Quaternion Quaternion::Squad (Float fT,
 		const Quaternion& rkP, const Quaternion& rkA,
 		const Quaternion& rkB, const Quaternion& rkQ)
 	{
-		float fSlerpT = 2.0*fT*(1.0-fT);
+		Float fSlerpT = 2.0*fT*(1.0-fT);
 		Quaternion kSlerpP = Slerp2(fT,rkP,rkQ);
 		Quaternion kSlerpQ = Slerp2(fT,rkA,rkB);
 		return Slerp2(fSlerpT,kSlerpP,kSlerpQ);
@@ -550,7 +550,7 @@ namespace GASS
 	}
 
 
-	Quaternion Quaternion::Slerp2(float t,const Quaternion &q1,const Quaternion &q2)
+	Quaternion Quaternion::Slerp2(Float t,const Quaternion &q1,const Quaternion &q2)
 	{
 
 		Quaternion qInterpolated;
@@ -561,7 +561,7 @@ namespace GASS
 
 		// Following the (b.a) part of the equation, we do a dot product between q1 and q2.
 		// We can do a dot product because the same math applied for a 3D vector as a 4D vector.
-		float result = (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.w * q2.w);
+		Float result = (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.w * q2.w);
 
 		// If the dot product is less than 0, the angle is greater than 90 degrees
 		if(result < 0.0f)
@@ -572,7 +572,7 @@ namespace GASS
 		}
 
 		// Set the first and second scale for the interpolation
-		float scale0 = 1 - t, scale1 = t;
+		Float scale0 = 1 - t, scale1 = t;
 
 		// Next, we want to actually calculate the spherical interpolation.  Since this
 		// calculation is quite computationally expensive, we want to only perform it
@@ -587,12 +587,12 @@ namespace GASS
 		if(1 - result > 0.1f)
 		{
 			// Get the angle between the 2 quaternions, and then store the sin() of that angle
-			float theta = (float)acos(result);
-			float sinTheta = (float)sin(theta);
+			Float theta = (Float)acos(result);
+			Float sinTheta = (Float)sin(theta);
 
 			// Calculate the scale for q1 and q2, according to the angle and it's sine value
-			scale0 = (float)sin( ( 1 - t ) * theta) / sinTheta;
-			scale1 = (float)sin( ( t * theta) ) / sinTheta;
+			scale0 = (Float)sin( ( 1 - t ) * theta) / sinTheta;
+			scale1 = (Float)sin( ( t * theta) ) / sinTheta;
 		}	
 
 		// Calculate the x, y, z and w values for the quaternion by using a special

@@ -57,7 +57,7 @@ namespace GASS
 		virtual void BuildLineFromControlPoints();
 		std::string m_MaterialName;
 		Vec2 m_TexScale;
-		float m_HeightOffset;
+		Float m_HeightOffset;
 		std::vector<LineData> m_ControlPoints;
 		std::string m_ControlPointList;
 		std::string m_Type;

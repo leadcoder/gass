@@ -46,18 +46,18 @@ namespace GASS
 
 		std::string GetFilename()const {return m_TerrainConfigFile;}
 		void SetFilename(const std::string &filename) {m_TerrainConfigFile = filename;}	
-		virtual float GetSizeX(){return m_WorldWidth;}
-		virtual float GetSizeZ(){return m_WorldHeight;}
-		virtual void GetHeightAndNormal(float x, float z, float &height,Vec3 &normal){}
-		virtual bool CheckOnTerrain(float x, float z){return true;}
+		virtual Float GetSizeX(){return m_WorldWidth;}
+		virtual Float GetSizeZ(){return m_WorldHeight;}
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
+		virtual bool CheckOnTerrain(Float x, Float z){return true;}
 		
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual unsigned int GetSamplesX();
 		virtual unsigned int GetSamplesZ();
 		
-		float GetHeight(float x, float z);
-		float GetWorldWidth()const {return  m_WorldWidth;}
-		float GetWorldHeight()const {return m_WorldHeight; }
+		Float GetHeight(Float x, Float z);
+		Float GetWorldWidth()const {return  m_WorldWidth;}
+		Float GetWorldHeight()const {return m_WorldHeight; }
 		int GetNodesPerSideAllPagesW()const {return m_NodesPerSideAllPagesW;}
 		int GetNodesPerSideAllPagesH()const  {return m_NodesPerSideAllPagesH;}
 		Vec3 GetScale() const {return m_Scale;}
@@ -69,8 +69,8 @@ namespace GASS
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;
 		bool m_Center;
-		float m_WorldWidth;
-		float m_WorldHeight;
+		Float m_WorldWidth;
+		Float m_WorldHeight;
 		int m_NodesPerSideAllPagesW;
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;

@@ -30,8 +30,8 @@ namespace GASS
 	
 	AABox::AABox()
 	{
-		m_Max.x = m_Max.y = m_Max.z = std::numeric_limits<float>::min();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<float>::max();
+		m_Max.x = m_Max.y = m_Max.z = std::numeric_limits<Float>::min();
+		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<Float>::max();
 	}
 
 	AABox::AABox(const Vec3 &min_pos, const Vec3 &max_pos)
@@ -46,7 +46,7 @@ namespace GASS
 
 	}
 
-	void AABox::Union(float x,float y,float z)
+	void AABox::Union(Float x,Float y,Float z)
 	{
 		Vec3 point;
 		point.Set(x,y,z);

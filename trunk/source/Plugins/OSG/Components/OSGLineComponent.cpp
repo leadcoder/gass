@@ -75,7 +75,7 @@ namespace GASS
 
 		m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();
-
+		
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
 		osg::ref_ptr<osg::LineWidth> linewidth = new osg::LineWidth(); 
 		
@@ -85,11 +85,12 @@ namespace GASS
 
 
 		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
+		
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
 
 
-		osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+		osg::ref_ptr<osg::Vec3dArray> vertices = new osg::Vec3dArray();
 		osg::ref_ptr<osg::Vec4Array> colors= new osg::Vec4Array;
 		
 		m_OSGGeometry->setVertexArray(vertices.get());
@@ -133,7 +134,7 @@ namespace GASS
 		if(m_OSGGeometry == NULL)
 			return;
 
-		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
+		osg::Vec3dArray* vertices = static_cast<osg::Vec3dArray*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
@@ -148,7 +149,7 @@ namespace GASS
 
 		if(m_OSGGeometry == NULL)
 			return;
-		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
+		osg::Vec3dArray* vertices = static_cast<osg::Vec3dArray*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
@@ -164,7 +165,7 @@ namespace GASS
 			vertices->resize(m_ControlPoints.size());
 			colors->resize(m_ControlPoints.size());
 
-			osg::Vec3Array::iterator vitr = vertices->begin();
+			osg::Vec3dArray::iterator vitr = vertices->begin();
 			osg::Vec4Array::iterator citr = colors->begin();
 
 			float tex_coord = 0;
@@ -173,7 +174,7 @@ namespace GASS
 				Vec3 pos = m_ControlPoints[i].pos;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y, pos.z+m_HeightOffset);
+				(vitr++)->set(pos.x, pos.y, pos.z);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 
@@ -204,7 +205,7 @@ namespace GASS
 			op = osg::PrimitiveSet::LINE_STRIP;
 		}
 
-		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
+		osg::Vec3dArray* vertices = static_cast<osg::Vec3dArray*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
@@ -221,22 +222,28 @@ namespace GASS
 
 			//osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays(op, 0, m_ControlPoints.size());
 
-			
+		
+			OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
+		
 			
 			osg::DrawArrays* drawable = static_cast<osg::DrawArrays*>(m_OSGGeometry->getPrimitiveSet(0));//drawable.get());
 			drawable->set(op, 0, m_ControlPoints.size());
 
-			osg::Vec3Array::iterator vitr = vertices->begin();
+			osg::Vec3dArray::iterator vitr = vertices->begin();
 
 			osg::Vec4Array::iterator citr = colors->begin();
+
+			
+			Vec3 start_pos = m_ControlPoints[0].pos;
+			lc->SetPosition(start_pos);
 
 			float tex_coord = 0;
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
-				Vec3 pos = m_ControlPoints[i].pos;
+				Vec3 pos = m_ControlPoints[i].pos - start_pos;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y, pos.z+m_HeightOffset);
+				(vitr++)->set(pos.x, pos.y, pos.z);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 

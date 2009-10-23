@@ -84,7 +84,7 @@ namespace GASS
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		//lc->GetOSGNode()->getAttitude();
 
-		osg::Vec3f pos = lc->GetOSGNode()->getPosition();
+		osg::Vec3d pos = lc->GetOSGNode()->getPosition();
 		osg::Quat rot = lc->GetOSGNode()->getAttitude();
 
 		osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
@@ -93,12 +93,12 @@ namespace GASS
 		osg::Transform* trans = lc->GetOSGNode()->asTransform();
 		osg::MatrixTransform* trans2 = lc->GetOSGNode()->asTransform()->asMatrixTransform();
 
-		osg::Matrixf cameraMatrix;
+		osg::Matrixd cameraMatrix;
 
 		cameraMatrix.setTrans(pos);
 		cameraMatrix.setRotate(rot);
 
-		osg::Matrixf final_cam_view= cameraMatrix.inverse(cameraMatrix);
+		osg::Matrixd final_cam_view= cameraMatrix.inverse(cameraMatrix);
 
 		m_OSGCamera->setViewMatrix(final_cam_view);
 	
