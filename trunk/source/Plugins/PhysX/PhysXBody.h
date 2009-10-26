@@ -46,6 +46,7 @@ namespace GASS
 		virtual void OnCreate();
 		void AddShape(NxShapeDesc* shape);
 		void SendTransformation();
+		NxActor* GetNxActor() {return m_Actor;}
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);

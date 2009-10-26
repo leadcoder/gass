@@ -152,6 +152,7 @@ namespace GASS
 		NxSceneDesc sceneDesc;
 		sceneDesc.gravity = NxVec3(gravity_vec.x, gravity_vec.y, gravity_vec.z);
 		sceneDesc.flags = NX_SIMULATION_SW;
+		
 		m_NxScene = system->GetNxSDK()->createScene(sceneDesc);
 		if(m_NxScene == NULL) 
 		{

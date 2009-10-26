@@ -121,9 +121,15 @@ namespace GASS
 		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 		NxBodyDesc bodyDesc;
+		bodyDesc.setToDefault();
 		m_ActorDesc.body		= &bodyDesc;
-		m_ActorDesc.density		= 10.0f;
-		m_ActorDesc.globalPose.t= NxVec3(0,0,0);	
+		m_ActorDesc.density		= 1.0f;
+
+
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		Vec3 pos = location->GetPosition();
+
+		m_ActorDesc.globalPose.t= NxVec3(pos.x,pos.y,pos.z);
 		m_Actor = m_SceneManager->GetNxScene()->createActor(m_ActorDesc);	
 	}
 
@@ -331,6 +337,20 @@ namespace GASS
 
 			if(m_EffectJoints)
 			{
+				IComponentContainer::ComponentVector components;
+				GetSceneObject()->GetComponentsByClass(components,"PhysXBody");
+				
+				for(int i = 0 ; i < components.size(); i++)
+				{
+					PhysXBodyPtr body = boost::shared_static_cast<PhysXBody>(components[i]);
+					if(body.get() != this)
+					{
+						LocationComponentPtr location = body->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+						Vec3 pos = location->GetPosition();
+						pos = pos + trans_vec;
+						body->SetPosition(pos);
+					}
+				}
 				/*int num_joints = dBodyGetNumJoints(m_PhysXBody);
 				for(int i = 0 ; i < num_joints ;i++)
 				{
@@ -367,7 +387,7 @@ namespace GASS
 		{
 			NxQuat nx_rot;
 			nx_rot.setXYZW(rot.x,rot.y,rot.z,rot.w);
-			m_Actor->setGlobalOrientationQuat(nx_rot);
+			m_Actor->setGlobalOrientation(nx_rot);
 		}
 	}
 

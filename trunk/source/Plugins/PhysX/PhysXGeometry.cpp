@@ -142,8 +142,14 @@ namespace GASS
 		case PGT_BOX:
 			{
 				NxBoxShapeDesc* boxDesc = new NxBoxShapeDesc();
-				boxDesc->dimensions = NxVec3(bb_size.x, bb_size.y, bb_size.z);
+				boxDesc->setToDefault();
+				boxDesc->dimensions = NxVec3(bb_size.x/2.0f, bb_size.y/2.0f, bb_size.z/2.0f);
 				shape = boxDesc;
+
+				geom_offset = box.m_Max + box.m_Min;
+				geom_offset = geom_offset*0.5f;
+
+				shape->localPose.t  =  NxVec3(geom_offset.x,geom_offset.y,geom_offset.z);
 				//actorDesc.shapes.pushBack(&boxDesc);
 				//actorDesc.body			= NULL;//&bodyDesc;
 				//actorDesc.density		= 10.0f;
@@ -156,6 +162,7 @@ namespace GASS
 				NxCapsuleShapeDesc capsuleDesc;
 
 				NxCapsuleShapeDesc* capDesc = new NxCapsuleShapeDesc();
+				capDesc->setToDefault();
 				capDesc->radius = max(bb_size.x/2.f,bb_size.y/2.f);
 				capDesc->height = bb_size.z-capDesc->radius;
 
@@ -171,6 +178,7 @@ namespace GASS
 		case PGT_SPHERE:
 			{
 				NxSphereShapeDesc* sphereDesc = new NxSphereShapeDesc();
+				sphereDesc->setToDefault();
 				sphereDesc->radius = sphere.m_Radius;
 				shape = sphereDesc;
 				//geom_id  = dCreateSphere(0, sphere.m_Radius);
@@ -279,17 +287,18 @@ namespace GASS
 			else // static geometry
 			{
 				NxActorDesc adesc;
-				//adesc.body		= NULL;
-				//adesc.globalPose.t = NxVec3(0,0,0);
+				adesc.body		= NULL;
+				adesc.globalPose.t = NxVec3(0,0,0);
 				adesc.shapes.pushBack(shape);
 				m_StaticActor = m_SceneManager->GetNxScene()->createActor(adesc);
 
 
-				NxPlaneShapeDesc planeDesc;
+				/*NxPlaneShapeDesc planeDesc;
 				NxActorDesc actorDesc;
+				planeDesc.d = -10;
 				actorDesc.shapes.pushBack(&planeDesc);
 				m_SceneManager->GetNxScene()->createActor(actorDesc);
-
+*/
 			}
 		}
 
