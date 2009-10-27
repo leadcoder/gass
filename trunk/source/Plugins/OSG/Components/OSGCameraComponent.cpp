@@ -47,7 +47,11 @@
 
 namespace GASS
 {
-	OSGCameraComponent::OSGCameraComponent() 
+	OSGCameraComponent::OSGCameraComponent() :m_NearClip(0.5),
+		m_FarClip(1000),
+		m_Fov(45.0),
+		m_Ortho(false),
+		m_OSGCamera(NULL)
 	{
 
 	}
@@ -60,6 +64,10 @@ namespace GASS
 	void OSGCameraComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OSGCameraComponent, IComponent>);
+		RegisterProperty<float>("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance);
+		RegisterProperty<float>("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance);
+		RegisterProperty<float>("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov);
+		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho);
 	}
 
 	void OSGCameraComponent::OnCreate()
@@ -67,11 +75,63 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnLoad,LoadGFXComponentsMessage),1);
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnPositionChanged,PositionMessage),10);
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC(OSGCameraComponent::OnRotationChanged,RotationMessage),10);
+		REGISTER_OBJECT_MESSAGE_CLASS(OSGCameraComponent::OnParameter,CameraParameterMessage,1);
+	}
+
+	void OSGCameraComponent::OnParameter(CameraParameterMessagePtr message)
+	{
+		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		switch(type)
+		{
+		case CameraParameterMessage::CAMERA_FOV:
+			{
+				float value = message->GetValue1();
+				SetFov(value);
+			}
+			break;
+		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+			{
+				m_OrthoWindowHeight = message->GetValue1();
+				UpdateProjection();
+				//if(m_Camera)
+				//m_Camera->setOrthoWindowHeight(value);
+			}
+			break;
+		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+			{
+				SetFarClipDistance(message->GetValue1());
+				SetNearClipDistance(message->GetValue2());
+			}
+			break;
+		}
 	}
 
 	void OSGCameraComponent::OnPositionChanged(PositionMessagePtr message)
 	{
 		UpdateFromLocation();
+	}
+
+	void OSGCameraComponent::UpdateProjection()
+	{
+		if(m_OSGCamera)
+		{
+			if(m_Ortho)
+			{
+				double aspectRatio = 1.0;
+				if(m_OSGCamera->getViewport())
+					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
+
+				double  h_size = m_OrthoWindowHeight/2.0;
+				double  w_size = h_size*aspectRatio;
+				m_OSGCamera->setProjectionMatrixAsOrtho(-w_size,w_size,-h_size,h_size,m_NearClip,m_FarClip);
+			}
+			else
+			{
+				double fovy, aspectRatio, zNear, zFar;
+				m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+				m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
+			}
+		}
 	}
 
 	void OSGCameraComponent::OnRotationChanged(RotationMessagePtr message)
@@ -109,26 +169,53 @@ namespace GASS
 	{
 		if(m_OSGCamera)
 		{
-			osg::Vec3d origin; 
+		/*	osg::Vec3d origin; 
 			osg::Vec3d direction;
 			osg::Matrix mat = osg::Matrix::inverse(m_OSGCamera->getProjectionMatrix()); 
 			osg::Matrix cameramatrix = m_OSGCamera->getInverseViewMatrix(); 
 			osg::Matrix cameramatrixnotrans = cameramatrix; 
-			cameramatrixnotrans.setTrans(0,0,0); 
-			osg::Vec4 d = osg::Vec4(
-				screenx * 2.0f - 1.0f, 
-				(1.0f-screeny) * 2.0f - 1.0f, 
-				0.0f,1.0f); 
-			d = d * mat; 
-			d = d * cameramatrixnotrans; 
+			cameramatrixnotrans.setTrans(0,0,0); */
 
-			direction.set(d[0],d[1],d[2]); 
-			direction.normalize(); 
-			origin = cameramatrix.getTrans(); 
+			/*if(!m_Ortho)
+			{
+				osg::Vec4 d = osg::Vec4(
+					screenx * 2.0f - 1.0f, 
+					(1.0f-screeny) * 2.0f - 1.0f, 
+					0.0f,1.0f); 
+				d = d * mat; 
+				d = d * cameramatrixnotrans; 
 
-			ray_start = OSGConvert::ToGASS(origin);
-			ray_dir = OSGConvert::ToGASS(direction);
-			ray_dir.Normalize();
+				direction.set(d[0],d[1],d[2]); 
+				direction.normalize(); 
+				origin = cameramatrix.getTrans(); 
+
+				ray_start = OSGConvert::ToGASS(origin);
+				ray_dir = OSGConvert::ToGASS(direction);
+				ray_dir.Normalize();
+			}
+			else*/
+			{
+				//use same method as ogre3d
+				osg::Matrix inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
+				float nx = screenx * 2.0f - 1.0f;
+				float ny = (1.0f-screeny) * 2.0f - 1.0f;
+				osg::Vec3 nearPoint(nx, ny, -1.f);
+				// Use midPoint rather than far point to avoid issues with infinite projection
+				osg::Vec3 midPoint (nx, ny,  0.0f);
+
+				// Get ray origin and ray target on near plane in world space
+				osg::Vec3 rayOrigin, rayTarget;
+		
+				rayOrigin = nearPoint*inverseVP;
+				rayTarget = midPoint*inverseVP;
+
+				osg::Vec3 rayDirection = rayTarget - rayOrigin;
+				rayDirection.normalize();
+
+				ray_start = OSGConvert::ToGASS(rayOrigin);
+				ray_dir = OSGConvert::ToGASS(rayDirection);
+				
+			}
 			return true;
 		}
 		else 
@@ -144,18 +231,33 @@ namespace GASS
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 
+		
 		osgViewer::ViewerBase::Views views;
 		gfx_sys->GetViewer()->getViews(views);
 		//set same scene in all viewports for the moment 
 
 		for(int i = 0; i < views.size(); i++)
 		{
-			osgGA::NodeTrackerManipulator* tm = new osgGA::NodeTrackerManipulator;
+			/*osgGA::NodeTrackerManipulator* tm = new osgGA::NodeTrackerManipulator;
 			tm->setTrackerMode(osgGA::NodeTrackerManipulator::NODE_CENTER_AND_ROTATION);
 			tm->setRotationMode(osgGA::NodeTrackerManipulator::ELEVATION_AZIM);
-			tm->setTrackNode(lc->GetOSGNode().get());
+			tm->setTrackNode(lc->GetOSGNode().get());*/
 			//uhh?
-			m_OSGCamera = views[i]->getCamera();
+
+			//m_OSGCamera = new osg::Camera;
+			//m_OSGCamera->setClearColor(osg::Vec4(1,1,1,1));
+
+			double fovy, aspectRatio, zNear, zFar;
+			m_OSGCamera = new osg::Camera(*views[i]->getCamera());
+			
+			views[i]->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+			m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
+
+			//m_OSGCamera->setReadBuffer(GL_BACK);
+			//m_OSGCamera->setDrawBuffer(GL_BACK);
+			//m_OSGCamera = views[i]->getCamera();
+			m_OrthoWindowHeight = views[i]->getCamera()->getViewport()->height();
+			UpdateProjection();
 			
 			//m_OSGCamera->setViewMatrix(
 
@@ -170,6 +272,49 @@ namespace GASS
 		m_Camera->setNearClipDistance(1.0);
 		m_Camera->setFarClipDistance(5000);
 		lc->GetOgreNode()->attachObject(m_Camera);*/
+	}
+
+	float OSGCameraComponent::GetFarClipDistance() const
+	{
+		return  m_FarClip;
+	}
+	void OSGCameraComponent::SetFarClipDistance(float value)
+	{
+		m_FarClip = value;
+		UpdateProjection();
+	}
+
+	float OSGCameraComponent::GetNearClipDistance() const
+	{
+		return  m_NearClip;
+	}
+
+	void OSGCameraComponent::SetNearClipDistance(float value)
+	{
+		m_NearClip = value;
+		UpdateProjection();
+	}
+
+	float OSGCameraComponent::GetFov() const
+	{
+		return  m_Fov;
+	}
+
+	void OSGCameraComponent::SetFov(float value)
+	{
+		m_Fov = value;
+		UpdateProjection();
+	}
+
+	bool OSGCameraComponent::GetOrtho() const
+	{
+		return  m_Ortho;
+	}
+
+	void OSGCameraComponent::SetOrtho(bool value)
+	{
+		m_Ortho = value;
+		UpdateProjection();
 	}
 }
 

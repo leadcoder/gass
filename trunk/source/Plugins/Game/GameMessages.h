@@ -35,5 +35,11 @@ namespace GASS
 		OBJECT_NM_HIT = 1007,
 		OBJECT_RM_OUT_OF_ARMOR = 1008,
 	};
+
+
+	enum GameScenarioSceneMessages
+	{
+		SCENARIO_RM_ENTER_VEHICLE = 1000,
+	};
 }
 #endif

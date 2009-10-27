@@ -182,9 +182,24 @@ namespace GASS
 		float speed_factor = 0;
 		m_Rot = Vec3(0,-MY_PI/2.f,0);
 		speed_factor = m_CurrentWindowSize;
-		m_Pos.z -= delta*speed_factor * m_ScrollUpInput;
-		m_Pos.x += delta*speed_factor * m_ScrollDownInput;
-		m_Pos.y = m_FixedHeight;
+
+		Vec3 up = m_Scene->GetSceneUp();
+		Vec3 north = m_Scene->GetSceneNorth();
+		Vec3 east = m_Scene->GetSceneEast();
+
+		//m_Pos.z -= delta*speed_factor * m_ScrollUpInput;
+		//m_Pos.x += delta*speed_factor * m_ScrollDownInput;
+		//m_Pos.y = m_FixedHeight;
+
+		up = up*m_FixedHeight;
+		m_Pos = (m_Pos*(north + east)) + up;
+
+		north = north*delta*speed_factor * m_ScrollUpInput;
+		east = east*delta*speed_factor * m_ScrollDownInput;
+		
+		m_Pos = ((m_Pos + north) + east);
+		
+		
 		//
 		if(m_EnableZoomInput) 
 			m_CurrentWindowSize += speed_factor*m_ZoomSpeed*m_ZoomInput*delta;

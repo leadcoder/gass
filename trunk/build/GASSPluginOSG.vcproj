@@ -262,6 +262,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGManualMeshComponent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGManualMeshComponent.h"
+							>
+						</File>
+						<File
 							RelativePath="..\Source\Plugins\OSG\Components\OSGMeshComponent.cpp"
 							>
 						</File>

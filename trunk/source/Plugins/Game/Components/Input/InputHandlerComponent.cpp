@@ -36,6 +36,7 @@
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Components/Graphics/ICameraComponent.h"
 
 
 namespace GASS
@@ -58,20 +59,19 @@ namespace GASS
 		else 
 			Log::Warning("Failed to find control settings: InputHandlerComponentInputSettings");
 
-		//try find camera 
-		/*IComponentContainer::ComponentContainerIterator cc_iter = GetSceneObject()->GetChildren();
+		//try find camera, move this to vehicle camera class
+		IComponentContainer::ComponentContainerIterator cc_iter = GetSceneObject()->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_dynamic_cast<GASS::SceneObject>(cc_iter.getNext());
-			std::string::size_type pos = child->GetName().find("CameraObject");
-			if(child && std::string::npos != pos)
+			CameraComponentPtr camera = child->GetFirstComponent<ICameraComponent>();//.find("CameraObject");
+			if(camera)
 			{
-				MessagePtr cam_msg(new Message(GASS::ScenarioScene::SCENARIO_RM_CHANGE_CAMERA));
-				cam_msg->SetData("CameraObject",child);
+				MessagePtr cam_msg(new ChangeCameraMessage(child));
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 				break;
 			}
-		}*/
+		}
 	}
 
 	void InputHandlerComponent::RegisterReflection()
@@ -84,6 +84,8 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE, TYPED_MESSAGE_FUNC(GASS::InputHandlerComponent::OnEnter,AnyMessage));
 		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnExit,AnyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(InputHandlerComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnLoad,LoadSimComponentsMessage));
 	}
 
 	void InputHandlerComponent::OnExit(AnyMessagePtr message)
@@ -93,6 +95,29 @@ namespace GASS
 			cs->GetMessageManager()->UnregisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
 	}
 
+	void InputHandlerComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	{
+	//	message->GetSimSceneManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
+	}
+
+	void InputHandlerComponent::OnUnload(MessagePtr message)
+	{
+	//	message->GetSimSceneManager()->GetScenarioScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
+	}
+
+	/*void InputHandlerComponent::OnEnter(AnyMessagePtr message)
+	{
+		Vec3 player_pos = boost::any_cast<Vec3>(message->GetData("PlayerPosition"));
+		float dist= (player_pos - my_pos).Length();
+		//Check if this pos is within enter radius
+		if(dist < 10)
+		{
+			//Enter vehicle by sending enter messeage
+			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
+			GetSceneObject()->SendImmediate(exit_message);	
+		}
+	}*/
+
 	void InputHandlerComponent::OnInput(ControllerMessagePtr message)
 	{
 		//relay message
@@ -100,10 +125,10 @@ namespace GASS
 		float value = message->GetValue();
 		
 		//check if exit message
-		if(name == "Exit")
+		if(name == "ExitVehicle")
 		{
 			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
-			GetSceneObject()->SendImmediate(exit_message);	
+			GetSceneObject()->PostMessage(exit_message);	
 		}
 		else
 		{

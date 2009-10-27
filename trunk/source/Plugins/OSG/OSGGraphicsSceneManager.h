@@ -47,6 +47,7 @@ namespace GASS
 		void Update(double delta_time);
 		void OnUnload(MessagePtr message);
 		void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
+		void OnChangeCamera(ChangeCameraMessagePtr message);
 
 	private:
 		void UpdateShadowSettings();

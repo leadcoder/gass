@@ -45,11 +45,17 @@ namespace GASS
 		void OnEnter(AnyMessagePtr message);
 		void OnExit(AnyMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
+
+		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnUnload(MessagePtr message);
+
 	private:
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;
 
 		std::string m_ControlSetting;
 	};
+
+	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
 }
 #endif

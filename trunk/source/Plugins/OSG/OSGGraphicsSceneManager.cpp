@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
+#include <osgViewer/Viewer>
+#include <osgViewer/CompositeViewer>
 
 #include "Core/Common.h"
 #include "Core/System/SystemFactory.h"
@@ -34,6 +36,7 @@
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/Components/OSGCameraComponent.h"
 
 
 
@@ -98,13 +101,40 @@ namespace GASS
 		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnLoad),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
 		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnUnload),0);
 
+		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+
 		m_SceneTransform->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
 										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
 	}
 
+	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
+	{
+		SceneObjectPtr cam_obj = message->GetCamera();
+		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponent<OSGCameraComponent>();
+		
+
+		osgViewer::ViewerBase::Views views;
+		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->getViews(views);
+		//set same scene in all viewports for the moment 
+		for(int i = 0; i < views.size(); i++)
+		{
+			cam_comp->GetOSGCamera()->setGraphicsContext(views[i]->getCamera()->getGraphicsContext());
+			cam_comp->GetOSGCamera()->setViewport(views[i]->getCamera()->getViewport());
+			views[i]->getCamera()->setViewport(NULL);
+			views[i]->getCamera()->setGraphicsContext(NULL);
+			views[i]->setCamera(cam_comp->GetOSGCamera());
+		}
+
+		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
+		m_Scene->PostMessage(cam_message);
+	}
+
+
+
 	void OSGGraphicsSceneManager::OnUnload(MessagePtr message)
 	{
+
 	}
 	
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
@@ -115,7 +145,6 @@ namespace GASS
 	/*	m_RootNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
 										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
-		
 		// Create green Irish sky
 		osg::ClearNode* backdrop = new osg::ClearNode;
 		backdrop->setClearColor(osg::Vec4(0.0f,0.8f,0.0f,1.0f));

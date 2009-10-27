@@ -39,7 +39,7 @@ namespace GASS
 	
 
 
-	class OSGTextComponent : public Reflection<OSGTextComponent,BaseSceneComponent> , public IGeometryComponent
+	class OSGTextComponent : public Reflection<OSGTextComponent,BaseSceneComponent> 
 	{
 	public:
 		OSGTextComponent (void);

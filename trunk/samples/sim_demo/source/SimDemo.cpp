@@ -35,8 +35,6 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/AnyMessage.h"
-
-
 #include "Core/PluginSystem/PluginManager.h"
 
 #include "Sim/SimEngine.h"

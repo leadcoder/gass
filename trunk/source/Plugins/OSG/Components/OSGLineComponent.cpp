@@ -96,6 +96,8 @@ namespace GASS
 		m_OSGGeometry->setVertexArray(vertices.get());
 		m_OSGGeometry->setColorArray(colors.get());
 
+		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+
 		osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays();
 		m_OSGGeometry->addPrimitiveSet(drawable.get());
 
