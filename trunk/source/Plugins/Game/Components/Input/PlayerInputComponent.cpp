@@ -96,9 +96,11 @@ namespace GASS
 		//relay message
 		std::string name = message->GetController();
 		float value = message->GetValue();
+
+		static int seat = 0;
 		
 		//check if enter message
-		if(name == "EnterVehicle")
+		if(name == "EnterVehicle" && value > 0)
 		{
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
@@ -119,12 +121,59 @@ namespace GASS
 						//enter and return
 						MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
 						so->PostMessage(enter_msg);
+						m_CurrentVehicle = so;
+						m_CurrentSeat = so;
+						seat = 0;
 						return;
 					}
 				}
+				/*IComponentContainerTemplate::ComponentVector components;
+				so->GetComponentsByClass(components,"InputHandlerComponent");
+				seat = seat % components.size();
+				if(components.size() > 0)
+				{
+					InputHandlerComponentPtr ih = boost::shared_dynamic_cast<InputHandlerComponent>(components[seat]);
+					LocationComponentPtr location = ih->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+					Vec3 obj_pos = location->GetWorldPosition();
+					Float dist = (my_pos-obj_pos).FastLength();
+					if(dist < 5)
+					{
+						//enter and return
+						MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
+						ih->GetSceneObject()->PostMessage(enter_msg);
+						seat++;
+						return;
+					}
+				}*/
 			}
 		}
-		else if(name == "ExitVehicle")
+		else if(name == "CycleVehicle" && value > 0)
+		{
+			
+			IComponentContainerTemplate::ComponentVector components;
+			if(m_CurrentVehicle)
+			{
+				m_CurrentVehicle->GetComponentsByClass(components,"InputHandlerComponent");
+				seat = seat % components.size();
+				//std::cout << "seat:" << seat << std::endl;
+				if(components.size() > 0)
+				{
+					if(m_CurrentSeat)
+					{
+						MessagePtr exit_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
+						m_CurrentSeat->PostMessage(exit_msg);
+					}
+					InputHandlerComponentPtr ih = boost::shared_dynamic_cast<InputHandlerComponent>(components[seat]);
+					MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
+					m_CurrentSeat = ih->GetSceneObject();
+					m_CurrentSeat->PostMessage(enter_msg);
+					
+					seat++;
+				}
+			}
+		}
+
+		else if(name == "ExitVehicle" && value > 0)
 		{
 			//Take camera control
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponent<ICameraComponent>();
@@ -133,6 +182,8 @@ namespace GASS
 				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject()));
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 			}
+			m_CurrentVehicle.reset();
+			m_CurrentSeat.reset();
 		}
 	}
 

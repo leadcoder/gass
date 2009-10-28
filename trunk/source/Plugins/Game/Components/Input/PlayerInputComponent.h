@@ -51,6 +51,9 @@ namespace GASS
 		std::string GetControlSetting() const;
 
 		std::string m_ControlSetting;
+
+		SceneObjectPtr m_CurrentVehicle;
+		SceneObjectPtr m_CurrentSeat;
 	};
 }
 #endif

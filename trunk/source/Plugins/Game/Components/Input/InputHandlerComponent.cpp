@@ -57,7 +57,7 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
 		else 
-			Log::Warning("Failed to find control settings: InputHandlerComponentInputSettings");
+			Log::Warning("Failed to find control settings: %s",m_ControlSetting.c_str());
 
 		//try find camera, move this to vehicle camera class
 		IComponentContainer::ComponentContainerIterator cc_iter = GetSceneObject()->GetChildren();
@@ -68,7 +68,7 @@ namespace GASS
 			if(camera)
 			{
 				MessagePtr cam_msg(new ChangeCameraMessage(child));
-				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+		//		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 				break;
 			}
 		}
@@ -124,8 +124,8 @@ namespace GASS
 		std::string name = message->GetController();
 		float value = message->GetValue();
 		
-		//check if exit message
-		if(name == "ExitVehicle")
+		//check if exit input
+		if(name == "ExitVehicle" && value > 0)
 		{
 			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
 			GetSceneObject()->PostMessage(exit_message);	

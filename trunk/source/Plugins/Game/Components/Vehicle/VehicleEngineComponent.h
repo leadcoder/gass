@@ -108,6 +108,10 @@ namespace GASS
 		void SetTurnForce(float value);
 		void SetGearRatio(const std::vector<float> &gear_data);
 		std::vector<float> GetGearRatio() const;
+		void SetSmoothRPMOutput(const bool &value);
+		bool GetSmoothRPMOutput() const;
+
+		
 
 		//Update clutch and gear selection
 		void UpdateGearShift(float throttle, float rpm, double time);
@@ -135,7 +139,7 @@ namespace GASS
 		//members attributes
 		std::string m_VehicleEngineComponentType;
 		float m_Power;
-		bool m_FakeRPMOutput;
+		bool m_SmoothRPMOutput;
 		float m_MaxBrakeTorque;
 		float m_MinRPM;
 		float m_MaxRPM;

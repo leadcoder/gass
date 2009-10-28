@@ -218,6 +218,9 @@ namespace GASS
 		UpdateJointAxis();
 		UpdateLimits();
 		SetAxis1Force(m_JointForce);
+		SetAxis2Force(m_JointForce);
+		SetAxis1Vel(0);
+		SetAxis2Vel(0);
 		UpdateSuspension();
 
 	}

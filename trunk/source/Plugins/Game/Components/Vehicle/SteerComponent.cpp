@@ -71,12 +71,13 @@ namespace GASS
 	{
 		AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
 		std::string name = boost::any_cast<std::string>(any_mess->GetData("Controller"));
-		float value = boost::any_cast<float>(any_mess->GetData("Value"))*m_MaxSteerVelocity;
+		float value = boost::any_cast<float>(any_mess->GetData("Value"));
+		float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")
 		{
 			//send rotaion message to physics engine
 			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
 
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);

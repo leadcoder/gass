@@ -68,7 +68,7 @@ namespace GASS
 		m_ThrottleAccel = 2;
 		m_TurnForce = 10;
 		m_MaxTurnForce = 200;
-		m_FakeRPMOutput = false;
+		m_SmoothRPMOutput = true;
 	
 
 		m_InputToThrottle = "Throttle";
@@ -132,7 +132,7 @@ namespace GASS
 		RegisterProperty<float>("Power", &GetPower, &SetPower);
 		RegisterProperty<float>("TurnForce", &GetTurnForce, &SetTurnForce);
 		RegisterProperty<std::vector<float>>("GearRatio", &GetGearRatio, &SetGearRatio);
-		//RegisterProperty<bool>("FakeRPMOutput", &GetFakeRPMOutput, &SetFakeRPMOutput);
+		RegisterProperty<bool>("SmoothRPMOutput", &GetSmoothRPMOutput, &SetSmoothRPMOutput);
 	}
 	
 	void VehicleEngineComponent::OnCreate()
@@ -476,11 +476,15 @@ namespace GASS
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		if(throttle < 0 && current_gear_ratio > 0) //we are moving foward and want to brake, set throttle to zero
 		{
+			//m_Clutch = 1.0 - fabs(throttle); //also, use clutch when braking
 			throttle = 0;
+			
 		}
 		else if(throttle > 0 && current_gear_ratio < 0) //we are moving backward and want to brake, set throttle to zero
 		{
+			//m_Clutch = 1.0 - throttle; //also, use clutch when braking
 			throttle = 0;
+			
 		}
 
 		if(m_AutoShiftStart)
@@ -599,7 +603,7 @@ namespace GASS
 		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg2);*/
 
 		//what rpm should we expose to other components?
-		if(m_FakeRPMOutput)
+		if(m_SmoothRPMOutput)
 		{
 			m_RPM = fabs(speed*current_gear_ratio*20);
 		}
@@ -740,5 +744,14 @@ namespace GASS
 	TaskGroup VehicleEngineComponent::GetTaskGroup() const
 	{
 		return "VEHICLE_TASK_GROUP";
+	}
+
+	void VehicleEngineComponent::SetSmoothRPMOutput(const bool &value)
+	{
+		m_SmoothRPMOutput = value;
+	}
+	bool VehicleEngineComponent::GetSmoothRPMOutput() const
+	{
+		return m_SmoothRPMOutput;
 	}
 }

@@ -62,8 +62,10 @@ namespace GASS
 
 	void TurretComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
-		
-
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
+		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
+		GetSceneObject()->PostMessage(force_msg);
+		GetSceneObject()->PostMessage(vel_msg);
 	}
 
 	void TurretComponent::OnInput(AnyMessagePtr message)
