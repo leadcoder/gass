@@ -64,6 +64,7 @@ namespace GASS
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
+		float* GetHeightData();
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		bool m_PageListenerAdded;

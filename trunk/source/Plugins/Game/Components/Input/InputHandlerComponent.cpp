@@ -68,7 +68,7 @@ namespace GASS
 			if(camera)
 			{
 				MessagePtr cam_msg(new ChangeCameraMessage(child));
-		//		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 				break;
 			}
 		}

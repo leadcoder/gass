@@ -433,7 +433,8 @@ namespace GASS
 			m_SampleWidth = size_x/(samples_x-1);
 			m_SampleHeight = size_z/(samples_z-1);
 
-			float thickness = m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
+			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
+			//Log::Print("thickness %f",thickness );
 
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
 			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space),
@@ -447,6 +448,13 @@ namespace GASS
 				0.0,	// vOffset
 				thickness,	// vThickness
 				0); // nWrapMode
+
+
+			/*dGeomHeightfieldDataBuildSingle( heightid,
+				m_TerrainGeom->GetHeightData(), 1,
+				size_x, size_z, samples_x, samples_z,
+				1, 0, thickness, 0);*/
+
 
 
 			// Give some very bounds which, while conservative,

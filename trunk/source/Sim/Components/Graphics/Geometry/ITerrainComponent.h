@@ -37,6 +37,7 @@ namespace GASS
 		virtual unsigned int GetSamplesZ()=0;
 		virtual void  GetBounds(Vec3 &min,Vec3 &max) = 0;
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) = 0;
+		virtual float* GetHeightData() = 0;
 	private:
 	};
 

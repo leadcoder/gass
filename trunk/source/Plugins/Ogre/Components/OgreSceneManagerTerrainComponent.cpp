@@ -290,4 +290,9 @@ namespace GASS
 
 		return height;
 	}
+
+	float* OgreSceneManagerTerrainComponent::GetHeightData()
+	{
+		return m_HeightData;
+	}
 }

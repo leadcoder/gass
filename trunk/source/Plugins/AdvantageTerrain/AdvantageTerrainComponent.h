@@ -57,6 +57,9 @@ namespace GASS
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal);
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual void GetMeshData(MeshDataPtr mesh_data);
+		float* GetHeightData() {return 0;}
+
+
 		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 
 		//IGeometryComponent

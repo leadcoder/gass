@@ -75,6 +75,7 @@ namespace GASS
 		RegisterProperty<int>("MagazineSize", &WeaponSystemComponent::GetMagazineSize, &WeaponSystemComponent::SetMagazineSize);
 		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
 		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
+		
 		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
 

@@ -18,36 +18,42 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef TURRET_COMPONENT_H
-#define TURRET_COMPONENT_H
+#ifndef INPUT_HANDLER_H
+#define INPUT_HANDLER_H
 
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/AnyMessage.h"
 
+
 namespace GASS
 {
-
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
+	class InputProxyComponent : public Reflection<InputProxyComponent,BaseSceneComponent>
 	{
 	public:
-		TurretComponent();
-		virtual ~TurretComponent();
+		InputProxyComponent();
+		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-	private:
-		std::string GetController() const {return m_Controller;}
-		void SetController(const std::string &value) {m_Controller = value;}
+		void OnPlayerInput(AnyMessagePtr  message);
 
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnInput(AnyMessagePtr message);
+		void OnUnload(MessagePtr message);
 
-		std::string m_Controller;
+	private:
+		void SetInputHandler(const std::string &handler);
+		std::string GetInputHandler() const;
+
+		std::string m_InputHandler;
 	};
+
+	typedef boost::shared_ptr<InputProxyComponent> InputProxyComponentPtr;
 }
 #endif

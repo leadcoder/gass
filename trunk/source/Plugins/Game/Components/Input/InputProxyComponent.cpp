@@ -18,70 +18,74 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "TurretComponent.h"
+#include "InputProxyComponent.h"
 #include "GameMessages.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Components/Graphics/ICameraComponent.h"
 
 
 namespace GASS
 {
-	TurretComponent::TurretComponent()  :m_Controller("Yaw")
+	InputProxyComponent::InputProxyComponent() 
 	{
 
 	}
 
-	TurretComponent::~TurretComponent()
+	InputProxyComponent::~InputProxyComponent()
 	{
 
 	}
-
-	void TurretComponent::RegisterReflection()
-	{
-		ComponentFactory::GetPtr()->Register("TurretComponent",new Creator<TurretComponent, IComponent>);
-		RegisterProperty<std::string>("RotationController", &TurretComponent::GetController, &TurretComponent::SetController);
-		//RegisterProperty<Vec2>("AnimationSpeedFactor", &TurretComponent::GetAnimationSpeedFactor, &TurretComponent::SetAnimationSpeedFactor);
-	}
-
-	void TurretComponent::OnCreate()
-	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TurretComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(TurretComponent::OnInput,AnyMessage));
-	}
-
-	void TurretComponent::OnLoad(LoadSimComponentsMessagePtr message)
-	{
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
-		GetSceneObject()->PostMessage(force_msg);
-		GetSceneObject()->PostMessage(vel_msg);
-	}
-
-	void TurretComponent::OnInput(AnyMessagePtr message)
-	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
-		if (name == m_Controller)
-		{
-			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
-			
-			GetSceneObject()->PostMessage(force_msg);
-			GetSceneObject()->PostMessage(vel_msg);
-		}
-	}
-
 	
+	void InputProxyComponent::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, IComponent>);
+		RegisterProperty<std::string>("InputHandler", &GetInputHandler, &SetInputHandler);
+	}
+
+	void InputProxyComponent::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(InputProxyComponent::OnUnload));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(InputProxyComponent::OnLoad,LoadSimComponentsMessage));
+	}
+
+	void InputProxyComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	{
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage((SceneObjectMessage)OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(GASS::InputProxyComponent::OnPlayerInput,AnyMessage));
+	}
+
+	void InputProxyComponent::OnUnload(MessagePtr message)
+	{
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage((SceneObjectMessage)OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(GASS::InputProxyComponent::OnPlayerInput,AnyMessage));
+	}
+
+	void InputProxyComponent::OnPlayerInput(AnyMessagePtr message)
+	{
+		GetSceneObject()->SendImmediate(message);	
+	}
+
+	void InputProxyComponent::SetInputHandler(const std::string &handler)
+	{
+		m_InputHandler = handler;
+	}
+
+	std::string InputProxyComponent::GetInputHandler() const
+	{
+		return m_InputHandler;
+	}
+
 }
