@@ -59,8 +59,24 @@ namespace GASS
 		else 
 			Log::Warning("Failed to find control settings: %s",m_ControlSetting.c_str());
 
+
 		//try find camera, move this to vehicle camera class
-		IComponentContainer::ComponentContainerIterator cc_iter = GetSceneObject()->GetChildren();
+		/*IComponentContainerTemplate::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass(components,"OgreCameraComponent");
+		
+		if(components.size() > 0)
+		{
+			BaseSceneComponentPtr camera = boost::shared_dynamic_cast<BaseSceneComponent>(components[0]);
+
+			if(camera)
+			{
+				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject()));
+				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+			}
+		}*/
+
+		//try find camera, move this to vehicle camera class
+		/*IComponentContainer::ComponentContainerIterator cc_iter = GetSceneObject()->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_dynamic_cast<GASS::SceneObject>(cc_iter.getNext());
@@ -71,7 +87,7 @@ namespace GASS
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 				break;
 			}
-		}
+		}*/
 	}
 
 	void InputHandlerComponent::RegisterReflection()

@@ -38,7 +38,7 @@
 
 namespace GASS
 {
-	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1)
+	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1),m_CurrentAngle(0),m_DesiredAngle(0),m_MaxSteerAngle(45)
 	{
 
 	}
@@ -53,11 +53,14 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("SteerComponent",new Creator<SteerComponent, IComponent>);
 		RegisterProperty<float>("SteerForce", &GetSteerForce, &SetSteerForce);
 		RegisterProperty<float>("MaxSteerVelocity", &GetMaxSteerVelocity, &SetMaxSteerVelocity);
+		RegisterProperty<float>("MaxSteerAngle", &GetMaxSteerAngle, &SetMaxSteerAngle);
+		
 	}
 
 	void SteerComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(SteerComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_HINGE_JOINT, TYPED_MESSAGE_FUNC(SteerComponent::OnJointUpdate,HingeJointNotifyMessage));
 	}
 
 	void SteerComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -72,6 +75,14 @@ namespace GASS
 		AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
 		std::string name = boost::any_cast<std::string>(any_mess->GetData("Controller"));
 		float value = boost::any_cast<float>(any_mess->GetData("Value"));
+		
+		if (name == "Steer")
+		{
+			float max_rad_angle = Math::Deg2Rad(m_MaxSteerAngle);
+			m_DesiredAngle = -value*max_rad_angle;
+		}
+		
+		/*float value = boost::any_cast<float>(any_mess->GetData("Value"));
 		float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")
 		{
@@ -81,7 +92,33 @@ namespace GASS
 
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
-		}
+		}*/
+		
+	}
+
+	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
+	{
+		m_CurrentAngle = message->GetAngle();
+		float angular_vel = (m_DesiredAngle-m_CurrentAngle)*5;
+		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
+		
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
+
+		GetSceneObject()->PostMessage(force_msg);
+		GetSceneObject()->PostMessage(vel_msg);
+		
+
+
+		/*float angular_vel = value*m_MaxSteerVelocity;
+		if (name == "Steer")
+		{
+			//send rotaion message to physics engine
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
+			GetSceneObject()->PostMessage(force_msg);
+			GetSceneObject()->PostMessage(vel_msg);
+		}*/
 	}
 
 	

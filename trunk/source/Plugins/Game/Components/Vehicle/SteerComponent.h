@@ -42,14 +42,20 @@ namespace GASS
 		virtual void OnCreate();
 	private:
 		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnInput(MessagePtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}
 		float GetMaxSteerVelocity() const {return m_MaxSteerVelocity;}
+		void SetMaxSteerAngle(float value) {m_MaxSteerAngle = value;}
+		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
 
 		float m_SteerForce;
 		float m_MaxSteerVelocity;
+		float m_MaxSteerAngle;
+		float m_CurrentAngle;
+		float m_DesiredAngle;
 	};
 }
 #endif

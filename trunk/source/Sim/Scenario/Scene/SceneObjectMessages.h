@@ -103,6 +103,7 @@ namespace GASS
 		Vec3 = "Velocity"
 		Vec3 = "AngularVelocity" */
 		OBJECT_NM_PHYSICS_VELOCITY,
+		OBJECT_NM_PHYSICS_HINGE_JOINT,
 
 		/** \brief message data: 
 		Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
@@ -234,7 +235,8 @@ namespace GASS
 			AXIS1_VELOCITY,
 			AXIS2_VELOCITY,
 			AXIS1_FORCE,
-			AXIS2_FORCE
+			AXIS2_FORCE,
+			AXIS1_DESIRED_ANGLE
 		};
 	public:
 		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) : 
@@ -456,8 +458,21 @@ namespace GASS
 		Vec3 m_LinearVel;
 		Vec3 m_AngularVel;
 	};
-
 	typedef boost::shared_ptr<VelocityNotifyMessage> VelocityNotifyMessagePtr;
+
+	class HingeJointNotifyMessage : public BaseMessage
+	{
+	public:
+		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(OBJECT_NM_PHYSICS_HINGE_JOINT, sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
+		  float GetAngle() const {return m_Angle;}
+		  float GetAngleRate() const {return m_AngleRate;}
+		  enum {OMID = OBJECT_NM_PHYSICS_HINGE_JOINT};
+	private:
+		float m_Angle;
+		float m_AngleRate;
+	};
+	typedef boost::shared_ptr<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
 
 
 	class TransformationNotifyMessage : public BaseMessage

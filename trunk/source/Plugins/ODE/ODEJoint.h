@@ -52,12 +52,11 @@ namespace GASS
 		void OnParameterMessage(PhysicsJointMessagePtr message);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 
-		//virtual void UpdateTransformation();
-		virtual float GetAngle();
-		virtual float GetAngleRate();
+		//virtual float GetAngle();
+		//virtual float GetAngleRate();
 		virtual void SetAxis1Vel(float velocity);
 		virtual void SetAxis2Vel(float value);
-		virtual float GetAxis2Vel();
+		//virtual float GetAxis2Vel();
 		float GetAxis1Force()const {return m_JointForce;}
 		void SetAxis1Force(float value);
 		virtual void SetAxis2Force(float value);
@@ -106,6 +105,7 @@ namespace GASS
 	private:
 		void JointCorrectHinge2();
 		void UpdateSwayBars(VelocityNotifyMessagePtr message);
+		void SendJointUpdate(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
 
 		std::string m_Body1Name;

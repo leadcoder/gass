@@ -202,6 +202,7 @@ namespace GASS
 			break;
 		case HINGE_JOINT:
 			m_ODEJoint = dJointCreateHinge(world,0);
+			GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEJoint::SendJointUpdate,VelocityNotifyMessage));
 			break;
 		case UNIVERSAL_JOINT:
 			m_ODEJoint = dJointCreateUniversal(world,0);
@@ -212,8 +213,8 @@ namespace GASS
 			GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEJoint::UpdateSwayBars,VelocityNotifyMessage));
 			break;
 		}
-		dJointAttach(m_ODEJoint, b1,b2);
 
+		dJointAttach(m_ODEJoint, b1,b2);
 		UpdateAnchor();
 		UpdateJointAxis();
 		UpdateLimits();
@@ -382,7 +383,7 @@ namespace GASS
 		}
 	}
 
-	float ODEJoint::GetAngle()
+	/*float ODEJoint::GetAngle()
 	{
 		switch(m_Type)
 		{
@@ -400,9 +401,9 @@ namespace GASS
 			break;
 		}
 		return 0.0;
-	}
+	}*/
 
-	float ODEJoint::GetAngleRate()
+	/*float ODEJoint::GetAngleRate()
 	{
 		switch(m_Type)
 		{
@@ -423,7 +424,7 @@ namespace GASS
 			break;
 		}
 		return 0.0;
-	}
+	}*/
 
 	void ODEJoint::SetAxis1Vel(float velocity)
 	{
@@ -550,10 +551,10 @@ namespace GASS
 		m_SwayForce = value;
 	}
 
-	float ODEJoint::GetAxis2Vel()
+/*	float ODEJoint::GetAxis2Vel()
 	{
 		return dJointGetHinge2Angle2Rate(m_ODEJoint);
-	}
+	}*/
 
 	void ODEJoint::Enable()
 	{
@@ -563,6 +564,32 @@ namespace GASS
 	void ODEJoint::Disable()
 	{
 		// no enable for joints
+	}
+
+	void ODEJoint::SendJointUpdate(VelocityNotifyMessagePtr message)
+	{
+		MessagePtr joint_message;
+		if(m_ODEJoint)
+		{
+			switch(m_Type)
+			{
+			case SLIDER_JOINT:
+				break;
+			case HINGE_JOINT:
+				{
+				float angle = dJointGetHingeAngle(m_ODEJoint);
+				float angle_rate = dJointGetHingeAngleRate(m_ODEJoint);
+				joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+				break;
+				}
+			case UNIVERSAL_JOINT:
+				break;
+			case SUSPENSION_JOINT:
+				break;
+			}
+			if(joint_message)
+				GetSceneObject()->PostMessage(joint_message);
+		}
 	}
 
 	void ODEJoint::UpdateSwayBars(VelocityNotifyMessagePtr message)
@@ -602,7 +629,6 @@ namespace GASS
 				dBodyAddForceAtPos( b1, -axis2.x*amt, -axis2.y*amt, -axis2.z*amt, wp[0], wp[1], wp[2] );
 			}
 		}
-
 	}
 
 	void ODEJoint::JointCorrectHinge2()
