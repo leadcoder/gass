@@ -196,24 +196,24 @@ namespace GASS
 			else*/
 			{
 				//use same method as ogre3d
-				osg::Matrix inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
-				float nx = screenx * 2.0f - 1.0f;
-				float ny = (1.0f-screeny) * 2.0f - 1.0f;
-				osg::Vec3 nearPoint(nx, ny, -1.f);
+				osg::Matrixd inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
+				double nx = screenx * 2.0f - 1.0f;
+				double ny = (1.0f-screeny) * 2.0f - 1.0f;
+				osg::Vec3d nearPoint(nx, ny, -1.f);
 				// Use midPoint rather than far point to avoid issues with infinite projection
-				osg::Vec3 midPoint (nx, ny,  0.0f);
+				osg::Vec3d midPoint (nx, ny,  0.0f);
 
 				// Get ray origin and ray target on near plane in world space
-				osg::Vec3 rayOrigin, rayTarget;
+				osg::Vec3d rayOrigin, rayTarget;
 		
 				rayOrigin = nearPoint*inverseVP;
 				rayTarget = midPoint*inverseVP;
 
-				osg::Vec3 rayDirection = rayTarget - rayOrigin;
+				osg::Vec3d rayDirection = rayTarget - rayOrigin;
 				rayDirection.normalize();
 
-				ray_start = OSGConvert::ToGASS(rayOrigin);
-				ray_dir = OSGConvert::ToGASS(rayDirection);
+				ray_start.Set(rayOrigin.x(),rayOrigin.y(),rayOrigin.z());
+				ray_dir.Set(rayDirection.x(),rayDirection.y(),rayDirection.z());
 				
 			}
 			return true;

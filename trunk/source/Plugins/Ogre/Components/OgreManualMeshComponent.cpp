@@ -162,10 +162,18 @@ namespace GASS
 
 	AABox OgreManualMeshComponent::GetBoundingBox() const
 	{
-		//AABox box;
+		AABox box;
 		//return box;
 		assert(m_MeshObject);
-		return Convert::ToGASS(m_MeshObject->getBoundingBox());
+		box = Convert::ToGASS(m_MeshObject->getBoundingBox());
+		
+		if(m_MeshObject->getParentSceneNode())
+		{
+			Vec3 scale = Convert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
+			box.m_Max = box.m_Max*scale;
+			box.m_Min = box.m_Min*scale;
+		}
+		return box;
 	}
 
 	Sphere OgreManualMeshComponent::GetBoundingSphere() const
@@ -174,6 +182,11 @@ namespace GASS
 		assert(m_MeshObject);
 		sphere.m_Pos = Vec3(0,0,0);
 		sphere.m_Radius = m_MeshObject->getBoundingRadius();
+		if(m_MeshObject->getParentSceneNode())
+		{
+			Vec3 scale = Convert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
+			sphere.m_Radius = sphere.m_Radius*Math::Max(scale.x,scale.y,scale.z);
+		}
 		return sphere;
 	}
 

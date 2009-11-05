@@ -135,7 +135,16 @@ void FreeCamControlComponent::PositionChange(MessagePtr message)
 
 void FreeCamControlComponent::RotationChange(MessagePtr message)
 {
-	//m_Rot = Math::Deg2Rad(boost::any_cast<Vec3>(message->GetData("Rotation")));
+	if(message->GetSenderID() != (int) this)
+	{
+		RotationMessagePtr pos_mess = boost::shared_static_cast<RotationMessage>(message);
+
+		Mat4 rot_mat;
+		pos_mess->GetRotation().ToRotationMatrix(rot_mat);
+		m_Rot.x = rot_mat.GetEulerHeading();
+		m_Rot.y = rot_mat.GetEulerPitch();
+		m_Rot.z = rot_mat.GetEulerRoll();
+	}
 }
 
 void FreeCamControlComponent::OnInput(MessagePtr message)

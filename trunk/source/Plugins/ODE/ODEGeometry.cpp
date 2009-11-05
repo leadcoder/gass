@@ -36,6 +36,7 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/Components/Graphics/ILocationComponent.h"
 #include <boost/bind.hpp>
 
 

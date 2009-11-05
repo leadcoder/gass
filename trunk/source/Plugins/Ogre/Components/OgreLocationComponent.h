@@ -52,7 +52,7 @@ namespace GASS
 		virtual void SetEulerRotation(const Vec3 &value);
 		virtual Vec3 GetEulerRotation() const;
 		virtual void SetScale(const Vec3 &value);
-		virtual Vec3 GetScale(){return m_Scale;}
+		virtual Vec3 GetScale() const {return m_Scale;}
 		virtual void SetRotation(const Quaternion &value);
 		virtual Quaternion GetRotation() const;
 		virtual Quaternion GetWorldRotation() const;

@@ -40,9 +40,6 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
 
-
-using namespace Ogre;
-
 namespace GASS
 {
 

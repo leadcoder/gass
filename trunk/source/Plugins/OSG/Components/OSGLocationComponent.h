@@ -30,13 +30,13 @@
 #include "Core/MessageSystem/IMessage.h"
 
 
-namespace Ogre
-{
-	class SceneNode;
-}
 
 namespace GASS
 {
+	class OSGGraphicsSceneManager;
+	class OSGLocationComponent;
+	typedef boost::shared_ptr<OSGLocationComponent>  OSGLocationComponentPtr;
+
 	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public osg::NodeCallback
 	{
 	public:
@@ -69,22 +69,31 @@ namespace GASS
 		
 		void OnWorldPositionMessage(WorldPositionMessagePtr message);
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
+
+		void SetAttachToParent(bool value);
+		bool GetAttachToParent() const;
+
+		//helper
+		OSGLocationComponentPtr GetParentLocation();
 		
 		
 		void OnVisibilityMessage(VisibilityMessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
-		Vec3 m_LastPos;
+		//Vec3 m_LastPos;
 
 		//! relative rotation of the scene node.
 		Vec3 m_Rot;
-		Vec3 m_LastRot;
+		//Vec3 m_LastRot;
+
+		bool m_AttachToParent;
 
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
+		OSGGraphicsSceneManager* m_GFXSceneManager;
 	};
-	typedef boost::shared_ptr<OSGLocationComponent>  OSGLocationComponentPtr;
+	
 }
 

@@ -34,13 +34,15 @@
 namespace GASS
 {
 
-	OSGLocationComponent::OSGLocationComponent() 
+	OSGLocationComponent::OSGLocationComponent() :
+		m_Pos(0,0,0),
+		m_Rot(0,0,0),
+		//m_LastRot(0,0,0),
+		//m_LastPos(0,0,0), 
+		m_Scale(1,1,1),
+		m_AttachToParent(false)
 	{
-		m_Pos.Set(0,0,0);
-		m_Rot.Set(0,0,0);
-		m_LastRot.Set(0,0,0);
-		m_LastPos.Set(0,0,0); 
-		m_Scale.Set(1,1,1);
+
 	}
 
 	OSGLocationComponent::~OSGLocationComponent()
@@ -60,6 +62,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OSGLocationComponent, IComponent>);
 		RegisterProperty<Vec3>("Position", &GetPosition, &SetPosition);
 		RegisterProperty<Vec3>("Rotation", &GetEulerRotation, &SetEulerRotation);
+		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent);
 	}
 
 	void OSGLocationComponent::OnCreate()
@@ -75,23 +78,32 @@ namespace GASS
 
 	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osg_sm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		assert(osg_sm);
-		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = osg_sm->GetOSGRootNode();
+		m_GFXSceneManager = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+		assert(m_GFXSceneManager );
 		m_TransformNode = new osg::PositionAttitudeTransform();
-
-		//m_TransformNode->setEventCallback(this);
-
-		//m_TransformNode->setAttitude(osg_sm->GetSceneTransformatation()->getAttitude());
 		m_RotTransformNode = new osg::PositionAttitudeTransform();
-		if(root_node.valid())
+		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
+
+		if(m_AttachToParent)
+		{
+			OSGLocationComponentPtr parent = GetParentLocation();
+			if(parent)
+			{
+				parent->GetOSGNode()->addChild(m_TransformNode.get());
+			}
+			else
+				root_node->addChild(m_TransformNode.get());
+		}
+		else
 		{
 			root_node->addChild(m_TransformNode.get());
-			m_TransformNode->addChild(m_RotTransformNode.get());
-			//m_TransformNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
-			//						     Math::Deg2Rad(180),osg::Vec3(0,1,0),
-			//							 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
+				//m_TransformNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
+				//						     Math::Deg2Rad(180),osg::Vec3(0,1,0),
+				//							 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
+			
 		}
+
+		m_TransformNode->addChild(m_RotTransformNode.get());
 		
 
 		MessagePtr pos_msg(new PositionMessage(m_Pos));
@@ -116,12 +128,27 @@ namespace GASS
 	void OSGLocationComponent::OnWorldPositionMessage(WorldPositionMessagePtr message)
 	{
 		Vec3 value = message->GetPosition();
-		m_Pos = value;
+		SetWorldPosition(value);
+		/*m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
+			osg::Vec3d new_pos(value.x,value.y,value.z);
+			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+			if(parent) 
+			{
+				osg::MatrixList mat_list = parent->getWorldMatrices();
+				osg::Matrix final;
+				final.identity();
+				for(int i = 0 ;  i < mat_list.size() ; i++)
+				{
+					final = mat_list[i]*final;
+				}
+				osg::Matrix inv_trans = osg::Matrix::inverse(final);
+				new_pos = new_pos*inv_trans;
+			}
+			m_TransformNode->setPosition(new_pos);
 			SendTransMessage();
-		}
+		}*/
 	}
 
 	
@@ -170,6 +197,14 @@ namespace GASS
 		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
 		GetSceneObject()->PostMessage(trans_msg);
 		//send for all child tranforms also?
+		GASS::IComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
+			OSGLocationComponentPtr c_location = obj->GetFirstComponent<OSGLocationComponent>();
+			if(c_location)
+				c_location->SendTransMessage();
+		}
 	}
 
 	Vec3 OSGLocationComponent::GetPosition() const 
@@ -179,16 +214,47 @@ namespace GASS
 
 	void OSGLocationComponent::SetWorldPosition(const Vec3 &value)
 	{
-		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
+			osg::Vec3d new_pos(value.x,value.y,value.z);
+			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+			if(parent) 
+			{
+				osg::MatrixList mat_list = parent->getWorldMatrices();
+				osg::Matrix final;
+				final.identity();
+				for(int i = 0 ;  i < mat_list.size() ; i++)
+				{
+					final = mat_list[i]*final;
+				}
+				osg::Matrix inv_trans = osg::Matrix::inverse(final);
+				new_pos = new_pos*inv_trans;
+			}
+			m_TransformNode->setPosition(new_pos);
+			m_Pos.Set(new_pos.x(),new_pos.y(),new_pos.z());
 			SendTransMessage();
 		}
 	}
 
 	Vec3 OSGLocationComponent::GetWorldPosition() const 
 	{
+		if(m_TransformNode.valid())
+		{
+			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+			if(parent) 
+			{
+				osg::MatrixList mat_list = parent->getWorldMatrices();
+				osg::Matrix final;
+				final.identity();
+				for(int i = 0 ;  i < mat_list.size() ; i++)
+				{
+					final = mat_list[i]*final;
+				}
+				osg::Vec3d osg_world_pos = m_TransformNode->getPosition()*final;
+				Vec3 world_pos(osg_world_pos.x(),osg_world_pos.y(),osg_world_pos.z());
+				return world_pos;
+			}
+		}
 		return m_Pos;
 	}
 
@@ -227,12 +293,15 @@ namespace GASS
 	
 	Quaternion OSGLocationComponent::GetRotation() const
 	{
-		Quaternion q;
-		osg::Quat rot = m_TransformNode->getAttitude();
-		q.x = rot.x();
-		q.z = -rot.y();
-		q.y = -rot.z();
-		q.w = rot.w();
+		Quaternion q = Quaternion::IDENTITY;
+		if(m_TransformNode.valid())
+		{
+			osg::Quat rot = m_TransformNode->getAttitude();
+			q.x = rot.x();
+			q.z = -rot.y();
+			q.y = -rot.z();
+			q.w = rot.w();
+		}
 		return q;
 	}
 
@@ -249,12 +318,16 @@ namespace GASS
 
 	Quaternion OSGLocationComponent::GetWorldRotation() const
 	{
-		Quaternion q;
-		osg::Quat rot = m_TransformNode->getAttitude();
-		q.x = rot.x();
-		q.z = -rot.y();
-		q.y = -rot.z();
-		q.w = rot.w();
+		Quaternion q = Quaternion::IDENTITY;
+		
+		if(m_TransformNode.valid())
+		{
+			osg::Quat rot = m_TransformNode->getAttitude();
+			q.x = rot.x();
+			q.z = -rot.y();
+			q.y = -rot.z();
+			q.w = rot.w();
+		}
 		return q;
 	}
 
@@ -274,10 +347,46 @@ namespace GASS
 		else m_TransformNode->setNodeMask(0);
 	}
 
-	
+	void OSGLocationComponent::SetAttachToParent(bool value)
+	{
+		m_AttachToParent = value;
+		if(m_TransformNode.valid())
+		{
+			Vec3 world_pos = GetWorldPosition();
+			Quaternion world_rot = GetWorldRotation();
+			if(m_TransformNode->getParent(0))
+				m_TransformNode->getParent(0)->removeChild(m_TransformNode);
+
+			OSGLocationComponentPtr parent = GetParentLocation();
+			if(parent && value)
+				parent->GetOSGNode()->addChild(m_TransformNode);
+			else
+			{
+				osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
+				root_node->addChild(m_TransformNode);
+			}
+			SetWorldPosition(world_pos);
+			SetWorldRotation(world_rot);
+		}
+	}
+
+	bool OSGLocationComponent::GetAttachToParent() const
+	{
+		return m_AttachToParent;
+	}
 
 
-	
-
-
+	OSGLocationComponentPtr OSGLocationComponent::GetParentLocation()
+	{
+		OSGLocationComponentPtr parent_location;
+		SceneObjectPtr scene_obj  = boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent());
+		while(scene_obj && !parent_location)
+		{
+			parent_location  = scene_obj->GetFirstComponent<OSGLocationComponent>();
+			if(parent_location)
+				return parent_location;
+			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());
+		}
+		return parent_location;
+	}
 }

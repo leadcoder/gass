@@ -78,6 +78,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, IComponent>);
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition);
 		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation);
+		RegisterProperty<Vec3>("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale);
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent);
 
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
@@ -126,12 +127,16 @@ namespace GASS
 			m_OgreNode = sm->getRootSceneNode()->createChildSceneNode(name);
 		}
 
+		//update scale
+		SetScale(m_Scale);
+
 		m_OgreNode->setListener(this);
 
 		MessagePtr pos_msg(new GASS::PositionMessage(m_Pos));
 		MessagePtr rot_msg(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
+		
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 

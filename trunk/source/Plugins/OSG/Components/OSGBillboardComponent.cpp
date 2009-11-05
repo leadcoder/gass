@@ -40,8 +40,6 @@
 
 
 
-using namespace Ogre;
-
 namespace GASS
 {
 
@@ -106,6 +104,8 @@ namespace GASS
 			Log::Error("Failed to find texture:%s",full_path.c_str());
 		}
 
+		//check if dds, then flip texcoords
+
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
 		m_OSGBillboard->addDrawable(
@@ -161,10 +161,10 @@ namespace GASS
 		geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 
 		osg::ref_ptr<osg::Vec2Array> tcoords = new osg::Vec2Array(4);
-		(*tcoords)[0].set(0.0f,0.0f);
-		(*tcoords)[1].set(1.0f,0.0f);
-			(*tcoords)[2].set(1.0f,1.0f);
-		(*tcoords)[3].set(0.0f,1.0f);
+		(*tcoords)[0].set(0.0f,1.0f);
+		(*tcoords)[1].set(1.0f,1.0f);
+		(*tcoords)[2].set(1.0f,0.0f);
+		(*tcoords)[3].set(0.0f,0.0f);
 		geom->setTexCoordArray(0,tcoords.get());
 		osg::ref_ptr<osg::DrawArrays> arrays = new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4);
 		geom->addPrimitiveSet(arrays.get());
