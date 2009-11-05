@@ -188,16 +188,22 @@ namespace GASS
 			{
 
 			TerrainComponentPtr terrain  = boost::shared_dynamic_cast<ITerrainComponent>(geom);
-
+			
 			if(terrain)
 			{
+				
 				NxReal sixtyFourKb = 65536.0f;
 				NxReal thirtyTwoKb = 32767.5f;
 
 				NxU32 nbRows = terrain->GetSamplesZ();
 				NxU32 nbColumns =terrain->GetSamplesX();
 
+				Vec3 b_min, b_max;
+				terrain->GetBounds(b_min,b_max);
+				float h_span = b_max.y - b_min.y;
+
 				NxHeightFieldDesc heightFieldDesc;
+				heightFieldDesc.setToDefault();
 				heightFieldDesc.nbColumns		= nbColumns;
 				heightFieldDesc.nbRows			= nbRows;
 				heightFieldDesc.convexEdgeThreshold = 0;
@@ -216,14 +222,21 @@ namespace GASS
 						float posx = terrain->GetSizeX()*((float)column/(float)nbColumns);
 						float posz = terrain->GetSizeZ()*((float)row/(float)nbRows);
 
-						float h = terrain->GetHeight(posx,posz);
-						NxI16 height = (NxI32)(sixtyFourKb * terrain->GetHeight(posz,posx)/1000.f);
+						//float h = terrain->GetHeight(posx,posz);
+						//NxI16 height = (NxI16)(thirtyTwoKb * terrain->GetHeight(posz,posx)/h_span);
+						NxI16 height = (NxI16)(thirtyTwoKb * terrain->GetHeightData()[nbRows*column + row]/h_span);
+
+						//Log::Print("%d %f %f",height,posx,posz);
 						//NxI16 height = (NxI32)(sixtyFourKb * 10/1000.f);
 						
 							//NxI16 height = - (nbRows / 2 - row) * (nbRows / 2 - row) - (nbColumns / 2 - column) * (nbColumns / 2 - column);
 
 						NxHeightFieldSample* currentSample = (NxHeightFieldSample*)currentByte;
 						currentSample->height = height;
+						currentSample->materialIndex0 = 1;
+						currentSample->materialIndex1 = 1;
+						currentSample->tessFlag = 0;
+						//currentSample->unused = 0;
 						currentByte += heightFieldDesc.sampleStride;
 					}
 				}
@@ -234,12 +247,14 @@ namespace GASS
 				// data has been copied, we can free our buffer
 				delete [] heightFieldDesc.samples;
 
-
+			
 				
 				NxHeightFieldShapeDesc* heightFieldShapeDesc = new NxHeightFieldShapeDesc();
+				heightFieldShapeDesc->setToDefault();
 				heightFieldShapeDesc->heightField	= heightField;
 				heightFieldShapeDesc->shapeFlags		= NX_SF_FEATURE_INDICES | NX_SF_VISUALIZATION;
-				heightFieldShapeDesc->heightScale	= 1000.0f / sixtyFourKb;
+				
+				heightFieldShapeDesc->heightScale	= h_span / thirtyTwoKb;
 				heightFieldShapeDesc->rowScale		= terrain->GetSizeZ() / NxReal(nbRows-1);
 				heightFieldShapeDesc->columnScale	= terrain->GetSizeX() / NxReal(nbColumns-1);
 				
@@ -287,15 +302,18 @@ namespace GASS
 			else // static geometry
 			{
 				NxActorDesc adesc;
+				adesc.setToDefault();
 				adesc.body		= NULL;
 				adesc.globalPose.t = NxVec3(0,0,0);
 				adesc.shapes.pushBack(shape);
 				m_StaticActor = m_SceneManager->GetNxScene()->createActor(adesc);
 
+					
 
-				/*NxPlaneShapeDesc planeDesc;
+
+			/*	NxPlaneShapeDesc planeDesc;
 				NxActorDesc actorDesc;
-				planeDesc.d = -10;
+				planeDesc.d = 5;
 				actorDesc.shapes.pushBack(&planeDesc);
 				m_SceneManager->GetNxScene()->createActor(actorDesc);
 */

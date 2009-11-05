@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/PhysX/PhysXBody.h"
+#include "Plugins/PhysX/PhysXJoint.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
 #include "Core/Math/AABox.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -122,9 +123,12 @@ namespace GASS
 		assert(m_SceneManager);
 		NxBodyDesc bodyDesc;
 		bodyDesc.setToDefault();
+		bodyDesc.mass = m_Mass;
 		m_ActorDesc.body		= &bodyDesc;
-		m_ActorDesc.density		= 1.0f;
+		m_ActorDesc.density		= 0.0f;
+		
 
+		
 
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
@@ -351,6 +355,23 @@ namespace GASS
 						body->SetPosition(pos);
 					}
 				}
+
+				components.clear();
+				GetSceneObject()->GetComponentsByClass(components,"PhysXJoint");
+				
+				for(int i = 0 ; i < components.size(); i++)
+				{
+					PhysXJointPtr joint = boost::shared_static_cast<PhysXJoint>(components[i]);
+					//if(joint.get() != this)
+					{
+						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+						Vec3 pos = location->GetPosition();
+						pos = pos + trans_vec;
+						joint->SetPosition(pos);
+					}
+				}
+
+
 				/*int num_joints = dBodyGetNumJoints(m_PhysXBody);
 				for(int i = 0 ; i < num_joints ;i++)
 				{

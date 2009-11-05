@@ -200,7 +200,7 @@ namespace GASS
 
 		NxTriangleMesh* trimesh;
 
-#ifndef NX_DEBUG
+
 
 
 	
@@ -254,37 +254,7 @@ namespace GASS
 			Log::Error("%s",s.str().c_str());//NxThrow_Error(s.str());
 		}
 		trimesh = m_PhysicsSDK->createTriangleMesh(MemoryReadBuffer(buf.data));*/
-#else
 
-		NxString filename;
-		if (Ogre::StringUtil::endsWith(meshName, ".mesh")) {
-			filename = meshName.substr(0, meshName.length() - 5) + ".TriangleMeshShape.nxs";	
-		}
-		else {
-			filename = meshName + ".TriangleMeshShape.nxs";
-		}
-
-		UserStream buf(filename.c_str(),false);
-
-		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) {
-			std::stringstream s;
-			s	<< "Mesh '" << meshName << "' failed to cook"
-				<< "V(" << mMeshVertices << ") F(" << mMeshFaces << ")";
-
-			NxThrow_Error(s.str());
-		}
-
-		fclose(buf.fp);
-
-		UserStream rbuf(filename.c_str(), true);
-
-		trimesh = scene->getPhysicsSDK().createTriangleMesh(rbuf);
-
-		fclose(rbuf.fp);
-
-
-
-#endif
 
 
 
