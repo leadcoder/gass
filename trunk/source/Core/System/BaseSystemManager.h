@@ -32,18 +32,49 @@
 class TiXmlElement;
 namespace GASS
 {
+	/**
+		Convinience system manager that load system from xml file
+	*/
 	
 	class GASSCoreExport BaseSystemManager : public ISystemManager
 	{
 	public:
 		BaseSystemManager();
 		virtual ~BaseSystemManager();
+		/**
+			Loading systems from xml-file, syntax example:
+
+			<?xml version="1.0" encoding="utf-8"?>
+			<Systems>
+				<GraphicsSystem type="OgreGraphicsSystem">
+					... gfx system params
+	  		    </GraphicsSystem>
+				<InputSystem type="OISInputSystem">
+					... input system params
+				</InputSystem>
+				...
+			<System>
+			A system is specified by a name tag and att type attribute that 
+			specify the class implementing the system.
+		*/
 		bool Load(const std::string &filename);
 
 		//ISystemInterface
+
+		/**
+			Initliize all systems
+		*/
 		virtual void Init();
+
+		/**
+			Update all systems
+		*/
 		virtual void Update(double delta_time);
 
+		/**
+			Get hold of system by class type. If more then one system
+			of the class type exist tbe first one loaded will be returned
+		*/
 		template <class T>
 		boost::shared_ptr<T> GetFirstSystem()
 		{

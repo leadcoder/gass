@@ -32,12 +32,28 @@
 namespace GASS
 {
 	class MessageManager;
+
+	/**
+		System manager for all systems used in GASSSim.
+		The system manager load it's systems through xml-files
+		and then handle all SimSystemMessages in GASSSim.
+		To post a SimSystemMessages you simply call 
+		PostMessage in this class with your message as argument.
+		To handle the messages the SimSystemManager use the 
+		MessageManager class
+	*/
 	class GASSExport SimSystemManager : public BaseSystemManager
 	{
 	public:
 		SimSystemManager();
 		virtual ~SimSystemManager();
+		/**
+		Called by owner before use
+		*/
 		void Init();
+		/**
+		Register for SimSystemMessages
+		*/
 		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);

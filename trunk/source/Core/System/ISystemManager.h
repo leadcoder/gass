@@ -32,6 +32,9 @@
 
 namespace GASS
 {
+	/**
+		Interface for a system manager
+	*/
 	class GASSCoreExport ISystemManager
 	{
 	public:

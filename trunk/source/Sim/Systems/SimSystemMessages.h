@@ -32,13 +32,21 @@ namespace GASS
 {
 	class ScenarioScene;
 
-	//Divided messages in two catagories, notify and request
-	//Messages with prefix SYSTEM_RM, is a request message
-	//Messages with prefix SYSTEM_NM, is a notify message
+	/**
+	Enumeration of message types used by the SimSystemManager
+	Sim system messages are used to communicate with systems and 
+	used by systems to notify listeners about critcal system events
+	To send a SimSystemMessage you have to get hold of the 
+	SimSystemManager and then post a message, ex:
+	SimEngine::Get().GetSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
+
+	Sim system messages are divided in two catagories, notify and request.
+	Mesages with prefix SYSTEM_RM, is a request message
+	Messages with prefix SYSTEM_NM, is a notify message*/
 	enum SimSystemMessage
 	{
 		//-----------------Request section-------------
-		SYSTEM_RM_INIT,
+		SYSTEM_RM_INIT, 
 		SYSTEM_RM_CREATE_RENDER_WINDOW,
 		SYSTEM_RM_DEBUG_PRINT,
 
@@ -49,6 +57,10 @@ namespace GASS
 		SYSTEM_NM_SCENARIO_SCENE_LOADED,
 		SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD
 	};
+
+	/**
+	Message used that can be posted by anyone to request that a new render window should be created.
+	*/
 
 	class CreateRenderWindowMessage : public BaseMessage
 	{
@@ -75,6 +87,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<CreateRenderWindowMessage> CreateRenderWindowMessagePtr;
 
+	/**
+	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
+	*/
 	class DebugPrintMessage : public BaseMessage
 	{
 	public:
@@ -90,6 +105,17 @@ namespace GASS
 	typedef boost::shared_ptr<DebugPrintMessage> DebugPrintMessagePtr;
 
 
+	/**
+	Message posted by the graphic scene manager to notify that the scene manager 
+	has loaded successfully. The message provided the name of the render system in use and 
+	a root node to the scene graph created by the scene manager. The root node is  a void-pointer 
+	and should be casted to the correct scene node type depending on what the render system in use.
+	ie. If Ogre3d is the render system the GetSceneGraphRootNode will return a Ogre::SceneNode*, if OSG
+	is used the root node will be osg::Node* etc. 
+	This message is usefull for render system extensions that don't want to link to a specific render system
+	implementation.
+	*/
+	
 	class GFXSceneManagerLoadedNotifyMessage : public BaseMessage
 	{
 	public:
@@ -105,6 +131,11 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<GFXSceneManagerLoadedNotifyMessage> GFXSceneManagerLoadedNotifyMessagePtr;
 
+	/**
+		Message posted by the graphic system to notify that a new render window has been created.
+		Suscribe to this message if you need to get hold of the render window handle, 
+	*/
+	
 	class MainWindowCreatedNotifyMessage : public BaseMessage
 	{
 	public:
@@ -122,6 +153,13 @@ namespace GASS
 	typedef boost::shared_ptr<MainWindowCreatedNotifyMessage> MainWindowCreatedNotifyMessagePtr;
 
 
+	/**
+		If you have a created a external render window this messages should be posted by the external
+		owner if the render window has moved or resized. 
+		A graphic system implementation should suscribe to this message to notify 
+		it's internal window system about the change
+	*/
+
 	class MainWindowMovedOrResizedNotifyMessage : public BaseMessage
 	{
 	public:
@@ -132,6 +170,14 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<MainWindowMovedOrResizedNotifyMessage> MainWindowMovedOrResizedNotifyMessagePtr;
 
+	/**
+		This message is posted by the ScenarioScene class when a scene in a scenario has loaded successfully.
+		This means that all objects specified in the scenario scene is loaded. If you want to catch the 
+		loading messages of thoes objects you should instead suscribe to the ScenarioSceneAboutToLoadNotifyMessage
+		bellow.
+		Suscribe to this message if you want to get hold of scenario scenes after all scene objects are loaded.
+	*/
+	
 	class ScenarioSceneLoadedNotifyMessage : public BaseMessage
 	{
 	public:
@@ -145,6 +191,13 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScenarioSceneLoadedNotifyMessage> ScenarioSceneLoadedNotifyMessagePtr;
 
+	
+	/**
+		This message is posted by the ScenarioScene class before the scenario objects are loaded.
+		Suscribe to this message if you want to get hold of sceario scenes before all scene objects are loaded. This
+		can be usefull if you want to modify, add or save some objects the scenario scene loaded
+	*/
+	
 	class ScenarioSceneAboutToLoadNotifyMessage : public BaseMessage
 	{
 	public:
