@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="GASSPluginPhysX"
 	ProjectGUID="{CA635CE0-2E30-1B47-80E6-7385659E3204}"
 	RootNamespace="GASSPluginODE"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -17,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\lib\vs2005"
+			OutputDirectory="..\lib\vs2008"
 			IntermediateDirectory="obj\Debug\GASSPluginPhysX"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -40,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\PhysXLoader\include&quot;;../Source;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Physics\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Foundation\include&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\Cooking\include&quot;;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
+				AdditionalIncludeDirectories="&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\PhysXLoader\include&quot;;../Source;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Physics\include&quot;;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Foundation\include&quot;;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Cooking\include&quot;;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;dDOUBLE;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,10 +69,12 @@
 				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib tbb_debug.lib NxCooking.lib &#x0A;PhysXLoader.lib"
 				OutputFile="$(OutDir)\GASSPluginPhysX_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;..\dependencies\tinyxml\lib;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\Tools\CookedMesh\Reader\lib&quot;;&quot;C:\Program Files\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.1\SDKs\lib\Win32&quot;;..\dependencies\tbb\ia32\vc8\lib"
+				AdditionalLibraryDirectories="..\lib\vs2008;..\dependencies;..\dependencies\tinyxml\lib;&quot;..\dependencies\NVIDIA PhysX SDK\v2.8.1\Tools\CookedMesh\Reader\lib&quot;;&quot;..\dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\lib\Win32&quot;;..\dependencies\tbb\ia32\vc8\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\vs2005\GASSPluginODE_d.lib"
 				TargetMachine="1"
 			/>
@@ -94,16 +97,13 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\lib\vs2005"
-			IntermediateDirectory="obj\Release\GASSPluginODE"
+			OutputDirectory="..\lib\vs2008"
+			IntermediateDirectory="obj\Release\GASSPluginPhysX"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="../Source;../dependencies/ode/include;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
+				AdditionalIncludeDirectories="&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\PhysXLoader\include&quot;;../Source;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Physics\include&quot;;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Foundation\include&quot;;&quot;../dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\Cooking\include&quot;;../dependencies/tinyxml;../dependencies/boost;../dependencies/tbb/include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;dDOUBLE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -149,14 +149,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\lib\vs2005\GASSCore.lib ..\lib\vs2005\GASSSim.lib ode_double.lib tinyxml.lib tbb.lib"
-				OutputFile="$(OutDir)\GASSPluginODE.dll"
+				AdditionalDependencies="GASSCore.lib GASSSim.lib NxCooking.lib &#x0A;PhysXLoader.lib tinyxml.lib tbb.lib"
+				OutputFile="$(OutDir)\GASSPluginPhysX.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;..\dependencies\tinyxml\lib;..\dependencies\ode\lib\$(ConfigurationName)DoubleLib;..\dependencies\tbb\ia32\vc8\lib"
+				AdditionalLibraryDirectories="..\lib\vs2008;..\dependencies;..\dependencies\tinyxml\lib;&quot;..\dependencies\NVIDIA PhysX SDK\v2.8.1\Tools\CookedMesh\Reader\lib&quot;;&quot;..\dependencies\NVIDIA PhysX SDK\v2.8.1\SDKs\lib\Win32&quot;;..\dependencies\tbb\ia32\vc8\lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\vs2005\GASSPluginODE.lib"
 				TargetMachine="1"
 			/>
@@ -179,9 +181,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -199,19 +198,35 @@
 					Name="PhysX"
 					>
 					<File
-						RelativePath="..\source\Plugins\PhysX\PhysXBody.cpp"
+						RelativePath="..\source\Plugins\PhysX\PhysXBodyComponent.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\source\Plugins\PhysX\PhysXBody.h"
+						RelativePath="..\source\Plugins\PhysX\PhysXBodyComponent.h"
 						>
 					</File>
 					<File
-						RelativePath="..\source\Plugins\PhysX\PhysXGeometry.cpp"
+						RelativePath="..\source\Plugins\PhysX\PhysXGeometryComponent.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\source\Plugins\PhysX\PhysXGeometry.h"
+						RelativePath="..\source\Plugins\PhysX\PhysXGeometryComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXHingeComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXHingeComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXJoint.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXJoint.h"
 						>
 					</File>
 					<File
@@ -228,6 +243,14 @@
 					</File>
 					<File
 						RelativePath="..\source\Plugins\PhysX\PhysXPhysicsSystem.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXSuspensionComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\PhysX\PhysXSuspensionComponent.h"
 						>
 					</File>
 					<Filter

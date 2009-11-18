@@ -6,6 +6,7 @@
     <MainScene>
       <SceneSettings>
         <StartPosition value= "1720.49 21.8169 2875.78"/>
+        <!--<StartPosition value= "4960 151.8169 60"/>-->
         <StartRotation value= "0 0 0"/>
         <SetRT90OrigoX value="1486593"/>
         <!-- east-->
@@ -32,7 +33,7 @@
           <FarShadowDistance value= "500"/>
           <SkyboxMaterial value="AfricaSkybox"/>
         </GraphicsSceneManager>
-        <PhysicsSceneManager type="ODEPhysicsSceneManager">
+        <PhysicsSceneManager type="PhysicsSceneManager">
           <Gravity value= "-9.81"/>
         </PhysicsSceneManager>
       </SceneManagers>

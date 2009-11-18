@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Plugins/PhysX/PhysXGeometry.h"
+#include "Plugins/PhysX/PhysXGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Math/Vector.h"
@@ -42,15 +42,15 @@ namespace GASS
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 
 		//virtual void UpdateTransformation();
-		virtual float GetAngle();
-		virtual float GetAngleRate();
-		virtual void SetAxis1Vel(float velocity);
-		virtual void SetAxis2Vel(float value);
-		virtual float GetAxis2Vel(){return 0;}
-		float GetAxis1Force()const {return m_JointForce1;}
-		void SetAxis1Force(float value);//{ m_JointForce = value;}
-		virtual void SetAxis2Force(float value);
-		float GetAxis2Force()const;
+		float GetRollAngle();
+		float GetRollAngleRate();
+		void SetRollAxisVel(float velocity);
+		//void SetSpringAxisVel(float value);
+		//float GetSpringAxisVel(){return 0;}
+		float GetRollAxisForce()const {return m_RollJointForce;}
+		void SetRollAxisForce(float value);//{ m_JointForce = value;}
+		//virtual void SetSpringAxisForce(float value);
+		//float GetSpringAxisForce()const;
 		
 	
 
@@ -78,10 +78,10 @@ namespace GASS
 		void SetStrength(float value){m_Strength =value;}
 		float GetSwayForce()const {return m_SwayForce;}
 		void SetSwayForce(float value);
-		Vec3 GetAxis1()const {return m_Axis1;}
-		void SetAxis1(const Vec3 &value);
-		Vec3 GetAxis2()const {return m_Axis2;}
-		void SetAxis2(const Vec3 &value);
+		Vec3 GetRollAxis()const {return m_RollAxis;}
+		void SetRollAxis(const Vec3 &value);
+		Vec3 GetSpringAxis()const {return m_SpringAxis;}
+		void SetSpringAxis(const Vec3 &value);
 		Vec3 GetAnchor()const {return m_Anchor;}
 		void SetAnchor(const Vec3 &value);
 
@@ -101,11 +101,9 @@ namespace GASS
 		std::string m_Body2Name;
 		
 		
-		float m_JointForce1;
-		float m_JointForce2;
-		float m_AngularVelocity1;
-		float m_AngularVelocity2;
-
+		float m_RollJointForce;
+		float m_SpringJointForce;
+		float m_RollAngularVelocity;
 
 		float m_SwayForce;
 		float m_Strength;
@@ -115,13 +113,15 @@ namespace GASS
 		float m_LowStop;
 
 		Vec3 m_Anchor; 
-		Vec3 m_Axis1;
-		Vec3 m_Axis2;
+		Vec3 m_RollAxis;
+		Vec3 m_SpringAxis;
 
 		PhysXPhysicsSceneManager* m_SceneManager;
 
 		//axis actor
-		NxActor *m_AxisActor;
+		NxActor *m_RollAxisActor;
+		NxRevoluteJoint *m_RollJoint;
+		NxPrismaticJoint *m_SpringJoint;
 	};
 	typedef boost::shared_ptr<PhysXSuspensionComponent> PhysXSuspensionComponentPtr;
 }

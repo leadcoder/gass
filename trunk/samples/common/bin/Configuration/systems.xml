@@ -7,6 +7,7 @@
     <Plugin value="Plugin_BSPSceneManager"/>
     <Plugin value="Plugin_OctreeSceneManager"/>
     <Plugin value="Plugin_ParticleFX"/>
+    <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
   </GraphicsSystem>
   <ResourceSystem type="OgreResourceSystem">
@@ -23,6 +24,8 @@
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
   </ResourceSystem>
+  <!--<PhysicsSystem type="PhysXPhysicsSystem">
+  </PhysicsSystem>-->
   <PhysicsSystem type="ODEPhysicsSystem">
   </PhysicsSystem>
   <InputSystem type="OISInputSystem">

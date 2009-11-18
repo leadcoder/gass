@@ -20,7 +20,7 @@
 
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODELineCollision.h"
-#include "Plugins/ODE/ODEGeometry.h"
+#include "Plugins/ODE/ODEGeometryComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
 namespace GASS
@@ -96,7 +96,7 @@ namespace GASS
 
 		if(!dGeomIsEnabled(other_geom)) return;
 
-		ODEGeometry* pobj = static_cast<ODEGeometry*>(dGeomGetData(other_geom));
+		ODEGeometryComponent* pobj = static_cast<ODEGeometryComponent*>(dGeomGetData(other_geom));
 		SceneObjectPtr scene_object = pobj->GetSceneObject();
 
 		int num_contact_points = 10;

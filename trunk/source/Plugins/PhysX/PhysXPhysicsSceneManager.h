@@ -33,8 +33,8 @@ class NxScene;
 
 namespace GASS
 {
-	class PhysXBody;
-	typedef boost::shared_ptr<PhysXBody> PhysXBodyPtr;
+	class PhysXBodyComponent;
+	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
 	
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager> , public ITaskListener
@@ -68,7 +68,7 @@ namespace GASS
 		int m_MaxSimSteps;
 		NxScene *m_NxScene;
 
-		std::vector<PhysXBodyPtr> m_Bodies;
+		std::vector<PhysXBodyComponentPtr> m_Bodies;
 	};
 }
 

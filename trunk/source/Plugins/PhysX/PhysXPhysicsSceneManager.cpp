@@ -20,7 +20,7 @@
 
 #include "Plugins/PhysX/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX/PhysXBody.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
 //#include "Plugins/PhysX/PhysXCollisionSystem.h"
 
 #include <boost/bind.hpp>
@@ -62,7 +62,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("PhysXPhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>("Gravity", &GASS::PhysXPhysicsSceneManager::GetGravity, &GASS::PhysXPhysicsSceneManager::SetGravity);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::PhysXPhysicsSceneManager::GetTaskGroup, &GASS::PhysXPhysicsSceneManager::SetTaskGroup);
 	}
@@ -95,7 +95,7 @@ namespace GASS
 		obj->SendImmediate(phy_msg);
 
 		//Save all bodies
-		PhysXBodyPtr body = obj->GetFirstComponent<PhysXBody>();
+		PhysXBodyComponentPtr body = obj->GetFirstComponent<PhysXBodyComponent>();
 		if(body)
 			m_Bodies.push_back(body);
 	}

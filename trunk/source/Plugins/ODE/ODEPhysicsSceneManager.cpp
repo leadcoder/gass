@@ -33,7 +33,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 //#include "Main/Root.h"
-#include "Plugins/ODE/ODEBody.h"
+#include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
 
 
@@ -61,7 +61,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::ODEPhysicsSceneManager::GetTaskGroup, &GASS::ODEPhysicsSceneManager::SetTaskGroup);
 	}
@@ -194,8 +194,8 @@ namespace GASS
 		else
 		{
 			// check that both bodies has a geometry
-			ODEGeometry* geom1 = static_cast<ODEGeometry*>(dGeomGetData(o1));
-			ODEGeometry* geom2 = static_cast<ODEGeometry*>(dGeomGetData(o2));
+			ODEGeometryComponent* geom1 = static_cast<ODEGeometryComponent*>(dGeomGetData(o1));
+			ODEGeometryComponent* geom2 = static_cast<ODEGeometryComponent*>(dGeomGetData(o2));
 
 			if(!(geom1 && geom2))
 				return;

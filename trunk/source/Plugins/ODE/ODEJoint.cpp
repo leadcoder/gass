@@ -20,7 +20,7 @@
 
 #include "Sim/Common.h"
 #include "Plugins/ODE/ODEJoint.h"
-#include "Plugins/ODE/ODEBody.h"
+#include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -183,11 +183,11 @@ namespace GASS
 	{
 		dWorldID world = m_SceneManager->GetWorld();
 
-		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBody>().get();
-		m_Body2 = GetSceneObject()->GetFirstComponent<ODEBody>().get();
+		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
 
-		dBodyID b1 = m_Body1->GetODEBody();
-		dBodyID b2 = m_Body2->GetODEBody();
+		dBodyID b1 = m_Body1->GetODEBodyComponent();
+		dBodyID b2 = m_Body2->GetODEBodyComponent();
 
 		if(m_ODEJoint)
 			dJointDestroy(m_ODEJoint);
@@ -597,8 +597,8 @@ namespace GASS
 		//Hack to keep vehicles from flipping upside down
 		if(m_SwayForce > 0)
 		{
-			dBodyID b1 = m_Body1->GetODEBody();
-			dBodyID b2 = m_Body2->GetODEBody();
+			dBodyID b1 = m_Body1->GetODEBodyComponent();
+			dBodyID b2 = m_Body2->GetODEBodyComponent();
 
 			Vec3 bodyPoint;
 			Vec3 hingePoint;
@@ -683,7 +683,7 @@ namespace GASS
 				// This works quite well on a cars un-turning rear wheels.
 
 				//const dReal * dBodyGetPosition(dBodyID);
-				dBodyID body = m_Body2->GetODEBody();
+				dBodyID body = m_Body2->GetODEBodyComponent();
 				const dReal *body_rot =  dBodyGetRotation(body);
 
 				dReal res_rot[3][3];

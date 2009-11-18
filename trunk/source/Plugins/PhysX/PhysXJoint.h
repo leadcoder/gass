@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Plugins/PhysX/PhysXGeometry.h"
+#include "Plugins/PhysX/PhysXGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/Math/Vector.h"

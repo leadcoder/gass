@@ -2,6 +2,7 @@
 <Plugins>
   <Plugin PluginFile = "GASSPluginOgre"/>
   <Plugin PluginFile = "GASSPluginOIS"/>
+  <!--<Plugin PluginFile = "GASSPluginPhysX"/>-->
   <Plugin PluginFile = "GASSPluginODE"/>
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>

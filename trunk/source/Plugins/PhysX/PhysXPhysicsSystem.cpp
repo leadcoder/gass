@@ -13,7 +13,7 @@
 *****************************************************************************/ 
 
 #include "PhysXPhysicsSystem.h"
-#include "PhysXGeometry.h"
+#include "PhysXGeometryComponent.h"
 
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Core/System/SystemFactory.h"

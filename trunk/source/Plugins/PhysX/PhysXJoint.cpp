@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/PhysX/PhysXJoint.h"
-#include "Plugins/PhysX/PhysXBody.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
 #include "Core/Math/AABox.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -172,8 +172,8 @@ namespace GASS
 
 	void PhysXJoint::CreateJoint()
 	{
-		PhysXBodyPtr body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<PhysXBody>();
-		PhysXBodyPtr body2 = GetSceneObject()->GetFirstComponent<PhysXBody>();
+		PhysXBodyComponentPtr body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<PhysXBodyComponent>();
+		PhysXBodyComponentPtr body2 = GetSceneObject()->GetFirstComponent<PhysXBodyComponent>();
 
 		NxActor* a1 = body1->GetNxActor();
 		NxActor* a2 = body2->GetNxActor();
@@ -183,11 +183,11 @@ namespace GASS
 
 		//ignore collision for all parent bodies 
 		IComponentContainer::ComponentVector components;
-		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass(components,"PhysXBody");
+		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
 			
 		for(int i = 0; i < components.size(); i++)
 		{
-			PhysXBodyPtr body = boost::shared_static_cast<PhysXBody>(components[i]);
+			PhysXBodyComponentPtr body = boost::shared_static_cast<PhysXBodyComponent>(components[i]);
 			if(body->GetNxActor() && body->GetNxActor() != a2)
 				m_SceneManager->GetNxScene()->setActorPairFlags(*body->GetNxActor(), *a2, NX_IGNORE_PAIR);
 		}

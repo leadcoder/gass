@@ -9,10 +9,10 @@
         <Filename value="JIM_TANK_hull.mesh"/>
         <CastShadow value="1"/>
       </HullMesh>
-      <HullCollision type="ODEGeometry">
+      <HullCollision type="PhysicsGeometryComponent">
         <GeometryType value="box"/>
       </HullCollision>
-      <HullBody type="ODEBody">
+      <HullBody type="PhysicsBodyComponent">
         <Mass value="1.0"/>
       </HullBody>
       <EngineSound type="OpenALSoundComponent">
@@ -27,7 +27,7 @@
       <Engine type="VehicleEngineComponent">
         <Wheels value="JimTankWheelR1 JimTankWheelR2 JimTankWheelR3 JimTankWheelR4 JimTankWheelR5 JimTankWheelR6 JimTankWheelL1 JimTankWheelL2 JimTankWheelL3 JimTankWheelL4 JimTankWheelL5 JimTankWheelL6"/>
         <EngineType value="tank"/>
-        <Power value="0.02"/>
+        <Power value="0.01"/>
         <Automatic  value="1"/>
         <BrakeTorque  value="5"/>
         <DeclutchTimeChangeGear value="1.0"/>
@@ -71,14 +71,14 @@
           </TurretMesh>
           <TurretComp type="TurretComponent">
           </TurretComp>
-          <TurretPhysicsGeom type="ODEGeometry">
+          <TurretPhysicsGeom type="PhysicsGeometryComponent">
             <GeometryType value="box"/>
           </TurretPhysicsGeom>
-          <TurretPhysicsBody type="ODEBody">
+          <TurretPhysicsBody type="PhysicsBodyComponent">
             <Mass value="0.1"/>
           </TurretPhysicsBody>
-          <TurretPhysicsJoint type="ODEJoint">
-            <Type value="hinge"/>
+          <TurretPhysicsJoint type="PhysicsHingeComponent">
+            <Axis value ="0 1 0"/>
             <HighStop value ="-1"/>
             <LowStop value ="1"/>
           </TurretPhysicsJoint>
@@ -260,16 +260,15 @@
     <Components>
       <WheelLocation type="LocationComponent">
       </WheelLocation>
-      <WheelPhysicsGeom type="ODEGeometry">
+      <WheelPhysicsGeom type="PhysicsGeometryComponent">
         <GeometryType value="sphere"/>
         <Friction value="1.0"/>
       </WheelPhysicsGeom>
-      <WheelPhysicsBody type="ODEBody">
+      <WheelPhysicsBody type="PhysicsBodyComponent">
         <GeometryType value="sphere"/>
         <Mass value="0.02"/>
       </WheelPhysicsBody>
-      <WheelPhysicsJoint type="ODEJoint">
-        <Type value="suspension"/>
+      <WheelPhysicsJoint type="PhysicsSuspensionComponent">
         <Strength value="0.1"/>
         <Damping value="4"/>
         <SwayForce value="100"/>

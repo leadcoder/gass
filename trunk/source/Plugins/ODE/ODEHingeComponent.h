@@ -27,55 +27,32 @@
 
 namespace GASS
 {
-
-	enum JointType
-	{
-		UNIVERSAL_JOINT,
-		BALL_JOINT,
-		SLIDER_JOINT,
-		HINGE_JOINT,
-		SUSPENSION_JOINT
-	};
-
-
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
 
-	class ODEJoint : public Reflection<ODEJoint,BaseSceneComponent>
+	class ODEHingeComponent : public Reflection<ODEHingeComponent,BaseSceneComponent>
 	{
 	public:
-		ODEJoint();
-		virtual ~ODEJoint();
+		ODEHingeComponent();
+		virtual ~ODEHingeComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
-
-		//virtual float GetAngle();
-		//virtual float GetAngleRate();
-		virtual void SetAxis1Vel(float velocity);
-		virtual void SetAxis2Vel(float value);
-		//virtual float GetAxis2Vel();
-		float GetAxis1Force()const {return m_JointForce;}
-		void SetAxis1Force(float value);
-		virtual void SetAxis2Force(float value);
-		float GetAxis2Force()const;
+		void SetAxisVel(float velocity);
+		float GetAxisForce()const {return m_JointForce;}
+		void SetAxisForce(float value);
 		
-		virtual void Enable();
-		virtual void Disable();
-
 
 		//Helpers
 
 		void CreateJoint();
-		void UpdateSuspension();
 		void UpdateLimits();
 		void UpdateAnchor();
 		void UpdateJointAxis();
 
 		//get set section
-
 		std::string GetType()const;
 		void SetType(const std::string &type);
 		std::string GetBody1Name()const {return m_Body1Name;}
@@ -83,16 +60,8 @@ namespace GASS
 		std::string GetBody2Name()const {return m_Body2Name;}
 		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
 		
-		float GetDamping()const {return m_Damping;}
-		void SetDamping(float value);
-		float GetStrength()const {return m_Strength;}
-		void SetStrength(float value);
-		float GetSwayForce()const {return m_SwayForce;}
-		void SetSwayForce(float value);
-		Vec3 GetAxis1()const {return m_Axis1;}
-		void SetAxis1(const Vec3 &value);
-		Vec3 GetAxis2()const {return m_Axis2;}
-		void SetAxis2(const Vec3 &value);
+		Vec3 GetAxis()const {return m_Axis;}
+		void SetAxis(const Vec3 &value);
 		Vec3 GetAnchor()const {return m_Anchor;}
 		void SetAnchor(const Vec3 &value);
 
@@ -100,19 +69,13 @@ namespace GASS
 		void SetHighStop(float value);
 		float GetLowStop()const {return m_LowStop;}
 		void SetLowStop(float value);
-
-		
 	private:
-		void JointCorrectHinge2();
-		void UpdateSwayBars(VelocityNotifyMessagePtr message);
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
 
 		std::string m_Body1Name;
 		std::string m_Body2Name;
 		
-		JointType m_Type;
-
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
 		
@@ -125,9 +88,8 @@ namespace GASS
 		float m_LowStop;
 
 		Vec3 m_Anchor; 
-		Vec3 m_Axis1;
-		Vec3 m_Axis2;
-
+		Vec3 m_Axis;
+		
 		ODEPhysicsSceneManager* m_SceneManager;
 	};
 }

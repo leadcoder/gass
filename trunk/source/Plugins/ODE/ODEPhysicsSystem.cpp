@@ -35,7 +35,7 @@
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 //#include "Main/Root.h"
-#include "Plugins/ODE/ODEBody.h"
+#include "Plugins/ODE/ODEBodyComponent.h"
 
 
 namespace GASS

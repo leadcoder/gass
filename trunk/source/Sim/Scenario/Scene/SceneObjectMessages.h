@@ -60,6 +60,7 @@ namespace GASS
 		OBJECT_RM_COLLISION_SETTINGS,
 		OBJECT_RM_PHYSICS_JOINT_PARAMETER,
 		OBJECT_RM_PHYSICS_BODY_PARAMETER,
+		OBJECT_RM_PHYSICS_MASS,
 		OBJECT_RM_SOUND_PARAMETER,
 
 		/**
@@ -278,7 +279,21 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsBodyMessage> PhysicsBodyMessagePtr;
 
+	class PhysicsMassMessage : public BaseMessage
+	{
+	public:
+		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(OBJECT_RM_PHYSICS_MASS, sender_id , delay), m_Value(mass)
+		  {
 
+		  }
+		  Float GetMass()const {return m_Value;}
+		  enum {OMID = OBJECT_RM_PHYSICS_MASS};
+	private:
+			Float m_Value;
+	};
+
+	typedef boost::shared_ptr<PhysicsMassMessage> PhysicsMassMessagePtr;
 
 	class SoundParameterMessage : public BaseMessage
 	{

@@ -23,49 +23,31 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Core/MessageSystem/IMessage.h"
-//#include "Core/Reflection/Reflection.h"
+
 
 namespace GASS
 {
-
-	enum JointType
-	{
-		UNIVERSAL_JOINT,
-		BALL_JOINT,
-		SLIDER_JOINT,
-		HINGE_JOINT,
-		SUSPENSION_JOINT
-	};
-
-
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
 
-	class ODEJoint : public Reflection<ODEJoint,BaseSceneComponent>
+	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>
 	{
 	public:
-		ODEJoint();
-		virtual ~ODEJoint();
+		ODESuspensionComponent();
+		virtual ~ODESuspensionComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 
-		//virtual float GetAngle();
-		//virtual float GetAngleRate();
-		virtual void SetAxis1Vel(float velocity);
-		virtual void SetAxis2Vel(float value);
-		//virtual float GetAxis2Vel();
+		void SetAxis1Vel(float velocity);
+		void SetAxis2Vel(float value);
 		float GetAxis1Force()const {return m_JointForce;}
 		void SetAxis1Force(float value);
-		virtual void SetAxis2Force(float value);
+		void SetAxis2Force(float value);
 		float GetAxis2Force()const;
 		
-		virtual void Enable();
-		virtual void Disable();
-
-
 		//Helpers
 
 		void CreateJoint();
@@ -75,9 +57,6 @@ namespace GASS
 		void UpdateJointAxis();
 
 		//get set section
-
-		std::string GetType()const;
-		void SetType(const std::string &type);
 		std::string GetBody1Name()const {return m_Body1Name;}
 		void SetBody1Name(const std::string &name) {m_Body1Name = name;}
 		std::string GetBody2Name()const {return m_Body2Name;}
@@ -111,7 +90,7 @@ namespace GASS
 		std::string m_Body1Name;
 		std::string m_Body2Name;
 		
-		JointType m_Type;
+	
 
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
@@ -127,7 +106,6 @@ namespace GASS
 		Vec3 m_Anchor; 
 		Vec3 m_Axis1;
 		Vec3 m_Axis2;
-
 		ODEPhysicsSceneManager* m_SceneManager;
 	};
 }

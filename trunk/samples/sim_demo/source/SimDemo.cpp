@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 	scenario->Load(scenario_path);
 
 
-	for(int i = 0; i < 2; i++)
+	for(int i = 0; i < 1; i++)
 	{
 		engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
 		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
@@ -157,7 +157,10 @@ int main(int argc, char* argv[])
 			
 			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
 			pos.x = pos.x + i*7;
-			pos.y = 11;
+			pos.z = pos.z - 2;
+			//pos.x = 0;
+			//pos.y = 10;
+			//pos.z = 0;
 			boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
 			scene_object->SendImmediate(pos_msg);
 
@@ -170,7 +173,6 @@ int main(int argc, char* argv[])
 				if(objs.size() > 0)
 					objs.front()->PostMessage(enter_msg);
 			}
-
 		}
 	}
 
@@ -205,7 +207,7 @@ int main(int argc, char* argv[])
 	bool check_reset = true;
 	double update_time = 1.0/60.0;
 
-	while(timer.GetTime() < 200)
+	while(timer.GetTime() < 1200)
 	{
 		double time = timer.GetTime();
 		temp_t = time;

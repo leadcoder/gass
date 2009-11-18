@@ -73,7 +73,7 @@ namespace GASS
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
-			ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("ODEPhysicsSceneManager").get());
+			ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("PhysicsSceneManager").get());
 			if(request.Type == COL_LINE)
 			{
 				CollisionResult result;

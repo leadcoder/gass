@@ -25,7 +25,7 @@
 #include <map>
 #include <string>
 #include "Core/Utils/Misc.h"
-
+#include "Core/Utils/Log.h"
 
 namespace GASS
 {
@@ -93,6 +93,7 @@ namespace GASS
 		if (it != m_creatorMap.end())
 		{
 			delete pCreator;
+			Log::Warning("ObjectType %s already registred",type.c_str());
 			return false;
 		}
 		m_creatorMap[type] = pCreator;
@@ -122,13 +123,12 @@ namespace GASS
 		typename CreatorMap::iterator it = m_creatorMap.begin();
 		while(it != m_creatorMap.end())
 		{
-			names.push_back((*it).second->GetClassName());
+			//names.push_back((*it).second->GetClassName());
+			names.push_back((*it).first);
 			it++;
 		}
 		return names;
 	}
-
-
 
 	template<class Base>
 	boost::shared_ptr<Base> Factory<Base>::Create(ObjectType type)
