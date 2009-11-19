@@ -134,6 +134,7 @@ namespace GASS
 		if(m_CreateMainWindowOnInit)
 		{
 			m_Window = m_Root->initialise(true);
+			m_Window->setDeactivateOnFocusChange(false);
 			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
 			cam->setPosition(Vector3(0,2,0));

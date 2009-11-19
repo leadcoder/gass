@@ -109,7 +109,7 @@ namespace GASS
 
 	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
 	{
-		ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("ODEPhysicsSceneManager").get());
+		ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("PhysicsSceneManager").get());
 		if(request.Type == COL_LINE)
 		{
 			ODELineCollision raycast(&request,&result,ode_scene);

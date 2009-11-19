@@ -119,14 +119,14 @@ namespace GASS
 
 			/*mMatrix.set(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
-										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
-			osg::Vec3 tv1 = v1*mMatrix,
-			tv2 = v2*mMatrix,
-			tv3 = v3*mMatrix;*/
+										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
+			osg::Vec3 tv1 = v1*mMatrix;
+			osg::Vec3 tv2 = v2*mMatrix;
+			osg::Vec3 tv3 = v3*mMatrix;
 
-			osg::Vec3 tv1 = v1;
-			osg::Vec3 tv2 = v2;
-			osg::Vec3 tv3 = v3;
+			//osg::Vec3 tv1 = v1;
+			//osg::Vec3 tv2 = v2;
+			//osg::Vec3 tv3 = v3;
 			
 			StridedVertex sv1, sv2, sv3;
 			StridedTriangle t;

@@ -75,7 +75,7 @@ namespace GASS
 		if (name == m_Controller)
 		{
 			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,100.0f));
 			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
 			
 			GetSceneObject()->PostMessage(force_msg);

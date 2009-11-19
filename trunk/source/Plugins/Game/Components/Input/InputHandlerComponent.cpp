@@ -60,6 +60,7 @@ namespace GASS
 			Log::Warning("Failed to find control settings: %s",m_ControlSetting.c_str());
 
 
+
 	
 		
 		IComponentContainerTemplate::ComponentVector components;

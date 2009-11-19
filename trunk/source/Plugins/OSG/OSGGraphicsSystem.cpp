@@ -58,6 +58,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
+#include <osgDB/ReadFile> 
 
 
 
@@ -91,13 +92,16 @@ namespace GASS
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
 	{
+
 		osgViewer::ViewerBase::Views views;
 		m_Viewer->getViews(views);
+
 		//set same scene in all viewports for the moment
 		for(int i = 0; i < views.size(); i++)
 		{
 			views[i]->setSceneData(root);
 		}
+		//m_Viewer->realize();
 	}
 
 	void OSGGraphicsSystem::OnInit(MessagePtr message)
@@ -163,6 +167,13 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 
+		/*osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
+		if (opt == NULL) { 
+			opt = new osgDB::ReaderWriter::Options(); 
+		} 
+		opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
+		osgDB::Registry::instance()->setOptions(opt); */
+
 		/*	IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
 		if(is)
 		{
@@ -186,7 +197,7 @@ namespace GASS
 		//		bool gotfrustum;
 		osgViewer::View* view = new osgViewer::View;
 		viewer->addView(view);
-		
+
 		//view->setCameraManipulator(Tman);
 		//view->setSceneData(scene.get());
 		view->getCamera()->setViewport(new osg::Viewport(x, y, width,height));

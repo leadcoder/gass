@@ -190,7 +190,7 @@ void FreeCamControlComponent::OnInput(MessagePtr message)
 	else if(name == "FreeCameraUpDown")
 	{
 		m_UpDownInput = value;
-		Log::Print("Scroll wheel input %f",value );
+		//Log::Print("Scroll wheel input %f",value );
 	}
 
 

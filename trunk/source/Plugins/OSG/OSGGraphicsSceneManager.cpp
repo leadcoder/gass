@@ -20,6 +20,8 @@
 #include <boost/bind.hpp>
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
+#include <osgUtil/Optimizer>
+#include <osgDB/ReadFile> 
 
 #include "Core/Common.h"
 #include "Core/System/SystemFactory.h"
@@ -150,7 +152,7 @@ namespace GASS
 		backdrop->setClearColor(osg::Vec4(0.0f,0.8f,0.0f,1.0f));
 		m_RootNode->addChild(backdrop);
 
-		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+		
 
 
 		UpdateShadowSettings();
@@ -172,6 +174,9 @@ namespace GASS
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root));
 		SimSystemManager* sim_sm = static_cast<SimSystemManager*>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
+		//osg::ref_ptr<osg::Group> mesh = (osg::Group*) osgDB::readNodeFile("C:/Root/Repo/filtema4/MSI-Projects/GASSData/scenarios/osg/nkpg/models/terrain/tempmaster.ive");
+		//m_RootNode->addChild(mesh);
+		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 	}
 
 	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
@@ -181,6 +186,8 @@ namespace GASS
 		assert(obj);
 		MessagePtr gfx_msg(new LoadGFXComponentsMessage(this,NULL));
 		obj->SendImmediate(gfx_msg);
+		//update scene data
+		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 	}
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()

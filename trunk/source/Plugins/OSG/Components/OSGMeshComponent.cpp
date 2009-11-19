@@ -34,6 +34,7 @@
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 
 #include <osgDB/ReadFile> 
+#include <osgUtil/Optimizer>
 #include <osg/MatrixTransform>
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -67,6 +68,8 @@ namespace GASS
 
 	void OSGMeshComponent::OnLoad(MessagePtr message)
 	{
+		
+
 		//OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(osg_sm);
 		//TODO: get resource manager and get full path
@@ -81,18 +84,36 @@ namespace GASS
 		}
 		if(rs->GetFullPath(m_Filename,full_path))
 		{
-			m_MeshNode = (osg::Group*) osgDB::readNodeFile(full_path);
+			
+			
+			std::string path = Misc::RemoveFilename(full_path);
+			//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
+			//osgUtil::Optimizer optimizer;
+			//optimizer.optimize(loadedModel.get());
+			m_MeshNode = (osg::Group*) osgDB::readNodeFile((full_path));
+			
 			if( ! m_MeshNode)
 			{
 				Log::Error("Failed to load mesh:%s",full_path.c_str());
 			}
 
+			osgUtil::Optimizer optimizer;
+		    optimizer.optimize(m_MeshNode.get());
+
+			//OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+			//gfx_sys->Update
+			//m_GFXSceneManager = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+			//osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
 		}
 		else 
 			Log::Error("Failed to find mesh:%s",full_path.c_str());
 
 		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
+		/*for(int i = 0; i < m_MeshNode->getNumChildren(); i++)
+		{
+			lc->GetOSGNode()->addChild(getChild(i));
+		}*/
 		CalulateBoundingbox(m_MeshNode.get());
 	}
 
@@ -145,6 +166,9 @@ namespace GASS
 			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
 			if (geode) 
 			{
+				//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+				//lc->GetOSGNode()->addChild(geode);
+		
 				osg::BoundingBox bbox = geode->getBoundingBox();
 
 				/*osg::Matrix trans;

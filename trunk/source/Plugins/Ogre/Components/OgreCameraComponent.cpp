@@ -178,7 +178,7 @@ namespace GASS
 	void OgreCameraComponent::SetFov(float value)
 	{
 		m_Fov = value;
-		if(m_Camera)
+		if(m_Camera && !GetOrtho())
 		{
 			m_Camera->setFOVy(Ogre::Radian(Math::Deg2Rad(value)));
 		}

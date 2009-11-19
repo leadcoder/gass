@@ -39,6 +39,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/Math/Quaternion.h"
+#include "Core/Utils/Log.h"
 
 namespace GASS
 {
@@ -77,7 +78,7 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::PositionChange, OBJECT_RM_POSITION,0);
-		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::RotationChange,OBJECT_RM_ROTATION,0);
+		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::RotationChange, OBJECT_RM_ROTATION,0);
 		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::OnInit,OBJECT_RM_LOAD_SIM_COMPONENTS,0);
 		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::OnUnload,OBJECT_RM_UNLOAD_COMPONENTS,0);
 
@@ -123,7 +124,10 @@ namespace GASS
 
 	void TopCamControlComponent::RotationChange(MessagePtr message)
 	{
-
+		if(message->GetSenderID() != (int) this)
+		{
+		
+		}
 	}
 
 	void TopCamControlComponent::OnInput(MessagePtr message)
@@ -187,17 +191,18 @@ namespace GASS
 		Vec3 north = m_Scene->GetSceneNorth();
 		Vec3 east = m_Scene->GetSceneEast();
 
-		//m_Pos.z -= delta*speed_factor * m_ScrollUpInput;
-		//m_Pos.x += delta*speed_factor * m_ScrollDownInput;
-		//m_Pos.y = m_FixedHeight;
+		Vec3 filter;
+		filter.x = abs(north.x) + abs(east.x);
+		filter.y = abs(north.y) + abs(east.y);
+		filter.z = abs(north.z) + abs(east.z);
 
 		up = up*m_FixedHeight;
-		m_Pos = (m_Pos*(north + east)) + up;
+		m_Pos = (m_Pos*filter) + up;
 
-		north = north*delta*speed_factor * m_ScrollUpInput;
-		east = east*delta*speed_factor * m_ScrollDownInput;
+		Vec3 move_north = north*delta*speed_factor * m_ScrollUpInput;
+		Vec3 move_east = east*delta*speed_factor * m_ScrollDownInput;
 		
-		m_Pos = ((m_Pos + north) + east);
+		m_Pos = ((m_Pos + move_north) + move_east);
 		
 		
 		//

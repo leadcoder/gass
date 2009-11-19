@@ -201,18 +201,21 @@ namespace GASS
 			}
 		}
 		if(mobj == NULL)
-			Log::Error("Failed to find moveable object for text component");
+			Log::Warning("Failed to find moveable object for text component: %s",m_Name.c_str());
 
-		static unsigned int obj_id = 0;
-		obj_id++;
-		std::stringstream ss;
-		std::string name;
-		ss << m_Name << obj_id;
-		ss >> name;
+		if(mobj)
+		{
+			static unsigned int obj_id = 0;
+			obj_id++;
+			std::stringstream ss;
+			std::string name;
+			ss << m_Name << obj_id;
+			ss >> name;
 
-		m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
-		m_TextObject->enable(true); 
-		m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
+			m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
+			m_TextObject->enable(true); 
+			m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
+		}
 	}
 
 
