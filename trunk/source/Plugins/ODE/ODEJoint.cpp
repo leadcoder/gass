@@ -203,6 +203,9 @@ namespace GASS
 		case HINGE_JOINT:
 			m_ODEJoint = dJointCreateHinge(world,0);
 			GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEJoint::SendJointUpdate,VelocityNotifyMessage));
+			dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
+			dJointSetHingeParam(m_ODEJoint,dParamBounce,0.5);
+			
 			break;
 		case UNIVERSAL_JOINT:
 			m_ODEJoint = dJointCreateUniversal(world,0);

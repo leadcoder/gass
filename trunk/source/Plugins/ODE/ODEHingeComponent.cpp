@@ -121,6 +121,10 @@ namespace GASS
 		m_ODEJoint = dJointCreateHinge(world,0);
 		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage));
 		dJointAttach(m_ODEJoint, b1,b2);
+
+		dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
+		dJointSetHingeParam(m_ODEJoint,dParamBounce,0.5);
+	
 		UpdateAnchor();
 		UpdateJointAxis();
 		UpdateLimits();
