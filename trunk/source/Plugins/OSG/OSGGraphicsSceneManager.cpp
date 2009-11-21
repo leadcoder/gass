@@ -121,11 +121,14 @@ namespace GASS
 		//set same scene in all viewports for the moment 
 		for(int i = 0; i < views.size(); i++)
 		{
-			cam_comp->GetOSGCamera()->setGraphicsContext(views[i]->getCamera()->getGraphicsContext());
-			cam_comp->GetOSGCamera()->setViewport(views[i]->getCamera()->getViewport());
-			views[i]->getCamera()->setViewport(NULL);
-			views[i]->getCamera()->setGraphicsContext(NULL);
-			views[i]->setCamera(cam_comp->GetOSGCamera());
+			if(views[i]->getCamera() != cam_comp->GetOSGCamera().get())
+			{
+				cam_comp->GetOSGCamera()->setGraphicsContext(views[i]->getCamera()->getGraphicsContext());
+				cam_comp->GetOSGCamera()->setViewport(views[i]->getCamera()->getViewport());
+				views[i]->getCamera()->setViewport(NULL);
+				views[i]->getCamera()->setGraphicsContext(NULL);
+				views[i]->setCamera(cam_comp->GetOSGCamera());
+			}
 		}
 
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
