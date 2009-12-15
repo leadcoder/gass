@@ -27,6 +27,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
+	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,BaseSceneComponent>
 	{
 	public:
@@ -88,7 +89,7 @@ namespace GASS
 		Vec3 m_Anchor; 
 		Vec3 m_Axis;
 
-		PhysXPhysicsSceneManager* m_SceneManager;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		NxRevoluteJoint* m_RevoluteJoint;
 
 	};

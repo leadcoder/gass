@@ -31,6 +31,7 @@ namespace GASS
 	class IGeometryComponent;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
+	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 	class PhysXGeometryComponent : public Reflection<PhysXGeometryComponent,BaseSceneComponent>
 	{
 	public:
@@ -83,7 +84,7 @@ namespace GASS
 		Vec3 m_CollisionGeomScale;
 		float m_Friction;
 		float m_Slip;
-		PhysXPhysicsSceneManager* m_SceneManager;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 
 	typedef boost::shared_ptr<PhysXGeometryComponent> PhysXGeometryComponentPtr;

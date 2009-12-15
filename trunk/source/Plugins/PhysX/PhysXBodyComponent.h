@@ -27,6 +27,8 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
+	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+
 	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>
 	{
 		friend class ODEJoint;
@@ -104,7 +106,7 @@ namespace GASS
 		bool m_Initialized;
 		bool m_EffectJoints;
 		MassRepresentationType m_MassRepresentation;
-		PhysXPhysicsSceneManager* m_SceneManager;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 
 		NxActor *m_Actor;
 		NxActorDesc m_ActorDesc;

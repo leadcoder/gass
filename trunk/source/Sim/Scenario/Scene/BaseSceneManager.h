@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <boost/enable_shared_from_this.hpp>
 #include <string>
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scene/ISceneManager.h"
@@ -30,9 +31,9 @@
 
 namespace GASS
 {
-	class ScenarioScene;
+	
 
-	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> ,public ISceneManager, public IXMLSerialize
+	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public boost::enable_shared_from_this<BaseSceneManager>, public ISceneManager, public IXMLSerialize
 	{
 	public:
 		BaseSceneManager();
@@ -41,8 +42,8 @@ namespace GASS
 
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual ScenarioScene* GetOwner() const {return m_Scene;}
-		virtual void SetOwner(ScenarioScene* owner){m_Scene = owner;}
+		virtual ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual void SetScenarioScene(ScenarioScenePtr owner){m_Scene = owner;}
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
 		//xml serialize interface
@@ -50,6 +51,6 @@ namespace GASS
 		virtual void SaveXML(TiXmlElement *xml_elem);
 	protected:
 		std::string m_Name;
-		ScenarioScene* m_Scene;
+		ScenarioSceneWeakPtr m_Scene;
 	};
 }

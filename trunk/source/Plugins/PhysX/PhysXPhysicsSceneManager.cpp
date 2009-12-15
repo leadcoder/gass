@@ -80,9 +80,9 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnLoad,LoadSceneManagersMessage ));
-		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage ));
-		m_Scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
+		GetScenarioScene()->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnLoad,LoadSceneManagersMessage ));
+		GetScenarioScene()->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage ));
+		GetScenarioScene()->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, TYPED_MESSAGE_FUNC( PhysXPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage),ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY);
 	}
 
 	void PhysXPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
@@ -91,7 +91,7 @@ namespace GASS
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
 
-		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(this,(int) this));
+		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(SceneManagerPtr(this),(int) this));
 		obj->SendImmediate(phy_msg);
 
 		//Save all bodies
@@ -145,7 +145,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioScene* scene = message->GetScenarioScene();
+		ScenarioScenePtr scene = message->GetScenarioScene();
 		Vec3 gravity_vec = scene->GetSceneUp()*m_Gravity;
 
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();

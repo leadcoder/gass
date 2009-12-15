@@ -38,10 +38,7 @@
 
 namespace GASS
 {
-	PhysXBodyComponent::PhysXBodyComponent() :
-		
-		m_SceneManager(NULL),
-		m_MassRepresentation(MR_GEOMETRY),
+	PhysXBodyComponent::PhysXBodyComponent() :	m_MassRepresentation(MR_GEOMETRY),
 		m_Mass(1),
 		m_Actor(NULL)
 	{
@@ -129,7 +126,7 @@ namespace GASS
 
 	void PhysXBodyComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
+		m_SceneManager = boost::shared_dynamic_cast<PhysXPhysicsSceneManager>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 		NxBodyDesc bodyDesc;
 		bodyDesc.setToDefault();
@@ -144,7 +141,7 @@ namespace GASS
 		Vec3 pos = location->GetPosition();
 
 		m_ActorDesc.globalPose.t= NxVec3(pos.x,pos.y,pos.z);
-		m_Actor = m_SceneManager->GetNxScene()->createActor(m_ActorDesc);	
+		m_Actor = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createActor(m_ActorDesc);	
 	}
 
 

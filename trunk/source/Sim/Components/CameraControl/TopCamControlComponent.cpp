@@ -86,8 +86,8 @@ namespace GASS
 
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
-		m_Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		m_Scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( TopCamControlComponent::OnChangeCamera));
+		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( TopCamControlComponent::OnChangeCamera));
 	}
 
 	TaskGroup TopCamControlComponent::GetTaskGroup() const
@@ -187,9 +187,10 @@ namespace GASS
 		m_Rot = Vec3(0,-MY_PI/2.f,0);
 		speed_factor = m_CurrentWindowSize;
 
-		Vec3 up = m_Scene->GetSceneUp();
-		Vec3 north = m_Scene->GetSceneNorth();
-		Vec3 east = m_Scene->GetSceneEast();
+		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		Vec3 up = scene->GetSceneUp();
+		Vec3 north = scene->GetSceneNorth();
+		Vec3 east = scene->GetSceneEast();
 
 		Vec3 filter;
 		filter.x = abs(north.x) + abs(east.x);

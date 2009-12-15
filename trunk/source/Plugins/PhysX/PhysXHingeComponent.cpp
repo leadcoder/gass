@@ -34,8 +34,7 @@
 
 namespace GASS
 {
-	PhysXHingeComponent::PhysXHingeComponent() : m_SceneManager(NULL), 
-		m_JointForce (0),
+	PhysXHingeComponent::PhysXHingeComponent() : m_JointForce (0),
 		m_Strength(1),
 		m_Damping(2),
 		m_Anchor (0,0,0),
@@ -94,7 +93,7 @@ namespace GASS
 
 	void PhysXHingeComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
+		m_SceneManager = boost::shared_dynamic_cast<PhysXPhysicsSceneManager>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 		CreateJoint();
 	}
@@ -116,7 +115,7 @@ namespace GASS
 		{
 			PhysXBodyComponentPtr body = boost::shared_static_cast<PhysXBodyComponent>(components[i]);
 			if(body->GetNxActor() && body->GetNxActor() != a2)
-				m_SceneManager->GetNxScene()->setActorPairFlags(*body->GetNxActor(), *a2, NX_IGNORE_PAIR);
+				PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->setActorPairFlags(*body->GetNxActor(), *a2, NX_IGNORE_PAIR);
 		}
 
 		NxRevoluteJointDesc revoluteDesc;
@@ -124,7 +123,7 @@ namespace GASS
 		revoluteDesc.actor[0] = a2;
 		revoluteDesc.actor[1] = a1;
 		revoluteDesc.setGlobalAxis(NxVec3(0,1,0));
-		m_RevoluteJoint = static_cast<NxRevoluteJoint*>(m_SceneManager->GetNxScene()->createJoint(revoluteDesc));
+		m_RevoluteJoint = static_cast<NxRevoluteJoint*>(PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createJoint(revoluteDesc));
 	
 		UpdateAnchor();
 		UpdateJointAxis();

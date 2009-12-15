@@ -26,6 +26,8 @@ namespace GASS
 	class ScenarioScene;
 	class SceneObject;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
+	
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>
 	{
@@ -61,7 +63,7 @@ namespace GASS
 
 		SoundMap m_BufferMap;
 		SourceMap m_SourceMap;
-		ScenarioScene *m_Scene;
+		ScenarioSceneWeakPtr m_Scene;
 		SceneObjectWeakPtr m_CurrentCamera;
 	};
 

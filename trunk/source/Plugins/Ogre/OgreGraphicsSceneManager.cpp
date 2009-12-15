@@ -103,11 +103,13 @@ namespace GASS
 	{
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
-		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
+		ScenarioScenePtr scene = GetScenarioScene();
+		assert(scene);
 
-		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
+		scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
+		scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
+		scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)
@@ -135,7 +137,8 @@ namespace GASS
 		
 
 		// Try to load default camera
-		SceneObjectPtr scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		ScenarioScenePtr scene = GetScenarioScene();
+		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		if(!scene_object) //If no FreeCameraObject template found, create one
 		{
@@ -156,7 +159,7 @@ namespace GASS
 
 			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
 
-			scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+			scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		}
 			
@@ -174,10 +177,13 @@ namespace GASS
 		
 		//m_GFXSystem->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
 		MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
-		m_Scene->SendImmediate(camera_msg);
+
+		//ScenarioScenePtr scene = ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());
+		//ScenarioScenePtr scene = GetScenarioScene();
+		scene->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new PositionMessage(GetOwner()->GetStartPos()));
+		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);
 		
 		//Give hook to 3dparty plugins to attach, maybee send other info
@@ -197,7 +203,7 @@ namespace GASS
 
 		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp->GetOgreCamera());
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
-		m_Scene->PostMessage(cam_message);
+		GetScenarioScene()->PostMessage(cam_message);
 	}
 
 	void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
@@ -205,9 +211,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(this,m_SceneMgr));
-		//gfx_msg->SetData("GraphicsSceneManager",boost::any(this));
-		//gfx_msg->SetData("OgreSceneManager",boost::any(m_SceneMgr));
+		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),m_SceneMgr));
 		obj->SendImmediate(gfx_msg);
 	}
 

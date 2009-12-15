@@ -37,11 +37,8 @@ namespace GASS
 		:m_ODESpaceID(NULL),
 		m_ODESecondarySpaceID(NULL),
 		m_ODEBodyComponent(0),
-		//m_ODEMass(0),
-		//m_MassOffset(0,0,0),
 		m_AutoDisable(true),
 		m_FastRotation(true),
-		m_SceneManager(NULL),
 		m_MassRepresentation(MR_GEOMETRY),
 		m_Mass(1),
 		m_CGPosition(0,0,0),
@@ -134,11 +131,12 @@ namespace GASS
 
 	void ODEBodyComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<ODEPhysicsSceneManager*> (message->GetPhysicsSceneManager());
-		assert(m_SceneManager);
+		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
 
 		Vec3 abs_pos;
-		m_ODEBodyComponent = dBodyCreate(m_SceneManager->GetWorld());
+		m_ODEBodyComponent = dBodyCreate(scene_manager->GetWorld());
 		//From car world
 		//Set the auto-disable flag of a body. If the do_auto_disable is nonzero the body will be automatically disabled when it has been idle for long enough.
 		dBodySetAutoDisableDefaults(m_ODEBodyComponent);
@@ -375,19 +373,20 @@ namespace GASS
 
 	dSpaceID ODEBodyComponent::GetSpace()
 	{
-		if(m_SceneManager && m_ODESpaceID == NULL)
+		ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
+		if(scene_manager && m_ODESpaceID == NULL)
 		{
-			m_ODESpaceID = m_SceneManager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
+			m_ODESpaceID = scene_manager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
 		}
 		return m_ODESpaceID;
 	}
 
 	dSpaceID ODEBodyComponent::GetSecondarySpace()
 	{
-
 		if(m_ODESecondarySpaceID == 0)
 		{
-			m_ODESecondarySpaceID = dSimpleSpaceCreate(m_SceneManager->GetCollisionSpace());
+			ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
+			m_ODESecondarySpaceID = dSimpleSpaceCreate(scene_manager->GetCollisionSpace());
 		}
 		return m_ODESecondarySpaceID;
 	}

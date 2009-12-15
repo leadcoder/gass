@@ -93,7 +93,7 @@ namespace GASS
 
 	void PhysXGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
+		m_SceneManager = boost::shared_dynamic_cast<PhysXPhysicsSceneManager>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 
 		boost::shared_ptr<IGeometryComponent> geom;
@@ -306,7 +306,7 @@ namespace GASS
 				adesc.body		= NULL;
 				adesc.globalPose.t = NxVec3(0,0,0);
 				adesc.shapes.pushBack(shape);
-				m_StaticActor = m_SceneManager->GetNxScene()->createActor(adesc);
+				m_StaticActor = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createActor(adesc);
 
 					
 

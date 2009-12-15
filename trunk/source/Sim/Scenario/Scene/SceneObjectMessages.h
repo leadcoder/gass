@@ -30,9 +30,10 @@
 namespace GASS
 {
 	class SimSceneManager;
-	class BaseSceneManager;
+	class ISceneManager;
 	struct ManualMeshData;
 	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
+	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
 	// Todo: Explain each individual message
 
@@ -523,13 +524,13 @@ namespace GASS
 	class LoadGFXComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadGFXComponentsMessage(BaseSceneManager* gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) : 
+		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(OMID, sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
-		  BaseSceneManager* GetGFXSceneManager() const {return m_GFXSceneManager;}
+		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
 		  void* GetUserData() const {return m_UserData;}
 		  enum {OMID = OBJECT_RM_LOAD_GFX_COMPONENTS};
 	private:
-		BaseSceneManager* m_GFXSceneManager;
+		SceneManagerPtr m_GFXSceneManager;
 		void *m_UserData;
 	};
 	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
@@ -538,12 +539,12 @@ namespace GASS
 	class LoadPhysicsComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadPhysicsComponentsMessage(BaseSceneManager* physics_scene_manager, SenderID sender_id = -1, double delay= 0) : 
+		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
-		  BaseSceneManager* GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
+		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
 		  enum {OMID = OBJECT_RM_LOAD_PHYSICS_COMPONENTS};
 	private:
-		BaseSceneManager* m_PhysicsSceneManager;
+		SceneManagerPtr m_PhysicsSceneManager;
 	};
 	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
 

@@ -28,10 +28,12 @@ class TiXmlElement;
 
 namespace GASS
 {
-	class ISceneManager;
 	class MessageManager;
 	class SceneObject;
+	class ScenarioScene;
 
+	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
@@ -45,12 +47,12 @@ namespace GASS
 	{
 		friend class ScenarioScene;
 	public:
-		SceneObjectManager(ScenarioScene* ss);
+		SceneObjectManager(ScenarioScenePtr ss);
 		virtual ~SceneObjectManager();
 		bool LoadFromFile(const std::string filename);
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);
-		ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
+		ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_ScenarioScene,boost::detail::sp_nothrow_tag());}
 		void Clear();
 		void DeleteObject(SceneObjectPtr obj);
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
@@ -60,8 +62,8 @@ namespace GASS
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
-		ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
-		ScenarioScene* m_ScenarioScene;
+		//ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
+		ScenarioSceneWeakPtr m_ScenarioScene;
 		SceneObjectPtr m_Root;
 	};
 }

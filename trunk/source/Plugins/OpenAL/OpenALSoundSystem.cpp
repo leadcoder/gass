@@ -45,7 +45,8 @@ namespace GASS
 	void OpenALSoundSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
 	{
 		m_Scene = message->GetScenarioScene();
-		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
+		if(message->GetScenarioScene())
+			message->GetScenarioScene()->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)

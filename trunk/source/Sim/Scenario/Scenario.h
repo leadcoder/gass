@@ -80,5 +80,6 @@ namespace GASS
 		ScenarioSceneVector m_Scenes;
 		std::string m_ScenarioPath;
 	};
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 }
 

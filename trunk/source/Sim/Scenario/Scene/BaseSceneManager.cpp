@@ -31,7 +31,7 @@ namespace GASS
 {
 	BaseSceneManager::BaseSceneManager(void)
 	{
-		m_Scene = NULL;
+		
 	}
 
 	BaseSceneManager::~BaseSceneManager(void)

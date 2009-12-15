@@ -133,4 +133,5 @@ namespace GASS
 		boost::weak_ptr<OgreGraphicsSystem> m_GFXSystem;
 		std::vector<IComponent*> m_GFXComponents;
 	};
+	typedef boost::shared_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
 }

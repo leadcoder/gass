@@ -48,7 +48,8 @@ namespace GASS
 	{
 		m_Scenario = NULL;
 		m_SceneMessageManager = new MessageManager();
-		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(this));
+		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(ScenarioScenePtr(this)));
 	}
 
 
@@ -56,7 +57,7 @@ namespace GASS
 	ScenarioScene::~ScenarioScene()
 	{
 		m_ObjectManager->Clear();
-		MessagePtr scenario_msg(new UnloadSceneManagersMessage(this));
+		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
 		m_SceneMessageManager->SendImmediate(scenario_msg);
 		delete m_SceneMessageManager;
 	}
@@ -202,9 +203,9 @@ namespace GASS
 			for(int i = 0; i < managers.size();i++)
 			{
 				SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-				m_SceneManagers.push_back(sm);
-				sm->SetOwner(this);
+				sm->SetScenarioScene(shared_from_this());
 				sm->SetName(managers[i]);
+				m_SceneManagers.push_back(sm);
 			}
 			scenemanager = scenemanager->FirstChildElement();
 			//Load scene manager settings
@@ -232,13 +233,15 @@ namespace GASS
 
 	void ScenarioScene::OnLoad()
 	{
+		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+	
 		std::string scenario_path = m_Scenario->GetPath();
 
-		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(this));
+		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
 
 		
-		MessagePtr scenario_msg(new LoadSceneManagersMessage(this));
+		MessagePtr scenario_msg(new LoadSceneManagersMessage(shared_from_this()));
 		//send load message
 		SendImmediate(scenario_msg);
 		
@@ -258,7 +261,7 @@ namespace GASS
 		//Create game objects instances from templates
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
 
-		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(this));
+		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
 	}
 
@@ -279,7 +282,7 @@ namespace GASS
 		{
 			if(m_SceneManagers[i]->GetName() == sm_type)
 			{
-				sm =m_SceneManagers[i];
+				sm = m_SceneManagers[i];
 				XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
 				if(serialize)
 					serialize->LoadXML(sm_elem);
@@ -296,7 +299,6 @@ namespace GASS
 			if(serialize)
 				serialize->LoadXML(sm_elem);
 		}*/
-		return sm;
 	}
 
 	SceneManagerPtr ScenarioScene::GetSceneManager(const std::string &name)

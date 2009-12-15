@@ -35,8 +35,7 @@
 
 namespace GASS
 {
-	PhysXSuspensionComponent::PhysXSuspensionComponent() : m_SceneManager(NULL), 
-		m_RollJointForce (0),
+	PhysXSuspensionComponent::PhysXSuspensionComponent() : m_RollJointForce (0),
 		m_SpringJointForce (0),
 		m_SwayForce  (0),
 		m_Strength(1),
@@ -109,7 +108,7 @@ namespace GASS
 
 	void PhysXSuspensionComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<PhysXPhysicsSceneManager*>(message->GetPhysicsSceneManager());
+		m_SceneManager = boost::shared_dynamic_cast<PhysXPhysicsSceneManager>(message->GetPhysicsSceneManager());
 		assert(m_SceneManager);
 		CreateJoint();
 	}
@@ -130,7 +129,7 @@ namespace GASS
 		{
 			PhysXBodyComponentPtr body = boost::shared_static_cast<PhysXBodyComponent>(components[i]);
 			if(body->GetNxActor() && body->GetNxActor() != a2)
-				m_SceneManager->GetNxScene()->setActorPairFlags(*body->GetNxActor(), *a2, NX_IGNORE_PAIR);
+				PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->setActorPairFlags(*body->GetNxActor(), *a2, NX_IGNORE_PAIR);
 		}
 
 		ILocationComponent *location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>().get();
@@ -149,7 +148,7 @@ namespace GASS
 		actorDesc.body			= &bodyDesc;
 		actorDesc.shapes.clear();
 		actorDesc.globalPose.t  = pos;
-		m_RollAxisActor = m_SceneManager->GetNxScene()->createActor(actorDesc);
+		m_RollAxisActor = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createActor(actorDesc);
 
 		// revolution joint connecting wheel with rollAxis
 		NxRevoluteJointDesc revJointDesc;
@@ -159,7 +158,7 @@ namespace GASS
 		revJointDesc.actor[1] = a2;
 		revJointDesc.setGlobalAnchor(pos);
 		revJointDesc.setGlobalAxis(NxVec3(1,0,0));
-		NxJoint * joint = m_SceneManager->GetNxScene()->createJoint(revJointDesc);
+		NxJoint * joint = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createJoint(revJointDesc);
 		m_RollJoint = static_cast<NxRevoluteJoint*>(joint);
 
 		NxPrismaticJointDesc prisJointDesc;
@@ -168,12 +167,12 @@ namespace GASS
 		prisJointDesc.actor[1] = m_RollAxisActor;
 		prisJointDesc.setGlobalAnchor(pos);
 		prisJointDesc.setGlobalAxis(NxVec3(0,1,0));
-		joint = m_SceneManager->GetNxScene()->createJoint(prisJointDesc);
+		joint = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createJoint(prisJointDesc);
 		m_SpringJoint = static_cast<NxPrismaticJoint*>(joint);
 
 		//add springs and dampers to the suspension (i.e. the related actors)
 		float springLength = 0.2f;
-		NxSpringAndDamperEffector * springNdamp = m_SceneManager->GetNxScene()->createSpringAndDamperEffector(NxSpringAndDamperEffectorDesc());
+		NxSpringAndDamperEffector * springNdamp = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetNxScene()->createSpringAndDamperEffector(NxSpringAndDamperEffectorDesc());
 
 		springNdamp->setBodies(a1, pos, m_RollAxisActor, pos + NxVec3(0,springLength,0));
 		springNdamp->setLinearSpring(0, springLength, 2*springLength, 10, 10);

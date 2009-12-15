@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <boost/enable_shared_from_this.hpp>
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
@@ -40,24 +41,11 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
-	
-	/*class ScenarioUpdateMessage : public BaseMessage
-	{
-	public:
-		ScenarioUpdateMessage(int type, double delta_time): Message(type) ,m_DeltaTime (delta_time)
-		{
-			
-		}
-		virtual ~ScenarioUpdateMessage(){}
-		double GetDeltaTime() const {return  m_DeltaTime;}
-	private:
-		double m_DeltaTime;
-	};*/
 
 	/**
 		Scenario scene class 
 	*/
-	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>
+	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>, public boost::enable_shared_from_this<ScenarioScene>
 	{
 	public:
 		// Priorities for system loading
@@ -136,5 +124,7 @@ namespace GASS
 		Vec3 m_North;
 		Vec3 m_East;
 	};
+
+	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 }
 

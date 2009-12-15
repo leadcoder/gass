@@ -83,7 +83,7 @@ namespace GASS
 		float m_ScrollDownInput;
 		float m_ZoomInput;
 		
-		ScenarioScene* m_Scene;
+	
 		float m_CurrentWindowSize;
 		float m_MaxWindowSize;
 		float m_MinWindowSize;

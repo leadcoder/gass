@@ -30,7 +30,7 @@ namespace GASS
 	class ODELineCollision
 	{
 	public:
-		ODELineCollision(CollisionRequest *request,CollisionResult *result,ODEPhysicsSceneManager* ode_scene);
+		ODELineCollision(CollisionRequest *request,CollisionResult *result, ODEPhysicsSceneManagerPtr ode_scene);
 		virtual ~ODELineCollision();
 		void Process();
 	private:
@@ -41,7 +41,7 @@ namespace GASS
 		Vec3 m_RayStart;
 		CollisionRequest* m_Request;
 		CollisionResult* m_Result;
-		ODEPhysicsSceneManager* m_SceneManager;
+		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 	
 }

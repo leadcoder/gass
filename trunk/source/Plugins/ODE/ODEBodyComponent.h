@@ -119,7 +119,7 @@ namespace GASS
 		bool m_EffectJoints;
 		Mat4 m_LastTrans;
 		MassRepresentationType m_MassRepresentation;
-		ODEPhysicsSceneManager* m_SceneManager;
+		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 }
 

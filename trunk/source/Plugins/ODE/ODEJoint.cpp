@@ -49,8 +49,7 @@ namespace GASS
 		m_ODEJoint (0),
 		m_HighStop(0),
 		m_LowStop(0),
-		m_Type(BALL_JOINT),
-		m_SceneManager(NULL)
+		m_Type(BALL_JOINT)
 	{
 	}
 
@@ -173,15 +172,16 @@ namespace GASS
 
 	void ODEJoint::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<ODEPhysicsSceneManager*>(message->GetPhysicsSceneManager());
-		assert(m_SceneManager);
+		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		m_SceneManager = scene_manager;
+		assert(scene_manager);
 
 		CreateJoint();
 	}
 
 	void ODEJoint::CreateJoint()
 	{
-		dWorldID world = m_SceneManager->GetWorld();
+		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
 
 		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
 		m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();

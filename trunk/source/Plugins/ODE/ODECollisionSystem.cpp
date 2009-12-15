@@ -45,8 +45,7 @@ namespace GASS
 	CollisionHandle ODECollisionSystem::Request(const CollisionRequest &request)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-
-		assert(request.Scene);
+		//assert(request.Scene);
 		m_HandleCount = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
 		CollisionHandle handle = m_HandleCount;
 		m_RequestMap[handle] = request;
@@ -73,13 +72,18 @@ namespace GASS
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
-			ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("PhysicsSceneManager").get());
-			if(request.Type == COL_LINE)
+			ScenarioScenePtr scene = ScenarioScenePtr(request.Scene);
+			
+			if(scene)
 			{
-				CollisionResult result;
-				ODELineCollision raycast(&request,&result,ode_scene);
-				raycast.Process();
-				resultMap[handle] = result;
+				ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+				if(request.Type == COL_LINE)
+				{
+					CollisionResult result;
+					ODELineCollision raycast(&request,&result,ode_scene);
+					raycast.Process();
+					resultMap[handle] = result;
+				}
 			}
 			/*else(request.Type == COL_SPHERE)
 			{
@@ -109,11 +113,15 @@ namespace GASS
 
 	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
 	{
-		ODEPhysicsSceneManager* ode_scene = dynamic_cast<ODEPhysicsSceneManager*>(request.Scene->GetSceneManager("PhysicsSceneManager").get());
-		if(request.Type == COL_LINE)
+		ScenarioScenePtr scene(request.Scene);
+		if(scene)
 		{
-			ODELineCollision raycast(&request,&result,ode_scene);
-			raycast.Process();
+			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+			if(request.Type == COL_LINE)
+			{
+				ODELineCollision raycast(&request,&result,ode_scene);
+				raycast.Process();
+			}
 		}
 	}
 

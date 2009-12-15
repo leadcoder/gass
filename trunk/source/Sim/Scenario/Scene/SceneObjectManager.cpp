@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	SceneObjectManager::SceneObjectManager(ScenarioScene* ss)
+	SceneObjectManager::SceneObjectManager(ScenarioScenePtr ss)
 	{
 		m_ScenarioScene = ss;
 		m_Root = SceneObjectPtr( new SceneObject());
@@ -92,7 +92,8 @@ namespace GASS
 		//Send load message so that all scene manager can initilze it's components
 		
 		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(obj));
-		m_ScenarioScene->SendImmediate(load_msg);
+		ScenarioScenePtr scene = GetScenarioScene();
+		scene->SendImmediate(load_msg);
 
 		//Move this to user scene manager!!
 		//MessagePtr obj_msg(new Message(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS));
@@ -168,7 +169,7 @@ namespace GASS
 
 		//notify that this object is to be removed
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(obj));
-		m_ScenarioScene->SendImmediate(unload_msg);
+		GetScenarioScene()->SendImmediate(unload_msg);
 	}
 
 	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)

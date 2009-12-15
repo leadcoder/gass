@@ -33,6 +33,9 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
+	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+
+
 	class ODEGeometryComponent : public Reflection<ODEGeometryComponent,BaseSceneComponent>
 	{
 	public:
@@ -104,7 +107,7 @@ namespace GASS
 		Vec3 m_CollisionGeomScale;
 		float m_Friction;
 		float m_Slip;
-		ODEPhysicsSceneManager* m_SceneManager;
+		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 
 		//Terrain data
 		Float m_SampleWidth;

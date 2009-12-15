@@ -27,6 +27,8 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
+	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+
 	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>
 	{
 	public:
@@ -116,7 +118,7 @@ namespace GASS
 		Vec3 m_RollAxis;
 		Vec3 m_SpringAxis;
 
-		PhysXPhysicsSceneManager* m_SceneManager;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 
 		//axis actor
 		NxActor *m_RollAxisActor;

@@ -70,5 +70,6 @@ namespace GASS
 
 		std::vector<PhysXBodyComponentPtr> m_Bodies;
 	};
+	typedef boost::shared_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
 }
 

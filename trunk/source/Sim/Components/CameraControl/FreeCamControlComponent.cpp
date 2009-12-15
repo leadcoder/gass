@@ -94,8 +94,8 @@ void FreeCamControlComponent::OnCreate()
 
 	m_ControlSetting->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
-	m_Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-	m_Scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( FreeCamControlComponent::OnChangeCamera));
+	ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+	scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( FreeCamControlComponent::OnChangeCamera));
 }
 
 TaskGroup FreeCamControlComponent::GetTaskGroup() const
@@ -263,9 +263,11 @@ void FreeCamControlComponent::StepPhysics(double delta)
 	Vec3 tot_vel;
 	//Vec3 gravity;
 
-	Vec3 up = m_Scene->GetSceneUp();
-	Vec3 north = m_Scene->GetSceneNorth();
-	Vec3 east = m_Scene->GetSceneEast();
+	ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+
+	Vec3 up = scene->GetSceneUp();
+	Vec3 north = scene->GetSceneNorth();
+	Vec3 east = scene->GetSceneEast();
 
 
 	if(m_Mode == "Aircraft")

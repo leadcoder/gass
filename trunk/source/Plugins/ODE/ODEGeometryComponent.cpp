@@ -46,7 +46,6 @@ namespace GASS
 		:m_ODESecondarySpaceID(NULL),
 		m_ODESpaceID (NULL),
 		m_Body (NULL),
-		m_SceneManager(NULL),
 		m_TransformGeomID(NULL),
 		m_SecondTransformGeomID(NULL),
 		m_Friction(1),
@@ -110,8 +109,9 @@ namespace GASS
 
 	void ODEGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
 	{
-		m_SceneManager = static_cast<ODEPhysicsSceneManager*>(message->GetPhysicsSceneManager());
-		assert(m_SceneManager);
+		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
 
 		m_Body = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
 
@@ -142,7 +142,7 @@ namespace GASS
 	{
 		if(m_ODESpaceID == NULL)
 		{
-			m_ODESpaceID = dSimpleSpaceCreate(m_SceneManager->GetPhysicsSpace());
+			m_ODESpaceID = dSimpleSpaceCreate(ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace());
 		}
 		return m_ODESpaceID;
 	}
@@ -151,7 +151,7 @@ namespace GASS
 	{
 		if(m_ODESecondarySpaceID == 0)
 		{
-			m_ODESecondarySpaceID = dSimpleSpaceCreate(m_SceneManager->GetCollisionSpace());
+			m_ODESecondarySpaceID = dSimpleSpaceCreate(ODEPhysicsSceneManagerPtr(m_SceneManager)->GetCollisionSpace());
 		}
 		return m_ODESecondarySpaceID;
 	}
@@ -219,7 +219,7 @@ namespace GASS
 
 				if(mesh)
 				{
-					ODECollisionMesh col_mesh = m_SceneManager->CreateCollisionMesh(mesh);
+					ODECollisionMesh col_mesh = ODEPhysicsSceneManagerPtr(m_SceneManager)->CreateCollisionMesh(mesh);
 					geom_id = dCreateTriMesh(0, col_mesh.ID, 0, 0, 0);
 
 				}

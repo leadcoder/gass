@@ -29,6 +29,7 @@ namespace GASS
 {
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
+	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 
 	class ODEHingeComponent : public Reflection<ODEHingeComponent,BaseSceneComponent>
 	{
@@ -90,7 +91,7 @@ namespace GASS
 		Vec3 m_Anchor; 
 		Vec3 m_Axis;
 		
-		ODEPhysicsSceneManager* m_SceneManager;
+		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 }
 

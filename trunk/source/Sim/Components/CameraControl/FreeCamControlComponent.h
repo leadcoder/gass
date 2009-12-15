@@ -32,6 +32,8 @@ namespace GASS
 	class ILocationComponent;
 	class ICameraComponent;
 	class ScenarioScene;
+	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
 
 		/**
 			Basic motion modell that can be used to move a camera. 
@@ -89,7 +91,6 @@ namespace GASS
 		Float m_PitchInput;
 		Float m_HeadingInput;
 		Float m_UpDownInput;
-		ScenarioScene* m_Scene;
 		Float m_CurrentFov;
 		Float m_MaxFov;
 		Float m_MinFov;

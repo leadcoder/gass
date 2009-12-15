@@ -31,6 +31,7 @@
 namespace GASS
 {
 	class ScenarioScene;
+	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 
 	/**
 	Enumeration of message types used by the SimSystemManager
@@ -181,13 +182,13 @@ namespace GASS
 	class ScenarioSceneLoadedNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioSceneLoadedNotifyMessage (ScenarioScene* scenario_scene,SenderID sender_id = -1, double delay= 0) : 
+		ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr scenario_scene,SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(ScenarioSceneLoadedNotifyMessage::SSMID , sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
 		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_LOADED};
-		  ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
+		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
-		ScenarioScene* m_ScenarioScene;		
+		ScenarioScenePtr m_ScenarioScene;		
 	};
 	typedef boost::shared_ptr<ScenarioSceneLoadedNotifyMessage> ScenarioSceneLoadedNotifyMessagePtr;
 
@@ -201,13 +202,13 @@ namespace GASS
 	class ScenarioSceneAboutToLoadNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScene* scenario_scene, SenderID sender_id = -1, double delay= 0) : 
+		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(ScenarioSceneAboutToLoadNotifyMessage::SSMID , sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
 		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD};
-		  ScenarioScene* GetScenarioScene() const {return m_ScenarioScene;}
+		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
-		ScenarioScene* m_ScenarioScene;		
+		ScenarioScenePtr m_ScenarioScene;		
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
 

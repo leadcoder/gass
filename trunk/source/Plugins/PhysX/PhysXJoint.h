@@ -36,6 +36,8 @@ namespace GASS
 	};
 
 	class PhysXPhysicsSceneManager;
+	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+
 	class PhysXJoint : public Reflection<PhysXJoint,BaseSceneComponent>
 	{
 	public:
@@ -130,7 +132,7 @@ namespace GASS
 		Vec3 m_Axis1;
 		Vec3 m_Axis2;
 
-		PhysXPhysicsSceneManager* m_SceneManager;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 
 		//axis actor
 		NxActor *m_AxisActor;
