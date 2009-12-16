@@ -98,12 +98,18 @@ namespace GASS
 	void OSGGraphicsSceneManager::OnCreate()
 	{
 		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
-
-		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-		m_Scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnLoad),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		m_Scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnUnload),0);
-
-		m_Scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		ScenarioScenePtr scene = GetScenarioScene();
+		if(scene)
+		{
+			scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
+			scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnLoad),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
+			scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnUnload),0);
+			scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		}
+		else
+		{
+			Log::Error("Scenario Scene not present in OSGGraphicsSceneManager::OnCreate");
+		}
 
 		m_SceneTransform->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
@@ -132,7 +138,7 @@ namespace GASS
 		}
 
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
-		m_Scene->PostMessage(cam_message);
+		GetScenarioScene()->PostMessage(cam_message);
 	}
 
 
@@ -162,15 +168,18 @@ namespace GASS
 		UpdateSkySettings();
 		UpdateLightSettings();
 		UpdateFogSettings();
+
+		ScenarioScenePtr scene = GetScenarioScene();
+		assert(scene);
 		//m_GFXSystem->SetActiveSceneManger(m_SceneMgr);
 
 		// Load default camera ect
 		std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
-		SceneObjectPtr scene_object = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
-		m_Scene->SendImmediate(camera_msg);
-		MessagePtr pos_msg(new PositionMessage(GetOwner()->GetStartPos()));
+		scene->SendImmediate(camera_msg);
+		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);
 		
 		void* root = static_cast<void*>(m_RootNode.get());
@@ -187,7 +196,7 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(this,NULL));
+		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),NULL));
 		obj->SendImmediate(gfx_msg);
 		//update scene data
 		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());

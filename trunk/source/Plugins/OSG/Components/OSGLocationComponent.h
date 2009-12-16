@@ -36,6 +36,7 @@ namespace GASS
 	class OSGGraphicsSceneManager;
 	class OSGLocationComponent;
 	typedef boost::shared_ptr<OSGLocationComponent>  OSGLocationComponentPtr;
+	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 
 	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public osg::NodeCallback
 	{
@@ -92,7 +93,7 @@ namespace GASS
 		Vec3 m_Scale;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
-		OSGGraphicsSceneManager* m_GFXSceneManager;
+		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 	};
 	
 }

@@ -224,8 +224,8 @@ namespace GASS
 
 	void OSGCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		assert(osgsm);
+//		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+//		assert(osgsm);
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 

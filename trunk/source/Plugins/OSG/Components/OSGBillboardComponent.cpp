@@ -94,8 +94,8 @@ namespace GASS
 
 	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		assert(osgsm);
+		//OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+		//assert(osgsm);
 
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();

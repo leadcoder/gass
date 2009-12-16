@@ -67,8 +67,8 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		assert(osgsm);
+//		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
+//		assert(osgsm);
 
 		m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();

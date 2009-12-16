@@ -78,11 +78,12 @@ namespace GASS
 
 	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		m_GFXSceneManager = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		assert(m_GFXSceneManager );
+		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
+		//assert(m_GFXSceneManager);
 		m_TransformNode = new osg::PositionAttitudeTransform();
 		m_RotTransformNode = new osg::PositionAttitudeTransform();
-		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
+		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
+		m_GFXSceneManager = scene_man;
 
 		if(m_AttachToParent)
 		{
@@ -362,8 +363,12 @@ namespace GASS
 				parent->GetOSGNode()->addChild(m_TransformNode);
 			else
 			{
-				osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
-				root_node->addChild(m_TransformNode);
+				OSGGraphicsSceneManagerPtr scene_man(m_GFXSceneManager,boost::detail::sp_nothrow_tag());
+				if(scene_man)
+				{
+					osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
+					root_node->addChild(m_TransformNode);
+				}
 			}
 			SetWorldPosition(world_pos);
 			SetWorldRotation(world_rot);

@@ -129,4 +129,6 @@ namespace GASS
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_RootNode;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_SceneTransform;
 	};
+	typedef boost::shared_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
+	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 }
