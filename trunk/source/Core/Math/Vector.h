@@ -59,6 +59,11 @@ namespace GASS
 			x = _x; y = _y;
 		}
 
+		inline bool operator== (const Vec2 &v) const
+		{
+			return (v.x == x &&  v.y == y);
+		}
+
 		friend std::ostream& operator << (std::ostream& os, const Vec2& vec)
 		{
 			os << vec.x << " " << vec.y;
