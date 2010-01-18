@@ -31,22 +31,33 @@
 
 namespace GASS
 {
-	
+
+	/**
+		This is a convenience class that implements the ISceneManager interface. 
+		It also implements the IXMLSerialize interface to enable the 
+		derived scene manager to support xml serialization.
+		New scene managers can derive from this class to reduce some implementation. 
+		To avoid this class to be instantiated the constructors could be declared 
+		private, however because we derived from the reflection class this is
+		impossible, so we keep it public for now.
+	*/
 
 	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public boost::enable_shared_from_this<BaseSceneManager>, public ISceneManager, public IXMLSerialize
 	{
 	public:
 		BaseSceneManager();
 		virtual ~BaseSceneManager();
+
 		static void RegisterReflection();
 
+		//ISceneManager
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
 		virtual ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
 		virtual void SetScenarioScene(ScenarioScenePtr owner){m_Scene = owner;}
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
-		//xml serialize interface
+		//IXMLSerialize
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);
 	protected:

@@ -18,7 +18,5 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-// TypedProperty.cpp
-//
 
 #include "Core/Reflection/TypedProperty.h"

@@ -211,11 +211,13 @@ int main(int argc, char* argv[])
 	{
 		double time = timer.GetTime();
 		temp_t = time;
-		if(time - prev > update_time)
+		//if(time - prev > update_time)
 		{
 			engine->Update(update_time);
 			scenario->OnUpdate(update_time);
 			//std::cout << "Time is:" << time << std::endl;
+			std::cout << "FPS:" << 1.0/(time - prev) << std::endl;
+			
 			prev = time;
 		}
 

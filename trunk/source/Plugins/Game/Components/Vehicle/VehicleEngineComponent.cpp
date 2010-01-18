@@ -117,7 +117,7 @@ namespace GASS
 	void VehicleEngineComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
-		RegisterProperty<std::vector<std::string>>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
+		RegisterVectorProperty<std::string>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 		RegisterProperty<std::string>("EngineType", &GetEngineType, &SetEngineType);
 		RegisterProperty<bool>("Automatic", &GetAutomatic, &SetAutomatic);
 		RegisterProperty<bool>("InvertDrivetrainOutput", &GetInvert, &SetInvert);
@@ -132,7 +132,7 @@ namespace GASS
 		RegisterProperty<float>("RPMGearChangeDown", &GetRPMGearChangeDown, &SetRPMGearChangeDown);
 		RegisterProperty<float>("Power", &GetPower, &SetPower);
 		RegisterProperty<float>("TurnForce", &GetTurnForce, &SetTurnForce);
-		RegisterProperty<std::vector<float>>("GearRatio", &GetGearRatio, &SetGearRatio);
+		RegisterVectorProperty<float>("GearRatio", &GetGearRatio, &SetGearRatio);
 		RegisterProperty<bool>("SmoothRPMOutput", &GetSmoothRPMOutput, &SetSmoothRPMOutput);
 	}
 	

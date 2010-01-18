@@ -26,10 +26,19 @@
 namespace GASS
 {
 	class ISerializer;
+
+	/**
+		Interface for binary serialization
+	*/
 	class GASSCoreExport ISerialize
 	{
 	public:
 		virtual ~ISerialize(){}
+
+		/**
+			Serialize functions that provide a the serialize object as argument
+			(SerialSaver or SerialLoader).
+		*/
 		virtual bool Serialize(ISerializer*) = 0;
 	};
 	typedef boost::shared_ptr<ISerialize> SerializePtr;

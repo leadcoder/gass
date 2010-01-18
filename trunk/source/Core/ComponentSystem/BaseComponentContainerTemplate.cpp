@@ -36,7 +36,7 @@ namespace GASS
 {
 	BaseComponentContainerTemplate::BaseComponentContainerTemplate()
 	{
-		
+
 	}
 
 	BaseComponentContainerTemplate::~BaseComponentContainerTemplate(void)
@@ -82,12 +82,14 @@ namespace GASS
 
 		if(serializer->Loading())
 		{
-			int num_comp;
-			serializer->IO(num_comp);
+			int num_comp = 0;
+			SerialLoader* loader = (SerialLoader*) serializer;
+			loader->IO<int>(num_comp);
+
 			for(int i  = 0 ; i < num_comp; i++)
 			{
 				std::string comp_type;
-				serializer->IO(comp_type);
+				loader->IO<std::string>(comp_type);
 				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 				if(comp)
 				{
@@ -106,7 +108,7 @@ namespace GASS
 			}
 
 			int num_children;
-			serializer->IO(num_children);
+			loader->IO<int>(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
 
@@ -127,7 +129,9 @@ namespace GASS
 		else
 		{
 			int num_comp = m_ComponentVector.size();
-			serializer->IO(num_comp);
+			SerialSaver* saver = (SerialSaver*) serializer;
+			saver->IO<int>(num_comp);
+			
 			ComponentVector::iterator iter = m_ComponentVector.begin();
 			while (iter != m_ComponentVector.end())
 			{
@@ -137,13 +141,14 @@ namespace GASS
 				{
 					if(!s_comp->Serialize(serializer))
 						return false;
-					
+
 				}
 				++iter;
 			}
 
 			int num_children = m_ComponentContainerVector.size();
-			serializer->IO(num_children);
+			saver->IO<int>(num_children);
+
 			BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
 			{
@@ -185,7 +190,7 @@ namespace GASS
 
 	void BaseComponentContainerTemplate::SaveXML(TiXmlElement *obj_elem)
 	{
-		
+
 		TiXmlElement* this_elem = new TiXmlElement( GetName().c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
 		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
@@ -206,7 +211,7 @@ namespace GASS
 
 		TiXmlElement* cc_elem = new TiXmlElement("ComponentContainers");
 		this_elem->LinkEndChild(cc_elem);
-	
+
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator cc_iter;
 		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); cc_iter++)
 		{
@@ -360,7 +365,7 @@ namespace GASS
 			if(new_object)
 			{
 				//AddComponentData(new_object);
-				
+
 				/*if(m_NameCheck)
 				{
 				BaseComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
@@ -380,10 +385,10 @@ namespace GASS
 				//new_object->SetPartId(part_id);
 				part_id++;
 				/*{
-					//IReflection* ref = dynamic_cast<IReflection*> (this);
-					BaseReflectionObject* ref_new_obj = dynamic_cast<BaseReflectionObject*> (new_object);
-					if(ref && ref_new_obj)
-						SetAttributes(ref_new_obj);
+				//IReflection* ref = dynamic_cast<IReflection*> (this);
+				BaseReflectionObject* ref_new_obj = dynamic_cast<BaseReflectionObject*> (new_object);
+				if(ref && ref_new_obj)
+				SetAttributes(ref_new_obj);
 				}*/
 			}
 			else
@@ -414,7 +419,7 @@ namespace GASS
 	{
 		std::string type = GetRTTI()->GetClassName();
 		type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
-			
+
 		//remove template from name
 		int pos = type.find("Template");
 		type = type.substr(0,pos);
@@ -424,7 +429,7 @@ namespace GASS
 			Log::Error("Failed to create instance %s",type.c_str());
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
-		
+
 		ComponentVector::iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
 		{
@@ -439,7 +444,7 @@ namespace GASS
 		return container;
 	}
 
-	#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
+#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void BaseComponentContainerTemplate::DebugPrint(int tc)
 	{
 

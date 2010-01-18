@@ -88,11 +88,13 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp;
-			serializer->IO(num_comp);
+			SerialLoader* loader = (SerialLoader*) serializer;
+			
+			loader->IO<int>(num_comp);
 			for(int i  = 0 ; i < num_comp; i++)
 			{
 				std::string comp_type;
-				serializer->IO(comp_type);
+				loader->IO<std::string>(comp_type);
 				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 				if(comp)
 				{
@@ -111,7 +113,7 @@ namespace GASS
 			}
 
 			int num_children;
-			serializer->IO(num_children);
+			loader->IO<int>(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
 
@@ -132,7 +134,9 @@ namespace GASS
 		else
 		{
 			int num_comp = m_ComponentVector.size();
-			serializer->IO(num_comp);
+			SerialSaver* saver = (SerialSaver*) serializer;
+			
+			saver->IO<int>(num_comp);
 			ComponentVector::iterator iter = m_ComponentVector.begin();
 			while (iter != m_ComponentVector.end())
 			{
@@ -148,7 +152,7 @@ namespace GASS
 			}
 
 			int num_children = m_ComponentContainerVector.size();
-			serializer->IO(num_children);
+			saver->IO<int>(num_children);
 			BaseComponentContainer::ComponentContainerVector::iterator go_iter;
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
 			{

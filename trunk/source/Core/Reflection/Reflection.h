@@ -18,12 +18,20 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+/*
+This class is based on the Game Programming Gems 5 article
+"Using Templates for Reflection in C++" by Dominic Filion.
+*/
+
+
+
 #ifndef REFLECTION_HH
 #define REFLECTION_HH
 
 #include <typeinfo>
 #include "Core/Reflection/RTTI.h"
 #include "Core/Reflection/Property.h"
+#include "Core/Reflection/VectorProperty.h"
 //#include "Core/Reflection/PropertySystem.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +106,24 @@ namespace GASS
 			typename Property<T, PropertyType>::SetterTypeConst Setter )
 		{
 			Property<T, PropertyType>* pProperty = new Property<T, PropertyType>( szName, Getter, Setter );
+			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
+			//PropertySystem::GetProperties()->push_back( pProperty );
+		}
+
+		template <class PropertyType>
+		static	void RegisterVectorProperty(	const char* szName, typename VectorProperty<T, PropertyType>::GetterType Getter,
+			typename VectorProperty<T, PropertyType>::SetterType Setter )
+		{
+			VectorProperty<T, PropertyType>* pProperty = new VectorProperty<T, PropertyType>( szName, Getter, Setter );
+			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
+			//PropertySystem::GetProperties()->push_back( pProperty );
+		}
+		
+		template <class PropertyType>
+		static	void RegisterVectorProperty(	const char* szName, typename VectorProperty<T, PropertyType>::GetterType Getter,
+			typename VectorProperty<T, PropertyType>::SetterTypeConst Setter )
+		{
+			VectorProperty<T, PropertyType>* pProperty = new VectorProperty<T, PropertyType>( szName, Getter, Setter );
 			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
 			//PropertySystem::GetProperties()->push_back( pProperty );
 		}

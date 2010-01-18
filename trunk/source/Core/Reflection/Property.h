@@ -18,6 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+/*
+This class is based on the Game Programming Gems 5 article
+"Using Templates for Reflection in C++" by Dominic Filion.
+*/
+
+
 #ifndef PROPERTY_HH
 #define PROPERTY_HH
 
@@ -70,7 +76,7 @@ namespace GASS
 		void SetValue(BaseReflectionObject* pOwner, boost::any &attribute);
 		void GetValue(BaseReflectionObject* pOwner, boost::any &attribute);
 	protected:
-		std::vector<std::string> Tokenize(const std::string & str, const std::string & delim);
+		//std::vector<std::string> Tokenize(const std::string & str, const std::string & delim);
 
 
 		GetterType		m_Getter;
@@ -129,6 +135,8 @@ namespace GASS
 		SetValue(pOwner,res);
 	}
 
+	
+
 	//Do nothing by default
 	template <class type>
 	bool GetValueFromString(type &res,const std::string &s)
@@ -139,12 +147,18 @@ namespace GASS
 		//SetValue(pOwner,res);
 		return true;
 	}
+
+	
+
 	//Use specialized template to catch std::string
 	template <>
 	bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
+	
+	
+
 	//Use specialized template to catch vector
-	template <>
+	/*template <>
 	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s);
 
 	//Use specialized template to catch vector
@@ -157,7 +171,9 @@ namespace GASS
 
 	//Use specialized template to catch vector
 	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<std::string> >(std::vector<std::string> &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<std::vector<std::string> >(std::vector<std::string> &res,const std::string &s);*/
+
+
 
 
 	template <class OwnerType, class T>
@@ -206,7 +222,7 @@ namespace GASS
 		attribute = res;
 	}
 
-	template <class OwnerType, class T>
+/*	template <class OwnerType, class T>
 	std::vector<std::string> Property<OwnerType, T>::Tokenize(const std::string & str, const std::string & delim)
 	{
 		using namespace std;
@@ -223,7 +239,7 @@ namespace GASS
 			p0 = str.find_first_not_of(delim, p1);
 		}
 		return tokens;
-	}
+	}*/
 
 	template <class OwnerType, class T>
 	void Property<OwnerType, T>::Serialize(BaseReflectionObject* pOwner,ISerializer* serializer)
@@ -232,13 +248,16 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			T val;
-			serializer->IO(val);
+			SerialLoader* loader = (SerialLoader*) serializer;
+			loader->IO<T>(val);
 			SetValue(pOwner,val);
 		}
 		else
 		{
 			T val = GetValue(pOwner);
-			serializer->IO(val);
+			SerialSaver* saver = (SerialSaver*) serializer;
+			saver->IO<T>(val);
+			
 		}
 	}
 

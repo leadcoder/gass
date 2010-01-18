@@ -25,13 +25,14 @@
 #include "Core/Math/Matrix.h"
 #include <cstring>
 
-// This is a modified version of serialization code from
-// the Enginuity article series (gamedev.net), Part V
-
 class TiXmlElement;
 
 namespace GASS
 {
+	/**
+		Interface for xml serialization
+	*/
+
 	class GASSCoreExport IXMLSerialize
 	{
 	public:

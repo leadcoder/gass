@@ -52,7 +52,7 @@ public:
 		short mRight;
 	};
 
-	typedef list<RectLayoutManager::Rect> RectList;
+	typedef std::list<RectLayoutManager::Rect> RectList;
 
 	RectLayoutManager(	unsigned short leftBound,
 						unsigned short topBound,

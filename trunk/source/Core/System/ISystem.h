@@ -29,6 +29,19 @@ namespace GASS
 	class ISystemManager;
 	typedef std::string SystemType;
 
+	/**
+		Interface for arbitrary system. 
+		Many applications can be divided in to different 
+		systems each with a specific task. For instance, 
+		a game engine usually has a graphic, sound, 
+		physics and input system. 
+		By deriving your system from this interface 
+		you enable the system manager to load your system
+		and make it accessible to the rest of your 
+		application.
+
+	*/
+
 	class GASSCoreExport ISystem
 	{
 	public:

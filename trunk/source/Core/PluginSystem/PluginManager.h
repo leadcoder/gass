@@ -28,13 +28,45 @@
 namespace GASS
 {
 	class DynamicModule;
+	/**
+		Manager used to load and hold plugins. 
+		A GASS plugin is the same as a regular 
+		dynamic library (dll in windows, so linux etc.)
+		The plugin manager only give the user some help
+		to load dynamic libraries in a platform independent
+		manner and doing this by loading a configuration file 
+		that hold a list of plugins to load.
+
+	*/
 	class GASSCoreExport PluginManager
 	{
 	public:
 		PluginManager();
 		virtual ~PluginManager();
+		/**
+			Load plugin-configuration file.
+			
+			Bellow is a configuration file example that 
+			load 3 plugins (TestPlugin1,TestPlugin2,TestPlugin3). 
+			Note that  the filename extension is removed. 
+			
+			<?xml version="1.0" encoding="utf-8"?>
+			<Plugins>
+				<Plugin PluginFile = "TestPlugin1"/>
+				<Plugin PluginFile = "TestPlugin2"/>
+				<Plugin PluginFile = "TestPlugin3"/>
+			</Plugins>
+		*/
 		bool LoadFromFile(const std::string &filename);
+
+		/**
+			Reload all loaded plugins
+		*/
 		void Reload();
+
+		/**
+			Free all loaded plugins
+		*/
 		void Shutdown();
 	protected:
 		std::vector<DynamicModule*> m_Plugins;

@@ -14,14 +14,14 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/boost",
+		"$(BOOST_PATH)",
 		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
 		"../dependencies/tinyxml/lib",
-		"../dependencies/boost/lib",
+		"$(BOOST_PATH)/lib",
 		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 

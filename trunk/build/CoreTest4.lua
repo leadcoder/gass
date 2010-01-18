@@ -5,33 +5,33 @@ project "CoreTest"
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	targetdir ( "../bin/$(ConfigurationName)" )
 
-	files { "../source/Test/CoreTest.cpp" }
+	files { "../source/Test/CoreUnitTest.cpp" }
 
 
 if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/boost" 
+		"$(BOOST_PATH)" 
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../dependencies/boost/lib"
+		"$(BOOST_PATH)/lib"
 	}
 
 else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include/boost"
+		"$(BOOST_PATH)/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../dependencies/lib"
+		"$(BOOST_PATH)/lib"
 	}
 end
 
@@ -43,7 +43,6 @@ end
 		postbuildcommands 
 		{
 			"copy ..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\bin\\$(ConfigurationName)" 
-			
 		}
 	
 	configuration "Release"

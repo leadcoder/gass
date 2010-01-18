@@ -20,3 +20,55 @@
 
 #include "Core/Serialize/Serialize.h"
 
+namespace GASS
+{
+	template <>
+	void SerialSaver::IO<std::string>(std::string &value)
+	{
+		if(buffer)
+		{
+			unsigned long l = (unsigned long) value.length();
+			IO<unsigned long>(l);
+			if(bHasOverflowed)return;
+			if(bytesUsed+l>length){bHasOverflowed=true; return; }
+			memcpy(buffer,value.c_str(),l);
+			buffer+=l; bytesUsed+=l;
+		}
+		else
+		{
+			int type_size = sizeof(unsigned long);
+			length +=type_size;
+			length += (int) value.length();
+		}
+	}
+
+	template <>
+	void SerialSaver::IO<FilePath>(FilePath &path)
+	{
+		IO(path.GetPath());
+	}
+
+	template <>
+	void SerialLoader::IO<std::string>(std::string &value)
+	{
+		unsigned long l;
+		IO<unsigned long>(l);
+		if(bHasOverflowed)return;
+		if(bytesUsed + l > length){bHasOverflowed=true; return; }
+		char *szBuf=new char[l+1];
+		szBuf[l]=0;
+		memcpy(szBuf,buffer,l);
+		value=szBuf;
+		delete[] szBuf;
+		buffer+=l; bytesUsed+=l;
+	}
+
+	template <>
+	void SerialLoader::IO<FilePath>(FilePath &path)
+	{
+		std::string value;
+		IO(value);
+		path = FilePath(value);
+	}
+
+}

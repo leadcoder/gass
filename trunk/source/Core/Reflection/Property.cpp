@@ -18,6 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+/*
+This class is based on the Game Programming Gems 5 article
+"Using Templates for Reflection in C++" by Dominic Filion.
+*/
+
+
 #include "Core/Reflection/Property.h"
 
 namespace GASS
@@ -31,7 +37,7 @@ namespace GASS
 		return true;
 	}
 
-    template <>
+    /*template <>
 	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s)
 	{
 		GetVectorFromString(res,s);
@@ -82,6 +88,6 @@ namespace GASS
 	{
 		GetStringFromVector(val,s);
 		return true;
-	}
+	}*/
 
 }

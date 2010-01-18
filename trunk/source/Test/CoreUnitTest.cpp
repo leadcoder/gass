@@ -20,6 +20,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 
 #include "Core/PluginSystem/PluginManager.h"
+#include "tinyxml.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -42,8 +43,9 @@ public:
 		RegisterProperty<GASS::Vec3>("Vec3", &TestReflectionObject::GetVec3, &TestReflectionObject::SetVec3);
 		RegisterProperty<GASS::Vec4>("Vec4", &TestReflectionObject::GetVec4, &TestReflectionObject::SetVec4);
 		RegisterProperty<GASS::Float>("Float", &TestReflectionObject::GetFloat, &TestReflectionObject::SetFloat);
-		RegisterProperty<std::vector<int>>("IntVec", &TestReflectionObject::GetIntVec, &TestReflectionObject::SetIntVec);
-		RegisterProperty<std::vector<std::string>>("StrVec", &TestReflectionObject::GetStrVec, &TestReflectionObject::SetStrVec);
+		RegisterVectorProperty<int>("IntVec", &TestReflectionObject::GetIntVec, &TestReflectionObject::SetIntVec);
+		RegisterVectorProperty<std::string>("StrVec", &TestReflectionObject::GetStrVec, &TestReflectionObject::SetStrVec);
+		RegisterVectorProperty<GASS::Vec2>("Vec2Vec", &TestReflectionObject::GetVec2Vec, &TestReflectionObject::SetVec2Vec);
 	}
 	std::string GetString()const {return m_String;}
 	void SetString(const std::string &value){m_String = value;}
@@ -61,6 +63,9 @@ public:
 	void SetIntVec(const std::vector<int> &vec){m_IntVec= vec;}
 	std::vector<std::string> GetStrVec()const {return m_StrVec;}
 	void SetStrVec(const std::vector<std::string> &vec){m_StrVec= vec;}
+	std::vector<GASS::Vec2> GetVec2Vec()const {return m_Vec2Vec;}
+	void SetVec2Vec(const std::vector<GASS::Vec2> &value){m_Vec2Vec = value;}
+	
 
 private:
 	std::string m_String;
@@ -70,6 +75,7 @@ private:
 	GASS::Vec4 m_Vec4;
 	std::vector<int> m_IntVec;
 	std::vector<std::string> m_StrVec;
+	std::vector<GASS::Vec2> m_Vec2Vec;
 };
 
 
@@ -77,7 +83,7 @@ BOOST_AUTO_TEST_CASE( TestGetSetByStringReflection )
 {
     //BOOST_CHECK( false );
     // unit test framework can catch operating system signals
-    BOOST_TEST_CHECKPOINT("About to test reflection system!");
+    //BOOST_TEST_CHECKPOINT("About to test reflection system!");
 
 	std::string value;
 	TestReflectionObject obj;
@@ -113,9 +119,9 @@ BOOST_AUTO_TEST_CASE( TestGetSetByStringReflection )
 	BOOST_CHECK( value == "string vector test");
 
 	value = "";
-	obj.SetPropertyByString("Vec2","33 34");
-	obj.GetPropertyByString("Vec2",value);
-	BOOST_CHECK( value == "33 34");
+	obj.SetPropertyByString("Vec2Vec","33 34 23 24");
+	obj.GetPropertyByString("Vec2Vec",value);
+	BOOST_CHECK( value == "33 34 23 24");
 }
 
 
@@ -123,7 +129,7 @@ BOOST_AUTO_TEST_CASE( TestGetSetByTypeReflection )
 {
     //BOOST_CHECK( false );
     // unit test framework can catch operating system signals
-    BOOST_TEST_CHECKPOINT("About to test reflection system!");
+   // BOOST_TEST_CHECKPOINT("About to test reflection system!");
 
 
 	
@@ -146,18 +152,117 @@ BOOST_AUTO_TEST_CASE( TestGetSetByTypeReflection )
 	obj.SetPropertyByType("Vec4",GASS::Vec4(121,22,177,42));
 	obj.GetPropertyByType("Vec4",value);
 	BOOST_CHECK( boost::any_cast<GASS::Vec4>(value) == GASS::Vec4(121,22,177,42));
-
-	/*value = "";
-	obj.SetPropertyByString("IntVec","221 22 177");
-	obj.GetPropertyByString("IntVec",value);
-	BOOST_CHECK( value == "221 22 177");
-
-	value = "";
-	obj.SetPropertyByString("StrVec","string vector test");
-	obj.GetPropertyByString("StrVec",value);
-	BOOST_CHECK( value == "string vector test");
-	*/
+	
 }
+
+BOOST_AUTO_TEST_CASE( TestReflectionSerialization )
+{
+    //BOOST_CHECK( false );
+    // unit test framework can catch operating system signals
+    //BOOST_TEST_CHECKPOINT("About to test reflection system!");
+
+	TestReflectionObject obj;
+
+	obj.SetString("My test object");
+	GASS::Float float_val(99);
+	obj.SetFloat(float_val);
+	
+	GASS::Vec2 vec2_val(45,54);
+	obj.SetVec2(vec2_val);
+	
+	GASS::Vec3 vec3_val(1,2,77);
+	obj.SetVec3(vec3_val);
+
+	GASS::Vec4 vec4_val(121,22,177,42);
+	obj.SetVec4(vec4_val);
+
+	std::vector<std::string> str_vec;
+	str_vec.push_back("Hello");
+	str_vec.push_back("World");
+	obj.SetStrVec(str_vec);
+
+
+	TiXmlDocument* doc = new TiXmlDocument();  
+	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+	doc->LinkEndChild( decl );  
+
+	TiXmlElement * object_elem = new TiXmlElement( "Object" );  
+	doc->LinkEndChild(object_elem);  
+
+	obj.SaveProperties(object_elem);
+
+	TestReflectionObject obj2;
+	obj2.LoadProperties(object_elem);
+	delete doc;
+
+	BOOST_CHECK( obj.GetFloat() == obj2.GetFloat());
+	BOOST_CHECK( obj.GetString() == obj2.GetString());
+	BOOST_CHECK( obj.GetVec2() == obj2.GetVec2());
+	BOOST_CHECK( obj.GetVec3() == obj2.GetVec3());
+	BOOST_CHECK( obj.GetVec4() == obj2.GetVec4());
+	BOOST_CHECK( obj.GetStrVec() == obj2.GetStrVec());
+
+
+	//Test serializing
+	GASS::SerialSaver ss(NULL,0);
+	obj.SerializeProperties(&ss);
+	unsigned long size=ss.getLength();
+
+	unsigned char *buffer=new unsigned char[size];
+	GASS::SerialSaver sv(buffer,size);
+	obj.SerializeProperties(&sv);
+
+	TestReflectionObject bin_obj;
+	GASS::SerialLoader sl(buffer, size);
+	bin_obj.SerializeProperties(&sl);
+
+	BOOST_CHECK( obj.GetFloat() == bin_obj.GetFloat());
+	BOOST_CHECK( obj.GetString() == bin_obj.GetString());
+	BOOST_CHECK( obj.GetVec2() == bin_obj.GetVec2());
+	BOOST_CHECK( obj.GetVec3() == bin_obj.GetVec3());
+	BOOST_CHECK( obj.GetVec4() == bin_obj.GetVec4());
+	BOOST_CHECK( obj.GetStrVec() == bin_obj.GetStrVec());
+
+		
+
+	/*std::ofstream outfile;
+	outfile.open("test.bin", std::ios::out | std::ios::trunc | std::ios::binary);
+	outfile.write( ((char *)buffer), size );
+	outfile.close();
+
+	std::ifstream infile ("test.bin", std::ios::in|std::ios::binary|std::ios::ate);
+
+	
+	
+	if (infile.is_open())
+	{
+		size = infile.tellg();
+		char *memblock = new char [size];
+		infile.seekg (0, std::ios::beg);
+		infile.read (memblock, size);
+		infile.close();
+		buffer = (unsigned char*) memblock;
+		GASS::SerialLoader sl(buffer, size);
+		bin_go->Serialize(&sl);
+		delete[] memblock;
+	}*/
+
+
+	//Test object copy
+
+	boost::shared_ptr<TestReflectionObject> obj3 (new TestReflectionObject) ;
+	obj.SetProperties(obj3);
+
+	BOOST_CHECK( obj.GetFloat() == obj3->GetFloat());
+	BOOST_CHECK( obj.GetString() == obj3->GetString());
+	BOOST_CHECK( obj.GetVec2() == obj3->GetVec2());
+	BOOST_CHECK( obj.GetVec3() == obj3->GetVec3());
+	BOOST_CHECK( obj.GetVec4() == obj3->GetVec4());
+	BOOST_CHECK( obj.GetStrVec() == obj3->GetStrVec());
+	
+
+}
+
 
 
 /*

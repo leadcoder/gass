@@ -74,8 +74,9 @@ namespace GASS
 		}
 		else
 		{
+			SerialSaver* saver = (SerialSaver*) serializer;
 			std::string comp_type = GetRTTI()->GetClassName();
-			serializer->IO(comp_type);
+			saver->IO<std::string>(comp_type);
 			if(!BaseReflectionObject::SerializeProperties(serializer))
 				return false;
 		}

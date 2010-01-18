@@ -18,9 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-//
-// Reflection.cpp
-//
+/*
+This class is based on the Game Programming Gems 5 article
+"Using Templates for Reflection in C++" by Dominic Filion.
+*/
+
 #include "Core/Reflection/Reflection.h"
 
 namespace GASS
