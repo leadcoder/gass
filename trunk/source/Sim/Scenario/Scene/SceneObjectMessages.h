@@ -74,6 +74,7 @@ namespace GASS
 		MeshParameterType = "Type" - See MeshParameterType for data fields*/
 		OBJECT_RM_MESH_FILE,
 		OBJECT_RM_TEXTURE_COORDINATES,
+		OBJECT_RM_COLOR,
 
 		OBJECT_RM_CAMERA_PARAMETER,
 
@@ -371,6 +372,18 @@ namespace GASS
 		Vec2 m_TexCoords;
 	};
 	typedef boost::shared_ptr<TextureCoordinateMessage> TextureCoordinateMessagePtr;
+
+	class ColorMessage : public BaseMessage
+	{
+	public:
+		ColorMessage(const Vec4 &color, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(OBJECT_RM_COLOR, sender_id , delay), m_Color(color){}
+		  Vec4 GetColor()const {return m_Color;}
+		  enum {OMID = OBJECT_RM_COLOR};
+	private:
+		Vec4 m_Color;
+	};
+	typedef boost::shared_ptr<ColorMessage> ColorMessagePtr;
 
 	class CameraParameterMessage : public BaseMessage
 	{

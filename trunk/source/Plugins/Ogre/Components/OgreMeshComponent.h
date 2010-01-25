@@ -62,6 +62,7 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
+		void OnColorMessage(ColorMessagePtr message);
 		
 		void SetTexCoordSpeed(const Vec2 &speed);
 

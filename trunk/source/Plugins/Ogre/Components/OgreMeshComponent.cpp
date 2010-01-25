@@ -27,6 +27,7 @@
 #include <OgreTextureUnitState.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreSubMesh.h>
+#include <OgreMaterialManager.h>
 
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -54,6 +55,16 @@ namespace GASS
 
 	OgreMeshComponent::~OgreMeshComponent()
 	{
+		if(m_OgreEntity && m_UniqueMaterialCreated)
+		{
+			//relase material
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				Ogre::MaterialPtr mat = se->getMaterial();
+				Ogre::MaterialManager::getSingleton().remove(mat->getName());
+			}
+		}
 
 	}
 
@@ -70,6 +81,7 @@ namespace GASS
 		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage,1);
 		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0);
 		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0);
+		REGISTER_OBJECT_MESSAGE_CLASS(OgreMeshComponent::OnColorMessage,ColorMessage,0);
 	}
 
 	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -360,5 +372,38 @@ namespace GASS
 	{
 		Vec2 uv = message->GetTextureCoordinates();
 		SetTexCoordSpeed(uv);
+	}
+
+	void OgreMeshComponent::OnColorMessage(ColorMessagePtr message)
+	{
+		Vec4 color = message->GetColor();
+
+		if(!m_UniqueMaterialCreated) //material clone hack to only set texcoord scroll speed for this mesh
+		{
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				Ogre::MaterialPtr mat = se->getMaterial();
+				mat = mat->clone(m_OgreEntity->getName() + mat->getName());
+				se->setMaterial(mat);
+			}
+			m_UniqueMaterialCreated = true;
+		}
+		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+		{
+			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+			Ogre::MaterialPtr mat = se->getMaterial();
+			mat->setDiffuse(color.x,color.y,color.z,color.w);
+			if(color.w < 1.0)
+			{
+				mat->setDepthCheckEnabled(false);
+				mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
+			}
+			else
+			{
+				mat->setDepthCheckEnabled(true);
+				mat->setSceneBlending(SBT_REPLACE);
+			}
+		}
 	}
 }
