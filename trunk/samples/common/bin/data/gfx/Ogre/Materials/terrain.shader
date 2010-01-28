@@ -275,6 +275,7 @@ void diffuse_one_light_fp(
 	uniform float exponent,
 	uniform float3 lightDiffuse,
 	uniform float4 ambient,
+	uniform float4 matDiffuse,
 #ifdef STD_FOG
 	uniform float3 fogColor,
     uniform float4 fogParams, 
@@ -296,7 +297,7 @@ color = color + ambient.xyz*diffuse.xyz;
 	float eyeDistance = eyeDir.w;
 	color = calcFog(eyeDistance,fogParams, fogColor, color);
 #endif
-	oColour = float4(color, diffuse.a);
+	oColour = float4(color, diffuse.a*matDiffuse.a);
 }
 
 

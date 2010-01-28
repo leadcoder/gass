@@ -444,6 +444,49 @@ namespace GASS
 		return container;
 	}
 
+	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc)
+	{
+		//std::string type = cc->GetRTTI()->GetClassName();
+		//type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
+
+		//remove template from name
+		//type += "Template";
+		//ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+
+		//if(!container)
+		//	Log::Error("Failed to create instance %s",type.c_str());
+		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(cc);
+		ref_obj->SetProperties(shared_from_this());
+
+		IComponentContainer::ComponentIterator comp_iter = cc->GetComponents();
+		while(comp_iter.hasMoreElements())
+		{
+			ComponentPtr comp = boost::shared_static_cast<IComponent>(comp_iter.getNext());
+			ComponentTemplatePtr temp_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+			if(temp_comp)
+			{
+				ComponentPtr template_comp = temp_comp->CreateCopy();
+				AddComponent(template_comp);
+			}
+		}
+
+		IComponentContainer::ComponentContainerIterator children = cc->GetChildren();
+
+		while(children.hasMoreElements())
+		{
+			ComponentContainerPtr child = children.getNext();
+
+			GetRTTI()->GetClassName();
+			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
+			//BaseComponentContainerTemplatePtr new_child(new BaseComponentContainerTemplate());
+			if(new_child)
+			{
+				new_child->CreateFromComponentContainer(child);
+				AddChild(new_child);
+			}
+		}
+	}
+
 #define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void BaseComponentContainerTemplate::DebugPrint(int tc)
 	{

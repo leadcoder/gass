@@ -66,6 +66,7 @@ namespace GASS
 		virtual ComponentPtr GetComponent(const std::string &name);
 		virtual ComponentIterator GetComponents();
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager);
+		void CreateFromComponentContainer(ComponentContainerPtr cc);
 
 
 		//xml serialize interface

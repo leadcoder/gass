@@ -45,7 +45,7 @@ namespace GASS
 		  interface with a Load function that assume that component containers
 		  that should be loaded from file has the IXML serialization
 		  interface implemented, like the BaseObject implementaion.
-		  The name BaseComponentContainerTemplateManager is therefor used to
+		  The name BaseComponentContainerTemplateManager is therefore used to
 		  indicate that BaseObject component container implementaion
 		  will work with this implementation.
 	*/
@@ -62,7 +62,7 @@ namespace GASS
 			Create a new object from the template archive.
 		@remarks
 			This function do not initialize the object,
-		@param name Template name defined in xml-file
+		@param name Template name
 		*/
 		ComponentContainerPtr CreateFromTemplate(const std::string &name);
 //		void SetNameCheck(bool value){m_NameCheck = value;}
