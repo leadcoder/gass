@@ -490,18 +490,6 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
 
-
-	class LoadSimComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadSimComponentsMessage(SimSceneManager* sim_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SimSceneManager(sim_scene_manager){}
-		  SimSceneManager* GetSimSceneManager() const {return m_SimSceneManager;}
-	private:
-		SimSceneManager* m_SimSceneManager;
-	};
-	typedef boost::shared_ptr<LoadSimComponentsMessage> LoadSimComponentsMessagePtr;
-
 	class UnloadComponentsMessage : public BaseMessage
 	{
 	public:

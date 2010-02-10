@@ -131,27 +131,28 @@ BOOST_AUTO_TEST_CASE( TestGetSetByTypeReflection )
     // unit test framework can catch operating system signals
    // BOOST_TEST_CHECKPOINT("About to test reflection system!");
 
-
-	
 	TestReflectionObject obj;
 
 	boost::any value;
-	obj.SetPropertyByType("Float",GASS::Float(99));
+	GASS::Float input1(99);
+	obj.SetPropertyByType("Float",input1);
 	obj.GetPropertyByType("Float",value);
-	BOOST_CHECK( boost::any_cast<GASS::Float>(value) == GASS::Float(99));
+	BOOST_CHECK( boost::any_cast<GASS::Float>(value) == input1);
 
-	
-	obj.SetPropertyByType("Vec2",GASS::Vec2(45,54));
+	GASS::Vec2 input2(45,54);
+	obj.SetPropertyByType("Vec2",input2);
 	obj.GetPropertyByType("Vec2",value);
-	BOOST_CHECK( boost::any_cast<GASS::Vec2>(value) == GASS::Vec2(45,54));
+	BOOST_CHECK( boost::any_cast<GASS::Vec2>(value) == input2);
 
-	obj.SetPropertyByType("Vec3",GASS::Vec3(1,2,77));
+	GASS::Vec3 input3(1,2,77);
+	obj.SetPropertyByType("Vec3",input3);
 	obj.GetPropertyByType("Vec3",value);
-	BOOST_CHECK( boost::any_cast<GASS::Vec3>(value) == GASS::Vec3(1,2,77));
+	BOOST_CHECK( boost::any_cast<GASS::Vec3>(value) == input3);
 
-	obj.SetPropertyByType("Vec4",GASS::Vec4(121,22,177,42));
+	GASS::Vec4 input4(121,22,177,42);
+	obj.SetPropertyByType("Vec4",input4);
 	obj.GetPropertyByType("Vec4",value);
-	BOOST_CHECK( boost::any_cast<GASS::Vec4>(value) == GASS::Vec4(121,22,177,42));
+	BOOST_CHECK( boost::any_cast<GASS::Vec4>(value) == input4);
 	
 }
 

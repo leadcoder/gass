@@ -23,7 +23,6 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/AnyMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"

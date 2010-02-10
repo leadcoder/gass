@@ -55,9 +55,7 @@ namespace GASS
 		*/
 
 		virtual void SetDeliverDelay(double delay) = 0;
-
 		virtual double GetDeliverDelay() const = 0;
-
 
 		/**
 		Get the sender id, -1 is returned if no sender id was provided in message constructor.
@@ -65,12 +63,6 @@ namespace GASS
 		virtual SenderID GetSenderID() const = 0;
 		virtual MessageType GetType() const = 0;
 
-		/**	
-		Set delay (in seconds) from current frame time until this AnyMessage should be delivered.
-		Note: This time is ignored when using the SendImmediate method of the AnyMessageManager
-		*/
-
-		
 	};
 	class IMessageFunc;
 	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
