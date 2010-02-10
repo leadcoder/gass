@@ -37,17 +37,11 @@ namespace GASS
 	class Controller;
 
 
-	enum
-	{
-		CONTROLLER_MESSAGE_NEW_INPUT
-	};
-
-
 	class ControllerMessage : public BaseMessage
 	{
 	public:
 		ControllerMessage(const std::string &controller, float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(CONTROLLER_MESSAGE_NEW_INPUT, sender_id , delay), m_Controller(controller), m_Value(value)
+		  BaseMessage(sender_id , delay), m_Controller(controller), m_Value(value)
 		  {
 
 		  }

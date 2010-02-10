@@ -26,7 +26,7 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 
 namespace GASS
@@ -42,12 +42,12 @@ namespace GASS
 		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnEnter(AnyMessagePtr message);
-		void OnExit(AnyMessagePtr message);
+		void OnEnter(EnterVehicleMessagePtr message);
+		void OnExit(ExitVehicleMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:
 		void SetControlSetting(const std::string &controlsetting);

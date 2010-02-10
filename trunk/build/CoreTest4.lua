@@ -12,13 +12,17 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)" 
+		"$(BOOST_PATH)" ,
+		"../dependencies/tinyxml",
+
+
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
 	}
 
 else
@@ -39,7 +43,7 @@ end
 		targetname "CoreTest_d"
 		defines { "DEBUG" }
 	 	flags { "Symbols"}
-		links { "GASSCore_d" }
+		links { "GASSCore_d",  "tinyxml" }
 		postbuildcommands 
 		{
 			"copy ..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\bin\\$(ConfigurationName)" 
@@ -49,6 +53,6 @@ end
 		targetname "CoreTest"
 	 	defines { "NDEBUG" }
 	 	flags { "Optimize"}
-		links { "GASSCore" }
+		links { "GASSCore", "tinyxml" }
 
 

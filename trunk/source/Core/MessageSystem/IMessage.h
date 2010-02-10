@@ -27,12 +27,13 @@
 #include <boost/bind.hpp>
 #include <map>
 #include "Core/Common.h"
+#include "Core/Utils/lokitypeinfo.h"
 
 namespace GASS
 {
 	class MessageManager;
 
-	typedef int MessageType;
+	typedef Loki::TypeInfo MessageType;
 	typedef int SenderID;
 
 

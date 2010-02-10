@@ -54,8 +54,8 @@ namespace GASS
 		/**
 		Register for SimSystemMessages
 		*/
-		int RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SimSystemMessage type, MessageFuncPtr callback);
+		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
+		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void Update(float delta_time);		

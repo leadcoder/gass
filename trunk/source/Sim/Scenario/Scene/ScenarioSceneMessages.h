@@ -38,7 +38,7 @@ namespace GASS
 	//Messages with prefix SCENARIO_RM, is a request message
 	//Messages with prefix SCENARIO_NM, is a notify message
 
-	enum ScenarioMessage
+	/*enum ScenarioMessage
 	{
 		//-----------------Request section-------------
 		//Request message sent when loading a scenario scene
@@ -55,23 +55,18 @@ namespace GASS
 		SCENARIO_NM_SCENE_OBJECT_REMOVED,
 		SCENARIO_NM_CAMERA_CHANGED,
 		//SCENARIO_NM_UPDATE
-	};
-
-
-
-
+	};*/
 
 
 	class LoadSceneManagersMessage : public BaseMessage
 	{
 	public:
 		LoadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, sender_id , delay), m_SS(scenario_scene)
+		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
 		  {
 
 		  }
 		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
-		  enum {SMID = SCENARIO_RM_LOAD_SCENE_MANAGERS};
 	private:
 		ScenarioScenePtr m_SS;
 	};
@@ -82,12 +77,11 @@ namespace GASS
 	{
 	public:
 		UnloadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, sender_id , delay), m_SS(scenario_scene)
+		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
 		  {
 
 		  }
 		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
-		  enum {SMID = SCENARIO_RM_UNLOAD_SCENE_MANAGERS};
 	private:
 		ScenarioScenePtr m_SS;
 	};
@@ -98,12 +92,11 @@ namespace GASS
 	{
 	public:
 		ChangeCameraMessage(SceneObjectPtr camera , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_RM_CHANGE_CAMERA, sender_id , delay), m_Camera(camera)
+		  BaseMessage(sender_id , delay), m_Camera(camera)
 		  {
 
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  enum {SMID = SCENARIO_RM_CHANGE_CAMERA};
 	private:
 		SceneObjectPtr m_Camera;
 	};
@@ -113,12 +106,11 @@ namespace GASS
 	{
 	public:
 		RemoveSceneObjectMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_RM_REMOVE_OBJECT, sender_id , delay), m_Object(object)
+		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
-		  enum {SMID = SCENARIO_RM_REMOVE_OBJECT};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -134,7 +126,7 @@ namespace GASS
 			const Vec3 &velocity,
 			SenderID sender_id = -1, 
 			double delay= 0) : 
-		BaseMessage(SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE, sender_id , delay), 
+		BaseMessage(sender_id , delay), 
 			m_Tempalate(template_name),
 			m_Position(position),
 			m_Rotation(rotation),
@@ -146,7 +138,6 @@ namespace GASS
 		Vec3 GetPosition() const {return m_Position;}
 		Quaternion GetRotation() const {return m_Rotation;}
 		Vec3 GetVelocity() const {return m_Velocity;}
-		enum {SMID = SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE};
 	private:
 		std::string m_Tempalate;
 		Vec3 m_Position;
@@ -160,12 +151,11 @@ namespace GASS
 	{
 	public:
 		SceneObjectCreatedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, sender_id , delay), m_Object(object)
+		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
-		  enum {SMID = SCENARIO_NM_SCENE_OBJECT_CREATED};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -175,12 +165,11 @@ namespace GASS
 	{
 	public:
 		SceneObjectRemovedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_NM_SCENE_OBJECT_REMOVED, sender_id , delay), m_Object(object)
+		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
-		  enum {SMID = SCENARIO_NM_SCENE_OBJECT_REMOVED};
 	private:
 		SceneObjectPtr m_Object;
 	};
@@ -190,13 +179,12 @@ namespace GASS
 	{
 	public:
 		CameraChangedNotifyMessage(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(SCENARIO_NM_CAMERA_CHANGED, sender_id , delay), m_Camera(camera),m_UserData(user_data)
+		  BaseMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
 		  {
 
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
 		  void* GetUserData() const {return m_UserData;}
-		  enum {SMID = SCENARIO_NM_CAMERA_CHANGED};
 	private:
 		SceneObjectPtr m_Camera;
 		void *m_UserData;

@@ -51,16 +51,13 @@ namespace GASS
 
 	}
 
-	void InputHandlerComponent::OnEnter(AnyMessagePtr message)
+	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
+			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllerMessage,0));
 		else 
 			Log::Warning("Failed to find control settings: %s",m_ControlSetting.c_str());
-
-
-
 	
 		
 		IComponentContainerTemplate::ComponentVector components;
@@ -89,17 +86,17 @@ namespace GASS
 
 	void InputHandlerComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE, TYPED_MESSAGE_FUNC(GASS::InputHandlerComponent::OnEnter,AnyMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnExit,AnyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(InputHandlerComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadSimComponentsMessage,0));
 	}
 
-	void InputHandlerComponent::OnExit(AnyMessagePtr message)
+	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(InputHandlerComponent::OnInput,ControllerMessage));
+			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
 	}
 
 	void InputHandlerComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -107,7 +104,7 @@ namespace GASS
 	//	message->GetSimSceneManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
 	}
 
-	void InputHandlerComponent::OnUnload(MessagePtr message)
+	void InputHandlerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 	//	message->GetSimSceneManager()->GetScenarioScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 	}
@@ -134,14 +131,12 @@ namespace GASS
 		//check if exit input
 		if(name == "ExitVehicle" && value > 0)
 		{
-			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
+			MessagePtr exit_message(new EnterVehicleMessage());
 			GetSceneObject()->PostMessage(exit_message);	
 		}
 		else
 		{
-			AnyMessagePtr input_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
-			input_message->SetData("Controller",name);
-			input_message->SetData("Value",value);
+			MessagePtr input_message(new PlayerInputMessage(name,value));
 			GetSceneObject()->SendImmediate(input_message);	
 		}
 	}

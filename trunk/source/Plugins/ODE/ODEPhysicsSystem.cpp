@@ -57,7 +57,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::OnCreate()
 	{
-		REGISTER_SYSTEM_MESSAGE_TYPE(ODEPhysicsSystem::OnInit,SYSTEM_RM_INIT,0);
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODEPhysicsSystem::OnInit,InitMessage,0));
 	}
 
 	void ODEPhysicsSystem::OnInit(MessagePtr message)

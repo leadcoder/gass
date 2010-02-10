@@ -62,14 +62,14 @@ namespace GASS
 		delete m_SceneMessageManager;
 	}
 
-	int ScenarioScene::RegisterForMessage( ScenarioMessage type, MessageFuncPtr callback, int priority )
+	int ScenarioScene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{
-		return m_SceneMessageManager->RegisterForMessage((int)type, callback, priority); 
+		return m_SceneMessageManager->RegisterForMessage(type, callback, priority); 
 	}
 
-	void ScenarioScene::UnregisterForMessage(ScenarioMessage type, MessageFuncPtr callback)
+	void ScenarioScene::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
-		m_SceneMessageManager->UnregisterForMessage((int)type, callback);
+		m_SceneMessageManager->UnregisterForMessage(type, callback);
 	}
 
 	void ScenarioScene::PostMessage( MessagePtr message )
@@ -227,8 +227,8 @@ namespace GASS
 
 	void ScenarioScene::OnCreate()
 	{
-		RegisterForMessage(SCENARIO_MESSAGE_CLASS(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage,0));
-		RegisterForMessage(SCENARIO_MESSAGE_CLASS(ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage,0));
+		RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
+		RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
 	}
 
 	void ScenarioScene::OnLoad()

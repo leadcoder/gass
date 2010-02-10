@@ -61,10 +61,9 @@ namespace GASS
 
 	void VehicleDebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(VehicleDebugComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleDebugComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_GOTO_POSITION, TYPED_MESSAGE_FUNC(VehicleDebugComponent::OnGotoPosition,AnyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnGotoPosition,GotoPositionMessage,0));
 		
 	}
 
@@ -99,14 +98,14 @@ namespace GASS
 		}
 		m_WaypointObj = scene_object;
 	}
-	void VehicleDebugComponent::OnUnload(MessagePtr message)
+	void VehicleDebugComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetSceneObjectManager()->DeleteObject(m_WaypointObj);
 	}
 
-	void VehicleDebugComponent::OnGotoPosition(AnyMessagePtr message)
+	void VehicleDebugComponent::OnGotoPosition(GotoPositionMessagePtr message)
 	{
-		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		Vec3 pos = message->GetPosition();
 		MessagePtr pos_msg(new PositionMessage(pos));
 		m_WaypointObj->PostMessage(pos_msg);
 	}

@@ -56,8 +56,8 @@ namespace GASS
 
 	void TurretComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TurretComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(TurretComponent::OnInput,AnyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,PlayerInputMessage,0));
 	}
 
 	void TurretComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -68,10 +68,10 @@ namespace GASS
 		GetSceneObject()->PostMessage(vel_msg);
 	}
 
-	void TurretComponent::OnInput(AnyMessagePtr message)
+	void TurretComponent::OnInput(PlayerInputMessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		std::string name = message->GetController();
+		float value = message->GetValue();
 		if (name == m_Controller)
 		{
 			//send rotaion message to physics engine

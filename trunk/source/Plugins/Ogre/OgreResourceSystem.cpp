@@ -51,7 +51,7 @@ namespace GASS
 
 	void OgreResourceSystem::OnCreate()
 	{
-		REGISTER_SYSTEM_MESSAGE_CLASS(OgreResourceSystem::OnInit,MainWindowCreatedNotifyMessage,0);
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,MainWindowCreatedNotifyMessage,0));
 	}
 
 	void OgreResourceSystem::Update()

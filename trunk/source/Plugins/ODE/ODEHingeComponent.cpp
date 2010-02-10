@@ -68,8 +68,8 @@ namespace GASS
 	
 	void ODEHingeComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEHingeComponent::OnLoad,LoadPhysicsComponentsMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEHingeComponent::OnParameterMessage,PhysicsJointMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
 	}
 
 
@@ -118,7 +118,7 @@ namespace GASS
 			dJointDestroy(m_ODEJoint);
 
 		m_ODEJoint = dJointCreateHinge(world,0);
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
 		dJointAttach(m_ODEJoint, b1,b2);
 
 		dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);

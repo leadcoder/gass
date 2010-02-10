@@ -35,7 +35,8 @@ namespace GASS
 	{
         delete m_Mutex;
 	}
-	void MessageManager::AddMessageToSystem(int type)
+
+	void MessageManager::AddMessageToSystem(const MessageType &type)
 	{
 		MessageTypeListenerMap::iterator message_type;
 
@@ -77,7 +78,7 @@ namespace GASS
 		return lhs->m_Priority < rhs->m_Priority;
 	}
 
-	int MessageManager::RegisterForMessage(MessageType type, MessageFuncPtr callback, int priority)
+	int MessageManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{
 		MessageTypeListenerMap::iterator message_type;
 
@@ -111,7 +112,7 @@ namespace GASS
 		return 0;
 	}
 
-	void MessageManager::UnregisterForMessage(MessageType type, MessageFuncPtr callback)
+	void MessageManager::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
 		MessageTypeListenerMap::iterator message_type;
 

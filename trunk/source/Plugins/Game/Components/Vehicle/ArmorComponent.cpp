@@ -58,11 +58,11 @@ namespace GASS
 	void ArmorComponent::OnCreate()
 	{
 		//GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(ArmorComponent::OnLoad));
-		GetSceneObject()->RegisterForMessage(SceneObjectMessage(OBJECT_NM_HIT), MESSAGE_FUNC(ArmorComponent::OnHit));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnHit,HitMessage,0));
 		//register for physics messages on engine?
 	}
 
-	void ArmorComponent::OnHit(MessagePtr message)
+	void ArmorComponent::OnHit(HitMessagePtr message)
 	{
 		//notify all children also
 		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
@@ -74,14 +74,12 @@ namespace GASS
 
 		if(m_CurrentArmor > 0)
 		{
-
-			AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
-			float damage = boost::any_cast<float>(any_mess->GetData("Damage"));
+			float damage = message->GetDamage();
 			m_CurrentArmor -= damage;
 			if(m_CurrentArmor <= 0)
 			{
 				//Send armor message
-				AnyMessagePtr armor_msg(new AnyMessage(OBJECT_RM_OUT_OF_ARMOR));
+				MessagePtr armor_msg(new OutOfArmorMessage());
 				GetSceneObject()->PostMessage(armor_msg);
 
 				//load damage mesh

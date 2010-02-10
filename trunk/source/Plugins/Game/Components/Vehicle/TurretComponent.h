@@ -24,7 +24,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
@@ -45,7 +45,7 @@ namespace GASS
 		void SetController(const std::string &value) {m_Controller = value;}
 
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnInput(AnyMessagePtr message);
+		void OnInput(PlayerInputMessagePtr message);
 
 		std::string m_Controller;
 	};

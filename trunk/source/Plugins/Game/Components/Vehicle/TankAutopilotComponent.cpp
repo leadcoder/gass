@@ -63,12 +63,12 @@ namespace GASS
 
 	void TankAutopilotComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnInput,AnyMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_GOTO_POSITION, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnGotoPosition,AnyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(TankAutopilotComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED, TYPED_MESSAGE_FUNC(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
 	}
 
 	void TankAutopilotComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -76,14 +76,14 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);	
 	}
 
-	void TankAutopilotComponent::OnUnload(MessagePtr message)
+	void TankAutopilotComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);		
 	}
 
-	void TankAutopilotComponent::OnGotoPosition(AnyMessagePtr message)
+	void TankAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)
 	{
-		Vec3 pos = boost::any_cast<Vec3>(message->GetData("Position"));
+		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,0,pos.z);
 	}
 
@@ -104,11 +104,11 @@ namespace GASS
 		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void TankAutopilotComponent::OnInput(AnyMessagePtr message)
+	void TankAutopilotComponent::OnInput(PlayerInputMessagePtr message)
 	{
 		
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		std::string name = message->GetController();
+		float value = message->GetValue();
 	}
 
 	void TankAutopilotComponent::Update(double delta)
@@ -216,15 +216,12 @@ namespace GASS
 
 			//Send input message
 
-			AnyMessagePtr throttle_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
-			throttle_message->SetData("Controller",m_ThrottleInput);
-			throttle_message->SetData("Value",throttle);
+			MessagePtr throttle_message(new PlayerInputMessage(m_ThrottleInput,throttle));
 			GetSceneObject()->SendImmediate(throttle_message);	
 
-			AnyMessagePtr steering_message(new AnyMessage(OBJECT_NM_PLAYER_INPUT));
-			steering_message->SetData("Controller",m_SteerInput);
-			steering_message->SetData("Value",turn);
+			MessagePtr steering_message(new PlayerInputMessage(m_SteerInput,turn));
 			GetSceneObject()->SendImmediate(steering_message);	
+
 		}
 	}
 

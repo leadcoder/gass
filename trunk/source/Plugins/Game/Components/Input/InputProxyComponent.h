@@ -26,7 +26,7 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 
 namespace GASS
@@ -42,10 +42,10 @@ namespace GASS
 		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnPlayerInput(AnyMessagePtr  message);
+		void OnPlayerInput(PlayerInputMessagePtr  message);
 
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:
 		void SetInputHandler(const std::string &handler);

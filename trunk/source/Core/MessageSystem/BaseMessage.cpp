@@ -22,8 +22,7 @@
 
 namespace GASS
 {
-	BaseMessage::BaseMessage(MessageType type, SenderID sender_id, double delay) :
-			m_TypeID(type),
+	BaseMessage::BaseMessage(SenderID sender_id, double delay) :
 			m_SenderID(sender_id),
 			m_Delay(delay)
 	{
@@ -48,7 +47,7 @@ namespace GASS
 
 	MessageType BaseMessage::GetType() const
 	{
-		return m_TypeID;
+		return MessageType(typeid(*this));
 	}
 
 	double  BaseMessage::GetDeliverDelay() const

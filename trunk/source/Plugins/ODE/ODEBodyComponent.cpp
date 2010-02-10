@@ -69,11 +69,11 @@ namespace GASS
 
 	void ODEBodyComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEBodyComponent::OnLoad,LoadPhysicsComponentsMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEBodyComponent::OnPositionChanged,PositionMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEBodyComponent::OnRotationChanged,RotationMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEBodyComponent::OnMassMessage,PhysicsMassMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsMassMessage,0));
 	}
 
 	void ODEBodyComponent::OnPositionChanged(PositionMessagePtr message)

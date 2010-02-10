@@ -1,6 +1,7 @@
 #include "OpenALSoundComponent.h"
 #include "OpenALSoundSystem.h"
 #include "Core/Utils/Log.h"
+#include "Core/MessageSystem/MessageManager.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
@@ -50,10 +51,10 @@ namespace GASS
 
 	void OpenALSoundComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage,1);
-		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
 	}
 
 	void OpenALSoundComponent::OnPositionChanged(TransformationNotifyMessagePtr message)

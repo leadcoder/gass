@@ -27,7 +27,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 
 namespace GASS
@@ -78,9 +78,9 @@ namespace GASS
 		void SetWheels(const std::vector<std::string> wheels);
 
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(AnyMessagePtr message);
+		void OnInput(PlayerInputMessagePtr message);
 
 
 		//set/get attributes

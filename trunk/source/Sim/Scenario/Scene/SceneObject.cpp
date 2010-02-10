@@ -50,7 +50,7 @@ namespace GASS
 
 	void SceneObject::OnCreate()
 	{
-		RegisterForMessage(OBJECT_RM_SCENE_OBJECT_NAME,TYPED_MESSAGE_FUNC(SceneObject::OnChangeName,SceneObjectNameMessage)); 
+		RegisterForMessage(typeid(SceneObjectNameMessage),TYPED_MESSAGE_FUNC(SceneObject::OnChangeName,SceneObjectNameMessage)); 
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
@@ -167,14 +167,14 @@ namespace GASS
 	}
 
 
-	int SceneObject::RegisterForMessage( SceneObjectMessage type, MessageFuncPtr callback, int priority )
+	int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
 	{
-		return m_MessageManager->RegisterForMessage((int)type, callback, priority); 
+		return m_MessageManager->RegisterForMessage(type, callback, priority); 
 	}
 
-	void SceneObject::UnregisterForMessage(SceneObjectMessage type, MessageFuncPtr callback)
+	void SceneObject::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
-		m_MessageManager->UnregisterForMessage((int)type, callback);
+		m_MessageManager->UnregisterForMessage(type, callback);
 	}
 
 	void SceneObject::PostMessage( MessagePtr message )

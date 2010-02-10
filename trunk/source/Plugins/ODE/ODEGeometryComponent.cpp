@@ -84,9 +84,9 @@ namespace GASS
 
 	void ODEGeometryComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 	}
 
 	void ODEGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)

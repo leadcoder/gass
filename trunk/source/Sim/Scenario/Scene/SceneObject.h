@@ -83,6 +83,7 @@ namespace GASS
 			return ret;
 		}
 
+		
 
 
 		//convenience functions 
@@ -97,8 +98,8 @@ namespace GASS
 		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
 		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true); 
 
-		int RegisterForMessage(SceneObjectMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(SceneObjectMessage type, MessageFuncPtr callback);
+		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
+		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);

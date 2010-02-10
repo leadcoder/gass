@@ -66,7 +66,7 @@ namespace GASS
 
 	void OgreSceneManagerTerrainComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(OgreSceneManagerTerrainComponent::OnLoad,LoadGFXComponentsMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadGFXComponentsMessage,0));
 	}
 
 	void OgreSceneManagerTerrainComponent::OnLoad(LoadGFXComponentsMessagePtr message)

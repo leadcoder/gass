@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 
 			if(i==0)
 			{
-				boost::shared_ptr<GASS::IMessage> enter_msg(new GASS::AnyMessage((GASS::SceneObjectMessage)GASS::OBJECT_RM_ENTER_VEHICLE));
+				GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
 				scene_object->PostMessage(enter_msg);
 
 				GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);

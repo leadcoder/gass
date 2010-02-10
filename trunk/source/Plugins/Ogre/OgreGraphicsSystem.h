@@ -71,7 +71,7 @@ namespace GASS
 		void SetTaskGroup(TaskGroup value);
 		
 
-		void OnInit(MessagePtr message);
+		void OnInit(InitMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 	

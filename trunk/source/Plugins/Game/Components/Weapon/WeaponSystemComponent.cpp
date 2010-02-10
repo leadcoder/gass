@@ -81,15 +81,15 @@ namespace GASS
 
 	void WeaponSystemComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_FIRE, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnExecuteFire,AnyMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_RM_RELOAD, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnReload,AnyMessage));
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_READY_TO_FIRE, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnReadyToFire,AnyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnExecuteFire,FireMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReload,ReloadMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
 
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnInput,AnyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED, TYPED_MESSAGE_FUNC(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 	}
 
 	void WeaponSystemComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -106,14 +106,14 @@ namespace GASS
 		m_CurrentVelocity = message->GetLinearVelocity();
 	}
 
-	void WeaponSystemComponent::OnReload(AnyMessagePtr message)
+	void WeaponSystemComponent::OnReload(ReloadMessagePtr message)
 	{
 		m_NumberOfMagazines--;
 		m_CurrentMagSize = m_MagazineSize;
 		m_Reloading = false;
 	}
 
-	void WeaponSystemComponent::OnExecuteFire(AnyMessagePtr message)
+	void WeaponSystemComponent::OnExecuteFire(FireMessagePtr message)
 	{
 		if(m_ReadyToFire && !m_Reloading)
 		{
@@ -125,19 +125,19 @@ namespace GASS
 				m_CurrentMagSize--;
 				
 				float time_until_fire = 1.0f/m_RoundOfFire;
-				MessagePtr ready_msg(new AnyMessage(OBJECT_NM_READY_TO_FIRE));
+				MessagePtr ready_msg(new ReadyToFireMessage());
 				ready_msg->SetDeliverDelay(time_until_fire);
 				GetSceneObject()->PostMessage(ready_msg);
 				m_ReadyToFire = false;
 			}
 			else if(m_AutoReload)
 			{
-				MessagePtr reload_msg(new AnyMessage(OBJECT_RM_RELOAD));
+				MessagePtr reload_msg(new ReloadMessage());
 				reload_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(reload_msg);
 				m_Reloading = true;
 
-				MessagePtr ready_msg(new AnyMessage(OBJECT_NM_READY_TO_FIRE));
+				MessagePtr ready_msg(new ReadyToFireMessage());
 				ready_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(ready_msg);
 			}
@@ -228,17 +228,17 @@ namespace GASS
 		}*/
 	}
 
-	void WeaponSystemComponent::OnInput(AnyMessagePtr message)
+	void WeaponSystemComponent::OnInput(PlayerInputMessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		std::string name = message->GetController();
+		float value = message->GetValue();
 		if (name == m_InputToFire)
 		{
 			//send fire request
 			if(value > 0)
 			{
 				m_FireRequest = true;
-				MessagePtr fire_request_msg(new AnyMessage(OBJECT_RM_FIRE));
+				MessagePtr fire_request_msg(new FireMessage());
 				fire_request_msg->SetDeliverDelay(m_FireDelay);
 				GetSceneObject()->PostMessage(fire_request_msg);
 			}
@@ -252,14 +252,14 @@ namespace GASS
 			if(!m_Reloading)
 			{
 				m_Reloading = true;
-				MessagePtr reload_msg(new AnyMessage(OBJECT_RM_RELOAD));
+				MessagePtr reload_msg(new ReloadMessage());
 				reload_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(reload_msg);
 			}
 		}
 	}
 
-	void WeaponSystemComponent::OnReadyToFire(AnyMessagePtr message)
+	void WeaponSystemComponent::OnReadyToFire(ReadyToFireMessagePtr message)
 	{
 		m_ReadyToFire = true;
 

@@ -52,18 +52,9 @@ namespace GASS
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnInput,ControllerMessage));
+			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllerMessage));
 	}
 
-	/*void PlayerInputComponent::OnEnter(AnyMessagePtr message)
-	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnInput,ControllerMessage));
-		else 
-			Log::Warning("Failed to find control settings: PlayerInputComponentInputSettings");
-
-	}*/
 
 	void PlayerInputComponent::RegisterReflection()
 	{
@@ -77,7 +68,7 @@ namespace GASS
 	//	GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnExit,AnyMessage));
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnInput,ControllerMessage));
+			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
 		else 
 			Log::Warning("Failed to find control settings: PlayerInputComponentInputSettings");
 
@@ -119,7 +110,7 @@ namespace GASS
 					if(dist < 5)
 					{
 						//enter and return
-						MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
+						MessagePtr enter_msg(new EnterVehicleMessage());
 						so->PostMessage(enter_msg);
 						m_CurrentVehicle = so;
 						m_CurrentSeat = so;
@@ -160,11 +151,11 @@ namespace GASS
 				{
 					if(m_CurrentSeat)
 					{
-						MessagePtr exit_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE));
+						MessagePtr exit_msg(new ExitVehicleMessage());
 						m_CurrentSeat->PostMessage(exit_msg);
 					}
 					InputHandlerComponentPtr ih = boost::shared_dynamic_cast<InputHandlerComponent>(components[seat]);
-					MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
+					MessagePtr enter_msg(new EnterVehicleMessage());
 					m_CurrentSeat = ih->GetSceneObject();
 					m_CurrentSeat->PostMessage(enter_msg);
 					

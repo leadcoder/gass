@@ -62,9 +62,9 @@ namespace GASS
 		ScenarioScenePtr scene = GetScenarioScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnLoad ));
-			scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC( SimSceneManager::OnUnload ));
-			scene->RegisterForMessage(SCENARIO_NM_SCENE_OBJECT_CREATED, MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
+			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( SimSceneManager::OnLoad ));
+			scene->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( SimSceneManager::OnUnload ));
+			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( SimSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
 		}
 	}
 

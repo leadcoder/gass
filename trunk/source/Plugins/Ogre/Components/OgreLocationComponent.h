@@ -83,7 +83,7 @@ namespace GASS
 		void PositionMessage(PositionMessagePtr message);
 		void RotationMessage(RotationMessagePtr message);
 		void VisibilityMessage(VisibilityMessagePtr message);
-		void ParentChangedMessage(MessagePtr message);
+		void ParentChangedMessage(ParentChangedMessagePtr message);
 		void WorldPositionMessage(WorldPositionMessagePtr message);
 		void WorldRotationMessage(WorldRotationMessagePtr message);
 		void BoundingInfoMessage(BoundingInfoMessagePtr message);

@@ -24,7 +24,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
@@ -40,9 +40,9 @@ namespace GASS
 		virtual ~VehicleDebugComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnGotoPosition(AnyMessagePtr message);
+		void OnGotoPosition(GotoPositionMessagePtr message);
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 	private:
 		bool m_ShowWaypoint;
 		SceneObjectPtr m_WaypointObj;

@@ -106,10 +106,10 @@ namespace GASS
 		ScenarioScenePtr scene = GetScenarioScene();
 		assert(scene);
 
-		scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS,  MESSAGE_FUNC( OgreGraphicsSceneManager::OnLoad ),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-		scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS,  MESSAGE_FUNC(OgreGraphicsSceneManager::OnUnload));
-		scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-		scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)

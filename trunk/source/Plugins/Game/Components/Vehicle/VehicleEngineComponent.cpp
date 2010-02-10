@@ -42,14 +42,14 @@ namespace GASS
 		m_WheelObject(wheel)
 	{
 		if(wheel)
-			wheel->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
+			wheel->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
 	}
 
 	VehicleWheel::~VehicleWheel()
 	{
 		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
 		if(wheel_obj)
-			wheel_obj->UnregisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
+			wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
 	}
 
 	void VehicleWheel::OnPhysicsMessage(VelocityNotifyMessagePtr message)
@@ -143,10 +143,10 @@ namespace GASS
 			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
 		else 
 			Log::Warning("Failed to find control settings: VehicleEngineComponentInputSettings");*/
-		GetSceneObject()->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(VehicleEngineComponent::OnInput,AnyMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(VehicleEngineComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(VehicleEngineComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		m_Initialized = true;
 	}
 
@@ -337,7 +337,7 @@ namespace GASS
 	}
 
 
-	void VehicleEngineComponent::OnUnload(MessagePtr message)
+	void VehicleEngineComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
@@ -350,10 +350,10 @@ namespace GASS
 		m_VehicleSpeed = velocity.FastLength();
 	}
 
-	void VehicleEngineComponent::OnInput(AnyMessagePtr message)
+	void VehicleEngineComponent::OnInput(PlayerInputMessagePtr message)
 	{
-		std::string name = boost::any_cast<std::string>(message->GetData("Controller"));
-		float value = boost::any_cast<float>(message->GetData("Value"));
+		std::string name = message->GetController();
+		float value = message->GetValue();
 
 		if (name == "Throttle")
 		{

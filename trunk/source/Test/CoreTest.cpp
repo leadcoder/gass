@@ -18,7 +18,7 @@
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/Message.h"
+#include "Core/MessageSystem/BaseMessage.h"
 
 #include "Core/PluginSystem/PluginManager.h"
 
@@ -30,11 +30,16 @@
 #include "Core/Reflection/Reflection.h"
 
 
-enum
+/*enum
 {
 	MESSAGE_INIT,
 	MESSAGE_UPDATE,
-};
+};*/
+
+
+
+
+
 
 GASS::MessageManager mm;
 boost::shared_ptr<GASS::BaseComponentContainerTemplateManager> template_manager;
@@ -53,7 +58,6 @@ private:
 	std::string m_Des;
 };
 
-
 class MyGameObjectTemplate : public GASS::Reflection<MyGameObjectTemplate,GASS::BaseComponentContainerTemplate> 
 {
 public:
@@ -67,6 +71,7 @@ public:
 private:
 	std::string m_Des;
 };
+
 
 
 
@@ -88,15 +93,26 @@ private:
 	float m_Size;
 };
 
-class UpdateMessage : public GASS::Message
+class UpdateMessage : public GASS::BaseMessage
 {
 public:
-	UpdateMessage(int type): Message(type)
+	UpdateMessage(): BaseMessage()
 	{
 
 	}
 	virtual ~UpdateMessage(){}
 	float m_Tick;
+};
+
+
+class InitMessage : public GASS::BaseMessage
+{
+public:
+	InitMessage(): BaseMessage()
+	{
+
+	}
+	virtual ~InitMessage(){}
 };
 
 class LocationComponent : public GASS::Reflection<LocationComponent, GASS::BaseComponent>
@@ -110,8 +126,8 @@ public:
 	~LocationComponent()
 	{
 		
-		mm.UnregisterForMessage(MESSAGE_INIT,MESSAGE_FUNC(LocationComponent::OnInit));
-		mm.UnregisterForMessage(MESSAGE_UPDATE,MESSAGE_FUNC(LocationComponent::OnInit));
+		mm.UnregisterForMessage(typeid(InitMessage),MESSAGE_FUNC(LocationComponent::OnInit));
+		mm.UnregisterForMessage(typeid(UpdateMessage),MESSAGE_FUNC(LocationComponent::OnUpdate));
 	}
 
 	static void RegisterReflection()
@@ -128,20 +144,21 @@ public:
 
 	void OnCreate()
 	{
-		mm.RegisterForMessage(MESSAGE_INIT,  MESSAGE_FUNC(LocationComponent::OnInit),m_InitPriority);
-		mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnInit),m_InitPriority);
+		mm.RegisterForMessage(typeid(InitMessage),  MESSAGE_FUNC(LocationComponent::OnInit),m_InitPriority);
+		mm.RegisterForMessage(typeid(UpdateMessage), MESSAGE_FUNC(LocationComponent::OnUpdate),m_InitPriority);
 	}
 
 	void OnInit(GASS::MessagePtr message)
 	{
+		
 		std::cout << "init:" << m_Name << std::endl;
 	}
 
 	void OnUpdate(GASS::MessagePtr message)
 	{
-
-		//if(((int) update_msg->m_Tick) % 10 == 0)
-		//std::cout << "update:" << m_Name << " tick:" << update_msg->m_Tick <<std::endl;
+		boost::shared_ptr<UpdateMessage> update_msg =  boost::shared_dynamic_cast<UpdateMessage> (message);
+		if(((int) update_msg->m_Tick) % 10 == 0)
+		 std::cout << "update:" << m_Name << " tick:" << update_msg->m_Tick <<std::endl;
 
 	}
 
@@ -188,8 +205,8 @@ public:
 	static void	RegisterReflection()
 	{
 		RegisterProperty<GASS::Vec3>("Pos", &TestReflectionObject::GetPos, &TestReflectionObject::SetPos);
-		RegisterProperty<std::vector<int>>("IntVec", &TestReflectionObject::GetVec, &TestReflectionObject::SetVec);
-		RegisterProperty<std::vector<std::string>>("StrVec", &TestReflectionObject::GetVecStr, &TestReflectionObject::SetVecStr);
+		RegisterVectorProperty<int>("IntVec", &TestReflectionObject::GetVec, &TestReflectionObject::SetVec);
+		RegisterVectorProperty<std::string>("StrVec", &TestReflectionObject::GetVecStr, &TestReflectionObject::SetVecStr);
 	}
 
 	GASS::Vec3 GetPos()const {return m_Pos;}
@@ -242,7 +259,7 @@ int main(int argc, char* argv[])
 
 	//////////////////test message system
 
-	boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT));
+	boost::shared_ptr<GASS::IMessage> init_msg(new InitMessage());
 	mm.PostMessage(init_msg);
 
 	/////////////////////////////////////////////////
@@ -265,7 +282,7 @@ int main(int argc, char* argv[])
 	{
 		if(i % 10 == 0)
 			std::cout << "update:" << i <<std::endl;
-		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage(MESSAGE_UPDATE));
+		boost::shared_ptr<UpdateMessage> update_msg (new UpdateMessage());
 		update_msg->m_Tick = i;
 		mm.PostMessage(update_msg);
 		mm.Update(i);
@@ -288,7 +305,7 @@ int main(int argc, char* argv[])
 	std::cout << "pos " << test_comp3->GetPos() << std::endl;
 
 	//Test serializing
-	GASS::SerialSizer ss;
+	GASS::SerialSaver ss;
 	go1->Serialize(&ss);
 	unsigned long size=ss.getLength();
 

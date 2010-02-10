@@ -59,21 +59,21 @@ namespace GASS
 
 	void InputProxyComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(InputProxyComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(InputProxyComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
 	void InputProxyComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage((SceneObjectMessage)OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(GASS::InputProxyComponent::OnPlayerInput,AnyMessage));
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,PlayerInputMessage,0));
 	}
 
-	void InputProxyComponent::OnUnload(MessagePtr message)
+	void InputProxyComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage((SceneObjectMessage)OBJECT_NM_PLAYER_INPUT, TYPED_MESSAGE_FUNC(GASS::InputProxyComponent::OnPlayerInput,AnyMessage));
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,PlayerInputMessage));
 	}
 
-	void InputProxyComponent::OnPlayerInput(AnyMessagePtr message)
+	void InputProxyComponent::OnPlayerInput(PlayerInputMessagePtr message)
 	{
 		GetSceneObject()->SendImmediate(message);	
 	}

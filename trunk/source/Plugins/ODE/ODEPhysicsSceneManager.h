@@ -64,7 +64,7 @@ namespace GASS
 
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadSceneManagersMessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;

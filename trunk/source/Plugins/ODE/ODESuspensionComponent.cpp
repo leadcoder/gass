@@ -77,8 +77,8 @@ namespace GASS
 
 	void ODESuspensionComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(ODESuspensionComponent::OnLoad,LoadPhysicsComponentsMessage,0);
-		REGISTER_OBJECT_MESSAGE_CLASS(ODESuspensionComponent::OnParameterMessage,PhysicsJointMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnParameterMessage,PhysicsJointMessage,0));
 	}
 
 
@@ -140,7 +140,7 @@ namespace GASS
 			dJointDestroy(m_ODEJoint);
 
 		m_ODEJoint = dJointCreateHinge2(world, 0);
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
 		
 		dJointAttach(m_ODEJoint, b1,b2);
 		UpdateAnchor();

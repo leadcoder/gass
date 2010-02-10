@@ -77,17 +77,17 @@ namespace GASS
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
-		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::PositionChange, OBJECT_RM_POSITION,0);
-		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::RotationChange, OBJECT_RM_ROTATION,0);
-		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::OnInit,OBJECT_RM_LOAD_SIM_COMPONENTS,0);
-		REGISTER_OBJECT_MESSAGE_TYPE(TopCamControlComponent::OnUnload,OBJECT_RM_UNLOAD_COMPONENTS,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInit,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
-
-		m_ControlSetting->GetMessageManager()->RegisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC( TopCamControlComponent::OnInput));
+		assert(m_ControlSetting);
+		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(TopCamControlComponent), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
 		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		scene->RegisterForMessage(SCENARIO_RM_CHANGE_CAMERA, MESSAGE_FUNC( TopCamControlComponent::OnChangeCamera));
+		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
 	TaskGroup TopCamControlComponent::GetTaskGroup() const

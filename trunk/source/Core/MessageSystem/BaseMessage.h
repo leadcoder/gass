@@ -40,7 +40,7 @@ namespace GASS
 	class GASSCoreExport BaseMessage : public IMessage
 	{
 	public:
-		BaseMessage(MessageType type, SenderID sender_id = -1, double delay= 0);
+		BaseMessage(SenderID sender_id = -1, double delay= 0);
 		virtual ~BaseMessage();
 
 		void SetDeliverDelay(double delay);
@@ -50,7 +50,6 @@ namespace GASS
 		MessageType GetType() const;
 		
 		private:
-			MessageType m_TypeID;
 			double m_Delay;
 			SenderID m_SenderID;
 	};

@@ -59,22 +59,22 @@ namespace GASS
 
 	void SteerComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(SteerComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_HINGE_JOINT, TYPED_MESSAGE_FUNC(SteerComponent::OnJointUpdate,HingeJointNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 	}
 
 	void SteerComponent::OnLoad(LoadSimComponentsMessagePtr message)
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		parent->RegisterForMessage((SceneObjectMessage) OBJECT_NM_PLAYER_INPUT, MESSAGE_FUNC(SteerComponent::OnInput));
+		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,PlayerInputMessage,0));
 	}
 
-	void SteerComponent::OnInput(MessagePtr message)
+	void SteerComponent::OnInput(PlayerInputMessagePtr message)
 	{
-		AnyMessagePtr any_mess = boost::shared_static_cast<AnyMessage>(message);
-		std::string name = boost::any_cast<std::string>(any_mess->GetData("Controller"));
-		float value = boost::any_cast<float>(any_mess->GetData("Value"));
+		
+		std::string name = message->GetController();
+		float value = message->GetValue();
 		
 		if (name == "Steer")
 		{

@@ -41,15 +41,10 @@ namespace GASS
 	//Messages with prefix OBJECT_RM, is a request message
 	//Messages with prefix OBJECT_NM, is a notify message
 
-	enum SceneObjectMessage
+	/*enum SceneObjectMessage
 	{
-		//-----------------Request section-------------
-		/** \brief Message data: 
-		Vec3 = "Position" - Position (relative to parent) change for SceneObject is requested */
 		OBJECT_RM_POSITION, 
 
-		/** \brief Message data: 
-		Quaternion = "Rotation" - Rotation (relative to parent) change for SceneObject is requested */
 		OBJECT_RM_ROTATION,
 
 
@@ -64,14 +59,10 @@ namespace GASS
 		OBJECT_RM_PHYSICS_MASS,
 		OBJECT_RM_SOUND_PARAMETER,
 
-		/**
-		Change name of scene object
-		std::string = "Name" new name of component
-		*/
+		
 		OBJECT_RM_SCENE_OBJECT_NAME,
 
-		/** \brief Message data: 
-		MeshParameterType = "Type" - See MeshParameterType for data fields*/
+	
 		OBJECT_RM_MESH_FILE,
 		OBJECT_RM_TEXTURE_COORDINATES,
 		OBJECT_RM_COLOR,
@@ -81,15 +72,10 @@ namespace GASS
 		OBJECT_RM_PARTICLE_SYSTEM_PARAMETER,
 
 
-		/**
-		See ManualMeshData for 	more info
-		*/
 		OBJECT_RM_MANUAL_MESH_DATA,
 		OBJECT_RM_CLEAR_MANUAL_MESH,
 
 
-		/** \brief Message data: 
-		TextParameterType = "Type" - See TextParameterType for data fields*/
 		OBJECT_RM_TEXT_CAPTION,
 
 		OBJECT_RM_LOAD_PHYSICS_COMPONENTS,
@@ -102,48 +88,43 @@ namespace GASS
 		//--------------------Notify section------------------------
 		OBJECT_NM_PARENT_CHANGED,
 
-		/** \brief message data: 
-		Vec3 = "Velocity"
-		Vec3 = "AngularVelocity" */
+		
 		OBJECT_NM_PHYSICS_VELOCITY,
 		OBJECT_NM_PHYSICS_HINGE_JOINT,
 
-		/** \brief message data: 
-		Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
-		Vec3 = "Scale"			- Scale is changed for SceneObject
-		Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
-		*/
 		OBJECT_NM_TRANSFORMATION_CHANGED,
 
+	};*/
 
-	};
-
+	//Position (relative to parent) change for SceneObject is requested
 	class PositionMessage : public BaseMessage
 	{
 	public:
+		
 		PositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Position(pos)
+		  BaseMessage(sender_id , delay), m_Position(pos)
 		  {
 
 		  }
 		  Vec3 GetPosition() const {return m_Position;}
-		  enum {OMID = OBJECT_RM_POSITION};
 	private:
 		Vec3 m_Position;
 	};
 	typedef boost::shared_ptr<PositionMessage> PositionMessagePtr;
 
 
+	/** \brief: 
+		Rotation (relative to parent) change for SceneObject is requested 
+	*/
 	class RotationMessage : public BaseMessage
 	{
 	public:
 		RotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Rotation(rot)
+		  BaseMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
 		  }
 		  Quaternion GetRotation() const {return m_Rotation;}
-		  enum {OMID = OBJECT_RM_ROTATION};
 	private:
 		Quaternion m_Rotation;
 	};
@@ -154,12 +135,11 @@ namespace GASS
 	{
 	public:
 		WorldPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Position(pos)
+		  BaseMessage( sender_id , delay), m_Position(pos)
 		  {
 
 		  }
 		  Vec3 GetPosition() const {return m_Position;}
-		  enum {OMID = OBJECT_RM_WORLD_POSITION};
 	private:
 		Vec3 m_Position;
 	};
@@ -170,12 +150,11 @@ namespace GASS
 	{
 	public:
 		WorldRotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Rotation(rot)
+		  BaseMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
 		  }
 		  Quaternion GetRotation() const {return m_Rotation;}
-		  enum {OMID = OBJECT_RM_WORLD_ROTATION};
 	private:
 		Quaternion m_Rotation;
 	};
@@ -186,12 +165,11 @@ namespace GASS
 	{
 	public:
 		VisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Visible(visible)
+		  BaseMessage(sender_id , delay), m_Visible(visible)
 		  {
 
 		  }
 		  bool GetValue() const {return m_Visible;}
-		  enum {OMID = OBJECT_RM_VISIBILITY};
 	private:
 		bool m_Visible;
 	};
@@ -202,12 +180,11 @@ namespace GASS
 	{
 	public:
 		BoundingInfoMessage(bool bb_visible, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_BBVisible(bb_visible)
+		  BaseMessage( sender_id , delay), m_BBVisible(bb_visible)
 		  {
 
 		  }
 		  bool ShowBoundingBox() const {return m_BBVisible;}
-		  enum {OMID = OBJECT_RM_BOUNDING_INFO};
 	private:
 		bool m_BBVisible;
 	};
@@ -218,12 +195,11 @@ namespace GASS
 	{
 	public:
 		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Enable(enable)
+		  BaseMessage(sender_id , delay), m_Enable(enable)
 		  {
 
 		  }
 		  bool EnableCollision() const {return m_Enable;}
-		  enum {OMID = OBJECT_RM_COLLISION_SETTINGS};
 	private:
 		bool m_Enable;
 	};
@@ -243,13 +219,12 @@ namespace GASS
 		};
 	public:
 		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_PHYSICS_JOINT_PARAMETER, sender_id , delay), m_Value(value), m_Parameter(parameter)
+		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
 		  }
 		  float GetValue()const {return m_Value;}
 		  PhysicsJointParameterType GetParameter()const {return m_Parameter;}
-		  enum {OMID = OBJECT_RM_PHYSICS_JOINT_PARAMETER};
 	private:
 		PhysicsJointParameterType m_Parameter;
 		float m_Value;
@@ -268,13 +243,12 @@ namespace GASS
 		};
 	public:
 		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER, sender_id , delay), m_Value(value), m_Parameter(parameter)
+		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
 		  }
 		  Vec3 GetValue()const {return m_Value;}
 		  PhysicsBodyParameterType GetParameter()const {return m_Parameter;}
-		  enum {OMID = OBJECT_RM_PHYSICS_BODY_PARAMETER};
 	private:
 		PhysicsBodyParameterType m_Parameter;
 		Vec3 m_Value;
@@ -285,12 +259,11 @@ namespace GASS
 	{
 	public:
 		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_PHYSICS_MASS, sender_id , delay), m_Value(mass)
+		  BaseMessage(sender_id , delay), m_Value(mass)
 		  {
 
 		  }
 		  Float GetMass()const {return m_Value;}
-		  enum {OMID = OBJECT_RM_PHYSICS_MASS};
 	private:
 			Float m_Value;
 	};
@@ -311,29 +284,31 @@ namespace GASS
 		};
 	public:
 		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_SOUND_PARAMETER, sender_id , delay), m_Value(value), m_Parameter(parameter)
+		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
 		  }
 		  float GetValue()const {return m_Value;}
 		  SoundParameterType GetParameter()const {return m_Parameter;}
-		  enum {OMID = OBJECT_RM_SOUND_PARAMETER};
 	private:
 		SoundParameterType m_Parameter;
 		float m_Value;
 	};
 	typedef boost::shared_ptr<SoundParameterMessage> SoundParameterMessagePtr;
 
+
+	/**
+		Change name of scene object
+	*/
 	class SceneObjectNameMessage : public BaseMessage
 	{
 	public:
 		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_Name(name)
+		  BaseMessage(sender_id , delay), m_Name(name)
 		  {
 
 		  }
 		  std::string GetName()const {return m_Name;}
-		  enum {OMID = OBJECT_RM_SCENE_OBJECT_NAME};
 	private:
 		std::string m_Name;
 
@@ -342,18 +317,15 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObjectNameMessage> SceneObjectNameMessagePtr;
 
 
-
-
 	class MeshFileMessage : public BaseMessage
 	{
 	public:
 		MeshFileMessage(const std::string mesh_file, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_MESH_FILE, sender_id , delay), m_FileName(mesh_file)
+		  BaseMessage(sender_id , delay), m_FileName(mesh_file)
 		  {
 
 		  }
 		  std::string GetFileName()const {return m_FileName;}
-		  enum {OMID = OBJECT_RM_MESH_FILE};
 	private:
 		std::string m_FileName;
 	};
@@ -365,9 +337,8 @@ namespace GASS
 	{
 	public:
 		TextureCoordinateMessage(const Vec2 &st, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_TEXTURE_COORDINATES, sender_id , delay), m_TexCoords(st){}
+		  BaseMessage(sender_id , delay), m_TexCoords(st){}
 		  Vec2 GetTextureCoordinates()const {return m_TexCoords;}
-		  enum {OMID = OBJECT_RM_TEXTURE_COORDINATES};
 	private:
 		Vec2 m_TexCoords;
 	};
@@ -377,9 +348,8 @@ namespace GASS
 	{
 	public:
 		ColorMessage(const Vec4 &color, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_COLOR, sender_id , delay), m_Color(color){}
+		  BaseMessage(sender_id , delay), m_Color(color){}
 		  Vec4 GetColor()const {return m_Color;}
-		  enum {OMID = OBJECT_RM_COLOR};
 	private:
 		Vec4 m_Color;
 	};
@@ -396,11 +366,10 @@ namespace GASS
 		};
 	public:
 		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_CAMERA_PARAMETER, sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
+		  BaseMessage(sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
 		  float GetValue1()const {return m_Value1;}
 		  float GetValue2()const {return m_Value2;}
 		  CameraParameterType GetParameter()const {return m_Parameter;}
-		  enum {OMID = OBJECT_RM_CAMERA_PARAMETER};
 	private:
 		float m_Value1;
 		float m_Value2;
@@ -413,9 +382,8 @@ namespace GASS
 	{
 	public:
 		ManualMeshDataMessage(ManualMeshDataPtr data, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_MANUAL_MESH_DATA, sender_id , delay), m_Data(data){}
+		  BaseMessage(sender_id , delay), m_Data(data){}
 		  ManualMeshDataPtr GetData()const {return m_Data;}
-		  enum {OMID = OBJECT_RM_MANUAL_MESH_DATA};
 	private:
 		ManualMeshDataPtr m_Data;
 
@@ -426,8 +394,7 @@ namespace GASS
 	{
 	public:
 		ClearManualMeshMessage (SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_CLEAR_MANUAL_MESH, sender_id , delay){}
-		  enum {OMID = OBJECT_RM_CLEAR_MANUAL_MESH};
+		  BaseMessage(sender_id , delay){}
 	private:
 	};
 	typedef boost::shared_ptr<ClearManualMeshMessage> ClearManualMeshMessagePtr;
@@ -445,11 +412,11 @@ namespace GASS
 		};
 	public:
 		ParticleSystemParameterMessage(ParticleSystemParameterType paramter, int emitter, float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_PARTICLE_SYSTEM_PARAMETER, sender_id , delay), m_Emitter(emitter), m_Value(value), m_Parameter(paramter){}
+		  BaseMessage(sender_id , delay), m_Emitter(emitter), m_Value(value), m_Parameter(paramter){}
 		  float GetValue()const {return m_Value;}
 		  int GetEmitter()const {return m_Emitter;}
 		  ParticleSystemParameterType GetParameter() const {return m_Parameter;}
-		  enum {OMID = OBJECT_RM_PARTICLE_SYSTEM_PARAMETER};
+		  
 	private:
 		float m_Value;
 		int m_Emitter;
@@ -466,9 +433,8 @@ namespace GASS
 	{
 	public:
 		TextCaptionMessage(const std::string  &caption, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_TEXT_CAPTION, sender_id , delay), m_Caption(caption){}
+		  BaseMessage(sender_id , delay), m_Caption(caption){}
 		  std::string GetCaption()const {return m_Caption;}
-		  enum {OMID = OBJECT_RM_TEXT_CAPTION};
 	private:
 		std::string m_Caption;
 	};
@@ -479,10 +445,9 @@ namespace GASS
 	{
 	public:
 		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_NM_PHYSICS_VELOCITY, sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
+		  BaseMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
 		  Vec3 GetLinearVelocity() const {return m_LinearVel;}
 		  Vec3 GetAngularVelocity() const {return m_AngularVel;}
-		  enum {OMID = OBJECT_NM_PHYSICS_VELOCITY};
 	private:
 		Vec3 m_LinearVel;
 		Vec3 m_AngularVel;
@@ -493,10 +458,9 @@ namespace GASS
 	{
 	public:
 		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_NM_PHYSICS_HINGE_JOINT, sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
+		  BaseMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
 		  float GetAngle() const {return m_Angle;}
 		  float GetAngleRate() const {return m_AngleRate;}
-		  enum {OMID = OBJECT_NM_PHYSICS_HINGE_JOINT};
 	private:
 		float m_Angle;
 		float m_AngleRate;
@@ -504,15 +468,21 @@ namespace GASS
 	typedef boost::shared_ptr<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
 
 
+
+	/** \brief message data: 
+		Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
+		Vec3 = "Scale"			- Scale is changed for SceneObject
+		Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
+	*/
+	
 	class TransformationNotifyMessage : public BaseMessage
 	{
 	public:
 		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_NM_TRANSFORMATION_CHANGED, sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
+		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
 		  Vec3 GetPosition() const {return m_Position;}
 		  Quaternion  GetRotation() const {return m_Rotation;}
 		  Vec3 GetScale() const {return m_Scale;}
-		  enum {OMID = OBJECT_NM_TRANSFORMATION_CHANGED};
 	private:
 		Vec3 m_Position;
 		Quaternion m_Rotation;
@@ -525,23 +495,33 @@ namespace GASS
 	{
 	public:
 		LoadSimComponentsMessage(SimSceneManager* sim_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, sender_id , delay), m_SimSceneManager(sim_scene_manager){}
+		  BaseMessage(sender_id , delay), m_SimSceneManager(sim_scene_manager){}
 		  SimSceneManager* GetSimSceneManager() const {return m_SimSceneManager;}
-		  enum {OMID = OBJECT_RM_LOAD_SIM_COMPONENTS};
 	private:
 		SimSceneManager* m_SimSceneManager;
 	};
 	typedef boost::shared_ptr<LoadSimComponentsMessage> LoadSimComponentsMessagePtr;
+
+	class UnloadComponentsMessage : public BaseMessage
+	{
+	public:
+		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+
+		  }
+	private:
+	};
+	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
 
 
 	class LoadGFXComponentsMessage : public BaseMessage
 	{
 	public:
 		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OMID, sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
+		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
 		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
 		  void* GetUserData() const {return m_UserData;}
-		  enum {OMID = OBJECT_RM_LOAD_GFX_COMPONENTS};
 	private:
 		SceneManagerPtr m_GFXSceneManager;
 		void *m_UserData;
@@ -553,23 +533,39 @@ namespace GASS
 	{
 	public:
 		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
+		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
 		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
-		  enum {OMID = OBJECT_RM_LOAD_PHYSICS_COMPONENTS};
 	private:
 		SceneManagerPtr m_PhysicsSceneManager;
 	};
 	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
 
+	class ParentChangedMessage : public BaseMessage
+	{
+	public:
+		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage( sender_id , delay)
+		  {
+
+		  }
+	private:
+		
+	};
+	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
+
+
+	
+
 /**
 Convenience macro used for registration of scene object message callbacks for specific scene object message class
 */
 
-#define REGISTER_OBJECT_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSceneObject()->RegisterForMessage((SceneObjectMessage)TYPED_MESSAGE::OMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
+//#define REGISTER_OBJECT_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSceneObject()->RegisterForMessage((SceneObjectMessage)TYPED_MESSAGE::OMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
+  
 
 /**
 Convenience macro used for registration of scene object message callbacks for specific scene object message type
 */
-#define REGISTER_OBJECT_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSceneObject()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
+//#define REGISTER_OBJECT_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSceneObject()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
 
 }

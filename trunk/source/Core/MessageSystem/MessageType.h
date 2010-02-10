@@ -39,7 +39,7 @@ namespace GASS
 	{
 	public:
 
-		int m_TypeID;
+		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
 

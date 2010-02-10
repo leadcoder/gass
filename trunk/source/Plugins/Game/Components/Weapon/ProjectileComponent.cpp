@@ -71,11 +71,11 @@ namespace GASS
 
 	void ProjectileComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(ProjectileComponent::OnLoad,LoadSimComponentsMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_UNLOAD_COMPONENTS, MESSAGE_FUNC(ProjectileComponent::OnUnload));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC( ProjectileComponent::OnPositionMessage,PositionMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC( ProjectileComponent::OnRotationMessage,RotationMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER,  TYPED_MESSAGE_FUNC(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage,0));
 	}
 
 	void ProjectileComponent::OnLoad(LoadSimComponentsMessagePtr message)
@@ -103,7 +103,7 @@ namespace GASS
 	}
 
 
-	void ProjectileComponent::OnUnload(MessagePtr message)
+	void ProjectileComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		std::cout << "Unloaded:" << GetSceneObject()->GetName() << std::endl;
@@ -282,9 +282,7 @@ namespace GASS
 				float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
 				float damage_value = angle_falloff*m_MaxDamage;
 
-				AnyMessagePtr hit_msg(new AnyMessage(OBJECT_NM_HIT));
-				hit_msg->SetData("Damage",damage_value);
-				hit_msg->SetData("HitDirection",proj_dir);
+				MessagePtr hit_msg(new HitMessage(damage_value,proj_dir));
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
 
 				//Send force message to indicate hit

@@ -24,7 +24,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
@@ -43,7 +43,7 @@ namespace GASS
 	private:
 		void OnLoad(LoadSimComponentsMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnInput(PlayerInputMessagePtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}

@@ -34,16 +34,19 @@ namespace tbb
 	class spin_mutex;
 }
 
+
 namespace GASS
 {
 	class IMessage;
+	//class MessageType;
+
 	class GASSCoreExport MessageManager
 	{
 	public:
         typedef boost::shared_ptr<IMessage> MessagePtr;
 		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
-		typedef std::map<int,MessageTypeListeners*> MessageTypeListenerMap;
+		typedef std::map<MessageType,MessageTypeListeners*> MessageTypeListenerMap;
 	public:
 		MessageManager();
 		virtual ~MessageManager();
@@ -71,14 +74,14 @@ namespace GASS
 			processed. This could for instance be useful if you have 
 			Initialization message  want a certain call order*/
 
-		int RegisterForMessage(MessageType type,  MessageFuncPtr callback, int priority = 0);
+		int RegisterForMessage(const MessageType &type,  MessageFuncPtr callback, int priority = 0);
 
 		/**
 			Unregister to listen to messages of certain type.
 			The callback function used during registration has to 
 			be provided again because its used as identifier.
 		*/
-		void UnregisterForMessage(MessageType type, MessageFuncPtr callback);
+		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 
 		/**
 			Process the message queue and deliver messages to 
@@ -87,10 +90,12 @@ namespace GASS
 		void Update(float dt);
 	private:
 		//#pragma deprecated(AddMessageToSystem)
-		void AddMessageToSystem(int type);
+		void AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;
 		tbb::spin_mutex *m_Mutex;
 	};
+	#define REG_TMESS(FUNCTION,TYPED_MESSAGE,PRIORITY) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
+	#define UNREG_TMESS(FUNCTION,TYPED_MESSAGE) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE)
 }
 #endif // #ifndef MESSAGEMANAGER_HH

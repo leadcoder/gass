@@ -44,7 +44,7 @@ namespace GASS
 	Sim system messages are divided in two catagories, notify and request.
 	Mesages with prefix SYSTEM_RM, is a request message
 	Messages with prefix SYSTEM_NM, is a notify message*/
-	enum SimSystemMessage
+	/*enum SimSystemMessage
 	{
 		//-----------------Request section-------------
 		SYSTEM_RM_INIT, 
@@ -57,17 +57,29 @@ namespace GASS
 		SYSTEM_NM_WINDOW_MOVED_OR_RESIZED,
 		SYSTEM_NM_SCENARIO_SCENE_LOADED,
 		SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD
-	};
+	};*/
 
 	/**
 	Message used that can be posted by anyone to request that a new render window should be created.
 	*/
 
+	class InitMessage : public BaseMessage
+	{
+	public:
+		InitMessage (SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) 
+			{ }
+	private:
+
+	};
+	typedef boost::shared_ptr<InitMessage> InitMessagePtr;
+
+
 	class CreateRenderWindowMessage : public BaseMessage
 	{
 	public:
 		CreateRenderWindowMessage(const std::string &name, int height,int width, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(CreateRenderWindowMessage::SSMID , sender_id , delay), 
+		  BaseMessage(sender_id , delay), 
 			  m_Name(name),
 			  m_Height(height),
 			  m_Width(width),
@@ -78,7 +90,6 @@ namespace GASS
 		  int GetHeight() const {return m_Height;}
 		  int GetHandle() const {return m_Handle;}
 		  int GetMainHandle() const {return m_MainHandle;}
-		  enum { SSMID = SYSTEM_RM_CREATE_RENDER_WINDOW};
 	private:
 		std::string m_Name;
 		int m_Height;
@@ -95,10 +106,10 @@ namespace GASS
 	{
 	public:
 		DebugPrintMessage(const std::string &text, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(DebugPrintMessage::SSMID , sender_id , delay), 
+		  BaseMessage(sender_id , delay), 
 			  m_Text(text)  { }
 		  std::string GetText()const {return m_Text;}
-		  enum { SSMID = SYSTEM_RM_DEBUG_PRINT};
+
 	private:
 		std::string m_Text;
 
@@ -121,11 +132,11 @@ namespace GASS
 	{
 	public:
 		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(GFXSceneManagerLoadedNotifyMessage::SSMID , sender_id , delay), 
+		  BaseMessage(sender_id , delay), 
 			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
-		  enum { SSMID = SYSTEM_NM_GFX_SM_LOADED};
+		 
 	private:
 		void* m_RootNode;
 		std::string m_RenderSystem;
@@ -141,11 +152,11 @@ namespace GASS
 	{
 	public:
 		MainWindowCreatedNotifyMessage(int render_window_handle, int main_window_handle,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(MainWindowCreatedNotifyMessage::SSMID , sender_id , delay), 
+		  BaseMessage(sender_id , delay), 
 			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
 		  int GetRenderWindowHandle() const {return m_Handle;}
 		  int GetMainHandle() const {return m_MainHandle;}
-		  enum { SSMID = SYSTEM_NM_MAIN_WINDOW_CREATED};
+		 
 	private:
 		int m_Handle;
 		int m_MainHandle;
@@ -165,8 +176,8 @@ namespace GASS
 	{
 	public:
 		MainWindowMovedOrResizedNotifyMessage (SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(MainWindowMovedOrResizedNotifyMessage::SSMID , sender_id , delay)  {}
-		  enum { SSMID = SYSTEM_NM_WINDOW_MOVED_OR_RESIZED};
+		  BaseMessage(sender_id , delay)  {}
+		  
 	private:
 	};
 	typedef boost::shared_ptr<MainWindowMovedOrResizedNotifyMessage> MainWindowMovedOrResizedNotifyMessagePtr;
@@ -183,9 +194,9 @@ namespace GASS
 	{
 	public:
 		ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr scenario_scene,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(ScenarioSceneLoadedNotifyMessage::SSMID , sender_id , delay) , 
+		  BaseMessage(sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
-		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_LOADED};
+		
 		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
 		ScenarioScenePtr m_ScenarioScene;		
@@ -203,9 +214,9 @@ namespace GASS
 	{
 	public:
 		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(ScenarioSceneAboutToLoadNotifyMessage::SSMID , sender_id , delay) , 
+		  BaseMessage(sender_id , delay) , 
 			  m_ScenarioScene(scenario_scene){}
-		  enum { SSMID = SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD};
+		  
 		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
 		ScenarioScenePtr m_ScenarioScene;		

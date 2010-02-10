@@ -45,7 +45,7 @@ namespace GASS
 	
 	void SimSystemManager::Init()
 	{
-		MessagePtr init_msg(new BaseMessage(SYSTEM_RM_INIT));
+		MessagePtr init_msg(new InitMessage());
 		m_SystemMessageManager->SendImmediate(init_msg);
 		//Log all systems loaded
 		for(int i = 0 ;i< m_Systems.size(); i++)
@@ -59,14 +59,14 @@ namespace GASS
 		m_SystemMessageManager->Update(delta_time);
 	}
 
-	int SimSystemManager::RegisterForMessage(SimSystemMessage type, MessageFuncPtr callback, int priority)
+	int SimSystemManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{
-		return m_SystemMessageManager->RegisterForMessage((int)type, callback, priority); 
+		return m_SystemMessageManager->RegisterForMessage(type, callback, priority); 
 	}
 
-	void SimSystemManager::UnregisterForMessage(SimSystemMessage type,  MessageFuncPtr callback)
+	void SimSystemManager::UnregisterForMessage(const MessageType &type,  MessageFuncPtr callback)
 	{
-		m_SystemMessageManager->UnregisterForMessage((int)type,  callback);
+		m_SystemMessageManager->UnregisterForMessage(type,  callback);
 	}
 
 	void SimSystemManager::PostMessage( MessagePtr message )

@@ -54,7 +54,7 @@ namespace GASS
 
 	void TrackComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_SIM_COMPONENTS, TYPED_MESSAGE_FUNC(TrackComponent::OnLoad,LoadSimComponentsMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadSimComponentsMessage,0));
 		//register for physics messages on engine?
 	}
 
@@ -79,7 +79,7 @@ namespace GASS
 			if(objects.size() > 0)
 			{
 				m_DriveWheel = (objects.front());
-				objects.front()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage));
+				objects.front()->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
 			}
 		}
 	}

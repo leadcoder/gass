@@ -164,7 +164,7 @@ namespace GASS
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
 	{
-		MessagePtr msg(new BaseMessage(OBJECT_RM_UNLOAD_COMPONENTS));
+		MessagePtr msg(new UnloadComponentsMessage());
 		obj->SendImmediate(msg);
 
 		//notify that this object is to be removed

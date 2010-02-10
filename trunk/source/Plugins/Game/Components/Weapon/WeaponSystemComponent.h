@@ -25,7 +25,8 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Plugins/Game/GameMessages.h"
+
 
 namespace GASS
 {
@@ -43,10 +44,10 @@ namespace GASS
 		virtual void OnCreate();
 	private:
 		void OnLoad(LoadSimComponentsMessagePtr message);
-		void OnInput(AnyMessagePtr message);
-		void OnExecuteFire(AnyMessagePtr message);
-		void OnReload(AnyMessagePtr message);
-		void OnReadyToFire(AnyMessagePtr message);
+		void OnInput(PlayerInputMessagePtr message);
+		void OnExecuteFire(FireMessagePtr message);
+		void OnReload(ReloadMessagePtr message);
+		void OnReadyToFire(ReadyToFireMessagePtr message);
 		
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);

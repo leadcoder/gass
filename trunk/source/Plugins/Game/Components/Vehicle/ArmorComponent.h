@@ -24,7 +24,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
@@ -41,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnHit(MessagePtr message);
+		void OnHit(HitMessagePtr message);
 		float GetArmor() const; 
 		void SetArmor(float value);
 		std::string GetDamageMesh() const;

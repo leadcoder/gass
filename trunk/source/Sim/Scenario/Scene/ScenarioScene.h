@@ -81,8 +81,8 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name = name;}
 		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
 		Scenario* GetOwner() {return m_Scenario;}
-		int RegisterForMessage(ScenarioMessage type, MessageFuncPtr callback, int priority = 0);
-		void UnregisterForMessage(ScenarioMessage type, MessageFuncPtr callback);
+		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
+		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 
