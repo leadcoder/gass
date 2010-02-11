@@ -39,7 +39,7 @@ namespace GASS
 	used by systems to notify listeners about critcal system events
 	To send a SimSystemMessage you have to get hold of the 
 	SimSystemManager and then post a message, ex:
-	SimEngine::Get().GetSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
+	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
 
 	Sim system messages are divided in two catagories, notify and request.
 	Mesages with prefix SYSTEM_RM, is a request message

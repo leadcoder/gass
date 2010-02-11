@@ -17,33 +17,34 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#ifndef ISYSTEMMANAGER_HH
-#define ISYSTEMMANAGER_HH
-
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
 #include "Core/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/ISystem.h"
+#include "Sim/Systems/SimSystem.h"
+#include "Sim/Systems/SimSystemManager.h"
 
 namespace GASS
 {
-	/**
-		Interface for a system manager
-	*/
-	class GASSCoreExport ISystemManager
+	SimSystem::SimSystem(void)
 	{
-	public:
-		virtual ~ISystemManager(){}
-		virtual void Init() = 0;
-		virtual void Update(float delta_time) = 0;
-	private:
-	};
-	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
-	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
+	
+	}
+
+	SimSystem::~SimSystem(void)
+	{
+	
+	}
+
+	void SimSystem::RegisterReflection()
+	{
+
+	}
+
+	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
+	{
+		return boost::shared_dynamic_cast<SimSystemManager>(SystemManagerPtr(m_Owner));
+	}
+	
 }
-#endif // #ifndef ISYSTEMMANAGER_HH
+
+
+
+

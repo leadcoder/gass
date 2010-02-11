@@ -30,6 +30,9 @@
 
 namespace GASS
 {
+	class ISystemManager;
+	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
+
 	class GASSCoreExport BaseSystem : public Reflection<BaseSystem, BaseReflectionObject>, public ISystem, public IXMLSerialize
 	{
 	public:
@@ -40,19 +43,19 @@ namespace GASS
 
 		//ISystem interface
 		virtual void OnCreate(){};
-		virtual SystemType GetSystemType(){return "BaseSystem";}
-
 		std::string GetName() const {return m_Name;}
 		void SetName(const std::string &name) {m_Name = name;}
-		ISystemManager* GetOwner() const {return m_Owner;}
-		void SetOwner(ISystemManager* owner){m_Owner = owner;}
+		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
+		void SetOwner(SystemManagerPtr owner){m_Owner = owner;}
+		
+		virtual SystemType GetSystemType() const {return "BaseSystem";}
 
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);
 	protected:
 		std::string m_Name;
-		ISystemManager* m_Owner;
+		SystemManagerWeakPtr m_Owner;
 	};
 }
 #endif // #ifndef BASESYSTEM_HH

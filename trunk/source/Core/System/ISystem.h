@@ -27,6 +27,7 @@
 namespace GASS
 {
 	class ISystemManager;
+	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
 	typedef std::string SystemType;
 
 	/**
@@ -48,12 +49,12 @@ namespace GASS
 		virtual ~ISystem(){}
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string &name) = 0;
-		virtual ISystemManager* GetOwner() const = 0;
-		virtual void SetOwner(ISystemManager* owner)= 0;
+		virtual SystemManagerPtr GetOwner() const = 0;
+		virtual void SetOwner(SystemManagerPtr owner)= 0;
 		virtual void OnCreate() = 0;
-		virtual SystemType GetSystemType() = 0;
+		virtual SystemType GetSystemType() const = 0;
 	};
-
 	typedef boost::shared_ptr<ISystem> SystemPtr;
+	typedef boost::weak_ptr<ISystem> SystemWeakPtr;
 }
 #endif // #ifndef ISYSTEM_HH

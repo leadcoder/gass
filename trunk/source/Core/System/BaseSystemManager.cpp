@@ -58,7 +58,7 @@ namespace GASS
 				SystemPtr system = LoadSystem(systems);
 				if(system)
 				{
-					system->SetOwner(this);
+					system->SetOwner(shared_from_this());
 					system->OnCreate();
 					m_Systems.push_back(system);
 				}

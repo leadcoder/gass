@@ -143,6 +143,6 @@ namespace GASS
 			m_TasksRoot->wait_for_all();
 
 		//Sync!
-		SimEngine::Get().GetSystemManager()->Update(delta_time);
+		SimEngine::Get().GetSimSystemManager()->Update(delta_time);
 	}
 }

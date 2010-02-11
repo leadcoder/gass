@@ -24,10 +24,12 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "Core/Common.h"
 #include "Core/System/ISystem.h"
 #include "Core/System/ISystemManager.h"
+
 
 class TiXmlElement;
 namespace GASS
@@ -36,7 +38,7 @@ namespace GASS
 		Convinience system manager that load system from xml file
 	*/
 	
-	class GASSCoreExport BaseSystemManager : public ISystemManager
+	class GASSCoreExport BaseSystemManager : public ISystemManager, public boost::enable_shared_from_this<BaseSystemManager>
 	{
 	public:
 		BaseSystemManager();

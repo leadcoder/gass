@@ -44,7 +44,7 @@ namespace GASS
 	{
 		//m_SimulationUpdateInterval = 1.0f/30.0f; //30Hz
 		m_PluginManager = PluginManagerPtr(new PluginManager());
-		m_SystemManager = SystemManagerPtr(new SimSystemManager());
+		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SimObjectManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());

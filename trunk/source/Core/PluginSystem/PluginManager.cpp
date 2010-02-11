@@ -23,7 +23,7 @@
 #include "Core/Utils/Log.h"
 #include "tinyxml.h"
 #include <assert.h>
-#include <boost/filesystem.hpp>
+//#include <boost/filesystem.hpp>
 
 
 namespace GASS

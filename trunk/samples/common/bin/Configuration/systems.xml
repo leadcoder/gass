@@ -34,4 +34,6 @@
   </CollisionSystem>
   <SoundSystem type="OpenALSoundSystem">
   </SoundSystem>
+  <BaseSystem type="BaseSystem">
+  </BaseSystem>
 </Systems>

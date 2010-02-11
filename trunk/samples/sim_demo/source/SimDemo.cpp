@@ -85,7 +85,7 @@ void CreateManualObject()
 
 void TestCollision(GASS::ScenarioScenePtr scene)
 {
-	GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+	GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 	
 	GASS::CollisionHandle handle;
 	GASS::CollisionRequest request;

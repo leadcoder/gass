@@ -238,7 +238,7 @@ namespace GASS
 		std::string scenario_path = m_Scenario->GetPath();
 
 		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(shared_from_this()));
-		SimEngine::Get().GetSystemManager()->SendImmediate(enter_load_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
 
 		
 		MessagePtr scenario_msg(new LoadSceneManagersMessage(shared_from_this()));
@@ -262,7 +262,7 @@ namespace GASS
 		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
 
 		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(shared_from_this()));
-		SimEngine::Get().GetSystemManager()->SendImmediate(system_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 	}
 
 	void ScenarioScene::OnUpdate(double delta_time)

@@ -33,7 +33,7 @@ namespace GASS
 	class IRuntimeController;
 	
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
-	typedef boost::shared_ptr<SimSystemManager> SystemManagerPtr;
+	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
@@ -92,7 +92,7 @@ namespace GASS
 		certain system.
 		*/
 
-		SystemManagerPtr GetSystemManager() {return m_SystemManager;}
+		SimSystemManagerPtr GetSimSystemManager() {return m_SystemManager;}
 		
 		/**
 		Get the object template manager. 
@@ -113,7 +113,7 @@ namespace GASS
 		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
 	private:
 		PluginManagerPtr m_PluginManager;
-		SystemManagerPtr m_SystemManager;
+		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SimObjectManager;
 		ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;

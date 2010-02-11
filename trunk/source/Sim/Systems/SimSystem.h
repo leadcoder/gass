@@ -18,32 +18,26 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef ISYSTEMMANAGER_HH
-#define ISYSTEMMANAGER_HH
+#pragma once
 
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
-#include "Core/Common.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Core/System/ISystem.h"
+#include "Sim/Common.h"
+#include "Core/System/BaseSystem.h"
+#include <string>
 
 namespace GASS
 {
-	/**
-		Interface for a system manager
-	*/
-	class GASSCoreExport ISystemManager
+	class SimSystemManager;
+	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
+	class GASSExport SimSystem : public BaseSystem
 	{
 	public:
-		virtual ~ISystemManager(){}
-		virtual void Init() = 0;
-		virtual void Update(float delta_time) = 0;
-	private:
+		SimSystem();
+		virtual ~SimSystem();
+		static void RegisterReflection();
+		/**
+		Convenience function to get SimSystemManager without casting from ISystemManager
+		*/
+		SimSystemManagerPtr GetSimSystemManager() const;
+	protected:
 	};
-	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
-	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
 }
-#endif // #ifndef ISYSTEMMANAGER_HH

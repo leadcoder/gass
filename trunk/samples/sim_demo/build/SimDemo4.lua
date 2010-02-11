@@ -35,6 +35,8 @@ project "SimDemo"
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+
 			"postbuild_debug.bat" 
 		}
 	
@@ -55,5 +57,6 @@ project "SimDemo"
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
 			"postbuild_release.bat" 
 		}
