@@ -67,12 +67,12 @@ namespace GASS
 
 	void OSGLocationComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnLoad,LoadGFXComponentsMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnPositionMessage,PositionMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnRotationMessage,RotationMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_POSITION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_WORLD_ROTATION, TYPED_MESSAGE_FUNC(OSGLocationComponent::OnWorldRotationMessage,WorldRotationMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_VISIBILITY,  TYPED_MESSAGE_FUNC( OSGLocationComponent::OnVisibilityMessage,VisibilityMessage),0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage,WorldRotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityMessage,0));
 		
 	}
 

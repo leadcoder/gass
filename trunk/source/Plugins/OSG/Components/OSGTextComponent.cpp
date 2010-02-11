@@ -64,9 +64,9 @@ namespace GASS
 
 	void OSGTextComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGTextComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnLoad,LoadGFXComponentsMessage,1));
 		//GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXT_PARAMETER, TYPED_MESSAGE_FUNC(OSGTextComponent::OnParameterMessage));
-		REGISTER_OBJECT_MESSAGE_CLASS(OSGTextComponent::OnTextCaptionMessage, TextCaptionMessage,0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionMessage,0));
 		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
@@ -77,7 +77,7 @@ namespace GASS
 		m_OSGText->setText(caption.c_str());
 	}
 
-	void OSGTextComponent::OnLoad(MessagePtr message)
+	void OSGTextComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		//OSGGraphicsSceneManager* ogsm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(ogsm);
@@ -126,7 +126,7 @@ namespace GASS
 		if(m_OSGText.valid())
 		{
 			std::string full_path;
-			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
+			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(!rs->GetFullPath(m_Font,full_path))
 			{
 				Log::Warning("Failed to find texture:%s",full_path.c_str());

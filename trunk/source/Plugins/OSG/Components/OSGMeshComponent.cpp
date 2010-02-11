@@ -62,11 +62,11 @@ namespace GASS
 
 	void OSGMeshComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, MESSAGE_FUNC(OSGMeshComponent::OnLoad),1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		//mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnUpdate),m_InitPriority);
 	}
 
-	void OSGMeshComponent::OnLoad(MessagePtr message)
+	void OSGMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		
 
@@ -74,7 +74,7 @@ namespace GASS
 		//assert(osg_sm);
 		//TODO: get resource manager and get full path
 		std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 
 		//check if extenstion exist?
 		std::string extesion =  Misc::GetExtension(m_Filename);

@@ -11,20 +11,20 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/ogre/OgreMain/include",
-		"../dependencies/ogre/dependencies/include",
-		"../dependencies/ogre/PlugIns/OctreeSceneManager/include",
 		"../dependencies/tinyxml",
-		"../dependencies/boost"
+		"../dependencies/ogre/dependencies/include",
+		"$(BOOST_PATH)"
+
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"../dependencies/ogre/lib",
+		"../dependencies/tinyxml/lib",
 		"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
-		"../dependencies/tinyxml/lib"
+		"$(BOOST_PATH)/lib"
+
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -34,17 +34,17 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include/OGRE",
-		"../dependencies/include/OctreeSceneManager",
+		"../dependencies/ogre/dependencies/include",
 		"../dependencies/include/tinyxml",
-		"../dependencies/include/boost"
+		"$(BOOST_PATH)"
+
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/lib/",
-		"../dependencies/lib/OGRE"
+		"$(BOOST_PATH)/lib"
 	}
 
 end

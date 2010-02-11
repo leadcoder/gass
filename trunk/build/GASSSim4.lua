@@ -14,7 +14,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/boost",
+		"$(BOOST_PATH)",
 		"../dependencies/tbb/include"
 	}
 
@@ -23,7 +23,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/boost/lib",
+		"$(BOOST_PATH)/lib",
 		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
@@ -37,14 +37,15 @@ else
 	{ 
 		"../source",
 		"../dependencies/include/tinyxml",
-		"../dependencies/include/boost",
+		"$(BOOST_PATH)",
 		"../dependencies/include"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib"
+		"../dependencies/lib",
+		"$(BOOST_PATH)/lib"
 	}
 
 end

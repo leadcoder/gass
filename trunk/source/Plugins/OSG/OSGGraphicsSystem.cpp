@@ -86,8 +86,8 @@ namespace GASS
 	void OSGGraphicsSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		GetSimSystemManager()->RegisterForMessage(SYSTEM_RM_INIT, MESSAGE_FUNC(OSGGraphicsSystem::OnInit),0);
-		REGISTER_SYSTEM_MESSAGE_CLASS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0);
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)

@@ -34,35 +34,14 @@ namespace GASS
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 
 	/**
-	Enumeration of message types used by the SimSystemManager
+	Deafult message used by the SimSystemManager
 	Sim system messages are used to communicate with systems and 
 	used by systems to notify listeners about critcal system events
 	To send a SimSystemMessage you have to get hold of the 
 	SimSystemManager and then post a message, ex:
 	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
-
-	Sim system messages are divided in two catagories, notify and request.
-	Mesages with prefix SYSTEM_RM, is a request message
-	Messages with prefix SYSTEM_NM, is a notify message*/
-	/*enum SimSystemMessage
-	{
-		//-----------------Request section-------------
-		SYSTEM_RM_INIT, 
-		SYSTEM_RM_CREATE_RENDER_WINDOW,
-		SYSTEM_RM_DEBUG_PRINT,
-
-		//--------------------Notify section------------------------
-		SYSTEM_NM_GFX_SM_LOADED,
-		SYSTEM_NM_MAIN_WINDOW_CREATED,
-		SYSTEM_NM_WINDOW_MOVED_OR_RESIZED,
-		SYSTEM_NM_SCENARIO_SCENE_LOADED,
-		SYSTEM_NM_SCENARIO_SCENE_ABOUT_TO_LOAD
-	};*/
-
-	/**
-	Message used that can be posted by anyone to request that a new render window should be created.
 	*/
-
+	
 	class InitMessage : public BaseMessage
 	{
 	public:
@@ -74,6 +53,10 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<InitMessage> InitMessagePtr;
 
+
+	/**
+	Message used that can be posted by anyone to request that a new render window should be created.
+	*/
 
 	class CreateRenderWindowMessage : public BaseMessage
 	{
@@ -222,17 +205,6 @@ namespace GASS
 		ScenarioScenePtr m_ScenarioScene;		
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
-
-	/**
-Convenience macro used for registration of scene object message callbacks for specific scene object message class
-*/
-
-#define REGISTER_SYSTEM_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSimSystemManager()->RegisterForMessage((SimSystemMessage)TYPED_MESSAGE::SSMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
-
-/**
-Convenience macro used for registration of scene object message callbacks for specific scene object message type
-*/
-#define REGISTER_SYSTEM_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSimSystemManager()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
 
 }
 #endif

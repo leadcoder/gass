@@ -13,7 +13,8 @@ if (os.is("windows")) then
 		"../source/Plugins/Game",
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/boost"
+		"$(BOOST_PATH)"
+
 	}
 
 	libdirs 
@@ -21,7 +22,8 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/boost/lib"
+		"$(BOOST_PATH)/lib"
+
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -32,13 +34,14 @@ else
 	{ 
 		"../source/Plugins/Game",
 		"../source",
-		"../dependencies/include/boost",
-			"../dependencies/include/tinyxml"
+		"$(BOOST_PATH)",
+		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
+		"$(BOOST_PATH)/lib",
 		"../dependencies/lib/",
 	}
 

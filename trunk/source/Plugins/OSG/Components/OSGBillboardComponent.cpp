@@ -89,7 +89,7 @@ namespace GASS
 
 	void OSGBillboardComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC( OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
 	}
 
 	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -98,7 +98,7 @@ namespace GASS
 		//assert(osgsm);
 
 		std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath(m_Material,full_path))
 		{
 			Log::Error("Failed to find texture:%s",full_path.c_str());

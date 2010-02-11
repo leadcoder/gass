@@ -14,7 +14,7 @@ if (os.is("windows")) then
 		"../dependencies/ogre/OgreMain/include",
 		"../dependencies/PagedGeometry/include",
 		"../dependencies/tinyxml",
-		"../dependencies/boost"
+		"$(BOOST_PATH)"
 	}
 
 	libdirs 
@@ -24,7 +24,7 @@ if (os.is("windows")) then
 		"../dependencies/ogre/lib",
 		"../dependencies/PagedGeometry/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/boost/lib"
+		"$(BOOST_PATH)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -34,7 +34,7 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include/boost",
+		"$(BOOST_PATH)",
 		"../dependencies/include/OGRE",
 		"../dependencies/PagedGeometry/include",
 		"../dependencies/include/tinyxml"
@@ -44,7 +44,7 @@ else
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/lib/",
-		"../dependencies/lib/OGRE"
+		"$(BOOST_PATH)/lib"
 	}
 
 end

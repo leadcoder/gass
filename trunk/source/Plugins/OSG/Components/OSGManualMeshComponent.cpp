@@ -60,9 +60,9 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnCreate()
 	{
-		REGISTER_OBJECT_MESSAGE_CLASS(OSGManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1);
-		REGISTER_OBJECT_MESSAGE_CLASS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1);
-		REGISTER_OBJECT_MESSAGE_CLASS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 	}
 
 	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)

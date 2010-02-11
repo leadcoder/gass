@@ -97,14 +97,14 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::OnCreate()
 	{
-		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 		ScenarioScenePtr scene = GetScenarioScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-			scene->RegisterForMessage(SCENARIO_RM_LOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnLoad),ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY);
-			scene->RegisterForMessage(SCENARIO_RM_UNLOAD_SCENE_MANAGERS, MESSAGE_FUNC(OSGGraphicsSceneManager::OnUnload),0);
-			scene->RegisterForMessage(SCENARIO_MESSAGE_CLASS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 		}
 		else
 		{
@@ -184,7 +184,7 @@ namespace GASS
 		
 		void* root = static_cast<void*>(m_RootNode.get());
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root));
-		SimSystemManager* sim_sm = static_cast<SimSystemManager*>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
+		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
 		//osg::ref_ptr<osg::Group> mesh = (osg::Group*) osgDB::readNodeFile("C:/Root/Repo/filtema4/MSI-Projects/GASSData/scenarios/osg/nkpg/models/terrain/tempmaster.ive");
 		//m_RootNode->addChild(mesh);

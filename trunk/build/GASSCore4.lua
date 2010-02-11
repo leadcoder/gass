@@ -51,7 +51,7 @@ if (os.is("windows")) then
 		"../source",
 		"../dependencies/include",
 		"../dependencies/include/tinyxml",
-		"../dependencies/include/boost"
+		"$(BOOST_PATH)"
 	}
 
 	libdirs 

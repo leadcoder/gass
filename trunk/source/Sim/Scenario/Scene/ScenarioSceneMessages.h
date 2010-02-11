@@ -33,31 +33,10 @@ namespace GASS
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	// Todo: Explain each individual message
-	//Divided messages in two catagories, notify and request
-	//Messages with prefix SCENARIO_RM, is a request message
-	//Messages with prefix SCENARIO_NM, is a notify message
-
-	/*enum ScenarioMessage
-	{
-		//-----------------Request section-------------
-		//Request message sent when loading a scenario scene
-		//It's up to each scene manager to catch this and load its stuff
-		SCENARIO_RM_LOAD_SCENE_MANAGERS,
-		SCENARIO_RM_UNLOAD_SCENE_MANAGERS,
-		SCENARIO_RM_CHANGE_CAMERA,
-		SCENARIO_RM_REMOVE_OBJECT,
-		SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE,
-		//--------------------Notify section------------------------
-		// message data: SceneObject that is created: "SceneObject" = SceneObjectPtr
-		SCENARIO_NM_SCENE_OBJECT_CREATED,
-		// message data: SceneObject that is removed: "SceneObject" = SceneObjectPtr
-		SCENARIO_NM_SCENE_OBJECT_REMOVED,
-		SCENARIO_NM_CAMERA_CHANGED,
-		//SCENARIO_NM_UPDATE
-	};*/
-
-
+	/**
+	Request message sent when loading a scenario scene
+	It's up to each scene manager to catch this and load its stuff
+	*/
 	class LoadSceneManagersMessage : public BaseMessage
 	{
 	public:
@@ -190,18 +169,6 @@ namespace GASS
 		void *m_UserData;
 	};
 	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
-
-/**
-Convenience macro used during registration for scenario message callbacks for specific scenario message class
-*/
-
-#define SCENARIO_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) (ScenarioMessage)TYPED_MESSAGE::SMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
-
-/**
-Convenience macro used for registration of scene object message callbacks for specific scene object message type
-*/
-#define SCENARIO_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY
-
 }
 
 #endif

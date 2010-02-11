@@ -35,66 +35,6 @@ namespace GASS
 	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 
-	// Todo: Explain each individual message
-
-	//We divided messages in two catagories, notify and request
-	//Messages with prefix OBJECT_RM, is a request message
-	//Messages with prefix OBJECT_NM, is a notify message
-
-	/*enum SceneObjectMessage
-	{
-		OBJECT_RM_POSITION, 
-
-		OBJECT_RM_ROTATION,
-
-
-		OBJECT_RM_WORLD_POSITION, 
-		OBJECT_RM_WORLD_ROTATION,
-
-		OBJECT_RM_VISIBILITY,
-		OBJECT_RM_BOUNDING_INFO,
-		OBJECT_RM_COLLISION_SETTINGS,
-		OBJECT_RM_PHYSICS_JOINT_PARAMETER,
-		OBJECT_RM_PHYSICS_BODY_PARAMETER,
-		OBJECT_RM_PHYSICS_MASS,
-		OBJECT_RM_SOUND_PARAMETER,
-
-		
-		OBJECT_RM_SCENE_OBJECT_NAME,
-
-	
-		OBJECT_RM_MESH_FILE,
-		OBJECT_RM_TEXTURE_COORDINATES,
-		OBJECT_RM_COLOR,
-
-		OBJECT_RM_CAMERA_PARAMETER,
-
-		OBJECT_RM_PARTICLE_SYSTEM_PARAMETER,
-
-
-		OBJECT_RM_MANUAL_MESH_DATA,
-		OBJECT_RM_CLEAR_MANUAL_MESH,
-
-
-		OBJECT_RM_TEXT_CAPTION,
-
-		OBJECT_RM_LOAD_PHYSICS_COMPONENTS,
-		OBJECT_RM_LOAD_GFX_COMPONENTS,
-		OBJECT_RM_LOAD_SIM_COMPONENTS,
-		OBJECT_RM_UPDATE_SIM_COMPONENTS,
-		OBJECT_RM_UNLOAD_COMPONENTS,
-
-
-		//--------------------Notify section------------------------
-		OBJECT_NM_PARENT_CHANGED,
-
-		
-		OBJECT_NM_PHYSICS_VELOCITY,
-		OBJECT_NM_PHYSICS_HINGE_JOINT,
-
-		OBJECT_NM_TRANSFORMATION_CHANGED,
-
-	};*/
 
 	//Position (relative to parent) change for SceneObject is requested
 	class PositionMessage : public BaseMessage
@@ -540,20 +480,5 @@ namespace GASS
 		
 	};
 	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
-
-
-	
-
-/**
-Convenience macro used for registration of scene object message callbacks for specific scene object message class
-*/
-
-//#define REGISTER_OBJECT_MESSAGE_CLASS(FUNCTION,TYPED_MESSAGE,PRIORITY) GetSceneObject()->RegisterForMessage((SceneObjectMessage)TYPED_MESSAGE::OMID,TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY);
-  
-
-/**
-Convenience macro used for registration of scene object message callbacks for specific scene object message type
-*/
-//#define REGISTER_OBJECT_MESSAGE_TYPE(FUNCTION,MESSAGE_TYPE,PRIORITY) GetSceneObject()->RegisterForMessage(MESSAGE_TYPE,MESSAGE_FUNC(FUNCTION),PRIORITY);
 
 }

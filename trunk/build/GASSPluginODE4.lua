@@ -13,7 +13,7 @@ if (os.is("windows")) then
 		"../Source",
 		"../dependencies/ode/include",
 		"../dependencies/tinyxml",
-		"../dependencies/boost",
+		"$(BOOST_PATH)",
 		"../dependencies/tbb/include"
 	}
 
@@ -21,6 +21,7 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
+		"$(BOOST_PATH)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib",
 		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
@@ -34,9 +35,7 @@ else
 	{ 
 		"../source",
 		"../dependencies/include",
-		"../dependencies/include/boost",
---		"../dependencies/include/OGRE",
---		"../dependencies/include/OctreeSceneManager",
+		"$(BOOST_PATH)",
 		"../dependencies/include/tinyxml"
 	}
 
@@ -44,7 +43,8 @@ else
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/lib/",
-		"../dependencies/lib/OGRE"
+		"$(BOOST_PATH)/lib"
+
 	}
 
 end

@@ -1,9 +1,9 @@
-project "GASSPluginOpenAL"
+project "GASSPluginOSG"
 	kind "SharedLib"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../source/Plugins/OpenAL/**.cpp", "../source/Plugins/OpenAL/**.h" }
+	files { "../source/Plugins/OSG/**.cpp", "../source/Plugins/OSG/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
@@ -11,7 +11,8 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/OpenAL1.1/include",
+		"$(OSG_PATH)/include",
+		"$(OSG_PATH)/build/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
 	}
@@ -20,8 +21,8 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"../dependencies/ogre/lib",
-		"../dependencies/OpenAL1.1/libs/Win32",
+		"$(OSG_PATH)/lib",
+		"$(OSG_PATH)/build/lib",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
 	}
@@ -34,23 +35,24 @@ else
 	{ 
 		"../source",
 		"$(BOOST_PATH)",
-		"../dependencies/OpenAL/include",
+		"$(OSG_PATH)/include",
+		"$(OSG_PATH)/build/include",
 		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"../dependencies/lib/OpenAL1.1/libs/Linux",
-		"$(BOOST_PATH)/lib"
+		"$(OSG_PATH)/lib",
+		"$(OSG_PATH)/build/lib"
+
 	}
 
 end
 
 
 	configuration "Debug"
-		targetname "GASSPluginOpenAL_d"
+		targetname "GASSPluginOSG_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
 --		debugPrefix = "_d"
@@ -58,22 +60,36 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
-			"OpenAL32",
-			"ALut",
+			"OpenThreadsd",
+			"osgd",
+			"osgDBd",
+			"osgUtild",
+			"osgGAd",
+			"osgViewerd",
+			"osgTextd",
+			"opengl32",
+			"glu32",
+			"tinyxmld"
 		}
 
 	configuration "Release"
-		targetname "GASSPluginOpenAL"
+		targetname "GASSPluginOSG"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
 		links 
 		{
 			"GASSCore",
 			"GASSSim",
-			"tinyxml",
-			"OpenAL32",
-			"ALut",
+			"OpenThreads",
+			"osg",
+			"osgDB",
+			"osgUtil",
+			"osgGA",
+			"osgViewer",
+			"osgText",
+			"opengl32",
+			"glu32",
+			"tinyxml"
 		}
 
 

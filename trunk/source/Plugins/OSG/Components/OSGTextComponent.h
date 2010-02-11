@@ -50,7 +50,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);
 
 
