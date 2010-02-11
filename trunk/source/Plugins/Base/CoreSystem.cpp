@@ -17,24 +17,28 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#pragma once
-
-#include "Sim/Common.h"
-#include "Core/System/BaseSystem.h"
-#include <string>
+#include "Core/Common.h"
+#include "CoreSystem.h"
+#include "Sim/Systems/SimSystemManager.h"
 
 namespace GASS
 {
-	class SimSystemManager;
-	class GASSExport SimpleSystem : public BaseSystem
+	CoreSystem::CoreSystem(void)
 	{
-	public:
-		SimpleSystem();
-		virtual ~SimpleSystem();
-		static void RegisterReflection();
-		virtual SystemType GetSystemType(){return "SimpleSystem";}
-		SimSystemManager* GetSimSystemManager() const;
-	protected:
-	};
+	
+	}
+
+	CoreSystem::~CoreSystem(void)
+	{
+	
+	}
+
+	void CoreSystem::RegisterReflection()
+	{
+
+	}
 }
+
+
+
+

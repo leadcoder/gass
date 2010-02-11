@@ -44,7 +44,7 @@ namespace GASS
 		std::string GetController() const {return m_Controller;}
 		void SetController(const std::string &value) {m_Controller = value;}
 
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(PlayerInputMessagePtr message);
 
 		std::string m_Controller;

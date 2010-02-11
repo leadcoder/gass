@@ -43,7 +43,7 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class GASSExport FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>, ITaskListener
+	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>, ITaskListener
 	{
 	public:
 		FreeCamControlComponent();

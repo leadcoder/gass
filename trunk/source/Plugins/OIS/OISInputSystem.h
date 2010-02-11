@@ -87,7 +87,7 @@ namespace GASS
             m_Window = window;
         }
 
-		SystemType GetSystemType() {return "InputSystem";}
+		SystemType GetSystemType() const {return "InputSystem";}
 
 		//ITaskListener interface
 		void Update(double delta);

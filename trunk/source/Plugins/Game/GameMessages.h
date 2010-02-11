@@ -23,25 +23,18 @@
 
 namespace GASS
 {
-	enum GameSceneObjectMessages
+	class GameSceneManager;
+	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr;
+	class LoadGameComponentsMessage : public BaseMessage
 	{
-		OBJECT_RM_ENTER_VEHICLE = 1000,
-		OBJECT_RM_EXIT_VEHICLE = 1001,
-		OBJECT_RM_GOTO_POSITION = 1002,
-		OBJECT_NM_PLAYER_INPUT = 1003,
-		OBJECT_RM_RELOAD = 1004,
-		OBJECT_RM_FIRE = 1005,
-		OBJECT_NM_READY_TO_FIRE = 1006,
-		OBJECT_NM_HIT = 1007,
-		OBJECT_RM_OUT_OF_ARMOR = 1008,
+	public:
+		LoadGameComponentsMessage(GameSceneManagerPtr game_scene_manager, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_GameSceneManager(game_scene_manager){}
+		  GameSceneManagerPtr GetGameSceneManager() const {return m_GameSceneManager;}
+	private:
+		GameSceneManagerPtr m_GameSceneManager;
 	};
-
-
-	enum GameScenarioSceneMessages
-	{
-		SCENARIO_RM_ENTER_VEHICLE = 1000,
-	};
-
+	typedef boost::shared_ptr<LoadGameComponentsMessage> LoadGameComponentsMessagePtr;
 
 	class EnterVehicleMessage : public BaseMessage
 	{

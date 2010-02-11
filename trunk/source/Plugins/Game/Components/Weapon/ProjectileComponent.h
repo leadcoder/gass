@@ -23,6 +23,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Plugins/Game/GameMessages.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -48,7 +49,7 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 
 	private:
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void StepPhysics(double time);
 		void OnPositionMessage(PositionMessagePtr message);

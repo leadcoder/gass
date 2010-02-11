@@ -41,7 +41,7 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class GASSExport TopCamControlComponent  :  public Reflection<TopCamControlComponent, BaseSceneComponent>, ITaskListener
+	class TopCamControlComponent  :  public Reflection<TopCamControlComponent, BaseSceneComponent>, ITaskListener
 	{
 	public:
 		TopCamControlComponent();

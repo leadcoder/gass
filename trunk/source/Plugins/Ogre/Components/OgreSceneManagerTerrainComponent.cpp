@@ -75,7 +75,7 @@ namespace GASS
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
-		IResourceSystem* rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>().get();
+		IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
 
 		std::string full_path;
 		if(!rs->GetFullPath(m_TerrainConfigFile,full_path))

@@ -295,7 +295,7 @@ namespace GASS
 
 	bool OpenALSoundComponent::LoadWaveSound(const std::string &filePath)
 	{
-		OpenALSoundSystem* ss = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OpenALSoundSystem>().get();
+		OpenALSoundSystem* ss = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OpenALSoundSystem>().get();
 		if(!ss)
 		{
 			Log::Error("OpenALSoundSystem is missing, you must add OpenALSoundSystem to SimSystemManager before loading OpenALSoundComponents");

@@ -87,10 +87,12 @@ namespace GASS
 		if(m_Billboard) 
 			m_Billboard->setDimensions(m_Width,m_Height);
 	}
+
 	float OgreBillboardComponent::GetHeight() const
 	{
 		return m_Height;
 	}
+
 	void OgreBillboardComponent::SetHeight(float height)
 	{
 		m_Height = height;
@@ -130,7 +132,7 @@ namespace GASS
 				material->setDepthWriteEnabled(true);
 				material->setCullingMode(Ogre::CULL_NONE);
 				std::string fullpath;
-				IResourceSystem* rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>().get();
+				IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
 
 				if(rs->GetFullPath(m_Material,fullpath))
 				{

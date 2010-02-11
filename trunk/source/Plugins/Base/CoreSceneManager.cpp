@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
-#include "SimpleSceneManager.h"
+#include "CoreSceneManager.h"
+#include "Plugins/Base/CoreMessages.h"
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -36,7 +37,7 @@
 
 namespace GASS
 {
-	SimpleSceneManager::SimpleSceneManager() :
+	CoreSceneManager::CoreSceneManager() :
 		m_TaskGroup(MAIN_TASK_GROUP),
 		m_Paused(false),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
@@ -46,45 +47,46 @@ namespace GASS
 
 	}
 
-	SimpleSceneManager::~SimpleSceneManager()
+	CoreSceneManager::~CoreSceneManager()
 	{
+
 	}
 
-	void SimpleSceneManager::RegisterReflection()
+	void CoreSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("SimpleSceneManager",new GASS::Creator<SimpleSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("CoreSceneManager",new GASS::Creator<CoreSceneManager, ISceneManager>);
 	}
 
-	void SimpleSceneManager::OnCreate()
+	void CoreSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		ScenarioScenePtr scene = GetScenarioScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( SimpleSceneManager::OnLoad ));
-			scene->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( SimpleSceneManager::OnUnload ));
-			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( SimpleSceneManager::OnLoadSceneObject),ScenarioScene::SIM_COMPONENT_LOAD_PRIORITY);
+			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
+			scene->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnUnload ));
+			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),ScenarioScene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
-
-	void SimpleSceneManager::OnLoadSceneObject(MessagePtr message)
+	
+	void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		//Initlize all sim components and send scene mananger as argument
 		SceneObjectCreatedNotifyMessagePtr socnm = boost::shared_static_cast<SceneObjectCreatedNotifyMessage>(message);
 		assert(socnm);
 		SceneObjectPtr obj = socnm->GetSceneObject();
 		assert(obj);
-		MessagePtr sim_msg(new LoadSimpleComponentsMessage(this,(int) this));
+		CoreSceneManagerPtr core_sm = boost::dynamic_pointer_cast<CoreSceneManager>(shared_from_this());
+		MessagePtr sim_msg(new LoadCoreComponentsMessage(core_sm,(int) this));
 		obj->SendImmediate(sim_msg);
 	}
 
-	TaskGroup SimpleSceneManager::GetTaskGroup() const
+	TaskGroup CoreSceneManager::GetTaskGroup() const
 	{
 		return m_TaskGroup;
 	}
 
-
-	void SimpleSceneManager::Update(double delta_time)
+	void CoreSceneManager::Update(double delta_time)
 	{
 		//do some time slicing
 		m_TimeToProcess += delta_time;
@@ -102,20 +104,19 @@ namespace GASS
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
 	}
 
-	void SimpleSceneManager::OnLoad(MessagePtr message)
+	void CoreSceneManager::OnLoad(MessagePtr message)
 	{
 		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message); 
 		m_Init = true;
 	}
 
-	void SimpleSceneManager::OnUnload(MessagePtr message)
+	void CoreSceneManager::OnUnload(MessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
-	void SimpleSceneManager::SetTaskGroup(TaskGroup value)
+	void CoreSceneManager::SetTaskGroup(TaskGroup value)
 	{
 		m_TaskGroup = value;
 	}
-
 }

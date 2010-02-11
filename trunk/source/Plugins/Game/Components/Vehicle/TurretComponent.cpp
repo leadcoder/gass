@@ -56,11 +56,11 @@ namespace GASS
 
 	void TurretComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,PlayerInputMessage,0));
 	}
 
-	void TurretComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));

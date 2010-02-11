@@ -102,7 +102,7 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnCreate()
 	{
 		int address = (int) this;
-		m_GFXSystem = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
 		ScenarioScenePtr scene = GetScenarioScene();
 		assert(scene);
 
@@ -189,7 +189,7 @@ namespace GASS
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("Ogre3D"),root));
-		SimSystemManager* sim_sm = static_cast<SimSystemManager*>(OgreGraphicsSystemPtr(m_GFXSystem)->GetOwner());
+		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OgreGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 
 		sim_sm->SendImmediate(loaded_msg);
 	

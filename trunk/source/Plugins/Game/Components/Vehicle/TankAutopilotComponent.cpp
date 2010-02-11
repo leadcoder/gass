@@ -65,13 +65,13 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,PlayerInputMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
 	}
 
-	void TankAutopilotComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void TankAutopilotComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);	
 	}

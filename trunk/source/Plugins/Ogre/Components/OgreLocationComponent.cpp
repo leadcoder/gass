@@ -379,7 +379,7 @@ namespace GASS
 
 	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,from_id));
 		debug_msg->SetData("Text",GetSceneObject()->GetName());
-		SimEngine::Get().GetSystemManager()->SendImmediate(debug_msg);*/
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 
 	}
 }

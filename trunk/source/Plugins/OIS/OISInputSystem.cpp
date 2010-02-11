@@ -144,7 +144,7 @@ namespace GASS
 		}
 		#endif
 
-		GraphicsSystemPtr gs = static_cast<SimSystemManager*>(GetOwner())->GetFirstSystem<IGraphicsSystem>();
+		GraphicsSystemPtr gs = boost::shared_dynamic_cast<SimSystemManager>(GetOwner())->GetFirstSystem<IGraphicsSystem>();
 		if(gs)
 		{
 			unsigned int width, height;

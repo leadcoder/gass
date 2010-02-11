@@ -43,7 +43,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(PlayerInputMessagePtr message);
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);

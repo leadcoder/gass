@@ -54,11 +54,11 @@ namespace GASS
 
 	void TrackComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadGameComponentsMessage,0));
 		//register for physics messages on engine?
 	}
 
-	void TrackComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void TrackComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		m_Initialized = true;
 		SetDriveWheel(m_DriveWheelName);

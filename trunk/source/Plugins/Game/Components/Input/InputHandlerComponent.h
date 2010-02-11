@@ -46,7 +46,7 @@ namespace GASS
 		void OnExit(ExitVehicleMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:

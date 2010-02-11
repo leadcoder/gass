@@ -61,13 +61,13 @@ namespace GASS
 
 	void VehicleDebugComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnGotoPosition,GotoPositionMessage,0));
 		
 	}
 
-	void VehicleDebugComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void VehicleDebugComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		//create waypoint text object
 		SceneObjectPtr scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("VehicleDebugWaypointTemplate");

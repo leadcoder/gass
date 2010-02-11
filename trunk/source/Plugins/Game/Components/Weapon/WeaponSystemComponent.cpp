@@ -80,7 +80,7 @@ namespace GASS
 
 	void WeaponSystemComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnExecuteFire,FireMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReload,ReloadMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
@@ -91,7 +91,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 	}
 
-	void WeaponSystemComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void WeaponSystemComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		SceneObjectVector objs = GetSceneObject()->GetObjectsByName("FireSound",false);
 		if(objs.size() >0)

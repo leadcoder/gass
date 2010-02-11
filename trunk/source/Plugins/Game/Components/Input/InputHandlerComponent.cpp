@@ -88,7 +88,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadGameComponentsMessage,0));
 	}
 
 	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
@@ -98,7 +98,7 @@ namespace GASS
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
 	}
 
-	void InputHandlerComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void InputHandlerComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 	//	message->GetSimSceneManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
 	}

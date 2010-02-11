@@ -52,7 +52,7 @@ namespace GASS
 		
 
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(PlayerInputMessagePtr message);

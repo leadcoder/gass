@@ -19,7 +19,8 @@
 *****************************************************************************/
 
 #include <boost/bind.hpp>
-#include "Sim/Components/CameraControl/FreeCamControlComponent.h"
+#include "Plugins/Base/Components/FreeCamControlComponent.h"
+#include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 
@@ -40,7 +41,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/Math/Quaternion.h"
 
-#include "Plugins/Utils/SimpleSceneManager.h"
+#include "Plugins/Base/CoreSceneManager.h"
 
 namespace GASS
 {
@@ -88,7 +89,7 @@ namespace GASS
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInit,LoadSimpleComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInit,LoadCoreComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");

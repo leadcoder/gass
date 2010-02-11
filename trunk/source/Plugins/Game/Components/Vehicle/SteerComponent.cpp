@@ -58,11 +58,11 @@ namespace GASS
 
 	void SteerComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 	}
 
-	void SteerComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void SteerComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());

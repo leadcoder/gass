@@ -77,7 +77,7 @@ namespace GASS
 		std::vector<std::string> GetWheels() const;
 		void SetWheels(const std::vector<std::string> wheels);
 
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(PlayerInputMessagePtr message);

@@ -41,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void OnGotoPosition(GotoPositionMessagePtr message);
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 	private:
 		bool m_ShowWaypoint;

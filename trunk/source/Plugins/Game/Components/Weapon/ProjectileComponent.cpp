@@ -70,14 +70,14 @@ namespace GASS
 
 	void ProjectileComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage,0));
 	}
 
-	void ProjectileComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void ProjectileComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		if(m_StartEffectTemplateName != "") 
 		{
@@ -95,7 +95,7 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		//for fast access
-		m_ColSys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
 		std::cout << "Loaded:" << GetSceneObject()->GetName() << std::endl;
 		//Send delete message?

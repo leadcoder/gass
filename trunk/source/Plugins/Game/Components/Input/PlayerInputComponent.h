@@ -45,7 +45,7 @@ namespace GASS
 		//void OnEnter(AnyMessagePtr message);
 		//void OnExit(AnyMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 	private:
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;

@@ -19,7 +19,8 @@
 *****************************************************************************/
 
 #include <boost/bind.hpp>
-#include "Sim/Components/CameraControl/TopCamControlComponent.h"
+#include "Plugins/Base/Components/TopCamControlComponent.h"
+#include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 
@@ -79,7 +80,7 @@ namespace GASS
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInit,LoadSimpleComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInit,LoadCoreComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");

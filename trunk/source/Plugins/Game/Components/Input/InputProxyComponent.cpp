@@ -58,11 +58,11 @@ namespace GASS
 
 	void InputProxyComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadSimComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
-	void InputProxyComponent::OnLoad(LoadSimComponentsMessagePtr message)
+	void InputProxyComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,PlayerInputMessage,0));
 	}

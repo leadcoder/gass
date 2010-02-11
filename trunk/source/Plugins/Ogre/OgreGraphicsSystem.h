@@ -50,7 +50,7 @@ namespace GASS
 		virtual ~OgreGraphicsSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		SystemType GetSystemType() {return "GraphicsSystem";}
+		SystemType GetSystemType() const {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		
 		//ITaskListener interface

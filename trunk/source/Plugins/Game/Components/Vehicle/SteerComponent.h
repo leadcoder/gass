@@ -41,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnInput(PlayerInputMessagePtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}

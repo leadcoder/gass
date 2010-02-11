@@ -44,7 +44,7 @@ namespace GASS
 		virtual void OnCreate();
 		void OnPlayerInput(PlayerInputMessagePtr  message);
 
-		void OnLoad(LoadSimComponentsMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:

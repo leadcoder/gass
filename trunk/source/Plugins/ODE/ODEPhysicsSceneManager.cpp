@@ -121,7 +121,7 @@ namespace GASS
 
 		//Temp: move this to ODEPhysicsSystem
 		
-		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
+		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
 		if(col_sys)
 		{
 			col_sys->Process();

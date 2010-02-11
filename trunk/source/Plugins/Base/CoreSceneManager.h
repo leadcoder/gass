@@ -22,6 +22,7 @@
 #define SIMPLE_SCENE_MANAGER_H
 
 #include <map>
+#include <boost/enable_shared_from_this.hpp>
 #include "Core/MessageSystem/BaseMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
@@ -34,11 +35,11 @@ namespace GASS
 		also be used by plugins that only provid some new sim components but dont want to create
 		a brand new scene manager.
 	*/
-	class SimpleSceneManager  : public Reflection<SimpleSceneManager, BaseSceneManager>, public ITaskListener
+	class CoreSceneManager : public Reflection<CoreSceneManager, BaseSceneManager>, public ITaskListener
 	{
 	public:
-		SimpleSceneManager();
-		virtual ~SimpleSceneManager();
+		CoreSceneManager();
+		virtual ~CoreSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void Update(double delta_time);
@@ -60,17 +61,7 @@ namespace GASS
 		TaskGroup m_TaskGroup;
 		
 	};
-
-	class LoadSimpleComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadSimpleComponentsMessage(SimpleSceneManager* simple_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SimpleSceneManager(simple_scene_manager){}
-		  SimpleSceneManager* GetSimpleSceneManager() const {return m_SimpleSceneManager;}
-	private:
-		SimpleSceneManager* m_SimpleSceneManager;
-	};
-	typedef boost::shared_ptr<LoadSimpleComponentsMessage> LoadSimpleComponentsMessagePtr;
+	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 
 
 }
 #endif
