@@ -26,10 +26,10 @@
       <!--<Position value="10 1000 10"/>-->
       <Rotation value="45 45 45"/>
       </ContainerLocation>
-      <ContainerPhysicsGeom type="ODEGeometryComponent">
+      <ContainerPhysicsGeom type="GeometryComponent">
         <GeometryType value="box"/>
       </ContainerPhysicsGeom>
-      <ContainerPhysicsBody type="ODEBodyComponent">
+      <ContainerPhysicsBody type="BodyComponent">
         <GeometryType value="box"/>
       </ContainerPhysicsBody>
   </Components>

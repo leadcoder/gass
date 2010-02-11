@@ -85,7 +85,7 @@ namespace GASS
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 		assert(m_ControlSetting);
-		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(TopCamControlComponent), MESSAGE_FUNC( TopCamControlComponent::OnInput));
+		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
 		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
 		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));

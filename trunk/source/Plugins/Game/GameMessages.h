@@ -20,6 +20,8 @@
 
 #ifndef GAME_MESSAGES_H
 #define GAME_MESSAGES_H
+#include "Core/MessageSystem/BaseMessage.h"
+#include "Core/Math/Vector.h"
 
 namespace GASS
 {

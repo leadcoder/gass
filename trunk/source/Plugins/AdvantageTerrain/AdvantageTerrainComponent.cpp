@@ -70,8 +70,8 @@ namespace GASS
 	{
 		int obj_id = (int) this;
 		
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_GFX_COMPONENTS, TYPED_MESSAGE_FUNC(AdvantageTerrainComponent::OnLoad,LoadGFXComponentsMessage),1);
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_NM_CAMERA_CHANGED,  TYPED_MESSAGE_FUNC(AdvantageTerrainComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AdvantageTerrainComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(AdvantageTerrainComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		
 	}
 
@@ -102,7 +102,7 @@ namespace GASS
 
 	void AdvantageTerrainComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		assert(rs);
 
 		std::string full_path;

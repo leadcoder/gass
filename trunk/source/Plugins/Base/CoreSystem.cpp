@@ -20,6 +20,8 @@
 #include "Core/Common.h"
 #include "CoreSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Core/System/SystemFactory.h"
+
 
 namespace GASS
 {
@@ -35,7 +37,7 @@ namespace GASS
 
 	void CoreSystem::RegisterReflection()
 	{
-
+		SystemFactory::GetPtr()->Register("CoreSystem",new GASS::Creator<CoreSystem, ISystem>);
 	}
 }
 

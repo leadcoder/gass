@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 			boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
 			scene_object->SendImmediate(pos_msg);
 
-			if(i==0)
+			/*if(i==0)
 			{
 				GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
 				scene_object->PostMessage(enter_msg);
@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
 				GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
 				if(objs.size() > 0)
 					objs.front()->PostMessage(enter_msg);
-			}
+			}*/
 		}
 	}
 
