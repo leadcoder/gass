@@ -33,6 +33,7 @@ namespace GASS
 {
 	class BaseReflectionObject;
 	typedef boost::shared_ptr<BaseReflectionObject> BaseReflectionObjectPtr;
+	typedef boost::weak_ptr<BaseReflectionObject> BaseReflectionObjectWeakPtr;
 
 	class GASSCoreExport BaseReflectionObject : public Reflection<BaseReflectionObject, NullClass>
 	{

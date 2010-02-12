@@ -46,7 +46,6 @@ namespace GASS
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
 
-
 	}
 
 	OgreGraphicsSystem::~OgreGraphicsSystem(void)

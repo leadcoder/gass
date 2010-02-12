@@ -22,10 +22,12 @@
 #define CORE_MESSAGES_H
 
 #include "Core/MessageSystem/BaseMessage.h"
-#include "CoreSceneManager.h"
+
 
 namespace GASS
 {
+	class CoreSceneManager;
+	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr;
 	class LoadCoreComponentsMessage : public BaseMessage
 	{
 	public:

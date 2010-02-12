@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="8.00"
 	Name="GASSPluginOSG"
-	ProjectGUID="{3829937D-E63F-49B9-8EEF-7D72A712CF38}"
-	RootNamespace="PluginOgre"
+	ProjectGUID="{8E18AE8F-0336-6D40-90A4-0ED0C62B28D2}"
+	RootNamespace="GASSPluginOSG"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -18,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../lib/vs2008"
-			IntermediateDirectory="obj/Debug"
+			OutputDirectory="..\lib\vs2005"
+			IntermediateDirectory="obj\Debug\GASSPluginOSG"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -27,8 +26,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
@@ -40,17 +38,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;&quot;$(OSG_PATH)\include&quot;;&quot;$(OSG_PATH)\build\include&quot;"
-				PreprocessorDefinitions="_LIB;WIN32;_WINDOWS;_DEBUG;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;OSG_DEBUG_POSTFIX=\&quot;d\&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
+				Optimization="0"	
+				AdditionalIncludeDirectories="../source;$(OSG_PATH)/include;$(OSG_PATH)/build/include;../dependencies/tinyxml;$(BOOST_PATH)"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -58,24 +56,22 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;HFE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/ogre/OgreMain/include;../../Dependencies/ogre/Dependencies/include;../../Dependencies/ogre/PlugIns/OctreeSceneManager/include;../../Dependencies/tinyxml;../../Dependencies/boost"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG"
+				AdditionalIncludeDirectories="../source;$(OSG_PATH)/include;$(OSG_PATH)/build/include;../dependencies/tinyxml;$(BOOST_PATH)"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib tinyxmld.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib opengl32.lib glu32.lib"
-				OutputFile="$(OutDir)/GASSPluginOSG_d.dll"
+				AdditionalDependencies="GASSCore_d.lib GASSSim_d.lib OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib opengl32.lib glu32.lib tinyxmld.lib"
+				OutputFile="$(OutDir)\GASSPluginOSG_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../lib/vs2008;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
+				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;$(OSG_PATH)\lib;$(OSG_PATH)\build\lib;..\dependencies\tinyxml\lib;$(BOOST_PATH)\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/PluginOSG_d.pdb"
+				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="../lib/vs2005/PluginOSG_d.lib"
+				ImportLibrary="..\lib\vs2005\GASSPluginOSG_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -97,13 +93,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../lib/vs2005"
-			IntermediateDirectory="obj/Release"
+			OutputDirectory="..\lib\vs2005"
+			IntermediateDirectory="obj\Release\GASSPluginOSG"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -111,8 +110,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
@@ -124,16 +122,16 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
-				AdditionalIncludeDirectories="../Source;../Dependencies/tinyxml;../Dependencies/boost;&quot;$(OSG_PATH)\include&quot;;&quot;$(OSG_PATH)\build\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;HFE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				Optimization="3"	
+				AdditionalIncludeDirectories="../source;$(OSG_PATH)/include;$(OSG_PATH)/build/include;../dependencies/tinyxml;$(BOOST_PATH)"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -141,25 +139,23 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;HFE_EXPORTS;_CRT_SECURE_NO_WARNINGS"
-				AdditionalIncludeDirectories="../Source;../../Dependencies/ogre/OgreMain/include;../../Dependencies/ogre/Dependencies/include;../../Dependencies/ogre/PlugIns/OctreeSceneManager/include;../../Dependencies/tinyxml;../../Dependencies/boost"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG"
+				AdditionalIncludeDirectories="../source;$(OSG_PATH)/include;$(OSG_PATH)/build/include;../dependencies/tinyxml;$(BOOST_PATH)"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GASSCore.lib GASSSim.lib tinyxml.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib"
-				OutputFile="$(OutDir)/GASSPluginOSG.dll"
+				AdditionalDependencies="..\lib\vs2005\GASSCore.lib ..\lib\vs2005\GASSSim.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib opengl32.lib glu32.lib tinyxml.lib"
+				OutputFile="$(OutDir)\GASSPluginOSG.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../lib/vs2005;../Dependencies;../Dependencies/tinyxml/lib;../Dependencies/boost/lib;&quot;$(OSG_PATH)//lib&quot;;&quot;$(OSG_PATH)/build/lib&quot;"
+				AdditionalLibraryDirectories="..\lib\vs2005;..\dependencies;$(OSG_PATH)\lib;$(OSG_PATH)\build\lib;..\dependencies\tinyxml\lib;$(BOOST_PATH)\lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="../lib/vs2005/GASSPluginOSG.lib"
+				ImportLibrary="..\lib\vs2005\GASSPluginOSG.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -179,6 +175,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -189,59 +188,31 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source"
+			Name="source"
+			Filter=""
 			>
 			<Filter
 				Name="Plugins"
+				Filter=""
 				>
 				<Filter
 					Name="OSG"
+					Filter=""
 					>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGConvert.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGGraphicsSceneManager.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGGraphicsSceneManager.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGGraphicsSystem.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGGraphicsSystem.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGResourceSystem.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\Plugins\OSG\OSGResourceSystem.h"
-						>
-					</File>
 					<Filter
 						Name="Components"
+						Filter=""
 						>
 						<File
 							RelativePath="..\source\Plugins\OSG\Components\OSGBillboardComponent.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\source\Plugins\OSG\Components\OSGBillboardComponent.h"
+							RelativePath="..\source\Plugins\OSG\Components\OSGCameraComponent.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGCameraComponent.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGCameraComponent.h"
+							RelativePath="..\source\Plugins\OSG\Components\OSGLightComponent.cpp"
 							>
 						</File>
 						<File
@@ -249,15 +220,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGLocationComponent.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGLocationComponent.h"
+							RelativePath="..\source\Plugins\OSG\Components\OSGLocationComponent.cpp"
 							>
 						</File>
 						<File
@@ -265,15 +228,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\source\Plugins\OSG\Components\OSGManualMeshComponent.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGMeshComponent.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\Source\Plugins\OSG\Components\OSGMeshComponent.h"
+							RelativePath="..\source\Plugins\OSG\Components\OSGMeshComponent.cpp"
 							>
 						</File>
 						<File
@@ -281,10 +236,66 @@
 							>
 						</File>
 						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGBillboardComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGCameraComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGLightComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGLineComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGLocationComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGManualMeshComponent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\source\Plugins\OSG\Components\OSGMeshComponent.h"
+							>
+						</File>
+						<File
 							RelativePath="..\source\Plugins\OSG\Components\OSGTextComponent.h"
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGGraphicsSceneManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGGraphicsSystem.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGResourceSystem.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGConvert.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGGraphicsSceneManager.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGGraphicsSystem.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\Plugins\OSG\OSGResourceSystem.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
