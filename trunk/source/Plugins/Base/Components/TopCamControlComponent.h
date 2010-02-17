@@ -25,6 +25,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace GASS
 {
@@ -55,12 +56,18 @@ namespace GASS
 		void OnInput(MessagePtr message);
 		void OnInit(MessagePtr message);
 		void OnUnload(MessagePtr message);
+		void OnCameraParameter(CameraParameterMessagePtr message);
+	
 
 		float GetMaxWindowSize() const {return m_MaxWindowSize;}
 		void SetMaxWindowSize(float value) {m_MaxWindowSize = value;}
 
 		float GetMinWindowSize() const {return m_MinWindowSize;}
 		void SetMinWindowSize(float value) {m_MinWindowSize = value;}
+
+		float GetWindowSize() const {return m_CurrentWindowSize;}
+		void SetWindowSize(float value) {m_CurrentWindowSize = value;}
+
 
 		float GetFixedHeight() const {return m_FixedHeight;}
 		void SetFixedHeight(float value) {m_FixedHeight = value;}

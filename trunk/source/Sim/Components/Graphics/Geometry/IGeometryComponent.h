@@ -34,4 +34,5 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const = 0;
 	protected:
 	};
+	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 }

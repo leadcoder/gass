@@ -72,6 +72,7 @@ namespace GASS
 		RegisterProperty<float>("MaxWindowSize", &GASS::TopCamControlComponent::GetMaxWindowSize, &GASS::TopCamControlComponent::SetMaxWindowSize);
 		RegisterProperty<float>("MinWindowSize", &GASS::TopCamControlComponent::GetMinWindowSize, &GASS::TopCamControlComponent::SetMinWindowSize);
 		RegisterProperty<float>("FixedHeight", &GASS::TopCamControlComponent::GetFixedHeight, &GASS::TopCamControlComponent::SetFixedHeight);
+		RegisterProperty<float>("WindowSize", &GASS::TopCamControlComponent::GetWindowSize, &GASS::TopCamControlComponent::SetWindowSize);
 	}
 
 	void TopCamControlComponent::OnCreate()
@@ -82,6 +83,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInit,LoadCoreComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
+
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 		assert(m_ControlSetting);
@@ -221,7 +224,35 @@ namespace GASS
 		MessagePtr rot_msg(new RotationMessage(m_Rot,from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
-		MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,from_id));
+		MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostMessage(cam_msg);
 	}
+
+
+	void TopCamControlComponent::OnCameraParameter(CameraParameterMessagePtr message)
+	{
+		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		int this_id = (int)this;
+		if(message->GetSenderID() != this_id)
+		{
+			switch(type)
+			{
+			case CameraParameterMessage::CAMERA_FOV:
+				{
+				}
+				break;
+			case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+				{
+					m_CurrentWindowSize = message->GetValue1();
+
+				}
+				break;
+			case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+				{
+				}
+				break;
+			}
+		}
+	}
+
 }
