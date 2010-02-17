@@ -60,6 +60,14 @@ namespace GASS
 		virtual ~RakNetNetworkSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
+
+		bool IsServer() {return  m_IsServer;}
+
+		//helpers
+		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
+		static std::string ReadString(RakNet::BitStream *inBitStream);
+		
+
 	protected:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -89,6 +97,7 @@ namespace GASS
 		bool m_AcceptLateJoin;
 		bool m_ScenarioIsRunning;
 	};
+	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }
 
 #endif

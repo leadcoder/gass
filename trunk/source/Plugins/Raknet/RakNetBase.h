@@ -26,28 +26,26 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
 
+#include "RakNetNetworkComponent.h"
+
+class ReplicaManager;
+	
 namespace GASS
 {
-	class RakNetNetworkSystem;
 	class RakNetReplicaMember;
 	
-	enum DATA_TAG
-	{
-		TRANSFORMATION_DATA = 1,
-        INPUT_DATA = 2,
-		OBJECT_DATA = 4,
-	};
+	
 
 	class RakNetBase 
 	{
 	public:
-		RakNetBase();
+		RakNetBase(ReplicaManager* manager);
 		virtual ~RakNetBase();
 		virtual void Update(double delta);
 		virtual bool IsMaster();
 		virtual void CreateaBaseObject();
-		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId, RakNetNetworkSystem *caller);
-		void LocalInit(BaseObject *object, RakNetNetworkSystem *caller);
+		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
+		void LocalInit(RakNetNetworkComponentPtr object);
 		RakNetReplicaMember* GetReplica(){return m_Replica;}
 
 		//Replica member functions
@@ -64,10 +62,8 @@ namespace GASS
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-	
 		NetworkID GetPartOfId(){return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
-
 	protected:
 		unsigned char m_DataToReceive;
 		unsigned char m_DataToSend;
@@ -76,42 +72,12 @@ namespace GASS
 	private:
 		SystemAddress m_OwnerSystemAddress;
 		NetworkID m_ActionHandlerPlayerId;
-		float m_DeadCount;
-		RakNetTime m_UpdateTimeStamp[4];
-		Vec3 m_Pos[4];
-		Quaternion m_Rotation[4];
 		int m_PartId;
 		NetworkID m_PartOfId;
-
 		RakNetReplicaMember* m_Replica;
-		
-
-		//#define DECLARE_RakNetBase_FUNCTIONS
-		//virtual int GetID(){return 0;}//DistributedNetworkObject::GetID();}
-		virtual int GetSessionID(){/* TODO */ return 0; } //ReplicaObject::GetSessionID();}
-		virtual char* GetStringID(){return NULL;}
-		//virtual std::string GetName(){return m_Name;}
-		virtual void SetStringID(std::string id){}
-		//virtual void SetName(std::string name){strcpy(m_Name,name.c_str());}
-		virtual bool IsRoot(){return (m_PartId == 0);}
-		//virtual void SetRoot(char value){m_Root = value;}
-		//virtual void Publish(){ReplicaObject::Publish();}
-		virtual std::string GetUniqueNetworkName()
-		{
-			return "tst";
-			/*int id = GetID();
-			int sid = GetSessionID();
-			char id_string[256];
-			sprintf(id_string,"%d/%d",id,sid);
-			return std::string(id_string);*/
-		}
-		std::string GetUniqueEngineName()
-		{
-			return std::string("test");
-		}
-
+		ReplicaManager* m_Manager;
+		RakNetNetworkComponentPtr m_Owner;
 	protected:
-		bool m_SendStopData;
 	};
 }
 

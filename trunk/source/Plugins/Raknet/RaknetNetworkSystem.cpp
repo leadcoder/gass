@@ -188,7 +188,7 @@ namespace GASS
 
 	ReplicaReturnResult RakNetNetworkSystem::ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller)
 	{
-		char output[255];
+		
 		//RakNetBase *object =NULL;
 
 		// I encoded all the data in inBitStream SendConstruction
@@ -199,6 +199,16 @@ namespace GASS
 		RakNet::StringTable::Instance()->DecodeString(output, 255, inBitStream);
 
 		//Create template
+		if (strcmp(output, "")==0)
+		{
+
+		}
+		else
+		{
+			//Create object
+		}
+		
+
 		
 		if (strcmp(output, "RakNetBase")==0)
 		{
@@ -374,6 +384,34 @@ namespace GASS
 		}
 		return net_obj;
 	}
+
+
+	void RakNetNetworkSystem::WriteString(const std::string &str,RakNet::BitStream *outBitStream)
+	{
+		int str_size = str.length();
+		outBitStream->Write(str_size);
+		if	(str_size > 0)
+		{
+			outBitStream->Write(str.c_str(),str_size);
+		}
+	}
+
+	std::string RakNetNetworkSystem::ReadString(RakNet::BitStream *inBitStream)
+	{
+		std::string final = "";
+		int str_size;
+		inBitStream->Read(str_size);
+		if(str_size >0)
+		{
+			char* inString = new char[ str_size + 1 ];
+			inBitStream->Read(inString, str_size);
+			inString[ str_size] = '\0';
+			final = inString;
+			delete[] inString;
+		}
+		return final;
+	}
+
 
 
 }
