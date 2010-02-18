@@ -27,6 +27,7 @@
 #include "NetworkIDManager.h"
 #include "ReplicaEnums.h"
 #include "ReplicaManager.h"
+#include "BitStream.h"
 
 //GASS includes
 #include "Core/MessageSystem/IMessage.h"
@@ -50,6 +51,25 @@ namespace GASS
 		ID_REMOTE_COMMAND = ID_USER_PACKET_ENUM+2,
 		ID_REMOTE_CREATE = ID_USER_PACKET_ENUM+3,
 	};
+
+
+	struct ServerPingReponse
+		{
+			std::string IP;
+			float Time;
+			float Ping;
+			int Port;
+		};
+
+		struct ClientData
+		{
+			std::string IP;
+
+		};
+		typedef std::map<std::string,ServerPingReponse> ServerReponseMap;
+		typedef std::map<std::string,ClientData> ClientDataMap;
+
+
 
 
 	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
@@ -78,6 +98,9 @@ namespace GASS
 		bool ConnectToServer(const std::string &server,int server_port,int client_port);
 		ReplicaReturnResult ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller);
 		void UpdateServer(double delta);
+		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
+		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
+
 	
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;
@@ -96,6 +119,7 @@ namespace GASS
 		bool m_RemoteCreatePlayers;
 		bool m_AcceptLateJoin;
 		bool m_ScenarioIsRunning;
+		ClientDataMap m_ClientMap;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

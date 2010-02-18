@@ -20,6 +20,7 @@
 #include <boost/bind.hpp>
 #include "Plugins/Raknet/RakNetNetworkSystem.h"
 #include "Plugins/Raknet/RakNetReplicaMember.h"
+#include "Plugins/Raknet/RakNetBase.h"
 
 #include "RakNetworkFactory.h"
 #include "RakPeerInterface.h"
@@ -27,6 +28,7 @@
 #include "StringTable.h"
 #include "NetworkData.h"
 #include "GetTime.h"
+
 
 
 #include "Core/Utils/Log.h"
@@ -188,6 +190,7 @@ namespace GASS
 
 	ReplicaReturnResult RakNetNetworkSystem::ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller)
 	{
+		char output[255];
 		
 		//RakNetBase *object =NULL;
 
@@ -277,7 +280,7 @@ namespace GASS
 				data.IP = name;
 				m_ClientMap[name] = data;
 
-				if(m_RemoteCreatePlayers)
+				/*if(m_RemoteCreatePlayers)
 				{
 					//Remote player!
 					m_RemoteOwnerId = p->systemAddress;
@@ -297,7 +300,7 @@ namespace GASS
 					//Check if we also should create vehicle
 					//player->OnServerCreate();
 					//RakNetPlayer* rp = (RakNetPlayer*) player->GetNetworkObject();
-				}
+				}*/
 				//Send client config
 				if(m_ScenarioIsRunning && m_AcceptLateJoin)
 				{
@@ -313,18 +316,18 @@ namespace GASS
 			{
 				//printf("Connection attempt to %s:%i failedIBaseSound.hn", rakPeer->PlayerIDToDottedIP(p->systemAddress), p->systemAddress.port);
 			}
-			else if (p->data[0]==ID_REMOTE_COMMAND)
+			/*else if (p->data[0]==ID_REMOTE_COMMAND)
 			{
 				RakNet::BitStream remote_data(p->data+1,p->length,false);
 				ReceiveRemoteCommand(&remote_data,p->systemAddress);
-			}
+			}*/
 			m_RakPeer->DeallocatePacket(p);
 			p = m_RakPeer->Receive();
 		}
 	}
 
 
-	INetworkObject* RakNetNetworkSystem::Init(RaknetNetworkComponenPtr object)
+	/*INetworkObject* RakNetNetworkSystem::Init(RaknetNetworkComponenPtr object)
 	{
 		// check if root/to object
 		if(object->IsRoot())
@@ -355,17 +358,17 @@ namespace GASS
 				return network_obj;
 			}
 		}
-	}
+	}*/
 
 
-	RakNetBase* RakNetNetworkSystem::NewNetworkObject(RaknetNetworkComponenPtr object)
+	/*RakNetBase* RakNetNetworkSystem::NewNetworkObject(RaknetNetworkComponenPtr object)
 	{
 		RakNetBase* net_obj = NULL;
-		/*if(object->IsKindOf(&BasePlayer::m_RTTI))
+		if(object->IsKindOf(&BasePlayer::m_RTTI))
 		{
 			net_obj = new RakNetPlayer();
 		}
-		else if(object->IsKindOf(&BaseObject::m_RTTI))*/
+		else if(object->IsKindOf(&BaseObject::m_RTTI))
 		{
 			net_obj = new RakNetBase();
 		}
@@ -383,7 +386,7 @@ namespace GASS
 			net_obj->LocalInit(object, this);
 		}
 		return net_obj;
-	}
+	}*/
 
 
 	void RakNetNetworkSystem::WriteString(const std::string &str,RakNet::BitStream *outBitStream)
@@ -410,6 +413,20 @@ namespace GASS
 			delete[] inString;
 		}
 		return final;
+	}
+
+
+	void RakNetNetworkSystem::SerializeServerData(RakNet::BitStream &bstream,ServerData* data)
+	{
+		WriteString(data->ServerName,&bstream);
+		WriteString(data->MapName,&bstream);
+
+	}
+	void RakNetNetworkSystem::DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data)
+	{
+		data->ServerName = RakNetNetworkSystem::ReadString(bstream);
+		data->MapName = RakNetNetworkSystem::ReadString(bstream);
+
 	}
 
 

@@ -63,39 +63,9 @@ namespace GASS
 
 	void RakNetNetworkComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		m_TemplateName = GetSceneObject()->GetTemplateName();
-		//m_PartId = GetSceneObject()->GetPartId();
-
-		//Is master
-		if(IsMaster())
-		{
-			m_Replica = new RakNetReplicaMember;
-			m_Replica->SetParent(this);
-			m_Replica->SetNetworkIDManager(caller->GetNetworkIDManager());
-			SceneObjectPtr object_root =  object->GetSceneObject()->GetRoot();
-			if(object_root)
-			{
-				RakNetNetworkComponentPtr root_net_obj = object_root->GetFirstComponent<RakNetNetworkComponent>();
-				if(root_net_obj)
-					m_PartOfId = root_net_obj->GetReplica()->GetNetworkID();
-		}
-
-		if (caller->IsServer())
-			caller->GetReplicaManager()->Construct(m_Replica , false, UNASSIGNED_SYSTEM_ADDRESS, true);
-
-		// For security, as a server disable these interfaces
-		if (caller->IsServer())
-		{
-			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
-			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
-			caller->GetReplicaManager()->DisableReplicaInterfaces(m_Replica, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
-		}
-		else
-		{
-			// For convenience and for saving bandwidth, as a client disable all sends except REPLICA_SEND_SERIALIZE
-			// I could do this manually by putting if (isServer==false) return; at the top of all my send functions too.
-			caller->GetReplicaManager()->DisableReplicaInterfaces(m_Replica, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
-		}
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(raknet->IsServer())
+			RakNetBase* replica = new RakNetBase();
 	}
 
 	void RakNetNetworkComponent::OnUnload(UnloadComponentsMessagePtr message)
