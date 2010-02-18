@@ -260,6 +260,10 @@ namespace GASS
 				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
+
+					if(!cc_elem->Attribute("type"))
+						Log::Error("Failed to find type-attribute for %s tag", cc_elem->Value());
+					
 					std::string type = cc_elem->Attribute("type");
 					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
 					AddChild(container);
