@@ -162,6 +162,7 @@ namespace GASS
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
 	}
 
 
@@ -372,6 +373,24 @@ namespace GASS
 		}
 	}
 
+	void RakNetNetworkSystem::OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message)
+	{
+		m_ServerData->MapName =	message->GetScenario()->GetPath();
+		
+		RakNet::BitStream out;
+		out.Reset();
+		out.Write((unsigned char)ID_START_SCENARIO);
+		SerializeServerData(out,m_ServerData);
+		//Send server data to all clients
+		for (int index=0; index < MAX_PEERS; index++)
+		{
+			SystemAddress sa=m_RakPeer->GetSystemAddressFromIndex(index);
+			if (sa==UNASSIGNED_SYSTEM_ADDRESS)
+				break;
+			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,sa,false);
+		}
+	}
+
 
 	void RakNetNetworkSystem::UpdateClient(double delta)
 	{
@@ -408,8 +427,9 @@ namespace GASS
 				ServerData data;
 				RakNet::BitStream server_data(p->data+1,p->length-1,false);
 				DeserializeServerData(&server_data,&data);
-
-				//MessagePtr message(new ServerMessage(response.IP, response.Port, response.Ping));
+				MessagePtr message(new StartSceanrioRequestMessage(data.MapName));
+				GetSimSystemManager()->PostMessage(message);
+				
 				//load scenario
 
 				//wait for local player?

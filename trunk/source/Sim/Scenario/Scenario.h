@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <boost/enable_shared_from_this.hpp>
 #include "Sim/Common.h"
 #include "Core/Math/Vector.h"
 #include "Core/Reflection/BaseReflectionObject.h"
@@ -47,7 +48,7 @@ namespace GASS
 
 	*/
 
-	class GASSExport Scenario : public Reflection<Scenario, BaseReflectionObject>
+	class GASSExport Scenario : public Reflection<Scenario, BaseReflectionObject>, public boost::enable_shared_from_this<Scenario>
 	{
 	public:
 		Scenario();

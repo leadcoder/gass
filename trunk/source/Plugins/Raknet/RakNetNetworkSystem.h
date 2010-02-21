@@ -98,7 +98,7 @@ namespace GASS
 		void OnStartClient(StartClientMessagePtr message);
 		void OnConnectToServer(ConnectToServerMessagePtr message);
 		void OnPingRequest(PingRequestMessagePtr message);
-
+		void OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message);
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const {return "NETWORK_TASK_GROUP";}

@@ -30,8 +30,11 @@
 
 namespace GASS
 {
+	class Scenario;
 	class ScenarioScene;
+	
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 
 	/**
 	Deafult message used by the SimSystemManager
@@ -186,9 +189,29 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScenarioSceneLoadedNotifyMessage> ScenarioSceneLoadedNotifyMessagePtr;
 
+
+
+
+	/**
+		This message is posted by the Scenario class before the scenario scenes are loaded.
+	*/
+	
+	class ScenarioAboutToLoadNotifyMessage : public BaseMessage
+	{
+	public:
+		ScenarioAboutToLoadNotifyMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Scenario(scenario){}
+		  
+		  ScenarioPtr GetScenario() const {return m_Scenario;}
+	private:
+		ScenarioPtr m_Scenario;		
+	};
+
+	typedef boost::shared_ptr<ScenarioAboutToLoadNotifyMessage> ScenarioAboutToLoadNotifyMessagePtr;
 	
 	/**
-		This message is posted by the ScenarioScene class before the scenario objects are loaded.
+		This message is posted by the ScenarioScene class before the scene objects are loaded.
 		Suscribe to this message if you want to get hold of sceario scenes before all scene objects are loaded. This
 		can be usefull if you want to modify, add or save some objects the scenario scene loaded
 	*/
@@ -319,6 +342,23 @@ namespace GASS
 		int m_ServerPort;
 	};
 	typedef boost::shared_ptr<PingRequestMessage> PingRequestMessagePtr;
+
+
+	/**
+	Server inform client about scenario
+	*/
+	class StartSceanrioRequestMessage : public BaseMessage
+	{
+	public:
+		StartSceanrioRequestMessage(const std::string scenario_name, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(scenario_name){}
+		  
+		 std::string GetScenarioName() const {return m_Name;}
+	private:
+		std::string m_Name;
+	};
+	typedef boost::shared_ptr<StartSceanrioRequestMessage> StartSceanrioRequestMessagePtr;
 
 	
 

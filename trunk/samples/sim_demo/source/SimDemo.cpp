@@ -109,6 +109,9 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 	}
 	//col_sys
 }
+
+GASS::Scenario* scenario = new GASS::Scenario();
+
 class SimClient
 {
 public:
@@ -123,6 +126,12 @@ public:
 		//try to connect
 		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ClientConnectedMessage(mess->GetServerName(),2002)));
 		m_IsConnected = true;
+	}
+	void OnLoadScenario(GASS::MessagePtr message)
+	{
+		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
+		scenario->Load(mess->GetScenarioName());		
+
 	}
 private:
 	bool m_IsConnected;
@@ -182,20 +191,57 @@ int main(int argc, char* argv[])
 	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
-	GASS::Scenario* scenario = new GASS::Scenario();
-
+	
 	//network settings
 	if(is_server)
 	{
 		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartServerMessage("SimDemoServer",2001)));
 		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, &server, _1 ),&server));
 		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedMessage),callback,0);
+
+		//CreateManualObject();
+		scenario->Load(scenario_path);
+
+
+		for(int i = 0; i < 1; i++)
+		{
+			engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
+			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
+			if(scene_object)
+			{
+
+				GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
+				pos.x = pos.x + i*7;
+				pos.z = pos.z - 2;
+				//pos.x = 0;
+				//pos.y = 10;
+				//pos.z = 0;
+				boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
+				scene_object->SendImmediate(pos_msg);
+
+				if(i==0)
+				{
+					GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
+					scene_object->PostMessage(enter_msg);
+
+					GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
+					if(objs.size() > 0)
+						objs.front()->PostMessage(enter_msg);
+				}
+			}
+		}
+
 	}
 	else
 	{
-		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnServerResponse, &client, _1 ),&client));
-		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ServerResponseMessage),callback,0);
+		GASS::MessageFuncPtr resp_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnServerResponse, &client, _1 ),&client));
+		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ServerResponseMessage),resp_callback,0);
+		GASS::MessageFuncPtr load_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnLoadScenario, &client, _1 ),&client));
+		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::StartSceanrioRequestMessage),load_callback,0);
 		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
+		
+		
+		
 		
 		printf("\n\nWaiting for server");
 		float update_time = 0;
@@ -209,37 +255,9 @@ int main(int argc, char* argv[])
 			//send ping request
 		}
 	}
-	//CreateManualObject();
-	scenario->Load(scenario_path);
+	
 
-	for(int i = 0; i < 1; i++)
-	{
-		engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
-		GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
-		if(scene_object)
-		{
-			
-			GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
-			pos.x = pos.x + i*7;
-			pos.z = pos.z - 2;
-			//pos.x = 0;
-			//pos.y = 10;
-			//pos.z = 0;
-			boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
-			scene_object->SendImmediate(pos_msg);
-
-			if(i==0)
-			{
-				GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
-				scene_object->PostMessage(enter_msg);
-
-				GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
-				if(objs.size() > 0)
-					objs.front()->PostMessage(enter_msg);
-			}
-		}
-	}
-
+	
 	
 	//scenario->Load("../../../data/scenarios/camp_genesis");
 	//scenario->Load("../../../data/advantage_scenario");
