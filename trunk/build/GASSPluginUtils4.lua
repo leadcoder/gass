@@ -1,57 +1,52 @@
-project "GASSPluginRakNet"
+project "GASSPluginUtils"
 	kind "SharedLib"
 	language "C++"
 	targetprefix "" -- exchange this with soname in some way?
 
-	files { "../source/Plugins/RakNet/**.cpp", "../source/Plugins/RakNet/**.h" }
+	files { "../source/Plugins/Utils/**.cpp", "../source/Plugins/Utils/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
 
 if (os.is("windows")) then
 	includedirs 
 	{ 
-		"../Source",
-		"../dependencies/RakNet/Source",
+		"../source/Plugins/Utils",
+		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
-		"../dependencies/tbb/include"
+		"../dependencies/boost"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/boost/lib"
 	}
 
-	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
+	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
 else
 	includedirs 
 	{ 
+		"../source/Plugins/Utils",
 		"../source",
-		"../dependencies/include",
-		"$(BOOST_PATH)",
-		"../dependencies/include/tinyxml"
+		"../dependencies/include/boost",
+			"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/lib/",
-		"$(BOOST_PATH)/lib"
-
 	}
 
 end
 
 
 	configuration "Debug"
-		targetname "GASSPluginRakNet_d"
+		targetname "GASSPluginUtils_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
 --		debugPrefix = "_d"
@@ -59,24 +54,18 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"RakNetLibStaticDebug",
 			"tinyxmld",
-			"tbb_debug",
-			"ws2_32"
 		}
 
 	configuration "Release"
-		targetname "GASSPluginRakNet"
+		targetname "GASSPluginUtils"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
 		links 
 		{
 			"GASSCore",
 			"GASSSim",
-			"RakNetLibStatic",
 			"tinyxml",
-			"tbb",
-			"ws2_32"
 		}
 
 

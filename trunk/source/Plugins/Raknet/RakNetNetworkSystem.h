@@ -83,6 +83,7 @@ namespace GASS
 
 		bool IsServer() {return  m_IsServer;}
 
+		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);

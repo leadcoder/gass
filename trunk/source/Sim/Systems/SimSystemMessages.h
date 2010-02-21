@@ -206,5 +206,42 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
 
+
+	/**
+	Start network server
+	*/
+
+	class StartServerMessage : public BaseMessage
+	{
+	public:
+		StartServerMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(name), m_Port(port){}
+		  
+		  ScenarioScenePtr GetScenarioScene() const {return m_Name;}
+	private:
+		std::string m_Name;
+		int m_Port;
+	};
+	typedef boost::shared_ptr<StartServerMessage> StartServerMessagePtr;
+
+	
+	/**
+	Start network client
+	*/
+	class StartClientMessage : public BaseMessage
+	{
+	public:
+		StartClientMessage(const std::string name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(name), m_ClientPort(client_port), m_ServerPort(server_port){}
+		  
+		  ScenarioScenePtr GetScenarioScene() const {return m_Name;}
+	private:
+		std::string m_Name;
+		int m_ClientPort;
+		int m_ServerPort;
+	};
+	typedef boost::shared_ptr<StartClientMessage> StartClientMessagePtr;
 }
 #endif

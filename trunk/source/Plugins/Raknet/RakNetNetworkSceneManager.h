@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <ode/ode.h>
 #include <map>
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
@@ -32,55 +31,25 @@
 
 namespace GASS
 {
-	class IMeshComponent;
-	struct MeshData;
-
-	struct ODECollisionMesh
-	{
-		MeshData* Mesh;
-		dTriMeshDataID ID;
-	};
 
 	class RaknetNetworkSceneManager  : public Reflection<RaknetNetworkSceneManager, BaseSceneManager> , public ITaskListener
 	{
-	public:
-		typedef std::map<std::string,ODECollisionMesh> CollisionMeshMap;
-	public:
+		public:
 		RaknetNetworkSceneManager();
 		virtual ~RaknetNetworkSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		dSpaceID GetPhysicsSpace(){return m_Space;}
-		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
-		ODECollisionMesh CreateCollisionMesh(IMeshComponent* mesh);
-		bool HasCollisionMesh(const std::string &name);
-		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
-		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
-		dWorldID GetWorld()const {return m_World;}
-
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
-		void SetGravity(float gravity);
-		float GetGravity() const;
 		void SetTaskGroup(TaskGroup value);
-		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
-		void ProcessCollision(dGeomID o1, dGeomID o2);
 	private:
-		dWorldID m_World;
-		dSpaceID m_Space;
-		dSpaceID m_StaticSpace;
-		dSpaceID m_CollisionSpace;
-		dJointGroupID m_ContactGroup;
-		float m_Gravity;
 		bool m_Paused;
 		TaskGroup m_TaskGroup;
-		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;

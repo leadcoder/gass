@@ -31,23 +31,16 @@
 
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Systems/SimSystemManager.h"
-#include "Plugins/ODE/RaknetNetworkSceneManager.h"
-//#include "Main/Root.h"
-#include "Plugins/ODE/ODEBodyComponent.h"
-#include "Plugins/ODE/ODECollisionSystem.h"
+#include "Plugins/RakNet/RaknetNetworkSceneManager.h"
+
 
 
 namespace GASS
 {
 
-	RaknetNetworkSceneManager::RaknetNetworkSceneManager() :m_Space(0),
-		m_StaticSpace(0),
-		m_World(0),
-		m_CollisionSpace(0),
-		m_ContactGroup (0),
+	RaknetNetworkSceneManager::RaknetNetworkSceneManager() :
 		m_Paused(false),
 		m_TaskGroup(PHYSICS_TASK_GROUP),
-		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
 		m_MaxSimSteps(4)
@@ -62,19 +55,9 @@ namespace GASS
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
-		RegisterProperty<float>("Gravity", &GASS::RaknetNetworkSceneManager::GetGravity, &GASS::RaknetNetworkSceneManager::SetGravity);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 
-	void RaknetNetworkSceneManager::SetGravity(float gravity)
-	{
-		m_Gravity = gravity;
-	}
-
-	float RaknetNetworkSceneManager::GetGravity() const
-	{
-		return m_Gravity;
-	}
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
@@ -86,12 +69,11 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		//Initlize all physics components and send scene mananger as argument
+		//Initlize all network components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(shared_from_this(),(int) this));
-		//phy_msg->SetData("PhysicsSceneManager",boost::any(this));
-		obj->SendImmediate(phy_msg);
+//		MessagePtr phy_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
+//		obj->SendImmediate(phy_msg);
 	}
 
 
@@ -111,22 +93,14 @@ namespace GASS
 
 		for (int i = 0; i < clamp_num_steps; ++i)
 		{
-			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-			dWorldQuickStep(m_World, m_SimulationUpdateInterval);
-			dJointGroupEmpty(m_ContactGroup);
+			
 		}
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
 
-		//Temp: move this to RakNetNetworkSystem
 		
-		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
-		if(col_sys)
-		{
-			col_sys->Process();
-
-		}
+		
+		
 	}
 
 
@@ -136,241 +110,18 @@ namespace GASS
 
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
-		//dInitODE2(0);
-		m_Space = 0;
-		m_StaticSpace = 0;
-		m_World = dWorldCreate();
-		m_Space = dHashSpaceCreate(m_Space);
-		m_StaticSpace = dHashSpaceCreate(m_StaticSpace);
+	
 
-		m_CollisionSpace = dHashSpaceCreate(m_CollisionSpace);
-		m_ContactGroup = dJointGroupCreate(0);
-
-		Vec3 gravity_vec = scene->GetSceneUp()*m_Gravity;
-
-		dWorldSetGravity(m_World, gravity_vec.x,gravity_vec.y, gravity_vec.z);
-		dWorldSetAutoDisableFlag(m_World, 1);
-		dWorldSetAutoDisableLinearThreshold(m_World, 0.01);
-		dWorldSetAutoDisableAngularThreshold(m_World, 0.01);
-		dWorldSetAutoDisableSteps(m_World, 10);
-		dWorldSetAutoDisableTime(m_World, 0);
-		//dAllocateODEDataForThread(dAllocateMaskAll);
-
-		m_Init = true;
+	
 	}
 
 	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
-		dJointGroupDestroy (m_ContactGroup);
-		dSpaceDestroy (m_CollisionSpace);
-		dSpaceDestroy (m_StaticSpace);
-		dWorldDestroy (m_World);
-		//dCloseODE();
+		
 		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
-
-#define MAX_CONTACTS 25		// maximum number of contact points per body
-	void RaknetNetworkSceneManager::NearCallback(void *data, dGeomID o1, dGeomID o2)
-	{
-		RaknetNetworkSceneManager* manager = (RaknetNetworkSceneManager*) data;
-		manager->ProcessCollision(o1,o2);
-	}
-
-	void RaknetNetworkSceneManager::ProcessCollision(dGeomID o1, dGeomID o2)
-	{
-		int i;
-		// if (o1->body && o2->body) return;
-		if(dGeomIsSpace(o1) &&  dGeomIsSpace(o2) && o1 == o2)
-		{
-			return;
-		}
-
-		if(dGeomIsSpace(o1) ||  dGeomIsSpace(o2))
-		{
-			dSpaceCollide2(o1,o2,this,&NearCallback);
-		}
-		else
-		{
-			// check that both bodies has a geometry
-			ODEGeometryComponent* geom1 = static_cast<ODEGeometryComponent*>(dGeomGetData(o1));
-			ODEGeometryComponent* geom2 = static_cast<ODEGeometryComponent*>(dGeomGetData(o2));
-
-			if(!(geom1 && geom2))
-				return;
-
-			if((geom1 == geom2))
-				return;
-
-			/*	if((geom1->GetSceneObject()->GetParent() && geom2->GetSceneObject()->GetParent()) && geom1->GetSceneObject()->GetParent() == geom2->GetSceneObject()->GetParent())
-			return;
-
-
-			*/
-
-			// check if part of same object
-
-			if(geom1->GetSceneObject()->GetObjectUnderRoot() == geom2->GetSceneObject()->GetObjectUnderRoot())
-			{
-				return;
-			}
-
-
-
-			dBodyID b1 = dGeomGetBody(o1);
-			dBodyID b2 = dGeomGetBody(o2);
-			if(!b1 && !b2) return;
-			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
-
-
-			dContact contact;
-			contact.fdir1[0] = 0;
-			contact.fdir1[1] = 0;
-			contact.fdir1[2] = -1;
-			contact.surface.mode = 0;
-			contact.surface.mu = geom1->GetFriction()*geom2->GetFriction();
-			contact.surface.mu2 = contact.surface.mu;
-
-
-			//reset?
-			contact.surface.soft_erp = 0;
-			contact.surface.motion1 = 0;
-			contact.surface.motion2 = 0;
-			contact.surface.slip1 = 0;
-			contact.surface.slip2 = 0;
-			contact.surface.mode = dContactSoftCFM | dContactApprox1;
-			//contact.surface.mu = Math::Max(geom1->GetFriction() , geom2->GetFriction());
-			contact.surface.soft_cfm = 0.01;
-
-			//dContact contact[MAX_CONTACTS];
-			dContactGeom contacts[MAX_CONTACTS];
-			int numc = dCollide(o1,o2,MAX_CONTACTS,contacts,sizeof(dContactGeom));
-
-			for (i=0; i < numc; i++)
-			{
-				contact.geom = contacts[i];
-
-				/*if( (WantsContact(geom1, contact, geom2, o1, o2, true )) &&
-				(WantsContact(geom2, contact, geom1, o2, o1, true )) )
-				*/{
-					dJointID tempJoint = dJointCreateContact( m_World, m_ContactGroup, &contact );
-					dJointAttach( tempJoint, b1, b2 );
-				}
-			}
-			/*if(numc > 0)
-			{
-			Vec3 pos = Vec3(contacts[0].pos[0],contacts[0].pos[1],contacts[0].pos[2]);
-			Vec3 normal = Vec3(contacts[0].normal[0],contacts[0].normal[1],contacts[0].normal[2]);
-			geom1->CallCollsionListeners(pos,normal);
-			geom2->CallCollsionListeners(pos,normal);
-			}*/
-		}
-
-	}
-	
-
-	void RaknetNetworkSceneManager::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
-	{
-		//Make ODE rotation matrix
-		ode_mat[0] = m.m_Data2[0];
-		ode_mat[1] = m.m_Data2[4];
-		ode_mat[2] = m.m_Data2[8];
-		ode_mat[3] = 0;
-		ode_mat[4] = m.m_Data2[1];
-		ode_mat[5] = m.m_Data2[5];
-		ode_mat[6] = m.m_Data2[9];
-		ode_mat[7] = 0;
-		ode_mat[8] = m.m_Data2[2];
-		ode_mat[9] = m.m_Data2[6];
-		ode_mat[10]= m.m_Data2[10];
-		ode_mat[11] = 0;
-	}
-
-	void RaknetNetworkSceneManager::CreateGASSRotationMatrix(const dReal *R, Mat4 &m)
-	{
-		m.m_Data2[0] = R[0];
-		m.m_Data2[1] = R[4];
-		m.m_Data2[2] = R[8];
-		m.m_Data2[3] = 0;
-		m.m_Data2[4] = R[1];
-		m.m_Data2[5] = R[5];
-		m.m_Data2[6]= R[9];
-		m.m_Data2[7]= 0;
-		m.m_Data2[8] = R[2];
-		m.m_Data2[9] = R[6];
-		m.m_Data2[10] = R[10];
-		m.m_Data2[11] = 0;
-		m.m_Data2[12] = 0;
-		m.m_Data2[13] = 0;
-		m.m_Data2[14] = 0;
-		m.m_Data2[15] = 1;
-
-	}
-
-
-	//TODO: move this to physics system instead of scenatio manager, mesh data should be same between scenes and therefore shareable
-	ODECollisionMesh RaknetNetworkSceneManager::CreateCollisionMesh(IMeshComponent* mesh)
-	{
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasCollisionMesh(col_mesh_name))
-		{
-			return m_ColMeshMap[col_mesh_name];
-		}
-		//not loaded, load it!
-
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-
-		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
-		{
-			//Log::Error("No verticies found for this mesh")
-		}
-		// This should equal above code, but without Opcode dependency and no duplicating data
-		dTriMeshDataID id = dGeomTriMeshDataCreate();
-
-		
-		int float_size = sizeof(Float);
-		if(float_size == 8) //double precision
-		{
-			
-			dGeomTriMeshDataBuildDouble(id,
-			&(mesh_data->VertexVector[0]),
-			sizeof(Float)*3,
-			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0],
-			mesh_data->NumFaces*3,
-			3 * sizeof(unsigned int));
-		}
-		else
-		{
-			dGeomTriMeshDataBuildSingle(id,
-			&(mesh_data->VertexVector[0]),
-			sizeof(Float)*3,
-			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0],
-			mesh_data->NumFaces*3,
-			3 * sizeof(unsigned int));
-		}
-		//Save id for this collision mesh
-
-		ODECollisionMesh col_mesh;
-		col_mesh.ID = id;
-		col_mesh.Mesh = mesh_data;
-		m_ColMeshMap[col_mesh_name] = col_mesh;
-		return col_mesh;
-	}
-
-	bool RaknetNetworkSceneManager::HasCollisionMesh(const std::string &name)
-	{
-		CollisionMeshMap::iterator iter;
-		iter = m_ColMeshMap.find(name);
-		if (iter!= m_ColMeshMap.end()) //in map.
-		{
-			return true;
-		}
-		return false;
-	}
 
 	void RaknetNetworkSceneManager::SetTaskGroup(TaskGroup value)
 	{

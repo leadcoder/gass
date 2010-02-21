@@ -97,7 +97,7 @@ namespace GASS
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
 
 		RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
-		RakNet::StringTable::Instance()->AddString("RakNetPlayer", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+//		RakNet::StringTable::Instance()->AddString("RakNetPlayer", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 	}
 
 	void RakNetNetworkSystem::OnShutdown(MessagePtr message)

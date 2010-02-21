@@ -41,9 +41,9 @@ namespace GASS
 	public:
 		RakNetBase(ReplicaManager* manager);
 		virtual ~RakNetBase();
-		virtual void Update(double delta);
+		//virtual void Update(double delta);
 		virtual bool IsMaster();
-		virtual void CreateaBaseObject();
+		//virtual void CreateaBaseObject();
 		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
 		void LocalInit(RakNetNetworkComponentPtr object);
 		RakNetReplicaMember* GetReplica(){return m_Replica;}

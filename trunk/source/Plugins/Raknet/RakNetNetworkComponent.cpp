@@ -19,6 +19,9 @@
 *****************************************************************************/
 
 #include "RakNetNetworkComponent.h"
+#include "Plugins/RakNet/RakNetNetworkSystem.h"
+#include "Plugins/RakNet/RakNetBase.h"
+
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -65,7 +68,7 @@ namespace GASS
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
-			RakNetBase* replica = new RakNetBase();
+			RakNetBase* replica = new RakNetBase(raknet->GetReplicaManager());
 	}
 
 	void RakNetNetworkComponent::OnUnload(UnloadComponentsMessagePtr message)
