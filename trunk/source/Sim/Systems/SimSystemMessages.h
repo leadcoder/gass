@@ -218,7 +218,8 @@ namespace GASS
 		  BaseMessage(sender_id , delay) , 
 			  m_Name(name), m_Port(port){}
 		  
-		  ScenarioScenePtr GetScenarioScene() const {return m_Name;}
+		  std::string GetServerName() const {return m_Name;}
+		  int GetPort() const {return m_Port;}
 	private:
 		std::string m_Name;
 		int m_Port;
@@ -236,12 +237,90 @@ namespace GASS
 		  BaseMessage(sender_id , delay) , 
 			  m_Name(name), m_ClientPort(client_port), m_ServerPort(server_port){}
 		  
-		  ScenarioScenePtr GetScenarioScene() const {return m_Name;}
+		 std::string GetClientName() const {return m_Name;}
+		 int GetClientPort() const {return m_ClientPort;}
+		 int GetServerPort() const {return m_ServerPort;}
 	private:
 		std::string m_Name;
 		int m_ClientPort;
 		int m_ServerPort;
 	};
 	typedef boost::shared_ptr<StartClientMessage> StartClientMessagePtr;
+
+
+	/**
+	Client connected to network server
+	*/
+	class ClientConnectedMessage : public BaseMessage
+	{
+	public:
+		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(name), m_ClientPort(client_port){}
+		  
+		 std::string GetClientName() const {return m_Name;}
+	private:
+		std::string m_Name;
+		int m_ClientPort;
+	};
+	typedef boost::shared_ptr<ClientConnectedMessage> ClientConnectedMessagePtr;
+
+
+	/**
+	Server response to network client
+	*/
+	class ServerResponseMessage : public BaseMessage
+	{
+	public:
+		ServerResponseMessage(const std::string server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(server_name), m_ServerPort(server_port), m_PingTime(ping_time){}
+		  
+		 std::string GetServerName() const {return m_Name;}
+		 int GetServerPort() const {return m_ServerPort;}
+		 float GetServerPingTime() const {return m_PingTime;}
+	private:
+		std::string m_Name;
+		int m_ServerPort;
+		float m_PingTime;
+	};
+	typedef boost::shared_ptr<ServerResponseMessage> ServerResponseMessagePtr;
+
+
+	/**
+	Connect to server
+	*/
+	class ConnectToServerMessage : public BaseMessage
+	{
+	public:
+		ConnectToServerMessage(const std::string server_name, int server_port,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_Name(server_name), m_ServerPort(server_port){}
+		  
+		 std::string GetServerName() const {return m_Name;}
+		 int GetServerPort() const {return m_ServerPort;}
+	private:
+		std::string m_Name;
+		int m_ServerPort;
+	};
+	typedef boost::shared_ptr<ConnectToServerMessage> ConnectToServerMessagePtr;
+
+	/**
+	Connect to server
+	*/
+	class PingRequestMessage : public BaseMessage
+	{
+	public:
+		PingRequestMessage(int server_port,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , 
+			  m_ServerPort(server_port){}
+		 int GetServerPort() const {return m_ServerPort;}
+	private:
+		int m_ServerPort;
+	};
+	typedef boost::shared_ptr<PingRequestMessage> PingRequestMessagePtr;
+
+	
+
 }
 #endif

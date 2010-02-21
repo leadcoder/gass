@@ -88,6 +88,8 @@ namespace GASS
 	void RakNetNetworkSystem::OnCreate()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
 	}
 
 	void RakNetNetworkSystem::OnInit(MessagePtr message)
@@ -97,7 +99,24 @@ namespace GASS
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
 
 		RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
-//		RakNet::StringTable::Instance()->AddString("RakNetPlayer", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+
+	}
+
+
+	void RakNetNetworkSystem::OnStartServer(StartServerMessagePtr message)
+	{
+		StartServer(message->GetServerName(),message->GetPort());
+	}
+
+	void RakNetNetworkSystem::OnStartClient(StartClientMessagePtr message)
+	{
+		StartClient(message->GetClientPort(),message->GetServerPort());
+	}
+
+
+	void RakNetNetworkSystem::OnConnectToServer(ConnectToServerMessagePtr message)
+	{
+		ConnectToServer(message->GetServerName(),message->GetServerPort(),0);
 	}
 
 	void RakNetNetworkSystem::OnShutdown(MessagePtr message)
@@ -106,12 +125,11 @@ namespace GASS
 			m_RakPeer->Shutdown(100, 0);
 	}
 
-
-
 	void RakNetNetworkSystem::StartServer(const std::string &name,int port)
 	{
 	    Log::Print("Starting raknet server:%s port:%d",name.c_str(),port);
 		m_IsServer = 1;
+
 		
 		//Anytime we get a new connection, call AddParticipant() on that connection
 		m_ReplicaManager->SetAutoParticipateNewConnections(true);
@@ -141,11 +159,16 @@ namespace GASS
 		Log::Print("Raknet startup done");
 		m_RakPeer->SetMaximumIncomingConnections(MAX_PEERS);
 		Log::Print("Raknet SetMaximumIncomingConnections done");
+
+		//Register update fucntion
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
 
 	void RakNetNetworkSystem::StartClient(int client_port,int server_port)
 	{
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage,0));
 		
 		//Anytime we get a new connection, call AddParticipant() on that connection
 		m_ReplicaManager->SetAutoParticipateNewConnections(true);
@@ -168,6 +191,19 @@ namespace GASS
 		m_RakPeer->Startup(1,0,&socketDescriptor, 1);
 
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
+
+		//Register update fucntion
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+	}
+
+	void RakNetNetworkSystem::Update(double delta)
+	{
+		if(IsServer())
+		{
+			UpdateServer(delta);
+		}
+		else 
+			UpdateClient(delta);
 	}
 
 	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int client_port)
@@ -186,7 +222,6 @@ namespace GASS
 		}
 		return connected;
 	}
-
 
 	ReplicaReturnResult RakNetNetworkSystem::ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller)
 	{
@@ -277,8 +312,12 @@ namespace GASS
 
 				ClientData data;
 				std::string name = p->systemAddress.ToString();
+				int port = p->systemAddress.port;
 				data.IP = name;
 				m_ClientMap[name] = data;
+
+				MessagePtr message (new ClientConnectedMessage(name,port));
+				GetSimSystemManager()->PostMessage(message);
 
 				/*if(m_RemoteCreatePlayers)
 				{
@@ -310,7 +349,6 @@ namespace GASS
 					SerializeServerData(out,m_ServerData);
 					m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,p->systemAddress,false);
 				}
-
 			}
 			else if (p->data[0]==ID_CONNECTION_ATTEMPT_FAILED)
 			{
@@ -321,6 +359,79 @@ namespace GASS
 				RakNet::BitStream remote_data(p->data+1,p->length,false);
 				ReceiveRemoteCommand(&remote_data,p->systemAddress);
 			}*/
+			m_RakPeer->DeallocatePacket(p);
+			p = m_RakPeer->Receive();
+		}
+	}
+
+	void RakNetNetworkSystem::OnPingRequest(PingRequestMessagePtr message)
+	{
+		if(m_RakPeer)
+		{
+			m_RakPeer->Ping("255.255.255.255", message->GetServerPort(), true);
+		}
+	}
+
+
+	void RakNetNetworkSystem::UpdateClient(double delta)
+	{
+		Packet *p;
+		p = m_RakPeer->Receive();
+		while(p)
+		{
+			unsigned char packetIdentifier = ( unsigned char ) p->data[ 0 ];
+			if (p->data[0]==ID_PONG)
+			{
+				RakNetTime time, dataLength;
+				RakNet::BitStream pong( p->data+1, sizeof(RakNetTime), false);
+				pong.Read(time);
+				dataLength = p->length - sizeof(unsigned char) - sizeof(RakNetTime);
+				ServerPingReponse response;
+				//response.IP = m_RakPeer->PlayerIDToDottedIP(p->systemAddress);
+				response.IP = p->systemAddress.ToString();//binaryAddress;
+				response.Port = p->systemAddress.port;
+				response.Ping = RakNet::GetTime()-time;
+				response.Time = time;
+				//printf("Time is %i\n",time);
+				//printf("Ping is %i\n", (unsigned int)(RakNet::GetTime()-time));
+				//printf("Data is %i bytes longIBaseSound.hn", dataLength);
+
+				//m_ServerMap[response.IP] = response;
+
+
+				MessagePtr message(new ServerResponseMessage(response.IP, response.Port, response.Ping));
+				GetSimSystemManager()->PostMessage(message);
+				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
+			}
+			else if(packetIdentifier == ID_START_SCENARIO)
+			{
+				ServerData data;
+				RakNet::BitStream server_data(p->data+1,p->length-1,false);
+				DeserializeServerData(&server_data,&data);
+
+				//MessagePtr message(new ServerMessage(response.IP, response.Port, response.Ping));
+				//load scenario
+
+				//wait for local player?
+
+		/*		if(m_RemoteCreatePlayers)
+				{
+					//Wait for player
+					while(Root::GetPtr()->GetDefaultLocalPlayer() == NULL)
+					{
+						CheckIncomingAndOutgoingObjects();
+						if(p) m_RakPeer->DeallocatePacket(p);
+						p = m_RakPeer->Receive();
+					}
+				}
+				else
+				{
+					//Root::Get().CreateLocalPlayer("LocalKing");
+				}*/
+				//Load level
+				//Root::GetPtr()->GetLevel()->LoadXML(data.MapName);
+			}
+
 			m_RakPeer->DeallocatePacket(p);
 			p = m_RakPeer->Receive();
 		}

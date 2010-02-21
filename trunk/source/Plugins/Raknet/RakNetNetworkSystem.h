@@ -33,6 +33,9 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Scheduling/ITaskListener.h"
+
 
 
 class ReplicaManager;
@@ -72,7 +75,7 @@ namespace GASS
 
 
 
-	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
+	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface, public ITaskListener
 	{
 
 	public:
@@ -87,11 +90,18 @@ namespace GASS
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
-		
 
-	protected:
+	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
+		void OnStartServer(StartServerMessagePtr message);
+		void OnStartClient(StartClientMessagePtr message);
+		void OnConnectToServer(ConnectToServerMessagePtr message);
+		void OnPingRequest(PingRequestMessagePtr message);
+
+		//ITaskListener
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const {return "NETWORK_TASK_GROUP";}
 	private:
 		//Helpers
 		void StartServer(const std::string &name,int port);
@@ -99,6 +109,7 @@ namespace GASS
 		bool ConnectToServer(const std::string &server,int server_port,int client_port);
 		ReplicaReturnResult ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller);
 		void UpdateServer(double delta);
+		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
 

@@ -109,15 +109,53 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 	}
 	//col_sys
 }
+class SimClient
+{
+public:
+	SimClient() : m_IsConnected(false){};
+	virtual ~SimClient(){}
+	bool IsConnected() const {return m_IsConnected;}
+	void OnServerResponse(GASS::MessagePtr message)
+	{
+		GASS::ServerResponseMessagePtr mess = boost::shared_dynamic_cast<GASS::ServerResponseMessage>(message);
+		printf("Client got response from server:%s",mess->GetServerName().c_str());
+		//Connect to server?
+		//try to connect
+		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ClientConnectedMessage(mess->GetServerName(),2002)));
+		m_IsConnected = true;
+	}
+private:
+	bool m_IsConnected;
+};
+
+
+class SimServer
+{
+public:
+	SimServer(){};
+	virtual ~SimServer(){}
+	
+	void OnClientConnected(GASS::MessagePtr message)
+	{
+		GASS::ClientConnectedMessagePtr mess = boost::shared_dynamic_cast<GASS::ClientConnectedMessage>(message);
+		printf("Client connected to server:%s",mess->GetClientName().c_str());
+	}
+};
+
+
 
 int main(int argc, char* argv[])
 {
+	SimServer server;
+	SimClient client;
+
 	std::string plugin_file = "../Configuration/plugins.xml";
 	std::string sys_conf_file ="../Configuration/systems.xml";
 	std::string ctrl_conf_file ="../Configuration/control_settings.xml";
 	std::string scenario_path ="../data/scenarios/ogre_demo_scenario";
 
 	int index = 1;
+	bool is_server = false;
 	//check if arguments are provided 
 	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scenario ../data/scenarios/osg_demo_scenario 
 	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scenario ../data/scenarios/ogre_demo_scenario 
@@ -136,16 +174,43 @@ int main(int argc, char* argv[])
 		{
 			scenario_path = argv[index+1];
 		}
+		else if(_strcmpi(arg, "--IsServer") == 0)
+		{
+			is_server = atoi(argv[index+1]);
+		}
 		index += 2;
 	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
 	GASS::Scenario* scenario = new GASS::Scenario();
 
+	//network settings
+	if(is_server)
+	{
+		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartServerMessage("SimDemoServer",2001)));
+		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, &server, _1 ),&server));
+		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedMessage),callback,0);
+	}
+	else
+	{
+		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnServerResponse, &client, _1 ),&client));
+		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ServerResponseMessage),callback,0);
+		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
+		
+		printf("\n\nWaiting for server");
+		float update_time = 0;
+		while(!client.IsConnected())
+		{
+			engine->Update(update_time);
+			engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));
+			update_time += 1.0;
+			Sleep(1000);
+			printf(".");
+			//send ping request
+		}
+	}
 	//CreateManualObject();
-	
 	scenario->Load(scenario_path);
-
 
 	for(int i = 0; i < 1; i++)
 	{

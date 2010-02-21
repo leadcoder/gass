@@ -180,12 +180,14 @@ namespace GASS
 		int width = message->GetWidth();
 		int handel = message->GetHandle();
 
-		if(m_Window == NULL) // first window
+		
 		{
 			int main_handel = message->GetMainHandle();
 			Ogre::NameValuePairList miscParams;
 			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handel);
-			m_Window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
+			Ogre::RenderWindow *window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
+
+			
 
 			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
@@ -194,14 +196,19 @@ namespace GASS
 			cam->setNearClipDistance(0.02f);
 			cam->setFarClipDistance(5000);
 			// Create one viewport, entire window
-			Viewport *vp = m_Window->addViewport(cam);
+			Viewport *vp = window->addViewport(cam);
 			vp->setBackgroundColour(ColourValue(0.5,0,0));
 			// Alter the camera aspect ratio to match the viewport
 			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handel,main_handel));
-			GetSimSystemManager()->SendImmediate(window_msg);
+			if(m_Window == NULL) // first window
+			{
+				m_Window = window;
+				MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handel,main_handel));
+				GetSimSystemManager()->SendImmediate(window_msg);
+			}
 		}
+		
 	}
 
 	void OgreGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)

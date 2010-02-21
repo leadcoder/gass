@@ -30,8 +30,8 @@
   </PhysicsSystem>
   <InputSystem type="OISInputSystem">
   </InputSystem>
-  <InputSystem type="RakNetNetworkSystem">
-  </InputSystem>
+  <NetworkSystem type="RakNetNetworkSystem">
+  </NetworkSystem>
   <CollisionSystem type="ODECollisionSystem">
   </CollisionSystem>
   <SoundSystem type="OpenALSoundSystem">
