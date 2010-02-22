@@ -51,8 +51,8 @@ namespace GASS
 	{
 		m_ScenarioPath = scenario_path;
 
-		//MessagePtr system_msg(new ScenarioAboutToLoadNotifyMessage(shared_from_this()));
-		//SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
+		MessagePtr system_msg(new ScenarioAboutToLoadNotifyMessage(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)

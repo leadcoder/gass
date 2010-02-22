@@ -110,7 +110,7 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 	//col_sys
 }
 
-GASS::Scenario* scenario = new GASS::Scenario();
+GASS::ScenarioPtr scenario(new GASS::Scenario());
 
 class SimClient
 {
@@ -124,7 +124,7 @@ public:
 		printf("Client got response from server:%s",mess->GetServerName().c_str());
 		//Connect to server?
 		//try to connect
-		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ClientConnectedMessage(mess->GetServerName(),2002)));
+		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2001)));
 		m_IsConnected = true;
 	}
 	void OnLoadScenario(GASS::MessagePtr message)

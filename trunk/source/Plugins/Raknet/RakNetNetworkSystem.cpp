@@ -389,6 +389,7 @@ namespace GASS
 				break;
 			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,sa,false);
 		}
+		m_ScenarioIsRunning = true;
 	}
 
 
