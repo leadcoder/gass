@@ -264,8 +264,9 @@ MovableTextOverlayAttributes::MovableTextOverlayAttributes(const Ogre::String & 
 
 MovableTextOverlayAttributes::~MovableTextOverlayAttributes()
 {
-	setFontName("");
-	setMaterialName("");
+	//don't free resources, exception when loading/reloading TextCompoenents (font texture can not be found.)
+	//setFontName("");
+	//setMaterialName("");
 }
 
 void MovableTextOverlayAttributes::setFontName(const Ogre::String & fontName)
