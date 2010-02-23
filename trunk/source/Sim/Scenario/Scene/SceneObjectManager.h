@@ -56,9 +56,10 @@ namespace GASS
 		void Clear();
 		void DeleteObject(SceneObjectPtr obj);
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
+		void LoadObject(SceneObjectPtr obj);
 	protected:
 		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
-		void LoadObject(SceneObjectPtr obj);
+		
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);

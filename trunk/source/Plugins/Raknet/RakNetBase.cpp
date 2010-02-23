@@ -21,10 +21,7 @@
 
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
-#include "Replica.h"
-#include "StringTable.h"
-#include "BitStream.h"
-#include "GetTime.h"
+
 
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
@@ -125,6 +122,7 @@ namespace GASS
 		{
 			m_Manager->Construct(m_Replica, false, senderId, true);
 		}
+
 		if(m_TemplateName != "") //check is this a top object
 		{
 			//Create object based on template name

@@ -18,9 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
-#include "Plugins/Raknet/RakNetNetworkSystem.h"
-#include "Plugins/Raknet/RakNetReplicaMember.h"
-#include "Plugins/Raknet/RakNetBase.h"
+#include "Plugins/RakNet/RakNetNetworkSystem.h"
+#include "Plugins/RakNet/RakNetReplicaMember.h"
+#include "Plugins/RakNet/RakNetBase.h"
+#include "Plugins/RakNet/RakNetMessages.h"
 
 #include "RakNetworkFactory.h"
 #include "RakPeerInterface.h"
@@ -241,6 +242,8 @@ namespace GASS
 		{
 			RakNetBase* object = new RakNetBase(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
+			MessagePtr message( new ReplicaCreatedMessage(object));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 		}
 		//if(object)
 		{

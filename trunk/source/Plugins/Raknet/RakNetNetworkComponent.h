@@ -27,11 +27,12 @@
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
-
+#include "Plugins/RakNet/RakNetMessages.h"
 
 namespace GASS
 {
 	class SceneObject;
+	class RakNetBase;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
@@ -44,7 +45,14 @@ namespace GASS
 		virtual void OnCreate();
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		RakNetBase* GetReplica() const {return m_Replica;}
+		void SetReplica(RakNetBase* replica) {m_Replica=replica;}
+		void SetPartId(int id) {m_PartId = id;}
+		int GetPartId() const {return m_PartId;}
 	private:
+		void OnNewReplica(ReplicaCreatedMessagePtr message);
+		RakNetBase* m_Replica;
+		int m_PartId;
 	};
 
 	typedef boost::shared_ptr<RakNetNetworkComponent> RakNetNetworkComponentPtr;

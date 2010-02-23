@@ -21,6 +21,8 @@
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -32,6 +34,9 @@
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/RakNet/RaknetNetworkSceneManager.h"
+#include "Plugins/RakNet/RakNetNetworkComponent.h"
+#include "Plugins/RakNet/RakNetBase.h"
+
 
 
 
@@ -40,7 +45,7 @@ namespace GASS
 
 	RaknetNetworkSceneManager::RaknetNetworkSceneManager() :
 		m_Paused(false),
-		m_TaskGroup(PHYSICS_TASK_GROUP),
+		m_TaskGroup(NETWORK_TASK_GROUP),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
 		m_MaxSimSteps(4)
@@ -65,17 +70,48 @@ namespace GASS
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewReplica,ReplicaCreatedMessage,0));
 	}
 
 	void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
 		//Initlize all network components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
+		if(obj->GetObjectUnderRoot() == obj) //root object, generate part id:s for all network components
+		{
+			int id=0;
+			GeneratePartID(obj,id);
+		}
 		assert(obj);
 //		MessagePtr phy_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
 //		obj->SendImmediate(phy_msg);
 	}
 
+	void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)
+	{
+		RakNetBase* replica = message->GetReplica();
+		std::string template_name = replica->GetTemplateName();
+		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
+		if(so)
+		{
+			RakNetNetworkComponentPtr comp = so->GetFirstComponent<RakNetNetworkComponent>();
+			comp->SetReplica(replica);
+			GetScenarioScene()->GetObjectManager()->LoadObject(so);
+		}
+	}
+
+	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id)
+	{
+		RakNetNetworkComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkComponent>();
+		if(comp)
+			comp->SetPartId(id);
+		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
+		while(cc_iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			GeneratePartID(child,++id);
+		}
+	}
 
 	void RaknetNetworkSceneManager::Update(double delta_time)
 	{

@@ -69,38 +69,59 @@ namespace GASS
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
 		{
-			RakNetBase* replica = new RakNetBase(raknet->GetReplicaManager());
-			replica->LocalInit(GetSceneObject());
+			m_Replica = new RakNetBase(raknet->GetReplicaManager());
+			m_Replica->LocalInit(GetSceneObject());
 		}
 		else
 		{
-			if(replica) //top object
+			if(m_Replica) //top object
 			{
 				
 			}
 			else
 			{
 				//Get part of id
-				SceneObjectPtr root = GetSceneObject();
-				while(root->GetParentSceneObject())
-					root = root->GetParentSceneObject();
+				SceneObjectPtr root = GetSceneObject()->GetObjectUnderRoot();
+				//while(root->GetParentSceneObject())
+				//	root = root->GetParentSceneObject();
 				RakNetNetworkComponentPtr top_comp = root->GetFirstComponent<RakNetNetworkComponent>();
 				NetworkID part_of_id = top_comp->GetReplica()->GetPartOfId();
 				int part_id = GetPartId();
-				RakNetBase* replica = raknet->FindReplica(part_of_id,part_id);
-				if(!replica) //not available jet
-					GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnReplicaCreated,ReplicaCreatedMessage,0));
+				m_Replica = raknet->FindReplica(part_of_id,part_id);
+				if(!m_Replica) //not available...jet
+				{
+					SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnNewReplica,ReplicaCreatedMessage,0));
+//					GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnReplicaCreated,ReplicaCreatedMessage,0));
+				}
 			}
 		}
 	}
+
+	void RakNetNetworkComponent::OnNewReplica(ReplicaCreatedMessagePtr message)
+	{
+		RakNetBase* replica = message->GetReplica();
+		SceneObjectPtr root = GetSceneObject()->GetObjectUnderRoot();
+		RakNetNetworkComponentPtr top_comp = root->GetFirstComponent<RakNetNetworkComponent>();
+		NetworkID part_of_id = top_comp->GetReplica()->GetPartOfId();
+		int part_id = GetPartId();
+		if(replica->GetPartId() == part_id && replica->GetPartOfId() == part_of_id)
+		{
+			m_Replica = replica;
+			SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkComponent::OnNewReplica,ReplicaCreatedMessage));
+		}
+	}
+
 
 	void RakNetNetworkComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 	//	message->GetSimSceneManager()->GetScenarioScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 	}
 
-	void RakNetNetworkComponent::OnReplicaCreated(ReplicaCreatedMessagePtr message)
+	/*void RakNetNetworkComponent::OnReplicaCreated(ReplicaCreatedMessagePtr message)
 	{
 		Replica message->
-	}
+	}*/
+
+	
 }
+

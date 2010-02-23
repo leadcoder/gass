@@ -27,6 +27,7 @@
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"
+#include "Plugins/RakNet/RakNetMessages.h"
 
 
 namespace GASS
@@ -46,7 +47,9 @@ namespace GASS
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		void OnNewReplica(ReplicaCreatedMessagePtr message);
 		void SetTaskGroup(TaskGroup value);
+		void GeneratePartID(SceneObjectPtr obj, int &id);
 	private:
 		bool m_Paused;
 		TaskGroup m_TaskGroup;

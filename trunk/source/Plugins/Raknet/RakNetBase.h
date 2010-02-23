@@ -21,12 +21,16 @@
 #ifndef RAKNET_BASE_H
 #define RAKNET_BASE_H
 #include "PacketPriority.h"
+#include "Replica.h"
+#include "StringTable.h"
+#include "BitStream.h"
+#include "GetTime.h"
 //#include "Network/INetworkObject.h"
 #include "Core/Utils/Log.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
-
 #include "RakNetNetworkComponent.h"
+
 
 class ReplicaManager;
 	
@@ -64,6 +68,7 @@ namespace GASS
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
 		NetworkID GetPartOfId(){return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
+		std::string GetTemplateName() {return m_TemplateName;}
 	protected:
 		unsigned char m_DataToReceive;
 		unsigned char m_DataToSend;

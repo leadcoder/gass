@@ -38,13 +38,14 @@
 
 
 
+
 class ReplicaManager;
 class RakPeerInterface;
 
 
 namespace GASS
 {
-	#define MAX_PEERS 64
+#define MAX_PEERS 64
 	struct ServerData;
 	class RakNetBase;
 
@@ -57,21 +58,22 @@ namespace GASS
 	};
 
 
+
 	struct ServerPingReponse
-		{
-			std::string IP;
-			float Time;
-			float Ping;
-			int Port;
-		};
+	{
+		std::string IP;
+		float Time;
+		float Ping;
+		int Port;
+	};
 
-		struct ClientData
-		{
-			std::string IP;
+	struct ClientData
+	{
+		std::string IP;
 
-		};
-		typedef std::map<std::string,ServerPingReponse> ServerReponseMap;
-		typedef std::map<std::string,ClientData> ClientDataMap;
+	};
+	typedef std::map<std::string,ServerPingReponse> ServerReponseMap;
+	typedef std::map<std::string,ClientData> ClientDataMap;
 
 
 
@@ -115,7 +117,7 @@ namespace GASS
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
 
-	
+
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;
 		NetworkIDManager m_NetworkIDManager;

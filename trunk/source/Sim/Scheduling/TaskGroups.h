@@ -29,6 +29,7 @@ namespace GASS
 	static const TaskGroup INPUT_TASK_GROUP = "INPUT_TASK_GROUP";
 	static const TaskGroup SOUND_TASK_GROUP = "SOUND_TASK_GROUP";
 	static const TaskGroup SIM_TASK_GROUP = "SOUND_TASK_GROUP";
+	static const TaskGroup NETWORK_TASK_GROUP = "NETWORK_TASK_GROUP";
 }
 
 
