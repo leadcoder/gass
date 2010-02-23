@@ -236,34 +236,13 @@ namespace GASS
 		// The stringTable system has the limitation that all systems must register all the same strings in the same order.
 		// I could have also used stringCompressor, which would always work but is less efficient to use when we have known strings
 		RakNet::StringTable::Instance()->DecodeString(output, 255, inBitStream);
-
-		//Create template
-		if (strcmp(output, "")==0)
-		{
-
-		}
-		else
-		{
-			//Create object
-		}
-		
-
 		
 		if (strcmp(output, "RakNetBase")==0)
 		{
-		//	object = new RakNetBase();
+			RakNetBase* object = new RakNetBase(m_ReplicaManager);
+			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 		}
-		else if (strcmp(output, "RakNetPlayer")==0)
-		{
-		//	object = new RakNetPlayer();
-		}
-		else
-		{
-			// Unknown string
-			assert(0);
-		}
-
-//		if(object)
+		//if(object)
 		{
 			//object->RemoteInit(inBitStream, timestamp, networkID,senderId, this);
 		}
@@ -520,6 +499,27 @@ namespace GASS
 		return net_obj;
 	}*/
 
+
+	RakNetBase* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id)
+	{
+		//Find replica object
+		for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
+		{
+			RakNetReplicaMember *rm = (RakNetReplicaMember *) m_ReplicaManager->GetReplicaAtIndex(index);
+			RakNetBase *rak_base = static_cast<RakNetBase*>(rm->GetParent());
+			if(rak_base)
+			{
+				if(rak_base->GetPartOfId() == part_of_network_id) //we are part of this object
+				{
+					if(rak_base->GetPartId() == part_id) //check that if right child
+					{
+						return rak_base; //Match!
+					}
+				}
+			}
+		}
+		return NULL;
+	}
 
 	void RakNetNetworkSystem::WriteString(const std::string &str,RakNet::BitStream *outBitStream)
 	{

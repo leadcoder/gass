@@ -45,7 +45,7 @@ namespace GASS
 		virtual bool IsMaster();
 		//virtual void CreateaBaseObject();
 		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
-		void LocalInit(RakNetNetworkComponentPtr object);
+		void LocalInit(SceneObjectPtr object);
 		RakNetReplicaMember* GetReplica(){return m_Replica;}
 
 		//Replica member functions
@@ -76,7 +76,7 @@ namespace GASS
 		NetworkID m_PartOfId;
 		RakNetReplicaMember* m_Replica;
 		ReplicaManager* m_Manager;
-		RakNetNetworkComponentPtr m_Owner;
+		SceneObjectPtr m_Owner;
 	protected:
 	};
 }

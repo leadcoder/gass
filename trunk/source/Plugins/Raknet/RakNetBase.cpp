@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 
+#include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 #include "Replica.h"
 #include "StringTable.h"
@@ -54,10 +55,10 @@ namespace GASS
 		}
 	}
 
-	void RakNetBase::LocalInit(RakNetNetworkComponentPtr object)
+	void RakNetBase::LocalInit(SceneObjectPtr object)
 	{
 		m_Owner = object;
-		m_TemplateName = object->GetSceneObject()->GetTemplateName();
+		m_TemplateName = object->GetTemplateName();
 		//m_PartId = object->GetPartId();
 
 		m_Replica = new RakNetReplicaMember();
@@ -71,8 +72,8 @@ namespace GASS
 			if(root_net_obj)
 				m_PartOfId = root_net_obj->GetReplica()->GetNetworkID();
 		}*/
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		SetOwnerSystemAddress(raknet->GetRakPeer()->GetInternalID());
 		if (raknet->IsServer())
 			m_Manager->Construct(m_Replica , false, UNASSIGNED_SYSTEM_ADDRESS, true);
 
@@ -124,6 +125,11 @@ namespace GASS
 		{
 			m_Manager->Construct(m_Replica, false, senderId, true);
 		}
+		if(m_TemplateName != "") //check is this a top object
+		{
+			//Create object based on template name
+			
+		}
 	}
 
 	ReplicaReturnResult RakNetBase::SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp )
@@ -132,17 +138,13 @@ namespace GASS
 		// If we didn't prevent then the object would be created on the system that just sent it to us, then back again, forever in a feedback loop.
 		//if (playerId==m_Owner)
 		//	return REPLICA_PROCESSING_DONE;
-
 		// This string was pre-registered in main with stringTable->AddString so we can send it with the string table and save bandwidth
-
 		RakNet::StringTable::Instance()->EncodeString("RakNetBase", 255, outBitStream);
 		// Write the owner when we construct the object, so we have it right away in order to prevent feedback loops
 		RakNetBase::SendConstruction(outBitStream);
-
 		//send part id
 		return REPLICA_PROCESSING_DONE;
 	}
-
 
 
 	void RakNetBase::SendConstruction(RakNet::BitStream *outBitStream)
@@ -152,7 +154,7 @@ namespace GASS
 		outBitStream->Write(m_PartId);
 		outBitStream->Write(m_PartOfId);
 		//std::string name = m_Owner->GetName();
-		std::string template_name = m_Owner->GetSceneObject()->GetTemplateName();
+		std::string template_name = m_Owner->GetTemplateName();
 		//RakNetNetworkManager::WriteString(name,outBitStream);
 		RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}

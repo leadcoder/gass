@@ -46,6 +46,7 @@ namespace GASS
 {
 	#define MAX_PEERS 64
 	struct ServerData;
+	class RakNetBase;
 
 
 	enum
@@ -87,10 +88,11 @@ namespace GASS
 		bool IsServer() {return  m_IsServer;}
 
 		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
+		RakPeerInterface* GetRakPeer() const {return m_RakPeer;}
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
-
+		RakNetBase* FindReplica(const NetworkID &part_of_network_id,int part_id);
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);

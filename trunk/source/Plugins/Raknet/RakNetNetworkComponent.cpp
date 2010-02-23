@@ -68,7 +68,30 @@ namespace GASS
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
+		{
 			RakNetBase* replica = new RakNetBase(raknet->GetReplicaManager());
+			replica->LocalInit(GetSceneObject());
+		}
+		else
+		{
+			if(replica) //top object
+			{
+				
+			}
+			else
+			{
+				//Get part of id
+				SceneObjectPtr root = GetSceneObject();
+				while(root->GetParentSceneObject())
+					root = root->GetParentSceneObject();
+				RakNetNetworkComponentPtr top_comp = root->GetFirstComponent<RakNetNetworkComponent>();
+				NetworkID part_of_id = top_comp->GetReplica()->GetPartOfId();
+				int part_id = GetPartId();
+				RakNetBase* replica = raknet->FindReplica(part_of_id,part_id);
+				if(!replica) //not available jet
+					GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnReplicaCreated,ReplicaCreatedMessage,0));
+			}
+		}
 	}
 
 	void RakNetNetworkComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -76,4 +99,8 @@ namespace GASS
 	//	message->GetSimSceneManager()->GetScenarioScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 	}
 
+	void RakNetNetworkComponent::OnReplicaCreated(ReplicaCreatedMessagePtr message)
+	{
+		Replica message->
+	}
 }
