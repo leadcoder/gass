@@ -54,6 +54,7 @@ namespace GASS
 
 	RakNetNetworkSystem::RakNetNetworkSystem() : m_IsServer(0),
 		m_ReplicaManager (new ReplicaManager()),
+		m_NetworkIDManager(new NetworkIDManager()),
 		m_ServerPort (60005),
 		m_ClientPort (60006),
 		//m_UseP2P(false),
@@ -79,6 +80,7 @@ namespace GASS
 		delete m_ReplicaManager;
 		delete m_ServerData;
 		delete m_ServerDataOnClient;
+		delete m_NetworkIDManager;
 	}
 
 	void RakNetNetworkSystem::RegisterReflection()
@@ -139,10 +141,10 @@ namespace GASS
 		m_ReplicaManager->SetAutoConstructToNewParticipants(true);
 
 		m_ReplicaManager->SetReceiveConstructionCB(this);
-		m_NetworkIDManager.SetIsNetworkIDAuthority(true);
+		m_NetworkIDManager->SetIsNetworkIDAuthority(true);
 		NetworkID::SetPeerToPeerMode(false);
 
-		m_RakPeer->SetNetworkIDManager(&m_NetworkIDManager);
+		m_RakPeer->SetNetworkIDManager(m_NetworkIDManager);
 
 		
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
@@ -180,10 +182,10 @@ namespace GASS
 
 		m_ReplicaManager->SetReceiveConstructionCB(this);
 
-		m_NetworkIDManager.SetIsNetworkIDAuthority(false);
+		m_NetworkIDManager->SetIsNetworkIDAuthority(false);
 		NetworkID::SetPeerToPeerMode(false);
 
-		m_RakPeer->SetNetworkIDManager(&m_NetworkIDManager);
+		m_RakPeer->SetNetworkIDManager(m_NetworkIDManager);
 
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.

@@ -61,15 +61,16 @@ namespace GASS
 		m_Replica = new RakNetReplicaMember();
 		m_Replica->SetParent(this);
 
-		/*m_Replica->SetNetworkIDManager(GetNetworkIDManager());
-		SceneObjectPtr object_root =  object->GetSceneObject()->GetRoot();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		
+		m_Replica->SetNetworkIDManager(raknet->GetNetworkIDManager());
+		SceneObjectPtr object_root =  object->GetObjectUnderRoot();
 		if(object_root)
 		{
-			RakNetBase* root_net_obj = (RakNetBase*) object_root->GetNetworkObject();
+			RakNetNetworkComponentPtr root_net_obj = object_root->GetFirstComponent<RakNetNetworkComponent>();
 			if(root_net_obj)
-				m_PartOfId = root_net_obj->GetReplica()->GetNetworkID();
-		}*/
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+				m_PartOfId = root_net_obj->GetReplica()->GetReplica()->GetNetworkID();
+		}
 		SetOwnerSystemAddress(raknet->GetRakPeer()->GetInternalID());
 		if (raknet->IsServer())
 			m_Manager->Construct(m_Replica , false, UNASSIGNED_SYSTEM_ADDRESS, true);
@@ -93,7 +94,9 @@ namespace GASS
 	{
 		m_Replica = new RakNetReplicaMember;
 		m_Replica->SetParent(this);
-		//m_Replica->SetNetworkIDManager(caller->GetNetworkIDManager());
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		
+		m_Replica->SetNetworkIDManager(raknet->GetNetworkIDManager());
 		// We must set the network ID of all remote objects
 		m_Replica->SetNetworkID(networkID);
 		// Tell the replica manager to create this as an object that originated on a remote node
@@ -102,7 +105,6 @@ namespace GASS
 		m_Manager->SetScope(m_Replica, true, senderId, false);
 		ReceiveConstruction(inBitStream);
 
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if (raknet->IsServer())
 		{
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE

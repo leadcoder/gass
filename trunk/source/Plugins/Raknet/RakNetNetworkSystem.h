@@ -91,6 +91,7 @@ namespace GASS
 
 		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
 		RakPeerInterface* GetRakPeer() const {return m_RakPeer;}
+		NetworkIDManager* GetNetworkIDManager() const{return m_NetworkIDManager;}
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
@@ -120,7 +121,7 @@ namespace GASS
 
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;
-		NetworkIDManager m_NetworkIDManager;
+		NetworkIDManager* m_NetworkIDManager;
 
 		int m_IsServer;
 		//std::string m_ServerIP;

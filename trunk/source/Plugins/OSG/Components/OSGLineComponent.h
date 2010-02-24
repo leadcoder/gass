@@ -28,6 +28,9 @@
 
 #include <osg/Geometry>
 
+#include <osg/Light>
+#include <osg/LightSource>
+
 
 namespace GASS
 {

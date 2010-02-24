@@ -28,6 +28,7 @@
 #include <osg/PositionAttitudeTransform>
 #include <string>
 
+
 namespace GASS
 {
 	class OSGGraphicsSystem;
@@ -55,6 +56,7 @@ namespace GASS
 		void UpdateLightSettings();
 		void UpdateSkySettings();
 
+	
 		//Keep private for now, 
 
 		//Fog

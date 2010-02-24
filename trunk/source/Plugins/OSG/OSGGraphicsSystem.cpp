@@ -202,6 +202,8 @@ namespace GASS
 		//view->setSceneData(scene.get());
 		view->getCamera()->setViewport(new osg::Viewport(x, y, width,height));
 		view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+		view->setLightingMode(osg::View::SKY_LIGHT); 
+		//view->getLight()->setDirection(osg::Vec3(1,1,1));
 
 		/*osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
 

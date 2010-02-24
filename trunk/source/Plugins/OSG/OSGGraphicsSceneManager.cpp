@@ -17,6 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
+
 #include <boost/bind.hpp>
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
@@ -41,8 +43,6 @@
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 
 
-
-
 namespace GASS
 {
 	OSGGraphicsSceneManager::OSGGraphicsSceneManager(void)
@@ -54,7 +54,7 @@ namespace GASS
 		m_FogDensity = 0.01;
 		m_FogColor.Set(1,1,1);
 		m_AmbientColor.Set(1,1,1);
-		
+
 		//Shadows
 		m_ShadowType = "";
 		m_ShadowCasterMaterial = "";
@@ -72,7 +72,7 @@ namespace GASS
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
-	
+
 	}
 
 	void OSGGraphicsSceneManager::RegisterReflection()
@@ -112,15 +112,15 @@ namespace GASS
 		}
 
 		m_SceneTransform->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
-									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
-										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));
+			Math::Deg2Rad(180),osg::Vec3(0,1,0),
+			Math::Deg2Rad(0),osg::Vec3(0,0,1)));
 	}
 
 	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponent<OSGCameraComponent>();
-		
+
 
 		osgViewer::ViewerBase::Views views;
 		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->getViews(views);
@@ -147,21 +147,21 @@ namespace GASS
 	{
 
 	}
-	
+
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
 		std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();//new osg::Group();
 
-	/*	m_RootNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
-									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
-										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
+		/*	m_RootNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
+		Math::Deg2Rad(180),osg::Vec3(0,1,0),
+		Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
 		// Create green Irish sky
 		osg::ClearNode* backdrop = new osg::ClearNode;
 		backdrop->setClearColor(osg::Vec4(0.0f,0.8f,0.0f,1.0f));
 		m_RootNode->addChild(backdrop);
 
-		
+
 
 
 		UpdateShadowSettings();
@@ -181,14 +181,14 @@ namespace GASS
 		scene->SendImmediate(camera_msg);
 		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);
-		
+
 		void* root = static_cast<void*>(m_RootNode.get());
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root));
 		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
-		//osg::ref_ptr<osg::Group> mesh = (osg::Group*) osgDB::readNodeFile("C:/Root/Repo/filtema4/MSI-Projects/GASSData/scenarios/osg/nkpg/models/terrain/tempmaster.ive");
-		//m_RootNode->addChild(mesh);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+
+
 	}
 
 	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
@@ -209,9 +209,9 @@ namespace GASS
 		if(m_FogMode == "Linear")
 		//	m_SceneMgr->setFog(Ogre::FOG_LINEAR, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "Exp")
-			m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+		m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "Exp2")
-			m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+		m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		//else if(m_FogMode == "None")
 		//Set Light color*/
 	}
@@ -220,7 +220,7 @@ namespace GASS
 	{
 		/*if(m_SceneMgr == NULL) return;
 		if(m_SkyboxMaterial != "")
-			m_SceneMgr->setSkyBox(true, m_SkyboxMaterial, 50);*/
+		m_SceneMgr->setSkyBox(true, m_SkyboxMaterial, 50);*/
 	}
 
 	void OSGGraphicsSceneManager::UpdateLightSettings()
@@ -239,84 +239,87 @@ namespace GASS
 	}
 
 
+
+
 	void OSGGraphicsSceneManager::UpdateShadowSettings()
 	{
 		/*if(m_SceneMgr == NULL) return;
 		bool isOpenGL;
 		if(Root::getSingleton().getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 		{
-			isOpenGL = true;
+		isOpenGL = true;
 		}
 		else
 		{
-			isOpenGL = false;
+		isOpenGL = false;
 		}
 		bool tex_shadow = false;
 		if(m_ShadowType == "AdditiveIntegratedTextureShadows")
 		{
-			tex_shadow = true;
-			if(isOpenGL)
-				m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
-			else m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-			//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-			//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
-			//sm->setShadowCasterRenderBackFaces(true);
+		tex_shadow = true;
+		if(isOpenGL)
+		m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
+		else m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
+		//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
+		//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
+		m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
+		//sm->setShadowCasterRenderBackFaces(true);
 
-			//sm->setShadowCasterRenderBackFaces(false);
-			//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
+		//sm->setShadowCasterRenderBackFaces(false);
+		//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
 		}
 
 		if(m_ShadowType == "TextureShadowsAdditive")
 		{
-			tex_shadow = true;
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
-			m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
-			m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+		tex_shadow = true;
+		m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
+		m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
+		m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
 
 		}
 		if(m_ShadowType == "TextureShadowsModulative")
 		{
-			tex_shadow = true;
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-			m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
-			m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+		tex_shadow = true;
+		m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+		m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
+		m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
 		}
 
 		if(tex_shadow)
 		{
-			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
-			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
-			m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
-			//sm->setShadowTextureCasterMaterial("DepthShadowmap_Caster_Float");
-			if(m_ShadowCasterMaterial != "")
-			{
+		m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
+		m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
+		m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
+		//sm->setShadowTextureCasterMaterial("DepthShadowmap_Caster_Float");
+		if(m_ShadowCasterMaterial != "")
+		{
 
-				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial);
-			}
+		m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial);
+		}
 
-			ShadowCameraSetupPtr currentShadowCameraSetup;
-			if(m_ShadowProjType == "LiSPSM")
-			{
-				m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
-				currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
-				m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
-			}
-			else if (m_ShadowProjType == "Uniform")
-			{
-				currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
-				m_SceneMgr->setShadowCasterRenderBackFaces(false);
-			}
-			else if (m_ShadowProjType == "UniformFocused")
-				currentShadowCameraSetup = ShadowCameraSetupPtr(new Ogre::FocusedShadowCameraSetup());
-			else
-				Log::Error("Undefined projection %s",m_ShadowProjType.c_str());
+		ShadowCameraSetupPtr currentShadowCameraSetup;
+		if(m_ShadowProjType == "LiSPSM")
+		{
+		m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
+		currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
+		m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
+		}
+		else if (m_ShadowProjType == "Uniform")
+		{
+		currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
+		m_SceneMgr->setShadowCasterRenderBackFaces(false);
+		}
+		else if (m_ShadowProjType == "UniformFocused")
+		currentShadowCameraSetup = ShadowCameraSetupPtr(new Ogre::FocusedShadowCameraSetup());
+		else
+		Log::Error("Undefined projection %s",m_ShadowProjType.c_str());
 		//	else if (m_ShadowProjType == "PlaneOptimal")
 		//		currentShadowCameraSetup = Ogre::ShadowCameraSetupPtr(new Ogre::PlaneOptimalShadowCameraSetup(mPlane));
-			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
+		m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);*/
 	}
+
 }
 
 

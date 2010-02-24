@@ -47,6 +47,8 @@
         <Armor value="50"/>
         <DamageMesh value="JIM_TANK_hull_demolished.mesh"/>
       </HullArmor>
+      <NetworkComp type="NetworkComponent">
+      </NetworkComp>
     </Components>
     <ComponentContainers>
       <JimTankDriverCameraObject type ="SceneObjectTemplate">

@@ -163,6 +163,7 @@ int main(int argc, char* argv[])
 	std::string ctrl_conf_file ="../Configuration/control_settings.xml";
 	std::string scenario_path ="../data/scenarios/ogre_demo_scenario";
 
+
 	int index = 1;
 	bool is_server = false;
 	//check if arguments are provided 
@@ -191,6 +192,8 @@ int main(int argc, char* argv[])
 	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
+	engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
+			
 	
 	//network settings
 	if(is_server)
@@ -205,7 +208,6 @@ int main(int argc, char* argv[])
 
 		for(int i = 0; i < 1; i++)
 		{
-			engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
 			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 			if(scene_object)
 			{
@@ -247,7 +249,7 @@ int main(int argc, char* argv[])
 		float update_time = 0;
 		while(!client.IsConnected())
 		{
-			engine->Update(update_time);
+			engine->Update(update_time); //update engine (need to process messages)
 			engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));
 			update_time += 1.0;
 			Sleep(1000);

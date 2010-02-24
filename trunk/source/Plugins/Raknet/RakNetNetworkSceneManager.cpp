@@ -59,7 +59,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 
@@ -143,12 +143,7 @@ namespace GASS
 	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
 		ScenarioScenePtr scene = message->GetScenarioScene();
-
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
-	
-
-	
 	}
 
 	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
