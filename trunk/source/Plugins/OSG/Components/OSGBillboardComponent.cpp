@@ -118,7 +118,7 @@ namespace GASS
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
-	
+		//m_OSGBillboard->setNodeMask();
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const

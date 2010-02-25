@@ -343,8 +343,8 @@ namespace GASS
 	void OSGLocationComponent::OnVisibilityMessage(VisibilityMessagePtr message)
 	{
 		bool visibility = message->GetValue();
-		if(visibility) 
-			m_TransformNode->setNodeMask(1);
+		if(visibility)  
+			m_TransformNode->setNodeMask(1); //TODO:Change this to keep old flags
 		else m_TransformNode->setNodeMask(0);
 	}
 

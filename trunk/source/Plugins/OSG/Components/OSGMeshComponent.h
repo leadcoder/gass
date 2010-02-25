@@ -169,16 +169,17 @@ namespace GASS
 	protected:
 		void SetFilename(const std::string &filename) {m_Filename = filename;}
 		bool GetCastShadow()const {return m_CastShadow;}
-		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
+		void SetCastShadow(bool value);
+		bool GetReceiveShadow()const {return m_ReceiveShadow;}
+		void SetReceiveShadow(bool value);
 		void GetMeshData(MeshDataPtr mesh_data);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		std::string m_Filename;
 		bool m_CastShadow;
+		bool m_ReceiveShadow;
 		osg::ref_ptr<osg::Group> m_MeshNode;
-		//bool checkDrawable(osg::Geode *geode);
 		AABox m_BBox;
-	 
 	};
 }
 

@@ -49,6 +49,8 @@ namespace GASS
 		Vec3 GetDiffuse()const {return m_Diffuse;}
 		void SetSpecular(const Vec3 &specular);
 		Vec3 GetSpecular()const {return m_Specular;}
+		void SetAmbient(const Vec3 &ambient);
+		Vec3 GetAmbient()const {return m_Ambient;}
 		void SetCastShadow(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetLightId(int value);
@@ -61,12 +63,14 @@ namespace GASS
 
 		Vec3 m_Diffuse;
 		Vec3 m_Specular;
+		Vec3 m_Ambient;
 		Vec4 m_AttenuationParams;
 		bool m_CastShadow;
 		Vec3 m_SpotParams;
 		int m_LightId;
 
 		osg::ref_ptr<osg::Light> m_OSGLight;
+		osg::ref_ptr<osg::LightSource>  m_OSGLightSource;
 	};
 }
 

@@ -38,7 +38,8 @@ namespace GASS
 
 	OSGLightComponent::OSGLightComponent(): 	m_LightType (LT_DIRECTIONAL),
 		m_Diffuse(1,1,1),
-		m_Specular(0,0,0),
+		m_Specular(1,1,1),
+		m_Ambient(0.7,0.7,0.7),
 		m_AttenuationParams(0,1,0,20),
 		m_CastShadow(true),
 		m_SpotParams(1,30,40),
@@ -56,15 +57,16 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, IComponent>);
 		RegisterProperty<LightType>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType);
-		
+
 
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams);
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams);
 		RegisterProperty<bool>("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow);
 		RegisterProperty<int>("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId);
 
-		RegisterProperty<Vec3>("DiffuseLightColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse);
-		RegisterProperty<Vec3>("SpecularLightColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular);
+		RegisterProperty<Vec3>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse);
+		RegisterProperty<Vec3>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular);
+		RegisterProperty<Vec3>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient);
 	}
 
 	void OSGLightComponent::OnCreate()
@@ -72,28 +74,14 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLoad,LoadGFXComponentsMessage,1));
 	}
 
-
 	void OSGLightComponent::SetLightType(LightType lt)
 	{
 		m_LightType = lt;
-		/*if(m_OgreLight)
-		{
-		if(lt == LT_DIRECTIONAL)
-		m_OgreLight->setType(Ogre::Light::LT_DIRECTIONAL);
-		else if(m_LightType == LT_POINT)
-		m_OgreLight->setType(Ogre::Light::LT_POINT);
-		else if(m_LightType == LT_SPOT)
-		m_OgreLight->setType(Ogre::Light::LT_SPOTLIGHT);
-		}*/
 	}
 
 	void OSGLightComponent::SetAttenuationParams(const Vec4 &params)
 	{
 		m_AttenuationParams = params;
-		/*if(m_OgreLight)
-		{
-		m_OgreLight->setAttenuation(params.x, params.y, params.z, params.w);
-		}*/
 	}
 
 	void OSGLightComponent::SetSpotParams(const Vec3 &params)
@@ -117,15 +105,20 @@ namespace GASS
 	void OSGLightComponent::SetSpecular(const Vec3 &specular)
 	{
 		m_Specular = specular;
-		//if(m_OgreLight)
-		//	m_OgreLight->setSpecularColour(m_Specular.x,m_Specular.y,m_Specular.z);
+		if(m_OSGLight)
+			m_OSGLight->setSpecular(osg::Vec4(m_Specular.x,m_Specular.y,m_Specular.z,1));
+	}
+
+	void OSGLightComponent::SetAmbient(const Vec3 &ambient)
+	{
+		m_Ambient = ambient;
+		if(m_OSGLight)
+			m_OSGLight->setAmbient(osg::Vec4(m_Ambient.x,m_Ambient.y,m_Ambient.z,1));
 
 	}
 	void OSGLightComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
-		//if(m_OgreLight)
-		//	m_OgreLight->setCastShadows(m_CastShadow);
 	}
 
 	void OSGLightComponent::SetLightId(int id)
@@ -137,57 +130,27 @@ namespace GASS
 
 	void OSGLightComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		osg::ref_ptr<osg::LightSource> lightS2 = new osg::LightSource;    
-		  //m_OSGLight = new osg::Light;
-			m_OSGLight = lightS2->getLight();
-		  SetLightId(m_LightId);
 
-		  m_OSGLight->setPosition(osg::Vec4(0.0,0.0,0.0,0.0f));
-		  m_OSGLight->setAmbient(osg::Vec4(0.1f,0.1f,0.1f,0.1f));
-		  m_OSGLight->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-		//  m_OSGLight->setConstantAttenuation(1.0f);
-		  
-		  SetDiffuse(m_Diffuse);
-		  
-		  //m_OSGLight->setDirection(osg::Vec3(0.0f,1.0f,0.0f));
+		m_OSGLight = new osg::Light;
+		m_OSGLightSource = new osg::LightSource;
 
 
-		  
-		  //lightS2->setLight(m_OSGLight);
-		  //lightS2->setLocalStateSetModes(osg::StateAttribute::ON); 
-
-		  OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
-		  //lc->GetOSGNode()->addChild(lightS2);
-
-		  OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
-			osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
-			root_node ->addChild(lightS2);
-		
-    
-    //myLight2->setDiffuse(osg::Vec4(0.0f,1.0f,1.0f,1.0f));
-    //myLight2->setConstantAttenuation(1.0f);
-    //myLight2->setLinearAttenuation(2.0f/modelSize);
-    //myLight2->setQuadraticAttenuation(2.0f/osg::square(modelSize));
-
-		/*OSGGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
-		//assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
-
-		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
-		m_OgreLight = sm->createLight(m_Name);
-		lc->GetOgreNode()->attachObject(m_OgreLight);
-
-
-		SetLightType(m_LightType);
-		SetAttenuationParams(m_AttenuationParams);
-		SetCastShadow(m_CastShadow);
+		//udpate osg
+		SetLightId(m_LightId);
 		SetDiffuse(m_Diffuse);
+		SetAmbient(m_Ambient);
 		SetSpecular(m_Specular);
-		SetSpotParams(m_SpotParams);
 
-		m_OgreLight->setVisible(true);
-		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
-		//m_OgreLight->setDirection(0,1,0);*/
+		m_OSGLightSource->setLight(m_OSGLight);
+		m_OSGLightSource->setLocalStateSetModes(osg::StateAttribute::ON); 
+
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		lc->GetOSGNode()->addChild(m_OSGLightSource);
+
+		//Always global light?
+		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
+		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
+		root_node->getOrCreateStateSet()->setAssociatedModes(m_OSGLight, osg::StateAttribute::ON);
 
 	}
 }

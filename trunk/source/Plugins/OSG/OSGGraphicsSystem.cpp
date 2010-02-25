@@ -65,6 +65,9 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 
 namespace GASS
 {
+
+	int OSGGraphicsSystem::m_ReceivesShadowTraversalMask = 0x40;
+	int OSGGraphicsSystem::m_CastsShadowTraversalMask = 0x80;
 	OSGGraphicsSystem::OSGGraphicsSystem(void) 
 	{
 
@@ -229,6 +232,8 @@ namespace GASS
 		near_clip,far_clip);
 		}*/
 		view->getCamera()->setGraphicsContext(gc.get());
+		view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+
 		// add the state manipulator
 		//  osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
 		// statesetManipulator->setStateSet(view->getCamera()->getOrCreateStateSet());

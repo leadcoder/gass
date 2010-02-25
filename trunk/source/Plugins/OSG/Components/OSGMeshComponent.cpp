@@ -31,6 +31,8 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
+
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 
 #include <osgDB/ReadFile> 
@@ -43,9 +45,10 @@
 namespace GASS
 {
 
-	OSGMeshComponent::OSGMeshComponent()
+	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
+		m_ReceiveShadow  (false)
 	{
-		m_CastShadow = true;
+		
 	}	
 
 	OSGMeshComponent::~OSGMeshComponent()
@@ -58,6 +61,30 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
 		RegisterProperty<std::string>("Filename", &GetFilename, &SetFilename);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
+		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
+	}
+
+
+	void OSGMeshComponent::SetCastShadow(bool value)
+	{
+		m_CastShadow = value;
+		if(m_CastShadow && m_MeshNode.valid())
+			m_MeshNode->setNodeMask(OSGGraphicsSystem::m_CastsShadowTraversalMask | m_MeshNode->getNodeMask());
+		else if(m_MeshNode.valid())
+		{
+			m_MeshNode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_MeshNode->getNodeMask());
+		}
+	}
+
+	void OSGMeshComponent::SetReceiveShadow(bool value)
+	{
+		m_ReceiveShadow = value;
+		if(m_ReceiveShadow && m_MeshNode.valid())
+			m_MeshNode->setNodeMask(OSGGraphicsSystem::m_ReceivesShadowTraversalMask | m_MeshNode->getNodeMask());
+		else if(m_MeshNode.valid())
+		{
+			m_MeshNode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & m_MeshNode->getNodeMask());
+		}
 	}
 
 	void OSGMeshComponent::OnCreate()
@@ -99,6 +126,10 @@ namespace GASS
 
 			osgUtil::Optimizer optimizer;
 		    optimizer.optimize(m_MeshNode.get());
+
+			SetCastShadow(m_CastShadow);
+			SetReceiveShadow(m_ReceiveShadow);
+			
 
 			//OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 			//gfx_sys->Update

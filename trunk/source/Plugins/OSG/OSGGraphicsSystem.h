@@ -46,8 +46,8 @@ namespace GASS
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-
-
+		static int m_ReceivesShadowTraversalMask;
+		static int m_CastsShadowTraversalMask;
 	protected:
 		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
@@ -60,11 +60,13 @@ namespace GASS
                  int x, int y, int width, int height);
 		void SetActiveData(osg::Group* root);
 		void OnInit(MessagePtr message);		
+		
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
 		osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;
 		osg::Group* m_Root;
 		bool m_CreateMainWindowOnInit;
+		
 	};
 	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef boost::weak_ptr<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

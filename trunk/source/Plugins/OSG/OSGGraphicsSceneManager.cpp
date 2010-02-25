@@ -25,6 +25,17 @@
 #include <osgUtil/Optimizer>
 #include <osgDB/ReadFile> 
 
+
+#include <osgShadow/ShadowedScene>
+#include <osgShadow/ShadowVolume>
+#include <osgShadow/ShadowTexture>
+#include <osgShadow/ShadowMap>
+#include <osgShadow/SoftShadowMap>
+#include <osgShadow/ParallelSplitShadowMap>
+#include <osgShadow/LightSpacePerspectiveShadowMap>
+#include <osgShadow/StandardShadowMap>
+
+
 #include "Core/Common.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -45,7 +56,7 @@
 
 namespace GASS
 {
-	OSGGraphicsSceneManager::OSGGraphicsSceneManager(void)
+	OSGGraphicsSceneManager::OSGGraphicsSceneManager(void):  m_Fog(new osg::Fog())
 	{
 		m_FogStart = 200;
 		m_FogEnd = 400;
@@ -72,7 +83,7 @@ namespace GASS
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
-
+		
 	}
 
 	void OSGGraphicsSceneManager::RegisterReflection()
@@ -148,11 +159,63 @@ namespace GASS
 
 	}
 
+	osg::ref_ptr<osgShadow::ShadowedScene> shadowedScene;
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
 		std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();//new osg::Group();
 
+		shadowedScene = new osgShadow::ShadowedScene;
+		
+		//osg::ref_ptr<osgShadow::StandardShadowMap> st = new osgShadow::StandardShadowMap;
+        //shadowedScene->setShadowTechnique(st.get());
+
+
+		shadowedScene->setReceivesShadowTraversalMask(OSGGraphicsSystem::m_ReceivesShadowTraversalMask);
+		shadowedScene->setCastsShadowTraversalMask(OSGGraphicsSystem::m_CastsShadowTraversalMask);
+
+		// pssm isn't yet thread safe
+        /*OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+
+        int mapcount = 4;
+        osg::ref_ptr<osgShadow::ParallelSplitShadowMap> pssm = new osgShadow::ParallelSplitShadowMap(NULL,mapcount);
+
+        int mapres = 1024;
+        pssm->setTextureResolution(mapres);
+
+		pssm->setMaxFarDistance(100);
+		pssm->setMoveVCamBehindRCamFactor(1);
+		pssm->setMinNearDistanceForSplits(10);
+        
+        double polyoffsetfactor = pssm->getPolygonOffset().x();
+        double polyoffsetunit   = pssm->getPolygonOffset().y();
+        pssm->setPolygonOffset(osg::Vec2(0.1,0.1)); 
+        shadowedScene->setShadowTechnique(pssm.get());*/
+
+
+		osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
+        //sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
+        //sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
+        sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
+        shadowedScene->setShadowTechnique( sm.get() );
+        if( sm.valid() ) 
+        {
+        
+            float minLightMargin = 20.f;
+            float maxFarPlane = 500;
+            unsigned int texSize = 1024;
+            unsigned int baseTexUnit = 0;
+            unsigned int shadowTexUnit = 1;
+
+            sm->setMinLightMargin( minLightMargin );
+            sm->setMaxFarPlane( maxFarPlane );
+            sm->setTextureSize( osg::Vec2s( texSize, texSize ) );
+            sm->setShadowTextureCoordIndex( shadowTexUnit );
+            sm->setShadowTextureUnit( shadowTexUnit );
+            sm->setBaseTextureCoordIndex( baseTexUnit );
+            sm->setBaseTextureUnit( baseTexUnit );
+        } 
+		shadowedScene->addChild(m_RootNode);
 		/*	m_RootNode->setAttitude(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 		Math::Deg2Rad(180),osg::Vec3(0,1,0),
 		Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
@@ -169,6 +232,15 @@ namespace GASS
 		UpdateLightSettings();
 		UpdateFogSettings();
 
+		//add and enable fog
+		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
+		state->setAttributeAndModes(m_Fog.get());
+		short attr = osg::StateAttribute::ON;
+		state->setMode(GL_FOG, attr);
+		m_RootNode->setStateSet(state);
+
+
+
 		ScenarioScenePtr scene = GetScenarioScene();
 		assert(scene);
 		//m_GFXSystem->SetActiveSceneManger(m_SceneMgr);
@@ -181,12 +253,18 @@ namespace GASS
 		scene->SendImmediate(camera_msg);
 		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);
+		
 
 		void* root = static_cast<void*>(m_RootNode.get());
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root));
 		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
-		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+		if(shadowedScene.valid())
+		{
+			OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(shadowedScene.get());
+		}
+		else
+			OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 
 
 	}
@@ -204,16 +282,21 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{
-		/*if(m_SceneMgr == NULL) return;
-		ColourValue fogColour(m_FogColor.x, m_FogColor.y, m_FogColor.z);
+		m_Fog->setColor(osg::Vec4(m_FogColor.x, m_FogColor.y, m_FogColor.z,1));
+		m_Fog->setDensity(m_FogDensity);
+		m_Fog->setEnd(m_FogEnd);
+		m_Fog->setStart(m_FogStart);
 		if(m_FogMode == "Linear")
-		//	m_SceneMgr->setFog(Ogre::FOG_LINEAR, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+			m_Fog->setMode(osg::Fog::LINEAR);
 		else if(m_FogMode == "Exp")
-		m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+			m_Fog->setMode(osg::Fog::EXP);
 		else if(m_FogMode == "Exp2")
-		m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		//else if(m_FogMode == "None")
-		//Set Light color*/
+			m_Fog->setMode(osg::Fog::EXP2);
+
+
+		
+
+
 	}
 
 	void OSGGraphicsSceneManager::UpdateSkySettings()

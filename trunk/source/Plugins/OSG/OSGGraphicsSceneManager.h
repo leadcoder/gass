@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include <osg/Node>
+#include <osg/Fog>
 #include <osg/PositionAttitudeTransform>
 #include <string>
 
@@ -130,6 +131,7 @@ namespace GASS
 		//osg::ref_ptr<osg::Group> m_RootNode;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_RootNode;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_SceneTransform;
+		osg::ref_ptr<osg::Fog> m_Fog;
 	};
 	typedef boost::shared_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
