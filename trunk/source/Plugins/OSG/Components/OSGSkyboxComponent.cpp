@@ -31,11 +31,11 @@
 #include <osg/StateSet>
 #include <osg/TexMat>
 #include <osg/TexGen>
+#include <osg/Material>
 #include <osg/TexEnvCombine>
 #include <osg/ShapeDrawable>
 #include <osgUtil/CullVisitor>
-
-
+#include <osgShadow/ShadowTechnique>
 
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -90,7 +90,7 @@ namespace GASS
 	void OSGSkyboxComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
-		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
+		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		root_node->addChild(CreateSkyBox());
 
 
@@ -196,7 +196,7 @@ namespace GASS
 		  osg::TexMat& _texMat;
 	};
 
-	class MoveEarthySkyWithEyePointTransform : public osg::PositionAttitudeTransform
+	class MyMoveEarthySkyWithEyePointTransform : public osg::PositionAttitudeTransform
 	{
 	public:
 		OSGSkyboxComponent *m_Skybox;
@@ -208,7 +208,7 @@ namespace GASS
 			{
 				Vec3 pos = m_Skybox->GetEyePosition();
 				osg::Vec3 eyePointLocal(pos.x,pos.y,pos.z);// = cv->getEyeLocal();
-				matrix.preMult(osg::Matrixd::translate(eyePointLocal.x(),eyePointLocal.y(),eyePointLocal.z()));
+				matrix.preMult(osg::Matrix::translate(eyePointLocal.x(),eyePointLocal.y(),eyePointLocal.z()));
 				//matrix.preMultTranslate(eyePointLocal);
 			}
 			return true;
@@ -277,9 +277,17 @@ namespace GASS
 		depth->setRange(1.0,1.0);   
 		stateset->setAttributeAndModes(depth, osg::StateAttribute::ON );
 
+		/*osg::ref_ptr<osg::Material> matirial = new osg::Material;
+		matirial->setColorMode(osg::Material::DIFFUSE);
+        matirial->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
+        matirial->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
+        matirial->setShininess(osg::Material::FRONT_AND_BACK, 64.0f);
+        stateset->setAttributeAndModes(matirial.get(), osg::StateAttribute::ON);*/
+
+
 		stateset->setRenderBinDetails(-1,"RenderBin");
 
-		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f,0.0f,0.0f),3));
+		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f,0.0f,0.0f),300));
 
 		osg::Geode* geode = new osg::Geode;
 		geode->setCullingActive(false);
@@ -287,7 +295,7 @@ namespace GASS
 		geode->addDrawable(drawable);
 
 
-		MoveEarthySkyWithEyePointTransform* transform = new MoveEarthySkyWithEyePointTransform;
+		MyMoveEarthySkyWithEyePointTransform* transform = new MyMoveEarthySkyWithEyePointTransform;
 		transform->m_Skybox = this;
 		transform->setCullingActive(false);
 		transform->addChild(geode);
@@ -303,8 +311,6 @@ namespace GASS
 		clearNode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & clearNode->getNodeMask());
 		transform->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & transform->getNodeMask());
 		transform->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & transform->getNodeMask());
-		
-		
 
 		return clearNode;
 	}

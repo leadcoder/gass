@@ -27,6 +27,8 @@
 #include "Sim/Scheduling/ITaskListener.h"
 #include <string>
 #include <osgViewer/Viewer>
+#include <osgShadow/ShadowTechnique>
+
 
 namespace GASS
 {
@@ -41,13 +43,16 @@ namespace GASS
 		SystemType GetSystemType() {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
-		osg::Group* GetActiveData() {return m_Root;}
+		//osg::Group* GetActiveData() {return m_Root;}
 
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
+
+
 		static int m_ReceivesShadowTraversalMask;
 		static int m_CastsShadowTraversalMask;
+
 	protected:
 		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
@@ -60,12 +65,17 @@ namespace GASS
                  int x, int y, int width, int height);
 		void SetActiveData(osg::Group* root);
 		void OnInit(MessagePtr message);		
-		
+		void LoadShadowSettings(TiXmlElement *shadow_elem);
+		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
+		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
+		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
 		osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;
-		osg::Group* m_Root;
+		//osg::Group* m_Root;
 		bool m_CreateMainWindowOnInit;
+		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
+		std::string m_ShadowSettingsFile;
 		
 	};
 	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;

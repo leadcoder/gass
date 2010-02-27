@@ -117,14 +117,17 @@ namespace GASS
 	class GFXSceneManagerLoadedNotifyMessage : public BaseMessage
 	{
 	public:
-		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,SenderID sender_id = -1, double delay= 0) : 
+		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), 
-			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) { }
+			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) ,m_ShadowNode(scene_graph_shadow_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
+		  void *GetSceneGraphShadowNode()const {return m_ShadowNode;}
+		  
 		 
 	private:
 		void* m_RootNode;
+		void* m_ShadowNode;
 		std::string m_RenderSystem;
 	};
 	typedef boost::shared_ptr<GFXSceneManagerLoadedNotifyMessage> GFXSceneManagerLoadedNotifyMessagePtr;

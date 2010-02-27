@@ -56,7 +56,7 @@ namespace GASS
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
-		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
+		void SetCastShadow(bool castShadow);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);
 

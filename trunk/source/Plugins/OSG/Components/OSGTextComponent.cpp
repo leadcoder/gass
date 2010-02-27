@@ -36,6 +36,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGTextComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
@@ -118,6 +119,10 @@ namespace GASS
     
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGGeode.get());
+
+		m_OSGGeode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & m_OSGGeode->getNodeMask());
+		m_OSGGeode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_OSGGeode->getNodeMask());
+		
 	}
 
 	void OSGTextComponent::SetFont(const std::string &font) 

@@ -33,6 +33,16 @@
 #include <osgGA/StateSetManipulator>
 
 
+#include <osgShadow/ShadowedScene>
+#include <osgShadow/ShadowVolume>
+#include <osgShadow/ShadowTexture>
+#include <osgShadow/ShadowMap>
+#include <osgShadow/SoftShadowMap>
+#include <osgShadow/ParallelSplitShadowMap>
+#include <osgShadow/LightSpacePerspectiveShadowMap>
+#include <osgShadow/StandardShadowMap>
+
+
 #if defined(WIN32) && !defined(__CYGWIN__) 
 #include <osgViewer/api/Win32/GraphicsWindowWin32> 
 typedef HWND WindowHandle; 
@@ -59,6 +69,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
 #include <osgDB/ReadFile> 
+#include "tinyxml.h"
 
 
 
@@ -68,7 +79,7 @@ namespace GASS
 
 	int OSGGraphicsSystem::m_ReceivesShadowTraversalMask = 0x40;
 	int OSGGraphicsSystem::m_CastsShadowTraversalMask = 0x80;
-	OSGGraphicsSystem::OSGGraphicsSystem(void) 
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml")
 	{
 
 
@@ -83,6 +94,8 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OSGGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OSGGraphicsSystem::SetCreateMainWindowOnInit);
+		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
+		
 		//RegisterProperty<std::string>( "Plugin", NULL, &GASS::OSGGraphicsSystem::AddPlugin);
 	}
 
@@ -113,6 +126,7 @@ namespace GASS
 		m_Viewer = new osgViewer::CompositeViewer();
 
 
+		
 
 
 		if(m_CreateMainWindowOnInit)
@@ -170,9 +184,33 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 
+		//Load shadow settings
+		if(m_ShadowSettingsFile != "")
+		{
+			TiXmlDocument *xmlDoc = new TiXmlDocument(m_ShadowSettingsFile.c_str());
+			if (!xmlDoc->LoadFile())
+			{
+				//Fatal error, cannot load
+				Log::Warning("OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: %s", m_ShadowSettingsFile.c_str());
+			}
+			else
+			{
+				//TiXmlElement *ss= xmlDoc->FirstChildElement("ShadowSettings");
+				TiXmlElement *ss= xmlDoc->FirstChildElement("Systems");
+				if(ss)
+				{
+					ss = ss->FirstChildElement("GraphicsSystem");
+					if(ss)
+						ss = ss->FirstChildElement("ShadowSettings");
+				}
+				LoadShadowSettings(ss);
+			}
+		}
+
+
 		/*osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
 		if (opt == NULL) { 
-			opt = new osgDB::ReaderWriter::Options(); 
+		opt = new osgDB::ReaderWriter::Options(); 
 		} 
 		opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
 		osgDB::Registry::instance()->setOptions(opt); */
@@ -337,6 +375,121 @@ namespace GASS
 	TaskGroup OSGGraphicsSystem::GetTaskGroup() const
 	{
 		return MAIN_TASK_GROUP;
+	}
+
+
+	void OSGGraphicsSystem::LoadShadowSettings(TiXmlElement *shadow_elem)
+	{
+		//Load shadow settings
+		//TiXmlElement *shadow_elem= elem->FirstChildElement("ShadowSettings");
+
+		if(shadow_elem)
+		{
+			std::string type = shadow_elem->Attribute("type");
+			
+			if(type == "ShadowVolume")
+			{
+				GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+				// hint to tell viewer to request stencil buffer when setting up windows
+				osg::DisplaySettings::instance()->setMinimumNumStencilBits(8);
+				osg::ref_ptr<osgShadow::ShadowVolume> sv = new osgShadow::ShadowVolume;
+				sv->setDynamicShadowVolumes(true);
+				//sv->setDrawMode(osgShadow::ShadowVolumeGeometry::STENCIL_TWO_SIDED);
+				//sv->setDrawMode(osgShadow::ShadowVolumeGeometry::STENCIL_TWO_PASS);
+				m_ShadowTechnique  = sv;
+			}
+			else if(type == "ShadowTexture")
+			{
+				osg::ref_ptr<osgShadow::ShadowTexture> st = new osgShadow::ShadowTexture;
+				m_ShadowTechnique  = st;
+			}
+			else if(type == "ShadowMap")
+			{
+				osg::ref_ptr<osgShadow::ShadowMap> sm = new osgShadow::ShadowMap;
+				m_ShadowTechnique = sm;
+			}
+			else if(type == "StandardShadowMap")
+			{
+				osg::ref_ptr<osgShadow::StandardShadowMap> ssm = new osgShadow::StandardShadowMap;
+				m_ShadowTechnique = ssm;
+			}
+			else if(type == "ParallelSplitShadowMap")
+			{
+				// pssm isn't yet thread safe
+				GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+				int mapcount = 4;
+				int mapres = 1024;
+				float maxFarPlane = 200;
+				float minNearDistanceForSplits = 10;
+				float moveVCamBehindRCamFactor = 1;
+				
+				shadow_elem->QueryFloatAttribute("MaxFarDistance",&maxFarPlane);
+				shadow_elem->QueryIntAttribute("TextureSize",&mapres);
+				shadow_elem->QueryIntAttribute("NumCount",&mapcount);
+				shadow_elem->QueryFloatAttribute("MinNearDistanceForSplits",&minNearDistanceForSplits);
+				shadow_elem->QueryFloatAttribute("MoveVCamBehindRCamFactor",&moveVCamBehindRCamFactor);
+				
+				osg::ref_ptr<osgShadow::ParallelSplitShadowMap> pssm = new osgShadow::ParallelSplitShadowMap(NULL,mapcount);
+			
+				pssm->setTextureResolution(mapres);
+				pssm->setMaxFarDistance(maxFarPlane);
+				pssm->setMoveVCamBehindRCamFactor(moveVCamBehindRCamFactor);
+				pssm->setMinNearDistanceForSplits(minNearDistanceForSplits);
+
+				double polyoffsetfactor = pssm->getPolygonOffset().x();
+				double polyoffsetunit   = pssm->getPolygonOffset().y();
+	
+				shadow_elem->QueryDoubleAttribute("PolyOffsetFactor",&polyoffsetfactor);
+				shadow_elem->QueryDoubleAttribute("PolyOffsetUnit",&polyoffsetunit);
+				
+				pssm->setPolygonOffset(osg::Vec2(polyoffsetfactor ,polyoffsetunit )); 
+				m_ShadowTechnique = pssm;
+			}
+			else if(type == "LightSpacePerspectiveShadowMap")
+			{
+				osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
+				
+				std::string sub_type = shadow_elem->Attribute("SubType");
+				if(sub_type == "Draw")
+				{
+					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
+					
+				}
+				else if(sub_type == "Cull")
+					sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
+				else if(sub_type == "Frustum")
+					sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
+				else
+					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
+				
+				if( sm.valid() ) 
+				{
+					//sm->setMainVertexShader( NULL ); 
+					//sm->setShadowVertexShader(NULL);
+					
+					float minLightMargin = 20.f;
+					float maxFarPlane = 500;
+					int texSize = 1024;
+					int baseTexUnit = 0;
+					int shadowTexUnit = 1;
+
+					shadow_elem->QueryFloatAttribute("MinLightMargin",&minLightMargin);
+					shadow_elem->QueryFloatAttribute("MaxFarPlane",&maxFarPlane);
+					shadow_elem->QueryIntAttribute("TextureSize",&texSize);
+					shadow_elem->QueryIntAttribute("BaseTextureUnit",&baseTexUnit);
+					shadow_elem->QueryIntAttribute("ShadowTextureUnit",&shadowTexUnit);
+					
+					sm->setMinLightMargin( minLightMargin );
+					sm->setMaxFarPlane( maxFarPlane );
+					sm->setTextureSize( osg::Vec2s( texSize, texSize ) );
+					sm->setShadowTextureCoordIndex( shadowTexUnit );
+					sm->setShadowTextureUnit( shadowTexUnit );
+					sm->setBaseTextureCoordIndex( baseTexUnit );
+					sm->setBaseTextureUnit( baseTexUnit );
+					m_ShadowTechnique = sm;
+				} 
+			}
+		}
 	}
 }
 

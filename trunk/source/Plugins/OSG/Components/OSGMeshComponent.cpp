@@ -32,14 +32,15 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-
+#include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
 #include <osg/MatrixTransform>
-#include "Plugins/OSG/Components/OSGLocationComponent.h"
-#include "Plugins/OSG/OSGConvert.h"
+#include <osgShadow/ShadowTechnique>
+
 
 
 namespace GASS
@@ -129,12 +130,6 @@ namespace GASS
 
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
-			
-
-			//OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
-			//gfx_sys->Update
-			//m_GFXSceneManager = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-			//osg::ref_ptr<osg::PositionAttitudeTransform> root_node = m_GFXSceneManager->GetOSGRootNode();
 		}
 		else 
 			Log::Error("Failed to find mesh:%s",full_path.c_str());

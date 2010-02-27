@@ -149,7 +149,7 @@ namespace GASS
 
 		//Always global light?
 		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
-		osg::ref_ptr<osg::PositionAttitudeTransform> root_node = scene_man->GetOSGRootNode();
+		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		root_node->getOrCreateStateSet()->setAssociatedModes(m_OSGLight, osg::StateAttribute::ON);
 
 	}

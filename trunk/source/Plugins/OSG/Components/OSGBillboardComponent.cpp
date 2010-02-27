@@ -35,6 +35,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
@@ -43,7 +44,7 @@
 namespace GASS
 {
 
-	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(true),
+	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(false),
 		m_OSGBillboard (NULL),
 		m_Width(1.0f),
 		m_Height(1.0f)
@@ -180,11 +181,19 @@ namespace GASS
 			
 			stateset->setTextureAttributeAndModes(0,texture.get(),osg::StateAttribute::ON);
 			geom->setStateSet(stateset.get());
-
-			
 		}
-
 		return geom;
 	}
 
+
+	void OSGBillboardComponent::SetCastShadow(bool value)
+	{
+		m_CastShadow = value;
+		if(m_CastShadow && m_OSGBillboard.valid())
+			m_OSGBillboard->setNodeMask(OSGGraphicsSystem::m_CastsShadowTraversalMask | m_OSGBillboard->getNodeMask());
+		else if(m_OSGBillboard.valid())
+		{
+			m_OSGBillboard->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_OSGBillboard->getNodeMask());
+		}
+	}
 }

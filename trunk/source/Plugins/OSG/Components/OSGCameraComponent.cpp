@@ -23,6 +23,7 @@
 #include <osgViewer/CompositeViewer>
 #include <osgGA/NodeTrackerManipulator>
 #include <osg/MatrixTransform>
+#include <osgShadow/ShadowTechnique>
 
 #include <GL/gl.h>
 #include <GL/glu.h>

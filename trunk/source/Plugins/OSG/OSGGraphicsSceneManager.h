@@ -29,6 +29,10 @@
 #include <osg/PositionAttitudeTransform>
 #include <string>
 
+namespace osgShadow
+{
+	class ShadowedScene;
+}
 
 namespace GASS
 {
@@ -42,8 +46,9 @@ namespace GASS
 		virtual ~OSGGraphicsSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGRootNode(){return m_RootNode;}
-		osg::ref_ptr<osg::PositionAttitudeTransform> GetSceneTransformatation() {return m_SceneTransform;}
+		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
+		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
+		//osg::ref_ptr<osg::PositionAttitudeTransform> GetSceneTransformatation() {return m_SceneTransform;}
 	protected:
 		void OnLoad(MessagePtr message);		
 		void Update(double delta_time);
@@ -129,9 +134,10 @@ namespace GASS
 		float m_FarShadowDistance;
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		//osg::ref_ptr<osg::Group> m_RootNode;
-		osg::ref_ptr<osg::PositionAttitudeTransform> m_RootNode;
-		osg::ref_ptr<osg::PositionAttitudeTransform> m_SceneTransform;
+		osg::ref_ptr<osg::Group> m_RootNode;
+		//osg::ref_ptr<osg::PositionAttitudeTransform> m_SceneTransform;
 		osg::ref_ptr<osg::Fog> m_Fog;
+		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};
 	typedef boost::shared_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
