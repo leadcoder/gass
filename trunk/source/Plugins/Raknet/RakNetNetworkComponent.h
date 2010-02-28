@@ -21,6 +21,13 @@
 #ifndef RAK_NET_NETWORK_COMPONENT_H
 #define RAK_NET_NETWORK_COMPONENT_H
 
+
+#include "PacketPriority.h"
+#include "Replica.h"
+#include "StringTable.h"
+#include "BitStream.h"
+#include "GetTime.h"
+
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
@@ -35,6 +42,7 @@ namespace GASS
 	class RakNetBase;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef std::vector<NetworkSerializeMessage::NetworkPackage> NetworkPackageVector;
 
 	class RakNetNetworkComponent : public Reflection<RakNetNetworkComponent,BaseSceneComponent>
 	{
@@ -49,10 +57,19 @@ namespace GASS
 		void SetReplica(RakNetBase* replica) {m_Replica=replica;}
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId() const {return m_PartId;}
+		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
+		std::vector<std::string> GetAttributes()const {return m_Attributes;}
+		//NetworkPackageVector GetNetworkPackages() {return m_SerilizePackages;}
+		void Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
+		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
+
 	private:
+		void OnSerialize(NetworkSerializeMessagePtr message);
 		void OnNewReplica(ReplicaCreatedMessagePtr message);
 		RakNetBase* m_Replica;
 		int m_PartId;
+		std::vector<std::string> m_Attributes;
+		NetworkPackageVector m_SerializePackages;
 	};
 
 	typedef boost::shared_ptr<RakNetNetworkComponent> RakNetNetworkComponentPtr;

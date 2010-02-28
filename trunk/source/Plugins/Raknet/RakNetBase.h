@@ -70,6 +70,12 @@ namespace GASS
 		int GetPartId(){return m_PartId;}
 		std::string GetTemplateName() {return m_TemplateName;}
 	protected:
+		AbstractProperty* GetProperty(const std::string &prop_name);
+		void SerializeProperties(RakNet::BitStream *bit_stream);
+	
+
+
+
 		unsigned char m_DataToReceive;
 		unsigned char m_DataToSend;
 		std::string m_TemplateName;

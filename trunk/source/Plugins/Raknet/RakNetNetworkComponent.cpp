@@ -56,12 +56,14 @@ namespace GASS
 	void RakNetNetworkComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("NetworkComponent",new Creator<RakNetNetworkComponent, IComponent>);
+		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkComponent::GetAttributes, &RakNetNetworkComponent::SetAttributes);
 	}
 
 	void RakNetNetworkComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnSerialize,NetworkSerializeMessage,0));
 	}
 
 	void RakNetNetworkComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -117,11 +119,42 @@ namespace GASS
 	//	message->GetSimSceneManager()->GetScenarioScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 	}
 
-	/*void RakNetNetworkComponent::OnReplicaCreated(ReplicaCreatedMessagePtr message)
+	void RakNetNetworkComponent::OnSerialize(NetworkSerializeMessagePtr message)
 	{
-		Replica message->
-	}*/
+		m_SerializePackages.push_back(message->GetPackage());
 
-	
+		//Signal serialize
+	}
+
+	void RakNetNetworkComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
+	{
+		int num_packs = m_SerializePackages.size();
+		outBitStream->Write(num_packs);
+		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		{
+			outBitStream->Write(m_SerializePackages[i].Id);
+			outBitStream->Write(m_SerializePackages[i].Size);
+			outBitStream->Write(m_SerializePackages[i].Data.get(),m_SerializePackages[i].Size);
+		}
+		m_SerializePackages.clear();
+	}
+
+	void RakNetNetworkComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
+	{
+		int num_packs = 0;
+		inBitStream->Read(num_packs);
+		for(int i = 0 ; i < num_packs; i++)
+		{
+			NetworkSerializeMessage::NetworkPackage package;
+			
+			inBitStream->Read(package.Id);
+			inBitStream->Write(package.Size);
+			package.Data = boost::shared_ptr<char>(new char[package.Size]);
+			inBitStream->Read(package.Data.get(),package.Size);
+			//m_SerializePackages.push_back(package);
+			//Post messages
+			GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));
+		}
+	}
 }
 

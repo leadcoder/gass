@@ -40,7 +40,7 @@ namespace GASS
 	class PositionMessage : public BaseMessage
 	{
 	public:
-		
+
 		PositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Position(pos)
 		  {
@@ -54,7 +54,7 @@ namespace GASS
 
 
 	/** \brief: 
-		Rotation (relative to parent) change for SceneObject is requested 
+	Rotation (relative to parent) change for SceneObject is requested 
 	*/
 	class RotationMessage : public BaseMessage
 	{
@@ -205,7 +205,7 @@ namespace GASS
 		  }
 		  Float GetMass()const {return m_Value;}
 	private:
-			Float m_Value;
+		Float m_Value;
 	};
 
 	typedef boost::shared_ptr<PhysicsMassMessage> PhysicsMassMessagePtr;
@@ -238,7 +238,7 @@ namespace GASS
 
 
 	/**
-		Change name of scene object
+	Change name of scene object
 	*/
 	class SceneObjectNameMessage : public BaseMessage
 	{
@@ -356,7 +356,7 @@ namespace GASS
 		  float GetValue()const {return m_Value;}
 		  int GetEmitter()const {return m_Emitter;}
 		  ParticleSystemParameterType GetParameter() const {return m_Parameter;}
-		  
+
 	private:
 		float m_Value;
 		int m_Emitter;
@@ -410,11 +410,11 @@ namespace GASS
 
 
 	/** \brief message data: 
-		Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
-		Vec3 = "Scale"			- Scale is changed for SceneObject
-		Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
+	Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
+	Vec3 = "Scale"			- Scale is changed for SceneObject
+	Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
 	*/
-	
+
 	class TransformationNotifyMessage : public BaseMessage
 	{
 	public:
@@ -477,8 +477,33 @@ namespace GASS
 
 		  }
 	private:
-		
+
 	};
 	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
+
+
+
+	class NetworkSerializeMessage : public BaseMessage
+	{
+
+	public:
+		typedef boost::shared_ptr<char> NetworkDataPtr;
+		struct NetworkPackage
+		{
+			int Id;
+			int Size;
+			NetworkDataPtr Data;
+		};
+		NetworkSerializeMessage(NetworkPackage package, SenderID sender_id = -1, double delay= 0) : 
+		BaseMessage( sender_id , delay), m_Package(package){}
+		NetworkPackage GetPackage() const {return m_Package;}
+	private:
+		NetworkPackage m_Package;
+	};
+	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
+
+
+
+
 
 }

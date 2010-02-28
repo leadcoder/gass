@@ -159,6 +159,65 @@ namespace GASS
 		RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
+	AbstractProperty* RakNetBase::GetProperty(const std::string &prop_name)
+	{
+		m_Owner->GetComponents();
+		IComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
+
+		while(comp_iter.hasMoreElements())
+		{
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
+			if(comp)
+			{				
+				RTTI* pRTTI = comp->GetRTTI();
+				while(pRTTI)
+				{
+					std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+					while(iter != pRTTI->GetProperties()->end())
+					{
+						AbstractProperty * prop = (*iter);
+						if(prop->GetName() == prop_name)
+						{
+							return prop;
+						}
+						iter++;
+					}
+					pRTTI = pRTTI->GetAncestorRTTI();
+				}
+			}
+		}
+		return NULL;
+	}
+
+	
+
+	void RakNetBase::SerializeProperties(RakNet::BitStream *bit_stream)
+	{
+		RakNetNetworkComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+		std::vector<std::string> attributes = nc->GetAttributes();
+		SerialSaver ss(NULL,0);
+		for(int i = 0 ;  i < attributes.size(); i++)
+		{
+			//AbstractProperty * prop = GetProperty(attributes[i]);
+			//prop->Serialize(&ss);
+		}
+		unsigned long size=ss.getLength();
+		unsigned char *buffer=new unsigned char[size];
+		SerialSaver sv(buffer,size);
+
+		for(int i = 0 ;  i < attributes.size(); i++)
+		{
+			//AbstractProperty * prop = GetProperty(attributes[i]);
+			//prop->Serialize(&sv);
+		}
+
+		bit_stream->Write(size);
+		if	(size > 0)
+		{
+			char* send_buf = (char*)(buffer);
+			bit_stream->Write(send_buf,size);
+		}
+	}
 
 	void RakNetBase::ReceiveConstruction(RakNet::BitStream *inBitStream)
 	{
