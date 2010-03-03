@@ -63,7 +63,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadGameComponentsMessage,1));
-			}
+	}
 
 	void RakNetLocationTransferComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
@@ -73,11 +73,12 @@ namespace GASS
 			Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		if(raknet->IsServer())
 		{
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 			
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnSerialize,NetworkSerializeMessage,0));
 		}
 	}
 
@@ -90,16 +91,33 @@ namespace GASS
 
 		NetworkSerializeMessage::NetworkPackage package;
 		package.Id = TRANSFORMATION_DATA;
-		//package.Data = 
-		
+
+
+		//pack position data
+		Vec3 pos = message->GetPosition();
+		package.Data = boost::shared_ptr<char>(new char[sizeof(Vec3)]);
+		*(Vec3*) package.Data.get() = pos;
+		package.Size = sizeof(Vec3);
+
 		MessagePtr serialize_message(new NetworkSerializeMessage(package));
-		
+		GetSceneObject()->SendImmediate(serialize_message);
+
 	}
 
 	void RakNetLocationTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 
 	}
-	
+
+
+	void RakNetLocationTransferComponent::OnSerialize(NetworkSerializeMessagePtr message)
+	{
+		if(message->GetPackage().Id == TRANSFORMATION_DATA)
+		{
+			Vec3 pos = *((Vec3*) message->GetPackage().Data.get());
+			std::cout << pos << std::endl;
+		}
+	}
+
 }
 

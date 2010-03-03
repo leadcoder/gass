@@ -121,7 +121,21 @@ namespace GASS
 
 	void RakNetNetworkComponent::OnSerialize(NetworkSerializeMessagePtr message)
 	{
-		m_SerializePackages.push_back(message->GetPackage());
+		bool found = false;
+		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		{
+			if(m_SerializePackages[i].Id = message->GetPackage().Id)
+			{
+				m_SerializePackages[i] = message->GetPackage();
+				found = true;
+				break;
+			}	
+		}
+		if(!found)
+			m_SerializePackages.push_back(message->GetPackage());
+		
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica->GetReplica(), UNASSIGNED_SYSTEM_ADDRESS, true);
 
 		//Signal serialize
 	}

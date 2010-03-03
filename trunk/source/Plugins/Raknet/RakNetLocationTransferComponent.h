@@ -47,10 +47,12 @@ namespace GASS
 		virtual ~RakNetLocationTransferComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+	private:
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-	private:
+		void OnSerialize(NetworkSerializeMessagePtr message);
+	
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }

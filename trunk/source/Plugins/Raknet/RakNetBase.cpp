@@ -92,7 +92,7 @@ namespace GASS
 
 	void RakNetBase::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
-		m_Replica = new RakNetReplicaMember;
+		m_Replica = new RakNetReplicaMember();
 		m_Replica->SetParent(this);
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
@@ -257,11 +257,17 @@ namespace GASS
 		//if (playerId==m_Owner)
 		//	return REPLICA_PROCESSING_DONE;
 		//outBitStream->Write(testInteger);
+
+		RakNetNetworkComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+		net_obj->Serialize(sendTimestamp, outBitStream, lastSendTime, priority, reliability, currentTime, systemAddress, flags);
 		return REPLICA_PROCESSING_DONE;
 	}
 	ReplicaReturnResult RakNetBase::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
-		inBitStream->Read(m_DataToReceive);
+		//inBitStream->Read(m_DataToReceive);
+
+		RakNetNetworkComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+		net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
 		// If this is a server
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if (raknet->IsServer())

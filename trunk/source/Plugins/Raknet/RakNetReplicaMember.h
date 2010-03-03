@@ -1,4 +1,9 @@
+#ifndef REPLICA_MEMBER_H
+#define REPLICA_MEMBER_H
+
 #include "Replica.h"
+
+
 
 // An implementation of Replica that passes all calls up to a parent class
 // Used if I don't want my game class to inherit from Replica
@@ -19,3 +24,4 @@ namespace GASS
 		virtual int GetSortPriority(void) const {return 0;}
 	};
 }
+#endif

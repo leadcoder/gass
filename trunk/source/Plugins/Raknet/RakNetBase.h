@@ -30,15 +30,13 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
 #include "RakNetNetworkComponent.h"
+#include "RakNetReplicaMember.h"
 
 
 class ReplicaManager;
 	
 namespace GASS
 {
-	class RakNetReplicaMember;
-	
-	
 
 	class RakNetBase 
 	{
