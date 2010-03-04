@@ -26,6 +26,9 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scenario/Scenario.h"
+#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "RakNetBase.h"
 #include "RakNetNetworkSystem.h"
@@ -128,6 +131,7 @@ namespace GASS
 		if(m_TemplateName != "") //check is this a top object
 		{
 			//Create object based on template name
+			raknet->GetScene()->GetObjectManager()->LoadFromTemplate(m_TemplateName);
 			
 		}
 	}
@@ -265,15 +269,17 @@ namespace GASS
 	ReplicaReturnResult RakNetBase::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
 		//inBitStream->Read(m_DataToReceive);
-
-		RakNetNetworkComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
-		net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
-		// If this is a server
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		if (raknet->IsServer())
+		if(m_Owner)
 		{
-			// Synchronisation events should be forwarded to other clients
-			m_Manager->SignalSerializeNeeded(m_Replica, systemAddress, true);
+			RakNetNetworkComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+			net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
+			// If this is a server
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			if (raknet->IsServer())
+			{
+				// Synchronisation events should be forwarded to other clients
+				m_Manager->SignalSerializeNeeded(m_Replica, systemAddress, true);
+			}
 		}
 		//raknet->GetReplicaManager()->SignalSerializeNeeded(this, playerId, true);
 		return REPLICA_PROCESSING_DONE;

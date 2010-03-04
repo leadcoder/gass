@@ -96,6 +96,7 @@ namespace GASS
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
 		RakNetBase* FindReplica(const NetworkID &part_of_network_id,int part_id);
+		ScenarioScenePtr GetScene() {return ScenarioScenePtr(m_Scene);}
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -117,6 +118,7 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
+		void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
 
 
 		ReplicaManager* m_ReplicaManager;
@@ -137,6 +139,7 @@ namespace GASS
 		bool m_AcceptLateJoin;
 		bool m_ScenarioIsRunning;
 		ClientDataMap m_ClientMap;
+		ScenarioSceneWeakPtr m_Scene;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

@@ -67,6 +67,7 @@ namespace GASS
 		NetworkID GetPartOfId(){return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
 		std::string GetTemplateName() {return m_TemplateName;}
+		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
 	protected:
 		AbstractProperty* GetProperty(const std::string &prop_name);
 		void SerializeProperties(RakNet::BitStream *bit_stream);

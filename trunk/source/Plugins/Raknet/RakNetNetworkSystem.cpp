@@ -93,6 +93,12 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
+	}
+
+	void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
+	{
+		m_Scene = message->GetScenarioScene();
 	}
 
 	void RakNetNetworkSystem::OnInit(MessagePtr message)
@@ -360,6 +366,7 @@ namespace GASS
 	void RakNetNetworkSystem::OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message)
 	{
 		m_ServerData->MapName =	message->GetScenario()->GetPath();
+		
 		
 		RakNet::BitStream out;
 		out.Reset();

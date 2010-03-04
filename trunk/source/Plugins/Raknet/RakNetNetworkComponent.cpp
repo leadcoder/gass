@@ -43,7 +43,7 @@
 
 namespace GASS
 {
-	RakNetNetworkComponent::RakNetNetworkComponent() 
+	RakNetNetworkComponent::RakNetNetworkComponent() : m_Replica(NULL)
 	{
 
 	}
@@ -78,6 +78,7 @@ namespace GASS
 		{
 			if(m_Replica) //top object
 			{
+				m_Replica->SetOwner(GetSceneObject());
 				
 			}
 			else
@@ -95,6 +96,8 @@ namespace GASS
 					SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnNewReplica,ReplicaCreatedMessage,0));
 //					GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkComponent::OnReplicaCreated,ReplicaCreatedMessage,0));
 				}
+				else
+					m_Replica->SetOwner(GetSceneObject());
 			}
 		}
 	}
@@ -109,6 +112,7 @@ namespace GASS
 		if(replica->GetPartId() == part_id && replica->GetPartOfId() == part_of_id)
 		{
 			m_Replica = replica;
+			m_Replica->SetOwner(GetSceneObject());
 			SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkComponent::OnNewReplica,ReplicaCreatedMessage));
 		}
 	}
@@ -162,7 +166,7 @@ namespace GASS
 			NetworkSerializeMessage::NetworkPackage package;
 			
 			inBitStream->Read(package.Id);
-			inBitStream->Write(package.Size);
+			inBitStream->Read(package.Size);
 			package.Data = boost::shared_ptr<char>(new char[package.Size]);
 			inBitStream->Read(package.Data.get(),package.Size);
 			//m_SerializePackages.push_back(package);
