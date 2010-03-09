@@ -22,6 +22,8 @@
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/ComponentContainerFactory.h"
 
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
@@ -131,7 +133,15 @@ namespace GASS
 		if(m_TemplateName != "") //check is this a top object
 		{
 			//Create object based on template name
-			raknet->GetScene()->GetObjectManager()->LoadFromTemplate(m_TemplateName);
+			//raknet->GetScene()->GetObjectManager()->LoadFromTemplate(m_TemplateName);
+
+			SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(m_TemplateName));
+			if(so)
+			{
+				RakNetNetworkComponentPtr comp = so->GetFirstComponent<RakNetNetworkComponent>();
+				comp->SetReplica(this);
+				raknet->GetScene()->GetObjectManager()->LoadObject(so);
+			}
 			
 		}
 	}

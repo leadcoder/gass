@@ -79,7 +79,6 @@ namespace GASS
 			if(m_Replica) //top object
 			{
 				m_Replica->SetOwner(GetSceneObject());
-				
 			}
 			else
 			{

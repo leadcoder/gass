@@ -115,7 +115,8 @@ namespace GASS
 		if(message->GetPackage().Id == TRANSFORMATION_DATA)
 		{
 			Vec3 pos = *((Vec3*) message->GetPackage().Data.get());
-			std::cout << pos << std::endl;
+			GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(pos)));
+			//std::cout << pos << std::endl;
 		}
 	}
 
