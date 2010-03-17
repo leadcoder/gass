@@ -56,7 +56,7 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllerMessage,0));
 		else 
-			Log::Warning("Failed to find control settings: %s",m_ControlSetting.c_str());
+			Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());
 	
 		
 		IComponentContainerTemplate::ComponentVector components;

@@ -21,6 +21,7 @@
 #include "RakNetNetworkComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetBase.h"
+#include "Plugins/RakNet/RakNetLocationTransferComponent.h"
 
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Math/Quaternion.h"
@@ -127,7 +128,7 @@ namespace GASS
 		bool found = false;
 		for(int i = 0 ; i < m_SerializePackages.size(); i++)
 		{
-			if(m_SerializePackages[i].Id = message->GetPackage().Id)
+			if(m_SerializePackages[i]->Id == message->GetPackage()->Id)
 			{
 				m_SerializePackages[i] = message->GetPackage();
 				found = true;
@@ -137,6 +138,8 @@ namespace GASS
 		if(!found)
 			m_SerializePackages.push_back(message->GetPackage());
 		
+		
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica->GetReplica(), UNASSIGNED_SYSTEM_ADDRESS, true);
 
@@ -149,9 +152,10 @@ namespace GASS
 		outBitStream->Write(num_packs);
 		for(int i = 0 ; i < m_SerializePackages.size(); i++)
 		{
-			outBitStream->Write(m_SerializePackages[i].Id);
-			outBitStream->Write(m_SerializePackages[i].Size);
-			outBitStream->Write(m_SerializePackages[i].Data.get(),m_SerializePackages[i].Size);
+			outBitStream->Write(m_SerializePackages[i]->Id);
+			//outBitStream->Write(m_SerializePackages[i]->Size);
+			int size = m_SerializePackages[i]->GetSize();
+			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
 		m_SerializePackages.clear();
 	}
@@ -162,12 +166,18 @@ namespace GASS
 		inBitStream->Read(num_packs);
 		for(int i = 0 ; i < num_packs; i++)
 		{
-			NetworkSerializeMessage::NetworkPackage package;
+			//NetworkSerializeMessage::NetworkPackage package;
+			//inBitStream->Read(package.Id);
+			int id;
+			inBitStream->Read(id);
+			NetworkSerializeMessage::NetworkPackagePtr package;
+			if(id == TRANSFORMATION_DATA)
+				package = NetworkSerializeMessage::NetworkPackagePtr (new TransformationPackage(TRANSFORMATION_DATA));
 			
-			inBitStream->Read(package.Id);
-			inBitStream->Read(package.Size);
-			package.Data = boost::shared_ptr<char>(new char[package.Size]);
-			inBitStream->Read(package.Data.get(),package.Size);
+			int size =package->GetSize(); 
+			//inBitStream->Read(package.Size);
+			//package.Data = boost::shared_ptr<char>(new char[package.Size]);
+			inBitStream->Read((char*)package.get(),size);
 			//m_SerializePackages.push_back(package);
 			//Post messages
 			GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));

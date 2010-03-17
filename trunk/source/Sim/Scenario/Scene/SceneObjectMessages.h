@@ -179,7 +179,9 @@ namespace GASS
 		{
 			TORQUE,
 			FORCE,
-			VELOCITY
+			VELOCITY,
+			ENABLE,
+			DISABLE
 		};
 	public:
 		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) : 
@@ -487,18 +489,23 @@ namespace GASS
 	{
 
 	public:
-		typedef boost::shared_ptr<char> NetworkDataPtr;
-		struct NetworkPackage
+		//typedef boost::shared_ptr<char> NetworkDataPtr;
+		class NetworkPackage
 		{
+		public:
+			NetworkPackage(int id) : Id(id)
+			{}
+			virtual ~NetworkPackage(){}
+			virtual int GetSize() = 0;
 			int Id;
-			int Size;
-			NetworkDataPtr Data;
+			//NetworkDataPtr Data;
 		};
-		NetworkSerializeMessage(NetworkPackage package, SenderID sender_id = -1, double delay= 0) : 
+		typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
+		NetworkSerializeMessage(NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
 		BaseMessage( sender_id , delay), m_Package(package){}
-		NetworkPackage GetPackage() const {return m_Package;}
+		NetworkPackagePtr GetPackage() const {return m_Package;}
 	private:
-		NetworkPackage m_Package;
+		NetworkPackagePtr m_Package;
 	};
 	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
 

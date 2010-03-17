@@ -42,7 +42,7 @@ namespace GASS
 	class RakNetBase;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef std::vector<NetworkSerializeMessage::NetworkPackage> NetworkPackageVector;
+	typedef std::vector<NetworkSerializeMessage::NetworkPackagePtr> NetworkPackageVector;
 
 	class RakNetNetworkComponent : public Reflection<RakNetNetworkComponent,BaseSceneComponent>
 	{

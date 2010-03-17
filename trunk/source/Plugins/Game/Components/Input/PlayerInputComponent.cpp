@@ -69,7 +69,7 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
 		else 
-			Log::Warning("Failed to find control settings: %s",m_ControlSetting);
+			Log::Warning("PlayerInputComponent::OnCreate -- Failed to find control settings: %s",m_ControlSetting.c_str());
 
 	}
 

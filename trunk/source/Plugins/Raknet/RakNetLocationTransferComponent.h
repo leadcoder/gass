@@ -35,6 +35,20 @@ namespace GASS
 	{
 		TRANSFORMATION_DATA = 0
 	};
+
+	class TransformationPackage : public NetworkSerializeMessage::NetworkPackage
+	{
+	public:
+		TransformationPackage(int id ) : NetworkSerializeMessage::NetworkPackage(id) {}
+		TransformationPackage(int id, const Vec3 &pos,const Quaternion &rot) : NetworkSerializeMessage::NetworkPackage(id), Position(pos), Rotation(rot){}
+		virtual ~TransformationPackage(){}
+		int GetSize() {return sizeof(TransformationPackage);}
+		Vec3 Position;
+		Quaternion Rotation;
+	};
+	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
+
+
 	class SceneObject;
 	class RakNetBase;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;

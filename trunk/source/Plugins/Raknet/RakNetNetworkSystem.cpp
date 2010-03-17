@@ -310,6 +310,9 @@ namespace GASS
 				MessagePtr message (new ClientConnectedMessage(name,port));
 				GetSimSystemManager()->PostMessage(message);
 
+
+				//printf("new connection\n");
+
 				/*if(m_RemoteCreatePlayers)
 				{
 					//Remote player!
@@ -339,6 +342,8 @@ namespace GASS
 					out.Write((MessageID)ID_START_SCENARIO);
 					SerializeServerData(out,m_ServerData);
 					m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,p->systemAddress,false);
+
+					//printf("send connection\n");
 				}
 			}
 			else if (p->data[0]==ID_CONNECTION_ATTEMPT_FAILED)
@@ -379,6 +384,8 @@ namespace GASS
 			if (sa==UNASSIGNED_SYSTEM_ADDRESS)
 				break;
 			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,sa,false);
+
+			printf("send scenario data");
 		}
 		m_ScenarioIsRunning = true;
 	}
@@ -421,6 +428,8 @@ namespace GASS
 				DeserializeServerData(&server_data,&data);
 				MessagePtr message(new StartSceanrioRequestMessage(data.MapName));
 				GetSimSystemManager()->PostMessage(message);
+
+				printf("got connection\n");
 				
 				//load scenario
 

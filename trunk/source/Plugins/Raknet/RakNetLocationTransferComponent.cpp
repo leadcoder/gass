@@ -79,6 +79,17 @@ namespace GASS
 		else
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnSerialize,NetworkSerializeMessage,0));
+
+			MessagePtr disable_msg(new PhysicsBodyMessage(PhysicsBodyMessage::DISABLE,Vec3(0,0,0)));
+			GetSceneObject()->PostMessage(disable_msg);
+
+			IComponentContainerTemplate::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
+			for(int i = 0;  i< components.size(); i++)
+			{
+				BaseSceneComponentPtr comp = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
+				comp->GetSceneObject()->PostMessage(disable_msg);
+			}
 		}
 	}
 
@@ -89,15 +100,19 @@ namespace GASS
 
 		//pack data
 
-		NetworkSerializeMessage::NetworkPackage package;
-		package.Id = TRANSFORMATION_DATA;
+		Vec3 pos = message->GetPosition();
+		Quaternion rot = message->GetRotation();
+		boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,pos, rot));
+		
+		
+		/*package.Id = TRANSFORMATION_DATA;
 
 
 		//pack position data
 		Vec3 pos = message->GetPosition();
 		package.Data = boost::shared_ptr<char>(new char[sizeof(Vec3)]);
 		*(Vec3*) package.Data.get() = pos;
-		package.Size = sizeof(Vec3);
+		package.Size = sizeof(Vec3);*/
 
 		MessagePtr serialize_message(new NetworkSerializeMessage(package));
 		GetSceneObject()->SendImmediate(serialize_message);
@@ -112,10 +127,13 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnSerialize(NetworkSerializeMessagePtr message)
 	{
-		if(message->GetPackage().Id == TRANSFORMATION_DATA)
+		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
-			Vec3 pos = *((Vec3*) message->GetPackage().Data.get());
+			TransformationPackagePtr package = boost::shared_dynamic_cast<TransformationPackage> (message->GetPackage());
+			Vec3 pos = package->Position;
+			Quaternion rot = package->Rotation;
 			GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(pos)));
+			GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(rot)));
 			//std::cout << pos << std::endl;
 		}
 	}

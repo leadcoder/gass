@@ -135,13 +135,13 @@ namespace GASS
 			//Create object based on template name
 			//raknet->GetScene()->GetObjectManager()->LoadFromTemplate(m_TemplateName);
 
-			SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(m_TemplateName));
+			/*SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(m_TemplateName));
 			if(so)
 			{
 				RakNetNetworkComponentPtr comp = so->GetFirstComponent<RakNetNetworkComponent>();
 				comp->SetReplica(this);
 				raknet->GetScene()->GetObjectManager()->LoadObject(so);
-			}
+			}*/
 			
 		}
 	}
