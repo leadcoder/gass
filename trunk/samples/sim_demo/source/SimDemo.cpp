@@ -121,7 +121,7 @@ public:
 	void OnServerResponse(GASS::MessagePtr message)
 	{
 		GASS::ServerResponseMessagePtr mess = boost::shared_dynamic_cast<GASS::ServerResponseMessage>(message);
-		printf("Client got response from server:%s",mess->GetServerName().c_str());
+		printf("Client got response from server:%s\n",mess->GetServerName().c_str());
 		//Connect to server?
 		//try to connect
 		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2001)));
@@ -130,6 +130,8 @@ public:
 	void OnLoadScenario(GASS::MessagePtr message)
 	{
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
+		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
+
 		scenario->Load(mess->GetScenarioName());		
 
 	}
@@ -204,9 +206,23 @@ int main(int argc, char* argv[])
 
 		//CreateManualObject();
 		scenario->Load(scenario_path);
+		int wait = 0;
+		while(wait < 60 )
+		{
+			wait += 1;
+			double update_time = 1.0/60.0;
+			engine->Update(update_time);
+			scenario->OnUpdate(update_time);
+			//engine->Update(0.1);
+			//scenario->OnUpdate(0.1);
+		}
+	//	Sleep(1000);
 
 
-		for(int i = 0; i < 1; i++)
+		
+
+
+		/*for(int i = 0; i < 1; i++)
 		{
 			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 			if(scene_object)
@@ -231,7 +247,8 @@ int main(int argc, char* argv[])
 						objs.front()->PostMessage(enter_msg);
 				}
 			}
-		}
+			//Sleep(1000);
+		}*/
 
 	}
 	else
@@ -300,7 +317,35 @@ int main(int argc, char* argv[])
 			engine->Update(update_time);
 			scenario->OnUpdate(update_time);
 			//std::cout << "Time is:" << time << std::endl;
-			std::cout << "FPS:" << 1.0/(time - prev) << std::endl;
+			//std::cout << "FPS:" << 1.0/(time - prev) << std::endl;
+static bool once = true;
+			if(is_server && once && time > 10)
+			{
+				once = false;
+			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
+			if(scene_object)
+			{
+
+				GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
+				pos.x = pos.x;
+				pos.z = pos.z - 2;
+				//pos.x = 0;
+				//pos.y = 10;
+				//pos.z = 0;
+				boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
+				scene_object->SendImmediate(pos_msg);
+
+				//if(i==0)
+				{
+					GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
+					scene_object->PostMessage(enter_msg);
+
+					GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
+					if(objs.size() > 0)
+						objs.front()->PostMessage(enter_msg);
+				}
+			}
+			}
 			
 			prev = time;
 		}
