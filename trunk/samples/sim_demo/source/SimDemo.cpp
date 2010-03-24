@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
 
 		//CreateManualObject();
 		scenario->Load(scenario_path);
-		int wait = 0;
+		/*int wait = 0;
 		while(wait < 60 )
 		{
 			wait += 1;
@@ -215,14 +215,14 @@ int main(int argc, char* argv[])
 			scenario->OnUpdate(update_time);
 			//engine->Update(0.1);
 			//scenario->OnUpdate(0.1);
-		}
+		}*/
 	//	Sleep(1000);
 
 
 		
 
 
-		/*for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 			if(scene_object)
@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
 				}
 			}
 			//Sleep(1000);
-		}*/
+		}
 
 	}
 	else
@@ -319,7 +319,7 @@ int main(int argc, char* argv[])
 			//std::cout << "Time is:" << time << std::endl;
 			//std::cout << "FPS:" << 1.0/(time - prev) << std::endl;
 static bool once = true;
-			if(is_server && once && time > 10)
+/*			if(is_server && once && time > 10)
 			{
 				once = false;
 			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
@@ -345,7 +345,7 @@ static bool once = true;
 						objs.front()->PostMessage(enter_msg);
 				}
 			}
-			}
+			}*/
 			
 			prev = time;
 		}

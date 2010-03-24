@@ -248,10 +248,12 @@ namespace GASS
 		
 		if (strcmp(output, "RakNetBase")==0)
 		{
+			printf("replica about to be created!\n");
 			RakNetBase* object = new RakNetBase(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			MessagePtr message( new ReplicaCreatedMessage(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+			printf("replica created!\n");
 		}
 		//if(object)
 		{
