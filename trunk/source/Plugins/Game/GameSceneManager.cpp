@@ -18,7 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
-#include "Plugins/Game/GameSceneManager.h"
+#include "GameSceneManager.h"
+#include "GameMessages.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -38,11 +39,7 @@
 namespace GASS
 {
 	GameSceneManager::GameSceneManager() :
-		m_TaskGroup(MAIN_TASK_GROUP),
-		m_Paused(false),
-		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
-		m_TimeToProcess(0),
-		m_MaxSimSteps(4)
+		m_TaskGroup(MAIN_TASK_GROUP)
 	{
 
 	}
@@ -59,7 +56,6 @@ namespace GASS
 
 	void GameSceneManager::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		ScenarioScenePtr scene = GetScenarioScene();
 		if(scene)
 		{
@@ -76,9 +72,14 @@ namespace GASS
 		assert(socnm);
 		SceneObjectPtr obj = socnm->GetSceneObject();
 		assert(obj);
-		GameSceneManagerPtr core_sm = boost::dynamic_pointer_cast<GameSceneManager>(shared_from_this());
-		MessagePtr sim_msg(new LoadGameComponentsMessage(core_sm,(int) this));
+		GameSceneManagerPtr game_sm = boost::dynamic_pointer_cast<GameSceneManager>(shared_from_this());
+		MessagePtr sim_msg(new LoadGameComponentsMessage(game_sm,(int) this));
 		obj->SendImmediate(sim_msg);
+	}
+
+	void GameSceneManager::Update(double delta)
+	{
+
 	}
 
 	TaskGroup GameSceneManager::GetTaskGroup() const
@@ -86,30 +87,11 @@ namespace GASS
 		return m_TaskGroup;
 	}
 
-	void GameSceneManager::Update(double delta_time)
-	{
-		//do some time slicing
-		m_TimeToProcess += delta_time;
-		int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
-		int clamp_num_steps = num_steps;
-
-		//Take max 4 simulation step each frame
-		if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
-
-		for (int i = 0; i < clamp_num_steps; ++i)
-		{
-						
-		}
-		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
-		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
-	}
-
 	void GameSceneManager::OnLoad(MessagePtr message)
 	{
-		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message); 
-		m_Init = true;
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);		
 	}
-
+	
 	void GameSceneManager::OnUnload(MessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);

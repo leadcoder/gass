@@ -31,9 +31,7 @@
 namespace GASS
 {
 	/**
-		Scene manager that owns all game components.  This scene manager can 
-		also be used by plugins that only provid some new sim components but dont want to create
-		a brand new scene manager.
+		Scene manager that owns all game components.
 	*/
 	class GameSceneManager : public Reflection<GameSceneManager, BaseSceneManager>, public ITaskListener
 	{
@@ -44,22 +42,13 @@ namespace GASS
 		virtual void OnCreate();
 		void Update(double delta_time);
 		TaskGroup GetTaskGroup() const;
-
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
 	private:
 		void SetTaskGroup(TaskGroup value);
-		
-	
-		bool m_Init;
-		double m_SimulationUpdateInterval;
-		double m_TimeToProcess;
-		int m_MaxSimSteps;
-		bool m_Paused;
 		TaskGroup m_TaskGroup;
-		
 	};
 	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr; 
 
