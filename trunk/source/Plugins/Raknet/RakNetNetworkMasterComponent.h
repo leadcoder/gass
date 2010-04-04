@@ -63,7 +63,7 @@ namespace GASS
 
 	private:
 		void OnSerialize(NetworkSerializeMessagePtr message);
-		void OnNewReplica(ReplicaCreatedMessagePtr message);
+		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		RakNetMasterReplica* m_Replica;
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;

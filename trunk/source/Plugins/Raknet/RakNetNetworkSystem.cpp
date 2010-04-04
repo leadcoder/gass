@@ -21,6 +21,8 @@
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetReplicaMember.h"
 #include "Plugins/RakNet/RakNetBase.h"
+#include "Plugins/RakNet/RakNetMasterReplica.h"
+
 #include "Plugins/RakNet/RakNetMessages.h"
 
 #include "RakNetworkFactory.h"
@@ -252,6 +254,16 @@ namespace GASS
 			RakNetBase* object = new RakNetBase(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			MessagePtr message( new ReplicaCreatedMessage(object));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+			printf("replica created!\n");
+		}
+
+		else if (strcmp(output, "RakNetMasterReplica")==0)
+		{
+			printf("replica about to be created!\n");
+			RakNetMasterReplica* object = new RakNetMasterReplica(m_ReplicaManager);
+			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
+			MessagePtr message( new MasterReplicaCreatedMessage(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 			printf("replica created!\n");
 		}

@@ -37,5 +37,16 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;
 
+	class RakNetMasterReplica;
+	class MasterReplicaCreatedMessage : public BaseMessage
+	{
+	public:
+		MasterReplicaCreatedMessage(RakNetMasterReplica* replica, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Replica(replica){}
+		  RakNetMasterReplica* GetReplica() const {return m_Replica;}
+	private:
+		RakNetMasterReplica* m_Replica;
+	};
+	typedef boost::shared_ptr<MasterReplicaCreatedMessage> MasterReplicaCreatedMessagePtr;
 }
 #endif
