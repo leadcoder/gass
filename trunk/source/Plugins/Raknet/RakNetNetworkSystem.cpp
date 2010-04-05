@@ -43,7 +43,6 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/SimSystemManager.h"
 
-
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"
@@ -110,6 +109,7 @@ namespace GASS
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
 
 		RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 
 	}
 

@@ -18,10 +18,14 @@ namespace GASS
 		virtual ReplicaReturnResult ReceiveScopeChange(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp);
 		virtual ReplicaReturnResult Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		virtual ReplicaReturnResult Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
-		// Safety check so the user does not forget to call SetParent
-		virtual bool RequiresSetParent(void) const;
+		
+		virtual bool RequiresSetParent(void) const ;
+	
 		virtual bool IsNetworkIDAuthority(void) const;
-		virtual int GetSortPriority(void) const {return 0;}
+		virtual int GetSortPriority(void) const 
+		{
+			return 0;
+		}
 	};
 }
 #endif

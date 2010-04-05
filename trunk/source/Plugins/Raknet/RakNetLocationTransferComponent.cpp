@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
-#include "Plugins/RakNet/RakNetBase.h"
+//#include "Plugins/RakNet/RakNetBase.h"
 #include "RakNetLocationTransferComponent.h"
 
 
@@ -68,13 +68,12 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
-		if(!nc)
-			Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
+		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
+		//if(!nc)
+		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		if(raknet->IsServer())
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
-			
 		}
 		else
 		{
@@ -96,7 +95,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		//Request data transfer
-		RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
+		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
 
 		//pack data
 

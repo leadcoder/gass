@@ -105,7 +105,7 @@ namespace GASS
 			m_SerializePackages.push_back(message->GetPackage());
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica->GetReplica(), UNASSIGNED_SYSTEM_ADDRESS, true);
+		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, UNASSIGNED_SYSTEM_ADDRESS, true);
 		//Signal serialize
 	}
 

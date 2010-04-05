@@ -43,18 +43,13 @@ namespace GASS
 	RakNetMasterReplica::RakNetMasterReplica(ReplicaManager* manager): m_Manager(manager)
 	{
 		m_OwnerSystemAddress = UNASSIGNED_SYSTEM_ADDRESS;
-		m_Replica = NULL;
 		m_AllowRemoteOwner = false;
 	}
 
 	RakNetMasterReplica::~RakNetMasterReplica()
 	{
-		if(m_Replica)
-		{
-			m_Manager->Destruct((Replica*)m_Replica, UNASSIGNED_SYSTEM_ADDRESS, true); // Forward the destruct message to all other systems but the sender
-			m_Manager->DereferencePointer((Replica*)m_Replica);
-			delete m_Replica;
-		}
+		m_Manager->Destruct(this, UNASSIGNED_SYSTEM_ADDRESS, true); // Forward the destruct message to all other systems but the sender
+		m_Manager->DereferencePointer(this);
 	}
 
 	void RakNetMasterReplica::LocalInit(SceneObjectPtr object)
@@ -62,12 +57,9 @@ namespace GASS
 		m_Owner = object;
 		m_TemplateName = object->GetTemplateName();
 		
-		m_Replica = new RakNetReplicaMember();
-		m_Replica->SetParent(this);
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
-		m_Replica->SetNetworkIDManager(raknet->GetNetworkIDManager());
+		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		
 		SetOwnerSystemAddress(raknet->GetRakPeer()->GetInternalID());
 		
@@ -75,53 +67,51 @@ namespace GASS
 		// For security, as a server disable these interfaces
 		if (raknet->IsServer())
 		{
-			m_Manager->Construct(m_Replica , false, UNASSIGNED_SYSTEM_ADDRESS, true);
+			m_Manager->Construct(this, false, UNASSIGNED_SYSTEM_ADDRESS, true);
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
 			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
 			
-			m_Manager->DisableReplicaInterfaces(m_Replica, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
+			m_Manager->DisableReplicaInterfaces(this, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
 		}
 		else
 		{
 			// For convenience and for saving bandwidth, as a client disable all sends except REPLICA_SEND_SERIALIZE
 			// I could do this manually by putting if (isServer==false) return; at the top of all my send functions too.
-			m_Manager->DisableReplicaInterfaces(m_Replica, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
+			m_Manager->DisableReplicaInterfaces(this, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
 		}
 	}
 
 	void RakNetMasterReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
-		m_Replica = new RakNetReplicaMember();
-		m_Replica->SetParent(this);
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
-		m_Replica->SetNetworkIDManager(raknet->GetNetworkIDManager());
+		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		// We must set the network ID of all remote objects
-		m_Replica->SetNetworkID(networkID);
+		SetNetworkID(networkID);
 		// Tell the replica manager to create this as an object that originated on a remote node
-		m_Manager->Construct(m_Replica, true, senderId, false);
+		m_Manager->Construct(this, true, senderId, false);
 		// Since SendConstruction is not called for copies and we were calling SetScope there, we need to call it here instead.
-		m_Manager->SetScope(m_Replica, true, senderId, false);
+		m_Manager->SetScope(this, true, senderId, false);
 		ReceiveConstruction(inBitStream);
 
 		if (raknet->IsServer())
 		{
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
 			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
-			m_Manager->DisableReplicaInterfaces(m_Replica, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
+			m_Manager->DisableReplicaInterfaces(this, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
 		}
 		else
 		{
 			// For convenience and for saving bandwidth, as a client disable all sends except REPLICA_SEND_SERIALIZE
 			// I could do this manually by putting if (isServer==false) return; at the top of all my send functions too.
-			m_Manager->DisableReplicaInterfaces(m_Replica, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
+			m_Manager->DisableReplicaInterfaces(this, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
 		}
 
 		// if this is a server and we receive a remotely created object, we must forward that creation
 		// to all of our clients
 		if (raknet->IsServer())
 		{
-			m_Manager->Construct(m_Replica, false, senderId, true);
+			m_Manager->Construct(this, false, senderId, true);
 		}
 	}
 
@@ -185,7 +175,7 @@ namespace GASS
 
 	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
-		RakNetNetworkComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
 		SerialSaver ss(NULL,0);
 		for(int i = 0 ;  i < attributes.size(); i++)
@@ -248,7 +238,7 @@ namespace GASS
 		//	return REPLICA_PROCESSING_DONE;
 		//outBitStream->Write(testInteger);
 
-		RakNetNetworkComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkComponent>();
+		RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
 		net_obj->Serialize(sendTimestamp, outBitStream, lastSendTime, priority, reliability, currentTime, systemAddress, flags);
 		return REPLICA_PROCESSING_DONE;
 	}
@@ -265,7 +255,7 @@ namespace GASS
 			if (raknet->IsServer())
 			{
 				// Synchronisation events should be forwarded to other clients
-				m_Manager->SignalSerializeNeeded(m_Replica, systemAddress, true);
+				m_Manager->SignalSerializeNeeded(this, systemAddress, true);
 			}
 		}
 		//raknet->GetReplicaManager()->SignalSerializeNeeded(this, playerId, true);

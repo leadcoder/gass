@@ -33,7 +33,7 @@ namespace GASS
 {
 	enum
 	{
-		TRANSFORMATION_DATA = 0
+		TRANSFORMATION_DATA = 11
 	};
 
 	class TransformationPackage : public NetworkSerializeMessage::NetworkPackage
@@ -50,7 +50,7 @@ namespace GASS
 
 
 	class SceneObject;
-	class RakNetBase;
+	
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 

@@ -29,7 +29,7 @@
 #include "Core/Utils/Log.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
-#include "RakNetNetworkComponent.h"
+//#include "RakNetNetworkComponent.h"
 #include "RakNetReplicaMember.h"
 
 
@@ -38,7 +38,7 @@ class ReplicaManager;
 namespace GASS
 {
 
-	class RakNetMasterReplica 
+	class RakNetMasterReplica  : public Replica
 	{
 	public:
 		RakNetMasterReplica(ReplicaManager* manager);
@@ -48,7 +48,7 @@ namespace GASS
 		//virtual void CreateaBaseObject();
 		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
 		void LocalInit(SceneObjectPtr object);
-		RakNetReplicaMember* GetReplica(){return m_Replica;}
+		//RakNetReplicaMember* GetReplica(){return m_Replica;}
 
 		//Replica member functions
 		virtual ReplicaReturnResult SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp );
@@ -58,6 +58,15 @@ namespace GASS
 		virtual ReplicaReturnResult ReceiveScopeChange(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp);
 		virtual ReplicaReturnResult Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		virtual ReplicaReturnResult Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
+		
+		/*virtual bool IsNetworkIDAuthority(void)
+		{
+			return true;
+		}*/
+		virtual int GetSortPriority(void) const 
+		{
+			return 0;
+		}
 
 		virtual void ReceiveConstruction(RakNet::BitStream *inBitStream);
 		void SendConstruction(RakNet::BitStream *outBitStream);
@@ -76,7 +85,7 @@ namespace GASS
 	private:
 		SystemAddress m_OwnerSystemAddress;
 		NetworkID m_ActionHandlerPlayerId;
-		RakNetReplicaMember* m_Replica;
+		//RakNetReplicaMember* m_Replica;
 		ReplicaManager* m_Manager;
 		SceneObjectPtr m_Owner;
 	protected:
