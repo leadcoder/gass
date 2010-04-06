@@ -18,48 +18,35 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGES_H
-#define RAK_NET_MESSAGES_H
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Core/Math/Vector.h"
+#ifndef RAK_NET_PACKAGE_FACTORY_H
+#define RAK_NET_PACKAGE_FACTORY_H
+#include "Core/Common.h"
+#include "Core/ComponentSystem/IComponent.h"
+#include "Core/Utils/Factory.h"
+#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace GASS
 {
-	/*class RakNetBase;
-	class ReplicaCreatedMessage : public BaseMessage
+	/**
+		The one and only factory holding network packages.
+		This is a singleton implementation of the EnumFactory template.
+		By using the singleton pattern each new package type can
+		register it	self in a easy way.
+		A package have to reigister it self to this
+		factory	if it want any type of serialization behavior.
+	*/
+
+	class PackageFactory : public Factory<NetworkPackage,int>
 	{
 	public:
-		ReplicaCreatedMessage(RakNetBase* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetBase* GetReplica() const {return m_Replica;}
-	private:
-		RakNetBase* m_Replica;
+		PackageFactory();
+		virtual ~PackageFactory();
+		static PackageFactory* GetPtr();
+		static PackageFactory& Get();
+	protected:
+		static PackageFactory* m_Instance;
+	protected:
 	};
-	typedef boost::shared_ptr<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
-
-	class RakNetMasterReplica;
-	class MasterReplicaCreatedMessage : public BaseMessage
-	{
-	public:
-		MasterReplicaCreatedMessage(RakNetMasterReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetMasterReplica* GetReplica() const {return m_Replica;}
-	private:
-		RakNetMasterReplica* m_Replica;
-	};
-	typedef boost::shared_ptr<MasterReplicaCreatedMessage> MasterReplicaCreatedMessagePtr;
-
-
-	class RakNetChildReplica;
-	class ChildReplicaCreatedMessage : public BaseMessage
-	{
-	public:
-		ChildReplicaCreatedMessage (RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetChildReplica* GetReplica() const {return m_Replica;}
-	private:
-		RakNetChildReplica* m_Replica;
-	};
-	typedef boost::shared_ptr<ChildReplicaCreatedMessage > ChildReplicaCreatedMessagePtr;
 }
-#endif
+
+#endif 

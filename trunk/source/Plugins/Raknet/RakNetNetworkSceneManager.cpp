@@ -35,6 +35,8 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Plugins/RakNet/RaknetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
+#include "Plugins/RakNet/RakNetNetworkChildComponent.h"
+
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 
 
@@ -108,16 +110,22 @@ namespace GASS
 			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponent<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
 			
-			//int id=0;
-			//GeneratePartID(so,id);
+			int id=0;
+			GeneratePartID(so,id);
 
 			GetScenarioScene()->GetObjectManager()->LoadObject(so);
 		}
 	}
 
+	/*void RaknetNetworkSceneManager::OnNewChildReplica(ChildReplicaCreatedMessagePtr message)
+	{
+		RakNetChildReplica* replica = message->GetReplica();
+	}*/
+
+
 	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id)
 	{
-		/*RakNetNetworkComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkComponent>();
+		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
@@ -125,7 +133,7 @@ namespace GASS
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
 			GeneratePartID(child,++id);
-		}*/
+		}
 	}
 
 	void RaknetNetworkSceneManager::Update(double delta_time)

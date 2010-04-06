@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAKNET_MASTER_REPLICA_H
-#define RAKNET_MASTER_REPLICA_H
+#ifndef RAKNET_CHILD_REPLICA_H
+#define RAKNET_CHILD_REPLICA_H
 #include "PacketPriority.h"
 #include "Replica.h"
 #include "StringTable.h"
@@ -40,11 +40,11 @@ namespace GASS
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	class RakNetMasterReplica  : public Replica
+	class RakNetChildReplica  : public Replica
 	{
 	public:
-		RakNetMasterReplica(ReplicaManager* manager);
-		virtual ~RakNetMasterReplica();
+		RakNetChildReplica(ReplicaManager* manager);
+		virtual ~RakNetChildReplica();
 		//virtual void Update(double delta);
 		//virtual bool IsMaster();
 		//virtual void CreateaBaseObject();
@@ -75,21 +75,27 @@ namespace GASS
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-		std::string GetTemplateName() {return m_TemplateName;}
+//		std::string GetTemplateName() {return m_TemplateName;}
 		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
+		void SetPartId(int id) {m_PartId = id;}
+		int GetPartId()const {m_PartId;}
+		NetworkID GetPartOfId(){return m_PartOfId;}
+		int GetPartId(){return m_PartId;}
 	protected:
 		AbstractProperty* GetProperty(const std::string &prop_name);
 		void SerializeProperties(RakNet::BitStream *bit_stream);
 		//unsigned char m_DataToReceive;
 		//unsigned char m_DataToSend;
-		std::string m_TemplateName;
+		//std::string m_TemplateName;
 		bool m_AllowRemoteOwner;
 	private:
 		SystemAddress m_OwnerSystemAddress;
 		//NetworkID m_ActionHandlerPlayerId;
 		//RakNetReplicaMember* m_Replica;
+		NetworkID m_PartOfId;
 		ReplicaManager* m_Manager;
 		SceneObjectPtr m_Owner;
+		int m_PartId;
 	protected:
 	};
 }

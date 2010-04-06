@@ -47,7 +47,8 @@ namespace GASS
 {
 #define MAX_PEERS 64
 	struct ServerData;
-	class RakNetBase;
+	//class RakNetBase;
+	class RakNetChildReplica;
 
 
 	enum
@@ -95,7 +96,7 @@ namespace GASS
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
-		RakNetBase* FindReplica(const NetworkID &part_of_network_id,int part_id);
+		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
 		ScenarioScenePtr GetScene() {return ScenarioScenePtr(m_Scene);}
 	private:
 		void OnInit(MessagePtr message);

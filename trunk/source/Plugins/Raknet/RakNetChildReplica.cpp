@@ -32,7 +32,7 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
-#include "RakNetMasterReplica.h"
+#include "RakNetChildReplica.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 //#include "RakNetReplicaMember.h"
@@ -40,22 +40,22 @@
 
 namespace GASS
 {
-	RakNetMasterReplica::RakNetMasterReplica(ReplicaManager* manager): m_Manager(manager)
+	RakNetChildReplica::RakNetChildReplica(ReplicaManager* manager): m_Manager(manager)
 	{
 		m_OwnerSystemAddress = UNASSIGNED_SYSTEM_ADDRESS;
 		m_AllowRemoteOwner = false;
 	}
 
-	RakNetMasterReplica::~RakNetMasterReplica()
+	RakNetChildReplica::~RakNetChildReplica()
 	{
 		m_Manager->Destruct(this, UNASSIGNED_SYSTEM_ADDRESS, true); // Forward the destruct message to all other systems but the sender
 		m_Manager->DereferencePointer(this);
 	}
 
-	void RakNetMasterReplica::LocalInit(SceneObjectPtr object)
+	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
 	{
 		m_Owner = object;
-		m_TemplateName = object->GetTemplateName();
+//		m_TemplateName = object->GetTemplateName();
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
@@ -81,7 +81,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetMasterReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
+	void RakNetChildReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
@@ -115,33 +115,33 @@ namespace GASS
 		}
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp )
+	ReplicaReturnResult RakNetChildReplica::SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp )
 	{
 		// Don't send back to the owner of an object.
 		// If we didn't prevent then the object would be created on the system that just sent it to us, then back again, forever in a feedback loop.
 		//if (playerId==m_Owner)
 		//	return REPLICA_PROCESSING_DONE;
 		// This string was pre-registered in main with stringTable->AddString so we can send it with the string table and save bandwidth
-		RakNet::StringTable::Instance()->EncodeString("RakNetMasterReplica", 255, outBitStream);
+		RakNet::StringTable::Instance()->EncodeString("RakNetChildReplica", 255, outBitStream);
 		// Write the owner when we construct the object, so we have it right away in order to prevent feedback loops
-		RakNetMasterReplica::SendConstruction(outBitStream);
+		RakNetChildReplica::SendConstruction(outBitStream);
 		//send part id
 		return REPLICA_PROCESSING_DONE;
 	}
 
 
-	void RakNetMasterReplica::SendConstruction(RakNet::BitStream *outBitStream)
+	void RakNetChildReplica::SendConstruction(RakNet::BitStream *outBitStream)
 	{
 		outBitStream->Write(m_OwnerSystemAddress);
 		assert(m_Owner);
 		
 		//std::string name = m_Owner->GetName();
-		std::string template_name = m_Owner->GetTemplateName();
+		//std::string template_name = m_Owner->GetTemplateName();
 		//RakNetNetworkManager::WriteString(name,outBitStream);
-		RakNetNetworkSystem::WriteString(template_name,outBitStream);
+		//RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
-	AbstractProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name)
+	AbstractProperty* RakNetChildReplica::GetProperty(const std::string &prop_name)
 	{
 		m_Owner->GetComponents();
 		IComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
@@ -171,9 +171,7 @@ namespace GASS
 		return NULL;
 	}
 
-	
-
-	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
+	void RakNetChildReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
@@ -201,37 +199,37 @@ namespace GASS
 		}
 	}
 
-	void RakNetMasterReplica::ReceiveConstruction(RakNet::BitStream *inBitStream)
+	void RakNetChildReplica::ReceiveConstruction(RakNet::BitStream *inBitStream)
 	{
 		inBitStream->Read(m_OwnerSystemAddress);
-		m_TemplateName = RakNetNetworkSystem::ReadString(inBitStream);
+		//m_TemplateName = RakNetNetworkSystem::ReadString(inBitStream);
 	}
 
-	ReplicaReturnResult  RakNetMasterReplica::SendDestruction(RakNet::BitStream *outBitStream, SystemAddress systemAddress, bool *includeTimestamp)
+	ReplicaReturnResult  RakNetChildReplica::SendDestruction(RakNet::BitStream *outBitStream, SystemAddress systemAddress, bool *includeTimestamp)
 	{
 		// Optional, nothing to send here.
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::ReceiveDestruction(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp)
+	ReplicaReturnResult RakNetChildReplica::ReceiveDestruction(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp)
 	{
 		//printf("Remote object owned by %s:%i destroyed\n", rakPeer->PlayerIDToDottedIP(owner), owner.port);
 		delete this;
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::SendScopeChange(bool inScope, RakNet::BitStream *outBitStream, RakNetTime currentTime, SystemAddress systemAddress, bool *includeTimestamp)
+	ReplicaReturnResult RakNetChildReplica::SendScopeChange(bool inScope, RakNet::BitStream *outBitStream, RakNetTime currentTime, SystemAddress systemAddress, bool *includeTimestamp)
 	{
 		outBitStream->Write(inScope);
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::ReceiveScopeChange(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp)
+	ReplicaReturnResult RakNetChildReplica::ReceiveScopeChange(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp)
 	{
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
+	ReplicaReturnResult RakNetChildReplica::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
 	{
 		// Don't send back to the owner of an object.
 		//if (playerId==m_Owner)
@@ -243,7 +241,7 @@ namespace GASS
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	ReplicaReturnResult RakNetMasterReplica::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
+	ReplicaReturnResult RakNetChildReplica::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
 		//inBitStream->Read(m_DataToReceive);
 		if(m_Owner)

@@ -28,6 +28,7 @@
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+#include "Plugins/RakNet/RakNetPackageFactory.h"
 
 namespace GASS
 {
@@ -36,17 +37,33 @@ namespace GASS
 		TRANSFORMATION_DATA = 11
 	};
 
-	class TransformationPackage : public NetworkSerializeMessage::NetworkPackage
+	class TransformationPackage : public NetworkPackage
 	{
 	public:
-		TransformationPackage(int id ) : NetworkSerializeMessage::NetworkPackage(id) {}
-		TransformationPackage(int id, const Vec3 &pos,const Quaternion &rot) : NetworkSerializeMessage::NetworkPackage(id), Position(pos), Rotation(rot){}
+		TransformationPackage() 
+		{
+			
+		}
+		TransformationPackage(int id ) : NetworkPackage(id) 
+		{
+		
+		}
+		TransformationPackage(int id, const Vec3 &pos,const Quaternion &rot) : NetworkPackage(id), Position(pos), Rotation(rot){}
+		/*static void RegisterToFactory()
+		{
+			GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::EnumCreator<TransformationPackage, NetworkPackage>);	
+		}*/
 		virtual ~TransformationPackage(){}
 		int GetSize() {return sizeof(TransformationPackage);}
+		void Assign(char* data)
+		{
+			*this = *(TransformationPackage*)data;
+		}
 		Vec3 Position;
 		Quaternion Rotation;
 	};
 	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
+	
 
 
 	class SceneObject;

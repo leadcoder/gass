@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_NETWORK_MASTER_COMPONENT_H
-#define RAK_NET_NETWORK_MASTER_COMPONENT_H
+#ifndef RAK_NET_NETWORK_CHILD_COMPONENT_H
+#define RAK_NET_NETWORK_CHILD_COMPONENT_H
 
 
 #include "PacketPriority.h"
@@ -39,36 +39,39 @@
 namespace GASS
 {
 	class SceneObject;
-	class RakNetMasterReplica;
+	class RakNetChildReplica;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
 
-	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,BaseSceneComponent>
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetNetworkMasterComponent();
-		virtual ~RakNetNetworkMasterComponent();
+		RakNetNetworkChildComponent();
+		virtual ~RakNetNetworkChildComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		RakNetMasterReplica* GetReplica() const {return m_Replica;}
-		void SetReplica(RakNetMasterReplica* replica) {m_Replica=replica;}
+		RakNetChildReplica* GetReplica() const {return m_Replica;}
+		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
 		std::vector<std::string> GetAttributes()const {return m_Attributes;}
 		//NetworkPackageVector GetNetworkPackages() {return m_SerilizePackages;}
 		void Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
 
+		void SetPartId(int id) {m_PartId = id;}
+		int GetPartId()const {m_PartId;}
 	private:
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
-		RakNetMasterReplica* m_Replica;
+		RakNetChildReplica* m_Replica;
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
+		int m_PartId;
 	};
 
-	typedef boost::shared_ptr<RakNetNetworkMasterComponent> RakNetNetworkMasterComponentPtr;
+	typedef boost::shared_ptr<RakNetNetworkChildComponent> RakNetNetworkChildComponentPtr;
 }
 #endif

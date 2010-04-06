@@ -19,9 +19,11 @@
 *****************************************************************************/
 #include <boost/bind.hpp>
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
-#include "Plugins/RakNet/RakNetReplicaMember.h"
-#include "Plugins/RakNet/RakNetBase.h"
+//#include "Plugins/RakNet/RakNetReplicaMember.h"
+//#include "Plugins/RakNet/RakNetBase.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
+#include "Plugins/RakNet/RakNetChildReplica.h"
+
 
 #include "Plugins/RakNet/RakNetMessages.h"
 
@@ -108,8 +110,9 @@ namespace GASS
 		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
 
-		RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+		//RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false); 
 
 	}
 
@@ -248,7 +251,7 @@ namespace GASS
 		// I could have also used stringCompressor, which would always work but is less efficient to use when we have known strings
 		RakNet::StringTable::Instance()->DecodeString(output, 255, inBitStream);
 		
-		if (strcmp(output, "RakNetBase")==0)
+		/*if (strcmp(output, "RakNetBase")==0)
 		{
 			printf("replica about to be created!\n");
 			RakNetBase* object = new RakNetBase(m_ReplicaManager);
@@ -258,12 +261,21 @@ namespace GASS
 			printf("replica created!\n");
 		}
 
-		else if (strcmp(output, "RakNetMasterReplica")==0)
+		else*/ if (strcmp(output, "RakNetMasterReplica")==0)
 		{
 			printf("replica about to be created!\n");
 			RakNetMasterReplica* object = new RakNetMasterReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			MessagePtr message( new MasterReplicaCreatedMessage(object));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+			printf("replica created!\n");
+		}
+		else if (strcmp(output, "RakNetChildReplica")==0)
+		{
+			printf("replica about to be created!\n");
+			RakNetChildReplica* object = new RakNetChildReplica(m_ReplicaManager);
+			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
+			MessagePtr message( new ChildReplicaCreatedMessage(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 			printf("replica created!\n");
 		}
@@ -288,14 +300,14 @@ namespace GASS
 				for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
 				{
 
-					RakNetReplicaMember *rm = (RakNetReplicaMember*) m_ReplicaManager->GetReplicaAtIndex(index);
+					/*RakNetReplicaMember *rm = (RakNetReplicaMember*) m_ReplicaManager->GetReplicaAtIndex(index);
 					RakNetBase *base = (RakNetBase*) rm->GetParent();
 					if (base->GetOwnerSystemAddress() == p->systemAddress) //bugg fix this, this only indicates master/slave
 					{
 						m_ReplicaManager->Destruct(base->GetReplica(), UNASSIGNED_SYSTEM_ADDRESS, true); //Send the destruct message to all
 						delete base;
 						break;
-					}
+					}*/
 				}
 
 				std::string name = p->systemAddress.ToString();
@@ -535,20 +547,19 @@ namespace GASS
 	}*/
 
 
-	RakNetBase* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id)
+	RakNetChildReplica* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id)
 	{
 		//Find replica object
 		for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
 		{
-			RakNetReplicaMember *rm = (RakNetReplicaMember *) m_ReplicaManager->GetReplicaAtIndex(index);
-			RakNetBase *rak_base = static_cast<RakNetBase*>(rm->GetParent());
-			if(rak_base)
+			RakNetChildReplica *rep = (RakNetChildReplica*) dynamic_cast<RakNetChildReplica*>(m_ReplicaManager->GetReplicaAtIndex(index));
+			if(rep)
 			{
-				if(rak_base->GetPartOfId() == part_of_network_id) //we are part of this object
+				if(rep->GetPartOfId() == part_of_network_id) //we are part of this object
 				{
-					if(rak_base->GetPartId() == part_id) //check that if right child
+					if(rep->GetPartId() == part_id) //check that if right child
 					{
-						return rak_base; //Match!
+						return rep; //Match!
 					}
 				}
 			}

@@ -17,49 +17,34 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#ifndef RAK_NET_MESSAGES_H
-#define RAK_NET_MESSAGES_H
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Core/Math/Vector.h"
+#include "RakNetPackageFactory.h"
 
 namespace GASS
 {
-	/*class RakNetBase;
-	class ReplicaCreatedMessage : public BaseMessage
+	PackageFactory::PackageFactory()
 	{
-	public:
-		ReplicaCreatedMessage(RakNetBase* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetBase* GetReplica() const {return m_Replica;}
-	private:
-		RakNetBase* m_Replica;
-	};
-	typedef boost::shared_ptr<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
 
-	class RakNetMasterReplica;
-	class MasterReplicaCreatedMessage : public BaseMessage
+	}
+
+	PackageFactory::~PackageFactory()
 	{
-	public:
-		MasterReplicaCreatedMessage(RakNetMasterReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetMasterReplica* GetReplica() const {return m_Replica;}
-	private:
-		RakNetMasterReplica* m_Replica;
-	};
-	typedef boost::shared_ptr<MasterReplicaCreatedMessage> MasterReplicaCreatedMessagePtr;
 
+	}
 
-	class RakNetChildReplica;
-	class ChildReplicaCreatedMessage : public BaseMessage
+	PackageFactory* PackageFactory::m_Instance = 0;
+	PackageFactory* PackageFactory::GetPtr(void)
 	{
-	public:
-		ChildReplicaCreatedMessage (RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetChildReplica* GetReplica() const {return m_Replica;}
-	private:
-		RakNetChildReplica* m_Replica;
-	};
-	typedef boost::shared_ptr<ChildReplicaCreatedMessage > ChildReplicaCreatedMessagePtr;
+		//assert(m_Instance);
+		if(m_Instance == NULL)
+			m_Instance = new PackageFactory();
+		return m_Instance;
+	}
+
+	PackageFactory& PackageFactory::Get(void)
+	{
+		//assert(m_Instance);
+		if(m_Instance == NULL)
+			m_Instance = new PackageFactory();
+		return *m_Instance;
+	}
 }
-#endif

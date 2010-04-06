@@ -57,6 +57,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
+		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
 	}
 
 	void RakNetLocationTransferComponent::OnCreate()
@@ -128,9 +129,12 @@ namespace GASS
 	{
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
-			TransformationPackagePtr package = boost::shared_dynamic_cast<TransformationPackage> (message->GetPackage());
-			Vec3 pos = package->Position;
-			Quaternion rot = package->Rotation;
+			NetworkPackagePtr package = message->GetPackage();
+			//Log::Print("Before cast\n");
+			TransformationPackagePtr trans_package = boost::shared_dynamic_cast<TransformationPackage>(package);
+			//Log::Print("after cast\n");
+			Vec3 pos = trans_package->Position;
+			Quaternion rot = trans_package->Rotation;
 			GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(pos)));
 			GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(rot)));
 			//std::cout << pos << std::endl;

@@ -18,9 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "RakNetNetworkMasterComponent.h"
+#include "RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
+#include "Plugins/RakNet/RakNetChildReplica.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
+#include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetLocationTransferComponent.h"
 
 #include "Plugins/Game/GameMessages.h"
@@ -44,52 +46,62 @@
 
 namespace GASS
 {
-	RakNetNetworkMasterComponent::RakNetNetworkMasterComponent() : m_Replica(NULL)
+	RakNetNetworkChildComponent::RakNetNetworkChildComponent() : m_Replica(NULL)
 	{
 
 	}
 
-	RakNetNetworkMasterComponent::~RakNetNetworkMasterComponent()
+	RakNetNetworkChildComponent::~RakNetNetworkChildComponent()
 	{
 
 	}
 
-	void RakNetNetworkMasterComponent::RegisterReflection()
+	void RakNetNetworkChildComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("NetworkMasterComponent",new Creator<RakNetNetworkMasterComponent, IComponent>);
-		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkMasterComponent::GetAttributes, &RakNetNetworkMasterComponent::SetAttributes);
+		ComponentFactory::GetPtr()->Register("NetworkChildComponent",new Creator<RakNetNetworkChildComponent, IComponent>);
+		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkChildComponent::GetAttributes, &RakNetNetworkChildComponent::SetAttributes);
 	}
 
-	void RakNetNetworkMasterComponent::OnCreate()
+	void RakNetNetworkChildComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnLoad,LoadGameComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
 	}
 
-	void RakNetNetworkMasterComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void RakNetNetworkChildComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
 		{
-			m_Replica = new RakNetMasterReplica(raknet->GetReplicaManager());
+			m_Replica = new RakNetChildReplica(raknet->GetReplicaManager());
 			m_Replica->LocalInit(GetSceneObject());
 		}
 		else
 		{
-			if(m_Replica) //top object
+		/*	if(m_Replica) //top object
 			{
 				m_Replica->SetOwner(GetSceneObject());
+			}*/
+			RakNetNetworkMasterComponentPtr master = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
+			if(master)
+				m_Replica = raknet->FindReplica(master->GetReplica()->GetNetworkID(),m_PartId);
+
+			if(m_Replica== NULL) //replica not available jet, trig serach on new child replica messages
+			{
+				
 			}
+			else
+			   m_Replica->SetOwner(GetSceneObject());
 		}
 	}
 
-	void RakNetNetworkMasterComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RakNetNetworkChildComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 	
 	}
 
-	void RakNetNetworkMasterComponent::OnSerialize(NetworkSerializeMessagePtr message)
+	void RakNetNetworkChildComponent::OnSerialize(NetworkSerializeMessagePtr message)
 	{
 		bool found = false;
 		for(int i = 0 ; i < m_SerializePackages.size(); i++)
@@ -109,7 +121,7 @@ namespace GASS
 		//Signal serialize
 	}
 
-	void RakNetNetworkMasterComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
+	void RakNetNetworkChildComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
 	{
 		int num_packs = m_SerializePackages.size();
 		outBitStream->Write(num_packs);
@@ -123,7 +135,7 @@ namespace GASS
 		m_SerializePackages.clear();
 	}
 
-	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
+	void RakNetNetworkChildComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
 		int num_packs = 0;
 		inBitStream->Read(num_packs);
