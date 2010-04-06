@@ -37,7 +37,7 @@ namespace GASS
 		See Factory class for more information on how to
 		do the actual registration.
 	*/
-	class GASSCoreExport ComponentContainerTemplateFactory : public Factory<IComponentContainerTemplate>
+	class GASSCoreExport ComponentContainerTemplateFactory : public Factory<IComponentContainerTemplate,std::string>
 	{
 	public:
 		ComponentContainerTemplateFactory();

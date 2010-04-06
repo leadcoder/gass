@@ -44,7 +44,8 @@ namespace GASS
 		m_CGPosition(0,0,0),
 		m_SymmetricInertia(0,0,0),
 		m_AssymetricInertia(0,0,0),
-		m_EffectJoints(true)
+		m_EffectJoints(true),
+		m_Active(true)
 	{
 		
 		
@@ -64,6 +65,7 @@ namespace GASS
 		RegisterProperty<Vec3>("SymmetricInertia",&ODEBodyComponent::GetSymmetricInertia, &ODEBodyComponent::SetSymmetricInertia);
 		RegisterProperty<Vec3>("AssymetricInertia",&ODEBodyComponent::GetAssymetricInertia, &ODEBodyComponent::SetAssymetricInertia);
 		RegisterProperty<bool>("EffectJoints",&ODEBodyComponent::GetEffectJoints, &ODEBodyComponent::SetEffectJoints);
+		RegisterProperty<bool>("Active",&ODEBodyComponent::GetActive, &ODEBodyComponent::SetActive);
 		
 	}
 
@@ -96,11 +98,17 @@ namespace GASS
 		}
 	}
 
+	void ODEBodyComponent::Wake()
+	{
+		if(GetActive())
+			SetActive(true);
+	}
+
 	void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
 		//wake body!!
-		Enable();
+		Wake();
 		switch(type)
 		{
 		case PhysicsBodyMessage::FORCE:
@@ -119,6 +127,16 @@ namespace GASS
 			{
 				Vec3 value = message->GetValue();
 				SetVelocity(value,true);
+				break;
+			}
+		case PhysicsBodyMessage::ENABLE:
+			{
+				SetActive(true);
+				break;
+			}
+		case PhysicsBodyMessage::DISABLE:
+			{
+				SetActive(false);
 				break;
 			}
 		}
@@ -320,25 +338,20 @@ namespace GASS
 		return vel;
 	}
 
-	void ODEBodyComponent::Enable()
+	void ODEBodyComponent::SetActive(bool value)
 	{
+		m_Active = value;
 		if(m_ODEBodyComponent)
 		{
-			dBodyEnable(m_ODEBodyComponent);
+			if(m_Active)
+				dBodyEnable(m_ODEBodyComponent);
+			else 
+				dBodyDisable(m_ODEBodyComponent);
 		}
 	}
-	bool ODEBodyComponent::IsEnabled()
+	bool ODEBodyComponent::GetActive() const
 	{
-		if(dBodyIsEnabled(m_ODEBodyComponent) == 0) return false;
-		return true;
-	}
-
-	void ODEBodyComponent::Disable()
-	{
-		if(m_ODEBodyComponent)
-		{
-			dBodyDisable(m_ODEBodyComponent);
-		}
+		return m_Active;
 	}
 
 	Vec3 ODEBodyComponent::GetTorque(bool rel)

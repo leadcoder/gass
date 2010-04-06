@@ -80,7 +80,7 @@ namespace GASS
 		float value = message->GetValue();
 
 		//wake body!!
-		m_Body1->Enable();
+		m_Body1->Wake();
 		switch(type)
 		{
 		case PhysicsJointMessage::AXIS1_VELOCITY:

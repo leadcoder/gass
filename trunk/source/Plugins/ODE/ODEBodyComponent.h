@@ -57,9 +57,9 @@ namespace GASS
 		Vec3 GetVelocity(bool rel = false);
 		void SetAngularVelocity(const Vec3 &vel, bool rel = false);
 		Vec3 GetAngularVelocity(bool rel = false);
-		void Enable();
-		void Disable();
-		bool IsEnabled();
+		void SetActive(bool value);
+		bool GetActive() const;
+		
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void SetForce(const Vec3 &force);
@@ -103,6 +103,7 @@ namespace GASS
 		dSpaceID GetSpace();
 		dSpaceID GetSecondarySpace();
 	protected:
+		void Wake();
 		dBodyID m_ODEBodyComponent;
 		dSpaceID m_ODESpaceID;
 		
@@ -112,6 +113,7 @@ namespace GASS
 		bool m_Debug;
 		bool m_AutoDisable;
 		bool m_FastRotation;
+		bool m_Active;
 		
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;

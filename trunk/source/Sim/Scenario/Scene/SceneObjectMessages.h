@@ -484,23 +484,26 @@ namespace GASS
 	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
 
 
+	//typedef boost::shared_ptr<char> NetworkDataPtr;
+	class NetworkPackage
+	{
+	public:
+		NetworkPackage() 
+		{}
+		NetworkPackage(int id) : Id(id)
+		{}
+		virtual ~NetworkPackage(){}
+		virtual int GetSize() = 0;
+		virtual void Assign(char* data) = 0;
+		int Id;
+		//NetworkDataPtr Data;
+	};
+	typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
 
 	class NetworkSerializeMessage : public BaseMessage
 	{
 
 	public:
-		//typedef boost::shared_ptr<char> NetworkDataPtr;
-		class NetworkPackage
-		{
-		public:
-			NetworkPackage(int id) : Id(id)
-			{}
-			virtual ~NetworkPackage(){}
-			virtual int GetSize() = 0;
-			int Id;
-			//NetworkDataPtr Data;
-		};
-		typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
 		NetworkSerializeMessage(NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
 		BaseMessage( sender_id , delay), m_Package(package){}
 		NetworkPackagePtr GetPackage() const {return m_Package;}

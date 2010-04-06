@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	class GASSCoreExport SystemFactory : public Factory<ISystem>
+	class GASSCoreExport SystemFactory : public Factory<ISystem,std::string>
 	{
 	public:
 		SystemFactory();

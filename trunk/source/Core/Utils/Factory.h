@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	typedef std::string ObjectType;
+	//typedef std::string ObjectType;
 
 
 	template<class Base>
@@ -71,7 +71,7 @@ namespace GASS
 
 
 
-	template<class Base>
+	template<class Base, class ObjectType>
 	class Factory
 	{
 	public:
@@ -86,14 +86,14 @@ namespace GASS
 	};
 
 
-	template<class Base>
-	bool Factory<Base>::Register(ObjectType type, CreatorBase<Base> * pCreator)
+	template<class Base, class ObjectType>
+	bool Factory<Base,ObjectType>::Register(ObjectType type, CreatorBase<Base> * pCreator)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it != m_creatorMap.end())
 		{
 			delete pCreator;
-			Log::Warning("ObjectType %s already registred",type.c_str());
+			Log::Warning("ObjectType already registred");
 			return false;
 		}
 		m_creatorMap[type] = pCreator;
@@ -101,8 +101,8 @@ namespace GASS
 	}
 
 
-	template<class Base>
-	std::string Factory<Base>::GetFactoryName(const std::string &class_name) 
+	template<class Base, class ObjectType>
+	std::string Factory<Base,ObjectType>::GetFactoryName(const std::string &class_name) 
 	{
 		typename CreatorMap::iterator it = m_creatorMap.begin();
 		while(it != m_creatorMap.end())
@@ -116,8 +116,8 @@ namespace GASS
 		return std::string("");
 	}
 
-	template<class Base>
-	std::vector<std::string> Factory<Base>::GetFactoryNames() 
+	template<class Base, class ObjectType>
+	std::vector<std::string> Factory<Base,ObjectType>::GetFactoryNames() 
 	{
 		std::vector<std::string> names;
 		typename CreatorMap::iterator it = m_creatorMap.begin();
@@ -130,8 +130,8 @@ namespace GASS
 		return names;
 	}
 
-	template<class Base>
-	boost::shared_ptr<Base> Factory<Base>::Create(ObjectType type)
+	template<class Base, class ObjectType>
+	boost::shared_ptr<Base> Factory<Base,ObjectType>::Create(ObjectType type)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end())
