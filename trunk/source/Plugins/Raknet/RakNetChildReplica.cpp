@@ -33,6 +33,9 @@
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "RakNetChildReplica.h"
+#include "RakNetMasterReplica.h"
+
+#include "RakNetNetworkChildComponent.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 //#include "RakNetReplicaMember.h"
@@ -55,7 +58,16 @@ namespace GASS
 	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
 	{
 		m_Owner = object;
+
 //		m_TemplateName = object->GetTemplateName();
+
+		SceneObjectPtr object_root =  object->GetObjectUnderRoot();
+		if(object_root)
+		{
+			RakNetNetworkMasterComponentPtr root_net_obj = object_root->GetFirstComponent<RakNetNetworkMasterComponent>();
+			if(root_net_obj)
+				m_PartOfId = root_net_obj->GetReplica()->GetNetworkID();
+		}
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
@@ -133,6 +145,8 @@ namespace GASS
 	void RakNetChildReplica::SendConstruction(RakNet::BitStream *outBitStream)
 	{
 		outBitStream->Write(m_OwnerSystemAddress);
+		outBitStream->Write(m_PartId);
+		outBitStream->Write(m_PartOfId);
 		assert(m_Owner);
 		
 		//std::string name = m_Owner->GetName();
@@ -173,7 +187,7 @@ namespace GASS
 
 	void RakNetChildReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
-		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkChildComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
 		SerialSaver ss(NULL,0);
 		for(int i = 0 ;  i < attributes.size(); i++)
@@ -202,6 +216,8 @@ namespace GASS
 	void RakNetChildReplica::ReceiveConstruction(RakNet::BitStream *inBitStream)
 	{
 		inBitStream->Read(m_OwnerSystemAddress);
+		inBitStream->Read(m_PartId);
+		inBitStream->Read(m_PartOfId);
 		//m_TemplateName = RakNetNetworkSystem::ReadString(inBitStream);
 	}
 
@@ -236,7 +252,7 @@ namespace GASS
 		//	return REPLICA_PROCESSING_DONE;
 		//outBitStream->Write(testInteger);
 
-		RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkChildComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkChildComponent>();
 		net_obj->Serialize(sendTimestamp, outBitStream, lastSendTime, priority, reliability, currentTime, systemAddress, flags);
 		return REPLICA_PROCESSING_DONE;
 	}
@@ -246,7 +262,7 @@ namespace GASS
 		//inBitStream->Read(m_DataToReceive);
 		if(m_Owner)
 		{
-			RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+			RakNetNetworkChildComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkChildComponent>();
 			net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
 			// If this is a server
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();

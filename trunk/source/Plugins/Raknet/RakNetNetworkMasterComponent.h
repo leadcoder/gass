@@ -62,6 +62,7 @@ namespace GASS
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
 
 	private:
+		void GeneratePartID(SceneObjectPtr obj, int &id);
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		RakNetMasterReplica* m_Replica;

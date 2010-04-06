@@ -75,6 +75,7 @@ namespace GASS
 		if(raknet->IsServer())
 		{
 			m_Replica = new RakNetChildReplica(raknet->GetReplicaManager());
+			m_Replica->SetPartId(m_PartId);
 			m_Replica->LocalInit(GetSceneObject());
 		}
 		else
@@ -89,12 +90,28 @@ namespace GASS
 
 			if(m_Replica== NULL) //replica not available jet, trig serach on new child replica messages
 			{
-				
+				SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage,0));
+//					
 			}
 			else
 			   m_Replica->SetOwner(GetSceneObject());
 		}
 	}
+
+	void RakNetNetworkChildComponent::OnNewChildReplica(ChildReplicaCreatedMessagePtr message)
+	{
+		RakNetChildReplica* replica = message->GetReplica();
+		RakNetNetworkMasterComponentPtr top_comp = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
+		NetworkID part_of_id = top_comp->GetReplica()->GetNetworkID();
+		int part_id = GetPartId();
+		if(replica->GetPartId() == part_id && replica->GetPartOfId() == part_of_id)
+		{
+			m_Replica = replica;
+			m_Replica->SetOwner(GetSceneObject());
+			SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+		}
+	}
+
 
 	void RakNetNetworkChildComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{

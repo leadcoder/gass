@@ -21,6 +21,7 @@
 #include "RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
+#include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetLocationTransferComponent.h"
 
 #include "Plugins/Game/GameMessages.h"
@@ -70,8 +71,13 @@ namespace GASS
 	void RakNetNetworkMasterComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		
+		int id = 0;
+		GeneratePartID(GetSceneObject(), id);
+		
 		if(raknet->IsServer())
 		{
+	
 			m_Replica = new RakNetMasterReplica(raknet->GetReplicaManager());
 			m_Replica->LocalInit(GetSceneObject());
 		}
@@ -81,6 +87,19 @@ namespace GASS
 			{
 				m_Replica->SetOwner(GetSceneObject());
 			}
+		}
+	}
+
+	void RakNetNetworkMasterComponent::GeneratePartID(SceneObjectPtr obj, int &id)
+	{
+		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkChildComponent>();
+		if(comp)
+			comp->SetPartId(id);
+		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
+		while(cc_iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			GeneratePartID(child,++id);
 		}
 	}
 

@@ -62,10 +62,11 @@ namespace GASS
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
 
 		void SetPartId(int id) {m_PartId = id;}
-		int GetPartId()const {m_PartId;}
+		int GetPartId()const {return m_PartId;}
 	private:
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
+		void OnNewChildReplica(ChildReplicaCreatedMessagePtr message);
 		RakNetChildReplica* m_Replica;
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;

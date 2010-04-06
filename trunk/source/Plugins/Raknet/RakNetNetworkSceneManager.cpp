@@ -77,14 +77,12 @@ namespace GASS
 	{
 		//Initlize all network components and send scene mananger as argument
 		/*SceneObjectPtr obj = message->GetSceneObject();
-		if(obj->GetObjectUnderRoot() == obj) //root object, generate part id:s for all network components
+		RakNetNetworkMasterComponentPtr comp = obj->GetFirstComponent<RakNetNetworkMasterComponent>();
+		if(comp) //root object, generate part id:s for all network components
 		{
 			int id=0;
 			GeneratePartID(obj,id);
-		}
-		assert(obj);*/
-//		MessagePtr phy_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
-//		obj->SendImmediate(phy_msg);
+		}*/
 	}
 
 	/*void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)
@@ -110,9 +108,7 @@ namespace GASS
 			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponent<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
 			
-			int id=0;
-			GeneratePartID(so,id);
-
+			
 			GetScenarioScene()->GetObjectManager()->LoadObject(so);
 		}
 	}
