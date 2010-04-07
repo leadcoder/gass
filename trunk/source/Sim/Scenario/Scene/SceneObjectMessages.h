@@ -504,11 +504,15 @@ namespace GASS
 	{
 
 	public:
-		NetworkSerializeMessage(NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
-		BaseMessage( sender_id , delay), m_Package(package){}
+		NetworkSerializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
+		BaseMessage( sender_id , delay), 
+		m_Package(package),
+		m_TimeStamp(time_stamp){}
 		NetworkPackagePtr GetPackage() const {return m_Package;}
+		unsigned int GetTimeStamp() const {return m_TimeStamp;}
 	private:
 		NetworkPackagePtr m_Package;
+		unsigned int m_TimeStamp;
 	};
 	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
 

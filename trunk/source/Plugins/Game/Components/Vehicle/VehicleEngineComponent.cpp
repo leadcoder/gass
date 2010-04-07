@@ -404,11 +404,11 @@ namespace GASS
 		UpdateSound(delta);
 		UpdateExhaustFumes(delta);
 		
-		char dtxt[256];
+		/*char dtxt[256];
 		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineComponentRPM,m_Clutch);
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 	}
 	void VehicleEngineComponent::UpdateSound(double delta)
 	{
@@ -447,11 +447,11 @@ namespace GASS
 		
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
-		char dtxt[256];
+		/*char dtxt[256];
 		sprintf(dtxt,"Speed(km/h): %f\n Hull ang vel:%f %f %f\n Q:%f \n DesiredSteer vel %f",m_VehicleSpeed*3.6f, m_AngularVelocity.x,m_AngularVelocity.y,m_AngularVelocity.z,turn_torque,-m_DesiredSteer);
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 	}
 
 	float VehicleEngineComponent::DampThrottle(float delta, float desired_throttle,float current_throttle, float throttle_accel)
@@ -594,10 +594,10 @@ namespace GASS
 		m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineComponentRPM-1000*delta);
 
 	
-		sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
+		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
 		engine_data = dtxt;
 		MessagePtr debug_msg2(new DebugPrintMessage(engine_data));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);*/
 
 		//what rpm should we expose to other components?
 		if(m_SmoothRPMOutput)

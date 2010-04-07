@@ -134,6 +134,8 @@ namespace GASS
 		outBitStream->Write(num_packs);
 		for(int i = 0 ; i < m_SerializePackages.size(); i++)
 		{
+			*sendTimestamp = true; //always include time stamp!
+
 			outBitStream->Write(m_SerializePackages[i]->Id);
 			//outBitStream->Write(m_SerializePackages[i]->Size);
 			int size = m_SerializePackages[i]->GetSize();
@@ -161,7 +163,8 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete data_to_read ;
-				GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));
+				GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(timestamp,package)));
+
 			}
 			//NetworkPackagePtr package;
 			/*if(id == TRANSFORMATION_DATA)

@@ -77,7 +77,7 @@ namespace GASS
 			The application is responsible for calling this function each frame
 		@param delta is the frame time.
 		*/
-		void Update(float delta_time);
+		void Update(double delta_time);
 		
 		/**
 		Shutdown GASS.
@@ -111,12 +111,19 @@ namespace GASS
 			Get the runtime control manager. See RuntimeController class for more information
 		*/
 		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
+
+
+		/**
+		Return elapsed time
+		*/
+		double GetTime() const {return m_CurrentTime;}
 	private:
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SimObjectManager;
 		ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
+		double m_CurrentTime;
 	};
 }
 

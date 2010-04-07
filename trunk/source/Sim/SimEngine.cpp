@@ -83,9 +83,12 @@ namespace GASS
 		return true;
 	}
 
-	void SimEngine::Update(float delta_time)
+	void SimEngine::Update(double delta_time)
 	{
 		m_RTC->Update(delta_time);
+
+		m_CurrentTime += delta_time;
+
 
 		//TODO: this should not be done here
 	

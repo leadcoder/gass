@@ -25,10 +25,13 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Scheduling/ITaskListener.h"
+
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
+
 
 namespace GASS
 {
@@ -48,7 +51,12 @@ namespace GASS
 		{
 		
 		}
-		TransformationPackage(int id, const Vec3 &pos,const Quaternion &rot) : NetworkPackage(id), Position(pos), Rotation(rot){}
+		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &delta_pos,const Quaternion &rot,const Quaternion &delta_rot) : NetworkPackage(id), 
+			Position(pos),
+			DeltaPosition(delta_pos), 
+			Rotation(rot),
+			DeltaRotation(delta_rot),
+			TimeStamp(time_stamp){}
 		/*static void RegisterToFactory()
 		{
 			GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::EnumCreator<TransformationPackage, NetworkPackage>);	
@@ -61,6 +69,9 @@ namespace GASS
 		}
 		Vec3 Position;
 		Quaternion Rotation;
+		Vec3 DeltaPosition;
+		Quaternion DeltaRotation;
+		unsigned int TimeStamp;
 	};
 	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
 	
@@ -71,7 +82,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>
+	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public ITaskListener
 	{
 	public:
 		RakNetLocationTransferComponent();
@@ -83,7 +94,20 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnSerialize(NetworkSerializeMessagePtr message);
-	
+
+		//ITaskListener
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
+		
+		Vec3 m_DeltaPosition;
+		Quaternion m_DeltaRotation;
+
+		Quaternion m_RotationHistory[3];
+		Vec3 m_PositionHistory[3];
+		unsigned int m_TimeStampHistory[3];
+		double m_DeadReckoning;
+		double m_LastSerialize;
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }
