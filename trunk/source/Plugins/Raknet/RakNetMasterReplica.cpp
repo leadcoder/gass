@@ -171,8 +171,6 @@ namespace GASS
 		return NULL;
 	}
 
-	
-
 	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();

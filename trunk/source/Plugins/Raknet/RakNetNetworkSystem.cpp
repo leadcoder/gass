@@ -263,25 +263,21 @@ namespace GASS
 
 		else*/ if (strcmp(output, "RakNetMasterReplica")==0)
 		{
-			printf("replica about to be created!\n");
+			//printf("replica about to be created!\n");
 			RakNetMasterReplica* object = new RakNetMasterReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			MessagePtr message( new MasterReplicaCreatedMessage(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
-			printf("replica created!\n");
+			//printf("replica created!\n");
 		}
 		else if (strcmp(output, "RakNetChildReplica")==0)
 		{
-			printf("replica about to be created!\n");
+			//printf("replica about to be created!\n");
 			RakNetChildReplica* object = new RakNetChildReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			MessagePtr message( new ChildReplicaCreatedMessage(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
-			printf("replica created!\n");
-		}
-		//if(object)
-		{
-			//object->RemoteInit(inBitStream, timestamp, networkID,senderId, this);
+			//printf("replica created!\n");
 		}
 		return REPLICA_PROCESSING_DONE;
 	}

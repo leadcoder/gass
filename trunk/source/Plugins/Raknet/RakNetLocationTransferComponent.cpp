@@ -45,8 +45,8 @@
 
 namespace GASS
 {
-	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_DeltaPosition(0,0,0),
-		m_DeltaRotation(0,0,0,0),
+	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_Velocity(0,0,0),
+		m_AngularVelocity(0,0,0,0),
 		m_DeadReckoning(0),
 		m_LastSerialize(0),
 		m_SendFreq(1.0f/20.0f) // 20fps
@@ -176,7 +176,7 @@ namespace GASS
 		//Font::DebugPrint("inte time: %d",(m_UpdateTimeStamp[0] -m_UpdateTimeStamp[1]));
 		time = time - step_back;
 
-		char debug_text[256];
+		//char debug_text[256];
 
 		if(time > m_TimeStampHistory[0])  
 		{
@@ -187,10 +187,10 @@ namespace GASS
 			float delta_time = time - m_UpdateTimeStamp[0];
 			Vec3 delta_dir = m_Pos[0]-m_Pos[1];
 			float speed = delta_dir.Length()*(1.0/prev_delta_time);*/
-			Float length = m_DeltaPosition.Length();
+			Float length = m_Velocity.Length();
 			if(length > 0.0000001)
 			{
-				Vec3 delta_dir = m_DeltaPosition;
+				Vec3 delta_dir = m_Velocity;
 				delta_dir.Normalize();
 				delta_dir = delta_dir*(length*m_DeadReckoning);
 				//delta_dir = delta_dir* (1.0/prev_delta_time);
@@ -201,13 +201,13 @@ namespace GASS
 				new_pos = m_PositionHistory[0];
 
 
-			sprintf(debug_text,"extrapolation Time before: %d Delta pos %f %f %f DEad time %f",(time -m_TimeStampHistory[0]),m_DeltaPosition.x,m_DeltaPosition.y,m_DeltaPosition.z, m_DeadReckoning);
+			//sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f DEad time %f",(time -m_TimeStampHistory[0]),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 
 
-			new_rot.x = m_RotationHistory[0].x  + m_DeltaRotation.x*m_DeadReckoning;
-			new_rot.y = m_RotationHistory[0].y  + m_DeltaRotation.y*m_DeadReckoning;
-			new_rot.z = m_RotationHistory[0].z  + m_DeltaRotation.z*m_DeadReckoning;
-			new_rot.w = m_RotationHistory[0].w  + m_DeltaRotation.w*m_DeadReckoning;
+			new_rot.x = m_RotationHistory[0].x  + m_AngularVelocity.x*m_DeadReckoning;
+			new_rot.y = m_RotationHistory[0].y  + m_AngularVelocity.y*m_DeadReckoning;
+			new_rot.z = m_RotationHistory[0].z  + m_AngularVelocity.z*m_DeadReckoning;
+			new_rot.w = m_RotationHistory[0].w  + m_AngularVelocity.w*m_DeadReckoning;
 
 			//new_rot = m_RotationHistory[0];
 			//new_pos = m_PositionHistory[0];
@@ -225,7 +225,7 @@ namespace GASS
 				inter = double(elapsed)/double(tot);
 			new_pos = (m_PositionHistory[1]*inter) + (m_PositionHistory[0]*(1.0-inter));
 			new_rot = Quaternion::Slerp2(inter,m_RotationHistory[0], m_RotationHistory[1]);
-			sprintf(debug_text,"interpolation 1: Time before: %d inter:%f",(m_TimeStampHistory[0] - time),inter);
+			//sprintf(debug_text,"interpolation 1: Time before: %d inter:%f",(m_TimeStampHistory[0] - time),inter);
 		}
 		else if(time >= m_TimeStampHistory[2])
 		{
@@ -238,12 +238,12 @@ namespace GASS
 				inter = double(elapsed)/double(tot);
 			new_pos = (m_PositionHistory[2]*inter) + (m_PositionHistory[1]*(1.0-inter));
 			new_rot = Quaternion::Slerp2(inter,m_RotationHistory[1], m_RotationHistory[2]);
-			sprintf(debug_text,"interpolation 2: Time before: %d inter %f",(m_TimeStampHistory[1] - time),inter);
+			//sprintf(debug_text,"interpolation 2: Time before: %d inter %f",(m_TimeStampHistory[1] - time),inter);
 		}
 		else
 		{
 			//Font::DebugPrint("behinde last update: %d",(m_UpdateTimeStamp[1]-time));
-			sprintf(debug_text,"behinde last update: %d",(m_TimeStampHistory[2] - time));
+			//sprintf(debug_text,"behinde last update: %d",(m_TimeStampHistory[2] - time));
 			//std::cout << "behinde last update: " <<(m_TimeStampHistory[1] - time) << std::endl; 
 			new_rot = m_RotationHistory[2];
 			new_pos = m_PositionHistory[2];
@@ -255,8 +255,8 @@ namespace GASS
 
 		//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 
-		MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
+		//MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
+		//SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
 
 	}
 
@@ -270,8 +270,8 @@ namespace GASS
 			//if(trans_package->TimeStamp < m_TimeStampHistory[0])
 			//	std::cout << "wrong order!!" << std::endl;
 
-			m_DeltaPosition = trans_package->DeltaPosition;
-			m_DeltaRotation = trans_package->DeltaRotation;
+			m_Velocity = trans_package->Velocity;
+			m_AngularVelocity = trans_package->AngularVelocity;
 
 			m_PositionHistory[2] = m_PositionHistory[1];
 			m_PositionHistory[1] = m_PositionHistory[0];

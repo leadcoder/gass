@@ -51,11 +51,11 @@ namespace GASS
 		{
 		
 		}
-		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &delta_pos,const Quaternion &rot,const Quaternion &delta_rot) : NetworkPackage(id), 
+		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &vel,const Quaternion &rot,const Quaternion &ang_vel) : NetworkPackage(id), 
 			Position(pos),
-			DeltaPosition(delta_pos), 
+			Velocity(vel), 
 			Rotation(rot),
-			DeltaRotation(delta_rot),
+			AngularVelocity(ang_vel),
 			TimeStamp(time_stamp){}
 		/*static void RegisterToFactory()
 		{
@@ -69,8 +69,8 @@ namespace GASS
 		}
 		Vec3 Position;
 		Quaternion Rotation;
-		Vec3 DeltaPosition;
-		Quaternion DeltaRotation;
+		Vec3 Velocity;
+		Quaternion AngularVelocity;
 		unsigned int TimeStamp;
 	};
 	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
@@ -102,8 +102,8 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 
 		
-		Vec3 m_DeltaPosition;
-		Quaternion m_DeltaRotation;
+		Vec3 m_Velocity;
+		Quaternion m_AngularVelocity;
 
 		Quaternion m_RotationHistory[3];
 		Vec3 m_PositionHistory[3];
