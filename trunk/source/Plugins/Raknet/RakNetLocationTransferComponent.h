@@ -90,10 +90,12 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
+		void SetSendFrequency(float value) {m_SendFreq = value;}
+		float GetSendFrequency() const {return m_SendFreq;}
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnSerialize(NetworkSerializeMessagePtr message);
+		void OnDeserialize(NetworkDeserializeMessagePtr message);
 
 		//ITaskListener
 		void Update(double delta);
@@ -108,6 +110,7 @@ namespace GASS
 		unsigned int m_TimeStampHistory[3];
 		double m_DeadReckoning;
 		double m_LastSerialize;
+		float m_SendFreq;
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }

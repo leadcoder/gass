@@ -48,14 +48,14 @@ namespace GASS
 	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_DeltaPosition(0,0,0),
 		m_DeltaRotation(0,0,0,0),
 		m_DeadReckoning(0),
-		m_LastSerialize(0)
+		m_LastSerialize(0),
+		m_SendFreq(1.0f/20.0f) // 20fps
 	{
 		for(int i = 0 ; i < 3; i++)
 		{
 			m_PositionHistory[i] = Vec3(0,0,0);
 			m_RotationHistory[i] = Quaternion(0,0,0);
 			m_TimeStampHistory[i] = 0;
-
 		}
 	}
 
@@ -68,6 +68,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
+		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
 	}
 
 	void RakNetLocationTransferComponent::OnCreate()
@@ -88,7 +89,7 @@ namespace GASS
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnSerialize,NetworkSerializeMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
 
 			MessagePtr disable_msg(new PhysicsBodyMessage(PhysicsBodyMessage::DISABLE,Vec3(0,0,0)));
 			GetSceneObject()->PostMessage(disable_msg);
@@ -111,18 +112,17 @@ namespace GASS
 		double delta = current_time - m_LastSerialize;
 
 
-			char debug_text[256];
-			sprintf(debug_text,"delta: %f",delta);
-			MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
+		char debug_text[256];
+		sprintf(debug_text,"delta: %f",delta);
+		MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
 
-		if(delta > 0.5) //serialize transformation at fix freq
+		if(delta > m_SendFreq) //serialize transformation at fix freq
 		{
 			if(delta > 5) //clamp
 				delta = 5;
 			m_LastSerialize = current_time;
-			
-		
+
 
 			Vec3 pos = message->GetPosition();
 			Quaternion rot = message->GetRotation();
@@ -147,11 +147,12 @@ namespace GASS
 			m_RotationHistory[0] = rot;
 
 			unsigned int time_stamp = RakNet::GetTime();
+			//std::cout << "Time stamp:" << time_stamp << "Current time" << current_time << std::endl;
 
 			boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,pos,delta_pos, rot,delta_rot));
 			MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
 			GetSceneObject()->SendImmediate(serialize_message);
-			
+
 		}
 
 	}
@@ -167,7 +168,7 @@ namespace GASS
 		Quaternion new_rot;
 		Vec3 new_pos;
 
-		RakNetTime step_back = 150; //
+		RakNetTime step_back = m_SendFreq*3*1000; //
 		RakNetTime time = RakNet::GetTime();
 
 		//std::cout << "Time since last data received: " <<(time - m_TimeStampHistory[0]) << std::endl; 
@@ -187,7 +188,7 @@ namespace GASS
 			Vec3 delta_dir = m_Pos[0]-m_Pos[1];
 			float speed = delta_dir.Length()*(1.0/prev_delta_time);*/
 			Float length = m_DeltaPosition.Length();
-			if(length > 0.01)
+			if(length > 0.0000001)
 			{
 				Vec3 delta_dir = m_DeltaPosition;
 				delta_dir.Normalize();
@@ -201,20 +202,20 @@ namespace GASS
 
 
 			sprintf(debug_text,"extrapolation Time before: %d Delta pos %f %f %f DEad time %f",(time -m_TimeStampHistory[0]),m_DeltaPosition.x,m_DeltaPosition.y,m_DeltaPosition.z, m_DeadReckoning);
-			
+
 
 			new_rot.x = m_RotationHistory[0].x  + m_DeltaRotation.x*m_DeadReckoning;
 			new_rot.y = m_RotationHistory[0].y  + m_DeltaRotation.y*m_DeadReckoning;
 			new_rot.z = m_RotationHistory[0].z  + m_DeltaRotation.z*m_DeadReckoning;
 			new_rot.w = m_RotationHistory[0].w  + m_DeltaRotation.w*m_DeadReckoning;
 
-			new_rot = m_RotationHistory[0];
+			//new_rot = m_RotationHistory[0];
 			//new_pos = m_PositionHistory[0];
-			
+
 		}
 		else if(time >= m_TimeStampHistory[1])
 		{
-			
+
 			//std::cout << "interpolation 1: " <<(m_TimeStampHistory[0] - time) << std::endl; 
 			//Font::DebugPrint("interpolation");
 			RakNetTime elapsed = m_TimeStampHistory[0] - time;
@@ -253,19 +254,22 @@ namespace GASS
 
 
 		//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
-		
+
 		MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
 
 	}
 
-	void RakNetLocationTransferComponent::OnSerialize(NetworkSerializeMessagePtr message)
+	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeMessagePtr message)
 	{
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
 			NetworkPackagePtr package = message->GetPackage();
 			TransformationPackagePtr trans_package = boost::shared_dynamic_cast<TransformationPackage>(package);
-			
+
+			//if(trans_package->TimeStamp < m_TimeStampHistory[0])
+			//	std::cout << "wrong order!!" << std::endl;
+
 			m_DeltaPosition = trans_package->DeltaPosition;
 			m_DeltaRotation = trans_package->DeltaRotation;
 
@@ -282,6 +286,7 @@ namespace GASS
 			m_TimeStampHistory[0] = trans_package->TimeStamp;
 
 			m_DeadReckoning = 0;
+			
 			//std::cout << "Time stamp: " << m_TimeStampHistory[0] << " " << m_TimeStampHistory[1] <<  " " << m_TimeStampHistory[2] <<std::endl; 
 		}
 	}

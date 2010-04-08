@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
 	{
 		double time = timer.GetTime();
 		temp_t = time;
-		//if(time - prev > update_time)
+		if(time - prev > update_time)
 		{
 			engine->Update(update_time);
 			scenario->OnUpdate(update_time);
