@@ -47,6 +47,8 @@
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Plugins/Game/GameMessages.h"
 
+#include "Client.h"
+#include "Server.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -112,52 +114,45 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 
 GASS::ScenarioPtr scenario(new GASS::Scenario());
 
-class SimClient
-{
-public:
-	SimClient() : m_IsConnected(false){};
-	virtual ~SimClient(){}
-	bool IsConnected() const {return m_IsConnected;}
-	void OnServerResponse(GASS::MessagePtr message)
-	{
-		GASS::ServerResponseMessagePtr mess = boost::shared_dynamic_cast<GASS::ServerResponseMessage>(message);
-		printf("Client got response from server:%s\n",mess->GetServerName().c_str());
-		//Connect to server?
-		//try to connect
-		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2001)));
-		m_IsConnected = true;
-	}
-	void OnLoadScenario(GASS::MessagePtr message)
-	{
-		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
-		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
-
-		scenario->Load(mess->GetScenarioName());		
-
-	}
-private:
-	bool m_IsConnected;
-};
-
-
-class SimServer
-{
-public:
-	SimServer(){};
-	virtual ~SimServer(){}
-	
-	void OnClientConnected(GASS::MessagePtr message)
-	{
-		GASS::ClientConnectedMessagePtr mess = boost::shared_dynamic_cast<GASS::ClientConnectedMessage>(message);
-		printf("Client connected to server:%s",mess->GetClientName().c_str());
-	}
-};
-
 
 
 int main(int argc, char* argv[])
 {
-	SimServer server;
+
+	
+	SimApplication* app;
+	bool is_server = false;
+	std::string config = "../configuration/app_config.xml";
+	int index = 1;
+	while(index < argc)
+	{
+		char* arg = argv[index];
+		if(_strcmpi(arg, "--IsServer") == 0)
+		{
+			is_server = atoi(argv[index+1]);
+		}
+		else if(_strcmpi(arg, "--Config") == 0)
+		{
+			config = argv[index+1];
+		}
+		index += 2;
+	}
+
+	if(is_server) 
+		app = new SimServer(config);
+	else 
+		app = new SimClient(config);
+
+	app->Init();
+
+	while(app->Update())
+	{
+
+	}
+	exit(0);
+	
+	
+/*	SimServer server;
 	SimClient client;
 
 	std::string plugin_file = "../Configuration/plugins.xml";
@@ -206,17 +201,7 @@ int main(int argc, char* argv[])
 
 		//CreateManualObject();
 		scenario->Load(scenario_path);
-		/*int wait = 0;
-		while(wait < 60 )
-		{
-			wait += 1;
-			double update_time = 1.0/60.0;
-			engine->Update(update_time);
-			scenario->OnUpdate(update_time);
-			//engine->Update(0.1);
-			//scenario->OnUpdate(0.1);
-		}*/
-	//	Sleep(1000);
+
 
 
 		
@@ -245,7 +230,7 @@ int main(int argc, char* argv[])
 					GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
 					if(objs.size() > 0)
 						objs.front()->PostMessage(enter_msg);*/
-				}
+		/*		}
 			}
 			//Sleep(1000);
 		}
@@ -258,8 +243,7 @@ int main(int argc, char* argv[])
 		GASS::MessageFuncPtr load_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnLoadScenario, &client, _1 ),&client));
 		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::StartSceanrioRequestMessage),load_callback,0);
 		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
-		
-		
+			
 		
 		
 		printf("\n\nWaiting for server");
@@ -298,11 +282,8 @@ int main(int argc, char* argv[])
 
 
 	
-	
-	GASS::Timer timer;
-
+	/*GASS::Timer timer;
 	timer.Reset();
-
 	double prev = 0;
 	double temp_t = 0;
 	bool check_reset = true;
@@ -318,37 +299,9 @@ int main(int argc, char* argv[])
 			scenario->OnUpdate(update_time);
 			//std::cout << "Time is:" << time << std::endl;
 			//std::cout << "FPS:" << 1.0/(time - prev) << std::endl;
-static bool once = true;
-/*			if(is_server && once && time > 10)
-			{
-				once = false;
-			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
-			if(scene_object)
-			{
-
-				GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
-				pos.x = pos.x;
-				pos.z = pos.z - 2;
-				//pos.x = 0;
-				//pos.y = 10;
-				//pos.z = 0;
-				boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
-				scene_object->SendImmediate(pos_msg);
-
-				//if(i==0)
-				{
-					GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
-					scene_object->PostMessage(enter_msg);
-
-					GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
-					if(objs.size() > 0)
-						objs.front()->PostMessage(enter_msg);
-				}
-			}
-			}*/
-			
+			static bool once = true;
 			prev = time;
-		}
+		}*/
 
 	/*	delete scenario;
 		scenario = new GASS::Scenario();
@@ -365,11 +318,9 @@ static bool once = true;
 			std::cout << "Reset timer after 5 sec , current time is:" << time << std::endl;
 			prev = time;
 		}*/
-	}
+	/*}*/
 
 	/////////////////TEST plugin manager/////////////
-
-	
 	return 0;
 }
 
