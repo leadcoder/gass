@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimApplication UpdateFrequency="60" Scenario="../data/scenarios/ogre_demo_scenario" SystemConfig="../Configuration/systems.xml" Plugins="../Configuration/plugins.xml" ControlSettings="../Configuration/control_settings.xml">
+  <Templates>
+    <Template Name="..\\data\\templates\\vehicles\\jim_tank.xml"/>
+  </Templates>
+  <Objects>
+    <Object Name="JimTank"/>
+  </Objects>
+</SimApplication>
