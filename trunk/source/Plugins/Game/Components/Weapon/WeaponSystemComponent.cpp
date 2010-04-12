@@ -86,7 +86,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
 
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 	}
@@ -227,7 +227,7 @@ namespace GASS
 		}*/
 	}
 
-	void WeaponSystemComponent::OnInput(PlayerInputMessagePtr message)
+	void WeaponSystemComponent::OnInput(ControllerMessagePtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();

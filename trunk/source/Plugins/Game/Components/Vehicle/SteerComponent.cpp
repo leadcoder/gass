@@ -66,10 +66,10 @@ namespace GASS
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,PlayerInputMessage,0));
+		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,ControllerMessage,0));
 	}
 
-	void SteerComponent::OnInput(PlayerInputMessagePtr message)
+	void SteerComponent::OnInput(ControllerMessagePtr message)
 	{
 		
 		std::string name = message->GetController();

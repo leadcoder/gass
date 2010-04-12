@@ -22,7 +22,7 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/AnyMessage.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include <OgreRenderTargetListener.h>

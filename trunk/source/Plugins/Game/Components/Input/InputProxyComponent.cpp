@@ -64,15 +64,15 @@ namespace GASS
 
 	void InputProxyComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,PlayerInputMessage,0));
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage,0));
 	}
 
 	void InputProxyComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,PlayerInputMessage));
+		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage));
 	}
 
-	void InputProxyComponent::OnPlayerInput(PlayerInputMessagePtr message)
+	void InputProxyComponent::OnPlayerInput(ControllerMessagePtr message)
 	{
 		GetSceneObject()->SendImmediate(message);	
 	}

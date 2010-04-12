@@ -40,7 +40,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine()
+	SimEngine::SimEngine(): m_CurrentTime(0)
 	{
 		//m_SimulationUpdateInterval = 1.0f/30.0f; //30Hz
 		m_PluginManager = PluginManagerPtr(new PluginManager());

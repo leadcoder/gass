@@ -63,7 +63,7 @@ namespace GASS
 
 	void TankAutopilotComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnUnload,UnloadComponentsMessage,0));
@@ -104,7 +104,7 @@ namespace GASS
 		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void TankAutopilotComponent::OnInput(PlayerInputMessagePtr message)
+	void TankAutopilotComponent::OnInput(ControllerMessagePtr message)
 	{
 		
 		std::string name = message->GetController();
@@ -216,10 +216,10 @@ namespace GASS
 
 			//Send input message
 
-			MessagePtr throttle_message(new PlayerInputMessage(m_ThrottleInput,throttle));
+			MessagePtr throttle_message(new ControllerMessage(m_ThrottleInput,throttle));
 			GetSceneObject()->SendImmediate(throttle_message);	
 
-			MessagePtr steering_message(new PlayerInputMessage(m_SteerInput,turn));
+			MessagePtr steering_message(new ControllerMessage(m_SteerInput,turn));
 			GetSceneObject()->SendImmediate(steering_message);	
 
 		}

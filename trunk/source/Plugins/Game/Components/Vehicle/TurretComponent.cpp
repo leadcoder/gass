@@ -57,7 +57,7 @@ namespace GASS
 	void TurretComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
 	}
 
 	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -68,7 +68,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(vel_msg);
 	}
 
-	void TurretComponent::OnInput(PlayerInputMessagePtr message)
+	void TurretComponent::OnInput(ControllerMessagePtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();

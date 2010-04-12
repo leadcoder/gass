@@ -42,7 +42,7 @@ namespace GASS
 		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnPlayerInput(PlayerInputMessagePtr  message);
+		void OnPlayerInput(ControllerMessagePtr  message);
 
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

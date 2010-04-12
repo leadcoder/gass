@@ -27,6 +27,7 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 
@@ -55,7 +56,7 @@ namespace GASS
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(PlayerInputMessagePtr message);
+		void OnInput(ControllerMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnGotoPosition(GotoPositionMessagePtr message);
 		

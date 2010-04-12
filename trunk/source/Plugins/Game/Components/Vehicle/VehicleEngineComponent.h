@@ -24,6 +24,7 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Sim/Common.h"
@@ -80,7 +81,7 @@ namespace GASS
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(PlayerInputMessagePtr message);
+		void OnInput(ControllerMessagePtr message);
 
 
 		//set/get attributes

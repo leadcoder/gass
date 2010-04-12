@@ -23,6 +23,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
 #include "Plugins/Game/GameMessages.h"
@@ -44,7 +45,7 @@ namespace GASS
 		virtual void OnCreate();
 	private:
 		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnInput(PlayerInputMessagePtr message);
+		void OnInput(ControllerMessagePtr message);
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);
 		void OnReadyToFire(ReadyToFireMessagePtr message);

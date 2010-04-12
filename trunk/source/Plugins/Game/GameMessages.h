@@ -77,7 +77,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<GotoPositionMessage> GotoPositionMessagePtr;
 
-	class PlayerInputMessage : public BaseMessage
+	/*class PlayerInputMessage : public BaseMessage
 	{
 	public:
 		PlayerInputMessage(const std::string &controller,float value, SenderID sender_id = -1, double delay= 0) : 
@@ -91,7 +91,7 @@ namespace GASS
 		std::string m_Controller;
 		float m_Value;
 	};
-	typedef boost::shared_ptr<PlayerInputMessage> PlayerInputMessagePtr;
+	typedef boost::shared_ptr<PlayerInputMessage> PlayerInputMessagePtr;*/
 
 
 	class ReloadMessage : public BaseMessage

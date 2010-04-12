@@ -130,12 +130,12 @@ namespace GASS
 		//check if exit input
 		if(name == "ExitVehicle" && value > 0)
 		{
-			MessagePtr exit_message(new EnterVehicleMessage());
+			MessagePtr exit_message(new ExitVehicleMessage());
 			GetSceneObject()->PostMessage(exit_message);	
 		}
 		else
 		{
-			MessagePtr input_message(new PlayerInputMessage(name,value));
+			MessagePtr input_message(new ControllerMessage(name,value));
 			GetSceneObject()->SendImmediate(input_message);	
 		}
 	}

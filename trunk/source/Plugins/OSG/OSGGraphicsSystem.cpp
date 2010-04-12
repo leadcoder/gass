@@ -208,6 +208,11 @@ namespace GASS
 		}
 
 
+		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
+		options->setOptionString("dds_flip"); 
+		osgDB::Registry::instance()->setOptions(options); 
+
+
 		/*osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
 		if (opt == NULL) { 
 		opt = new osgDB::ReaderWriter::Options(); 

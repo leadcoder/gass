@@ -49,7 +49,8 @@ namespace GASS
 		m_FarClip(1000),
 		m_Fov(45.0),
 		m_Ortho(false),
-		m_Camera(NULL)
+		m_Camera(NULL),
+		m_ClipToFog(false)
 	{
 		
 	}
@@ -66,6 +67,8 @@ namespace GASS
 		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance);
 		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
 		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
+		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog);
+		
 	}
 
 	void OgreCameraComponent::OnCreate()
@@ -89,6 +92,9 @@ namespace GASS
 		std::string name;
 		ss << GetName() << obj_id;
 		ss >> name;
+
+		if(m_ClipToFog)
+			m_FarClip = ogsm->GetFogEnd();
 
 		m_Camera = sm->createCamera(name);
 		//m_Camera->setAspectRatio(16.0/9.0);

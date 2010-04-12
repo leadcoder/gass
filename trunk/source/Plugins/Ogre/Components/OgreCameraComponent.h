@@ -54,6 +54,8 @@ namespace GASS
 		void SetFov(float value);
 		bool GetOrtho() const;
 		void SetOrtho(bool value);
+		bool GetClipToFog() const {return m_ClipToFog;}
+		void SetClipToFog(bool value) {m_ClipToFog = value;}
 	
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Camera* m_Camera;
@@ -61,6 +63,7 @@ namespace GASS
 		float m_FarClip;
 		float m_Fov;
 		bool m_Ortho;
+		bool m_ClipToFog;
 
 	};
 

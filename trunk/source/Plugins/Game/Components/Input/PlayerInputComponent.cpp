@@ -73,7 +73,6 @@ namespace GASS
 
 	}
 
-	
 	/*void PlayerInputComponent::OnExit(AnyMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);

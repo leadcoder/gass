@@ -23,6 +23,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
 
@@ -45,7 +46,7 @@ namespace GASS
 		void SetController(const std::string &value) {m_Controller = value;}
 
 		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnInput(PlayerInputMessagePtr message);
+		void OnInput(ControllerMessagePtr message);
 
 		std::string m_Controller;
 	};

@@ -38,6 +38,8 @@ namespace GASS
 	class OgreGraphicsSystem;
 	class OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>
 	{
+	private:
+		void UpdateFogSettings();
 	public:
 		OgreGraphicsSceneManager();
 		virtual ~OgreGraphicsSceneManager();
@@ -46,19 +48,7 @@ namespace GASS
 		virtual void Update(double delta_time);
 
 		Ogre::SceneManager* GetSceneManger() {return m_SceneMgr;}
-		
-	protected:
-		void OnLoad(MessagePtr message);		
-		void OnChangeCamera(ChangeCameraMessagePtr message);
-		void OnUnload(MessagePtr message);
-		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
-	private:
-		void UpdateShadowSettings();
-		void UpdateFogSettings();
-		void UpdateLightSettings();
-		void UpdateSkySettings();
 
-		//Keep private for now, 
 
 		//Fog
 		float GetFogStart() const {return m_FogStart;}
@@ -70,6 +60,25 @@ namespace GASS
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
+		
+	protected:
+		void OnLoad(MessagePtr message);		
+		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnUnload(MessagePtr message);
+		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+
+		
+		
+	private:
+		
+		
+		void UpdateLightSettings();
+		void UpdateSkySettings();
+		void UpdateShadowSettings();
+
+		//Keep private for now, 
+
+		 
 
 		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value; UpdateLightSettings();}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}

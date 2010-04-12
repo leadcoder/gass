@@ -143,7 +143,7 @@ namespace GASS
 			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
 		else 
 			Log::Warning("Failed to find control settings: VehicleEngineComponentInputSettings");*/
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,PlayerInputMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
@@ -350,7 +350,7 @@ namespace GASS
 		m_VehicleSpeed = velocity.FastLength();
 	}
 
-	void VehicleEngineComponent::OnInput(PlayerInputMessagePtr message)
+	void VehicleEngineComponent::OnInput(ControllerMessagePtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
