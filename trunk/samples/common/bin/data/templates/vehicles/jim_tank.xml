@@ -51,7 +51,10 @@
       </NetworkComp>
       <NetLocationTrans type="LocationTransferComponent">
       </NetLocationTrans>
-      </Components>
+      <NetInputTrans type="InputTransferComponent">
+        <ControlSetting value ="VehicleEngineInputSettings"/>
+      </NetInputTrans>
+    </Components>
       <ComponentContainers>
         <JimTankDriverCameraObject type ="SceneObjectTemplate">
           <Inheritance value ="JimTankCameraObject"/>
@@ -102,6 +105,13 @@
               <Armor value="50"/>
               <DamageMesh value="turret_demolished.mesh"/>
             </TurretArmor>
+            <TurretNetworkComp type="NetworkChildComponent">
+            </TurretNetworkComp>
+            <TurretNetLocationTrans type="LocationTransferComponent">
+            </TurretNetLocationTrans>
+            <NetInputTrans type="InputTransferComponent">
+              <ControlSetting value ="TurretInputSettings"/>
+            </NetInputTrans>
           </Components>
           <ComponentContainers>
             <FireSound type ="SceneObjectTemplate">

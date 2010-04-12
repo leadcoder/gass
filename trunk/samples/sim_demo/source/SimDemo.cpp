@@ -239,12 +239,12 @@ int main(int argc, char* argv[])
 
 				if(i==0)
 				{
-					GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
+					/*GASS::MessagePtr enter_msg(new GASS::EnterVehicleMessage());
 					scene_object->PostMessage(enter_msg);
 
 					GASS::SceneObjectVector objs = scene_object->GetObjectsByName("Turret", false);
 					if(objs.size() > 0)
-						objs.front()->PostMessage(enter_msg);
+						objs.front()->PostMessage(enter_msg);*/
 				}
 			}
 			//Sleep(1000);

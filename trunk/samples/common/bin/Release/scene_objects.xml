@@ -11,7 +11,7 @@
       <Controller type="FreeCamControlComponent">
       </Controller>
       <PIC type="PlayerInputComponent">
-        <ControlSetting value="PlayerInputSettings"/>
+        <ControlSetting value="FreeCameraInputSettings"/>
       </PIC>
     </Components>
 	</FreeCameraObject>

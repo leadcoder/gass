@@ -12,6 +12,10 @@
     <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
   </TurretInputSettings>
   <FreeCameraInputSettings>
+    <MapControllerToInput Controller="EnterVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_E" Repeat="false"/>
+    <MapControllerToInput Controller="ExitVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_R" Repeat="false"/>
+    <MapControllerToInput Controller="CycleVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>
+
     <MapControllerToInput Controller="ToggleFreeCameraCollision" InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>
     <MapControllerToInput Controller="ToggleFreeCameraFly" InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
     <MapControllerToInput Controller="FreeCameraSpeedBoost" InputDevice="DEVICE_KEYBOARD" Key="INPUT_LSHIFT" Repeat="true"/>
