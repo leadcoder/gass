@@ -3,7 +3,7 @@
 class SimClient : public SimApplication
 {
 public:
-	SimClient(const std::string &config) : SimApplication(config), m_IsConnected(false)
+	SimClient(const std::string &config, const std::string &data_path ="") : SimApplication(config,data_path), m_IsConnected(false)
 	{
 
 	}

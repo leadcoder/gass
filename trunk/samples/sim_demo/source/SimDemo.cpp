@@ -51,6 +51,8 @@
 #include "Server.h"
 
 #include <stdio.h>
+#include <conio.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -138,10 +140,22 @@ int main(int argc, char* argv[])
 		index += 2;
 	}
 
-	if(is_server) 
+	std::cout << "Server, client or standalone? Press [S] ,[C] or [A]:";
+	char key = _getch();
+	int app_mode = 2;
+	if(key == 'c' || key == 'C')
+		app_mode = 0;
+	else if(key == 's' || key == 'S')
+		app_mode = 1;
+	else if(key == 'a' || key == 'A')
+		app_mode = 2;
+
+	if(app_mode == 0) 
 		app = new SimServer(config);
-	else 
+	else if(app_mode == 1) 
 		app = new SimClient(config);
+	else if(app_mode == 2) 
+		app = new SimApplication(config);
 
 	app->Init();
 

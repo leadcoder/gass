@@ -6,7 +6,7 @@
 class SimServer : public SimApplication
 {
 public:
-	SimServer(const std::string config) : SimApplication(config)
+	SimServer(const std::string config,const std::string &data_path ="") : SimApplication(config,data_path)
 	{
 	}
 	virtual ~SimServer()
@@ -50,7 +50,7 @@ public:
 		//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 		for(int i = 0; i <  m_Objects.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(data_path + m_Templates[i]);
+			
 			GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
 			
 			GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();

@@ -52,6 +52,7 @@ protected:
 	std::string m_Plugins;
 	std::string m_ScenarioName;
 	std::string m_Instances;
+	std::string m_DataPath;
 	std::vector<std::string> m_Templates;
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
@@ -59,7 +60,7 @@ protected:
 	GASS::Timer m_Timer;
 	double m_UpdateFreq;
 public:
-	SimApplication(const std::string configuration)
+	SimApplication(const std::string configuration, const std::string &data_path ="") : m_DataPath(data_path)
 	{
 		LoadConfig(configuration);
 		//Init();
@@ -77,19 +78,19 @@ public:
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 		
 		m_Scenario = scenario;
-		std::string data_path = getenv("GASS_DATA_PATH");
-		m_Scenario->Load(data_path + m_ScenarioName);
+		//std::string data_path = getenv("GASS_DATA_PATH");
+		m_Scenario->Load(m_DataPath + m_ScenarioName);
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(data_path + m_Templates[i]);
+			m_Engine->GetSimObjectManager()->Load(m_DataPath + m_Templates[i]);
 		}
 
 		//if(m_Instances != "")
 		//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 		for(int i = 0; i <  m_Objects.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(data_path + m_Templates[i]);
+			
 			GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
 			
 			GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();

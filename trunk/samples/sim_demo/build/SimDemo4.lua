@@ -9,13 +9,14 @@ project "SimDemo"
 	includedirs 
 	{ 
 		"../../../source", 		
---		"../../../dependencies/tinyxml",
+		"../../../dependencies/tinyxml",
 		"../../../dependencies/boost" 
 	}
 
 	libdirs 
 	{ 
-		"../../../lib/" .. _ACTION
+		"../../../lib/" .. _ACTION,
+		"../../../dependencies/tinyxml/lib"
 	}
 
 
@@ -24,7 +25,7 @@ project "SimDemo"
 		targetname "SimDemo_d"
 		defines { "DEBUG" }
 	 	flags { "Symbols"}
-		links { "GASSCore_d","GASSSim_d"}
+		links { "GASSCore_d","GASSSim_d","tinyxmld"}
 		postbuildcommands 
 		{
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
@@ -47,7 +48,7 @@ project "SimDemo"
 		targetname "SimDemo"
 	 	defines { "NDEBUG" }
 	 	flags { "Optimize"}
-		links { "GASSCore","GASSSim" }
+		links { "GASSCore","GASSSim","tinyxml" }
 		postbuildcommands 
 		{
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
