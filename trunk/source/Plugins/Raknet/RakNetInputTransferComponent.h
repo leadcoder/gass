@@ -85,7 +85,10 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
+		void SetControlSetting(const std::string &controlsetting) {m_ControlSetting = controlsetting;}
+		std::string GetControlSetting() const {return m_ControlSetting;}
 
+		
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;

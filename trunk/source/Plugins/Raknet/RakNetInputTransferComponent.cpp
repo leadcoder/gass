@@ -59,7 +59,8 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("InputTransferComponent",new Creator<RakNetInputTransferComponent, IComponent>);
 		GASS::PackageFactory::GetPtr()->Register(INPUT_DATA,new GASS::Creator<InputPackage, NetworkPackage>);	
-		//RegisterProperty<float>("SendFrequency", &RakNetInputTransferComponent::GetSendFrequency, &RakNetInputTransferComponent::SetSendFrequency);
+		
+		RegisterProperty<std::string>("ControlSetting", &RakNetInputTransferComponent::GetControlSetting, &RakNetInputTransferComponent::SetControlSetting);
 	}
 
 	void RakNetInputTransferComponent::OnCreate()
@@ -74,8 +75,13 @@ namespace GASS
 		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
 		//if(!nc)
 		//	Log::Error("RakNetInputTransferComponent require RakNetNetworkComponent to be present");
-		if(raknet->IsServer())
+		if(!raknet->IsServer())
 		{
+			/*ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
+			if(cs)
+				cs->GetMessageManager()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
+			else 
+				Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());*/
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
 		}
 		else
@@ -94,12 +100,11 @@ namespace GASS
 		boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,index,value));
 		MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
 		GetSceneObject()->SendImmediate(serialize_message);
+		//std::cout << "send input to server" << std::endl;
 	}
 
 	void RakNetInputTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-
-
 
 	}
 
@@ -118,6 +123,7 @@ namespace GASS
 			std::string controller = cs->m_IndexToName[input_package->Index];
 			MessagePtr message(new ControllerMessage(controller,input_package->Value));
 			GetSceneObject()->PostMessage(message);
+			//std::cout << "got input from client" << std::endl;
 		}
 	}
 
