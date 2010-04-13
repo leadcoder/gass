@@ -1,0 +1,4 @@
+Update xml-format, tags should be class name instead of template name
+Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
+
+
