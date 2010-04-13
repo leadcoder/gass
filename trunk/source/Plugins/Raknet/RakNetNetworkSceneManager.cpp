@@ -66,7 +66,6 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-		
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
@@ -75,14 +74,10 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		//Initlize all network components and send scene mananger as argument
-		/*SceneObjectPtr obj = message->GetSceneObject();
-		RakNetNetworkMasterComponentPtr comp = obj->GetFirstComponent<RakNetNetworkMasterComponent>();
-		if(comp) //root object, generate part id:s for all network components
-		{
-			int id=0;
-			GeneratePartID(obj,id);
-		}*/
+		SceneObjectPtr obj = message->GetSceneObject();
+		assert(obj);
+		MessagePtr net_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
+		obj->SendImmediate(net_msg);
 	}
 
 	/*void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)

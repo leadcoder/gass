@@ -23,7 +23,7 @@
 #include "RakNetInputTransferComponent.h"
 
 
-#include "Plugins/Game/GameMessages.h"
+
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -66,10 +66,10 @@ namespace GASS
 	void RakNetInputTransferComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnLoad,LoadGameComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnLoad,LoadNetworkComponentsMessage,1));
 	}
 
-	void RakNetInputTransferComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void RakNetInputTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();

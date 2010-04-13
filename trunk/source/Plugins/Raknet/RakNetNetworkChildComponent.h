@@ -33,7 +33,6 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 
 namespace GASS
@@ -51,7 +50,7 @@ namespace GASS
 		virtual ~RakNetNetworkChildComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		RakNetChildReplica* GetReplica() const {return m_Replica;}
 		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}

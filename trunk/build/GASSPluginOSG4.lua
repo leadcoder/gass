@@ -67,6 +67,7 @@ end
 			"osgGAd",
 			"osgViewerd",
 			"osgTextd",
+			"osgShadowd",
 			"opengl32",
 			"glu32",
 			"tinyxmld"
@@ -87,6 +88,7 @@ end
 			"osgGA",
 			"osgViewer",
 			"osgText",
+			"osgShadow",
 			"opengl32",
 			"glu32",
 			"tinyxml"

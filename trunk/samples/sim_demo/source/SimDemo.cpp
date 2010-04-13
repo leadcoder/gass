@@ -151,9 +151,9 @@ int main(int argc, char* argv[])
 		app_mode = 2;
 
 	if(app_mode == 0) 
-		app = new SimServer(config);
-	else if(app_mode == 1) 
 		app = new SimClient(config);
+	else if(app_mode == 1) 
+		app = new SimServer(config);
 	else if(app_mode == 2) 
 		app = new SimApplication(config);
 

@@ -470,6 +470,20 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
 
+
+	class LoadNetworkComponentsMessage : public BaseMessage
+	{
+	public:
+		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
+		  SceneManagerPtr GetNetworkSceneManager() const {return m_NetworkSceneManager;}
+	private:
+		SceneManagerPtr m_NetworkSceneManager;
+	};
+	typedef boost::shared_ptr<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
+
+
+
 	class ParentChangedMessage : public BaseMessage
 	{
 	public:
@@ -531,9 +545,6 @@ namespace GASS
 		unsigned int m_TimeStamp;
 	};
 	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
-
-
-
 
 
 }

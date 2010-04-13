@@ -23,7 +23,6 @@
 #include "RakNetLocationTransferComponent.h"
 
 
-#include "Plugins/Game/GameMessages.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -74,10 +73,10 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadGameComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadNetworkComponentsMessage,1));
 	}
 
-	void RakNetLocationTransferComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void RakNetLocationTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();

@@ -28,7 +28,6 @@
 #include "Sim/Scheduling/ITaskListener.h"
 
 #include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 
@@ -81,7 +80,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 		void OnInput(ControllerMessagePtr message);

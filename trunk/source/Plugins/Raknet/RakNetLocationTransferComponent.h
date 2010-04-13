@@ -28,7 +28,6 @@
 #include "Sim/Scheduling/ITaskListener.h"
 
 #include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 
@@ -92,7 +91,7 @@ namespace GASS
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
