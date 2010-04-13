@@ -1,4 +1,24 @@
+Complete PhysX plugin, premakescript etc.
+
 Update xml-format, tags should be class name instead of template name
+
+Add more scene-tree serach functions, ie search for template name or class factory name
+
 Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
+
+Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
+
+Add more test cases using boost unit test framework.
+
+Test raycast wheels in vehicle-simulation
+
+Add simple GUI example
+
+
+
+
+
+
+
 
 
