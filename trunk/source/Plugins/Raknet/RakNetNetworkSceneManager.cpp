@@ -36,7 +36,7 @@
 #include "Plugins/RakNet/RaknetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
-
+#include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 
 
@@ -74,10 +74,14 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-		MessagePtr net_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
-		obj->SendImmediate(net_msg);
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(raknet->IsActive())
+		{
+			SceneObjectPtr obj = message->GetSceneObject();
+			assert(obj);
+			MessagePtr net_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
+			obj->SendImmediate(net_msg);
+		}
 	}
 
 	/*void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)

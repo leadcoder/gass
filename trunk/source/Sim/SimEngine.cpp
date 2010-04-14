@@ -78,7 +78,7 @@ namespace GASS
 
 		m_RTC->Init();
 		//Load some base game objects
-		m_SimObjectManager->Load("scene_objects.xml");
+		//m_SimObjectManager->Load("scene_objects.xml");
 		Log::Print("SimEngine::Init -- Done");
 		return true;
 	}

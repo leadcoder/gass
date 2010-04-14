@@ -64,17 +64,12 @@ namespace GASS
 		m_RakPeer(NULL),
 		m_ServerData(new ServerData()),
 		m_ServerDataOnClient(new ServerData()),
-		//m_TransformationUpdateInterval(1.0/10.0), //10fps
-		//m_UpdateTransformations(false),
 		m_ScenarioIsRunning (false),
 		m_AcceptLateJoin (true),
-		m_RemoteCreatePlayers (true)
+		m_RemoteCreatePlayers (true),
+		m_Active(false)
 	{
-		
-		//m_RemoteOwnerId = UNASSIGNED_SYSTEM_ADDRESS;
-
-
-
+	
 	}
 
 	RakNetNetworkSystem::~RakNetNetworkSystem()
@@ -176,7 +171,10 @@ namespace GASS
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+
+		//Catch scenario load messages
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
+		m_Active = true;
 	}
 
 
@@ -209,6 +207,7 @@ namespace GASS
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		m_Active = true;
 	}
 
 	void RakNetNetworkSystem::Update(double delta)

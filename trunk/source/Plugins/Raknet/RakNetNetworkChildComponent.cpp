@@ -84,7 +84,7 @@ namespace GASS
 				m_Replica->SetOwner(GetSceneObject());
 			}*/
 			RakNetNetworkMasterComponentPtr master = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
-			if(master)
+			if(master && master->GetReplica())
 				m_Replica = raknet->FindReplica(master->GetReplica()->GetNetworkID(),m_PartId);
 
 			if(m_Replica== NULL) //replica not available jet, trig serach on new child replica messages

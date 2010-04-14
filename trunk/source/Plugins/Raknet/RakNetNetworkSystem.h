@@ -89,6 +89,7 @@ namespace GASS
 		virtual void OnCreate();
 
 		bool IsServer() {return  m_IsServer;}
+		bool IsActive() {return  m_Active;}
 
 		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
 		RakPeerInterface* GetRakPeer() const {return m_RakPeer;}
@@ -127,6 +128,7 @@ namespace GASS
 		NetworkIDManager* m_NetworkIDManager;
 
 		int m_IsServer;
+		bool m_Active;
 		//std::string m_ServerIP;
 		int m_ServerPort;
 		int m_ClientPort;
