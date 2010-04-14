@@ -52,7 +52,7 @@ protected:
 	std::string m_Plugins;
 	std::string m_ScenarioName;
 	std::string m_Instances;
-	std::string m_DataPath;
+	//std::string m_DataPath;
 	std::vector<std::string> m_Templates;
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
@@ -60,7 +60,7 @@ protected:
 	GASS::Timer m_Timer;
 	double m_UpdateFreq;
 public:
-	SimApplication(const std::string configuration, const std::string &data_path ="") : m_DataPath(data_path)
+	SimApplication(const std::string configuration) 
 	{
 		LoadConfig(configuration);
 		//Init();
@@ -77,29 +77,37 @@ public:
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 		
-		m_Scenario = scenario;
-		//std::string data_path = getenv("GASS_DATA_PATH");
-		m_Scenario->Load(m_DataPath + m_ScenarioName);
-
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(m_DataPath + m_Templates[i]);
+			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
+		
+		m_Scenario = scenario;
 
-		//if(m_Instances != "")
-		//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
-		for(int i = 0; i <  m_Objects.size();i++)
+		if(m_Scenario->Load(m_ScenarioName))
 		{
-			
-			GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
-			
-			GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();
-			pos.x += 10*i;
-			GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
-			if(object)
-				object->SendImmediate(pos_msg);
+			//if(m_Instances != "")
+			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 
+
+			for(int i = 0; i <  m_Objects.size();i++)
+			{
+
+				GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+
+				GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();
+				pos.x += 10*i;
+				GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+				if(object)
+					object->SendImmediate(pos_msg);
+			}
 		}
+		else
+		{
+			GASS::Log::Error("Failed to load scenario %s", m_ScenarioName.c_str());
+			return false;
+		}
+
 		return true;
 	}
 	
@@ -122,7 +130,13 @@ public:
 			m_Plugins = app_settings->Attribute("Plugins");
 			m_ControlSettings = app_settings->Attribute("ControlSettings");
 			m_ScenarioName = app_settings->Attribute("Scenario");
+			
+			GASS::FilePath full_path(m_ScenarioName);
+			m_ScenarioName = full_path.GetPath();
+
 			m_UpdateFreq = atoi(app_settings->Attribute("UpdateFrequency"));
+			
+			
 			//m_Instances = app_settings->Attribute("Instances");
 			TiXmlElement *temp_elem = app_settings->FirstChildElement("Templates");	
 			if(temp_elem)
@@ -131,6 +145,9 @@ public:
 				while(temp_elem)
 				{
 					std::string name = temp_elem->Attribute("Name");
+					GASS::FilePath full_path(name);
+					name = full_path.GetPath();
+
 					m_Templates.push_back(name);
 					temp_elem = temp_elem->NextSiblingElement();
 				}

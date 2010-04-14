@@ -3,7 +3,7 @@
 class SimClient : public SimApplication
 {
 public:
-	SimClient(const std::string &config, const std::string &data_path ="") : SimApplication(config,data_path), m_IsConnected(false)
+	SimClient(const std::string &config) : SimApplication(config), m_IsConnected(false)
 	{
 
 	}
@@ -18,24 +18,22 @@ public:
 		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2001)));
 		m_IsConnected = true;
 	}
+
 	void OnLoadScenario(GASS::MessagePtr message)
 	{
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
 		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
-		m_Scenario->Load(mess->GetScenarioName());		
+		m_Scenario->Load(mess->GetScenarioName());
 	}
 
 	bool Init()
 	{
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
-
-		//std::string data_path = getenv("GASS_DATA_PATH");
-		std::string data_path = "";
-
+		
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(data_path + m_Templates[i]);
+			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
 
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseMessage,0));

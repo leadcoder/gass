@@ -6,7 +6,7 @@
 class SimServer : public SimApplication
 {
 public:
-	SimServer(const std::string config,const std::string &data_path ="") : SimApplication(config,data_path)
+	SimServer(const std::string config) : SimApplication(config)
 	{
 	}
 	virtual ~SimServer()
@@ -22,10 +22,6 @@ public:
 
 	bool Init()
 	{
-		//std::string data_path = getenv("GASS_DATA_PATH");
-		std::string data_path = "";
-		
-
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
 		
@@ -33,31 +29,35 @@ public:
 		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),this));
 		m_Engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedMessage),callback,0);
 
-		
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(data_path + m_Templates[i]);
+			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
-
 
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 		m_Scenario = scenario;
-		m_Scenario->Load(data_path + m_ScenarioName);
-
-		
-
-		//if(m_Instances != "")
-		//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
-		for(int i = 0; i <  m_Objects.size();i++)
+		if(m_Scenario->Load(m_ScenarioName))
 		{
-			
-			GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
-			
-			GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();
-			pos.x += 10*i;
-			GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
-			if(object)
-				object->SendImmediate(pos_msg);
+			//if(m_Instances != "")
+			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
+
+
+			for(int i = 0; i <  m_Objects.size();i++)
+			{
+
+				GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+
+				GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();
+				pos.x += 10*i;
+				GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+				if(object)
+					object->SendImmediate(pos_msg);
+			}
+		}
+		else
+		{
+			GASS::Log::Error("Failed to load scenario %s", m_ScenarioName.c_str());
+			return false;
 		}
 		return true;
 	}
