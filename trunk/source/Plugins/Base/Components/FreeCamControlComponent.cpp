@@ -63,7 +63,8 @@ namespace GASS
 		m_Active(false),
 		m_CurrentFov(45),
 		m_UpDownInput(0),
-		m_Mode("Aircraft")
+		m_Mode("Aircraft"),
+		m_Debug(false)
 	{
 
 	}
@@ -80,6 +81,7 @@ namespace GASS
 		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
 		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
 		RegisterProperty<std::string>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
+		RegisterProperty<bool>("Debug", &GASS::FreeCamControlComponent::GetDebug, &GASS::FreeCamControlComponent::SetDebug);
 
 	}
 
@@ -356,6 +358,11 @@ namespace GASS
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
 		m_UpDownInput = 0;
+
+		if(m_Debug)
+		{
+			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_Rot << std::endl;
+		}
 	}
 
 

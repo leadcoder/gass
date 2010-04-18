@@ -91,6 +91,10 @@ namespace GASS
 		void SetAutomatic(bool value);
 		float GetBrakeTorque() const;
 		void SetBrakeTorque(float value);
+		float GetConstantTorque() const;
+		void SetConstantTorque(float value);
+		
+		
 		float GetDeclutchTimeChangeGear() const;
 		void SetDeclutchTimeChangeGear(float value);
 		float GetClutchTimeChangeGear() const;
@@ -142,6 +146,7 @@ namespace GASS
 		float m_Power;
 		bool m_SmoothRPMOutput;
 		float m_MaxBrakeTorque;
+		float m_ConstantTorque;
 		float m_MinRPM;
 		float m_MaxRPM;
 		float m_WheelRPM;

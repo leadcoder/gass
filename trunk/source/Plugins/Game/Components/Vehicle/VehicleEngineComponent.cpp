@@ -62,7 +62,10 @@ namespace GASS
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl; 
 	}
 
-	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), m_VehicleSpeed(0),	m_Invert(false)
+	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), 
+		m_VehicleSpeed(0),	
+		m_Invert(false),
+		m_ConstantTorque(0)
 	{
 		m_RPM = 0;
 		m_AutoShiftStart = 0;
@@ -122,6 +125,7 @@ namespace GASS
 		RegisterProperty<bool>("Automatic", &GetAutomatic, &SetAutomatic);
 		RegisterProperty<bool>("InvertDrivetrainOutput", &GetInvert, &SetInvert);
 		RegisterProperty<float>("BrakeTorque", &GetBrakeTorque, &SetBrakeTorque);
+		RegisterProperty<float>("ConstantTorque", &GetConstantTorque, &SetConstantTorque);
 		RegisterProperty<float>("DeclutchTimeChangeGear", &GetDeclutchTimeChangeGear, &SetDeclutchTimeChangeGear);
 		RegisterProperty<float>("ClutchTimeChangeGear", &GetClutchTimeChangeGear, &SetClutchTimeChangeGear);
 
@@ -293,6 +297,17 @@ namespace GASS
 			}
 		}
 		m_Gear = m_NeutralGear;
+	}
+
+	float VehicleEngineComponent::GetConstantTorque() const
+	{
+		return m_ConstantTorque;
+	}
+
+	void VehicleEngineComponent::SetConstantTorque(float value)
+	{
+		m_ConstantTorque = value;
+
 	}
 
 	std::vector<float> VehicleEngineComponent::GetGearRatio() const
@@ -496,7 +511,7 @@ namespace GASS
 
 	float VehicleEngineComponent::GetBreakTorq(float throttle)
 	{
-		float brake_torque = 0;
+		float brake_torque = m_ConstantTorque;
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		//Park brake
 		if(current_gear_ratio == 0)
@@ -553,12 +568,12 @@ namespace GASS
 		float wheel_vel =  GetDesiredWheelVelocity(throttle);
 		int num_wheels = 0;
 
-		char dtxt[256];
+		/*char dtxt[256];
 		sprintf(dtxt,"Wheel q: %f v:%f",wheel_torque,wheel_vel);
 	
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 
 		//send physics data to wheels and update mean wheel rpm
 		if(m_Invert)

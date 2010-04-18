@@ -63,6 +63,9 @@ namespace GASS
 		void RotationChange(MessagePtr message);
 		void SetMode(const std::string &value) {m_Mode= value;}
 		std::string GetMode()const  {return m_Mode;}
+
+		void SetDebug(bool debug) {m_Debug= debug;}
+		bool GetDebug()const  {return m_Debug;}
 		
 		void SetRunSpeed(Float speed){ m_RunSpeed = speed;}
 		Float GetRunSpeed()const { return m_RunSpeed;}
@@ -86,6 +89,7 @@ namespace GASS
 		bool m_Active;
 		bool m_EnableRotInput;
 		bool m_SpeedBoostInput;
+		bool m_Debug;
 		Float m_ThrottleInput;
 		Float m_StrafeInput;
 		Float m_PitchInput;

@@ -98,7 +98,10 @@ namespace GASS
 	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
 	{
 		m_CurrentAngle = message->GetAngle();
-		float angular_vel = (m_DesiredAngle-m_CurrentAngle)*5;
+		float angular_vel = (m_DesiredAngle-m_CurrentAngle);
+
+		if(angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
+		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
 		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
 		
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));

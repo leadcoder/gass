@@ -74,6 +74,8 @@ namespace GASS
 		float value = message->GetValue();
 		if (name == m_Controller)
 		{
+			if(fabs(value) < 0.1) //clamp
+				value  =0;
 			//send rotaion message to physics engine
 			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,100.0f));
 			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
