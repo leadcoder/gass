@@ -1,38 +1,23 @@
 
 Allmänt
 -------
-Organisera test kod på ett bra med avseende på resureser så som xml-filer, dll:er, evt. meshar mm.
-
+Organisera test kod på ett bra vis med avseende på resureser så som xml-filer, dll:er, evt. meshar mm.
 Fixa felrapportering. Avsaknad av resurser resulterar ofta i svårfunna fel pga obefintligt med felmeddelanden.
-
 
 Core
 ----
-Kolla över message systemet, ska enum för message types överges till förmån för strängar? På detta sätt skulle de vara enklare att regitrera ny meddelandetyper.....men hur blir prestandan, alternativt använd någon form av GUID-system
-
-Skapa macros för att registrear system, objekt, attribut mm.
-
 
 Sim
 ---
-Skapa gränssnitt för  grafik, fysik, ljud, input ect
-
-Skapa en scenario-klass som ska hålla flera scenemangers, Ska flera scenemangers kunna vara aktiva samtidigt? Kanske smidigt om man tex vill kunna ha flera vyer samtidigt där en vy visa en terräng medans en annan endast ska visa en 3d-modell
-
-En scenmanager ska hålla subscenemanagers för tex grafik och fysik.
-
-
-Massor av objekt ska portas från tidigare version så som derivat av BaseObject  och Geomtry. Många av dessa bör dock placeras i plugins
 
 
 Physics
 -------
-Porta ode plug
-gör klart physx plug
+Gör klart physx plug
 
 Network
 -------
-Porta raknet plug
+Gör klart raknet plug
 
 Linux
 -----
