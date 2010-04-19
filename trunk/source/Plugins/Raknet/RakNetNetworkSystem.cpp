@@ -92,6 +92,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
+	
 	}
 
 	void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
@@ -108,7 +109,6 @@ namespace GASS
 		//RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false); 
-
 	}
 
 
@@ -151,6 +151,7 @@ namespace GASS
 		NetworkID::SetPeerToPeerMode(false);
 
 		m_RakPeer->SetNetworkIDManager(m_NetworkIDManager);
+	
 
 		
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
@@ -174,6 +175,7 @@ namespace GASS
 
 		//Catch scenario load messages
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
+		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
 	}
 
@@ -195,6 +197,7 @@ namespace GASS
 		NetworkID::SetPeerToPeerMode(false);
 
 		m_RakPeer->SetNetworkIDManager(m_NetworkIDManager);
+		
 
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
@@ -204,9 +207,11 @@ namespace GASS
 		m_RakPeer->Startup(1,0,&socketDescriptor, 1);
 
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
+		m_RakPeer->SetOccasionalPing(true);
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		
 		m_Active = true;
 	}
 
@@ -414,6 +419,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::UpdateClient(double delta)
 	{
+		
 		Packet *p;
 		p = m_RakPeer->Receive();
 		while(p)
@@ -473,7 +479,7 @@ namespace GASS
 				//Load level
 				//Root::GetPtr()->GetLevel()->LoadXML(data.MapName);
 			}
-
+		
 			m_RakPeer->DeallocatePacket(p);
 			p = m_RakPeer->Receive();
 		}

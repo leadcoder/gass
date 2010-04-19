@@ -50,7 +50,7 @@ namespace GASS
 		{
 		
 		}
-		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &vel,const Quaternion &rot,const Quaternion &ang_vel) : NetworkPackage(id), 
+		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &vel,const Quaternion &rot,const Vec3 &ang_vel) : NetworkPackage(id), 
 			Position(pos),
 			Velocity(vel), 
 			Rotation(rot),
@@ -69,7 +69,7 @@ namespace GASS
 		Vec3 Position;
 		Quaternion Rotation;
 		Vec3 Velocity;
-		Quaternion AngularVelocity;
+		Vec3 AngularVelocity;
 		unsigned int TimeStamp;
 	};
 	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
@@ -94,6 +94,7 @@ namespace GASS
 		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnVelocityNotify(VelocityNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 
 		//ITaskListener
@@ -102,7 +103,7 @@ namespace GASS
 
 		
 		Vec3 m_Velocity;
-		Quaternion m_AngularVelocity;
+		Vec3 m_AngularVelocity;
 
 		Quaternion m_RotationHistory[3];
 		Vec3 m_PositionHistory[3];
