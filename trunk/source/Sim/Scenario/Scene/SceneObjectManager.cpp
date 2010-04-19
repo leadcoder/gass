@@ -160,6 +160,8 @@ namespace GASS
 	void SceneObjectManager::Clear()
 	{
 		UnloadObject(m_Root);
+		m_Root.reset();
+		m_Root = SceneObjectPtr( new SceneObject());
 	}
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)
@@ -169,7 +171,8 @@ namespace GASS
 
 		//notify that this object is to be removed
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(obj));
-		GetScenarioScene()->SendImmediate(unload_msg);
+		if(GetScenarioScene())
+			GetScenarioScene()->SendImmediate(unload_msg);
 	}
 
 	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)

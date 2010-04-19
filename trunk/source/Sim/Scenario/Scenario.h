@@ -82,5 +82,6 @@ namespace GASS
 		std::string m_ScenarioPath;
 	};
 	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 }
 

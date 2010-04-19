@@ -49,9 +49,6 @@ namespace GASS
 
 	PlayerInputComponent::~PlayerInputComponent()
 	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllerMessage));
 	}
 
 
@@ -63,6 +60,8 @@ namespace GASS
 
 	void PlayerInputComponent::OnCreate()
 	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnUnload,UnloadComponentsMessage,0));
+
 	//	GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE, TYPED_MESSAGE_FUNC(GASS::PlayerInputComponent::OnEnter,AnyMessage));
 	//	GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnExit,AnyMessage));
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
@@ -72,6 +71,14 @@ namespace GASS
 			Log::Warning("PlayerInputComponent::OnCreate -- Failed to find control settings: %s",m_ControlSetting.c_str());
 
 	}
+
+	void PlayerInputComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
+		if(cs)
+			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllerMessage));
+	}
+
 
 	/*void PlayerInputComponent::OnExit(AnyMessagePtr message)
 	{

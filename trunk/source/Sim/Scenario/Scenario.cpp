@@ -42,9 +42,10 @@ namespace GASS
 
 	Scenario::~Scenario()
 	{
-
-
-	
+		for(int i = 0; i < m_Scenes.size();i++)
+		{
+			m_Scenes[i]->Shutdown();
+		}
 	}
 
 	bool Scenario::Load(const std::string &scenario_path)
@@ -89,7 +90,7 @@ namespace GASS
 				ScenarioScenePtr scene = LoadScene(scene_elem);
 				if(scene)
 				{
-					scene->SetOwner(this);
+//					scene->SetOwner(this);
 					scene->OnCreate();
 					m_Scenes.push_back(scene);
 				}
@@ -116,7 +117,7 @@ namespace GASS
 	{
 		std::string scene_name = scene_elem->Value();
 		
-		ScenarioScenePtr scene(new ScenarioScene());
+		ScenarioScenePtr scene(new ScenarioScene(shared_from_this()));
 		if(scene)
 		{
 			scene->SetName(scene_name);

@@ -38,15 +38,16 @@
 
 namespace GASS
 {
-	ScenarioScene::ScenarioScene():
+	ScenarioScene::ScenarioScene(ScenarioPtr scenario):
 		m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
 		m_RT90Origo(Vec2(0,0)),
 		m_Up(0,1,0),
 		m_North(0,0,-1),
-		m_East(1,0,0)
+		m_East(1,0,0),
+		m_Scenario(scenario)
 	{
-		m_Scenario = NULL;
+		
 		m_SceneMessageManager = new MessageManager();
 		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
 		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(ScenarioScenePtr(this)));
@@ -56,10 +57,14 @@ namespace GASS
 
 	ScenarioScene::~ScenarioScene()
 	{
+		delete m_SceneMessageManager;
+	}
+
+	void ScenarioScene::Shutdown()
+	{
 		m_ObjectManager->Clear();
 		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
 		m_SceneMessageManager->SendImmediate(scenario_msg);
-		delete m_SceneMessageManager;
 	}
 
 	int ScenarioScene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
@@ -235,7 +240,7 @@ namespace GASS
 	{
 		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
 	
-		std::string scenario_path = m_Scenario->GetPath();
+		std::string scenario_path = ScenarioPtr(m_Scenario)->GetPath();
 
 		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);

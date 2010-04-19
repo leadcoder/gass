@@ -66,7 +66,8 @@ namespace GASS
 
 		friend class Scenario;
 	public:
-		ScenarioScene();
+		ScenarioScene(ScenarioPtr scenario);
+		ScenarioScene(){}
 		virtual ~ScenarioScene();
 		static void RegisterReflection();
 
@@ -84,8 +85,8 @@ namespace GASS
 		void OnCreate();
 		std::string GetName() const {return m_Name;}
 		void SetName(const std::string &name) {m_Name = name;}
-		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
-		Scenario* GetOwner() {return m_Scenario;}
+//		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
+	//	Scenario* GetOwner() {return m_Scenario;}
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
@@ -99,7 +100,7 @@ namespace GASS
 	protected:
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
-	
+		void Shutdown();
 
 		void SetUpVector(const std::string &value);
 		std::string GetUpVector() const;
@@ -121,7 +122,7 @@ namespace GASS
 		Vec2 m_RT90Origo;
 		std::vector<SceneManagerPtr> m_SceneManagers;
 		MessageManager* m_SceneMessageManager;
-		Scenario* m_Scenario;
+		ScenarioWeakPtr m_Scenario;
 		std::string m_Name;
 		SceneObjectManagerPtr m_ObjectManager;
 
