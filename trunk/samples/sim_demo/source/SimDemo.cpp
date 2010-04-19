@@ -120,8 +120,6 @@ GASS::ScenarioPtr scenario(new GASS::Scenario());
 
 int main(int argc, char* argv[])
 {
-
-	
 	SimApplication* app;
 	bool is_server = false;
 	std::string config = "../configuration/app_config.xml";
@@ -163,6 +161,7 @@ int main(int argc, char* argv[])
 	{
 
 	}
+	delete app;
 	exit(0);
 	
 	

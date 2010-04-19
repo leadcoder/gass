@@ -15,7 +15,7 @@ public:
 		printf("Client got response from server:%s\n",mess->GetServerName().c_str());
 		//Connect to server?
 		//try to connect
-		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2001)));
+		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2005)));
 		m_IsConnected = true;
 	}
 
@@ -38,7 +38,7 @@ public:
 
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseMessage,0));
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScenario,GASS::StartSceanrioRequestMessage,0));
-		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
+		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2006,2005)));
 
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 		m_Scenario = scenario;

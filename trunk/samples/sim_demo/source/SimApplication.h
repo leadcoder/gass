@@ -68,7 +68,8 @@ public:
 	}
 	virtual ~SimApplication()
 	{
-
+		m_Scenario.reset();
+		delete m_Engine;
 	}
 
 	virtual bool Init()
