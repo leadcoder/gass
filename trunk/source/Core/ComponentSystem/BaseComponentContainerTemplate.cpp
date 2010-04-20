@@ -266,10 +266,17 @@ namespace GASS
 					
 					std::string type = cc_elem->Value(); //Attribute("type");
 					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
-					AddChild(container);
-					XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
-					if(s_container)
-						s_container->LoadXML(cc_elem);
+					if(container)
+					{
+						AddChild(container);
+						XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
+						if(s_container)
+							s_container->LoadXML(cc_elem);
+					}
+					else
+					{
+						Log::Warning("Failed to create ComponentContainer instance from template: %s",type.c_str());
+					}
 					cc_elem  = cc_elem->NextSiblingElement();
 				}
 			}

@@ -53,6 +53,7 @@ namespace GASS
 	{
 		m_Manager->Destruct(this, UNASSIGNED_SYSTEM_ADDRESS, true); // Forward the destruct message to all other systems but the sender
 		m_Manager->DereferencePointer(this);
+		
 	}
 
 	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
@@ -230,6 +231,8 @@ namespace GASS
 	ReplicaReturnResult RakNetChildReplica::ReceiveDestruction(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp)
 	{
 		//printf("Remote object owned by %s:%i destroyed\n", rakPeer->PlayerIDToDottedIP(owner), owner.port);
+		//remove SceneObject
+
 		delete this;
 		return REPLICA_PROCESSING_DONE;
 	}

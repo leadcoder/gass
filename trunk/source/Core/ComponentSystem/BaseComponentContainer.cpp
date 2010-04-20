@@ -236,7 +236,7 @@ namespace GASS
 
 	void BaseComponentContainer::LoadXML(TiXmlElement *obj_elem)
 	{
-		m_Name = obj_elem->Value();
+		//m_Name = obj_elem->Value();
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{

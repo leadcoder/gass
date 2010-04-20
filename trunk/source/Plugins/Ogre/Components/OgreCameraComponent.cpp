@@ -86,6 +86,11 @@ namespace GASS
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
 
+		if(!lc)
+		{
+			Log::Error("OgreCameraComponent::OnLoad -- Failed to find location component");
+		}
+
 		static unsigned int obj_id = 0;
 		obj_id++;
 		std::stringstream ss;
