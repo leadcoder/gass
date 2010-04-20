@@ -265,6 +265,134 @@ BOOST_AUTO_TEST_CASE( TestReflectionSerialization )
 }
 
 
+///////////////////////////TEst component system
+
+
+class MyGameObject : public GASS::Reflection<MyGameObject,GASS::BaseComponentContainer> 
+{
+public:
+	static void RegisterReflection()
+	{
+		GASS::ComponentContainerFactory::GetPtr()->Register("MyGameObject",new GASS::Creator<MyGameObject, IComponentContainer>);
+		RegisterProperty<std::string>("Description", &MyGameObject::GetDescription, &MyGameObject::SetDescription);
+	}
+	std::string GetDescription()const {return m_Des;}
+	void SetDescription(const std::string &des){m_Des = des;}
+private:
+	std::string m_Des;
+};
+
+class MyGameObjectTemplate : public GASS::Reflection<MyGameObjectTemplate,GASS::BaseComponentContainerTemplate> 
+{
+public:
+	static void RegisterReflection()
+	{
+		GASS::ComponentContainerTemplateFactory::GetPtr()->Register("MyGameObjectTemplate",new GASS::Creator<MyGameObjectTemplate, IComponentContainerTemplate>);
+		RegisterProperty<std::string>("Description", &MyGameObjectTemplate::GetDescription, &MyGameObjectTemplate::SetDescription);
+	}
+	std::string GetDescription()const {return m_Des;}
+	void SetDescription(const std::string &des){m_Des = des;}
+private:
+	std::string m_Des;
+};
+
+
+class TestComponent : public GASS::Reflection<TestComponent, GASS::BaseComponent>
+{
+public:
+	static void RegisterReflection()
+	{
+		GASS::ComponentFactory::GetPtr()->Register("TestComponent",new GASS::Creator<TestComponent, IComponent>);
+		RegisterProperty<float>("Size", &TestComponent::GetSize, &TestComponent::SetSize);
+	}
+	float GetSize()const {return m_Size;}
+	void SetSize(const float &size){m_Size = size;}
+	void OnCreate()
+	{
+
+	}
+private:
+	float m_Size;
+};
+
+typedef boost::shared_ptr<MyGameObject> MyGameObjectPtr;
+typedef boost::shared_ptr<MyGameObjectTemplate> MyGameObjectTemplatePtr;
+typedef boost::shared_ptr<TestComponent> TestComponentPtr;
+typedef boost::weak_ptr<TestComponent> TestComponentWeakPtr;
+
+
+
+
+BOOST_AUTO_TEST_CASE( TestComponentSystem)
+{
+	boost::shared_ptr<GASS::BaseComponentContainerTemplateManager> template_manager( new GASS::BaseComponentContainerTemplateManager());
+    //BOOST_CHECK( false );
+    // unit test framework can catch operating system signals
+    //BOOST_TEST_CHECKPOINT("About to test reflection system!");
+
+	MyGameObjectTemplatePtr go1(new MyGameObjectTemplate());
+	go1->SetName("MyManualGameObject");
+	MyGameObjectTemplatePtr child_go (new MyGameObjectTemplate());
+	child_go->SetName("ChildGameObject");
+	go1->AddChild(child_go);
+	TestComponentPtr tc (new TestComponent());
+	tc->SetName("TestComp");
+	tc->SetSize(1000);
+	tc->SetName("MyTestComponent");
+	go1->AddComponent(tc);
+	//LocationComponent* clc = new LocationComponent();
+	child_go->AddComponent(tc);
+
+	//go1->OnCreate();
+	//boost::shared_ptr<GASS::Message> init_msg(new GASS::Message(MESSAGE_INIT,100));
+	//mm.SendImmediate(init_msg);
+	TiXmlDocument* doc = new TiXmlDocument();  
+	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+	doc->LinkEndChild( decl );  
+
+	TiXmlElement * template_elem = new TiXmlElement( "Templates" );  
+	doc->LinkEndChild(template_elem);  
+	go1->SaveXML(template_elem);
+
+	doc->SaveFile("debug.xml" );
+	MyGameObjectTemplatePtr go2(new MyGameObjectTemplate());
+	go2->LoadXML(template_elem->FirstChildElement());
+
+	
+
+	delete doc;
+
+	BOOST_CHECK( go1->GetName() == go2->GetName());
+
+	template_manager->AddTemplate(go1);
+
+	boost::shared_ptr<GASS::BaseComponentContainer> bo = boost::shared_static_cast<GASS::BaseComponentContainer>( template_manager->CreateFromTemplate("MyManualGameObject"));
+
+
+	doc = new TiXmlDocument();  
+	decl = new TiXmlDeclaration( "1.0", "", "" );  
+	doc->LinkEndChild( decl );  
+
+	template_elem = new TiXmlElement( "Objects" );  
+	doc->LinkEndChild(template_elem);  
+	bo->SaveXML(template_elem);
+	doc->SaveFile("debug.xml" );
+
+	/*BOOST_CHECK( obj.GetFloat() == obj2.GetFloat());
+	BOOST_CHECK( obj.GetString() == obj2.GetString());
+	BOOST_CHECK( obj.GetVec2() == obj2.GetVec2());
+	BOOST_CHECK( obj.GetVec3() == obj2.GetVec3());
+	BOOST_CHECK( obj.GetVec4() == obj2.GetVec4());
+	BOOST_CHECK( obj.GetStrVec() == obj2.GetStrVec());*/
+
+
+	
+		
+
+
+}
+
+
 
 /*
 int main(int argc, char* argv[])

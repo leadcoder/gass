@@ -190,10 +190,11 @@ namespace GASS
 
 	void BaseComponentContainerTemplate::SaveXML(TiXmlElement *obj_elem)
 	{
+		std::string factory_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 
-		TiXmlElement* this_elem = new TiXmlElement( GetName().c_str() );  
+		TiXmlElement* this_elem = new TiXmlElement(factory_name.c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
-		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
+		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		SaveProperties(this_elem);
 
 		TiXmlElement* comp_elem = new TiXmlElement("Components");
@@ -225,7 +226,7 @@ namespace GASS
 
 	void BaseComponentContainerTemplate::LoadXML(TiXmlElement *obj_elem)
 	{
-		m_Name = obj_elem->Value();
+		//m_Name = obj_elem->Value();
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
@@ -260,11 +261,10 @@ namespace GASS
 				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
-
-					if(!cc_elem->Attribute("type"))
-						Log::Error("Failed to find type-attribute for %s tag", cc_elem->Value());
+					//if(!cc_elem->Attribute("type"))
+					//	Log::Error("Failed to find type-attribute for %s tag", cc_elem->Value());
 					
-					std::string type = cc_elem->Attribute("type");
+					std::string type = cc_elem->Value(); //Attribute("type");
 					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
 					AddChild(container);
 					XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
@@ -285,12 +285,12 @@ namespace GASS
 
 	ComponentPtr BaseComponentContainerTemplate::LoadComponent(TiXmlElement *comp_template)
 	{
-		std::string comp_name = comp_template->Value();
-		std::string comp_type = comp_template->Attribute("type");
+		std::string comp_type = comp_template->Value();
+		//std::string comp_type = comp_template->Attribute("type");
 		ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 		if(comp)
 		{
-			comp->SetName(comp_name);
+			comp->SetName(comp_type);
 			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->LoadXML(comp_template);
@@ -480,7 +480,7 @@ namespace GASS
 		{
 			ComponentContainerPtr child = children.getNext();
 
-			GetRTTI()->GetClassName();
+			
 			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
 			//BaseComponentContainerTemplatePtr new_child(new BaseComponentContainerTemplate());
 			if(new_child)

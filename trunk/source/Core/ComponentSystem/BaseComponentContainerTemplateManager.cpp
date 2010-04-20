@@ -102,7 +102,7 @@ namespace GASS
 			// Loop through each template
 			while(templates)
 			{
-				std::string type = templates->Attribute("type");
+				std::string type = templates->Value();
 				ComponentContainerTemplatePtr container = (ComponentContainerTemplateFactory::Get().Create(type));
 				if(container)
 				{

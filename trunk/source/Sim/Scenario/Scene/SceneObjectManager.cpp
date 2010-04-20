@@ -118,14 +118,14 @@ namespace GASS
 		//check if we want create object by template or type
 		std::string so_name = so_elem->Value();
 		SceneObjectPtr so;
-		if(so_elem->Attribute("type"))
+		if(so_elem->Attribute("from_template"))
 		{
-			std::string object_type = so_elem->Attribute("type");
-			so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create(object_type));
+			std::string template_name = so_elem->Attribute("from_template");
+			so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
 		}
 		else
 		{
-			so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(so_name));
+			so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create(so_name));
 		}
 		if(so)
 		{
