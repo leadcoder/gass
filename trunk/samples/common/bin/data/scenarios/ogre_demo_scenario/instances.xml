@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Objects>
-  <TerrainObject/>
-  <SunObject/>
+  <SceneObject from_template="TerrainObject"/>
+  <SceneObject from_template="SunObject"/>
   <!--<ContainerObject>
     <Components>
       <CampLocation type="LocationComponent">

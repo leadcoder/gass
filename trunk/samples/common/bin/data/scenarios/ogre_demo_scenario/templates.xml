@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates>
-  <TerrainObject type ="SceneObjectTemplate">
+  <SceneObjectTemplate>
+    <Name value="TerrainObject"/> 
     <Components>
-      <TerrainGeom type="OgreTerrainComponent">
+      <OgreTerrainComponent>
         <TerrainConfigFile value="gfx/terrain/terrain.cfg"/>
-      </TerrainGeom>
-      <TerrainLocation type="LocationComponent">
+      </OgreTerrainComponent>
+      <LocationComponent>
         <Position value="0 0 0"/>
         <Rotation value="0 0 0"/>
-      </TerrainLocation>
-      <PhysicsGeom type="PhysicsGeometryComponent">
+      </LocationComponent>
+      <PhysicsGeometryComponent>
         <GeometryType value="terrain"/>
-      </PhysicsGeom>
-     <TreeLayer1 type="TreeGeometry">
+      </PhysicsGeometryComponent>
+     <TreeGeometry>
         <Mesh value= "fir06_30.mesh"/>
         <DensityMap value= "gfx/terrain/grassmask.dds"/>
         <ImposterAlphaRejectionValue value ="40"/>
@@ -24,8 +25,8 @@
         <ImposterFadeDistance value ="20"/>
         <SetHeightAtStartup value = "true"/>
         <MaxMinScale value ="0.05 0.1"/>
-     </TreeLayer1>
-      <GrassLayer1 type="GrassGeometry">
+     </TreeGeometry>
+      <GrassGeometry>
         <PageSize value = "15"/>
         <ViewDistance value ="35"/>
         <Material value="FadeGrass"/>
@@ -41,21 +42,21 @@
         <FadeTech value ="AlphaGrow"/>
         <RenderTechnique value ="CrossQuads"/>
         <BlendWithGround value="false"/>
-      </GrassLayer1>
+      </GrassGeometry>
     </Components>
-  </TerrainObject>
-  <SunObject type ="SceneObjectTemplate">
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SunObject"/>
     <Components>
-      <LightComp type="LightComponent">
+      <LightComponent>
         <LightType value="0"/>
         <CastShadow value="1"/>
-      </LightComp>
-      <LightLocation type="LocationComponent">
+      </LightComponent>
+      <LocationComponent>
         <Position value="0 0 0"/>
         <Rotation value="45 45 0"/>
-      </LightLocation>
+      </LocationComponent>
     </Components>
-  </SunObject>
- 
-</Templates>
+  </SceneObjectTemplate>
+ </Templates>
 
