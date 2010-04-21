@@ -282,17 +282,15 @@ namespace GASS
 	{
 		SceneManagerPtr sm;
 		std::string sm_name = sm_elem->Value();
-		std::string sm_type = sm_elem->Attribute("type");
 		for(int i = 0; i < m_SceneManagers.size() ; i++)
 		{
-			if(m_SceneManagers[i]->GetName() == sm_type)
+			if(m_SceneManagers[i]->GetName() == sm_name)
 			{
 				sm = m_SceneManagers[i];
 				XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
 				if(serialize)
 					serialize->LoadXML(sm_elem);
 				return sm;
-
 			}
 		}
 		return sm;

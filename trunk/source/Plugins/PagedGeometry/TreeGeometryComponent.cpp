@@ -23,7 +23,7 @@
 #include <Ogre.h>
 #include <OgreSceneManager.h>
 #include <OgreHardwarePixelBuffer.h>
-#include "TreeGeometry.h"
+#include "TreeGeometryComponent.h"
 #include "PagedGeometry.h"
 #include "ImpostorPage.h"
 #include "BatchPage.h"
@@ -43,46 +43,46 @@
 
 namespace GASS
 {
-	ITerrainComponent* TreeGeometry::m_Terrain = NULL;
+	ITerrainComponent* TreeGeometryComponent::m_Terrain = NULL;
 
-	void TreeGeometry::RegisterReflection()
+	void TreeGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("TreeGeometry",new Creator<TreeGeometry, IComponent>);
+		ComponentFactory::GetPtr()->Register("TreeGeometryComponent",new Creator<TreeGeometryComponent, IComponent>);
 		
-		RegisterProperty<std::string>("Mesh", &TreeGeometry::GetMesh, &TreeGeometry::SetMesh);
-		RegisterProperty<std::string>("ColorMap", &TreeGeometry::GetColorMap, &TreeGeometry::SetColorMap);
-		RegisterProperty<std::string>("DensityMap", &TreeGeometry::GetDensityMap, &TreeGeometry::SetDensityMap);
-		RegisterProperty<float>("DensityFactor", &TreeGeometry::GetDensityFactor, &TreeGeometry::SetDensityFactor);
-		RegisterProperty<float>("MeshDistance", &TreeGeometry::GetMeshDistance, &TreeGeometry::SetMeshDistance);
-		RegisterProperty<float>("MeshFadeDistance", &TreeGeometry::GetMeshFadeDistance, &TreeGeometry::SetMeshFadeDistance);
-		RegisterProperty<float>("ImposterDistance", &TreeGeometry::GetImposterDistance, &TreeGeometry::SetImposterDistance);
-		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometry::GetImposterFadeDistance, &TreeGeometry::SetImposterFadeDistance);
-		RegisterProperty<Vec4>("Bounds", &TreeGeometry::GetBounds, &TreeGeometry::SetBounds);
-		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometry::GetMaxMinScale, &TreeGeometry::SetMaxMinScale);
-		RegisterProperty<bool>("CastShadows", &TreeGeometry::GetCastShadows, &TreeGeometry::SetCastShadows);
-		RegisterProperty<bool>("CreateShadowMap", &TreeGeometry::GetCreateShadowMap, &TreeGeometry::SetCreateShadowMap);
-		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometry::GetPrecalcHeight, &TreeGeometry::SetPrecalcHeight);
+		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh);
+		RegisterProperty<std::string>("ColorMap", &TreeGeometryComponent::GetColorMap, &TreeGeometryComponent::SetColorMap);
+		RegisterProperty<std::string>("DensityMap", &TreeGeometryComponent::GetDensityMap, &TreeGeometryComponent::SetDensityMap);
+		RegisterProperty<float>("DensityFactor", &TreeGeometryComponent::GetDensityFactor, &TreeGeometryComponent::SetDensityFactor);
+		RegisterProperty<float>("MeshDistance", &TreeGeometryComponent::GetMeshDistance, &TreeGeometryComponent::SetMeshDistance);
+		RegisterProperty<float>("MeshFadeDistance", &TreeGeometryComponent::GetMeshFadeDistance, &TreeGeometryComponent::SetMeshFadeDistance);
+		RegisterProperty<float>("ImposterDistance", &TreeGeometryComponent::GetImposterDistance, &TreeGeometryComponent::SetImposterDistance);
+		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometryComponent::GetImposterFadeDistance, &TreeGeometryComponent::SetImposterFadeDistance);
+		RegisterProperty<Vec4>("Bounds", &TreeGeometryComponent::GetBounds, &TreeGeometryComponent::SetBounds);
+		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale);
+		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows);
+		RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
+		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight);
 		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &GetImposterAlphaRejectionValue, &SetImposterAlphaRejectionValue);
 		
-		//REGISTER_PROP(String,TreeGeometry,m_DensityMapFilename,"DensityMap",CProperty::STREAM|CProperty::READONLY,"");
-		/*REGISTER_PROP(Float,TreeGeometry,m_DensityFactor,"DensityFactor",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometry,m_MeshDist,"MeshDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometry,m_MeshFadeDist,"MeshFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometry,m_ImposterDist,"ImposterDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometry,m_ImposterFadeDist,"ImposterFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Vect4D,TreeGeometry,m_Bounds,"Bounds",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Vect2D,TreeGeometry,m_MaxMinScale,"MaxMinScale",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometry,m_CastShadows,"CastShadows",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometry,m_CreateShadowMap,"CreateShadowMap",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometry,m_PrecalcHeight,"SetHeightAtStartup",CProperty::STREAM|CProperty::READONLY,"");*/
+		//REGISTER_PROP(String,TreeGeometryComponent,m_DensityMapFilename,"DensityMap",CProperty::STREAM|CProperty::READONLY,"");
+		/*REGISTER_PROP(Float,TreeGeometryComponent,m_DensityFactor,"DensityFactor",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Float,TreeGeometryComponent,m_MeshDist,"MeshDistance",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Float,TreeGeometryComponent,m_MeshFadeDist,"MeshFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Float,TreeGeometryComponent,m_ImposterDist,"ImposterDistance",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Float,TreeGeometryComponent,m_ImposterFadeDist,"ImposterFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Vect4D,TreeGeometryComponent,m_Bounds,"Bounds",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Vect2D,TreeGeometryComponent,m_MaxMinScale,"MaxMinScale",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Bool,TreeGeometryComponent,m_CastShadows,"CastShadows",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Bool,TreeGeometryComponent,m_CreateShadowMap,"CreateShadowMap",CProperty::STREAM|CProperty::READONLY,"");
+		REGISTER_PROP(Bool,TreeGeometryComponent,m_PrecalcHeight,"SetHeightAtStartup",CProperty::STREAM|CProperty::READONLY,"");*/
 	}
 
 	
 	
 
 
-	TreeGeometry::TreeGeometry(void) : m_Bounds(0,0,0,0)
+	TreeGeometryComponent::TreeGeometryComponent(void) : m_Bounds(0,0,0,0)
 	{
 		m_DensityFactor = 0.001;
 		m_MaxMinScale.x = 1.1;
@@ -99,12 +99,12 @@ namespace GASS
 
 	}
 
-	TreeGeometry::~TreeGeometry(void)
+	TreeGeometryComponent::~TreeGeometryComponent(void)
 	{
 	}
 
 
-	void TreeGeometry::OnLoad(LoadGFXComponentsMessagePtr message)
+	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
@@ -170,7 +170,7 @@ namespace GASS
 		else
 		{
 			treeLoader2d = new TreeLoader2D(m_PagedGeometry, m_MapBounds);
-			treeLoader2d->setHeightFunction(TreeGeometry::GetTerrainHeight);
+			treeLoader2d->setHeightFunction(TreeGeometryComponent::GetTerrainHeight);
 			if(m_ColorMapFilename!= "") treeLoader2d->setColorMap(m_ColorMapFilename);
 			m_PagedGeometry->setPageLoader(treeLoader2d);
 		}
@@ -258,7 +258,7 @@ namespace GASS
 	}
 
 
-/*	void TreeGeometry::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
+/*	void TreeGeometryComponent::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
 	{
 		mesh_data->NumVertex = 0;
 		mesh_data->VertexVector = NULL;
@@ -287,7 +287,7 @@ namespace GASS
 		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
 	}
 
-	void TreeGeometry::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
+	void TreeGeometryComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
 	{
 		if (!vertex_data)
 			return;
@@ -332,7 +332,7 @@ namespace GASS
 		}
 	}
 
-	void TreeGeometry::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
+	void TreeGeometryComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
 	{
 		const unsigned int prev_size = mesh->NumFaces;
 		mesh->NumFaces += (unsigned int)data->indexCount;
@@ -374,12 +374,12 @@ namespace GASS
 		}
 	}*/
 
-	void TreeGeometry::OnCreate()
+	void TreeGeometryComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometry::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,1));
 	}
 
-	void TreeGeometry::LoadDensityMap(const std::string &mapFile, int channel)
+	void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
 	{
 		//Load image
 		Ogre::TexturePtr map = Ogre::TextureManager::getSingleton().load(mapFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
@@ -431,7 +431,7 @@ namespace GASS
 		}
 	}
 
-	void TreeGeometry::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+	void TreeGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
@@ -440,7 +440,7 @@ namespace GASS
 	}
 
 
-	float TreeGeometry::GetDensityAt(float x, float z)
+	float TreeGeometryComponent::GetDensityAt(float x, float z)
 	{
 		assert(m_DensityMap);
 
@@ -459,7 +459,7 @@ namespace GASS
 		return val;
 	}
 
-	float TreeGeometry::GetTerrainHeight(float x, float z)
+	float TreeGeometryComponent::GetTerrainHeight(float x, float z)
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);

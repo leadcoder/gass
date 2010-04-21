@@ -111,6 +111,10 @@ namespace GASS
 						s_cont->LoadXML(templates);
 					AddTemplate(container);
 				}
+				else
+				{
+					Log::Warning("Failed to create ComponentContainerTemplate:%s",type.c_str());
+				}
 				templates  = templates->NextSiblingElement();
 			}
 		}

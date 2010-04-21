@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once 
+#ifndef TREE_GEOMETRY_COMPONENT_H
+#define TREE_GEOMETRY_COMPONENT_H
+
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
@@ -32,11 +34,11 @@ namespace GASS
 {
 	class ITerrainComponent;
 
-	class TreeGeometry : public Reflection<TreeGeometry,BaseSceneComponent>  , public Ogre::RenderTargetListener
+	class TreeGeometryComponent : public Reflection<TreeGeometryComponent,BaseSceneComponent>  , public Ogre::RenderTargetListener
 	{
 	public:
-		TreeGeometry(void);
-		~TreeGeometry(void);
+		TreeGeometryComponent(void);
+		~TreeGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
@@ -223,3 +225,5 @@ namespace GASS
 
 	};
 }
+
+#endif

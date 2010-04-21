@@ -77,6 +77,7 @@ namespace GASS
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
+			system->SetName(system_type);
 			XMLSerializePtr  serialize = boost::shared_dynamic_cast<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);

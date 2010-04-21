@@ -17,8 +17,11 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once 
 
+
+
+#ifndef GRASS_GEOMETRY_COMPONENT_H
+#define GRASS_GEOMETRY_COMPONENT_H
 
 
 #include "PagedGeometry.h"
@@ -36,11 +39,11 @@ namespace GASS
 {
 	class ITerrainComponent;
 
-	class GrassGeometry : public Reflection<GrassGeometry,BaseSceneComponent> , public Ogre::RenderTargetListener
+	class GrassGeometryComponent : public Reflection<GrassGeometryComponent,BaseSceneComponent> , public Ogre::RenderTargetListener
 	{
 	public:
-		GrassGeometry(void);
-		~GrassGeometry(void);
+		GrassGeometryComponent(void);
+		~GrassGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
@@ -110,3 +113,5 @@ protected:
 		
 	};
 }
+
+#endif 

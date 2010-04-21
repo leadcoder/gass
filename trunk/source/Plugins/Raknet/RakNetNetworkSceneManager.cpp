@@ -60,14 +60,12 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
-		Log::Print("reg ref  RaknetNetworkSceneManager");
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-			Log::Print("reg OnCreate  RaknetNetworkSceneManager");
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
