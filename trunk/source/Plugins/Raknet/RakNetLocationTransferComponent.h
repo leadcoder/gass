@@ -94,8 +94,11 @@ namespace GASS
 		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnParentTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnVelocityNotify(VelocityNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
+		bool GetRelativeToParent() const {return m_RelativeToParent;}
+		void SetRelativeToParent(bool value) {m_RelativeToParent=value;}
 
 		//ITaskListener
 		void Update(double delta);
@@ -111,6 +114,8 @@ namespace GASS
 		double m_DeadReckoning;
 		double m_LastSerialize;
 		float m_SendFreq;
+		bool m_RelativeToParent;
+		Vec3 m_ParentPos;
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }

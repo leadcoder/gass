@@ -51,6 +51,8 @@ namespace GASS
 		m_AngularVelocity(0,0,0),
 		m_DeadReckoning(0),
 		m_LastSerialize(0),
+		m_ParentPos(0,0,0),
+		m_RelativeToParent(0),
 		m_SendFreq(1.0f/20.0f) // 20fps
 	{
 		for(int i = 0 ; i < 3; i++)
@@ -71,6 +73,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
 		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
+		RegisterProperty<bool>("RelativeToParent", &RakNetLocationTransferComponent::GetRelativeToParent, &RakNetLocationTransferComponent::SetRelativeToParent);
+		
 	}
 
 	void RakNetLocationTransferComponent::OnCreate()
@@ -86,8 +90,16 @@ namespace GASS
 		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
 		//if(!nc)
 		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
+		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
+		if(parent && m_RelativeToParent)
+		{
+			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
+			std::cout << "---------------------------ehajehj-------------------------" << std::endl;
+		}
 		if(raknet->IsServer())
 		{
+			
+
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,VelocityNotifyMessage,0));
 			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -124,9 +136,22 @@ namespace GASS
 		m_AngularVelocity = trans*message->GetAngularVelocity();
 	}
 
+
+	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationNotifyMessagePtr message)
+	{
+		m_ParentPos = message->GetPosition();
+		//std::cout << "pos" << m_ParentPos << std::endl;
+	}
+
 	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
+
+		if(m_RelativeToParent) 
+		{
+			pos = pos - m_ParentPos;
+			std::cout << "pos" << pos << std::endl;
+		}
 		Quaternion rot = message->GetRotation();
 
 		double current_time = SimEngine::Get().GetTime();
@@ -335,6 +360,12 @@ namespace GASS
 				//std::cout << "behinde last update: " <<(m_TimeStampHistory[1] - time) << std::endl; 
 				new_rot = m_RotationHistory[2];
 				new_pos = m_PositionHistory[2];
+			}
+
+			if(m_RelativeToParent)
+			{
+				std::cout << "pos" << new_pos << std::endl;
+				new_pos = new_pos + m_ParentPos;
 			}
 
 			m_DeadReckoning += delta;

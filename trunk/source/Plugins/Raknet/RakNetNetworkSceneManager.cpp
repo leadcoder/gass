@@ -161,14 +161,14 @@ namespace GASS
 	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
 		ScenarioScenePtr scene = message->GetScenarioScene();
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
 	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
 		
 		int address = (int) this;
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 
