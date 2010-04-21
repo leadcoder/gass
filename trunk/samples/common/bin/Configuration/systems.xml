@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Systems>
-  <GraphicsSystem type="OgreGraphicsSystem">
+  <OgreGraphicsSystem>
+    <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
     <Plugin value="RenderSystem_Direct3D9"/>
     <Plugin value="Plugin_CgProgramManager"/>
@@ -9,8 +10,9 @@
     <Plugin value="Plugin_ParticleFX"/>
     <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
-  </GraphicsSystem>
-  <ResourceSystem type="OgreResourceSystem">
+  </OgreGraphicsSystem>
+  <OgreResourceSystem>
+    <Name value = "ResourceSystem"/>
     <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
     <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
     <AddResourceLocation Path="../data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
@@ -23,19 +25,23 @@
     <AddResourceLocation Path="../data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
-  </ResourceSystem>
-  <!--<PhysicsSystem type="PhysXPhysicsSystem">
-  </PhysicsSystem>-->
-  <PhysicsSystem type="ODEPhysicsSystem">
-  </PhysicsSystem>
-  <InputSystem type="OISInputSystem">
-  </InputSystem>
-  <NetworkSystem type="RakNetNetworkSystem">
-  </NetworkSystem>
-  <CollisionSystem type="ODECollisionSystem">
-  </CollisionSystem>
-  <SoundSystem type="OpenALSoundSystem">
-  </SoundSystem>
-  <BaseSystem type="BaseSystem">
+  </OgreResourceSystem>
+  <ODEPhysicsSystem>
+    <Name value = "PhysicsSystem"/>
+  </ODEPhysicsSystem>
+  <ODECollisionSystem>
+    <Name value = "CollisionSystem"/>
+  </ODECollisionSystem>
+  <OISInputSystem>
+    <Name value = "InputSystem"/>
+  </OISInputSystem>
+  <RakNetNetworkSystem>
+    <Name value = "NetworkSystem"/>
+  </RakNetNetworkSystem>
+  <OpenALSoundSystem>
+    <Name value = "SoundSystem"/>
+  </OpenALSoundSystem>
+  <BaseSystem>
+    <Name value = "BaseSystem"/>
   </BaseSystem>
 </Systems>

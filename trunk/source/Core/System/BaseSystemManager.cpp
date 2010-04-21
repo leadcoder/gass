@@ -73,12 +73,10 @@ namespace GASS
 
 	SystemPtr BaseSystemManager::LoadSystem(TiXmlElement *system_elem)
 	{
-		std::string system_name = system_elem->Value();
-		std::string system_type = system_elem->Attribute("type");
+		std::string system_type = system_elem->Value();
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
-			system->SetName(system_name);
 			XMLSerializePtr  serialize = boost::shared_dynamic_cast<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);
