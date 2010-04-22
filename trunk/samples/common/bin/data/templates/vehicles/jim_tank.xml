@@ -114,6 +114,7 @@
             </NetworkChildComponent>
             <LocationTransferComponent>
               <RelativeToParent value="1"/>
+              <UpdatePosition value="1"/>
             </LocationTransferComponent>
             <InputTransferComponent>
               <ControlSetting value ="TurretInputSettings"/>

@@ -31,7 +31,7 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
-
+#include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -53,6 +53,8 @@ namespace GASS
 		m_LastSerialize(0),
 		m_ParentPos(0,0,0),
 		m_RelativeToParent(0),
+		m_UpdatePosition(true),
+		m_UpdateRotation(true),
 		m_SendFreq(1.0f/20.0f) // 20fps
 	{
 		for(int i = 0 ; i < 3; i++)
@@ -73,7 +75,10 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
 		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
-		RegisterProperty<bool>("RelativeToParent", &RakNetLocationTransferComponent::GetRelativeToParent, &RakNetLocationTransferComponent::SetRelativeToParent);
+		RegisterProperty<int>("RelativeToParent", &RakNetLocationTransferComponent::GetRelativeToParent, &RakNetLocationTransferComponent::SetRelativeToParent);
+		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
+		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
+		
 		
 	}
 
@@ -91,10 +96,10 @@ namespace GASS
 		//if(!nc)
 		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		if(parent && m_RelativeToParent)
+		if(parent && m_RelativeToParent == 1)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
-			std::cout << "---------------------------ehajehj-------------------------" << std::endl;
+			
 		}
 		if(raknet->IsServer())
 		{
@@ -119,6 +124,14 @@ namespace GASS
 				comp->GetSceneObject()->PostMessage(disable_msg);
 			}
 
+			if(m_RelativeToParent == 1 || m_RelativeToParent == 2)
+			{
+				//attach this to parent node
+				LocationComponentPtr location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				BaseSceneComponentPtr base = boost::shared_dynamic_cast<BaseSceneComponent>(location);
+				base->SetPropertyByType("AttachToParent",boost::any(true));
+			}
+
 			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 	}
@@ -140,19 +153,33 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		m_ParentPos = message->GetPosition();
+		m_ParentRot = message->GetRotation();
 		//std::cout << "pos" << m_ParentPos << std::endl;
 	}
 
 	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
-
-		if(m_RelativeToParent) 
-		{
-			pos = pos - m_ParentPos;
-			std::cout << "pos" << pos << std::endl;
-		}
 		Quaternion rot = message->GetRotation();
+
+		if(m_RelativeToParent == 1)
+		{
+			Mat4 transform;
+			m_ParentRot.ToRotationMatrix(transform);
+			transform.SetTranslation(m_ParentPos.x,m_ParentPos.y,m_ParentPos.z);
+			transform = transform.Invert2();
+			pos = transform * pos;
+			Mat4 rot_mat;
+			rot_mat.Identity();
+			rot.ToRotationMatrix(rot_mat);
+			transform.SetTranslation(0,0,0);
+			transform.Invert2();
+			rot_mat = transform*rot_mat;
+			rot.FromRotationMatrix(rot_mat);
+			//pos = pos - m_ParentPos;
+			//std::cout << "pos" << pos << std::endl;
+		}
+		
 
 		double current_time = SimEngine::Get().GetTime();
 		double delta = current_time - m_TimeStampHistory[0];
@@ -362,15 +389,26 @@ namespace GASS
 				new_pos = m_PositionHistory[2];
 			}
 
-			if(m_RelativeToParent)
-			{
-				std::cout << "pos" << new_pos << std::endl;
-				new_pos = new_pos + m_ParentPos;
-			}
+			
 
 			m_DeadReckoning += delta;
-			GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(new_pos)));
-			GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(new_rot)));
+			
+			if(m_RelativeToParent == 1 || m_RelativeToParent == 0)
+			{
+				if(m_UpdatePosition)
+					GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(new_pos)));
+				if(m_UpdateRotation)
+					GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(new_rot)));
+			}
+			else if (m_RelativeToParent == 2)
+			{
+				if(m_UpdatePosition)
+					GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(new_pos)));
+				if(m_UpdateRotation)
+					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(new_rot)));
+			}
+
+			
 
 			//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 #ifdef _DEBUG_LTC_
