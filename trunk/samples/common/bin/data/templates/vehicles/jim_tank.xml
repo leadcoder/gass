@@ -113,8 +113,8 @@
             <NetworkChildComponent>
             </NetworkChildComponent>
             <LocationTransferComponent>
-              <RelativeToParent value="1"/>
-              <UpdatePosition value="1"/>
+              <RelativeToParent value="2"/>
+              <UpdatePosition value="0"/>
             </LocationTransferComponent>
             <InputTransferComponent>
               <ControlSetting value ="TurretInputSettings"/>
@@ -312,6 +312,12 @@
         <Damping value="4"/>
         <SwayForce value="100"/>
       </PhysicsSuspensionComponent>
+      <NetworkChildComponent>
+      </NetworkChildComponent>
+      <LocationTransferComponent>
+        <RelativeToParent value="0"/>
+        <UpdatePosition value="1"/>
+      </LocationTransferComponent>
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>

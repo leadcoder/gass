@@ -80,7 +80,6 @@ namespace GASS
 		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation);
 		RegisterProperty<Vec3>("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale);
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent);
-
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
 	}
 
