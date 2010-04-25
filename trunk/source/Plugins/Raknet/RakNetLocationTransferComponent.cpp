@@ -43,12 +43,14 @@
 #include "GetTime.h"
 
 
-//#define _DEBUG_LTC_
+#define _DEBUG_LTC_
 
 namespace GASS
 {
 	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_Velocity(0,0,0),
+//		m_LocalVelocity(0,0,0),
 		m_AngularVelocity(0,0,0),
+//		m_LocalAngularVelocity(0,0,0),
 		m_DeadReckoning(0),
 		m_LastSerialize(0),
 		m_ParentPos(0,0,0),
@@ -78,8 +80,6 @@ namespace GASS
 		RegisterProperty<int>("RelativeToParent", &RakNetLocationTransferComponent::GetRelativeToParent, &RakNetLocationTransferComponent::SetRelativeToParent);
 		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
-		
-		
 	}
 
 	void RakNetLocationTransferComponent::OnCreate()
@@ -139,14 +139,15 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnVelocityNotify(VelocityNotifyMessagePtr message)
 	{
-		Mat4 trans;
+		/*Mat4 trans;
 		trans.Identity();
 		m_RotationHistory[0].ToRotationMatrix(trans);
-		//trans.SetTranslation(m_PositionHistory[0].x,m_PositionHistory[0].y,m_PositionHistory[0].z);
-
 		//transform
 		m_Velocity = trans*message->GetLinearVelocity();
-		m_AngularVelocity = trans*message->GetAngularVelocity();
+		m_AngularVelocity = trans*message->GetAngularVelocity();*/
+		m_Velocity = message->GetLinearVelocity();
+		m_AngularVelocity = message->GetAngularVelocity();
+
 	}
 
 
@@ -294,7 +295,8 @@ namespace GASS
 				step_back--;
 			if(GetAsyncKeyState(VK_F3))
 				step_back++;
-			std::cout << "step_back "<< step_back << std::endl;
+		//	std::cout << "step_back "<< step_back << std::endl;
+		//  std::cout << "Local vel"<< m_LocalVelocity << " " << m_LocalAngularVelocity << std::endl;
 #endif
 
 			RakNetTime time = RakNet::GetTime();
@@ -318,10 +320,20 @@ namespace GASS
 				float delta_time = time - m_UpdateTimeStamp[0];
 				Vec3 delta_dir = m_Pos[0]-m_Pos[1];
 				float speed = delta_dir.Length()*(1.0/prev_delta_time);*/
-				Float length = m_Velocity.Length();
+
+				m_DeadReckoning = (float(time - m_TimeStampHistory[0]))/1000.0f;
+
+				Mat4 trans;
+				trans.Identity();
+				m_RotationHistory[0].ToRotationMatrix(trans);
+			
+				Vec3 local_velocity = trans*m_Velocity;
+				Vec3 local_angular_velocity = trans*m_AngularVelocity;
+
+				Float length = local_velocity.Length();
 				if(length > 0.0000001)
 				{
-					Vec3 delta_dir = m_Velocity;
+					Vec3 delta_dir = local_velocity;
 					delta_dir.Normalize();
 					delta_dir = delta_dir*(length*m_DeadReckoning);
 					//delta_dir = delta_dir* (1.0/prev_delta_time);
@@ -335,7 +347,8 @@ namespace GASS
 				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_TimeStampHistory[0]),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 #endif
 
-				Vec3 ang_vel = m_AngularVelocity*m_DeadReckoning;
+				//transform to local space
+				Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
 				new_rot = Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z))*m_RotationHistory[0];
 
 				//new_rot.x = m_RotationHistory[0].x  + m_AngularVelocity.x*m_DeadReckoning;
@@ -391,7 +404,7 @@ namespace GASS
 
 			
 
-			m_DeadReckoning += delta;
+			//m_DeadReckoning += delta;
 			
 			if(m_RelativeToParent == 1 || m_RelativeToParent == 0)
 			{
@@ -408,12 +421,14 @@ namespace GASS
 					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(new_rot)));
 			}
 
+			GetSceneObject()->PostMessage(MessagePtr(new VelocityNotifyMessage(m_Velocity, m_AngularVelocity)));
+
 			
 
 			//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 #ifdef _DEBUG_LTC_
 			MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
+			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
 #endif
 
 		}
@@ -432,6 +447,7 @@ namespace GASS
 			m_Velocity = trans_package->Velocity;
 			m_AngularVelocity = trans_package->AngularVelocity;
 
+			
 			m_PositionHistory[2] = m_PositionHistory[1];
 			m_PositionHistory[1] = m_PositionHistory[0];
 			m_PositionHistory[0] = trans_package->Position;
@@ -444,9 +460,12 @@ namespace GASS
 			m_TimeStampHistory[1] = m_TimeStampHistory[0];
 			m_TimeStampHistory[0] = message->GetTimeStamp();//->TimeStamp;
 
-			m_DeadReckoning = 0;
+			//m_DeadReckoning = 0;
 
-			RakNetTime time = RakNet::GetTime();
+
+			
+			
+			//RakNetTime time = RakNet::GetTime();
 			//std::cout << "Time diff:" <<  (time - message->GetTimeStamp()) <<std::endl; 
 			//std::cout << "Time:" <<  time  << " Stamp:" << message->GetTimeStamp() << " Diff:" <<(time - message->GetTimeStamp()) << std::endl; 
 

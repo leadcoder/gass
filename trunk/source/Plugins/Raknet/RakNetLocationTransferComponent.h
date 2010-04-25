@@ -114,6 +114,10 @@ namespace GASS
 		Vec3 m_Velocity;
 		Vec3 m_AngularVelocity;
 
+
+		//Vec3 m_LocalVelocity;
+		//Vec3 m_LocalAngularVelocity;
+
 		Quaternion m_RotationHistory[3];
 		Vec3 m_PositionHistory[3];
 		unsigned int m_TimeStampHistory[3];
