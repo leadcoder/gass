@@ -27,7 +27,7 @@
 #undef max
 namespace GASS
 {
-	
+
 	AABox::AABox()
 	{
 		m_Max.x = m_Max.y = m_Max.z = std::numeric_limits<Float>::min();
@@ -38,7 +38,7 @@ namespace GASS
 	{
 		m_Max = (max_pos);
 		m_Min = (min_pos);
-		
+
 	}
 
 	AABox::~AABox()
@@ -83,15 +83,15 @@ namespace GASS
 	void AABox::Transform(const Mat4 &mat)
 	{
 		Vec3 p1,p2,p3,p4,p5,p6,p7,p8;
-		
+
 		p1.Set(m_Min.x,m_Max.y,m_Max.z);
 		p2 = m_Max;
-		p3.Set(m_Min.x,m_Min.y,m_Max.z); 
-		p4.Set(m_Max.x,m_Min.y,m_Max.z); 
-		p5.Set(m_Min.x,m_Max.y,m_Min.z); 
-		p6.Set(m_Max.x,m_Max.y,m_Min.z); 
-		p7.Set(m_Max.x,m_Min.y,m_Min.z); 
-		p8 = m_Min; 
+		p3.Set(m_Min.x,m_Min.y,m_Max.z);
+		p4.Set(m_Max.x,m_Min.y,m_Max.z);
+		p5.Set(m_Min.x,m_Max.y,m_Min.z);
+		p6.Set(m_Max.x,m_Max.y,m_Min.z);
+		p7.Set(m_Max.x,m_Min.y,m_Min.z);
+		p8 = m_Min;
 
 		p1 = mat * p1;
 		p2 = mat * p2;
@@ -130,7 +130,7 @@ namespace GASS
 		for(int i = 0; i < poly_vec.size(); i++)
 		{
 			//Polygon poly = &(poly_vec[i]);
-			//Vec3 center = poly->GetCenter(); 
+			//Vec3 center = poly->GetCenter();
 			AABox poly_aabox = GetAABox(poly_vec[i]);
 
 			if(i==0) aabox = poly_aabox;
@@ -224,10 +224,10 @@ namespace GASS
 
 
 
-		//Check max  X plane 
-		if((m_Max.x < p1.x && m_Max.x > p2.x) || (m_Max.x > p1.x && m_Max.x <= p2.x)) 
+		//Check max  X plane
+		if((m_Max.x < p1.x && m_Max.x > p2.x) || (m_Max.x > p1.x && m_Max.x <= p2.x))
 		{
-			x = m_Max.x; 
+			x = m_Max.x;
 			scale = (x - pos.x) / dir.x;
 			isect = pos + dir * scale;
 			if(isect.y > m_Min.y && isect.y < m_Max.y && isect.z > m_Min.z && isect.z < m_Max.z) return true;
@@ -235,7 +235,7 @@ namespace GASS
 		//Check min  X plane
 		if((m_Min.x < p1.x && m_Min.x > p2.x) || (m_Min.x > p1.x && m_Min.x < p2.x))
 		{
-			x = m_Min.x; 
+			x = m_Min.x;
 			scale = (x - pos.x) / dir.x;
 			isect = pos + dir * scale;
 			if(isect.y > m_Min.y && isect.y < m_Max.y &&
@@ -243,9 +243,9 @@ namespace GASS
 		}
 
 		//Check max  Y plane
-		if((m_Max.y < p1.y && m_Max.y > p2.y) || (m_Max.y > p1.y && m_Max.y < p2.y)) 
+		if((m_Max.y < p1.y && m_Max.y > p2.y) || (m_Max.y > p1.y && m_Max.y < p2.y))
 		{
-			y = m_Max.y; 
+			y = m_Max.y;
 			scale = (y - pos.y) / dir.y;
 			isect = pos + dir * scale;
 			if(isect.x > m_Min.x && isect.x < m_Max.x &&
@@ -253,18 +253,18 @@ namespace GASS
 		}
 
 		//Check min  Y plane
-		if((m_Min.y < p1.y && m_Min.y > p2.y) || (m_Min.y > p1.y && m_Min.y < p2.y)) 
+		if((m_Min.y < p1.y && m_Min.y > p2.y) || (m_Min.y > p1.y && m_Min.y < p2.y))
 		{
-			y = m_Min.y; 
+			y = m_Min.y;
 			scale = (y - pos.y) / dir.y;
 			isect = pos + dir * scale;
 			if(isect.x > m_Min.x && isect.x < m_Max.x &&
 				isect.z > m_Min.z && isect.z < m_Max.z) return true;
 		}
 		//Check max  Z plane
-		if((m_Max.z < p1.z && m_Max.z > p2.z) || (m_Max.z > p1.z && m_Max.z < p2.z)) 
+		if((m_Max.z < p1.z && m_Max.z > p2.z) || (m_Max.z > p1.z && m_Max.z < p2.z))
 		{
-			z = m_Max.z; 
+			z = m_Max.z;
 			scale = (z - pos.z) / dir.z;
 			isect = pos + dir * scale;
 			if(isect.y > m_Min.y && isect.y < m_Max.y &&
@@ -272,9 +272,9 @@ namespace GASS
 		}
 
 		//Check min  Z plane
-		if((m_Min.z < p1.z && m_Min.z > p2.z) || (m_Min.z > p1.y && m_Min.z < p2.z)) 
+		if((m_Min.z < p1.z && m_Min.z > p2.z) || (m_Min.z > p1.y && m_Min.z < p2.z))
 		{
-			z = m_Min.z; 
+			z = m_Min.z;
 			scale = (z - pos.z) / dir.z;
 			isect = pos + dir * scale;
 			if(isect.y > m_Min.y && isect.y < m_Max.y &&
@@ -285,7 +285,7 @@ namespace GASS
 
 	Vec3 AABox::GetSize() const
 	{
-		return (m_Max - m_Min); 
+		return (m_Max - m_Min);
 	}
 }
 
