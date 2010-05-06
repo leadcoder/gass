@@ -24,7 +24,7 @@
 #include <sys/time.h>
 #endif
 #include "Timer.h"
-
+#include <iostream>
 namespace GASS
 {
 	Timer::Timer()
@@ -62,6 +62,7 @@ namespace GASS
 		timeval tmpTimeVal;
 		gettimeofday(&tmpTimeVal, 0);
 		m_MMTimerStart = (double)(tmpTimeVal.tv_sec * 1000 + tmpTimeVal.tv_usec / 1000.0);
+		//std::cout << "Start time is:" << m_MMTimerStart << std::endl;
 
 #endif
 	}
@@ -96,9 +97,10 @@ namespace GASS
 		gettimeofday(&curTime, 0);
 		double ticks = (double)(curTime.tv_sec * 1000 + curTime.tv_usec / 1000.0);
 		double newTicks = ticks - m_MMTimerStart;
+		//std::cout << "time is:" << ticks << std::endl;
 
 		// Return The Current Time Minus The Start Time Multiplied By The Resolution And 1000 (To Get MS)
-		return( (double) (newTicks  - m_MMTimerStart) * m_Resolution)*1000.0f;
+		return( (double) (newTicks) * m_Resolution);
 #endif
 
 	}
