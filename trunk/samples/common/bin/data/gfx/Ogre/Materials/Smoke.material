@@ -37,3 +37,23 @@ material Dust
 	}
 }
 
+
+material WhiteDust
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture white_dust.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
