@@ -66,12 +66,6 @@ namespace GASS
 	{
 	}
 
-		template<class T>
-	ePropertyType GetPropID(T v)
-	{
-		return eptBOOL;
-	}
-
 /*	template<>
 	ePropertyType GASSCoreExport GetPropID<bool>(bool v)
 	{

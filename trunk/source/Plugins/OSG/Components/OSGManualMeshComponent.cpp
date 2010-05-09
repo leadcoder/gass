@@ -39,6 +39,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
+#include <osg/Depth>
 
 
 namespace GASS
@@ -67,15 +68,28 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-//		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-//		assert(osgsm);
 
 		m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		
+		// Enable blending, select transparent bin.
+		ss->setMode( GL_BLEND, osg::StateAttribute::ON );
+		ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+		// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
+		ss->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+
+		// Conversely, disable writing to depth buffer so that
+		// a transparent polygon will allow polygons behind it to shine through.
+		// OSG renders transparent polygons after opaque ones.
+		osg::Depth* depth = new osg::Depth;
+		depth->setWriteMask( false );
+		ss->setAttributeAndModes( depth, osg::StateAttribute::ON );
+
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
+
+		
 		
 
 		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
@@ -190,15 +204,7 @@ namespace GASS
 
 			(vitr++)->set(pos.x, pos.y, pos.z);
 			(citr++)->set(color.x, color.y, color.z,color.w);
-
-			/*m_MeshObject->position(pos.x, pos.y, pos.z);
-			m_MeshObject->textureCoord(tex_coord.x,tex_coord.y);
-			Ogre::ColourValue col;
-			col.r = color.x;
-			col.g = color.y;
-			col.b = color.z;
-			col.a = color.w;
-			m_MeshObject->colour(col);*/
+			
 		}
 
 		
