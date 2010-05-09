@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	TankAutopilotComponent::TankAutopilotComponent()  : m_ThrottleInput("Throttle"), 
+	TankAutopilotComponent::TankAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
 		m_DesiredPosRadius ( 4),
 		m_DesiredPos(0,0,0),
@@ -46,7 +46,7 @@ namespace GASS
 		m_DesiredSpeed(10)
 
 	{
-		
+
 	}
 
 	TankAutopilotComponent::~TankAutopilotComponent()
@@ -57,8 +57,8 @@ namespace GASS
 	void TankAutopilotComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TankAutopilotComponent",new Creator<TankAutopilotComponent, IComponent>);
-		RegisterProperty<std::string>("SteerInput", &GetSteerInput, &SetSteerInput);
-		RegisterProperty<std::string>("ThrottleInput", &GetThrottleInput, &SetThrottleInput);
+		RegisterProperty<std::string>("SteerInput", &TankAutopilotComponent::GetSteerInput, &TankAutopilotComponent::SetSteerInput);
+		RegisterProperty<std::string>("ThrottleInput", &TankAutopilotComponent::GetThrottleInput, &TankAutopilotComponent::SetThrottleInput);
 	}
 
 	void TankAutopilotComponent::OnCreate()
@@ -73,12 +73,12 @@ namespace GASS
 
 	void TankAutopilotComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);	
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
 	void TankAutopilotComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);		
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 	void TankAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)
@@ -106,7 +106,7 @@ namespace GASS
 
 	void TankAutopilotComponent::OnInput(ControllerMessagePtr message)
 	{
-		
+
 		std::string name = message->GetController();
 		float value = message->GetValue();
 	}
@@ -124,19 +124,19 @@ namespace GASS
 		//go to current way point
 		Vec3 follow_line = pos - last_pos;
 		float speed = follow_line.Length();
-		
+
 		Vec3 dir_to_wp = pos - v_pos;
 		float dist_to_wp = dir_to_wp.Length();
 
 		Vec3 target_pos;
-		
+
 		if(speed > 0.01)
 		{
 			follow_line.Normalize();
 			Vec3 closest_point_on_line = Math::ClosestPointOnLine(pos,last_pos, v_pos);
 
 			if(Math::Dot(follow_line,dir_to_wp) > 0) // check that we are not "behide" the waypoint
-			{	
+			{
 				//Try to goto a postion 3m ahead
 				target_pos = closest_point_on_line + follow_line*20;
 			}
@@ -149,7 +149,7 @@ namespace GASS
 		//float dist_to_line = (closest_point_on_line - m_UGV->GetAbsPos()).Length();
 		//Vec3 drive_dir = pos - m_UGV->GetAbsPos();
 		Vec3 drive_dir = target_pos - v_pos;
-	
+
 		float drive_dist = drive_dir.Length();
 
 		//Font::DebugPrint("drive_dist %f ",drive_dist);
@@ -175,52 +175,52 @@ namespace GASS
 			float m_BrakeDist= 10.0;
 
 			//std::cout << "Drive dir angle:" << angle_to_drive_dir << "turn:" << turn << std::endl;
-			
+
 
 			float current_speed = 0;
 			current_speed = m_VehicleSpeed.Length();
 			//if(m_ActionHandler->GetOwner()->GetFirstPhysicsBody())
 			//current_speed = m_ActionHandler->GetOwner()->GetFirstPhysicsBody()->GetVelocity().Length();
-		/*/	if(drive_dist < m_BrakeDist) 
+		/*/	if(drive_dist < m_BrakeDist)
 			{
 				desired_speed = desired_speed*(1-(m_BrakeDist  - drive_dist)/m_BrakeDist);
 			}*/
 
-			
-			
+
+
 			/*if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp)// || fabs(angle_to_drive_dir) > 80) //back up
 			{
 				desired_speed *= -1;
 				turn *=-1;
 			}*/
-			
+
 			m_TrottlePID.setGain(1.0,0,0);
 			m_TrottlePID.set(desired_speed);
 			throttle = m_TrottlePID.update(current_speed,time);
 
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
-			
+
 
 		/*	if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp || fabs(angle_to_drive_dir) > 80) //back up
 			{
 				throttle = -1;
 				turn *=-1;
 			}*/
-			
+
 			//turn = -turn;
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 
-			
+
 
 			//Send input message
 
 			MessagePtr throttle_message(new ControllerMessage(m_ThrottleInput,throttle));
-			GetSceneObject()->SendImmediate(throttle_message);	
+			GetSceneObject()->SendImmediate(throttle_message);
 
 			MessagePtr steering_message(new ControllerMessage(m_SteerInput,turn));
-			GetSceneObject()->SendImmediate(steering_message);	
+			GetSceneObject()->SendImmediate(steering_message);
 
 		}
 	}

@@ -60,19 +60,62 @@ namespace GASS
 	public :
 
 		// Returns type ID associated with the templatized type.
-		static	ePropertyType	GetTypeID();
+		ePropertyType	GetTypeID() const;
 
 	//private:
 
-		static ePropertyType    m_TypeID;
+		//static ePropertyType    m_TypeID;
 
 	};
 
-	template<class T>
-	ePropertyType PropertyType<T>::GetTypeID()
+
+/*	template<class T>
+	ePropertyType GetPropID(T v)
 	{
-		return m_TypeID;
+		return -1;
 	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<bool>(bool v)
+	{
+		return eptBOOL;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<int>(int v)
+	{
+		return eptINT;
+	}
+
+	template<>
+	ePropertyType  GASSCoreExport GetPropID<float>(float v)
+	{
+		return eptFLOAT;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<std::string>(std::string v)
+	{
+		return eptSTRING;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<Vec3>(Vec3 v)
+	{
+		return eptVEC3;
+	}*/
+
+
+
+	template<class T>
+    ePropertyType PropertyType<T>::GetTypeID()const
+	{
+	   // T v;
+		//return GetPropID<T>(v);
+		return eptVEC3;
+	}
+
+
 
 }
 #endif //PROPERTYTYPES_HH

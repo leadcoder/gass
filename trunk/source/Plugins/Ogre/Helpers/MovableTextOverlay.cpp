@@ -12,9 +12,9 @@ MovableTextOverlay::MovableTextOverlay(const Ogre::String & name, const Ogre::St
 , mName(name)
 , mCaption("")
 , mUpdateFrequency(0.01)
-, mNeedUpdate(TRUE)
-, mOnScreen(FALSE)
-, mEnabled(FALSE)
+, mNeedUpdate(true)
+, mOnScreen(false)
+, mEnabled(false)
 {
 	if (name == "")
         Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Trying to create MovableTextOverlay without name", "MovableTextOverlay::MovableTextOverlay");
@@ -25,8 +25,8 @@ MovableTextOverlay::MovableTextOverlay(const Ogre::String & name, const Ogre::St
 	if (mAttrs == NULL)
 		Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Trying to create MovableTextOverlay without Attributes", "MovableTextOverlay::MovableTextOverlay");
 /*
-    if(Ogre::OverlayManager::getSingleton().getByName(name + "_Ov")) 
-    { 
+    if(Ogre::OverlayManager::getSingleton().getByName(name + "_Ov"))
+    {
         Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Trying to create MovableTextOverlay with a duplicate name", "MovableTextOverlay::MovableTextOverlay");
     }
 */
@@ -54,7 +54,7 @@ MovableTextOverlay::MovableTextOverlay(const Ogre::String & name, const Ogre::St
 
 MovableTextOverlay::~MovableTextOverlay()
 {
-	// overlay cleanup -- Ogre would clean this up at app exit but if your app 
+	// overlay cleanup -- Ogre would clean this up at app exit but if your app
 	// tends to create and delete these objects often it's a good idea to do it here.
 
 	mpOv->hide();
@@ -82,7 +82,7 @@ void MovableTextOverlay::_computeTextWidth()
 	mTextWidth = 0;
 
 	for(Ogre::String::iterator i = mCaption.begin(); i < mCaption.end();i++)
-	{   
+	{
 		if (*i == 0x0020)
 			mTextWidth += pFont->getGlyphAspectRatio(0x0030);
 		else
@@ -123,13 +123,13 @@ void MovableTextOverlay::_getMinMaxEdgesOfTopAABBIn2D(Ogre::Real& MinX, Ogre::Re
 	{
 	  X[i] = 0;
 	  Y[i] = 0;
-	  
+
 	  _getScreenCoordinates(CornersOfTopAABB[i],X[i],Y[i]);// transfor into 2d dots
 
-	  
+
 	  if (CameraPlain.getSide(CornersOfTopAABB[i]) == Plane::NEGATIVE_SIDE)
 	  {
-	     
+
 		 if (i == 0)// accept the first set of values, no matter how bad it might be.
 		 {
 			MinX = X[i];
@@ -166,7 +166,7 @@ void MovableTextOverlay::_getMinMaxEdgesOfTopAABBIn2D(Ogre::Real& MinX, Ogre::Re
 		break;
 	  }
 	}
-} 
+}
 
 void MovableTextOverlay::_getScreenCoordinates(const Ogre::Vector3& position, Ogre::Real& x, Ogre::Real& y)
 {

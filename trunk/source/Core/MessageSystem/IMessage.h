@@ -48,8 +48,8 @@ namespace GASS
 	public:
 		virtual ~IMessage(){};
 
-		
-		/**	
+
+		/**
 		Set delay (in seconds) from current frame time until this message should be delivered.
 		Note: This time is ignored when using the SendImmediate method of the MessageManager
 		*/
@@ -66,7 +66,7 @@ namespace GASS
 	};
 	class IMessageFunc;
 	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
-	
+
 	typedef boost::shared_ptr<IMessage> MessagePtr;
 
 	/**
@@ -82,33 +82,33 @@ namespace GASS
 		*/
 		virtual void Fire(MessagePtr message) = 0;
 
-		
+
 
 
 		/*
 		This operator is used by the message manager to identify message functions
 		*/
 		virtual bool operator== (const IMessageFunc &func) const = 0;
-		
-		
+
+
 		/*
 		This function should return a pointer to the object the class callback belongs to
 		*/
 		virtual void* GetObjectPtr() const = 0;
-		
+
 		/*
 		This function should return a pointer to the actual callback function
 		*/
 		virtual void* GetFuncPtr() const  = 0;
 	};
 
-	
-	
+
+
 	/**
-	Template based implementation of the message function interface. 
-	This template class is used to create message function objects for 
-	specific message types. The template paramerer  MESSAGE_TYPE, 
-	specify what kind of message the callback takes as argument. 
+	Template based implementation of the message function interface.
+	This template class is used to create message function objects for
+	specific message types. The template paramerer  MESSAGE_TYPE,
+	specify what kind of message the callback takes as argument.
 	*/
 	template <class MESSAGE_TYPE>
 	class MessageFunc : public IMessageFunc
@@ -128,7 +128,7 @@ namespace GASS
 		}
 
 		/*
-		Implements the Fire function of the IMessageFunc interface. 
+		Implements the Fire function of the IMessageFunc interface.
 		In this implementation the message is casted to the message type
 		specified by the template argument MESSAGE_TYPE
 		*/
@@ -141,7 +141,7 @@ namespace GASS
 		}
 		bool operator== (const IMessageFunc &func) const
 		{
-			return (func.GetObjectPtr() == m_Object) && 
+			return (func.GetObjectPtr() == m_Object) &&
 				(m_Func.functor.func_ptr == func.GetFuncPtr());
 		}
 		void* GetObjectPtr() const
@@ -151,9 +151,9 @@ namespace GASS
 
 		void* GetFuncPtr() const
 		{
-			return m_Func.functor.func_ptr;
+			return (void*) m_Func.functor.func_ptr;
 		}
-		
+
 		void* m_Object;
 		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
 	};

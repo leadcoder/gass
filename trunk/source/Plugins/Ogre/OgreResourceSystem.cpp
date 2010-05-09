@@ -35,19 +35,19 @@ namespace GASS
 {
 	OgreResourceSystem::OgreResourceSystem(void)
 	{
-	
+
 	}
 
 	OgreResourceSystem::~OgreResourceSystem(void)
 	{
-	
+
 	}
 
 	void OgreResourceSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("OgreResourceSystem",new GASS::Creator<OgreResourceSystem, ISystem>);
 	}
-	
+
 
 	void OgreResourceSystem::OnCreate()
 	{
@@ -127,7 +127,7 @@ namespace GASS
 					}
 				}
 			}
-			
+
 		}
 		std::string::size_type occurIndex2 = curStr.find("$");
 		if (occurIndex2 != std::string::npos )
@@ -153,7 +153,7 @@ namespace GASS
 				}
 			}
 		}
-		
+
 		return curStr;
 	}*/
 
@@ -161,7 +161,7 @@ namespace GASS
 	void OgreResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		Ogre::StringVector groups = rsm->getResourceGroups();        
+		Ogre::StringVector groups = rsm->getResourceGroups();
 		if (std::find(groups.begin(), groups.end(), resource_group) == groups.end())
 		{
 			rsm->createResourceGroup(resource_group);
@@ -179,7 +179,7 @@ namespace GASS
 	bool OgreResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
 	{
 		FILE*fp;
-		if(file_name == "") 
+		if(file_name == "")
 		{
 			return false;
 		}
@@ -190,7 +190,7 @@ namespace GASS
 			file_path = file_name;
 			return true;
 		}
-		else 
+		else
 		{
 			Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 			//std::string gname = rsm->findGroupContainingResource(file_name);
@@ -221,7 +221,7 @@ namespace GASS
 
 			for(int i  = 0; i < m_ResourceLocations.size(); i++)
 			{
-				
+
 				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
 				if(fp = fopen(temp_file_path.c_str(),"rb"))
 				{

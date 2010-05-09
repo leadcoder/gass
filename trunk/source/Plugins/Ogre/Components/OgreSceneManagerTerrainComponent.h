@@ -23,12 +23,13 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include <tinyxml.h>
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Common.h"
 #include <OgreTerrainPageSource.h>
 #include <OgreTerrainSceneManager.h>
-#include "tinyxml.h"
+
 
 namespace GASS
 {
@@ -45,16 +46,16 @@ namespace GASS
 		virtual void pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 
 		std::string GetFilename()const {return m_TerrainConfigFile;}
-		void SetFilename(const std::string &filename) {m_TerrainConfigFile = filename;}	
+		void SetFilename(const std::string &filename) {m_TerrainConfigFile = filename;}
 		virtual Float GetSizeX(){return m_WorldWidth;}
 		virtual Float GetSizeZ(){return m_WorldHeight;}
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
 		virtual bool CheckOnTerrain(Float x, Float z){return true;}
-		
+
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual unsigned int GetSamplesX();
 		virtual unsigned int GetSamplesZ();
-		
+
 		Float GetHeight(Float x, Float z);
 		Float GetWorldWidth()const {return  m_WorldWidth;}
 		Float GetWorldHeight()const {return m_WorldHeight; }

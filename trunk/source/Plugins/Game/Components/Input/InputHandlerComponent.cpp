@@ -40,7 +40,7 @@
 
 namespace GASS
 {
-	InputHandlerComponent::InputHandlerComponent() 
+	InputHandlerComponent::InputHandlerComponent()
 	{
 
 	}
@@ -55,13 +55,13 @@ namespace GASS
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllerMessage,0));
-		else 
+		else
 			Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());
-	
-		
+
+
 		IComponentContainerTemplate::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components,"OgreCameraComponent");
-		
+
 		if(components.size() > 0)
 		{
 			BaseSceneComponentPtr camera = boost::shared_dynamic_cast<BaseSceneComponent>(components[0]);
@@ -80,7 +80,7 @@ namespace GASS
 	void InputHandlerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, IComponent>);
-		RegisterProperty<std::string>("ControlSetting", &GetControlSetting, &SetControlSetting);
+		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
 	}
 
 	void InputHandlerComponent::OnCreate()
@@ -117,7 +117,7 @@ namespace GASS
 		{
 			//Enter vehicle by sending enter messeage
 			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
-			GetSceneObject()->SendImmediate(exit_message);	
+			GetSceneObject()->SendImmediate(exit_message);
 		}
 	}*/
 
@@ -126,17 +126,17 @@ namespace GASS
 		//relay message
 		std::string name = message->GetController();
 		float value = message->GetValue();
-		
+
 		//check if exit input
 		if(name == "ExitVehicle" && value > 0)
 		{
 			MessagePtr exit_message(new ExitVehicleMessage());
-			GetSceneObject()->PostMessage(exit_message);	
+			GetSceneObject()->PostMessage(exit_message);
 		}
 		else
 		{
 			MessagePtr input_message(new ControllerMessage(name,value));
-			GetSceneObject()->SendImmediate(input_message);	
+			GetSceneObject()->SendImmediate(input_message);
 		}
 	}
 

@@ -56,11 +56,11 @@ protected:
 	std::vector<std::string> m_Templates;
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
-	GASS::ScenarioPtr m_Scenario; 
+	GASS::ScenarioPtr m_Scenario;
 	GASS::Timer m_Timer;
 	double m_UpdateFreq;
 public:
-	SimApplication(const std::string configuration) 
+	SimApplication(const std::string configuration)
 	{
 		LoadConfig(configuration);
 		//Init();
@@ -77,19 +77,22 @@ public:
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
-		
+
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
-		
+
 		m_Scenario = scenario;
+		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
+
 
 		if(m_Scenario->Load(m_ScenarioName))
 		{
 			//if(m_Instances != "")
 			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 
+            GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
 
 			for(int i = 0; i <  m_Objects.size();i++)
 			{
@@ -111,7 +114,7 @@ public:
 
 		return true;
 	}
-	
+
 
 	virtual bool LoadConfig(const std::string filename)
 	{
@@ -123,7 +126,7 @@ public:
 			GASS::Log::Warning("SimApplication::LoadConfig() - Couldn't load xmlfile: %s", filename.c_str());
 			return 0;
 		}
-		TiXmlElement *app_settings = xmlDoc->FirstChildElement("SimApplication");	
+		TiXmlElement *app_settings = xmlDoc->FirstChildElement("SimApplication");
 
 		if(app_settings)
 		{
@@ -131,15 +134,15 @@ public:
 			m_Plugins = app_settings->Attribute("Plugins");
 			m_ControlSettings = app_settings->Attribute("ControlSettings");
 			m_ScenarioName = app_settings->Attribute("Scenario");
-			
+
 			GASS::FilePath full_path(m_ScenarioName);
 			m_ScenarioName = full_path.GetPath();
 
 			m_UpdateFreq = atoi(app_settings->Attribute("UpdateFrequency"));
-			
-			
+
+
 			//m_Instances = app_settings->Attribute("Instances");
-			TiXmlElement *temp_elem = app_settings->FirstChildElement("Templates");	
+			TiXmlElement *temp_elem = app_settings->FirstChildElement("Templates");
 			if(temp_elem)
 			{
 				temp_elem = temp_elem ->FirstChildElement("Template");
@@ -155,7 +158,7 @@ public:
 			}
 
 
-			TiXmlElement *object_elem = app_settings->FirstChildElement("Objects");	
+			TiXmlElement *object_elem = app_settings->FirstChildElement("Objects");
 			if(object_elem)
 			{
 				object_elem = object_elem->FirstChildElement("Object");
@@ -180,14 +183,14 @@ public:
 		{
 			m_Engine->Update(time - prev);
 			m_Scenario->OnUpdate(time - prev);
-			//std::cout << "Time is:" << time << std::endl;
 			prev = time;
 		}
 
-		
-		if(GetAsyncKeyState(VK_ESCAPE))
-			return false;
-			
+        if(time > 50)
+            return false;
+//		if(GetAsyncKeyState(VK_ESCAPE))
+//			return false;
+
 		return true;
 	}
 

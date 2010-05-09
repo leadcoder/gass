@@ -30,7 +30,7 @@ public:
 	{
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
-		
+
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
@@ -48,15 +48,15 @@ public:
 		while(!IsConnected())
 		{
 			//update engine (need to process messages)
-			m_Engine->Update(update_time); 
+			m_Engine->Update(update_time);
 
 			//send ping request
 			m_Engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));
 			update_time += 1.0;
-			Sleep(1000);
+//			Sleep(1000);
 			std::cout << ".";
-			if(GetAsyncKeyState(VK_ESCAPE))
-				return false;
+//			if(GetAsyncKeyState(VK_ESCAPE))
+//				return false;
 		}
 		return true;
 	}

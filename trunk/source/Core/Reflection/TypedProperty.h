@@ -28,7 +28,7 @@ This class is based on the Game Programming Gems 5 article
 #define TYPEPROPERTY_HH
 
 #include "Core/Reflection/AbstractProperty.h"
-
+#include "Core/Reflection/PropertyTypes.h"
 namespace GASS
 {
 
@@ -50,7 +50,7 @@ namespace GASS
 		/**
 		 Returns the type of this property.
 		 */
-		virtual ePropertyType	GetType() const;
+		virtual ePropertyType	GetTypeID() const;
 
 		/**
 		Determines the value of this property.
@@ -66,20 +66,86 @@ namespace GASS
 	{
 	}
 
-	template <class T>
-	ePropertyType TypedProperty<T>::GetType() const
+		template<class T>
+	ePropertyType GetPropID(T v)
 	{
-		return PropertyType<T>::GetTypeID();
+		return eptBOOL;
 	}
 
+/*	template<>
+	ePropertyType GASSCoreExport GetPropID<bool>(bool v)
+	{
+		return eptBOOL;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<int>(int v)
+	{
+		return eptINT;
+	}
+
+	template<>
+	ePropertyType  GASSCoreExport GetPropID<float>(float v)
+	{
+		return eptFLOAT;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<std::string>(std::string v)
+	{
+		return eptSTRING;
+	}
+
+	template<>
+	ePropertyType GASSCoreExport GetPropID<Vec3>(Vec3 v)
+	{
+		return eptVEC3;
+	}
+*/
+
+
+
+
+	template <class T>
+	ePropertyType TypedProperty<T>::GetTypeID() const
+	{
+	    //PropertyType<T> ptype;
+		//return ptype.GetTypeID();
+		//T v;
+		//GetPropID<T>(v);
+		if(typeid(T) == typeid(int))
+		{
+		   return eptINT;
+		}
+		else if(typeid(T) == typeid(float))
+		{
+		   return eptFLOAT;
+		}
+		else if(typeid(T) == typeid(std::string))
+        {
+		   return eptSTRING;
+		}
+		else if(typeid(T) == typeid(Vec3))
+        {
+		   return eptVEC3;
+		}
+		else if(typeid(T) == typeid(bool))
+        {
+		   return eptBOOL;
+		}
+	}
+
+
+
+
 #ifdef WIN32
-	template<class T> ePropertyType PropertyType<T>::m_TypeID = eptPTR;
+/*	template<class T> ePropertyType PropertyType<T>::m_TypeID = eptPTR;
 	template<> ePropertyType PropertyType<bool>::m_TypeID		= eptBOOL;
 	//template<> ePropertyType PropertyType<DWORD>::m_TypeID	= eptDWORD;
 	template<> ePropertyType PropertyType<int>::m_TypeID		= eptINT;
 	template<> ePropertyType PropertyType<float>::m_TypeID	= eptFLOAT;
 	template<> ePropertyType PropertyType<std::string>::m_TypeID	= eptSTRING;
-	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;
+	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;*/
 #endif
 }
 #endif // TYPEPROPERTY_HH

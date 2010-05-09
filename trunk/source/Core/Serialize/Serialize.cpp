@@ -43,12 +43,6 @@ namespace GASS
 	}
 
 	template <>
-	void SerialSaver::IO<FilePath>(FilePath &path)
-	{
-		IO(path.GetPath());
-	}
-
-	template <>
 	void SerialLoader::IO<std::string>(std::string &value)
 	{
 		unsigned long l;
@@ -64,11 +58,20 @@ namespace GASS
 	}
 
 	template <>
+	void SerialSaver::IO<FilePath>(FilePath &path)
+	{
+	    std::string value = path.GetPath();
+		IO(value);
+	}
+
+
+	template <>
 	void SerialLoader::IO<FilePath>(FilePath &path)
 	{
 		std::string value;
 		IO(value);
 		path = FilePath(value);
 	}
+
 
 }

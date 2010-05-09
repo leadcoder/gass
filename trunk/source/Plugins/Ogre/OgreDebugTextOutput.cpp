@@ -48,7 +48,7 @@ namespace GASS
 	{
 
 	}
-	
+
 	void OgreDebugTextOutput::Print(const char *string, ...)
 	{
 		if(!m_Active) return;
@@ -61,7 +61,7 @@ namespace GASS
 			return;												// Do Nothing
 		va_start(ap, string);										// Parses The String For Variables
 		vsprintf(text, string, ap);							// And Converts Symbols To Actual Numbers
-		va_end(ap);	
+		va_end(ap);
 
 		DebugString ds;
 		ds.m_PosX = -1;

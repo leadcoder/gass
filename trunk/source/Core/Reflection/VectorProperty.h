@@ -49,7 +49,7 @@ This class is based on the Game Programming Gems 5 article
 namespace GASS
 {
 	template <class OwnerType, class T>
-	class VectorProperty : public TypedProperty<std::vector<T>>
+	class VectorProperty : public TypedProperty<std::vector<T> >
 	{
 
 	public:
@@ -87,7 +87,7 @@ namespace GASS
 
 	template <class OwnerType, class T>
 	inline VectorProperty<OwnerType, T>::VectorProperty( const char* szName, GetterType Getter, SetterType Setter ) :
-	TypedProperty<std::vector<T>>	( szName		),
+	TypedProperty<std::vector<T> >	( szName		),
 		m_Getter			( Getter		),
 		m_Setter			( Setter		),
 		m_SetterConst			( NULL)
@@ -96,7 +96,7 @@ namespace GASS
 
 	template <class OwnerType, class T>
 	inline VectorProperty<OwnerType, T>::VectorProperty( const char* szName, GetterType Getter, SetterTypeConst Setter ) :
-	TypedProperty<std::vector<T>>	( szName		),
+	TypedProperty<std::vector<T> >	( szName		),
 		m_Getter			( Getter		),
 		m_SetterConst			( Setter		),
 		m_Setter			( NULL)
@@ -131,10 +131,10 @@ namespace GASS
 	template <class OwnerType, class T>
 	void VectorProperty<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, boost::any &attribute)
 	{
-		std::vector<T> res = boost::any_cast<std::vector<T>>(attribute);
+		std::vector<T> res = boost::any_cast<std::vector<T> >(attribute);
 		SetValue(pOwner,res);
 	}
-	
+
 
 	/*template <class type>
 	bool GetValueFromString(type &res,const std::string &s)
@@ -150,7 +150,7 @@ namespace GASS
 	void VectorProperty<OwnerType, T>::SetValueByString(BaseReflectionObject* pOwner,const std::string &s)
 	{
 		std::vector<T> res;
-		
+
 		std::stringstream str(s);
 		T value;
 		while(str >> value)
@@ -172,13 +172,13 @@ namespace GASS
 		return true;
 	}*/
 
-	
+
 	template <class OwnerType, class T>
 	std::string VectorProperty<OwnerType, T>::GetValueAsString(BaseReflectionObject* pOwner)
 	{
 		std::vector<T> val = GetValue(pOwner);
 		std::string res;
-		
+
 		for(int i = 0 ; i < val.size(); i++)
 		{
 			std::string str_val;
@@ -189,7 +189,7 @@ namespace GASS
 			sstream.unsetf(std::ios::skipws);
 			sstream << val[i];
 			str_val = sstream.str();
-		
+
 
 			//GetStringFromValue(val[i],str_val);
 			res += str_val;
@@ -219,7 +219,7 @@ namespace GASS
 			for(int i  = 0 ; i < num_val; i++)
 			{
 				T value;
-				
+
 				loader->IO<T>(value);
 				val.push_back(value);
 			}
@@ -228,7 +228,7 @@ namespace GASS
 		else
 		{
 			SerialSaver* saver = (SerialSaver*) serializer;
-			
+
 			std::vector<T> val = GetValue(pOwner);
 			int num_val = val.size();
 			saver->IO<int>(num_val);

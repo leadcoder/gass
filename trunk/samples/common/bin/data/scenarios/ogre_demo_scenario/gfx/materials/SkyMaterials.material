@@ -7,7 +7,7 @@ material AfricaSkybox : SkyTemplate
 		{
 			texture_unit SkyboxTex
 			{
-				cubic_texture gfx/textures/skybox/africa_SB_North.dds gfx/textures/skybox/africa_SB_South.dds gfx/textures/skybox/africa_SB_west.dds gfx/textures/skybox/africa_SB_East.dds gfx/textures/skybox/africa_SB_Up.dds gfx/textures/skybox/africa_SB_Down.dds separateUV
+				cubic_texture gfx/textures/skybox/africa_sb_north.dds gfx/textures/skybox/africa_sb_south.dds gfx/textures/skybox/africa_sb_west.dds gfx/textures/skybox/africa_sb_east.dds gfx/textures/skybox/africa_sb_up.dds gfx/textures/skybox/africa_sb_down.dds separateUV
 					tex_address_mode clamp
 			}
 		}

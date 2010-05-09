@@ -22,7 +22,7 @@
 
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
-#include "Sim/systems/SimSystemMessages.h"
+#include "Sim/Systems/SimSystemMessages.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
@@ -52,11 +52,11 @@ namespace GASS
 		virtual void OnCreate();
 		SystemType GetSystemType() const {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
-		
+
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-		
+
 		Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
@@ -69,12 +69,12 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void SetTaskGroup(TaskGroup value);
-		
+
 
 		void OnInit(InitMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
-	
+
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		Ogre::RenderWindow* m_Window;

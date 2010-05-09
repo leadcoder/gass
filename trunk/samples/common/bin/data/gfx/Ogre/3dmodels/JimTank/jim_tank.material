@@ -3,6 +3,7 @@ import * from "terrain.material"
 
 material JIM_TANK_hatches : DiffuseTemplate
 {
+        set_texture_alias diffuse_tex JIM_TANK_hatches.jpg
 	technique
 	{
 		pass
@@ -12,6 +13,7 @@ material JIM_TANK_hatches : DiffuseTemplate
 			specular 0 0 0 10
 			emissive 0 0 0 
 
+			
 			texture_unit 
 			{
 				texture JIM_TANK_hatches.jpg
@@ -23,6 +25,7 @@ material JIM_TANK_hatches : DiffuseTemplate
 
 material JIM_TANK_hull : DiffuseTemplate
 {
+set_texture_alias diffuse_tex  JIM_TANK_hull.jpg
 	technique
 	{
 		pass
@@ -43,6 +46,7 @@ material JIM_TANK_hull : DiffuseTemplate
 
 material JIM_TANK_turret : DiffuseTemplate
 {
+set_texture_alias diffuse_tex JIM_TANK_turret.jpg
 	technique
 	{
 		pass
@@ -63,6 +67,7 @@ material JIM_TANK_turret : DiffuseTemplate
 
 material JIM_gattling : DiffuseTemplate
 {
+set_texture_alias diffuse_tex JIM_gattling.jpg
 	technique
 	{
 		pass
@@ -84,6 +89,7 @@ material JIM_gattling : DiffuseTemplate
 //material Material#41 : DiffuseTemplate
 material Material#41
 {
+set_texture_alias diffuse_tex T72_wheels.jpg
 	technique
 	{
 		pass
@@ -105,6 +111,7 @@ material Material#41
 //material T72_band : DiffuseTemplate
 material T72_band 
 {
+set_texture_alias diffuse_tex T72_band.jpg
 	technique
 	{
 		pass
@@ -125,6 +132,7 @@ material T72_band
 
 material T72_wheels : DiffuseTemplate
 {
+set_texture_alias diffuse_tex T72_wheels.jpg
 	technique
 	{
 		pass

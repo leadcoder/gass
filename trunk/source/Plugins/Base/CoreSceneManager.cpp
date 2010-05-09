@@ -68,7 +68,7 @@ namespace GASS
 			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),ScenarioScene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
-	
+
 	void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		//Initlize all sim components and send scene mananger as argument
@@ -98,7 +98,7 @@ namespace GASS
 
 		for (int i = 0; i < clamp_num_steps; ++i)
 		{
-						
+
 		}
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
@@ -106,7 +106,7 @@ namespace GASS
 
 	void CoreSceneManager::OnLoad(MessagePtr message)
 	{
-		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message); 
+		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message);
 		m_Init = true;
 	}
 

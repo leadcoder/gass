@@ -50,10 +50,10 @@ namespace GASS
 	void SteerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SteerComponent",new Creator<SteerComponent, IComponent>);
-		RegisterProperty<float>("SteerForce", &GetSteerForce, &SetSteerForce);
-		RegisterProperty<float>("MaxSteerVelocity", &GetMaxSteerVelocity, &SetMaxSteerVelocity);
-		RegisterProperty<float>("MaxSteerAngle", &GetMaxSteerAngle, &SetMaxSteerAngle);
-		
+		RegisterProperty<float>("SteerForce", &SteerComponent::GetSteerForce, &SteerComponent::SetSteerForce);
+		RegisterProperty<float>("MaxSteerVelocity", &SteerComponent::GetMaxSteerVelocity, &SteerComponent::SetMaxSteerVelocity);
+		RegisterProperty<float>("MaxSteerAngle", &SteerComponent::GetMaxSteerAngle, &SteerComponent::SetMaxSteerAngle);
+
 	}
 
 	void SteerComponent::OnCreate()
@@ -71,16 +71,16 @@ namespace GASS
 
 	void SteerComponent::OnInput(ControllerMessagePtr message)
 	{
-		
+
 		std::string name = message->GetController();
 		float value = message->GetValue();
-		
+
 		if (name == "Steer")
 		{
 			float max_rad_angle = Math::Deg2Rad(m_MaxSteerAngle);
 			m_DesiredAngle = -value*max_rad_angle;
 		}
-		
+
 		/*float value = boost::any_cast<float>(any_mess->GetData("Value"));
 		float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")
@@ -92,7 +92,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
 		}*/
-		
+
 	}
 
 	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
@@ -103,13 +103,13 @@ namespace GASS
 		if(angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
 		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
 		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
-		
+
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
 
 		GetSceneObject()->PostMessage(force_msg);
 		GetSceneObject()->PostMessage(vel_msg);
-		
+
 
 
 		/*float angular_vel = value*m_MaxSteerVelocity;
@@ -123,5 +123,5 @@ namespace GASS
 		}*/
 	}
 
-	
+
 }

@@ -56,7 +56,7 @@ namespace GASS
 		{
 			buffer=buf; length=size; bytesUsed=0; bHasOverflowed=false;
 		}
-			
+
 		template <class T>
 		void IO(T &value)
 		{
@@ -76,12 +76,8 @@ namespace GASS
 			}
 		}
 
-		//Use specialized template to catch std::string
-		template <>
-		void IO<std::string>(std::string &value);
-		template <>
-		void IO<FilePath>(FilePath &path);
-	
+
+
 
 		bool Loading(){return false;}
 
@@ -89,6 +85,31 @@ namespace GASS
 		long getFlow() { return length-bytesUsed; } //should be equal to 0 when we're done
 		unsigned long getLength() { return length; }
 	};
+
+    //Use specialized template to catch std::string
+    template <>
+    void SerialSaver::IO<std::string>(std::string &value);
+   /* {
+		if(buffer)
+		{
+			unsigned long l = (unsigned long) value.length();
+			IO<unsigned long>(l);
+			if(bHasOverflowed)return;
+			if(bytesUsed+l>length){bHasOverflowed=true; return; }
+			memcpy(buffer,value.c_str(),l);
+			buffer+=l; bytesUsed+=l;
+		}
+		else
+		{
+			int type_size = sizeof(unsigned long);
+			length +=type_size;
+			length += (int) value.length();
+		}
+	}*/
+
+    template <>
+    void SerialSaver::IO<FilePath>(FilePath &path);
+
 
 	class GASSCoreExport SerialLoader : public ISerializer
 	{
@@ -117,19 +138,33 @@ namespace GASS
 			buffer+=type_size; bytesUsed+=type_size;
 		}
 
-		//Use specialized template to catch std::string
-		template <>
-		void IO<std::string>(std::string &value);
 
-		template <>
-		void IO<FilePath>(FilePath &path);
-		
+
 		bool Loading(){return true;}
 
 		bool hasOverflowed() { return bHasOverflowed; }
 		long getFlow() { return length-bytesUsed; } //should be equal to 0 when we're done
 
 	};
+
+	//Use specialized template to catch std::string
+    template <>
+    void SerialLoader::IO<std::string>(std::string &value);
+    /*{
+        unsigned long l;
+		IO<unsigned long>(l);
+		if(bHasOverflowed)return;
+		if(bytesUsed + l > length){bHasOverflowed=true; return; }
+		char *szBuf=new char[l+1];
+		szBuf[l]=0;
+		memcpy(szBuf,buffer,l);
+		value=szBuf;
+		delete[] szBuf;
+		buffer+=l; bytesUsed+=l;
+    }*/
+
+    template <>
+    void SerialLoader::IO<FilePath>(FilePath &path);
 }
 
 #endif // #ifndef SERIALIZE_HH

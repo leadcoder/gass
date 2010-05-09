@@ -11,7 +11,7 @@ class RectLayoutManager
 {
 public:
 
-	enum MethodType 
+	enum MethodType
 	{
 		PLACE_ABOVE = 0,	// the overlapping rectangles are placed above the non-overlapping ones
 		PLACE_BELOW			// the overlapping rectangles are placed below the non-overlapping ones
@@ -27,11 +27,11 @@ public:
 			, mBottom(bottom)
 			, dy(0)
 		{
-			if (mBottom <= mTop)
-				throw std::exception("Condition Failure (top < bottom) in RectLayoutManager::Rect::Rect");
+	//		if (mBottom <= mTop)
+	//			throw std::exception("Condition Failure (top < bottom) in RectLayoutManager::Rect::Rect");
 
-			if (mRight <= mLeft)
-				throw std::exception("Condition Failure (left < right) in RectLayoutManager::Rect::Rect");
+		//	if (mRight <= mLeft)
+			//	throw std::exception("Condition Failure (left < right) in RectLayoutManager::Rect::Rect");
 		}
 
 		inline const short getTop() const {return mTop + dy;}
@@ -68,13 +68,13 @@ public:
 	, mMaxRectHeight(0)
 	, mDepth(0)
 	{
-		if (mBoundBottom <= mBoundTop)
-			throw std::exception("Condition Failure (mBoundTop < mBoundBottom) in RectLayoutManager::RectLayoutManager");
+	//	if (mBoundBottom <= mBoundTop)
+		//	throw std::exception("Condition Failure (mBoundTop < mBoundBottom) in RectLayoutManager::RectLayoutManager");
 
-		if (mBoundRight <= mBoundLeft)
-			throw std::exception("Condition Failure (mBoundLeft < mBoundRight) in RectLayoutManager::RectLayoutManager");
+	//	if (mBoundRight <= mBoundLeft)
+	//		throw std::exception("Condition Failure (mBoundLeft < mBoundRight) in RectLayoutManager::RectLayoutManager");
 	}
-	
+
 	~RectLayoutManager(){clear();}
 
 	const unsigned short getMinDistance() const {return mMinDistance;}
@@ -144,7 +144,7 @@ protected:
 	//
 	// (mDepth = 0) - the search will go on untill a place is found.
 	// (mDepth > 0) - the search will go on <mDepth> times
-	unsigned short mDepth;	
+	unsigned short mDepth;
 
 	// Don't use these directly, use addData instead
 	RectList::iterator addDataAbove(Rect &Data);
@@ -216,7 +216,7 @@ RectLayoutManager::RectList::iterator RectLayoutManager::addDataBelow(RectLayout
 		{
 			// If no rect overlapped r, then there is no need to move it
 			if (!MoveIt && (diff > diff2))
-			{	
+			{
 				FoundIt = true;
 				itLastChecked = itStart;
 				break;
@@ -260,7 +260,7 @@ RectLayoutManager::RectList::iterator RectLayoutManager::addDataBelow(RectLayout
 		if (r.getBottom() > mBoundBottom)
 			return mList.end(); // out of bounds
 
-		itInsert = lower_bound(itLastChecked, itCurrent, r);			
+		itInsert = lower_bound(itLastChecked, itCurrent, r);
 		itInsert = mList.insert(itInsert,r);
 
 		return itInsert;
@@ -323,7 +323,7 @@ RectLayoutManager::RectList::iterator RectLayoutManager::addDataAbove(RectLayout
 		{
 			// If no rect overlapped r, then there is no need to move it
 			if (!MoveIt && (diff > diff2))
-			{	
+			{
 				FoundIt = true;
 				itLastChecked = itStart;
 				break;
@@ -368,7 +368,7 @@ RectLayoutManager::RectList::iterator RectLayoutManager::addDataAbove(RectLayout
 		if (r.getTop() < mBoundTop)
 			return mList.end(); // out of bounds
 
-		itInsert = lower_bound(itLastChecked, itCurrent, r, _fGreaterTop);			
+		itInsert = lower_bound(itLastChecked, itCurrent, r, _fGreaterTop);
 		itInsert = mList.insert(itInsert,r);
 
 		return itInsert;

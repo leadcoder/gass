@@ -42,7 +42,7 @@
 
 namespace GASS
 {
-	PlayerInputComponent::PlayerInputComponent() 
+	PlayerInputComponent::PlayerInputComponent()
 	{
 
 	}
@@ -55,7 +55,7 @@ namespace GASS
 	void PlayerInputComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, IComponent>);
-		RegisterProperty<std::string>("ControlSetting", &GetControlSetting, &SetControlSetting);
+		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 
 	void PlayerInputComponent::OnCreate()
@@ -67,7 +67,7 @@ namespace GASS
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
-		else 
+		else
 			Log::Warning("PlayerInputComponent::OnCreate -- Failed to find control settings: %s",m_ControlSetting.c_str());
 
 	}
@@ -94,7 +94,7 @@ namespace GASS
 		float value = message->GetValue();
 
 		static int seat = 0;
-		
+
 		//check if enter message
 		if(name == "EnterVehicle" && value > 0)
 		{
@@ -145,7 +145,7 @@ namespace GASS
 		}
 		else if(name == "CycleVehicle" && value > 0)
 		{
-			
+
 			IComponentContainerTemplate::ComponentVector components;
 			if(m_CurrentVehicle)
 			{
@@ -163,7 +163,7 @@ namespace GASS
 					MessagePtr enter_msg(new EnterVehicleMessage());
 					m_CurrentSeat = ih->GetSceneObject();
 					m_CurrentSeat->PostMessage(enter_msg);
-					
+
 					seat++;
 				}
 			}

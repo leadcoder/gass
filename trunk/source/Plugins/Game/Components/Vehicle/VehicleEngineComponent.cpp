@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	VehicleWheel::VehicleWheel(SceneObjectPtr  wheel) : m_Velocity(0), 
+	VehicleWheel::VehicleWheel(SceneObjectPtr  wheel) : m_Velocity(0),
 		m_AngularVelocity (0),
 		m_WheelObject(wheel)
 	{
@@ -59,11 +59,11 @@ namespace GASS
 		m_Velocity = vel.x;
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel.x;
-	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl; 
+	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
-	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false), 
-		m_VehicleSpeed(0),	
+	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false),
+		m_VehicleSpeed(0),
 		m_Invert(false),
 		m_ConstantTorque(0)
 	{
@@ -73,7 +73,7 @@ namespace GASS
 		m_TurnForce = 10;
 		m_MaxTurnForce = 200;
 		m_SmoothRPMOutput = true;
-	
+
 
 		m_InputToThrottle = "Throttle";
 		m_InputToSteer = "Steering";
@@ -92,7 +92,7 @@ namespace GASS
 		m_Gear = 2;
 		m_Clutch = 1;
 		m_Automatic = 1;
-	
+
 		m_RPMGearChangeUp = 1500;
 		m_RPMGearChangeDown = 700;
 		m_MaxBrakeTorque = 1000;
@@ -121,31 +121,31 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
 		RegisterVectorProperty<std::string>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
-		RegisterProperty<std::string>("EngineType", &GetEngineType, &SetEngineType);
-		RegisterProperty<bool>("Automatic", &GetAutomatic, &SetAutomatic);
-		RegisterProperty<bool>("InvertDrivetrainOutput", &GetInvert, &SetInvert);
-		RegisterProperty<float>("BrakeTorque", &GetBrakeTorque, &SetBrakeTorque);
-		RegisterProperty<float>("ConstantTorque", &GetConstantTorque, &SetConstantTorque);
-		RegisterProperty<float>("DeclutchTimeChangeGear", &GetDeclutchTimeChangeGear, &SetDeclutchTimeChangeGear);
-		RegisterProperty<float>("ClutchTimeChangeGear", &GetClutchTimeChangeGear, &SetClutchTimeChangeGear);
+		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType);
+		RegisterProperty<bool>("Automatic", &VehicleEngineComponent::GetAutomatic, &VehicleEngineComponent::SetAutomatic);
+		RegisterProperty<bool>("InvertDrivetrainOutput", &VehicleEngineComponent::GetInvert, &VehicleEngineComponent::SetInvert);
+		RegisterProperty<float>("BrakeTorque", &VehicleEngineComponent::GetBrakeTorque, &VehicleEngineComponent::SetBrakeTorque);
+		RegisterProperty<float>("ConstantTorque", &VehicleEngineComponent::GetConstantTorque, &VehicleEngineComponent::SetConstantTorque);
+		RegisterProperty<float>("DeclutchTimeChangeGear", &VehicleEngineComponent::GetDeclutchTimeChangeGear, &VehicleEngineComponent::SetDeclutchTimeChangeGear);
+		RegisterProperty<float>("ClutchTimeChangeGear", &VehicleEngineComponent::GetClutchTimeChangeGear, &VehicleEngineComponent::SetClutchTimeChangeGear);
 
-		RegisterProperty<float>("MaxRPM", &GetMaxRPM, &SetMaxRPM);
-		RegisterProperty<float>("MinRPM", &GetMinRPM, &SetMinRPM);
+		RegisterProperty<float>("MaxRPM", &VehicleEngineComponent::GetMaxRPM, &VehicleEngineComponent::SetMaxRPM);
+		RegisterProperty<float>("MinRPM", &VehicleEngineComponent::GetMinRPM, &VehicleEngineComponent::SetMinRPM);
 
-		RegisterProperty<float>("RPMGearChangeUp", &GetRPMGearChangeUp, &SetRPMGearChangeUp);
-		RegisterProperty<float>("RPMGearChangeDown", &GetRPMGearChangeDown, &SetRPMGearChangeDown);
-		RegisterProperty<float>("Power", &GetPower, &SetPower);
-		RegisterProperty<float>("TurnForce", &GetTurnForce, &SetTurnForce);
-		RegisterVectorProperty<float>("GearRatio", &GetGearRatio, &SetGearRatio);
-		RegisterProperty<bool>("SmoothRPMOutput", &GetSmoothRPMOutput, &SetSmoothRPMOutput);
+		RegisterProperty<float>("RPMGearChangeUp", &VehicleEngineComponent::GetRPMGearChangeUp, &VehicleEngineComponent::SetRPMGearChangeUp);
+		RegisterProperty<float>("RPMGearChangeDown", &VehicleEngineComponent::GetRPMGearChangeDown, &VehicleEngineComponent::SetRPMGearChangeDown);
+		RegisterProperty<float>("Power", &VehicleEngineComponent::GetPower, &VehicleEngineComponent::SetPower);
+		RegisterProperty<float>("TurnForce", &VehicleEngineComponent::GetTurnForce, &VehicleEngineComponent::SetTurnForce);
+		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio);
+		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput);
 	}
-	
+
 	void VehicleEngineComponent::OnCreate()
 	{
 	/*	ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("VehicleEngineComponentInputSettings");
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
-		else 
+		else
 			Log::Warning("Failed to find control settings: VehicleEngineComponentInputSettings");*/
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadGameComponentsMessage,0));
@@ -263,7 +263,7 @@ namespace GASS
 	}
 
 
-	
+
 	float VehicleEngineComponent::GetPower() const
 	{
 		return m_Power;
@@ -375,7 +375,7 @@ namespace GASS
 
 			//let there be a dead span in input
 			m_DesiredThrottle = value;
-			if(fabs(m_DesiredThrottle) < 0.1) 
+			if(fabs(m_DesiredThrottle) < 0.1)
 				m_DesiredThrottle = 0;
 		}
 
@@ -384,10 +384,10 @@ namespace GASS
 			m_DesiredSteer = value;
 			//let there be a dead span in input
 			m_DesiredSteer = value;
-			if(fabs(m_DesiredSteer) < 0.1) 
+			if(fabs(m_DesiredSteer) < 0.1)
 				m_DesiredSteer = 0;
 		}
-	
+
 	}
 
 
@@ -398,7 +398,7 @@ namespace GASS
 
 		//Direct mapping, use the above function to damp input
 		float throttle = m_DesiredThrottle;
-		
+
 		//select gear if in automatic otherwise only handle clutch timing
 		UpdateGearShift(throttle, m_VehicleEngineComponentRPM,m_CurrentTime);
 		float brake_q = GetBreakTorq(throttle);
@@ -409,7 +409,7 @@ namespace GASS
 		//clamp rpm
 		if(m_VehicleEngineComponentRPM > m_MaxRPM) m_VehicleEngineComponentRPM = m_MaxRPM;
 		if(m_VehicleEngineComponentRPM < m_MinRPM) m_VehicleEngineComponentRPM = m_MinRPM;
-		
+
 		//TODO: Simulate hydrostatic transmission instead
 		if(m_EngineType == ET_TANK)
 		{
@@ -418,7 +418,7 @@ namespace GASS
 
 		UpdateSound(delta);
 		UpdateExhaustFumes(delta);
-		
+
 		/*char dtxt[256];
 		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineComponentRPM,m_Clutch);
 		std::string engine_data = dtxt;
@@ -436,7 +436,7 @@ namespace GASS
 
 	void VehicleEngineComponent::UpdateExhaustFumes(double delta)
 	{
-	
+
 		float emission = GetNormRPM()*30;
 		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
 		GetSceneObject()->PostMessage(particle_msg);
@@ -444,7 +444,7 @@ namespace GASS
 
 	float VehicleEngineComponent::GetNormRPM()
 	{
-		
+
 		float ret = (m_RPM-m_MinRPM)/(m_MaxRPM-m_MinRPM);
 		//float ret = (m_RPM-m_MinRPM)/(m_RPMGearChangeUp-m_MinRPM);
 		if(ret < 0)  ret = 0;
@@ -459,7 +459,7 @@ namespace GASS
 		//limit pid to max turn force
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce);
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
-		
+
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
 		/*char dtxt[256];
@@ -492,13 +492,13 @@ namespace GASS
 		{
 			//m_Clutch = 1.0 - fabs(throttle); //also, use clutch when braking
 			throttle = 0;
-			
+
 		}
 		else if(throttle > 0 && current_gear_ratio < 0) //we are moving backward and want to brake, set throttle to zero
 		{
 			//m_Clutch = 1.0 - throttle; //also, use clutch when braking
 			throttle = 0;
-			
+
 		}
 
 		if(m_AutoShiftStart)
@@ -518,17 +518,17 @@ namespace GASS
 		{
 			brake_torque = m_MaxBrakeTorque;
 		}
-		
+
 		//brake
 		if(throttle < 0 && current_gear_ratio > 0)
 		{
 			brake_torque = m_MaxBrakeTorque* fabs(throttle);
-			
+
 		}
 		else if(throttle > 0 && current_gear_ratio < 0)
 		{
 			brake_torque = m_MaxBrakeTorque* fabs(throttle);
-		
+
 		}
 		return brake_torque;
 	}
@@ -548,16 +548,16 @@ namespace GASS
 
 	float VehicleEngineComponent::GetWheelTorqFromEngine()
 	{
-		
+
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 
-		//max power at half of max_rpm 
+		//max power at half of max_rpm
 		float angle= (m_VehicleEngineComponentRPM / m_MaxRPM)*MY_PI;
 		float current_engine_power = sin(angle)*m_Power;
-		
+
 		float wheel_torque;
 		wheel_torque = (current_engine_power)*fabs(current_gear_ratio)*m_Clutch;
-		
+
 		return wheel_torque;
 
 	}
@@ -570,7 +570,7 @@ namespace GASS
 
 		/*char dtxt[256];
 		sprintf(dtxt,"Wheel q: %f v:%f",wheel_torque,wheel_vel);
-	
+
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
@@ -578,10 +578,10 @@ namespace GASS
 		//send physics data to wheels and update mean wheel rpm
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
-		
+
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS2_FORCE,wheel_torque+brake_torque));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS2_VELOCITY,wheel_vel));
-	
+
 		m_WheelRPM = 0;
 		for(int i = 0; i < m_Wheels.size(); i++)
 		{
@@ -598,17 +598,17 @@ namespace GASS
 
 		if(m_Invert)
 			m_WheelRPM = -m_WheelRPM;
-	
+
 
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		//give feedback to engine, when clutch down throttle is directly mapped to rpm, this is not correct and alternatives are to be tested
 		//this could be ok if we ha separate clutch input
 		//m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
-		
+
 		//give feedback to engine, when clutch down engine rmp is decreased by 1000rpm each second...throttle is released during shifting
 		m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineComponentRPM-1000*delta);
 
-	
+
 		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
 		engine_data = dtxt;
 		MessagePtr debug_msg2(new DebugPrintMessage(engine_data));
@@ -632,7 +632,7 @@ namespace GASS
 		{
 			if(m_Automatic)
 			{
-				
+
 				if(m_Gear == m_NeutralGear)
 				{
 					if(throttle > 0.03 && m_Gear+1 < number_of_gears)
@@ -646,10 +646,10 @@ namespace GASS
 						m_FutureGear = m_Gear-1;
 					}
 				}
-				
+
 				else if(m_Gear > m_NeutralGear) //forward gear
 				{
-					if(rpm > m_RPMGearChangeUp && m_Gear+1 < number_of_gears) 
+					if(rpm > m_RPMGearChangeUp && m_Gear+1 < number_of_gears)
 					{
 						m_AutoShiftStart = time;
 						m_FutureGear = m_Gear + 1;
@@ -662,7 +662,7 @@ namespace GASS
 				}
 				else //reverse gear
 				{
-					if(rpm > m_RPMGearChangeUp && m_Gear-1 >= 0) 
+					if(rpm > m_RPMGearChangeUp && m_Gear-1 >= 0)
 					{
 						m_AutoShiftStart = time;
 						m_FutureGear = m_Gear - 1;
@@ -703,7 +703,7 @@ namespace GASS
 					m_Gear = m_FutureGear;
 					// Trigger gear shift sample
 					desired_clutch=0.0f;
-				} 
+				}
 				else
 				{
 					// Change clutch over time (depress pedal means clutch goes from 1->0

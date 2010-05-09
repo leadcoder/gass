@@ -39,7 +39,7 @@ namespace GASS
 	public:
 		inline AbstractProperty(const std::string &name);
 		inline  std::string GetName() const;
-		virtual ePropertyType GetType() const = 0;
+		virtual ePropertyType GetTypeID() const = 0;
 		virtual void SetValueByString(BaseReflectionObject* pObject,const std::string &s) = 0;
 		virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
 		virtual void Serialize(BaseReflectionObject* pObject, ISerializer* serializer) = 0;

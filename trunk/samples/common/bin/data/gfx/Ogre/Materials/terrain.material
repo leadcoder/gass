@@ -393,6 +393,7 @@ material DiffuseTemplate
 
 			texture_unit diffuse_tex
 			{
+				texture BaseMap.tga
 
 			}
 			// shadowmap 1

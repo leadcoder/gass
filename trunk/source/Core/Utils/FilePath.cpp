@@ -63,7 +63,7 @@ namespace GASS
 		std::string::size_type occurIndex1 = curStr.find("%");
 		std::string varName = "";
 		std::string replaceStr = "";
-		char * replaceVal = "";
+		char * replaceVal = 0;
 		if ( occurIndex1 != std::string::npos )
 		{
 			std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
@@ -144,7 +144,7 @@ namespace GASS
 		return ret;
 	}
 
-	std::string FilePath::GetFilename() const 
+	std::string FilePath::GetFilename() const
 	{
 		std::string ret = m_ExpandPath;
 		int pos = 0;

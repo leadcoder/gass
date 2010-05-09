@@ -51,7 +51,7 @@ namespace GASS
 	}
 
 	SimEngine::~SimEngine()
-	{	
+	{
 
 	}
 
@@ -91,7 +91,7 @@ namespace GASS
 
 
 		//TODO: this should not be done here
-	
+
 		m_ControlSettingsManager->Update(delta_time);
 
 	}

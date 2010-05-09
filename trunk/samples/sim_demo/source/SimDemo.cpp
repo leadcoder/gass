@@ -51,7 +51,7 @@
 #include "Server.h"
 
 #include <stdio.h>
-#include <conio.h>
+//#include <conio.h>
 
 #include <iostream>
 #include <fstream>
@@ -65,23 +65,23 @@ void CreateManualObject()
 	GASS::BaseComponentPtr lc = boost::shared_static_cast<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("LocationComponent"));
 	lc->SetName("ContainerLocation");
 	lc->SetPropertyByType("Position",GASS::Vec3(0,0,0));
-	lc->SetPropertyByType("Rotation",GASS::Vec3(45,45,45));	
+	lc->SetPropertyByType("Rotation",GASS::Vec3(45,45,45));
 	container->AddComponent(lc);
 
 	GASS::BaseComponentPtr mc = boost::shared_static_cast<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("MeshComponent"));
 	mc->SetName("ContainerMesh");
 	mc->SetPropertyByType("Filename",std::string("container_01.mesh"));
-	mc->SetPropertyByType("CastShadow",true);	
+	mc->SetPropertyByType("CastShadow",true);
 	container->AddComponent(mc);
 
 	GASS::BaseComponentPtr geom_comp = boost::shared_static_cast<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("ODEGeometry"));
 	geom_comp->SetName("ContainerPhysicsGeom");
-	geom_comp->SetPropertyByType("GeometryType",std::string("box"));	
+	geom_comp->SetPropertyByType("GeometryType",std::string("box"));
 	container->AddComponent(geom_comp);
 
 	GASS::BaseComponentPtr body_comp = boost::shared_static_cast<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("ODEBody"));
 	body_comp->SetName("ContainerPhysicsBody");
-	//body_comp->SetPropertyByValue("GeometryType","box");	
+	//body_comp->SetPropertyByValue("GeometryType","box");
 	container->AddComponent(body_comp);
 	GASS::SimEngine::Get().GetSimObjectManager()->AddTemplate(container);
 }
@@ -89,7 +89,7 @@ void CreateManualObject()
 void TestCollision(GASS::ScenarioScenePtr scene)
 {
 	GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
-	
+
 	GASS::CollisionHandle handle;
 	GASS::CollisionRequest request;
 	GASS::CollisionResult result;
@@ -118,20 +118,38 @@ GASS::ScenarioPtr scenario(new GASS::Scenario());
 
 
 
+#include <stdio.h>
+#include <termios.h>
+#include <unistd.h>
+
+int mygetch( ) {
+  struct termios oldt,
+                 newt;
+  int            ch;
+  tcgetattr( STDIN_FILENO, &oldt );
+  newt = oldt;
+  newt.c_lflag &= ~( ICANON | ECHO );
+  tcsetattr( STDIN_FILENO, TCSANOW, &newt );
+  ch = getchar();
+  tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+  return ch;
+
+}
+
 int main(int argc, char* argv[])
 {
 	SimApplication* app;
 	bool is_server = false;
-	std::string config = "../configuration/app_config.xml";
+	std::string config = "../Configuration/app_config.xml";
 	int index = 1;
 	while(index < argc)
 	{
 		char* arg = argv[index];
-		if(_strcmpi(arg, "--IsServer") == 0)
+		if(strcmp(arg, "--IsServer") == 0)
 		{
 			is_server = atoi(argv[index+1]);
 		}
-		else if(_strcmpi(arg, "--Config") == 0)
+		else if(strcmp(arg, "--Config") == 0)
 		{
 			config = argv[index+1];
 		}
@@ -139,7 +157,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::cout << "Server, client or standalone? Press [S] ,[C] or [A]:";
-	char key = _getch();
+	char key = mygetch();
 	int app_mode = 2;
 	if(key == 'c' || key == 'C')
 		app_mode = 0;
@@ -148,11 +166,11 @@ int main(int argc, char* argv[])
 	else if(key == 'a' || key == 'A')
 		app_mode = 2;
 
-	if(app_mode == 0) 
+	if(app_mode == 0)
 		app = new SimClient(config);
-	else if(app_mode == 1) 
+	else if(app_mode == 1)
 		app = new SimServer(config);
-	else if(app_mode == 2) 
+	else if(app_mode == 2)
 		app = new SimApplication(config);
 
 	app->Init();
@@ -163,8 +181,8 @@ int main(int argc, char* argv[])
 	}
 	delete app;
 	exit(0);
-	
-	
+
+
 /*	SimServer server;
 	SimClient client;
 
@@ -176,9 +194,9 @@ int main(int argc, char* argv[])
 
 	int index = 1;
 	bool is_server = false;
-	//check if arguments are provided 
-	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scenario ../data/scenarios/osg_demo_scenario 
-	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scenario ../data/scenarios/ogre_demo_scenario 
+	//check if arguments are provided
+	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scenario ../data/scenarios/osg_demo_scenario
+	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scenario ../data/scenarios/ogre_demo_scenario
 	while(index < argc)
 	{
 		char* arg = argv[index];
@@ -203,8 +221,8 @@ int main(int argc, char* argv[])
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
 	engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
-			
-	
+
+
 	//network settings
 	if(is_server)
 	{
@@ -217,7 +235,7 @@ int main(int argc, char* argv[])
 
 
 
-		
+
 
 
 		for(int i = 0; i < 1; i++)
@@ -256,9 +274,9 @@ int main(int argc, char* argv[])
 		GASS::MessageFuncPtr load_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnLoadScenario, &client, _1 ),&client));
 		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::StartSceanrioRequestMessage),load_callback,0);
 		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
-			
-		
-		
+
+
+
 		printf("\n\nWaiting for server");
 		float update_time = 0;
 		while(!client.IsConnected())
@@ -271,20 +289,20 @@ int main(int argc, char* argv[])
 			//send ping request
 		}
 	}
-	
 
-	
-	
+
+
+
 	//scenario->Load("../../../data/scenarios/camp_genesis");
 	//scenario->Load("../../../data/advantage_scenario");
-	
+
 	/*for(int i = 0; i < 2; i++)
 	{
 		for(int j = 0; j < 2; j++)
 		{
 			//GASS::SceneObject* scene_object = scenario->GetScene(0)->GetObjectManager()->LoadFromTemplate("ContainerObject");
 			GASS::SceneObjectPtr scene_object = scenario->GetScene(0)->GetObjectManager()->LoadFromTemplate("ContainerTemplate");
-	
+
 			int from_id = i*40 + j;
 			GASS::MessagePtr pos_msg(new GASS::Message(GASS::ScenarioScene::OBJECT_RM_POSITION,from_id));
 			GASS::Vec3 pos(1705.18 + i*10 ,100.3, 2808+10*j);
@@ -294,7 +312,7 @@ int main(int argc, char* argv[])
 	}*/
 
 
-	
+
 	/*GASS::Timer timer;
 	timer.Reset();
 	double prev = 0;
@@ -322,7 +340,7 @@ int main(int argc, char* argv[])
 		//CreateManualObject();
 
 		scenario->Load("../data/scenarios/ogre_demo_scenario");*/
-		
+
 		/*if(check_reset && time > 5.0)
 		{
 			check_reset = false;

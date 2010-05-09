@@ -245,7 +245,7 @@ namespace GASS
 		}
 		else
 			trans_geom_id = geom_id;
-		
+
 
 		if(body)
 		{
@@ -434,6 +434,8 @@ namespace GASS
 			m_SampleWidth = size_x/(samples_x-1);
 			m_SampleHeight = size_z/(samples_z-1);
 
+			//Log::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
+
 			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
 			//Log::Print("thickness %f",thickness );
 
@@ -449,6 +451,7 @@ namespace GASS
 				0.0,	// vOffset
 				thickness,	// vThickness
 				0); // nWrapMode
+
 
 
 			/*dGeomHeightfieldDataBuildSingle( heightid,
