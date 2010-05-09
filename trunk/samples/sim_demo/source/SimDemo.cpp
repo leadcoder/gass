@@ -51,10 +51,13 @@
 #include "Server.h"
 
 #include <stdio.h>
-//#include <conio.h>
-
 #include <iostream>
 #include <fstream>
+
+#ifdef WIN32
+#include <conio.h>
+#endif
+
 
 GASS::MessageManager mm;
 
@@ -117,24 +120,26 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 GASS::ScenarioPtr scenario(new GASS::Scenario());
 
 
-
+#ifndef WIN32
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
 
-int mygetch( ) {
-  struct termios oldt,
-                 newt;
-  int            ch;
-  tcgetattr( STDIN_FILENO, &oldt );
-  newt = oldt;
-  newt.c_lflag &= ~( ICANON | ECHO );
-  tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-  ch = getchar();
-  tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-  return ch;
+int _getch( ) {
+	struct termios oldt,
+		newt;
+	int            ch;
+	tcgetattr( STDIN_FILENO, &oldt );
+	newt = oldt;
+	newt.c_lflag &= ~( ICANON | ECHO );
+	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
+	ch = getchar();
+	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+	return ch;
 
 }
+#endif
+
 
 int main(int argc, char* argv[])
 {
@@ -157,7 +162,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::cout << "Server, client or standalone? Press [S] ,[C] or [A]:";
-	char key = mygetch();
+	char key = _getch();
 	int app_mode = 2;
 	if(key == 'c' || key == 'C')
 		app_mode = 0;

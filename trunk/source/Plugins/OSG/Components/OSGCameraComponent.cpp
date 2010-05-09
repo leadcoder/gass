@@ -38,6 +38,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
@@ -148,19 +149,23 @@ namespace GASS
 		osg::Vec3d pos = lc->GetOSGNode()->getPosition();
 		osg::Quat rot = lc->GetOSGNode()->getAttitude();
 
-		osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
-
-		rot = q*rot;
-		osg::Transform* trans = lc->GetOSGNode()->asTransform();
-		osg::MatrixTransform* trans2 = lc->GetOSGNode()->asTransform()->asMatrixTransform();
+		/*Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
+		if(up.z ==1)
+		{
+			osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
+			rot = rot*q;
+		}*/
+		//osg::Transform* trans = lc->GetOSGNode()->asTransform();
+		//osg::MatrixTransform* trans2 = lc->GetOSGNode()->asTransform()->asMatrixTransform();
 
 		osg::Matrixd cameraMatrix;
+		cameraMatrix.identity();
 
 		cameraMatrix.setTrans(pos);
 		cameraMatrix.setRotate(rot);
 
 		osg::Matrixd final_cam_view= cameraMatrix.inverse(cameraMatrix);
-
+		
 		m_OSGCamera->setViewMatrix(final_cam_view);
 	
 		//m_OSGCamera->getInverseViewMatrix().setRotate(lc->GetOSGNode()->getAttitude());

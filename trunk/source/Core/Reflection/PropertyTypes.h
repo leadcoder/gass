@@ -36,12 +36,13 @@ namespace GASS
 	enum ePropertyType
 	{
 		eptBOOL,
-		//eptDWORD,
 		eptINT,
 		eptFLOAT,
 		eptSTRING,
 		eptPTR,
 		eptVEC3,
+		eptVEC2,
+		eptUNKNOWN,
 		eptMAX_PROPERTY_TYPES
 	};
 

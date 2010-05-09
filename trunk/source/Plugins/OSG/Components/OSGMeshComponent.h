@@ -149,9 +149,10 @@ namespace GASS
 			sv3.Vertex.y = tv3[1];
 			sv3.Vertex.z = tv3[2];
 			
-			mVertices.push_back(sv1);
-			mVertices.push_back(sv2);
+			//Changed winding order
 			mVertices.push_back(sv3);
+			mVertices.push_back(sv2);
+			mVertices.push_back(sv1);
 		}
 	};
 	

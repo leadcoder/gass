@@ -64,6 +64,12 @@ namespace GASS
 		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	protected:
+
+		Vec3 FromOSGToGASS(const osg::Vec3d &value) const;
+		osg::Vec3d ToOSGFromGASS(const Vec3 &value) const;
+		Quaternion FromOSGToGASS(const osg::Quat &value) const;
+		osg::Quat ToOSGFromGASS(const Quaternion &value) const;
+
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);

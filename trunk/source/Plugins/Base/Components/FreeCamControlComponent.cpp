@@ -339,8 +339,14 @@ namespace GASS
 		tot_vel = forward_vel + strafe_vel;
 		tot_vel  = tot_vel  + (up*updown_speed);
 
+		//m_Rot = m_Rot +  up*turn_speed_x;
+		//m_Rot = m_Rot +  east*turn_speed_y;
+
+		
 		m_Rot.h +=  turn_speed_x;
 		m_Rot.p +=  turn_speed_y;
+		//m_Rot.h +=  turn_speed_x;
+		//m_Rot.p +=  turn_speed_y;
 
 		//gravity = gravity * delta;
 		//tot_vel.y += up_down_speed;
@@ -352,7 +358,14 @@ namespace GASS
 		MessagePtr pos_msg(new PositionMessage(m_Pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new RotationMessage(m_Rot,from_id));
+		Quaternion rot_to_send(m_Rot);
+		if(up.z ==1)
+		{
+			//we have to rotate 90 deg if z is up
+			rot_to_send = rot_to_send*Quaternion(Vec3(0,Math::Deg2Rad(90),0));
+		}
+
+		MessagePtr rot_msg(new RotationMessage(rot_to_send,from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
 		m_HeadingInput = 0;

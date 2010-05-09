@@ -65,7 +65,6 @@ namespace GASS
 				if(bHasOverflowed)return; //stop writing when overflowed
 				int type_size = sizeof(T);
 				if(bytesUsed+type_size > length){bHasOverflowed=true; return; }
-				//SDLNet_Write32(value,buffer);
 				*(T*) buffer = value;
 				buffer+=type_size; bytesUsed+=type_size;
 			}
@@ -88,27 +87,10 @@ namespace GASS
 
     //Use specialized template to catch std::string
     template <>
-    void SerialSaver::IO<std::string>(std::string &value);
-   /* {
-		if(buffer)
-		{
-			unsigned long l = (unsigned long) value.length();
-			IO<unsigned long>(l);
-			if(bHasOverflowed)return;
-			if(bytesUsed+l>length){bHasOverflowed=true; return; }
-			memcpy(buffer,value.c_str(),l);
-			buffer+=l; bytesUsed+=l;
-		}
-		else
-		{
-			int type_size = sizeof(unsigned long);
-			length +=type_size;
-			length += (int) value.length();
-		}
-	}*/
-
+    GASSCoreExport void SerialSaver::IO<std::string>(std::string &value);
+  
     template <>
-    void SerialSaver::IO<FilePath>(FilePath &path);
+    GASSCoreExport void SerialSaver::IO<FilePath>(FilePath &path);
 
 
 	class GASSCoreExport SerialLoader : public ISerializer
@@ -149,22 +131,10 @@ namespace GASS
 
 	//Use specialized template to catch std::string
     template <>
-    void SerialLoader::IO<std::string>(std::string &value);
-    /*{
-        unsigned long l;
-		IO<unsigned long>(l);
-		if(bHasOverflowed)return;
-		if(bytesUsed + l > length){bHasOverflowed=true; return; }
-		char *szBuf=new char[l+1];
-		szBuf[l]=0;
-		memcpy(szBuf,buffer,l);
-		value=szBuf;
-		delete[] szBuf;
-		buffer+=l; bytesUsed+=l;
-    }*/
-
+    GASSCoreExport void SerialLoader::IO<std::string>(std::string &value);
+    
     template <>
-    void SerialLoader::IO<FilePath>(FilePath &path);
+    GASSCoreExport void SerialLoader::IO<FilePath>(FilePath &path);
 }
 
 #endif // #ifndef SERIALIZE_HH

@@ -64,7 +64,7 @@ namespace GASS
 	class CreateRenderWindowMessage : public BaseMessage
 	{
 	public:
-		CreateRenderWindowMessage(const std::string &name, int height,int width, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) : 
+		CreateRenderWindowMessage(const std::string &name, int width, int height, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), 
 			  m_Name(name),
 			  m_Height(height),
@@ -164,10 +164,14 @@ namespace GASS
 	class MainWindowMovedOrResizedNotifyMessage : public BaseMessage
 	{
 	public:
-		MainWindowMovedOrResizedNotifyMessage (SenderID sender_id = -1, double delay= 0) : 
+		MainWindowMovedOrResizedNotifyMessage (int width,int height,SenderID sender_id = -1, double delay= 0) : 
+		  m_Width(width),
+		  m_Height(height),
 		  BaseMessage(sender_id , delay)  {}
-		  
+		  int GetWidth()const {return m_Width;}
+		  int GetHeight()const {return m_Height;}
 	private:
+		int m_Width,m_Height;
 	};
 	typedef boost::shared_ptr<MainWindowMovedOrResizedNotifyMessage> MainWindowMovedOrResizedNotifyMessagePtr;
 

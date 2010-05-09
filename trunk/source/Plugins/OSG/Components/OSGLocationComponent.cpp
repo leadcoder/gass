@@ -120,7 +120,7 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(osg::Vec3d(value.x,value.y,value.z));
+			m_TransformNode->setPosition(ToOSGFromGASS(value));
 			SendTransMessage();
 		}
 	}
@@ -158,7 +158,8 @@ namespace GASS
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
 		{
-			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
+			osg::Quat final = ToOSGFromGASS(value);//osg::Quat(-value.x,value.z,-value.y,value.w);
+			//osg::Quat final = osg::Quat(-value.x,value.y,value.z,value.w);
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
 		}
@@ -169,7 +170,8 @@ namespace GASS
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
 		{
-			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
+			osg::Quat final = ToOSGFromGASS(value);//osg::Quat(-value.x,value.z,-value.y,value.w);
+			//osg::Quat final = osg::Quat(-value.x,value.y,value.z,value.w);
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
 		}
@@ -237,6 +239,28 @@ namespace GASS
 		}
 	}
 
+	Vec3 OSGLocationComponent::FromOSGToGASS(const osg::Vec3d &value) const 
+	{
+		return Vec3(value.x(),value.y(),value.z());
+	}
+
+	osg::Vec3d OSGLocationComponent::ToOSGFromGASS(const Vec3 &value) const
+	{
+		return osg::Vec3d(value.x,value.y,value.z);
+	}
+
+	Quaternion OSGLocationComponent::FromOSGToGASS(const osg::Quat &value) const
+	{
+		//return Quaternion(value.w(),value.x(),-value.z(),-value.y());
+		return Quaternion(-value.w(),value.x(),value.y(),value.z());
+	}
+
+	osg::Quat OSGLocationComponent::ToOSGFromGASS(const Quaternion &value) const
+	{
+		//return osg::Quat(-value.x,value.z,-value.y,value.w);
+		return osg::Quat(value.x,value.y,value.z,-value.w);
+	}
+
 	Vec3 OSGLocationComponent::GetWorldPosition() const 
 	{
 		if(m_TransformNode.valid())
@@ -252,7 +276,8 @@ namespace GASS
 					final = mat_list[i]*final;
 				}
 				osg::Vec3d osg_world_pos = m_TransformNode->getPosition()*final;
-				Vec3 world_pos(osg_world_pos.x(),osg_world_pos.y(),osg_world_pos.z());
+
+				Vec3 world_pos = FromOSGToGASS(osg_world_pos);
 				return world_pos;
 			}
 		}
@@ -297,11 +322,12 @@ namespace GASS
 		Quaternion q = Quaternion::IDENTITY;
 		if(m_TransformNode.valid())
 		{
-			osg::Quat rot = m_TransformNode->getAttitude();
+			q = FromOSGToGASS(m_TransformNode->getAttitude());
+			/*osg::Quat rot = m_TransformNode->getAttitude();
 			q.x = rot.x();
 			q.z = -rot.y();
 			q.y = -rot.z();
-			q.w = rot.w();
+			q.w = rot.w();*/
 		}
 		return q;
 	}
@@ -310,7 +336,7 @@ namespace GASS
 	{
 		if(m_TransformNode.valid())
 		{
-			osg::Quat final = osg::Quat(-value.x,value.z,-value.y,value.w);
+			osg::Quat final = ToOSGFromGASS(value);
 			
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
@@ -323,11 +349,7 @@ namespace GASS
 		
 		if(m_TransformNode.valid())
 		{
-			osg::Quat rot = m_TransformNode->getAttitude();
-			q.x = rot.x();
-			q.z = -rot.y();
-			q.y = -rot.z();
-			q.w = rot.w();
+			q = FromOSGToGASS(m_TransformNode->getAttitude());
 		}
 		return q;
 	}
@@ -335,7 +357,7 @@ namespace GASS
 	void OSGLocationComponent::operator()(osg::Node* node, osg::NodeVisitor* nv) 
      {  
           //std::cout<<"update callback - pre traverse"<<node<<std::endl; 
-		 std::cout<<"update callback for:" << GetSceneObject()->GetName() <<std::endl; 
+		 //std::cout<<"update callback for:" << GetSceneObject()->GetName() <<std::endl; 
           traverse(node,nv); 
           //std::cout<<"update callback - post traverse"<<node<<std::endl; 
       } 

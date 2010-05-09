@@ -125,6 +125,10 @@ namespace GASS
         {
 		   return eptSTRING;
 		}
+		else if(typeid(T) == typeid(Vec2))
+        {
+		   return eptVEC2;
+		}
 		else if(typeid(T) == typeid(Vec3))
         {
 		   return eptVEC3;
@@ -133,6 +137,8 @@ namespace GASS
         {
 		   return eptBOOL;
 		}
+		else
+			return eptUNKNOWN;
 	}
 
 

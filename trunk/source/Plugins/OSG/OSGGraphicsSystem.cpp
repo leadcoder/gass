@@ -104,6 +104,7 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0));
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
@@ -311,8 +312,6 @@ namespace GASS
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
 
-
-
 			m_GraphicsContext = osg::GraphicsContext::createGraphicsContext(traits.get());
 			if (m_GraphicsContext.valid())
 			{
@@ -327,6 +326,8 @@ namespace GASS
 			{
 				osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
 			}
+
+			
 
 			//osg::ref_ptr<osg::Group> rootNode;
 			//rootNode = new osg::Group();
@@ -360,7 +361,15 @@ namespace GASS
 	void OSGGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)
 	{
 		//m_Window->windowMovedOrResized();
-		//m_Viewer->getView(0)->
+		osgViewer::ViewerBase::Views views;
+		
+		
+		m_Viewer->getViews(views);
+		//set same size in all viewports for the moment
+		for(int i = 0; i < views.size(); i++)
+		{
+			views[i]->getCamera()->setViewport(0,0,message->GetWidth(),message->GetHeight());
+		}
 	}
 
 	void OSGGraphicsSystem::Update(double delta_time)
@@ -371,7 +380,7 @@ namespace GASS
 		if(m_Viewer->done())
 		{
 			//Exit
-			Log::Error("Exit");
+		//	Log::Error("Exit");
 		}
 		//WindowEventUtilities::messagePump();
 		//m_Root->renderOneFrame();

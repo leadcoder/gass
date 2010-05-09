@@ -85,6 +85,7 @@ namespace GASS
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;
 		int m_MaxSimSteps;
+		static bool m_ZUp;
 	};
 	typedef boost::shared_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerPtr;
 	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
