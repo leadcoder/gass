@@ -48,10 +48,10 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:
-		void SetInputHandler(const std::string &handler);
-		std::string GetInputHandler() const;
+	//	void SetInputHandler(const std::string &handler);
+	//	std::string GetInputHandler() const;
 
-		std::string m_InputHandler;
+	//	std::string m_InputHandler;
 	};
 
 	typedef boost::shared_ptr<InputProxyComponent> InputProxyComponentPtr;

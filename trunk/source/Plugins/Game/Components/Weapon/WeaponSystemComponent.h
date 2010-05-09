@@ -69,13 +69,9 @@ namespace GASS
 		Vec3 GetRecoilForce() const;
 		float GetReloadTime() const;
 		void SetReloadTime(float offset);
-		
-		
+		std::string GetFireEffectTemplate() const;
+		void SetFireEffectTemplate(const std::string &value);
 
-		
-
-
-		//Projectile* m_ProjectileTemplate;
 		SceneObjectPtr m_FireSound;
 		/*SceneObjectPtr m_ReloadPatch; 
 		SceneObjectPtr m_ReleasePatch;
@@ -89,17 +85,8 @@ namespace GASS
 		std::string m_InputToFire;
 		std::string m_InputToReload;
 
-		//float m_FireingForce;
-		//float m_RecoilSpeed;
-		//float m_RecoilSize;
-		//float m_ReloadTimeRemaining;
+		std::string m_FireEffectTemplate;
 
-		//float m_Velocity;
-		//int m_FireOnce;
-		//int m_FireInCameraDof;
-		//float m_MinDamage;
-		//float m_DistToStartLoseDamage;
-		//float m_DistToMinDamage;
 		Vec3 m_RecoilForce;
 		float m_RoundOfFire;
 		float m_FireDelay;

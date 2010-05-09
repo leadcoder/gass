@@ -185,9 +185,7 @@ public:
 			m_Scenario->OnUpdate(time - prev);
 			prev = time;
 		}
-
-        if(time > 50)
-            return false;
+        
 //		if(GetAsyncKeyState(VK_ESCAPE))
 //			return false;
 

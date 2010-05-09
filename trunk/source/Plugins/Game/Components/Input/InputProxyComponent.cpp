@@ -53,7 +53,7 @@ namespace GASS
 	void InputProxyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, IComponent>);
-		RegisterProperty<std::string>("InputHandler", &InputProxyComponent::GetInputHandler, &InputProxyComponent::SetInputHandler);
+		//RegisterProperty<std::string>("InputHandler", &InputProxyComponent::GetInputHandler, &InputProxyComponent::SetInputHandler);
 	}
 
 	void InputProxyComponent::OnCreate()
@@ -77,7 +77,7 @@ namespace GASS
 		GetSceneObject()->SendImmediate(message);
 	}
 
-	void InputProxyComponent::SetInputHandler(const std::string &handler)
+	/*void InputProxyComponent::SetInputHandler(const std::string &handler)
 	{
 		m_InputHandler = handler;
 	}
@@ -85,6 +85,6 @@ namespace GASS
 	std::string InputProxyComponent::GetInputHandler() const
 	{
 		return m_InputHandler;
-	}
+	}*/
 
 }

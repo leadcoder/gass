@@ -74,6 +74,8 @@ namespace GASS
 		RegisterProperty<int>("MagazineSize", &WeaponSystemComponent::GetMagazineSize, &WeaponSystemComponent::SetMagazineSize);
 		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
 		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
+		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
+		
 		
 		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
@@ -140,8 +142,6 @@ namespace GASS
 				ready_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(ready_msg);
 			}
-
-			
 			
 			/*if(m_Automatic)
 			{
@@ -153,7 +153,8 @@ namespace GASS
 		}
 	}
 
-	
+
+
 
 	void WeaponSystemComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
@@ -194,6 +195,15 @@ namespace GASS
 		//recoil
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,m_RecoilForce));
 		GetSceneObject()->PostMessage(force_msg);
+
+
+		//effect
+		if(m_FireEffectTemplate != "")
+		{
+			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,final_pos,projectile_rot,vel));
+			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+		}
+	
 
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
@@ -337,6 +347,17 @@ namespace GASS
 	{
 		return m_ReloadTime;
 	}
+
+	std::string WeaponSystemComponent::GetFireEffectTemplate() const
+	{
+		return m_FireEffectTemplate;
+	}
+	void WeaponSystemComponent::SetFireEffectTemplate(const std::string &value)
+	{
+		m_FireEffectTemplate = value;
+	}
+
+	
 
 
 

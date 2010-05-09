@@ -44,7 +44,7 @@
         <TurnForce value="100"/>
       </VehicleEngineComponent>
       <InputHandlerComponent>
-        <ControlSetting value ="VehicleEngineInputSettings"/>
+        <ControlSetting value ="TankInputSettings"/>
       </InputHandlerComponent>
       <ArmorComponent>
         <Armor value="50"/>
@@ -55,21 +55,10 @@
       <LocationTransferComponent>
       </LocationTransferComponent>
       <InputTransferComponent>
-        <ControlSetting value ="VehicleEngineInputSettings"/>
+        <ControlSetting value ="TankInputSettings"/>
       </InputTransferComponent>
     </Components>
       <ComponentContainers>
-        <SceneObjectTemplate>
-          <Name value="JimTankDriverCameraObject"/>
-          <Inheritance value ="JimTankCameraObject"/>
-          <Components>
-            <LocationComponent>
-              <AttachToParent value ="1"/>
-              <Position value="-1.0 1.0 -1.0"/>
-              <Rotation value="0 0 0"/>
-            </LocationComponent>
-          </Components>
-        </SceneObjectTemplate>
         <SceneObjectTemplate>
           <Name value="JimTankTurret"/> 
           <Components>
@@ -94,17 +83,19 @@
               <HighStop value ="-1"/>
               <LowStop value ="1"/>
             </PhysicsHingeComponent>
-            <InputHandlerComponent>
+            <InputProxyComponent/>
+           <!-- <InputHandlerComponent>
               <ControlSetting value="TurretInputSettings"/>
-            </InputHandlerComponent>
+            </InputHandlerComponent>-->
             <WeaponSystemComponent>
               <ProjectileTemplate value="JimTankMainGunProjectileObject"/>
-              <ProjectileStartOffset value="5.0"/>
+              <ProjectileStartOffset value="4.5"/>
               <ProjectileStartVelocity value="500"/>
               <NumberOfMagazines value="90"/>
               <MagazineSize value="5"/>
               <RecoilForce value="0 0 100"/>
               <ReloadTime value="3"/>
+              <FireEffectTemplate value="JimTankMainGunFireEffect"/>
             </WeaponSystemComponent>
             <ArmorComponent>
               <Armor value="50"/>
@@ -116,11 +107,22 @@
               <RelativeToParent value="2"/>
               <UpdatePosition value="0"/>
             </LocationTransferComponent>
-            <InputTransferComponent>
+            <!--<InputTransferComponent>
               <ControlSetting value ="TurretInputSettings"/>
-            </InputTransferComponent>
+            </InputTransferComponent>-->
           </Components>
           <ComponentContainers>
+            <SceneObjectTemplate>
+              <Name value="JimTankDriverCameraObject"/>
+              <Inheritance value ="JimTankCameraObject"/>
+              <Components>
+                <LocationComponent>
+                  <AttachToParent value ="1"/>
+                  <Position value="1.0 0.4 -0.54"/>
+                  <Rotation value="0 0 0"/>
+                </LocationComponent>
+              </Components>
+            </SceneObjectTemplate>
             <SceneObjectTemplate>
               <Name value="FireSound"/>
               <Components>
@@ -392,6 +394,18 @@
       </LocationComponent>
       <ParticleSystemComponent>
         <ParticleTemplate value="ProjectileDust"/>
+        <TimeToLive value="2.0"/>
+      </ParticleSystemComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="JimTankMainGunFireEffect"/>
+    <Components>
+      <LocationComponent>
+        <AttachToParent value="0"/>
+      </LocationComponent>
+      <ParticleSystemComponent>
+        <ParticleTemplate value="FireEffect"/>
         <TimeToLive value="2.0"/>
       </ParticleSystemComponent>
     </Components>
