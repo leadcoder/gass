@@ -27,8 +27,7 @@ if (os.is("windows")) then
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_CORE_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	targetdir ( "../lib/" .. _ACTION )
---	copy ..\lib\.. _ACTION .. "//GASSCore_d.dll ..\bin\Debug
+	
 
 	configuration "Debug"
 		targetname "GASSCore_d"
@@ -46,23 +45,24 @@ if (os.is("windows")) then
 
      else
 
+        
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include",
-		"../dependencies/include/tinyxml",
+		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
                 "../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
-		"../dependencies/lib"
+		"../dependencies/tinyxml/lib",
+		"$(BOOST_PATH)/lib"
 	}
 
 
 	configuration "Debug"
-		targetname "GASSCore_d"
+		targetname "libGASSCore_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
 		links { "tinyxmld" }
@@ -70,10 +70,10 @@ if (os.is("windows")) then
 
 	
 	configuration "Release"
-		targetname "GASSCore"
+		targetname "libGASSCore"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
-		links { "tinyxml", "Winmm" }
+		links { "tinyxml" }
 
      end
 

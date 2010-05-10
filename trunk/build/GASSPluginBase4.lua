@@ -8,6 +8,14 @@ project "GASSPluginBase"
 	targetdir ( "../lib/" .. _ACTION )
 
 if (os.is("windows")) then
+
+	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
+	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
+	
+else
+
+end
+
 	includedirs 
 	{ 
 		"../source/Plugins/Base",
@@ -24,26 +32,6 @@ if (os.is("windows")) then
 		"$(BOOST_PATH)/lib"
 	}
 
-	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
-	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	
-else
-	includedirs 
-	{ 
-		"../source/Plugins/Base",
-		"../source",
-		"$(BOOST_PATH)",
-		"../dependencies/include/tinyxml"
-	}
-
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"$(BOOST_PATH)/lib"
-	}
-
-end
 
 
 	configuration "Debug"

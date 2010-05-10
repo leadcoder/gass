@@ -7,7 +7,7 @@ project "GASSPluginGame"
 
 	targetdir ( "../lib/" .. _ACTION )
 
-if (os.is("windows")) then
+
 	includedirs 
 	{ 
 		"../source/Plugins/Game",
@@ -26,24 +26,12 @@ if (os.is("windows")) then
 
 	}
 
+if (os.is("windows")) then
+
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
 else
-	includedirs 
-	{ 
-		"../source/Plugins/Game",
-		"../source",
-		"$(BOOST_PATH)",
-		"../dependencies/include/tinyxml"
-	}
-
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib",
-		"../dependencies/lib/",
-	}
 
 end
 

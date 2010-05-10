@@ -36,16 +36,17 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include/tinyxml",
+		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
-		"../dependencies/include"
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib",
-		"$(BOOST_PATH)/lib"
+		"../dependencies/tinyxml/lib",
+		"$(BOOST_PATH)/lib",
+                "../dependencies/tbb/ia32/cc4.1.0_libc2.4_kernel2.6.16.21/lib"
 	}
 
 end
@@ -57,7 +58,7 @@ end
 		links 
 		{
 		   "GASSCore_d",
-		   "tinyxml",
+		   "tinyxmld",
 		   "tbb_debug"  
 		}
 
@@ -69,7 +70,6 @@ end
 		links 
 		{
 			"GASSCore",
-			"Winmm",
 			"tinyxml",
 			"tbb"
 		}

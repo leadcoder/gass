@@ -36,16 +36,17 @@ else
 	{ 
 		"../source",
 		"$(BOOST_PATH)",
-		"../dependencies/include/OGRE",
-		"../dependencies/include/OctreeSceneManager",
-		"../dependencies/include/tinyxml"
+		"$(OGRE_PATH)/OgreMain/include",
+		"$(OGRE_PATH)/OctreeSceneManager/include",
+		"$(OGRE_PATH)/build/include",		
+		"../dependencies/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"../dependencies/lib/OGRE",
+		"../dependencies/tinyxml/lib",
+		"$(OGRE_PATH)/build/lib",
 		"$(BOOST_PATH)/lib"
 
 	}
@@ -63,7 +64,7 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"OGREMain_d",
-			"Plugin_OctreeSceneManager_d",
+			--"Plugin_OctreeSceneManager_d",
 			"tinyxmld"
 		}
 
@@ -76,7 +77,7 @@ end
 			"GASSCore",
 			"GASSSim",
 			"OGREMain",
-			"Plugin_OctreeSceneManager",
+			--"Plugin_OctreeSceneManager",
 			"tinyxml"
 		}
 

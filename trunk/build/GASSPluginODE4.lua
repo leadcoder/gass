@@ -33,19 +33,24 @@ if (os.is("windows")) then
 else
 	includedirs 
 	{ 
-		"../source",
-		"../dependencies/include",
+		"../Source",
+		"../dependencies/ode/include",
+		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
-		"../dependencies/include/tinyxml"
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"$(BOOST_PATH)/lib"
+		"../dependencies",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib",
+		"../dependencies/tbb/ia32/cc4.1.0_libc2.4_kernel2.6.16.21/lib"
 
 	}
+        defines { "dDOUBLE" }
 
 end
 

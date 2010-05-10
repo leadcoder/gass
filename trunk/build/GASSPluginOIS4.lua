@@ -7,7 +7,11 @@ project "GASSPluginOIS"
 
 	targetdir ( "../lib/" .. _ACTION )
 
+	
+
+
 if (os.is("windows")) then
+
 	includedirs 
 	{ 
 		"../source",
@@ -16,11 +20,10 @@ if (os.is("windows")) then
 		"$(BOOST_PATH)"
 
 	}
-
+	
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"../dependencies",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
 		"$(BOOST_PATH)/lib"
@@ -34,17 +37,17 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/ogre/dependencies/include",
-		"../dependencies/include/tinyxml",
+		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
 
 	}
 
 	libdirs 
-	{
+	{ 
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
+		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
+
 	}
 
 end
@@ -59,7 +62,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OIS_d",
+			"OIS",
 			"tinyxmld"
 		}
 
