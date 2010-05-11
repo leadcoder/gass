@@ -64,7 +64,7 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"OGREMain_d",
-			--"Plugin_OctreeSceneManager_d",
+			"Plugin_OctreeSceneManager_d",
 			"tinyxmld"
 		}
 
@@ -77,7 +77,7 @@ end
 			"GASSCore",
 			"GASSSim",
 			"OGREMain",
-			--"Plugin_OctreeSceneManager",
+			"Plugin_OctreeSceneManager",
 			"tinyxml"
 		}
 
