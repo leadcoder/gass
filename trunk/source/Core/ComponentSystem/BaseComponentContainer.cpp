@@ -249,7 +249,8 @@ namespace GASS
 					TiXmlElement *name_elem =comp_elem->FirstChildElement("Name");
 					std::string comp_name;
 					if(name_elem)
-						comp_name = comp_elem->Attribute("Value");
+						comp_name = name_elem->Attribute("value"); //comp_name = comp_elem->Attribute("Value");
+						
 					ComponentPtr target_comp (GetComponent(comp_name));
 					if(target_comp) //over loading component
 					{
