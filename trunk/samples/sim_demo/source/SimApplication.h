@@ -57,14 +57,15 @@ protected:
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
 	GASS::ScenarioPtr m_Scenario;
-	GASS::Timer m_Timer;
+	GASS::Timer* m_Timer;
 	double m_UpdateFreq;
 public:
 	SimApplication(const std::string configuration)
 	{
 		LoadConfig(configuration);
 		//Init();
-		m_Timer.Reset();
+		m_Timer =  new GASS::Timer();
+
 	}
 	virtual ~SimApplication()
 	{
@@ -111,6 +112,7 @@ public:
 			GASS::Log::Error("Failed to load scenario %s", m_ScenarioName.c_str());
 			return false;
 		}
+		m_Timer->Reset();
 
 		return true;
 	}
@@ -177,7 +179,7 @@ public:
 	virtual bool Update()
 	{
 		static double prev = -1;
-		double time = m_Timer.GetTime();
+		double time = m_Timer->GetTime();
 		double update_time = 1.0/m_UpdateFreq;
 		if(time - prev > update_time)
 		{
@@ -185,7 +187,10 @@ public:
 			m_Scenario->OnUpdate(time - prev);
 			prev = time;
 		}
-        
+
+
+
+
 //		if(GetAsyncKeyState(VK_ESCAPE))
 //			return false;
 

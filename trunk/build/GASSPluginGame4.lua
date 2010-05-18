@@ -30,9 +30,6 @@ if (os.is("windows")) then
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	
-else
-
 end
 
 

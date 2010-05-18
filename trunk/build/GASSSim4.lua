@@ -8,6 +8,10 @@ project "GASSSim"
 	targetdir ( "../lib/" .. _ACTION )
 
 if (os.is("windows")) then
+	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_EXPORTS" }
+	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
+end
+
 	dofile "helpfunctions.lua"
 
 	includedirs 
@@ -27,29 +31,7 @@ if (os.is("windows")) then
 		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
-	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_EXPORTS" }
-	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 
-
-else
-
-	includedirs 
-	{ 
-		"../source",
-		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
-		"../dependencies/tbb/include"
-	}
-
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib",
-                "../dependencies/tbb/ia32/cc4.1.0_libc2.4_kernel2.6.16.21/lib"
-	}
-
-end
 
 	configuration "Debug"
 		targetname "GASSSim_d"

@@ -7,7 +7,8 @@ project "GASSCore"
 
 	targetdir ( "../lib/" .. _ACTION )
 
-if (os.is("windows")) then
+
+
 	dofile "helpfunctions.lua"
 
 	includedirs 
@@ -25,9 +26,10 @@ if (os.is("windows")) then
 		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
+
+if (os.is("windows")) then
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_CORE_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	
 
 	configuration "Debug"
 		targetname "GASSCore_d"
@@ -43,24 +45,7 @@ if (os.is("windows")) then
 		flags { "Optimize" }
 		links { "tinyxml", "Winmm" }
 
-     else
-
-        
-	includedirs 
-	{ 
-		"../source",
-		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
-                "../dependencies/tbb/include"
-	}
-
-	libdirs 
-	{ 
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
-	}
-
-
+else
 	configuration "Debug"
 		targetname "libGASSCore_d"
 		defines { "DEBUG" }
@@ -75,6 +60,6 @@ if (os.is("windows")) then
 		flags { "Optimize" }
 		links { "tinyxml" }
 
-     end
+end
 
 

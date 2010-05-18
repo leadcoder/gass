@@ -18,22 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
-
 
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
 namespace GASS
-{	
+{
 
-/*		class PositionMessage : public BaseMessage
-		{
-		public:
-			PositionMessage(MessageType type, const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-			  BaseMessage(type, sender_id , delay),m_Position(pos){}
-			Vec3 GetPosition() const{return m_Position;}
-		private:
-			Vec3 m_Position;
-		}
-*/
 }

@@ -8,52 +8,26 @@ project "GASSPluginODE"
 	targetdir ( "../lib/" .. _ACTION )
 
 if (os.is("windows")) then
-	includedirs 
-	{ 
-		"../Source",
-		"../dependencies/ode/include",
-		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
-		"../dependencies/tbb/include"
-	}
-
-	libdirs 
-	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_PATH)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
-	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
 else
+       defines { "dDOUBLE" }
+
+end
+
 	includedirs 
 	{ 
-		"../Source",
+		"../source",
 		"../dependencies/ode/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
 		"../dependencies/tbb/include"
 	}
 
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_PATH)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/ode/lib/$(ConfigurationName)DoubleLib",
-		"../dependencies/tbb/ia32/cc4.1.0_libc2.4_kernel2.6.16.21/lib"
-
-	}
-        defines { "dDOUBLE" }
-
-end
-
+	
+ 
 
 	configuration "Debug"
 		targetname "GASSPluginODE_d"
@@ -68,6 +42,16 @@ end
 			"tinyxmld",
 			"tbb_debug"  
 		}
+	libdirs 
+	{
+		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/ode/lib/DebugDoubleLib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+
+	}
 
 	configuration "Release"
 		targetname "GASSPluginODE"
@@ -81,6 +65,16 @@ end
 			"tinyxml",
 			"tbb" 
 		}
+libdirs 
+	{
+		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/ode/lib/ReleaseDoubleLib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+
+	}
 
 
 

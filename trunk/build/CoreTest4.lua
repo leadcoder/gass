@@ -8,7 +8,6 @@ project "CoreTest"
 	files { "../source/Test/CoreUnitTest.cpp" }
 
 
-if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
@@ -24,20 +23,6 @@ if (os.is("windows")) then
 		"$(BOOST_PATH)/lib",
 		"../dependencies/tinyxml/lib",
 	}
-
-else
-	includedirs 
-	{ 
-		"../source",
-		"$(BOOST_PATH)/boost"
-	}
-
-	libdirs 
-	{ 
-		"../lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib"
-	}
-end
 
 	configuration "Debug"
 		targetname "CoreTest_d"

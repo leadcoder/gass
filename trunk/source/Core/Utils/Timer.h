@@ -55,6 +55,7 @@ namespace GASS
 		float			m_Resolution;		// Timer Resolution
 		unsigned long	m_MMTimerStart;		// Multimedia Timer Start Value
 		unsigned long	m_MMTimerElapsed;	// Multimedia Timer Elapsed Time
+		double m_StartTime;
 
 
 	};

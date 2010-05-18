@@ -1,31 +1,36 @@
 project "SimDemo"
 	kind "ConsoleApp"
 	language "C++"
-	files { "../Source/*.cpp", "../Source/*.h" }
+	files { "../source/*.cpp", "../source/*.h" }
+if (os.is("windows")) then
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	targetdir ( "../../common/bin/$(ConfigurationName)" )
+end
+	
+        dofile "../../../build/helpfunctions.lua"
 
 	includedirs 
 	{ 
 		"../../../source", 		
 		"../../../dependencies/tinyxml",
-		"../../../dependencies/boost" 
+		"$(BOOST_PATH)",
+                "../../../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
 		"../../../lib/" .. _ACTION,
-		"../../../dependencies/tinyxml/lib"
+		"../../../dependencies/tinyxml/lib",
+		"../../../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
-
-
 
 	configuration "Debug"
 		targetname "SimDemo_d"
 		defines { "DEBUG" }
 	 	flags { "Symbols"}
-		links { "GASSCore_d","GASSSim_d","tinyxmld"}
+		links { "GASSCore_d","GASSSim_d","tinyxmld","tbb_debug"}
+		targetdir ( "../../common/bin/Debug" )
+
 		postbuildcommands 
 		{
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
@@ -48,7 +53,8 @@ project "SimDemo"
 		targetname "SimDemo"
 	 	defines { "NDEBUG" }
 	 	flags { "Optimize"}
-		links { "GASSCore","GASSSim","tinyxml" }
+		links { "GASSCore","GASSSim","tinyxml","tbb" }
+                targetdir ( "../../common/bin/Release" )
 		postbuildcommands 
 		{
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\..\\common\\bin\\$(ConfigurationName)", 

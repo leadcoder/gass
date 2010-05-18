@@ -37,7 +37,7 @@ else
 		"../source",
 		"$(BOOST_PATH)",
 		"$(OGRE_PATH)/OgreMain/include",
-		"$(OGRE_PATH)/OctreeSceneManager/include",
+		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
 		"$(OGRE_PATH)/build/include",		
 		"../dependencies/tinyxml"
 	}
@@ -59,27 +59,46 @@ end
 		defines { "DEBUG" }
 		flags { "Symbols" }
 --		debugPrefix = "_d"
+if (os.is("windows")) then
 		links 
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OGREMain_d",
+			"OgreMain_d",
 			"Plugin_OctreeSceneManager_d",
 			"tinyxmld"
 		}
+else
+		links 
+		{
+			"GASSCore_d",
+			"GASSSim_d",
+			"OgreMain",
+			"tinyxmld"
+		}
+end
 
 	configuration "Release"
 		targetname "GASSPluginOgre"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
+if (os.is("windows")) then
 		links 
 		{
 			"GASSCore",
 			"GASSSim",
-			"OGREMain",
+			"OgreMain",
 			"Plugin_OctreeSceneManager",
 			"tinyxml"
 		}
-
+else
+		links 
+		{
+			"GASSCore",
+			"GASSSim",
+			"OgreMain",
+			"tinyxml"
+		}
+end
 
 

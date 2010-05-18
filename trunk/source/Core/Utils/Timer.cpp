@@ -61,8 +61,10 @@ namespace GASS
 
 		timeval tmpTimeVal;
 		gettimeofday(&tmpTimeVal, 0);
-		m_MMTimerStart = (double)(tmpTimeVal.tv_sec * 1000 + tmpTimeVal.tv_usec / 1000.0);
-		//std::cout << "Start time is:" << m_MMTimerStart << std::endl;
+		m_StartTime = (double)(tmpTimeVal.tv_sec + tmpTimeVal.tv_usec / 1000000.0);
+
+		//std::cout << "Start time is:" << tmpTimeVal.tv_sec << " " << tmpTimeVal.tv_sec << std::endl;
+		//std::cout << "Start time is:" << m_StartTime << std::endl;
 
 #endif
 	}
@@ -95,12 +97,14 @@ namespace GASS
 
 		timeval curTime;
 		gettimeofday(&curTime, 0);
-		double ticks = (double)(curTime.tv_sec * 1000 + curTime.tv_usec / 1000.0);
-		double newTicks = ticks - m_MMTimerStart;
-		//std::cout << "time is:" << ticks << std::endl;
+		double ticks = (double)(curTime.tv_sec + curTime.tv_usec / 1000000.0);
+		double newTicks = ticks - m_StartTime;
+		//std::cout << "time is:" << newTicks << std::endl;
+		//std::cout << "time is:" << curTime.tv_sec << " " << curTime.tv_usec << std::endl;
+
 
 		// Return The Current Time Minus The Start Time Multiplied By The Resolution And 1000 (To Get MS)
-		return( (double) (newTicks) * m_Resolution);
+		return( (double) (newTicks));
 #endif
 
 	}
@@ -115,7 +119,10 @@ namespace GASS
 #else
 		timeval curTime;
 		gettimeofday(&curTime, 0);
-		m_MMTimerStart = (double)(curTime.tv_sec * 1000 + curTime.tv_usec / 1000.0);
+		m_StartTime = (double)(curTime.tv_sec + curTime.tv_usec / 1000000.0);
+		//std::cout << "Start time is:" << m_StartTime << std::endl;
+		//std::cout << "Start time is:" << curTime.tv_sec << " " << curTime.tv_usec << std::endl;
+
 #endif
 	}
 }
