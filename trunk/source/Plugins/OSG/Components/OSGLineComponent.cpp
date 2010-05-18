@@ -29,6 +29,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -38,6 +39,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
+#include <osg/Depth>
 
 namespace GASS
 {
@@ -81,6 +83,20 @@ namespace GASS
 		
 		linewidth->setWidth(2); 
 		ss->setAttributeAndModes(linewidth.get(),osg::StateAttribute::ON); 
+		
+		ss->setMode( GL_BLEND, osg::StateAttribute::ON );
+		ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+		// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
+		ss->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+
+		// Conversely, disable writing to depth buffer so that
+		// a transparent polygon will allow polygons behind it to shine through.
+		// OSG renders transparent polygons after opaque ones.
+		osg::Depth* depth = new osg::Depth;
+		depth->setWriteMask( false );
+		ss->setAttributeAndModes( depth, osg::StateAttribute::ON );
+
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
 
 
@@ -96,7 +112,7 @@ namespace GASS
 		m_OSGGeometry->setVertexArray(vertices.get());
 		m_OSGGeometry->setColorArray(colors.get());
 
-		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 
 		osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays();
 		m_OSGGeometry->addPrimitiveSet(drawable.get());
@@ -239,10 +255,14 @@ namespace GASS
 			Vec3 start_pos = m_ControlPoints[0].pos;
 			lc->SetPosition(start_pos);
 
+
+			Vec3 offset = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_HeightOffset;
+
 			float tex_coord = 0;
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
 				Vec3 pos = m_ControlPoints[i].pos - start_pos;
+				pos = pos + offset;
 				tex_coord  = pos.FastLength();
 
 				(vitr++)->set(pos.x, pos.y, pos.z);
@@ -251,7 +271,7 @@ namespace GASS
 
 			m_OSGGeometry->setVertexArray(vertices);
 			m_OSGGeometry->setColorArray(colors);
-			//m_Geometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+			m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 		}
 	}
 

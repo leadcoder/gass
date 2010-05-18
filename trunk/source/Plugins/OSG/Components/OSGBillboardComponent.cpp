@@ -32,8 +32,10 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
+
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
@@ -105,14 +107,18 @@ namespace GASS
 			Log::Error("Failed to find texture:%s",full_path.c_str());
 		}
 
-		//check if dds, then flip texcoords
+		Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_Height;
+		Vec3 east = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneEast()*m_Width;
+		
+		//make offset
+		Vec3 corner = -east*0.5;
 
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
 		m_OSGBillboard->addDrawable(
-			CreateSquare(osg::Vec3(-0.5f,0.0f,0.0f),
-			osg::Vec3(1.0f,0.0f,0.0f)*m_Width,
-			osg::Vec3(0.0f,0.0f,1.0f)*m_Height,
+			CreateSquare(osg::Vec3(corner.x,corner.y,corner.z),
+			osg::Vec3(east.x,east.y,east.z),
+			osg::Vec3(up.x,up.y,up.z),
 			//osgDB::readImageFile("Images/reflect.rgb")),
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
@@ -124,8 +130,11 @@ namespace GASS
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
 	{
-		float max = Math::Max(m_Width,m_Height);
-		AABox box(Vec3(-max/2.0,-max/2.0,-max/2.0),Vec3(max/2.0,max/2.0,max/2.0));
+		Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_Height;
+		Vec3 east = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneEast()*m_Width;
+		Vec3 north = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneNorth()*m_Width;
+		Vec3 corner = -east*0.5 - north*0.5;
+		AABox box(corner,corner+east+up+north);
 		return box;
 
 	}

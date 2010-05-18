@@ -211,7 +211,7 @@ namespace GASS
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
 
-		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 	}
 
 

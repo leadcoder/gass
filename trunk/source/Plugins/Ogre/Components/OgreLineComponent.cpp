@@ -39,6 +39,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
@@ -67,7 +68,6 @@ namespace GASS
 		RegisterProperty<std::string>("MaterialName", &OgreLineComponent::GetMaterialName, &OgreLineComponent::SetMaterialName);
 		RegisterProperty<std::string>("Type", &OgreLineComponent::GetType, &OgreLineComponent::SetType);
 		RegisterProperty<float>("HeightOffset", &OgreLineComponent::GetHeightOffset, &OgreLineComponent::SetHeightOffset);
-		
 	}
 
 	void OgreLineComponent::OnCreate()
@@ -138,13 +138,13 @@ namespace GASS
 		{
 			m_LineObject->beginUpdate(0);
 			float tex_coord = 0;
+			Vec3 offset = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_HeightOffset;
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
-				Vec3 pos = m_ControlPoints[i].pos;
-				
+				Vec3 pos = m_ControlPoints[i].pos + offset;
 				
 				tex_coord  = pos.FastLength();
-				m_LineObject->position(pos.x, pos.y+m_HeightOffset, pos.z);
+				m_LineObject->position(pos.x, pos.y, pos.z);
 				m_LineObject->textureCoord(0,tex_coord);
 
 				Ogre::ColourValue col;
@@ -188,12 +188,14 @@ namespace GASS
 				op = Ogre::RenderOperation::OT_LINE_STRIP;
 			}
 
+			Vec3 offset = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_HeightOffset;
 			m_LineObject->begin(m_MaterialName, op);
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
 				Vec3 pos = m_ControlPoints[i].pos;
+				pos = pos + offset;
 				tex_coord  = pos.FastLength();
-				m_LineObject->position(pos.x, pos.y+m_HeightOffset, pos.z);
+				m_LineObject->position(pos.x, pos.y, pos.z);
 				m_LineObject->textureCoord(0,tex_coord);
 				Ogre::ColourValue col;
 				col.r = m_ControlPoints[i].color.x;

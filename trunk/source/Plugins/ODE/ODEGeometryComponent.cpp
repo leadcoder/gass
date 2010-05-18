@@ -231,7 +231,7 @@ namespace GASS
 
 		}
 
-		m_Offset = m_Offset + geom_offset;
+		Vec3 temp_offset = m_Offset + geom_offset;
 		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
 		//then the encapsulated object will be destroyed when the geometry transform is destroyed.
 		//If the clean-up mode is 0 this does not happen. The default clean-up mode is 0.
@@ -241,7 +241,7 @@ namespace GASS
 			trans_geom_id = dCreateGeomTransform(space);
 			dGeomTransformSetCleanup(trans_geom_id, 1 );
 			dGeomTransformSetGeom(trans_geom_id,geom_id);
-			dGeomSetPosition(geom_id, m_Offset.x, m_Offset.y, m_Offset.z);
+			dGeomSetPosition(geom_id, temp_offset.x, temp_offset.y, temp_offset.z);
 		}
 		else
 			trans_geom_id = geom_id;

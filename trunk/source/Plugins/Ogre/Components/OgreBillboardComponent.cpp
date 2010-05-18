@@ -164,8 +164,10 @@ namespace GASS
 
 	AABox OgreBillboardComponent::GetBoundingBox() const
 	{
-		float max = Math::Max(m_Width,m_Height);
-		AABox box(Vec3(-max/2.0,-max/2.0,-max/2.0),Vec3(max/2.0,max/2.0,max/2.0));
+		float max_size = Math::Max(m_Width,m_Height);
+		max_size *= 0.5f;
+		//AABox box(Vec3(-max/2.0,-max/2.0,-max/2.0),Vec3(max/2.0,max/2.0,max/2.0));
+		AABox box(Vec3(-max_size,-max_size+m_Height/4.0,-max_size),Vec3(max_size,max_size+m_Height/4.0,max_size));
 		return box;
 
 	}
