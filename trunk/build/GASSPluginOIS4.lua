@@ -16,7 +16,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/ogre/dependencies/include",
+		"$(OGRE_PATH)/dependencies/include",
 		"$(BOOST_PATH)"
 
 	}
@@ -25,7 +25,7 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
+		"$(OGRE_PATH)/dependencies/lib/$(ConfigurationName)",
 		"$(BOOST_PATH)/lib"
 
 	}

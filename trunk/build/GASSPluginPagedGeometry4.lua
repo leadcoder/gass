@@ -11,7 +11,7 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/ogre/OgreMain/include",
+		"$(OGRE_PATH)/OgreMain/include",
 		"../dependencies/PagedGeometry/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
@@ -21,7 +21,7 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"../dependencies/ogre/lib",
+		"$(OGRE_PATH)/build/lib/$(ConfigurationName)",
 		"../dependencies/PagedGeometry/lib",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
