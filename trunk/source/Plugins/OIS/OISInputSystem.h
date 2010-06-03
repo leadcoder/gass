@@ -110,7 +110,7 @@ namespace GASS
 		{ 
 			if (device >= m_Joys.size())
 				return 0;
-			return m_OldJoyState[device].buttonDown(index);
+			return m_OldJoyState[device].mButtons[index];
 		}
 		
 		OIS::InputManager* m_InputManager;

@@ -18,11 +18,14 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Input/IInputSystem.h"
 
+#include "CEGUI.h"
 
 namespace GASS
 {
-	class CEGUISystem : public Reflection<CEGUISystem, SimSystem>
+	class CEGUISystem : public Reflection<CEGUISystem, SimSystem>, public IMouseListener, public IKeyListener
 	{
 	public:
 		CEGUISystem();
@@ -30,10 +33,15 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		void OnInit(MessagePtr message);
+		void OnInit(InitMessagePtr  message);
 		void OnShutdown(MessagePtr message);
+		bool MouseMoved(float x,float y, float z);
+		bool MousePressed( int id );
+		bool MouseReleased( int id );
+		bool KeyPressed(int key, unsigned int text);
+		bool KeyReleased( int key, unsigned int text);
+		CEGUI::MouseButton ConvertOISButtonToCegui(int buttonID);
 	};
-
 	typedef boost::shared_ptr<CEGUISystem> CEGUISystemPtr;
 }
 

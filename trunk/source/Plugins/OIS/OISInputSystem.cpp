@@ -102,13 +102,13 @@ namespace GASS
 		m_Mouse->setEventCallback(this);
 
 #ifdef WIN32
-		if (m_InputManager->numJoySticks() > 0) {
-			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->numJoySticks());
+		if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
+			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->getNumberOfDevices(OIS::OISJoyStick));
 			try {
-				for (int i = 0; i < m_InputManager->numJoySticks(); i++) {
+				for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) {
 					OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, bufferedJoy ));
 					joy->setEventCallback(this);
-					Log::Print("OISInputSystem: Joystick ID #%d '%s' - %d axes, %d buttons, %d hats",joy->getID(), joy->vendor().c_str(), joy->axes(), joy->buttons(), joy->hats());
+					Log::Print("OISInputSystem: Joystick ID #%d '%s' - %d axes, %d buttons, %d hats",joy->getID(), joy->vendor().c_str(), joy->getNumberOfComponents(OIS::OIS_Axis), joy->getNumberOfComponents(OIS::OIS_Button), joy->getNumberOfComponents(OIS::OIS_POV));
 					m_Joys.push_back(joy);
 					m_JoyState.push_back(joy->getJoyStickState());
 					m_OldJoyState.push_back(joy->getJoyStickState());
