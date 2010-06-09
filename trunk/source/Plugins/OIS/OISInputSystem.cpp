@@ -95,7 +95,7 @@ namespace GASS
 		//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
 		bool bufferedKeys = true;
 		bool bufferedMouse = true;
-		bool bufferedJoy = true;
+		bool bufferedJoy = false;
 		m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject( OIS::OISKeyboard, bufferedKeys ));
 		m_Keyboard->setEventCallback(this);
 		m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject( OIS::OISMouse, bufferedMouse ));
@@ -105,13 +105,15 @@ namespace GASS
 		if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
 			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->getNumberOfDevices(OIS::OISJoyStick));
 			try {
-				for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) {
-					OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, bufferedJoy ));
-					joy->setEventCallback(this);
+				for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) 
+				{
+					OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, bufferedJoy ));
+					//joy->setEventCallback(this);
+					joy->capture();
 					Log::Print("OISInputSystem: Joystick ID #%d '%s' - %d axes, %d buttons, %d hats",joy->getID(), joy->vendor().c_str(), joy->getNumberOfComponents(OIS::OIS_Axis), joy->getNumberOfComponents(OIS::OIS_Button), joy->getNumberOfComponents(OIS::OIS_POV));
 					m_Joys.push_back(joy);
-					m_JoyState.push_back(joy->getJoyStickState());
-					m_OldJoyState.push_back(joy->getJoyStickState());
+					//m_JoyState.push_back(joy->getJoyStickState());
+					//m_OldJoyState.push_back(joy->getJoyStickState());
 				}
 			} catch(std::exception& e) {
 				Log::Warning("OISInputSystem: Exception caught while initializing joysticks: %s", e.what());
@@ -121,7 +123,7 @@ namespace GASS
 		} else {
 			Log::Print("OISInputSystem: No joystick");
 		}
-		#else
+#else
 		if (m_InputManager->numJoysticks() > 0) {
 			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->numJoysticks());
 			try {
@@ -189,10 +191,11 @@ namespace GASS
 
 		m_OldMouseState = m_MouseState;
 		m_MouseState = m_Mouse->getMouseState();
-		for (int i = 0; i < m_Joys.size(); i++) {
+		for (int i = 0; i < m_Joys.size(); i++) 
+		{
 			m_Joys[i]->capture();
-			m_OldJoyState[i] = m_JoyState[i];
-			m_JoyState[i] = m_Joys[i]->getJoyStickState();
+			//m_OldJoyState[i] = m_JoyState[i];
+			//m_JoyState[i] = m_Joys[i]->getJoyStickState();
 		}
 	}
 

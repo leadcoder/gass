@@ -25,6 +25,8 @@
 #include "Core/MessageSystem/MessageType.h"
 #include <string>
 #include <OgreCompositorInstance.h>
+#include "OgrePrerequisites.h"
+#include "OgreCompositorLogic.h"
 #include <OgreGpuProgram.h>
 #include <OgreViewport.h>
 #include <OgreCamera.h>
@@ -33,32 +35,88 @@
 namespace GASS
 {
 
+
+
+	//The simple types of compositor logics will all do the same thing -
+	//Attach a listener to the created compositor
+	class ListenerFactoryLogic : public Ogre::CompositorLogic
+	{
+	public:
+		/** @copydoc CompositorLogic::compositorInstanceCreated */
+		virtual void compositorInstanceCreated(Ogre::CompositorInstance* newInstance) 
+		{
+			Ogre::CompositorInstance::Listener* listener = createListener(newInstance);
+			newInstance->addListener(listener);
+			mListeners[newInstance] = listener;
+		}
+
+		/** @copydoc CompositorLogic::compositorInstanceDestroyed */
+		virtual void compositorInstanceDestroyed(Ogre::CompositorInstance* destroyedInstance)
+		{
+			delete mListeners[destroyedInstance];
+			mListeners.erase(destroyedInstance);
+		}
+
+	protected:
+		//This is the method that implementations will need to override
+		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance) = 0;
+	private:
+		typedef std::map<Ogre::CompositorInstance*, Ogre::CompositorInstance::Listener*> ListenerMap;
+		ListenerMap mListeners;
+
+	};
+
+	//The compositor logic for the heat vision compositor
+	class HeatVisionLogic : public ListenerFactoryLogic
+	{
+	protected:
+		/** @copydoc ListenerFactoryLogic::createListener */
+		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+	};
+
+	//The compositor logic for the hdr compositor
+	class HDRLogic : public ListenerFactoryLogic
+	{
+	protected:
+		/** @copydoc ListenerFactoryLogic::createListener */
+		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+	};
+
+	//The compositor logic for the gaussian blur compositor
+	class GaussianBlurLogic : public ListenerFactoryLogic
+	{
+	protected:
+		/** @copydoc ListenerFactoryLogic::createListener */
+		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+	};
+
+
 	//---------------------------------------------------------------------------
 
 	//CompositorInstance::Listener
 	class SSAOListener: public Ogre::CompositorInstance::Listener
-    {
-    public:
-        SSAOListener(Ogre::Viewport* vp);
-        virtual ~SSAOListener();
-        //virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-        virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-    protected:
+	{
+	public:
+		SSAOListener(Ogre::Viewport* vp);
+		virtual ~SSAOListener();
+		//virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+	protected:
 		Ogre::Viewport* m_Viewport;
-    };
+	};
 
-    class HeatVisionListener: public Ogre::CompositorInstance::Listener
-    {
-    public:
-        HeatVisionListener();
-        virtual ~HeatVisionListener();
-        virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-        virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-    protected:
-        Ogre::GpuProgramParametersSharedPtr fpParams;
-        float start, end, curr;
-        Ogre::Timer *timer;
-    };
+	class HeatVisionListener: public Ogre::CompositorInstance::Listener
+	{
+	public:
+		HeatVisionListener();
+		virtual ~HeatVisionListener();
+		virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+	protected:
+		Ogre::GpuProgramParametersSharedPtr fpParams;
+		float start, end, curr;
+		Ogre::Timer *timer;
+	};
 	//---------------------------------------------------------------------------
 	class HDRListener: public Ogre::CompositorInstance::Listener
 	{

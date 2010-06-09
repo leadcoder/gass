@@ -11,18 +11,25 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)",
-		"$(OGRE_PATH)/OgreMain/include",
-		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
-		"$(OGRE_PATH)/build/include",		
-		"../dependencies/tinyxml"
+--		"../dependencies/ogre/OgreMain/include",
+--		"../dependencies/ogre/dependencies/include",
+--		"../dependencies/ogre/PlugIns/OctreeSceneManager/include",
+		"../dependencies/tinyxml",
+		"$(OGRE_PATH)/include/OGRE",
+		"$(OGRE_PATH)/include/OGRE/Plugins/OctreeSceneManager",
+		--Compatible with ogre 1.6
+		"$(BOOST_PATH)"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(OGRE_PATH)/lib/$(ConfigurationName)",
+		"$(OGRE_PATH)/lib/$(ConfigurationName)/opt",
+	--	"../dependencies/ogre/lib",
+	--	"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
 		"../dependencies/tinyxml/lib",
-		"$(OGRE_PATH)/build/lib/$(ConfigurationName)",
 		"$(BOOST_PATH)/lib"
 
 	}

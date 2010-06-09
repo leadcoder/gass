@@ -260,8 +260,8 @@ namespace GASS
 		Float strafe_speed = m_StrafeInput*delta*speed_factor;
 		Float updown_speed = m_UpDownInput*delta*speed_factor*0.4;
 
-		Float teta = m_Rot.h;
-		Float beta = m_Rot.p;
+		Float teta = m_Rot.x; //heading
+		Float beta = m_Rot.y; //pitch
 
 		Vec3 forward_vel;
 		Vec3 strafe_vel;
@@ -343,8 +343,8 @@ namespace GASS
 		//m_Rot = m_Rot +  east*turn_speed_y;
 
 		
-		m_Rot.h +=  turn_speed_x;
-		m_Rot.p +=  turn_speed_y;
+		m_Rot.x +=  turn_speed_x;
+		m_Rot.y +=  turn_speed_y;
 		//m_Rot.h +=  turn_speed_x;
 		//m_Rot.p +=  turn_speed_y;
 

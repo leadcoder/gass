@@ -38,6 +38,7 @@
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
+#include <OgreCompositorChain.h>
 #include <OgreRenderWindow.h>
 #include <OgreCompositionTechnique.h>
 #include <OgreCompositorManager.h>
@@ -49,105 +50,115 @@ using namespace Ogre;
 namespace GASS
 {
 
-	
-	SSAOListener::SSAOListener(Ogre::Viewport* vp) : m_Viewport(vp)
-    {
-	
-    }
-	
-	SSAOListener::~SSAOListener()
-    {
-     
-    }
 
-	
+	SSAOListener::SSAOListener(Ogre::Viewport* vp) : m_Viewport(vp)
+	{
+
+	}
+
+	SSAOListener::~SSAOListener()
+	{
+
+	}
+
+
 	/*void SSAOListener::notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
-    {
-       
-    }*/
+	{
+
+	}*/
 
 	void SSAOListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
-    {
-        if (pass_id != 42) // not SSAO, return
-            return;
+	{
+		if (pass_id != 42) // not SSAO, return
+			return;
 
-        // this is the camera you're using
+		// this is the camera you're using
 		Ogre::Camera *cam = m_Viewport->getCamera();
 
-        // calculate the far-top-right corner in view-space
-        Ogre::Vector3 farCorner = cam->getViewMatrix(true) * cam->getWorldSpaceCorners()[4];
+		// calculate the far-top-right corner in view-space
+		Ogre::Vector3 farCorner = cam->getViewMatrix(true) * cam->getWorldSpaceCorners()[4];
 
-        // get the pass
-        Ogre::Pass *pass = mat->getBestTechnique()->getPass(0);
+		// get the pass
+		Ogre::Pass *pass = mat->getBestTechnique()->getPass(0);
 
-        // get the vertex shader parameters
-        Ogre::GpuProgramParametersSharedPtr params = pass->getVertexProgramParameters();
-        // set the camera's far-top-right corner
-        if (params->_findNamedConstantDefinition("farCorner"))
-            params->setNamedConstant("farCorner", farCorner);
+		// get the vertex shader parameters
+		Ogre::GpuProgramParametersSharedPtr params = pass->getVertexProgramParameters();
+		// set the camera's far-top-right corner
+		if (params->_findNamedConstantDefinition("farCorner"))
+			params->setNamedConstant("farCorner", farCorner);
 
-        // get the fragment shader parameters
-        params = pass->getFragmentProgramParameters();
-        // set the projection matrix we need
-        static const Ogre::Matrix4 CLIP_SPACE_TO_IMAGE_SPACE(
-            0.5,    0,    0,  0.5,
-            0,   -0.5,    0,  0.5,
-            0,      0,    1,    0,
-            0,      0,    0,    1);
-        if (params->_findNamedConstantDefinition("ptMat"))
-            params->setNamedConstant("ptMat", CLIP_SPACE_TO_IMAGE_SPACE * cam->getProjectionMatrixWithRSDepth());
-        if (params->_findNamedConstantDefinition("far"))
-            params->setNamedConstant("far", cam->getFarClipDistance());
-    }
+		// get the fragment shader parameters
+		params = pass->getFragmentProgramParameters();
+		// set the projection matrix we need
+		static const Ogre::Matrix4 CLIP_SPACE_TO_IMAGE_SPACE(
+			0.5,    0,    0,  0.5,
+			0,   -0.5,    0,  0.5,
+			0,      0,    1,    0,
+			0,      0,    0,    1);
+		if (params->_findNamedConstantDefinition("ptMat"))
+			params->setNamedConstant("ptMat", CLIP_SPACE_TO_IMAGE_SPACE * cam->getProjectionMatrixWithRSDepth());
+		if (params->_findNamedConstantDefinition("far"))
+			params->setNamedConstant("far", cam->getFarClipDistance());
+	}
 
 	/*************************************************************************
-	                    HeatVisionListener Methods
-*************************************************************************/
-//---------------------------------------------------------------------------
-    HeatVisionListener::HeatVisionListener()
-    {
+	HeatVisionListener Methods
+	*************************************************************************/
+	//---------------------------------------------------------------------------
+	HeatVisionListener::HeatVisionListener()
+	{
 		timer = new Ogre::Timer();
-        start = end = curr = 0.0f;
-    }
-//---------------------------------------------------------------------------
-    HeatVisionListener::~HeatVisionListener()
-    {
-       delete timer;
-    }
-//---------------------------------------------------------------------------
-    void HeatVisionListener::notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
-    {
-        if(pass_id == 0xDEADBABE)
-        {
-            timer->reset();
-            fpParams =
-                mat->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
-        }
-    }
-//---------------------------------------------------------------------------
-    void HeatVisionListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
-    {
-        if(pass_id == 0xDEADBABE)
-        {
-            // "random_fractions" parameter
-            fpParams->setNamedConstant("random_fractions", Ogre::Vector4(Ogre::Math::RangeRandom(0.0, 1.0), Ogre::Math::RangeRandom(0, 1.0), 0, 0));
+		start = end = curr = 0.0f;
+	}
+	//---------------------------------------------------------------------------
+	HeatVisionListener::~HeatVisionListener()
+	{
+		delete timer;
+	}
+	//---------------------------------------------------------------------------
+	void HeatVisionListener::notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
+	{
+		if(pass_id == 0xDEADBABE)
+		{
+			timer->reset();
+			fpParams =
+				mat->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+		}
+	}
+	//---------------------------------------------------------------------------
+	void HeatVisionListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
+	{
+		if(pass_id == 0xDEADBABE)
+		{
+			// "random_fractions" parameter
+			fpParams->setNamedConstant("random_fractions", Ogre::Vector4(Ogre::Math::RangeRandom(0.0, 1.0), Ogre::Math::RangeRandom(0, 1.0), 0, 0));
 
-            // "depth_modulator" parameter
-            float inc = ((float)timer->getMilliseconds())/1000.0f;
-            if ( (fabs(curr-end) <= 0.001) ) {
-                // take a new value to reach
-                end = Ogre::Math::RangeRandom(0.95, 1.0);
-                start = curr;
-            } else {
-                if (curr > end) curr -= inc;
-                else curr += inc;
-            }
-            timer->reset();
+			// "depth_modulator" parameter
+			float inc = ((float)timer->getMilliseconds())/1000.0f;
+			if ( (fabs(curr-end) <= 0.001) ) {
+				// take a new value to reach
+				end = Ogre::Math::RangeRandom(0.95, 1.0);
+				start = curr;
+			} else {
+				if (curr > end) curr -= inc;
+				else curr += inc;
+			}
+			timer->reset();
 
-            fpParams->setNamedConstant("depth_modulator", Ogre::Vector4(curr, 0, 0, 0));
-        }
-    }
-//---------------------------------------------------------------------------
+			fpParams->setNamedConstant("depth_modulator", Ogre::Vector4(curr, 0, 0, 0));
+		}
+	}
+
+
+	Ogre::CompositorInstance::Listener* HeatVisionLogic::createListener(Ogre::CompositorInstance* instance)
+	{
+		return new HeatVisionListener;
+	}
+
+
+
+
+	//---------------------------------------------------------------------------
 
 	/*************************************************************************
 	HDRListener Methods
@@ -225,7 +236,7 @@ namespace GASS
 		// Prepare the fragment params offsets
 		switch(pass_id)
 		{
-		//case 994: // rt_lum4
+			//case 994: // rt_lum4
 		case 993: // rt_lum3
 		case 992: // rt_lum2
 		case 991: // rt_lum1
@@ -264,7 +275,15 @@ namespace GASS
 	{
 	}
 	//---------------------------------------------------------------------------
-
+	Ogre::CompositorInstance::Listener* HDRLogic::createListener(Ogre::CompositorInstance* instance)
+	{
+		HDRListener* listener = new HDRListener;
+		Ogre::Viewport* vp = instance->getChain()->getViewport();
+		listener->notifyViewportSize(vp->getActualWidth(), vp->getActualHeight());
+		listener->notifyCompositor(instance);
+		return listener;
+	}
+	//---------------------------------------------------------------------------
 
 	/*************************************************************************
 	GaussianListener Methods
@@ -356,15 +375,29 @@ namespace GASS
 	{
 	}
 
+	Ogre::CompositorInstance::Listener* GaussianBlurLogic::createListener(Ogre::CompositorInstance* instance)
+	{
+		GaussianListener* listener = new GaussianListener;
+		Ogre::Viewport* vp = instance->getChain()->getViewport();
+		listener->notifyViewportSize(vp->getActualWidth(), vp->getActualHeight());
+		return listener;
+	}
+
+
 
 	OgrePostProcess::OgrePostProcess(Ogre::Viewport* vp)
 		:m_Viewport(vp)
 	{
 
-		m_HVListener = new HeatVisionListener();
-		m_HDRListener = new HDRListener();
-		m_GaussianListener = new GaussianListener();
+		//m_HVListener = new HeatVisionListener();
+		//m_HDRListener = new HDRListener();
+		//m_GaussianListener = new GaussianListener();
 		m_SSAOListener = new SSAOListener(vp);
+
+		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+		compMgr.registerCompositorLogic("GaussianBlur", new GaussianBlurLogic);
+		compMgr.registerCompositorLogic("HDR", new HDRLogic);
+		compMgr.registerCompositorLogic("HeatVision", new HeatVisionLogic);
 		RegisterCompositors(vp);
 	}
 
@@ -374,7 +407,7 @@ namespace GASS
 		delete m_HDRListener;
 		delete m_GaussianListener;
 		delete m_SSAOListener;
-	
+
 	}
 
 	void OgrePostProcess::Update(Ogre::Camera* vp)
@@ -390,38 +423,45 @@ namespace GASS
 	void OgrePostProcess::EnableCompositor(const std::string &name)
 	{
 		Ogre::CompositorManager::getSingleton().setCompositorEnabled(m_Viewport,name,true);
-    }
+	}
 
 	void OgrePostProcess::DisableCompositor(const std::string &name)
 	{
 		Ogre::CompositorManager::getSingleton().setCompositorEnabled(m_Viewport,name,false);
-    }
+	}
 
 	void OgrePostProcess::RegisterCompositors(Ogre::Viewport* vp)
-    {
-      
-        Ogre::CompositorManager::ResourceMapIterator resourceIterator =
-            Ogre::CompositorManager::getSingleton().getResourceIterator();
+	{
 
-        while (resourceIterator.hasMoreElements())
-        {
-            Ogre::ResourcePtr resource = resourceIterator.getNext();
-            const Ogre::String& compositorName = resource->getName();
-      
+		Ogre::CompositorManager::ResourceMapIterator resourceIterator =
+			Ogre::CompositorManager::getSingleton().getResourceIterator();
+
+		while (resourceIterator.hasMoreElements())
+		{
+			Ogre::ResourcePtr resource = resourceIterator.getNext();
+			const Ogre::String& compositorName = resource->getName();
+
 			if (compositorName == "Ogre/Scene")
-                continue;
+				continue;
 
-            int addPosition = -1;
+			int addPosition = -1;
 			if (compositorName == "HDR")
 			{
 				// HDR must be first in the chain
 				addPosition = 0;
 			}
-            Ogre::CompositorInstance *instance = Ogre::CompositorManager::getSingleton().addCompositor(vp, compositorName, addPosition);
+			// Don't add the deferred shading compositors, thats a different demo.
+			if (Ogre::StringUtil::startsWith(compositorName, "DeferredShading", false))
+				continue;
+
+			
+			Ogre::CompositorManager::getSingleton().addCompositor(vp, compositorName, addPosition);
 			Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, compositorName, false);
-            //special handling for Heat Vision which uses a listener
-            if(instance && (compositorName == "HeatVision"))
-                instance->addListener(m_HVListener);
+			//Ogre::CompositorInstance *instance = Ogre::CompositorManager::getSingleton().addCompositor(vp, compositorName, addPosition);
+			//Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, compositorName, false);
+			//special handling for Heat Vision which uses a listener
+			/*if(instance && (compositorName == "HeatVision"))
+				instance->addListener(m_HVListener);
 			else if(instance && (compositorName == "HDR"))
 			{
 				instance->addListener(m_HDRListener);
@@ -436,11 +476,11 @@ namespace GASS
 			else if(instance && (compositorName == "ssao"))
 			{
 				instance->addListener(m_SSAOListener);
-			
+
 				//m_SSAOListener->notifyViewportSize(vp->getActualWidth(), vp->getActualHeight());
-			}
-        }
-    }
+			}*/
+		}
+	}
 }
 
 

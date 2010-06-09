@@ -156,6 +156,8 @@ namespace GASS
 				m_MeshObject->index(data->IndexVector[i]);
 			}
 			m_MeshObject->end();
+
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage()));
 		}
 	}
 

@@ -175,7 +175,6 @@ namespace GASS
 		rsm->initialiseResourceGroup(resource_group);
 	}
 
-
 	bool OgreResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
 	{
 		FILE*fp;

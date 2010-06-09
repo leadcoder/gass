@@ -132,6 +132,9 @@ namespace GASS
 			vertices->clear();
 		if(colors)
 			colors->clear();
+
+		m_OSGGeometry->setVertexArray(vertices);
+		m_OSGGeometry->setColorArray(colors);
 	}
 
 	void OSGManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
@@ -207,17 +210,20 @@ namespace GASS
 			
 		}
 
-		
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage()));
 	}
 
 
 	AABox OSGManualMeshComponent::GetBoundingBox() const
 	{
-		AABox box;
+		
+		osg::BoundingBox osg_box = m_OSGGeometry->getBound();
+		AABox box(Vec3(osg_box._min.x(),osg_box._min.y(),osg_box._min.z()),
+				Vec3(osg_box._max.x(),osg_box._max.y(),osg_box._max.z()));
 		return box;
 		//assert(m_MeshObject);
 		//return Convert::ToGASS(m_MeshObject->getBoundingBox());

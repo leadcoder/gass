@@ -16,7 +16,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(OGRE_PATH)/dependencies/include",
+		"$(OGRE_PATH)/include",
 		"$(BOOST_PATH)"
 
 	}
@@ -25,9 +25,8 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"$(OGRE_PATH)/dependencies/lib/$(ConfigurationName)",
+		"$(OGRE_PATH)/lib/$(ConfigurationName)",
 		"$(BOOST_PATH)/lib"
-
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -62,7 +61,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OIS",
+			"OIS_d",
 			"tinyxmld"
 		}
 

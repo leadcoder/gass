@@ -87,6 +87,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		
 	}
 
 	void ODEGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
@@ -169,11 +171,27 @@ namespace GASS
 		Vec3 bb_size = (box.m_Max - box.m_Min)*m_CollisionGeomScale;
 		//bb_size = bb_size*m_Owner->GetScale();
 
+		if(bb_size.x <= 0 || bb_size.y <= 0 || bb_size.z <= 0) //Set default size
+		{
+			bb_size = Vec3(1,1,1);
+		}
+
+
 		Sphere sphere = geom->GetBoundingSphere();
 		sphere.m_Radius *= m_CollisionGeomScale.x;//*m_Owner->GetScale().x;
+
+		if(sphere.m_Radius <= 0) //Set default size
+		{
+			sphere.m_Radius = 1;
+		}
+
+		
 		m_BBSize = bb_size;
 		m_BSSize = sphere.m_Radius;
 
+
+		
+		
 		Vec3 geom_offset(0,0,0);
 
 
@@ -292,6 +310,44 @@ namespace GASS
 	{
 		dGeomEnable(m_TransformGeomID);
 		dGeomEnable(m_SecondTransformGeomID);
+	}
+
+
+	void ODEGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	{
+		GeometryComponentPtr geom;
+		if(m_GeometryTemplate != "")
+		{
+			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+		}
+		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
+
+		if(geom)
+		{
+			SetSizeFromGeom(m_GeomID,geom);
+			SetSizeFromGeom(m_SecondGeomID,geom);
+		}
+	}
+
+	void ODEGeometryComponent::SetSizeFromGeom(dGeomID id, GeometryComponentPtr geom)
+	{
+		//we we only resize/rescale box,sphere and cylinder right now
+		float radius = geom->GetBoundingSphere().m_Radius;
+		Vec3 bbsize = geom->GetBoundingBox().m_Max - geom->GetBoundingBox().m_Min;
+		switch(m_GeometryType)
+		{
+		case PGT_BOX:
+			dGeomBoxSetLengths(id,bbsize.x,bbsize.y,bbsize.z);
+			break;
+		case PGT_CYLINDER:
+			dGeomCCylinderSetParams(id,bbsize.x/2.f, bbsize.y);
+			break;
+		case PGT_SPHERE:
+			dGeomSphereSetRadius(id,radius);
+			break;
+		case PGT_PLANE:
+			break;
+		}
 	}
 
 	void ODEGeometryComponent::SetScale(const Vec3 &value, dGeomID id)

@@ -367,7 +367,7 @@ material DiffuseTemplate
 	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
-		pass 
+		pass
 		{ 
 			// Vertex program reference 
 			vertex_program_ref DiffuseVP
@@ -397,7 +397,7 @@ material DiffuseTemplate
 
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit 
 			{
 				content_type shadow
 				tex_address_mode border

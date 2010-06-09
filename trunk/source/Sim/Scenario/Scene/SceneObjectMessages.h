@@ -342,6 +342,16 @@ namespace GASS
 	typedef boost::shared_ptr<ClearManualMeshMessage> ClearManualMeshMessagePtr;
 
 
+	class GeometryChangedMessage : public BaseMessage
+	{
+	public:
+		GeometryChangedMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
+
+
 	class ParticleSystemParameterMessage : public BaseMessage
 	{
 	public:

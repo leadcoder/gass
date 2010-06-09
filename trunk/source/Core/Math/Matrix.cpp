@@ -157,7 +157,7 @@ namespace GASS
 		m_Data[3][1] = pos.y;
 		m_Data[3][2] = pos.z;
 
-		Rotate(rot.h,rot.p,rot.r);
+		Rotate(rot.x,rot.y,rot.z);
 
 		m_Data[0][3] = 0;//scale.x;
 		m_Data[1][3] = 0;//scale.y;

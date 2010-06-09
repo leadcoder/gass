@@ -1,6 +1,6 @@
 Complete PhysX plugin, premakescript etc.
 
-Update xml-format, tags should be class name instead of template name
+done: Update xml-format, tags should be class name instead of template name
 
 Add more scene-tree serach functions, ie search for template name or class factory name
 

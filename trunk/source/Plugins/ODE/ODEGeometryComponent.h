@@ -34,6 +34,7 @@ namespace GASS
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
 	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
 	class ODEGeometryComponent : public Reflection<ODEGeometryComponent,BaseSceneComponent>
@@ -60,7 +61,8 @@ namespace GASS
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
 	protected:
-		
+		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void SetSizeFromGeom(dGeomID id, GeometryComponentPtr geom);
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 

@@ -162,7 +162,7 @@ namespace GASS
 	
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
-		std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
+		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();//new osg::Group();
 
 		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
@@ -203,7 +203,7 @@ namespace GASS
 		//m_GFXSystem->SetActiveSceneManger(m_SceneMgr);
 
 		// Load default camera ect
-		std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
+		//std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
 		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		MessagePtr camera_msg(new ChangeCameraMessage(scene_object));

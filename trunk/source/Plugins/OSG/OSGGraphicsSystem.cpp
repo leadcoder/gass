@@ -200,7 +200,7 @@ namespace GASS
 				TiXmlElement *ss= xmlDoc->FirstChildElement("Systems");
 				if(ss)
 				{
-					ss = ss->FirstChildElement("GraphicsSystem");
+					ss = ss->FirstChildElement("OSGGraphicsSystem");
 					if(ss)
 						ss = ss->FirstChildElement("ShadowSettings");
 				}

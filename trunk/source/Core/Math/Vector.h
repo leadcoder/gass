@@ -142,19 +142,10 @@ namespace GASS
 		/**\var Float x,y,z
 		* \brief Contains the data of the vector.
 		*/
-		union
-		{
-			Float x,h;
-		};
-		union
-		{
-			Float y,p;
-		};
-		union
-		{
-			Float z,r;
-		};
-
+		Float x;//,h;
+		Float y;//,p;
+		Float z;//,r;
+		
 		static Vec3 m_UnitX;
 		static Vec3 m_UnitY;
 		static Vec3 m_UnitZ;
@@ -242,13 +233,18 @@ namespace GASS
 			return temp_v;
 		}
 
-		inline 	Float* operator [] ( unsigned element )
+		inline 	Float& operator [] ( unsigned element )
 		{
 			assert( element < 3 );
-			if(element == 0) return &x;
-			else if(element == 1) return &y;
-			else return &z;
+			return *(&x+element);
 		}
+
+		inline 	Float operator [] ( unsigned element ) const
+		{
+			assert( element < 3 );
+			return *(&x+element);
+		}
+
 		inline friend Vec3 operator * ( Float scalar, const Vec3& v )
 		{
 			Vec3 ret;
