@@ -2,7 +2,7 @@ import * from  "terrain.material"
 material FadeGrass : VegetationTemplate
 { 
 	//receive_shadows off 
-	technique 
+	technique light
 	{ 
 		pass 
 		{ 
@@ -13,7 +13,7 @@ material FadeGrass : VegetationTemplate
 			emissive 0.0 1.0 0.0 0.5 
 			depth_write off
 
-			texture_unit 
+			texture_unit diffuse_map
 			{ 
 				texture gfx/materials/grass02.dds 
 			}

@@ -84,7 +84,7 @@ fragment_program DiffuseFP_Cg cg
    compile_arguments -DINTEGRATED_SHADOWS=1 -DSTD_FOG=1 -DFOG_EXP2=1
    default_params
    {
-	param_named_auto fogParams fog_params 
+		param_named_auto fogParams fog_params 
         param_named_auto fogColor fog_colour
    }
 }

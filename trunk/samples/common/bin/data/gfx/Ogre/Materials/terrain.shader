@@ -84,10 +84,7 @@ float calcShadow(float4 shadowUV,sampler2D shadowMap)
    // Sample each of them checking whether the pixel under test is shadowed or not
    float fShadowTerms[9];
    float fShadowTerm = 0.0f;
-   //float fixedDepthBias = 0.0000001; //standard value
-   float fixedDepthBias = 0.001; //Tweeked value
-   //You have to increase this value to avoid flickering on triangles that close in depth 
-   //when using direction light source and LiSPSM shadow setup
+   float fixedDepthBias = 0.0000001;
    float compareDepth = shadowUV.z - fixedDepthBias;
    for( int i = 0; i < 9; i++ )
    {

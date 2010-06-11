@@ -3,7 +3,7 @@ import * from  "terrain.material"
 material RoadMat : DiffuseTemplate
 { 
 	//receive_shadows off 
-	technique 
+	technique light
 	{ 
 		pass 
 		{ 
@@ -12,7 +12,7 @@ material RoadMat : DiffuseTemplate
 			//ambient 1 1 1 1 
 			//diffuse 1 1 1 1  
 
-			texture_unit 
+			texture_unit diffuse_map
 			{ 
 				texture mudroad.dds
 			}
@@ -31,7 +31,7 @@ material RoadMat : DiffuseTemplate
 material TinyRoad : DiffuseTemplate
 { 
 	//receive_shadows off 
-	technique 
+	technique light
 	{ 
 		pass 
 		{ 
@@ -41,7 +41,7 @@ material TinyRoad : DiffuseTemplate
 			//ambient 1 1 1 1 
 			//diffuse 1 1 1 1  
 
-			texture_unit 
+			texture_unit diffuse_map
 			{ 
 				texture mudroad2.dds
 			}

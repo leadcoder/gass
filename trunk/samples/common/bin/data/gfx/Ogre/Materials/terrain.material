@@ -1,6 +1,6 @@
 material TerrainBase
 { 
-	technique 
+	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
@@ -25,12 +25,12 @@ material TerrainBase
 				param_named_auto exponent surface_shininess
 				param_named_auto ambient ambient_light_colour
 			} 
-			texture_unit
+			texture_unit color_map
 			{
 				texture BaseMap.tga
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -59,7 +59,7 @@ material TerrainBase
 
 material TerrainSplat1
 { 
-	technique 
+	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
@@ -85,22 +85,22 @@ material TerrainSplat1
 				param_named_auto ambient ambient_light_colour
 				param_named splatScales float4 500 500 500 100
 			} 
-			texture_unit
+			texture_unit color_map
 			{
 				texture BaseMap.tga
 			}
-			texture_unit
+			texture_unit splat_map
 			{
 				// coverage texture : rgba handling alpha for each splat
 				texture Cover.tga
 			}
 
-			texture_unit
+			texture_unit detail0_map
 			{
 				texture detail_rock.dds
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -129,7 +129,7 @@ material TerrainSplat1
 
 material TerrainSplat2
 { 
-	technique 
+	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
@@ -155,27 +155,27 @@ material TerrainSplat2
 				param_named_auto ambient ambient_light_colour
 				param_named splatScales float4 500 500 500 100
 			} 
-			texture_unit
+			texture_unit color_map
 			{
 				texture BaseMap.tga
 			}
-			texture_unit
+			texture_unit splat_map
 			{
 				// coverage texture : rgba handling alpha for each splat
 				texture Cover.tga
 			}
 
-			texture_unit
+			texture_unit detail0_map
 			{
 				texture default.dds
 			}
 
-			texture_unit
+			texture_unit detail1_map
 			{
 				texture default.dds
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -204,11 +204,12 @@ material TerrainSplat2
 
 material TerrainSplat3
 { 
-	technique 
+	technique light 
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
 		{ 
+		 
 			// Vertex program reference 
 			vertex_program_ref DiffuseVP
 			{ 
@@ -230,32 +231,32 @@ material TerrainSplat3
 				param_named_auto ambient ambient_light_colour
 				param_named splatScales float4 500 500 500 100
 			} 
-			texture_unit
+			texture_unit color_map
 			{
 				texture BaseMap.tga
 			}
-			texture_unit
+			texture_unit splat_map
 			{
 				// coverage texture : rgba handling alpha for each splat
 				texture Cover.tga
 			}
 
-			texture_unit
+			texture_unit detail0_map
 			{
 				texture detail_rock.dds
 			}
 
-			texture_unit
+			texture_unit detail1_map
 			{
 				texture default.dds
 			}
 
-			texture_unit
+			texture_unit detail2_map
 			{
 				texture default.dds
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -285,11 +286,12 @@ material TerrainSplat3
 
 material TerrainSplat3LightMap
 { 
-	technique 
+	technique light
 	{ 
 		// do the lighting  and bump mapping with parallax pass 
 		pass 
 		{ 
+	
 			// Vertex program reference 
 			vertex_program_ref DiffuseLightMapVP
 			{ 
@@ -304,37 +306,37 @@ material TerrainSplat3LightMap
 				param_named splatScales float4 500 500 500 100
 			} 
 				
-			texture_unit
+			texture_unit color_map
 			{
 				texture BaseMap.tga
 			}
-			texture_unit
+			texture_unit splat_map
 			{
 				// coverage texture : rgba handling alpha for each splat
 				texture Cover.tga
 			}
 
-			texture_unit
+			texture_unit detail0_map
 			{
 				texture default.dds
 			}
 
-			texture_unit
+			texture_unit detail1_map
 			{
 				texture default.dds
 			}
 
-			texture_unit
+			texture_unit detail2_map
 			{
 				texture default.dds
 			}
 			
-			texture_unit
+			texture_unit detail3_map
 			{
 				texture lightmap.dds
 			}
 			// shadowmap 1
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -369,6 +371,8 @@ material DiffuseTemplate
 		// do the lighting  and bump mapping with parallax pass 
 		pass
 		{ 
+			diffuse 1 1 1 1
+			specular 1 1 1 1 20
 			// Vertex program reference 
 			vertex_program_ref DiffuseVP
 			{ 
@@ -386,18 +390,19 @@ material DiffuseTemplate
 			{ 
 				param_named_auto lightDiffuse light_diffuse_colour 0 
 				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto matDiffuse surface_diffuse_colour
 				param_named_auto exponent surface_shininess
 				param_named_auto ambient ambient_light_colour
 				//param_named shadowParams float4 0.98 0.01 0 0.00048828125
 			} 
 
-			texture_unit diffuse_tex
+			texture_unit diffuse_map
 			{
 				texture BaseMap.tga
 
 			}
 			// shadowmap 1
-			texture_unit 
+			texture_unit  shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -430,7 +435,7 @@ material DiffuseTemplate
 
 material VegetationTemplate
 { 
-	technique 
+	technique light
 	{ 
 		pass 
 		{ 
@@ -444,11 +449,11 @@ material VegetationTemplate
 				//param_named shadowParams float4 0.98 0 0 0.00048828125
 			} 
 
-			texture_unit
+			texture_unit diffuse_map
 			{
 				texture Cover.tga
 			}
-			texture_unit
+			texture_unit shadow_map
 			{
 				content_type shadow
 				tex_address_mode border
@@ -474,4 +479,5 @@ material VegetationTemplate
 	    }
 	}
 } 
+
 

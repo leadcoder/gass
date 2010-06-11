@@ -1,6 +1,6 @@
 material DemolishedHull
 {
-	technique
+	technique light
 	{
 		pass
 		{
@@ -9,7 +9,7 @@ material DemolishedHull
 			specular 0 0 0 10
 			emissive 0 0 0 
 
-			texture_unit 
+			texture_unit diffuse_map
 			{
 				texture JIM_TANK_demolished_hull.jpg
 			}
@@ -20,7 +20,7 @@ material DemolishedHull
 
 material JIM_TANK_hatches_demo
 {
-	technique
+	technique light
 	{
 		pass
 		{
@@ -29,7 +29,7 @@ material JIM_TANK_hatches_demo
 			specular 0 0 0 10
 			emissive 0 0 0 
 
-			texture_unit 
+			texture_unit diffuse_map
 			{
 				texture JIM_TANK_hatches_demolished.jpg
 			}
@@ -40,7 +40,7 @@ material JIM_TANK_hatches_demo
 
 material JIM_TANK_turret_demo
 {
-	technique
+	technique light
 	{
 		pass
 		{
@@ -49,7 +49,7 @@ material JIM_TANK_turret_demo
 			specular 0 0 0 10
 			emissive 0 0 0 
 
-			texture_unit 
+			texture_unit diffuse_map
 			{
 				texture JIM_TANK_turret_demolished.jpg
 			}
@@ -60,16 +60,16 @@ material JIM_TANK_turret_demo
 
 material JIM_gattling_demo
 {
-	technique
+	technique light
 	{
-		pass
+		pass 
 		{
 			ambient 0.588235 0.588235 0.588235 
 			diffuse 0.588235 0.588235 0.588235 
 			specular 0 0 0 10
 			emissive 0 0 0 
 
-			texture_unit 
+			texture_unit diffuse_map
 			{
 				texture JIM_gattling_demo.jpg
 			}
