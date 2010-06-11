@@ -48,16 +48,19 @@ namespace GASS
 		
 	}
 	
-	bool SceneObjectManager::LoadFromFile(const std::string filename)
+	bool SceneObjectManager::LoadXML(const std::string filename)
 	{
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+
 		if(!xmlDoc->LoadFile())
 		{
 			//Fatal error, cannot load
-			Log::Warning("SceneObjectManager::Load() - Couldn't load: %s", filename.c_str());
-			return false;
+			Log::Warning("SystemManager::Load() - Couldn't load: %s", filename.c_str());
+			return 0;
 		}
+
+		//LoadXML((TiXmlElement*)xmlDoc);
 		TiXmlElement *objects = xmlDoc->FirstChildElement("Objects");
 		if(objects == NULL) Log::Error("Failed to get Object tag");
 		
@@ -65,23 +68,74 @@ namespace GASS
 		//Loop through each template
 		while(object_elem)
 		{
-			SceneObjectPtr obj = LoadSceneObject(object_elem);
+			SceneObjectPtr obj = LoadSceneObjectXML(object_elem);
 			if(obj)
 			{
-			
 				LoadObject(obj);
 			}
 			object_elem= object_elem->NextSiblingElement();
 		}
+	
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;
 		return true;
 	}
 
+	bool SceneObjectManager::SaveXML(const std::string filename)
+	{
+		TiXmlDocument doc;  
+		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+		doc.LinkEndChild( decl ); 
+			
+		//SaveXML((TiXmlElement*)&doc);
+		TiXmlElement *som_elem = new TiXmlElement("Objects");  
+		doc.LinkEndChild(som_elem); 
+		IComponentContainer::ComponentContainerIterator iter = m_Root->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			child->SaveXML(som_elem);
+		}
+		
+		doc.SaveFile(filename.c_str());
+		return true;
+	}
+
+	bool SceneObjectManager::LoadXML(TiXmlElement *parent)
+	{
+		TiXmlElement *objects = parent->FirstChildElement("Objects");
+		if(objects == NULL) Log::Error("Failed to get Object tag");
+		
+		TiXmlElement *object_elem = objects->FirstChildElement();
+		//Loop through each template
+		while(object_elem)
+		{
+			SceneObjectPtr obj = LoadSceneObjectXML(object_elem);
+			if(obj)
+			{
+				LoadObject(obj);
+			}
+			object_elem= object_elem->NextSiblingElement();
+		}
+		return true;
+	}
+
+	bool SceneObjectManager::SaveXML(TiXmlElement *parent) const
+	{
+		TiXmlElement *som_elem = new TiXmlElement("Objects");  
+		parent->LinkEndChild(som_elem); 
+		IComponentContainer::ComponentContainerIterator iter = m_Root->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			child->SaveXML(som_elem);
+		}
+		return true;
+	}
+
 	void SceneObjectManager::LoadObject(SceneObjectPtr obj)
 	{
-	
 		obj->SetSceneObjectManager(this);
 		obj->OnCreate();
 		
@@ -94,10 +148,6 @@ namespace GASS
 		ScenarioScenePtr scene = GetScenarioScene();
 		scene->SendImmediate(load_msg);
 
-		//Move this to user scene manager!!
-		//MessagePtr obj_msg(new Message(SceneObject::OBJECT_RM_LOAD_USER_COMPONENTS));
-		//obj->SendImmediate(obj_msg);
-		
 		//Pump initial messages around
 		obj->SyncMessages(0,false);
 		//send load message for all child game object also?
@@ -111,9 +161,8 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr SceneObjectManager::LoadSceneObject(TiXmlElement *so_elem)
+	SceneObjectPtr SceneObjectManager::LoadSceneObjectXML(TiXmlElement *so_elem)
 	{
-
 		//check if we want create object by template or type
 		std::string so_name = so_elem->Value();
 		SceneObjectPtr so;
@@ -135,7 +184,6 @@ namespace GASS
 		return so;
 	}
 
-	
 	SceneObjectPtr SceneObjectManager::LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent)
 	{
 		SceneObjectPtr go = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(go_template_name));

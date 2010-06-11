@@ -63,6 +63,10 @@ namespace GASS
 
 		std::string filename = scenario_path + "/scenario.xml";
 
+		//Load scenario specific templates, filename should probably be a scenario parameter
+		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
+
+
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
@@ -90,8 +94,6 @@ namespace GASS
 				ScenarioScenePtr scene = LoadScene(scene_elem);
 				if(scene)
 				{
-//					scene->SetOwner(this);
-					scene->OnCreate();
 					m_Scenes.push_back(scene);
 				}
 				scene_elem= scene_elem->NextSiblingElement();
@@ -101,16 +103,48 @@ namespace GASS
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;
 
-		//Load scenario specific game object templates, filename should probably be a scenario parameter
-		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
+		
 
 		//load all scenes
 		for(int i = 0; i < m_Scenes.size();i++)
 		{
 			m_Scenes[i]->OnLoad();
 		}
-	
 		return 1;
+	}
+
+
+	bool Scenario::Save(const std::string &scenario_path)
+	{
+		m_ScenarioPath = scenario_path;
+		
+
+		TiXmlDocument doc;  
+		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+		doc.LinkEndChild( decl ); 
+
+		TiXmlElement * scenario_elem = new TiXmlElement("Scenario");  
+		doc.LinkEndChild( scenario_elem); 
+
+		TiXmlElement * ss_elem = new TiXmlElement( "ScenarioSettings" );  
+		scenario_elem->LinkEndChild(ss_elem);
+
+		BaseReflectionObject::SaveProperties(ss_elem);
+
+		TiXmlElement * scenes_elem = new TiXmlElement("Scenes");  
+		scenario_elem->LinkEndChild(scenes_elem);
+
+		for(int i = 0; i < m_Scenes.size();i++)
+		{
+			m_Scenes[i]->SaveXML(scenes_elem);
+		}
+
+		std::string filename = scenario_path + "/scenario.xml";
+		doc.SaveFile(filename.c_str());
+
+		//Save scenario specific object templates, filename should probably be a scenario parameter
+		//SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
+		return true;
 	}
 
 	ScenarioScenePtr Scenario::LoadScene(TiXmlElement *scene_elem)
@@ -118,6 +152,7 @@ namespace GASS
 		std::string scene_name = scene_elem->Value();
 		
 		ScenarioScenePtr scene(new ScenarioScene(shared_from_this()));
+		scene->OnCreate();
 		if(scene)
 		{
 			scene->SetName(scene_name);
@@ -132,5 +167,15 @@ namespace GASS
 		{
 			m_Scenes[i]->OnUpdate(delta_time);
 		}
+	}
+
+	ScenarioSceneIterator Scenario::GetScenarioScenes()
+	{
+		return ScenarioSceneIterator(m_Scenes.begin(),m_Scenes.end());
+	}
+
+	void Scenario::AddScenarioScene(ScenarioScenePtr scene)
+	{
+		m_Scenes.push_back(scene);
 	}
 }

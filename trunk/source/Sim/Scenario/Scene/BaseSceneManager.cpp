@@ -64,9 +64,8 @@ namespace GASS
 	void BaseSceneManager::SaveXML(TiXmlElement *xml_elem)
 	{
 		TiXmlElement * this_elem;
-		this_elem = new TiXmlElement( GetName().c_str() );  
+		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
-		this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		SaveProperties(this_elem);
 	}
 	

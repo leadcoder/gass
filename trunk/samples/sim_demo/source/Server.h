@@ -41,13 +41,14 @@ public:
 			//if(m_Instances != "")
 			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 
+			GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
 
 			for(int i = 0; i <  m_Objects.size();i++)
 			{
 
-				GASS::SceneObjectPtr object = m_Scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+				GASS::SceneObjectPtr object = scene->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
 
-				GASS::Vec3 pos = m_Scenario->GetScenarioScenes().at(0)->GetStartPos();
+				GASS::Vec3 pos = scene->GetStartPos();
 				pos.x += 10*i;
 				GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
 				if(object)

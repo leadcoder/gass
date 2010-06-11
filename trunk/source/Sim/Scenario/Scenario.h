@@ -24,6 +24,7 @@
 #include "Sim/Common.h"
 #include "Core/Math/Vector.h"
 #include "Core/Reflection/BaseReflectionObject.h"
+#include "Core/Utils/Iterators.h"
 
 class TiXmlElement;
 
@@ -34,16 +35,17 @@ namespace GASS
 
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef std::vector<ScenarioScenePtr> ScenarioSceneVector;
+	typedef VectorIterator<ScenarioSceneVector> ScenarioSceneIterator;
 
 	/**
-		A scenario in GASS is divided in scenarios scenes. The scenario class is
-		therefore only a container of scenario scenes and the actual scenario 
-		functionality is capsulated in its scenario scenes,
+		A scenario in GASS is divided in scenarios-scenes. The scenario class is
+		therefore only a container of scenario-scenes and the actual scenario 
+		functionality is capsulated in its scenario-scenes,
 		By dividing the scenario in scenes the user can have different 
-		representations of the same scene, for instance one visual representation
+		representations of the same scenario, for instance one visual representation
 		and one infrared. In another application the user might want to have a 
 		separate scene for the menu-system or divided the scenario in different zones
-		each represented by it's own scene.
+		each represented by it's own scenario-scene.
 		See ScenarioScene class for more information about scenario scenes. 
 
 	*/
@@ -57,6 +59,11 @@ namespace GASS
 		Load a new scenario from path
 		*/
 		bool Load(const std::string &scenario_parh);
+
+		/**
+		Save scenario to path
+		*/
+		bool Save(const std::string &name);
 		/**
 		Get path to current loaded scenario
 		@param absolute or relative path to the scenario
@@ -68,14 +75,17 @@ namespace GASS
 		@param delta_time time scince lat update
 		*/
 		void OnUpdate(double delta_time);
+
 		/**
-		Get vector of all loaded scenario scenes. 
-		This vector hold shared pointers to scenario scenes 
-		so if you save this vector the scenario scene memory 
-		will not be released when a new scenario is loaded.
-		TODO:Change this to iterator
+		Get iterator to all scenario scenes.
 		*/
-		ScenarioSceneVector GetScenarioScenes() { return m_Scenes;}
+
+		ScenarioSceneIterator GetScenarioScenes();
+
+		/**
+			Add scene to scenario, 
+		*/
+		void AddScenarioScene(ScenarioScenePtr scene);
 	protected:
 		ScenarioScenePtr LoadScene(TiXmlElement *sm_elem);
 		ScenarioSceneVector m_Scenes;

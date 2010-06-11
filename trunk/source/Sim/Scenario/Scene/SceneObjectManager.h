@@ -49,7 +49,10 @@ namespace GASS
 	public:
 		SceneObjectManager(ScenarioScenePtr ss);
 		virtual ~SceneObjectManager();
-		bool LoadFromFile(const std::string filename);
+		
+		bool LoadXML(const std::string filename);
+		bool SaveXML(const std::string filename);
+
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);
 		ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_ScenarioScene,boost::detail::sp_nothrow_tag());}
@@ -58,10 +61,14 @@ namespace GASS
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
 		void LoadObject(SceneObjectPtr obj);
 	protected:
+		bool LoadXML(TiXmlElement *parent);
+		bool SaveXML(TiXmlElement *parent) const;
+		
+		
 		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		
 		void UnloadObject(SceneObjectPtr obj);
-		SceneObjectPtr LoadSceneObject(TiXmlElement *go_elem);
+		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
 		//ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
 		ScenarioSceneWeakPtr m_ScenarioScene;

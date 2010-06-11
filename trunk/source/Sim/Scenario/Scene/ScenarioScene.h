@@ -43,12 +43,21 @@ namespace GASS
 
 
 	/**
-		Scenario scene class 
+		A scenario-scene is a step to divide a scenario into convenient parts.
+		The owner of a scenario-scene is the scenario and the scenario-scene in its turn 
+		is the owner of the scenario-scene-objects. By dividing a scenario 
+		into scenario-scenes the user can have different representations of the same 
+		scenario, for instance one visual representation and one infrared. 
+		In another application the user might want to have a separate scene for the 
+		menu-system or divided the scenario in different zones,
+		each represented by it's own scenario scene.
 	*/
+
 	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>, public boost::enable_shared_from_this<ScenarioScene>
 	{
 	public:
-		// Priorities for system loading
+		// Default priorities for component loading
+		//TODO: move this to better location
 		enum
 		{ 
 			GFX_COMPONENT_LOAD_PRIORITY = 0,
@@ -63,7 +72,6 @@ namespace GASS
 			CORE_SYSTEM_LOAD_PRIORITY = 3,
 			USER_SYSTEM_LOAD_PRIORITY = 4,
 		};
-
 		friend class Scenario;
 	public:
 		ScenarioScene(ScenarioPtr scenario);
@@ -78,15 +86,15 @@ namespace GASS
 		Vec2 GetRT90Origo() const {return m_RT90Origo;}
 		void SetRT90Origo(const Vec2& origo) {m_RT90Origo=origo;}
 
+		//Remove this
 		Vec3 RT90ToGASSPosition(const Vec3 &pos);
 		Vec3 GASSToRT90Position(const Vec3 &pos);
 
 		void LoadXML(TiXmlElement *scene_elem);
+		void SaveXML(TiXmlElement *scene_elem);
 		void OnCreate();
 		std::string GetName() const {return m_Name;}
 		void SetName(const std::string &name) {m_Name = name;}
-//		void SetOwner(Scenario* scenario) {m_Scenario = scenario;}
-	//	Scenario* GetOwner() {return m_Scenario;}
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
@@ -97,11 +105,16 @@ namespace GASS
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
+
+		void CreateRegistredSceneManagers();
 	protected:
+		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *so_elem);
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 		void Shutdown();
-
+		
+		void SetInstancesFile(const std::string &value);
+		std::string GetInstancesFile() const;
 		void SetUpVector(const std::string &value);
 		std::string GetUpVector() const;
 		void SetEastVector(const std::string &value);
@@ -116,6 +129,8 @@ namespace GASS
 	
 		void OnUpdate(double delta_time);
 		void OnLoad();
+
+		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
@@ -129,6 +144,9 @@ namespace GASS
 		Vec3 m_Up;
 		Vec3 m_North;
 		Vec3 m_East;
+
+		std::string m_InstancesFile;
+		
 	};
 
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;

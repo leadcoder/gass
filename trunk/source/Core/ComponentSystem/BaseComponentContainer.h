@@ -28,7 +28,6 @@
 #include "Core/ComponentSystem/IComponentContainerTemplate.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "Core/Serialize/ISerialize.h"
-//#include "Core/Reflection/IReflection.h"
 
 namespace GASS
 {

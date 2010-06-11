@@ -45,19 +45,21 @@ namespace GASS
 		m_Up(0,1,0),
 		m_North(0,0,-1),
 		m_East(1,0,0),
-		m_Scenario(scenario)
+		m_Scenario(scenario),
+		m_SceneMessageManager(new MessageManager()),
+		m_InstancesFile("instances.xml")
 	{
 		
-		m_SceneMessageManager = new MessageManager();
-		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
-		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(ScenarioScenePtr(this)));
 	}
-
-
 
 	ScenarioScene::~ScenarioScene()
 	{
 		delete m_SceneMessageManager;
+	}
+
+	void ScenarioScene::CreateRegistredSceneManagers()
+	{
+	
 	}
 
 	void ScenarioScene::Shutdown()
@@ -94,6 +96,18 @@ namespace GASS
 		RegisterProperty<std::string>("SceneUp", &GASS::ScenarioScene::GetUpVector, &GASS::ScenarioScene::SetUpVector);
 		RegisterProperty<std::string>("SceneEast", &GASS::ScenarioScene::GetEastVector, &GASS::ScenarioScene::SetEastVector);
 		RegisterProperty<std::string>("SceneNorth", &GASS::ScenarioScene::GetNorthVector, &GASS::ScenarioScene::SetNorthVector);
+		RegisterProperty<std::string>("Instances", &GASS::ScenarioScene::GetInstancesFile, &GASS::ScenarioScene::SetInstancesFile);
+	}
+
+
+	void ScenarioScene::SetInstancesFile(const std::string &value)
+	{
+		m_InstancesFile = value;
+	}
+
+	std::string ScenarioScene::GetInstancesFile() const
+	{
+		return m_InstancesFile;
 	}
 
 	void ScenarioScene::SetUpVector(const std::string &value)
@@ -201,70 +215,74 @@ namespace GASS
 		
 		if(scenemanager)
 		{
-			//Try to create all registered scene manangers
-
-			std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
-
-			for(int i = 0; i < managers.size();i++)
-			{
-				SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-				sm->SetScenarioScene(shared_from_this());
-				sm->SetName(managers[i]);
-				m_SceneManagers.push_back(sm);
-			}
 			scenemanager = scenemanager->FirstChildElement();
 			//Load scene manager settings
 			while(scenemanager)
 			{
 				SceneManagerPtr sm = LoadSceneManager(scenemanager);
-				/*if(sm)
-				{
-					m_SceneManagers.push_back(sm);
-				}*/
 				scenemanager = scenemanager->NextSiblingElement();
 			}
-			for(int i = 0; i < m_SceneManagers.size();i++)
-			{
-				m_SceneManagers[i]->OnCreate();
-			}
 		}
+	}
+
+	void ScenarioScene::SaveXML(TiXmlElement *parent)
+	{
+		//Create
+		TiXmlElement *scene_elem = new TiXmlElement("ScenarioScene");  
+		parent->LinkEndChild(scene_elem); 
+
+
+		TiXmlElement *settings_elem = new TiXmlElement("SceneSettings");  
+		scene_elem->LinkEndChild(settings_elem); 
+
+		BaseReflectionObject::SaveProperties(settings_elem);
+
+		TiXmlElement *sms_elem = new TiXmlElement("SceneManagers");  
+		scene_elem->LinkEndChild(sms_elem);
+
+		for(int i  = 0 ; i < m_SceneManagers.size();i++)
+		{
+			SceneManagerPtr sm = m_SceneManagers[i];
+			XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
+			if(serialize)
+				serialize->SaveXML(sms_elem);
+		}
+		std::string scenario_path = ScenarioPtr(m_Scenario)->GetPath();
+		m_ObjectManager->SaveXML(scenario_path + "/"  + m_InstancesFile);
 	}
 
 	void ScenarioScene::OnCreate()
 	{
 		RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(ScenarioScene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
 		RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
+
+		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+
+		//Add all registered scene manangers to scene
+		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
+		for(int i = 0; i < managers.size();i++)
+		{
+			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
+			sm->SetScenarioScene(shared_from_this());
+			sm->SetName(managers[i]);
+			sm->OnCreate();
+			m_SceneManagers.push_back(sm);
+		}
 	}
 
 	void ScenarioScene::OnLoad()
 	{
-		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
-	
 		std::string scenario_path = ScenarioPtr(m_Scenario)->GetPath();
 
 		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
-
 		
 		MessagePtr scenario_msg(new LoadSceneManagersMessage(shared_from_this()));
 		//send load message
 		SendImmediate(scenario_msg);
 		
-	
-		// Load default camera ect
-		/*SceneObject* scene_object = GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		assert(scene_object);
-		MessagePtr camera_msg(new Message(ScenarioScene::SCENARIO_RM_CHANGE_CAMERA,(int) this));
-		camera_msg->SetData("CameraObject",scene_object);
-		GetMessageManager()->SendImmediate(camera_msg);
-
-		//move camera to spawn position
-		MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,(int) this));
-		pos_msg->SetData("Position",GetStartPos());
-		scene_object->SendImmediate(pos_msg);*/
-
 		//Create game objects instances from templates
-		m_ObjectManager->LoadFromFile(scenario_path + "/instances.xml");
+		m_ObjectManager->LoadXML(scenario_path + "/"  + m_InstancesFile);
 
 		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
