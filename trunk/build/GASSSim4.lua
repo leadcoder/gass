@@ -32,7 +32,7 @@ end
 	}
 
 
-
+if (os.is("windows")) then
 	configuration "Debug"
 		targetname "GASSSim_d"
 		defines { "DEBUG" }
@@ -55,6 +55,30 @@ end
 			"tinyxml",
 			"tbb"
 		}
+else
+	configuration "Debug"
+		targetname "libGASSSim_d"
+		defines { "DEBUG" }
+		flags { "Symbols" }
+		links 
+		{
+		   "GASSCore_d",
+		   "tinyxmld",
+		   "tbb_debug"  
+		}
 
+
+	configuration "Release"
+		targetname "libGASSSim"
+		defines { "NDEBUG" }
+		flags { "Optimize" }
+		links 
+		{
+			"GASSCore",
+			"tinyxml",
+			"tbb"
+		}
+
+end
 
 

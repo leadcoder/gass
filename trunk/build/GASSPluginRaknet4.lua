@@ -6,11 +6,12 @@ project "GASSPluginRakNet"
 	files { "../source/Plugins/RakNet/**.cpp", "../source/Plugins/RakNet/**.h" }
 
 	targetdir ( "../lib/" .. _ACTION )
+	dofile "helpfunctions.lua"
 
 if (os.is("windows")) then
 	includedirs 
 	{ 
-		"../Source",
+		"../source",
 		"../dependencies/RakNet/Source",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
@@ -34,16 +35,20 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"../dependencies/include",
+		"../dependencies/RakNet/Source",
+		"../dependencies/tinyxml",
 		"$(BOOST_PATH)",
-		"../dependencies/include/tinyxml"
+		"../dependencies/tbb/include"	
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"$(BOOST_PATH)/lib"
+		"../dependencies",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/RakNet/Lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 
 	}
 

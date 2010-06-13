@@ -7,7 +7,6 @@ project "GASSPluginOpenAL"
 
 	targetdir ( "../lib/" .. _ACTION )
 
-if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
@@ -26,27 +25,12 @@ if (os.is("windows")) then
 		"$(BOOST_PATH)/lib"
 	}
 
+if (os.is("windows")) then
+
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
-else
-	includedirs 
-	{ 
-		"../source",
-		"$(BOOST_PATH)",
-		"../dependencies/OpenAL/include",
-		"../dependencies/include/tinyxml"
-	}
 
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"../dependencies/lib/OpenAL1.1/libs/Linux",
-		"$(BOOST_PATH)/lib"
-	}
-
-end
 
 
 	configuration "Debug"
@@ -75,6 +59,33 @@ end
 			"OpenAL32",
 			"ALut",
 		}
+else 
+	configuration "Debug"
+		targetname "GASSPluginOpenAL_d"
+		defines { "DEBUG" }
+		flags { "Symbols" }
+--		debugPrefix = "_d"
+		links 
+		{
+			"GASSCore_d",
+			"GASSSim_d",
+			"tinyxmld",
+			"openal",
+			"alut",
+		}
 
+	configuration "Release"
+		targetname "GASSPluginOpenAL"
+		defines { "NDEBUG" }
+		flags { "Optimize" }
+		links 
+		{
+			"GASSCore",
+			"GASSSim",
+			"tinyxml",
+			"openal",
+			"alut",
+		}
+end
 
 
