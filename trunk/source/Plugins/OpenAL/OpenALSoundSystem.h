@@ -7,9 +7,9 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Systems/SimSystemMessages.h"
-#include <al.h>
-#include <alc.h>
-#include <alut.h>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
 #include <string>
 
 // Be very careful with these two parameters
@@ -27,19 +27,19 @@ namespace GASS
 	class SceneObject;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
-	
+
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>
 	{
 	public:
 		typedef std::map<std::string,ALuint> SoundMap;
 		typedef std::map<std::string,ALuint> SourceMap;
-		
+
 		OpenALSoundSystem();
 		virtual ~OpenALSoundSystem();
 		static void RegisterReflection();
 		void OnCreate();
-		
+
 		// OpenAL-specific functions
 		bool LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
 		bool CheckAlError( void );
@@ -69,4 +69,4 @@ namespace GASS
 
 }
 
-#endif 
+#endif

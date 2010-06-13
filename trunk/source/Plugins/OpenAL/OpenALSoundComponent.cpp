@@ -10,7 +10,7 @@
 
 namespace GASS
 {
-	
+
 	OpenALSoundComponent::OpenALSoundComponent()
 	{
 		m_Buffer = 0;
@@ -36,7 +36,7 @@ namespace GASS
 		Log::Warning("%s%s",szText,alGetString(errorcode));
 		return;
 	}
-	
+
 	void OpenALSoundComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OpenALSoundComponent",new Creator<OpenALSoundComponent, IComponent>);
@@ -108,13 +108,13 @@ namespace GASS
 		return m_MinDistance;
 	}
 
-	void OpenALSoundComponent::SetMinDistance(float min_dist) 
+	void OpenALSoundComponent::SetMinDistance(float min_dist)
 	{
 		m_MinDistance = min_dist;
 
-		if (m_Source) 
+		if (m_Source)
 		{
-			alSourcef(m_Source,AL_REFERENCE_DISTANCE,min_dist); 
+			alSourcef(m_Source,AL_REFERENCE_DISTANCE,min_dist);
 		}
 	}
 
@@ -123,13 +123,13 @@ namespace GASS
 		return m_Rolloff;
 	}
 
-	void OpenALSoundComponent::SetRolloff(float rolloff) 
+	void OpenALSoundComponent::SetRolloff(float rolloff)
 	{
 		m_Rolloff = rolloff;
 
-		if (m_Source) 
+		if (m_Source)
 		{
-			alSourcef(m_Source,AL_ROLLOFF_FACTOR,rolloff); 
+			alSourcef(m_Source,AL_ROLLOFF_FACTOR,rolloff);
 		}
 	}
 
@@ -138,13 +138,13 @@ namespace GASS
 		return m_MaxDistance;
 	}
 
-	void OpenALSoundComponent::SetMaxDistance(float max_dist) 
+	void OpenALSoundComponent::SetMaxDistance(float max_dist)
 	{
 		m_MaxDistance = max_dist;
 
-		if (m_Source) 
+		if (m_Source)
 		{
-			alSourcef(m_Source,AL_MAX_DISTANCE,max_dist); 
+			alSourcef(m_Source,AL_MAX_DISTANCE,max_dist);
 		}
 	}
 
@@ -153,7 +153,7 @@ namespace GASS
 		return m_MinDistance;
 	}
 
-	void OpenALSoundComponent::SetVolume(float volume) 
+	void OpenALSoundComponent::SetVolume(float volume)
 	{
 		if(volume <  0)
 		{
@@ -161,13 +161,13 @@ namespace GASS
 			return;
 		}
 		m_Volume = volume;
-		if (m_Source) 
+		if (m_Source)
 		{
-			alSourcef(m_Source,AL_GAIN,m_Volume); 
+			alSourcef(m_Source,AL_GAIN,m_Volume);
 		}
 	}
 
-	void OpenALSoundComponent::SetPitch(float pitch) 
+	void OpenALSoundComponent::SetPitch(float pitch)
 	{
 		if(pitch <=  0)
 		{
@@ -175,7 +175,7 @@ namespace GASS
 			return;
 		}
 		m_Pitch = pitch;
-		if (m_Source) 
+		if (m_Source)
 		{
 			alSourcef(m_Source,AL_PITCH,pitch);
 		}
@@ -185,24 +185,24 @@ namespace GASS
 	{
 		return m_Pitch;
 	}
-		
+
 	bool OpenALSoundComponent::GetStereo() const
 	{
 		return m_Stereo;
 	}
 
-	void OpenALSoundComponent::SetStereo(bool stereo) 
+	void OpenALSoundComponent::SetStereo(bool stereo)
 	{
 		m_Stereo = stereo;
 	}
 
-	
+
 	bool OpenALSoundComponent::GetLoop() const
 	{
 		return m_Loop;
 	}
 
-	void OpenALSoundComponent::SetLoop(bool loop) 
+	void OpenALSoundComponent::SetLoop(bool loop)
 	{
 		m_Loop = loop;
 
@@ -223,7 +223,7 @@ namespace GASS
 		return m_Filename;
 	}
 
-	void OpenALSoundComponent::SetSoundFile(const std::string &file) 
+	void OpenALSoundComponent::SetSoundFile(const std::string &file)
 	{
 		m_Filename = file;
 	}
@@ -232,10 +232,10 @@ namespace GASS
 	{
 		bool wasSoundLoaded  = LoadWaveSound(m_Filename);//, 0);
 		//sound loaded, update sound settings
-		SetLoop(m_Loop); 
-		SetMaxDistance(m_MaxDistance); 
-		SetMinDistance(m_MinDistance); 
-		SetRolloff(m_Rolloff); 
+		SetLoop(m_Loop);
+		SetMaxDistance(m_MaxDistance);
+		SetMinDistance(m_MinDistance);
+		SetRolloff(m_Rolloff);
 		//Play();
 	}
 
@@ -274,7 +274,7 @@ namespace GASS
 
 	}
 
-	
+
 	bool OpenALSoundComponent::IsPlaying()
 	{
 		ALint	error;
@@ -288,7 +288,7 @@ namespace GASS
 
 		alGetSourcei(m_Source, AL_SOURCE_STATE, &iVal);
 		if ((error = alGetError()) != AL_NO_ERROR)
-			DisplayALError((ALbyte *) "OpenALSoundComponent::IsPlaying(): : ", error);
+			DisplayALError((ALchar *) "OpenALSoundComponent::IsPlaying(): : ", error);
 
 		return (iVal == AL_PLAYING);
 	}
@@ -337,4 +337,4 @@ namespace GASS
 		if (m_Source == 0) return;
 		alSourceStop(m_Source);
 	}
-} 
+}

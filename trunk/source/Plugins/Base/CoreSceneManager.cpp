@@ -29,6 +29,7 @@
 
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 
 
@@ -108,7 +109,7 @@ namespace GASS
 	{
 		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message);
 		m_Init = true;
-	}
+ 	}
 
 	void CoreSceneManager::OnUnload(MessagePtr message)
 	{

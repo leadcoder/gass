@@ -32,8 +32,8 @@ This class is based on the Game Programming Gems 5 article
 #include "Core/Reflection/RTTI.h"
 #include "Core/Reflection/Property.h"
 #include "Core/Reflection/VectorProperty.h"
-//#include "Core/Reflection/PropertySystem.h"
-
+#include "Core/Utils/Log.h"
+#include "Core/Utils/Misc.h"
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Reflection
@@ -53,8 +53,8 @@ namespace GASS
 		//substr(6) is used for removing "class_" from string returned by typeid,
 		//we dont want to use any prefix when accessing classes by name,
 		//To be invesitgated if typeid return same prefix in gcc
-		std::string ret = name.substr(6);
 
+		std::string ret = name.substr(6);
 		//remove namespace
 		size_t pos = ret.find("::");
 		if(pos != -1)
@@ -118,7 +118,7 @@ namespace GASS
 			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
 			//PropertySystem::GetProperties()->push_back( pProperty );
 		}
-		
+
 		template <class PropertyType>
 		static	void RegisterVectorProperty(	const char* szName, typename VectorProperty<T, PropertyType>::GetterType Getter,
 			typename VectorProperty<T, PropertyType>::SetterTypeConst Setter )
@@ -168,7 +168,7 @@ namespace GASS
 	}*/
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(UnDecorateClassName(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
+		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
 		(RegisterReflectionFunc)T::RegisterReflection );
 
 	template <class T, class TInClass>

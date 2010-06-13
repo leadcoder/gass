@@ -26,6 +26,9 @@
 #include <algorithm>
 #include <string.h>
 
+#ifndef WIN32
+#include <cxxabi.h>
+#endif
 namespace GASS
 {
 Misc::Misc()
@@ -330,6 +333,28 @@ void Misc::splitpath(char *name, char *drive, char *path, char *base, char *ext)
 	if (ext)
 		strcpy(ext, p);
 }
+
+    std::string Misc::Demangle(const std::string &name)
+	{
+
+
+#ifdef WIN32
+        //substr(6) is used for removing "class_" when using vs,
+        //TODO: use UnDecorateSymbolName api functions instead?
+		std::string ret = name.substr(6);
+#else
+	    int status;
+        std::string ret = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
+#endif
+        //remove namespace
+		size_t pos = ret.find("::");
+		if(pos != -1)
+		{
+			ret =  ret.substr(pos+2);
+		}
+		return ret;
+	}
+
 
 
 }

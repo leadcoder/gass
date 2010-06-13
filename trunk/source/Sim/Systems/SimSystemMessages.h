@@ -32,24 +32,24 @@ namespace GASS
 {
 	class Scenario;
 	class ScenarioScene;
-	
+
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 
 	/**
 	Deafult message used by the SimSystemManager
-	Sim system messages are used to communicate with systems and 
+	Sim system messages are used to communicate with systems and
 	used by systems to notify listeners about critcal system events
-	To send a SimSystemMessage you have to get hold of the 
+	To send a SimSystemMessage you have to get hold of the
 	SimSystemManager and then post a message, ex:
 	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
 	*/
-	
+
 	class InitMessage : public BaseMessage
 	{
 	public:
-		InitMessage (SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) 
+		InitMessage (SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay)
 			{ }
 	private:
 
@@ -64,8 +64,8 @@ namespace GASS
 	class CreateRenderWindowMessage : public BaseMessage
 	{
 	public:
-		CreateRenderWindowMessage(const std::string &name, int width, int height, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), 
+		CreateRenderWindowMessage(const std::string &name, int width, int height, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay),
 			  m_Name(name),
 			  m_Height(height),
 			  m_Width(width),
@@ -91,8 +91,8 @@ namespace GASS
 	class DebugPrintMessage : public BaseMessage
 	{
 	public:
-		DebugPrintMessage(const std::string &text, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), 
+		DebugPrintMessage(const std::string &text, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay),
 			  m_Text(text)  { }
 		  std::string GetText()const {return m_Text;}
 
@@ -104,27 +104,27 @@ namespace GASS
 
 
 	/**
-	Message posted by the graphic scene manager to notify that the scene manager 
-	has loaded successfully. The message provided the name of the render system in use and 
-	a root node to the scene graph created by the scene manager. The root node is  a void-pointer 
+	Message posted by the graphic scene manager to notify that the scene manager
+	has loaded successfully. The message provided the name of the render system in use and
+	a root node to the scene graph created by the scene manager. The root node is  a void-pointer
 	and should be casted to the correct scene node type depending on what the render system in use.
 	ie. If Ogre3d is the render system the GetSceneGraphRootNode will return a Ogre::SceneNode*, if OSG
-	is used the root node will be osg::Node* etc. 
+	is used the root node will be osg::Node* etc.
 	This message is usefull for render system extensions that don't want to link to a specific render system
 	implementation.
 	*/
-	
+
 	class GFXSceneManagerLoadedNotifyMessage : public BaseMessage
 	{
 	public:
-		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), 
+		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay),
 			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) ,m_ShadowNode(scene_graph_shadow_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
 		  void *GetSceneGraphShadowNode()const {return m_ShadowNode;}
-		  
-		 
+
+
 	private:
 		void* m_RootNode;
 		void* m_ShadowNode;
@@ -134,18 +134,18 @@ namespace GASS
 
 	/**
 		Message posted by the graphic system to notify that a new render window has been created.
-		Suscribe to this message if you need to get hold of the render window handle, 
+		Suscribe to this message if you need to get hold of the render window handle,
 	*/
-	
+
 	class MainWindowCreatedNotifyMessage : public BaseMessage
 	{
 	public:
-		MainWindowCreatedNotifyMessage(int render_window_handle, int main_window_handle,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), 
+		MainWindowCreatedNotifyMessage(int render_window_handle, int main_window_handle,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay),
 			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
 		  int GetRenderWindowHandle() const {return m_Handle;}
 		  int GetMainHandle() const {return m_MainHandle;}
-		 
+
 	private:
 		int m_Handle;
 		int m_MainHandle;
@@ -156,15 +156,15 @@ namespace GASS
 
 	/**
 		If you have a created a external render window this messages should be posted by the external
-		owner if the render window has moved or resized. 
-		A graphic system implementation should suscribe to this message to notify 
+		owner if the render window has moved or resized.
+		A graphic system implementation should suscribe to this message to notify
 		it's internal window system about the change
 	*/
 
 	class MainWindowMovedOrResizedNotifyMessage : public BaseMessage
 	{
 	public:
-		MainWindowMovedOrResizedNotifyMessage (int width,int height,SenderID sender_id = -1, double delay= 0) : 
+		MainWindowMovedOrResizedNotifyMessage (int width,int height,SenderID sender_id = -1, double delay= 0) :
 		  m_Width(width),
 		  m_Height(height),
 		  BaseMessage(sender_id , delay)  {}
@@ -177,22 +177,22 @@ namespace GASS
 
 	/**
 		This message is posted by the ScenarioScene class when a scene in a scenario has loaded successfully.
-		This means that all objects specified in the scenario scene is loaded. If you want to catch the 
+		This means that all objects specified in the scenario scene is loaded. If you want to catch the
 		loading messages of thoes objects you should instead suscribe to the ScenarioSceneAboutToLoadNotifyMessage
 		bellow.
 		Suscribe to this message if you want to get hold of scenario scenes after all scene objects are loaded.
 	*/
-	
+
 	class ScenarioSceneLoadedNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr scenario_scene,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr scenario_scene,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_ScenarioScene(scenario_scene){}
-		
+
 		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
-		ScenarioScenePtr m_ScenarioScene;		
+		ScenarioScenePtr m_ScenarioScene;
 	};
 	typedef boost::shared_ptr<ScenarioSceneLoadedNotifyMessage> ScenarioSceneLoadedNotifyMessagePtr;
 
@@ -202,37 +202,37 @@ namespace GASS
 	/**
 		This message is posted by the Scenario class before the scenario scenes are loaded.
 	*/
-	
+
 	class ScenarioAboutToLoadNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioAboutToLoadNotifyMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ScenarioAboutToLoadNotifyMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Scenario(scenario){}
-		  
+
 		  ScenarioPtr GetScenario() const {return m_Scenario;}
 	private:
-		ScenarioPtr m_Scenario;		
+		ScenarioPtr m_Scenario;
 	};
 
 	typedef boost::shared_ptr<ScenarioAboutToLoadNotifyMessage> ScenarioAboutToLoadNotifyMessagePtr;
-	
+
 	/**
 		This message is posted by the ScenarioScene class before the scene objects are loaded.
 		Suscribe to this message if you want to get hold of sceario scenes before all scene objects are loaded. This
 		can be usefull if you want to modify, add or save some objects the scenario scene loaded
 	*/
-	
+
 	class ScenarioSceneAboutToLoadNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ScenarioSceneAboutToLoadNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_ScenarioScene(scenario_scene){}
-		  
+
 		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
 	private:
-		ScenarioScenePtr m_ScenarioScene;		
+		ScenarioScenePtr m_ScenarioScene;
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
 
@@ -244,11 +244,11 @@ namespace GASS
 	class StartServerMessage : public BaseMessage
 	{
 	public:
-		StartServerMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		StartServerMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
-		  
-		  std::string GetServerName() const {return m_Name;}
+
+		  std::string GetServerName() const;// {return m_Name;}
 		  int GetPort() const {return m_Port;}
 	private:
 		std::string m_Name;
@@ -256,17 +256,17 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StartServerMessage> StartServerMessagePtr;
 
-	
+
 	/**
 	Start network client
 	*/
 	class StartClientMessage : public BaseMessage
 	{
 	public:
-		StartClientMessage(const std::string name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		StartClientMessage(const std::string name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port), m_ServerPort(server_port){}
-		  
+
 		 std::string GetClientName() const {return m_Name;}
 		 int GetClientPort() const {return m_ClientPort;}
 		 int GetServerPort() const {return m_ServerPort;}
@@ -284,10 +284,10 @@ namespace GASS
 	class ClientConnectedMessage : public BaseMessage
 	{
 	public:
-		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port){}
-		  
+
 		 std::string GetClientName() const {return m_Name;}
 	private:
 		std::string m_Name;
@@ -302,10 +302,10 @@ namespace GASS
 	class ServerResponseMessage : public BaseMessage
 	{
 	public:
-		ServerResponseMessage(const std::string server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ServerResponseMessage(const std::string server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port), m_PingTime(ping_time){}
-		  
+
 		 std::string GetServerName() const {return m_Name;}
 		 int GetServerPort() const {return m_ServerPort;}
 		 float GetServerPingTime() const {return m_PingTime;}
@@ -323,10 +323,10 @@ namespace GASS
 	class ConnectToServerMessage : public BaseMessage
 	{
 	public:
-		ConnectToServerMessage(const std::string server_name, int server_port,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		ConnectToServerMessage(const std::string server_name, int server_port,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port){}
-		  
+
 		 std::string GetServerName() const {return m_Name;}
 		 int GetServerPort() const {return m_ServerPort;}
 	private:
@@ -341,8 +341,8 @@ namespace GASS
 	class PingRequestMessage : public BaseMessage
 	{
 	public:
-		PingRequestMessage(int server_port,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		PingRequestMessage(int server_port,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_ServerPort(server_port){}
 		 int GetServerPort() const {return m_ServerPort;}
 	private:
@@ -357,17 +357,17 @@ namespace GASS
 	class StartSceanrioRequestMessage : public BaseMessage
 	{
 	public:
-		StartSceanrioRequestMessage(const std::string scenario_name, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , 
+		StartSceanrioRequestMessage(const std::string scenario_name, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
 			  m_Name(scenario_name){}
-		  
+
 		 std::string GetScenarioName() const {return m_Name;}
 	private:
 		std::string m_Name;
 	};
 	typedef boost::shared_ptr<StartSceanrioRequestMessage> StartSceanrioRequestMessagePtr;
 
-	
+
 
 }
 #endif

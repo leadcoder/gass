@@ -20,6 +20,8 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/MessageSystem/MessageType.h"
+#include "Core/Utils/Log.h"
+
 #include "tbb/spin_mutex.h"
 #include <stdio.h>
 #include <iostream>
@@ -63,7 +65,19 @@ namespace GASS
 		message_type = m_MessageTypes.find(message->GetType());
 		if(message_type == m_MessageTypes.end())
 		{
-			return;
+
+        /*    MessageType mt = message->GetType();
+            Log::Print("Failed %s",message->GetType().name());
+		    message_type = m_MessageTypes.begin();
+		    while(message_type != m_MessageTypes.end())
+		    {
+		        if(mt == message_type->first)
+                    Log::Print("REG failed name %s",message_type->first.name());
+                else
+                    Log::Print("REG name %s",message_type->first.name());
+		        message_type++;
+		    }*/
+		 	return;
 		}
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())

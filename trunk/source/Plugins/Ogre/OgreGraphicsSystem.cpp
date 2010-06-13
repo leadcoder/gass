@@ -68,11 +68,13 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
+
 	}
 
 
 
-	//Create custom load
+
+    //Create custom load
 	/*void OgreGraphicsSystem::Load(TiXmlElement *elem)
 	{
 		TiXmlElement *attrib = elem->FirstChildElement();
@@ -101,6 +103,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
 	{
+
 		std::cout << "init:" << m_Name << std::endl;
 
 		//Load plugins
@@ -180,14 +183,14 @@ namespace GASS
 		int width = message->GetWidth();
 		int handel = message->GetHandle();
 
-		
+
 		{
 			int main_handel = message->GetMainHandle();
 			Ogre::NameValuePairList miscParams;
 			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handel);
 			Ogre::RenderWindow *window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
 
-			
+
 
 			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
@@ -208,7 +211,7 @@ namespace GASS
 				GetSimSystemManager()->SendImmediate(window_msg);
 			}
 		}
-		
+
 	}
 
 	void OgreGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)

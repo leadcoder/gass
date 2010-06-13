@@ -75,6 +75,9 @@ namespace GASS
 
 		// Replaces windows specific _splitpath - TODO need to be tested!!!
 		static void splitpath(char *name, char *drive, char *path, char *base, char *ext);
+
+		static std::string Demangle(const std::string &name);
+
 	};
 }
 

@@ -44,7 +44,7 @@ namespace GASS
 		virtual void OnCreate();
 
 		void Shutdown();
-		
+
 		virtual void AddKeyListener(IKeyListener* key_listener);
 		virtual void RemoveKeyListener(IKeyListener* key_listener);
 
@@ -53,7 +53,7 @@ namespace GASS
 
 		virtual void AddGameControllerListener(IGameControllerListener* );
 		virtual void RemoveGameControllerListener(IGameControllerListener* );
-	
+
 		OIS::Mouse*    GetMouse(){return m_Mouse;}
 		OIS::Keyboard* GetKeyboard(){return m_Keyboard;}
 
@@ -95,24 +95,24 @@ namespace GASS
 
 	private:
 		float NormalizeMouse(float value);
-		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
-		
+		void OnInit(MainWindowCreatedNotifyMessagePtr message);
+
 
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}
 		void SetExclusiveMode(bool value) {m_ExclusiveMode = value;}
 
 
 		int inline OldKey(int index) { return (m_OldKeyBuffer[index]); }
-		
+
 		int OldButton(int index);
-	
-		int inline OldJoystickButton(int device, int index) 
-		{ 
+
+		int inline OldJoystickButton(int device, int index)
+		{
 			if (device >= m_Joys.size())
 				return 0;
 			return m_OldJoyState[device].mButtons[index];
 		}
-		
+
 		OIS::InputManager* m_InputManager;
 		OIS::Mouse*    m_Mouse;
 		OIS::Keyboard* m_Keyboard;
@@ -129,7 +129,7 @@ namespace GASS
 		std::vector<IKeyListener*> m_KeyListeners;
 		std::vector<IMouseListener*> m_MouseListeners;
 		std::vector<IGameControllerListener*> m_GameControllerListeners;
-		
+
 		int m_JoystickDeviceCount;
 		bool m_Inverted;
 		bool m_OnlyUpdateWhenFocued;

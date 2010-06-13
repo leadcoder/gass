@@ -10,9 +10,9 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Vector.h"
-#include "al.h"
-#include "alc.h"
-#include "alut.h"
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "AL/alut.h"
 
 namespace GASS
 {
@@ -32,7 +32,7 @@ namespace GASS
 		virtual void StopLooping();
 		virtual bool IsPlaying();
 
-		
+
 	protected:
 
 		//Helper to load sound from wave-file
@@ -84,8 +84,8 @@ namespace GASS
 		float m_Rolloff;
 		int m_Stereo;
 		bool m_Loop;
-		//int m_Priority; 
+		//int m_Priority;
 		float m_Volume;
 	};
-} 
+}
 #endif

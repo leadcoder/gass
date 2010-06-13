@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	ODEBodyComponent::ODEBodyComponent() 
+	ODEBodyComponent::ODEBodyComponent()
 		:m_ODESpaceID(NULL),
 		m_ODESecondarySpaceID(NULL),
 		m_ODEBodyComponent(0),
@@ -47,9 +47,9 @@ namespace GASS
 		m_EffectJoints(true),
 		m_Active(true)
 	{
-		
-		
-		
+
+
+
 	}
 
 	ODEBodyComponent::~ODEBodyComponent()
@@ -66,7 +66,7 @@ namespace GASS
 		RegisterProperty<Vec3>("AssymetricInertia",&ODEBodyComponent::GetAssymetricInertia, &ODEBodyComponent::SetAssymetricInertia);
 		RegisterProperty<bool>("EffectJoints",&ODEBodyComponent::GetEffectJoints, &ODEBodyComponent::SetEffectJoints);
 		RegisterProperty<bool>("Active",&ODEBodyComponent::GetActive, &ODEBodyComponent::SetActive);
-		
+
 	}
 
 	void ODEBodyComponent::OnCreate()
@@ -178,7 +178,7 @@ namespace GASS
 		} else
 		Log::Warning("ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		*/
-		if (m_MassRepresentation != MR_GEOMETRY) 
+		if (m_MassRepresentation != MR_GEOMETRY)
 		{
 			//assert(m_MassRepresentation != MR_USER); // TODO: implement box, sphere, cylinder mass geometries
 
@@ -207,7 +207,7 @@ namespace GASS
 
 		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 		SetPosition(location->GetPosition());
-		
+
 		dBodySetMovedCallback (m_ODEBodyComponent, &BodyMovedCallback);
 	}
 
@@ -234,7 +234,7 @@ namespace GASS
 
 	/*	bool ODEBodyComponent::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
 	{
-	BaseObject* bo = (BaseObject*)m_Owner->GetRoot()		
+	BaseObject* bo = (BaseObject*)m_Owner->GetRoot()
 	if(bo && bo->IsMaster()) return true;
 	else return false;
 	}
@@ -345,7 +345,7 @@ namespace GASS
 		{
 			if(m_Active)
 				dBodyEnable(m_ODEBodyComponent);
-			else 
+			else
 				dBodyDisable(m_ODEBodyComponent);
 		}
 	}
@@ -539,7 +539,7 @@ namespace GASS
 
 		if(m_ODEBodyComponent)
 		{
-			
+
 			const dReal *ode_rot_mat = dBodyGetRotation(m_ODEBodyComponent);
 			Mat4 rot;
 			ODEPhysicsSceneManager::CreateGASSRotationMatrix(ode_rot_mat,rot);

@@ -52,12 +52,8 @@ namespace GASS
 		typedef boost::shared_ptr<Product> ProductPtr;
 		Creator()
 		{
-			m_ClassName = std::string(typeid(Product).name()).substr(6);
-			size_t pos = m_ClassName.find("::");
-			if(pos != -1)
-			{
-				m_ClassName = m_ClassName.substr(pos+2);
-			}
+			m_ClassName = Misc::Demangle(typeid(Product).name());
+
 		}
 		virtual BasePtr Create() const
 		{
@@ -102,7 +98,7 @@ namespace GASS
 
 
 	template<class Base, class ObjectType>
-	std::string Factory<Base,ObjectType>::GetFactoryName(const std::string &class_name) 
+	std::string Factory<Base,ObjectType>::GetFactoryName(const std::string &class_name)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.begin();
 		while(it != m_creatorMap.end())
@@ -117,7 +113,7 @@ namespace GASS
 	}
 
 	template<class Base, class ObjectType>
-	std::vector<std::string> Factory<Base,ObjectType>::GetFactoryNames() 
+	std::vector<std::string> Factory<Base,ObjectType>::GetFactoryNames()
 	{
 		std::vector<std::string> names;
 		typename CreatorMap::iterator it = m_creatorMap.begin();

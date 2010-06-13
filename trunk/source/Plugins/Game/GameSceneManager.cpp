@@ -30,6 +30,7 @@
 
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 
 
@@ -64,7 +65,7 @@ namespace GASS
 			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( GameSceneManager::OnLoadSceneObject),ScenarioScene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
-	
+
 	void GameSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		//Initlize all sim components and send scene mananger as argument
@@ -89,9 +90,10 @@ namespace GASS
 
 	void GameSceneManager::OnLoad(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);		
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+
 	}
-	
+
 	void GameSceneManager::OnUnload(MessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);

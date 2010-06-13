@@ -20,7 +20,12 @@
 #include "Core/Common.h"
 #include "Sim/Systems/SimSystemMessages.h"
 
+namespace GASS
+{
 
-
-
+std::string StartServerMessage::GetServerName() const
+{
+    return m_Name;
+}
+}
 

@@ -124,10 +124,10 @@ namespace GASS
 			Log::Print("OISInputSystem: No joystick");
 		}
 #else
-		if (m_InputManager->numJoysticks() > 0) {
-			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->numJoysticks());
+		if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
+			Log::Print("OISInputSystem: %d joysticks available",m_InputManager->getNumberOfDevices(OIS::OISJoyStick) );
 			try {
-				for (int i = 0; i < m_InputManager->numJoysticks(); i++) {
+				for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) {
 					OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, bufferedJoy ));
 					Log::Print("OISInputSystem: Joystick ID #%d '%s' - %d axes",joy->getID(), joy->vendor().c_str(), joy->getJoyStickState().mAxes.size());
 					joy->capture();
