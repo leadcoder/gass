@@ -10,10 +10,15 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Vector.h"
+#ifdef WIN32
 #include "al.h"
 #include "alc.h"
 #include "alut.h"
-
+#else 
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "AL/alut.h"
+#endif
 namespace GASS
 {
 	class OpenALSoundComponent : public Reflection<OpenALSoundComponent,BaseSceneComponent>

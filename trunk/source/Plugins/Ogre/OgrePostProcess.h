@@ -25,8 +25,8 @@
 #include "Core/MessageSystem/MessageType.h"
 #include <string>
 #include <OgreCompositorInstance.h>
-#include "OgrePrerequisites.h"
-#include "OgreCompositorLogic.h"
+#include <OgrePrerequisites.h>
+#include <OgreCompositorLogic.h>
 #include <OgreGpuProgram.h>
 #include <OgreViewport.h>
 #include <OgreCamera.h>

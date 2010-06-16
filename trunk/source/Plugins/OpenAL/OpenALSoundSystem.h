@@ -7,9 +7,15 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Systems/SimSystemMessages.h"
-#include <al.h>
-#include <alc.h>
-#include <alut.h>
+#ifdef WIN32
+#include "al.h"
+#include "alc.h"
+#include "alut.h"
+#else 
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "AL/alut.h"
+#endif
 #include <string>
 
 // Be very careful with these two parameters
