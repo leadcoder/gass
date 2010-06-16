@@ -42,9 +42,16 @@
 
 namespace GASS
 {
-	OgreSceneManagerTerrainComponent::OgreSceneManagerTerrainComponent() :
-		m_CreateCollisionMesh (true),
-		m_PageListenerAdded (false)
+	OgreSceneManagerTerrainComponent::OgreSceneManagerTerrainComponent() : m_CreateCollisionMesh (true),
+		m_HeightData(NULL),
+		m_PageListenerAdded (false),
+		m_Scale(1,1,1),
+		m_MaxHeight(0),
+		m_WorldWidth(0),
+		m_WorldHeight(0),
+		m_NodesPerSideAllPagesW (0),
+		m_NodesPerSideAllPagesH(0),
+		m_OgreSceneManager(NULL)
 	{
 
 
@@ -52,6 +59,7 @@ namespace GASS
 
 	OgreSceneManagerTerrainComponent::~OgreSceneManagerTerrainComponent()
 	{
+		delete[] m_HeightData;
 		if(m_PageListenerAdded)
 		{
 			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
@@ -69,71 +77,88 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadGFXComponentsMessage,0));
 	}
 
+	void OgreSceneManagerTerrainComponent::SetFilename(const std::string &filename) 
+	{
+		m_TerrainConfigFile = filename;
+		LoadTerrain(m_TerrainConfigFile);
+	}
+
+	void OgreSceneManagerTerrainComponent::LoadTerrain(const std::string &filename)
+	{
+
+		if(m_OgreSceneManager && filename != "")
+		{
+			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
+
+			std::string full_path;
+			if(!rs->GetFullPath(filename,full_path))
+			{
+				Log::Warning("Faild to load terrain %s",filename.c_str());
+				return;
+			}
+
+			std::string base_path = Misc::RemoveFilename(full_path);
+			m_OgreSceneManager->setWorldGeometry(full_path);
+			Ogre::Vector3 scale = Ogre::Vector3::ZERO;
+			int nodes_per_side = 0;
+			int nodes_per_side_all_pagesW = 0;
+			int nodes_per_side_all_pagesH = 0;
+			m_OgreSceneManager->getOption("Scale", &scale);
+			m_OgreSceneManager->getOption("PageSize", &nodes_per_side);
+			//Ogre::Real worldWidth, worldHeight;
+
+			if(Misc::GetExtension(filename) == "cfg")
+			{
+				if (nodes_per_side == 0)
+				{
+					Ogre::ConfigFile config;
+					Ogre::String val;
+
+					config.load(full_path, "=", true);
+
+					val = config.getSetting( "PageSize" );
+					assert( !val.empty() );
+					nodes_per_side = atoi( val.c_str() );
+
+					val = config.getSetting( "PageWorldX" );
+					assert( !val.empty() );
+					scale.x = atof( val.c_str() ) / (nodes_per_side-1);
+
+					val = config.getSetting( "MaxHeight" );
+					assert( !val.empty() );
+					scale.y = atof( val.c_str() );
+
+					val = config.getSetting( "PageWorldZ" );
+					assert( !val.empty() );
+					scale.z = atof( val.c_str() ) / (nodes_per_side-1);
+
+				}
+			}
+
+			m_Scale = Convert::ToGASS(scale);
+			m_MaxHeight = m_Scale.y;
+			m_WorldWidth  = m_Scale.x * (nodes_per_side-1);
+			m_WorldHeight = m_Scale.z * (nodes_per_side-1);
+			m_NodesPerSideAllPagesW = nodes_per_side;
+			m_NodesPerSideAllPagesH = nodes_per_side;
+
+		}
+	}
+
 	void OgreSceneManagerTerrainComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
-
-		IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
-
-		std::string full_path;
-		if(!rs->GetFullPath(m_TerrainConfigFile,full_path))
-			Log::Error("Faild to load terrain %s",m_TerrainConfigFile.c_str());
-
-		std::string base_path = Misc::RemoveFilename(full_path);
+		m_OgreSceneManager = ogsm->GetSceneManger();
 
 		if(m_CreateCollisionMesh)
 		{
 			Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(this);
 			m_PageListenerAdded = true;
 		}
-		sm->setWorldGeometry(full_path);
-		Ogre::Vector3 scale = Ogre::Vector3::ZERO;
-		int nodes_per_side = 0;
-		int nodes_per_side_all_pagesW = 0;
-		int nodes_per_side_all_pagesH = 0;
-		sm->getOption("Scale", &scale);
-		sm->getOption("PageSize", &nodes_per_side);
+		LoadTerrain(m_TerrainConfigFile);
 
-		//Ogre::Real worldWidth, worldHeight;
-
-		if(Misc::GetExtension(m_TerrainConfigFile) == "cfg")
-		{
-			if (nodes_per_side == 0)
-			{
-				Ogre::ConfigFile config;
-				Ogre::String val;
-
-				config.load(full_path, "=", true);
-
-				val = config.getSetting( "PageSize" );
-				assert( !val.empty() );
-				nodes_per_side = atoi( val.c_str() );
-
-				val = config.getSetting( "PageWorldX" );
-				assert( !val.empty() );
-				scale.x = atof( val.c_str() ) / (nodes_per_side-1);
-
-				val = config.getSetting( "MaxHeight" );
-				assert( !val.empty() );
-				scale.y = atof( val.c_str() );
-
-				val = config.getSetting( "PageWorldZ" );
-				assert( !val.empty() );
-				scale.z = atof( val.c_str() ) / (nodes_per_side-1);
-
-			}
-		}
-
-		m_Scale = Convert::ToGASS(scale);
-		m_MaxHeight = m_Scale.y;
-		m_WorldWidth  = m_Scale.x * (nodes_per_side-1);
-		m_WorldHeight = m_Scale.z * (nodes_per_side-1);
-		m_NodesPerSideAllPagesW = nodes_per_side;
-		m_NodesPerSideAllPagesH = nodes_per_side;
 	}
-
 
 	void OgreSceneManagerTerrainComponent::GetBounds(Vec3 &min,Vec3 &max)
 	{
@@ -184,6 +209,8 @@ namespace GASS
 		float terrain_size = scale.x*m_HMDim;
 		// Create vertices
 		size_t vertex_size = m_HMDim * m_HMDim;
+		delete[] m_HeightData;
+
 		m_HeightData = new float[vertex_size];
 		Ogre::Vector3 offset(0,0,0);
 		for(size_t x = 0; x < m_HMDim; x++)
@@ -196,7 +223,6 @@ namespace GASS
 	}
 
 	void OgreSceneManagerTerrainComponent::GetMeshData(MeshDataPtr mesh_data)
-		//(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData)
 	{
 		size_t tWidth = m_HMDim;
 		size_t tHeight = m_HMDim;
@@ -229,7 +255,7 @@ namespace GASS
 		{
 			for(size_t z = 0; z < tHeight; z++)
 			{
-//				m_HeightData[z*m_HMDim+x] = heightData[z*m_HMDim+x]*scale.y;
+				//				m_HeightData[z*m_HMDim+x] = heightData[z*m_HMDim+x]*scale.y;
 				//Ogre::Vector3 pos = Ogre::Vector3(x,heightData[z*tWidth+x],z)*scale+offset;
 				Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset;
 				mesh_data->VertexVector[index] = Convert::ToGASS(pos);
@@ -238,9 +264,9 @@ namespace GASS
 		}
 	}
 
-	#ifndef LERP
-		#define LERP(a, b, t) (a + (b - a) * t)
-	#endif
+#ifndef LERP
+#define LERP(a, b, t) (a + (b - a) * t)
+#endif
 
 	Float OgreSceneManagerTerrainComponent::GetHeight(Float x, Float z)
 	{

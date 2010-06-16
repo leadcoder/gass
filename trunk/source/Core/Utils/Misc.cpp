@@ -26,8 +26,11 @@
 #include <algorithm>
 #include <string.h>
 
+
 #ifndef WIN32
-#include <cxxabi.h>
+	#include <cxxabi.h>
+#else
+	#include <Dbghelp.h>
 #endif
 namespace GASS
 {
@@ -340,7 +343,13 @@ void Misc::splitpath(char *name, char *drive, char *path, char *base, char *ext)
 
 #ifdef WIN32
         //substr(6) is used for removing "class_" when using vs,
-        //TODO: use UnDecorateSymbolName api functions instead?
+        //Test UnDecorateSymbolName api functions
+		//char out[256];
+		//int len=0;
+		//int flags=0;
+		//UnDecorateSymbolName(name.c_str(),out,len,flags);
+		//std::string ret = out;
+		//remove "class " from name
 		std::string ret = name.substr(6);
 #else
 	    int status;

@@ -10,9 +10,9 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Vector.h"
-#include "AL/al.h"
-#include "AL/alc.h"
-#include "AL/alut.h"
+#include "al.h"
+#include "alc.h"
+#include "alut.h"
 
 namespace GASS
 {

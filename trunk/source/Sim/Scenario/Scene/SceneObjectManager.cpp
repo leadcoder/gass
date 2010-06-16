@@ -75,7 +75,6 @@ namespace GASS
 			}
 			object_elem= object_elem->NextSiblingElement();
 		}
-	
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;

@@ -162,10 +162,10 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
-		dJointGroupDestroy (m_ContactGroup);
-		dSpaceDestroy (m_CollisionSpace);
-		dSpaceDestroy (m_StaticSpace);
-		dWorldDestroy (m_World);
+		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
+		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);
+		if(m_StaticSpace) dSpaceDestroy (m_StaticSpace);
+		if(m_World) dWorldDestroy (m_World);
 		//dCloseODE();
 		int address = (int) this;
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);

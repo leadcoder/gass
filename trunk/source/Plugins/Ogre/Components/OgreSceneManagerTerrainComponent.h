@@ -46,7 +46,7 @@ namespace GASS
 		virtual void pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 
 		std::string GetFilename()const {return m_TerrainConfigFile;}
-		void SetFilename(const std::string &filename) {m_TerrainConfigFile = filename;}
+		void SetFilename(const std::string &filename);
 		virtual Float GetSizeX(){return m_WorldWidth;}
 		virtual Float GetSizeZ(){return m_WorldHeight;}
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
@@ -67,6 +67,7 @@ namespace GASS
 		Sphere GetBoundingSphere() const;
 		float* GetHeightData();
 	protected:
+		void OgreSceneManagerTerrainComponent::LoadTerrain(const std::string &filename);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;
@@ -77,6 +78,7 @@ namespace GASS
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;
 		std::string m_TerrainConfigFile;
+		Ogre::SceneManager* m_OgreSceneManager;
 
 		//Helpers to access terrain height very fast
 		//TODO: Put this in a heightmap class for all terrain managers
