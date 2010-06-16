@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"

@@ -157,7 +157,7 @@ namespace GASS
 			}
 			m_MeshObject->end();
 
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage()));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
 

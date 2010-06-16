@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
+#include "ODEPhysicsSceneManager.h"
 
 namespace GASS
 {
@@ -39,6 +40,7 @@ namespace GASS
 
 	class ODEGeometryComponent : public Reflection<ODEGeometryComponent,BaseSceneComponent>
 	{
+	friend class ODEPhysicsSceneManager;
 	public:
 		enum PhysicsGeometryType
 		{
@@ -55,12 +57,14 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 
-		virtual void Disable();
-		virtual void Enable();
-		virtual void SetScale(const Vec3 &value);
+		
+	protected:
+		void Disable();
+		void Enable();
+		void SetScale(const Vec3 &value);
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
-	protected:
+		void Reset();
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void SetSizeFromGeom(dGeomID id, GeometryComponentPtr geom);
 		void SetPosition(const Vec3 &pos);

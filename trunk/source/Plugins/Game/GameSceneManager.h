@@ -22,8 +22,8 @@
 #define SIMPLE_SCENE_MANAGER_H
 
 #include <map>
-#include <boost/enable_shared_from_this.hpp>
 #include "Core/MessageSystem/BaseMessage.h"
+#include "Sim/Common.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"

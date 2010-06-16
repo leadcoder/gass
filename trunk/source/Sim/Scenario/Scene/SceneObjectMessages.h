@@ -31,9 +31,11 @@ namespace GASS
 {
 	class SimSceneManager;
 	class ISceneManager;
+	class IGeometryComponent;
 	struct ManualMeshData;
 	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
 	//Position (relative to parent) change for SceneObject is requested
@@ -345,9 +347,10 @@ namespace GASS
 	class GeometryChangedMessage : public BaseMessage
 	{
 	public:
-		GeometryChangedMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay){}
+		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Geometry(geom){}
 	private:
+		GeometryComponentPtr m_Geometry;
 	};
 	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
 

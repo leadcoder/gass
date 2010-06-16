@@ -132,6 +132,7 @@ namespace GASS
 			{
 				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
 			}
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
 

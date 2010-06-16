@@ -159,6 +159,8 @@ namespace GASS
 			bbsize *=  0.5f;
 			m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
 			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
+
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
 

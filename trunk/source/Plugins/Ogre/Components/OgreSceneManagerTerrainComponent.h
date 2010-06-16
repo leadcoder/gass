@@ -30,12 +30,11 @@
 #include <OgreTerrainPageSource.h>
 #include <OgreTerrainSceneManager.h>
 
-
 namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
+	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener, public boost::enable_shared_from_this<OgreSceneManagerTerrainComponent>
 	{
 	public:
 		OgreSceneManagerTerrainComponent();
@@ -58,9 +57,9 @@ namespace GASS
 
 		Float GetHeight(Float x, Float z);
 		Float GetWorldWidth()const {return  m_WorldWidth;}
-		Float GetWorldHeight()const {return m_WorldHeight; }
-		int GetNodesPerSideAllPagesW()const {return m_NodesPerSideAllPagesW;}
-		int GetNodesPerSideAllPagesH()const  {return m_NodesPerSideAllPagesH;}
+		Float GetWorldHeight()const {return m_WorldHeight;}
+		int GetNodesPerSideAllPagesW() const {return m_NodesPerSideAllPagesW;}
+		int GetNodesPerSideAllPagesH() const  {return m_NodesPerSideAllPagesH;}
 		Vec3 GetScale() const {return m_Scale;}
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		AABox GetBoundingBox() const;
@@ -87,7 +86,5 @@ namespace GASS
 		int m_HMDim;
 		float m_MaxHeight;
 	};
-
-
 }
 

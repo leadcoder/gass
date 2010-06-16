@@ -59,10 +59,7 @@ namespace GASS
 
 	ODEGeometryComponent::~ODEGeometryComponent()
 	{
-		if(m_TransformGeomID) dGeomDestroy(m_TransformGeomID);
-		if(m_SecondTransformGeomID) dGeomDestroy(m_SecondTransformGeomID);
-		if(m_ODESpaceID) dSpaceDestroy(m_ODESpaceID);
-		if(m_ODESecondarySpaceID) dSpaceDestroy(m_ODESecondarySpaceID);
+		Reset();
 	}
 
 	void ODEGeometryComponent::RegisterReflection()
@@ -117,7 +114,7 @@ namespace GASS
 
 		m_Body = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
 
-		boost::shared_ptr<IGeometryComponent> geom;
+		/*boost::shared_ptr<IGeometryComponent> geom;
 		if(m_GeometryTemplate != "")
 		{
 			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
@@ -137,7 +134,7 @@ namespace GASS
 				CreateODEGeomFromGeom(geom.get(),GetStaticSpace(),m_GeomID,m_TransformGeomID,NULL);
 				CreateODEGeomFromGeom(geom.get(),GetSecondaryStaticSpace(),m_SecondGeomID,m_SecondTransformGeomID,NULL);
 			}
-		}
+		}*/
 	}
 
 	dSpaceID ODEGeometryComponent::GetStaticSpace()
@@ -302,30 +299,52 @@ namespace GASS
 
 	void ODEGeometryComponent::Disable()
 	{
-		dGeomDisable(m_TransformGeomID);
-		dGeomDisable(m_SecondTransformGeomID);
+		if(m_TransformGeomID) dGeomDisable(m_TransformGeomID);
+		if(m_SecondTransformGeomID) dGeomDisable(m_SecondTransformGeomID);
 	}
 
 	void ODEGeometryComponent::Enable()
 	{
-		dGeomEnable(m_TransformGeomID);
-		dGeomEnable(m_SecondTransformGeomID);
+		if(m_TransformGeomID) dGeomEnable(m_TransformGeomID);
+		if(m_SecondTransformGeomID) dGeomEnable(m_SecondTransformGeomID);
+	}
+
+	void ODEGeometryComponent::Reset()
+	{
+		if(m_TransformGeomID) dGeomDestroy(m_TransformGeomID);
+		if(m_SecondTransformGeomID) dGeomDestroy(m_SecondTransformGeomID);
+		if(m_ODESpaceID) dSpaceDestroy(m_ODESpaceID);
+		if(m_ODESecondarySpaceID) dSpaceDestroy(m_ODESecondarySpaceID);
+		m_TransformGeomID = NULL;
+		m_SecondTransformGeomID = NULL;
+		m_ODESpaceID = NULL;
+		m_ODESecondarySpaceID = NULL;
 	}
 
 
 	void ODEGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
 	{
+		Reset();
 		GeometryComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
 			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
-
 		if(geom)
 		{
-			SetSizeFromGeom(m_GeomID,geom);
-			SetSizeFromGeom(m_SecondGeomID,geom);
+			if(m_Body)
+			{
+				CreateODEGeomFromGeom(geom.get(),m_Body->GetSpace(),m_GeomID,m_TransformGeomID,m_Body);
+				CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
+				if (m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
+					CreateODEMassFromGeom(geom.get(),m_Body);
+			}
+			else
+			{
+				CreateODEGeomFromGeom(geom.get(),GetStaticSpace(),m_GeomID,m_TransformGeomID,NULL);
+				CreateODEGeomFromGeom(geom.get(),GetSecondaryStaticSpace(),m_SecondGeomID,m_SecondTransformGeomID,NULL);
+			}
 		}
 	}
 

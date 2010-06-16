@@ -19,6 +19,7 @@
 *****************************************************************************/
 #pragma once
 
+
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
@@ -34,7 +35,7 @@ namespace Ogre
 namespace GASS
 {
 	class DynamicLines;
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent, public boost::enable_shared_from_this<OgreManualMeshComponent>
 	{
 	public:
 		OgreManualMeshComponent(void);

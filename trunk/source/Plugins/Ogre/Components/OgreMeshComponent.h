@@ -38,7 +38,7 @@ namespace GASS
 	
 
 
-	class OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent
+	class OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public boost::enable_shared_from_this<OgreMeshComponent>
 	{
 	public:
 		OgreMeshComponent (void);
