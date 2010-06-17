@@ -88,6 +88,7 @@ namespace GASS
 
 		if(m_OgreSceneManager && filename != "")
 		{
+			//unload previous terrain
 			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
 
 			std::string full_path;
@@ -96,8 +97,13 @@ namespace GASS
 				Log::Warning("Faild to load terrain %s",filename.c_str());
 				return;
 			}
+			
+			
+			//add resrouce path to terrain
+			//std::string terrain_path = Misc::RemoveFilename(full_path);
+			//rs->AddResourceLocation(terrain_path,"GASSTerrain","FileSystem",true);
+			//rs->LoadResourceGroup("GASSTerrain");
 
-			std::string base_path = Misc::RemoveFilename(full_path);
 			m_OgreSceneManager->setWorldGeometry(full_path);
 			Ogre::Vector3 scale = Ogre::Vector3::ZERO;
 			int nodes_per_side = 0;

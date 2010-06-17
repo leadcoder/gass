@@ -31,7 +31,7 @@
 namespace GASS
 {
 	class DynamicLines;
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent, public boost::enable_shared_from_this<OSGManualMeshComponent>
 	{
 	public:
 		OSGManualMeshComponent(void);

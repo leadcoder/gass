@@ -393,21 +393,25 @@ namespace GASS
 		//m_HDRListener = new HDRListener();
 		//m_GaussianListener = new GaussianListener();
 		m_SSAOListener = new SSAOListener(vp);
-
-		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
-		compMgr.registerCompositorLogic("GaussianBlur", new GaussianBlurLogic);
-		compMgr.registerCompositorLogic("HDR", new HDRLogic);
-		compMgr.registerCompositorLogic("HeatVision", new HeatVisionLogic);
+		static bool firstTime = true;
+		if (firstTime)
+		{
+			Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+			compMgr.registerCompositorLogic("GaussianBlur", new GaussianBlurLogic);
+			compMgr.registerCompositorLogic("HDR", new HDRLogic);
+			compMgr.registerCompositorLogic("HeatVision", new HeatVisionLogic);
+			firstTime = false;
+		}
+		
 		RegisterCompositors(vp);
 	}
 
 	OgrePostProcess::~OgrePostProcess(void)
 	{
-		delete m_HVListener;
-		delete m_HDRListener;
-		delete m_GaussianListener;
 		delete m_SSAOListener;
-
+		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+		compMgr.removeCompositorChain(m_Viewport);
+		
 	}
 
 	void OgrePostProcess::Update(Ogre::Camera* vp)
@@ -417,7 +421,6 @@ namespace GASS
 			DisableCompositor(m_ActiveVec[i]);
 			EnableCompositor(m_ActiveVec[i]);
 		}
-
 	}
 
 	void OgrePostProcess::EnableCompositor(const std::string &name)

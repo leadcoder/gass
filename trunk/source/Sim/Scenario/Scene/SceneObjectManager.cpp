@@ -206,7 +206,7 @@ namespace GASS
 
 	void SceneObjectManager::Clear()
 	{
-		UnloadObject(m_Root);
+		DeleteObject(m_Root);
 		m_Root.reset();
 		m_Root = SceneObjectPtr( new SceneObject());
 	}
