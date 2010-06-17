@@ -66,7 +66,7 @@ namespace GASS
 		Sphere GetBoundingSphere() const;
 		float* GetHeightData();
 	protected:
-		void OgreSceneManagerTerrainComponent::LoadTerrain(const std::string &filename);
+		void LoadTerrain(const std::string &filename);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;
