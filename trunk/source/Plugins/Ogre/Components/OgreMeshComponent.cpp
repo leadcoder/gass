@@ -208,8 +208,9 @@ namespace GASS
 	{
 		assert(m_OgreEntity);
 		return Convert::ToGASS(m_OgreEntity->getBoundingBox());
-
 	}
+
+
 	Sphere OgreMeshComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;

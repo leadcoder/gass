@@ -119,6 +119,7 @@ namespace GASS
 			m_SceneMgr->clearScene();
 			//m_MainWindow->removeAllViewports();
 			Root::getSingleton().destroySceneManager(m_SceneMgr);
+			m_SceneMgr = NULL;
 		}
 	}
 	

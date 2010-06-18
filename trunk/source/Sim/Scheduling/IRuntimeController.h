@@ -81,6 +81,11 @@ namespace GASS
 			the only identifier for the RTC.
 		*/
 		virtual void Unregister(ITaskListener* listener) = 0;
+
+		/**
+			Log RTC state
+		*/
+		virtual void Log() = 0;
 	private:
 	};
 }

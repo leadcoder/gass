@@ -36,6 +36,21 @@ namespace GASS
 	MessageManager::~MessageManager()
 	{
         delete m_Mutex;
+
+		//release mem
+		MessageTypeListenerMap::iterator type_iter  = m_MessageTypes.begin();
+		while(type_iter != m_MessageTypes.end())
+		{
+			/*MessageRegList::iterator msg_reg = type_iter->second->m_MessageRegistrations.begin();
+			while(msg_reg != type_iter->second->m_MessageRegistrations.end())
+			{
+				delete (*msg_reg);
+				msg_reg++;
+			}*/
+			MessageTypeListeners* listener = type_iter->second;
+			delete listener;
+			type_iter++;
+		}
 	}
 
 	void MessageManager::AddMessageToSystem(const MessageType &type)

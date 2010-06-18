@@ -55,6 +55,7 @@ namespace GASS
 	ScenarioScene::~ScenarioScene()
 	{
 		delete m_SceneMessageManager;
+		
 	}
 
 	void ScenarioScene::CreateRegistredSceneManagers()
@@ -64,9 +65,14 @@ namespace GASS
 
 	void ScenarioScene::Shutdown()
 	{
+		Log::Print("Scenario scene shutdown started for:%s",GetName().c_str());
 		m_ObjectManager->Clear();
+
 		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
 		m_SceneMessageManager->SendImmediate(scenario_msg);
+		
+		MessagePtr unload_msg(new ScenarioSceneUnloadNotifyMessage(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 	}
 
 	int ScenarioScene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )

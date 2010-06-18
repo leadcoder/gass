@@ -42,6 +42,7 @@ namespace GASS
 		void Update(double delta_time);
 		void Register(ITaskListener *);
 		void Unregister(ITaskListener *update_task);
+		void Log();
 	private:
 		tbb::task* m_TasksRoot;
 		tbb::spin_mutex m_Mutex;

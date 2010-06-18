@@ -42,6 +42,7 @@ namespace GASS
 
 	Scenario::~Scenario()
 	{
+		Log::Print("Scenario shutdown started");
 		for(int i = 0; i < m_Scenes.size();i++)
 		{
 			m_Scenes[i]->Shutdown();

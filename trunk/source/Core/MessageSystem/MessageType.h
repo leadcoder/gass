@@ -30,6 +30,8 @@ namespace GASS
 	class MessageReg
 	{
 	public:
+		MessageReg(){}
+		virtual ~MessageReg(){}
 		MessageFuncPtr m_Callback;
 		int m_Priority;
 	};
@@ -38,6 +40,17 @@ namespace GASS
 	class MessageTypeListeners
 	{
 	public:
+		MessageTypeListeners(){}
+		virtual ~MessageTypeListeners()
+		{
+			MessageRegList::iterator iter = m_MessageRegistrations.begin();
+			while(iter != m_MessageRegistrations.end())
+			{
+				MessageReg*  reg  = (*iter);
+				delete reg;
+				iter++;
+			}
+		}
 
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;

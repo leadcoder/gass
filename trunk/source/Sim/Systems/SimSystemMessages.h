@@ -220,7 +220,7 @@ namespace GASS
 	/**
 		This message is posted by the ScenarioScene class before the scene objects are loaded.
 		Suscribe to this message if you want to get hold of sceario scenes before all scene objects are loaded. This
-		can be usefull if you want to modify, add or save some objects the scenario scene loaded
+		can be usefull if you want to modify, add or save some objects loaded by the scenario scene.
 	*/
 
 	class ScenarioSceneAboutToLoadNotifyMessage : public BaseMessage
@@ -235,6 +235,22 @@ namespace GASS
 		ScenarioScenePtr m_ScenarioScene;
 	};
 	typedef boost::shared_ptr<ScenarioSceneAboutToLoadNotifyMessage> ScenarioSceneAboutToLoadNotifyMessagePtr;
+
+
+	class ScenarioSceneUnloadNotifyMessage : public BaseMessage
+	{
+	public:
+		ScenarioSceneUnloadNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_ScenarioScene(scenario_scene){}
+
+		  ScenarioScenePtr GetScenarioScene() const {return m_ScenarioScene;}
+	private:
+		ScenarioScenePtr m_ScenarioScene;
+	};
+	typedef boost::shared_ptr<ScenarioSceneUnloadNotifyMessage> ScenarioSceneUnloadNotifyMessagePtr;
+
+	
 
 
 	/**

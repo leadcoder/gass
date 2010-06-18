@@ -76,11 +76,9 @@ namespace GASS
 					iter++;
 			}
 			return;
-
 		}
 		else
 		{
-			
 			tbb::spin_mutex::scoped_lock lock(m_Mutex);
 			TaskListenerVector::iterator iter = m_TaskGroups[group].begin();
 			while(iter != m_TaskGroups[group].end())
@@ -118,7 +116,7 @@ namespace GASS
 
 			for(; iter != groups.end();iter++)
 			{
-					//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
+				//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
 				TBBUpdateTask* update_task = new( m_TasksRoot->allocate_additional_child_of( *m_TasksRoot ) ) TBBUpdateTask(delta_time,iter->second);
 				// affinity will increase the chances that each SystemTask will be assigned
 				// to a unique thread, regardless of PerformanceHint
@@ -144,5 +142,18 @@ namespace GASS
 
 		//Sync!
 		SimEngine::Get().GetSimSystemManager()->Update(delta_time);
+	}
+
+
+	void TBBRuntimeController::Log()
+	{
+		Log::Print("Num registred tasks in primary vector:%d",m_PrimaryUpdateVector.size());
+		Log::Print("Num registred groups:%d",m_TaskGroups.size());
+
+		TaskGroupMap::iterator iter = m_TaskGroups.begin();
+		for(; iter != m_TaskGroups.end();iter++)
+		{
+			Log::Print("Num registred in %s: %d",iter->first.c_str(), iter->second.size());
+		}
 	}
 }
