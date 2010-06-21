@@ -29,8 +29,10 @@
 
 namespace GASS
 {	
+	class MessageManager;
 	class SceneObjectManager;
 	class SceneObject;
+	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
@@ -105,7 +107,7 @@ namespace GASS
 		void OnChangeName(SceneObjectNameMessagePtr message);
 	protected:
 		SceneObjectManager* m_Manager;
-		MessageManager* m_MessageManager;
+		MessageManagerPtr m_MessageManager;
 	};
 
 }

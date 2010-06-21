@@ -25,6 +25,7 @@
 #include <map>
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/SimSystemMessages.h"
 #include "Core/System/BaseSystem.h"
 #include "tbb/spin_mutex.h"
 
@@ -46,6 +47,7 @@ namespace GASS
 		void Force(CollisionRequest &request, CollisionResult &result);
 		void Process();
 	private:
+		void OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

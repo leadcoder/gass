@@ -23,6 +23,7 @@
 #include "Plugins/ODE/ODELineCollision.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/SimEngine.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -33,8 +34,6 @@ namespace GASS
 	ODECollisionSystem::ODECollisionSystem()
 	{
 		m_HandleCount = 5;
-		
-
 	}
 
 	ODECollisionSystem::~ODECollisionSystem()
@@ -133,7 +132,16 @@ namespace GASS
 	void ODECollisionSystem::OnCreate()
 	{
 		int address = (int) this;
+
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
+		
 		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_RM_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
+	}
+
+	void ODECollisionSystem::OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message)
+	{
+		m_RequestMap.clear();
+		m_ResultMap.clear();
 	}
 
 	/*void ODECollisionSystem::OnUpdate(MessagePtr message)

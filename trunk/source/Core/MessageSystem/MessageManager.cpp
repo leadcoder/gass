@@ -38,19 +38,13 @@ namespace GASS
         delete m_Mutex;
 
 		//release mem
-		MessageTypeListenerMap::iterator type_iter  = m_MessageTypes.begin();
+		/*MessageTypeListenerMap::iterator type_iter  = m_MessageTypes.begin();
 		while(type_iter != m_MessageTypes.end())
 		{
-			/*MessageRegList::iterator msg_reg = type_iter->second->m_MessageRegistrations.begin();
-			while(msg_reg != type_iter->second->m_MessageRegistrations.end())
-			{
-				delete (*msg_reg);
-				msg_reg++;
-			}*/
 			MessageTypeListeners* listener = type_iter->second;
 			delete listener;
 			type_iter++;
-		}
+		}*/
 	}
 
 	void MessageManager::AddMessageToSystem(const MessageType &type)
@@ -60,7 +54,7 @@ namespace GASS
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
 		{
-			MessageTypeListeners* new_type = new MessageTypeListeners;
+			MessageTypeListenersPtr new_type = MessageTypeListenersPtr(new MessageTypeListeners);
 			new_type->m_TypeID = type;
 			m_MessageTypes[type] = new_type;
 		}
@@ -97,12 +91,13 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
+			
 			(*msg_reg)->m_Callback->Fire(message);
-				msg_reg++;
+			msg_reg++;
 		}
 	}
 
-	bool MessageRegSortPredicate(const MessageReg* lhs, const MessageReg* rhs)
+	bool MessageRegSortPredicate(const MessageRegPtr lhs, const MessageRegPtr rhs)
 	{
 		return lhs->m_Priority < rhs->m_Priority;
 	}
@@ -130,7 +125,7 @@ namespace GASS
 			}
 			msg_reg++;
 		}
-		MessageReg* new_reg = new MessageReg();
+		MessageRegPtr new_reg (new MessageReg());
 		new_reg->m_Callback = callback;
 		//new_reg->m_ObjectID = object_id;
 		new_reg->m_Priority = priority;
@@ -157,9 +152,7 @@ namespace GASS
 		{
 			if(*(*msg_reg)->m_Callback == *callback)
 			{
-				delete (*msg_reg);
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
-
 				return;
 			}
 			msg_reg++;

@@ -33,14 +33,14 @@
 
 namespace GASS
 {
-	SceneObject::SceneObject()
+	SceneObject::SceneObject() : m_MessageManager (new MessageManager())
 	{
-		m_MessageManager = new MessageManager();
+		
 	}
 
 	SceneObject::~SceneObject(void)
 	{
-		delete m_MessageManager;
+		//delete m_MessageManager;
 	}
 
 	void SceneObject::RegisterReflection()

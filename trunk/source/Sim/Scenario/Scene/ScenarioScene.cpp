@@ -54,7 +54,7 @@ namespace GASS
 
 	ScenarioScene::~ScenarioScene()
 	{
-		delete m_SceneMessageManager;
+		//delete m_SceneMessageManager;
 		
 	}
 

@@ -35,26 +35,29 @@ namespace GASS
 		MessageFuncPtr m_Callback;
 		int m_Priority;
 	};
+	typedef boost::shared_ptr<MessageReg> MessageRegPtr;
 
-	typedef std::list<MessageReg*> MessageRegList;
+	typedef std::list<MessageRegPtr> MessageRegList;
+	
 	class MessageTypeListeners
 	{
 	public:
 		MessageTypeListeners(){}
 		virtual ~MessageTypeListeners()
 		{
-			MessageRegList::iterator iter = m_MessageRegistrations.begin();
+			/*MessageRegList::iterator iter = m_MessageRegistrations.begin();
 			while(iter != m_MessageRegistrations.end())
 			{
 				MessageReg*  reg  = (*iter);
 				delete reg;
 				iter++;
-			}
+			}*/
 		}
 
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
+	typedef boost::shared_ptr<MessageTypeListeners> MessageTypeListenersPtr;
 
 }
 #endif 

@@ -39,6 +39,7 @@ namespace GASS
 
 	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 
 
 	/**
@@ -215,7 +216,7 @@ namespace GASS
 		Vec3 m_StartRot;
 		Vec2 m_RT90Origo;
 		std::vector<SceneManagerPtr> m_SceneManagers;
-		MessageManager* m_SceneMessageManager;
+		MessageManagerPtr m_SceneMessageManager;
 		ScenarioWeakPtr m_Scenario;
 		std::string m_Name;
 		SceneObjectManagerPtr m_ObjectManager;
