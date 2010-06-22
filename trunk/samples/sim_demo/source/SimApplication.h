@@ -87,8 +87,23 @@ public:
 		m_Scenario = scenario;
 		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
 
+		for(int i = 0; i <  16 ;i++)
+		{
+			GASS::SimEngine::Get().GetControlSettingsManager()->Clear();
+			GASS::SimEngine::Get().GetSimSystemManager()->ClearMessagesManager();
+			m_Scenario.reset();
+			
+			m_Scenario = GASS::ScenarioPtr(new GASS::Scenario());
 
-		if(m_Scenario->Load(m_ScenarioName))
+			m_Scenario->Load(m_ScenarioName);
+
+			m_Engine->Update(0.1);
+			m_Scenario->OnUpdate(0.1);
+			
+			
+		}
+
+		if(m_Scenario) //if(m_Scenario->Load(m_ScenarioName))
 		{
 			m_Scenario->Save("c:/temp/scenario_test");
 			//if(m_Instances != "")
@@ -187,17 +202,18 @@ public:
 		double update_time = 1.0/m_UpdateFreq;
 		if(time - prev > update_time)
 		{
-			m_Engine->Update(time - prev);
-			m_Scenario->OnUpdate(time - prev);
+			m_Engine->Update(update_time);//time - prev);
+			m_Scenario->OnUpdate(update_time);//time - prev);
 			prev = time;
 		}
 
 
 
 
+
+
 //		if(GetAsyncKeyState(VK_ESCAPE))
 //			return false;
-
 		return true;
 	}
 
