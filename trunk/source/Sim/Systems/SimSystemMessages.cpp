@@ -23,9 +23,5 @@
 namespace GASS
 {
 
-std::string StartServerMessage::GetServerName() const
-{
-    return m_Name;
-}
 }
 

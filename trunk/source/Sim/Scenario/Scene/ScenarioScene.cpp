@@ -66,6 +66,8 @@ namespace GASS
 	void ScenarioScene::Shutdown()
 	{
 		Log::Print("Scenario scene shutdown started for:%s",GetName().c_str());
+
+		m_SceneMessageManager->Clear();
 		m_ObjectManager->Clear();
 
 		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));

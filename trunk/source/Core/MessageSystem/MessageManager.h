@@ -88,6 +88,9 @@ namespace GASS
 			registred listeners.
 		*/
 		void Update(float dt);
+
+
+		void Clear();
 	private:
 		//#pragma deprecated(AddMessageToSystem)
 		void AddMessageToSystem(const MessageType &type);

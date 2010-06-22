@@ -159,6 +159,12 @@ namespace GASS
 		}
 	}
 
+
+	void MessageManager::Clear()
+	{
+		m_MessageQueue.clear();
+	}
+
 	// Updates the message handler and sends any messages than need to be sent
 	void MessageManager::Update(float dt)
 	{

@@ -74,7 +74,7 @@ namespace GASS
 		{
 			//Fatal error, cannot load
 			Log::Warning("SystemManager::Load() - Couldn't load: %s", filename.c_str());
-			return 0;
+			return false;
 		}
 		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
 		if(scenario == NULL) Log::Error("Failed to get Scenario tag");
@@ -101,7 +101,7 @@ namespace GASS
 			}
 		}
 		xmlDoc->Clear();
-		//Delete our allocated document and return success ;)
+		//Delete our allocated document
 		delete xmlDoc;
 
 		
@@ -111,7 +111,7 @@ namespace GASS
 		{
 			m_Scenes[i]->OnLoad();
 		}
-		return 1;
+		return true;
 	}
 
 

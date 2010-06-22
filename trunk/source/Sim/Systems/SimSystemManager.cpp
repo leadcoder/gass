@@ -78,4 +78,9 @@ namespace GASS
 	{
 		m_SystemMessageManager->SendImmediate(message);
 	}
+
+	void SimSystemManager::ClearMessagesManager()
+	{
+		m_SystemMessageManager->Clear();
+	}
 }

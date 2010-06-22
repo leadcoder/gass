@@ -291,6 +291,19 @@ namespace GASS
 		}
 	}
 
+
+	void ControlSettingsManager::Clear()
+	{
+		ControlSettingMap::iterator iter;
+		iter = m_ControlSettingMap.begin();
+		while(iter != m_ControlSettingMap.end())
+		{
+			iter->second->GetMessageManager()->Clear();
+			iter++;
+		}
+	}
+
+
 	bool ControlSettingsManager::Load(const std::string &filename)
 	{
 		if(filename =="") return false;

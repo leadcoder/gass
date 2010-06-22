@@ -12,7 +12,18 @@
 *                                                                           *
 *****************************************************************************/ 
 
+
+#include <stdio.h>
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+
+//int My_init(lua_State* L); // declare the wrapped module
+int mytest();
+
 #include "CEGUISystem.h"
+#include "ScriptingModules/LuaScriptModule/CEGUILua.h"
+
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
@@ -21,6 +32,17 @@
 
 
 #include "RendererModules/Ogre/CEGUIOgreRenderer.h"
+
+//int tolua_LuaTest_open (lua_State* L);
+//int GASS_SWIG_init(lua_State* L);
+extern "C" {
+int luaopen_GASS(lua_State* L);
+}
+
+//int mytest(lua_State* L);
+
+
+
 
 namespace GASS
 {
@@ -48,6 +70,19 @@ namespace GASS
 	{
 		// initialise GUI system using the new automagic function
 		CEGUI::OgreRenderer* d_renderer = &CEGUI::OgreRenderer::bootstrapSystem();
+
+	    //create a script module.
+        CEGUI::LuaScriptModule& scriptmod(CEGUI::LuaScriptModule::create());
+
+         // tell CEGUI to use this scripting module
+         CEGUI::System::getSingleton().setScriptingModule(&scriptmod);
+
+		 //luaopen_GASS(scriptmod.getLuaState());
+
+
+         // execute the demo8 script which controls the rest of this demo
+         CEGUI::System::getSingleton().executeScriptFile("demo8.lua");
+
 		using namespace CEGUI;
 
 		// CEGUI relies on various systems being set-up, so this is what we do
@@ -60,7 +95,7 @@ namespace GASS
 		// So, we use the SchemeManager singleton to load in a scheme that loads the
 		// imagery and registers widgets for the TaharezLook skin.  This scheme also
 		// loads in a font that gets used as the system default.
-		SchemeManager::getSingleton().create("TaharezLook.scheme");
+		/*SchemeManager::getSingleton().create("TaharezLook.scheme");
 
 		// The next thing we do is to set a default mouse cursor image.  This is
 		// not strictly essential, although it is nice to always have a visible
@@ -99,7 +134,9 @@ namespace GASS
 
 		// Here we attach the newly created FrameWindow to the previously created
 		// DefaultWindow which we will be using as the root of the displayed gui.
-		root->addChildWindow(wnd);
+		//root->addChildWindow(wnd);
+		Window* sheet = winMgr.loadWindowLayout("Demo7Windows.layout");
+		root->addChildWindow(sheet);
 
 		// Windows are in Relative metrics mode by default.  This means that we can
 		// specify sizes and positions without having to know the exact pixel size
@@ -126,7 +163,9 @@ namespace GASS
 		// As a final step in the initialisation of our sample window, we set the window's
 		// text to "Hello World!", so that this text will appear as the caption in the
 		// FrameWindow's titlebar.
-		wnd->setText("Hello World!");
+		wnd->setText("Hello World!");*/
+
+
 
 
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
@@ -136,6 +175,25 @@ namespace GASS
 		// return true so that the samples framework knows that initialisation was a
 		// success, and that it should now run the sample.
 	}
+
+
+	/*void CEGUISystem::OnSuscribeMessage(SuscribeMessagePtr message)
+	{
+		//#define REG_TMESS(FUNCTION,TYPED_MESSAGE,PRIORITY) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(CEGUISystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(typeid(message->GetMessageType()),MESSAGE_FUNC(OnDelegate),0);
+	}
+
+	void CEGUISystem::OnSuscribeMessage(MessagePtr message)
+	{
+		//iterate over all typeid and send messages to lua functions
+		for(int i = 0; i < m_FunctionMap[message->GetType()].size(); i++)
+		{
+			std::string lua_function = m_FunctionMap[message->GetType()].at(i);
+			call_lua(lua_function,
+		}
+	}*/
+	
 
 
 	bool CEGUISystem::MouseMoved(float x,float y, float z)

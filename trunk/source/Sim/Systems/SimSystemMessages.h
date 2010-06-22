@@ -264,7 +264,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
 
-		  std::string GetServerName() const;// {return m_Name;}
+		  std::string GetServerName() const {return m_Name;}
 		  int GetPort() const {return m_Port;}
 	private:
 		std::string m_Name;

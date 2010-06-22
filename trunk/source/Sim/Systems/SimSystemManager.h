@@ -58,7 +58,8 @@ namespace GASS
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
-		void Update(float delta_time);		
+		void Update(float delta_time);
+		void ClearMessagesManager();
 	private:
 		MessageManager* m_SystemMessageManager;
 	};

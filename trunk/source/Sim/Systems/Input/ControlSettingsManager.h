@@ -47,6 +47,7 @@ namespace GASS
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
 		bool Load(const std::string &filename);
 		void Update(double delta_time);
+		void Clear();
 	private:
 		int GetDevice(std::string device);
 		void Add(const std::string &name,ControlSetting* cs);
