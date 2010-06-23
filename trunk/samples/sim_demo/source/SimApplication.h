@@ -87,7 +87,7 @@ public:
 		m_Scenario = scenario;
 		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
 
-		for(int i = 0; i <  16 ;i++)
+		/*for(int i = 0; i <  16 ;i++)
 		{
 			GASS::SimEngine::Get().GetControlSettingsManager()->Clear();
 			GASS::SimEngine::Get().GetSimSystemManager()->ClearMessagesManager();
@@ -101,9 +101,9 @@ public:
 			m_Scenario->OnUpdate(0.1);
 			
 			
-		}
+		}*/
 
-		if(m_Scenario) //if(m_Scenario->Load(m_ScenarioName))
+		if(m_Scenario->Load(m_ScenarioName))
 		{
 			m_Scenario->Save("c:/temp/scenario_test");
 			//if(m_Instances != "")
