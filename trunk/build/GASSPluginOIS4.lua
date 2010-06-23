@@ -7,8 +7,6 @@ project "GASSPluginOIS"
 
 	targetdir ( "../lib/" .. _ACTION )
 
-	
-
 
 if (os.is("windows")) then
 
@@ -16,16 +14,15 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(OGRE_PATH)/include",
+		"../dependencies/ois/includes",
 		"$(BOOST_PATH)"
-
 	}
 	
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"$(OGRE_PATH)/lib/$(ConfigurationName)",
+		"../dependencies/ois/lib",
 		"$(BOOST_PATH)/lib"
 	}
 
@@ -38,7 +35,6 @@ else
 		"../source",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
-
 	}
 
 	libdirs 
@@ -46,7 +42,6 @@ else
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
-
 	}
 
 end
@@ -56,12 +51,11 @@ end
 		targetname "GASSPluginOIS_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
---		debugPrefix = "_d"
 		links 
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OIS_d",
+			"OIS_static_d",
 			"tinyxmld"
 		}
 
@@ -73,7 +67,7 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-			"OIS",
+			"OIS_static",
 			"tinyxml"
 		}
 
