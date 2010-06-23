@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <OIS/OIS.h>
+#include <OIS.h>
 #include "Sim/Common.h"
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageType.h"
