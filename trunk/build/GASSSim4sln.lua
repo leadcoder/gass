@@ -10,12 +10,12 @@ dofile "GASSPluginPagedGeometry4.lua"
 dofile "GASSPluginOpenAL4.lua"
 dofile "GASSPluginGame4.lua"
 dofile "GASSPluginBase4.lua"
-
+dofile "GASSPluginRaknet4.lua"
 
 -- Optional Plugins
 --dofile "GASSPluginOSG4.lua"
 --dofile "GASSPluginApplication4.lua"
-dofile "GASSPluginRaknet4.lua"
+
 --dofile "GASSPluginPhysX4.lua"
 --[[newoption {
    trigger     = "gfxapi",

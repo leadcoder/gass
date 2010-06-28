@@ -27,8 +27,37 @@ ECHO.
 goto start
 
 :GENERATE
-@echo on
+
 ..\Tools\premake4.exe --file=GASSSim4sln.lua  --os=windows %target%
 ..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows %target%
 
 pause
+
+cls
+
+set choice=
+set /p choice="Do you want to build GASS? "
+if '%choice%'=='y' (
+goto BUILDGASS
+)
+if '%choice%'=='Y' (
+goto BUILDGASS
+)
+
+goto ENDOFFILE
+
+
+:BUILDGASS
+
+Echo To proceed environment variables OGRE_HOME, OGRE_PATH need to be defined. 
+Echo When you have made sure that they are
+
+pause
+
+
+call "Build GASS.bat" %target%
+
+
+:ENDOFFILE
+pause
+@echo on
