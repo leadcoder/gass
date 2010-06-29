@@ -121,6 +121,7 @@ namespace GASS
 			//if((*msg_reg)->m_Callback == callback)
 			if(*(*msg_reg)->m_Callback == *callback)
 			{
+				Log::Error("Callback already registered for message: %s", type.name());
 				return 1;
 			}
 			msg_reg++;
@@ -163,6 +164,7 @@ namespace GASS
 	void MessageManager::Clear()
 	{
 		m_MessageQueue.clear();
+		//m_MessageTypes.clear();
 	}
 
 	// Updates the message handler and sends any messages than need to be sent

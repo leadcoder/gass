@@ -49,6 +49,7 @@ namespace GASS
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;

@@ -47,6 +47,7 @@ namespace GASS
 		float GetDensityAt(float x, float z);
 
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		static float GetTerrainHeight(float x, float z);
 
 		std::string GetMesh() const 

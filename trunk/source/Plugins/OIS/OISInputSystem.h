@@ -33,7 +33,6 @@
 namespace GASS
 {
 
-
 	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener, public ITaskListener
 	{
 	public:

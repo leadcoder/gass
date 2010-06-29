@@ -55,21 +55,7 @@ namespace GASS
 	OgreLocationComponent::~OgreLocationComponent()
 	{
 
-		if(m_OgreNode)
-		{
-			m_OgreNode->setListener(NULL);
-			Ogre::SceneNode* parent = m_OgreNode->getParentSceneNode();
-			if(parent)
-			{
-				parent->removeChild(m_OgreNode);
-			}
-			else
-			{
-				Ogre::SceneManager* sm = m_OgreNode->getCreator();
-				sm->destroySceneNode(m_OgreNode->getName());
-			}
-
-		}
+		
 
 	}
 
@@ -86,6 +72,7 @@ namespace GASS
 	void OgreLocationComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnLoad,GASS::LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::PositionMessage,GASS::PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::RotationMessage,GASS::RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldPositionMessage,GASS::WorldPositionMessage ,0));
@@ -95,6 +82,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::VisibilityMessage,GASS::VisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0));
 	}
+
 
 	void OgreLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
@@ -137,6 +125,26 @@ namespace GASS
 		
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
+
+	void OgreLocationComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		if(m_OgreNode)
+		{
+			m_OgreNode->setListener(NULL);
+			Ogre::SceneNode* parent = m_OgreNode->getParentSceneNode();
+			if(parent)
+			{
+				parent->removeChild(m_OgreNode);
+			}
+			else
+			{
+				Ogre::SceneManager* sm = m_OgreNode->getCreator();
+				sm->destroySceneNode(m_OgreNode->getName());
+			}
+		}
+	}
+
+
 
 	void OgreLocationComponent::ParentChangedMessage(ParentChangedMessagePtr message)
 	{

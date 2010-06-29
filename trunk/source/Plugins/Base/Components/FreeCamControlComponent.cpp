@@ -111,6 +111,7 @@ namespace GASS
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)

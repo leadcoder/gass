@@ -60,6 +60,7 @@ namespace GASS
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		void OnColorMessage(ColorMessagePtr message);

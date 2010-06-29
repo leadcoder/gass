@@ -168,6 +168,7 @@ namespace GASS
 	{
 		
 		int address = (int) this;
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 

@@ -55,16 +55,7 @@ namespace GASS
 
 	OgreMeshComponent::~OgreMeshComponent()
 	{
-		if(m_OgreEntity && m_UniqueMaterialCreated)
-		{
-			//relase material
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				Ogre::MaterialManager::getSingleton().remove(mat->getName());
-			}
-		}
+		
 
 	}
 
@@ -79,6 +70,7 @@ namespace GASS
 	void OgreMeshComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnColorMessage,ColorMessage,0));
@@ -91,6 +83,22 @@ namespace GASS
 		m_ReadyToLoadMesh = true;
 		SetFilename(m_Filename);
 	}
+
+
+	void OgreMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		if(m_OgreEntity && m_UniqueMaterialCreated)
+		{
+			//relase material
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				Ogre::MaterialPtr mat = se->getMaterial();
+				Ogre::MaterialManager::getSingleton().remove(mat->getName());
+			}
+		}
+	}
+
 
 	void OgreMeshComponent::SetFilename(const std::string &filename) 
 	{

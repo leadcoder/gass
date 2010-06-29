@@ -80,6 +80,7 @@ namespace GASS
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		void PositionMessage(PositionMessagePtr message);
 		void RotationMessage(RotationMessagePtr message);
 		void VisibilityMessage(VisibilityMessagePtr message);

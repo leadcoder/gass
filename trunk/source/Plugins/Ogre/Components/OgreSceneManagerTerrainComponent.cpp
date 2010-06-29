@@ -59,11 +59,7 @@ namespace GASS
 
 	OgreSceneManagerTerrainComponent::~OgreSceneManagerTerrainComponent()
 	{
-		delete[] m_HeightData;
-		if(m_PageListenerAdded)
-		{
-			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
-		}
+	
 	}
 
 	void OgreSceneManagerTerrainComponent::RegisterReflection()
@@ -75,6 +71,7 @@ namespace GASS
 	void OgreSceneManagerTerrainComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
 	void OgreSceneManagerTerrainComponent::SetFilename(const std::string &filename) 
@@ -166,6 +163,16 @@ namespace GASS
 		LoadTerrain(m_TerrainConfigFile);
 
 	}
+
+	void OgreSceneManagerTerrainComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		delete[] m_HeightData;
+		if(m_PageListenerAdded)
+		{
+			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
+		}
+	}
+
 
 	void OgreSceneManagerTerrainComponent::GetBounds(Vec3 &min,Vec3 &max)
 	{

@@ -60,12 +60,7 @@ namespace GASS
 
 	GrassGeometryComponent::~GrassGeometryComponent(void)
 	{
-		if(m_PagedGeometry)
-		{
-			if(m_PagedGeometry->getPageLoader())
-				delete m_PagedGeometry->getPageLoader();
-			delete m_PagedGeometry;
-		}
+		
 	}
 
 
@@ -95,6 +90,7 @@ namespace GASS
 	void GrassGeometryComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnLoad,LoadGFXComponentsMessage,999));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
 	std::string GrassGeometryComponent::GetDensityMap() const
@@ -328,6 +324,21 @@ namespace GASS
 	void GrassGeometryComponent::SetViewDistance(float distance)
 	{
 		m_ViewDist = distance;
+	}
+
+
+	void GrassGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		if(m_PagedGeometry)
+		{
+			if(m_PagedGeometry->getPageLoader())
+				delete m_PagedGeometry->getPageLoader();
+			delete m_PagedGeometry;
+		}
+
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		ocam->getViewport()->getTarget()->removeListener(this);
 	}
 
 

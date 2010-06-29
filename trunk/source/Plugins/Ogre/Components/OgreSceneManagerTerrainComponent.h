@@ -68,6 +68,7 @@ namespace GASS
 	protected:
 		void LoadTerrain(const std::string &filename);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;
 		bool m_Center;

@@ -157,7 +157,7 @@ namespace GASS
 	};
 	
 
-	class OSGMeshComponent :	public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent
+	class OSGMeshComponent :	public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public boost::enable_shared_from_this<OSGMeshComponent>
 	{
 	public:
 		OSGMeshComponent (void);

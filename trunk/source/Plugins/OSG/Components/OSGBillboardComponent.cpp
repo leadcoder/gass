@@ -125,6 +125,7 @@ namespace GASS
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		//m_OSGBillboard->setNodeMask();
 	}
 

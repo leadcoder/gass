@@ -64,22 +64,7 @@ namespace GASS
 		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight);
 		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &GetImposterAlphaRejectionValue, &SetImposterAlphaRejectionValue);
-		
-		//REGISTER_PROP(String,TreeGeometryComponent,m_DensityMapFilename,"DensityMap",CProperty::STREAM|CProperty::READONLY,"");
-		/*REGISTER_PROP(Float,TreeGeometryComponent,m_DensityFactor,"DensityFactor",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometryComponent,m_MeshDist,"MeshDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometryComponent,m_MeshFadeDist,"MeshFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometryComponent,m_ImposterDist,"ImposterDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Float,TreeGeometryComponent,m_ImposterFadeDist,"ImposterFadeDistance",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Vect4D,TreeGeometryComponent,m_Bounds,"Bounds",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Vect2D,TreeGeometryComponent,m_MaxMinScale,"MaxMinScale",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometryComponent,m_CastShadows,"CastShadows",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometryComponent,m_CreateShadowMap,"CreateShadowMap",CProperty::STREAM|CProperty::READONLY,"");
-		REGISTER_PROP(Bool,TreeGeometryComponent,m_PrecalcHeight,"SetHeightAtStartup",CProperty::STREAM|CProperty::READONLY,"");*/
 	}
-
-	
-	
 
 
 	TreeGeometryComponent::TreeGeometryComponent(void) : m_Bounds(0,0,0,0)
@@ -103,6 +88,20 @@ namespace GASS
 	{
 	}
 
+
+	void TreeGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		if(m_PagedGeometry)
+		{
+			if(m_PagedGeometry->getPageLoader())
+				delete m_PagedGeometry->getPageLoader();
+			delete m_PagedGeometry;
+		}
+
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		ocam->getViewport()->getTarget()->removeListener(this);
+	}
 
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
@@ -377,6 +376,7 @@ namespace GASS
 	void TreeGeometryComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
 	void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
