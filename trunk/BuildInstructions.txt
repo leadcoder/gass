@@ -1,0 +1,21 @@
+Build GASS
+
+Download boost 1.42, ogre3d 1.7 SDK and directx sdk
+Add your directx installation to your defalut lib and include paths settings in vc 2005/2008 
+Create BOOST_PATH env-var and set it  you boost installation dir , ie c:\boost_1.42\
+Create OGRE_PATH env-var and set it  you ogre installation dir, ie c:\ogre3d\
+Download the latest (if you use the trunk) gass-depdendencies from http://code.google.com/p/gass/downloads/list
+place your dependencies inside you working copy of gass and run "Build dependencies.bat"
+Goto the gass build dir and run generate_build_files_premake4.bat
+open GASSSim.sln and build
+
+
+
+
+
+
+
+
+
+
+
