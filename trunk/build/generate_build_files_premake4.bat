@@ -36,7 +36,7 @@ pause
 cls
 
 set choice=
-set /p choice="Do you want to build GASS? "
+set /p choice="Do you want to build GASS? (Y/N)"
 if '%choice%'=='y' (
 goto BUILDGASS
 )

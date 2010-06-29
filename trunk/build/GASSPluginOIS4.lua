@@ -15,7 +15,8 @@ if (os.is("windows")) then
 		"../source",
 		"../dependencies/tinyxml",
 		"../dependencies/ois/includes",
-		"$(BOOST_PATH)"
+		"$(BOOST_PATH)",
+		"$(DXSDK_DIR)/include"
 	}
 	
 	libdirs 
@@ -23,7 +24,8 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ois/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_PATH)/lib",
+		"$(DXSDK_DIR)/lib/x86"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }

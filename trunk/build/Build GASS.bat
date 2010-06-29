@@ -53,6 +53,7 @@ call :COMPILE GASSSim.sln "GASSSim" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginOgre" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginODE" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginOIS" "Debug|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSPluginOpenAL" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginPagedGeometry" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginGame" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginBase" "Debug|Win32" /USEENV
@@ -64,6 +65,7 @@ call :COMPILE GASSSim.sln "GASSSim" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginOgre" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginODE" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginOIS" "Release|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSPluginOpenAL" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginPagedGeometry" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginGame" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginBase" "Release|Win32" /USEENV
