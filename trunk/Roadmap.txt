@@ -14,6 +14,8 @@ Test raycast wheels in vehicle-simulation
 
 Add simple GUI example
 
+Change SceneObjectManager pointer in SceneObject to weak pointer
+
 
 
 
