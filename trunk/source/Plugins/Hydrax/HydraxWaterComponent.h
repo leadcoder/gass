@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
+
 namespace Hydrax
 {
 	class Hydrax;
@@ -293,6 +294,8 @@ namespace GASS
 		Hydrax::Noise::Perlin* m_Perlin;
 		Hydrax::Noise::FFT* m_FFT;
 		Hydrax::Module::ProjectedGrid *m_ProjectedGridGeometryModuleVertex; 
+
+		Ogre::Viewport* m_Viewport;
 	};
 }
 

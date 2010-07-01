@@ -40,7 +40,7 @@
 namespace GASS
 {
 
-	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL)
+	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL),m_Viewport(NULL)
 	{
 
 	}
@@ -571,8 +571,7 @@ namespace GASS
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->removeListener(this);
-
+		m_Viewport->getTarget()->removeListener(this);
 		m_Hydrax->remove();
 		delete m_Hydrax;
 	}
@@ -581,7 +580,8 @@ namespace GASS
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->addListener(this);
+		m_Viewport =ocam->getViewport();
+		m_Viewport->getTarget()->addListener(this);
 		m_Hydrax = new Hydrax::Hydrax(sm, ocam, ocam->getViewport());
 		// Create our projected grid module  
 
@@ -605,13 +605,13 @@ namespace GASS
 			= new Hydrax::Module::ProjectedGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			m_Perlin,
+			new Hydrax::Noise::Perlin(),
 			// Base plane
 			Ogre::Plane(Ogre::Vector3(0,1,0), Ogre::Vector3(0,0,0)),
 			// Normal mode
 			Hydrax::MaterialManager::NM_VERTEX,
 			// Projected grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::ProjectedGrid::Options(/* See more constructors */));
+			Hydrax::Module::ProjectedGrid::Options());
 		AddGeometryModule(m_ProjectedGridGeometryModuleVertex);
 
 		// Add projected grid geometry module to the manager(Rtt normals)
@@ -625,7 +625,7 @@ namespace GASS
 			// Normal mode
 			Hydrax::MaterialManager::NM_RTT,
 			// Projected grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::ProjectedGrid::Options(/* Default constructor */));
+			Hydrax::Module::ProjectedGrid::Options());
 		AddGeometryModule(ProjectedGridGeometryModuleRtt);
 
 		// Add the simple grid geometry module to our manager(Vertex normals)
@@ -633,11 +633,11 @@ namespace GASS
 			= new Hydrax::Module::SimpleGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			m_Perlin,
+			new Hydrax::Noise::Perlin(),
 			// Normal mode
 			Hydrax::MaterialManager::NM_VERTEX,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::SimpleGrid::Options(512, Hydrax::Size(10000,10000) /* See more constructors */));
+			Hydrax::Module::SimpleGrid::Options(512, Hydrax::Size(10000,10000) ));
 		AddGeometryModule(SimpleGridGeometryModuleVertex);
 
 		// Add the simple grid geometry module to our manager(Rtt normals)
@@ -645,11 +645,11 @@ namespace GASS
 			= new Hydrax::Module::SimpleGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			m_Perlin,
+			new Hydrax::Noise::Perlin(),
 			// Normal mode
 			Hydrax::MaterialManager::NM_RTT,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::SimpleGrid::Options(128, Hydrax::Size(10000,10000) /* See more constructors */));
+			Hydrax::Module::SimpleGrid::Options(128, Hydrax::Size(10000,10000) ));
 		AddGeometryModule(SimpleGridGeometryModuleRtt);
 
 		// Add the radial grid geometry module to our manager(Vertex normals)
@@ -657,11 +657,11 @@ namespace GASS
 			= new Hydrax::Module::RadialGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			m_Perlin,
+			new Hydrax::Noise::Perlin(),
 			// Normal mode
 			Hydrax::MaterialManager::NM_VERTEX,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::RadialGrid::Options(250, 250, 6000  /* See more constructors */));
+			Hydrax::Module::RadialGrid::Options(250, 250, 6000  ));
 		AddGeometryModule(RadialGridGeometryModuleVertex);
 
 		// Add the radial grid geometry module to our manager(Rtt normals)
@@ -669,11 +669,11 @@ namespace GASS
 			= new Hydrax::Module::RadialGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			m_Perlin,
+			new Hydrax::Noise::Perlin(),
 			// Normal mode
 			Hydrax::MaterialManager::NM_RTT,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
-			Hydrax::Module::RadialGrid::Options(80, 10, 6000  /* See more constructors */));
+			Hydrax::Module::RadialGrid::Options(80, 10, 6000 ));
 		AddGeometryModule(RadialGridGeometryModuleRtt);
 
 
@@ -787,8 +787,9 @@ namespace GASS
 		for (It = mModules.begin(); It != mModules.end(); It++)
 		{
 			delete (*It);
-			mModules.erase(It);
+			
 		}
+		mModules.clear();
 	}
 
 	void HydraxWaterComponent::AddNoiseModule(Hydrax::Noise::Noise* n)
@@ -834,8 +835,9 @@ namespace GASS
 		for (It = mNoises.begin(); It != mNoises.end(); It++)
 		{
 			delete (*It);
-			mNoises.erase(It);
+			
 		}
+		mNoises.clear();
 	}
 
 }
