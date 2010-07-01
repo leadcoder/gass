@@ -108,6 +108,7 @@ namespace GASS
 	protected:
 		SceneObjectManager* m_Manager;
 		MessageManagerPtr m_MessageManager;
+		
 	};
 
 }

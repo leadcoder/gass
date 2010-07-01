@@ -40,7 +40,7 @@
 namespace GASS
 {
 
-	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0)
+	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL)
 	{
 
 	}
@@ -82,12 +82,66 @@ namespace GASS
 		RegisterProperty<Float>("FFTSpeed", &HydraxWaterComponent::GetFFTSpeed, &HydraxWaterComponent::SetFFTSpeed);
 		RegisterProperty<Float>("Strength", &HydraxWaterComponent::GetStrength, &HydraxWaterComponent::SetStrength);
 		RegisterProperty<Float>("Elevation", &HydraxWaterComponent::GetElevation, &HydraxWaterComponent::SetElevation);
+		RegisterProperty<std::string>("SaveConfiguration", &HydraxWaterComponent::GetSave, &HydraxWaterComponent::SetSave);
+		RegisterProperty<Float>("PlanesError", &HydraxWaterComponent::GetPlanesError, &HydraxWaterComponent::SetPlanesError);
 	}
 
 	void HydraxWaterComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnUnload,UnloadComponentsMessage,0));
+	}
+
+
+
+	void HydraxWaterComponent::SetSave(const std::string &value)
+	{
+		if(m_Hydrax)
+		{
+			m_ConfigurationFile = value;
+			std::string filename = Misc::GetFilename(value);
+			std::string path = Misc::RemoveFilename(value);
+
+			m_Hydrax->saveCfg(filename, path);
+		}
+	}
+
+	std::string HydraxWaterComponent::GetSave() const 
+	{
+		return m_ConfigurationFile;
+	}
+
+	void HydraxWaterComponent::SetPlanesError(const Float &value)
+	{
+		if(m_Hydrax)
+		{
+			m_Hydrax->setPlanesError(value);
+		}
+	}
+
+
+	Float HydraxWaterComponent::GetPlanesError() const 
+	{
+		if(m_Hydrax)
+		{
+			return m_Hydrax->getPlanesError();
+		}
+		return 0;
+	}
+
+
+	void HydraxWaterComponent::SetGPUStrength(const Float &value)
+	{
+		if(m_Hydrax)
+		{
+	//		m_Hydrax->_setStrength(value);
+		}
+	}
+
+
+	Float HydraxWaterComponent::GetGPUStrength() const 
+	{
+		return 0;
 	}
 
 
@@ -638,20 +692,39 @@ namespace GASS
 
 		if(m_ConfigurationFile != "")
 		{
-			//	SetConfigurationFile(m_ConfigurationFile);
+			SetConfigurationFile(m_ConfigurationFile);
 		}
 	}
 
 	void HydraxWaterComponent::SetConfigurationFile(const std::string &cfg_file) 
 	{
-		m_ConfigurationFile = Misc::GetFilename(cfg_file);
+		m_ConfigurationFile = cfg_file;
+		std::string filename = Misc::GetFilename(cfg_file);
+		std::string path = Misc::RemoveFilename(cfg_file);
+
+		
+
+
+		if (path != "" && path != filename && !Ogre::ResourceGroupManager::getSingleton().resourceExists("Hydrax", filename))
+		{
+			try
+		    {
+			    Ogre::ResourceGroupManager::getSingleton().removeResourceLocation(path, "Hydrax");
+		    }
+		    catch(...)
+		    {
+		    }
+
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", "Hydrax");
+		}
+
 		if(m_Hydrax)
 		{
 			Ogre::ConfigFile CfgFile;
 			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource(m_ConfigurationFile, "Hydrax"));
 			m_Hydrax->setModule(GetGeometryModule(CfgFile.getSetting("Module")), false);
 			m_Hydrax->getModule()->setNoise(GetNoiseModule(CfgFile.getSetting("Noise")), m_Hydrax->getGPUNormalMapManager(), false);
-			m_Hydrax->loadCfg(m_ConfigurationFile);
+			m_Hydrax->loadCfg(filename);
 			m_Hydrax->create();
 		}
 	}

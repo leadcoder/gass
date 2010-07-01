@@ -39,7 +39,9 @@ namespace GASS
 
 	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	typedef std::vector<SceneManagerPtr> SceneManagerVector;
 	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
+	typedef VectorIterator<SceneManagerVector> SceneManagerIterator;
 
 
 	/**
@@ -168,6 +170,12 @@ namespace GASS
 
 		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
+
+		/**
+		Get scene manager iterator
+		*/
+		SceneManagerIterator GetSceneManagers();
+
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
@@ -215,7 +223,7 @@ namespace GASS
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
 		Vec2 m_RT90Origo;
-		std::vector<SceneManagerPtr> m_SceneManagers;
+		SceneManagerVector m_SceneManagers;
 		MessageManagerPtr m_SceneMessageManager;
 		ScenarioWeakPtr m_Scenario;
 		std::string m_Name;

@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	BaseComponentContainer::BaseComponentContainer()
+	BaseComponentContainer::BaseComponentContainer() : m_Serialize(true)
 	{
 		
 	}
@@ -82,6 +82,8 @@ namespace GASS
 
 	bool BaseComponentContainer::Serialize(ISerializer* serializer)
 	{
+		if(!m_Serialize)
+			return true;
 		if(!BaseReflectionObject::SerializeProperties(serializer))
 			return false;
 
@@ -201,6 +203,8 @@ namespace GASS
 
 	void BaseComponentContainer::SaveXML(TiXmlElement *obj_elem)
 	{
+		if(!m_Serialize)
+			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 
 		TiXmlElement* this_elem = new TiXmlElement( factory_name.c_str() );  
@@ -236,7 +240,8 @@ namespace GASS
 
 	void BaseComponentContainer::LoadXML(TiXmlElement *obj_elem)
 	{
-		//m_Name = obj_elem->Value();
+		if(!m_Serialize)
+			return;
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
@@ -320,6 +325,28 @@ namespace GASS
 		return IComponentContainer::ComponentContainerIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
 
+	
+	void BaseComponentContainer::SetTemplateName(const std::string &name) 
+	{
+		m_TemplateName = name;
+	}
+
+
+	std::string BaseComponentContainer::GetTemplateName()  const 
+	{
+		return m_TemplateName;
+	}
+
+	void BaseComponentContainer::SetSerialize(bool value) 
+	{
+		m_Serialize = value;
+	}
+
+	bool BaseComponentContainer::GetSerialize()  const 
+	{
+		return m_Serialize;
+	}
+
 
 	#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void BaseComponentContainer::DebugPrint(int tc)
@@ -357,6 +384,9 @@ namespace GASS
 		tc--;
 		//TAB(tc) << "IComponentContainer - " << std::endl;
 	}
+
+
+
 
 }
 

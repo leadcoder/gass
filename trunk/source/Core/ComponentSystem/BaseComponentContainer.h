@@ -75,12 +75,22 @@ namespace GASS
 		void DebugPrint(int tc = 0);
 
 		//Get/Set section
-		void SetTemplateName(const std::string &name) {m_TemplateName = name;}
-		std::string GetTemplateName()  const {return m_TemplateName;}
 
+		/**Set the template this container is derived from*/
+		void SetTemplateName(const std::string &name);
+
+		/**Get the  template this container is derived from*/
+		std::string GetTemplateName() const;
+
+
+		/**Set whether this container should be serilized or not, by defaulit
+		all containers are serialized*/
+		void SetSerialize(bool value);
+
+		/**Get whether this container should be serilized or not, by defaulit
+		all containers are serialized*/
+		bool GetSerialize()  const;
 	protected:
-
-		
 		//Help functions for template creation
 		std::string CreateUniqueName();
 		void InheritComponentData(ComponentContainerPtr cc);
@@ -91,6 +101,8 @@ namespace GASS
 		std::string m_Name;
 		std::string m_TemplateName;
 		ComponentContainerWeakPtr m_Parent;
+		//Activate/deactivate serialization
+		bool m_Serialize;
 	};
 	typedef boost::shared_ptr<BaseComponentContainer> BaseComponentContainerPtr;
 

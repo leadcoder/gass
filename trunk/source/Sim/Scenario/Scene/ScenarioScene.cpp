@@ -371,4 +371,9 @@ namespace GASS
 			GetObjectManager()->DeleteObject(so);
 
 	}
+
+	SceneManagerIterator ScenarioScene::GetSceneManagers()
+	{
+		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
+	}
 }

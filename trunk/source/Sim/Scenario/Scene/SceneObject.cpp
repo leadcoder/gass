@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	SceneObject::SceneObject() : m_MessageManager (new MessageManager())
+	SceneObject::SceneObject() : m_MessageManager (new MessageManager()) , m_Manager(NULL)
 	{
 		
 	}

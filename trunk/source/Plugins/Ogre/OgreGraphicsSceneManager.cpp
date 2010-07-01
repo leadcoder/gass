@@ -48,29 +48,26 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) 
-	{
-		m_FogStart = 200;
-		m_FogEnd = 400;
-		m_UseFog = 1;
-		m_FogMode = "Linear";
-		m_FogDensity = 0.01;
-		m_FogColor.Set(1,1,1);
-		m_AmbientColor.Set(1,1,1);
-		
+	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) :	m_FogStart(200),
+		m_FogEnd(400),
+		m_UseFog(1),
+		m_FogMode("Linear"),
+		m_FogDensity(0.01),
+		m_FogColor(1,1,1),
+		m_AmbientColor(1,1,1),
 		//Shadows
-		m_ShadowType = "";
-		m_ShadowCasterMaterial = "";
-		m_ShadowProjType = "LISPM";
-		m_TextureShadowSize = 1024;
-		m_NumShadowTextures = 1;
-		m_SelfShadowing = false;
-		m_OptimalAdjustFactor = 1;
-		m_FarShadowDistance = 100;
-
-		m_SkyboxMaterial = "";
-		m_SceneManagerType = "TerrainSceneManager";
-		m_SceneMgr = NULL;
+		m_ShadowType ("AdditiveIntegratedTextureShadows"),
+		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),
+		m_ShadowProjType ("LiSPSM"),
+		m_TextureShadowSize (1024),
+		m_NumShadowTextures (1),
+		m_SelfShadowing (false),
+		m_OptimalAdjustFactor (1),
+		m_FarShadowDistance (100),
+		m_SkyboxMaterial(""),
+		m_SceneManagerType("TerrainSceneManager"),
+		m_SceneMgr (NULL)
+	{
 	}
 
 	OgreGraphicsSceneManager::~OgreGraphicsSceneManager(void)
@@ -163,6 +160,9 @@ namespace GASS
 			
 		
 		assert(scene_object);
+		
+		//don't save this object
+		scene_object->SetSerialize(false);
 		//SceneObject* scene_object = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("FreeCameraObject");
 		//OgreCameraComponent* cam_comp = scene_object->GetFirstComponent<OgreCameraComponent>();
 		//OgreLocationComponent* loc_comp = scene_object->GetFirstComponent<OgreLocationComponent>();

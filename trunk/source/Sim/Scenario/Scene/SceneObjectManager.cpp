@@ -42,6 +42,7 @@ namespace GASS
 		m_ScenarioScene = ss;
 		m_Root = SceneObjectPtr( new SceneObject());
 		m_Root->SetName("Root");
+		m_Root->SetSceneObjectManager(this);
 	}
 
 	SceneObjectManager::~SceneObjectManager()
@@ -211,6 +212,7 @@ namespace GASS
 		m_Root.reset();
 		m_Root = SceneObjectPtr( new SceneObject());
 		m_Root->SetName("Root");
+		m_Root->SetSceneObjectManager(this);
 	}
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)

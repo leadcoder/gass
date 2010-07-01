@@ -270,6 +270,16 @@ namespace GASS
 		Float GetStrength() const;
 		void SetElevation(const Float &value);
 		Float GetElevation() const;
+
+		void SetSave(const std::string &value);
+		std::string GetSave() const;
+		void SetPlanesError(const Float &value);
+		Float GetPlanesError() const;
+		void SetGPUStrength(const Float &value);
+		Float GetGPUStrength() const;
+	
+
+	
 	private:
 		std::string m_ConfigurationFile;
 		Hydrax::Hydrax *m_Hydrax;

@@ -156,8 +156,6 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(window_msg);
 
 
-
-
 		}
 		else
 		{
@@ -226,9 +224,6 @@ namespace GASS
 
 		}*/
 	}
-
-
-
 
 	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)
 	{
