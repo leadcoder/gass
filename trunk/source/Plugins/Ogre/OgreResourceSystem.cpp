@@ -99,64 +99,6 @@ namespace GASS
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	}
 
-	/*std::string OgreResourceSystem::ExpandEnvVariables(const std::string &inStr)
-	{
-		std::string curStr = inStr;
-		std::string::size_type occurIndex1 = curStr.find("%");
-		std::string varName = "";
-		std::string replaceStr = "";
-		char * replaceVal = "";
-		if ( occurIndex1 != std::string::npos )
-		{
-			std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
-			if (endVarIndex == std::string::npos)
-			{
-				Log::Warning("OgreResourceSystem::ExpandEnvVariables - Erroneous use of environment variable: %s\nOnly one percent sign in string", curStr.c_str());
-				assert(true);
-			}
-			else
-			{
-				varName = curStr.substr(occurIndex1+1, endVarIndex-occurIndex1-1);
-				replaceStr = curStr.substr(occurIndex1, endVarIndex-occurIndex1+1);
-				if (varName.length() > 0)
-				{
-					replaceVal = getenv(varName.c_str());
-					if (replaceVal)
-					{
-						curStr.replace( occurIndex1, replaceStr.length(), replaceVal );
-					}
-				}
-			}
-
-		}
-		std::string::size_type occurIndex2 = curStr.find("$");
-		if (occurIndex2 != std::string::npos )
-		{
-			std::string::size_type startVarIndex = curStr.find("(");
-			std::string::size_type endVarIndex = curStr.find(")");
-			if (startVarIndex == std::string::npos || endVarIndex == std::string::npos)
-			{
-				Log::Warning("OgreResourceSystem::ExpandEnvVariables - Erroneous use of environment variable: %s\nMissing start or end parenthesis", curStr.c_str());
-				assert(true);
-			}
-			else
-			{
-				varName = curStr.substr(startVarIndex+1, endVarIndex-startVarIndex-1);
-				replaceStr = curStr.substr(occurIndex2, endVarIndex-occurIndex2+1);
-				if (varName.length() > 0)
-				{
-					replaceVal = getenv(varName.c_str());
-					if (replaceVal)
-					{
-						curStr.replace( occurIndex2, replaceStr.length(), replaceVal );
-					}
-				}
-			}
-		}
-
-		return curStr;
-	}*/
-
 
 	void OgreResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
@@ -168,6 +110,28 @@ namespace GASS
 		}
 		rsm->addResourceLocation(path,type, resource_group,recursive);
 	}
+
+
+	void OgreResourceSystem::RemoveResourceLocation(const std::string &path,const std::string &resource_group)
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		Ogre::StringVector groups = rsm->getResourceGroups();
+		if (std::find(groups.begin(), groups.end(), resource_group) != groups.end())
+		{
+			rsm->removeResourceLocation(path,resource_group);
+		}
+	}
+
+	void OgreResourceSystem::RemoveResourceGroup(const std::string &resource_group)
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		Ogre::StringVector groups = rsm->getResourceGroups();
+		if (std::find(groups.begin(), groups.end(), resource_group) != groups.end())
+		{
+			rsm->destroyResourceGroup(resource_group);
+		}
+	}
+
 
 	void OgreResourceSystem::LoadResourceGroup(const std::string &resource_group)
 	{

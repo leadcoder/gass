@@ -20,6 +20,8 @@
 
 #pragma once
 
+
+#include <OgreVector2.h>
 #include <OgreVector3.h>
 #include <OgreVector4.h>
 #include <OgreMatrix4.h>
@@ -39,6 +41,7 @@ namespace GASS
 	class Convert
 	{
 	public:
+		static inline Ogre::Vector2				ToOgre(const Vec2 &v) {return Ogre::Vector2(v.x,v.y);}
 		static inline Ogre::Vector3				ToOgre(const Vec3 &v) {return Ogre::Vector3(v.x,v.y,v.z);}
 		static inline Ogre::Vector4				ToOgre(const Vec4 &v) {return Ogre::Vector4(v.x,v.y,v.z,v.w);}
 		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat){Ogre::Matrix4(mat[0][0],mat[0][1],mat[0][2],mat[0][3],	mat[1][0],mat[1][1],mat[1][2],mat[1][3],	mat[2][0],mat[2][1],mat[2][2],mat[2][3],	mat[3][0],mat[3][1],mat[3][2],mat[3][3]);}
@@ -46,6 +49,7 @@ namespace GASS
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(-q.w,q.x,q.y,q.z);}
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
 
+		static inline Vec2						ToGASS(const Ogre::Vector2 &v) {return Vec2(v.x,v.y);}
 		static inline Vec3						ToGASS(const Ogre::Vector3 &v) {return Vec3(v.x,v.y,v.z);}
 		static inline Vec4						ToGASS(const Ogre::Vector4 &v) {return Vec4(v.x,v.y,v.z,v.w);}
 		static inline AABox						ToGASS(const Ogre::AxisAlignedBox &b) {return AABox(ToGASS(b.getMinimum()),ToGASS(b.getMaximum()));}
