@@ -24,7 +24,7 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
-#include <OgreRenderTargetListener.h>
+#include <OgreFrameListener.h>
 
 
 namespace Hydrax
@@ -49,15 +49,16 @@ namespace Hydrax
 namespace GASS
 {
 
-	class HydraxWaterComponent : public Reflection<HydraxWaterComponent,BaseSceneComponent> , public Ogre::RenderTargetListener
+	class HydraxWaterComponent : public Reflection<HydraxWaterComponent,BaseSceneComponent> , public Ogre::FrameListener
 	{
 	public:
 		HydraxWaterComponent(void);
 		~HydraxWaterComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		Hydrax::Hydrax* GetHydrax() const {return m_Hydrax;}
 	protected:
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
+		bool frameStarted(const Ogre::FrameEvent& evt);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void SetConfigurationFile(const std::string &cfg_file);
@@ -295,8 +296,10 @@ namespace GASS
 		Hydrax::Noise::FFT* m_FFT;
 		Hydrax::Module::ProjectedGrid *m_ProjectedGridGeometryModuleVertex; 
 
-		Ogre::Viewport* m_Viewport;
+		Ogre::RenderTarget* m_Target;
 	};
+
+	typedef boost::shared_ptr<HydraxWaterComponent> HydraxWaterComponentPtr;
 }
 
 #endif

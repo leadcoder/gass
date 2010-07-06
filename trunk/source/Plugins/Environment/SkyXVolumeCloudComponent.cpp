@@ -206,6 +206,9 @@ namespace GASS
 	{
 		//Get Skyx component
 		Load();
+
+
+
 	}
 
 
@@ -224,6 +227,17 @@ namespace GASS
 			m_CloudManager->setHeight(Convert::ToOgre(m_Height));
 			m_CloudManager->create();
 			skyx->GetSkyX()->getCamera()->setFarClipDistance(save_clip );
+
+
+			SetNoiseScale(m_NoiseScale);
+			SetCloudFieldScale(m_CloudFieldScale);
+			SetWindDirection(m_WindDirection);
+			SetWindSpeed(m_WindSpeed);
+			SetGlobalOpacity(m_GlobalOpacity);
+		
+			SetWeather(m_Weather);
+			SetLightResponse(m_LightResponse);
+			SetAutoupdate(m_Autoupdate);
 		}
 	}
 }

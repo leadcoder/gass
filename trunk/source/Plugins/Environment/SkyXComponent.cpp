@@ -32,7 +32,7 @@
 
 namespace GASS
 {
-	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), m_MoonSize(1),m_SkyX(NULL), m_Radius(10000)
+	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), m_MoonSize(1),m_SkyX(NULL), m_Radius(5000),m_Target(NULL)
 	{
 				
 	}
@@ -193,9 +193,7 @@ namespace GASS
 
 	void SkyXComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		m_Viewport->getTarget()->removeListener(this);
+		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
 	}
 
@@ -203,11 +201,9 @@ namespace GASS
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		m_Viewport =ocam->getViewport();
-		m_Viewport->getTarget()->addListener(this);
-
+		Ogre::Root::getSingleton().addFrameListener(this);
 		float save_clip  = ocam->getFarClipDistance();
-		ocam->setFarClipDistance(m_Radius);
+		//ocam->setFarClipDistance(m_Radius);
 		
 		// Create our projected grid module  
 		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
@@ -232,31 +228,27 @@ namespace GASS
 		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
 		m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
 		m_MoonSize = m_SkyX->getMoonManager()->getMoonSize();
-		
-		
 
 		// Create the sky
 		m_SkyX->create();
 
 
-		ocam->setFarClipDistance(save_clip);
-
-		// Add a basic cloud layer
-		//m_CloudLayer1 = m_SkyX->getCloudsManager()->add(SkyX::CloudLayer::Options(/* Default options */));
+		//ocam->setFarClipDistance(save_clip);
+		
 	}
 
-	void SkyXComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+	bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)
 	{
 		double c_time = SimEngine::Get().GetTime();
 		static double prev_time = 0;
 
-		Ogre::Viewport *vp = evt.source;
 		if(prev_time == 0)
 			m_SkyX->update(0.1);
 		else
 			m_SkyX->update(c_time - prev_time);
 
 		prev_time = c_time;
+		return true;
 	}
 }
 

@@ -40,7 +40,7 @@
 namespace GASS
 {
 
-	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL),m_Viewport(NULL)
+	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL),m_Target(NULL)
 	{
 
 	}
@@ -557,9 +557,7 @@ namespace GASS
 
 	void HydraxWaterComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		m_Viewport->getTarget()->removeListener(this);
+		Ogre::Root::getSingleton().removeFrameListener(this);
 		m_Hydrax->remove();
 		delete m_Hydrax;
 	}
@@ -568,8 +566,9 @@ namespace GASS
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		m_Viewport =ocam->getViewport();
-		m_Viewport->getTarget()->addListener(this);
+		
+		Ogre::Root::getSingleton().addFrameListener(this);
+		
 		m_Hydrax = new Hydrax::Hydrax(sm, ocam, ocam->getViewport());
 		// Create our projected grid module  
 
@@ -703,10 +702,10 @@ namespace GASS
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", "Hydrax");
 		}
 
-		if(m_Hydrax)
+		if(m_Hydrax && m_ConfigurationFile != "")
 		{
 			Ogre::ConfigFile CfgFile;
-			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource(m_ConfigurationFile, "Hydrax"));
+			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource(filename, "Hydrax"));
 			m_Hydrax->setModule(GetGeometryModule(CfgFile.getSetting("Module")), false);
 			m_Hydrax->getModule()->setNoise(GetNoiseModule(CfgFile.getSetting("Noise")), m_Hydrax->getGPUNormalMapManager(), false);
 			m_Hydrax->loadCfg(filename);
@@ -714,18 +713,17 @@ namespace GASS
 		}
 	}
 
-	void HydraxWaterComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+	bool  HydraxWaterComponent::frameStarted(const Ogre::FrameEvent& evt)
 	{
 		double c_time = SimEngine::Get().GetTime();
 		static double prev_time = 0;
-
-		Ogre::Viewport *vp = evt.source;
 		if(prev_time == 0)
 			m_Hydrax->update(0.1);
 		else
 			m_Hydrax->update(c_time - prev_time);
 
 		prev_time = c_time;
+		return true;
 	}
 
 

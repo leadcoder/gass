@@ -17,66 +17,47 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef SKY_X_COMPONENT_H
-#define SKY_X_COMPONENT_H
+#ifndef ENVIRONMENT_MANAGER_COMPONENT_H
+#define ENVIRONMENT_MANAGER_COMPONENT_H
 
+#include "Core/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
+#include <OgreLight.h>
+
+#include "Hydrax/Hydrax.h"
 #include "SkyX/SkyX.h"
-
-
 
 namespace GASS
 {
-
-	class SkyXComponent : public Reflection<SkyXComponent,BaseSceneComponent> , public Ogre::FrameListener
+	class EnvironmentManagerComponent : public Reflection<EnvironmentManagerComponent,BaseSceneComponent>, public Ogre::FrameListener
 	{
 	public:
-		SkyXComponent(void);
-		~SkyXComponent(void);
+		EnvironmentManagerComponent(void);
+		~EnvironmentManagerComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
-		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
-		bool frameStarted(const Ogre::FrameEvent& evt);
+		void UpdateEnvironmentLighting();
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		void SetInnerRadius(const Float &value);
-		Float GetInnerRadius() const;
-		void SetOuterRadius(const Float &value);
-		Float GetOuterRadius() const ;
-		void SetExposure(const Float &value);
-		Float GetExposure() const ;
-		void SetHeightPosition(const Float &value);
-		Float GetHeightPosition() const ;
-		void SetRayleighMultiplier(const Float &value);
-		Float GetRayleighMultiplier() const ;
-		Float GetMieMultiplier() const ;
-		void SetMieMultiplier(const Float &value);
-		int GetNumberOfSamples() const ;
-		void SetNumberOfSamples(const int &value);
-		void SetTimeMultiplier(const double &value);
-		double GetTimeMultiplier() const;
-		void SetMoonSize(const Float &value);
-		Float GetMoonSize() const ;
-
-
-		void SetTime(const Vec3 &value);
-		Vec3 GetTime() const;
-
-		void UpdateOptions();
+		bool frameStarted(const Ogre::FrameEvent& evt);
+		void SetWaterGradient(const std::vector<Vec4> &value);
+		std::vector<Vec4>  GetWaterGradient() const ;
+	
 	private:
+		Ogre::Light *m_SunLight;
+		SkyX::ColorGradient m_WaterGradient;
+		std::vector<Vec4> m_ShadowWaterGradient;
+		SkyX::ColorGradient m_SunGradient; 
+		SkyX::ColorGradient m_AmbientGradient;
+		Hydrax::Hydrax *m_Hydrax;
+		SkyX::SkyX *m_SkyX;
 		Ogre::RenderTarget* m_Target;
-		double m_TimeMultiplier;
-		SkyX::SkyX* m_SkyX;
-		Float m_MoonSize;
-		SkyX::AtmosphereManager::Options m_SkyXOptions;
-		Float m_Radius;
 	};
-	typedef boost::shared_ptr<SkyXComponent> SkyXComponentPtr;
 }
 
 #endif
