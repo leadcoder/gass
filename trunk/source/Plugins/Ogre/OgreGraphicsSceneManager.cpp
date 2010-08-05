@@ -247,7 +247,6 @@ namespace GASS
 		//update scene settings
 	}
 
-
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
 	{
 		if(m_SceneMgr == NULL) return;

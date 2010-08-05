@@ -31,6 +31,8 @@ namespace GASS
 		virtual ~IResourceSystem(){}
 		virtual bool GetFullPath(const std::string &file_name,std::string &file_path) = 0;
 		virtual void AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
+		virtual void RemoveResourceLocation(const std::string &path,const std::string &resource_group) = 0;
+		virtual void RemoveResourceGroup(const std::string &resource_group) = 0;
 		virtual void LoadResourceGroup(const std::string &resource_group) = 0;
 	protected:
 	};

@@ -47,6 +47,14 @@ namespace GASS
 		{
 			m_Scenes[i]->Shutdown();
 		}
+
+		if(m_ScenarioPath != "")
+		{
+			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+			if(rs == NULL)
+				Log::Error("No Resource Manager Found");
+			rs->RemoveResourceGroup("GASSScenario");
+		}
 	}
 
 	bool Scenario::Load(const std::string &scenario_path)

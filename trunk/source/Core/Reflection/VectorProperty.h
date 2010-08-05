@@ -48,8 +48,18 @@ This class is based on the Game Programming Gems 5 article
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 namespace GASS
 {
+
+	class IVectorProperty
+	{
+	public:
+		virtual ~IVectorProperty(){}
+		virtual void SetValueByStringVector(BaseReflectionObject* pOwner, const std::vector<std::string> &s) = 0;
+		virtual std::vector<std::string> GetValueAsStringVector(BaseReflectionObject* pOwner) = 0;
+	};
+	
+
 	template <class OwnerType, class T>
-	class VectorProperty : public TypedProperty<std::vector<T> >
+	class VectorProperty : public TypedProperty<std::vector<T> > , IVectorProperty
 	{
 
 	public:
@@ -70,11 +80,15 @@ namespace GASS
 		virtual void	SetValue( BaseReflectionObject* pObject, const std::vector<T> &Value );
 		void Serialize(BaseReflectionObject* pObject,ISerializer* serializer);
 
-		void SetValueByString(BaseReflectionObject* pObject, const std::string &s);
-		std::string GetValueAsString(BaseReflectionObject* pObject);
+		void SetValueByString(BaseReflectionObject* pOwner, const std::string &s);
+		std::string GetValueAsString(BaseReflectionObject* pOwner);
 		void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src);
 		void SetValue(BaseReflectionObject* pOwner, boost::any &attribute);
 		void GetValue(BaseReflectionObject* pOwner, boost::any &attribute);
+
+
+		void SetValueByStringVector(BaseReflectionObject* pOwner, const std::vector<std::string> &s);
+		std::vector<std::string> GetValueAsStringVector(BaseReflectionObject* pOwner);
 	protected:
 		//std::vector<std::string> Tokenize(const std::string & str, const std::string & delim);
 
@@ -162,17 +176,6 @@ namespace GASS
 		SetValue(pOwner,res);
 	}
 
-	/*template <class type>
-	bool GetStringFromValue(const type &val,std::string &res)
-	{
-		std::stringstream sstream;
-		sstream.unsetf(std::ios::skipws);
-		sstream << val;
-		res = sstream.str();
-		return true;
-	}*/
-
-
 	template <class OwnerType, class T>
 	std::string VectorProperty<OwnerType, T>::GetValueAsString(BaseReflectionObject* pOwner)
 	{
@@ -193,6 +196,39 @@ namespace GASS
 
 			//GetStringFromValue(val[i],str_val);
 			res += str_val;
+		}
+		return res;
+	}
+
+
+	template <class OwnerType, class T>
+	void VectorProperty<OwnerType, T>::SetValueByStringVector(BaseReflectionObject* pOwner, const std::vector<std::string> &s)
+	{
+		std::vector<T> res;
+		for(int i = 0 ; i < s.size(); i++)
+		{
+			T value;
+			std::stringstream ss(s[i]);
+			ss >> value;
+			res.push_back(value);
+		}
+		SetValue(pOwner,res);
+	}
+
+	template <class OwnerType, class T>
+	std::vector<std::string> VectorProperty<OwnerType, T>::GetValueAsStringVector(BaseReflectionObject* pOwner)
+	{
+		std::vector<T> val = GetValue(pOwner);
+		std::vector<std::string> res;
+
+		for(int i = 0 ; i < val.size(); i++)
+		{
+			std::string str_val;
+			std::stringstream sstream;
+			sstream.unsetf(std::ios::skipws);
+			sstream << val[i];
+			str_val = sstream.str();
+			res.push_back(str_val);
 		}
 		return res;
 	}

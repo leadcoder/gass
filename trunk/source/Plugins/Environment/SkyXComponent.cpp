@@ -225,8 +225,10 @@ namespace GASS
 		atOpt.OuterRadius = 10.3311f;
 		m_SkyX->getAtmosphereManager()->setOptions(atOpt);
 
+		UpdateOptions();
+
 		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
-		m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
+		//m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
 		m_MoonSize = m_SkyX->getMoonManager()->getMoonSize();
 
 		// Create the sky

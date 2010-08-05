@@ -211,7 +211,6 @@ namespace GASS
 
 	}
 
-
 	void SkyXVolumeCloudComponent::Load()
 	{
 		//Get Skyx component
