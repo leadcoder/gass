@@ -137,7 +137,15 @@ namespace GASS
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
-		m_OgreLight = sm->createLight(m_Name);
+		
+		static unsigned int obj_id = 0;
+		obj_id++;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << obj_id;
+		ss >> name;
+
+		m_OgreLight = sm->createLight(name);
 		lc->GetOgreNode()->attachObject(m_OgreLight);
 
 
