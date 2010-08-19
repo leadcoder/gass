@@ -125,6 +125,11 @@ namespace GASS
 	{
 		// Configure global
 		//
+		m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
+		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
+		m_TerrainGroup->setOrigin(Ogre::Vector3(0,0,0));
+
+
 		if(m_CustomMaterial != "")
 		{
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW GASSTerrainMaterialGenerator(m_CustomMaterial)));
@@ -172,6 +177,8 @@ namespace GASS
 
 		defaultimp.layerList[2].worldSize = 10;
 		defaultimp.layerList[2].textureNames.push_back("default.dds");
+
+		m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
 		
 	}
 
@@ -187,6 +194,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetImportScale(const float &value)
 	{
+		
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
@@ -195,39 +203,29 @@ namespace GASS
 
 	}
 
-
 	int OgreTerrainGroupComponent::GetImportTerrainSize() const
 	{
-		if(m_TerrainGroup)
-		{
-			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-			return defaultimp.terrainSize;
-		}
-		return 1;
+		return m_TerrainSize;
 	}
 
 	void OgreTerrainGroupComponent::SetImportTerrainSize(const int &value)
 	{
+		m_TerrainSize = value;
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.terrainSize = value;
 		}
-		
 	}
 
 	Float OgreTerrainGroupComponent::GetImportTerrainWorldSize() const
 	{
-		if(m_TerrainGroup)
-		{
-			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-			return defaultimp.worldSize;
-		}
-		return 1;
+		return m_TerrainWorldSize;
 	}
 
 	void OgreTerrainGroupComponent::SetImportTerrainWorldSize(const Float &value)
 	{
+		m_TerrainWorldSize = value;
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
@@ -240,18 +238,11 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
-
-		m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
-		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
-		m_TerrainGroup->setOrigin(Ogre::Vector3(0,0,0));
 		ConfigureTerrainDefaults();
-
-		if(m_TerrainName == "UnkownTerrain")
-			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
-		else
+		//if(m_TerrainName != "UnkownTerrain")
 		{
 			//try to load terrain
-			SetLoadTerrain(m_TerrainName);
+			//SetLoadTerrain(m_TerrainName);
 		}
 	}
 
