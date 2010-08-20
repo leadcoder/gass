@@ -135,6 +135,8 @@ namespace GASS
 			Ogre::Image img;
 			img.load(full_path, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);*/
 
+
+
 			m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &img);
 
 			// sync load since we want everything in place when we start
@@ -168,10 +170,13 @@ namespace GASS
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
-				m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
+				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				SetPosition(m_Pos);
-				
+
+				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
+				//std::string name = ptr->getName();	
+				//Terrain page created
 			}
 		}
 	}

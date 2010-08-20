@@ -572,12 +572,16 @@ namespace GASS
 		m_Hydrax = new Hydrax::Hydrax(sm, ocam, ocam->getViewport());
 		// Create our projected grid module  
 
-
-
 		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
 
 		if(terrain_mat.get())
 			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
+
+
+		terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainPageMaterial"));
+		if(terrain_mat.get())
+			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
+		
 
 
 		// Add perlin noise module to our manager

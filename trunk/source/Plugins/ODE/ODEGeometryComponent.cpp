@@ -66,16 +66,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsGeometryComponent",new Creator<ODEGeometryComponent, IComponent>);
 
 		RegisterProperty<Vec3>("Offset", &GASS::ODEGeometryComponent::GetOffset, &GASS::ODEGeometryComponent::SetOffset);
-		//RegisterProperty<std::string>("GeometryComponent", &SetGeometryComponent, &GetGeometryComponent);
 		RegisterProperty<float>("Friction", &GASS::ODEGeometryComponent::GetFriction, &GASS::ODEGeometryComponent::SetFriction);
 		RegisterProperty<float>("Slip", &GASS::ODEGeometryComponent::GetSlip, &GASS::ODEGeometryComponent::SetSlip);
 		RegisterProperty<std::string>("GeometryType", &GASS::ODEGeometryComponent::GetGeometryType, &GASS::ODEGeometryComponent::SetGeometryType);
-
-		//REGISTER_PROP(String,IPhysicsGeometry,m_AddToBody,"AddToBody",CProperty::STREAM|CProperty::READONLY,"");
-		//REGISTER_PROP(String,IPhysicsGeometry,m_GeometryTemplate,"GeometryTemplate",CProperty::STREAM|CProperty::READONLY,"");
-		//REGISTER_PROP(String,IPhysicsGeometry,m_GeometryTypeName,"GeometryType",CProperty::STREAM|CProperty::READONLY,"");
-		//REGISTER_PROP(Vect3D,IPhysicsGeometry,m_Offset,"Offset",CProperty::STREAM|CProperty::READONLY,"");
-		//REGISTER_PROP(Vect3D,IPhysicsGeometry,m_CollisionGeomScale,"Scale",CProperty::STREAM|CProperty::READONLY,"");
 	}
 
 	void ODEGeometryComponent::OnCreate()
