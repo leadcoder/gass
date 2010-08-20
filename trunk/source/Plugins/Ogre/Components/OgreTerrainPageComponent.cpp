@@ -59,7 +59,7 @@ namespace GASS
 
 	OgreTerrainPageComponent::~OgreTerrainPageComponent()
 	{
-	
+
 	}
 
 	void OgreTerrainPageComponent::RegisterReflection()
@@ -103,10 +103,6 @@ namespace GASS
 		m_IndexY=index;
 	}
 
-
-	
-	
-
 	void OgreTerrainPageComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnLoad,LoadGFXComponentsMessage,0));
@@ -133,16 +129,17 @@ namespace GASS
 			/*std::string full_path;
 			if(!rs->GetFullPath(filename,full_path))
 			{
-				Log::Warning("Faild to load terrain %s",filename.c_str());
-				return;
+			Log::Warning("Faild to load terrain %s",filename.c_str());
+			return;
 			}
 			Ogre::Image img;
 			img.load(full_path, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);*/
-			
+
 			m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &img);
-			
+
 			// sync load since we want everything in place when we start
 			m_TerrainGroup->loadAllTerrains(true);
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
 
@@ -171,8 +168,10 @@ namespace GASS
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
+				m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				SetPosition(m_Pos);
+				
 			}
 		}
 	}
@@ -189,9 +188,14 @@ namespace GASS
 		m_ColorMap = Misc::GetFilename(colormap);
 		if(m_Terrain && m_ColorMap != "")
 		{
+
+			std::fstream fstr(colormap.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+
 			Ogre::Image colourMap;
+			colourMap.load(stream);
 			m_Terrain->setGlobalColourMapEnabled(true);
-			colourMap.load(m_ColorMap, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			//colourMap.load(m_ColorMap, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_Terrain->getGlobalColourMap()->loadImage(colourMap);
 		}
 	}
@@ -209,7 +213,7 @@ namespace GASS
 			m_Terrain->setLayerTextureName(0,0,m_DiffuseLayer0);
 		}
 	}
-	
+
 	std::string OgreTerrainPageComponent::GetDiffuseLayer0() const
 	{
 		return m_DiffuseLayer0;
@@ -223,7 +227,7 @@ namespace GASS
 			m_Terrain->setLayerTextureName(1,0,m_DiffuseLayer1);
 		}
 	}
-	
+
 	std::string OgreTerrainPageComponent::GetDiffuseLayer1() const
 	{
 		return m_DiffuseLayer1;
@@ -237,7 +241,7 @@ namespace GASS
 			m_Terrain->setLayerTextureName(2,0,m_DiffuseLayer2);
 		}
 	}
-	
+
 	std::string OgreTerrainPageComponent::GetDiffuseLayer2() const
 	{
 		return m_DiffuseLayer2;
@@ -255,7 +259,7 @@ namespace GASS
 			Ogre::Image img;
 			img.load(stream);
 			img.resize(m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-    
+
 			Ogre::ColourValue cval;
 
 			//mBlendMap = m_Terrain->getLayerBlendMap(layerID);
@@ -280,7 +284,7 @@ namespace GASS
 			m_Terrain->getLayerBlendMap(2)->update();
 		}
 	}
-	
+
 	std::string OgreTerrainPageComponent::GetMask() const
 	{
 		return m_Mask;
@@ -291,7 +295,7 @@ namespace GASS
 		m_MaskLayer1 = Misc::GetFilename(mask);
 		if(m_Terrain && m_MaskLayer1 != "")
 		{
-			
+
 			//m_Terrain->getLayerBlendMap(1)->loadImage(m_MaskLayer1,Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 			std::fstream fstr(mask.c_str(), std::ios::in|std::ios::binary);
@@ -300,7 +304,7 @@ namespace GASS
 			Ogre::Image img;
 			img.load(stream);
 			img.resize(m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-    
+
 			Ogre::ColourValue cval;
 
 			//mBlendMap = m_Terrain->getLayerBlendMap(layerID);
@@ -320,7 +324,7 @@ namespace GASS
 			m_Terrain->getLayerBlendMap(1)->update();
 		}
 	}
-	
+
 	std::string OgreTerrainPageComponent::GetMaskLayer1() const
 	{
 		return m_MaskLayer1;
@@ -338,7 +342,7 @@ namespace GASS
 			Ogre::Image img;
 			img.load(stream);
 			img.resize(m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-    
+
 			Ogre::ColourValue cval;
 
 			//mBlendMap = m_Terrain->getLayerBlendMap(layerID);
@@ -372,13 +376,13 @@ namespace GASS
 			m_Terrain->setLayerWorldSize(0,value);
 		}
 	}
-	
+
 	float OgreTerrainPageComponent::GetTilingLayer0() const
 	{
 		return m_TilingLayer0;
 	}
 
-	
+
 	void OgreTerrainPageComponent::SetTilingLayer1(float value)
 	{
 		m_TilingLayer1 = value;
@@ -387,7 +391,7 @@ namespace GASS
 			m_Terrain->setLayerWorldSize(1,value);
 		}
 	}
-	
+
 	float OgreTerrainPageComponent::GetTilingLayer1() const
 	{
 		return m_TilingLayer1;
@@ -401,7 +405,7 @@ namespace GASS
 			m_Terrain->setLayerWorldSize(2,value);
 		}
 	}
-	
+
 	float OgreTerrainPageComponent::GetTilingLayer2() const
 	{
 		return m_TilingLayer2;
@@ -416,53 +420,60 @@ namespace GASS
 
 	void OgreTerrainPageComponent::GetBounds(Vec3 &min,Vec3 &max)
 	{
-		min.x = 0;
-		min.y = 0;
-		min.z = 0;
-
-		max.x = 0;
-		max.y = 1000000;
-		max.z = 0;
+		AABox aabox;
+		if(m_Terrain)
+			aabox = Convert::ToGASS(m_Terrain->getAABB());
+		min = aabox.m_Min + m_Pos;
+		max = aabox.m_Max + m_Pos;
 	}
 
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
 	{
 		AABox aabox;
-		aabox.m_Min.x = 0;
-		aabox.m_Min.y = 0;
-		aabox.m_Min.z = 0;
+		
+		if(m_Terrain)
+			aabox = Convert::ToGASS(m_Terrain->getAABB());
 
-		aabox.m_Max.x = 0;
-		aabox.m_Max.y = 1000000;
-		aabox.m_Max.z = 0;
+		aabox.m_Min += m_Pos;
+		aabox.m_Max += m_Pos;
+
 		return aabox;
 	}
 
 	Sphere OgreTerrainPageComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
-		sphere.m_Pos = Vec3(1/2.0,0,1/2.0);
-		sphere.m_Radius = sqrt(1.0);
+		if(m_Terrain)
+		{
+			sphere.m_Pos = Convert::ToGASS(m_Terrain->getPosition()) + m_Pos;
+			sphere.m_Radius = m_Terrain->getBoundingRadius();
+		}
 		return sphere;
 	}
 
 	unsigned int OgreTerrainPageComponent::GetSamplesX()
 	{
-		return 0;
+		if(m_Terrain)
+			return m_Terrain->getSize();
+		else return 0;
 	}
 
 	unsigned int OgreTerrainPageComponent::GetSamplesZ()
 	{
-		return 0;
+		if(m_Terrain)
+			return m_Terrain->getSize();
+		else return 0;
 	}
 
 	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
-	
+
 	}
 
 	Float OgreTerrainPageComponent::GetHeight(Float x, Float z)
 	{
+		if(m_Terrain)
+			return m_Terrain->getHeightAtWorldPosition(x,10000,z);
 		return 0;
 	}
 
@@ -470,11 +481,21 @@ namespace GASS
 	{
 		m_Pos = pos;
 		if(m_Terrain)
+		{
 			m_Terrain->setPosition(Convert::ToOgre(pos));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		}
 	}
 
 	Vec3 OgreTerrainPageComponent::GetPosition() const
 	{
 		return m_Pos;
+	}
+
+	float* OgreTerrainPageComponent::GetHeightData()
+	{
+			if(m_Terrain)
+				return m_Terrain->getHeightData();
+			return NULL;
 	}
 }

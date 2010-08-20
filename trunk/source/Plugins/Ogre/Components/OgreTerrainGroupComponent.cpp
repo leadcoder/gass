@@ -27,9 +27,12 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
 
@@ -73,6 +76,7 @@ namespace GASS
 		RegisterProperty<std::string>("SaveTerrain", &GASS::OgreTerrainGroupComponent::GetSaveTerrain, &GASS::OgreTerrainGroupComponent::SetSaveTerrain);
 		RegisterProperty<std::string>("LoadTerrain", &GASS::OgreTerrainGroupComponent::GetLoadTerrain, &GASS::OgreTerrainGroupComponent::SetLoadTerrain);
 		RegisterProperty<std::string>("CustomMaterial", &GASS::OgreTerrainGroupComponent::GetCustomMaterial, &GASS::OgreTerrainGroupComponent::SetCustomMaterial);
+		RegisterProperty<Vec2i>("CreatePages", &GASS::OgreTerrainGroupComponent::GetPages, &GASS::OgreTerrainGroupComponent::CreatePages);
 	}
 
 	void OgreTerrainGroupComponent::OnCreate()
@@ -81,6 +85,39 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
+	Vec2i OgreTerrainGroupComponent::GetPages() const
+	{
+		Vec2i size;
+		size.x = 0;
+		size.y = 0;
+		return size;
+	}
+
+	void OgreTerrainGroupComponent::CreatePages(const Vec2i  &size)
+	{
+		
+		if(GetSceneObject())
+		{
+			RemoveAllPages();
+
+			for(int x = 0 ;x < size.x; x++)
+			{
+				for(int y = 0 ;y < size.y ;y++)
+				{
+					SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("OgreTerrainPageObject"));
+					if(so)
+					{
+						OgreTerrainPageComponentPtr comp = so->GetFirstComponent<OgreTerrainPageComponent>();
+						comp->SetIndexX(x);
+						comp->SetIndexY(y);
+						GetSceneObject()->AddChild(so);
+						GetSceneObject()->GetSceneObjectManager()->LoadObject(so);
+						comp->SetPosition(Vec3(m_TerrainWorldSize*x,0,m_TerrainWorldSize*y));
+					}
+				}
+			}
+		}
+	}
 
 	std::string OgreTerrainGroupComponent::GetCustomMaterial() const
 	{
@@ -89,7 +126,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetCustomMaterial(const std::string &material)
 	{
-		m_CustomMaterial=material;
+		m_CustomMaterial = material;
 	}
 
 	std::string OgreTerrainGroupComponent::GetLoadTerrain() const
@@ -120,14 +157,18 @@ namespace GASS
 		}
 	}
 
-	//void OgreTerrainGroupComponent::ConfigureTerrainDefaults(Light* l)
 	void OgreTerrainGroupComponent::ConfigureTerrainDefaults()
 	{
 		// Configure global
 		//
+		delete m_TerrainGroup;
+		delete m_TerrainGlobals;
+
 		m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
 		m_TerrainGroup->setOrigin(Ogre::Vector3(0,0,0));
+		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
+		m_TerrainGroup->setResourceGroup("GASSScenario");
 
 
 		if(m_CustomMaterial != "")
@@ -215,6 +256,8 @@ namespace GASS
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.terrainSize = value;
+			RemoveAllPages();
+			ConfigureTerrainDefaults();
 		}
 	}
 
@@ -228,8 +271,25 @@ namespace GASS
 		m_TerrainWorldSize = value;
 		if(m_TerrainGroup)
 		{
+
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.worldSize = value;
+			RemoveAllPages();
+			ConfigureTerrainDefaults();
+		}
+	}
+
+
+	void OgreTerrainGroupComponent::RemoveAllPages()
+	{
+		//remove all children
+		BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			GetSceneObject()->GetSceneObjectManager()->DeleteObject(child);
+			//release pointers by reallocate children list
+			children = GetSceneObject()->GetChildren();
 		}
 	}
 
@@ -238,12 +298,16 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
+
+		/*ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(rs == NULL)
+			Log::Error("No Resource Manager Found");
+		std::string location = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario()->GetPath();
+		location += "gfx/terrain";
+		rs->AddResourceLocation(location,"TerrainResourceLocation","FileSystem",true);
+		rs->LoadResourceGroup("TerrainResourceLocation");*/
+		
 		ConfigureTerrainDefaults();
-		//if(m_TerrainName != "UnkownTerrain")
-		{
-			//try to load terrain
-			//SetLoadTerrain(m_TerrainName);
-		}
 	}
 
 	void OgreTerrainGroupComponent::SetSaveTerrain(const std::string &filename)
@@ -266,6 +330,9 @@ namespace GASS
 	{
 		delete m_TerrainGroup;
 		delete m_TerrainGlobals;	
+
+		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		//rs->RemoveResourceGroup("TerrainResourceLocation");
 	}
 
 	void OgreTerrainGroupComponent::GetBounds(Vec3 &min,Vec3 &max)
@@ -304,6 +371,7 @@ namespace GASS
 	{
 		return 0;
 	}
+
 	unsigned int OgreTerrainGroupComponent::GetSamplesZ()
 	{
 		return 0;

@@ -573,6 +573,7 @@ namespace GASS
 		// Create our projected grid module  
 
 
+
 		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
 
 		if(terrain_mat.get())

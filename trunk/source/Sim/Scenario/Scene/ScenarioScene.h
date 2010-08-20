@@ -176,6 +176,12 @@ namespace GASS
 		*/
 		SceneManagerIterator GetSceneManagers();
 
+
+		/**
+			Get owner scenario of this scenario scene
+		*/
+		ScenarioPtr GetScenario() const {return ScenarioPtr(m_Scenario);}
+
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}

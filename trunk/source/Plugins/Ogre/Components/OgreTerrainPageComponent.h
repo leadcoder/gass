@@ -39,6 +39,7 @@ namespace GASS
 	class CollisionMesh;
 	class OgreTerrainPageComponent : public Reflection<OgreTerrainPageComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  public boost::enable_shared_from_this<OgreTerrainPageComponent>
 	{
+		friend class OgreTerrainGroupComponent;
 	public:
 		OgreTerrainPageComponent();
 		~OgreTerrainPageComponent();
@@ -64,17 +65,19 @@ namespace GASS
 		//Vec3 GetScale() const {return m_Scale;}
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
-		float* GetHeightData() {return NULL;}
+		float* GetHeightData();
 		
 		void LoadFromFile();
-
+		
 	protected:
-		int GetIndexX() const;
+			int GetIndexX() const;
 		void SetIndexX(int index);
 		int GetIndexY() const;
 		void SetIndexY(int index);
 		void SetPosition(const Vec3 &pos);
 		Vec3 GetPosition() const; 
+
+		
 		void SetColorMap(const std::string &colormap);
 		std::string GetColorMap() const; 
 		void SetDiffuseLayer0(const std::string &diffuse);

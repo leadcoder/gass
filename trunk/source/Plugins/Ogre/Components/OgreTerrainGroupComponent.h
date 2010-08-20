@@ -69,6 +69,7 @@ namespace GASS
 		float* GetHeightData() {return NULL;}
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 	protected:
+		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
 		void SetCustomMaterial(const std::string &material);
 		void SetSaveTerrain(const std::string &filename);
@@ -82,6 +83,8 @@ namespace GASS
 		Float GetImportTerrainWorldSize() const;
 		void SetImportTerrainWorldSize(const Float &value);
 		void ConfigureTerrainDefaults();
+		Vec2i OgreTerrainGroupComponent::GetPages() const;
+		void OgreTerrainGroupComponent::CreatePages(const Vec2i  &size);
 		
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

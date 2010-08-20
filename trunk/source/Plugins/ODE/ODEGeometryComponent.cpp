@@ -39,7 +39,6 @@
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include <boost/bind.hpp>
 
-
 namespace GASS
 {
 	ODEGeometryComponent::ODEGeometryComponent()
@@ -560,7 +559,7 @@ namespace GASS
 	Float ODEGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
 		Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
-		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.x;
+		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 		return m_TerrainGeom->GetHeight(world_x,world_z);
 	}
 
