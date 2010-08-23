@@ -279,9 +279,8 @@ namespace GASS
 		Float GetPlanesError() const;
 		void SetGPUStrength(const Float &value);
 		Float GetGPUStrength() const;
-	
-
-	
+		FilePath GetResourceLocation() const;
+		void SetResourceLocation(const FilePath &value);
 	private:
 		std::string m_ConfigurationFile;
 		Hydrax::Hydrax *m_Hydrax;
@@ -297,6 +296,7 @@ namespace GASS
 		Hydrax::Module::ProjectedGrid *m_ProjectedGridGeometryModuleVertex; 
 
 		Ogre::RenderTarget* m_Target;
+		FilePath m_ResourceLocation;
 	};
 
 	typedef boost::shared_ptr<HydraxWaterComponent> HydraxWaterComponentPtr;

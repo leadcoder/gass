@@ -40,7 +40,13 @@
 namespace GASS
 {
 
-	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , m_Rot(0,0,0), m_Perlin(NULL), m_FFT(NULL), m_ProjectedGridGeometryModuleVertex(NULL),m_Target(NULL)
+	HydraxWaterComponent::HydraxWaterComponent(void) : m_Hydrax(NULL) , 
+		m_Rot(0,0,0), 
+		m_Perlin(NULL), 
+		m_FFT(NULL), 
+		m_ProjectedGridGeometryModuleVertex(NULL),
+		m_Target(NULL),
+		m_ResourceLocation("%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax")
 	{
 
 	}
@@ -84,6 +90,7 @@ namespace GASS
 		RegisterProperty<Float>("Elevation", &HydraxWaterComponent::GetElevation, &HydraxWaterComponent::SetElevation);
 		RegisterProperty<std::string>("SaveConfiguration", &HydraxWaterComponent::GetSave, &HydraxWaterComponent::SetSave);
 		RegisterProperty<Float>("PlanesError", &HydraxWaterComponent::GetPlanesError, &HydraxWaterComponent::SetPlanesError);
+		RegisterProperty<FilePath>("ResourceLocation", &HydraxWaterComponent::GetResourceLocation, &HydraxWaterComponent::SetResourceLocation);
 	}
 
 	void HydraxWaterComponent::OnCreate()
@@ -104,10 +111,24 @@ namespace GASS
 		}
 	}
 
+	
 	std::string HydraxWaterComponent::GetSave() const 
 	{
 		return m_ConfigurationFile;
 	}
+
+
+	FilePath HydraxWaterComponent::GetResourceLocation() const 
+	{
+		return m_ResourceLocation;
+	}
+
+
+	void HydraxWaterComponent::SetResourceLocation(const FilePath &value)
+	{
+		m_ResourceLocation = value;
+	}
+
 
 	void HydraxWaterComponent::SetPlanesError(const Float &value)
 	{
@@ -558,21 +579,41 @@ namespace GASS
 	void HydraxWaterComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		Ogre::Root::getSingleton().removeFrameListener(this);
+		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+		compMgr.removeCompositor(m_Hydrax->getViewport(),"_Hydrax_Underwater_Compositor_Name");
+
 		m_Hydrax->remove();
 		delete m_Hydrax;
+		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
 	}
 
 	void HydraxWaterComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+
+		Ogre::RenderTarget* target = NULL;
+
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+
+		Ogre::Viewport* vp = target->getViewport(0);
+			
+
+		if(m_ResourceLocation.GetPath() != "")
+		{
+			Ogre::ResourceGroupManager *mngr = Ogre::ResourceGroupManager::getSingletonPtr();
+			mngr->addResourceLocation(m_ResourceLocation.GetPath() ,"FileSystem","Hydrax");
+		}
 		
 		Ogre::Root::getSingleton().addFrameListener(this);
 		
-		m_Hydrax = new Hydrax::Hydrax(sm, ocam, ocam->getViewport());
+		m_Hydrax = new Hydrax::Hydrax(sm, ocam, vp);
+
+		
 		// Create our projected grid module  
 
-		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
+		/*Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
 
 		if(terrain_mat.get())
 			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
@@ -580,7 +621,7 @@ namespace GASS
 
 		terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainPageMaterial"));
 		if(terrain_mat.get())
-			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
+			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());*/
 		
 
 
@@ -691,28 +732,37 @@ namespace GASS
 	void HydraxWaterComponent::SetConfigurationFile(const std::string &cfg_file) 
 	{
 		m_ConfigurationFile = cfg_file;
+		
 		std::string filename = Misc::GetFilename(cfg_file);
 		std::string path = Misc::RemoveFilename(cfg_file);
 
-		if (path != "" && path != filename && !Ogre::ResourceGroupManager::getSingleton().resourceExists("Hydrax", filename))
-		{
-			try
-		    {
-			    Ogre::ResourceGroupManager::getSingleton().removeResourceLocation(path, "Hydrax");
-		    }
-		    catch(...)
-		    {
-		    }
-
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", "Hydrax");
-		}
-
 		if(m_Hydrax && m_ConfigurationFile != "")
 		{
+			if (path != "" && path != filename && !Ogre::ResourceGroupManager::getSingleton().resourceExists("Hydrax", filename))
+			{
+				try
+				{
+					Ogre::ResourceGroupManager::getSingleton().removeResourceLocation(path, "Hydrax");
+				}
+				catch(...)
+				{
+				}
+
+				Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", "Hydrax");
+			}
+
 			Ogre::ConfigFile CfgFile;
+			//std::fstream fstr(cfg_file.c_str(), std::ios::in|std::ios::binary);
+			//Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+			//CfgFile.load(stream);
 			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource(filename, "Hydrax"));
 			m_Hydrax->setModule(GetGeometryModule(CfgFile.getSetting("Module")), false);
 			m_Hydrax->getModule()->setNoise(GetNoiseModule(CfgFile.getSetting("Noise")), m_Hydrax->getGPUNormalMapManager(), false);
+
+		
+			
+
+
 			m_Hydrax->loadCfg(filename);
 			m_Hydrax->create();
 		}

@@ -201,6 +201,7 @@ namespace GASS
 			colourMap.load(stream);
 			m_Terrain->setGlobalColourMapEnabled(true);
 			//colourMap.load(m_ColorMap, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			m_Terrain->getGlobalColourMap()->unload();
 			m_Terrain->getGlobalColourMap()->loadImage(colourMap);
 		}
 	}

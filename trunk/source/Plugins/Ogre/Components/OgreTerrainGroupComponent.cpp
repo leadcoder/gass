@@ -162,9 +162,12 @@ namespace GASS
 		// Configure global
 		//
 		delete m_TerrainGroup;
-		delete m_TerrainGlobals;
+		//delete m_TerrainGlobals;
+		
+		m_TerrainGlobals =Ogre::TerrainGlobalOptions::getSingletonPtr();
 
-		m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
+		if(!m_TerrainGlobals)
+			m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
 		m_TerrainGroup->setOrigin(Ogre::Vector3(0,0,0));
 		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
@@ -329,7 +332,7 @@ namespace GASS
 	void OgreTerrainGroupComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		delete m_TerrainGroup;
-		delete m_TerrainGlobals;	
+		//delete m_TerrainGlobals;	
 
 		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		//rs->RemoveResourceGroup("TerrainResourceLocation");
