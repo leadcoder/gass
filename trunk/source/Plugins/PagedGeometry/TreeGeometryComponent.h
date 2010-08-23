@@ -28,7 +28,14 @@
 #include <OgreRenderTargetListener.h>
 
 class Ogre::PixelBox;
-class PagedGeometry;
+
+namespace Forests
+{
+	class PagedGeometry;
+}
+
+using namespace Forests;
+
 
 namespace GASS
 {
@@ -48,7 +55,7 @@ namespace GASS
 
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		static float GetTerrainHeight(float x, float z);
+		static float GetTerrainHeight(float x, float z, void* user_data);
 
 		std::string GetMesh() const 
 		{

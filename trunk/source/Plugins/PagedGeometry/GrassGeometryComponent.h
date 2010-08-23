@@ -28,12 +28,19 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
-class PagedGeometry;
-class GrassLoader;
-class GrassLayer;
+
+namespace Forests
+{
+	class PagedGeometry;
+	class GrassLoader;
+	class GrassLayer;
+}
+
+using namespace Forests;
 
 namespace GASS
 {
@@ -85,7 +92,8 @@ namespace GASS
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
 protected:
-		static float GetTerrainHeight(float x, float z);
+		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
+		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
 		std::string m_ColorMapFilename;
 		std::string m_Material;

@@ -102,7 +102,7 @@ namespace GASS
 	}
 	void GrassGeometryComponent::SetDensityMap(const std::string &dm)
 	{
-		m_DensityMapFilename = dm;
+		m_DensityMapFilename = Misc::GetFilename(dm);
 		if(m_GrassLayer)
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 	}
@@ -159,7 +159,7 @@ namespace GASS
 
 	void GrassGeometryComponent::SetColorMap(const std::string &name)
 	{
-		m_ColorMapFilename = name;
+		m_ColorMapFilename = Misc::GetFilename(name);
 		if(m_GrassLayer) 
 			m_GrassLayer->setColorMap(m_ColorMapFilename); 
 	}
@@ -329,8 +329,14 @@ namespace GASS
 
 	void GrassGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
+
+
 		if(m_PagedGeometry)
 		{
+
+			m_PagedGeometry->removeDetailLevels();
+			m_PagedGeometry->reloadGeometry();
+
 			if(m_PagedGeometry->getPageLoader())
 				delete m_PagedGeometry->getPageLoader();
 			delete m_PagedGeometry;
@@ -338,17 +344,40 @@ namespace GASS
 
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->removeListener(this);
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->removeListener(this);
+	}
+
+
+	TerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
+	{
+		TerrainComponentPtr terrain = obj->GetFirstComponent<ITerrainComponent>();
+		if(terrain) 
+			return terrain;
+
+		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
+		while(cc_iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			terrain = GetTerrainComponent(child);
+			if(terrain) 
+				return terrain;
+		}
+		return terrain;
 	}
 
 
 	void GrassGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		
 		//assert(ogsm);
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->addListener(this);
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->addListener(this);
 	
 		bool user_bounds = true;
 		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
@@ -358,7 +387,12 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
+			if(!terrain)
+			{
+				SceneObjectPtr root = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject();
+				terrain = GetTerrainComponent(root);
+			}
 			if(terrain)
 			{
 				Vec3 bmin,bmax;
@@ -394,8 +428,11 @@ namespace GASS
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y); 
 		m_GrassLayer->setDensity(m_DensityFactor);
 		m_GrassLayer->setMapBounds(m_MapBounds); 
-		m_GrassLayer->setDensityMap(m_DensityMapFilename);   
-		m_GrassLayer->setColorMap(m_ColorMapFilename); 
+		if(m_DensityMapFilename != "")
+			m_GrassLayer->setDensityMap(m_DensityMapFilename);   
+
+		if(m_ColorMapFilename != "")
+			m_GrassLayer->setColorMap(m_ColorMapFilename); 
 
 		//loader->setRenderQueueGroup();
 
@@ -409,7 +446,7 @@ namespace GASS
 //		Root::Get().AddRenderListener(this);
 	}
 
-	float GrassGeometryComponent::GetTerrainHeight(float x, float z)
+	float GrassGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
@@ -423,8 +460,8 @@ namespace GASS
 		m_PagedGeometry->update();
 		if(vp) 
 			m_PagedGeometry->setCamera(vp->getCamera());
-		if(m_GrassLoader ) 
-			m_GrassLoader->updateAnimation();
+		//if(m_GrassLoader ) 
+		//	m_GrassLoader->updateAnimation();
 	}
 
 

@@ -100,7 +100,11 @@ namespace GASS
 
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->removeListener(this);
+
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->removeListener(this);
 	}
 
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -111,7 +115,13 @@ namespace GASS
 		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->addListener(this);
+
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		
+
+		target->addListener(this);
 
 		bool user_bounds = true;
 		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
@@ -208,7 +218,7 @@ namespace GASS
 						treeLoader3d->addTree(myTree,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
 					else 
-						treeLoader2d->addTree(myTree,  Ogre::Vector2(x, z) ,Ogre::Degree(yaw), scale);
+						treeLoader2d->addTree(myTree,  Ogre::Vector3(x,0, z) ,Ogre::Degree(yaw), scale);
 					//treeLoader->addTree(myTree, x, z,yaw, scale);
 				/*	if(m_CreateShadowMap)
 					{
@@ -459,7 +469,7 @@ namespace GASS
 		return val;
 	}
 
-	float TreeGeometryComponent::GetTerrainHeight(float x, float z)
+	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
