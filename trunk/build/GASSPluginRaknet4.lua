@@ -30,32 +30,8 @@ if (os.is("windows")) then
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
-	
-else
-	includedirs 
-	{ 
-		"../source",
-		"../dependencies/RakNet/Source",
-		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
-		"../dependencies/tbb/include"	
-	}
 
-	libdirs 
-	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_PATH)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
-
-	}
-
-end
-
-
-	configuration "Debug"
+configuration "Debug"
 		targetname "GASSPluginRakNet_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
@@ -83,6 +59,54 @@ end
 			"tbb",
 			"ws2_32"
 		}
+	
+else
+	includedirs 
+	{ 
+		"../source",
+		"../dependencies/RakNet/Source",
+		"../dependencies/tinyxml",
+		"$(BOOST_PATH)",
+		"../dependencies/tbb/include"	
+	}
 
+	libdirs 
+	{
+		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
+		"../dependencies/RakNet/Lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+
+	}
+configuration "Debug"
+		targetname "GASSPluginRakNet_d"
+		defines { "DEBUG" }
+		flags { "Symbols" }
+--		debugPrefix = "_d"
+		links 
+		{
+			"GASSCore_d",
+			"GASSSim_d",
+			"RakNetLibStaticDebug",
+			"tinyxmld",
+			"tbb_debug"
+		}
+
+	configuration "Release"
+		targetname "GASSPluginRakNet"
+		defines { "NDEBUG" }
+		flags { "Optimize" }
+		links 
+		{
+			"GASSCore",
+			"GASSSim",
+			"RakNetLibStatic",
+			"tinyxml",
+			"tbb"
+		}
+
+end
 
 

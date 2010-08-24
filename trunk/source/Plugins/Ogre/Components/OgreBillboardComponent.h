@@ -28,9 +28,11 @@
 #include "Core/Math/Sphere.h"
 #include "Core/MessageSystem/IMessage.h"
 
-
-class Ogre::BillboardSet;
-class Ogre::Billboard;
+namespace Ogre
+{
+    class BillboardSet;
+    class Billboard;
+}
 
 namespace GASS
 {
@@ -57,7 +59,7 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLoad(LoadGFXComponentsMessagePtr message);
-		
+
 		std::string m_RenderQueue;
 		std::string m_Material;
 		bool m_CastShadow;
@@ -69,6 +71,6 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<OgreBillboardComponent> OgreBillboardComponentPtr;
-	
+
 }
 

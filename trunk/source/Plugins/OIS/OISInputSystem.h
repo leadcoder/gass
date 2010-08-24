@@ -19,8 +19,11 @@
 *****************************************************************************/
 
 #pragma once
-
+#ifdef WIN32
 #include <OIS.h>
+#else
+#include <OIS/OIS.h>
+#endif
 #include "Sim/Common.h"
 #include "Core/Utils/Log.h"
 #include "Core/MessageSystem/MessageType.h"

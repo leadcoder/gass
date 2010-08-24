@@ -27,15 +27,17 @@
 #include "Core/Math/Sphere.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 
-
-class Ogre::Entity;
-class Ogre::Bone;
-class Ogre::IndexData;
-class Ogre::VertexData;
+namespace Ogre
+{
+    class Entity;
+    class Bone;
+    class IndexData;
+    class VertexData;
+}
 
 namespace GASS
 {
-	
+
 
 
 	class OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public boost::enable_shared_from_this<OgreMeshComponent>
@@ -56,7 +58,7 @@ namespace GASS
 		void SetFilename(const std::string &filename);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		
+
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
@@ -64,10 +66,10 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		void OnColorMessage(ColorMessagePtr message);
-		
+
 		void SetTexCoordSpeed(const Vec2 &speed);
 
-		
+
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
 
@@ -78,7 +80,7 @@ namespace GASS
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;
 	};
-	
+
 	typedef boost::shared_ptr<OgreMeshComponent> OgreMeshComponentPtr;
 }
 

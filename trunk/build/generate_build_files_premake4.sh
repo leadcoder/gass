@@ -16,5 +16,5 @@ esac
 
 
 ../tools/premake4 --file=GASSSim4sln.lua --cc=gcc --os=linux $target
-../tools/premake4 --file=CoreTest4sln.lua --cc=gcc --os=linux $target
+#../tools/premake4 --file=CoreTest4sln.lua --cc=gcc --os=linux $target
 
