@@ -53,6 +53,8 @@ namespace GASS
 	public:
 		Scenario();
 		virtual ~Scenario();
+
+		static void RegisterReflection();
 		/**
 		Load a new scenario from path
 		return success if true or false if failure
@@ -86,9 +88,20 @@ namespace GASS
 		*/
 		void AddScenarioScene(ScenarioScenePtr scene);
 	protected:
+		/**
+			Get optional resource locations relative to scenario path
+		*/
+		std::vector<std::string> GetScenarioResourceFolders() const;
+
+		/**
+			Set optional resource locations relative to scenario path
+		*/
+		void SetScenarioResourceFolders(const std::vector<std::string> &folders);
+	
 		ScenarioScenePtr LoadScene(TiXmlElement *sm_elem);
 		ScenarioSceneVector m_Scenes;
 		std::string m_ScenarioPath;
+		std::vector<std::string> m_ResourceFolders;
 	};
 	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;

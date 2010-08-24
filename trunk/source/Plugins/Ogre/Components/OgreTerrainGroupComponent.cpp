@@ -55,7 +55,8 @@ namespace GASS
 		m_TerrainGroup(NULL),
 		m_TerrainWorldSize(5000),
 		m_TerrainSize(513),
-		m_TerrainName("UnkownTerrain")
+		m_TerrainName("UnkownTerrain"),
+		m_Origin(0,0,0)
 	{
 
 
@@ -77,12 +78,40 @@ namespace GASS
 		RegisterProperty<std::string>("LoadTerrain", &GASS::OgreTerrainGroupComponent::GetLoadTerrain, &GASS::OgreTerrainGroupComponent::SetLoadTerrain);
 		RegisterProperty<std::string>("CustomMaterial", &GASS::OgreTerrainGroupComponent::GetCustomMaterial, &GASS::OgreTerrainGroupComponent::SetCustomMaterial);
 		RegisterProperty<Vec2i>("CreatePages", &GASS::OgreTerrainGroupComponent::GetPages, &GASS::OgreTerrainGroupComponent::CreatePages);
+		RegisterProperty<Vec3>("Origin", &GASS::OgreTerrainGroupComponent::GetOrigin, &GASS::OgreTerrainGroupComponent::SetOrigin);
+		
 	}
 
 	void OgreTerrainGroupComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnLoad,LoadGFXComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
+	}
+
+	void OgreTerrainGroupComponent::SetOrigin(const Vec3 &pos)
+	{
+		m_Origin = pos;
+		if(m_TerrainGroup)
+		{
+			m_TerrainGroup->setOrigin(Convert::ToOgre(pos));
+
+			//update page positions
+			BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				OgreTerrainPageComponentPtr page = child->GetFirstComponent<OgreTerrainPageComponent>();
+				if(page)
+				{
+					page->UpdatePosition();
+				}
+			}
+		}
+	}
+
+	Vec3 OgreTerrainGroupComponent::GetOrigin() const
+	{
+		return m_Origin;
 	}
 
 	Vec2i OgreTerrainGroupComponent::GetPages() const
@@ -169,7 +198,7 @@ namespace GASS
 		if(!m_TerrainGlobals)
 			m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
-		m_TerrainGroup->setOrigin(Ogre::Vector3(0,0,0));
+		SetOrigin(m_Origin);
 		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
 		m_TerrainGroup->setResourceGroup("GASSScenario");
 
@@ -290,9 +319,13 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			GetSceneObject()->GetSceneObjectManager()->DeleteObject(child);
+			OgreTerrainPageComponentPtr page = child->GetFirstComponent<OgreTerrainPageComponent>();
+			if(page)
+			{
+				GetSceneObject()->GetSceneObjectManager()->DeleteObject(child);
+				children = GetSceneObject()->GetChildren();
+			}
 			//release pointers by reallocate children list
-			children = GetSceneObject()->GetChildren();
 		}
 	}
 
@@ -340,33 +373,55 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::GetBounds(Vec3 &min,Vec3 &max)
 	{
-		/*min.x = 0;
-		min.y = 0;
-		min.z = 0;
-
-		max.x = m_WorldWidth;
-		max.y = m_MaxHeight;
-		max.z = m_WorldHeight;*/
+		AABox aabox = GetBoundingBox();
+		min = aabox.m_Min;
+		max = aabox.m_Max;
 	}
 
 	AABox OgreTerrainGroupComponent::GetBoundingBox() const
 	{
 		AABox aabox;
-		/*aabox.m_Min.x = 0;
-		aabox.m_Min.y = 0;
-		aabox.m_Min.z = 0;
+		
+		if(m_TerrainGroup)
+		{
+			//Get all components
+			IComponentContainer::ComponentVector comps;
+			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
 
-		aabox.m_Max.x = m_WorldWidth;
-		aabox.m_Max.y = m_MaxHeight;
-		aabox.m_Max.z = m_WorldHeight;*/
+			for(int i = 0 ;  i < comps.size(); i++)
+			{
+				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
+				if(page)
+				{
+					
+					AABox page_bb = page->GetBoundingBox();
+					aabox.Union(page_bb);
+				}
+			}
+		}
 		return aabox;
 	}
 
 	Sphere OgreTerrainGroupComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
-		//sphere.m_Pos = Vec3(m_WorldWidth/2.0,m_MaxHeight/2.0,m_WorldHeight/2.0);
-		//sphere.m_Radius = sqrt(m_WorldWidth*m_WorldWidth);
+		if(m_TerrainGroup)
+		{
+			//Get all components
+			IComponentContainer::ComponentVector comps;
+			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+
+			for(int i = 0 ;  i < comps.size(); i++)
+			{
+				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
+				if(page)
+				{
+					
+					Sphere page_sphere = page->GetBoundingSphere();
+					sphere.Union(page_sphere);
+				}
+			}
+		}
 		return sphere;
 	}
 
@@ -387,6 +442,10 @@ namespace GASS
 
 	Float OgreTerrainGroupComponent::GetHeight(Float x, Float z)
 	{
+		if(m_TerrainGroup)
+		{
+			return m_TerrainGroup->getHeightAtWorldPosition(x,0,z);
+		}
 		return 0;
 	}
 }

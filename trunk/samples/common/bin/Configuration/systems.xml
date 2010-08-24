@@ -25,8 +25,7 @@
     <AddResourceLocation Path="../data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>
-
+    <!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
   </OgreResourceSystem>
   <ODEPhysicsSystem>
     <Name value = "PhysicsSystem"/>

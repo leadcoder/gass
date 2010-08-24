@@ -12,7 +12,8 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"$(OGRE_PATH)/include/OGRE",
-		"../dependencies/PagedGeometry/include",
+		"$(OGRE_PATH)/OGREMain/include",
+		"../dependencies/PagedGeometry-1.1.0/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
 	}
@@ -22,7 +23,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"$(OGRE_PATH)/lib/$(ConfigurationName)",
-		"../dependencies/PagedGeometry/lib",
+		"../dependencies/PagedGeometry-1.1.0/lib",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
 	}
@@ -36,7 +37,7 @@ else
 		"../source",
 		"$(BOOST_PATH)",
 		"../dependencies/include/OGRE",
-		"../dependencies/PagedGeometry/include",
+		"../dependencies/PagedGeometry-1.1.0/include",
 		"../dependencies/include/tinyxml"
 	}
 

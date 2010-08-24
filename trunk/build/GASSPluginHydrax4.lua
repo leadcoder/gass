@@ -12,6 +12,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"$(OGRE_PATH)/include/OGRE",
+		"$(OGRE_PATH)/OGREMain/include",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"

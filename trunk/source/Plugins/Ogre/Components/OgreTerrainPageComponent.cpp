@@ -51,8 +51,7 @@ namespace GASS
 		m_TerrainGroup(NULL),
 		m_TilingLayer0(5),
 		m_TilingLayer1(5),
-		m_TilingLayer2(5),
-		m_Pos(0,0,0)
+		m_TilingLayer2(5)
 	{
 
 	}
@@ -172,7 +171,8 @@ namespace GASS
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
-				SetPosition(m_Pos);
+				//SetPosition(m_Pos);
+				UpdatePosition();
 
 				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
 				//std::string name = ptr->getName();	
@@ -429,8 +429,8 @@ namespace GASS
 		AABox aabox;
 		if(m_Terrain)
 			aabox = Convert::ToGASS(m_Terrain->getAABB());
-		min = aabox.m_Min + m_Pos;
-		max = aabox.m_Max + m_Pos;
+		min = aabox.m_Min + GetPosition();
+		max = aabox.m_Max + GetPosition();
 	}
 
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
@@ -440,8 +440,8 @@ namespace GASS
 		if(m_Terrain)
 			aabox = Convert::ToGASS(m_Terrain->getAABB());
 
-		aabox.m_Min += m_Pos;
-		aabox.m_Max += m_Pos;
+		aabox.m_Min += GetPosition();
+		aabox.m_Max += GetPosition();
 
 		return aabox;
 	}
@@ -451,7 +451,7 @@ namespace GASS
 		Sphere sphere;
 		if(m_Terrain)
 		{
-			sphere.m_Pos = Convert::ToGASS(m_Terrain->getPosition()) + m_Pos;
+			sphere.m_Pos = Convert::ToGASS(m_Terrain->getPosition()) + GetPosition();
 			sphere.m_Radius = m_Terrain->getBoundingRadius();
 		}
 		return sphere;
@@ -471,6 +471,7 @@ namespace GASS
 		else return 0;
 	}
 
+
 	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
 
@@ -483,25 +484,39 @@ namespace GASS
 		return 0;
 	}
 
-	void OgreTerrainPageComponent::SetPosition(const Vec3 &pos)
-	{
-		m_Pos = pos;
-		if(m_Terrain)
-		{
-			m_Terrain->setPosition(Convert::ToOgre(pos));
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
-		}
-	}
-
-	Vec3 OgreTerrainPageComponent::GetPosition() const
-	{
-		return m_Pos;
-	}
-
 	float* OgreTerrainPageComponent::GetHeightData()
 	{
 			if(m_Terrain)
 				return m_Terrain->getHeightData();
 			return NULL;
 	}
+
+
+	void OgreTerrainPageComponent::UpdatePosition()
+	{
+		if(m_Terrain)
+		{
+			//m_Pos = Convert::ToGASS(m_Terrain->getPosition());
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		}
+	}
+
+	void OgreTerrainPageComponent::SetPosition(const Vec3 &pos)
+	{
+	/*	m_Pos = pos;
+		if(m_Terrain)
+		{
+			m_Terrain->setPosition(Convert::ToOgre(pos));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		}*/
+	}
+
+	Vec3 OgreTerrainPageComponent::GetPosition() const
+	{
+		Vec3 pos(0,0,0);
+		if(m_Terrain)
+			pos= Convert::ToGASS(m_Terrain->getPosition());;
+		return pos;
+	}
+
 }

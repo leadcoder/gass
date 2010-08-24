@@ -63,7 +63,6 @@ namespace GASS
 		
 	}
 
-
 	void GrassGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("GrassGeometryComponent",new Creator<GrassGeometryComponent, IComponent>);
@@ -127,8 +126,8 @@ namespace GASS
 	void GrassGeometryComponent::SetPageSize(float size)
 	{
 		m_PageSize = size;
-
 	}
+
 	float GrassGeometryComponent::GetImposterAlphaRejectionValue() const
 	{
 		return m_ImposterAlphaRejectionValue;
@@ -154,7 +153,6 @@ namespace GASS
 	std::string GrassGeometryComponent::GetColorMap() const
 	{
 		return m_ColorMapFilename;
-
 	}
 
 	void GrassGeometryComponent::SetColorMap(const std::string &name)
@@ -329,11 +327,8 @@ namespace GASS
 
 	void GrassGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-
-
 		if(m_PagedGeometry)
 		{
-
 			m_PagedGeometry->removeDetailLevels();
 			m_PagedGeometry->reloadGeometry();
 

@@ -66,11 +66,10 @@ namespace GASS
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
 		float* GetHeightData();
-		
 		void LoadFromFile();
-		
 	protected:
-			int GetIndexX() const;
+		void UpdatePosition();
+		int GetIndexX() const;
 		void SetIndexX(int index);
 		int GetIndexY() const;
 		void SetIndexY(int index);
@@ -127,7 +126,7 @@ namespace GASS
 		float m_TilingLayer0;
 		float m_TilingLayer1;
 		float m_TilingLayer2;
-		Vec3 m_Pos;
+		
 	};
 
 	typedef boost::shared_ptr<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;

@@ -11,13 +11,18 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
---		"../dependencies/ogre/OgreMain/include",
---		"../dependencies/ogre/dependencies/include",
---		"../dependencies/ogre/PlugIns/OctreeSceneManager/include",
 		"../dependencies/tinyxml",
+		--support both source build and SDK
+		--SDK
 		"$(OGRE_PATH)/include/OGRE",
 		"$(OGRE_PATH)/include/OGRE/Plugins/OctreeSceneManager",
-		--Compatible with ogre 1.6
+		"$(OGRE_PATH)/include/OGRE/Terrain",
+		"$(OGRE_PATH)/include/OGRE/Paging",
+		--Same  inludes but form source
+		"$(OGRE_PATH)/OGREMain/include",
+		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
+		"$(OGRE_PATH)/Components/Terrain/include",
+		"$(OGRE_PATH)/Components/Paging/include",
 		"$(BOOST_PATH)"
 	}
 
@@ -27,8 +32,6 @@ if (os.is("windows")) then
 		"../dependencies",
 		"$(OGRE_PATH)/lib/$(ConfigurationName)",
 		"$(OGRE_PATH)/lib/$(ConfigurationName)/opt",
-	--	"../dependencies/ogre/lib",
-	--	"../dependencies/Ogre/dependencies/lib/$(ConfigurationName)",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
 
@@ -44,6 +47,8 @@ else
 		"$(BOOST_PATH)",
 		"$(OGRE_PATH)/OgreMain/include",
 		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
+		"$(OGRE_PATH)/Components/Terrain/include",
+		"$(OGRE_PATH)/Components/Paging/include",
 		"$(OGRE_PATH)/build/include",		
 		"../dependencies/tinyxml"
 	}
@@ -72,6 +77,8 @@ if (os.is("windows")) then
 			"GASSSim_d",
 			"OgreMain_d",
 			"Plugin_OctreeSceneManager_d",
+			"OgreTerrain_d",
+			"OgrePaging_d",
 			"tinyxmld"
 		}
 else
@@ -80,6 +87,8 @@ else
 			"GASSCore_d",
 			"GASSSim_d",
 			"OgreMain",
+			"OgreTerrain",
+			"OgrePaging",
 			"tinyxmld"
 		}
 end
@@ -95,6 +104,8 @@ if (os.is("windows")) then
 			"GASSSim",
 			"OgreMain",
 			"Plugin_OctreeSceneManager",
+			"OgreTerrain",
+			"OgrePaging",
 			"tinyxml"
 		}
 else
@@ -103,6 +114,8 @@ else
 			"GASSCore",
 			"GASSSim",
 			"OgreMain",
+			"OgreTerrain",
+			"OgrePaging",
 			"tinyxml"
 		}
 end

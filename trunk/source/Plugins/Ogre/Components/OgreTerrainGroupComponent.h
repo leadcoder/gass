@@ -83,9 +83,10 @@ namespace GASS
 		Float GetImportTerrainWorldSize() const;
 		void SetImportTerrainWorldSize(const Float &value);
 		void ConfigureTerrainDefaults();
-		Vec2i OgreTerrainGroupComponent::GetPages() const;
-		void OgreTerrainGroupComponent::CreatePages(const Vec2i  &size);
-		
+		Vec2i GetPages() const;
+		void CreatePages(const Vec2i  &size);
+		void SetOrigin(const Vec3 &pos);
+		Vec3 GetOrigin() const;
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		
@@ -117,6 +118,7 @@ namespace GASS
 		float m_TerrainWorldSize;
 		std::string m_TerrainName;
 		std::string m_CustomMaterial;
+		Vec3 m_Origin;
 	};
 	typedef boost::shared_ptr<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 

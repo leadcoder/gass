@@ -57,6 +57,21 @@ namespace GASS
 		}
 	}
 
+	void Scenario::RegisterReflection()
+	{
+		RegisterVectorProperty<std::string>("ScenarioResourceFolders", &GASS::Scenario::GetScenarioResourceFolders, &GASS::Scenario::SetScenarioResourceFolders);
+	}
+
+	std::vector<std::string> Scenario::GetScenarioResourceFolders() const
+	{
+		return m_ResourceFolders;
+	}
+
+	void Scenario::SetScenarioResourceFolders(const std::vector<std::string> &folders)
+	{
+		m_ResourceFolders = folders;
+	}
+
 	bool Scenario::Load(const std::string &scenario_path)
 	{
 		m_ScenarioPath = scenario_path;
@@ -67,8 +82,10 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			Log::Error("No Resource Manager Found");
-		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
-		rs->LoadResourceGroup("GASSScenario");
+		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",false);
+		
+
+		
 
 		std::string filename = scenario_path + "/scenario.xml";
 
@@ -91,6 +108,13 @@ namespace GASS
 		if(settings == NULL) Log::Error("Failed to get ScenarioSettings tag");
 
 		BaseReflectionObject::LoadProperties(settings);
+
+		for(std::vector<std::string>::iterator iter = m_ResourceFolders.begin(); iter != m_ResourceFolders.end(); iter++)
+		{
+			std::string location = scenario_path + "/" + *iter;
+			rs->AddResourceLocation(location,"GASSScenario","FileSystem",false);
+		}
+		rs->LoadResourceGroup("GASSScenario");
 
 		TiXmlElement *scene_elem = scenario->FirstChildElement("Scenes");
 

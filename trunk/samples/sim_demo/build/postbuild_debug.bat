@@ -1,4 +1,6 @@
 copy %OGRE_PATH%\bin\debug\OgreMain_d.dll ..\..\common\bin\Debug\
+copy %OGRE_PATH%\bin\debug\OgreTerrain_d.dll ..\..\common\bin\Debug\
+copy %OGRE_PATH%\bin\debug\OgrePaging_d.dll ..\..\common\bin\Debug\
 copy %OGRE_PATH%\bin\debug\Plugin_BSPSceneManager_d.dll ..\..\common\bin\Debug\
 copy %OGRE_PATH%\bin\debug\Plugin_CgProgramManager_d.dll ..\..\common\bin\Debug\
 copy %OGRE_PATH%\bin\debug\Plugin_OctreeSceneManager_d.dll ..\..\common\bin\Debug\

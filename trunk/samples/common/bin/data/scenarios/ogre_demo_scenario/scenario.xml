@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Scenario>
   <ScenarioSettings>
+    <ScenarioResourceFolders value="gfx/terrain gfx/materials gfx/3dmodels"/>
   </ScenarioSettings>
   <Scenes>
     <MainScene>
