@@ -45,8 +45,14 @@ namespace GASS
 		m_Perlin(NULL), 
 		m_FFT(NULL), 
 		m_ProjectedGridGeometryModuleVertex(NULL),
+		m_ProjectedGridGeometryModuleRtt(NULL),
+		m_SimpleGridGeometryModuleVertex(NULL),
+		m_SimpleGridGeometryModuleRtt(NULL),
+		m_RadialGridGeometryModuleVertex(NULL),
+		m_RadialGridGeometryModuleRtt(NULL),
 		m_Target(NULL),
-		m_ResourceLocation("%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax")
+		m_ResourceLocation("%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax"),
+		m_ActiveModule("ProjectedGridRtt")
 	{
 
 	}
@@ -60,6 +66,8 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("HydraxWaterComponent",new Creator<HydraxWaterComponent, IComponent>);
 		RegisterProperty<std::string>("ConfigurationFile", &HydraxWaterComponent::GetConfigurationFile, &HydraxWaterComponent::SetConfigurationFile);
+		RegisterProperty<std::string>("ActiveModule", &HydraxWaterComponent::GetActiveModule, &HydraxWaterComponent::SetActiveModule);
+		RegisterProperty<std::string>("ActiveNoise", &HydraxWaterComponent::GetActiveNoise, &HydraxWaterComponent::SetActiveNoise);
 		RegisterProperty<Vec3>("Position", &HydraxWaterComponent::GetPosition, &HydraxWaterComponent::SetPosition);
 		RegisterProperty<Vec3>("Rotation", &HydraxWaterComponent::GetRotation, &HydraxWaterComponent::SetRotation);
 		RegisterProperty<Float>("GlobalTransparency", &HydraxWaterComponent::GetGlobalTransparency, &HydraxWaterComponent::SetGlobalTransparency);
@@ -164,19 +172,31 @@ namespace GASS
 
 	void HydraxWaterComponent::SetStrength(const Float &value)
 	{
-		if(m_ProjectedGridGeometryModuleVertex)
+		if(m_Hydrax && m_ProjectedGridGeometryModuleVertex == m_Hydrax->getModule())
 		{
 			Hydrax::Module::ProjectedGrid::Options  options = m_ProjectedGridGeometryModuleVertex->getOptions();
 			options.Strength = value;
 			m_ProjectedGridGeometryModuleVertex->setOptions(options);
+			m_ProjectedGridGeometryModuleRtt->setOptions(options);
+		}
+		else if(m_Hydrax && m_ProjectedGridGeometryModuleRtt == m_Hydrax->getModule())
+		{
+			Hydrax::Module::ProjectedGrid::Options  options = m_ProjectedGridGeometryModuleRtt->getOptions();
+			options.Strength = value;
+			m_ProjectedGridGeometryModuleRtt->setOptions(options);
 		}
 	}
 
 	Float HydraxWaterComponent::GetStrength() const 
 	{
-		if(m_ProjectedGridGeometryModuleVertex)
+		if(m_Hydrax && m_ProjectedGridGeometryModuleVertex == m_Hydrax->getModule())
 		{
 			Hydrax::Module::ProjectedGrid::Options  options = m_ProjectedGridGeometryModuleVertex->getOptions();
+			return options.Strength;
+		}
+		else if(m_Hydrax && m_ProjectedGridGeometryModuleRtt == m_Hydrax->getModule())
+		{
+			Hydrax::Module::ProjectedGrid::Options  options = m_ProjectedGridGeometryModuleRtt->getOptions();
 			return options.Strength;
 		}
 		return 0;
@@ -434,7 +454,7 @@ namespace GASS
 	void HydraxWaterComponent::SetFoamStart(const Float &FoamStart)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setFoamScale(FoamStart);
+			m_Hydrax->setFoamStart(FoamStart);
 	}
 
 	void HydraxWaterComponent::SetFoamTransparency(const Float &FoamTransparency)
@@ -613,7 +633,7 @@ namespace GASS
 		
 		// Create our projected grid module  
 
-		/*Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
+		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
 
 		if(terrain_mat.get())
 			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
@@ -621,7 +641,7 @@ namespace GASS
 
 		terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainPageMaterial"));
 		if(terrain_mat.get())
-			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());*/
+			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
 		
 
 
@@ -638,7 +658,7 @@ namespace GASS
 			= new Hydrax::Module::ProjectedGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			new Hydrax::Noise::Perlin(),
+			m_Perlin,
 			// Base plane
 			Ogre::Plane(Ogre::Vector3(0,1,0), Ogre::Vector3(0,0,0)),
 			// Normal mode
@@ -648,7 +668,7 @@ namespace GASS
 		AddGeometryModule(m_ProjectedGridGeometryModuleVertex);
 
 		// Add projected grid geometry module to the manager(Rtt normals)
-		Hydrax::Module::ProjectedGrid *ProjectedGridGeometryModuleRtt
+		m_ProjectedGridGeometryModuleRtt
 			= new Hydrax::Module::ProjectedGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
@@ -659,59 +679,60 @@ namespace GASS
 			Hydrax::MaterialManager::NM_RTT,
 			// Projected grid options (Can be updated each frame -> setOptions(...))
 			Hydrax::Module::ProjectedGrid::Options());
-		AddGeometryModule(ProjectedGridGeometryModuleRtt);
+		AddGeometryModule(m_ProjectedGridGeometryModuleRtt);
 
 		// Add the simple grid geometry module to our manager(Vertex normals)
-		Hydrax::Module::SimpleGrid *SimpleGridGeometryModuleVertex
+		m_SimpleGridGeometryModuleVertex
 			= new Hydrax::Module::SimpleGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			new Hydrax::Noise::Perlin(),
+			m_Perlin,
 			// Normal mode
 			Hydrax::MaterialManager::NM_VERTEX,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
 			Hydrax::Module::SimpleGrid::Options(512, Hydrax::Size(10000,10000) ));
-		AddGeometryModule(SimpleGridGeometryModuleVertex);
+		AddGeometryModule(m_SimpleGridGeometryModuleVertex);
 
 		// Add the simple grid geometry module to our manager(Rtt normals)
-		Hydrax::Module::SimpleGrid *SimpleGridGeometryModuleRtt
+		m_SimpleGridGeometryModuleRtt
 			= new Hydrax::Module::SimpleGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			new Hydrax::Noise::Perlin(),
+			m_Perlin,
 			// Normal mode
 			Hydrax::MaterialManager::NM_RTT,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
 			Hydrax::Module::SimpleGrid::Options(128, Hydrax::Size(10000,10000) ));
-		AddGeometryModule(SimpleGridGeometryModuleRtt);
+		AddGeometryModule(m_SimpleGridGeometryModuleRtt);
 
 		// Add the radial grid geometry module to our manager(Vertex normals)
-		Hydrax::Module::RadialGrid *RadialGridGeometryModuleVertex
+		m_RadialGridGeometryModuleVertex
 			= new Hydrax::Module::RadialGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			new Hydrax::Noise::Perlin(),
+			m_Perlin,
 			// Normal mode
 			Hydrax::MaterialManager::NM_VERTEX,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
 			Hydrax::Module::RadialGrid::Options(250, 250, 6000  ));
-		AddGeometryModule(RadialGridGeometryModuleVertex);
+		AddGeometryModule(m_RadialGridGeometryModuleVertex);
 
 		// Add the radial grid geometry module to our manager(Rtt normals)
-		Hydrax::Module::RadialGrid *RadialGridGeometryModuleRtt
+		m_RadialGridGeometryModuleRtt
 			= new Hydrax::Module::RadialGrid(// Hydrax parent pointer
 			m_Hydrax,
 			// Noise module
-			new Hydrax::Noise::Perlin(),
+			m_Perlin,
 			// Normal mode
 			Hydrax::MaterialManager::NM_RTT,
 			// Simple grid options (Can be updated each frame -> setOptions(...))
 			Hydrax::Module::RadialGrid::Options(80, 10, 6000 ));
-		AddGeometryModule(RadialGridGeometryModuleRtt);
+		AddGeometryModule(m_RadialGridGeometryModuleRtt);
 
 
 		// Set our module
-		m_Hydrax->setModule(static_cast<Hydrax::Module::Module*>(ProjectedGridGeometryModuleRtt));
+		//SetActiveModule(m_ActiveModule);
+		//m_Hydrax->setModule(static_cast<Hydrax::Module::Module*>(m_ProjectedGridGeometryModuleRtt));
 		// Load all parameters from config file
 		// Remarks: The config file must be in Hydrax resource group.
 		// All parameters can be set/updated directly by code(Like previous versions),
@@ -719,6 +740,11 @@ namespace GASS
 		// Create water
 		//m_Hydrax->create();
 
+		//force default load
+		Ogre::ConfigFile CfgFile;
+		CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource("DefaultEditorWater.hdx", "Hydrax"));
+		SetActiveModule(CfgFile.getSetting("Module"));
+		SetActiveNoise(CfgFile.getSetting("Perlin"));
 		m_Hydrax->loadCfg("DefaultEditorWater.hdx");
 		// Create water
 		m_Hydrax->create();
@@ -727,6 +753,32 @@ namespace GASS
 		{
 			SetConfigurationFile(m_ConfigurationFile);
 		}
+	}
+
+
+	void HydraxWaterComponent::SetActiveNoise(const std::string &module) 
+	{
+		m_ActiveNoise = module;
+		if(m_Hydrax && m_Hydrax->getModule() && GetNoiseModule(module))
+			m_Hydrax->getModule()->setNoise(GetNoiseModule(module),m_Hydrax->getGPUNormalMapManager(), false);
+	}
+
+	std::string HydraxWaterComponent::GetActiveNoise() const 
+	{
+		return m_ActiveNoise;
+	}
+
+
+	void HydraxWaterComponent::SetActiveModule(const std::string &module) 
+	{
+		m_ActiveModule = module;
+		if(m_Hydrax && GetGeometryModule(module))
+			m_Hydrax->setModule(GetGeometryModule(module), false);
+	}
+
+	std::string HydraxWaterComponent::GetActiveModule() const 
+	{
+		return m_ActiveModule;
 	}
 
 	void HydraxWaterComponent::SetConfigurationFile(const std::string &cfg_file) 
@@ -756,12 +808,9 @@ namespace GASS
 			//Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
 			//CfgFile.load(stream);
 			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource(filename, "Hydrax"));
-			m_Hydrax->setModule(GetGeometryModule(CfgFile.getSetting("Module")), false);
-			m_Hydrax->getModule()->setNoise(GetNoiseModule(CfgFile.getSetting("Noise")), m_Hydrax->getGPUNormalMapManager(), false);
-
-		
-			
-
+			SetActiveModule(CfgFile.getSetting("Module"));
+			//m_Hydrax->setModule(GetGeometryModule(CfgFile.getSetting("Module")), false);
+			SetActiveNoise(CfgFile.getSetting("Noise"));
 
 			m_Hydrax->loadCfg(filename);
 			m_Hydrax->create();

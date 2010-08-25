@@ -35,6 +35,8 @@ namespace Hydrax
 	{
 		class Module;
 		class ProjectedGrid;
+		class SimpleGrid;
+		class RadialGrid;
 	}
 
 
@@ -281,6 +283,12 @@ namespace GASS
 		Float GetGPUStrength() const;
 		FilePath GetResourceLocation() const;
 		void SetResourceLocation(const FilePath &value);
+		void SetActiveModule(const std::string &module);
+		std::string GetActiveModule() const;
+
+		void SetActiveNoise(const std::string &module);
+		std::string GetActiveNoise() const;
+	
 	private:
 		std::string m_ConfigurationFile;
 		Hydrax::Hydrax *m_Hydrax;
@@ -294,9 +302,17 @@ namespace GASS
 		Hydrax::Noise::Perlin* m_Perlin;
 		Hydrax::Noise::FFT* m_FFT;
 		Hydrax::Module::ProjectedGrid *m_ProjectedGridGeometryModuleVertex; 
+		Hydrax::Module::ProjectedGrid *m_ProjectedGridGeometryModuleRtt;
+		Hydrax::Module::SimpleGrid *m_SimpleGridGeometryModuleVertex;
+		Hydrax::Module::SimpleGrid *m_SimpleGridGeometryModuleRtt;
+		Hydrax::Module::RadialGrid *m_RadialGridGeometryModuleVertex;
+		Hydrax::Module::RadialGrid *m_RadialGridGeometryModuleRtt;
 
 		Ogre::RenderTarget* m_Target;
 		FilePath m_ResourceLocation;
+		std::string m_ActiveModule;
+		std::string m_ActiveNoise;
+
 	};
 
 	typedef boost::shared_ptr<HydraxWaterComponent> HydraxWaterComponentPtr;
