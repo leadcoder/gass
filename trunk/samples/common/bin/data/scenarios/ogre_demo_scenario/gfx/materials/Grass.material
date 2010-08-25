@@ -15,7 +15,7 @@ material FadeGrass : VegetationTemplate
 
 			texture_unit diffuse_map
 			{ 
-				texture gfx/materials/grass02.dds 
+				texture gfx/materials/Grass02.dds 
 			}
 			
 		} 

@@ -12,7 +12,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/OGREMain/include",
+		"$(OGRE_PATH)/OgreMain/include",
 		"../dependencies/PagedGeometry-1.1.0/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
@@ -36,7 +36,8 @@ else
 	{ 
 		"../source",
 		"$(BOOST_PATH)",
-		"../dependencies/include/OGRE",
+		"$(OGRE_PATH)/include/OGRE",
+		"$(OGRE_PATH)/OgreMain/include",
 		"../dependencies/PagedGeometry-1.1.0/include",
 		"../dependencies/include/tinyxml"
 	}
@@ -44,8 +45,9 @@ else
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
-		"$(BOOST_PATH)/lib"
+		"../dependencies/PagedGeometry-1.1.0/lib",
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tinyxml/lib",
 	}
 
 end
@@ -60,7 +62,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OGREMain_d",
+			"OgreMain_d",
 			"tinyxmld",
 			"PagedGeometry_d"
 		}
@@ -73,7 +75,7 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-			"OGREMain",
+			"OgreMain",
 			"tinyxml",
 			"PagedGeometry"
 		}
