@@ -26,9 +26,10 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
-
-class Ogre::PixelBox;
-
+namespace Ogre
+{
+    class PixelBox;
+}
 namespace Forests
 {
 	class PagedGeometry;
@@ -57,27 +58,27 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 
-		std::string GetMesh() const 
+		std::string GetMesh() const
 		{
 			return m_MeshFileName;
 		}
 
-		void SetMesh(const std::string &mesh) 
+		void SetMesh(const std::string &mesh)
 		{
 			m_MeshFileName = mesh;
 		}
 
-		std::string GetColorMap() const 
+		std::string GetColorMap() const
 		{
 			return m_ColorMapFilename;
 		}
 
-		void SetColorMap(const std::string &colormap) 
+		void SetColorMap(const std::string &colormap)
 		{
 			m_ColorMapFilename = colormap;
 		}
 
-		std::string GetDensityMap() const 
+		std::string GetDensityMap() const
 		{
 			return m_DensityMapFilename;
 		}
@@ -97,7 +98,7 @@ namespace GASS
 			m_DensityFactor = value;
 		}
 
-		float GetMeshDistance() const 
+		float GetMeshDistance() const
 		{
 			return m_MeshDist;
 		}
@@ -107,7 +108,7 @@ namespace GASS
 			m_MeshDist = value;
 		}
 
-		float GetMeshFadeDistance() const 
+		float GetMeshFadeDistance() const
 		{
 			return m_MeshFadeDist;
 		}
@@ -118,7 +119,7 @@ namespace GASS
 		}
 
 
-		float GetImposterDistance() const 
+		float GetImposterDistance() const
 		{
 			return m_ImposterDist;
 		}
@@ -129,7 +130,7 @@ namespace GASS
 		}
 
 
-		float GetImposterFadeDistance() const 
+		float GetImposterFadeDistance() const
 		{
 			return m_ImposterFadeDist;
 		}
@@ -139,7 +140,7 @@ namespace GASS
 			m_ImposterFadeDist = value;
 		}
 
-		Vec4 GetBounds() const 
+		Vec4 GetBounds() const
 		{
 			return m_Bounds;
 		}
@@ -150,7 +151,7 @@ namespace GASS
 		}
 
 
-		Vec2 GetMaxMinScale() const 
+		Vec2 GetMaxMinScale() const
 		{
 			return m_MaxMinScale;
 		}
@@ -160,7 +161,7 @@ namespace GASS
 			m_MaxMinScale = value;
 		}
 
-		bool GetCastShadows() const 
+		bool GetCastShadows() const
 		{
 			return m_CastShadows;
 		}
@@ -168,9 +169,9 @@ namespace GASS
 		void SetCastShadows(bool value)
 		{
 			m_CastShadows = value;
-		}	
+		}
 
-		bool GetCreateShadowMap() const 
+		bool GetCreateShadowMap() const
 		{
 			return m_CreateShadowMap;
 		}
@@ -180,7 +181,7 @@ namespace GASS
 			m_CreateShadowMap = value;
 		}
 
-		bool GetPrecalcHeight() const 
+		bool GetPrecalcHeight() const
 		{
 			return m_PrecalcHeight;
 		}

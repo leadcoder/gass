@@ -48,7 +48,7 @@ namespace GASS
 	void TreeGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TreeGeometryComponent",new Creator<TreeGeometryComponent, IComponent>);
-		
+
 		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh);
 		RegisterProperty<std::string>("ColorMap", &TreeGeometryComponent::GetColorMap, &TreeGeometryComponent::SetColorMap);
 		RegisterProperty<std::string>("DensityMap", &TreeGeometryComponent::GetDensityMap, &TreeGeometryComponent::SetDensityMap);
@@ -62,8 +62,8 @@ namespace GASS
 		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows);
 		RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
 		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight);
-		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &GetImposterAlphaRejectionValue, &SetImposterAlphaRejectionValue);
+		RegisterProperty<float>("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize);
+		RegisterProperty<float>("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue);
 	}
 
 
@@ -109,7 +109,7 @@ namespace GASS
 
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		
+
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(ogsm);
 		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
@@ -119,7 +119,7 @@ namespace GASS
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		
+
 
 		target->addListener(this);
 
@@ -142,7 +142,7 @@ namespace GASS
 
 				m_Bounds.z = bmax.x;
 				m_Bounds.w = bmax.z;
-				//for speed we save the raw pointer , we will access this for each height callback 
+				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
 			}
 			else
@@ -155,7 +155,7 @@ namespace GASS
 
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
-	
+
 		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.5,0.5,0.5,1));
 		assert(m_PagedGeometry);
 		m_PagedGeometry->setImposterAlphaRejectValue(m_ImposterAlphaRejectionValue);
@@ -217,7 +217,7 @@ namespace GASS
 						float y = m_Terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
 						treeLoader3d->addTree(myTree,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
-					else 
+					else
 						treeLoader2d->addTree(myTree,  Ogre::Vector3(x,0, z) ,Ogre::Degree(yaw), scale);
 					//treeLoader->addTree(myTree, x, z,yaw, scale);
 				/*	if(m_CreateShadowMap)
@@ -445,7 +445,7 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp) 
+		if(vp)
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
@@ -473,7 +473,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
-		else 
+		else
 			return 0;
 	}
 

@@ -16,7 +16,7 @@
 *                                                                           *
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
-*****************************************************************************/ 
+*****************************************************************************/
 
 /* FIXME Fading doesn't work with multiple grass layers */
 
@@ -56,33 +56,33 @@ namespace GASS
 //		m_Terrain(NULL)
 	{
 
-	}	
+	}
 
 	GrassGeometryComponent::~GrassGeometryComponent(void)
 	{
-		
+
 	}
 
 	void GrassGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("GrassGeometryComponent",new Creator<GrassGeometryComponent, IComponent>);
-		RegisterProperty<std::string>("DensityMap", &GetDensityMap, &SetDensityMap);
-		RegisterProperty<float>("DensityFactor", &GetDensityFactor, &SetDensityFactor);
-		RegisterProperty<float>("PageSize", &GetPageSize, &SetPageSize);
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &GetImposterAlphaRejectionValue, &SetImposterAlphaRejectionValue);
-		RegisterProperty<Vec4>("Bounds", &GetBounds, &SetBounds);
-		RegisterProperty<std::string>("ColorMap", &GetColorMap, &SetColorMap);
-		RegisterProperty<std::string>("Material", &GetMaterial, &SetMaterial);
-		RegisterProperty<std::string>("FadeTech", &GetFadeTech, &SetFadeTech);
-		RegisterProperty<std::string>("RenderTechnique", &GetRenderTechnique, &SetRenderTechnique);
-		RegisterProperty<bool>("BlendWithGround", &GetBlendWithGround, &SetBlendWithGround);
-		RegisterProperty<Vec2>("MaxSize", &GetMaxSize, &SetMaxSize);
-		RegisterProperty<Vec2>("MinSize", &GetMinSize, &SetMinSize);
-		RegisterProperty<float>("SwaySpeed", &GetSwaySpeed, &SetSwaySpeed);
-		RegisterProperty<float>("SwayLength", &GetSwayLength, &SetSwayLength);
-		RegisterProperty<bool>("EnableSway", &GetEnableSway, &SetEnableSway);
-		RegisterProperty<float>("SwayDistribution", &GetSwayDistribution, &SetSwayDistribution);
-		RegisterProperty<float>("ViewDistance", &GetViewDistance, &SetViewDistance);
+		RegisterProperty<std::string>("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap);
+		RegisterProperty<float>("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor);
+		RegisterProperty<float>("PageSize", &GrassGeometryComponent::GetPageSize, &GrassGeometryComponent::SetPageSize);
+		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue);
+		RegisterProperty<Vec4>("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds);
+		RegisterProperty<std::string>("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap);
+		RegisterProperty<std::string>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial);
+		RegisterProperty<std::string>("FadeTech", &GrassGeometryComponent::GetFadeTech, &GrassGeometryComponent::SetFadeTech);
+		RegisterProperty<std::string>("RenderTechnique", &GrassGeometryComponent::GetRenderTechnique, &GrassGeometryComponent::SetRenderTechnique);
+		RegisterProperty<bool>("BlendWithGround", &GrassGeometryComponent::GetBlendWithGround, &GrassGeometryComponent::SetBlendWithGround);
+		RegisterProperty<Vec2>("MaxSize", &GrassGeometryComponent::GetMaxSize, &GrassGeometryComponent::SetMaxSize);
+		RegisterProperty<Vec2>("MinSize", &GrassGeometryComponent::GetMinSize, &GrassGeometryComponent::SetMinSize);
+		RegisterProperty<float>("SwaySpeed", &GrassGeometryComponent::GetSwaySpeed, &GrassGeometryComponent::SetSwaySpeed);
+		RegisterProperty<float>("SwayLength", &GrassGeometryComponent::GetSwayLength, &GrassGeometryComponent::SetSwayLength);
+		RegisterProperty<bool>("EnableSway", &GrassGeometryComponent::GetEnableSway, &GrassGeometryComponent::SetEnableSway);
+		RegisterProperty<float>("SwayDistribution", &GrassGeometryComponent::GetSwayDistribution, &GrassGeometryComponent::SetSwayDistribution);
+		RegisterProperty<float>("ViewDistance", &GrassGeometryComponent::GetViewDistance, &GrassGeometryComponent::SetViewDistance);
 
 	}
 
@@ -147,7 +147,7 @@ namespace GASS
 	{
 		m_Bounds = bounds;
 		if(m_GrassLayer)
-			m_GrassLayer->setMapBounds(TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w)); 
+			m_GrassLayer->setMapBounds(TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w));
 	}
 
 	std::string GrassGeometryComponent::GetColorMap() const
@@ -158,13 +158,13 @@ namespace GASS
 	void GrassGeometryComponent::SetColorMap(const std::string &name)
 	{
 		m_ColorMapFilename = Misc::GetFilename(name);
-		if(m_GrassLayer) 
-			m_GrassLayer->setColorMap(m_ColorMapFilename); 
+		if(m_GrassLayer)
+			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
 	std::string GrassGeometryComponent::GetMaterial() const
 	{
-		return m_Material; 
+		return m_Material;
 	}
 
 	void GrassGeometryComponent::SetMaterial(const std::string &name)
@@ -205,7 +205,7 @@ namespace GASS
 		}
 	}
 
-	std::string GrassGeometryComponent::GetRenderTechnique() const 
+	std::string GrassGeometryComponent::GetRenderTechnique() const
 	{
 		return m_RenderTechnique;
 	}
@@ -226,7 +226,7 @@ namespace GASS
 		m_Blend = value;
 	}
 
-	Vec2 GrassGeometryComponent::GetMaxSize() const 
+	Vec2 GrassGeometryComponent::GetMaxSize() const
 	{
 		return m_MaxSize;
 	}
@@ -236,7 +236,7 @@ namespace GASS
 		m_MaxSize = size;
 
 		if(m_GrassLayer)
-				m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y); 
+				m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 	}
 
 	Vec2 GrassGeometryComponent::GetMinSize() const
@@ -248,7 +248,7 @@ namespace GASS
 	{
 		m_MinSize = size;
 		if(m_GrassLayer)
-			m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y); 
+			m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 	}
 
 	float GrassGeometryComponent::GetSwaySpeed()const
@@ -349,7 +349,7 @@ namespace GASS
 	TerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
 	{
 		TerrainComponentPtr terrain = obj->GetFirstComponent<ITerrainComponent>();
-		if(terrain) 
+		if(terrain)
 			return terrain;
 
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
@@ -357,7 +357,7 @@ namespace GASS
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
 			terrain = GetTerrainComponent(child);
-			if(terrain) 
+			if(terrain)
 				return terrain;
 		}
 		return terrain;
@@ -373,7 +373,7 @@ namespace GASS
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
 		target->addListener(this);
-	
+
 		bool user_bounds = true;
 		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
 		{
@@ -398,7 +398,7 @@ namespace GASS
 
 				m_Bounds.z = bmax.x;
 				m_Bounds.w = bmax.z;
-				//for speed we save the raw pointer , we will access this for each height callback 
+				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
 			}
 			else
@@ -409,25 +409,25 @@ namespace GASS
 		}
 		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 		//What camera should be used?
-		
+
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
-		
+
 		GrassLoader* loader = new GrassLoader(m_PagedGeometry);
 		loader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
-		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist); 
+		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
 		m_PagedGeometry->setPageLoader(loader);
 
 		loader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight);
-		m_GrassLayer = loader->addLayer(m_Material); 
-		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y); 
-		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y); 
+		m_GrassLayer = loader->addLayer(m_Material);
+		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
+		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 		m_GrassLayer->setDensity(m_DensityFactor);
-		m_GrassLayer->setMapBounds(m_MapBounds); 
+		m_GrassLayer->setMapBounds(m_MapBounds);
 		if(m_DensityMapFilename != "")
-			m_GrassLayer->setDensityMap(m_DensityMapFilename);   
+			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 
 		if(m_ColorMapFilename != "")
-			m_GrassLayer->setColorMap(m_ColorMapFilename); 
+			m_GrassLayer->setColorMap(m_ColorMapFilename);
 
 		//loader->setRenderQueueGroup();
 
@@ -436,8 +436,8 @@ namespace GASS
 
 		SetFadeTech(m_FadeTech);
 		UpdateSway();
-		
-		
+
+
 //		Root::Get().AddRenderListener(this);
 	}
 
@@ -445,7 +445,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
-		else 
+		else
 			return 0;
 	}
 
@@ -453,9 +453,9 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp) 
+		if(vp)
 			m_PagedGeometry->setCamera(vp->getCamera());
-		//if(m_GrassLoader ) 
+		//if(m_GrassLoader )
 		//	m_GrassLoader->updateAnimation();
 	}
 
