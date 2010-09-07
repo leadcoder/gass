@@ -57,10 +57,10 @@ namespace GASS
 		return Math::InvSqrt(x*x+y*y+z*z);
 	}
 
-	std::string Vec3::ToString()
+	std::string Vec3::ToString(const std::string &separator)
 	{
 		char ret[128];
-		sprintf(ret,"%.3f;%.3f;%.3f",x,y,z);
+		sprintf(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
 		return ret;
 	}
 

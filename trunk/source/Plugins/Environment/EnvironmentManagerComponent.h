@@ -45,13 +45,15 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);
-		void SetWaterGradient(const std::vector<Vec4> &value);
-		std::vector<Vec4>  GetWaterGradient() const ;
-	
+		void SetWaterGradient(const std::vector<Vec3> &value);
+		std::vector<Vec3>  GetWaterGradient() const ;
+		void SetWaterGradientWeights(const std::vector<float> &value);
+		std::vector<float>  GetWaterGradientWeights() const;
 	private:
 		Ogre::Light *m_SunLight;
 		SkyX::ColorGradient m_WaterGradient;
-		std::vector<Vec4> m_ShadowWaterGradient;
+		std::vector<Vec3> m_WaterGradientValues;
+		std::vector<float> m_WaterGradientWeights;
 		SkyX::ColorGradient m_SunGradient; 
 		SkyX::ColorGradient m_AmbientGradient;
 		Hydrax::Hydrax *m_Hydrax;

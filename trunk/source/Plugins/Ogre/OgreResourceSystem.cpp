@@ -28,6 +28,7 @@
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
 #include "tinyxml.h"
+#include <boost/filesystem.hpp>
 
 using namespace Ogre;
 
@@ -78,7 +79,7 @@ namespace GASS
 				if(rec == "true")
 					rl.m_Recursive = true;
 
-				m_ResourceLocations.push_back(rl);
+				AddResourceLocationRecursive(rl);
 			}
 			else
 			{
@@ -86,6 +87,28 @@ namespace GASS
 				SetPropertyByString(attrib_name,attrib_val);
 			}
 			attrib  = attrib->NextSiblingElement();
+		}
+	}
+
+	void OgreResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
+	{
+		boost::filesystem::path boost_path(rl.m_Path.GetPath()); 
+		if( boost::filesystem::exists(boost_path))  
+		{
+			m_ResourceLocations.push_back(rl);
+			if(rl.m_Recursive)
+			{
+				boost::filesystem::directory_iterator end ;    
+				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+				{
+					if (boost::filesystem::is_directory( *iter ) )      
+					{   
+						ResourceLocation rec_rl = rl;
+						rec_rl.m_Path = iter->path().string();
+						AddResourceLocationRecursive(rec_rl);
+					}     
+				}
+			}
 		}
 	}
 
@@ -102,13 +125,17 @@ namespace GASS
 
 	void OgreResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
-		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		Ogre::StringVector groups = rsm->getResourceGroups();
-		if (std::find(groups.begin(), groups.end(), resource_group) == groups.end())
+		boost::filesystem::path boost_path(path); 
+		if( boost::filesystem::exists(boost_path))  
 		{
-			rsm->createResourceGroup(resource_group);
-		}
-		rsm->addResourceLocation(path,type, resource_group,recursive);
+			Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+			Ogre::StringVector groups = rsm->getResourceGroups();
+			if (std::find(groups.begin(), groups.end(), resource_group) == groups.end())
+			{
+				rsm->createResourceGroup(resource_group);
+			}
+			rsm->addResourceLocation(path,type, resource_group,false);
+		}			
 	}
 
 
@@ -120,6 +147,18 @@ namespace GASS
 		{
 			rsm->removeResourceLocation(path,resource_group);
 		}
+
+		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
+		while(iter != m_ResourceLocations.end())
+		{
+			std::string temp_file_path = iter->m_Path.GetPath();
+			if(temp_file_path  == path && resource_group == iter->m_Group)
+			{
+				iter = m_ResourceLocations.erase(iter);
+			}
+			else
+				iter++;
+		}
 	}
 
 	void OgreResourceSystem::RemoveResourceGroup(const std::string &resource_group)
@@ -129,6 +168,17 @@ namespace GASS
 		if (std::find(groups.begin(), groups.end(), resource_group) != groups.end())
 		{
 			rsm->destroyResourceGroup(resource_group);
+		}
+
+		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
+		while(iter != m_ResourceLocations.end())
+		{
+			if(resource_group == iter->m_Group)
+			{
+				iter = m_ResourceLocations.erase(iter);
+			}
+			else
+				iter++;
 		}
 	}
 

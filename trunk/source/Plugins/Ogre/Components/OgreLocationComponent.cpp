@@ -268,25 +268,6 @@ namespace GASS
 	}
 
 
-
-	//nodeUpdated
-	/*void OgreLocationComponent::SetEulerRotation(const Vec3 &value)
-	{
-		m_Rot = value;
-		if(m_OgreNode)
-		{
-			Vec3 rot  = Math::Deg2Rad(m_Rot);
-			m_OgreNode->resetOrientation();
-			m_OgreNode->yaw(Ogre::Radian(rot.x));
-			m_OgreNode->pitch(Ogre::Radian(rot.y));
-			m_OgreNode->roll(Ogre::Radian(rot.z));
-
-			// send rotation changed message
-
-		}
-	}*/
-
-
 	void OgreLocationComponent::SetEulerRotation(const Vec3 &value)
 	{
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;

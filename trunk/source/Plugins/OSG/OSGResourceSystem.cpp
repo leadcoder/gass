@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <tinyxml.h>
 #include "Core/Common.h"
 #include "Plugins/OSG/OSGResourceSystem.h"
@@ -74,7 +75,7 @@ namespace GASS
 				if(rec == "true")
 					rl.m_Recursive = true;
 
-				m_ResourceLocations.push_back(rl);
+				AddResourceLocationRecursive(rl);
 			}
 			else
 			{
@@ -84,6 +85,29 @@ namespace GASS
 			attrib  = attrib->NextSiblingElement();
 		}
 	}
+
+	void OSGResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
+	{
+		boost::filesystem::path boost_path(rl.m_Path.GetPath()); 
+		if( boost::filesystem::exists(boost_path))  
+		{
+			m_ResourceLocations.push_back(rl);
+			if(rl.m_Recursive)
+			{
+				boost::filesystem::directory_iterator end ;    
+				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+				{
+					if (boost::filesystem::is_directory( *iter ) )      
+					{   
+						ResourceLocation rec_rl = rl;
+						rec_rl.m_Path = iter->path().string();
+						AddResourceLocationRecursive(rec_rl);
+					}     
+				}
+			}
+		}
+	}
+
 
 	void OSGResourceSystem::OnInit(MessagePtr message)
 	{
@@ -109,6 +133,35 @@ namespace GASS
 	{
 	}
 
+
+	void OSGResourceSystem::RemoveResourceLocation(const std::string &path,const std::string &resource_group)
+	{
+		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
+		while(iter != m_ResourceLocations.end())
+		{
+			std::string temp_file_path = iter->m_Path.GetPath();
+			if(temp_file_path  == path && resource_group == iter->m_Group)
+			{
+				iter = m_ResourceLocations.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
+
+	void OSGResourceSystem::RemoveResourceGroup(const std::string &resource_group)
+	{
+		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
+		while(iter != m_ResourceLocations.end())
+		{
+			if(resource_group == iter->m_Group)
+			{
+				iter = m_ResourceLocations.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
 
 	bool OSGResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
 	{

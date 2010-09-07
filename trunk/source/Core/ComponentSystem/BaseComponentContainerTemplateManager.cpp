@@ -34,7 +34,7 @@ namespace GASS
 
 	BaseComponentContainerTemplateManager::BaseComponentContainerTemplateManager() : m_ForceUniqueName(true)
 	{
-		//m_NameCheck = false;
+		
 	}
 
 	BaseComponentContainerTemplateManager::~BaseComponentContainerTemplateManager()
@@ -123,21 +123,4 @@ namespace GASS
 		delete xmlDoc;
 		return 1;
 	}
-
-	/*void BaseComponentContainerTemplateManager::AddRecursive(IComponentContainer* cc)
-	{
-		IComponentContainerTemplate* temp = dynamic_cast<IComponentContainerTemplate*>(cc);
-		if(temp)
-		{
-			AddTemplate(temp);
-			IComponentContainer::ComponentContainerVector children = cc->GetChildren();
-			IComponentContainer::ComponentContainerVector::iterator iter;
-			for(iter  = children.begin(); iter != children.end(); iter++)
-			{
-				AddRecursive(*iter);
-			}
-		}
-	}*/
-
-	
 }

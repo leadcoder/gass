@@ -59,7 +59,7 @@ namespace GASS
 	
 
 	template <class OwnerType, class T>
-	class VectorProperty : public TypedProperty<std::vector<T> > , IVectorProperty
+	class VectorProperty : public TypedProperty<std::vector<T> > , public IVectorProperty
 	{
 
 	public:

@@ -102,10 +102,12 @@ namespace GASS
 			return false;
 		}
 		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
-		if(scenario == NULL) Log::Error("Failed to get Scenario tag");
+		if(scenario == NULL) 
+			Log::Error("Failed to get Scenario tag");
 
 		TiXmlElement *settings = scenario->FirstChildElement("ScenarioSettings");
-		if(settings == NULL) Log::Error("Failed to get ScenarioSettings tag");
+		if(settings == NULL) 
+			Log::Error("Failed to get ScenarioSettings tag");
 
 		BaseReflectionObject::LoadProperties(settings);
 

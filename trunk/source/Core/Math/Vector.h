@@ -307,7 +307,7 @@ namespace GASS
 		* \return True if inside sphere.
 		*/
 		bool InSphere(Vec3 &v, Float radius) const;
-		std::string ToString();
+		std::string ToString(const std::string &separator);
 		//char CheckRange2(Vec3 &v, Float radius) const;
 		/**\fn Print();
 		* \brief Print the vector to the text console (command window).

@@ -73,9 +73,9 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
-		
 		void OnWorldPositionMessage(WorldPositionMessagePtr message);
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
+		void OnParentChangedMessage(ParentChangedMessagePtr message);
 
 		void SetAttachToParent(bool value);
 		bool GetAttachToParent() const;
@@ -98,7 +98,7 @@ namespace GASS
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
-		osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
+		//osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 	};
 	

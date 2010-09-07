@@ -164,12 +164,15 @@ namespace GASS
 	{
 		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();//new osg::Group();
+		m_RootNode->setName("GASSRootNode");
+
 
 		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
 		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
 		if(st.valid())
 		{
 			m_ShadowedScene = new osgShadow::ShadowedScene;
+			m_ShadowedScene->setName("ShadowRootNode");
 			m_ShadowedScene->setReceivesShadowTraversalMask(OSGGraphicsSystem::m_ReceivesShadowTraversalMask);
 			m_ShadowedScene->setCastsShadowTraversalMask(OSGGraphicsSystem::m_CastsShadowTraversalMask);
 			m_ShadowedScene->setShadowTechnique(st);
@@ -218,14 +221,6 @@ namespace GASS
 		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
-		/*if(m_ShadowedScene.valid())
-		{
-			OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_ShadowedScene.get());
-		}
-		else
-			OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());*/
-
-
 	}
 
 	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)

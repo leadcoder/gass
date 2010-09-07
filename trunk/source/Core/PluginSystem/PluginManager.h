@@ -69,6 +69,7 @@ namespace GASS
 		*/
 		void Shutdown();
 	protected:
+		void LoadPluginsFromDirectory(const std::string &directory);
 		std::vector<DynamicModule*> m_Plugins;
 	};
 }

@@ -26,17 +26,6 @@
 
 namespace GASS
 {
-	/*class GASSCoreExport EnginePlugin
-	{
-	public:
-		EnginePlugin();
-		virtual ~EnginePlugin();
-		virtual void InitPlugin()=0;
-		virtual std::string GetType()=0;
-	};*/
-
-	//typedef EnginePlugin*(*OnLoadModule)();
-	//typedef void(*OnUnloadModule)();
 	typedef void* ModuleHandle;
 
 	class GASSCoreExport DynamicModule
@@ -47,12 +36,9 @@ namespace GASS
 		bool Load();
 		void Unload();
 		inline const std::string &GetModuleName(){return m_ModuleName;}
-		//inline EnginePlugin* GetEnginePlugin(){return m_EnginePlugin;}
 	protected:
 		std::string m_ModuleName;
-		//ModuleHandle m_ModuleHandle;
 		DYNLIB_HANDLE m_ModuleHandle;
-		//EnginePlugin* m_EnginePlugin;
 	};
 }
 

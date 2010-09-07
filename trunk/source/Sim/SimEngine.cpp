@@ -49,14 +49,6 @@ namespace GASS
 		m_SimObjectManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
-
-	//	MessagePtr mess1 = MessagePtr(new StartServerMessage("",0));
-		MessagePtr mess2 = MessagePtr(new StartClientMessage("",0,0));
-		MessagePtr mess3 = MessagePtr(new ClientConnectedMessage("",0));
-		MessagePtr mess4 = MessagePtr(new ServerResponseMessage("",0,0));
-		MessagePtr mess5 = MessagePtr(new ConnectToServerMessage("",0));
-		MessagePtr mess6 = MessagePtr(new PingRequestMessage(0));
-		MessagePtr mess7 = MessagePtr(new StartSceanrioRequestMessage(""));
 	}
 
 	SimEngine::~SimEngine()
@@ -86,8 +78,6 @@ namespace GASS
 		m_SystemManager->Init();
 
 		m_RTC->Init();
-		//Load some base game objects
-		//m_SimObjectManager->Load("scene_objects.xml");
 		Log::Print("SimEngine::Init -- Done");
 		return true;
 	}

@@ -47,15 +47,6 @@ namespace GASS
 		m_InputStringTable->Add("DEVICE_GAME_CONTROLLER_4",DEVICE_GAME_CONTROLLER_4);
 		m_InputStringTable->Add("DEVICE_MOUSE",DEVICE_MOUSE);
 
-		/*m_InputStringTable->Add("ThrottleController",PI_THROTTLE);
-		m_InputStringTable->Add("YawController",PI_YAW);
-		m_InputStringTable->Add("PitchController",PI_PITCH);
-		m_InputStringTable->Add("WalkController",PI_WALK);
-		m_InputStringTable->Add("Fire1Controller",PI_FIRE);
-		m_InputStringTable->Add("Fire2Controller",PI_FIRE);
-		m_InputStringTable->Add("ReloadController",PI_RELOAD);
-		m_InputStringTable->Add("ActionController",PI_USE);*/
-		
 		m_InputStringTable->Add("INPUT_AXIS_0",INPUT_AXIS_0);
 		m_InputStringTable->Add("INPUT_AXIS_1",INPUT_AXIS_1);
 		m_InputStringTable->Add("INPUT_AXIS_2",INPUT_AXIS_2);
@@ -311,7 +302,7 @@ namespace GASS
 		if (!xmlDoc->LoadFile())
 		{
 			// Fatal error, cannot load
-			Log::Warning("ControlSettingsManager::Load() - Couldn't load xmlfile: %s", filename.c_str());
+			Log::Error("ControlSettingsManager::Load() - Couldn't load xmlfile: %s", filename.c_str());
 			return 0;
 		}
 		TiXmlElement *control_settings = xmlDoc->FirstChildElement("ControlSettings");	

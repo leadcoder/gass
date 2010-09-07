@@ -39,12 +39,20 @@ namespace GASS
 {
 	EnvironmentManagerComponent::EnvironmentManagerComponent(void) :m_SkyX(NULL),m_Hydrax(NULL), m_Target(NULL)
 	{
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.4,0.535822*0.4,0.779105*0.4,1));
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.3,0.535822*0.3,0.779105*0.3,0.8));
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.25,0.535822*0.25,0.679105*0.25,0.6));
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.2,0.535822*0.2,0.679105*0.2,0.5));
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.1,0.535822*0.1,0.679105*0.1,0.45));
-		m_ShadowWaterGradient.push_back(Vec4(0.058209*0.1,0.535822*0.1,0.679105*0.025,0));
+		
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.4,0.535822*0.4,0.779105*0.4));
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.3,0.535822*0.3,0.779105*0.3));
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.25,0.535822*0.25,0.679105*0.25));
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.2,0.535822*0.2,0.679105*0.2));
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.1,0.535822*0.1,0.679105*0.1));
+		m_WaterGradientValues.push_back(Vec3(0.058209*0.1,0.535822*0.1,0.679105*0.025));
+
+		m_WaterGradientWeights.push_back(1);
+		m_WaterGradientWeights.push_back(0.8);
+		m_WaterGradientWeights.push_back(0.6);
+		m_WaterGradientWeights.push_back(0.5);
+		m_WaterGradientWeights.push_back(0.45);
+		m_WaterGradientWeights.push_back(0);
 	}
 
 	EnvironmentManagerComponent::~EnvironmentManagerComponent(void)
@@ -55,7 +63,8 @@ namespace GASS
 	void EnvironmentManagerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("EnvironmentManagerComponent",new Creator<EnvironmentManagerComponent, IComponent>);
-		RegisterVectorProperty<Vec4>("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient);
+		RegisterVectorProperty<Vec3>("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient);
+		RegisterVectorProperty<float>("WaterGradientWeights", &EnvironmentManagerComponent::GetWaterGradientWeights, &EnvironmentManagerComponent::SetWaterGradientWeights);
 	}
 
 	void EnvironmentManagerComponent::OnCreate()
@@ -69,22 +78,52 @@ namespace GASS
 		Ogre::Root::getSingleton().removeFrameListener(this);
 	}
 
-	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec4> &value)
+	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
 	{
-		m_ShadowWaterGradient = value;
+		m_WaterGradientValues = value;
 		m_WaterGradient.clear();
 		m_WaterGradient = SkyX::ColorGradient();
-		for(int i = 0; i < value.size(); i++)
+
+		if(m_WaterGradientWeights.size() != m_WaterGradientValues.size())
 		{
-			m_WaterGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), value[i].w));
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_WaterGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_WaterGradientValues.size()-1.0)));
+			}
+		}
+		else
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_WaterGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), m_WaterGradientWeights[i]));
+			}
 		}
 	}
 
 
-	std::vector<Vec4>  EnvironmentManagerComponent::GetWaterGradient() const 
+	std::vector<Vec3>  EnvironmentManagerComponent::GetWaterGradient() const 
 	{
-		return m_ShadowWaterGradient;
+		return m_WaterGradientValues;
 	}
+
+
+	void EnvironmentManagerComponent::SetWaterGradientWeights(const std::vector<float> &value)
+	{
+		m_WaterGradientWeights = value;
+		m_WaterGradient.clear();
+		m_WaterGradient = SkyX::ColorGradient();
+		if(m_WaterGradientWeights.size() == m_WaterGradientValues.size())
+		{
+			SetWaterGradient(m_WaterGradientValues);
+		}
+	}
+
+
+	std::vector<float>  EnvironmentManagerComponent::GetWaterGradientWeights() const 
+	{
+		return m_WaterGradientWeights;
+	}
+
 
 	void EnvironmentManagerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
@@ -112,7 +151,7 @@ namespace GASS
 		// Water
 		m_WaterGradient = SkyX::ColorGradient();
 
-		SetWaterGradient(m_ShadowWaterGradient);
+		SetWaterGradient(m_WaterGradientValues);
 
 		// Sun
 		m_SunGradient = SkyX::ColorGradient();
