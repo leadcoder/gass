@@ -12,7 +12,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/OGREMain/include",
+		"$(OGRE_PATH)/OgreMain/include",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
 		"../dependencies/SkyX-v0.1/SkyX",
 		"../dependencies/tinyxml",
@@ -38,15 +38,19 @@ else
 	{ 
 		"../source",
 		"$(BOOST_PATH)",
-		"$(OGRE_PATH)",
-		"..\dependencies\Hydrax-v0.5.1\Hydrax\bin\$(ConfigurationName)",
+		"$(OGRE_PATH)/OgreMain/include",
+		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
+		"../dependencies/SkyX-v0.1/SkyX",
 		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/lib/",
+		"$(OGRE_PATH)/build/lib",
+		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
+		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
+		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
 	}
 
@@ -62,7 +66,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OGREMain_d",
+			"OgreMain_d",
 			"tinyxmld",
 			"Hydrax_d",
 			"SkyX_d"
@@ -77,7 +81,7 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-			"OGREMain",
+			"OgreMain",
 			"tinyxml",
 			"Hydrax",
 			"SkyX"

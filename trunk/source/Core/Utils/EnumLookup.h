@@ -27,17 +27,37 @@
 
 namespace GASS
 {
+    /**
+    Table used to map strings to unique integers
+    It's also possible to map custom int values to
+    specific enums.
+    */
 
 	class GASSCoreExport EnumLookup
 	{
 
 	public:
-
 		EnumLookup();
 		virtual ~EnumLookup();
+		/**
+            Add string to table
+            @param name Name of enum
+            @param value Value to map enum to
+		*/
 		void Add(std::string name, int value);
+
+		/**
+            Add string to table and give this enum
+            a unique int value
+            @param name Name of enum
+ 		*/
 		void Add(std::string name);
-		int Get(std::string name);
+
+		/**
+            Get int value maped tto enum
+            @param name Name of enum
+ 		*/
+		int Get(const std::string &name);
 	private:
 		typedef std::map<std::string,int> ConstantMap;
 		int m_NumConstants;
