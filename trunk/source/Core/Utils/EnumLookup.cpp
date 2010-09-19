@@ -23,7 +23,7 @@
 
 namespace GASS
 {
-	
+
 	EnumLookup::EnumLookup()
 	{
 		m_NumConstants = 0;
@@ -46,15 +46,15 @@ namespace GASS
 		m_NumConstants++;
 	}
 
-	int EnumLookup::Get(std::string name)
+	int EnumLookup::Get(const std::string &name)
 	{
 		ConstantMap::iterator pos;
-		name = Misc::ToLower(name);
-		pos = m_ConstantMap.find(name);
+		std::string lower_name = Misc::ToLower(name);
+		pos = m_ConstantMap.find(lower_name);
 
 		if (pos != m_ConstantMap.end()) //in map.
 		{
-			return m_ConstantMap[name];
+			return m_ConstantMap[lower_name];
 		}
 		else
 		{
@@ -62,5 +62,5 @@ namespace GASS
 		}
 	}
 
-	
+
 }

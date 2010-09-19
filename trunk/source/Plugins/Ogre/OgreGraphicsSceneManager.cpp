@@ -72,7 +72,7 @@ namespace GASS
 
 	OgreGraphicsSceneManager::~OgreGraphicsSceneManager(void)
 	{
-	
+
 	}
 
 	void OgreGraphicsSceneManager::RegisterReflection()
@@ -93,7 +93,7 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowProjType",&GASS::OgreGraphicsSceneManager::GetShadowProjType,&GASS::OgreGraphicsSceneManager::SetShadowProjType);
 		RegisterProperty<std::string>("ShadowType",&GASS::OgreGraphicsSceneManager::GetShadowType,&GASS::OgreGraphicsSceneManager::SetShadowType);
 		RegisterProperty<std::string>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
-		
+
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()
@@ -119,11 +119,11 @@ namespace GASS
 			m_SceneMgr = NULL;
 		}
 	}
-	
+
 	void OgreGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
 		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, m_Name);
-		if(m_SceneMgr == NULL) 
+		if(m_SceneMgr == NULL)
 			GASS::Log::Error("SceneManager %s not found",m_SceneManagerType.c_str());
 		UpdateShadowSettings();
 		UpdateSkySettings();
@@ -141,7 +141,7 @@ namespace GASS
 			fre_cam_template->SetName("FreeCameraObject");
 			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
 			location_comp->SetName("LocationComp");
-	
+
 			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
 			camera_comp->SetName("FreeCameraComp");
 
@@ -157,10 +157,10 @@ namespace GASS
 			scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		}
-			
-		
+
+
 		assert(scene_object);
-		
+
 		//don't save this object
 		scene_object->SetSerialize(false);
 		//SceneObject* scene_object = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("FreeCameraObject");
@@ -169,10 +169,10 @@ namespace GASS
 		//loc_comp->SetPosition(GetOwner()->GetStartPos());
 		//loc_comp->SetEulerRotation(GetOwner()->GetStartRot());
 		//m_Scene->GetObjectManager()->LoadObject(scene_object);
-		
+
 
 		//Send message to load all gfx components
-		
+
 		//m_GFXSystem->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
 		MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
 
@@ -183,7 +183,7 @@ namespace GASS
 		//move camera to spawn position
 		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);
-		
+
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("Ogre3D"),root,root));
@@ -293,7 +293,7 @@ namespace GASS
 
 		if(tex_shadow)
 		{
-			
+
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
 			m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);

@@ -135,7 +135,7 @@ namespace GASS
 		SetValue(pOwner,res);
 	}
 
-	
+
 
 	//Do nothing by default
 	template <class type>
@@ -148,32 +148,11 @@ namespace GASS
 		return true;
 	}
 
-	
+
 
 	//Use specialized template to catch std::string
 	template <>
 	bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
-
-	
-	
-
-	//Use specialized template to catch vector
-	/*template <>
-	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s);
-
-	//Use specialized template to catch vector
-	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<float> >(std::vector<float> &res,const std::string &s);
-
-	//Use specialized template to catch vector
-	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<double> >(std::vector<double> &res,const std::string &s);
-
-	//Use specialized template to catch vector
-	template <>
-	bool GASSCoreExport GetValueFromString<std::vector<std::string> >(std::vector<std::string> &res,const std::string &s);*/
-
-
 
 
 	template <class OwnerType, class T>
@@ -257,7 +236,7 @@ namespace GASS
 			T val = GetValue(pOwner);
 			SerialSaver* saver = (SerialSaver*) serializer;
 			saver->IO<T>(val);
-			
+
 		}
 	}
 

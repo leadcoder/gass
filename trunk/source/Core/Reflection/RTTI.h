@@ -35,139 +35,129 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	class BaseReflectionObject;
-	class RTTI;
+    class BaseReflectionObject;
+    class RTTI;
 
-	typedef std::string				ClassID;
-	typedef BaseReflectionObject*	(*ClassFactoryFunc)( ClassID );
-	typedef bool			(*RegisterReflectionFunc)();
-
-
+    typedef std::string				ClassID;
+    typedef BaseReflectionObject*	(*ClassFactoryFunc)( ClassID );
+    typedef bool			(*RegisterReflectionFunc)();
 
 
-	class GASSCoreExport RTTI
-	{
+    /**
+        RTTI class used to store properties for classes
+    */
 
-	public:
+    class GASSCoreExport RTTI
+    {
 
-		//----------------------------------------------------------------------------------------------
-		// RTTI constructor.
-		// The first paramter is a stub. I am not sure why this stub is necessary - removing ths stub will
-		// confuse the .NET compiler and produce compile errors with subsequent parameters. If anybody knows
-		// why this is so, feel free to e-mail me at dfilion@hotmail.com
-		//
-		// The RTTI structure constructor takes in the following parameters:
-		//		dwStub			Just a stub
-		//		CLID			A unique class ID
-		//		szClassName		The name of the class type this RTTI structure represents
-		//		pBaseReflectionObjectRTTI	The parent RTTI structure for this RTTI structure
-		//		pFactory		A factory function callback for creating an instance of the bound class type
-		//		pReflectionFunc	Callback called by the system to register the reflective properties
-		RTTI(const std::string  &class_name, RTTI* base_class_RTTI, ClassFactoryFunc factory, RegisterReflectionFunc reflection_func );
+    public:
 
-		//----------------------------------------------------------------------------------------------
-		// Fills a vector with all properties of the represented class type, including all ancestor types.
-		void	EnumProperties( std::vector<AbstractProperty*>& o_Result );
+        /** Constructor
+        @param class_name	undecorated class name
+        @param base_class_rtti	Pointer to parent class type RTTI implementation
+        @param factory	A factory function for creating an instances of RTTI class type
+        @param reflection_func	optinoal funcation pointer to register class properties, this function is called in this function
+        */
+        RTTI(const std::string  &class_name, RTTI* base_class_rtti, ClassFactoryFunc factory, RegisterReflectionFunc reflection_func )
+        {
+            if ( reflection_func)
+                reflection_func();
+        }
 
-		//----------------------------------------------------------------------------------------------
-		// Returns true if the RTTI structure is of the type specified by CLID.
-		inline bool				IsTypeOf( RTTI *rtti);
-		inline bool				IsTypeOf( const std::string &class_name);
+        //----------------------------------------------------------------------------------------------
+        // Fills a vector with all properties of the represented class type, including all ancestor types.
+        //void	EnumProperties( std::vector<AbstractProperty*>& o_Result );
 
-		// Returns true if the RTTI structure is derived from the type specified by CLID.
-		inline bool				IsDerivedFrom( RTTI *rtti);
-		inline bool				IsDerivedFrom( const std::string &class_name);
+        /**
+            Check if same RTTI, return true if same
+        */
+        bool IsTypeOf( RTTI *rtti)
+        {
+            return this == rtti;
+        }
 
-		//----------------------------------------------------------------------------------------------
-		// Gets base class' RTTI structure.
-		inline RTTI*			GetAncestorRTTI();
+        /**
+            Check class name of this RTTI class, return true if same
+        */
+        bool IsTypeOf( const std::string &class_name)
+        {
+            return class_name == GetClassName();
+        }
 
-		//----------------------------------------------------------------------------------------------
-		//----------------------------------------------------------------------------------------------
-		// Gets the class name.
-		inline std::string		GetClassName();
-		//inline std::string		GetClassNameNoNamespace();
+        bool IsDerivedFrom( RTTI *rtti)
+        {
+            if ( rtti == this)
+                return true;
+            else if ( m_BaseRTTI )
+                return m_BaseRTTI->IsDerivedFrom( rtti);
 
-		//----------------------------------------------------------------------------------------------
-		// Gets the class factory function.
-		inline ClassFactoryFunc	GetClassFactory();
+            return false;
+        }
 
-		//----------------------------------------------------------------------------------------------
-		// Provides access to the properties bound to this run-time type. Does not include ancestor class
-		// properties. Use EnumProperties to include ancestor properties.
-		inline	std::list<AbstractProperty*>::iterator	GetFirstProperty();
-		inline	std::list<AbstractProperty*>::iterator	GetLastProperty();
-		inline	std::list<AbstractProperty*>*			GetProperties();
+        bool IsDerivedFrom( const std::string &class_name)
+        {
+            if ( class_name == GetClassName())
+                return true;
+            else if ( m_BaseRTTI )
+                return m_BaseRTTI->IsDerivedFrom( class_name);
+            return false;
+        }
 
-	private:
+        /**
+            Gets base RTTI class.
+        */
+        RTTI* GetAncestorRTTI()
+        {
+            return m_BaseRTTI;
+        }
 
-		std::string					m_ClassName;		// Class name
-		RTTI*						m_BaseRTTI;							// Base class RTTI structure
-		ClassFactoryFunc			m_ObjectFactory;						// Factory function
-		std::list<AbstractProperty*>	m_Properties;							// Property list
+        /**
+            Gets class name for this RTTI instance.
+        */
+        std::string GetClassName()
+        {
+            return m_ClassName;
+        }
 
-	};
-
-	inline RTTI* RTTI::GetAncestorRTTI()
-	{
-		return m_BaseRTTI;
-	}
-
-	inline ClassFactoryFunc RTTI::GetClassFactory()
-	{
-		return m_ObjectFactory;
-	}
-
-	inline std::string RTTI::GetClassName()
-	{
-		return m_ClassName;
-	}
+        /**
+            Gets class factory  used to create class instances for this specific RTTI.
+        */
+        ClassFactoryFunc GetClassFactory()
+        {
+            return m_ObjectFactory;
+        }
 
 
 
-	inline std::list<AbstractProperty*>::iterator RTTI::GetFirstProperty()
-	{
-		return m_Properties.begin();
-	}
+        /**
+            Gets access to property iterator.
+        */
+        std::list<AbstractProperty*>::iterator	GetFirstProperty()
+        {
+            return m_Properties.begin();
+        }
 
-	inline std::list<AbstractProperty*>* RTTI::GetProperties()
-	{
-		return &m_Properties;
-	}
+        /**
+            Gets access to property iterator.
+        */
+        std::list<AbstractProperty*>::iterator	GetLastProperty()
+        {
+            return m_Properties.end();
+        }
 
-	inline bool RTTI::IsDerivedFrom( RTTI* rtti )
-	{
-		if( rtti == this)
-			return true;
-		else if( m_BaseRTTI )
-			return m_BaseRTTI->IsDerivedFrom( rtti);
+        /**
+            Gets access to property iterator.
+        */
+        std::list<AbstractProperty*>*			GetProperties()
+        {
+            return &m_Properties;
+        }
+    private:
+        std::string					m_ClassName;		// Class name
+        RTTI*						m_BaseRTTI;			// Base class RTTI structure
+        ClassFactoryFunc			m_ObjectFactory;	 // Factory function
+        std::list<AbstractProperty*>	m_Properties;	 // Property list
 
-		return false;
-	}
-
-	inline bool RTTI::IsDerivedFrom( const std::string &class_name)
-	{
-		if( class_name == GetClassName())
-			return true;
-		else if( m_BaseRTTI )
-			return m_BaseRTTI->IsDerivedFrom( class_name);
-		return false;
-	}
-
-	inline bool RTTI::IsTypeOf( RTTI* rtti )
-	{
-		return this == rtti;
-	}
-
-	inline bool RTTI::IsTypeOf(const std::string &class_name)
-	{
-		return class_name == GetClassName();
-	}
-
-	inline std::list<AbstractProperty*>::iterator RTTI::GetLastProperty()
-	{
-		return m_Properties.end();
-	}
-
+    };
 }
-#endif // #ifndef RTTI_HH
+#endif

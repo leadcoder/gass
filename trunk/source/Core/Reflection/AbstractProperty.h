@@ -34,14 +34,32 @@ namespace GASS
 {
 	class ISerializer;
 	class BaseReflectionObject;
+	/**
+        Interface class for all properties
+	*/
 	class GASSCoreExport AbstractProperty
 	{
 	public:
-		inline AbstractProperty(const std::string &name);
+        /**
+            Constructor
+            @param name Name of this property
+        */
+        inline AbstractProperty(const std::string &name);
 		inline  std::string GetName() const;
 		virtual ePropertyType GetTypeID() const = 0;
-		virtual void SetValueByString(BaseReflectionObject* pObject,const std::string &s) = 0;
-		virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
+
+		/**
+            Set value of this property by string
+            @param object The object that is owner of this property
+            @param value The value provided as string
+        */
+		virtual void SetValueByString(BaseReflectionObject* object,const std::string &s) = 0;
+
+		/**
+            Get the value of this property
+            @param object The object that is owner of this property
+        */
+    	virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
 		virtual void Serialize(BaseReflectionObject* pObject, ISerializer* serializer) = 0;
 		virtual void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src) = 0;
 		virtual void SetValue(BaseReflectionObject* pObject, boost::any &attribute) = 0;

@@ -29,8 +29,10 @@
 
 namespace GASS
 {
-	//typedef std::string ObjectType;
 
+    /**
+
+    */
 
 	template<class Base>
 	class CreatorBase

@@ -29,8 +29,8 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	RTTI::RTTI(const std::string &class_name, RTTI* base_class_RTTI, 
-		ClassFactoryFunc factory, RegisterReflectionFunc reflection_func ) : 
+	/*RTTI::RTTI(const std::string &class_name, RTTI* base_class_RTTI,
+		ClassFactoryFunc factory, RegisterReflectionFunc reflection_func ) :
 	m_BaseRTTI(base_class_RTTI),
 		m_ObjectFactory(factory),
 		m_ClassName(class_name)
@@ -45,5 +45,5 @@ namespace GASS
 			m_BaseRTTI->EnumProperties( o_Result );
 		for ( std::list<AbstractProperty*>::iterator it = m_Properties.begin(); it != m_Properties.end(); ++it )
 			o_Result.push_back( *it );
-	}
+	}*/
 }
