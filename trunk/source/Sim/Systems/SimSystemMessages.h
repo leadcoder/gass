@@ -197,8 +197,6 @@ namespace GASS
 	typedef boost::shared_ptr<ScenarioSceneLoadedNotifyMessage> ScenarioSceneLoadedNotifyMessagePtr;
 
 
-
-
 	/**
 		This message is posted by the Scenario class before the scenario scenes are loaded.
 	*/
@@ -252,6 +250,7 @@ namespace GASS
 
 	
 
+	/////////NETWORK SERVER MESSAGES////////////////
 
 	/**
 	Start network server
@@ -274,6 +273,57 @@ namespace GASS
 
 
 	/**
+	Stop network server
+	*/
+	class StopServerMessage : public BaseMessage
+	{
+	public:
+		StopServerMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef boost::shared_ptr<StopServerMessage> StopServerMessagePtr;
+
+	
+
+	/**
+	Client connected to network server
+	*/
+	class ClientConnectedMessage : public BaseMessage
+	{
+	public:
+		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_Name(name), m_ClientPort(client_port){}
+
+		 std::string GetClientName() const {return m_Name;}
+	private:
+		std::string m_Name;
+		int m_ClientPort;
+	};
+	typedef boost::shared_ptr<ClientConnectedMessage> ClientConnectedMessagePtr;
+
+
+	/**
+	Client disconnected from network server
+	*/
+	class ClientDisconnectedMessage : public BaseMessage
+	{
+	public:
+		ClientDisconnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_Name(name), m_ClientPort(client_port){}
+
+		 std::string GetClientName() const {return m_Name;}
+	private:
+		std::string m_Name;
+		int m_ClientPort;
+	};
+	typedef boost::shared_ptr<ClientDisconnectedMessage> ClientDisconnectedMessagePtr;
+
+	
+	/////////NETWORK CLIENT MESSAGES////////////////
+	/**
 	Start network client
 	*/
 	class StartClientMessage : public BaseMessage
@@ -293,23 +343,34 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StartClientMessage> StartClientMessagePtr;
 
-
+	
 	/**
-	Client connected to network server
+	Server disconnected 
 	*/
-	class ClientConnectedMessage : public BaseMessage
+	class ServerDisconnectedMessage : public BaseMessage
 	{
 	public:
-		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		ServerDisconnectedMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
-			  m_Name(name), m_ClientPort(client_port){}
-
-		 std::string GetClientName() const {return m_Name;}
+			  m_Name(name), m_Port(port){}
+		 std::string GetServerName() const {return m_Name;}
 	private:
 		std::string m_Name;
-		int m_ClientPort;
+		int m_Port;
 	};
-	typedef boost::shared_ptr<ClientConnectedMessage> ClientConnectedMessagePtr;
+	typedef boost::shared_ptr<ServerDisconnectedMessage> ServerDisconnectedMessagePtr;
+
+	/**
+	Stop network client
+	*/
+	class StopClientMessage : public BaseMessage
+	{
+	public:
+		StopClientMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef boost::shared_ptr<StopClientMessage> StopClientMessagePtr;
 
 
 	/**
@@ -352,7 +413,7 @@ namespace GASS
 	typedef boost::shared_ptr<ConnectToServerMessage> ConnectToServerMessagePtr;
 
 	/**
-	Connect to server
+	Ping for servers
 	*/
 	class PingRequestMessage : public BaseMessage
 	{

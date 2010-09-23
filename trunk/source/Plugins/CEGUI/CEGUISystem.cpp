@@ -33,10 +33,13 @@ int mytest();
 
 #include "RendererModules/Ogre/CEGUIOgreRenderer.h"
 
+#include "LuaScriptManager.h"
+
 //int tolua_LuaTest_open (lua_State* L);
 //int GASS_SWIG_init(lua_State* L);
 extern "C" {
 int luaopen_GASS(lua_State* L);
+
 }
 
 //int mytest(lua_State* L);
@@ -68,6 +71,7 @@ namespace GASS
 
 	void CEGUISystem::OnInit(InitMessagePtr message)
 	{
+		LuaScriptManager* lsm = new LuaScriptManager();
 		// initialise GUI system using the new automagic function
 		CEGUI::OgreRenderer* d_renderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
@@ -77,13 +81,13 @@ namespace GASS
          // tell CEGUI to use this scripting module
          CEGUI::System::getSingleton().setScriptingModule(&scriptmod);
 
-		 //luaopen_GASS(scriptmod.getLuaState());
+		 luaopen_GASS(scriptmod.getLuaState());
 
-
+		
          // execute the demo8 script which controls the rest of this demo
-         CEGUI::System::getSingleton().executeScriptFile("demo8.lua");
+         CEGUI::System::getSingleton().executeScriptFile("gass.lua");
 
-		using namespace CEGUI;
+	/*	using namespace CEGUI;
 
 		// CEGUI relies on various systems being set-up, so this is what we do
 		// here first.
@@ -95,7 +99,7 @@ namespace GASS
 		// So, we use the SchemeManager singleton to load in a scheme that loads the
 		// imagery and registers widgets for the TaharezLook skin.  This scheme also
 		// loads in a font that gets used as the system default.
-		/*SchemeManager::getSingleton().create("TaharezLook.scheme");
+		SchemeManager::getSingleton().create("TaharezLook.scheme");
 
 		// The next thing we do is to set a default mouse cursor image.  This is
 		// not strictly essential, although it is nice to always have a visible

@@ -90,6 +90,8 @@ namespace GASS
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
 	
@@ -100,6 +102,8 @@ namespace GASS
 		m_Scene = message->GetScenarioScene();
 	}
 
+
+	
 	void RakNetNetworkSystem::OnInit(MessagePtr message)
 	{
 		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
@@ -117,11 +121,29 @@ namespace GASS
 		StartServer(message->GetServerName(),message->GetPort());
 	}
 
+	void RakNetNetworkSystem::OnStopServer(StopServerMessagePtr message)
+	{
+		Stop();
+	}
+
+	void RakNetNetworkSystem::OnStopClient(StopClientMessagePtr message)
+	{
+		if(m_Active)
+		{
+			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage));
+			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage));
+			//Register update fucntion
+			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		}
+		if(m_RakPeer) 
+			m_RakPeer->Shutdown(100, 0);
+		m_Active = false;
+	}
+
 	void RakNetNetworkSystem::OnStartClient(StartClientMessagePtr message)
 	{
 		StartClient(message->GetClientPort(),message->GetServerPort());
 	}
-
 
 	void RakNetNetworkSystem::OnConnectToServer(ConnectToServerMessagePtr message)
 	{
@@ -130,12 +152,27 @@ namespace GASS
 
 	void RakNetNetworkSystem::OnShutdown(MessagePtr message)
 	{
+		Stop();
+	}
+
+	void RakNetNetworkSystem::Stop()
+	{
 		if(m_RakPeer) 
 			m_RakPeer->Shutdown(100, 0);
+		if(m_Active)
+		{
+			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage));
+		}
+		m_Active=false;
 	}
 
 	void RakNetNetworkSystem::StartServer(const std::string &name,int port)
 	{
+		if(m_Active)
+		{
+			Log::Warning("Server already started");
+			return;
+		}
 	    Log::Print("Starting raknet server:%s port:%d",name.c_str(),port);
 		m_IsServer = 1;
 
@@ -208,6 +245,8 @@ namespace GASS
 
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
 		m_RakPeer->SetOccasionalPing(true);
+
+		
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -311,12 +350,15 @@ namespace GASS
 				}
 
 				std::string name = p->systemAddress.ToString();
+				int port = p->systemAddress.port;
 				ClientDataMap::iterator pos;
 				pos = m_ClientMap.find(name);
 				if (pos != m_ClientMap.end())
 				{
 					m_ClientMap.erase(pos);
 				}
+				MessagePtr message (new ClientDisconnectedMessage(name,port));
+				GetSimSystemManager()->PostMessage(message);
 			}
 			else if (p->data[0] == ID_NEW_INCOMING_CONNECTION || p->data[0]==ID_CONNECTION_REQUEST_ACCEPTED)
 			{
@@ -478,6 +520,13 @@ namespace GASS
 				}*/
 				//Load level
 				//Root::GetPtr()->GetLevel()->LoadXML(data.MapName);
+			}
+			else if (p->data[0]==ID_DISCONNECTION_NOTIFICATION || p->data[0]==ID_CONNECTION_LOST)
+			{
+				std::string name = p->systemAddress.ToString();
+				int port = p->systemAddress.port;
+				MessagePtr message (new ServerDisconnectedMessage(name,port));
+				GetSimSystemManager()->PostMessage(message);
 			}
 		
 			m_RakPeer->DeallocatePacket(p);

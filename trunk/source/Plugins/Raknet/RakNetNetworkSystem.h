@@ -107,11 +107,14 @@ namespace GASS
 		void OnConnectToServer(ConnectToServerMessagePtr message);
 		void OnPingRequest(PingRequestMessagePtr message);
 		void OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnStopServer(StopServerMessagePtr message);
+		void OnStopClient(StopClientMessagePtr message);
 		//ITaskListener
 		void Update(double delta);
-		TaskGroup GetTaskGroup() const {return "NETWORK_TASK_GROUP";}
+		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
 	private:
 		//Helpers
+		void Stop();
 		void StartServer(const std::string &name,int port);
 		void StartClient(int client_port,int server_port);
 		bool ConnectToServer(const std::string &server,int server_port,int client_port);
