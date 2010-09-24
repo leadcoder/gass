@@ -47,7 +47,7 @@
 
 namespace GASS
 {
-	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL)
+	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),m_UniqueMaterialCreated(false)
 	{
 
 	}
@@ -67,6 +67,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnColorMessage,ColorMessage,1));
 	}
 
 	void OgreManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -161,6 +162,42 @@ namespace GASS
 		}
 	}
 
+
+	void OgreManualMeshComponent::OnColorMessage(ColorMessagePtr message)
+	{
+		
+		if(!m_UniqueMaterialCreated) 
+		{
+			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+			std::string mat_name = m_MeshObject->getName() + mat->getName();
+			mat = mat->clone(mat_name);
+			m_MeshObject->getSection(0)->setMaterialName(mat_name);
+			m_UniqueMaterialCreated = true;
+		}
+		
+		Vec4 diffuse = message->GetDiffuse();
+		Vec3 ambient = message->GetAmbient();
+		Vec3 specular = message->GetSpecular();
+		Vec3 si = message->GetSelfIllumination();
+		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+		
+		mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
+		mat->setAmbient(ambient.x,ambient.y,ambient.z);
+		mat->setSpecular(specular.x,specular.y,specular.z,1);
+		mat->setSelfIllumination(si.x,si.y,si.z);
+		mat->setShininess(message->GetShininess());
+
+		/*if(color.w < 1.0)
+		{
+			mat->setDepthCheckEnabled(false);
+			mat->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+		}
+		else
+		{
+			//mat->setDepthCheckEnabled(true);
+			mat->setSceneBlending(Ogre::SBT_REPLACE);
+		}*/
+	}
 
 	AABox OgreManualMeshComponent::GetBoundingBox() const
 	{

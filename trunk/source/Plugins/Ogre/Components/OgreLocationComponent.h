@@ -81,6 +81,7 @@ namespace GASS
 		void SetWorldPosition(const Vec3 &pos);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnScaleMessage(ScaleMessagePtr message);
 		void PositionMessage(PositionMessagePtr message);
 		void RotationMessage(RotationMessagePtr message);
 		void VisibilityMessage(VisibilityMessagePtr message);

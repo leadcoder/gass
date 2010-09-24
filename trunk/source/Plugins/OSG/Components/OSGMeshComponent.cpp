@@ -40,6 +40,8 @@
 #include <osgUtil/Optimizer>
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
+#include <osg/Material>
+#include <osg/BlendFunc>
 
 
 
@@ -91,29 +93,78 @@ namespace GASS
 	void OSGMeshComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
-		//mm.RegisterForMessage(MESSAGE_UPDATE, MESSAGE_FUNC(LocationComponent::OnUpdate),m_InitPriority);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnColorMessage,ColorMessage,1));
 	}
+
+
+	void OSGMeshComponent::OnColorMessage(ColorMessagePtr message)
+	{
+		Vec4 diffuse = message->GetDiffuse();
+		Vec3 ambient = message->GetAmbient();
+		Vec3 specular = message->GetSpecular();
+		Vec3 si = message->GetSelfIllumination();
+
+		osg::ref_ptr<osg::Material> mat (new osg::Material);
+		//Specifying the yellow colour of the object
+		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
+		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
+		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
+		mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
+		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
+		//Attaching the newly defined state set object to the node state set
+		osg::ref_ptr<osg::StateSet> nodess (m_MeshNode->getOrCreateStateSet());
+		nodess->setAttribute(mat.get());
+
+		
+		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+        // Turn on blending
+		if(diffuse.w < 1.0)
+		{
+			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			nodess->setAttributeAndModes(bf);
+		}
+	}
+
 
 	void OSGMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		
-
 		//OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(osg_sm);
 		//TODO: get resource manager and get full path
+	
+		/*for(int i = 0; i < m_MeshNode->getNumChildren(); i++)
+		{
+			lc->GetOSGNode()->addChild(getChild(i));
+		}*/
+		
+		SetFilename(m_Filename);
+		if(m_MeshNode.get())
+			CalulateBoundingbox(m_MeshNode.get());
+	}
+
+	void OSGMeshComponent::SetFilename(const std::string &filename)
+	{
+		m_Filename = filename;
+		if(!GetSceneObject()) //not loaded
+			return;
+		
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-
 		//check if extenstion exist?
 		std::string extesion =  Misc::GetExtension(m_Filename);
 		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
 		{
 			m_Filename = Misc::Replace(m_Filename,".mesh",".3ds");
 		}
+		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		if(m_MeshNode.valid())
+		{
+			lc->GetOSGNode()->removeChild(m_MeshNode.get());
+			m_MeshNode.release();
+		}
+
 		if(rs->GetFullPath(m_Filename,full_path))
 		{
-			
-			
 			std::string path = Misc::RemoveFilename(full_path);
 			//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
 			//osgUtil::Optimizer optimizer;
@@ -135,13 +186,8 @@ namespace GASS
 		else 
 			Log::Error("Failed to find mesh:%s",full_path.c_str());
 
-		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
-		/*for(int i = 0; i < m_MeshNode->getNumChildren(); i++)
-		{
-			lc->GetOSGNode()->addChild(getChild(i));
-		}*/
-		CalulateBoundingbox(m_MeshNode.get());
 	}
 
 	AABox OSGMeshComponent::GetBoundingBox() const

@@ -46,6 +46,7 @@ namespace GASS
 		Vec3 LineEnd;
 		ScenarioSceneWeakPtr Scene;
 		bool ReturnFirstCollisionPoint;
+		long int CollisionBits;
 	};
 	
 	struct CollisionResult

@@ -49,11 +49,13 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
+		void OnColorMessage(ColorMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<MeshData> m_MeshData;
+		bool m_UniqueMaterialCreated;
 	};
 }
 

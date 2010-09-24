@@ -386,9 +386,9 @@ namespace GASS
 
 	void OgreMeshComponent::OnColorMessage(ColorMessagePtr message)
 	{
-		Vec4 color = message->GetColor();
+		
 
-		if(!m_UniqueMaterialCreated) //material clone hack to only set texcoord scroll speed for this mesh
+		if(!m_UniqueMaterialCreated) 
 		{
 			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 			{
@@ -403,8 +403,19 @@ namespace GASS
 		{
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
 			Ogre::MaterialPtr mat = se->getMaterial();
-			mat->setDiffuse(color.x,color.y,color.z,color.w);
-			if(color.w < 1.0)
+			Vec4 diffuse = message->GetDiffuse();
+			Vec3 ambient = message->GetAmbient();
+			Vec3 specular = message->GetSpecular();
+			Vec3 si = message->GetSelfIllumination();
+		
+			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
+			mat->setAmbient(ambient.x,ambient.y,ambient.z);
+			mat->setSpecular(specular.x,specular.y,specular.z,1);
+			mat->setSelfIllumination(si.x,si.y,si.z);
+			mat->setShininess(message->GetShininess());
+
+			//mat->setAmbient(ambinet.x,ambinet.y,ambinet.z);
+			if(diffuse.w < 1.0)
 			{
 				mat->setDepthCheckEnabled(false);
 				mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);

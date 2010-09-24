@@ -45,13 +45,18 @@ namespace GASS
 		:m_ODESecondarySpaceID(NULL),
 		m_ODESpaceID (NULL),
 		m_Body (NULL),
-		m_TransformGeomID(NULL),
-		m_SecondTransformGeomID(NULL),
 		m_Friction(1),
 		m_Offset(0,0,0),
+		m_BBOffset(0,0,0),
 		m_Slip(0),
 		m_GeometryType(PGT_BOX),
-		m_CollisionGeomScale(1,1,1)
+		m_CollisionGeomScale(1,1,1),
+		m_CollisionCategory(1),
+		m_CollisionBits(1),
+		m_GeomID(0),
+		m_SecondGeomID(0),
+		m_TransformGeomID(NULL),
+		m_SecondTransformGeomID(NULL)
 	{
 
 	}
@@ -68,6 +73,10 @@ namespace GASS
 		RegisterProperty<Vec3>("Offset", &GASS::ODEGeometryComponent::GetOffset, &GASS::ODEGeometryComponent::SetOffset);
 		RegisterProperty<float>("Friction", &GASS::ODEGeometryComponent::GetFriction, &GASS::ODEGeometryComponent::SetFriction);
 		RegisterProperty<float>("Slip", &GASS::ODEGeometryComponent::GetSlip, &GASS::ODEGeometryComponent::SetSlip);
+		RegisterProperty<long int>("CollisionBits", &GASS::ODEGeometryComponent::GetCollisionBits, &GASS::ODEGeometryComponent::SetCollisionBits);
+		RegisterProperty<long int>("CollisionCategory", &GASS::ODEGeometryComponent::GetCollisionCategory, &GASS::ODEGeometryComponent::SetCollisionCategory);
+		//RegisterVectorProperty<std::string>("CollisionBits", &GASS::ODEGeometryComponent::GetCollisionBits, &GASS::ODEGeometryComponent::SetCollisionBits);
+		//RegisterVectorProperty<std::string>("CollisionCategories", &GASS::ODEGeometryComponent::GetCollisionCategory, &GASS::ODEGeometryComponent::SetCollisionCategory);
 		RegisterProperty<std::string>("GeometryType", &GASS::ODEGeometryComponent::GetGeometryType, &GASS::ODEGeometryComponent::SetGeometryType);
 	}
 
@@ -87,6 +96,9 @@ namespace GASS
 
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
+
+		SetScale(message->GetScale());
+		
 	}
 
 	void ODEGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -105,28 +117,6 @@ namespace GASS
 		m_SceneManager = scene_manager;
 
 		m_Body = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
-
-		/*boost::shared_ptr<IGeometryComponent> geom;
-		if(m_GeometryTemplate != "")
-		{
-			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
-		}
-		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
-		if(geom)
-		{
-			if(m_Body)
-			{
-				CreateODEGeomFromGeom(geom.get(),m_Body->GetSpace(),m_GeomID,m_TransformGeomID,m_Body);
-				CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
-				if (m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
-					CreateODEMassFromGeom(geom.get(),m_Body);
-			}
-			else
-			{
-				CreateODEGeomFromGeom(geom.get(),GetStaticSpace(),m_GeomID,m_TransformGeomID,NULL);
-				CreateODEGeomFromGeom(geom.get(),GetSecondaryStaticSpace(),m_SecondGeomID,m_SecondTransformGeomID,NULL);
-			}
-		}*/
 	}
 
 	dSpaceID ODEGeometryComponent::GetStaticSpace()
@@ -160,11 +150,12 @@ namespace GASS
 		Vec3 bb_size = (box.m_Max - box.m_Min)*m_CollisionGeomScale;
 		//bb_size = bb_size*m_Owner->GetScale();
 
-		if(bb_size.x <= 0 || bb_size.y <= 0 || bb_size.z <= 0) //Set default size
-		{
-			bb_size = Vec3(1,1,1);
-		}
-
+		if(bb_size.x <= 0) //Set default size
+			bb_size.x = 0.01;
+		if(bb_size.y <= 0)
+		  bb_size.y = 0.01;
+		if(bb_size.z <= 0)
+			bb_size.z = 0.01;
 
 		Sphere sphere = geom->GetBoundingSphere();
 		sphere.m_Radius *= m_CollisionGeomScale.x;//*m_Owner->GetScale().x;
@@ -179,7 +170,6 @@ namespace GASS
 		m_BSSize = sphere.m_Radius;
 
 
-		
 		
 		Vec3 geom_offset(0,0,0);
 
@@ -238,6 +228,8 @@ namespace GASS
 
 		}
 
+		
+		m_BBOffset = geom_offset;
 		Vec3 temp_offset = m_Offset + geom_offset;
 		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
 		//then the encapsulated object will be destroyed when the geometry transform is destroyed.
@@ -252,7 +244,6 @@ namespace GASS
 		}
 		else
 			trans_geom_id = geom_id;
-
 
 		if(body)
 		{
@@ -331,12 +322,17 @@ namespace GASS
 				CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
 				if (m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
 					CreateODEMassFromGeom(geom.get(),m_Body);
+				
 			}
 			else
 			{
 				CreateODEGeomFromGeom(geom.get(),GetStaticSpace(),m_GeomID,m_TransformGeomID,NULL);
 				CreateODEGeomFromGeom(geom.get(),GetSecondaryStaticSpace(),m_SecondGeomID,m_SecondTransformGeomID,NULL);
+				
+				
 			}
+			SetCollisionBits(m_CollisionBits);
+			SetCollisionCategory(m_CollisionCategory);
 		}
 	}
 
@@ -366,19 +362,21 @@ namespace GASS
 		//we we only resize/rescale box,sphere and cylinder right now
 		float radius = m_BSSize*value.x;
 		Vec3 bbsize = m_BBSize*value;
+
+		Vec3 offset = m_Offset + m_BBOffset*value;
 		switch(m_GeometryType)
 		{
 		case PGT_BOX:
 			dGeomBoxSetLengths(id,bbsize.x,bbsize.y,bbsize.z);
-			dGeomSetPosition(id, m_Offset.x*value.x, m_Offset.y*value.y, m_Offset.z*value.z);
+			dGeomSetPosition(id, offset.x, offset.y, offset.z);
 			break;
 		case PGT_CYLINDER:
 			dGeomCCylinderSetParams(id,bbsize.x/2.f, bbsize.y);
-			dGeomSetPosition(id, m_Offset.x*value.x, m_Offset.y*value.y, m_Offset.z*value.z);
+			dGeomSetPosition(id, offset.x, offset.y, offset.z);
 			break;
 		case PGT_SPHERE:
 			dGeomSphereSetRadius(id,radius);
-			dGeomSetPosition(id, m_Offset.x*value.x, m_Offset.y*value.y, m_Offset.z*value.z);
+			dGeomSetPosition(id, offset.x, offset.y, offset.z);
 			break;
 		case PGT_PLANE:
 			break;
@@ -556,48 +554,45 @@ namespace GASS
 		return m_TerrainGeom->GetHeight(world_x,world_z);
 	}
 
-	/*	bool ODEGeometryComponent::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest )
-	{
-	if(m_Slip < 0)
-	return true;
 
-	//Calcaulte slip param
-	float inv = 1;
-	dBodyID bid = dGeomGetBody( you );
-	bool makeNoise = true;
-	float noiseVolume = 0;
-	dReal const * vel = dBodyGetLinearVel( bid );
-	//float colVel = ((Vector3 const &)*vel) / (Vector3 &)contact.geom.normal;
-	float colVel = Math::Dot(((Vec3 const &)*vel) , (Vec3 &)contact.geom.normal);
+	long int ODEGeometryComponent::GetCollisionBits() const 
+	{
+		return m_CollisionBits;
+	}
 
-	Vec3 front;
-	Vec3 up;
-	//Compute fDir1 if a wheel
-	dReal const * R = dBodyGetRotation(bid);
-	front = Vec3( R[2] * inv, R[6] * inv, R[10] * inv );
-	up = Vec3( R[1] * inv, R[5] * inv, R[9] * inv );
-	//  Set Slip2
-	contact.surface.mode |= dContactSlip2 | dContactFDir1;
-	float v = sqrtf( vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2] );
-	contact.surface.slip2 = m_Slip * v;
-	//  Turn on Approx1
-	contact.surface.mode |= dContactApprox1;
-	//  re-tweak mu and mu2
-	contact.surface.mu = contact.surface.mu2 = m_Friction;
-	//  The theory is that it doesn't matter if "front" points "up"
-	//  because we want fdir2 to be orthogonal to "front" and contact
-	//  normal. Of course, if "front" points in the direction of the
-	//  contact, this can be a problem. In that case, choose "up".
-	if( fabsf( dDot( contact.geom.normal, &front.x, 3 ) ) > 0.5f )
+	void ODEGeometryComponent::SetCollisionBits(long int value)
 	{
-	((Vec3 &)contact.fdir1) = up;
+		m_CollisionBits = value;
+
+		if(m_GeomID)
+		{
+			dGeomSetCollideBits (m_GeomID,m_CollisionBits);
+			dGeomSetCollideBits (m_TransformGeomID, m_CollisionBits);
+			dGeomSetCollideBits (m_SecondGeomID,m_CollisionBits);
+			dGeomSetCollideBits (m_SecondTransformGeomID, m_CollisionBits);
+		}
 	}
-	else
+
+	long int ODEGeometryComponent::GetCollisionCategory() const 
 	{
-	((Vec3 &)contact.fdir1) = front;
+		return m_CollisionCategory;
 	}
-	return true;
-	}*/
+
+	void ODEGeometryComponent::SetCollisionCategory(long int value)
+	{
+		m_CollisionCategory =value;
+		if(m_GeomID)
+		{
+
+			dGeomSetCategoryBits(m_GeomID, m_CollisionCategory );
+			dGeomSetCategoryBits(m_TransformGeomID, m_CollisionCategory );
+			
+			dGeomSetCategoryBits(m_SecondGeomID, m_CollisionCategory);
+			dGeomSetCategoryBits(m_SecondTransformGeomID, m_CollisionCategory);
+		}
+	}
+
+	
 
 
 }

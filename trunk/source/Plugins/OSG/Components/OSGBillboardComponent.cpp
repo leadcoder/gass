@@ -40,7 +40,8 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
-
+#include <osg/Material>
+#include <osg/BlendFunc>
 
 
 namespace GASS
@@ -94,6 +95,7 @@ namespace GASS
 	void OSGBillboardComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnColorMessage,ColorMessage,1));
 	}
 
 	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -151,6 +153,36 @@ namespace GASS
 	void OSGBillboardComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
 
+	}
+
+	void OSGBillboardComponent::OnColorMessage(ColorMessagePtr message)
+	{
+		Vec4 diffuse = message->GetDiffuse();
+		Vec3 ambient = message->GetAmbient();
+		Vec3 specular = message->GetSpecular();
+		Vec3 si = message->GetSelfIllumination();
+
+		osg::ref_ptr<osg::Material> mat (new osg::Material);
+		//Specifying the yellow colour of the object
+		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
+		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
+		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
+		mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
+		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
+
+		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
+		//Attaching the newly defined state set object to the node state set
+		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
+		nodess->setAttribute(mat.get());
+
+		
+		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+        // Turn on blending
+		if(diffuse.w < 1.0)
+		{
+			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			nodess->setAttributeAndModes(bf);
+		}
 	}
 
 	//From OSG billboard example

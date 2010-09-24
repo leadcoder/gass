@@ -73,6 +73,7 @@ namespace GASS
 	typedef boost::shared_ptr<RotationMessage> RotationMessagePtr;
 
 
+
 	class WorldPositionMessage : public BaseMessage
 	{
 	public:
@@ -102,6 +103,21 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<WorldRotationMessage> WorldRotationMessagePtr;
 
+	//Scale (relative to parent) change for SceneObject is requested
+	class ScaleMessage : public BaseMessage
+	{
+	public:
+
+		ScaleMessage (const Vec3 &scale, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Scale(scale)
+		  {
+
+		  }
+		  Vec3 GetScale() const {return m_Scale;}
+	private:
+		Vec3 m_Scale;
+	};
+	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
 
 	class VisibilityMessage : public BaseMessage
 	{
@@ -291,11 +307,19 @@ namespace GASS
 	class ColorMessage : public BaseMessage
 	{
 	public:
-		ColorMessage(const Vec4 &color, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Color(color){}
-		  Vec4 GetColor()const {return m_Color;}
+		ColorMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess){}
+		  Vec4 GetDiffuse()const {return m_Diffuse;}
+		  Vec3 GetAmbient()const {return m_Ambient;}
+		  Vec3 GetSpecular()const {return m_Specular;}
+		  Vec3 GetSelfIllumination()const {return m_SelfIllumination;}
+		  float GetShininess()const {return m_Shininess;}
 	private:
-		Vec4 m_Color;
+		Vec4 m_Diffuse;
+		Vec3 m_Ambient;
+		Vec3 m_Specular;
+		Vec3 m_SelfIllumination;
+		float m_Shininess;
 	};
 	typedef boost::shared_ptr<ColorMessage> ColorMessagePtr;
 

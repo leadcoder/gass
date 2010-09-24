@@ -39,8 +39,10 @@ namespace GASS
 		float ray_length = m_RayDir.Length();
 		m_RayDir = m_RayDir*(1.0/ray_length);
 		m_RayGeom = dCreateRay (0, ray_length);
-		dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z,
-			m_RayDir.x,m_RayDir.y,m_RayDir.z);
+		dGeomSetCollideBits (m_RayGeom,request->CollisionBits);
+		dGeomSetCategoryBits(m_RayGeom,request->CollisionBits);
+
+		dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z,	m_RayDir.x,m_RayDir.y,m_RayDir.z);
 	}
 
 	ODELineCollision::~ODELineCollision()
@@ -73,13 +75,22 @@ namespace GASS
 		}
 		else
 		{
-			ODELineCollision* rs = (ODELineCollision*) data;
-			rs->ProcessCallback(o1,o2);
+			long int cat1 = dGeomGetCategoryBits (o1);
+			long int cat2 = dGeomGetCategoryBits (o2);
+			long int col1 = dGeomGetCollideBits (o1);
+			long int col2 = dGeomGetCollideBits (o2);
+			if ((cat1 & col2) || (cat2 & col1)) 
+			{
+				ODELineCollision* rs = (ODELineCollision*) data;
+				rs->ProcessCallback(o1,o2);
+			}
 		}
 	}
 
 	void ODELineCollision::ProcessCallback(dGeomID o1, dGeomID o2)
 	{
+
+
 		dGeomID ray_geom =0;
 		dGeomID other_geom =0;
 

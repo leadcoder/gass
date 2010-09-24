@@ -93,9 +93,13 @@ namespace GASS
 
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
-
-	protected:
 		
+		long int GetCollisionBits() const;
+		void SetCollisionBits(long int value);
+
+		long int GetCollisionCategory() const;
+		void SetCollisionCategory(long int value);
+	protected:
 		dGeomID m_GeomID;
 		dGeomID m_TransformGeomID;
 		dGeomID m_SecondGeomID;
@@ -110,6 +114,7 @@ namespace GASS
 		std::string m_GeometryTemplate;
 		std::string m_AddToBody;
 		Vec3 m_Offset;
+		Vec3 m_BBOffset;
 		Vec3 m_CollisionGeomScale;
 		float m_Friction;
 		float m_Slip;
@@ -120,5 +125,7 @@ namespace GASS
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		ITerrainComponent* m_TerrainGeom;
+		long int m_CollisionCategory;
+		long int m_CollisionBits;
 	};
 }

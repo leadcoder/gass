@@ -40,6 +40,10 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 #include <osg/Depth>
+#include <osg/Point>
+#include <osg/StateAttribute>
+
+
 
 
 namespace GASS
@@ -83,12 +87,14 @@ namespace GASS
 		// Conversely, disable writing to depth buffer so that
 		// a transparent polygon will allow polygons behind it to shine through.
 		// OSG renders transparent polygons after opaque ones.
-		osg::Depth* depth = new osg::Depth;
+		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
 		depth->setWriteMask( false );
 		ss->setAttributeAndModes( depth, osg::StateAttribute::ON );
 
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
 
+		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
+		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
 		
 		
 
@@ -150,6 +156,7 @@ namespace GASS
 			break;
 		case POINT_LIST:
 			op = osg::PrimitiveSet::POINTS;
+			
 			break;
 		case LINE_STRIP:
 			op = osg::PrimitiveSet::LINE_STRIP;

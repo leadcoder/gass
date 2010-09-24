@@ -74,6 +74,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnLoad,GASS::LoadGFXComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::PositionMessage,GASS::PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnScaleMessage,GASS::ScaleMessage,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::RotationMessage,GASS::RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldPositionMessage,GASS::WorldPositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldRotationMessage,GASS::WorldRotationMessage ,0));
@@ -168,6 +170,11 @@ namespace GASS
 		}
 	}
 
+	void OgreLocationComponent::OnScaleMessage(ScaleMessagePtr message)
+	{
+		SetScale(message->GetScale());
+	}
+	
 	void OgreLocationComponent::WorldPositionMessage(WorldPositionMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();

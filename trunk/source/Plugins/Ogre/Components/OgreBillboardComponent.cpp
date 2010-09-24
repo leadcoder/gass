@@ -75,6 +75,7 @@ namespace GASS
 	void OgreBillboardComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(typeid(LoadGFXComponentsMessage),TYPED_MESSAGE_FUNC(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnColorMessage,ColorMessage,0));
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -185,6 +186,14 @@ namespace GASS
 	{
 
 	}
+
+	void OgreBillboardComponent::OnColorMessage(ColorMessagePtr message)
+	{
+		Vec4 color = message->GetDiffuse();
+		if(m_Billboard)
+			m_Billboard->setColour(Ogre::ColourValue(color.x,color.y,color.z,color.w));
+	}
+
 
 
 }
