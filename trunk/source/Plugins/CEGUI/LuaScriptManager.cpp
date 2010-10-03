@@ -139,6 +139,7 @@ namespace GASS
 		return ret;
 	}
 
+	// From CEGUI
 	void LuaScriptManager::PushNamedFunction(lua_State* L, const std::string& handler_name)
 	{
 		int top = lua_gettop(L);
@@ -209,11 +210,4 @@ namespace GASS
 			//throw ScriptException("The Lua event handler: '"+handler_name+"' does not represent a Lua function");
 		}
 	}
-
-	/*DebugPrintMessage LuaScriptManager::ToDebugPrintMessage(MessagePtr message)
-	{
-		DebugPrintMessagePtr db_mess = boost::shared_dynamic_cast<DebugPrintMessage>(message);
-		DebugPrintMessage ret = *db_mess.get();
-		return ret;
-	}*/
 }

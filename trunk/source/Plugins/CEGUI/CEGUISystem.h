@@ -35,6 +35,7 @@ namespace GASS
 	protected:
 		void OnInit(InitMessagePtr  message);
 		void OnShutdown(MessagePtr message);
+		void OnLoadGUIScript(GUIScriptMessagePtr message);
 		bool MouseMoved(float x,float y, float z);
 		bool MousePressed( int id );
 		bool MouseReleased( int id );

@@ -33,19 +33,12 @@ int mytest();
 
 #include "RendererModules/Ogre/CEGUIOgreRenderer.h"
 
-#include "LuaScriptManager.h"
-
 //int tolua_LuaTest_open (lua_State* L);
 //int GASS_SWIG_init(lua_State* L);
-extern "C" {
-int luaopen_GASS(lua_State* L);
-
-}
-
+//extern "C" {
+//int luaopen_GASS(lua_State* L);
+//}
 //int mytest(lua_State* L);
-
-
-
 
 namespace GASS
 {
@@ -66,26 +59,28 @@ namespace GASS
 
 	void CEGUISystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(CEGUISystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(CEGUISystem::OnInit,InitMessage,1));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(CEGUISystem::OnLoadGUIScript,GUIScriptMessage,0));
+
 	}
 
 	void CEGUISystem::OnInit(InitMessagePtr message)
 	{
-		LuaScriptManager* lsm = new LuaScriptManager();
 		// initialise GUI system using the new automagic function
 		CEGUI::OgreRenderer* d_renderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
 	    //create a script module.
         CEGUI::LuaScriptModule& scriptmod(CEGUI::LuaScriptModule::create());
 
-         // tell CEGUI to use this scripting module
-         CEGUI::System::getSingleton().setScriptingModule(&scriptmod);
+        // tell CEGUI to use this scripting module
+        CEGUI::System::getSingleton().setScriptingModule(&scriptmod);
 
-		 luaopen_GASS(scriptmod.getLuaState());
+		MessagePtr state_message(new LuaScriptStateMessage((void*)scriptmod.getLuaState()));
+		GetSimSystemManager()->SendImmediate(state_message);
+		 //luaopen_GASS(scriptmod.getLuaState());
 
-		
-         // execute the demo8 script which controls the rest of this demo
-         CEGUI::System::getSingleton().executeScriptFile("gass.lua");
+	     // execute the lua script which controls the GUI
+         //CEGUI::System::getSingleton().executeScriptFile("gass.lua");
 
 	/*	using namespace CEGUI;
 
@@ -180,24 +175,11 @@ namespace GASS
 		// success, and that it should now run the sample.
 	}
 
-
-	/*void CEGUISystem::OnSuscribeMessage(SuscribeMessagePtr message)
+	void CEGUISystem::OnLoadGUIScript(GUIScriptMessagePtr message)
 	{
-		//#define REG_TMESS(FUNCTION,TYPED_MESSAGE,PRIORITY) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(CEGUISystem::OnInit,InitMessage,0));
-		GetSimSystemManager()->RegisterForMessage(typeid(message->GetMessageType()),MESSAGE_FUNC(OnDelegate),0);
+		CEGUI::System::getSingleton().executeScriptFile(message->GetFilename());
 	}
 
-	void CEGUISystem::OnSuscribeMessage(MessagePtr message)
-	{
-		//iterate over all typeid and send messages to lua functions
-		for(int i = 0; i < m_FunctionMap[message->GetType()].size(); i++)
-		{
-			std::string lua_function = m_FunctionMap[message->GetType()].at(i);
-			call_lua(lua_function,
-		}
-	}*/
-	
 
 
 	bool CEGUISystem::MouseMoved(float x,float y, float z)
