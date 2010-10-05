@@ -4,7 +4,7 @@
 
 %{
 #include "Sim/Systems/SimSystemManager.h"
-#include "Plugins/CEGUI/LuaScriptManager.h"
+#include "Plugins/Script/LuaScriptManager.h"
 #include <boost/shared_ptr.hpp>
 %}
 %include "Common.i"

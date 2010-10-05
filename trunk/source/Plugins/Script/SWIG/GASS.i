@@ -10,13 +10,14 @@ using namespace GASS;
 %}
 
 %include <std_string.i>
+%include <std_vector.i>
 %include "Common.i"
 %include "Vector.i"
 %include "Messages.i"
 %include "SimEngine.i"
 %include "SimSystemManager.i"
 %include "LuaScriptManager.i"
-
+%include "Scenario.i"
 
 %wrapper %{
    SWIGEXPORT void swig_new_message_ptr(lua_State* L, MessagePtr* message)

@@ -5,7 +5,7 @@
 
 %{
 #include "Core/MessageSystem/IMessage.h"
-#include "Plugins/CEGUI/LuaScriptManager.h"
+#include "Plugins/Script/LuaScriptManager.h"
 %}
 
 %include "Messages.i"
