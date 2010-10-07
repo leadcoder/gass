@@ -60,6 +60,11 @@ namespace GASS
             @param object The object that is owner of this property
         */
     	virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
+		
+		/**
+            Get the value of this property
+            @param object The object that is owner of this property
+        */
 		virtual void Serialize(BaseReflectionObject* pObject, ISerializer* serializer) = 0;
 		virtual void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src) = 0;
 		virtual void SetValue(BaseReflectionObject* pObject, boost::any &attribute) = 0;
@@ -78,4 +83,4 @@ namespace GASS
 	}
 }
 
-#endif // #ifndef ABSTRACTPROPERTY_HH
+#endif 

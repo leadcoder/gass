@@ -304,24 +304,26 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TextureCoordinateMessage> TextureCoordinateMessagePtr;
 
-	class ColorMessage : public BaseMessage
+	class MaterialMessage : public BaseMessage
 	{
 	public:
-		ColorMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess){}
+		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess), m_DepthTest(depth_test_on){}
 		  Vec4 GetDiffuse()const {return m_Diffuse;}
 		  Vec3 GetAmbient()const {return m_Ambient;}
 		  Vec3 GetSpecular()const {return m_Specular;}
 		  Vec3 GetSelfIllumination()const {return m_SelfIllumination;}
 		  float GetShininess()const {return m_Shininess;}
+		  bool GetDepthTest()const {return m_DepthTest;}
 	private:
 		Vec4 m_Diffuse;
 		Vec3 m_Ambient;
 		Vec3 m_Specular;
 		Vec3 m_SelfIllumination;
 		float m_Shininess;
+		bool m_DepthTest;
 	};
-	typedef boost::shared_ptr<ColorMessage> ColorMessagePtr;
+	typedef boost::shared_ptr<MaterialMessage> MaterialMessagePtr;
 
 	class CameraParameterMessage : public BaseMessage
 	{

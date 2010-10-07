@@ -42,7 +42,8 @@
 #include <osg/Depth>
 #include <osg/Point>
 #include <osg/StateAttribute>
-
+#include <osg/Material>
+#include <osg/BlendFunc>
 
 
 
@@ -68,6 +69,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 	}
 
 	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -91,7 +93,7 @@ namespace GASS
 		depth->setWriteMask( false );
 		ss->setAttributeAndModes( depth, osg::StateAttribute::ON );
 
-		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
+		//ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
 
 		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
@@ -247,6 +249,42 @@ namespace GASS
 		sphere.m_Radius = bsphere._radius;
 
 		return sphere;
+	}
+
+
+	void OSGManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
+	{
+		Vec4 diffuse = message->GetDiffuse();
+		Vec3 ambient = message->GetAmbient();
+		Vec3 specular = message->GetSpecular();
+		Vec3 si = message->GetSelfIllumination();
+
+		osg::ref_ptr<osg::Material> mat (new osg::Material);
+		//Specifying the yellow colour of the object
+		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
+		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
+		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
+		mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
+		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
+
+		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
+		//Attaching the newly defined state set object to the node state set
+		osg::ref_ptr<osg::StateSet> nodess (m_OSGGeometry->getOrCreateStateSet());
+		nodess->setAttribute(mat.get());
+
+		if(message->GetDepthTest())
+			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
+		else
+			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+
+		
+		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+        // Turn on blending
+		if(diffuse.w < 1.0)
+		{
+			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			nodess->setAttributeAndModes(bf);
+		}
 	}
 
 }

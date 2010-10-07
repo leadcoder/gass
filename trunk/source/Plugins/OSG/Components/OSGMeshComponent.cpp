@@ -93,11 +93,11 @@ namespace GASS
 	void OSGMeshComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnColorMessage,ColorMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
 	}
 
 
-	void OSGMeshComponent::OnColorMessage(ColorMessagePtr message)
+	void OSGMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();

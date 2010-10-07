@@ -73,9 +73,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage,WorldRotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityMessage,0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedMessage,0));
-		
 	}
 
 	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -129,13 +128,11 @@ namespace GASS
 		}
 	}
 
-
 	void OSGLocationComponent::OnWorldPositionMessage(WorldPositionMessagePtr message)
 	{
 		Vec3 value = message->GetPosition();
 		SetWorldPosition(value);
 	}
-
 	
 	void OSGLocationComponent::OnRotationMessage(RotationMessagePtr message)
 	{
@@ -166,6 +163,7 @@ namespace GASS
 		m_Scale = value;
 	}
 
+	
 	void OSGLocationComponent::SetPosition(const Vec3 &value)
 	{
 		m_Pos = value;
@@ -176,10 +174,21 @@ namespace GASS
 		}
 	}
 
+	
+	void OSGLocationComponent::OnScaleMessage(ScaleMessagePtr message)
+	{
+		m_Scale = message->GetScale();
+		if(m_TransformNode.valid())
+		{
+			m_TransformNode->setScale( ToOSGFromGASS(m_Scale));
+			SendTransMessage();
+		}
+	}
+
 	void OSGLocationComponent::SendTransMessage()
 	{
 		Vec3 pos = GetWorldPosition();
-		Vec3 scale = Vec3(1,1,1);//GetScale();
+		Vec3 scale = GetScale();
 		Quaternion rot = GetWorldRotation();
 		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
 		GetSceneObject()->PostMessage(trans_msg);

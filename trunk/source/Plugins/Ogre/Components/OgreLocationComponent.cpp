@@ -146,8 +146,6 @@ namespace GASS
 		}
 	}
 
-
-
 	void OgreLocationComponent::ParentChangedMessage(ParentChangedMessagePtr message)
 	{
 		SetAttachToParent(m_AttachToParent);

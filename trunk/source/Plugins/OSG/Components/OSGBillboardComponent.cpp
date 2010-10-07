@@ -95,7 +95,7 @@ namespace GASS
 	void OSGBillboardComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnColorMessage,ColorMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
 	}
 
 	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -155,7 +155,7 @@ namespace GASS
 
 	}
 
-	void OSGBillboardComponent::OnColorMessage(ColorMessagePtr message)
+	void OSGBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();

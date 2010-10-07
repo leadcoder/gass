@@ -49,7 +49,7 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnColorMessage(ColorMessagePtr message);
+		void OnMaterialMessage(MaterialMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();

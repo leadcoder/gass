@@ -30,7 +30,7 @@ namespace GASS
 
 	AABox::AABox()
 	{
-		m_Max.x = m_Max.y = m_Max.z = std::numeric_limits<Float>::min();
+		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<Float>::max();
 		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<Float>::max();
 	}
 
@@ -102,8 +102,8 @@ namespace GASS
 		p7 = mat * p7;
 		p8 = mat * p8;
 
-		m_Max.x = m_Max.y = m_Max.z =std::numeric_limits<float>::min();
-		m_Min.x = m_Min.y = m_Min.z =std::numeric_limits<float>::max();
+		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<Float>::max();
+		m_Min.x = m_Min.y = m_Min.z =std::numeric_limits<Float>::max();
 
 		Union(p1);
 		Union(p2);

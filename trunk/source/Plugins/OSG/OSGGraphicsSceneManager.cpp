@@ -275,9 +275,6 @@ namespace GASS
 		std::cout << " OSGGraphicsSceneManager -- tick:" << tick++ <<std::endl;
 	}
 
-
-
-
 	void OSGGraphicsSceneManager::UpdateShadowSettings()
 	{
 		/*if(m_SceneMgr == NULL) return;

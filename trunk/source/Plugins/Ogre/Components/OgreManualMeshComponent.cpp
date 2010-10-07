@@ -67,7 +67,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnColorMessage,ColorMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 	}
 
 	void OgreManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -163,7 +163,7 @@ namespace GASS
 	}
 
 
-	void OgreManualMeshComponent::OnColorMessage(ColorMessagePtr message)
+	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		
 		if(!m_UniqueMaterialCreated) 

@@ -49,7 +49,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
-		void OnColorMessage(ColorMessagePtr message);
+		void OnMaterialMessage(MaterialMessagePtr message);
 		float GetWidth() const;
 		void SetWidth(float width);
 		float GetHeight() const;

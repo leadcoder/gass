@@ -70,9 +70,11 @@ namespace GASS
 		Quaternion FromOSGToGASS(const osg::Quat &value) const;
 		osg::Quat ToOSGFromGASS(const Quaternion &value) const;
 
+
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
+		void OnScaleMessage(ScaleMessagePtr message);
 		void OnWorldPositionMessage(WorldPositionMessagePtr message);
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
 		void OnParentChangedMessage(ParentChangedMessagePtr message);

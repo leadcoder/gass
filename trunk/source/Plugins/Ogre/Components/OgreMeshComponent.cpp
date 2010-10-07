@@ -73,7 +73,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnColorMessage,ColorMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
 	}
 
 	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -384,7 +384,7 @@ namespace GASS
 		SetTexCoordSpeed(uv);
 	}
 
-	void OgreMeshComponent::OnColorMessage(ColorMessagePtr message)
+	void OgreMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		
 

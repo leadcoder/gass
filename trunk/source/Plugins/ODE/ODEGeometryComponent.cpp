@@ -48,6 +48,8 @@ namespace GASS
 		m_Friction(1),
 		m_Offset(0,0,0),
 		m_BBOffset(0,0,0),
+		m_BBoxSize(0,0,0),
+		m_BSphereSize(0),
 		m_Slip(0),
 		m_GeometryType(PGT_BOX),
 		m_CollisionGeomScale(1,1,1),
@@ -86,19 +88,16 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
-		
+
 	}
 
 	void ODEGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
-
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
-
 		SetScale(message->GetScale());
-		
 	}
 
 	void ODEGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -143,7 +142,6 @@ namespace GASS
 		dGeomID &trans_geom_id,
 		ODEBodyComponent* body)
 	{
-
 		AABox box = geom->GetBoundingBox();
 		//Vec3 maxVec3 = box.m_Max - m_Owner->GetPosition();
 		//Vec3 min = box.m_Min - m_Owner->GetPosition();
@@ -153,7 +151,7 @@ namespace GASS
 		if(bb_size.x <= 0) //Set default size
 			bb_size.x = 0.01;
 		if(bb_size.y <= 0)
-		  bb_size.y = 0.01;
+			bb_size.y = 0.01;
 		if(bb_size.z <= 0)
 			bb_size.z = 0.01;
 
@@ -165,12 +163,10 @@ namespace GASS
 			sphere.m_Radius = 1;
 		}
 
-		
-		m_BBSize = bb_size;
-		m_BSSize = sphere.m_Radius;
+		m_BBoxSize = bb_size;
+		m_BSphereSize = sphere.m_Radius;
 
 
-		
 		Vec3 geom_offset(0,0,0);
 
 
@@ -223,12 +219,12 @@ namespace GASS
 			}
 			break;
 		case PGT_TERRAIN:
-				geom_id = CreateTerrain(geom,  0);
+			geom_id = CreateTerrain(geom,  0);
 			break;
 
 		}
 
-		
+
 		m_BBOffset = geom_offset;
 		Vec3 temp_offset = m_Offset + geom_offset;
 		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
@@ -322,14 +318,14 @@ namespace GASS
 				CreateODEGeomFromGeom(geom.get(),m_Body->GetSecondarySpace(),m_SecondGeomID,m_SecondTransformGeomID,m_Body);
 				if (m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
 					CreateODEMassFromGeom(geom.get(),m_Body);
-				
+
 			}
 			else
 			{
 				CreateODEGeomFromGeom(geom.get(),GetStaticSpace(),m_GeomID,m_TransformGeomID,NULL);
 				CreateODEGeomFromGeom(geom.get(),GetSecondaryStaticSpace(),m_SecondGeomID,m_SecondTransformGeomID,NULL);
-				
-				
+
+
 			}
 			SetCollisionBits(m_CollisionBits);
 			SetCollisionCategory(m_CollisionCategory);
@@ -360,28 +356,41 @@ namespace GASS
 	void ODEGeometryComponent::SetScale(const Vec3 &value, dGeomID id)
 	{
 		//we we only resize/rescale box,sphere and cylinder right now
-		float radius = m_BSSize*value.x;
-		Vec3 bbsize = m_BBSize*value;
+		float radius = m_BSphereSize*value.x;
+		Vec3 bbsize = m_BBoxSize*value;
 
-		Vec3 offset = m_Offset + m_BBOffset*value;
-		switch(m_GeometryType)
+		if(m_Body == NULL && m_TransformGeomID)
 		{
-		case PGT_BOX:
-			dGeomBoxSetLengths(id,bbsize.x,bbsize.y,bbsize.z);
-			dGeomSetPosition(id, offset.x, offset.y, offset.z);
-			break;
-		case PGT_CYLINDER:
-			dGeomCCylinderSetParams(id,bbsize.x/2.f, bbsize.y);
-			dGeomSetPosition(id, offset.x, offset.y, offset.z);
-			break;
-		case PGT_SPHERE:
-			dGeomSphereSetRadius(id,radius);
-			dGeomSetPosition(id, offset.x, offset.y, offset.z);
-			break;
-		case PGT_PLANE:
-			break;
+			Vec3 offset = m_Offset + m_BBOffset*value;
+			switch(m_GeometryType)
+			{
+			case PGT_BOX:
+				if(bbsize.Length() > 0)
+				{
+					dGeomBoxSetLengths(id,bbsize.x,bbsize.y,bbsize.z);
+					dGeomSetPosition(id, offset.x, offset.y, offset.z);
+				}
+				break;
+			case PGT_CYLINDER:
+				if(bbsize.Length() > 0)
+				{
+					dGeomCCylinderSetParams(id,bbsize.x/2.f, bbsize.y);
+					dGeomSetPosition(id, offset.x, offset.y, offset.z);
+				}
+				break;
+			case PGT_SPHERE:
+				if(radius > 0)
+				{
+					dGeomSphereSetRadius(id,radius);
+					dGeomSetPosition(id, offset.x, offset.y, offset.z);
+				}
+				break;
+			case PGT_PLANE:
+				break;
+			}
 		}
 	}
+
 
 	void ODEGeometryComponent::SetScale(const Vec3 &value)
 	{
@@ -453,7 +462,7 @@ namespace GASS
 		dMass ode_mass;
 		switch(m_GeometryType)
 		{
-		//case PGT_PLANE:
+			//case PGT_PLANE:
 		case PGT_MESH:
 		case PGT_BOX:
 			{
@@ -520,9 +529,9 @@ namespace GASS
 
 
 			/*dGeomHeightfieldDataBuildSingle( heightid,
-				m_TerrainGeom->GetHeightData(), 1,
-				size_x, size_z, samples_x, samples_z,
-				1, 0, thickness, 0);*/
+			m_TerrainGeom->GetHeightData(), 1,
+			size_x, size_z, samples_x, samples_z,
+			1, 0, thickness, 0);*/
 
 
 
@@ -586,13 +595,13 @@ namespace GASS
 
 			dGeomSetCategoryBits(m_GeomID, m_CollisionCategory );
 			dGeomSetCategoryBits(m_TransformGeomID, m_CollisionCategory );
-			
+
 			dGeomSetCategoryBits(m_SecondGeomID, m_CollisionCategory);
 			dGeomSetCategoryBits(m_SecondTransformGeomID, m_CollisionCategory);
 		}
 	}
 
-	
+
 
 
 }

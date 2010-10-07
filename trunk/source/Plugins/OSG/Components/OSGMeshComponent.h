@@ -175,7 +175,7 @@ namespace GASS
 		void SetReceiveShadow(bool value);
 		void GetMeshData(MeshDataPtr mesh_data);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
-		void OnColorMessage(ColorMessagePtr message);
+		void OnMaterialMessage(MaterialMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		std::string m_Filename;
 		bool m_CastShadow;

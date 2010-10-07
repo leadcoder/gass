@@ -107,8 +107,8 @@ namespace GASS
 		dSpaceID m_ODESpaceID;
 		dSpaceID m_ODESecondarySpaceID;
 		ODEBodyComponent* m_Body;
-		Vec3 m_BBSize; // bounding box start size
-		float m_BSSize; // bounding sphere start size
+		Vec3 m_BBoxSize; // bounding box start size
+		float m_BSphereSize; // bounding sphere start size
 		
 		PhysicsGeometryType m_GeometryType;
 		std::string m_GeometryTemplate;
