@@ -35,24 +35,49 @@ namespace GASS
 	typedef boost::shared_ptr<BaseReflectionObject> BaseReflectionObjectPtr;
 	typedef boost::weak_ptr<BaseReflectionObject> BaseReflectionObjectWeakPtr;
 
+    /**
+        This class implement basic reflection functionality.
+        All classes that want reflection support should be derived from this class
+    */
 	class GASSCoreExport BaseReflectionObject : public Reflection<BaseReflectionObject, NullClass>
 	{
 	public:
 		BaseReflectionObject();
 		virtual ~BaseReflectionObject();
 
-		//helpers to modify properties
+		/**Set property by string
+		    @param property_name Name of the property to change
+            @param value The value provided as string
+            @return true if property found and set
+		*/
+		bool SetPropertyByString(const std::string &property_name,const std::string &value);
+		/**Get property by string
+		    @param property_name Name of the property to get
+            @param value The value provided as string
+            @return true if property found
+		*/
+		bool GetPropertyByString(const std::string &property_name, std::string &value);
+
+		/**Set property by using boost::any
+		    @param property_name Name of the property to get
+            @param value The value provided as boost::any
+            @return true if property found and set
+		*/
+		bool SetPropertyByType(const std::string &property_name, boost::any value);
+
+		/**Get property value
+		    @param property_name Name of the property to get
+            @param value The value provided as boost::any
+            @return true if property found
+		*/
+		bool GetPropertyByType(const std::string &property_name, boost::any &value);
+
 		void LoadProperties(TiXmlElement *elem);
 		void SaveProperties(TiXmlElement *parent);
-		bool SetPropertyByString(const std::string &attrib_name,const std::string &attrib_val);
-		bool GetPropertyByString(const std::string &attrib_name, std::string &value);
-		bool SetPropertyByType(const std::string &attrib_name, boost::any attribute);
-		bool GetPropertyByType(const std::string &attrib_name, boost::any &attribute);
+
 		bool SerializeProperties(ISerializer* serializer);
 		void SetProperties(BaseReflectionObjectPtr dest);
-
 	};
-
 
 }
 #endif // #ifndef BASEREFLECTIONOBJECT_HH

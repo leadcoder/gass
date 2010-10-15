@@ -27,9 +27,5 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	/*template <>
-	void GetValueHelper<std::string>(std::string &res,const std::string &s)
-	{
-		res = s;
-	}*/
+
 }

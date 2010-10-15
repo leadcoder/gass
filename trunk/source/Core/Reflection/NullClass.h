@@ -33,14 +33,15 @@ namespace GASS
 {
 	class RTTI;
 
+    /**
+        Class use by BaseReflectionObject in reflection template inheritance.
+    */
 	class GASSCoreExport NullClass
 	{
 	protected :
 
-		// It is necessary to implement this to avoid compilation errors in the templatized RTTI code
-		// In any case no RTTI support is provided from this class
 		static inline RTTI* GetClassRTTI()			{ return NULL;};
 	};
 }
 
-#endif // NULLCLASS_HH
+#endif

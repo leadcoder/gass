@@ -58,7 +58,7 @@ namespace GASS
 				AbstractProperty * prop = (*iter);
 
 				TiXmlElement * prop_elem;
-				prop_elem = new TiXmlElement( prop->GetName().c_str());  
+				prop_elem = new TiXmlElement( prop->GetName().c_str());
 				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
 				parent->LinkEndChild( prop_elem);
 				iter++;
@@ -84,7 +84,7 @@ namespace GASS
 		return true;
 	}
 
-	bool BaseReflectionObject::SetPropertyByString(const std::string &attrib_name,const std::string &attrib_val)
+	bool BaseReflectionObject::SetPropertyByString(const std::string &property_name,const std::string &value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -94,10 +94,10 @@ namespace GASS
 			{
 				AbstractProperty * prop = (*iter);
 				std::string prop_name = prop->GetName();
-				if(prop_name == attrib_name)
+				if(prop_name == property_name)
 				{
-					prop->SetValueByString(this,attrib_val);
-					
+					prop->SetValueByString(this,value);
+
 					return true;
 				}
 				iter++;
@@ -107,7 +107,7 @@ namespace GASS
 		return false;
 	}
 
-	bool BaseReflectionObject::SetPropertyByType(const std::string &attrib_name, boost::any attribute)
+	bool BaseReflectionObject::SetPropertyByType(const std::string &property_name, boost::any value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -117,9 +117,9 @@ namespace GASS
 			{
 				AbstractProperty * prop = (*iter);
 				std::string prop_name = prop->GetName();
-				if(prop_name == attrib_name)
+				if(prop_name == property_name)
 				{
-					prop->SetValue(this,attribute);
+					prop->SetValue(this,value);
 					return true;
 				}
 				iter++;
@@ -129,7 +129,7 @@ namespace GASS
 		return false;
 	}
 
-	bool BaseReflectionObject::GetPropertyByType(const std::string &attrib_name, boost::any &attribute)
+	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, boost::any &value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -139,9 +139,9 @@ namespace GASS
 			{
 				AbstractProperty * prop = (*iter);
 				std::string prop_name = prop->GetName();
-				if(prop_name == attrib_name)
+				if(prop_name == property_name)
 				{
-					prop->GetValue(this,attribute);
+					prop->GetValue(this,value);
 					return true;
 				}
 				iter++;
@@ -152,7 +152,7 @@ namespace GASS
 	}
 
 
-	bool BaseReflectionObject::GetPropertyByString(const std::string &attrib_name, std::string &value)
+	bool BaseReflectionObject::GetPropertyByString(const std::string &property_name, std::string &value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -162,7 +162,7 @@ namespace GASS
 			{
 				AbstractProperty * prop = (*iter);
 				std::string prop_name = prop->GetName();
-				if(prop_name == attrib_name)
+				if(prop_name == property_name)
 				{
 					value = prop->GetValueAsString(this);
 					return true;
@@ -200,7 +200,7 @@ namespace GASS
 			while(pRTTI)
 			{
 				std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			
+
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					AbstractProperty * prop = (*iter);

@@ -19,11 +19,9 @@
 *****************************************************************************/
 
 /*
-This class is based on the Game Programming Gems 5 article
+This code is based on the Game Programming Gems 5 article
 "Using Templates for Reflection in C++" by Dominic Filion.
 */
-
-
 
 #ifndef REFLECTION_HH
 #define REFLECTION_HH
@@ -34,15 +32,6 @@ This class is based on the Game Programming Gems 5 article
 #include "Core/Reflection/VectorProperty.h"
 #include "Core/Utils/Log.h"
 #include "Core/Utils/Misc.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Reflection
-//
-// Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
-// supporting RTTI need to derive from this class, with their ancestor specified as the TInClass
-// template parameter.
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 class TiXmlElement;
 
 namespace GASS
@@ -52,7 +41,6 @@ namespace GASS
 	{
 		//substr(6) is used for removing "class_" from string returned by typeid,
 		//we dont want to use any prefix when accessing classes by name,
-		//To be invesitgated if typeid return same prefix in gcc
 
 		std::string ret = name.substr(6);
 		//remove namespace
@@ -64,72 +52,76 @@ namespace GASS
 		return ret;
 	}
 
+    //forward declaration
 	class BaseReflectionObject;
+
+    /** Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
+     supporting RTTI need to derive from this class, with their ancestor specified as the TInClass
+    template parameter.*/
+
 	template <class T, class TInClass>
 	class Reflection : public TInClass
 	{
 
 	public :
 		typedef boost::shared_ptr<T> TPtr;
-//		typedef boost::shared_ptr<Reflection> ReflectionPtr
-
-		//----------------------------------------------------------------------------------------------
-		// Constructor
-		Reflection();
+		Reflection()
+		{
+		}
 
 		//----------------------------------------------------------------------------------------------
 		// Default factory function. Creates an instance of T. Called by the system to dynamically create
 		// class instances from class IDs.
-		static boost::shared_ptr<T> Create();
+		static boost::shared_ptr<T> Create()
+		{
+            return boost::shared_ptr<T> (new T());
+        }
 
-		virtual boost::shared_ptr<BaseReflectionObject> CreateInstance();
-		//virtual void Assign(void* dst_class);
+		virtual boost::shared_ptr<BaseReflectionObject> CreateInstance()
+		{
+		boost::shared_ptr<T>  instance (new T());
+		return instance;
+        }
 
-		//----------------------------------------------------------------------------------------------
 		// Default reflection registration function. Does nothing by default.
-		static void	RegisterReflection();
+		static void	RegisterReflection()
+		{
+        }
 
 		//----------------------------------------------------------------------------------------------
 		// Registers a property. Takes in the property name, its getter and setter functions, and the property
 		// type as a template parameter. Should be called from within a user-defined RegisterReflection function.
 		template <class PropertyType>
-		static	void RegisterProperty(	const char* szName, typename Property<T, PropertyType>::GetterType Getter,
-			typename Property<T, PropertyType>::SetterType Setter )
+		static void RegisterProperty(const std::string &name, typename Property<T, PropertyType>::GetterType getter,
+			typename Property<T, PropertyType>::SetterType setter )
 		{
-			Property<T, PropertyType>* pProperty = new Property<T, PropertyType>( szName, Getter, Setter );
-			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
-			//PropertySystem::GetProperties()->push_back( pProperty );
+			Property<T, PropertyType>* property = new Property<T, PropertyType>(name, getter, setter);
+			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
-		static	void RegisterProperty(	const char* szName, typename Property<T, PropertyType>::GetterType Getter,
-			typename Property<T, PropertyType>::SetterTypeConst Setter )
+		static void RegisterProperty(const std::string &name, typename Property<T, PropertyType>::GetterType getter,
+			typename Property<T, PropertyType>::SetterTypeConst setter)
 		{
-			Property<T, PropertyType>* pProperty = new Property<T, PropertyType>( szName, Getter, Setter );
-			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
-			//PropertySystem::GetProperties()->push_back( pProperty );
+			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter );
+			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
-		static	void RegisterVectorProperty(	const char* szName, typename VectorProperty<T, PropertyType>::GetterType Getter,
-			typename VectorProperty<T, PropertyType>::SetterType Setter )
+		static void RegisterVectorProperty(const std::string &name, typename VectorProperty<T, PropertyType>::GetterType getter,
+			typename VectorProperty<T, PropertyType>::SetterType setter)
 		{
-			VectorProperty<T, PropertyType>* pProperty = new VectorProperty<T, PropertyType>( szName, Getter, Setter );
-			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
-			//PropertySystem::GetProperties()->push_back( pProperty );
+			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter);
+			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
-		static	void RegisterVectorProperty(	const char* szName, typename VectorProperty<T, PropertyType>::GetterType Getter,
-			typename VectorProperty<T, PropertyType>::SetterTypeConst Setter )
+		static void RegisterVectorProperty(const std::string &name, typename VectorProperty<T, PropertyType>::GetterType getter,
+			typename VectorProperty<T, PropertyType>::SetterTypeConst setter)
 		{
-			VectorProperty<T, PropertyType>* pProperty = new VectorProperty<T, PropertyType>( szName, Getter, Setter );
-			T::GetClassRTTI()->GetProperties()->push_back( pProperty );
-			//PropertySystem::GetProperties()->push_back( pProperty );
+			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter);
+			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
-
-		//bool SetProperty(const std::string &attrib_name,const std::string &attrib_val);
-
 
 		//----------------------------------------------------------------------------------------------
 		// Returns RTTI info associated with this class type.
@@ -148,30 +140,15 @@ namespace GASS
 
 
 	protected :
-		static RTTI	m_RTTI;				// RTTI structure
+		static RTTI	m_RTTI;
 
 	};
-
-
-
-	/*template <class T, class TInClass>
-	void Reflection<T, TInClass>::Load(TiXmlElement *elem)
-	{
-		TiXmlElement *attrib = elem->FirstChildElement();
-		while(attrib)
-		{
-			std::string attrib_name = attrib->Value();
-			std::string attrib_val = attrib->FirstAttribute()->Value();
-			SetProperty(attrib_name,attrib_val);
-			attrib  = attrib->NextSiblingElement();
-		}
-	}*/
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
 		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
 		(RegisterReflectionFunc)T::RegisterReflection );
 
-	template <class T, class TInClass>
+	/*template <class T, class TInClass>
 	Reflection<T, TInClass>::Reflection()
 	{
 	}
@@ -189,22 +166,9 @@ namespace GASS
 		return instance;
 	}
 
-	/*template <class T, class TInClass>
-	void Reflection<T, TInClass>::Assign(void* dst_class)
-	{
-	//Convenient hack to for class assignment,
-	//for instance this will consider any memory
-	//that has to be reallocated -> invalid pointers etc.
-	//This function should probably  be mandatory for every
-	//derived class to implement.
-
-	T* dst = (T*) dst_class;
-	*dst = *((T*)this);
-	}*/
-
 	template <class T, class TInClass>
 	void Reflection<T, TInClass>::RegisterReflection()
 	{
-	}
+	}*/
 }
-#endif // #ifndef REFLECTION_HH
+#endif

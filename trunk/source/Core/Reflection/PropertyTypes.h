@@ -33,90 +33,17 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	enum ePropertyType
+	enum PropertyType
 	{
-		eptBOOL,
-		eptINT,
-		eptFLOAT,
-		eptSTRING,
-		eptPTR,
-		eptVEC3,
-		eptVEC2,
-		eptUNKNOWN,
-		eptMAX_PROPERTY_TYPES
+		PROP_BOOL,
+		PROP_INT,
+		PROP_FLOAT,
+		PROP_STRING,
+		PROP_VEC2,
+		PROP_VEC3,
+		PROP_VEC4,
+		PROP_UNKNOWN,
+		PROP_MAX_PROPERTY_TYPES
 	};
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// PropertyType
-	//
-	// This templatized class will associate compile-time types with unique enum members.
-	//
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-
-	template <class T>
-	class PropertyType
-	{
-
-	public :
-
-		// Returns type ID associated with the templatized type.
-		ePropertyType	GetTypeID() const;
-
-	//private:
-
-		//static ePropertyType    m_TypeID;
-
-	};
-
-
-/*	template<class T>
-	ePropertyType GetPropID(T v)
-	{
-		return -1;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<bool>(bool v)
-	{
-		return eptBOOL;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<int>(int v)
-	{
-		return eptINT;
-	}
-
-	template<>
-	ePropertyType  GASSCoreExport GetPropID<float>(float v)
-	{
-		return eptFLOAT;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<std::string>(std::string v)
-	{
-		return eptSTRING;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<Vec3>(Vec3 v)
-	{
-		return eptVEC3;
-	}*/
-
-
-
-	template<class T>
-    ePropertyType PropertyType<T>::GetTypeID()const
-	{
-	   // T v;
-		//return GetPropID<T>(v);
-		return eptVEC3;
-	}
-
-
-
 }
-#endif //PROPERTYTYPES_HH
+#endif

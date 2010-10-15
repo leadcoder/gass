@@ -48,224 +48,290 @@ This class is based on the Game Programming Gems 5 article
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 namespace GASS
 {
-	template <class OwnerType, class T>
-	class Property : public TypedProperty<T>
-	{
 
-	public:
+    template <class type>
+    bool GetValueFromString(type &res,const std::string &s)
+    {
+        std::stringstream str;
+        str << s;
+        str >> res;
+        return true;
+    }
 
-		//----------------------------------------------------------------------------------------------
-		typedef T		(OwnerType::*GetterType)() const;				// Getter function
-		typedef void	(OwnerType::*SetterType)( T Value);	// Setter function
-		typedef void	(OwnerType::*SetterTypeConst)( const T &Value );	// Setter function
-
-		//----------------------------------------------------------------------------------------------
-		// Constructor. Takes in property's name, getter and setter functions.
-		inline Property( const char* szName, GetterType Getter, SetterType Setter );
-		inline Property( const char* szName, GetterType Getter, SetterTypeConst Setter );
-
-		//----------------------------------------------------------------------------------------------
-		// Determines the value of this property.
-		virtual T		GetValue( BaseReflectionObject* pObject ) const;
-		virtual void	SetValue( BaseReflectionObject* pObject, const T &Value );
-		void Serialize(BaseReflectionObject* pObject,ISerializer* serializer);
-
-		void SetValueByString(BaseReflectionObject* pObject, const std::string &s);
-		std::string GetValueAsString(BaseReflectionObject* pObject);
-		void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src);
-		void SetValue(BaseReflectionObject* pOwner, boost::any &attribute);
-		void GetValue(BaseReflectionObject* pOwner, boost::any &attribute);
-	protected:
-		//std::vector<std::string> Tokenize(const std::string & str, const std::string & delim);
+    //Use specialized template to catch std::string
+    template <>
+    bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
 
-		GetterType		m_Getter;
-		SetterType		m_Setter;
-		SetterTypeConst	m_SetterConst;
+    template <class type>
+    bool GetStringFromValue(const type &val,std::string &res)
+    {
+        std::stringstream sstream;
+        sstream.unsetf(std::ios::skipws);
+        sstream << val;
+        res = sstream.str();
+        return true;
+    }
 
-	};
+    /**
+    Template class used to define a property of a specific type.
+    @param OwnerType class that has the getter and setter functions
+    @param T Poperty type
+    */
+    template <class OwnerType, class T>
+    class Property : public TypedProperty<T>
+    {
+    public:
+        typedef T (OwnerType::*GetterType)() const; // Getter function
+        typedef void (OwnerType::*SetterType)( T Value); // Setter function
+        typedef void (OwnerType::*SetterTypeConst)( const T &Value ); // Const setter function
+        Property( const std::string &name, GetterType getter, SetterType setter ):
+                TypedProperty<T>(name),
+                m_Getter(getter),
+                m_Setter(setter),
+                m_SetterConst(NULL)
+        {
 
-	template <class OwnerType, class T>
-	inline Property<OwnerType, T>::Property( const char* szName, GetterType Getter, SetterType Setter ) :
-	TypedProperty<T>	( szName		),
-		m_Getter			( Getter		),
-		m_Setter			( Setter		),
-		m_SetterConst			( NULL)
-	{
-	}
+        }
+        Property( const std::string &name, GetterType getter, SetterTypeConst setter ):
+                TypedProperty<T>(name),
+                m_Getter(getter),
+                m_SetterConst(setter),
+                m_Setter(NULL)
+        {
+        }
 
-	template <class OwnerType, class T>
-	inline Property<OwnerType, T>::Property( const char* szName, GetterType Getter, SetterTypeConst Setter ) :
-	TypedProperty<T>	( szName		),
-		m_Getter			( Getter		),
-		m_SetterConst			( Setter		),
-		m_Setter			( NULL)
-	{
-	}
+        virtual T GetValue(BaseReflectionObject* object) const
+        {
+            return (((OwnerType*)object)->*m_Getter)();
+        }
 
-	template <class OwnerType, class T>
-	T Property<OwnerType, T>::GetValue( BaseReflectionObject* pOwner ) const
-	{
-		return (((OwnerType*)pOwner)->*m_Getter)();
-	}
+        virtual void SetValue( BaseReflectionObject* object, const T &value )
+        {
+            if (m_SetterConst)
+            {
+                (((OwnerType*)object)->*m_SetterConst)( value );
+            }
+            else if (m_Setter)
+            {
+                (((OwnerType*)object)->*m_Setter)( value );
+            }
+        }
 
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, const T &Value )
-	{
-		if(m_SetterConst)
-		{
-			(((OwnerType*)pOwner)->*m_SetterConst)( Value );
-		}
-		else if(m_Setter)
-		{
-			(((OwnerType*)pOwner)->*m_Setter)( Value );
-		}
-	}
+        void Serialize(BaseReflectionObject* object,ISerializer* serializer)
+        {
+            if (serializer->Loading())
+            {
+                T val;
+                SerialLoader* loader = (SerialLoader*) serializer;
+                loader->IO<T>(val);
+                SetValue(object,val);
+            }
+            else
+            {
+                T val = GetValue(object);
+                SerialSaver* saver = (SerialSaver*) serializer;
+                saver->IO<T>(val);
+            }
+        }
 
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::SetValue(BaseReflectionObject* dest, BaseReflectionObject* src)
-	{
-		SetValue(dest,GetValue(src));
-	}
+        void SetValueByString(BaseReflectionObject* object, const std::string &value)
+        {
+            T res;
+            GetValueFromString<T>(res,value);
+            SetValue(object,res);
+        }
 
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, boost::any &attribute)
-	{
-		T res = boost::any_cast<T>(attribute);
-		SetValue(pOwner,res);
-	}
+        std::string GetValueAsString(BaseReflectionObject* object)
+        {
+            T val = GetValue(object);
+            std::string res;
+            GetStringFromValue<T>(val,res);
+            return res;
+        }
 
+        void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src)
+        {
+            SetValue(dest,GetValue(src));
+        }
+        void SetValue(BaseReflectionObject* object, boost::any &value)
+        {
+            T res = boost::any_cast<T>(value);
+            SetValue(object,res);
+        }
 
+        void GetValue(BaseReflectionObject* object, boost::any &value)
+        {
+            T res = GetValue(object);
+            value = res;
+        }
+    protected:
+        GetterType		m_Getter;
+        SetterType		m_Setter;
+        SetterTypeConst	m_SetterConst;
+    };
 
-	//Do nothing by default
-	template <class type>
-	bool GetValueFromString(type &res,const std::string &s)
-	{
-		std::stringstream str;
-		str << s;
-		str >> res;
-		//SetValue(pOwner,res);
-		return true;
-	}
+    /*template <class OwnerType, class T>
+    inline Property<OwnerType, T>::Property( const char* szName, GetterType Getter, SetterType Setter ) :
+    TypedProperty<T>	( szName		),
+    	m_Getter			( Getter		),
+    	m_Setter			( Setter		),
+    	m_SetterConst			( NULL)
+    {
+    }
 
+    template <class OwnerType, class T>
+    inline Property<OwnerType, T>::Property( const char* szName, GetterType Getter, SetterTypeConst Setter ) :
+    TypedProperty<T>	( szName		),
+    	m_Getter			( Getter		),
+    	m_SetterConst			( Setter		),
+    	m_Setter			( NULL)
+    {
+    }
 
+    template <class OwnerType, class T>
+    T Property<OwnerType, T>::GetValue( BaseReflectionObject* pOwner ) const
+    {
+    	return (((OwnerType*)pOwner)->*m_Getter)();
+    }
 
-	//Use specialized template to catch std::string
-	template <>
-	bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
+    template <class OwnerType, class T>
+    void Property<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, const T &Value )
+    {
+    	if(m_SetterConst)
+    	{
+    		(((OwnerType*)pOwner)->*m_SetterConst)( Value );
+    	}
+    	else if(m_Setter)
+    	{
+    		(((OwnerType*)pOwner)->*m_Setter)( Value );
+    	}
+    }
 
+    template <class OwnerType, class T>
+    void Property<OwnerType, T>::SetValue(BaseReflectionObject* dest, BaseReflectionObject* src)
+    {
+    	SetValue(dest,GetValue(src));
+    }
 
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::SetValueByString(BaseReflectionObject* pOwner,const std::string &s)
-	{
-		T res;
-		GetValueFromString<T>(res,s);
-		SetValue(pOwner,res);
-	}
-
-
-
-
-	template <class type>
-	bool GetStringFromValue(const type &val,std::string &res)
-	{
-		std::stringstream sstream;
-		sstream.unsetf(std::ios::skipws);
-		sstream << val;
-		res = sstream.str();
-		return true;
-	}
-
-	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<std::string> >(const std::vector<std::string> &val,std::string &s);
-	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<int> >(const std::vector<int> &val,std::string &s);
-	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<float> >(const std::vector<float> &val,std::string &s);
-	template <>
-	bool GASSCoreExport GetStringFromValue<std::vector<double> >(const std::vector<double> &val,std::string &s);
-
-	template <class OwnerType, class T>
-	std::string Property<OwnerType, T>::GetValueAsString(BaseReflectionObject* pOwner)
-	{
-		T val = GetValue(pOwner);
-		std::string res;
-		GetStringFromValue<T>(val,res);
-		return res;
-	}
-
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::GetValue(BaseReflectionObject* pOwner, boost::any &attribute)
-	{
-		T res = GetValue(pOwner);
-		attribute = res;
-	}
-
-/*	template <class OwnerType, class T>
-	std::vector<std::string> Property<OwnerType, T>::Tokenize(const std::string & str, const std::string & delim)
-	{
-		using namespace std;
-		vector<string> tokens;
-		size_t p0 = 0, p1 = string::npos;
-		while(p0 != string::npos)
-		{
-			p1 = str.find_first_of(delim, p0);
-			if(p1 != p0)
-			{
-				string token = str.substr(p0, p1 - p0);
-				tokens.push_back(token);
-			}
-			p0 = str.find_first_not_of(delim, p1);
-		}
-		return tokens;
-	}*/
-
-	template <class OwnerType, class T>
-	void Property<OwnerType, T>::Serialize(BaseReflectionObject* pOwner,ISerializer* serializer)
-	{
-
-		if(serializer->Loading())
-		{
-			T val;
-			SerialLoader* loader = (SerialLoader*) serializer;
-			loader->IO<T>(val);
-			SetValue(pOwner,val);
-		}
-		else
-		{
-			T val = GetValue(pOwner);
-			SerialSaver* saver = (SerialSaver*) serializer;
-			saver->IO<T>(val);
-
-		}
-	}
+    template <class OwnerType, class T>
+    void Property<OwnerType, T>::SetValue(BaseReflectionObject* pOwner, boost::any &attribute)
+    {
+    	T res = boost::any_cast<T>(attribute);
+    	SetValue(pOwner,res);
+    }*/
 
 
-	template <class type>
-	bool GetVectorFromString(std::vector<type> &res,const std::string &s)
-	{
-		res.clear();
-		std::stringstream str(s);
-		type value;
-		while(str >> value)
-		{
-			res.push_back(value);
-		}
-		return true;
-	}
 
-	template <class type>
-	bool GetStringFromVector(const std::vector<type> &val,std::string &s)
-	{
-		std::string str_val;
-		for(int i = 0 ; i < val.size(); i++)
-		{
-			if(i > 0 )
-				s += " ";
-			GetStringFromValue(val[i],str_val);
-			s += str_val;
-		}
-		return true;
-	}
+    //Do nothing by default
+    /*	template <class type>
+    	bool GetValueFromString(type &res,const std::string &s)
+    	{
+    		std::stringstream str;
+    		str << s;
+    		str >> res;
+    		//SetValue(pOwner,res);
+    		return true;
+    	}*/
+
+    //Use specialized template to catch std::string
+    /*template <>
+    bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s)
+    {
+    	res = s;
+    	return true;
+    }*/
+
+
+    /*template <class OwnerType, class T>
+    void Property<OwnerType, T>::SetValueByString(BaseReflectionObject* pOwner,const std::string &s)
+    {
+    	T res;
+    	GetValueFromString<T>(res,s);
+    	SetValue(pOwner,res);
+    }*/
+
+    /*template <class type>
+    bool GetStringFromValue(const type &val,std::string &res)
+    {
+    	std::stringstream sstream;
+    	sstream.unsetf(std::ios::skipws);
+    	sstream << val;
+    	res = sstream.str();
+    	return true;
+    }
+
+    template <>
+    bool GASSCoreExport GetStringFromValue<std::vector<std::string> >(const std::vector<std::string> &val,std::string &s);
+    template <>
+    bool GASSCoreExport GetStringFromValue<std::vector<int> >(const std::vector<int> &val,std::string &s);
+    template <>
+    bool GASSCoreExport GetStringFromValue<std::vector<float> >(const std::vector<float> &val,std::string &s);
+    template <>
+    bool GASSCoreExport GetStringFromValue<std::vector<double> >(const std::vector<double> &val,std::string &s);
+
+    template <class OwnerType, class T>
+    std::string Property<OwnerType, T>::GetValueAsString(BaseReflectionObject* pOwner)
+    {
+    	T val = GetValue(pOwner);
+    	std::string res;
+    	GetStringFromValue<T>(val,res);
+    	return res;
+    }
+    */
+    /*	template <class OwnerType, class T>
+    	void Property<OwnerType, T>::GetValue(BaseReflectionObject* pOwner, boost::any &attribute)
+    	{
+    		T res = GetValue(pOwner);
+    		attribute = res;
+    	}*/
+
+    /*template <class OwnerType, class T>
+    void Property<OwnerType, T>::Serialize(BaseReflectionObject* pOwner,ISerializer* serializer)
+    {
+
+    	if(serializer->Loading())
+    	{
+    		T val;
+    		SerialLoader* loader = (SerialLoader*) serializer;
+    		loader->IO<T>(val);
+    		SetValue(pOwner,val);
+    	}
+    	else
+    	{
+    		T val = GetValue(pOwner);
+    		SerialSaver* saver = (SerialSaver*) serializer;
+    		saver->IO<T>(val);
+
+    	}
+    }
+
+
+    template <class type>
+    bool GetVectorFromString(std::vector<type> &res,const std::string &s)
+    {
+    	res.clear();
+    	std::stringstream str(s);
+    	type value;
+    	while(str >> value)
+    	{
+    		res.push_back(value);
+    	}
+    	return true;
+    }
+
+    template <class type>
+    bool GetStringFromVector(const std::vector<type> &val,std::string &s)
+    {
+    	std::string str_val;
+    	for(int i = 0 ; i < val.size(); i++)
+    	{
+    		if(i > 0 )
+    			s += " ";
+    		GetStringFromValue(val[i],str_val);
+    		s += str_val;
+    	}
+    	return true;
+    }*/
 }
-#endif // #ifndef PROPERTY_HH
+#endif

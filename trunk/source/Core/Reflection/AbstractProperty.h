@@ -44,9 +44,18 @@ namespace GASS
             Constructor
             @param name Name of this property
         */
-        inline AbstractProperty(const std::string &name);
-		inline  std::string GetName() const;
-		virtual ePropertyType GetTypeID() const = 0;
+        AbstractProperty( const std::string  &name ) :
+		m_Name(name)
+        {
+
+        }
+
+        std::string GetName() const
+        {
+            return m_Name;
+        }
+
+		virtual PropertyType GetTypeID() const = 0;
 
 		/**
             Set value of this property by string
@@ -60,27 +69,35 @@ namespace GASS
             @param object The object that is owner of this property
         */
     	virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
-		
+
 		/**
-            Get the value of this property
+            Serialize this property
             @param object The object that is owner of this property
+            @param serializer The serializer, can be Loader,Saver or Sizer
         */
-		virtual void Serialize(BaseReflectionObject* pObject, ISerializer* serializer) = 0;
+		virtual void Serialize(BaseReflectionObject* object, ISerializer* serializer) = 0;
+		/**
+            Transfer this property from one object to another
+            @param dest The object that should be modified
+            @param src The object that the property value should be fetch from
+        */
 		virtual void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src) = 0;
-		virtual void SetValue(BaseReflectionObject* pObject, boost::any &attribute) = 0;
-		virtual void GetValue(BaseReflectionObject* pObject, boost::any &attribute) = 0;
+
+		/**
+            Set this property value by providing the value by the boost any class
+            @param object The object that is owner of this property
+            @param value Value wrapped in the boost::any class
+        */
+		virtual void SetValue(BaseReflectionObject* object, boost::any &value) = 0;
+		/**
+            Get the value of this property, retured by the boost::any class
+            @param object The object that is owner of this property
+            @param value The value returned, wrapped in the boost::any class
+        */
+		virtual void GetValue(BaseReflectionObject* object, boost::any &value) = 0;
 	protected :
 		std::string	m_Name;
 	};
-
-	inline AbstractProperty::AbstractProperty( const std::string  &name ) :
-		m_Name(name)
-	{
-	}
-	inline std::string AbstractProperty::GetName() const
-	{
-		return m_Name;
-	}
 }
 
-#endif 
+#endif

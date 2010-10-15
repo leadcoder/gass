@@ -43,109 +43,69 @@ namespace GASS
 	public:
 
 		/**
-		 Constructor. Takes in property name.
+		 Constructor.
+		 @param name Property name.
 		**/
-		inline TypedProperty( const char* szName );
+		inline TypedProperty(const std::string  &name );
 
 		/**
 		 Returns the type of this property.
 		 */
-		virtual ePropertyType	GetTypeID() const;
+		virtual PropertyType GetTypeID() const;
 
 		/**
-		Determines the value of this property.
+		Get the value of this property.
+		@param object BaseReflectionObject that is owner of this property
 		*/
-		virtual T		GetValue( BaseReflectionObject* pObject )const = 0;
-		virtual void	SetValue( BaseReflectionObject* pObject,const  T &Value ) = 0;
+		virtual T GetValue(BaseReflectionObject* object)const = 0;
 
+		/**
+		Set the value of this property.
+		@param object BaseReflectionObject that is owner of this property
+		*/
+		virtual void	SetValue(BaseReflectionObject* object, const T &value) = 0;
 	};
 
 	template <class T>
-	inline TypedProperty<T>::TypedProperty( const char* szName ) :
-	AbstractProperty( szName			)
+	inline TypedProperty<T>::TypedProperty( const std::string &name ) :
+	AbstractProperty(name)
 	{
 	}
-
-/*	template<>
-	ePropertyType GASSCoreExport GetPropID<bool>(bool v)
-	{
-		return eptBOOL;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<int>(int v)
-	{
-		return eptINT;
-	}
-
-	template<>
-	ePropertyType  GASSCoreExport GetPropID<float>(float v)
-	{
-		return eptFLOAT;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<std::string>(std::string v)
-	{
-		return eptSTRING;
-	}
-
-	template<>
-	ePropertyType GASSCoreExport GetPropID<Vec3>(Vec3 v)
-	{
-		return eptVEC3;
-	}
-*/
-
-
-
 
 	template <class T>
-	ePropertyType TypedProperty<T>::GetTypeID() const
+	PropertyType TypedProperty<T>::GetTypeID() const
 	{
-	    //PropertyType<T> ptype;
-		//return ptype.GetTypeID();
-		//T v;
-		//GetPropID<T>(v);
+
 		if(typeid(T) == typeid(int))
 		{
-		   return eptINT;
+		   return PROP_INT;
 		}
 		else if(typeid(T) == typeid(float))
 		{
-		   return eptFLOAT;
+		   return PROP_FLOAT;
 		}
 		else if(typeid(T) == typeid(std::string))
         {
-		   return eptSTRING;
+		   return PROP_STRING;
 		}
 		else if(typeid(T) == typeid(Vec2))
         {
-		   return eptVEC2;
+		   return PROP_VEC2;
 		}
 		else if(typeid(T) == typeid(Vec3))
         {
-		   return eptVEC3;
+		   return PROP_VEC3;
+		}
+		else if(typeid(T) == typeid(Vec4))
+        {
+		   return PROP_VEC4;
 		}
 		else if(typeid(T) == typeid(bool))
         {
-		   return eptBOOL;
+		   return PROP_BOOL;
 		}
 		else
-			return eptUNKNOWN;
+			return PROP_UNKNOWN;
 	}
-
-
-
-
-#ifdef WIN32
-/*	template<class T> ePropertyType PropertyType<T>::m_TypeID = eptPTR;
-	template<> ePropertyType PropertyType<bool>::m_TypeID		= eptBOOL;
-	//template<> ePropertyType PropertyType<DWORD>::m_TypeID	= eptDWORD;
-	template<> ePropertyType PropertyType<int>::m_TypeID		= eptINT;
-	template<> ePropertyType PropertyType<float>::m_TypeID	= eptFLOAT;
-	template<> ePropertyType PropertyType<std::string>::m_TypeID	= eptSTRING;
-	template<> ePropertyType PropertyType<Vec3>::m_TypeID	= eptVEC3;*/
-#endif
 }
-#endif // TYPEPROPERTY_HH
+#endif
