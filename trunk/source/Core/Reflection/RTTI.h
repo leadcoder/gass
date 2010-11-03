@@ -38,9 +38,9 @@ namespace GASS
 	class BaseReflectionObject;
 	class RTTI;
 
-	typedef std::string				ClassID;
-	typedef BaseReflectionObject*	(*ClassFactoryFunc)( ClassID );
-	typedef bool			(*RegisterReflectionFunc)();
+	typedef std::string ClassID;
+	typedef BaseReflectionObject* (*ClassFactoryFunc)( ClassID );
+	typedef bool (*RegisterReflectionFunc)();
 
 	/**
 	RTTI class used to store properties for classes
@@ -57,8 +57,8 @@ namespace GASS
 		@param factory	A factory function for creating an instances of RTTI class type
 		@param reflection_func	optinoal funcation pointer to register class properties, this function is called in this function
 		*/
-		RTTI(const std::string  &class_name, RTTI* base_class_rtti, ClassFactoryFunc factory, RegisterReflectionFunc reflection_func ) : m_ClassName(class_name),
-			m_ObjectFactory(factory),
+		RTTI(const std::string  &class_name, RTTI* base_class_rtti,/* ClassFactoryFunc factory,*/ RegisterReflectionFunc reflection_func ) : m_ClassName(class_name),
+			//m_ObjectFactory(factory),
 			m_BaseRTTI(base_class_rtti)
 		{
 			if ( reflection_func)
@@ -119,10 +119,10 @@ namespace GASS
 		/**
 		Gets class factory  used to create class instances for this specific RTTI.
 		*/
-		ClassFactoryFunc GetClassFactory()
+		/*ClassFactoryFunc GetClassFactory()
 		{
 			return m_ObjectFactory;
-		}
+		}*/
 
 
 
@@ -152,7 +152,7 @@ namespace GASS
 	private:
 		std::string m_ClassName;		// Class name
 		RTTI* m_BaseRTTI;			// Base class RTTI structure
-		ClassFactoryFunc m_ObjectFactory;	 // Factory function
+		//ClassFactoryFunc m_ObjectFactory;	 // Factory function
 		std::list<AbstractProperty*> m_Properties;	 // Property list
 
 	};

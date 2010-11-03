@@ -69,13 +69,14 @@ namespace GASS
 		{
 		}
 
-		//----------------------------------------------------------------------------------------------
-		// Default factory function. Creates an instance of T. Called by the system to dynamically create
-		// class instances from class IDs.
-		static boost::shared_ptr<T> Create()
+		/**
+            Creates an instance of T. Called by the system to dynamically create
+		    class instances from class IDs.
+        */
+		/*static boost::shared_ptr<T> Create()
 		{
             return boost::shared_ptr<T> (new T());
-        }
+        }*/
 
 		virtual boost::shared_ptr<BaseReflectionObject> CreateInstance()
 		{
@@ -145,7 +146,7 @@ namespace GASS
 	};
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(), (ClassFactoryFunc)T::Create,
+		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
 		(RegisterReflectionFunc)T::RegisterReflection );
 
 	/*template <class T, class TInClass>
