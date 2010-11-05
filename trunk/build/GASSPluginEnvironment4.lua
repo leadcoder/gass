@@ -24,7 +24,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"$(OGRE_PATH)/lib/$(ConfigurationName)",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/bin/$(ConfigurationName)",
+		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
 		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"

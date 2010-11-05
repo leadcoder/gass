@@ -16,7 +16,7 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/CEGUI_0.7.1/CEGUI/include",
+		"../dependencies/CEGUI-SDK-0.7.2/CEGUI/include",
 		"$(OGRE_PATH)/OgreMain/include",
 		"$(BOOST_PATH)"
 
@@ -26,7 +26,7 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"../dependencies/CEGUI_0.7.1/lib",
+		"../dependencies/CEGUI-SDK-0.7.2/lib",
 		"$(BOOST_PATH)/lib"
 
 	}
@@ -65,6 +65,7 @@ end
 			"GASSSim_d",
 			"CEGUIBase_d",
 			"CEGUIOgreRenderer_d",
+			"CEGUILuaScriptModule_d.lib",
 			"tinyxmld"
 		}
 
@@ -78,6 +79,7 @@ end
 			"GASSSim",
 			"CEGUIBase",
 			"CEGUIOgreRenderer",
+			"CEGUILuaScriptModule",
 			"tinyxml"
 		}
 
