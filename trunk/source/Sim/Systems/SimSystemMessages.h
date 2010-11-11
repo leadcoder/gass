@@ -444,7 +444,38 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StartSceanrioRequestMessage> StartSceanrioRequestMessagePtr;
 
+	//Script messages
+	/**
+	Lua script state is disterbuted through this message
+	*/
+	class LuaScriptStateMessage : public BaseMessage
+	{
+	public:
+		LuaScriptStateMessage(void *state, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_State(state){}
 
+		 void* GetState() const {return m_State;}
+	private:
+		void *m_State;
+	};
+	typedef boost::shared_ptr<LuaScriptStateMessage> LuaScriptStateMessagePtr;
+
+	/**
+	Load a gui script file	
+	*/
+	class GUIScriptMessage : public BaseMessage
+	{
+	public:
+		GUIScriptMessage(const std::string filename, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_Name(filename){}
+
+		 std::string GetFilename() const {return m_Name;}
+	private:
+		std::string m_Name;
+	};
+	typedef boost::shared_ptr<GUIScriptMessage> GUIScriptMessagePtr;
 
 }
 #endif

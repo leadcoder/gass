@@ -14,9 +14,9 @@
 
 
 #include <stdio.h>
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+//#include "lua.h"
+//#include "lualib.h"
+//#include "lauxlib.h"
 
 //int My_init(lua_State* L); // declare the wrapped module
 int mytest();

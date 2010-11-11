@@ -56,10 +56,11 @@ namespace GASS {
         typename T::iterator mCurrent;
         typename T::iterator mEnd;
 		/// Private constructor since only the parameterised constructor should be used
-        VectorIterator() {};
+        //VectorIterator() {};
     public:
         typedef typename T::value_type ValueType;
 
+		VectorIterator() {};
         /** Constructor.
         @remarks
             Provide a start and end iterator to initialise.

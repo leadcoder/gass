@@ -56,10 +56,6 @@ namespace GASS
 	{
 	}
 
-	void ScenarioScene::CreateRegistredSceneManagers()
-	{
-	
-	}
 
 	void ScenarioScene::Shutdown()
 	{
@@ -106,7 +102,6 @@ namespace GASS
 		RegisterProperty<std::string>("SceneNorth", &GASS::ScenarioScene::GetNorthVector, &GASS::ScenarioScene::SetNorthVector);
 		RegisterProperty<std::string>("Instances", &GASS::ScenarioScene::GetInstancesFile, &GASS::ScenarioScene::SetInstancesFile);
 	}
-
 
 	void ScenarioScene::SetInstancesFile(const std::string &value)
 	{
@@ -289,7 +284,7 @@ namespace GASS
 		//send load message
 		SendImmediate(scenario_msg);
 		
-		//Create game objects instances from templates
+		//Create scene object instances from templates
 		m_ObjectManager->LoadXML(scenario_path + "/"  + m_InstancesFile);
 
 		MessagePtr system_msg(new ScenarioSceneLoadedNotifyMessage(shared_from_this()));
@@ -298,8 +293,6 @@ namespace GASS
 
 	void ScenarioScene::OnUpdate(double delta_time)
 	{
-		//boost::shared_ptr<ScenarioUpdateMessage> update_msg(new ScenarioUpdateMessage(SCENARIO_RM_UPDATE,delta_time));
-		//m_SceneMessageManager->SendImmediate(update_msg);
 		m_SceneMessageManager->Update(delta_time);
 		m_ObjectManager->SyncMessages(delta_time);
 	}
@@ -320,14 +313,6 @@ namespace GASS
 			}
 		}
 		return sm;
-		/*SceneManagerPtr sm = GetSceneManager(sm_type);
-		if(sm)
-		{
-			sm->SetName(sm_name);
-			XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
-			if(serialize)
-				serialize->LoadXML(sm_elem);
-		}*/
 	}
 
 	SceneManagerPtr ScenarioScene::GetSceneManager(const std::string &name)

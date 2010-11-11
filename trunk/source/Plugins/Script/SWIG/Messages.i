@@ -190,6 +190,19 @@ public:
 	StartSceanrioRequestMessagePtr(StartSceanrioRequestMessage *);
 };
 
+class ScenarioSceneLoadedNotifyMessage : public BaseMessage
+{
+public:
+	ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0);
+	ScenarioScenePtr GetScenarioScene() const;
+};
+
+class ScenarioSceneLoadedNotifyMessagePtr
+{
+public:
+	ScenarioSceneLoadedNotifyMessagePtr(StartSceanrioRequestMessage *);
+};
+
 
 %inline %{
 	DebugPrintMessage ToDebugPrintMessage(MessagePtr message)
@@ -228,12 +241,18 @@ public:
 		return ret;
 	}
 	
+	ScenarioSceneLoadedNotifyMessage ToScenarioSceneLoadedNotifyMessage(MessagePtr message)
+	{
+		ScenarioSceneLoadedNotifyMessagePtr db_mess = boost::shared_dynamic_cast<ScenarioSceneLoadedNotifyMessage>(message);
+		ScenarioSceneLoadedNotifyMessage ret = *db_mess.get();
+		return ret;
+	}
+	
 	%}
 
 
 
-//%template(MessagePtr) boost::shared_ptr<GASS::IMessage>;
-//%template(DebugPrintMessagePtr) boost::shared_ptr<DebugPrintMessage>;
+
 
 
 

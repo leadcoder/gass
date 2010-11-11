@@ -18,6 +18,7 @@ using namespace GASS;
 %include "SimSystemManager.i"
 %include "LuaScriptManager.i"
 %include "Scenario.i"
+%include "ScenarioScene.i"
 
 %wrapper %{
    SWIGEXPORT void swig_new_message_ptr(lua_State* L, MessagePtr* message)

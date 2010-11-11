@@ -1503,6 +1503,23 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 
 /* ------------------------------ end luarun.swg  ------------------------------ */
 
+/*  Errors in SWIG */
+#define  SWIG_UnknownError    	   -1 
+#define  SWIG_IOError        	   -2 
+#define  SWIG_RuntimeError   	   -3 
+#define  SWIG_IndexError     	   -4 
+#define  SWIG_TypeError      	   -5 
+#define  SWIG_DivisionByZero 	   -6 
+#define  SWIG_OverflowError  	   -7 
+#define  SWIG_SyntaxError    	   -8 
+#define  SWIG_ValueError     	   -9 
+#define  SWIG_SystemError    	   -10
+#define  SWIG_AttributeError 	   -11
+#define  SWIG_MemoryError    	   -12 
+#define  SWIG_NullReferenceError   -13
+
+
+
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
@@ -1520,29 +1537,38 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_MessagePtr swig_types[11]
 #define SWIGTYPE_p_PingRequestMessage swig_types[12]
 #define SWIGTYPE_p_PingRequestMessagePtr swig_types[13]
-#define SWIGTYPE_p_ServerDisconnectedMessage swig_types[14]
-#define SWIGTYPE_p_ServerDisconnectedMessagePtr swig_types[15]
-#define SWIGTYPE_p_ServerResponseMessage swig_types[16]
-#define SWIGTYPE_p_ServerResponseMessagePtr swig_types[17]
-#define SWIGTYPE_p_SimEngine swig_types[18]
-#define SWIGTYPE_p_SimSystemManager swig_types[19]
-#define SWIGTYPE_p_SimSystemManagerPtr swig_types[20]
-#define SWIGTYPE_p_StartClientMessage swig_types[21]
-#define SWIGTYPE_p_StartClientMessagePtr swig_types[22]
-#define SWIGTYPE_p_StartSceanrioRequestMessage swig_types[23]
-#define SWIGTYPE_p_StartSceanrioRequestMessagePtr swig_types[24]
-#define SWIGTYPE_p_StartServerMessage swig_types[25]
-#define SWIGTYPE_p_StartServerMessagePtr swig_types[26]
-#define SWIGTYPE_p_StopClientMessage swig_types[27]
-#define SWIGTYPE_p_StopClientMessagePtr swig_types[28]
-#define SWIGTYPE_p_StopServerMessage swig_types[29]
-#define SWIGTYPE_p_StopServerMessagePtr swig_types[30]
-#define SWIGTYPE_p_Vec3 swig_types[31]
-#define SWIGTYPE_p_double swig_types[32]
-#define SWIGTYPE_p_int swig_types[33]
-#define SWIGTYPE_p_std__string swig_types[34]
-static swig_type_info *swig_types[36];
-static swig_module_info swig_module = {swig_types, 35, 0, 0, 0, 0};
+#define SWIGTYPE_p_Scenario swig_types[14]
+#define SWIGTYPE_p_ScenarioScene swig_types[15]
+#define SWIGTYPE_p_ScenarioSceneIterator swig_types[16]
+#define SWIGTYPE_p_ScenarioSceneVector swig_types[17]
+#define SWIGTYPE_p_ScenarioSceneVector__iterator swig_types[18]
+#define SWIGTYPE_p_ScenarioSceneVector__pointer swig_types[19]
+#define SWIGTYPE_p_ScenarioSceneVector__value_type swig_types[20]
+#define SWIGTYPE_p_ServerDisconnectedMessage swig_types[21]
+#define SWIGTYPE_p_ServerDisconnectedMessagePtr swig_types[22]
+#define SWIGTYPE_p_ServerResponseMessage swig_types[23]
+#define SWIGTYPE_p_ServerResponseMessagePtr swig_types[24]
+#define SWIGTYPE_p_SimEngine swig_types[25]
+#define SWIGTYPE_p_SimSystemManager swig_types[26]
+#define SWIGTYPE_p_SimSystemManagerPtr swig_types[27]
+#define SWIGTYPE_p_StartClientMessage swig_types[28]
+#define SWIGTYPE_p_StartClientMessagePtr swig_types[29]
+#define SWIGTYPE_p_StartSceanrioRequestMessage swig_types[30]
+#define SWIGTYPE_p_StartSceanrioRequestMessagePtr swig_types[31]
+#define SWIGTYPE_p_StartServerMessage swig_types[32]
+#define SWIGTYPE_p_StartServerMessagePtr swig_types[33]
+#define SWIGTYPE_p_StopClientMessage swig_types[34]
+#define SWIGTYPE_p_StopClientMessagePtr swig_types[35]
+#define SWIGTYPE_p_StopServerMessage swig_types[36]
+#define SWIGTYPE_p_StopServerMessagePtr swig_types[37]
+#define SWIGTYPE_p_Vec3 swig_types[38]
+#define SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t swig_types[39]
+#define SWIGTYPE_p_double swig_types[40]
+#define SWIGTYPE_p_int swig_types[41]
+#define SWIGTYPE_p_std__string swig_types[42]
+#define SWIGTYPE_p_std__vectorT_ScenarioScene_t swig_types[43]
+static swig_type_info *swig_types[45];
+static swig_module_info swig_module = {swig_types, 44, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1575,6 +1601,19 @@ using namespace GASS;
      ret = lua_isnil(L, idx);
     return ret;
   }
+
+
+#include <vector>
+
+
+#include <stdexcept>
+
+
+#define SWIG_exception(a,b)\
+{ lua_pushfstring(L,"%s:%s",#a,b);SWIG_fail; }
+
+
+#include <stdexcept>
 
 
 //typedef double Float;
@@ -1630,7 +1669,7 @@ using namespace GASS;
 
 
 #include "Sim/Systems/SimSystemManager.h"
-#include "Plugins/CEGUI/LuaScriptManager.h"
+#include "Plugins/Script/LuaScriptManager.h"
 #include <boost/shared_ptr.hpp>
 
 SWIGINTERN void SimSystemManager_RegisterForSystemMessage(SimSystemManager *self,std::string const &lua_function,MessagePtr message_type){
@@ -1638,8 +1677,25 @@ SWIGINTERN void SimSystemManager_RegisterForSystemMessage(SimSystemManager *self
 	}
 
 #include "Core/MessageSystem/IMessage.h"
-#include "Plugins/CEGUI/LuaScriptManager.h"
+#include "Plugins/Script/LuaScriptManager.h"
 
+
+#include "Sim/Scenario/Scenario.h"
+#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Core/Utils/Iterators.h"
+#include <vector>
+
+
+SWIGINTERN ScenarioScene std_vector_Sl_ScenarioScene_Sg____getitem__(std::vector< ScenarioScene > *self,unsigned int idx){
+				if (idx>=self->size())
+					throw std::out_of_range("in vector::__getitem__()");
+				return (*self)[idx];
+			}
+SWIGINTERN void std_vector_Sl_ScenarioScene_Sg____setitem__(std::vector< ScenarioScene > *self,unsigned int idx,ScenarioScene val){
+				if (idx>=self->size())
+					throw std::out_of_range("in vector::__setitem__()");
+				(*self)[idx]=val;
+			}
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -5746,6 +5802,808 @@ static swig_lua_class *swig_LuaScriptManager_bases[] = {0};
 static const char *swig_LuaScriptManager_base_names[] = {0};
 static swig_lua_class _wrap_class_LuaScriptManager = { "LuaScriptManager", &SWIGTYPE_p_LuaScriptManager,_wrap_new_LuaScriptManager, swig_delete_LuaScriptManager, swig_LuaScriptManager_methods, swig_LuaScriptManager_attributes, swig_LuaScriptManager_bases, swig_LuaScriptManager_base_names };
 
+static int _wrap_new_ScenarioSceneVector__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(ScenarioScene)>",0,0)
+  result = (std::vector< ScenarioScene > *)new std::vector< ScenarioScene >();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_ScenarioScene_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneVector__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  unsigned int arg1 ;
+  std::vector< ScenarioScene > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(ScenarioScene)>",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("std::vector<(ScenarioScene)>",1,"unsigned int");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (unsigned int)lua_tonumber(L, 1);
+  result = (std::vector< ScenarioScene > *)new std::vector< ScenarioScene >(arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_ScenarioScene_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneVector__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = 0 ;
+  std::vector< ScenarioScene > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(ScenarioScene)>",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("std::vector<(ScenarioScene)>",1,"std::vector< ScenarioScene > const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("new_ScenarioSceneVector",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = (std::vector< ScenarioScene > *)new std::vector< ScenarioScene >((std::vector< ScenarioScene > const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_ScenarioScene_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneVector__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  unsigned int arg1 ;
+  ScenarioScene arg2 ;
+  ScenarioScene *argp2 ;
+  std::vector< ScenarioScene > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(ScenarioScene)>",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("std::vector<(ScenarioScene)>",1,"unsigned int");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("std::vector<(ScenarioScene)>",2,"ScenarioScene");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (unsigned int)lua_tonumber(L, 1);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_ScenarioScene,0))){
+    SWIG_fail_ptr("new_ScenarioSceneVector",2,SWIGTYPE_p_ScenarioScene);
+  }
+  arg2 = *argp2;
+  
+  result = (std::vector< ScenarioScene > *)new std::vector< ScenarioScene >(arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_ScenarioScene_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneVector(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_ScenarioSceneVector__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__vectorT_ScenarioScene_t, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ScenarioSceneVector__SWIG_2(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_ScenarioSceneVector__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_ScenarioScene, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_ScenarioSceneVector__SWIG_3(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ScenarioSceneVector'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    std::vector< ScenarioScene >()\n"
+    "    std::vector< ScenarioScene >(unsigned int)\n"
+    "    std::vector< ScenarioScene >(std::vector< ScenarioScene > const &)\n"
+    "    std::vector< ScenarioScene >(unsigned int,ScenarioScene)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ScenarioSceneVector_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("size",1,"std::vector< ScenarioScene > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_size",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = (unsigned int)((std::vector< ScenarioScene > const *)arg1)->size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_max_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("max_size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("max_size",1,"std::vector< ScenarioScene > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_max_size",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = (unsigned int)((std::vector< ScenarioScene > const *)arg1)->max_size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_empty(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("empty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("empty",1,"std::vector< ScenarioScene > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_empty",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = (bool)((std::vector< ScenarioScene > const *)arg1)->empty();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_clear(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"std::vector< ScenarioScene > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_clear",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  (arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_push_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  ScenarioScene arg2 ;
+  ScenarioScene *argp2 ;
+  
+  SWIG_check_num_args("push_back",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("push_back",1,"std::vector< ScenarioScene > *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("push_back",2,"ScenarioScene");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_push_back",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_ScenarioScene,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_push_back",2,SWIGTYPE_p_ScenarioScene);
+  }
+  arg2 = *argp2;
+  
+  (arg1)->push_back(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_pop_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  
+  SWIG_check_num_args("pop_back",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pop_back",1,"std::vector< ScenarioScene > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_pop_back",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  (arg1)->pop_back();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_front(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  ScenarioScene result;
+  
+  SWIG_check_num_args("front",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("front",1,"std::vector< ScenarioScene > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_front",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = ((std::vector< ScenarioScene > const *)arg1)->front();
+  {
+    ScenarioScene * resultptr = new ScenarioScene((const ScenarioScene &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioScene,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  ScenarioScene result;
+  
+  SWIG_check_num_args("back",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("back",1,"std::vector< ScenarioScene > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector_back",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  result = ((std::vector< ScenarioScene > const *)arg1)->back();
+  {
+    ScenarioScene * resultptr = new ScenarioScene((const ScenarioScene &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioScene,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  unsigned int arg2 ;
+  ScenarioScene result;
+  
+  SWIG_check_num_args("__getitem__",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("__getitem__",1,"std::vector< ScenarioScene > *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("__getitem__",2,"unsigned int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector___getitem",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  try {
+    result = std_vector_Sl_ScenarioScene_Sg____getitem__(arg1,arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  {
+    ScenarioScene * resultptr = new ScenarioScene((const ScenarioScene &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioScene,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneVector___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) 0 ;
+  unsigned int arg2 ;
+  ScenarioScene arg3 ;
+  ScenarioScene *argp3 ;
+  
+  SWIG_check_num_args("__setitem__",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("__setitem__",1,"std::vector< ScenarioScene > *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("__setitem__",2,"unsigned int");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("__setitem__",3,"ScenarioScene");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_ScenarioScene_t,0))){
+    SWIG_fail_ptr("ScenarioSceneVector___setitem",1,SWIGTYPE_p_std__vectorT_ScenarioScene_t);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_ScenarioScene,0))){
+    SWIG_fail_ptr("ScenarioSceneVector___setitem",3,SWIGTYPE_p_ScenarioScene);
+  }
+  arg3 = *argp3;
+  
+  try {
+    std_vector_Sl_ScenarioScene_Sg____setitem__(arg1,arg2,arg3);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ScenarioSceneVector(void *obj) {
+std::vector< ScenarioScene > *arg1 = (std::vector< ScenarioScene > *) obj;
+delete arg1;
+}
+static swig_lua_method swig_std_vector_Sl_ScenarioScene_Sg__methods[] = {
+    {"size", _wrap_ScenarioSceneVector_size}, 
+    {"max_size", _wrap_ScenarioSceneVector_max_size}, 
+    {"empty", _wrap_ScenarioSceneVector_empty}, 
+    {"clear", _wrap_ScenarioSceneVector_clear}, 
+    {"push_back", _wrap_ScenarioSceneVector_push_back}, 
+    {"pop_back", _wrap_ScenarioSceneVector_pop_back}, 
+    {"front", _wrap_ScenarioSceneVector_front}, 
+    {"back", _wrap_ScenarioSceneVector_back}, 
+    {"__getitem", _wrap_ScenarioSceneVector___getitem}, 
+    {"__setitem", _wrap_ScenarioSceneVector___setitem}, 
+    {0,0}
+};
+static swig_lua_attribute swig_std_vector_Sl_ScenarioScene_Sg__attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_std_vector_Sl_ScenarioScene_Sg__bases[] = {0};
+static const char *swig_std_vector_Sl_ScenarioScene_Sg__base_names[] = {0};
+static swig_lua_class _wrap_class_std_vector_Sl_ScenarioScene_Sg_ = { "ScenarioSceneVector", &SWIGTYPE_p_std__vectorT_ScenarioScene_t,_wrap_new_ScenarioSceneVector, swig_delete_ScenarioSceneVector, swig_std_vector_Sl_ScenarioScene_Sg__methods, swig_std_vector_Sl_ScenarioScene_Sg__attributes, swig_std_vector_Sl_ScenarioScene_Sg__bases, swig_std_vector_Sl_ScenarioScene_Sg__base_names };
+
+static int _wrap_new_ScenarioSceneIterator__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *result = 0 ;
+  
+  SWIG_check_num_args("VectorIterator<(ScenarioSceneVector)>",0,0)
+  result = (VectorIterator< ScenarioSceneVector > *)new VectorIterator< ScenarioSceneVector >();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneIterator__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioSceneVector::iterator arg1 ;
+  ScenarioSceneVector::iterator arg2 ;
+  ScenarioSceneVector::iterator *argp1 ;
+  ScenarioSceneVector::iterator *argp2 ;
+  VectorIterator< ScenarioSceneVector > *result = 0 ;
+  
+  SWIG_check_num_args("VectorIterator<(ScenarioSceneVector)>",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("VectorIterator<(ScenarioSceneVector)>",1,"ScenarioSceneVector::iterator");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("VectorIterator<(ScenarioSceneVector)>",2,"ScenarioSceneVector::iterator");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_ScenarioSceneVector__iterator,0))){
+    SWIG_fail_ptr("new_ScenarioSceneIterator",1,SWIGTYPE_p_ScenarioSceneVector__iterator);
+  }
+  arg1 = *argp1;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_ScenarioSceneVector__iterator,0))){
+    SWIG_fail_ptr("new_ScenarioSceneIterator",2,SWIGTYPE_p_ScenarioSceneVector__iterator);
+  }
+  arg2 = *argp2;
+  
+  result = (VectorIterator< ScenarioSceneVector > *)new VectorIterator< ScenarioSceneVector >(arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneIterator__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioSceneVector *arg1 = 0 ;
+  VectorIterator< ScenarioSceneVector > *result = 0 ;
+  
+  SWIG_check_num_args("VectorIterator<(ScenarioSceneVector)>",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("VectorIterator<(ScenarioSceneVector)>",1,"ScenarioSceneVector &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_ScenarioSceneVector,0))){
+    SWIG_fail_ptr("new_ScenarioSceneIterator",1,SWIGTYPE_p_ScenarioSceneVector);
+  }
+  
+  result = (VectorIterator< ScenarioSceneVector > *)new VectorIterator< ScenarioSceneVector >(*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneIterator(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_ScenarioSceneIterator__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_ScenarioSceneVector, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ScenarioSceneIterator__SWIG_2(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_ScenarioSceneVector__iterator, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_ScenarioSceneVector__iterator, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_ScenarioSceneIterator__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ScenarioSceneIterator'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    VectorIterator< ScenarioSceneVector >()\n"
+    "    VectorIterator< ScenarioSceneVector >(ScenarioSceneVector::iterator,ScenarioSceneVector::iterator)\n"
+    "    VectorIterator< ScenarioSceneVector >(ScenarioSceneVector &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ScenarioSceneIterator_hasMoreElements(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasMoreElements",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasMoreElements",1,"VectorIterator< ScenarioSceneVector > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,0))){
+    SWIG_fail_ptr("ScenarioSceneIterator_hasMoreElements",1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t);
+  }
+  
+  result = (bool)((VectorIterator< ScenarioSceneVector > const *)arg1)->hasMoreElements();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneIterator_getNext(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) 0 ;
+  ScenarioSceneVector::value_type result;
+  
+  SWIG_check_num_args("getNext",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getNext",1,"VectorIterator< ScenarioSceneVector > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,0))){
+    SWIG_fail_ptr("ScenarioSceneIterator_getNext",1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t);
+  }
+  
+  result = (arg1)->getNext();
+  {
+    ScenarioSceneVector::value_type * resultptr = new ScenarioSceneVector::value_type((const ScenarioSceneVector::value_type &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioSceneVector__value_type,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneIterator_peekNext(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) 0 ;
+  ScenarioSceneVector::value_type result;
+  
+  SWIG_check_num_args("peekNext",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("peekNext",1,"VectorIterator< ScenarioSceneVector > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,0))){
+    SWIG_fail_ptr("ScenarioSceneIterator_peekNext",1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t);
+  }
+  
+  result = (arg1)->peekNext();
+  {
+    ScenarioSceneVector::value_type * resultptr = new ScenarioSceneVector::value_type((const ScenarioSceneVector::value_type &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioSceneVector__value_type,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneIterator_peekNextPtr(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) 0 ;
+  ScenarioSceneVector::pointer result;
+  
+  SWIG_check_num_args("peekNextPtr",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("peekNextPtr",1,"VectorIterator< ScenarioSceneVector > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,0))){
+    SWIG_fail_ptr("ScenarioSceneIterator_peekNextPtr",1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t);
+  }
+  
+  result = (arg1)->peekNextPtr();
+  {
+    ScenarioSceneVector::pointer * resultptr = new ScenarioSceneVector::pointer((const ScenarioSceneVector::pointer &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioSceneVector__pointer,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScenarioSceneIterator_moveNext(lua_State* L) {
+  int SWIG_arg = 0;
+  VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) 0 ;
+  
+  SWIG_check_num_args("moveNext",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("moveNext",1,"VectorIterator< ScenarioSceneVector > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,0))){
+    SWIG_fail_ptr("ScenarioSceneIterator_moveNext",1,SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t);
+  }
+  
+  (arg1)->moveNext();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ScenarioSceneIterator(void *obj) {
+VectorIterator< ScenarioSceneVector > *arg1 = (VectorIterator< ScenarioSceneVector > *) obj;
+delete arg1;
+}
+static swig_lua_method swig_VectorIterator_Sl_ScenarioSceneVector_Sg__methods[] = {
+    {"hasMoreElements", _wrap_ScenarioSceneIterator_hasMoreElements}, 
+    {"getNext", _wrap_ScenarioSceneIterator_getNext}, 
+    {"peekNext", _wrap_ScenarioSceneIterator_peekNext}, 
+    {"peekNextPtr", _wrap_ScenarioSceneIterator_peekNextPtr}, 
+    {"moveNext", _wrap_ScenarioSceneIterator_moveNext}, 
+    {0,0}
+};
+static swig_lua_attribute swig_VectorIterator_Sl_ScenarioSceneVector_Sg__attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_VectorIterator_Sl_ScenarioSceneVector_Sg__bases[] = {0};
+static const char *swig_VectorIterator_Sl_ScenarioSceneVector_Sg__base_names[] = {0};
+static swig_lua_class _wrap_class_VectorIterator_Sl_ScenarioSceneVector_Sg_ = { "ScenarioSceneIterator", &SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t,_wrap_new_ScenarioSceneIterator, swig_delete_ScenarioSceneIterator, swig_VectorIterator_Sl_ScenarioSceneVector_Sg__methods, swig_VectorIterator_Sl_ScenarioSceneVector_Sg__attributes, swig_VectorIterator_Sl_ScenarioSceneVector_Sg__bases, swig_VectorIterator_Sl_ScenarioSceneVector_Sg__base_names };
+
+static int _wrap_new_Scenario(lua_State* L) {
+  int SWIG_arg = 0;
+  Scenario *result = 0 ;
+  
+  SWIG_check_num_args("Scenario",0,0)
+  result = (Scenario *)new Scenario();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Scenario,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Scenario_GetScenarioScenes(lua_State* L) {
+  int SWIG_arg = 0;
+  Scenario *arg1 = (Scenario *) 0 ;
+  ScenarioSceneIterator result;
+  
+  SWIG_check_num_args("GetScenarioScenes",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("GetScenarioScenes",1,"Scenario *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Scenario,0))){
+    SWIG_fail_ptr("Scenario_GetScenarioScenes",1,SWIGTYPE_p_Scenario);
+  }
+  
+  result = (arg1)->GetScenarioScenes();
+  {
+    ScenarioSceneIterator * resultptr = new ScenarioSceneIterator((const ScenarioSceneIterator &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioSceneIterator,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_Scenario(void *obj) {
+Scenario *arg1 = (Scenario *) obj;
+delete arg1;
+}
+static swig_lua_method swig_Scenario_methods[] = {
+    {"GetScenarioScenes", _wrap_Scenario_GetScenarioScenes}, 
+    {0,0}
+};
+static swig_lua_attribute swig_Scenario_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_Scenario_bases[] = {0};
+static const char *swig_Scenario_base_names[] = {0};
+static swig_lua_class _wrap_class_Scenario = { "Scenario", &SWIGTYPE_p_Scenario,_wrap_new_Scenario, swig_delete_Scenario, swig_Scenario_methods, swig_Scenario_attributes, swig_Scenario_bases, swig_Scenario_base_names };
+
 
    SWIGEXPORT void swig_new_message_ptr(lua_State* L, MessagePtr* message)
 		{
@@ -5871,6 +6729,13 @@ static swig_type_info _swigt__p_LuaScriptManager = {"_p_LuaScriptManager", "LuaS
 static swig_type_info _swigt__p_MessagePtr = {"_p_MessagePtr", "MessagePtr *", 0, 0, (void*)&_wrap_class_MessagePtr, 0};
 static swig_type_info _swigt__p_PingRequestMessage = {"_p_PingRequestMessage", "PingRequestMessage *", 0, 0, (void*)&_wrap_class_PingRequestMessage, 0};
 static swig_type_info _swigt__p_PingRequestMessagePtr = {"_p_PingRequestMessagePtr", "PingRequestMessagePtr *", 0, 0, (void*)&_wrap_class_PingRequestMessagePtr, 0};
+static swig_type_info _swigt__p_Scenario = {"_p_Scenario", "Scenario *", 0, 0, (void*)&_wrap_class_Scenario, 0};
+static swig_type_info _swigt__p_ScenarioScene = {"_p_ScenarioScene", "ScenarioScene *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneIterator = {"_p_ScenarioSceneIterator", "ScenarioSceneIterator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneVector = {"_p_ScenarioSceneVector", "ScenarioSceneVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneVector__iterator = {"_p_ScenarioSceneVector__iterator", "ScenarioSceneVector::iterator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneVector__pointer = {"_p_ScenarioSceneVector__pointer", "ScenarioSceneVector::pointer *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneVector__value_type = {"_p_ScenarioSceneVector__value_type", "ScenarioSceneVector::value_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ServerDisconnectedMessage = {"_p_ServerDisconnectedMessage", "ServerDisconnectedMessage *", 0, 0, (void*)&_wrap_class_ServerDisconnectedMessage, 0};
 static swig_type_info _swigt__p_ServerDisconnectedMessagePtr = {"_p_ServerDisconnectedMessagePtr", "ServerDisconnectedMessagePtr *", 0, 0, (void*)&_wrap_class_ServerDisconnectedMessagePtr, 0};
 static swig_type_info _swigt__p_ServerResponseMessage = {"_p_ServerResponseMessage", "ServerResponseMessage *", 0, 0, (void*)&_wrap_class_ServerResponseMessage, 0};
@@ -5889,9 +6754,11 @@ static swig_type_info _swigt__p_StopClientMessagePtr = {"_p_StopClientMessagePtr
 static swig_type_info _swigt__p_StopServerMessage = {"_p_StopServerMessage", "StopServerMessage *", 0, 0, (void*)&_wrap_class_StopServerMessage, 0};
 static swig_type_info _swigt__p_StopServerMessagePtr = {"_p_StopServerMessagePtr", "StopServerMessagePtr *", 0, 0, (void*)&_wrap_class_StopServerMessagePtr, 0};
 static swig_type_info _swigt__p_Vec3 = {"_p_Vec3", "Vec3 *", 0, 0, (void*)&_wrap_class_Vec3, 0};
+static swig_type_info _swigt__p_VectorIteratorT_ScenarioSceneVector_t = {"_p_VectorIteratorT_ScenarioSceneVector_t", "VectorIterator< ScenarioSceneVector > *", 0, 0, (void*)&_wrap_class_VectorIterator_Sl_ScenarioSceneVector_Sg_, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "Float *|double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|SenderID *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_std_string, 0};
+static swig_type_info _swigt__p_std__vectorT_ScenarioScene_t = {"_p_std__vectorT_ScenarioScene_t", "std::vector< ScenarioScene > *", 0, 0, (void*)&_wrap_class_std_vector_Sl_ScenarioScene_Sg_, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_BaseMessage,
@@ -5908,6 +6775,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_MessagePtr,
   &_swigt__p_PingRequestMessage,
   &_swigt__p_PingRequestMessagePtr,
+  &_swigt__p_Scenario,
+  &_swigt__p_ScenarioScene,
+  &_swigt__p_ScenarioSceneIterator,
+  &_swigt__p_ScenarioSceneVector,
+  &_swigt__p_ScenarioSceneVector__iterator,
+  &_swigt__p_ScenarioSceneVector__pointer,
+  &_swigt__p_ScenarioSceneVector__value_type,
   &_swigt__p_ServerDisconnectedMessage,
   &_swigt__p_ServerDisconnectedMessagePtr,
   &_swigt__p_ServerResponseMessage,
@@ -5926,9 +6800,11 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_StopServerMessage,
   &_swigt__p_StopServerMessagePtr,
   &_swigt__p_Vec3,
+  &_swigt__p_VectorIteratorT_ScenarioSceneVector_t,
   &_swigt__p_double,
   &_swigt__p_int,
   &_swigt__p_std__string,
+  &_swigt__p_std__vectorT_ScenarioScene_t,
 };
 
 static swig_cast_info _swigc__p_BaseMessage[] = {  {&_swigt__p_BaseMessage, 0, 0, 0},  {&_swigt__p_DebugPrintMessage, _p_DebugPrintMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientConnectedMessage, _p_ClientConnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartServerMessage, _p_StartServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopServerMessage, _p_StopServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartClientMessage, _p_StartClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopClientMessage, _p_StopClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerResponseMessage, _p_ServerResponseMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ConnectToServerMessage, _p_ConnectToServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientDisconnectedMessage, _p_ClientDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerDisconnectedMessage, _p_ServerDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_PingRequestMessage, _p_PingRequestMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartSceanrioRequestMessage, _p_StartSceanrioRequestMessageTo_p_BaseMessage, 0, 0},{0, 0, 0, 0}};
@@ -5945,6 +6821,13 @@ static swig_cast_info _swigc__p_LuaScriptManager[] = {  {&_swigt__p_LuaScriptMan
 static swig_cast_info _swigc__p_MessagePtr[] = {  {&_swigt__p_MessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PingRequestMessage[] = {  {&_swigt__p_PingRequestMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PingRequestMessagePtr[] = {  {&_swigt__p_PingRequestMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Scenario[] = {  {&_swigt__p_Scenario, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioScene[] = {  {&_swigt__p_ScenarioScene, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneIterator[] = {  {&_swigt__p_ScenarioSceneIterator, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneVector[] = {  {&_swigt__p_ScenarioSceneVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneVector__iterator[] = {  {&_swigt__p_ScenarioSceneVector__iterator, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneVector__pointer[] = {  {&_swigt__p_ScenarioSceneVector__pointer, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneVector__value_type[] = {  {&_swigt__p_ScenarioSceneVector__value_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ServerDisconnectedMessage[] = {  {&_swigt__p_ServerDisconnectedMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ServerDisconnectedMessagePtr[] = {  {&_swigt__p_ServerDisconnectedMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ServerResponseMessage[] = {  {&_swigt__p_ServerResponseMessage, 0, 0, 0},{0, 0, 0, 0}};
@@ -5963,9 +6846,11 @@ static swig_cast_info _swigc__p_StopClientMessagePtr[] = {  {&_swigt__p_StopClie
 static swig_cast_info _swigc__p_StopServerMessage[] = {  {&_swigt__p_StopServerMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_StopServerMessagePtr[] = {  {&_swigt__p_StopServerMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec3[] = {  {&_swigt__p_Vec3, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_VectorIteratorT_ScenarioSceneVector_t[] = {  {&_swigt__p_VectorIteratorT_ScenarioSceneVector_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_ScenarioScene_t[] = {  {&_swigt__p_std__vectorT_ScenarioScene_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_BaseMessage,
@@ -5982,6 +6867,13 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_MessagePtr,
   _swigc__p_PingRequestMessage,
   _swigc__p_PingRequestMessagePtr,
+  _swigc__p_Scenario,
+  _swigc__p_ScenarioScene,
+  _swigc__p_ScenarioSceneIterator,
+  _swigc__p_ScenarioSceneVector,
+  _swigc__p_ScenarioSceneVector__iterator,
+  _swigc__p_ScenarioSceneVector__pointer,
+  _swigc__p_ScenarioSceneVector__value_type,
   _swigc__p_ServerDisconnectedMessage,
   _swigc__p_ServerDisconnectedMessagePtr,
   _swigc__p_ServerResponseMessage,
@@ -6000,9 +6892,11 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_StopServerMessage,
   _swigc__p_StopServerMessagePtr,
   _swigc__p_Vec3,
+  _swigc__p_VectorIteratorT_ScenarioSceneVector_t,
   _swigc__p_double,
   _swigc__p_int,
   _swigc__p_std__string,
+  _swigc__p_std__vectorT_ScenarioScene_t,
 };
 
 

@@ -136,7 +136,7 @@ namespace GASS
 
 		/**
 		Should be called by creator.
-		This function is allocate the scene object manager which take the
+		This function allocate the scene object manager which take the
 		ScenarioScene as constructor argument and therefore can not be
 		allocated in the ScenarioScene contructor where shared_from_this()
         is not excepted. Further this function allocate all registred scene managers,
@@ -185,8 +185,6 @@ namespace GASS
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
-
-		void CreateRegistredSceneManagers();
 	protected:
         /**
           Load scenario scene from xml,
