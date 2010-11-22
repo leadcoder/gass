@@ -29,20 +29,20 @@ end
 		defines { "DEBUG" }
 	 	flags { "Symbols"}
 		links { "GASSCore_d","GASSSim_d","tinyxmld","tbb_debug"}
-		targetdir ( "../../common/bin/Debug" )
+		targetdir ( "../bin/Debug" )
 
 		postbuildcommands 
 		{
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet_d.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore_d.dll ..\\bin\\$(ConfigurationName)", 
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase_d.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet_d.dll ..\\bin\\$(ConfigurationName)" ,
 
 			"postbuild_debug.bat" 
 		}
@@ -54,18 +54,18 @@ end
 	 	defines { "NDEBUG" }
 	 	flags { "Optimize"}
 		links { "GASSCore","GASSSim","tinyxml","tbb" }
-                targetdir ( "../../common/bin/Release" )
+                targetdir ( "../bin/Release" )
 		postbuildcommands 
 		{
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\..\\common\\bin\\$(ConfigurationName)", 
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet.dll ..\\..\\common\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSCore.dll ..\\bin\\$(ConfigurationName)", 
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSSim.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOgre.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOIS.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginODE.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginPagedGeometry.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginOpenAL.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet.dll ..\\bin\\$(ConfigurationName)" ,
 			"postbuild_release.bat" 
 		}
