@@ -58,7 +58,7 @@ namespace GASS
 
 
 	/**
-	Message used that can be posted by anyone to request that a new render window should be created.
+	Message that can be posted by anyone to request that a new render window should be created.
 	*/
 
 	class CreateRenderWindowMessage : public BaseMessage
@@ -248,7 +248,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScenarioSceneUnloadNotifyMessage> ScenarioSceneUnloadNotifyMessagePtr;
 
-	
+
 
 	/////////NETWORK SERVER MESSAGES////////////////
 
@@ -284,7 +284,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StopServerMessage> StopServerMessagePtr;
 
-	
+
 
 	/**
 	Client connected to network server
@@ -321,7 +321,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ClientDisconnectedMessage> ClientDisconnectedMessagePtr;
 
-	
+
 	/////////NETWORK CLIENT MESSAGES////////////////
 	/**
 	Start network client
@@ -343,9 +343,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StartClientMessage> StartClientMessagePtr;
 
-	
+
 	/**
-	Server disconnected 
+	Server disconnected
 	*/
 	class ServerDisconnectedMessage : public BaseMessage
 	{

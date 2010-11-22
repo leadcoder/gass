@@ -26,6 +26,17 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
 
+/**
+This file hold messages that should be posted to
+SceneObjects. SceneObjectMessages are used to
+enable communication between components hold by
+a SceneObject. The user is free to extend this
+set of messages but this file hold the "core"
+messages that all components share.
+If a scene object message is added and it's
+of common interest it can be a candidate for
+this file.
+*/
 
 namespace GASS
 {
@@ -38,12 +49,22 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
-	//Position (relative to parent) change for SceneObject is requested
+	/**
+	Position (relative to parent) change is requested,
+	Typically the location component respond to this message
+	by moving the node in the scene graph. The location component
+	is usually implemented in the graphic system and is used by GASS
+	to transfer location information to a scene graph node.
+	However, it's also possible to have other type of components
+	that respond to position messages, for instance a sound source
+	probably also want to catch location information.
+	*/
+
 	class PositionMessage : public BaseMessage
 	{
 	public:
 
-		PositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+		PositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Position(pos)
 		  {
 
@@ -55,13 +76,23 @@ namespace GASS
 	typedef boost::shared_ptr<PositionMessage> PositionMessagePtr;
 
 
-	/** \brief: 
-	Rotation (relative to parent) change for SceneObject is requested 
+	/**
+	Rotation (relative to parent) change is requested,
+	Typically the location component respond to this message
+	by apply the rotation to the node in the scene graph.
+	The location component is usually implemented in the
+    graphic system and is used by GASS to transfer location
+    information to a scene graph node.
+    However, it's also possible to have other type of components
+	that respond to rotation messages, for instance a light source
+	probably also want to catch rotation information if its
+	not attached to a scene node.
 	*/
+
 	class RotationMessage : public BaseMessage
 	{
 	public:
-		RotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) : 
+		RotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
@@ -74,10 +105,29 @@ namespace GASS
 
 
 
+/**
+	Position change is requested,
+	Typically the location component respond to this message
+	by moving the node in the scene graph. The location component
+	is usually implemented in the graphic system and is used by GASS
+	to transfer location information to a scene graph node.
+	However, it's also possible to have other type of components
+	that respond to position messages, for instance a sound source
+	probably also want to catch location information.
+
+	Note: In contrast to the PositionMessage this is a request for a
+	absolute position change, if the location component that
+	respond to this messages has a scene graph node that is
+	attached to a parent node this position change will
+	probably require more calulations due to the fact
+	a new relative position also have to be calulated.
+	*/
+
+
 	class WorldPositionMessage : public BaseMessage
 	{
 	public:
-		WorldPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+		WorldPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay), m_Position(pos)
 		  {
 
@@ -89,10 +139,31 @@ namespace GASS
 	typedef boost::shared_ptr<WorldPositionMessage> WorldPositionMessagePtr;
 
 
+
+	/**
+	Rotation change is requested,
+	Typically the location component respond to this message
+	by apply the rotation to the node in the scene graph.
+	The location component is usually implemented in the
+    graphic system and is used by GASS to transfer location
+    information to a scene graph node.
+    However, it's also possible to have other type of components
+	that respond to rotation messages, for instance a light source
+	probably also want to catch rotation information if its
+	not attached to a scene node.
+
+	Note: In contrast to the RotationMessage this is a request for a
+	absolute rotation change, if the location component that
+	respond to this messages has a scene graph node that is
+	attached to a parent node this rotation change will
+	probably require more calulations due to the fact
+	a new relative rotation also have to be calulated.
+	*/
+
 	class WorldRotationMessage : public BaseMessage
 	{
 	public:
-		WorldRotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) : 
+		WorldRotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
@@ -103,12 +174,23 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<WorldRotationMessage> WorldRotationMessagePtr;
 
-	//Scale (relative to parent) change for SceneObject is requested
+	/**
+        Scale (relative to parent) change requested.
+        Typically the location component respond to this message
+        by apply the scale to the node in the scene graph.
+        The location component is usually implemented in the
+        graphic system and is used by GASS to transfer location
+        information to a scene graph node.
+        Note that scaling scene nodes should be used by care,
+        due to the fact that mesh normals can get out of
+        hand and as a result the lightning will not look correct.
+        Instead try to prescale your meshes before loading.
+  */
 	class ScaleMessage : public BaseMessage
 	{
 	public:
 
-		ScaleMessage (const Vec3 &scale, SenderID sender_id = -1, double delay= 0) : 
+		ScaleMessage (const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Scale(scale)
 		  {
 
@@ -119,10 +201,22 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
 
+	/**
+	Message used to change visibility of scene nodes,
+    Typically the location component respond to this message
+    by hiding/unhiding the node in the graphic system scene graph.
+
+    Note: that this messages only intended to hide the visual part
+    of a object, sound, physics or any other components
+    should not respond to this message. For instance, to disable
+    the physics collision component instead use the
+    CollisionSettingsMessage.
+    */
+
 	class VisibilityMessage : public BaseMessage
 	{
 	public:
-		VisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) : 
+		VisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Visible(visible)
 		  {
 
@@ -134,10 +228,17 @@ namespace GASS
 
 	typedef boost::shared_ptr<VisibilityMessage> VisibilityMessagePtr;
 
+    /**
+	Message used to change visibility of the bounding box,
+    Typically the location component respond to this message
+    by hiding/unhiding the scene nodes bounding box.
+
+    */
+
 	class BoundingInfoMessage : public BaseMessage
 	{
 	public:
-		BoundingInfoMessage(bool bb_visible, SenderID sender_id = -1, double delay= 0) : 
+		BoundingInfoMessage(bool bb_visible, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay), m_BBVisible(bb_visible)
 		  {
 
@@ -149,10 +250,18 @@ namespace GASS
 
 	typedef boost::shared_ptr<BoundingInfoMessage> BoundingInfoMessagePtr;
 
+
+    /**
+	Message used to change collisiion settings,
+    Typically the physics system has
+    components that respond to this message
+    by disable/enable collision models.
+
+    */
 	class CollisionSettingsMessage : public BaseMessage
 	{
 	public:
-		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) : 
+		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Enable(enable)
 		  {
 
@@ -163,6 +272,13 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<CollisionSettingsMessage> CollisionSettingsMessagePtr;
+
+	/**
+	Messages used to interact with joint components usually found in
+	the physics system. This message should probably be divided into
+	separate messages (one for force, one for velocity ec.) but
+	for now we use enums to specify what parameter we want to change.
+	*/
 
 	class PhysicsJointMessage : public BaseMessage
 	{
@@ -176,7 +292,7 @@ namespace GASS
 			AXIS1_DESIRED_ANGLE
 		};
 	public:
-		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) : 
+		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
@@ -202,7 +318,7 @@ namespace GASS
 			DISABLE
 		};
 	public:
-		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) : 
+		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
@@ -218,7 +334,7 @@ namespace GASS
 	class PhysicsMassMessage : public BaseMessage
 	{
 	public:
-		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) : 
+		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(mass)
 		  {
 
@@ -243,7 +359,7 @@ namespace GASS
 			VOLUME,
 		};
 	public:
-		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) : 
+		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
@@ -263,7 +379,7 @@ namespace GASS
 	class SceneObjectNameMessage : public BaseMessage
 	{
 	public:
-		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) : 
+		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Name(name)
 		  {
 
@@ -280,7 +396,7 @@ namespace GASS
 	class MeshFileMessage : public BaseMessage
 	{
 	public:
-		MeshFileMessage(const std::string mesh_file, SenderID sender_id = -1, double delay= 0) : 
+		MeshFileMessage(const std::string mesh_file, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_FileName(mesh_file)
 		  {
 
@@ -296,7 +412,7 @@ namespace GASS
 	class TextureCoordinateMessage : public BaseMessage
 	{
 	public:
-		TextureCoordinateMessage(const Vec2 &st, SenderID sender_id = -1, double delay= 0) : 
+		TextureCoordinateMessage(const Vec2 &st, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_TexCoords(st){}
 		  Vec2 GetTextureCoordinates()const {return m_TexCoords;}
 	private:
@@ -307,7 +423,7 @@ namespace GASS
 	class MaterialMessage : public BaseMessage
 	{
 	public:
-		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) : 
+		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess), m_DepthTest(depth_test_on){}
 		  Vec4 GetDiffuse()const {return m_Diffuse;}
 		  Vec3 GetAmbient()const {return m_Ambient;}
@@ -335,7 +451,7 @@ namespace GASS
 			CAMERA_ORTHO_WIN_SIZE,
 		};
 	public:
-		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) : 
+		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
 		  float GetValue1()const {return m_Value1;}
 		  float GetValue2()const {return m_Value2;}
@@ -351,7 +467,7 @@ namespace GASS
 	class ManualMeshDataMessage : public BaseMessage
 	{
 	public:
-		ManualMeshDataMessage(ManualMeshDataPtr data, SenderID sender_id = -1, double delay= 0) : 
+		ManualMeshDataMessage(ManualMeshDataPtr data, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Data(data){}
 		  ManualMeshDataPtr GetData()const {return m_Data;}
 	private:
@@ -363,7 +479,7 @@ namespace GASS
 	class ClearManualMeshMessage : public BaseMessage
 	{
 	public:
-		ClearManualMeshMessage (SenderID sender_id = -1, double delay= 0) : 
+		ClearManualMeshMessage (SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
@@ -373,7 +489,7 @@ namespace GASS
 	class GeometryChangedMessage : public BaseMessage
 	{
 	public:
-		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) : 
+		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Geometry(geom){}
 	private:
 		GeometryComponentPtr m_Geometry;
@@ -386,13 +502,13 @@ namespace GASS
 	public:
 		enum ParticleSystemParameterType
 		{
-			/** \brief Message data: 
+			/** \brief Message data:
 			Vec2 = "Speed" - Texture scroll speed in x,y(s,t) direction*/
 			EMISSION_RATE,
 			PARTICLE_LIFE_TIME,
 		};
 	public:
-		ParticleSystemParameterMessage(ParticleSystemParameterType paramter, int emitter, float value, SenderID sender_id = -1, double delay= 0) : 
+		ParticleSystemParameterMessage(ParticleSystemParameterType paramter, int emitter, float value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Emitter(emitter), m_Value(value), m_Parameter(paramter){}
 		  float GetValue()const {return m_Value;}
 		  int GetEmitter()const {return m_Emitter;}
@@ -407,13 +523,10 @@ namespace GASS
 
 
 
-
-
-
 	class TextCaptionMessage : public BaseMessage
 	{
 	public:
-		TextCaptionMessage(const std::string  &caption, SenderID sender_id = -1, double delay= 0) : 
+		TextCaptionMessage(const std::string  &caption, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Caption(caption){}
 		  std::string GetCaption()const {return m_Caption;}
 	private:
@@ -425,7 +538,7 @@ namespace GASS
 	class VelocityNotifyMessage : public BaseMessage
 	{
 	public:
-		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) : 
+		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
 		  Vec3 GetLinearVelocity() const {return m_LinearVel;}
 		  Vec3 GetAngularVelocity() const {return m_AngularVel;}
@@ -438,7 +551,7 @@ namespace GASS
 	class HingeJointNotifyMessage : public BaseMessage
 	{
 	public:
-		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) : 
+		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
 		  float GetAngle() const {return m_Angle;}
 		  float GetAngleRate() const {return m_AngleRate;}
@@ -450,7 +563,7 @@ namespace GASS
 
 
 
-	/** \brief message data: 
+	/** \brief message data:
 	Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
 	Vec3 = "Scale"			- Scale is changed for SceneObject
 	Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
@@ -459,7 +572,7 @@ namespace GASS
 	class TransformationNotifyMessage : public BaseMessage
 	{
 	public:
-		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) : 
+		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
 		  Vec3 GetPosition() const {return m_Position;}
 		  Quaternion  GetRotation() const {return m_Rotation;}
@@ -474,7 +587,7 @@ namespace GASS
 	class UnloadComponentsMessage : public BaseMessage
 	{
 	public:
-		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) : 
+		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay)
 		  {
 
@@ -487,7 +600,7 @@ namespace GASS
 	class LoadGFXComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) : 
+		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
 		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
 		  void* GetUserData() const {return m_UserData;}
@@ -501,7 +614,7 @@ namespace GASS
 	class LoadPhysicsComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) : 
+		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
 		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
 	private:
@@ -513,7 +626,7 @@ namespace GASS
 	class LoadNetworkComponentsMessage : public BaseMessage
 	{
 	public:
-		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) : 
+		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
 		  SceneManagerPtr GetNetworkSceneManager() const {return m_NetworkSceneManager;}
 	private:
@@ -526,7 +639,7 @@ namespace GASS
 	class ParentChangedMessage : public BaseMessage
 	{
 	public:
-		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) : 
+		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay)
 		  {
 
@@ -541,7 +654,7 @@ namespace GASS
 	class NetworkPackage
 	{
 	public:
-		NetworkPackage() 
+		NetworkPackage()
 		{}
 		NetworkPackage(int id) : Id(id)
 		{}
@@ -557,8 +670,8 @@ namespace GASS
 	{
 
 	public:
-		NetworkSerializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
-		BaseMessage( sender_id , delay), 
+		NetworkSerializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		BaseMessage( sender_id , delay),
 		m_Package(package),
 		m_TimeStamp(time_stamp){}
 		NetworkPackagePtr GetPackage() const {return m_Package;}
@@ -573,8 +686,8 @@ namespace GASS
 	class NetworkDeserializeMessage : public BaseMessage
 	{
 	public:
-		NetworkDeserializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) : 
-		BaseMessage( sender_id , delay), 
+		NetworkDeserializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		BaseMessage( sender_id , delay),
 		m_Package(package),
 		m_TimeStamp(time_stamp){}
 		NetworkPackagePtr GetPackage() const {return m_Package;}
