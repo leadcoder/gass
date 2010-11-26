@@ -118,9 +118,9 @@ namespace GASS
 		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false); 
 
 		//register RPC
-		ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterObject", int, RakNetBaseReplica, EnterObject, const char *client_address, RakNet::AutoRPC* networkCaller);
-
-		
+		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
+		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
 	}
 
 

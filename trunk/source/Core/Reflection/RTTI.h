@@ -45,7 +45,6 @@ namespace GASS
 	/**
 	RTTI class used to store properties for classes
 	*/
-
 	class GASSCoreExport RTTI
 	{
 
@@ -63,6 +62,7 @@ namespace GASS
 		{
 			if ( reflection_func)
 				reflection_func();
+
 		}
 
 		/**

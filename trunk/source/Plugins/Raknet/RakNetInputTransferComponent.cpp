@@ -92,7 +92,7 @@ namespace GASS
 		else
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientEnterVehicle,ClientEnterVehicleMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientRemoteMessage,ClientRemoteMessage,0));
 		}
 //		ARPC_REGISTER_CPP_FUNCTION2(raknet->GetRPC(), "RakNetInputTransferComponent::EnterObject", int, RakNetInputTransferComponent, EnterObject, const char *str, RakNet::AutoRPC* networkCaller);
 	}
@@ -172,20 +172,19 @@ namespace GASS
 		return 0;
 	}*/
 
-	void RakNetInputTransferComponent::OnClientEnterVehicle(ClientEnterVehicleMessagePtr message)
+	void RakNetInputTransferComponent::OnClientRemoteMessage(ClientRemoteMessagePtr message)
 	{
 		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkMasterComponent>();
 		if(comp)
 		{
-			comp->GetReplica()->EnterObject(message->GetClient().c_str(),0);
+			comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);
 		}
 		else
 		{
 			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkChildComponent>();
 			if(comp)
 			{
-				comp->GetReplica()->EnterObject(message->GetClient().c_str(),0);
-		//		raknet->GetRPC()->SetRecipientObject(comp->GetReplica()->GetNetworkID());
+				comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);
 			}
 		}
 	}

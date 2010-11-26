@@ -50,7 +50,7 @@ namespace GASS
 		
 	}
 	
-	int RakNetBaseReplica::EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller) 
+/*	int RakNetBaseReplica::EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller) 
 	{
 		if(m_Owner)
 		{
@@ -98,5 +98,40 @@ namespace GASS
 			}
 		}
 		return 1;
+	}*/
+
+	int RakNetBaseReplica::RemoteMessage(const char *client_address, const char *message , RakNet::AutoRPC* networkCaller) 
+	{
+		if(m_Owner)
+		{
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			if (networkCaller==0)
+			{
+				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
+				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteMessage", client_address,message);
+				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+				//std::cout << "EnterObject called from server" <<std::endl;
+			}
+			else
+			{
+				if(std::string(client_address)  == std::string(raknet->GetRakPeer()->GetInternalID().ToString()))
+				{
+					
+					if(std::string(message) == "EnterVehicle")
+					{
+						MessagePtr enter_msg(new EnterVehicleMessage());
+						m_Owner->PostMessage(enter_msg);
+					}
+					else if(std::string(message) == "ExitVehicle")
+					{
+						MessagePtr exit_msg(new ExitVehicleMessage());
+						m_Owner->PostMessage(exit_msg);
+					}
+				}
+				//std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;
+			}
+		}
+		return 1;
 	}
+
 }

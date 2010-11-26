@@ -89,8 +89,8 @@ namespace GASS
 		void OnInput(ControllerMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
 		std::string GetControlSetting() const {return m_ControlSettingName;}
-
-		void OnClientEnterVehicle(ClientEnterVehicleMessagePtr message);
+		//void OnClientEnterVehicle(ClientEnterVehicleMessagePtr message);
+		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		
 		
 		//ITaskListener

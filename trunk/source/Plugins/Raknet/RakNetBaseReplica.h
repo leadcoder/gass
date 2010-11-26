@@ -20,9 +20,9 @@
 
 #ifndef RAKNET_BASE_REPLICA_H
 #define RAKNET_BASE_REPLICA_H
+#include "AutoRPC.h"
 #include "PacketPriority.h"
 #include "Replica.h"
-#include "AutoRPC.h"
 #include "StringTable.h"
 #include "BitStream.h"
 #include "GetTime.h"
@@ -31,7 +31,8 @@
 #include "Core/Math/Quaternion.h"
 
 class ReplicaManager;
-	
+
+
 namespace GASS
 {
 	class SceneObject;
@@ -43,8 +44,9 @@ namespace GASS
 		RakNetBaseReplica();
 		virtual ~RakNetBaseReplica();
 		//Remote calls
-		int AUTO_RPC_CALLSPEC EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
-		int AUTO_RPC_CALLSPEC ExitVehicle(const char *client_address, RakNet::AutoRPC* networkCaller) 
+		//int AUTO_RPC_CALLSPEC EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
+		//int AUTO_RPC_CALLSPEC ExitVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
+		int AUTO_RPC_CALLSPEC RemoteMessage(const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
 	protected:
 		SceneObjectPtr m_Owner;
 	};

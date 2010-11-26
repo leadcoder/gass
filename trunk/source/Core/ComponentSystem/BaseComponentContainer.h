@@ -83,12 +83,12 @@ namespace GASS
 		std::string GetTemplateName() const;
 
 
-		/**Set whether this container should be serilized or not, by defaulit
-		all containers are serialized*/
+		/**Set whether this container should be serialized or not, 
+		by default all containers are serialized*/
 		void SetSerialize(bool value);
 
-		/**Get whether this container should be serilized or not, by defaulit
-		all containers are serialized*/
+		/**Get whether this container should be serialized or not, 
+		by default all containers are serialized*/
 		bool GetSerialize()  const;
 	protected:
 		//Help functions for template creation

@@ -32,9 +32,12 @@ namespace GASS
 {
 	class Scenario;
 	class ScenarioScene;
+	class SceneObject;
 
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	
 
 	/**
 	Deafult message used by the SimSystemManager
@@ -446,7 +449,7 @@ namespace GASS
 
 	//Script messages
 	/**
-	Lua script state is disterbuted through this message
+	Lua script state is distributed through this message
 	*/
 	class LuaScriptStateMessage : public BaseMessage
 	{
@@ -454,7 +457,6 @@ namespace GASS
 		LuaScriptStateMessage(void *state, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_State(state){}
-
 		 void* GetState() const {return m_State;}
 	private:
 		void *m_State;
@@ -476,6 +478,5 @@ namespace GASS
 		std::string m_Name;
 	};
 	typedef boost::shared_ptr<GUIScriptMessage> GUIScriptMessagePtr;
-
 }
 #endif
