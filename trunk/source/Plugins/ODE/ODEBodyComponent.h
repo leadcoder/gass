@@ -93,7 +93,9 @@ namespace GASS
 		void static BodyMovedCallback(dBodyID id);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
+		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);
+		void OnWorldRotationChanged(WorldRotationMessagePtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
 	

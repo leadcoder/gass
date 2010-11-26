@@ -34,7 +34,7 @@
 
 namespace GASS
 {
-	BaseComponentContainerTemplate::BaseComponentContainerTemplate()
+	BaseComponentContainerTemplate::BaseComponentContainerTemplate() : m_Serialize(true)
 	{
 
 	}
@@ -56,6 +56,17 @@ namespace GASS
 	{
 		RegisterProperty<std::string>("Name", &GASS::BaseComponentContainerTemplate::GetName, &GASS::BaseComponentContainerTemplate::SetName);
 		RegisterProperty<std::string>("Inheritance", &GASS::BaseComponentContainerTemplate::GetInheritance, &GASS::BaseComponentContainerTemplate::SetInheritance);
+		RegisterProperty<bool>("Serialize", &GASS::BaseComponentContainerTemplate::GetSerialize, &GASS::BaseComponentContainerTemplate::SetSerialize);
+	}
+
+	bool BaseComponentContainerTemplate::GetSerialize() const
+	{
+		return m_Serialize;
+	}
+
+	void BaseComponentContainerTemplate::SetSerialize(bool value) 
+	{
+		m_Serialize = value;
 	}
 
 	ComponentPtr BaseComponentContainerTemplate::GetComponent(const std::string &name)

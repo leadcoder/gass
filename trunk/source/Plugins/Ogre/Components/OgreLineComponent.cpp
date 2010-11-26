@@ -179,7 +179,7 @@ namespace GASS
 			{
 				op = Ogre::RenderOperation::OT_LINE_LIST;
 			}
-			if(m_Type == "point_list")
+			else if(m_Type == "point_list")
 			{
 				op = Ogre::RenderOperation::OT_POINT_LIST;
 			}

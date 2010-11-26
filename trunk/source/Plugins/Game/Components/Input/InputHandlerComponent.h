@@ -54,6 +54,7 @@ namespace GASS
 		std::string GetControlSetting() const;
 
 		std::string m_ControlSetting;
+		bool m_Empty;
 	};
 
 	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;

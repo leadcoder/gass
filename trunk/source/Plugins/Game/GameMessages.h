@@ -165,5 +165,19 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<OutOfArmorMessage> OutOfArmorMessagePtr;
 
+	/**
+		Send message to client to enter object
+	*/
+	class ClientEnterVehicleMessage : public BaseMessage
+	{
+	public:
+		ClientEnterVehicleMessage(const std::string client, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) , m_Client(client){}
+		std::string GetClient() const {return m_Client;}
+	private:
+		std::string m_Client;
+	};
+	typedef boost::shared_ptr<ClientEnterVehicleMessage> ClientEnterVehicleMessagePtr;
+
 }
 #endif

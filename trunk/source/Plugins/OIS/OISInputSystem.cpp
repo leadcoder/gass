@@ -108,7 +108,8 @@ namespace GASS
 				for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) 
 				{
 					OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, bufferedJoy ));
-					//joy->setEventCallback(this);
+					joy->setEventCallback(this);
+					joy->setBuffered(true);
 					joy->capture();
 					Log::Print("OISInputSystem: Joystick ID #%d '%s' - %d axes, %d buttons, %d hats",joy->getID(), joy->vendor().c_str(), joy->getNumberOfComponents(OIS::OIS_Axis), joy->getNumberOfComponents(OIS::OIS_Button), joy->getNumberOfComponents(OIS::OIS_POV));
 					m_Joys.push_back(joy);

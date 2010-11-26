@@ -60,12 +60,14 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 
 
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/Utils/TextBox.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
 #include <osgDB/ReadFile> 
@@ -79,7 +81,7 @@ namespace GASS
 
 	int OSGGraphicsSystem::m_ReceivesShadowTraversalMask = 0x40;
 	int OSGGraphicsSystem::m_CastsShadowTraversalMask = 0x80;
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml")
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml"), m_DebugTextBox(new TextBox())
 	{
 
 
@@ -105,6 +107,15 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
+	}
+
+	void OSGGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
+	{
+		std::string debug_text = message->GetText();
+		
+		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
+
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
@@ -112,6 +123,8 @@ namespace GASS
 
 		osgViewer::ViewerBase::Views views;
 		m_Viewer->getViews(views);
+
+		root->addChild(&m_DebugTextBox->getGroup());
 
 		//set same scene in all viewports for the moment
 		for(int i = 0; i < views.size(); i++)
@@ -126,7 +139,19 @@ namespace GASS
 
 		m_Viewer = new osgViewer::CompositeViewer();
 
-
+		
+		std::string full_path;
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(!rs->GetFullPath("arial.ttf",full_path))
+		{
+			Log::Warning("Failed to find texture:%s",full_path.c_str());
+		}
+		
+		
+		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
+		m_DebugTextBox->setFont(full_path);
+		m_DebugTextBox->setTextSize(12);
+		
 		
 
 
@@ -377,11 +402,13 @@ namespace GASS
 		static int tick = 0;
 		m_Viewer->frame(delta_time);
 
+
 		if(m_Viewer->done())
 		{
 			//Exit
 		//	Log::Error("Exit");
 		}
+		m_DebugTextBox->setText("");
 		//WindowEventUtilities::messagePump();
 		//m_Root->renderOneFrame();
 	}

@@ -30,6 +30,7 @@
 #include "Sim/Common.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Plugins/Game/GameMessages.h"
 
 
 namespace GASS
@@ -65,6 +66,7 @@ namespace GASS
 		float Value;
 		unsigned int TimeStamp;
 	};
+
 	typedef boost::shared_ptr<InputPackage> InputPackagePtr;
 
 	class SceneObject;
@@ -79,20 +81,24 @@ namespace GASS
 		virtual ~RakNetInputTransferComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
 	private:
 		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
-		void SetControlSetting(const std::string &controlsetting) {m_ControlSetting = controlsetting;}
-		std::string GetControlSetting() const {return m_ControlSetting;}
+		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
+		std::string GetControlSetting() const {return m_ControlSettingName;}
 
+		void OnClientEnterVehicle(ClientEnterVehicleMessagePtr message);
+		
 		
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 
-		std::string m_ControlSetting;
+		std::string m_ControlSettingName;
+		ControlSetting* m_ControlSetting;
 	};
 	typedef boost::shared_ptr<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
 }

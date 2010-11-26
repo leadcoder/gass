@@ -252,8 +252,9 @@ namespace GASS
 			osg::Vec4Array::iterator citr = colors->begin();
 
 			
-			Vec3 start_pos = m_ControlPoints[0].pos;
-			lc->SetPosition(start_pos);
+			//Vec3 start_pos = m_ControlPoints[0].pos;
+			//lc->SetWorldPosition(start_pos);
+			Vec3 this_pos = lc->GetWorldPosition();
 
 
 			Vec3 offset = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_HeightOffset;
@@ -261,7 +262,7 @@ namespace GASS
 			float tex_coord = 0;
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
-				Vec3 pos = m_ControlPoints[i].pos - start_pos;
+				Vec3 pos = m_ControlPoints[i].pos;// - this_pos;
 				pos = pos + offset;
 				tex_coord  = pos.FastLength();
 

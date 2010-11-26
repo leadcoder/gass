@@ -188,15 +188,20 @@ namespace GASS
 
 	void TopCamControlComponent::UpdateTopCam(double delta)
 	{
-		float speed_factor = 0;
-		m_Rot = Vec3(0,-MY_PI/2.f,0);
-		speed_factor = m_CurrentWindowSize;
-
 		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
 		Vec3 up = scene->GetSceneUp();
 		Vec3 north = scene->GetSceneNorth();
 		Vec3 east = scene->GetSceneEast();
 
+		float speed_factor = 0;
+		if(up.y > 0)
+			m_Rot = Vec3(0,-MY_PI/2.f,0);
+		else if(up.z > 0)
+			m_Rot = Vec3(0,0,0);
+		speed_factor = m_CurrentWindowSize;
+
+		
+		
 		Vec3 filter;
 		filter.x = abs(north.x) + abs(east.x);
 		filter.y = abs(north.y) + abs(east.y);

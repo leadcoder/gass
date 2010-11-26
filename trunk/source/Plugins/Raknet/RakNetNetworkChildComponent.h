@@ -63,6 +63,7 @@ namespace GASS
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {return m_PartId;}
 	private:
+		void OnGotReplica(ComponentGotReplicaMessagePtr message);
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		void OnNewChildReplica(ChildReplicaCreatedMessagePtr message);

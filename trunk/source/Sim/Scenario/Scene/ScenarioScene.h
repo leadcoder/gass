@@ -242,5 +242,6 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
 }
 

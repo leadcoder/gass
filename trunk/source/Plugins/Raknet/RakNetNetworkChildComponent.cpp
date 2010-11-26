@@ -66,6 +66,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnLoad,LoadNetworkComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaMessage,0));
+		
 	}
 
 	void RakNetNetworkChildComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
@@ -107,10 +109,16 @@ namespace GASS
 		{
 			m_Replica = replica;
 			m_Replica->SetOwner(GetSceneObject());
-			SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+			GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaMessage(m_Replica)));
+			//this is not allowed, post to finalize object
+			//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
 		}
 	}
 
+	void RakNetNetworkChildComponent::OnGotReplica(ComponentGotReplicaMessagePtr message)
+	{
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+	}
 
 	void RakNetNetworkChildComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{

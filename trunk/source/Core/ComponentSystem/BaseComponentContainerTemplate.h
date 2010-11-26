@@ -84,6 +84,15 @@ namespace GASS
 		//print object
 		void DebugPrint(int tc = 0);
 
+
+		/**Set whether this container should be serialized or not, by defaulit
+		all containers are serialized*/
+		void SetSerialize(bool value);
+
+		/**Get whether this container should be serialized or not, by defaulit
+		all containers are serialized*/
+		bool GetSerialize()  const;
+
 	protected:
 
 		//Its possible to override this function if custom creation proccess is needed.
@@ -107,6 +116,7 @@ namespace GASS
 		ComponentContainerTemplateVector m_ComponentContainerVector;
 		std::string m_Name;
 		std::string m_Inheritance;
+		bool m_Serialize;
 		ComponentContainerTemplateWeakPtr m_Parent;
 	};
 	typedef boost::shared_ptr<BaseComponentContainerTemplate> BaseComponentContainerTemplatePtr;

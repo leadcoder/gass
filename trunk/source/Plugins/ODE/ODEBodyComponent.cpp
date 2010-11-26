@@ -47,9 +47,6 @@ namespace GASS
 		m_EffectJoints(true),
 		m_Active(true)
 	{
-
-
-
 	}
 
 	ODEBodyComponent::~ODEBodyComponent()
@@ -73,7 +70,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLoad,LoadPhysicsComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsMassMessage,0));
 	}
@@ -85,6 +84,27 @@ namespace GASS
 		{
 			Vec3 pos = message->GetPosition();
 			SetPosition(pos);
+		}
+	}
+
+
+	void ODEBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		{
+			Vec3 pos = message->GetPosition();
+			SetPosition(pos);
+		}
+	}
+
+	void ODEBodyComponent::OnWorldRotationChanged(WorldRotationMessagePtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		{
+			Quaternion rot = message->GetRotation();
+			SetRotation(rot);
 		}
 	}
 

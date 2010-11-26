@@ -43,7 +43,7 @@
 #include "GetTime.h"
 
 
-#define _DEBUG_LTC_
+//#define _DEBUG_LTC_
 
 namespace GASS
 {

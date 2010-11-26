@@ -35,6 +35,7 @@
 #include "RakNetMasterReplica.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
+#include "Plugins/Game/GameMessages.h"
 //#include "RakNetReplicaMember.h"
 
 
@@ -259,5 +260,30 @@ namespace GASS
 		//raknet->GetReplicaManager()->SignalSerializeNeeded(this, playerId, true);
 		return REPLICA_PROCESSING_DONE;
 	}
-
+	//handle RPC
+	/*int RakNetMasterReplica::EnterObject(const char *str, RakNet::AutoRPC* networkCaller) 
+	{
+		if(m_Owner)
+		{
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			if (networkCaller==0)
+			{
+				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
+				raknet->GetRPC()->Call("RakNetMasterReplica::EnterObject", str);
+				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+				std::cout << "EnterObject called from server" <<std::endl;
+			}
+			else
+			{
+				if(std::string(str)  == std::string(raknet->GetRakPeer()->GetInternalID().ToString()))
+				{
+					MessagePtr enter_msg(new EnterVehicleMessage());
+					m_Owner->PostMessage(enter_msg);
+				}
+				std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;
+			}
+		}
+		//printf("object member a=%i memberVariable=%i sender=%s\n", a, memberVariable, networkCaller==0 ? "N/A" : networkCaller->GetLastSenderAddress().ToString());
+		return 1;
+	}*/
 }

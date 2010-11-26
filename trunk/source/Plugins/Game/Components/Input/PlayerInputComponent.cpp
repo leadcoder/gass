@@ -79,14 +79,6 @@ namespace GASS
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllerMessage));
 	}
 
-
-	/*void PlayerInputComponent::OnExit(AnyMessagePtr message)
-	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(CONTROLLER_MESSAGE_NEW_INPUT, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnInput,ControllerMessage));
-	}*/
-
 	void PlayerInputComponent::OnInput(ControllerMessagePtr message)
 	{
 		//relay message

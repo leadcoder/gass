@@ -22,6 +22,11 @@
 //#include "Plugins/RakNet/RakNetBase.h"
 #include "RakNetInputTransferComponent.h"
 
+#include "RakNetNetworkMasterComponent.h"
+#include "RakNetNetworkChildComponent.h"
+#include "RakNetMasterReplica.h"
+#include "RakNetChildReplica.h"
+
 
 
 #include "Core/Math/Quaternion.h"
@@ -42,10 +47,12 @@
 #include "Sim/Components/Graphics/ICameraComponent.h"
 
 #include "GetTime.h"
+#include "rakpeerinterface.h"
+
 
 namespace GASS
 {
-	RakNetInputTransferComponent::RakNetInputTransferComponent() 
+	RakNetInputTransferComponent::RakNetInputTransferComponent() : m_ControlSetting(NULL)
 	{
 		
 	}
@@ -67,35 +74,35 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnLoad,LoadNetworkComponentsMessage,1));
+
 	}
 
 	void RakNetInputTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
-		//if(!nc)
-		//	Log::Error("RakNetInputTransferComponent require RakNetNetworkComponent to be present");
+
+		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
+		if(m_ControlSetting == NULL)
+			Log::Error("could not find control settings: %s in RakNetInputTransferComponent",m_ControlSettingName.c_str());
+		
 		if(!raknet->IsServer())
 		{
-			/*ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-			if(cs)
-				cs->GetMessageManager()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
-			else 
-				Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());*/
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
 		}
 		else
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientEnterVehicle,ClientEnterVehicleMessage,0));
 		}
+//		ARPC_REGISTER_CPP_FUNCTION2(raknet->GetRPC(), "RakNetInputTransferComponent::EnterObject", int, RakNetInputTransferComponent, EnterObject, const char *str, RakNet::AutoRPC* networkCaller);
 	}
 
 	void RakNetInputTransferComponent::OnInput(ControllerMessagePtr message)
 	{
 		RakNetTime time_stamp = RakNet::GetTime();
 		std::string controller = message->GetController();
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		int index = cs->m_NameToIndex[controller];
+		
+		int index = m_ControlSetting->m_NameToIndex[controller];
 		float value = message->GetValue();
 		boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,index,value));
 		MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
@@ -119,8 +126,8 @@ namespace GASS
 		{
 			NetworkPackagePtr package = message->GetPackage();
 			InputPackagePtr input_package = boost::shared_dynamic_cast<InputPackage>(package);
-			ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-			std::string controller = cs->m_IndexToName[input_package->Index];
+			
+			std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
 			MessagePtr message(new ControllerMessage(controller,input_package->Value));
 			GetSceneObject()->PostMessage(message);
 			//std::cout << "got input from client" << std::endl;
@@ -130,6 +137,57 @@ namespace GASS
 	TaskGroup RakNetInputTransferComponent::GetTaskGroup() const 
 	{
 		return NETWORK_TASK_GROUP;
+	}
+
+	/*int RakNetInputTransferComponent::EnterObject(const char *str, RakNet::AutoRPC* networkCaller) 
+	{
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if (networkCaller==0)
+		{
+			RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkMasterComponent>();
+			if(comp)
+			{
+				raknet->GetRPC()->SetRecipientObject(comp->GetReplica()->GetNetworkID());
+			}
+			else
+			{
+				RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkChildComponent>();
+				if(comp)
+				{
+					raknet->GetRPC()->SetRecipientObject(comp->GetReplica()->GetNetworkID());
+				}
+			}
+			raknet->GetRPC()->Call("RakNetInputTransferComponent::EnterObject", str);
+			raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+			std::cout << "EnterObject called from server" <<std::endl;
+		
+		}
+		else
+		{
+			MessagePtr enter_msg(new EnterVehicleMessage());
+			GetSceneObject()->PostMessage(enter_msg);
+			std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;
+		}
+		//printf("object member a=%i memberVariable=%i sender=%s\n", a, memberVariable, networkCaller==0 ? "N/A" : networkCaller->GetLastSenderAddress().ToString());
+		return 0;
+	}*/
+
+	void RakNetInputTransferComponent::OnClientEnterVehicle(ClientEnterVehicleMessagePtr message)
+	{
+		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkMasterComponent>();
+		if(comp)
+		{
+			comp->GetReplica()->EnterObject(message->GetClient().c_str(),0);
+		}
+		else
+		{
+			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkChildComponent>();
+			if(comp)
+			{
+				comp->GetReplica()->EnterObject(message->GetClient().c_str(),0);
+		//		raknet->GetRPC()->SetRecipientObject(comp->GetReplica()->GetNetworkID());
+			}
+		}
 	}
 }
 

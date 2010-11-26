@@ -40,7 +40,7 @@
 
 namespace GASS
 {
-	InputHandlerComponent::InputHandlerComponent()
+	InputHandlerComponent::InputHandlerComponent() : m_Empty(true)
 	{
 
 	}
@@ -53,9 +53,12 @@ namespace GASS
 	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
+		if(cs && m_Empty)
+		{
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllerMessage,0));
-		else
+			m_Empty = false;
+		}
+		else if(cs == NULL)
 			Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());
 
 
@@ -96,6 +99,7 @@ namespace GASS
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
+		m_Empty = true;
 	}
 
 	void InputHandlerComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -110,19 +114,6 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
 	}
-
-	/*void InputHandlerComponent::OnEnter(AnyMessagePtr message)
-	{
-		Vec3 player_pos = boost::any_cast<Vec3>(message->GetData("PlayerPosition"));
-		float dist= (player_pos - my_pos).Length();
-		//Check if this pos is within enter radius
-		if(dist < 10)
-		{
-			//Enter vehicle by sending enter messeage
-			AnyMessagePtr exit_message(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
-			GetSceneObject()->SendImmediate(exit_message);
-		}
-	}*/
 
 	void InputHandlerComponent::OnInput(ControllerMessagePtr message)
 	{

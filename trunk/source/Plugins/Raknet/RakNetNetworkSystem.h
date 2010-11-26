@@ -28,6 +28,7 @@
 #include "ReplicaEnums.h"
 #include "ReplicaManager.h"
 #include "BitStream.h"
+#include "AutoRPC.h"
 
 //GASS includes
 #include "Core/MessageSystem/IMessage.h"
@@ -99,6 +100,7 @@ namespace GASS
 		static std::string ReadString(RakNet::BitStream *inBitStream);
 		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
 		ScenarioScenePtr GetScene() {return ScenarioScenePtr(m_Scene);}
+		RakNet::AutoRPC* GetRPC() {return  &m_AutoRPC;}
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -112,6 +114,7 @@ namespace GASS
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
+		
 	private:
 		//Helpers
 		void Stop();
@@ -146,6 +149,8 @@ namespace GASS
 		bool m_ScenarioIsRunning;
 		ClientDataMap m_ClientMap;
 		ScenarioSceneWeakPtr m_Scene;
+
+		RakNet::AutoRPC m_AutoRPC;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

@@ -29,7 +29,7 @@
 #include <osgViewer/Viewer>
 #include <osgShadow/ShadowTechnique>
 
-
+class TextBox;
 namespace GASS
 {
 	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem, public ITaskListener
@@ -54,6 +54,7 @@ namespace GASS
 		static int m_CastsShadowTraversalMask;
 
 	protected:
+		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
 		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
@@ -76,6 +77,8 @@ namespace GASS
 		bool m_CreateMainWindowOnInit;
 		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
 		std::string m_ShadowSettingsFile;
+
+		TextBox* m_DebugTextBox;
 		
 	};
 	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;

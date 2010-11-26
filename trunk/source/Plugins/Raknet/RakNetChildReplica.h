@@ -25,14 +25,10 @@
 #include "StringTable.h"
 #include "BitStream.h"
 #include "GetTime.h"
-//#include "Network/INetworkObject.h"
 #include "Core/Utils/Log.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
-//#include "RakNetNetworkComponent.h"
-//#include "RakNetReplicaMember.h"
-
-
+#include "RakNetBaseReplica.h"
 class ReplicaManager;
 	
 namespace GASS
@@ -40,18 +36,14 @@ namespace GASS
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	class RakNetChildReplica  : public Replica
+	class RakNetChildReplica  : public RakNetBaseReplica
 	{
 	public:
 		RakNetChildReplica(ReplicaManager* manager);
 		virtual ~RakNetChildReplica();
-		//virtual void Update(double delta);
-		//virtual bool IsMaster();
-		//virtual void CreateaBaseObject();
 		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
 		void LocalInit(SceneObjectPtr object);
-		//RakNetReplicaMember* GetReplica(){return m_Replica;}
-
+		
 		//Replica member functions
 		virtual ReplicaReturnResult SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp );
 		virtual ReplicaReturnResult SendDestruction(RakNet::BitStream *outBitStream, SystemAddress systemAddress, bool *includeTimestamp);
@@ -61,10 +53,6 @@ namespace GASS
 		virtual ReplicaReturnResult Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		virtual ReplicaReturnResult Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
 		
-		/*virtual bool IsNetworkIDAuthority(void)
-		{
-			return true;
-		}*/
 		virtual int GetSortPriority(void) const 
 		{
 			return 0;
@@ -75,7 +63,6 @@ namespace GASS
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-//		std::string GetTemplateName() {return m_TemplateName;}
 		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {m_PartId;}
@@ -84,17 +71,11 @@ namespace GASS
 	protected:
 		AbstractProperty* GetProperty(const std::string &prop_name);
 		void SerializeProperties(RakNet::BitStream *bit_stream);
-		//unsigned char m_DataToReceive;
-		//unsigned char m_DataToSend;
-		//std::string m_TemplateName;
 		bool m_AllowRemoteOwner;
 	private:
 		SystemAddress m_OwnerSystemAddress;
-		//NetworkID m_ActionHandlerPlayerId;
-		//RakNetReplicaMember* m_Replica;
 		NetworkID m_PartOfId;
 		ReplicaManager* m_Manager;
-		SceneObjectPtr m_Owner;
 		int m_PartId;
 	protected:
 	};
