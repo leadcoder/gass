@@ -103,6 +103,9 @@ namespace GASS
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
+
+		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void TopCamControlComponent::OnChangeCamera(MessagePtr message)

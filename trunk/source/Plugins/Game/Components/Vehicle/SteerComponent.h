@@ -52,7 +52,10 @@ namespace GASS
 		float GetMaxSteerVelocity() const {return m_MaxSteerVelocity;}
 		void SetMaxSteerAngle(float value) {m_MaxSteerAngle = value;}
 		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
+		void SetSpeedMultiplier(float value) {m_Speed = value;}
+		float GetSpeedMultiplier() const {return m_Speed;}
 
+		float m_Speed;
 		float m_SteerForce;
 		float m_MaxSteerVelocity;
 		float m_MaxSteerAngle;

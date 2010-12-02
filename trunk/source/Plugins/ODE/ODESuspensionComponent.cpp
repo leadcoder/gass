@@ -124,6 +124,8 @@ namespace GASS
 		m_SceneManager = scene_manager;
 
 		CreateJoint();
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
+	
 	}
 
 	void ODESuspensionComponent::CreateJoint()
@@ -170,7 +172,7 @@ namespace GASS
 	void ODESuspensionComponent::UpdateJointAxis()
 	{
 		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
-		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		//LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 
 		Quaternion rot = location1->GetRotation();
 
@@ -180,8 +182,8 @@ namespace GASS
 		rot.ToRotationMatrix(rot_mat);
 		ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 
-		Vec3 pos_b1 = location1->GetPosition();
-		Vec3 pos_b2 = location2->GetPosition();
+		//Vec3 pos_b1 = location1->GetPosition();
+		//Vec3 pos_b2 = location2->GetPosition();
 
 			if (m_Axis1.Length() != 0)
 				dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
@@ -315,14 +317,14 @@ namespace GASS
 	void ODESuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 	{
 		MessagePtr joint_message;
-		/*if(m_ODEJoint)
+		if(m_ODEJoint)
 		{
-			float angle = dJointGetHingeAngle(m_ODEJoint);
-			float angle_rate = dJointGetHingeAngleRate(m_ODEJoint);
+			float angle = dJointGetHinge2Angle1(m_ODEJoint);
+			float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
 			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
 			if(joint_message)
 				GetSceneObject()->PostMessage(joint_message);
-		}*/
+		}
 	}
 
 	void ODESuspensionComponent::UpdateSwayBars(VelocityNotifyMessagePtr message)

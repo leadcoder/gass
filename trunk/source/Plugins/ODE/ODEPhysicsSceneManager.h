@@ -61,11 +61,12 @@ namespace GASS
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-
+		bool IsActive()const {return !m_Paused;}
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		void SetTaskGroup(TaskGroup value);

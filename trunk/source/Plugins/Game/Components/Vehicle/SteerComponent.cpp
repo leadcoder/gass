@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1),m_CurrentAngle(0),m_DesiredAngle(0),m_MaxSteerAngle(45)
+	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1),m_CurrentAngle(0),m_DesiredAngle(0),m_MaxSteerAngle(45),m_Speed(1)
 	{
 
 	}
@@ -53,6 +53,8 @@ namespace GASS
 		RegisterProperty<float>("SteerForce", &SteerComponent::GetSteerForce, &SteerComponent::SetSteerForce);
 		RegisterProperty<float>("MaxSteerVelocity", &SteerComponent::GetMaxSteerVelocity, &SteerComponent::SetMaxSteerVelocity);
 		RegisterProperty<float>("MaxSteerAngle", &SteerComponent::GetMaxSteerAngle, &SteerComponent::SetMaxSteerAngle);
+		RegisterProperty<float>("SpeedMultiplier", &SteerComponent::GetSpeedMultiplier, &SteerComponent::SetSpeedMultiplier);
+		
 
 	}
 
@@ -98,7 +100,7 @@ namespace GASS
 	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
 	{
 		m_CurrentAngle = message->GetAngle();
-		float angular_vel = (m_DesiredAngle-m_CurrentAngle);
+		float angular_vel = (m_DesiredAngle-m_CurrentAngle)*m_Speed;
 
 		if(angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
 		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;

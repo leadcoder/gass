@@ -90,6 +90,18 @@ namespace GASS
 			const Quaternion& rkA, const Quaternion& rkB,
 			const Quaternion& rkQ);
 
+		friend std::ostream& operator << (std::ostream& os, const Quaternion& q)
+		{
+			os << q.x << " " << q.y << " " << q.z << " " << q.w;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, Quaternion& q)
+		{
+			os >> q.x >>  q.y >> q.z >> q.w;
+			return os;
+		}
+
 		// cutoff for sine near zero
 		static const Float ms_fEpsilon;
 

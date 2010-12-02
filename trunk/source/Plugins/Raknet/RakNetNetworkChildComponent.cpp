@@ -52,6 +52,7 @@ namespace GASS
 
 	RakNetNetworkChildComponent::~RakNetNetworkChildComponent()
 	{
+		
 
 	}
 
@@ -122,7 +123,12 @@ namespace GASS
 
 	void RakNetNetworkChildComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-	
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(raknet->IsServer())
+		{
+			delete m_Replica;
+			m_Replica = NULL;
+		}
 	}
 
 	void RakNetNetworkChildComponent::OnSerialize(NetworkSerializeMessagePtr message)
@@ -157,7 +163,7 @@ namespace GASS
 			int size = m_SerializePackages[i]->GetSize();
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
-		m_SerializePackages.clear();
+		//m_SerializePackages.clear();
 	}
 
 	void RakNetNetworkChildComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )

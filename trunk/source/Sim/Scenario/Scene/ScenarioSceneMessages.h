@@ -169,6 +169,21 @@ namespace GASS
 		void *m_UserData;
 	};
 	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
+
+
+		///////Physics messages/////////////////
+	
+	class ActivatePhysicsMessage : public BaseMessage
+	{
+	public:
+		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_Activate(activate){}
+		  int Activate() const {return m_Activate;}
+	private:
+		int m_Activate;
+	};
+	typedef boost::shared_ptr<ActivatePhysicsMessage> ActivatePhysicsMessagePtr;
 }
 
 #endif

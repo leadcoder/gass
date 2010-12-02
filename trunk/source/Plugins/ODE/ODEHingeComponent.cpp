@@ -151,8 +151,8 @@ namespace GASS
 		rot.ToRotationMatrix(rot_mat);
 		ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 
-		Vec3 pos_b1 = location1->GetPosition();
-		Vec3 pos_b2 = location2->GetPosition();
+		//Vec3 pos_b1 = location1->GetPosition();
+		//Vec3 pos_b2 = location2->GetPosition();
 
 		if (m_Axis.Length() != 0)
 			dJointSetHingeAxis(m_ODEJoint,m_Axis.x,m_Axis.y,m_Axis.z);

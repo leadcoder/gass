@@ -255,6 +255,23 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 
+		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
+		if(parent && m_RelativeToParent == 1)
+		{
+			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
+		}
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+
+		/*RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(raknet->IsServer())
+		{
+			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		}
+		else
+		{
+
+		}*/
+		
 	}
 
 
@@ -436,6 +453,7 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeMessagePtr message)
 	{
+		//std::cout << "RakNetLocationTransferComponent::OnDeserialize" << std::endl;
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
 			NetworkPackagePtr package = message->GetPackage();

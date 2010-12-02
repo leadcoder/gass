@@ -225,6 +225,11 @@ namespace GASS
 		}
 		dBodySetData(m_ODEBodyComponent, (void*)this);
 
+		if(!scene_manager->IsActive())
+		{
+			//Check if parent has physics
+		}
+
 		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 		SetPosition(location->GetPosition());
 
@@ -518,6 +523,12 @@ namespace GASS
 						Vec3 pos(p[0],p[1],p[2]);
 						pos = pos + trans_vec;
 						child_body->SetPosition(pos);
+
+						//send position message in case of paused physics
+						int from_id = (int) this;
+						MessagePtr pos_msg(new PositionMessage(pos,from_id));
+						child_body->GetSceneObject()->PostMessage(pos_msg);
+
 					}
 
 					/*const dReal *p = dBodyGetPosition(b2);
