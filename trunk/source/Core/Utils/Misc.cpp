@@ -44,30 +44,6 @@ Misc::~Misc()
 
 }
 
-#define MAX_BYTES 100000
-
-std::string Misc::LoadTextFile(const std::string &file_name)
-{
-	FILE* fp;
-	std::string text = "";
-	fp = fopen(file_name.c_str(),"r");
-	if(fp == NULL) return text;
-
-	int num_bytes = 0;
-	bool end_of_file = false;
-	char buffer[MAX_BYTES];
-	while(!feof(fp))
-	{
-		if(num_bytes >= MAX_BYTES) Log::Error("Failed to load textfile:%s",file_name.c_str());
-		fread(&buffer[num_bytes++] ,sizeof(char),1,fp);
-	}
-	buffer[num_bytes-1] = NULL;
-
-	fclose(fp);
-
-	text = buffer;
-	return text;
-}
 
 std::string Misc::RemoveQuotation(char* str)
 {

@@ -40,16 +40,14 @@ namespace GASS
 	SceneObjectManager::SceneObjectManager(ScenarioScenePtr ss)
 	{
 		m_ScenarioScene = ss;
-		m_Root = SceneObjectPtr( new SceneObject());
-		m_Root->SetName("Root");
-		m_Root->SetSceneObjectManager(this);
+
 	}
 
 	SceneObjectManager::~SceneObjectManager()
 	{
-		
+
 	}
-	
+
 	bool SceneObjectManager::LoadXML(const std::string filename)
 	{
 		if(filename =="") return false;
@@ -65,7 +63,7 @@ namespace GASS
 		//LoadXML((TiXmlElement*)xmlDoc);
 		TiXmlElement *objects = xmlDoc->FirstChildElement("Objects");
 		if(objects == NULL) Log::Error("Failed to get Object tag");
-		
+
 		TiXmlElement *object_elem = objects->FirstChildElement();
 		//Loop through each template
 		while(object_elem)
@@ -85,20 +83,20 @@ namespace GASS
 
 	bool SceneObjectManager::SaveXML(const std::string filename)
 	{
-		TiXmlDocument doc;  
-		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
-		doc.LinkEndChild( decl ); 
-			
+		TiXmlDocument doc;
+		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
+		doc.LinkEndChild( decl );
+
 		//SaveXML((TiXmlElement*)&doc);
-		TiXmlElement *som_elem = new TiXmlElement("Objects");  
-		doc.LinkEndChild(som_elem); 
+		TiXmlElement *som_elem = new TiXmlElement("Objects");
+		doc.LinkEndChild(som_elem);
 		IComponentContainer::ComponentContainerIterator iter = m_Root->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
 			child->SaveXML(som_elem);
 		}
-		
+
 		doc.SaveFile(filename.c_str());
 		return true;
 	}
@@ -107,7 +105,7 @@ namespace GASS
 	{
 		TiXmlElement *objects = parent->FirstChildElement("Objects");
 		if(objects == NULL) Log::Error("Failed to get Object tag");
-		
+
 		TiXmlElement *object_elem = objects->FirstChildElement();
 		//Loop through each template
 		while(object_elem)
@@ -124,8 +122,8 @@ namespace GASS
 
 	bool SceneObjectManager::SaveXML(TiXmlElement *parent) const
 	{
-		TiXmlElement *som_elem = new TiXmlElement("Objects");  
-		parent->LinkEndChild(som_elem); 
+		TiXmlElement *som_elem = new TiXmlElement("Objects");
+		parent->LinkEndChild(som_elem);
 		IComponentContainer::ComponentContainerIterator iter = m_Root->GetChildren();
 		while(iter.hasMoreElements())
 		{
@@ -137,14 +135,14 @@ namespace GASS
 
 	void SceneObjectManager::LoadObject(SceneObjectPtr obj)
 	{
-		obj->SetSceneObjectManager(this);
+		obj->SetSceneObjectManager(shared_from_this());
 		obj->OnCreate();
-		
+
 		if(!obj->GetParent()) // we are top level object
 			m_Root->AddChild(obj);
-	
+
 		//Send load message so that all scene manager can initilze it's components
-		
+
 		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(obj));
 		ScenarioScenePtr scene = GetScenarioScene();
 		scene->SendImmediate(load_msg);
@@ -157,7 +155,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			LoadObject(child); 
+			LoadObject(child);
 		}
 	}
 
@@ -194,7 +192,7 @@ namespace GASS
 			{
 				//go->SetParent(parent);
 				parent->AddChild(go);
-				
+
 			}
 			LoadObject(go);
 		}
@@ -210,9 +208,14 @@ namespace GASS
 	{
 		DeleteObject(m_Root);
 		m_Root.reset();
-		m_Root = SceneObjectPtr( new SceneObject());
+		Init();
+	}
+
+	void SceneObjectManager::Init()
+	{
+        m_Root = SceneObjectPtr( new SceneObject());
 		m_Root->SetName("Root");
-		m_Root->SetSceneObjectManager(this);
+		m_Root->SetSceneObjectManager(shared_from_this());
 	}
 
 	void SceneObjectManager::UnloadObject(SceneObjectPtr obj)

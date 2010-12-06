@@ -49,7 +49,7 @@ namespace GASS
 		m_SceneMessageManager(new MessageManager()),
 		m_InstancesFile("instances.xml")
 	{
-		
+
 	}
 
 	ScenarioScene::~ScenarioScene()
@@ -61,12 +61,12 @@ namespace GASS
 	{
 		Log::Print("Scenario scene shutdown started for:%s",GetName().c_str());
 
-		
+
 		m_ObjectManager->Clear();
 
 		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
 		m_SceneMessageManager->SendImmediate(scenario_msg);
-		
+
 		MessagePtr unload_msg(new ScenarioSceneUnloadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 
@@ -75,7 +75,7 @@ namespace GASS
 
 	int ScenarioScene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{
-		return m_SceneMessageManager->RegisterForMessage(type, callback, priority); 
+		return m_SceneMessageManager->RegisterForMessage(type, callback, priority);
 	}
 
 	void ScenarioScene::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
@@ -210,12 +210,12 @@ namespace GASS
 	void ScenarioScene::LoadXML(TiXmlElement *scene_elem)
 	{
 		TiXmlElement *settings = scene_elem->FirstChildElement("SceneSettings");
-		if(settings == NULL) 
+		if(settings == NULL)
 			Log::Error("Failed to get SceneSettings tag");
-		
+
 		BaseReflectionObject::LoadProperties(settings);
 		TiXmlElement *scenemanager = scene_elem->FirstChildElement("SceneManagers");
-		
+
 		if(scenemanager)
 		{
 			scenemanager = scenemanager->FirstChildElement();
@@ -231,16 +231,16 @@ namespace GASS
 	void ScenarioScene::SaveXML(TiXmlElement *parent)
 	{
 		//Create
-		TiXmlElement *scene_elem = new TiXmlElement("ScenarioScene");  
-		parent->LinkEndChild(scene_elem); 
+		TiXmlElement *scene_elem = new TiXmlElement("ScenarioScene");
+		parent->LinkEndChild(scene_elem);
 
 
-		TiXmlElement *settings_elem = new TiXmlElement("SceneSettings");  
-		scene_elem->LinkEndChild(settings_elem); 
+		TiXmlElement *settings_elem = new TiXmlElement("SceneSettings");
+		scene_elem->LinkEndChild(settings_elem);
 
 		BaseReflectionObject::SaveProperties(settings_elem);
 
-		TiXmlElement *sms_elem = new TiXmlElement("SceneManagers");  
+		TiXmlElement *sms_elem = new TiXmlElement("SceneManagers");
 		scene_elem->LinkEndChild(sms_elem);
 
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
@@ -260,6 +260,7 @@ namespace GASS
 		RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(ScenarioScene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
 
 		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+		m_ObjectManager->Init();
 
 		//Add all registered scene manangers to scene
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
@@ -279,11 +280,11 @@ namespace GASS
 
 		MessagePtr enter_load_msg(new ScenarioSceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
-		
+
 		MessagePtr scenario_msg(new LoadSceneManagersMessage(shared_from_this()));
 		//send load message
 		SendImmediate(scenario_msg);
-		
+
 		//Create scene object instances from templates
 		m_ObjectManager->LoadXML(scenario_path + "/"  + m_InstancesFile);
 
@@ -340,7 +341,7 @@ namespace GASS
 			MessagePtr pos_msg(new PositionMessage(pos,sender_id));
 			MessagePtr rot_msg(new RotationMessage(rot,sender_id));
 			MessagePtr vel_msg(new PhysicsBodyMessage(PhysicsBodyMessage::VELOCITY,vel,sender_id));
-			
+
 			so->SendImmediate(pos_msg);
 			so->SendImmediate(rot_msg);
 			so->SendImmediate(vel_msg);

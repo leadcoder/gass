@@ -49,7 +49,7 @@ namespace GASS
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);
 		void OnReadyToFire(ReadyToFireMessagePtr message);
-		
+
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
@@ -71,11 +71,15 @@ namespace GASS
 		void SetReloadTime(float offset);
 		std::string GetFireEffectTemplate() const;
 		void SetFireEffectTemplate(const std::string &value);
+		std::string GetInputToFire() const;
+		void SetInputToFire(const std::string &value);
+        void SetRoundOfFire(float value);
+        float GetRoundOfFire() const;
 
 		SceneObjectPtr m_FireSound;
-		/*SceneObjectPtr m_ReloadPatch; 
+		/*SceneObjectPtr m_ReloadPatch;
 		SceneObjectPtr m_ReleasePatch;
-		SceneObjectPtr m_ShellBouncePatch; 
+		SceneObjectPtr m_ShellBouncePatch;
 		SceneObjectPtr m_MachineGunDistance;
 		SceneObjectPtr m_FireLoopPatch; */
 

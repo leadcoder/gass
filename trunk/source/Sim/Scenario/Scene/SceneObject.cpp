@@ -33,9 +33,9 @@
 
 namespace GASS
 {
-	SceneObject::SceneObject() : m_MessageManager (new MessageManager()) , m_Manager(NULL)
+	SceneObject::SceneObject() : m_MessageManager (new MessageManager())
 	{
-		
+
 	}
 
 	SceneObject::~SceneObject(void)
@@ -50,7 +50,7 @@ namespace GASS
 
 	void SceneObject::OnCreate()
 	{
-		RegisterForMessage(typeid(SceneObjectNameMessage),TYPED_MESSAGE_FUNC(SceneObject::OnChangeName,SceneObjectNameMessage)); 
+		RegisterForMessage(typeid(SceneObjectNameMessage),TYPED_MESSAGE_FUNC(SceneObject::OnChangeName,SceneObjectNameMessage));
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
@@ -60,7 +60,7 @@ namespace GASS
 		}
 	}
 
-	void SceneObject::SetSceneObjectManager(SceneObjectManager* manager)
+	void SceneObject::SetSceneObjectManager(SceneObjectManagerPtr manager)
 	{
 		m_Manager = manager;
 		IComponentContainer::ComponentContainerVector::iterator go_iter;
@@ -115,7 +115,7 @@ namespace GASS
 		{
 			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
-			{				
+			{
 				components.push_back(comp);
 			}
 		}
@@ -169,7 +169,7 @@ namespace GASS
 
 	int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
 	{
-		return m_MessageManager->RegisterForMessage(type, callback, priority); 
+		return m_MessageManager->RegisterForMessage(type, callback, priority);
 	}
 
 	void SceneObject::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)

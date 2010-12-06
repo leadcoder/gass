@@ -37,19 +37,19 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
-		The Scene object manager is owned by a scenario scene 
+		The Scene object manager is owned by a scenario scene
 		and could be seen as a decomposition (or helper class)
-		of the ScenarioScene class. 
-		In future this class may be merged into the 
+		of the ScenarioScene class.
+		In future this class may be merged into the
 		scenario scene class.
 	*/
-	class GASSExport SceneObjectManager 
+	class GASSExport SceneObjectManager : public boost::enable_shared_from_this<SceneObjectManager>
 	{
 		friend class ScenarioScene;
 	public:
 		SceneObjectManager(ScenarioScenePtr ss);
 		virtual ~SceneObjectManager();
-		
+
 		bool LoadXML(const std::string filename);
 		bool SaveXML(const std::string filename);
 
@@ -57,16 +57,17 @@ namespace GASS
 		void SyncMessages(double delta_time);
 		ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_ScenarioScene,boost::detail::sp_nothrow_tag());}
 		void Clear();
+		void Init();
 		void DeleteObject(SceneObjectPtr obj);
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
 		void LoadObject(SceneObjectPtr obj);
 	protected:
 		bool LoadXML(TiXmlElement *parent);
 		bool SaveXML(TiXmlElement *parent) const;
-		
-		
+
+
 		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
-		
+
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);

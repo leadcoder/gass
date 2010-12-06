@@ -47,14 +47,14 @@ namespace GASS
 		m_ReadyToFire(true),
 		m_AutoReload(true)
 	{
-		
+
 		m_InputToFire = "Fire";
 		m_InputToReload = "Reload";
 		m_CurrentMagSize = 0;
-		
+
 		m_RoundOfFire = 1;
 		m_Automatic = true;
-		
+
 		m_Reloading = false;
 		m_FireRequest = false;
 	}
@@ -74,9 +74,12 @@ namespace GASS
 		RegisterProperty<int>("MagazineSize", &WeaponSystemComponent::GetMagazineSize, &WeaponSystemComponent::SetMagazineSize);
 		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
 		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
+		RegisterProperty<float>("RoundOfFire", &WeaponSystemComponent::GetRoundOfFire, &WeaponSystemComponent::SetRoundOfFire);
+
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
-		
-		
+		RegisterProperty<std::string>("InputToFire", &WeaponSystemComponent::GetInputToFire, &WeaponSystemComponent::SetInputToFire);
+
+
 		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
 
@@ -116,15 +119,15 @@ namespace GASS
 
 	void WeaponSystemComponent::OnExecuteFire(FireMessagePtr message)
 	{
-		if(m_ReadyToFire && !m_Reloading)
+		if(m_FireRequest && m_ReadyToFire && !m_Reloading)
 		{
 			//Send projectile if we have ammo
-			m_FireRequest = false;
+			//m_FireRequest = false;
 			if(m_CurrentMagSize > 0)
 			{
 				SpawnProjectile(m_ProjectileStartPos,m_ProjectileStartRot);
 				m_CurrentMagSize--;
-				
+
 				float time_until_fire = 1.0f/m_RoundOfFire;
 				MessagePtr ready_msg(new ReadyToFireMessage());
 				ready_msg->SetDeliverDelay(time_until_fire);
@@ -142,7 +145,7 @@ namespace GASS
 				ready_msg->SetDeliverDelay(m_ReloadTime);
 				GetSceneObject()->PostMessage(ready_msg);
 			}
-			
+
 			/*if(m_Automatic)
 			{
 				float time_until_fire = 1.0f/m_RoundOfFire;
@@ -166,14 +169,14 @@ namespace GASS
 	{
 		//Vec3 fire_arm_dir = projectile_dir;
 		//recoil
-		/*if(m_TopPCO) 
+		/*if(m_TopPCO)
 		{
 			m_TopPCO->ApplyForce(-fire_arm_dir*m_RecoilSize*10);
 		}*/
 
-		
 
-		
+
+
 		//Play fire sound
 		if(m_FireSound)
 		{
@@ -203,7 +206,7 @@ namespace GASS
 			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,final_pos,projectile_rot,vel));
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 		}
-	
+
 
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
@@ -220,7 +223,7 @@ namespace GASS
 			Mat4 rotmat;
 			projectile_rot.ToRotationMatrix(rotmat);
 			Vec3 projectile_dir = -rotmat.GetViewDirVector();
-			
+
 			//projectile->SetWeaponSystem(this);
 			Vec3 vel = projectile_dir*m_ProjectileVelocity;
 
@@ -228,11 +231,11 @@ namespace GASS
 			vel_msg->SetData("Parameter",SceneObject::VELOCITY);
 			vel_msg->SetData("Value",vel);
 			projectile->SendImmediate(vel_msg);
-		
+
 
 			//add platform velocity
 			//vel += projectile_dir*m_CurrentVelocity.x
-		
+
 			//Send velocity message
 		}*/
 	}
@@ -241,6 +244,7 @@ namespace GASS
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
+		//std::cout << "Fire:" << name << "  " << m_InputToFire << std::endl;
 		if (name == m_InputToFire)
 		{
 			//send fire request
@@ -251,7 +255,7 @@ namespace GASS
 				fire_request_msg->SetDeliverDelay(m_FireDelay);
 				GetSceneObject()->PostMessage(fire_request_msg);
 			}
-			else 
+			else
 			{
 				m_FireRequest = false;
 			}
@@ -277,6 +281,14 @@ namespace GASS
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
 			m_FireSound->PostMessage(sound_msg);
 		}
+
+		if(m_Automatic && m_FireRequest)
+		{
+		    std::cout << "send new fire" << std::endl;
+            MessagePtr fire_request_msg(new FireMessage());
+            fire_request_msg->SetDeliverDelay(m_FireDelay);
+            GetSceneObject()->PostMessage(fire_request_msg);
+		}
 	}
 
 	std::string WeaponSystemComponent::GetProjectileTemplate() const
@@ -293,7 +305,7 @@ namespace GASS
 		return m_ProjectileStartOffset;
 	}
 
-	void WeaponSystemComponent::SetProjectileStartOffset(float offset) 
+	void WeaponSystemComponent::SetProjectileStartOffset(float offset)
 	{
 		m_ProjectileStartOffset = offset;
 	}
@@ -303,7 +315,7 @@ namespace GASS
 		return m_NumberOfMagazines;
 	}
 
-	void WeaponSystemComponent::SetNumberOfMagazines(int value) 
+	void WeaponSystemComponent::SetNumberOfMagazines(int value)
 	{
 		m_NumberOfMagazines = value;
 	}
@@ -313,12 +325,12 @@ namespace GASS
 		return m_MagazineSize;
 	}
 
-	void WeaponSystemComponent::SetMagazineSize(int value) 
+	void WeaponSystemComponent::SetMagazineSize(int value)
 	{
 		m_MagazineSize = value;
 	}
 
-	void WeaponSystemComponent::SetProjectileStartVelocity(float value) 
+	void WeaponSystemComponent::SetProjectileStartVelocity(float value)
 	{
 		m_ProjectileStartVelocity = value;
 	}
@@ -338,7 +350,7 @@ namespace GASS
 		return m_RecoilForce;
 	}
 
-	void WeaponSystemComponent::SetReloadTime(float value) 
+	void WeaponSystemComponent::SetReloadTime(float value)
 	{
 		m_ReloadTime = value;
 	}
@@ -352,17 +364,31 @@ namespace GASS
 	{
 		return m_FireEffectTemplate;
 	}
+
 	void WeaponSystemComponent::SetFireEffectTemplate(const std::string &value)
 	{
 		m_FireEffectTemplate = value;
 	}
 
-	
+	std::string WeaponSystemComponent::GetInputToFire() const
+	{
+        return m_InputToFire;
+	}
 
+    void WeaponSystemComponent::SetInputToFire(const std::string &value)
+    {
+        m_InputToFire = value;
+    }
 
+    void WeaponSystemComponent::SetRoundOfFire(float value)
+	{
+		m_RoundOfFire = value;
+	}
 
-
-	
+	float WeaponSystemComponent::GetRoundOfFire() const
+	{
+		return m_RoundOfFire;
+	}
 
 }
 

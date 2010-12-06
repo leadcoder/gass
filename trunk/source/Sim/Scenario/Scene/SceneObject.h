@@ -28,10 +28,14 @@
 
 
 namespace GASS
-{	
+{
 	class MessageManager;
 	class SceneObjectManager;
 	class SceneObject;
+
+	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
+	typedef boost::weak_ptr<SceneObjectManager> SceneObjectManagerWeakPtr;
+
 	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
@@ -39,14 +43,14 @@ namespace GASS
 
 	/**
 		This class is derived from the BaseComponentContainer class and extend
-		the BaseComponentContainer with message functionality. 
+		the BaseComponentContainer with message functionality.
 		To communicate with components owned by the SceneObject a message manager is used.
 		Some basic object messages is enumerated below.
 
 		As the name indicates a SceneObject is a object in a scenario scene.
 		The SceneObject is owned by a SceneObjectManager which in turn is owned
-		by a ScenarioScene. 
-		By design the SceneObject class is not intended to be derived from, 
+		by a ScenarioScene.
+		By design the SceneObject class is not intended to be derived from,
 		Instead new functionality should be added through components
 	*/
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer>
@@ -58,13 +62,13 @@ namespace GASS
 		static	void RegisterReflection();
 		void SyncMessages(double delta_time, bool recursive = true);
 
-		SceneObjectManager* GetSceneObjectManager() {return m_Manager;}
+		SceneObjectManagerPtr GetSceneObjectManager() {return SceneObjectManagerPtr(m_Manager,boost::detail::sp_nothrow_tag());}
 		//MessageManager* GetMessageManager(){return m_MessageManager;}
 		void OnCreate();
-	
+
 
 		//public for now, not possible to get derived manager to get hold of this otherwise
-		void SetSceneObjectManager(SceneObjectManager* manager);
+		void SetSceneObjectManager(SceneObjectManagerPtr manager);
 
 		/**
 			Get owner object that is direct under scene root
@@ -81,14 +85,14 @@ namespace GASS
 				if(ret)
 					break;
 			}
-			
+
 			return ret;
 		}
 
-		
 
 
-		//convenience functions 
+
+		//convenience functions
 		SceneObjectPtr GetParentSceneObject()
 		{
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
@@ -98,7 +102,7 @@ namespace GASS
 
 		//should we return result or pass it as ref arg?
 		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
-		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true); 
+		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true);
 
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
@@ -106,9 +110,9 @@ namespace GASS
 		void SendImmediate(MessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);
 	protected:
-		SceneObjectManager* m_Manager;
+		SceneObjectManagerWeakPtr m_Manager;
 		MessageManagerPtr m_MessageManager;
-		
+
 	};
 
 }
