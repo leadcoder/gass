@@ -251,6 +251,23 @@ namespace GASS
 	typedef boost::shared_ptr<BoundingInfoMessage> BoundingInfoMessagePtr;
 
 
+	/**
+	Request update of euler angles from quaternion, by performance reasons this 
+	is usually not done by default in the location component
+	*/
+	class UpdateEulerAnglesMessage : public BaseMessage
+	{
+	public:
+		UpdateEulerAnglesMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay)
+		  {
+		  }
+	};
+
+	typedef boost::shared_ptr<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
+
+	
+
     /**
 	Message used to change collisiion settings,
     Typically the physics system has
