@@ -246,10 +246,10 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 		Vec3 pos = GetPosition();
-		MessagePtr pos_msg(new PositionMessage(pos,from_id));
+		MessagePtr pos_msg(new WorldPositionMessage(pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new RotationMessage(GetRotation(),from_id));
+		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
 		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
@@ -509,7 +509,7 @@ namespace GASS
 			Vec3 trans_vec = value - GetPosition();
 			dBodySetPosition(m_ODEBodyComponent, value.x, value.y, value.z);
 
-			if(m_EffectJoints)
+			if(m_EffectJoints && GetActive())
 			{
 				int num_joints = dBodyGetNumJoints(m_ODEBodyComponent);
 				for(int i = 0 ; i < num_joints ;i++)
@@ -528,9 +528,7 @@ namespace GASS
 						int from_id = (int) this;
 						MessagePtr pos_msg(new PositionMessage(pos,from_id));
 						child_body->GetSceneObject()->PostMessage(pos_msg);
-
 					}
-
 					/*const dReal *p = dBodyGetPosition(b2);
 					Vec3 pos(p[0],p[1],p[2]);
 					pos = pos + trans_vec;
@@ -555,12 +553,40 @@ namespace GASS
 	{
 		if(m_ODEBodyComponent)
 		{
+			//Quaternion rel_rot = GetRotation().Inverse()* rot;
+
 			dReal ode_rot_mat[12];
 			Mat4 rot_mat;
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);
 			ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 			dBodySetRotation(m_ODEBodyComponent, ode_rot_mat);
+
+			/*if(m_EffectJoints && GetActive())
+			{
+				int num_joints = dBodyGetNumJoints(m_ODEBodyComponent);
+				for(int i = 0 ; i < num_joints ;i++)
+				{
+					dJointID joint = dBodyGetJoint(m_ODEBodyComponent,i);
+					dBodyID b2 = dJointGetBody (joint, 1);
+					ODEBodyComponent* child_body = (ODEBodyComponent*) dBodyGetData(b2);
+					if(child_body && child_body != this)
+					{
+							const dReal *ode_rot_mat = dBodyGetRotation(b2);
+							Mat4 rot;
+							ODEPhysicsSceneManager::CreateGASSRotationMatrix(ode_rot_mat,rot);
+							Quaternion q;
+							q.FromRotationMatrix(rot);
+							q = q*rel_rot;
+							child_body->SetRotation(q);
+
+							//send position message in case of paused physics
+							int from_id = (int) this;
+							MessagePtr pos_msg(new RotationMessage(q,from_id));
+							child_body->GetSceneObject()->PostMessage(pos_msg);
+					}
+				}
+			}*/
 		}
 	}
 
