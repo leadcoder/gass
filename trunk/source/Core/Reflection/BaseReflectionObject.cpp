@@ -40,8 +40,8 @@ namespace GASS
 		TiXmlElement *attrib = elem->FirstChildElement();
 		while(attrib)
 		{
-			std::string attrib_name = attrib->Value();
-			std::string attrib_val = attrib->FirstAttribute()->Value();
+			const std::string attrib_name = attrib->Value();
+			const std::string attrib_val = attrib->FirstAttribute()->Value();
 			SetPropertyByString(attrib_name,attrib_val);
 			attrib  = attrib->NextSiblingElement();
 		}
@@ -56,9 +56,8 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				AbstractProperty * prop = (*iter);
-
-				TiXmlElement * prop_elem;
-				prop_elem = new TiXmlElement( prop->GetName().c_str());
+				
+				TiXmlElement *prop_elem = new TiXmlElement( prop->GetName().c_str());
 				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
 				parent->LinkEndChild( prop_elem);
 				iter++;
@@ -92,8 +91,8 @@ namespace GASS
 			std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
 			while(iter != pRTTI->GetProperties()->end())
 			{
-				AbstractProperty * prop = (*iter);
-				std::string prop_name = prop->GetName();
+				AbstractProperty *prop = (*iter);
+				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
 					prop->SetValueByString(this,value);
@@ -116,7 +115,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				AbstractProperty * prop = (*iter);
-				std::string prop_name = prop->GetName();
+				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
 					prop->SetValue(this,value);
@@ -138,7 +137,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				AbstractProperty * prop = (*iter);
-				std::string prop_name = prop->GetName();
+				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
 					prop->GetValue(this,value);
@@ -161,7 +160,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				AbstractProperty * prop = (*iter);
-				std::string prop_name = prop->GetName();
+				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
 					value = prop->GetValueAsString(this);
@@ -200,7 +199,6 @@ namespace GASS
 			while(pRTTI)
 			{
 				std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					AbstractProperty * prop = (*iter);

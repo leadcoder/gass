@@ -73,7 +73,7 @@ namespace GASS
 
 	SystemPtr BaseSystemManager::LoadSystem(TiXmlElement *system_elem)
 	{
-		std::string system_type = system_elem->Value();
+		const std::string system_type = system_elem->Value();
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{

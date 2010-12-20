@@ -73,49 +73,6 @@ void KeyframeAnimation::AutoCalulateRotation()
 	}
 }
 
-/*
-void KeyframeAnimation::Render()
-{
-	RenderKeys();
-	Float steps = 25;
-
-	glBegin(GL_LINE_STRIP);							
-
-		for(int  i = 0; i < m_KeyVector.size(); i++)
-		{
-			//Key *k1 = &m_KeyVector[i];
-			//Key *k2 = &m_KeyVector[i%m_KeyVector.size()];
-			//Float t = GetKeys(timeIndex, k1, k2, NULL);
-			
-			for(Float t = 0; t <= (1 + (1.0f / steps)); t += 1.0f / steps)
-			{
-				Vec3 vPoint =  m_PositionSpline.Interpolate(i, t);
-				//Vec3 vPoint = PointOnCurve(g_vStartPoint, g_vControlPoint1, g_vControlPoint2, g_vEndPoint, t);
-				glVertex3f(vPoint.x, vPoint.y, vPoint.z);
-			}
-		}
-
-	glEnd();
-	
-}
-
-
-void KeyframeAnimation::RenderKeys()
-{
-	for(int i = 0; i < m_KeyVector.size(); i++)
-	{
-		glPushMatrix();
-		glTranslatef(m_KeyVector[i].m_Pos.x,
-					m_KeyVector[i].m_Pos.y,
-					m_KeyVector[i].m_Pos.z);
-		//just draw sphere
-		glutSolidSphere(0.001,8,8);
-		glPopMatrix();		
-	}
-}
-
-*/
-
 Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex)  const
 {
 	int i;

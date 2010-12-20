@@ -320,7 +320,7 @@ namespace GASS
 		while(control_settings)
 		{
 			ControlSetting* cs = new ControlSetting(input_system.get());
-			std::string name = control_settings->Value();
+			const std::string name = control_settings->Value();
 			Add(name,cs);
 			TiXmlElement *control_map = control_settings->FirstChildElement();
 			while(control_map)
@@ -329,17 +329,17 @@ namespace GASS
 
 				if(!control_map->Attribute("Controller")) 
 					Log::Error("No Controller parameter");
-				std::string controller_name = control_map->Attribute("Controller");
-				int action = m_InputStringTable->Get(controller_name);
+				const std::string controller_name = control_map->Attribute("Controller");
+				const int action = m_InputStringTable->Get(controller_name);
 				if(!control_map->Attribute("InputDevice")) 
 					Log::Error("No InputDevice parameter");
-				std::string inputdevicename = control_map->Attribute("InputDevice");
-				int inputdevice = m_InputStringTable->Get(inputdevicename);
+				const std::string inputdevicename = control_map->Attribute("InputDevice");
+				const int inputdevice = m_InputStringTable->Get(inputdevicename);
 				if(inputdevice == DEVICE_KEYBOARD)
 				{
 					if(control_map->Attribute("Key"))
 					{
-						std::string input = control_map->Attribute("Key");
+						const std::string input = control_map->Attribute("Key");
 						KeyTriggerController* controller = new KeyTriggerController(controller_name,cs);
 						controller->m_Device = inputdevice;
 						controller->m_Key = m_InputStringTable->Get(input);
@@ -354,8 +354,8 @@ namespace GASS
 					}
 					else if(control_map->Attribute("PosKey") && control_map->Attribute("NegKey"))
 					{
-						std::string pos_input = control_map->Attribute("PosKey");
-						std::string neg_input = control_map->Attribute("NegKey");
+						const std::string pos_input = control_map->Attribute("PosKey");
+						const std::string neg_input = control_map->Attribute("NegKey");
 						KeyAxisController* controller = new KeyAxisController(controller_name,cs);
 						controller->m_NonRepeating = false;
 						controller->m_Device = inputdevice;
@@ -371,7 +371,7 @@ namespace GASS
 
 					if(control_map->Attribute("Axis"))//axis
 					{
-						std::string input = control_map->Attribute("Axis");
+						const std::string input = control_map->Attribute("Axis");
 						AxisAxisController* controller = new AxisAxisController(controller_name,cs);
 						controller->m_Device = inputdevice;
 						controller->m_Axis = m_InputStringTable->Get(input);
@@ -387,7 +387,7 @@ namespace GASS
 					{
 						if(control_map->Attribute("Button")) //button
 						{
-							std::string input = control_map->Attribute("Button");
+							const std::string input = control_map->Attribute("Button");
 							ButtonTriggerController* controller = new ButtonTriggerController(controller_name,cs);
 							controller->m_Device = inputdevice;
 							controller->m_Button = m_InputStringTable->Get(input);
@@ -404,8 +404,8 @@ namespace GASS
 						}
 						else if(control_map->Attribute("PosButton") && control_map->Attribute("NegButton"))
 						{
-							std::string posinput = control_map->Attribute("PosButton");
-							std::string neginput = control_map->Attribute("NegButton");
+							const std::string posinput = control_map->Attribute("PosButton");
+							const std::string neginput = control_map->Attribute("NegButton");
 							ButtonAxisController* controller = new ButtonAxisController(controller_name,cs);
 							controller->m_Device = inputdevice;
 							controller->m_PosKey = m_InputStringTable->Get(posinput);
@@ -438,9 +438,8 @@ namespace GASS
 			ControlSetting::ControllerMap::iterator iter;
 			for(iter = local->m_ControllerMap.begin(); iter != local->m_ControllerMap.end(); iter++)
 			{
-				std::string name = (std::string) iter->first;
+				const std::string name = (std::string) iter->first;
 				Controller* remote_controller  = new RemoteController("remotecontroller",local);
-			//	remote_controller->SetValue(0);
 				remote->m_ControllerMap[name] = remote_controller;
 				Controller* controller = (Controller*) iter->second;
 				*remote_controller  = *controller;

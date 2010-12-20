@@ -56,7 +56,7 @@ namespace GASS
 	class BaseReflectionObject;
 
     /** Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
-     supporting RTTI need to derive from this class, with their ancestor specified as the TInClass
+     supporting RTTI need to derived from this class, with their ancestor specified as the TInClass
     template parameter.*/
 
 	template <class T, class TInClass>
@@ -148,28 +148,5 @@ namespace GASS
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
 		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
 		(RegisterReflectionFunc)T::RegisterReflection );
-
-	/*template <class T, class TInClass>
-	Reflection<T, TInClass>::Reflection()
-	{
-	}
-
-	template <class T, class TInClass>
-	boost::shared_ptr<T> Reflection<T, TInClass>::Create()
-	{
-		return boost::shared_ptr<T> (new T());
-	}
-
-	template <class T, class TInClass>
-	boost::shared_ptr<BaseReflectionObject> Reflection<T, TInClass>::CreateInstance()
-	{
-		boost::shared_ptr<T>  instance (new T());
-		return instance;
-	}
-
-	template <class T, class TInClass>
-	void Reflection<T, TInClass>::RegisterReflection()
-	{
-	}*/
 }
 #endif

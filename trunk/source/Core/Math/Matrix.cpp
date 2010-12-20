@@ -456,7 +456,7 @@ namespace GASS
 		Float det = 0.0f;
 
 		for (int col = 0; col < 4; col++) {
-			Float sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
+			const Float sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
 			det += sign * m_Data[0][col] * Determinant(0, col);
 		}
 		return det;
@@ -508,7 +508,7 @@ namespace GASS
 
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 4; col++) {
-				Float sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
+				const Float sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
 				result.m_Data2[col * 4 + row] = sign * Determinant(col, row) / det;
 			}
 		}

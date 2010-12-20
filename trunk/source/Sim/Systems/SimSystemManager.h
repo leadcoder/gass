@@ -59,7 +59,7 @@ namespace GASS
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void Update(float delta_time);
-		void ClearMessagesManager();
+		void ClearMessages();
 	private:
 		MessageManager* m_SystemMessageManager;
 	};

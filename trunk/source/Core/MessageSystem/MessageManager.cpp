@@ -54,7 +54,7 @@ namespace GASS
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
 		{
-			MessageTypeListenersPtr new_type = MessageTypeListenersPtr(new MessageTypeListeners);
+			const MessageTypeListenersPtr new_type = MessageTypeListenersPtr(new MessageTypeListeners);
 			new_type->m_TypeID = type;
 			m_MessageTypes[type] = new_type;
 		}

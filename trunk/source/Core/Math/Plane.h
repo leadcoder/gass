@@ -30,7 +30,7 @@ namespace GASS
 	{
 	public:
 		Plane4();
-		Plane4(Vec3 p1,Vec3 p2,Vec3 p3);
+		Plane4(const Vec3 &p1,const Vec3 &p2,const Vec3 &p3);
 		Plane4(const Vec3& origin, const Vec3& normal)
 		{
 			m_Normal = normal;
@@ -44,7 +44,7 @@ namespace GASS
 
 		bool IsFrontFacingTo(const Vec3& direction) const
 		{
-			double dot = Math::Dot(m_Normal,direction);
+			const double dot = Math::Dot(m_Normal,direction);
 			return (dot <= 0);
 		};
 		double SignedDistanceTo(const Vec3& point) const

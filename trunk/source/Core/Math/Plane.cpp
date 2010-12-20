@@ -35,7 +35,7 @@ namespace GASS
 
 	}
 
-	Plane4::Plane4(Vec3 p1,Vec3 p2,Vec3 p3)
+	Plane4::Plane4(const Vec3 &p1,const Vec3 &p2,const Vec3 &p3)
 	{
 		m_Normal = Math::Cross((p2-p1),(p3-p1));
 		m_Normal.Normalize();
@@ -49,7 +49,7 @@ namespace GASS
 
 	void Plane4::Normalize()
 	{
-		float t = (float) sqrt(a * a + b * b + c * c);
+		const float t = (float) sqrt(a * a + b * b + c * c);
 		a /= t;
 		b /= t;
 		c /= t;

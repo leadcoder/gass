@@ -180,7 +180,7 @@ namespace GASS
 
 
 		// Get Poly Center
-		Vec3 center = poly.Center();
+		const Vec3 center = poly.Center();
 
 		if(PointInside(center)) return true;
 

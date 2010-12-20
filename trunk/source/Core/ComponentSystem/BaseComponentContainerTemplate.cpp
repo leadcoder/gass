@@ -201,7 +201,7 @@ namespace GASS
 
 	void BaseComponentContainerTemplate::SaveXML(TiXmlElement *obj_elem)
 	{
-		std::string factory_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+		const std::string factory_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 
 		TiXmlElement* this_elem = new TiXmlElement(factory_name.c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
@@ -241,13 +241,13 @@ namespace GASS
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
-			std::string data_name = class_attribute->Value();
+			const std::string data_name = class_attribute->Value();
 			if(data_name == "Components")
 			{
 				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
 				while(comp_elem)
 				{
-					std::string comp_name = comp_elem->Value();
+					const std::string comp_name = comp_elem->Value();
 					ComponentPtr target_comp (GetComponent(comp_name));
 					if(target_comp) //over loading component
 					{
@@ -275,7 +275,7 @@ namespace GASS
 					//if(!cc_elem->Attribute("type"))
 					//	Log::Error("Failed to find type-attribute for %s tag", cc_elem->Value());
 					
-					std::string type = cc_elem->Value(); //Attribute("type");
+					const std::string type = cc_elem->Value(); //Attribute("type");
 					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
 					if(container)
 					{
@@ -294,7 +294,7 @@ namespace GASS
 			else //base object attribute
 			{
 				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
-				std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
+				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
 				SetPropertyByString(data_name,attrib_val);
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
@@ -303,7 +303,7 @@ namespace GASS
 
 	ComponentPtr BaseComponentContainerTemplate::LoadComponent(TiXmlElement *comp_template)
 	{
-		std::string comp_type = comp_template->Value();
+		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
 		ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 		if(comp)
@@ -340,7 +340,7 @@ namespace GASS
 			ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
 			if(template_comp)
 			{
-				std::string name = comp->GetName();
+				const std::string name = comp->GetName();
 				ComponentPtr target_comp (cc->GetComponent(name));
 				if(target_comp)
 				{
@@ -383,11 +383,9 @@ namespace GASS
 		}
 		else
 		{
-			new_object = CreateComponentContainer();//ComponentContainerFactory::Get().Create(m_Type);
+			new_object = CreateComponentContainer();
 			if(new_object)
 			{
-				//AddComponentData(new_object);
-
 				/*if(m_NameCheck)
 				{
 				BaseComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
@@ -406,12 +404,6 @@ namespace GASS
 				new_object->SetTemplateName(GetName());
 				//new_object->SetPartId(part_id);
 				part_id++;
-				/*{
-				//IReflection* ref = dynamic_cast<IReflection*> (this);
-				BaseReflectionObject* ref_new_obj = dynamic_cast<BaseReflectionObject*> (new_object);
-				if(ref && ref_new_obj)
-				SetAttributes(ref_new_obj);
-				}*/
 			}
 			else
 			{
@@ -443,7 +435,7 @@ namespace GASS
 		type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
 
 		//remove template from name
-		int pos = type.find("Template");
+		const int pos = type.find("Template");
 		type = type.substr(0,pos);
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 
@@ -497,10 +489,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			ComponentContainerPtr child = children.getNext();
-
-			
 			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
-			//BaseComponentContainerTemplatePtr new_child(new BaseComponentContainerTemplate());
 			if(new_child)
 			{
 				new_child->CreateFromComponentContainer(child);

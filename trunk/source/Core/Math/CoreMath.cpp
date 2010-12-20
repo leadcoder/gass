@@ -88,8 +88,8 @@ namespace GASS
 	{
 
 		Vec3 normal;
-		Vec3 edge1 = p2 - p1;
-		Vec3 edge2 = p3 - p1;
+		const Vec3 edge1 = p2 - p1;
+		const Vec3 edge2 = p3 - p1;
 
 		normal = Cross(edge1,edge2);
 		normal.Normalize();
@@ -103,7 +103,7 @@ namespace GASS
 
 		ray_dir.Normalize();
 
-		Float ray_scale = IsectRayPlane(start, ray_dir, p1,normal);
+		const Float ray_scale = IsectRayPlane(start, ray_dir, p1,normal);
 
 		if(ray_scale == -1) return false;
 
@@ -125,11 +125,11 @@ namespace GASS
 
 		ray_dir.Normalize();
 
-		Float ray_scale = IsectRayPlane(start, ray_dir, poly.m_VertexVector[0],poly.m_Normal);
+		const Float ray_scale = IsectRayPlane(start, ray_dir, poly.m_VertexVector[0],poly.m_Normal);
 
 		if(ray_scale == -1) return false;
 
-		Vec3 isect_point = start + ray_dir * ray_scale;
+		const Vec3 isect_point = start + ray_dir * ray_scale;
 
 		int size = poly.m_VertexVector.size();
 		size %= 3;
@@ -164,7 +164,7 @@ namespace GASS
 
 	int Math::ClassifyPoint(const Vec3 &point, const Polygon &poly) 
 	{
-		Vec3 dir = poly.m_VertexVector[0] - point;
+		const Vec3 dir = poly.m_VertexVector[0] - point;
 		double d = Dot(dir, poly.m_Normal);
 
 		if (d < -0.001f)
@@ -177,7 +177,7 @@ namespace GASS
 
 	int Math::ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal) 
 	{
-		Vec3 dir = origin - point;
+		const Vec3 dir = origin - point;
 		double d = Dot(dir, normal);
 
 		if (d<-0.001f)
@@ -192,9 +192,9 @@ namespace GASS
 
 	char Math::GetMaxCoord(const Vec3 &coord)
 	{
-		Float x = fabs(coord.x);
-		Float y = fabs(coord.y);
-		Float z = fabs(coord.z);
+		const Float x = fabs(coord.x);
+		const Float y = fabs(coord.y);
+		const Float z = fabs(coord.z);
 		if(x > y)
 		{
 			if(x > z) return 0;

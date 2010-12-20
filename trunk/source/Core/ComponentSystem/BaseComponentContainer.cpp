@@ -246,7 +246,7 @@ namespace GASS
 		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
-			std::string data_name = class_attribute->Value();
+			const std::string data_name = class_attribute->Value();
 			if(data_name == "Components")
 			{
 				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
@@ -282,7 +282,7 @@ namespace GASS
 				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
-					std::string type = cc_elem->Value();
+					const std::string type = cc_elem->Value();
 					ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 					AddChild(container);
 					XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
@@ -294,7 +294,7 @@ namespace GASS
 			else //base object attribute
 			{
 				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
-				std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
+				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
 				SetPropertyByString(data_name,attrib_val);
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
@@ -303,7 +303,7 @@ namespace GASS
 
 	ComponentPtr BaseComponentContainer::LoadComponent(TiXmlElement *comp_template)
 	{
-		std::string comp_type = comp_template->Value();
+		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
 		ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 		if(comp)
