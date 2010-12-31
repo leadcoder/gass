@@ -39,6 +39,8 @@ namespace GASS
 		static LuaScriptManager& Get();
 		void RegisterForSystemMessage(const std::string &lua_function,MessagePtr message_type);
 		void OnMessage(MessagePtr message);
+		void SetState(lua_State* state);
+		lua_State* GetState() const {m_State;}
 		//DebugPrintMessage ToDebugPrintMessage(MessagePtr message);
 		 
 	private:
@@ -48,8 +50,7 @@ namespace GASS
 		
 		typedef std::vector<std::string> str_vec;
 		std::map<MessageType,str_vec> m_MessageRegMap;
-		
-	
+		lua_State* m_State;
 	};
 }
 

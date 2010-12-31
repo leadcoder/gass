@@ -1540,35 +1540,38 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_Scenario swig_types[14]
 #define SWIGTYPE_p_ScenarioScene swig_types[15]
 #define SWIGTYPE_p_ScenarioSceneIterator swig_types[16]
-#define SWIGTYPE_p_ScenarioSceneVector swig_types[17]
-#define SWIGTYPE_p_ScenarioSceneVector__iterator swig_types[18]
-#define SWIGTYPE_p_ScenarioSceneVector__pointer swig_types[19]
-#define SWIGTYPE_p_ScenarioSceneVector__value_type swig_types[20]
-#define SWIGTYPE_p_ServerDisconnectedMessage swig_types[21]
-#define SWIGTYPE_p_ServerDisconnectedMessagePtr swig_types[22]
-#define SWIGTYPE_p_ServerResponseMessage swig_types[23]
-#define SWIGTYPE_p_ServerResponseMessagePtr swig_types[24]
-#define SWIGTYPE_p_SimEngine swig_types[25]
-#define SWIGTYPE_p_SimSystemManager swig_types[26]
-#define SWIGTYPE_p_SimSystemManagerPtr swig_types[27]
-#define SWIGTYPE_p_StartClientMessage swig_types[28]
-#define SWIGTYPE_p_StartClientMessagePtr swig_types[29]
-#define SWIGTYPE_p_StartSceanrioRequestMessage swig_types[30]
-#define SWIGTYPE_p_StartSceanrioRequestMessagePtr swig_types[31]
-#define SWIGTYPE_p_StartServerMessage swig_types[32]
-#define SWIGTYPE_p_StartServerMessagePtr swig_types[33]
-#define SWIGTYPE_p_StopClientMessage swig_types[34]
-#define SWIGTYPE_p_StopClientMessagePtr swig_types[35]
-#define SWIGTYPE_p_StopServerMessage swig_types[36]
-#define SWIGTYPE_p_StopServerMessagePtr swig_types[37]
-#define SWIGTYPE_p_Vec3 swig_types[38]
-#define SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t swig_types[39]
-#define SWIGTYPE_p_double swig_types[40]
-#define SWIGTYPE_p_int swig_types[41]
-#define SWIGTYPE_p_std__string swig_types[42]
-#define SWIGTYPE_p_std__vectorT_ScenarioScene_t swig_types[43]
-static swig_type_info *swig_types[45];
-static swig_module_info swig_module = {swig_types, 44, 0, 0, 0, 0};
+#define SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage swig_types[17]
+#define SWIGTYPE_p_ScenarioSceneLoadedNotifyMessagePtr swig_types[18]
+#define SWIGTYPE_p_ScenarioScenePtr swig_types[19]
+#define SWIGTYPE_p_ScenarioSceneVector swig_types[20]
+#define SWIGTYPE_p_ScenarioSceneVector__iterator swig_types[21]
+#define SWIGTYPE_p_ScenarioSceneVector__pointer swig_types[22]
+#define SWIGTYPE_p_ScenarioSceneVector__value_type swig_types[23]
+#define SWIGTYPE_p_ServerDisconnectedMessage swig_types[24]
+#define SWIGTYPE_p_ServerDisconnectedMessagePtr swig_types[25]
+#define SWIGTYPE_p_ServerResponseMessage swig_types[26]
+#define SWIGTYPE_p_ServerResponseMessagePtr swig_types[27]
+#define SWIGTYPE_p_SimEngine swig_types[28]
+#define SWIGTYPE_p_SimSystemManager swig_types[29]
+#define SWIGTYPE_p_SimSystemManagerPtr swig_types[30]
+#define SWIGTYPE_p_StartClientMessage swig_types[31]
+#define SWIGTYPE_p_StartClientMessagePtr swig_types[32]
+#define SWIGTYPE_p_StartSceanrioRequestMessage swig_types[33]
+#define SWIGTYPE_p_StartSceanrioRequestMessagePtr swig_types[34]
+#define SWIGTYPE_p_StartServerMessage swig_types[35]
+#define SWIGTYPE_p_StartServerMessagePtr swig_types[36]
+#define SWIGTYPE_p_StopClientMessage swig_types[37]
+#define SWIGTYPE_p_StopClientMessagePtr swig_types[38]
+#define SWIGTYPE_p_StopServerMessage swig_types[39]
+#define SWIGTYPE_p_StopServerMessagePtr swig_types[40]
+#define SWIGTYPE_p_Vec3 swig_types[41]
+#define SWIGTYPE_p_VectorIteratorT_ScenarioSceneVector_t swig_types[42]
+#define SWIGTYPE_p_double swig_types[43]
+#define SWIGTYPE_p_int swig_types[44]
+#define SWIGTYPE_p_std__string swig_types[45]
+#define SWIGTYPE_p_std__vectorT_ScenarioScene_t swig_types[46]
+static swig_type_info *swig_types[48];
+static swig_module_info swig_module = {swig_types, 47, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1659,6 +1662,13 @@ using namespace GASS;
 	{
 		ServerDisconnectedMessagePtr db_mess = boost::shared_dynamic_cast<ServerDisconnectedMessage>(message);
 		ServerDisconnectedMessage ret = *db_mess.get();
+		return ret;
+	}
+	
+	ScenarioSceneLoadedNotifyMessage ToScenarioSceneLoadedNotifyMessage(MessagePtr message)
+	{
+		ScenarioSceneLoadedNotifyMessagePtr db_mess = boost::shared_dynamic_cast<ScenarioSceneLoadedNotifyMessage>(message);
+		ScenarioSceneLoadedNotifyMessage ret = *db_mess.get();
 		return ret;
 	}
 	
@@ -5305,6 +5315,247 @@ static swig_lua_class *swig_StartSceanrioRequestMessagePtr_bases[] = {0};
 static const char *swig_StartSceanrioRequestMessagePtr_base_names[] = {0};
 static swig_lua_class _wrap_class_StartSceanrioRequestMessagePtr = { "StartSceanrioRequestMessagePtr", &SWIGTYPE_p_StartSceanrioRequestMessagePtr,_wrap_new_StartSceanrioRequestMessagePtr, swig_delete_StartSceanrioRequestMessagePtr, swig_StartSceanrioRequestMessagePtr_methods, swig_StartSceanrioRequestMessagePtr_attributes, swig_StartSceanrioRequestMessagePtr_bases, swig_StartSceanrioRequestMessagePtr_base_names };
 
+static int _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioScenePtr arg1 ;
+  SenderID arg2 ;
+  double arg3 ;
+  ScenarioScenePtr *argp1 ;
+  ScenarioSceneLoadedNotifyMessage *result = 0 ;
+  
+  SWIG_check_num_args("ScenarioSceneLoadedNotifyMessage",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",1,"ScenarioScenePtr");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",2,"SenderID");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",3,"double");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_ScenarioScenePtr,0))){
+    SWIG_fail_ptr("new_ScenarioSceneLoadedNotifyMessage",1,SWIGTYPE_p_ScenarioScenePtr);
+  }
+  arg1 = *argp1;
+  
+  arg2 = (SenderID)lua_tonumber(L, 2);
+  arg3 = (double)lua_tonumber(L, 3);
+  result = (ScenarioSceneLoadedNotifyMessage *)new ScenarioSceneLoadedNotifyMessage(arg1,arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioScenePtr arg1 ;
+  SenderID arg2 ;
+  ScenarioScenePtr *argp1 ;
+  ScenarioSceneLoadedNotifyMessage *result = 0 ;
+  
+  SWIG_check_num_args("ScenarioSceneLoadedNotifyMessage",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",1,"ScenarioScenePtr");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",2,"SenderID");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_ScenarioScenePtr,0))){
+    SWIG_fail_ptr("new_ScenarioSceneLoadedNotifyMessage",1,SWIGTYPE_p_ScenarioScenePtr);
+  }
+  arg1 = *argp1;
+  
+  arg2 = (SenderID)lua_tonumber(L, 2);
+  result = (ScenarioSceneLoadedNotifyMessage *)new ScenarioSceneLoadedNotifyMessage(arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioScenePtr arg1 ;
+  ScenarioScenePtr *argp1 ;
+  ScenarioSceneLoadedNotifyMessage *result = 0 ;
+  
+  SWIG_check_num_args("ScenarioSceneLoadedNotifyMessage",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessage",1,"ScenarioScenePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_ScenarioScenePtr,0))){
+    SWIG_fail_ptr("new_ScenarioSceneLoadedNotifyMessage",1,SWIGTYPE_p_ScenarioScenePtr);
+  }
+  arg1 = *argp1;
+  
+  result = (ScenarioSceneLoadedNotifyMessage *)new ScenarioSceneLoadedNotifyMessage(arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ScenarioSceneLoadedNotifyMessage(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_ScenarioScenePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_2(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_ScenarioScenePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_ScenarioScenePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_new_ScenarioSceneLoadedNotifyMessage__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ScenarioSceneLoadedNotifyMessage'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr,SenderID,double)\n"
+    "    ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr,SenderID)\n"
+    "    ScenarioSceneLoadedNotifyMessage(ScenarioScenePtr)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ScenarioSceneLoadedNotifyMessage_GetScenarioScene(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioSceneLoadedNotifyMessage *arg1 = (ScenarioSceneLoadedNotifyMessage *) 0 ;
+  ScenarioScenePtr result;
+  
+  SWIG_check_num_args("GetScenarioScene",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("GetScenarioScene",1,"ScenarioSceneLoadedNotifyMessage const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,0))){
+    SWIG_fail_ptr("ScenarioSceneLoadedNotifyMessage_GetScenarioScene",1,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage);
+  }
+  
+  result = ((ScenarioSceneLoadedNotifyMessage const *)arg1)->GetScenarioScene();
+  {
+    ScenarioScenePtr * resultptr = new ScenarioScenePtr((const ScenarioScenePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioScenePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ScenarioSceneLoadedNotifyMessage(void *obj) {
+ScenarioSceneLoadedNotifyMessage *arg1 = (ScenarioSceneLoadedNotifyMessage *) obj;
+delete arg1;
+}
+static swig_lua_method swig_ScenarioSceneLoadedNotifyMessage_methods[] = {
+    {"GetScenarioScene", _wrap_ScenarioSceneLoadedNotifyMessage_GetScenarioScene}, 
+    {0,0}
+};
+static swig_lua_attribute swig_ScenarioSceneLoadedNotifyMessage_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_ScenarioSceneLoadedNotifyMessage_bases[] = {0,0};
+static const char *swig_ScenarioSceneLoadedNotifyMessage_base_names[] = {"BaseMessage *",0};
+static swig_lua_class _wrap_class_ScenarioSceneLoadedNotifyMessage = { "ScenarioSceneLoadedNotifyMessage", &SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,_wrap_new_ScenarioSceneLoadedNotifyMessage, swig_delete_ScenarioSceneLoadedNotifyMessage, swig_ScenarioSceneLoadedNotifyMessage_methods, swig_ScenarioSceneLoadedNotifyMessage_attributes, swig_ScenarioSceneLoadedNotifyMessage_bases, swig_ScenarioSceneLoadedNotifyMessage_base_names };
+
+static int _wrap_new_ScenarioSceneLoadedNotifyMessagePtr(lua_State* L) {
+  int SWIG_arg = 0;
+  ScenarioSceneLoadedNotifyMessage *arg1 = (ScenarioSceneLoadedNotifyMessage *) 0 ;
+  ScenarioSceneLoadedNotifyMessagePtr *result = 0 ;
+  
+  SWIG_check_num_args("ScenarioSceneLoadedNotifyMessagePtr",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("ScenarioSceneLoadedNotifyMessagePtr",1,"ScenarioSceneLoadedNotifyMessage *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,0))){
+    SWIG_fail_ptr("new_ScenarioSceneLoadedNotifyMessagePtr",1,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage);
+  }
+  
+  result = (ScenarioSceneLoadedNotifyMessagePtr *)new ScenarioSceneLoadedNotifyMessagePtr(arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessagePtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ScenarioSceneLoadedNotifyMessagePtr(void *obj) {
+ScenarioSceneLoadedNotifyMessagePtr *arg1 = (ScenarioSceneLoadedNotifyMessagePtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_ScenarioSceneLoadedNotifyMessagePtr_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_ScenarioSceneLoadedNotifyMessagePtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_ScenarioSceneLoadedNotifyMessagePtr_bases[] = {0};
+static const char *swig_ScenarioSceneLoadedNotifyMessagePtr_base_names[] = {0};
+static swig_lua_class _wrap_class_ScenarioSceneLoadedNotifyMessagePtr = { "ScenarioSceneLoadedNotifyMessagePtr", &SWIGTYPE_p_ScenarioSceneLoadedNotifyMessagePtr,_wrap_new_ScenarioSceneLoadedNotifyMessagePtr, swig_delete_ScenarioSceneLoadedNotifyMessagePtr, swig_ScenarioSceneLoadedNotifyMessagePtr_methods, swig_ScenarioSceneLoadedNotifyMessagePtr_attributes, swig_ScenarioSceneLoadedNotifyMessagePtr_bases, swig_ScenarioSceneLoadedNotifyMessagePtr_base_names };
+
 static int _wrap_ToDebugPrintMessage(lua_State* L) {
   int SWIG_arg = 0;
   SwigValueWrapper< MessagePtr > arg1 ;
@@ -5439,6 +5690,35 @@ static int _wrap_ToServerDisconnectedMessage(lua_State* L) {
   {
     ServerDisconnectedMessage * resultptr = new ServerDisconnectedMessage((const ServerDisconnectedMessage &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ServerDisconnectedMessage,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ToScenarioSceneLoadedNotifyMessage(lua_State* L) {
+  int SWIG_arg = 0;
+  SwigValueWrapper< MessagePtr > arg1 ;
+  MessagePtr *argp1 ;
+  SwigValueWrapper< ScenarioSceneLoadedNotifyMessage > result;
+  
+  SWIG_check_num_args("ToScenarioSceneLoadedNotifyMessage",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("ToScenarioSceneLoadedNotifyMessage",1,"MessagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_MessagePtr,0))){
+    SWIG_fail_ptr("ToScenarioSceneLoadedNotifyMessage",1,SWIGTYPE_p_MessagePtr);
+  }
+  arg1 = *argp1;
+  
+  result = ToScenarioSceneLoadedNotifyMessage(arg1);
+  {
+    ScenarioSceneLoadedNotifyMessage * resultptr = new ScenarioSceneLoadedNotifyMessage((const ScenarioSceneLoadedNotifyMessage &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_ScenarioSceneLoadedNotifyMessage,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6620,6 +6900,7 @@ static const struct luaL_reg swig_commands[] = {
     { "ToClientConnectedMessage", _wrap_ToClientConnectedMessage},
     { "ToClientDisconnectedMessage", _wrap_ToClientDisconnectedMessage},
     { "ToServerDisconnectedMessage", _wrap_ToServerDisconnectedMessage},
+    { "ToScenarioSceneLoadedNotifyMessage", _wrap_ToScenarioSceneLoadedNotifyMessage},
     { "SimEngine_GetPtr", _wrap_SimEngine_GetPtr},
     { "SimEngine_Get", _wrap_SimEngine_Get},
     { "LuaScriptManager_GetPtr", _wrap_LuaScriptManager_GetPtr},
@@ -6676,44 +6957,50 @@ static void *_p_PingRequestMessageTo_p_BaseMessage(void *x, int *SWIGUNUSEDPARM(
 static void *_p_StartSceanrioRequestMessageTo_p_BaseMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((BaseMessage *)  ((StartSceanrioRequestMessage *) x));
 }
-static void *_p_BaseMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *)  ((BaseMessage *) x));
+static void *_p_ScenarioSceneLoadedNotifyMessageTo_p_BaseMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((BaseMessage *)  ((ScenarioSceneLoadedNotifyMessage *) x));
 }
-static void *_p_DebugPrintMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((DebugPrintMessage *) x));
+static void *_p_ScenarioSceneLoadedNotifyMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ScenarioSceneLoadedNotifyMessage *) x));
 }
-static void *_p_ClientConnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((ClientConnectedMessage *) x));
-}
-static void *_p_StartServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((StartServerMessage *) x));
-}
-static void *_p_StopServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((StopServerMessage *) x));
-}
-static void *_p_StartClientMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((StartClientMessage *) x));
-}
-static void *_p_StopClientMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((StopClientMessage *) x));
-}
-static void *_p_ServerResponseMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((ServerResponseMessage *) x));
-}
-static void *_p_ConnectToServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((ConnectToServerMessage *) x));
-}
-static void *_p_ClientDisconnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((ClientDisconnectedMessage *) x));
-}
-static void *_p_ServerDisconnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((ServerDisconnectedMessage *) x));
+static void *_p_StartSceanrioRequestMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((StartSceanrioRequestMessage *) x));
 }
 static void *_p_PingRequestMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((IMessage *) (BaseMessage *) ((PingRequestMessage *) x));
 }
-static void *_p_StartSceanrioRequestMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((IMessage *) (BaseMessage *) ((StartSceanrioRequestMessage *) x));
+static void *_p_ServerDisconnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ServerDisconnectedMessage *) x));
+}
+static void *_p_ClientDisconnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ClientDisconnectedMessage *) x));
+}
+static void *_p_ConnectToServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ConnectToServerMessage *) x));
+}
+static void *_p_ServerResponseMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ServerResponseMessage *) x));
+}
+static void *_p_StopClientMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((StopClientMessage *) x));
+}
+static void *_p_StartClientMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((StartClientMessage *) x));
+}
+static void *_p_StopServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((StopServerMessage *) x));
+}
+static void *_p_StartServerMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((StartServerMessage *) x));
+}
+static void *_p_ClientConnectedMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((ClientConnectedMessage *) x));
+}
+static void *_p_DebugPrintMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *) (BaseMessage *) ((DebugPrintMessage *) x));
+}
+static void *_p_BaseMessageTo_p_IMessage(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((IMessage *)  ((BaseMessage *) x));
 }
 static swig_type_info _swigt__p_BaseMessage = {"_p_BaseMessage", "BaseMessage *", 0, 0, (void*)&_wrap_class_BaseMessage, 0};
 static swig_type_info _swigt__p_ClientConnectedMessage = {"_p_ClientConnectedMessage", "ClientConnectedMessage *", 0, 0, (void*)&_wrap_class_ClientConnectedMessage, 0};
@@ -6732,6 +7019,9 @@ static swig_type_info _swigt__p_PingRequestMessagePtr = {"_p_PingRequestMessageP
 static swig_type_info _swigt__p_Scenario = {"_p_Scenario", "Scenario *", 0, 0, (void*)&_wrap_class_Scenario, 0};
 static swig_type_info _swigt__p_ScenarioScene = {"_p_ScenarioScene", "ScenarioScene *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ScenarioSceneIterator = {"_p_ScenarioSceneIterator", "ScenarioSceneIterator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ScenarioSceneLoadedNotifyMessage = {"_p_ScenarioSceneLoadedNotifyMessage", "ScenarioSceneLoadedNotifyMessage *", 0, 0, (void*)&_wrap_class_ScenarioSceneLoadedNotifyMessage, 0};
+static swig_type_info _swigt__p_ScenarioSceneLoadedNotifyMessagePtr = {"_p_ScenarioSceneLoadedNotifyMessagePtr", "ScenarioSceneLoadedNotifyMessagePtr *", 0, 0, (void*)&_wrap_class_ScenarioSceneLoadedNotifyMessagePtr, 0};
+static swig_type_info _swigt__p_ScenarioScenePtr = {"_p_ScenarioScenePtr", "ScenarioScenePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ScenarioSceneVector = {"_p_ScenarioSceneVector", "ScenarioSceneVector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ScenarioSceneVector__iterator = {"_p_ScenarioSceneVector__iterator", "ScenarioSceneVector::iterator *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ScenarioSceneVector__pointer = {"_p_ScenarioSceneVector__pointer", "ScenarioSceneVector::pointer *", 0, 0, (void*)0, 0};
@@ -6778,6 +7068,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Scenario,
   &_swigt__p_ScenarioScene,
   &_swigt__p_ScenarioSceneIterator,
+  &_swigt__p_ScenarioSceneLoadedNotifyMessage,
+  &_swigt__p_ScenarioSceneLoadedNotifyMessagePtr,
+  &_swigt__p_ScenarioScenePtr,
   &_swigt__p_ScenarioSceneVector,
   &_swigt__p_ScenarioSceneVector__iterator,
   &_swigt__p_ScenarioSceneVector__pointer,
@@ -6807,7 +7100,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__vectorT_ScenarioScene_t,
 };
 
-static swig_cast_info _swigc__p_BaseMessage[] = {  {&_swigt__p_BaseMessage, 0, 0, 0},  {&_swigt__p_DebugPrintMessage, _p_DebugPrintMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientConnectedMessage, _p_ClientConnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartServerMessage, _p_StartServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopServerMessage, _p_StopServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartClientMessage, _p_StartClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopClientMessage, _p_StopClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerResponseMessage, _p_ServerResponseMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ConnectToServerMessage, _p_ConnectToServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientDisconnectedMessage, _p_ClientDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerDisconnectedMessage, _p_ServerDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_PingRequestMessage, _p_PingRequestMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartSceanrioRequestMessage, _p_StartSceanrioRequestMessageTo_p_BaseMessage, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_BaseMessage[] = {  {&_swigt__p_DebugPrintMessage, _p_DebugPrintMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientConnectedMessage, _p_ClientConnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartServerMessage, _p_StartServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopServerMessage, _p_StopServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartClientMessage, _p_StartClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StopClientMessage, _p_StopClientMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerResponseMessage, _p_ServerResponseMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ConnectToServerMessage, _p_ConnectToServerMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ClientDisconnectedMessage, _p_ClientDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ServerDisconnectedMessage, _p_ServerDisconnectedMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_PingRequestMessage, _p_PingRequestMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_StartSceanrioRequestMessage, _p_StartSceanrioRequestMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_ScenarioSceneLoadedNotifyMessage, _p_ScenarioSceneLoadedNotifyMessageTo_p_BaseMessage, 0, 0},  {&_swigt__p_BaseMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ClientConnectedMessage[] = {  {&_swigt__p_ClientConnectedMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ClientConnectedMessagePtr[] = {  {&_swigt__p_ClientConnectedMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ClientDisconnectedMessage[] = {  {&_swigt__p_ClientDisconnectedMessage, 0, 0, 0},{0, 0, 0, 0}};
@@ -6816,7 +7109,7 @@ static swig_cast_info _swigc__p_ConnectToServerMessage[] = {  {&_swigt__p_Connec
 static swig_cast_info _swigc__p_ConnectToServerMessagePtr[] = {  {&_swigt__p_ConnectToServerMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_DebugPrintMessage[] = {  {&_swigt__p_DebugPrintMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_DebugPrintMessagePtr[] = {  {&_swigt__p_DebugPrintMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_IMessage[] = {  {&_swigt__p_BaseMessage, _p_BaseMessageTo_p_IMessage, 0, 0},  {&_swigt__p_DebugPrintMessage, _p_DebugPrintMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ClientConnectedMessage, _p_ClientConnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartServerMessage, _p_StartServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StopServerMessage, _p_StopServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartClientMessage, _p_StartClientMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StopClientMessage, _p_StopClientMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ServerResponseMessage, _p_ServerResponseMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ConnectToServerMessage, _p_ConnectToServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ClientDisconnectedMessage, _p_ClientDisconnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ServerDisconnectedMessage, _p_ServerDisconnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_PingRequestMessage, _p_PingRequestMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartSceanrioRequestMessage, _p_StartSceanrioRequestMessageTo_p_IMessage, 0, 0},  {&_swigt__p_IMessage, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_IMessage[] = {  {&_swigt__p_ScenarioSceneLoadedNotifyMessage, _p_ScenarioSceneLoadedNotifyMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartSceanrioRequestMessage, _p_StartSceanrioRequestMessageTo_p_IMessage, 0, 0},  {&_swigt__p_PingRequestMessage, _p_PingRequestMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ServerDisconnectedMessage, _p_ServerDisconnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ClientDisconnectedMessage, _p_ClientDisconnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ConnectToServerMessage, _p_ConnectToServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ServerResponseMessage, _p_ServerResponseMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StopClientMessage, _p_StopClientMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartClientMessage, _p_StartClientMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StopServerMessage, _p_StopServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_StartServerMessage, _p_StartServerMessageTo_p_IMessage, 0, 0},  {&_swigt__p_ClientConnectedMessage, _p_ClientConnectedMessageTo_p_IMessage, 0, 0},  {&_swigt__p_DebugPrintMessage, _p_DebugPrintMessageTo_p_IMessage, 0, 0},  {&_swigt__p_IMessage, 0, 0, 0},  {&_swigt__p_BaseMessage, _p_BaseMessageTo_p_IMessage, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LuaScriptManager[] = {  {&_swigt__p_LuaScriptManager, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_MessagePtr[] = {  {&_swigt__p_MessagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PingRequestMessage[] = {  {&_swigt__p_PingRequestMessage, 0, 0, 0},{0, 0, 0, 0}};
@@ -6824,6 +7117,9 @@ static swig_cast_info _swigc__p_PingRequestMessagePtr[] = {  {&_swigt__p_PingReq
 static swig_cast_info _swigc__p_Scenario[] = {  {&_swigt__p_Scenario, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ScenarioScene[] = {  {&_swigt__p_ScenarioScene, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ScenarioSceneIterator[] = {  {&_swigt__p_ScenarioSceneIterator, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneLoadedNotifyMessage[] = {  {&_swigt__p_ScenarioSceneLoadedNotifyMessage, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioSceneLoadedNotifyMessagePtr[] = {  {&_swigt__p_ScenarioSceneLoadedNotifyMessagePtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ScenarioScenePtr[] = {  {&_swigt__p_ScenarioScenePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ScenarioSceneVector[] = {  {&_swigt__p_ScenarioSceneVector, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ScenarioSceneVector__iterator[] = {  {&_swigt__p_ScenarioSceneVector__iterator, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ScenarioSceneVector__pointer[] = {  {&_swigt__p_ScenarioSceneVector__pointer, 0, 0, 0},{0, 0, 0, 0}};
@@ -6870,6 +7166,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Scenario,
   _swigc__p_ScenarioScene,
   _swigc__p_ScenarioSceneIterator,
+  _swigc__p_ScenarioSceneLoadedNotifyMessage,
+  _swigc__p_ScenarioSceneLoadedNotifyMessagePtr,
+  _swigc__p_ScenarioScenePtr,
   _swigc__p_ScenarioSceneVector,
   _swigc__p_ScenarioSceneVector__iterator,
   _swigc__p_ScenarioSceneVector__pointer,

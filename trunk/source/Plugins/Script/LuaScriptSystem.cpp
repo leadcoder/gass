@@ -90,6 +90,7 @@ namespace GASS
 	void LuaScriptSystem::OnLuaStateMessage(LuaScriptStateMessagePtr message)
 	{
 		lua_State *state =  static_cast<lua_State*>(message->GetState());
+		LuaScriptManager::Get().SetState(state);
 		luaopen_GASS(state);
 	}
 }

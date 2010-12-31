@@ -200,7 +200,7 @@ public:
 class ScenarioSceneLoadedNotifyMessagePtr
 {
 public:
-	ScenarioSceneLoadedNotifyMessagePtr(StartSceanrioRequestMessage *);
+	ScenarioSceneLoadedNotifyMessagePtr(ScenarioSceneLoadedNotifyMessage *);
 };
 
 

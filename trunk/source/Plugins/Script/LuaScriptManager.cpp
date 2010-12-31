@@ -37,7 +37,7 @@ extern "C" {
 #include "lauxlib.h"
 	namespace GASS
 	{
-	void swig_new_message_ptr(lua_State* L, GASS::MessagePtr* message);
+		void swig_new_message_ptr(lua_State* L, GASS::MessagePtr* message);
 	}
 }
 
@@ -48,7 +48,7 @@ extern "C" {
 //#include "ScriptingModules/LuaScriptModule/CEGUILua.h"
 namespace GASS
 {
-	LuaScriptManager::LuaScriptManager()
+	LuaScriptManager::LuaScriptManager() : m_State(NULL)
 	{
 
 	}
@@ -91,15 +91,19 @@ namespace GASS
 	bool LuaScriptManager::ExecuteMessageFunction(const std::string& handler_name, MessagePtr message)
 	{
 		//CEGUI::LuaScriptModule* scriptmod = dynamic_cast<CEGUI::LuaScriptModule*>( CEGUI::System::getSingleton().getScriptingModule());
-		lua_State* d_state;// = scriptmod->getLuaState();
+		if(!m_State)
+		{
+			Log::Warning("No lua state present");
+			return false;
+		}
 		const int err_idx = 0;
-		int top = lua_gettop(d_state);
+		int top = lua_gettop(m_State);
 
 		//PushNamedFunction(d_state, handler_name.c_str());
-		lua_getglobal(d_state, handler_name.c_str());
-		if (!lua_isfunction(d_state,-1))
+		lua_getglobal(m_State, handler_name.c_str());
+		if (!lua_isfunction(m_State,-1))
 		{
-			lua_settop(d_state,top);
+			lua_settop(m_State,top);
 			return false;
 			//throw ScriptException("The Lua event handler: '"+handler_name+"' does not represent a Lua function");
 		}
@@ -110,10 +114,10 @@ namespace GASS
 		//if (!lua_isnil(d_state, -1))
 
 
-		swig_new_message_ptr(d_state, &message);
+		swig_new_message_ptr(m_State, &message);
 		{ 
 			// the class wasn't found 
-			
+
 			// tolua_pushusertype(d_state, (void*)message.get(),"BaseMessage");
 		} 
 
@@ -124,18 +128,18 @@ namespace GASS
 		}
 		*/
 
-		lua_call(d_state, 1, 0);
+		lua_call(m_State, 1, 0);
 		// handle errors
 		/*if (error)
 		{
-			std::string  errStr(lua_tostring(d_state,-1));
-			lua_settop(d_state,top);
-			//throw ScriptException("Unable to evaluate the Lua event handler: '" +
-			//                     handler_name + "'\n\n" + errStr + "\n");
+		std::string  errStr(lua_tostring(d_state,-1));
+		lua_settop(d_state,top);
+		//throw ScriptException("Unable to evaluate the Lua event handler: '" +
+		//                     handler_name + "'\n\n" + errStr + "\n");
 		}*/
 		// retrieve result
-		bool ret = lua_isboolean(d_state, -1) ? lua_toboolean(d_state, -1 ) : true;
-		lua_settop(d_state,top);
+		bool ret = lua_isboolean(m_State, -1) ? lua_toboolean(m_State, -1 ) : true;
+		lua_settop(m_State,top);
 		return ret;
 	}
 
@@ -210,10 +214,15 @@ namespace GASS
 		}
 	}
 
+	void LuaScriptManager::SetState(lua_State* state)
+	{
+		m_State = state;
+	}
+
 	/*DebugPrintMessage LuaScriptManager::ToDebugPrintMessage(MessagePtr message)
 	{
-		DebugPrintMessagePtr db_mess = boost::shared_dynamic_cast<DebugPrintMessage>(message);
-		DebugPrintMessage ret = *db_mess.get();
-		return ret;
+	DebugPrintMessagePtr db_mess = boost::shared_dynamic_cast<DebugPrintMessage>(message);
+	DebugPrintMessage ret = *db_mess.get();
+	return ret;
 	}*/
 }
