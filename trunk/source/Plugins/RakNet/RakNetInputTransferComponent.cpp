@@ -47,14 +47,14 @@
 #include "Sim/Components/Graphics/ICameraComponent.h"
 
 #include "GetTime.h"
-#include "rakpeerinterface.h"
+#include "RakPeerInterface.h"
 
 
 namespace GASS
 {
 	RakNetInputTransferComponent::RakNetInputTransferComponent() : m_ControlSetting(NULL)
 	{
-		
+
 	}
 
 	RakNetInputTransferComponent::~RakNetInputTransferComponent()
@@ -65,8 +65,8 @@ namespace GASS
 	void RakNetInputTransferComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("InputTransferComponent",new Creator<RakNetInputTransferComponent, IComponent>);
-		GASS::PackageFactory::GetPtr()->Register(INPUT_DATA,new GASS::Creator<InputPackage, NetworkPackage>);	
-		
+		GASS::PackageFactory::GetPtr()->Register(INPUT_DATA,new GASS::Creator<InputPackage, NetworkPackage>);
+
 		RegisterProperty<std::string>("ControlSetting", &RakNetInputTransferComponent::GetControlSetting, &RakNetInputTransferComponent::SetControlSetting);
 	}
 
@@ -84,7 +84,7 @@ namespace GASS
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
 		if(m_ControlSetting == NULL)
 			Log::Error("could not find control settings: %s in RakNetInputTransferComponent",m_ControlSettingName.c_str());
-		
+
 		if(!raknet->IsServer())
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
@@ -101,7 +101,7 @@ namespace GASS
 	{
 		RakNetTime time_stamp = RakNet::GetTime();
 		std::string controller = message->GetController();
-		
+
 		int index = m_ControlSetting->m_NameToIndex[controller];
 		float value = message->GetValue();
 		boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,index,value));
@@ -126,7 +126,7 @@ namespace GASS
 		{
 			NetworkPackagePtr package = message->GetPackage();
 			InputPackagePtr input_package = boost::shared_dynamic_cast<InputPackage>(package);
-			
+
 			std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
 			MessagePtr message(new ControllerMessage(controller,input_package->Value));
 			GetSceneObject()->PostMessage(message);
@@ -134,12 +134,12 @@ namespace GASS
 		}
 	}
 
-	TaskGroup RakNetInputTransferComponent::GetTaskGroup() const 
+	TaskGroup RakNetInputTransferComponent::GetTaskGroup() const
 	{
 		return NETWORK_TASK_GROUP;
 	}
 
-	/*int RakNetInputTransferComponent::EnterObject(const char *str, RakNet::AutoRPC* networkCaller) 
+	/*int RakNetInputTransferComponent::EnterObject(const char *str, RakNet::AutoRPC* networkCaller)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if (networkCaller==0)
@@ -160,7 +160,7 @@ namespace GASS
 			raknet->GetRPC()->Call("RakNetInputTransferComponent::EnterObject", str);
 			raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
 			std::cout << "EnterObject called from server" <<std::endl;
-		
+
 		}
 		else
 		{

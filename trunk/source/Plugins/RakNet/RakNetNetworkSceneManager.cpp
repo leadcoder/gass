@@ -33,7 +33,7 @@
 
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Systems/SimSystemManager.h"
-#include "Plugins/RakNet/RaknetNetworkSceneManager.h"
+#include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
@@ -106,8 +106,8 @@ namespace GASS
 		{
 			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponent<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
-			
-			
+
+
 			GetScenarioScene()->GetObjectManager()->LoadObject(so);
 		}
 	}
@@ -133,7 +133,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::Update(double delta_time)
 	{
-		
+
 		if (m_Paused)
 			return;
 
@@ -147,14 +147,14 @@ namespace GASS
 
 		for (int i = 0; i < clamp_num_steps; ++i)
 		{
-			
+
 		}
 		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
 		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
 
-		
-		
-		
+
+
+
 	}
 
 
@@ -166,7 +166,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
-		
+
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);

@@ -322,7 +322,12 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsJointMessage> PhysicsJointMessagePtr;
 
-
+    /**
+        Message used to interact with physics bodies.
+        The user provide a paramerter type and a
+        value for that type. Physics body implementations
+        are responsible to suscribe to this message.
+    */
 	class PhysicsBodyMessage : public BaseMessage
 	{
 	public:
@@ -348,6 +353,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsBodyMessage> PhysicsBodyMessagePtr;
 
+    /**
+        Message used to change mass of physics bodies.
+    */
 	class PhysicsMassMessage : public BaseMessage
 	{
 	public:

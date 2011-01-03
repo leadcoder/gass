@@ -36,11 +36,11 @@
 
 
 
-extern "C" 
+extern "C"
 {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include "lua5.1/lua.h"
+#include "lua5.1/lualib.h"
+#include "lua5.1/lauxlib.h"
 	int luaopen_GASS(lua_State* L);
 	namespace GASS
 	{
@@ -75,7 +75,7 @@ namespace GASS
 	void LuaScriptSystem::OnInit(InitMessagePtr message)
 	{
 		LuaScriptManager* lsm = new LuaScriptManager();
-		
+
 		 /*lua_State *L = lua_open();
 		 //lua_close(L);
 		 luaopen_GASS(L);

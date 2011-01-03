@@ -114,7 +114,7 @@ namespace GASS
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
-		
+
 	private:
 		//Helpers
 		void Stop();
@@ -126,7 +126,7 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
-		void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
 
 
 		ReplicaManager* m_ReplicaManager;

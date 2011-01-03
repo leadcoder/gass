@@ -32,9 +32,18 @@
 
 
 extern "C" {
+#ifdef WIN32
+
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+
+#else
+
+#include "lua5.1/lua.h"
+#include "lua5.1/lualib.h"
+#include "lua5.1/lauxlib.h"
+#endif
 	namespace GASS
 	{
 		void swig_new_message_ptr(lua_State* L, GASS::MessagePtr* message);
@@ -110,16 +119,16 @@ namespace GASS
 
 		// call it
 		//int error = lua_call(d_state, 0, 0);
-		//luaL_getmetatable(d_state, "SWIG.BaseMessage"); 
+		//luaL_getmetatable(d_state, "SWIG.BaseMessage");
 		//if (!lua_isnil(d_state, -1))
 
 
 		swig_new_message_ptr(m_State, &message);
-		{ 
-			// the class wasn't found 
+		{
+			// the class wasn't found
 
 			// tolua_pushusertype(d_state, (void*)message.get(),"BaseMessage");
-		} 
+		}
 
 		/*
 		SWIGEXPORT void swig_new_message_ptr(lua_State* L, MessagePtr* message)
