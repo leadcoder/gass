@@ -55,7 +55,7 @@ namespace GASS
 
 	OgreMeshComponent::~OgreMeshComponent()
 	{
-		
+
 
 	}
 
@@ -74,6 +74,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
+
 	}
 
 	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -193,7 +195,7 @@ namespace GASS
 				Ogre::Bone* bone_cand = bone_iter.getNext();
 				//Ogre::Vector3 bone_pos = bone->getWorldPosition();
 				//Vec3 bone_pos = Convert::ToGASS(bone_cand->getWorldPosition());
-				Vec3 bone_pos = Convert::ToGASS(bone_cand->_getDerivedPosition());
+				Vec3 bone_pos = Convert::ToGASS(bone_cand->getPosition());
 				//add node pos?
 				float  dist = (pos - bone_pos).SquaredLength();
 				if(dist < min_dist || bone == NULL)
@@ -386,7 +388,7 @@ namespace GASS
 
 	void OgreMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-		
+
 
 		if(!m_UniqueMaterialCreated) 
 		{
@@ -407,7 +409,7 @@ namespace GASS
 			Vec3 ambient = message->GetAmbient();
 			Vec3 specular = message->GetSpecular();
 			Vec3 si = message->GetSelfIllumination();
-		
+
 			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
 			mat->setAmbient(ambient.x,ambient.y,ambient.z);
 			mat->setSpecular(specular.x,specular.y,specular.z,1);
@@ -425,6 +427,46 @@ namespace GASS
 				mat->setDepthCheckEnabled(true);
 				mat->setSceneBlending(SBT_REPLACE);
 			}
+		}
+	}
+
+	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
+	{
+		Ogre::Bone* bone;
+
+		
+		if(message->GetName() == "")
+		{
+			//bone = GetClosestBone(pos);
+			return;
+		}
+		else
+		{
+			Ogre::SkeletonInstance* skeleton = m_OgreEntity->getSkeleton();
+			bone = skeleton->getBone(message->GetName());
+		}
+		if(bone)
+		{
+
+			Vec3 pos = message->GetPosition();
+			if(!bone->isManuallyControlled())
+			{
+				bone->setManuallyControlled(true);
+			}
+			bone->setPosition(pos.x,pos.y,pos.z);
+
+			/*Ogre::Vector3 worldPos(pos.x, pos.y, pos.z); // desired position in world coords
+			Ogre::SceneNode* parent = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get()->GetOgreNode();
+			Ogre::Vector3 parentPos = parent->_getDerivedPosition(); // node local pos
+			Ogre::Vector3 parentQuatXbonePos = worldPos - parentPos;
+			Ogre::Quaternion parentQuat = parent->_getDerivedOrientation(); // node local ori
+			Ogre::Vector3 bonePos = parentQuat.Inverse() * parentQuatXbonePos;
+			Ogre::Vector3 inverseParentScale = 1.0 / parent->_getDerivedScale();
+
+			bone->setPosition(bonePos * inverseParentScale);
+			Ogre::Quaternion worldQuat(1.0, 0, 0, 0); // desired orientation in world terms
+			Ogre::Quaternion boneQuat = worldQuat.Inverse() * parentQuat; // equiv to ("boneQuat = worldQuat / parentQuat")
+			bone->setOrientation(boneQuat);*/
 		}
 	}
 }

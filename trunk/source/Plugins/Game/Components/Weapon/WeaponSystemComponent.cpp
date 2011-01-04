@@ -203,9 +203,16 @@ namespace GASS
 		//effect
 		if(m_FireEffectTemplate != "")
 		{
-			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,final_pos,projectile_rot,vel));
+			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,Vec3(0,0,0),Quaternion::IDENTITY,vel,GetSceneObject()));
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 		}
+
+
+		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,m_RoundOfFire));
+		GetSceneObject()->PostMessage(particle_msg);
+		MessagePtr particle_msg2(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,0));
+		particle_msg2->SetDeliverDelay(0.15);
+		GetSceneObject()->PostMessage(particle_msg2);
 
 
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_ProjectileTemplateName);

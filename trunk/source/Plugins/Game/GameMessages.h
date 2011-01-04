@@ -136,16 +136,18 @@ namespace GASS
 	class HitMessage : public BaseMessage
 	{
 	public:
-		HitMessage(float damage, const Vec3 &hit_direction, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Damage(damage), m_HitDirection (hit_direction)
+		HitMessage(float damage, const Vec3 &hit_position, const Vec3 &hit_direction, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Damage(damage), m_HitDirection (hit_direction),m_HitPosition(hit_position)
 		  {
 
 		  }
 		  float GetDamage() const {return m_Damage;}
 		  Vec3 GetHitDirection() const {return m_HitDirection;}
+		  Vec3 GetHitPosition() const {return m_HitPosition;}
 	private:
 		float m_Damage;
 		Vec3 m_HitDirection;
+		Vec3 m_HitPosition;
 	};
 	typedef boost::shared_ptr<HitMessage> HitMessagePtr;
 

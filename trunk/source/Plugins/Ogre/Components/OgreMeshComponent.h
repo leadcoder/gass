@@ -66,6 +66,7 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 
 		void SetTexCoordSpeed(const Vec2 &speed);
 

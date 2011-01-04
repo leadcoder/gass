@@ -281,7 +281,7 @@ namespace GASS
 				float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
 				float damage_value = angle_falloff*m_MaxDamage;
 
-				MessagePtr hit_msg(new HitMessage(damage_value,proj_dir));
+				MessagePtr hit_msg(new HitMessage(damage_value,m_Pos,proj_dir));
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
 
 				//Send force message to indicate hit

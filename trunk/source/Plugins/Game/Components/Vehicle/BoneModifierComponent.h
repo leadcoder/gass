@@ -18,12 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef ARMOR_COMPONENT_H
-#define ARMOR_COMPONENT_H
+#ifndef TRACK_COMPONENT_H
+#define TRACK_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Common.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Common.h"
+#include "Core/MessageSystem/IMessage.h"
 #include "Plugins/Game/GameMessages.h"
 
 namespace GASS
@@ -33,26 +34,32 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class ArmorComponent :  public Reflection<ArmorComponent,BaseSceneComponent>
+	class BoneModifierComponent :  public Reflection<BoneModifierComponent,BaseSceneComponent>
 	{
 	public:
-		ArmorComponent();
-		virtual ~ArmorComponent();
+		BoneModifierComponent();
+		virtual ~BoneModifierComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void OnHit(HitMessagePtr message);
-		float GetArmor() const; 
-		void SetArmor(float value);
-		std::string GetDamageMesh() const;
-		void SetDamageMesh(const std::string &value);
-		std::string GetDamageEffect1() const;
-		void SetDamageEffect1(const std::string &name);
+		std::string GetBoneName() const;
+		void SetBoneName(const std::string &name);
+		std::string GetSourceObject() const;
+		void SetSourceObject(const std::string &name);
+		std::string GetMeshObject() const;
+		void SetMeshObject(const std::string &name);
 
-		float m_Armor;
-		float m_CurrentArmor;
-		std::string m_DamageMesh;
-		std::string m_DamageEffect1;
+		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
+		void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message);
+		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+		SceneObjectWeakPtr m_SourceObject;
+
+		std::string m_BoneName;
+		std::string m_MeshObjectName;
+		std::string m_SourceObjectName;
+
+
 	};
 }
 #endif
