@@ -330,7 +330,7 @@ namespace GASS
 	void ScenarioScene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
 	{
 		std::string obj_template = message->GetTemplateName();
-		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template);
+		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template,message->GetParent());
 		if(so)
 		{
 			Vec3 pos = message->GetPosition();

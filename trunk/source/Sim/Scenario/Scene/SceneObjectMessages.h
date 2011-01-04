@@ -466,6 +466,22 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<MaterialMessage> MaterialMessagePtr;
 
+
+	class BoneTransformationMessage : public BaseMessage
+	{
+	public:
+		BoneTransformationMessage(const std::string &name, const Vec3  &pos, const Quaternion &rot,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Name(name),m_Position(pos), m_Rotation(rot){}
+		  std::string GetName() const {return m_Name;}
+		  Vec3 GetPosition() const {return m_Position;}
+		  Quaternion  GetRotation() const {return m_Rotation;}
+	private:
+		std::string m_Name;
+		Vec3 m_Position;
+		Quaternion m_Rotation;
+	};
+	typedef boost::shared_ptr<BoneTransformationMessage> BoneTransformationMessagePtr;
+
 	class CameraParameterMessage : public BaseMessage
 	{
 	public:

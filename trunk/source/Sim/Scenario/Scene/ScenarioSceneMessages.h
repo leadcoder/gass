@@ -103,13 +103,15 @@ namespace GASS
 			const Vec3 &position,
 			const Quaternion &rotation,
 			const Vec3 &velocity,
+			SceneObjectPtr parent = SceneObjectPtr(),
 			SenderID sender_id = -1, 
 			double delay= 0) : 
 		BaseMessage(sender_id , delay), 
 			m_Tempalate(template_name),
 			m_Position(position),
 			m_Rotation(rotation),
-			m_Velocity(velocity)
+			m_Velocity(velocity),
+			m_Parent(parent)
 		{
 
 		}
@@ -117,11 +119,13 @@ namespace GASS
 		Vec3 GetPosition() const {return m_Position;}
 		Quaternion GetRotation() const {return m_Rotation;}
 		Vec3 GetVelocity() const {return m_Velocity;}
+		SceneObjectPtr GetParent() const {return m_Parent;}
 	private:
 		std::string m_Tempalate;
 		Vec3 m_Position;
 		Quaternion m_Rotation;
 		Vec3 m_Velocity;
+		SceneObjectPtr m_Parent;
 	};
 
 	typedef boost::shared_ptr<SpawnObjectFromTemplateMessage> SpawnObjectFromTemplateMessagePtr;
