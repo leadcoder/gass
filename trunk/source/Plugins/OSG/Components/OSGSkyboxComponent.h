@@ -52,6 +52,7 @@ namespace GASS
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
 		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetTexturePath(const std::string &side) const;
 
 		osg::TextureCubeMap* ReadCubeMap();

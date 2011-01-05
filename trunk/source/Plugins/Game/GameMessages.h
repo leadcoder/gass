@@ -183,5 +183,27 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ClientRemoteMessage> ClientRemoteMessagePtr;
 
+
+	/**
+		Message sent by the LOD component to inform other components lod level for the object
+	*/
+	class LODMessage : public BaseMessage
+	{
+		
+	public:
+		enum LODLevel
+		{
+			LOD_HIGH,
+			LOD_MEDIUM,
+			LOD_LOW
+		};
+
+		LODMessage(LODLevel level, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) , m_Level(level){}
+		LODLevel GetLevel() const {return m_Level;}
+	private:
+		LODLevel m_Level;
+	};
+	typedef boost::shared_ptr<LODMessage> LODMessagePtr;
 }
 #endif

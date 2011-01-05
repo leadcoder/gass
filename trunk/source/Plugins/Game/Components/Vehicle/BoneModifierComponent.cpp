@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	BoneModifierComponent::BoneModifierComponent() 
+	BoneModifierComponent::BoneModifierComponent() : m_Active(false)
 	{
 	}
 
@@ -57,6 +57,20 @@ namespace GASS
 	void BoneModifierComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLODChange,LODMessage,0));
+		
+	}
+
+	void BoneModifierComponent::OnLODChange(LODMessagePtr message)
+	{
+		if(message->GetLevel() == LODMessage::LOD_LOW)
+		{
+			m_Active = false;
+		}
+		else
+		{
+			m_Active = true; 
+		}
 	}
 
 	void BoneModifierComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -85,14 +99,9 @@ namespace GASS
 
 	void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		//Send bone transformation message to parent scene object!
-		/*if(GetSceneObject()->GetParentSceneObject())
-		{
-			//GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName, message->GetPosition(),message->GetRotation())));
-			LocationComponentPtr location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
-			GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName, location->GetPosition(),Quaternion::IDENTITY)));
-			std::cout << "send bone" << std::endl;
-		}*/
+		if(!m_Active)
+			return;
+
 
 		SceneObjectPtr so(m_SourceObject);
 		if(so)

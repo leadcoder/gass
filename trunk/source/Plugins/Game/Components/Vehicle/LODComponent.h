@@ -18,51 +18,52 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BONE_MODIFIER_COMPONENT_H
-#define BONE_MODIFIER_COMPONENT_H
+#ifndef LOD_COMPONENT_H
+#define LOD_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
 #include "Plugins/Game/GameMessages.h"
+
 
 namespace GASS
 {
-
 	class SceneObject;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class BoneModifierComponent :  public Reflection<BoneModifierComponent,BaseSceneComponent>
+	class LODComponent :  public Reflection<LODComponent,BaseSceneComponent>
 	{
 	public:
-		BoneModifierComponent();
-		virtual ~BoneModifierComponent();
+		LODComponent();
+		virtual ~LODComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		std::string GetBoneName() const;
-		void SetBoneName(const std::string &name);
-		std::string GetSourceObject() const;
-		void SetSourceObject(const std::string &name);
-		std::string GetMeshObject() const;
-		void SetMeshObject(const std::string &name);
-
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLODChange(LODMessagePtr message);
-	
-		void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message);
-		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
-		SceneObjectWeakPtr m_SourceObject;
+		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		
+		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}
+		void SetLowLODDistance(float value) {m_LowLODDistance = value;}
+		float GetMediumLODDistance() const {return m_MediumLODDistance;}
+		float GetLowLODDistance() const {return m_LowLODDistance;}
 
-		std::string m_BoneName;
-		std::string m_MeshObjectName;
-		std::string m_SourceObjectName;
-		bool m_Active;
+		void OnCameraMoved(TransformationNotifyMessagePtr message);
+		void OnObjectMoved(TransformationNotifyMessagePtr message);
 
+		void UpdateLOD();
+		
+		float m_MediumLODDistance;
+		float m_LowLODDistance;
+		SceneObjectWeakPtr m_ActiveCameraObject;
 
+		Vec3 m_ObjectPosition;
+		Vec3 m_CameraPosition;
+		LODMessage::LODLevel m_CurrentLevel;
 	};
 }
 #endif
