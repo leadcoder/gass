@@ -35,6 +35,7 @@
 //#include "Main/Root.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
+#include "Plugins/ODE/ODEGeometry.h"
 
 
 namespace GASS
@@ -208,9 +209,11 @@ namespace GASS
 		else
 		{
 			// check that both bodies has a geometry
-			ODEGeometryComponent* geom1 = static_cast<ODEGeometryComponent*>(dGeomGetData(o1));
-			ODEGeometryComponent* geom2 = static_cast<ODEGeometryComponent*>(dGeomGetData(o2));
+			
+			BaseSceneComponent* geom1 = static_cast<BaseSceneComponent*>(dGeomGetData(o1));
+			BaseSceneComponent* geom2 = static_cast<BaseSceneComponent*>(dGeomGetData(o2));
 
+			
 			if(!(geom1 && geom2))
 				return;
 
@@ -238,12 +241,16 @@ namespace GASS
 			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
 
 
+			IPhysicsGeometry* physics_geom1 = static_cast<IPhysicsGeometry*>(dGeomGetData(o1));
+			IPhysicsGeometry* physics_geom2 = static_cast<IPhysicsGeometry*>(dGeomGetData(o2));
+
+
 			dContact contact;
 			contact.fdir1[0] = 0;
 			contact.fdir1[1] = 0;
 			contact.fdir1[2] = -1;
 			contact.surface.mode = 0;
-			contact.surface.mu = geom1->GetFriction()*geom2->GetFriction();
+			contact.surface.mu = physics_geom1->GetFriction()*physics_geom2->GetFriction();
 			contact.surface.mu2 = contact.surface.mu;
 
 

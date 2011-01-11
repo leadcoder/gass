@@ -107,7 +107,7 @@ namespace GASS
 
 		if(!dGeomIsEnabled(other_geom)) return;
 
-		ODEGeometryComponent* pobj = static_cast<ODEGeometryComponent*>(dGeomGetData(other_geom));
+		BaseSceneComponent* pobj = static_cast<BaseSceneComponent*>(dGeomGetData(other_geom));
 		SceneObjectPtr scene_object = pobj->GetSceneObject();
 
 		int num_contact_points = 10;

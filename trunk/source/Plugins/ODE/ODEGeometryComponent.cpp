@@ -27,16 +27,20 @@
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/Math/AABox.h"
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
 
 namespace GASS
@@ -77,6 +81,8 @@ namespace GASS
 		RegisterProperty<float>("Slip", &GASS::ODEGeometryComponent::GetSlip, &GASS::ODEGeometryComponent::SetSlip);
 		RegisterProperty<long int>("CollisionBits", &GASS::ODEGeometryComponent::GetCollisionBits, &GASS::ODEGeometryComponent::SetCollisionBits);
 		RegisterProperty<long int>("CollisionCategory", &GASS::ODEGeometryComponent::GetCollisionCategory, &GASS::ODEGeometryComponent::SetCollisionCategory);
+		RegisterProperty<Vec3>("BaseScale", &GASS::ODEGeometryComponent::GetBaseScale, &GASS::ODEGeometryComponent::SetBaseScale);
+
 		//RegisterVectorProperty<std::string>("CollisionBits", &GASS::ODEGeometryComponent::GetCollisionBits, &GASS::ODEGeometryComponent::SetCollisionBits);
 		//RegisterVectorProperty<std::string>("CollisionCategories", &GASS::ODEGeometryComponent::GetCollisionCategory, &GASS::ODEGeometryComponent::SetCollisionCategory);
 		RegisterProperty<std::string>("GeometryType", &GASS::ODEGeometryComponent::GetGeometryType, &GASS::ODEGeometryComponent::SetGeometryType);
@@ -88,7 +94,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
 	void ODEGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
@@ -185,6 +191,7 @@ namespace GASS
 				geom_offset = geom_offset*0.5f;
 				geom_id= dCreateBox(0, bb_size.x, bb_size.y, bb_size.z);
 				//Log::Print("BBsize:%f,%f,%f",bb_size.x, bb_size.y, bb_size.z);
+				//create manual mesh object for debug purpose
 			}
 			break;
 		case PGT_CYLINDER:
@@ -196,6 +203,8 @@ namespace GASS
 				float radius=std::max(bb_size.x/2.f,bb_size.y/2.f);
 				float length=bb_size.z-radius;
 				geom_id = dCreateCCylinder (0, radius, length);
+
+
 
 			}
 			break;
@@ -224,7 +233,6 @@ namespace GASS
 
 		}
 
-
 		m_BBOffset = geom_offset;
 		Vec3 temp_offset = m_Offset + geom_offset;
 		//Set the clean-up mode of geometry transform. If the clean-up mode is 1,
@@ -251,6 +259,8 @@ namespace GASS
 			dGeomSetBody(trans_geom_id, NULL);
 		}
 		dGeomSetData(trans_geom_id, (void*)this);
+
+		//UpdateDebug(true);
 	}
 
 	void ODEGeometryComponent::SetPosition(const Vec3 &pos)
@@ -493,7 +503,6 @@ namespace GASS
 
 		if(m_TerrainGeom)
 		{
-
 			int samples_x;
 			int samples_z;
 			Float size_x;
@@ -601,7 +610,197 @@ namespace GASS
 		}
 	}
 
+	void ODEGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
+	{
+		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		MeshVertex vertex;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+
+		vertex.TexCoord.Set(0,0);
+		vertex.Color = Vec4(1,1,1,1);
+		mesh_data->Type = LINE_LIST;
+		std::vector<Vec3> conrners;
+
+		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
+		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 , size.z/2.0));
+		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
+		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
+
+		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 , size.z/2.0));
+		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 , size.z/2.0));
+		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
+		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
 
 
+		for(int i = 0; i < 4; i++)
+		{
+			vertex.Pos = conrners[i];
+			mesh_data->VertexVector.push_back(vertex);
+			vertex.Pos = conrners[(i+1)%4];
+			mesh_data->VertexVector.push_back(vertex);
 
+			vertex.Pos = conrners[i];
+			mesh_data->VertexVector.push_back(vertex);
+			vertex.Pos = conrners[i+4];
+			mesh_data->VertexVector.push_back(vertex);
+		}
+
+		for(int i = 0; i < 4; i++)
+		{
+			vertex.Pos = conrners[4 + i];
+			mesh_data->VertexVector.push_back(vertex);
+			vertex.Pos = conrners[4 + ((i+1)%4)];
+			mesh_data->VertexVector.push_back(vertex);
+		}
+
+		SceneObjectPtr scene_object = GetDebugObject();
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		scene_object->PostMessage(mesh_message);
+
+		//Vec3 pos  = m_Offset + offset;
+		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(pos);
+		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
+	}
+
+
+	void ODEGeometryComponent::CreateDebugSphere(float size,const Vec3 &offset)
+	{
+		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		MeshVertex vertex;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+
+		vertex.TexCoord.Set(0,0);
+		vertex.Color = Vec4(1,1,1,1);
+		mesh_data->Type = LINE_STRIP;
+
+		float samples = 30;
+		float rad = 2*MY_PI/samples;
+
+		float x,y,z;
+		for(float i = 0 ;i <= samples; i++)
+		{
+			x = cos(rad*i)*size;
+			y = sin(rad*i)*size;
+			vertex.Pos.Set(x,y,0);
+			mesh_data->VertexVector.push_back(vertex);
+		}
+		mesh_data->VertexVector.push_back(vertex);
+
+		for(float i = 0 ;i <= samples; i++)
+		{
+			x = cos(rad*i)*size;
+			z = sin(rad*i)*size;
+			vertex.Pos.Set(x,0,z);
+			mesh_data->VertexVector.push_back(vertex);
+		}
+		mesh_data->VertexVector.push_back(vertex);
+
+		for(float i = 0 ;i <= samples; i++)
+		{
+			y = cos(rad*i)*size;
+			z = sin(rad*i)*size;
+			vertex.Pos.Set(0,y,z);
+			mesh_data->VertexVector.push_back(vertex);
+		}
+		mesh_data->VertexVector.push_back(vertex);
+
+
+		SceneObjectPtr scene_object = GetDebugObject();
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		scene_object->PostMessage(mesh_message);
+		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(offset);
+		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
+	}
+
+
+	void ODEGeometryComponent::UpdateDebug(bool enable)
+	{
+
+		if(m_GeomID && enable)
+		{
+			switch(m_GeometryType)
+			{
+			case PGT_PLANE:
+				{
+
+				}
+				break;
+			case PGT_BOX:
+				{
+					dVector3 temp_size;
+					dGeomBoxGetLengths (m_GeomID, temp_size);
+					Vec3 size(temp_size[0],temp_size[1],temp_size[2]);
+					const dReal* pos =  dGeomGetPosition(m_GeomID);
+					CreateDebugBox(size,Vec3(pos[0],pos[1],pos[2]));
+				}
+				break;
+			case PGT_CYLINDER:
+				{
+
+				}
+				break;
+			case PGT_SPHERE:
+				{
+					dReal radius = dGeomSphereGetRadius (m_GeomID);
+					const dReal* pos =  dGeomGetPosition(m_GeomID);
+					CreateDebugSphere(radius,Vec3(pos[0],pos[1],pos[2]));
+				}
+				break;
+			}
+		}
+		if(!enable)
+		{
+			SceneObjectPtr obj = GetDebugObject();
+			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
+		}
+	}
+
+
+	SceneObjectPtr ODEGeometryComponent::GetDebugObject() 
+	{
+		SceneObjectPtr scene_object;
+		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			int pos = child->GetName().find("DebugPhysics");
+			if(pos  >= 0)
+			{
+				scene_object = child;
+			}
+		}
+
+		if(!scene_object)
+		{
+			scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
+			//scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+			if(!scene_object)
+			{
+				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
+				debug_template->SetName("DebugPhysics");
+
+				BaseComponentPtr location_comp = boost::shared_dynamic_cast<BaseComponent>(ComponentFactory::Get().Create("LocationComponent"));
+				location_comp->SetName("LocationComp");
+				location_comp->SetPropertyByType("AttachToParent",true);
+
+
+				BaseComponentPtr mesh_comp = boost::shared_dynamic_cast<BaseComponent>(ComponentFactory::Get().Create("ManualMeshComponent"));
+				mesh_comp->SetName("MeshComp");
+				mesh_comp->SetPropertyByType("CastShadows",false);
+
+				debug_template->AddComponent(location_comp);
+				debug_template->AddComponent(mesh_comp );
+				SimEngine::Get().GetSimObjectManager()->AddTemplate(debug_template);
+				scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
+				//scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+			}
+			//GetSceneObject()->AddChild(scene_object);
+		}
+		return scene_object;
+	}
+
+	void ODEGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	{
+		UpdateDebug(message->DebugGeometry());
+	}
 }

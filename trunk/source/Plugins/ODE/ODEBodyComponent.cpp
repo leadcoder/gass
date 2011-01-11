@@ -36,7 +36,7 @@ namespace GASS
 	ODEBodyComponent::ODEBodyComponent()
 		:m_ODESpaceID(NULL),
 		m_ODESecondarySpaceID(NULL),
-		m_ODEBodyComponent(0),
+		m_ODEBodyID(0),
 		m_AutoDisable(true),
 		m_FastRotation(true),
 		m_MassRepresentation(MR_GEOMETRY),
@@ -51,7 +51,7 @@ namespace GASS
 
 	ODEBodyComponent::~ODEBodyComponent()
 	{
-		if(m_ODEBodyComponent) dBodyDestroy(m_ODEBodyComponent);
+		if(m_ODEBodyID) dBodyDestroy(m_ODEBodyID);
 	}
 
 	void ODEBodyComponent::RegisterReflection()
@@ -174,27 +174,27 @@ namespace GASS
 		m_SceneManager = scene_manager;
 
 		Vec3 abs_pos;
-		m_ODEBodyComponent = dBodyCreate(scene_manager->GetWorld());
+		m_ODEBodyID = dBodyCreate(scene_manager->GetWorld());
 		//From car world
 		//Set the auto-disable flag of a body. If the do_auto_disable is nonzero the body will be automatically disabled when it has been idle for long enough.
-		dBodySetAutoDisableDefaults(m_ODEBodyComponent);
-		if(m_AutoDisable) dBodySetAutoDisableFlag(m_ODEBodyComponent, 1);
-		else dBodySetAutoDisableFlag(m_ODEBodyComponent, 0);
+		dBodySetAutoDisableDefaults(m_ODEBodyID);
+		if(m_AutoDisable) dBodySetAutoDisableFlag(m_ODEBodyID, 1);
+		else dBodySetAutoDisableFlag(m_ODEBodyID, 0);
 		//Set whether the body is influenced by the world's gravity or not. If mode is nonzero it is, if mode is zero, it isn't. Newly created bodies are always influenced by the world's gravity.
-		dBodySetGravityMode(m_ODEBodyComponent, 1);
+		dBodySetGravityMode(m_ODEBodyID, 1);
 
-		//SetBodyTransformation(m_ODEBodyComponent,m_Owner);
+		//SetBodyTransformation(m_ODEBodyID,m_Owner);
 		//From ode doc
 		//0: An ``infinitesimal'' orientation update is used. This is fast to compute, but it can occasionally cause inaccuracies for bodies that are rotating at high speed, especially when those bodies are joined to other bodies. This is the default for every new body that is created.
 		//1: A ``finite'' orientation update is used. This is more costly to compute, but will be more accurate for high speed rotations. Note however that high speed rotations can result in many types of error in a simulation, and this mode will only fix one of those sources of error.
-		if(m_FastRotation) dBodySetFiniteRotationMode(m_ODEBodyComponent, 1 );
+		if(m_FastRotation) dBodySetFiniteRotationMode(m_ODEBodyID, 1 );
 		/*
 		// Create mass and inertia matrix based on bounding box if nothing else specified
 		Vec3 box = GetOwner()->GetFirstGeometry()->GetBoundingBox().GetSize();
 		if (box.x != 0 && box.y != 0 && box.z != 0) {
 		dMassSetBoxTotal(&m_ODEMass,m_Mass,box.x,box.y,box.z);
 		Log::Print("ODEBodyComponent BBox mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
-		dBodySetMass(m_ODEBodyComponent,&m_ODEMass);
+		dBodySetMass(m_ODEBodyID,&m_ODEMass);
 		} else
 		Log::Warning("ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		*/
@@ -223,7 +223,7 @@ namespace GASS
 			}
 
 		}
-		dBodySetData(m_ODEBodyComponent, (void*)this);
+		dBodySetData(m_ODEBodyID, (void*)this);
 
 		if(!scene_manager->IsActive())
 		{
@@ -233,7 +233,7 @@ namespace GASS
 		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 		SetPosition(location->GetPosition());
 
-		dBodySetMovedCallback (m_ODEBodyComponent, &BodyMovedCallback);
+		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
@@ -275,17 +275,17 @@ namespace GASS
 			CGPosition.x,CGPosition.y,CGPosition.z,
 			symmetricInertia.x,symmetricInertia.y,symmetricInertia.z,
 			assymmetricInertia.x,assymmetricInertia.y,assymmetricInertia.z);
-		dBodySetMass(m_ODEBodyComponent, &m_ODEMass);
+		dBodySetMass(m_ODEBodyID, &m_ODEMass);
 	}
 
 	Vec3 ODEBodyComponent::GetForce(bool rel)
 	{
 		Vec3 force(0,0,0);
-		if (m_ODEBodyComponent) {
-			const dReal *f_p = dBodyGetForce(m_ODEBodyComponent);
+		if (m_ODEBodyID) {
+			const dReal *f_p = dBodyGetForce(m_ODEBodyID);
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorFromWorld(m_ODEBodyComponent,f_p[0],f_p[1],f_p[2],vec);
+				dBodyVectorFromWorld(m_ODEBodyID,f_p[0],f_p[1],f_p[2],vec);
 				force.Set(vec[0],vec[1],vec[2]);
 			} else
 				force.Set(f_p[0],f_p[1],f_p[2]);
@@ -295,54 +295,54 @@ namespace GASS
 
 	void ODEBodyComponent::SetForce(const Vec3 &force)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
-			dBodySetForce(m_ODEBodyComponent,force.x,force.y,force.z);
+			dBodySetForce(m_ODEBodyID,force.x,force.y,force.z);
 		}
 	}
 
 	void ODEBodyComponent::SetTorque(const Vec3 &torque)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
-			dBodySetTorque(m_ODEBodyComponent,torque.x,torque.y,torque.z);
+			dBodySetTorque(m_ODEBodyID,torque.x,torque.y,torque.z);
 		}
 	}
 
 	void ODEBodyComponent::AddTorque(const Vec3 &torque_vec, bool rel)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			if (rel)
-				dBodyAddRelTorque(m_ODEBodyComponent, torque_vec.x,torque_vec.y,torque_vec.z);
+				dBodyAddRelTorque(m_ODEBodyID, torque_vec.x,torque_vec.y,torque_vec.z);
 			else
-				dBodyAddTorque(m_ODEBodyComponent, torque_vec.x,torque_vec.y,torque_vec.z);
+				dBodyAddTorque(m_ODEBodyID, torque_vec.x,torque_vec.y,torque_vec.z);
 		}
 	}
 
 	void ODEBodyComponent::SetVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorToWorld(m_ODEBodyComponent,vel.x,vel.y,vel.z,vec);
-				dBodySetLinearVel(m_ODEBodyComponent,vec[0],vec[1],vec[2]);
+				dBodyVectorToWorld(m_ODEBodyID,vel.x,vel.y,vel.z,vec);
+				dBodySetLinearVel(m_ODEBodyID,vec[0],vec[1],vec[2]);
 			} else
-				dBodySetLinearVel(m_ODEBodyComponent,vel.x,vel.y,vel.z);
+				dBodySetLinearVel(m_ODEBodyID,vel.x,vel.y,vel.z);
 		}
 	}
 
 	void ODEBodyComponent::SetAngularVelocity(const Vec3 &vel, bool rel)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorToWorld(m_ODEBodyComponent,vel.x,vel.y,vel.z,vec);
-				dBodySetAngularVel(m_ODEBodyComponent,vec[0],vec[1],vec[2]);
+				dBodyVectorToWorld(m_ODEBodyID,vel.x,vel.y,vel.z,vec);
+				dBodySetAngularVel(m_ODEBodyID,vec[0],vec[1],vec[2]);
 			} else
-				dBodySetAngularVel(m_ODEBodyComponent,vel.x,vel.y,vel.z);
+				dBodySetAngularVel(m_ODEBodyID,vel.x,vel.y,vel.z);
 		}
 	}
 
@@ -350,12 +350,12 @@ namespace GASS
 	Vec3 ODEBodyComponent::GetAngularVelocity(bool rel)
 	{
 		Vec3 vel(0,0,0);
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
-			dReal const * vel_p = dBodyGetAngularVel( m_ODEBodyComponent);
+			dReal const * vel_p = dBodyGetAngularVel( m_ODEBodyID);
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorFromWorld(m_ODEBodyComponent,vel_p[0],vel_p[1],vel_p[2],vec);
+				dBodyVectorFromWorld(m_ODEBodyID,vel_p[0],vel_p[1],vel_p[2],vec);
 				vel.Set(vec[0],vec[1],vec[2]);
 			} else
 				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
@@ -366,12 +366,12 @@ namespace GASS
 	void ODEBodyComponent::SetActive(bool value)
 	{
 		m_Active = value;
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			if(m_Active)
-				dBodyEnable(m_ODEBodyComponent);
+				dBodyEnable(m_ODEBodyID);
 			else
-				dBodyDisable(m_ODEBodyComponent);
+				dBodyDisable(m_ODEBodyID);
 		}
 	}
 	bool ODEBodyComponent::GetActive() const
@@ -382,11 +382,11 @@ namespace GASS
 	Vec3 ODEBodyComponent::GetTorque(bool rel)
 	{
 		Vec3 torque(0,0,0);
-		if (m_ODEBodyComponent) {
-			const dReal *f_p = dBodyGetTorque(m_ODEBodyComponent);
+		if (m_ODEBodyID) {
+			const dReal *f_p = dBodyGetTorque(m_ODEBodyID);
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorFromWorld(m_ODEBodyComponent,f_p[0],f_p[1],f_p[2],vec);
+				dBodyVectorFromWorld(m_ODEBodyID,f_p[0],f_p[1],f_p[2],vec);
 				torque.Set(vec[0],vec[1],vec[2]);
 			} else
 				torque.Set(f_p[0],f_p[1],f_p[2]);
@@ -433,32 +433,32 @@ namespace GASS
 
 	void ODEBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			if(rel)
-				dBodyAddRelForce(m_ODEBodyComponent, force_vec.x,force_vec.y,force_vec.z);
+				dBodyAddRelForce(m_ODEBodyID, force_vec.x,force_vec.y,force_vec.z);
 			else
-				dBodyAddForce(m_ODEBodyComponent, force_vec.x,force_vec.y,force_vec.z);
+				dBodyAddForce(m_ODEBodyID, force_vec.x,force_vec.y,force_vec.z);
 		}
 	}
 
 	void ODEBodyComponent::AddForceAtPos(const Vec3 &force_vec, const Vec3& pos_vec, bool rel_force, bool rel_pos)
 	{
-		if (m_ODEBodyComponent)
+		if (m_ODEBodyID)
 		{
 			if (rel_force) {
 				if (rel_pos)
-					dBodyAddRelForceAtRelPos(m_ODEBodyComponent, force_vec.x, force_vec.y, force_vec.z,
+					dBodyAddRelForceAtRelPos(m_ODEBodyID, force_vec.x, force_vec.y, force_vec.z,
 					pos_vec.x, pos_vec.y, pos_vec.z);
 				else
-					dBodyAddRelForceAtPos(m_ODEBodyComponent, force_vec.x, force_vec.y, force_vec.z,
+					dBodyAddRelForceAtPos(m_ODEBodyID, force_vec.x, force_vec.y, force_vec.z,
 					pos_vec.x, pos_vec.y, pos_vec.z);
 			} else {
 				if (rel_pos)
-					dBodyAddForceAtRelPos(m_ODEBodyComponent, force_vec.x, force_vec.y, force_vec.z,
+					dBodyAddForceAtRelPos(m_ODEBodyID, force_vec.x, force_vec.y, force_vec.z,
 					pos_vec.x, pos_vec.y, pos_vec.z);
 				else
-					dBodyAddForceAtPos(m_ODEBodyComponent, force_vec.x, force_vec.y, force_vec.z,
+					dBodyAddForceAtPos(m_ODEBodyID, force_vec.x, force_vec.y, force_vec.z,
 					pos_vec.x, pos_vec.y, pos_vec.z);
 			}
 		}
@@ -468,10 +468,10 @@ namespace GASS
 	{
 		m_Mass = mass;
 
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			dMassAdjust(&m_ODEMass, m_Mass);
-			dBodySetMass(m_ODEBodyComponent, &m_ODEMass);
+			dBodySetMass(m_ODEBodyID, &m_ODEMass);
 			m_CGPosition = Vec3(m_ODEMass.c[0],m_ODEMass.c[1],m_ODEMass.c[2]);
 		}
 		// TODO: update m_SymmetricInertia and m_AssymetricInertia
@@ -480,7 +480,7 @@ namespace GASS
 	void ODEBodyComponent::SetODEMass(dMass mass)
 	{
 		m_ODEMass = mass;
-		dBodySetMass(m_ODEBodyComponent, &m_ODEMass);
+		dBodySetMass(m_ODEBodyID, &m_ODEMass);
 		m_Mass = mass.mass;
 		m_CGPosition = Vec3(mass.c[0],mass.c[1],mass.c[2]);
 		// TODO: update m_SymmetricInertia and m_AssymetricInertia
@@ -490,11 +490,11 @@ namespace GASS
 	Vec3 ODEBodyComponent::GetVelocity(bool rel)
 	{
 		Vec3 vel(0,0,0);
-		if (m_ODEBodyComponent) {
-			const dReal *vel_p = dBodyGetLinearVel  (m_ODEBodyComponent);
+		if (m_ODEBodyID) {
+			const dReal *vel_p = dBodyGetLinearVel  (m_ODEBodyID);
 			if (rel) {
 				dVector3 vec;
-				dBodyVectorFromWorld(m_ODEBodyComponent,vel_p[0],vel_p[1],vel_p[2],vec);
+				dBodyVectorFromWorld(m_ODEBodyID,vel_p[0],vel_p[1],vel_p[2],vec);
 				vel.Set(vec[0],vec[1],vec[2]);
 			} else
 				vel.Set(vel_p[0],vel_p[1],vel_p[2]);
@@ -504,17 +504,17 @@ namespace GASS
 
 	void ODEBodyComponent::SetPosition(const Vec3 &value)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			Vec3 trans_vec = value - GetPosition();
-			dBodySetPosition(m_ODEBodyComponent, value.x, value.y, value.z);
+			dBodySetPosition(m_ODEBodyID, value.x, value.y, value.z);
 
 			if(m_EffectJoints && GetActive())
 			{
-				int num_joints = dBodyGetNumJoints(m_ODEBodyComponent);
+				int num_joints = dBodyGetNumJoints(m_ODEBodyID);
 				for(int i = 0 ; i < num_joints ;i++)
 				{
-					dJointID joint = dBodyGetJoint(m_ODEBodyComponent,i);
+					dJointID joint = dBodyGetJoint(m_ODEBodyID,i);
 					dBodyID b2 = dJointGetBody (joint, 1);
 					ODEBodyComponent* child_body = (ODEBodyComponent*) dBodyGetData(b2);
 					if(child_body && child_body != this)
@@ -541,9 +541,9 @@ namespace GASS
 	Vec3  ODEBodyComponent::GetPosition() const
 	{
 		Vec3 pos(0,0,0);
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
-			const dReal *p = dBodyGetPosition(m_ODEBodyComponent);
+			const dReal *p = dBodyGetPosition(m_ODEBodyID);
 			pos = Vec3(p[0],p[1],p[2]);
 		}
 		return pos;
@@ -551,7 +551,7 @@ namespace GASS
 
 	void ODEBodyComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 			//Quaternion rel_rot = GetRotation().Inverse()* rot;
 
@@ -560,14 +560,14 @@ namespace GASS
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);
 			ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
-			dBodySetRotation(m_ODEBodyComponent, ode_rot_mat);
+			dBodySetRotation(m_ODEBodyID, ode_rot_mat);
 
 			/*if(m_EffectJoints && GetActive())
 			{
-				int num_joints = dBodyGetNumJoints(m_ODEBodyComponent);
+				int num_joints = dBodyGetNumJoints(m_ODEBodyID);
 				for(int i = 0 ; i < num_joints ;i++)
 				{
-					dJointID joint = dBodyGetJoint(m_ODEBodyComponent,i);
+					dJointID joint = dBodyGetJoint(m_ODEBodyID,i);
 					dBodyID b2 = dJointGetBody (joint, 1);
 					ODEBodyComponent* child_body = (ODEBodyComponent*) dBodyGetData(b2);
 					if(child_body && child_body != this)
@@ -594,10 +594,10 @@ namespace GASS
 	{
 		Quaternion q;
 
-		if(m_ODEBodyComponent)
+		if(m_ODEBodyID)
 		{
 
-			const dReal *ode_rot_mat = dBodyGetRotation(m_ODEBodyComponent);
+			const dReal *ode_rot_mat = dBodyGetRotation(m_ODEBodyID);
 			Mat4 rot;
 			ODEPhysicsSceneManager::CreateGASSRotationMatrix(ode_rot_mat,rot);
 			q.FromRotationMatrix(rot);

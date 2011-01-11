@@ -50,6 +50,13 @@ namespace GASS
 		virtual ~ODEBodyComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+
+		dBodyID GetODEBodyComponent(){return m_ODEBodyID;}
+		dSpaceID GetSpace();
+		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
+		float GetMass() const {return m_Mass;}
+		void SetMass(float mass);
+		void SetODEMass(dMass mass);
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -67,8 +74,8 @@ namespace GASS
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
 		
 		//reflection functions
-		float GetMass() const {return m_Mass;}
-		void SetMass(float mass);
+		
+	
 
 		Vec3 GetCGPosition() const {return m_CGPosition;}
 		void SetCGPosition(const Vec3 value) {m_CGPosition = value;}
@@ -79,10 +86,10 @@ namespace GASS
 		bool GetEffectJoints() const {return m_EffectJoints;}
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
 
-		void SetODEMass(dMass mass);
+		
 		
 		void SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymetricInertia);
-		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
+		
 
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
@@ -99,14 +106,14 @@ namespace GASS
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
 	
-		dBodyID GetODEBodyComponent(){return m_ODEBodyComponent;}
+		
 		
 		void DampenBody( dBodyID body, float vScale, float aScale );
-		dSpaceID GetSpace();
+		
 		dSpaceID GetSecondarySpace();
 	protected:
 		void Wake();
-		dBodyID m_ODEBodyComponent;
+		dBodyID m_ODEBodyID;
 		dSpaceID m_ODESpaceID;
 		
 		dSpaceID m_ODESecondarySpaceID;
