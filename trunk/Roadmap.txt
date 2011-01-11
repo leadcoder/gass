@@ -1,20 +1,21 @@
-Complete PhysX plugin, premakescript etc.
+TODO:	Complete PhysX plugin, premakescript etc.
 
-done: Update xml-format, tags should be class name instead of template name
+TODO:	Split ODEGeomtryComponent into new components for the diffrent geometry  
+	types types, ie ODEBoxGeometryComponent etc.
 
-Add more scene-tree serach functions, ie search for template name or class factory name
+TODO:	Add more scene-tree serach functions, ie search for template name or class factory name, only search in child objects
 
-Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
+TODO:	Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
 
-Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
+TODO:	Add more test cases using boost unit test framework.
 
-Add more test cases using boost unit test framework.
+TODO:	Test raycast wheels in vehicle-simulation
 
-Test raycast wheels in vehicle-simulation
+Done:	Add simple GUI example
 
-Add simple GUI example
+Done:	Change SceneObjectManager pointer in SceneObject to weak pointer
 
-Change SceneObjectManager pointer in SceneObject to weak pointer
+Started: Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
 
 
 
