@@ -67,7 +67,6 @@ namespace GASS
 
 	void LODComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		//get active camera
 		SceneObjectVector objects = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetObjectsByName("FreeCamera",false);
@@ -82,7 +81,6 @@ namespace GASS
 		{
 			cam->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage,0));
 		}
-
 	}
 
 	void LODComponent::OnUnload(UnloadComponentsMessagePtr message)

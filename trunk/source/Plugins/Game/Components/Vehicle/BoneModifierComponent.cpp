@@ -86,7 +86,7 @@ namespace GASS
 			if(objects.size() > 0)
 				m_SourceObject  = objects.front();
 			else
-				Log::Error("Failed to find source %s for bone modifier %s",m_SourceObjectName,m_BoneName);
+				Log::Warning("Failed to find source %s for bone modifier %s",m_SourceObjectName.c_str(),m_BoneName.c_str());
 		}
 		else
 			m_SourceObject  = GetSceneObject();
@@ -103,7 +103,7 @@ namespace GASS
 			return;
 
 
-		SceneObjectPtr so(m_SourceObject);
+		SceneObjectPtr so(m_SourceObject,boost::detail::sp_nothrow_tag());
 		if(so)
 		{
 				//GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName, message->GetPosition(),message->GetRotation())));

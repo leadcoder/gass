@@ -42,7 +42,9 @@ namespace GASS
 		m_WheelObject(wheel)
 	{
 		if(wheel)
+		{
 			wheel->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
+		}
 	}
 
 	VehicleWheel::~VehicleWheel()
@@ -326,6 +328,7 @@ namespace GASS
 		//Update wheel list
 		if(m_Initialized)
 		{
+			m_Wheels.clear();
 			for(int i = 0; i < m_WheelNames.size(); i++)
 			{
 				SceneObjectVector objects;
@@ -586,12 +589,16 @@ namespace GASS
 		for(int i = 0; i < m_Wheels.size(); i++)
 		{
 			VehicleWheelPtr wheel = m_Wheels[i];
-			SceneObjectPtr wheel_obj(wheel->m_WheelObject);
-			wheel_obj->PostMessage(force_msg);
-			wheel_obj->PostMessage(vel_msg);
+			SceneObjectPtr wheel_obj(wheel->m_WheelObject,boost::detail::sp_nothrow_tag());
 
-			m_WheelRPM += AngleVel2RPM(wheel->m_AngularVelocity);
-			num_wheels++;
+			if(wheel_obj)
+			{
+				wheel_obj->PostMessage(force_msg);
+				wheel_obj->PostMessage(vel_msg);
+
+				m_WheelRPM += AngleVel2RPM(wheel->m_AngularVelocity);
+				num_wheels++;
+			}
 		}
 		if(num_wheels > 0)
 			m_WheelRPM = m_WheelRPM/float(num_wheels);
