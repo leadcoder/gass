@@ -50,7 +50,6 @@ namespace GASS
 		m_Body (NULL),
 		m_Friction(1),
 		m_Offset(0,0,0),
-		m_BBOffset(0,0,0),
 		m_Size(1,1,1),
 		m_Slip(0),
 		m_CollisionGeomScale(1,1,1),
@@ -58,7 +57,8 @@ namespace GASS
 		m_CollisionBits(1),
 		m_GeomID(0),
 		m_TransformGeomID(NULL),
-		m_SizeFromMesh(true)
+		m_SizeFromMesh(true),
+		m_Debug(false)
 	{
 
 	}
@@ -72,12 +72,14 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, IComponent>);
 
+		RegisterProperty<Vec3>("Size", &GASS::ODEBoxGeometryComponent::GetSize, &GASS::ODEBoxGeometryComponent::SetSize);
 		RegisterProperty<Vec3>("Offset", &GASS::ODEBoxGeometryComponent::GetOffset, &GASS::ODEBoxGeometryComponent::SetOffset);
 		RegisterProperty<float>("Friction", &GASS::ODEBoxGeometryComponent::GetFriction, &GASS::ODEBoxGeometryComponent::SetFriction);
-		RegisterProperty<float>("Slip", &GASS::ODEBoxGeometryComponent::GetSlip, &GASS::ODEBoxGeometryComponent::SetSlip);
-		//RegisterProperty<bool>("SizeFromMesh", &GASS::ODEBoxGeometryComponent::GetSizeFromMesh, &GASS::ODEBoxGeometryComponent::SetSizeFromMesh);
+		//RegisterProperty<float>("Slip", &GASS::ODEBoxGeometryComponent::GetSlip, &GASS::ODEBoxGeometryComponent::SetSlip);
+		RegisterProperty<bool>("SizeFromMesh", &GASS::ODEBoxGeometryComponent::GetSizeFromMesh, &GASS::ODEBoxGeometryComponent::SetSizeFromMesh);
 		RegisterProperty<long int>("CollisionBits", &GASS::ODEBoxGeometryComponent::GetCollisionBits, &GASS::ODEBoxGeometryComponent::SetCollisionBits);
 		RegisterProperty<long int>("CollisionCategory", &GASS::ODEBoxGeometryComponent::GetCollisionCategory, &GASS::ODEBoxGeometryComponent::SetCollisionCategory);
+		RegisterProperty<bool>("Debug", &GASS::ODEBoxGeometryComponent::GetDebug, &GASS::ODEBoxGeometryComponent::SetDebug);
 	}
 
 	void ODEBoxGeometryComponent::OnCreate()
@@ -116,7 +118,7 @@ namespace GASS
 	void ODEBoxGeometryComponent::SetSizeFromMesh(bool value)
 	{
 		m_SizeFromMesh = value;
-		if(m_SizeFromMesh)
+		if(m_SizeFromMesh && IsInitialized())
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
@@ -163,6 +165,7 @@ namespace GASS
 		{
 			dGeomBoxSetLengths(m_GeomID, m_Size.x, m_Size.y, m_Size.z);
 			UpdateBodyMass();
+			UpdateDebug();
 		}
 	}
 
@@ -204,6 +207,7 @@ namespace GASS
 		if(m_GeomID)
 		{
 			dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+			UpdateDebug();
 		}
 	}
 
@@ -270,6 +274,11 @@ namespace GASS
 			dGeomSetCollideBits (m_GeomID,m_CollisionBits);
 			dGeomSetCollideBits (m_TransformGeomID, m_CollisionBits);
 		}
+	}
+
+	bool ODEBoxGeometryComponent::IsInitialized() const
+	{
+		return (m_GeomID == 0) ? false:true;
 	}
 
 	long int ODEBoxGeometryComponent::GetCollisionCategory() const 
@@ -361,22 +370,21 @@ namespace GASS
 
 	
 
-	void ODEBoxGeometryComponent::UpdateDebug(bool enable)
+	void ODEBoxGeometryComponent::UpdateDebug()
 	{
 
-		if(m_GeomID && enable)
+		if(m_Debug)
 		{
-			dVector3 temp_size;
-			dGeomBoxGetLengths (m_GeomID, temp_size);
-			Vec3 size(temp_size[0],temp_size[1],temp_size[2]);
-			const dReal* pos =  dGeomGetPosition(m_GeomID);
-			CreateDebugBox(size,Vec3(pos[0],pos[1],pos[2]));
+			if(m_GeomID)
+			{
+				dVector3 temp_size;
+				dGeomBoxGetLengths (m_GeomID, temp_size);
+				Vec3 size(temp_size[0],temp_size[1],temp_size[2]);
+				const dReal* pos =  dGeomGetPosition(m_GeomID);
+				CreateDebugBox(size,Vec3(pos[0],pos[1],pos[2]));
+			}
 		}
-		if(!enable)
-		{
-			SceneObjectPtr obj = GetDebugObject();
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
-		}
+		
 	}
 
 
@@ -387,7 +395,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			int pos = child->GetName().find("DebugPhysics");
+			int pos = child->GetName().find(GetName() + "DebugPhysics");
 			if(pos  >= 0)
 			{
 				scene_object = child;
@@ -418,13 +426,52 @@ namespace GASS
 				scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
 				//scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
 			}
+			scene_object->SetName(GetName() + scene_object->GetName());
+			scene_object->RegisterForMessage(REG_TMESS(ODEBoxGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));
 			//GetSceneObject()->AddChild(scene_object);
 		}
 		return scene_object;
 	}
 
+	void ODEBoxGeometryComponent::OnDebugTransformation(TransformationNotifyMessagePtr message)
+	{
+		SceneObjectPtr obj = GetDebugObject();
+		Vec3 pos  =obj->GetFirstComponent<ILocationComponent>()->GetPosition();
+		if(pos != m_Offset)
+		{
+			m_Offset = pos;
+			if(m_GeomID)
+			{
+				dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+			}
+		}
+	}
+
 	void ODEBoxGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
 	{
-		UpdateDebug(message->DebugGeometry());
+		SetDebug(message->DebugGeometry());
+	}
+
+	void ODEBoxGeometryComponent::SetDebug(bool value)
+	{
+		m_Debug = value;
+		if(IsInitialized())
+		{
+			if(m_Debug)
+			{
+				UpdateDebug();
+			}
+			else
+			{
+				SceneObjectPtr obj = GetDebugObject();
+				obj->UnregisterForMessage(UNREG_TMESS(ODEBoxGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
+				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
+			}
+		}
+	}
+
+	bool ODEBoxGeometryComponent::GetDebug() const
+	{
+		return m_Debug;
 	}
 }

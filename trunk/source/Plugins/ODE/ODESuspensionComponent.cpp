@@ -125,34 +125,38 @@ namespace GASS
 
 		CreateJoint();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
-	
 	}
 
 	void ODESuspensionComponent::CreateJoint()
 	{
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
 
-		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
-		m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
-
-		dBodyID b1 = m_Body1->GetODEBodyComponent();
-		dBodyID b2 = m_Body2->GetODEBodyComponent();
-
-		if(m_ODEJoint)
-			dJointDestroy(m_ODEJoint);
-
-		m_ODEJoint = dJointCreateHinge2(world, 0);
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
 		
-		dJointAttach(m_ODEJoint, b1,b2);
-		UpdateAnchor();
-		UpdateJointAxis();
-		UpdateLimits();
-		SetAxis1Force(m_JointForce);
-		SetAxis2Force(m_JointForce);
-		SetAxis1Vel(0);
-		SetAxis2Vel(0);
-		UpdateSuspension();
+		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		if(m_Body1)
+		{
+			m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+			assert(m_Body2);
+
+			dBodyID b1 = m_Body1->GetODEBodyComponent();
+			dBodyID b2 = m_Body2->GetODEBodyComponent();
+
+			if(m_ODEJoint)
+				dJointDestroy(m_ODEJoint);
+
+			m_ODEJoint = dJointCreateHinge2(world, 0);
+			GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
+
+			dJointAttach(m_ODEJoint, b1,b2);
+			UpdateAnchor();
+			UpdateJointAxis();
+			UpdateLimits();
+			SetAxis1Force(m_JointForce);
+			SetAxis2Force(m_JointForce);
+			SetAxis1Vel(0);
+			SetAxis2Vel(0);
+			UpdateSuspension();
+		}
 	}
 
 	void ODESuspensionComponent::SetAxis1(const Vec3 &axis)

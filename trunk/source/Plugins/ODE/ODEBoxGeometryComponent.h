@@ -71,8 +71,8 @@ namespace GASS
 		void SetOffset(const Vec3 &value);
 		Vec3 GetOffset() const {return m_Offset;}
 		
-		void SetSlip(float value){m_Friction = value;}
-		float GetSlip() const {return m_Friction;}
+		//void SetSlip(float value){m_Friction = value;}
+		//float GetSlip() const {return m_Friction;}
 		
 		long int GetCollisionBits() const;
 		void SetCollisionBits(long int value);
@@ -90,13 +90,17 @@ namespace GASS
 
 		GeometryComponentPtr GetGeometry() const;
 		void UpdateBodyMass();
+		bool IsInitialized() const;
 
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		SceneObjectPtr GetDebugObject();
-		void UpdateDebug(bool enable);
+		void UpdateDebug();
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
+		void OnDebugTransformation(TransformationNotifyMessagePtr message);
 
+		void SetDebug(bool value);
+		bool GetDebug() const;
 	protected:
 		dGeomID m_GeomID;
 		dGeomID m_TransformGeomID;
@@ -114,5 +118,6 @@ namespace GASS
 		long int m_CollisionCategory;
 		long int m_CollisionBits;
 		bool m_SizeFromMesh;
+		bool m_Debug;
 	};
 }

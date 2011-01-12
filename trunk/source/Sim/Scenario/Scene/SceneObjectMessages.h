@@ -287,8 +287,26 @@ namespace GASS
 	private:
 		bool m_Enable;
 	};
-
 	typedef boost::shared_ptr<CollisionSettingsMessage> CollisionSettingsMessagePtr;
+	
+	/**
+	Message used to enable/disable physics debugging
+    */
+
+	class PhysicsDebugMessage : public BaseMessage
+	{
+	public:
+		PhysicsDebugMessage(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
+		  {
+
+		  }
+		  bool DebugGeometry() const {return m_DebugGeometry;}
+	private:
+		bool m_DebugGeometry;
+	};
+
+	typedef boost::shared_ptr<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
 	/**
 	Messages used to interact with joint components usually found in

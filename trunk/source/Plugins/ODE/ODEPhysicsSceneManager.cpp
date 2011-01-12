@@ -241,8 +241,8 @@ namespace GASS
 			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
 
 
-			IPhysicsGeometry* physics_geom1 = static_cast<IPhysicsGeometry*>(dGeomGetData(o1));
-			IPhysicsGeometry* physics_geom2 = static_cast<IPhysicsGeometry*>(dGeomGetData(o2));
+			IPhysicsGeometry* physics_geom1 = dynamic_cast<IPhysicsGeometry*>(geom1);
+			IPhysicsGeometry* physics_geom2 = dynamic_cast<IPhysicsGeometry*>(geom2);
 
 
 			dContact contact;

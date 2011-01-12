@@ -80,19 +80,22 @@ namespace GASS
 		float value = message->GetValue();
 
 		//wake body!!
-		m_Body1->Wake();
-		switch(type)
+		if(m_Body1)
 		{
-		case PhysicsJointMessage::AXIS1_VELOCITY:
+			m_Body1->Wake();
+			switch(type)
 			{
-				SetAxisVel(value);
+			case PhysicsJointMessage::AXIS1_VELOCITY:
+				{
+					SetAxisVel(value);
+				}
+				break;
+			case PhysicsJointMessage::AXIS1_FORCE:
+				{
+					SetAxisForce(value);
+				}
+				break;
 			}
-			break;
-		case PhysicsJointMessage::AXIS1_FORCE:
-			{
-				SetAxisForce(value);
-			}
-			break;
 		}
 	}
 
@@ -109,26 +112,31 @@ namespace GASS
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
 
 		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
-		m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		
 
-		dBodyID b1 = m_Body1->GetODEBodyComponent();
-		dBodyID b2 = m_Body2->GetODEBodyComponent();
+		if(m_Body1)
+		{
+			m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
 
-		if(m_ODEJoint)
-			dJointDestroy(m_ODEJoint);
+			dBodyID b1 = m_Body1->GetODEBodyComponent();
+			dBodyID b2 = m_Body2->GetODEBodyComponent();
 
-		m_ODEJoint = dJointCreateHinge(world,0);
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
-		dJointAttach(m_ODEJoint, b1,b2);
+			if(m_ODEJoint)
+				dJointDestroy(m_ODEJoint);
 
-		dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
-		dJointSetHingeParam(m_ODEJoint,dParamBounce,0.5);
-	
-		UpdateAnchor();
-		UpdateJointAxis();
-		UpdateLimits();
-		SetAxisForce(m_JointForce);
-		SetAxisVel(0);
+			m_ODEJoint = dJointCreateHinge(world,0);
+			GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
+			dJointAttach(m_ODEJoint, b1,b2);
+
+			dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
+			dJointSetHingeParam(m_ODEJoint,dParamBounce,0.5);
+
+			UpdateAnchor();
+			UpdateJointAxis();
+			UpdateLimits();
+			SetAxisForce(m_JointForce);
+			SetAxisVel(0);
+		}
 	}
 
 	void ODEHingeComponent::SetAxis(const Vec3 &axis)
