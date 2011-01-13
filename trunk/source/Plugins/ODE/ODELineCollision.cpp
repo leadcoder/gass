@@ -55,7 +55,7 @@ namespace GASS
 		assert(m_Result);
 		m_Result->Coll = false;
 		m_Result->CollDist = 0;
-		dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetCollisionSpace();
+		dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
 		dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
 
 		if(m_Result->Coll == true)

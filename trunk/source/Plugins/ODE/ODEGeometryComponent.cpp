@@ -172,7 +172,6 @@ namespace GASS
 		m_BBoxSize = bb_size;
 		m_BSphereSize = sphere.m_Radius;
 
-
 		Vec3 geom_offset(0,0,0);
 
 

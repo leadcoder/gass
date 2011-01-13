@@ -28,6 +28,7 @@
 #include "Core/Math/Quaternion.h"
 #include "ODEPhysicsSceneManager.h"
 #include "ODEGeometry.h"
+#include "ODEBaseGeometryComponent.h"
 
 namespace GASS
 {
@@ -38,7 +39,7 @@ namespace GASS
 	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
-	class ODEBoxGeometryComponent : public Reflection<ODEBoxGeometryComponent,BaseSceneComponent> , public IPhysicsGeometry
+	class ODEBoxGeometryComponent : public Reflection<ODEBoxGeometryComponent,ODEBaseGeometryComponent>
 	{
 	friend class ODEPhysicsSceneManager;
 	public:
@@ -47,77 +48,15 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		//Message functions
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
-		
-		
-		void UpdateODEGeom();
-
-		void Disable();
-		void Enable();
-		void SetScale(const Vec3 &value);
-		void SetFriction(float value){m_Friction = value;}
-		float GetFriction() const {return m_Friction;}
-		void Reset();
-		
-		void SetPosition(const Vec3 &pos);
-		void SetRotation(const Quaternion &rot);
-		dSpaceID GetSpace();
-		
-		//void SetScale(const Vec3 &value);
-		void SetOffset(const Vec3 &value);
-		Vec3 GetOffset() const {return m_Offset;}
-		
-		//void SetSlip(float value){m_Friction = value;}
-		//float GetSlip() const {return m_Friction;}
-		
-		long int GetCollisionBits() const;
-		void SetCollisionBits(long int value);
-
-		long int GetCollisionCategory() const;
-		void SetCollisionCategory(long int value);
-
-		bool GetSizeFromMesh() const;
-		void SetSizeFromMesh(bool value);
-
-
-
+		dGeomID CreateODEGeom();
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
-
-		GeometryComponentPtr GetGeometry() const;
 		void UpdateBodyMass();
-		bool IsInitialized() const;
-
+		void SetSizeFromMesh(bool value);
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
-		SceneObjectPtr GetDebugObject();
 		void UpdateDebug();
-		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		void OnDebugTransformation(TransformationNotifyMessagePtr message);
-
-		void SetDebug(bool value);
-		bool GetDebug() const;
 	protected:
-		dGeomID m_GeomID;
-		dGeomID m_TransformGeomID;
-		dSpaceID m_ODESpaceID;
-		ODEBodyComponent* m_Body; //pointer to body!
-		Vec3 m_Size; //bounding box start size
-		std::string m_GeometryTemplate;
-		std::string m_AddToBody;
-		Vec3 m_Offset;
-		Vec3 m_BBOffset;
-		Vec3 m_CollisionGeomScale;
-		float m_Friction;
-		float m_Slip;
-		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
-		long int m_CollisionCategory;
-		long int m_CollisionBits;
-		bool m_SizeFromMesh;
-		bool m_Debug;
+		Vec3 m_Size; 
 	};
 }
