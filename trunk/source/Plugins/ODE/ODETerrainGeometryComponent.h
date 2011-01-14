@@ -28,86 +28,64 @@
 #include "Core/Math/Quaternion.h"
 #include "ODEPhysicsSceneManager.h"
 #include "ODEGeometry.h"
+#include "ODEBaseGeometryComponent.h"
 
 namespace GASS
 {
+	class ITerrainComponent;
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
 	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
+	
 
-	/**
-	An ODE geometry-object has a lot of common operations/functionality like, transformations, 
-	collision settings and friction. 
-	This class implements that common ODE-geometry functionality to reduce the implementation 
-	load of derived components. This class is not registred to the component manager and can 
-	not be instantiated in configuration files
-	*/
-
-	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,BaseSceneComponent> , public IPhysicsGeometry
+	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometry
 	{
 	friend class ODEPhysicsSceneManager;
 	public:
-		ODEBaseGeometryComponent();
-		virtual ~ODEBaseGeometryComponent();
+		ODETerrainGeometryComponent();
+		virtual ~ODETerrainGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
 
-		//Message functions
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
 		
-		//virtual functions that derived geometry have to implement
-		virtual dGeomID CreateODEGeom() {return 0;}
-		virtual void SetSizeFromMesh(bool value) {};
-		virtual void UpdateBodyMass(){};
 
-		//common ode geometry functionality, 
-		//all functions are virtual for max flexibility
-		virtual void UpdateODEGeom();
-		virtual void Disable();
-		virtual void Enable();
-		virtual void SetFriction(float value){m_Friction = value;}
-		virtual float GetFriction() const {return m_Friction;}
-		virtual void Reset();
-		virtual void SetPosition(const Vec3 &pos);
-		virtual void SetRotation(const Quaternion &rot);
-		virtual dSpaceID GetSpace();
-		virtual void SetOffset(const Vec3 &value);
-		virtual Vec3 GetOffset() const {return m_Offset;}
-		virtual long int GetCollisionBits() const;
-		virtual void SetCollisionBits(long int value);
-		virtual long int GetCollisionCategory() const;
-		virtual void SetCollisionCategory(long int value);
-		virtual bool GetSizeFromMesh() const;
-		virtual GeometryComponentPtr GetGeometry() const;
-		virtual bool IsInitialized() const;
+		void SetFriction(float value){m_Friction = value;}
+		float GetFriction() const {return m_Friction;}
+		long int GetCollisionBits() const;
+		void SetCollisionBits(long int value);
+		long int GetCollisionCategory() const;
+		void SetCollisionCategory(long int value);
+		dGeomID CreateODEGeom();
+		void Disable();
+		void Enable();
+		void Reset();
+		dSpaceID GetSpace();
+		dGeomID CreateTerrain();
+		TerrainComponentPtr GetTerrainComponent() const;
 
-		//debug fucntions
-		virtual void UpdateDebug() {};
-		virtual void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		virtual void OnDebugTransformation(TransformationNotifyMessagePtr message);
-		virtual void SetDebug(bool value);
-		virtual bool GetDebug() const;
-		virtual SceneObjectPtr GetDebugObject();
+		static dReal TerrainHeightCallback(void* data,int x,int z);	
+		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-		dGeomID m_GeomID;
-		dGeomID m_TransformGeomID;
-		dSpaceID m_ODESpaceID;
-		ODEBodyComponent* m_Body; //pointer to body!
-		std::string m_GeometryTemplate;
-		std::string m_AddToBody;
-		Vec3 m_Offset;
-		float m_Friction;
+		Float m_SampleWidth;
+		
+		Float m_SampleHeight;
+		AABox m_TerrainBounds;
+		ITerrainComponent* m_TerrainGeom;
 		long int m_CollisionCategory;
 		long int m_CollisionBits;
-		bool m_SizeFromMesh;
+		dGeomID m_GeomID;
+		dSpaceID m_SpaceID;
+		std::string m_GeometryTemplate;
+		float m_Friction;
 		bool m_Debug;
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
-
 	};
 }

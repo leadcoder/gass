@@ -195,16 +195,12 @@ namespace GASS
 			break;
 		case PGT_CYLINDER:
 			{
-
 				geom_offset = box.m_Max + box.m_Min;
 				geom_offset = geom_offset*0.5f;
 
 				float radius=std::max(bb_size.x/2.f,bb_size.y/2.f);
 				float length=bb_size.z-radius;
 				geom_id = dCreateCCylinder (0, radius, length);
-
-
-
 			}
 			break;
 		case PGT_SPHERE:

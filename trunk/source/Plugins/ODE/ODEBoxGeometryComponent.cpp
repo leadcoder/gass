@@ -90,7 +90,7 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::SetSize(const Vec3 &size)
 	{
-		if(m_Size.x > 0 && m_Size.y > 0 && m_Size.z > 0)
+		if(size.x > 0 && size.y > 0 && size.z > 0)
 		{
 			m_Size = size;
 			if(m_GeomID)

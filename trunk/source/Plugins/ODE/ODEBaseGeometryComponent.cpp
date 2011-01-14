@@ -95,16 +95,15 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		if(m_Body == 0)
+		if(m_Body == 0) //only update position for static geometry 
 		{
 			Vec3 pos = message->GetPosition();
 			SetPosition(pos);
 			Quaternion rot = message->GetRotation();
 			SetRotation(rot);
+			//Reflect scaling			
+			SetSizeFromMesh(m_SizeFromMesh);
 		}
-		//SetScale(message->GetScale());
-		//Update scaling
-		//SetSizeFromMesh(m_SizeFromMesh);
 	}
 
 	bool  ODEBaseGeometryComponent::GetSizeFromMesh()const
