@@ -38,9 +38,16 @@
 
 extern "C"
 {
+#ifdef WIN32
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+#else
 #include "lua5.1/lua.h"
 #include "lua5.1/lualib.h"
 #include "lua5.1/lauxlib.h"
+
+#endif
 	int luaopen_GASS(lua_State* L);
 	namespace GASS
 	{

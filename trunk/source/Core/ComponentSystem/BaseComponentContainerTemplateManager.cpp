@@ -84,6 +84,18 @@ namespace GASS
 		return temp;
 	}
 
+	std::vector<std::string> BaseComponentContainerTemplateManager::GetTemplateNames()
+	{
+		std::vector<std::string> templates;
+		TemplateMap::iterator iter = m_TemplateMap.begin();
+		while(iter != m_TemplateMap.end())
+		{
+			templates.push_back(iter->first);
+			iter++;
+		}
+		return templates;
+	}
+
 	bool BaseComponentContainerTemplateManager::Load(const std::string &filename)
 	{
 		if(filename =="") return false;

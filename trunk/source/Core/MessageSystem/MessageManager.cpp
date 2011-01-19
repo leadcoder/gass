@@ -70,6 +70,9 @@ namespace GASS
 
 	void MessageManager::SendImmediate(MessagePtr  message)
 	{
+		//lock
+		//tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+
 		MessageTypeListenerMap::iterator message_type;
 		message_type = m_MessageTypes.find(message->GetType());
 		if(message_type == m_MessageTypes.end())
@@ -104,6 +107,9 @@ namespace GASS
 
 	int MessageManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{
+		//lock
+		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+
 		MessageTypeListenerMap::iterator message_type;
 
 		message_type = m_MessageTypes.find(type);
@@ -139,6 +145,9 @@ namespace GASS
 
 	void MessageManager::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
+		//lock
+		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+
 		MessageTypeListenerMap::iterator message_type;
 
 		message_type = m_MessageTypes.find(type);
@@ -163,6 +172,9 @@ namespace GASS
 
 	void MessageManager::Clear()
 	{
+		//lock
+		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+
 		m_MessageQueue.clear();
 		//m_MessageTypes.clear();
 	}
@@ -170,14 +182,22 @@ namespace GASS
 	// Updates the message handler and sends any messages than need to be sent
 	void MessageManager::Update(float dt)
 	{
+		//lock
+		MessageQueue work_queue;
+		{
+		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		if(m_MessageQueue.size() == 0)
 			return;
 
+			work_queue =  m_MessageQueue;
+			m_MessageQueue.clear();
+		}
+
 
 		//std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
-		MessageQueue::iterator iter = m_MessageQueue.begin();
+		MessageQueue::iterator iter = work_queue.begin();
 
-		while (iter !=  m_MessageQueue.end())
+		while (iter !=  work_queue.end())
 		{
 			float delay = (*iter)->GetDeliverDelay();
 			if(delay > 0)
@@ -206,7 +226,18 @@ namespace GASS
 					msg_reg++;
 				}
 				//delete (*iter);
-				iter = m_MessageQueue.erase(iter);
+				iter = work_queue.erase(iter);
+			}
+		}
+
+		//lock and sync
+		{
+			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+			MessageQueue::iterator iter = work_queue.begin();
+			while (iter !=  work_queue.end())
+			{
+				m_MessageQueue.push_back(*iter);
+				iter++;
 			}
 		}
 	}

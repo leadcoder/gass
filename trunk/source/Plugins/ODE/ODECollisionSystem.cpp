@@ -56,16 +56,19 @@ namespace GASS
 		RequestMap::iterator iter;
 		RequestMap requestMap;
 		ResultMap resultMap;
+		ResultMap::iterator res_iter;
 
 		{
 			tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
 			requestMap = m_RequestMap;
 			m_RequestMap.clear();
 		}
-		{
+		/*{
 			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
 			resultMap = m_ResultMap;
-		}
+		}*/
+		//std::cout << "ResultMap:" << m_ResultMap.size() << "\n";
+		//std::cout << "RequestMap:" << requestMap.size() << "\n";
 
 		for(iter = requestMap.begin(); iter != requestMap.end(); iter++)
 		{
@@ -89,10 +92,14 @@ namespace GASS
 
 			}*/
 		}
-		
 		{
 			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-			m_ResultMap = resultMap;
+			//transfer results
+			for(res_iter = resultMap.begin(); res_iter != resultMap.end(); res_iter++)
+			{
+				CollisionHandle handle = res_iter->first;
+				m_ResultMap[handle] = res_iter->second;
+			}
 		}
 			
 	}

@@ -86,6 +86,11 @@ namespace GASS
 			unique name or not.
 		*/
 		void SetForceUniqueName(bool value) {m_ForceUniqueName = value;}
+		
+		/**
+		Get a vector of all templates hold by this manager
+		*/
+		std::vector<std::string> GetTemplateNames();
 	protected:
 		//void AddRecursive(IComponentContainer* ct);
 		bool m_ForceUniqueName;
