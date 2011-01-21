@@ -44,11 +44,22 @@ namespace GASS
 	private:
 		std::string GetController() const {return m_Controller;}
 		void SetController(const std::string &value) {m_Controller = value;}
-
+		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}
+		float GetMaxSteerVelocity() const {return m_MaxSteerVelocity;}
+		void SetMaxSteerAngle(float value) {m_MaxSteerAngle = value;}
+		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
+		void SetSteerForce(float value) {m_SteerForce = value;}
+		float GetSteerForce() const {return m_SteerForce;}
+		
+		
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 
 		std::string m_Controller;
+		float m_MaxSteerVelocity;
+		float m_MaxSteerAngle;
+		float m_SteerForce;
+		
 	};
 }
 #endif

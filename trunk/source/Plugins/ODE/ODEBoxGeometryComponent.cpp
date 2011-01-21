@@ -119,7 +119,7 @@ namespace GASS
 	
 	void ODEBoxGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
@@ -170,7 +170,6 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::UpdateDebug()
 	{
-
 		if(m_Debug)
 		{
 			if(m_GeomID)
@@ -182,6 +181,5 @@ namespace GASS
 				CreateDebugBox(size,Vec3(pos[0],pos[1],pos[2]));
 			}
 		}
-		
 	}
 }

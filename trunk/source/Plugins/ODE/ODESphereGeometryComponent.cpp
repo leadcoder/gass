@@ -125,7 +125,7 @@ namespace GASS
 
 	void ODESphereGeometryComponent::CreateDebugSphere(Float size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 

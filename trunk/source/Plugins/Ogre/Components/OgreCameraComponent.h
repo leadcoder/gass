@@ -43,7 +43,8 @@ namespace GASS
 		virtual void OnCreate();
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 		inline Ogre::Camera* GetOgreCamera(){return m_Camera;}
-		
+		std::vector<std::string> GetPostFilters() const;
+		void SetPostFilters(const std::vector<std::string> &filters);
 	protected:
 		void OnParameter(CameraParameterMessagePtr message);
 		float GetFarClipDistance() const;
@@ -56,6 +57,7 @@ namespace GASS
 		void SetOrtho(bool value);
 		bool GetClipToFog() const {return m_ClipToFog;}
 		void SetClipToFog(bool value) {m_ClipToFog = value;}
+		
 	
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Camera* m_Camera;
@@ -64,6 +66,7 @@ namespace GASS
 		float m_Fov;
 		bool m_Ortho;
 		bool m_ClipToFog;
+		std::vector<std::string> m_PostFilters;
 
 	};
 

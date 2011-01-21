@@ -607,7 +607,7 @@ namespace GASS
 
 	void ODEGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
@@ -660,7 +660,7 @@ namespace GASS
 
 	void ODEGeometryComponent::CreateDebugSphere(float size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData);
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 

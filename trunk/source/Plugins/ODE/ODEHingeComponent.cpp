@@ -178,10 +178,10 @@ namespace GASS
 
 	void ODEHingeComponent::UpdateAnchor()
 	{
-		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
+		//LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
 		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 
-		Vec3 pos_b1 = location1->GetPosition();
+		//Vec3 pos_b1 = location1->GetPosition();
 		Vec3 pos_b2 = location2->GetPosition();
 
 		Vec3  world_anchor;

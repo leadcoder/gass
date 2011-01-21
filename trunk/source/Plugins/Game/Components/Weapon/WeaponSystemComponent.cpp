@@ -33,7 +33,7 @@
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
-
+#include "Sim/Components/Graphics/MeshData.h"
 
 namespace GASS
 {
@@ -103,6 +103,36 @@ namespace GASS
 			m_FireSound = objs.front();
 
 		m_CurrentMagSize = m_MagazineSize;
+
+
+
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		MeshVertex vertex;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+		mesh_data->ScreenSpace = true;
+
+		vertex.TexCoord.Set(0,0);
+		vertex.Color = Vec4(1,1,1,1);
+		mesh_data->Type = LINE_LIST;
+		std::vector<Vec3> conrners;
+
+		Vec2 size;
+		size.x =0.5;
+		size.y =0.5;
+		conrners.push_back(Vec3( size.x ,size.y, 0));
+		conrners.push_back(Vec3(-size.x,size.y, 0));
+		conrners.push_back(Vec3(-size.x,size.y,0));
+		conrners.push_back(Vec3( size.x,size.y,0));
+		
+		for(int i = 0; i < 4; i++)
+		{
+			vertex.Pos = conrners[i];
+			mesh_data->VertexVector.push_back(vertex);
+			vertex.Pos = conrners[i];
+			mesh_data->VertexVector.push_back(vertex);
+		}
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		GetSceneObject()->PostMessage(mesh_message);
 	}
 
 	void WeaponSystemComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)

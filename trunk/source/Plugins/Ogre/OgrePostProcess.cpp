@@ -414,8 +414,15 @@ namespace GASS
 		
 	}
 
-	void OgrePostProcess::Update(Ogre::Camera* vp)
+	void OgrePostProcess::Update(OgreCameraComponentPtr camera)
 	{
+		for(int i = 0 ; i < m_ActiveVec.size(); i++ )
+		{
+			DisableCompositor(m_ActiveVec[i]);
+		}
+		//if(camera->GetPostFilters().size() > 0)
+		m_ActiveVec = camera->GetPostFilters();
+
 		for(int i = 0 ; i < m_ActiveVec.size(); i++ )
 		{
 			DisableCompositor(m_ActiveVec[i]);

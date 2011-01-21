@@ -68,7 +68,7 @@ namespace GASS
 		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
 		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
 		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog);
-		
+		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 	}
 
 	void OgreCameraComponent::OnCreate()
@@ -76,6 +76,16 @@ namespace GASS
 		//priorty = 1 -> load this one after nodes
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,1));
+	}
+
+	std::vector<std::string> OgreCameraComponent::GetPostFilters() const
+	{
+		return m_PostFilters;
+	}
+
+	void OgreCameraComponent::SetPostFilters(const std::vector<std::string> &filters)
+	{
+		m_PostFilters = filters;
 	}
 
 

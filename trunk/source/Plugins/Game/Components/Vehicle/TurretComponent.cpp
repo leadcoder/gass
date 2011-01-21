@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	TurretComponent::TurretComponent()  :m_Controller("Yaw")
+	TurretComponent::TurretComponent()  :m_Controller("Yaw"),m_MaxSteerVelocity(1),m_SteerForce(10),m_MaxSteerAngle(0)
 	{
 
 	}
@@ -51,7 +51,9 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("TurretComponent",new Creator<TurretComponent, IComponent>);
 		RegisterProperty<std::string>("RotationController", &TurretComponent::GetController, &TurretComponent::SetController);
-		//RegisterProperty<Vec2>("AnimationSpeedFactor", &TurretComponent::GetAnimationSpeedFactor, &TurretComponent::SetAnimationSpeedFactor);
+		RegisterProperty<float>("MaxSteerVelocity", &TurretComponent::GetMaxSteerVelocity, &TurretComponent::SetMaxSteerVelocity);
+		RegisterProperty<float>("MaxSteerAngle", &TurretComponent::GetMaxSteerAngle, &TurretComponent::SetMaxSteerAngle);
+		RegisterProperty<float>("SteerForce", &TurretComponent::GetSteerForce, &TurretComponent::SetSteerForce);
 	}
 
 	void TurretComponent::OnCreate()
@@ -62,7 +64,7 @@ namespace GASS
 
 	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,10.0f));
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
 		GetSceneObject()->PostMessage(force_msg);
 		GetSceneObject()->PostMessage(vel_msg);
@@ -75,10 +77,10 @@ namespace GASS
 		if (name == m_Controller)
 		{
 			if(fabs(value) < 0.1) //clamp
-				value  =0;
+				value  = 0;
 			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,100.0f));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,value));
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*value));
 			
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);

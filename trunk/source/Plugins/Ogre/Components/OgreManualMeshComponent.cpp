@@ -114,6 +114,26 @@ namespace GASS
 		if(m_MeshObject)
 		{
 			m_MeshObject->clear();
+
+			if(data->ScreenSpace)
+			{
+				// Use identity view/projection matrices
+			   m_MeshObject->setUseIdentityProjection(true);
+			   m_MeshObject->setUseIdentityView(true);
+
+				// Use infinite AAB to always stay visible
+				Ogre::AxisAlignedBox aabInf;
+				aabInf.setInfinite();
+				m_MeshObject->setBoundingBox(aabInf);
+
+				// Render just before overlays
+				m_MeshObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY - 1);
+
+				//Set up flags not to trigger ray cast detection
+				//m_MeshObject->setQueryFlags();
+				//setQueryFlagsNoHit(m_MeshObject);
+			}
+
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
 			switch(data->Type)
 			{

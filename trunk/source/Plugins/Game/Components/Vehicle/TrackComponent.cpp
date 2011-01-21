@@ -36,7 +36,7 @@
 
 namespace GASS
 {
-	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1)
+	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6)
 	{
 	}
 
@@ -50,6 +50,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("TrackComponent",new Creator<TrackComponent, IComponent>);
 		RegisterProperty<std::string>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
 		RegisterProperty<Vec2>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
+		RegisterProperty<float>("ParticleEmissionFactor", &TrackComponent::GetParticleEmissionFactor, &TrackComponent::SetParticleEmissionFactor);
 	}
 
 	void TrackComponent::OnCreate()
@@ -94,10 +95,10 @@ namespace GASS
 		MessagePtr mesh_msg(new TextureCoordinateMessage(m_AnimationValue));
 		GetSceneObject()->PostMessage(mesh_msg);
 
-		float emission = fabs(ang_vel.x)*0.3;
+		float emission = fabs(ang_vel.x)*m_ParticleEmissionFactor;
 
-		if(emission >12)
-			emission =12;
+		if(emission >50)
+			emission =50;
 		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
 		GetSceneObject()->PostMessage(particle_msg);
 
@@ -106,8 +107,8 @@ namespace GASS
 		if(duration > 1.6)  
 			duration = 1.6;
 
-		MessagePtr particle_duration_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::PARTICLE_LIFE_TIME,0,duration));
-		GetSceneObject()->PostMessage(particle_duration_msg);
+		//MessagePtr particle_duration_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::PARTICLE_LIFE_TIME,0,duration));
+		//GetSceneObject()->PostMessage(particle_duration_msg);
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 

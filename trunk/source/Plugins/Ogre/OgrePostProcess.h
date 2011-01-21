@@ -23,6 +23,9 @@
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Core/MessageSystem/MessageType.h"
+#include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/Ogre/Components/OgreCameraComponent.h"
+
 #include <string>
 #include <OgreCompositorInstance.h>
 #include <OgrePrerequisites.h>
@@ -165,7 +168,7 @@ namespace GASS
 		void EnableCompositor(const std::string &name);
 		void DisableCompositor(const std::string &name);
 		void RegisterCompositors(Ogre::Viewport* vp);
-		void Update(Ogre::Camera* vp);
+		void Update(OgreCameraComponentPtr camera);
 		void SetActiveCompositors(const std::vector<std::string> &active_vec){ m_ActiveVec =active_vec;}
 	private:
 		Ogre::Viewport* m_Viewport;
