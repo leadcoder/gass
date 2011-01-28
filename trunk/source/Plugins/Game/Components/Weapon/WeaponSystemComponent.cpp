@@ -45,7 +45,8 @@ namespace GASS
 		m_ReloadTime(0.3),
 		m_FireDelay(0),
 		m_ReadyToFire(true),
-		m_AutoReload(true)
+		m_AutoReload(true),
+		m_1FP(false)
 	{
 
 		m_InputToFire = "Fire";
@@ -94,17 +95,50 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
+	}
+
+	void WeaponSystemComponent::OnLODChange(LODMessagePtr message)
+	{
+		if(message->GetLevel() == LODMessage::LOD_HIGH)
+		{
+			m_1FP = true;
+			std::cout << "fP1" << std::endl;
+		}
+		else
+		{
+			m_1FP = false; 
+		}
 	}
 
 	void WeaponSystemComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		SceneObjectVector objs = GetSceneObject()->GetObjectsByName("FireSound",false);
+		
+
+		SceneObjectVector objs = GetSceneObject()->GetObjectsByName("FireSound1Fp",false);
 		if(objs.size() >0)
-			m_FireSound = objs.front();
+		{
+			m_FireSound1Fp = objs.front();
+		}
+
+		objs = GetSceneObject()->GetObjectsByName("FireSound3Fp",false);
+		if(objs.size() >0)
+		{
+			m_FireSound3Fp = objs.front();
+			
+		}
+
+		if(!m_FireSound1Fp)
+		{
+			objs = GetSceneObject()->GetObjectsByName("FireSound",false);
+			if(objs.size() >0)
+			{
+				m_FireSound1Fp = objs.front();
+				m_FireSound3Fp = objs.front();
+			}
+		}
 
 		m_CurrentMagSize = m_MagazineSize;
-
-
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
@@ -208,10 +242,17 @@ namespace GASS
 
 
 		//Play fire sound
-		if(m_FireSound)
+		if(m_FireSound1Fp && m_1FP)
 		{
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-			m_FireSound->PostMessage(sound_msg);
+			m_FireSound1Fp->PostMessage(sound_msg);
+			std::cout << "fire fP1" << std::endl;
+		}
+		else if(m_FireSound3Fp)
+		{
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+			m_FireSound3Fp->PostMessage(sound_msg);
+			std::cout << "fire fP3" << std::endl;
 		}
 
 
@@ -313,10 +354,16 @@ namespace GASS
 	{
 		m_ReadyToFire = true;
 
-		if(m_FireSound)
+		if(m_FireSound1Fp)
 		{
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
-			m_FireSound->PostMessage(sound_msg);
+			m_FireSound1Fp->PostMessage(sound_msg);
+		}
+
+		if(m_FireSound3Fp)
+		{
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			m_FireSound3Fp->PostMessage(sound_msg);
 		}
 
 		if(m_Automatic && m_FireRequest)

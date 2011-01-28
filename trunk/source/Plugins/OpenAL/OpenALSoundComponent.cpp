@@ -150,7 +150,7 @@ namespace GASS
 
 	float OpenALSoundComponent::GetVolume() const
 	{
-		return m_MinDistance;
+		return m_Volume;
 	}
 
 	void OpenALSoundComponent::SetVolume(float volume)

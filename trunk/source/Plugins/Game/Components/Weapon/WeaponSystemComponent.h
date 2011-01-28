@@ -49,6 +49,7 @@ namespace GASS
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);
 		void OnReadyToFire(ReadyToFireMessagePtr message);
+		void OnLODChange(LODMessagePtr message);
 
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
@@ -76,7 +77,8 @@ namespace GASS
         void SetRoundOfFire(float value);
         float GetRoundOfFire() const;
 
-		SceneObjectPtr m_FireSound;
+		SceneObjectPtr m_FireSound1Fp;
+		SceneObjectPtr m_FireSound3Fp;
 		/*SceneObjectPtr m_ReloadPatch;
 		SceneObjectPtr m_ReleasePatch;
 		SceneObjectPtr m_ShellBouncePatch;
@@ -114,6 +116,8 @@ namespace GASS
 
 		Quaternion m_ProjectileStartRot;
 		Vec3 m_ProjectileStartPos;
+
+		bool m_1FP;
 
 
 	};

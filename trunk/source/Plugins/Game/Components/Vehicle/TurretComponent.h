@@ -51,7 +51,7 @@ namespace GASS
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
 		
-		
+		void OnRotation(VelocityNotifyMessagePtr message);
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 

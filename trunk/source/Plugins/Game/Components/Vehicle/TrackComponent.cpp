@@ -36,7 +36,7 @@
 
 namespace GASS
 {
-	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6)
+	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6),m_SoundVolumeFactor(1.0f)
 	{
 	}
 
@@ -51,6 +51,7 @@ namespace GASS
 		RegisterProperty<std::string>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
 		RegisterProperty<Vec2>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
 		RegisterProperty<float>("ParticleEmissionFactor", &TrackComponent::GetParticleEmissionFactor, &TrackComponent::SetParticleEmissionFactor);
+		RegisterProperty<float>("SoundVolumeFactor", &TrackComponent::GetSoundVolumeFactor, &TrackComponent::SetSoundVolumeFactor);
 	}
 
 	void TrackComponent::OnCreate()
@@ -63,6 +64,14 @@ namespace GASS
 	{
 		m_Initialized = true;
 		SetDriveWheel(m_DriveWheelName);
+
+		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(play_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+		GetSceneObject()->PostMessage(volume_msg);
+
+		
 	}
 
 	std::string TrackComponent::GetDriveWheel() const
@@ -112,5 +121,22 @@ namespace GASS
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 
+		const float speed = fabs(ang_vel.x);
+		const float max_volume_at_speed = 10;
+		if(speed < max_volume_at_speed)
+		{
+			//std::cout << speed << std::endl;
+			//Play engine sound
+			const float volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+			GetSceneObject()->PostMessage(sound_msg);
+		}
+
+		if(speed > 0)
+		{
+			float pitch = 0.8 + speed*0.015;
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+			GetSceneObject()->PostMessage(sound_msg);
+		}
 	}
 }

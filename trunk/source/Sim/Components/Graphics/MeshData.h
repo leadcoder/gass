@@ -61,6 +61,13 @@ namespace GASS
 		std::vector<unsigned int> IndexVector;
 		std::string Material;
 		MeshType Type;
+		bool ScreenSpace;
+
+		ManualMeshData()
+		{
+			ScreenSpace = false; 
+			Type =LINE_LIST;
+		}
 	};
 	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
 }

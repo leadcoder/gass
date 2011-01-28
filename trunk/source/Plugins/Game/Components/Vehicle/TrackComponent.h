@@ -47,6 +47,8 @@ namespace GASS
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		float GetParticleEmissionFactor() const{return m_ParticleEmissionFactor;}
 		void SetParticleEmissionFactor(float value) {m_ParticleEmissionFactor = value;}
+		float GetSoundVolumeFactor() const{return m_SoundVolumeFactor;}
+		void SetSoundVolumeFactor(float value) {m_SoundVolumeFactor = value;}
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
@@ -57,6 +59,7 @@ namespace GASS
 		Vec2 m_AnimationSpeedFactor;
 		Vec2 m_AnimationValue;
 		float m_ParticleEmissionFactor;
+		float m_SoundVolumeFactor;
 	};
 }
 #endif
