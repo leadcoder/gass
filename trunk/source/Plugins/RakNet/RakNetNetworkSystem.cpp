@@ -121,7 +121,7 @@ namespace GASS
 		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
 		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
-		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, const char *client_address, const char *controller, float value,RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, SystemAddress input_source, int controller, float value,RakNet::AutoRPC* networkCaller);
 	}
 
 
@@ -487,6 +487,10 @@ namespace GASS
 	void RakNetNetworkSystem::OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message)
 	{
 		m_ServerData->MapName =	message->GetScenario()->GetPath();
+		//only keep scenario foldern name, scenario path is added in client
+		m_ServerData->MapName = Misc::GetFilename(m_ServerData->MapName);
+		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
+
 		m_ScenarioIsRunning = true;
 		if(m_Active && m_IsServer)
 		{

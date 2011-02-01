@@ -131,10 +131,14 @@ namespace GASS
 		}
 		if(!found)
 			m_SerializePackages.push_back(message->GetPackage());
+
+		SystemAddress address;
+		address.binaryAddress = message->GetAddress().m_Address;
+		address.port  = message->GetAddress().m_Port;
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, UNASSIGNED_SYSTEM_ADDRESS, true);
 		//Signal serialize
+		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
 	}
 
 	void RakNetNetworkMasterComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
@@ -150,7 +154,7 @@ namespace GASS
 			int size = m_SerializePackages[i]->GetSize();
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
-		//m_SerializePackages.clear();
+		
 	}
 
 	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
@@ -174,7 +178,7 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete data_to_read ;
-				GetSceneObject()->PostMessage(MessagePtr(new NetworkDeserializeMessage(timestamp,package)));
+				GetSceneObject()->PostMessage(MessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 
 			}
 			//NetworkPackagePtr package;

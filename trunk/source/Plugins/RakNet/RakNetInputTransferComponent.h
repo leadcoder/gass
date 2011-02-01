@@ -82,6 +82,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
+		void ReceivedInput(int controller, float value);
 	private:
 		void OnLoad(LoadNetworkComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

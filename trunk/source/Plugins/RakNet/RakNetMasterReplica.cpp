@@ -268,7 +268,7 @@ namespace GASS
 			if (raknet->IsServer())
 			{
 				// Synchronisation events should be forwarded to other clients
-				m_Manager->SignalSerializeNeeded(this, systemAddress, true);
+				//m_Manager->SignalSerializeNeeded(this, systemAddress, true);
 			}
 		}
 		//raknet->GetReplicaManager()->SignalSerializeNeeded(this, playerId, true);

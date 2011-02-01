@@ -35,6 +35,7 @@
 #include "RakNetBaseReplica.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
+#include "RakNetInputTransferComponent.h"
 #include "Plugins/Game/GameMessages.h"
 
 
@@ -135,7 +136,7 @@ namespace GASS
 	}
 
 
-	int RakNetBaseReplica::RemoteInput(const char *client_address, const char *controller,float value, RakNet::AutoRPC* networkCaller) 
+	int RakNetBaseReplica::RemoteInput(SystemAddress input_source, int controller, float value, RakNet::AutoRPC* networkCaller) 
 	{
 		if(m_Owner)
 		{
@@ -143,27 +144,30 @@ namespace GASS
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
-				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", client_address,controller, value);
+				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", input_source ,controller, value);
 				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
-				std::cout << "RemoteInput called" <<std::endl;
+				//std::cout << "RemoteInput called" <<std::endl;
 			}
 			else
 			{
-				if(std::string(client_address) != std::string(raknet->GetRakPeer()->GetInternalID().ToString()))
+				//check that we differ from input source, we dont want to duplicate our own input 
+				if(input_source != raknet->GetRakPeer()->GetInternalID())
 				{
-					std::cout << "RemoteInput received:" << client_address <<std::endl;
-					int id = 8888;
-					MessagePtr message(new ControllerMessage(controller,value,id));
-					m_Owner->PostMessage(message);
+					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponent<RakNetInputTransferComponent>();	
+					//std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
+					//int id = 8888;
+					input_comp->ReceivedInput(controller,value);
+					//MessagePtr message(new ControllerMessage(controller,value,id));
+					//m_Owner->PostMessage(message);
 					
 				}
 
 				if(raknet->IsServer())
 				{
 					raknet->GetRPC()->SetRecipientObject(GetNetworkID());
-					raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", client_address,controller, value);
+					raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", input_source, controller, value);
 					raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
-					std::cout << "RemoteInput called:" << client_address  <<std::endl;
+					//std::cout << "RemoteInput called:" << input_source.ToString()  <<std::endl;
 				}
 
 				//if(std::string(client_address) == std::string(raknet->GetRakPeer()->GetInternalID().ToString()))

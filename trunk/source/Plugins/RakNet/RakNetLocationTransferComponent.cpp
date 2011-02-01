@@ -293,8 +293,9 @@ namespace GASS
 				m_LastSerialize = current_time;
 				unsigned int time_stamp = RakNet::GetTime();
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
+				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_PositionHistory[0],m_Velocity, m_RotationHistory[0],m_AngularVelocity));
-				MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
+				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediate(serialize_message);
 			}
 
