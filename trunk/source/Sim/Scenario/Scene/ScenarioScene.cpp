@@ -101,6 +101,8 @@ namespace GASS
 		RegisterProperty<std::string>("SceneEast", &GASS::ScenarioScene::GetEastVector, &GASS::ScenarioScene::SetEastVector);
 		RegisterProperty<std::string>("SceneNorth", &GASS::ScenarioScene::GetNorthVector, &GASS::ScenarioScene::SetNorthVector);
 		RegisterProperty<std::string>("Instances", &GASS::ScenarioScene::GetInstancesFile, &GASS::ScenarioScene::SetInstancesFile);
+		RegisterProperty<Vec2>("SetRT90Origo", &GASS::ScenarioScene::GetRT90Origo, &GASS::ScenarioScene::SetRT90Origo);
+		
 	}
 
 	void ScenarioScene::SetInstancesFile(const std::string &value)

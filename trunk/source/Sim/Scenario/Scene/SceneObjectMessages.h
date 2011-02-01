@@ -725,35 +725,56 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
 
+	class NetworkAddress
+	{
+	public:
+		NetworkAddress(unsigned int address = 0, unsigned int port = 0) : m_Address(address),m_Port(port) {}
+		unsigned int m_Address;
+		unsigned int m_Port;
+	};
+
 	class NetworkSerializeMessage : public BaseMessage
 	{
 
 	public:
-		NetworkSerializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		NetworkSerializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
 		BaseMessage( sender_id , delay),
 		m_Package(package),
-		m_TimeStamp(time_stamp){}
+		m_TimeStamp(time_stamp),
+		m_Address(address)
+		{
+		}
 		NetworkPackagePtr GetPackage() const {return m_Package;}
 		unsigned int GetTimeStamp() const {return m_TimeStamp;}
+		NetworkAddress GetAddress() const {return m_Address;}
 	private:
 		NetworkPackagePtr m_Package;
 		unsigned int m_TimeStamp;
+		NetworkAddress m_Address;
+
 	};
 	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
 
 
+	
 	class NetworkDeserializeMessage : public BaseMessage
 	{
 	public:
-		NetworkDeserializeMessage(unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		NetworkDeserializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
 		BaseMessage( sender_id , delay),
 		m_Package(package),
-		m_TimeStamp(time_stamp){}
+		m_TimeStamp(time_stamp),
+		m_Address(address)
+		{
+		}
 		NetworkPackagePtr GetPackage() const {return m_Package;}
 		unsigned int GetTimeStamp() const {return m_TimeStamp;}
+		NetworkAddress GetAddress() const {return m_Address;}
 	private:
 		NetworkPackagePtr m_Package;
 		unsigned int m_TimeStamp;
+		NetworkAddress m_Address;
+		
 	};
 	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
 
