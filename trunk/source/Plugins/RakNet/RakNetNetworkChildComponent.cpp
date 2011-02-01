@@ -104,15 +104,18 @@ namespace GASS
 	{
 		RakNetChildReplica* replica = message->GetReplica();
 		RakNetNetworkMasterComponentPtr top_comp = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
-		NetworkID part_of_id = top_comp->GetReplica()->GetNetworkID();
-		int part_id = GetPartId();
-		if(replica->GetPartId() == part_id && replica->GetPartOfId() == part_of_id)
+		if(top_comp->GetReplica())
 		{
-			m_Replica = replica;
-			m_Replica->SetOwner(GetSceneObject());
-			GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaMessage(m_Replica)));
-			//this is not allowed, post to finalize object
-			//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+			NetworkID part_of_id = top_comp->GetReplica()->GetNetworkID();
+			int part_id = GetPartId();
+			if(replica->GetPartId() == part_id && replica->GetPartOfId() == part_of_id)
+			{
+				m_Replica = replica;
+				m_Replica->SetOwner(GetSceneObject());
+				GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaMessage(m_Replica)));
+				//this is not allowed, post to finalize object
+				//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+			}
 		}
 	}
 

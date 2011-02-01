@@ -86,6 +86,11 @@ namespace GASS
 			{
 				m_Replica->SetOwner(GetSceneObject());
 			}
+			else
+			{
+				Log::Warning("No replica found for RakNetNetworkMasterComponent, have you created a client unit");
+			}
+
 		}
 	}
 

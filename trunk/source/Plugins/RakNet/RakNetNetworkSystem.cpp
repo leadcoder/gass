@@ -121,6 +121,7 @@ namespace GASS
 		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
 		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, const char *client_address, const char *controller, float value,RakNet::AutoRPC* networkCaller);
 	}
 
 

@@ -134,4 +134,56 @@ namespace GASS
 		return 1;
 	}
 
+
+	int RakNetBaseReplica::RemoteInput(const char *client_address, const char *controller,float value, RakNet::AutoRPC* networkCaller) 
+	{
+		if(m_Owner)
+		{
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			if (networkCaller==0)
+			{
+				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
+				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", client_address,controller, value);
+				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+				std::cout << "RemoteInput called" <<std::endl;
+			}
+			else
+			{
+				if(std::string(client_address) != std::string(raknet->GetRakPeer()->GetInternalID().ToString()))
+				{
+					std::cout << "RemoteInput received:" << client_address <<std::endl;
+					int id = 8888;
+					MessagePtr message(new ControllerMessage(controller,value,id));
+					m_Owner->PostMessage(message);
+					
+				}
+
+				if(raknet->IsServer())
+				{
+					raknet->GetRPC()->SetRecipientObject(GetNetworkID());
+					raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", client_address,controller, value);
+					raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+					std::cout << "RemoteInput called:" << client_address  <<std::endl;
+				}
+
+				//if(std::string(client_address) == std::string(raknet->GetRakPeer()->GetInternalID().ToString()))
+				/*{
+					
+					if(std::string(message) == "EnterVehicle")
+					{
+						MessagePtr enter_msg(new EnterVehicleMessage());
+						m_Owner->PostMessage(enter_msg);
+					}
+					else if(std::string(message) == "ExitVehicle")
+					{
+						MessagePtr exit_msg(new ExitVehicleMessage());
+						m_Owner->PostMessage(exit_msg);
+					}
+				}*/
+				//std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;
+			}
+		}
+		return 1;
+	}
+
 }
