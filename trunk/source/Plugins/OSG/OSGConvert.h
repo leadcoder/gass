@@ -27,25 +27,25 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Sphere.h"
 #include "Core/Math/AABox.h"
+#include "Core/Utils/Singleton.h"
+#include <osg/Projection>
 
 namespace GASS
 {
-	class OSGConvert
+	class OSGConvert : public Singleton<OSGConvert>
 	{
 	public:
-		static inline osg::Vec3				   ToOSG(const Vec3 &v) {return osg::Vec3f(v.x,v.y,v.z);}
-
-		/*static inline Ogre::Vector4				ToOgre(const Vec4 &v) {return Ogre::Vector4(v.x,v.y,v.z,v.w);}
-		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat){Ogre::Matrix4(mat[0][0],mat[0][1],mat[0][2],mat[0][3],	mat[1][0],mat[1][1],mat[1][2],mat[1][3],	mat[2][0],mat[2][1],mat[2][2],mat[2][3],	mat[3][0],mat[3][1],mat[3][2],mat[3][3]);}
-		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.m_Min),ToOgre(b.m_Max));}
-		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(-q.w,q.x,q.y,q.z);}
-		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
-*/
-		static inline Vec3						ToGASS(const osg::Vec3f &v) {return Vec3(v.x(),v.y(),v.z());}
-/*		static inline Vec4						ToGASS(const Ogre::Vector4 &v) {return Vec4(v.x,v.y,v.z,v.w);}
-		static inline AABox						ToGASS(const Ogre::AxisAlignedBox &b) {return AABox(ToGASS(b.getMinimum()),ToGASS(b.getMaximum()));}
-		static inline Quaternion				ToGASS(const Ogre::Quaternion &q) {return Quaternion(-q.w,q.x,q.y,q.z);}
-		static inline Sphere					ToGASS(const Ogre::Sphere &s){return Sphere(ToGASS(s.getCenter()),s.getRadius());}*/
+		OSGConvert();
+		virtual ~OSGConvert();
+		static OSGConvert* GetPtr();
+		static OSGConvert& Get();
+		osg::Vec3 ToOSG(const Vec3 &v) const; 
+		Vec3 ToGASS(const osg::Vec3 &v) const; 
+		osg::Quat ToOSG(const Quaternion &value) const;
+		Quaternion ToGASS(const osg::Quat &value) const;
+		Mat4 m_Tranform;
+		Mat4 m_InvTranform;
+		bool m_FlipYZ;
 	};
 }
 

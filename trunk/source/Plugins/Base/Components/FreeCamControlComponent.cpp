@@ -218,13 +218,8 @@ namespace GASS
 
 	void FreeCamControlComponent::StepPhysics(double delta)
 	{
-		//Get default input, this must be moved to a input update function if we run in multi thread mode
-		//std::cout << "Throttle:" << throttle << std::endl;
-		//std::cout << "Strafe:" << yaw << std::endl;
-
 		Float turn_speed_x = 0;
 		Float turn_speed_y = 0;
-
 
 		if(m_EnableRotInput)
 		{
@@ -343,7 +338,6 @@ namespace GASS
 		//m_Rot = m_Rot +  up*turn_speed_x;
 		//m_Rot = m_Rot +  east*turn_speed_y;
 
-		
 		m_Rot.x +=  turn_speed_x;
 		m_Rot.y +=  turn_speed_y;
 		//m_Rot.h +=  turn_speed_x;
@@ -360,15 +354,17 @@ namespace GASS
 		GetSceneObject()->PostMessage(pos_msg);
 
 		Quaternion rot_to_send(m_Rot);
-		if(up.z ==1)
+		if(up.z == 1)
 		{
+			//fix rotation if we want z as up axis in gass scenario
+			rot_to_send = Quaternion(Vec3(0,0,m_Rot.x));
+			rot_to_send = Quaternion(Vec3(0,m_Rot.y,0))*rot_to_send;
 			//we have to rotate 90 deg if z is up
-			rot_to_send = rot_to_send*Quaternion(Vec3(0,Math::Deg2Rad(90),0));
+			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
 		}
-
 		MessagePtr rot_msg(new RotationMessage(rot_to_send,from_id));
 		GetSceneObject()->PostMessage(rot_msg);
-
+	
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
 		m_UpDownInput = 0;
@@ -378,7 +374,4 @@ namespace GASS
 			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_Rot << std::endl;
 		}
 	}
-
-
-
 }

@@ -49,9 +49,12 @@ namespace GASS
 		virtual void OnCreate();
 	protected:
 		dGeomID CreateODEGeom();
+		void UpdateODEGeom();
 		void SetNormal(const Vec3 &normal);
 		Vec3 GetNormal() const;
 		void UpdateBodyMass() {};
+		void SetPosition(const Vec3 &pos);
+		void SetRotation(const Quaternion &rot);
 		//void SetSizeFromMesh(bool value);
 	protected:
 		Vec3 m_Normal; 

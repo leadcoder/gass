@@ -255,8 +255,8 @@ namespace GASS
 				osg::Vec3 p2 = bbox._min;//*trans;
 
 				AABox box;
-				box.Union(OSGConvert::ToGASS(p1));
-				box.Union(OSGConvert::ToGASS(p2));
+				box.Union(OSGConvert::Get().ToGASS(p1));
+				box.Union(OSGConvert::Get().ToGASS(p2));
 				m_BBox.Union(box);
 				//shape.M = osg::Matrix::translate(bbox.center()) * M;
 				//shape.p1 = max3(bbox.xMax()-bbox.xMin(), bbox.yMax()-bbox.yMin(), shape.p3 = bbox.zMax()-bbox.zMin())/2.0;
@@ -269,8 +269,8 @@ namespace GASS
 					osg::Vec3 p1 = bbox._max;//*trans;
 					osg::Vec3 p2 = bbox._min;//*trans;
 
-					box.Union(OSGConvert::ToGASS(p1));
-					box.Union(OSGConvert::ToGASS(p2));
+					box.Union(OSGConvert::Get().ToGASS(p1));
+					box.Union(OSGConvert::Get().ToGASS(p2));
 					m_BBox.Union(box);
 				}
 			}

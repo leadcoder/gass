@@ -161,6 +161,9 @@ namespace GASS
 		osg::Matrixd cameraMatrix;
 		cameraMatrix.identity();
 
+		osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
+		rot = q*rot;
+
 		cameraMatrix.setTrans(pos);
 		cameraMatrix.setRotate(rot);
 

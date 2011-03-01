@@ -214,7 +214,8 @@ namespace GASS
 			Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 			Vec4 color  = data->VertexVector[i].Color;
 
-			(vitr++)->set(pos.x, pos.y, pos.z);
+			osg::Vec3 opos = OSGConvert::Get().ToOSG(pos);
+			(vitr++)->set(opos.x(), opos.y(), opos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
 			
 		}
@@ -231,8 +232,8 @@ namespace GASS
 	{
 		
 		osg::BoundingBox osg_box = m_OSGGeometry->getBound();
-		AABox box(Vec3(osg_box._min.x(),osg_box._min.y(),osg_box._min.z()),
-				Vec3(osg_box._max.x(),osg_box._max.y(),osg_box._max.z()));
+		AABox box(OSGConvert::Get().ToGASS(osg_box._min),
+				OSGConvert::Get().ToGASS(osg_box._max));
 		return box;
 		//assert(m_MeshObject);
 		//return Convert::ToGASS(m_MeshObject->getBoundingBox());

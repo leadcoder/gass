@@ -131,10 +131,10 @@ namespace GASS
 
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(1,1,1,1);
-		mesh_data->Type = LINE_STRIP;
+		mesh_data->Type = LINE_LIST;
 
-		float samples = 30;
-		float rad = 2*MY_PI/samples;
+		const float samples = 24;
+		const float rad = 2*MY_PI/samples;
 
 		float x,y,z;
 		for(float i = 0 ;i <= samples; i++)
@@ -143,17 +143,20 @@ namespace GASS
 			y = sin(rad*i)*size;
 			vertex.Pos.Set(x,y,0);
 			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
 		}
-		mesh_data->VertexVector.push_back(vertex);
-
+		//mesh_data->VertexVector.push_back(vertex);
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*size;
 			z = sin(rad*i)*size;
 			vertex.Pos.Set(x,0,z);
 			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
 		}
-		mesh_data->VertexVector.push_back(vertex);
+		//mesh_data->VertexVector.push_back(vertex);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
@@ -161,8 +164,10 @@ namespace GASS
 			z = sin(rad*i)*size;
 			vertex.Pos.Set(0,y,z);
 			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
 		}
-		mesh_data->VertexVector.push_back(vertex);
+		//mesh_data->VertexVector.push_back(vertex);
 
 
 		SceneObjectPtr scene_object = GetDebugObject();

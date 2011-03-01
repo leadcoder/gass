@@ -71,6 +71,17 @@ namespace GASS
 		return dCreatePlane(GetSpace(), plane_normal.x, plane_normal.y, plane_normal.z,m_PlaneOffset);
 	}
 
+	void ODEPlaneGeometryComponent::UpdateODEGeom()
+	{
+		Reset();
+		m_Body = NULL;
+		m_GeomID  = CreateODEGeom();
+		m_TransformGeomID = m_GeomID;//dCreateGeomTransform(space);
+		dGeomSetData(m_TransformGeomID, (void*)this);
+		SetCollisionBits(m_CollisionBits);
+		SetCollisionCategory(m_CollisionCategory);
+	}
+
 	void ODEPlaneGeometryComponent::SetNormal(const Vec3 &normal)
 	{
 		if(normal.x > 0 || normal.y > 0 || normal.z > 0)
@@ -89,5 +100,14 @@ namespace GASS
 	Vec3 ODEPlaneGeometryComponent::GetNormal() const
 	{
 		return m_Normal;
+	}
+
+	void ODEPlaneGeometryComponent::SetPosition(const Vec3 &pos)
+	{
+		
+	}
+
+	void ODEPlaneGeometryComponent::SetRotation(const Quaternion &rot)
+	{
 	}
 }

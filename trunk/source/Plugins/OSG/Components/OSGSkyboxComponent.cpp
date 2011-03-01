@@ -52,6 +52,8 @@
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGSkyboxComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
+
 
 
 
@@ -137,8 +139,6 @@ namespace GASS
 		return full_path;
 	}
 
-
-
 	osg::TextureCubeMap* OSGSkyboxComponent::ReadCubeMap()
 	{
 		osg::TextureCubeMap* cubemap = new osg::TextureCubeMap();
@@ -214,7 +214,7 @@ namespace GASS
 			if (cv)
 			{
 				Vec3 pos = m_Skybox->GetEyePosition();
-				osg::Vec3 eyePointLocal(pos.x,pos.y,pos.z);// = cv->getEyeLocal();
+				osg::Vec3 eyePointLocal = OSGConvert::Get().ToOSG(pos);
 				matrix.preMult(osg::Matrix::translate(eyePointLocal.x(),eyePointLocal.y(),eyePointLocal.z()));
 				//matrix.preMultTranslate(eyePointLocal);
 			}

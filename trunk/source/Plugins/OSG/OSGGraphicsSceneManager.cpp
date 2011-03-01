@@ -35,7 +35,6 @@
 #include <osgShadow/LightSpacePerspectiveShadowMap>
 #include <osgShadow/StandardShadowMap>
 
-
 #include "Core/Common.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -52,6 +51,8 @@
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
+
 
 
 namespace GASS
@@ -162,6 +163,11 @@ namespace GASS
 	
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
+		ScenarioScenePtr scene = GetScenarioScene();
+		assert(scene);
+		if(scene->GetSceneUp().z > 0)
+			OSGConvert::Get().m_FlipYZ = false;
+		
 		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();//new osg::Group();
 		m_RootNode->setName("GASSRootNode");
@@ -201,8 +207,7 @@ namespace GASS
 		GetOSGShadowRootNode()->setStateSet(state);
 
 
-		ScenarioScenePtr scene = GetScenarioScene();
-		assert(scene);
+
 		//m_GFXSystem->SetActiveSceneManger(m_SceneMgr);
 
 		// Load default camera ect
@@ -221,6 +226,8 @@ namespace GASS
 		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+
+
 	}
 
 	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
