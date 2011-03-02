@@ -137,7 +137,10 @@ namespace GASS
 			
 			mTriangles.push_back(t);
 			
-			sv1.Vertex.x = tv1[0];
+			sv1.Vertex = OSGConvert::Get().ToGASS(tv1);
+			sv2.Vertex = OSGConvert::Get().ToGASS(tv2);
+			sv3.Vertex = OSGConvert::Get().ToGASS(tv3);
+			/*sv1.Vertex.x = tv1[0];
 			sv1.Vertex.y = tv1[1];
 			sv1.Vertex.z = tv1[2];
 			
@@ -147,7 +150,7 @@ namespace GASS
 			
 			sv3.Vertex.x = tv3[0];
 			sv3.Vertex.y = tv3[1];
-			sv3.Vertex.z = tv3[2];
+			sv3.Vertex.z = tv3[2];*/
 			
 			//Changed winding order
 			mVertices.push_back(sv3);
