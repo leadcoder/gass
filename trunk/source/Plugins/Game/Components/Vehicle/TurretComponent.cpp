@@ -60,6 +60,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnRotation,VelocityNotifyMessage,0));
 	}
 
 	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -68,6 +69,12 @@ namespace GASS
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
 		GetSceneObject()->PostMessage(force_msg);
 		GetSceneObject()->PostMessage(vel_msg);
+
+		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(play_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+		GetSceneObject()->PostMessage(volume_msg);
 	}
 
 	void TurretComponent::OnInput(ControllerMessagePtr message)
@@ -84,8 +91,43 @@ namespace GASS
 			
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
+
+			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
+			GetSceneObject()->PostMessage(volume_msg);
+
+			/*if(fabs(value) > 0)
+			{
+				MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+				GetSceneObject()->PostMessage(play_msg);
+			}
+			else
+			{
+				MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+				GetSceneObject()->PostMessage(play_msg);
+			}*/
 		}
 	}
+
+	/*void TurretComponent::OnRotation(VelocityNotifyMessagePtr message)
+	{
+		Vec3 ang_vel  = message->GetAngularVelocity();
+		const float speed = fabs(ang_vel.y);
+		const float max_volume_at_speed = 1;
+		if(speed < max_volume_at_speed)
+		{
+			//std::cout << speed << std::endl;
+			//Play engine sound
+			const float volume = (speed/max_volume_at_speed);
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+			GetSceneObject()->PostMessage(sound_msg);
+		}
+		if(speed > 0)
+		{
+			float pitch = 0.8 + speed*0.01;
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+			GetSceneObject()->PostMessage(sound_msg);
+		}
+	}*/
 
 	
 }

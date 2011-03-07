@@ -46,6 +46,7 @@ namespace GASS
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result);
 		void Process();
+		Float GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute=true) const;
 	private:
 		void OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message);
 		RequestMap m_RequestMap;
@@ -54,6 +55,7 @@ namespace GASS
 		tbb::spin_mutex m_RequestMutex;
 		tbb::spin_mutex m_ResultMutex;
 	};
+	typedef boost::shared_ptr<ODECollisionSystem> ODECollisionSystemPtr;
 
 
 }

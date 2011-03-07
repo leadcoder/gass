@@ -47,16 +47,18 @@ namespace GASS
 		virtual ~ODESphereGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void SetRadius(Float value);
+		Float GetRadius() const;
 	protected:
 		dGeomID CreateODEGeom();
 		void SetSizeFromMesh(bool value);
 		void UpdateBodyMass();
-		void SetRadius(Float value);
-		Float GetRadius() const;
+		
 		//debug functions
 		void CreateDebugSphere(Float radius,const Vec3 &offset);
 		void UpdateDebug();
 	protected:
 		Float m_Radius; //bounding box start size
 	};
+	typedef boost::shared_ptr<ODESphereGeometryComponent> ODESphereGeometryComponentPtr;
 }

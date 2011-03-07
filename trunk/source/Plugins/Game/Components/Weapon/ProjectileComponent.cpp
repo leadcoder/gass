@@ -97,7 +97,7 @@ namespace GASS
 		//for fast access
 		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
-		std::cout << "Loaded:" << GetSceneObject()->GetName() << std::endl;
+		//std::cout << "Loaded:" << GetSceneObject()->GetName() << std::endl;
 		//Send delete message?
 	}
 
@@ -105,7 +105,7 @@ namespace GASS
 	void ProjectileComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-		std::cout << "Unloaded:" << GetSceneObject()->GetName() << std::endl;
+		//std::cout << "Unloaded:" << GetSceneObject()->GetName() << std::endl;
 	}
 
 	void ProjectileComponent::OnPhysicsParameterMessage(PhysicsBodyMessagePtr message)

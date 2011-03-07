@@ -101,7 +101,6 @@ namespace GASS
 				m_ResultMap[handle] = res_iter->second;
 			}
 		}
-			
 	}
 
 	bool ODECollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
@@ -139,9 +138,7 @@ namespace GASS
 	void ODECollisionSystem::OnCreate()
 	{
 		int address = (int) this;
-
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
-		
 		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_RM_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
 	}
 
@@ -150,6 +147,43 @@ namespace GASS
 		m_RequestMap.clear();
 		m_ResultMap.clear();
 	}
+
+	Float ODECollisionSystem::GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute) const
+	{
+		ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+		CollisionRequest request;
+		CollisionResult result;
+
+		Vec3 up = scene->GetSceneUp();
+
+		Vec3 ray_start = pos;
+		Vec3 ray_direction = -up;
+		//max raycast 2000000 units down
+		ray_direction = ray_direction*2000000;
+
+		request.LineStart = ray_start;
+		request.LineEnd = ray_start + ray_direction;
+		request.Type = COL_LINE;
+		request.Scene = scene;
+		request.ReturnFirstCollisionPoint = false;
+		request.CollisionBits = 2;
+		ODELineCollision raycast(&request,&result,ode_scene);
+		raycast.Process();
+
+		if(result.Coll)
+		{
+			Vec3 col_pos;
+			if(absolute)
+				col_pos  = result.CollPosition;
+			else
+				col_pos = pos - result.CollPosition;
+
+			col_pos = col_pos *up;
+			return col_pos.Length();
+		}
+		return 0;
+	}
+
 
 	/*void ODECollisionSystem::OnUpdate(MessagePtr message)
 	{

@@ -22,14 +22,19 @@
 #include "Plugins/ODE/ODESuspensionComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
+#include "Plugins/ODE/ODECollisionSystem.h"
+#include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/ComponentSystem/IComponentContainer.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include <boost/bind.hpp>
 //#include "Main/SceneNodes/BaseObject.h"
 //#include "Main/SceneNodes/TransformationNode.h"
@@ -192,6 +197,7 @@ namespace GASS
 			if (m_Axis1.Length() != 0)
 				dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
 			else
+				//dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[6],ode_rot_mat[5]);
 				dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
 			dJointSetHinge2Axis2(m_ODEJoint,    ode_rot_mat[0],    ode_rot_mat[1],    ode_rot_mat[2]);
 	}
@@ -236,14 +242,13 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
-		
 			dJointSetHinge2Param(m_ODEJoint,dParamLoStop,m_LowStop);
 			dJointSetHinge2Param(m_ODEJoint,dParamHiStop,m_HighStop);
 			dJointSetHinge2Param(m_ODEJoint,dParamLoStop,m_LowStop);
 			dJointSetHinge2Param(m_ODEJoint,dParamHiStop,m_HighStop);
-		
 		}
 	}
+
 	void ODESuspensionComponent::SetAxis1Vel(float velocity)
 	{
 		if(m_ODEJoint)
@@ -352,15 +357,29 @@ namespace GASS
 			axis2.Set(temp[0],temp[1],temp[2]);
 			displacement = Math::Dot((hingePoint - bodyPoint) ,axis2);
 			float amt = displacement * m_SwayForce;
-			if( displacement > 0 ) 
+
+
+			ODESphereGeometryComponentPtr sphere = GetSceneObject()->GetFirstComponent<ODESphereGeometryComponent>();
+			Float radius = 0;
+			if(sphere) 
 			{
-				if( amt > 15 ) 
+				radius = sphere->GetRadius();
+			}
+
+			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ODECollisionSystem>();
+			Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetSceneObjectManager()->GetScenarioScene(),hingePoint,false);
+			//std::cout << "height" <<  height_above_ground << "\n";
+
+			//get terrain height
+
+			if( displacement > 0 && height_above_ground < radius*2) 
+			{
+				if( amt > 15 )
 				{
 					amt = 15;
 				}
 				dBodyAddForce( b2, -axis2.x * amt, -axis2.y * amt, -axis2.z * amt );
 				dReal const * wp = dBodyGetPosition( b2 );
-
 
 				dBodyAddForceAtPos( b1, axis2.x*amt, axis2.y*amt, axis2.z*amt, wp[0], wp[1], wp[2] );
 				//dBodyAddForce( wheelBody_[ix^1], axis.x * amt, axis.y * amt, axis.z * amt );

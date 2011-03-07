@@ -64,6 +64,7 @@ namespace GASS
 
 		IComponentContainerTemplate::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components,"OgreCameraComponent");
+		GetSceneObject()->GetComponentsByClass(components,"OSGCameraComponent");
 
 		if(components.size() > 0)
 		{

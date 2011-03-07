@@ -75,9 +75,10 @@ namespace GASS
 	void OSGCameraComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLoad,LoadGFXComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnPositionChanged,PositionMessage,10));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnRotationChanged,RotationMessage,10));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnPositionChanged,PositionMessage,10));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnRotationChanged,RotationMessage,10));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
 	}
 
 	void OSGCameraComponent::OnParameter(CameraParameterMessagePtr message)
@@ -108,7 +109,7 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraComponent::OnPositionChanged(PositionMessagePtr message)
+	void OSGCameraComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		UpdateFromLocation();
 	}
@@ -136,18 +137,21 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraComponent::OnRotationChanged(RotationMessagePtr message)
+	/*void OSGCameraComponent::OnRotationChanged(RotationMessagePtr message)
 	{
 		UpdateFromLocation();
-	}
+	}*/
 
 	void OSGCameraComponent::UpdateFromLocation()
 	{
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
 		//lc->GetOSGNode()->getAttitude();
 
-		osg::Vec3d pos = lc->GetOSGNode()->getPosition();
-		osg::Quat rot = lc->GetOSGNode()->getAttitude();
+		//osg::Vec3d pos = lc->GetOSGNode()->getPosition();
+		//osg::Quat rot = lc->GetOSGNode()->getAttitude();
+
+		osg::Vec3d pos = OSGConvert::Get().ToOSG(lc->GetWorldPosition());
+		osg::Quat rot = OSGConvert::Get().ToOSG(lc->GetWorldRotation());
 
 		/*Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
 		if(up.z ==1)

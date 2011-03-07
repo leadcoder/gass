@@ -103,7 +103,7 @@ namespace GASS
 		if(message->GetLevel() == LODMessage::LOD_HIGH)
 		{
 			m_1FP = true;
-			std::cout << "fP1" << std::endl;
+			//std::cout << "fP1" << std::endl;
 		}
 		else
 		{
@@ -246,13 +246,13 @@ namespace GASS
 		{
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 			m_FireSound1Fp->PostMessage(sound_msg);
-			std::cout << "fire fP1" << std::endl;
+			//std::cout << "fire fP1" << std::endl;
 		}
 		else if(m_FireSound3Fp)
 		{
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 			m_FireSound3Fp->PostMessage(sound_msg);
-			std::cout << "fire fP3" << std::endl;
+			//std::cout << "fire fP3" << std::endl;
 		}
 
 
@@ -368,7 +368,7 @@ namespace GASS
 
 		if(m_Automatic && m_FireRequest)
 		{
-		    std::cout << "send new fire" << std::endl;
+		    //std::cout << "send new fire" << std::endl;
             MessagePtr fire_request_msg(new FireMessage());
             fire_request_msg->SetDeliverDelay(m_FireDelay);
             GetSceneObject()->PostMessage(fire_request_msg);

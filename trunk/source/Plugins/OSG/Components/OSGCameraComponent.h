@@ -42,8 +42,9 @@ namespace GASS
 
 	protected:
 		void OnParameter(CameraParameterMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		//void OnPositionChanged(PositionMessagePtr message);
+		//void OnRotationChanged(RotationMessagePtr message);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 
 		float GetFarClipDistance() const;
