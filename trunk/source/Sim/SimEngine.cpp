@@ -20,6 +20,10 @@
 
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/TBBRuntimeController.h"
+
+#include "Sim/Utils/Profiler.h"
+#include "Sim/Utils/ProfileRuntimeHandler.h"
+
 #include "Core/PluginSystem/PluginManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -35,6 +39,7 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
+#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/SimSystemMessages.h"
@@ -79,20 +84,32 @@ namespace GASS
 
 		m_RTC->Init();
 		Log::Print("SimEngine::Init -- Done");
+
+		//intilize profiler
+
+		ProfileSample::outputHandler = new ProfileRuntimeHandler();
+		ProfileSample::ResetAll();
+
 		return true;
 	}
 
 	void SimEngine::Update(double delta_time)
 	{
+		//ProfileSample::ResetAll();
+		
+		{
+		PROFILE("SimEngine::Update")
 		m_RTC->Update(delta_time);
 
 		m_CurrentTime += delta_time;
 
-
 		//TODO: this should not be done here
 
 		m_ControlSettingsManager->Update(delta_time);
-
+		}
+#ifdef PROFILER
+		ProfileSample::Output();
+#endif
 	}
 
 	bool SimEngine::Shutdown()
