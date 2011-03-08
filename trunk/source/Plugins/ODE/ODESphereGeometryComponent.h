@@ -27,7 +27,7 @@
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
 #include "ODEPhysicsSceneManager.h"
-#include "ODEGeometry.h"
+//#include "ODEGeometry.h"
 #include "ODEBaseGeometryComponent.h"
 
 namespace GASS

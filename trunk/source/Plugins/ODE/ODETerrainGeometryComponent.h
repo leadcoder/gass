@@ -22,13 +22,14 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 #include <ode/ode.h>
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Quaternion.h"
 #include "ODEPhysicsSceneManager.h"
-#include "ODEGeometry.h"
 #include "ODEBaseGeometryComponent.h"
+
 
 namespace GASS
 {
@@ -41,7 +42,7 @@ namespace GASS
 	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
 	
 
-	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometry
+	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:

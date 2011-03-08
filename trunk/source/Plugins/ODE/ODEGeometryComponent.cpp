@@ -218,14 +218,12 @@ namespace GASS
 				{
 					ODECollisionMesh col_mesh = ODEPhysicsSceneManagerPtr(m_SceneManager)->CreateCollisionMesh(mesh);
 					geom_id = dCreateTriMesh(0, col_mesh.ID, 0, 0, 0);
-
 				}
 			}
 			break;
 		case PGT_TERRAIN:
 			geom_id = CreateTerrain(geom,  0);
 			break;
-
 		}
 
 		m_BBOffset = geom_offset;

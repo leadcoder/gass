@@ -35,7 +35,7 @@
 //#include "Main/Root.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
-#include "Plugins/ODE/ODEGeometry.h"
+#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 
 
 namespace GASS
@@ -241,8 +241,8 @@ namespace GASS
 			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
 
 
-			IPhysicsGeometry* physics_geom1 = dynamic_cast<IPhysicsGeometry*>(geom1);
-			IPhysicsGeometry* physics_geom2 = dynamic_cast<IPhysicsGeometry*>(geom2);
+			IPhysicsGeometryComponent* physics_geom1 = dynamic_cast<IPhysicsGeometryComponent*>(geom1);
+			IPhysicsGeometryComponent* physics_geom2 = dynamic_cast<IPhysicsGeometryComponent*>(geom2);
 
 
 			dContact contact;
