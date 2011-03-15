@@ -17,15 +17,9 @@ TODO:	Replace interator with const_iterator where appropriate and as a result ma
 90%:	Split ODEGeomtryComponent into new components for the diffrent geometry  
 	types types, ie ODEBoxGeometryComponent etc.
 
-50%: Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
+100%    Unified coordinate system for osg and ogre, vehicle templates ect. has to be
+        same for both scene graphs  
 
-
-
-
-
-
-
-
-
+50%:    Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
 
 
