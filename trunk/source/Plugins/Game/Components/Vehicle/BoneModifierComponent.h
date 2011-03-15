@@ -52,8 +52,8 @@ namespace GASS
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLODChange(LODMessagePtr message);
-	
-		void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message);
+
+		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 		SceneObjectWeakPtr m_SourceObject;
 

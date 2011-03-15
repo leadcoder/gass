@@ -100,25 +100,28 @@ namespace GASS
 				if(pos_elem)
 				{
 					const std::string pos_str = pos_elem->Attribute("value");
-					std::stringstream(pos_str) >> instance.m_Position;
+					std::stringstream ss(pos_str);
+					ss >> instance.m_Position;
 				}
 				TiXmlElement *rot_elem = prop_elem->FirstChildElement("Quaternion");
 				if(rot_elem)
 				{
 					const std::string rot_str = rot_elem->Attribute("value");
-					std::stringstream(rot_str) >> instance.m_Rotation;
-		
+					std::stringstream ss(rot_str);
+					ss >> instance.m_Rotation;
+
 				}
 
 				TiXmlElement *scale_elem = prop_elem->FirstChildElement("Scale");
 				if(scale_elem)
 				{
 					const std::string scale_str = scale_elem->Attribute("value");
-					std::stringstream(scale_str) >> instance.m_Scale;
-		
+					std::stringstream ss(scale_str);
+					ss >> instance.m_Scale;
+
 				}
 				m_MeshInstances[mesh_name].push_back(instance);
-				//const std::string mesh_pos = 
+				//const std::string mesh_pos =
 			}
 			else
 			{
@@ -147,7 +150,7 @@ namespace GASS
 		float size = 300;
 		sg->setRegionDimensions(Ogre::Vector3(size, size, size));
         sg->setOrigin(Ogre::Vector3(-size/2, 0, -size/2));
-		
+
 
 
 		if(m_RenderQueue == "SkiesLate")
@@ -192,7 +195,7 @@ namespace GASS
 	}
 
 
-	void OgreStaticMeshComponent::SetFilename(const std::string &filename) 
+	void OgreStaticMeshComponent::SetFilename(const std::string &filename)
 	{
 		m_Filename = filename;
 		if(m_ReadyToLoadMesh)
@@ -480,7 +483,7 @@ namespace GASS
 	{
 
 
-		if(!m_UniqueMaterialCreated) 
+		if(!m_UniqueMaterialCreated)
 		{
 			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 			{
@@ -524,7 +527,7 @@ namespace GASS
 	{
 		Ogre::Bone* bone;
 
-		
+
 		if(message->GetName() == "")
 		{
 			//bone = GetClosestBone(pos);
