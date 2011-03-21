@@ -90,7 +90,7 @@ namespace GASS
         {
         }
 
-        virtual T GetValue(BaseReflectionObject* object) const
+        virtual T GetValue(const BaseReflectionObject* object) const
         {
             return (((OwnerType*)object)->*m_Getter)();
         }
@@ -131,7 +131,7 @@ namespace GASS
             SetValue(object,res);
         }
 
-        std::string GetValueAsString(BaseReflectionObject* object)
+        std::string GetValueAsString(const BaseReflectionObject* object) const 
         {
             T val = GetValue(object);
             std::string res;

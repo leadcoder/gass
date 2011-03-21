@@ -129,7 +129,7 @@ namespace GASS
 		/**
 		Gets access to property iterator.
 		*/
-		std::list<AbstractProperty*>::iterator	GetFirstProperty()
+		std::list<AbstractProperty*>::iterator	GetFirstProperty() 
 		{
 			return m_Properties.begin();
 		}

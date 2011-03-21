@@ -90,7 +90,7 @@ namespace GASS
 		/**
 		Get a vector of all templates hold by this manager
 		*/
-		std::vector<std::string> GetTemplateNames();
+		std::vector<std::string> GetTemplateNames() const;
 	protected:
 		//void AddRecursive(IComponentContainer* ct);
 		bool m_ForceUniqueName;

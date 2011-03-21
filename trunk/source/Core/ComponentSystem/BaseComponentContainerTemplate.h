@@ -63,7 +63,7 @@ namespace GASS
 		virtual ComponentContainerTemplatePtr GetParent() const {return ComponentContainerTemplatePtr(m_Parent,boost::detail::sp_nothrow_tag());}//allow null pointer}
 		virtual void SetParent(ComponentContainerTemplateWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
-		virtual ComponentPtr GetComponent(const std::string &name);
+		virtual ComponentPtr GetComponent(const std::string &name) const;
 		virtual ComponentIterator GetComponents();
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager);
 		void CreateFromComponentContainer(ComponentContainerPtr cc);

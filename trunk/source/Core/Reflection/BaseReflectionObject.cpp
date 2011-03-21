@@ -151,12 +151,14 @@ namespace GASS
 	}
 
 
-	bool BaseReflectionObject::GetPropertyByString(const std::string &property_name, std::string &value)
+	bool BaseReflectionObject::GetPropertyByString(const std::string &property_name, std::string &value) const
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
-			std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			//std::list<AbstractProperty*>::const_iterator	iter = pRTTI->GetFirstProperty();
+			std::list<AbstractProperty*>::iterator iter = pRTTI->GetFirstProperty();
+
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				AbstractProperty * prop = (*iter);

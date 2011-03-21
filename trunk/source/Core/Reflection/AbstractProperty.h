@@ -68,7 +68,7 @@ namespace GASS
             Get the value of this property
             @param object The object that is owner of this property
         */
-    	virtual std::string GetValueAsString(BaseReflectionObject* pObject) = 0;
+    	virtual std::string GetValueAsString( const BaseReflectionObject* pObject) const = 0;
 
 		/**
             Serialize this property

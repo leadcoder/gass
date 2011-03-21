@@ -69,7 +69,7 @@ namespace GASS
 		m_Serialize = value;
 	}
 
-	ComponentPtr BaseComponentContainerTemplate::GetComponent(const std::string &name)
+	ComponentPtr BaseComponentContainerTemplate::GetComponent(const std::string &name) const
 	{
 		ComponentPtr comp;
 		for(int i = 0 ; i < m_ComponentVector.size(); i++)

@@ -56,7 +56,7 @@ namespace GASS
             @param value The value provided as string
             @return true if property found
 		*/
-		bool GetPropertyByString(const std::string &property_name, std::string &value);
+		bool GetPropertyByString(const std::string &property_name, std::string &value) const;
 
 		/**Set property by using boost::any
 		    @param property_name Name of the property to get

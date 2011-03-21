@@ -95,7 +95,7 @@ namespace GASS
 			Get component by name,
 			only serach this containers components and first one is returned
 		*/
-		virtual ComponentPtr GetComponent(const std::string &name) = 0;
+		virtual ComponentPtr GetComponent(const std::string &name) const = 0;
 
 		/**
 			Get all components owned by this container

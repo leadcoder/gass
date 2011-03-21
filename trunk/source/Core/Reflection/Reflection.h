@@ -133,7 +133,7 @@ namespace GASS
 
 		//----------------------------------------------------------------------------------------------
 		// Returns RTTI info associated with this class instance.
-		virtual RTTI* GetRTTI()
+		virtual RTTI* GetRTTI() const
 		{
 			return &m_RTTI;
 		}

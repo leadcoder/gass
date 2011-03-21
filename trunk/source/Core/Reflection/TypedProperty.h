@@ -57,7 +57,7 @@ namespace GASS
 		Get the value of this property.
 		@param object BaseReflectionObject that is owner of this property
 		*/
-		virtual T GetValue(BaseReflectionObject* object)const = 0;
+		virtual T GetValue(const BaseReflectionObject* object)const = 0;
 
 		/**
 		Set the value of this property.

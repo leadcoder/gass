@@ -61,7 +61,7 @@ namespace GASS
 		virtual ComponentContainerPtr GetParent() const {return ComponentContainerPtr(m_Parent,boost::detail::sp_nothrow_tag());}//allow null pointer}
 		virtual void SetParent(ComponentContainerWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
-		virtual ComponentPtr GetComponent(const std::string &name);
+		virtual ComponentPtr GetComponent(const std::string &name) const;
 		virtual ComponentIterator GetComponents();
 
 		//xml serialize interface

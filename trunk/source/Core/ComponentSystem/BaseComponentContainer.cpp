@@ -63,7 +63,7 @@ namespace GASS
 		return ComponentIterator(m_ComponentVector.begin(), m_ComponentVector.end());
 	}
 
-	ComponentPtr BaseComponentContainer::GetComponent(const std::string &name)
+	ComponentPtr BaseComponentContainer::GetComponent(const std::string &name) const
 	{
 		ComponentPtr comp;
 		for(int i = 0 ; i < m_ComponentVector.size(); i++)
