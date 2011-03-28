@@ -179,6 +179,8 @@ namespace GASS
 			osgUtil::Optimizer optimizer;
 		    optimizer.optimize(m_MeshNode.get());
 
+			m_MeshNode->setUserData((osg::Referenced*)this);
+
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));

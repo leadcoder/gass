@@ -30,6 +30,9 @@
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Simengine.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -38,6 +41,8 @@
 namespace GASS
 {
 	ITerrainComponent* GrassGeometryComponent::m_Terrain = NULL;
+	ICollisionSystem * GrassGeometryComponent::m_CollisionSystem = NULL;
+
 	GrassGeometryComponent::GrassGeometryComponent(void) : m_DensityFactor(0.001),
 		m_Bounds(0,0,0,0),
 		m_PageSize(50),
@@ -53,7 +58,6 @@ namespace GASS
 		m_RenderTechnique("Quad"),
 		m_Blend(false),
 		m_GrassLayer(NULL)
-//		m_Terrain(NULL)
 	{
 
 	}
@@ -380,6 +384,8 @@ namespace GASS
 			user_bounds = false;
 		}
 
+		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
+
 		if(!user_bounds)
 		{
 			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
@@ -407,7 +413,11 @@ namespace GASS
 			}
 			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 		}
-		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+		else 
+		{
+			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+			
+		}
 		//What camera should be used?
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
@@ -417,7 +427,7 @@ namespace GASS
 		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
 		m_PagedGeometry->setPageLoader(loader);
 
-		loader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight);
+		loader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
 		m_GrassLayer = loader->addLayer(m_Material);
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
@@ -441,12 +451,38 @@ namespace GASS
 //		Root::Get().AddRenderListener(this);
 	}
 
+	float GrassGeometryComponent::GetCollisionSystemHeight(float x, float z)
+	{
+		if(m_CollisionSystem)
+		{
+			GASS::CollisionRequest request;
+			request.LineStart.Set(x,-1000,z);
+			request.LineEnd.Set(x,2000,z);
+			request.Type = COL_LINE;
+			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+			request.ReturnFirstCollisionPoint = false;
+			request.CollisionBits = 1;
+			GASS::CollisionResult result;
+			result.Coll = false;
+			m_CollisionSystem->Force(request,result);
+			if(result.Coll)
+				return result.CollPosition.y;
+		}
+		return 0;
+
+	}
+
 	float GrassGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
-		else
-			return 0;
+		else 
+		{
+			GrassGeometryComponent* grass = static_cast<GrassGeometryComponent*> (user_data);
+			return grass->GetCollisionSystemHeight(x, z);
+			
+			
+		}
 	}
 
 	void GrassGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)

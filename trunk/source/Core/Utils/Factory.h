@@ -76,6 +76,7 @@ namespace GASS
 		typedef boost::shared_ptr<Base> BasePtr;
 		BasePtr Create(ObjectType type);
 		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
+		bool Remove(ObjectType type);
 		std::string GetFactoryName(const std::string &class_name);
 		std::vector<std::string> GetFactoryNames();
 	private:
@@ -98,6 +99,19 @@ namespace GASS
 		return true;
 	}
 
+	template<class Base, class ObjectType>
+	bool Factory<Base,ObjectType>::Remove(ObjectType type)
+	{
+		typename CreatorMap::iterator it = m_creatorMap.find(type);
+		if (it != m_creatorMap.end())
+		{
+			delete m_creatorMap[type];
+			m_creatorMap.erase(it);
+			return true;
+		}
+		return false;
+	}
+	
 
 	template<class Base, class ObjectType>
 	std::string Factory<Base,ObjectType>::GetFactoryName(const std::string &class_name)

@@ -101,7 +101,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreMeshComponent::SetFilename(const std::string &filename) 
 	{
 		m_Filename = filename;
@@ -119,7 +118,6 @@ namespace GASS
 			std::string name;
 			ss << GetName() << obj_id;
 			ss >> name;
-
 
 			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
 			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
@@ -365,12 +363,35 @@ namespace GASS
 
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
+			
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+			
 			Ogre::MaterialPtr mat = se->getMaterial();
-			Ogre::Technique * technique = mat->getTechnique(0);
-			Ogre::Pass* pass = technique->getPass(0);
-			Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
-			textureUnit->setTextureScroll(speed.x,speed.y);
+			if(mat->getNumTechniques() > 0)
+			{
+				Ogre::Technique * technique = mat->getTechnique(0);
+				if(technique->getNumPasses() > 0)
+				{
+					Ogre::Pass* pass = technique->getPass(0);
+
+					/*static Vec2 uv_offset(0,0);
+					uv_offset.x += 0.1*speed.x;
+					uv_offset.y += 0.1*speed.y;
+
+					if(pass->getVertexProgram().get())
+					{
+						pass->getVertexProgramParameters()->setNamedConstant("texOffset",Ogre::Vector3(uv_offset.x ,uv_offset.y,0));
+					}
+					else*/
+					{
+						if(pass->getNumTextureUnitStates() > 0)
+						{
+							Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
+							textureUnit->setTextureScroll(speed.x,speed.y);
+						}
+					}
+				}
+			}
 		}
 	}
 

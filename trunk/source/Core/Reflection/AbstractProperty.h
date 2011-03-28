@@ -94,7 +94,7 @@ namespace GASS
             @param object The object that is owner of this property
             @param value The value returned, wrapped in the boost::any class
         */
-		virtual void GetValue(BaseReflectionObject* object, boost::any &value) = 0;
+		virtual void GetValue(const BaseReflectionObject* object, boost::any &value) const = 0;
 	protected :
 		std::string	m_Name;
 	};

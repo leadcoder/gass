@@ -43,7 +43,7 @@ namespace GASS
 	public:
 		virtual ~IVectorProperty(){}
 		virtual void SetValueByStringVector(BaseReflectionObject* object, const std::vector<std::string> &value) = 0;
-		virtual std::vector<std::string> GetValueAsStringVector(BaseReflectionObject* object) = 0;
+		virtual std::vector<std::string> GetValueAsStringVector(const BaseReflectionObject* object) const = 0;
 	};
 
 	template <class OwnerType, class T>
@@ -70,7 +70,7 @@ namespace GASS
 		{
 		}
 
-		virtual std::vector<T> GetValue(BaseReflectionObject* object) const
+		virtual std::vector<T> GetValue(const BaseReflectionObject* object) const
 		{
 			return (((OwnerType*)object)->*m_Getter)();
 		}
@@ -136,7 +136,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		std::string GetValueAsString(BaseReflectionObject* object)
+		std::string GetValueAsString(const BaseReflectionObject* object) const
 		{
 			std::vector<T> val = GetValue(object);
 			std::string res;
@@ -169,7 +169,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		void GetValue(BaseReflectionObject* object, boost::any &value)
+		void GetValue(const BaseReflectionObject* object, boost::any &value) const
 		{
 			std::vector<T> res = GetValue(object);
 			value = res;
@@ -189,7 +189,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		std::vector<std::string> GetValueAsStringVector(BaseReflectionObject* object)
+		std::vector<std::string> GetValueAsStringVector(const BaseReflectionObject* object) const
 		{
 			std::vector<T> val = GetValue(object);
 			std::vector<std::string> res;

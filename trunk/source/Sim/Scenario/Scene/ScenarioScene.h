@@ -121,7 +121,7 @@ namespace GASS
 		/**
           Deprecated
         */
-		void SetRT90Origo(const Vec2& origo) {m_RT90Origo=origo;}
+		void SetRT90Origo(const Vec2& origo);
 
 		//Remove this
 		/**

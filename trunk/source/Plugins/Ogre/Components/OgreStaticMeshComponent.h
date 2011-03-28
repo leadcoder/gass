@@ -26,6 +26,7 @@
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 
 namespace Ogre
 {
@@ -56,33 +57,25 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual std::string GetFilename()const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data);
-		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
-		void SetFilename(const std::string &filename);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
+		void SetRegionSize(Float size) {m_RegionSize = size;}
+		Float GetRegionSize() const {return m_RegionSize;}
 
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
-		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
+		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset);
+		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
+	
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
-		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
-		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
+	
 
-		void SetTexCoordSpeed(const Vec2 &speed);
-
-
-		Ogre::Bone* GetClosestBone(const Vec3 &pos);
-		bool HasSkeleton() const;
-
-		Ogre::Entity* m_OgreEntity;
+		
 		std::string m_RenderQueue;
-		std::string m_Filename;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;
@@ -90,6 +83,10 @@ namespace GASS
 		typedef std::vector<MeshInstance> MeshInstanceVector;
 		typedef std::map<std::string, MeshInstanceVector> MeshMap;
 		MeshMap m_MeshInstances;
+		Ogre::StaticGeometry *m_StaticGeometry;
+		OgreGraphicsSceneManagerWeakPtr m_OgreSceneManager;
+		std::string m_Filename;
+		Float m_RegionSize;
 	};
 
 	typedef boost::shared_ptr<OgreStaticMeshComponent> OgreStaticMeshComponentPtr;

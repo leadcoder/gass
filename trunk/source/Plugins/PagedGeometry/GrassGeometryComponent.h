@@ -29,6 +29,8 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/Systems/Collision/ICollisionSystem.h"
+
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 
@@ -92,6 +94,7 @@ namespace GASS
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
 protected:
+		float GetCollisionSystemHeight(float x, float z);
 		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
@@ -119,6 +122,7 @@ protected:
 		Vec4 m_Bounds;
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
+		static ICollisionSystem* m_CollisionSystem;
 		
 	};
 }

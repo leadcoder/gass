@@ -149,7 +149,7 @@ namespace GASS
             SetValue(object,res);
         }
 
-        void GetValue(BaseReflectionObject* object, boost::any &value)
+        void GetValue(const BaseReflectionObject* object, boost::any &value) const 
         {
             T res = GetValue(object);
             value = res;

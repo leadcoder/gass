@@ -36,7 +36,7 @@ namespace GASS
 {
 	class IComponent;
 	class OgreGraphicsSystem;
-	class OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>
+	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>
 	{
 	private:
 		void UpdateFogSettings();
@@ -143,4 +143,5 @@ namespace GASS
 		std::vector<IComponent*> m_GFXComponents;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
+	typedef boost::weak_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerWeakPtr;
 }

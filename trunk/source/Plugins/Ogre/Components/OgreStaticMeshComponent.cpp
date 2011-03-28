@@ -36,7 +36,6 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreStaticMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
@@ -47,10 +46,11 @@ using namespace Ogre;
 namespace GASS
 {
 
-	OgreStaticMeshComponent::OgreStaticMeshComponent() : m_OgreEntity(NULL),
+	OgreStaticMeshComponent::OgreStaticMeshComponent() : m_StaticGeometry(NULL),
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
-		m_UniqueMaterialCreated(false)
+		m_UniqueMaterialCreated(false),
+		m_RegionSize(300.0)
 	{
 
 	}
@@ -67,16 +67,17 @@ namespace GASS
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreStaticMeshComponent::GetRenderQueue, &GASS::OgreStaticMeshComponent::SetRenderQueue);
 		//RegisterProperty<std::string>("Filename", &GASS::OgreStaticMeshComponent::GetFilename, &GASS::OgreStaticMeshComponent::SetFilename);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreStaticMeshComponent::GetCastShadow, &GASS::OgreStaticMeshComponent::SetCastShadow);
+		RegisterProperty<Float>("RegionSize", &GASS::OgreStaticMeshComponent::GetRegionSize, &GASS::OgreStaticMeshComponent::SetRegionSize);
 	}
 
 	void OgreStaticMeshComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMaterialMessage,MaterialMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMaterialMessage,MaterialMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
 
 	}
 
@@ -135,9 +136,11 @@ namespace GASS
 	void OgreStaticMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		m_OgreSceneManager = ogsm;
 		assert(ogsm);
-		m_ReadyToLoadMesh = true;
 
+		
+		
 		static unsigned int obj_id = 0;
 		obj_id++;
 		std::stringstream ss;
@@ -145,21 +148,21 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-
-		Ogre::StaticGeometry *sg = ogsm->GetSceneManger()->createStaticGeometry(name);
-		float size = 300;
-		sg->setRegionDimensions(Ogre::Vector3(size, size, size));
-        sg->setOrigin(Ogre::Vector3(-size/2, 0, -size/2));
-
-
+		//Use this name to generate unique filename, used by geometry interface. 
+		m_Filename = name;
+			
+		m_StaticGeometry  = ogsm->GetSceneManger()->createStaticGeometry(name);
+		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
+        m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
+		
 
 		if(m_RenderQueue == "SkiesLate")
 		{
-				sg->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
+				m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
 		}
 		else if(m_RenderQueue == "SkiesEarly")
 		{
-			sg->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
+			m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
 		}
 		MeshMap::iterator iter = m_MeshInstances.begin();
 		while(iter != m_MeshInstances.end())
@@ -170,159 +173,71 @@ namespace GASS
 				Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);
 				Ogre::Quaternion orientation = Convert::ToOgre(iter->second.at(i).m_Rotation);
 				Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(i).m_Scale);
-				sg->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
+				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
 			}
 			iter++;
 		}
-		sg->build();
-		//
-	//	SetFilename(m_Filename);
+		m_StaticGeometry->build();
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+
 	}
 
 
 	void OgreStaticMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		if(m_OgreEntity && m_UniqueMaterialCreated)
+		
+		if(m_StaticGeometry)
 		{
-			//relase material
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				Ogre::MaterialManager::getSingleton().remove(mat->getName());
-			}
+			OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );
+			if(ogsm)
+				ogsm->GetSceneManger()->destroyStaticGeometry(m_StaticGeometry);
 		}
 	}
 
-
-	void OgreStaticMeshComponent::SetFilename(const std::string &filename)
-	{
-		m_Filename = filename;
-		if(m_ReadyToLoadMesh)
-		{
-			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
-			if(m_OgreEntity) //release previous mesh
-			{
-				lc->GetOgreNode()->detachObject(m_OgreEntity);
-				lc->GetOgreNode()->getCreator()->destroyEntity(m_OgreEntity);
-			}
-			static unsigned int obj_id = 0;
-			obj_id++;
-			std::stringstream ss;
-			std::string name;
-			ss << GetName() << obj_id;
-			ss >> name;
-
-
-			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
-			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
-			//LoadLightmap();
-			if(m_CastShadow)
-			{
-				m_OgreEntity->setCastShadows(true);
-				//??
-			}
-			else
-			{
-				m_OgreEntity->setCastShadows(false);
-			}
-
-			if(m_RenderQueue == "SkiesLate")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-			}
-			else if(m_RenderQueue == "SkiesEarly")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-			}
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
-		}
-	}
-
-	/*	void OgreStaticMeshComponent::TryLoadLightmap()
-	{
-	std::string lightmap = Root::GetPtr()->GetLevel()->GetPath() + "/3dmodels/";
-	char temp[255];
-	Vec3 pos = m_SceneNode->GetAbsoluteTransformation().GetTranslation();
-	std::string base_name = Misc::RemoveExtension(m_Mesh->m_Name);
-	sprintf(temp,"%s_%d-%d-%d.tga",base_name.c_str(),(int) pos.x,(int) pos.y,(int) -pos.z);
-	lightmap += temp;
-	FILE* fp = fopen(lightmap.c_str(),"rb");
-	if(fp)
-	{
-	fclose(fp);
-	//Change material of enity
-	for(unsigned int i = 0;i < m_OgreEntity->getNumSubEntities();i++)
-	{
-	Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-	Ogre::MaterialPtr mat = se->getMaterial();
-	if(!mat.isNull())
-	{
-	std::string new_name = mat->getName() + lightmap;
-	Ogre::MaterialPtr new_mat = mat->clone(new_name);
-	Ogre::Technique * technique = new_mat->getTechnique(0);
-	Ogre::Pass* pass = technique->getPass(0);
-	pass->setLightingEnabled(false);
-	Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(lightmap,1);
-	textureUnit->setColourOperationEx(Ogre::LBX_MODULATE_X2);
-	se->setMaterialName(new_name);
-	//Ogre::MaterialManager::getSingleton().
-	}
-	}
-	}
-	}*/
-
-
-
-	Ogre::Bone* OgreStaticMeshComponent::GetClosestBone(const Vec3 &pos)
-	{
-		assert(m_OgreEntity);
-		Ogre::Bone* bone = NULL;
-		float min_dist = 0;
-		if(m_OgreEntity->hasSkeleton())
-		{
-			Ogre::SkeletonInstance* skeleton = m_OgreEntity->getSkeleton();
-			Ogre::Skeleton::BoneIterator bone_iter = skeleton->getBoneIterator();
-			while(bone_iter.hasMoreElements())
-			{
-				Ogre::Bone* bone_cand = bone_iter.getNext();
-				//Ogre::Vector3 bone_pos = bone->getWorldPosition();
-				//Vec3 bone_pos = Convert::ToGASS(bone_cand->getWorldPosition());
-				Vec3 bone_pos = Convert::ToGASS(bone_cand->getPosition());
-				//add node pos?
-				float  dist = (pos - bone_pos).SquaredLength();
-				if(dist < min_dist || bone == NULL)
-				{
-					min_dist = dist;
-					bone = bone_cand;
-				}
-			}
-		}
-		return bone;
-	}
-
-	bool OgreStaticMeshComponent::HasSkeleton() const
-	{
-		assert(m_OgreEntity);
-		return m_OgreEntity->hasSkeleton();
-	}
-
+	
 	AABox OgreStaticMeshComponent::GetBoundingBox() const
 	{
-		assert(m_OgreEntity);
-		return Convert::ToGASS(m_OgreEntity->getBoundingBox());
+		assert(m_StaticGeometry);
+		AABox final_box;
+
+		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
+		while (regIt.hasMoreElements())
+		{
+			StaticGeometry::Region* region = regIt.getNext();
+			Vec3 center = Convert::ToGASS(region->getCentre());
+			AABox box = Convert::ToGASS(region->getBoundingBox());
+			final_box.Union(box);
+		}
+		return final_box;
 	}
 
 
 	Sphere OgreStaticMeshComponent::GetBoundingSphere() const
 	{
-		Sphere sphere;
-		assert(m_OgreEntity);
-		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = m_OgreEntity->getBoundingRadius();
-		return sphere;
-	}
+		Sphere final_sphere;
+		
 
+		bool first_loop = true;
+		
+		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
+		while (regIt.hasMoreElements())
+		{
+			StaticGeometry::Region* region = regIt.getNext();
+			Sphere sphere;
+
+			
+			sphere.m_Radius = region->getBoundingRadius();
+			sphere.m_Pos = Convert::ToGASS(region->getCentre());
+			if(first_loop)
+			{
+				final_sphere = sphere;
+				first_loop = false;
+			}
+			else
+				final_sphere.Union(sphere);
+		}
+		return final_sphere;
+	}
 
 	void OgreStaticMeshComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
@@ -331,31 +246,52 @@ namespace GASS
 		mesh_data->NumFaces = 0;
 		mesh_data->FaceVector = NULL;
 
-		Ogre::MeshPtr mesh = m_OgreEntity->getMesh();
-
-		if(mesh->sharedVertexData)
+		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
+		while (regIt.hasMoreElements())
 		{
-			AddVertexData(mesh->sharedVertexData,mesh_data);
-		}
+			StaticGeometry::Region* region = regIt.getNext();
+			Ogre::Vector3 center = region->getCentre();
+			
+			StaticGeometry::Region::LODIterator lodIt = region->getLODIterator();
 
-		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
-		{
-			SubMesh *sub_mesh = mesh->getSubMesh(i);
+			float sqdist = 1e24;
+			Ogre::StaticGeometry::LODBucket *theBucket = 0;
+			while (lodIt.hasMoreElements()) 
+			{
 
-			if (!sub_mesh->useSharedVertices)
-			{
-				AddIndexData(sub_mesh->indexData,mesh_data->NumVertex,mesh_data);
-				AddVertexData(sub_mesh->vertexData,mesh_data);
+				Ogre::StaticGeometry::LODBucket *b = lodIt.getNext();
+				if (!theBucket || b->getLodValue() < sqdist) {
+					sqdist = b->getLodValue();
+					theBucket = b;
+				}
 			}
-			else
+
+			//while (lodIt.hasMoreElements())
 			{
-				AddIndexData(sub_mesh->indexData,0,mesh_data);
+
+				//StaticGeometry::LODBucket* bucket = lodIt.getNext();
+				
+				StaticGeometry::LODBucket::MaterialIterator matIt = theBucket->getMaterialIterator();
+				while (matIt.hasMoreElements())
+				{
+					StaticGeometry::MaterialBucket* mat = matIt.getNext();
+					StaticGeometry::MaterialBucket::GeometryIterator geomIt = mat->getGeometryIterator();
+					while (geomIt.hasMoreElements())
+					{
+						StaticGeometry::GeometryBucket* geom = geomIt.getNext();
+
+						AddIndexData(geom->getIndexData(),mesh_data->NumVertex,mesh_data);
+						AddVertexData(geom->getVertexData(),mesh_data, center);
+						
+					}
+				}
 			}
-		}
+		}	
 		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
 	}
+	
 
-	void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
+void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset)
 	{
 		if (!vertex_data)
 			return;
@@ -388,9 +324,9 @@ namespace GASS
 				posElem->baseVertexPointerToElement(vertex, &pReal);
 				vertex += vSize;
 
-				curVertices->x = (*pReal++);
-				curVertices->y = (*pReal++);
-				curVertices->z = (*pReal++);
+				curVertices->x = (*pReal++) + offset.x;
+				curVertices->y = (*pReal++) + offset.y;
+				curVertices->z = (*pReal++) + offset.z;
 
 				//*curVertices = _transform * (*curVertices);
 
@@ -400,7 +336,7 @@ namespace GASS
 		}
 	}
 
-	void OgreStaticMeshComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
+	void OgreStaticMeshComponent::AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
 	{
 		const unsigned int prev_size = mesh->NumFaces;
 		mesh->NumFaces += (unsigned int)data->indexCount;
@@ -442,124 +378,4 @@ namespace GASS
 		}
 	}
 
-	void OgreStaticMeshComponent::SetTexCoordSpeed(const Vec2 &speed)
-	{
-		if(!m_UniqueMaterialCreated) //material clone hack to only set texcoord scroll speed for this mesh
-		{
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				mat = mat->clone(m_OgreEntity->getName() + mat->getName());
-				se->setMaterial(mat);
-			}
-			m_UniqueMaterialCreated = true;
-		}
-
-		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-		{
-			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-			Ogre::MaterialPtr mat = se->getMaterial();
-			Ogre::Technique * technique = mat->getTechnique(0);
-			Ogre::Pass* pass = technique->getPass(0);
-			Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
-			textureUnit->setTextureScroll(speed.x,speed.y);
-		}
-	}
-
-	void OgreStaticMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
-	{
-		std::string name = message->GetFileName();
-		SetFilename(name);
-	}
-
-	void OgreStaticMeshComponent::OnTexCoordMessage(TextureCoordinateMessagePtr message)
-	{
-		Vec2 uv = message->GetTextureCoordinates();
-		SetTexCoordSpeed(uv);
-	}
-
-	void OgreStaticMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
-	{
-
-
-		if(!m_UniqueMaterialCreated)
-		{
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				mat = mat->clone(m_OgreEntity->getName() + mat->getName());
-				se->setMaterial(mat);
-			}
-			m_UniqueMaterialCreated = true;
-		}
-		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-		{
-			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-			Ogre::MaterialPtr mat = se->getMaterial();
-			Vec4 diffuse = message->GetDiffuse();
-			Vec3 ambient = message->GetAmbient();
-			Vec3 specular = message->GetSpecular();
-			Vec3 si = message->GetSelfIllumination();
-
-			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
-			mat->setAmbient(ambient.x,ambient.y,ambient.z);
-			mat->setSpecular(specular.x,specular.y,specular.z,1);
-			mat->setSelfIllumination(si.x,si.y,si.z);
-			mat->setShininess(message->GetShininess());
-
-			//mat->setAmbient(ambinet.x,ambinet.y,ambinet.z);
-			if(diffuse.w < 1.0)
-			{
-				mat->setDepthCheckEnabled(false);
-				mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
-			}
-			else
-			{
-				mat->setDepthCheckEnabled(true);
-				mat->setSceneBlending(SBT_REPLACE);
-			}
-		}
-	}
-
-	void OgreStaticMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
-	{
-		Ogre::Bone* bone;
-
-
-		if(message->GetName() == "")
-		{
-			//bone = GetClosestBone(pos);
-			return;
-		}
-		else
-		{
-			Ogre::SkeletonInstance* skeleton = m_OgreEntity->getSkeleton();
-			bone = skeleton->getBone(message->GetName());
-		}
-		if(bone)
-		{
-
-			Vec3 pos = message->GetPosition();
-			if(!bone->isManuallyControlled())
-			{
-				bone->setManuallyControlled(true);
-			}
-			bone->setPosition(pos.x,pos.y,pos.z);
-
-			/*Ogre::Vector3 worldPos(pos.x, pos.y, pos.z); // desired position in world coords
-			Ogre::SceneNode* parent = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get()->GetOgreNode();
-			Ogre::Vector3 parentPos = parent->_getDerivedPosition(); // node local pos
-			Ogre::Vector3 parentQuatXbonePos = worldPos - parentPos;
-			Ogre::Quaternion parentQuat = parent->_getDerivedOrientation(); // node local ori
-			Ogre::Vector3 bonePos = parentQuat.Inverse() * parentQuatXbonePos;
-			Ogre::Vector3 inverseParentScale = 1.0 / parent->_getDerivedScale();
-
-			bone->setPosition(bonePos * inverseParentScale);
-			Ogre::Quaternion worldQuat(1.0, 0, 0, 0); // desired orientation in world terms
-			Ogre::Quaternion boneQuat = worldQuat.Inverse() * parentQuat; // equiv to ("boneQuat = worldQuat / parentQuat")
-			bone->setOrientation(boneQuat);*/
-		}
-	}
 }

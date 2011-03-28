@@ -189,6 +189,7 @@ namespace GASS
 			Ogre::RenderWindow *window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
 
 
+			
 
 			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
@@ -238,6 +239,8 @@ namespace GASS
 			m_Window->getMetrics(width, height, depth, left, top);
 	}
 
+	
+
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
 		//boost::shared_ptr<UpdateMessage> update_msg = boost::static_pointer_cast<UpdateMessage>( message);
@@ -251,6 +254,21 @@ namespace GASS
 
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
+
+
+		if(m_Window)
+		{
+			float a_fps = m_Window->getAverageFPS(); 
+			size_t tri_count = m_Window->getTriangleCount(); 
+			size_t batch_count = m_Window->getBatchCount();
+
+			std::stringstream sstream;
+			sstream << "AVERAGE FPS:" << a_fps << "\n" <<
+					   "TRIANGLE COUNT: " << tri_count << "\n"
+					   "BATCH COUNT: " << batch_count << "\n";
+			std::string stats_text = sstream.str();
+			GetSimSystemManager()->SendImmediate(MessagePtr( new DebugPrintMessage(stats_text)));
+		}
 
 		//Update all scene managers
 		/*for(int  i = 0 ;  m_SceneManagers.size(); i++)

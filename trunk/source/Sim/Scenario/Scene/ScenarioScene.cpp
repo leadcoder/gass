@@ -105,6 +105,13 @@ namespace GASS
 		
 	}
 
+
+	void ScenarioScene::SetRT90Origo(const Vec2& origo) 
+	{
+		m_RT90Origo=origo;
+	}
+	
+
 	void ScenarioScene::SetInstancesFile(const std::string &value)
 	{
 		m_InstancesFile = value;
