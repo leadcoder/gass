@@ -76,6 +76,7 @@ namespace GASS
 		RegisterProperty<Vec3>("RecoilForce", &WeaponSystemComponent::GetRecoilForce, &WeaponSystemComponent::SetRecoilForce);
 		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
 		RegisterProperty<float>("RoundOfFire", &WeaponSystemComponent::GetRoundOfFire, &WeaponSystemComponent::SetRoundOfFire);
+		RegisterProperty<int>("CurrentMagazineSize", &WeaponSystemComponent::GetCurrentMagazineSize, &WeaponSystemComponent::SetCurrentMagazineSize);
 
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
 		RegisterProperty<std::string>("InputToFire", &WeaponSystemComponent::GetInputToFire, &WeaponSystemComponent::SetInputToFire);
@@ -472,6 +473,16 @@ namespace GASS
 	float WeaponSystemComponent::GetRoundOfFire() const
 	{
 		return m_RoundOfFire;
+	}
+
+	int WeaponSystemComponent::GetCurrentMagazineSize() const
+	{
+		return m_CurrentMagSize;
+	}
+
+	void WeaponSystemComponent::SetCurrentMagazineSize(int value)
+	{
+		m_CurrentMagSize = value;
 	}
 
 }

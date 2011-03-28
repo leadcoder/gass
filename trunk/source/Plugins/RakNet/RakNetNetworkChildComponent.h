@@ -34,6 +34,8 @@
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+#include "Sim/Scheduling/ITaskListener.h"
+
 
 namespace GASS
 {
@@ -43,7 +45,7 @@ namespace GASS
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
 
-	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent>
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> , ITaskListener
 	{
 	public:
 		RakNetNetworkChildComponent();
@@ -62,7 +64,14 @@ namespace GASS
 
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {return m_PartId;}
+
+		
+
 	private:
+		//ITaskListener
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
 		void OnGotReplica(ComponentGotReplicaMessagePtr message);
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);

@@ -68,15 +68,19 @@ namespace GASS
 		int GetPartId()const {m_PartId;}
 		NetworkID GetPartOfId(){return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
-	protected:
-		AbstractProperty* GetProperty(const std::string &prop_name);
 		void SerializeProperties(RakNet::BitStream *bit_stream);
+		void DeserializeProperties(RakNet::BitStream *bit_stream);
+		bool HasPropertiesChanged();
+	protected:
+		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, AbstractProperty* &abstract_property);
+		
 		bool m_AllowRemoteOwner;
 	private:
 		SystemAddress m_OwnerSystemAddress;
 		NetworkID m_PartOfId;
 		ReplicaManager* m_Manager;
 		int m_PartId;
+		std::vector<std::string>  m_SavedValues;
 	protected:
 	};
 }

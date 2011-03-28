@@ -156,7 +156,7 @@ namespace GASS
 		//RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
-	AbstractProperty* RakNetChildReplica::GetProperty(const std::string &prop_name)
+	bool RakNetChildReplica::GetProperty(const std::string &prop_name, BaseReflectionObject* &component, AbstractProperty* &abstract_property)
 	{
 		m_Owner->GetComponents();
 		IComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
@@ -175,7 +175,9 @@ namespace GASS
 						AbstractProperty * prop = (*iter);
 						if(prop->GetName() == prop_name)
 						{
-							return prop;
+							abstract_property = prop;
+							component = comp.get();
+							return true;
 						}
 						iter++;
 					}
@@ -183,7 +185,63 @@ namespace GASS
 				}
 			}
 		}
-		return NULL;
+		return false;
+	}
+
+	
+	void RakNetChildReplica::DeserializeProperties(RakNet::BitStream *bit_stream)
+	{
+		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkChildComponent>();
+		std::vector<std::string> attributes = nc->GetAttributes();
+
+		unsigned long size = 0;
+		bit_stream->Read(size);
+		if	(size > 0)
+		{
+			char* data_to_read = new char[size];
+			bit_stream->Read(data_to_read,size);
+			SerialLoader sl((unsigned char* )data_to_read,size);
+
+			for(int i = 0 ;  i < attributes.size(); i++)
+			{
+				AbstractProperty * prop;
+				BaseReflectionObject* component;
+				if(GetProperty(attributes[i],component,prop))
+				{
+					std::string before = prop->GetValueAsString(component);
+					prop->Serialize(component,&sl);
+					std::string after = prop->GetValueAsString(component);
+					std::cout << attributes[i] << " before:" << before << " after:" << after << "\n";
+				}
+
+				
+			}
+		}
+	}
+
+	bool RakNetChildReplica::HasPropertiesChanged()
+	{
+		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkChildComponent>();
+		std::vector<std::string> attributes = nc->GetAttributes();
+
+		if(m_SavedValues.size() != attributes.size())
+		{
+			m_SavedValues.resize(attributes.size());
+		}
+
+		for(int i = 0 ;  i < attributes.size(); i++)
+		{
+			AbstractProperty * prop;
+			BaseReflectionObject* component;
+			if(GetProperty(attributes[i],component,prop))
+			{
+				std::string value = prop->GetValueAsString(component);
+				
+				if(value != m_SavedValues[i])
+					return true;
+			}
+		}
+		return false;
 	}
 
 	void RakNetChildReplica::SerializeProperties(RakNet::BitStream *bit_stream)
@@ -193,17 +251,33 @@ namespace GASS
 		SerialSaver ss(NULL,0);
 		for(int i = 0 ;  i < attributes.size(); i++)
 		{
-			//AbstractProperty * prop = GetProperty(attributes[i]);
-			//prop->Serialize(&ss);
+			AbstractProperty * prop;
+			BaseReflectionObject* component;
+			if(GetProperty(attributes[i],component,prop))
+				prop->Serialize(component,&ss);
 		}
 		unsigned long size=ss.getLength();
 		unsigned char *buffer=new unsigned char[size];
 		SerialSaver sv(buffer,size);
 
+
+		if(m_SavedValues.size() != attributes.size())
+		{
+			m_SavedValues.resize(attributes.size());
+
+		}
 		for(int i = 0 ;  i < attributes.size(); i++)
 		{
-			//AbstractProperty * prop = GetProperty(attributes[i]);
-			//prop->Serialize(&sv);
+			AbstractProperty * prop;
+			BaseReflectionObject* component;
+			if(GetProperty(attributes[i],component,prop))
+			{
+				 
+				prop->Serialize(component,&sv);
+				std::string value = prop->GetValueAsString(component);
+				m_SavedValues[i] = value;
+				std::cout << "Serialize " << attributes[i] << ":" << value << "\n";
+			}
 		}
 
 		bit_stream->Write(size);

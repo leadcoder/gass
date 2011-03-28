@@ -79,6 +79,9 @@ namespace GASS
 			m_Replica = new RakNetChildReplica(raknet->GetReplicaManager());
 			m_Replica->SetPartId(m_PartId);
 			m_Replica->LocalInit(GetSceneObject());
+
+			if(m_Attributes.size() > 0)
+				SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 		else
 		{
@@ -173,7 +176,8 @@ namespace GASS
 			int size = m_SerializePackages[i]->GetSize();
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
-		
+		if(m_Replica && m_Attributes.size() > 0)
+			m_Replica->SerializeProperties(outBitStream);
 	}
 
 	void RakNetNetworkChildComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
@@ -197,28 +201,29 @@ namespace GASS
 				delete data_to_read ;
 				GetSceneObject()->PostMessage(MessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 			}
-			//NetworkPackagePtr package;
-			/*if(id == TRANSFORMATION_DATA)
-			{
-				//package = NetworkSerializeMessage::NetworkPackagePtr (new TransformationPackage(TRANSFORMATION_DATA));
-				TransformationPackagePtr tp(new TransformationPackage(TRANSFORMATION_DATA));
-				int size = tp->GetSize();
-				char* data_to_read = new char[size];
-				inBitStream->Read(data_to_read,size);
-				TransformationPackage* ptp = tp.get();
-				*ptp = *(TransformationPackage*)data_to_read;
-				//package = tp;
-				//GetSceneObject()->SendImmediate(MessagePtr(new NetworkSerializeMessage(tp)));
-				GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(tp)));
-				delete data_to_read;
-			}*/
-			
-			//int size =package->GetSize(); 
-			//inBitStream->Read((char*)package.get(),size);
-			
-			//Post messages
-			//GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));
 		}
+		if(m_Replica && m_Attributes.size() > 0)
+			m_Replica->DeserializeProperties(inBitStream);
+	}
+
+
+	void RakNetNetworkChildComponent::Update(double delta)
+	{
+		//check if attributes are changed
+		if(m_Replica && m_Replica->HasPropertiesChanged())
+		{
+			//std::cout << "props has changed\n";
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
+			
+			//Signal serialize
+			raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
+		}
+	}
+
+	TaskGroup RakNetNetworkChildComponent::GetTaskGroup() const 
+	{
+		return NETWORK_TASK_GROUP;
 	}
 }
 

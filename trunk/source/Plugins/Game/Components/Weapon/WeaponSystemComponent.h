@@ -76,14 +76,12 @@ namespace GASS
 		void SetInputToFire(const std::string &value);
         void SetRoundOfFire(float value);
         float GetRoundOfFire() const;
+		int GetCurrentMagazineSize() const;
+		void SetCurrentMagazineSize(int value);
 
 		SceneObjectPtr m_FireSound1Fp;
 		SceneObjectPtr m_FireSound3Fp;
-		/*SceneObjectPtr m_ReloadPatch;
-		SceneObjectPtr m_ReleasePatch;
-		SceneObjectPtr m_ShellBouncePatch;
-		SceneObjectPtr m_MachineGunDistance;
-		SceneObjectPtr m_FireLoopPatch; */
+	
 
 
 		Vec3 m_ProjectilePosition;

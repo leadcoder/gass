@@ -447,6 +447,18 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<StartSceanrioRequestMessage> StartSceanrioRequestMessagePtr;
 
+	class ShutdownSceanrioRequestMessage : public BaseMessage
+	{
+	public:
+		ShutdownSceanrioRequestMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) 
+		  {
+		  }
+	};
+
+	typedef boost::shared_ptr<ShutdownSceanrioRequestMessage> ShutdownSceanrioRequestMessagePtr;
+
+
 	//Script messages
 	/**
 	Lua script state is distributed through this message
