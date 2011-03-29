@@ -13,19 +13,19 @@
   </OgreGraphicsSystem>
   <OgreResourceSystem>
     <Name value = "ResourceSystem"/>
-    <AddResourceLocation Path="../../data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../../data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../../data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_PATH%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_PATH%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_PATH%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_PATH%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>
+    <!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/imagesets" Group="CEGUI" Type="FileSystem" Recursive="false"/>
@@ -36,7 +36,6 @@
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/xml_schemas" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
   </OgreResourceSystem>
-  <!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
   <ODEPhysicsSystem>
     <Name value = "PhysicsSystem"/>
   </ODEPhysicsSystem>
