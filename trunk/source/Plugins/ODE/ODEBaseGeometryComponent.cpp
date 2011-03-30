@@ -91,6 +91,8 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		UpdateODEGeom();
+		if(m_Debug) 
+			SetDebug(true);
 	}
 
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
@@ -106,7 +108,7 @@ namespace GASS
 		}
 	}
 
-	bool  ODEBaseGeometryComponent::GetSizeFromMesh()const
+	bool  ODEBaseGeometryComponent::GetSizeFromMesh() const
 	{
 		return m_SizeFromMesh;
 	}
@@ -296,7 +298,7 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr ODEBaseGeometryComponent::GetDebugObject() 
+	SceneObjectPtr ODEBaseGeometryComponent::GetDebugObject()
 	{
 		SceneObjectPtr scene_object;
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
@@ -312,8 +314,8 @@ namespace GASS
 
 		if(!scene_object)
 		{
-			scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-			//scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+			//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
+			scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
 			if(!scene_object)
 			{
 				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
@@ -331,12 +333,12 @@ namespace GASS
 				debug_template->AddComponent(location_comp);
 				debug_template->AddComponent(mesh_comp );
 				SimEngine::Get().GetSimObjectManager()->AddTemplate(debug_template);
-				scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-				//scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+				//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
+				scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
 			scene_object->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));
-			//GetSceneObject()->AddChild(scene_object);
+			GetSceneObject()->AddChild(scene_object);
 		}
 		return scene_object;
 	}
