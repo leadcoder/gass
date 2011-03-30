@@ -48,7 +48,8 @@ namespace GASS
 		m_LastRot(0,0,0),
 		m_LastPos(0,0,0),
 		m_Scale(1,1,1),
-		m_OgreNode (NULL)
+		m_OgreNode (NULL),
+		m_QRot()
 	{
 	}
 
@@ -64,6 +65,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, IComponent>);
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition);
 		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation);
+		RegisterProperty<Quaternion>("Quaternion", &GASS::OgreLocationComponent::GetRotation, &GASS::OgreLocationComponent::SetRotation);
 		RegisterProperty<Vec3>("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale);
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent);
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
@@ -83,6 +85,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::ParentChangedMessage,GASS::ParentChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::VisibilityMessage,GASS::VisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesMessage,0));
+		
 	}
 
 
@@ -121,7 +125,12 @@ namespace GASS
 		m_OgreNode->setListener(this);
 
 		MessagePtr pos_msg(new GASS::PositionMessage(m_Pos));
-		MessagePtr rot_msg(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		MessagePtr rot_msg;
+		if(m_Rot != Vec3(0,0,0))
+			rot_msg =MessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		else //use 
+			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
+
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
 		
@@ -291,6 +300,7 @@ namespace GASS
 
 	void OgreLocationComponent::SetRotation(const Quaternion &value)
 	{
+		m_QRot = value;
 		if(m_OgreNode)
 		{
 			m_OgreNode->setOrientation(Convert::ToOgre(value));
@@ -299,12 +309,13 @@ namespace GASS
 
 	Quaternion OgreLocationComponent::GetRotation() const
 	{
-		Quaternion q;
+		return m_QRot;
+		/*Quaternion q;
 		if(m_OgreNode)
 		{
 			q = Convert::ToGASS(m_OgreNode->getOrientation());
 		}
-		return q;
+		return q;*/
 	}
 
 	Quaternion OgreLocationComponent::GetWorldRotation() const
@@ -315,6 +326,20 @@ namespace GASS
 			q = Convert::ToGASS(m_OgreNode->_getDerivedOrientation());
 		}
 		return q;
+	}
+
+	void OgreLocationComponent::OnUpdateEulerAngles(UpdateEulerAnglesMessagePtr message)
+	{
+		Quaternion q;
+		if(m_OgreNode)
+		{
+			q = Convert::ToGASS(m_OgreNode->getOrientation());
+			Mat4 rot_mat;
+			q.ToRotationMatrix(rot_mat);
+			m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerHeading());
+			m_Rot.y = Math::Rad2Deg(rot_mat.GetEulerPitch());
+			m_Rot.z = Math::Rad2Deg(rot_mat.GetEulerRoll());
+		}
 	}
 
 	OgreLocationComponentPtr OgreLocationComponent::GetParentLocation()
@@ -329,7 +354,6 @@ namespace GASS
 			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());
 		}
 		return parent_location;
-
 	}
 
 	void OgreLocationComponent::SetAttachToParent(bool value)

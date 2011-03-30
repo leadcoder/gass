@@ -38,7 +38,7 @@ namespace GASS
 	class OgreLocationComponent;
 	typedef boost::shared_ptr<OgreLocationComponent> OgreLocationComponentPtr;
 
-	class OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener
+	class GASSPluginExport OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener
 	{
 	public:
 		OgreLocationComponent();
@@ -89,6 +89,7 @@ namespace GASS
 		void WorldPositionMessage(WorldPositionMessagePtr message);
 		void WorldRotationMessage(WorldRotationMessagePtr message);
 		void BoundingInfoMessage(BoundingInfoMessagePtr message);
+		void OnUpdateEulerAngles(UpdateEulerAnglesMessagePtr message);
 
 		
 	
@@ -107,6 +108,7 @@ namespace GASS
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		Ogre::SceneNode* m_OgreNode;
+		Quaternion m_QRot;
 
 		// Should this location node be relative to parent's location? First with a LocationComponent
 		bool m_AttachToParent;
