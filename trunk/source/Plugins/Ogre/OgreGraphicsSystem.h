@@ -66,6 +66,9 @@ namespace GASS
 		void AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
+		bool GetShowStats() const {return m_ShowStats;}
+		void SetShowStats(bool value){m_ShowStats = value;}
+		
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void SetTaskGroup(TaskGroup value);
@@ -83,6 +86,7 @@ namespace GASS
 		std::vector<std::string> m_PostFilters;
 		OgreDebugTextOutput* m_DebugTextBox;
 		bool m_CreateMainWindowOnInit;
+		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
 		TaskGroup m_TaskGroup;
 	};

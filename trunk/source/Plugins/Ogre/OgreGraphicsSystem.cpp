@@ -60,6 +60,8 @@ namespace GASS
 		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::OgreGraphicsSystem::GetTaskGroup, &GASS::OgreGraphicsSystem::SetTaskGroup);
+		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
+		
 	}
 
 	void OgreGraphicsSystem::OnCreate()
@@ -245,7 +247,7 @@ namespace GASS
 	{
 		//boost::shared_ptr<UpdateMessage> update_msg = boost::static_pointer_cast<UpdateMessage>( message);
 		//if(((int) update_msg->m_Tick) % 10 == 0)
-		static int tick = 0;
+		//static int tick = 0;
 		//std::cout << " tick:" << tick++ <<std::endl;
 
 		//set thread priority to highest!!
@@ -256,7 +258,7 @@ namespace GASS
 		m_DebugTextBox->UpdateTextBox();
 
 
-		if(m_Window)
+		if(m_Window && m_ShowStats)
 		{
 			float a_fps = m_Window->getAverageFPS(); 
 			size_t tri_count = m_Window->getTriangleCount(); 
@@ -269,12 +271,6 @@ namespace GASS
 			std::string stats_text = sstream.str();
 			GetSimSystemManager()->SendImmediate(MessagePtr( new DebugPrintMessage(stats_text)));
 		}
-
-		//Update all scene managers
-		/*for(int  i = 0 ;  m_SceneManagers.size(); i++)
-		{
-			m_SceneManagers[i]->Update(delta_time);
-		}*/
 	}
 
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour)
