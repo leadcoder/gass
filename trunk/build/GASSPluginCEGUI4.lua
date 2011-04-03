@@ -16,7 +16,9 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"../dependencies/CEGUI-SDK-0.7.2/CEGUI/include",
+		"$(CEGUI_HOME)/CEGUI/include",
+		"$(CEGUI_HOME)/CEGUI/include/ScriptingModules/LuaScriptModule/support/tolua++",
+		"$(CEGUI_HOME)/dependencies/include",
 		"$(OGRE_PATH)/OgreMain/include",
 		"$(BOOST_PATH)"
 
@@ -26,7 +28,8 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"../dependencies/CEGUI-SDK-0.7.2/lib",
+		"$(CEGUI_HOME)/lib",
+		"$(CEGUI_HOME)/dependencies/lib/static",
 		"$(BOOST_PATH)/lib"
 
 	}
@@ -65,7 +68,7 @@ end
 			"GASSSim_d",
 			"CEGUIBase_d",
 			"CEGUIOgreRenderer_d",
-			"CEGUILuaScriptModule_d.lib",
+			"CEGUILuaScriptModule_d",
 			"tinyxmld"
 		}
 

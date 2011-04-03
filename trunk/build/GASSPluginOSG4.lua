@@ -14,6 +14,7 @@ if (os.is("windows")) then
 		"$(OSG_PATH)/include",
 		"$(OSG_PATH)/build/include",
 		"../dependencies/tinyxml",
+		"../dependencies/tbb/include",
 		"$(BOOST_PATH)"
 	}
 
@@ -24,7 +25,8 @@ if (os.is("windows")) then
 		"$(OSG_PATH)/lib",
 		"$(OSG_PATH)/build/lib",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_PATH)/lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -37,14 +39,16 @@ else
 		"$(BOOST_PATH)",
 		"$(OSG_PATH)/include",
 		"$(OSG_PATH)/build/include",
-		"../dependencies/include/tinyxml"
+		"../dependencies/include/tinyxml",
+		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
 		"$(OSG_PATH)/lib",
-		"$(OSG_PATH)/build/lib"
+		"$(OSG_PATH)/build/lib",
+		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
 
 	}
 
@@ -70,7 +74,8 @@ end
 			"osgShadowd",
 			"opengl32",
 			"glu32",
-			"tinyxmld"
+			"tinyxmld",
+			"tbb_debug"  
 		}
 
 	configuration "Release"
@@ -91,7 +96,8 @@ end
 			"osgShadow",
 			"opengl32",
 			"glu32",
-			"tinyxml"
+			"tinyxml",
+			"tbb"  
 		}
 
 

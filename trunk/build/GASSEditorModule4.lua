@@ -9,11 +9,11 @@ project "GASSEditorModule"
 
 if (os.is("windows")) then
 
-	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS"}
+	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS","EDITOR_MODULE_EXPORTS"}
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
 else
-       defines { }
+       defines {"EDITOR_MODULE_EXPORTS" }
 
 end
 
