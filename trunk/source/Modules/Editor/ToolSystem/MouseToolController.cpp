@@ -459,22 +459,30 @@ namespace GASS
 
 		if(gizmo_result.Coll)
 		{
-			MessagePtr cursor_msg(new CursorMoved3DMessage(screen_pos,gizmo_result.CollPosition, SceneObjectPtr(gizmo_result.CollSceneObject),from_id));
-			EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
-			m_CursorInfo.m_3DPos = gizmo_result.CollPosition;
-			m_CursorInfo.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
-
-			//std::cout << result.CollPosition << std::endl;
-			MoveTo(m_CursorInfo);
+			
+			SceneObjectPtr col_obj(gizmo_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+			if(col_obj)
+			{
+				MessagePtr cursor_msg(new CursorMoved3DMessage(screen_pos,gizmo_result.CollPosition, col_obj,from_id));
+				EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+				m_CursorInfo.m_3DPos = gizmo_result.CollPosition;
+				m_CursorInfo.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
+				//std::cout << result.CollPosition << std::endl;
+				MoveTo(m_CursorInfo);
+			}
 		}
 		else if(mesh_result.Coll)
 		{
-			MessagePtr cursor_msg(new CursorMoved3DMessage(screen_pos,mesh_result.CollPosition, SceneObjectPtr(mesh_result.CollSceneObject),from_id));
-			EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
-			m_CursorInfo.m_3DPos = mesh_result.CollPosition;
-			m_CursorInfo.m_ObjectUnderCursor = mesh_result.CollSceneObject;
-			//std::cout << result.CollPosition << std::endl;
-			MoveTo(m_CursorInfo);
+			SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+			if(col_obj)
+			{
+				MessagePtr cursor_msg(new CursorMoved3DMessage(screen_pos,mesh_result.CollPosition, col_obj,from_id));
+				EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+				m_CursorInfo.m_3DPos = mesh_result.CollPosition;
+				m_CursorInfo.m_ObjectUnderCursor = mesh_result.CollSceneObject;
+				//std::cout << result.CollPosition << std::endl;
+				MoveTo(m_CursorInfo);
+			}
 		}
 		//SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		//	if(obj_under_cursor)
@@ -597,6 +605,17 @@ namespace GASS
 	{
 		CheckScenePosition();
 		RequestScenePosition();
+
+
+
+		//debug message
+
+		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		if(obj_under_cursor)
+		{
+			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
+			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+		}
 	}
 }
 

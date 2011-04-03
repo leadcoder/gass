@@ -189,10 +189,12 @@ namespace GASS
 			float tex_coord = 0;
 			for(int i = 0; i < m_ControlPoints.size(); i++)
 			{
-				Vec3 pos = m_ControlPoints[i].pos;
+				const Vec3 pos = m_ControlPoints[i].pos;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y, pos.z);
+				(vitr++)->set(OSGConvert::Get().ToOSG(pos));
+
+				//(vitr++)->set(pos.x, pos.y, pos.z);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 
@@ -256,7 +258,6 @@ namespace GASS
 			//lc->SetWorldPosition(start_pos);
 			Vec3 this_pos = lc->GetWorldPosition();
 
-
 			Vec3 offset = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_HeightOffset;
 
 			float tex_coord = 0;
@@ -266,7 +267,8 @@ namespace GASS
 				pos = pos + offset;
 				tex_coord  = pos.FastLength();
 
-				(vitr++)->set(pos.x, pos.y, pos.z);
+				(vitr++)->set(OSGConvert::Get().ToOSG(pos));
+				//(vitr++)->set(pos.x, pos.y, pos.z);
 				(citr++)->set(m_ControlPoints[i].color.x, m_ControlPoints[i].color.y, m_ControlPoints[i].color.z,1);
 			}
 

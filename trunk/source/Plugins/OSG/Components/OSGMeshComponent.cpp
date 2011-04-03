@@ -147,6 +147,12 @@ namespace GASS
 		m_Filename = filename;
 		if(!GetSceneObject()) //not loaded
 			return;
+
+		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		if(!lc)
+		{
+			Log::Error("Failed loading %s , not possible to use mesh components without location compoent",GetSceneObject()->GetName().c_str());
+		}
 		
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
@@ -156,7 +162,7 @@ namespace GASS
 		{
 			m_Filename = Misc::Replace(m_Filename,".mesh",".3ds");
 		}
-		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		
 		if(m_MeshNode.valid())
 		{
 			lc->GetOSGNode()->removeChild(m_MeshNode.get());

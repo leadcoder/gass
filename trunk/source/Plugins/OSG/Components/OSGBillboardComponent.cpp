@@ -40,6 +40,7 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
 #include <osg/Material>
 #include <osg/BlendFunc>
 
@@ -110,8 +111,8 @@ namespace GASS
 			Log::Error("Failed to find texture:%s",full_path.c_str());
 		}
 
-		Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_Height;
-		Vec3 east = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneEast()*m_Width;
+		Vec3 up(0,0,m_Height);
+		Vec3 east(m_Width,0,0);
 		
 		//make offset
 		Vec3 corner = -east*0.5;
@@ -134,9 +135,10 @@ namespace GASS
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
 	{
-		Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp()*m_Height;
-		Vec3 east = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneEast()*m_Width;
-		Vec3 north = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneNorth()*m_Width;
+		
+		Vec3 up = OSGConvert::Get().ToGASS(osg::Vec3(0,0,m_Height));
+		Vec3 east = OSGConvert::Get().ToGASS(osg::Vec3(m_Width,0,0));
+		Vec3 north = OSGConvert::Get().ToGASS(osg::Vec3(0,m_Width,0));
 		Vec3 corner = -east*0.5 - north*0.5;
 		AABox box(corner,corner+east+up+north);
 		return box;

@@ -225,9 +225,10 @@ namespace GASS
 				osg::Vec3d rayDirection = rayTarget - rayOrigin;
 				rayDirection.normalize();
 
-				ray_start.Set(rayOrigin.x(),rayOrigin.y(),rayOrigin.z());
-				ray_dir.Set(rayDirection.x(),rayDirection.y(),rayDirection.z());
-				
+				//ray_start.Set(rayOrigin.x(),rayOrigin.y(),rayOrigin.z());
+				//ray_dir.Set(rayDirection.x(),rayDirection.y(),rayDirection.z());
+				ray_start = OSGConvert::Get().ToGASS(rayOrigin);
+				ray_dir = OSGConvert::Get().ToGASS(rayDirection);
 			}
 			return true;
 		}
