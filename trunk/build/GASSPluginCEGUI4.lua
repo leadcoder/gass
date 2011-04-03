@@ -20,6 +20,7 @@ if (os.is("windows")) then
 		"$(CEGUI_HOME)/CEGUI/include/ScriptingModules/LuaScriptModule/support/tolua++",
 		"$(CEGUI_HOME)/dependencies/include",
 		"$(OGRE_PATH)/OgreMain/include",
+		"$(OGRE_PATH)/include/Ogre",
 		"$(BOOST_PATH)"
 
 	}
