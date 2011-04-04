@@ -229,6 +229,7 @@ namespace GASS
 				orot.FromRotationMatrix(rot_mat);
 			}
 			m_OgreNode->setOrientation(orot);
+			m_QRot = Convert::ToGASS(orot);
 		}
 	}
 

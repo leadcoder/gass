@@ -28,7 +28,8 @@ namespace GASS
 		m_Highlight(true),
 		m_LastDist(0), 
 		m_Mode("World"),
-		m_GridDist(1.0)
+		m_GridDist(1.0),
+		m_Active(false)
 	{
 
 	}
@@ -402,21 +403,22 @@ namespace GASS
 		}
 		else if(m_Type == "plane")
 		{
+			float thickness = 0.01;
 			MeshVertex vertex;
-			vertex.Pos = Vec3(0,0,0);
+			vertex.Pos = Vec3(0,-thickness,0);
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = Vec4(1,1,1,1);
 			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,0,0);
+			vertex.Pos = Vec3(m_Size,-thickness,0);
 			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,0,-m_Size);
+			vertex.Pos = Vec3(m_Size,-thickness,-m_Size);
 			m_MeshData->VertexVector.push_back(vertex);
 
-			vertex.Pos = Vec3(0,0,0);
+			vertex.Pos = Vec3(0,-thickness,0);
 			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,0,-m_Size);
+			vertex.Pos = Vec3(m_Size,-thickness,-m_Size);
 			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,0,-m_Size);
+			vertex.Pos = Vec3(0,-thickness,-m_Size);
 			m_MeshData->VertexVector.push_back(vertex);
 
 			m_MeshData->IndexVector.push_back(0);
@@ -432,6 +434,38 @@ namespace GASS
 			m_MeshData->IndexVector.push_back(5);
 			m_MeshData->IndexVector.push_back(4);
 			m_MeshData->IndexVector.push_back(3);
+
+
+			vertex.Pos = Vec3(0,thickness,0);
+			vertex.TexCoord.Set(0,0);
+			vertex.Color  = Vec4(1,1,1,1);
+			m_MeshData->VertexVector.push_back(vertex);
+			vertex.Pos = Vec3(m_Size,thickness,0);
+			m_MeshData->VertexVector.push_back(vertex);
+			vertex.Pos = Vec3(m_Size,thickness,-m_Size);
+			m_MeshData->VertexVector.push_back(vertex);
+
+			vertex.Pos = Vec3(0,-thickness,0);
+			m_MeshData->VertexVector.push_back(vertex);
+			vertex.Pos = Vec3(m_Size,thickness,-m_Size);
+			m_MeshData->VertexVector.push_back(vertex);
+			vertex.Pos = Vec3(0,thickness,-m_Size);
+			m_MeshData->VertexVector.push_back(vertex);
+
+			m_MeshData->IndexVector.push_back(6);
+			m_MeshData->IndexVector.push_back(7);
+			m_MeshData->IndexVector.push_back(8);
+			m_MeshData->IndexVector.push_back(9);
+			m_MeshData->IndexVector.push_back(10);
+			m_MeshData->IndexVector.push_back(11);
+
+			m_MeshData->IndexVector.push_back(8);
+			m_MeshData->IndexVector.push_back(7);
+			m_MeshData->IndexVector.push_back(6);
+			m_MeshData->IndexVector.push_back(11);
+			m_MeshData->IndexVector.push_back(10);
+			m_MeshData->IndexVector.push_back(9);
+
 
 			m_MeshData->Material = "GizmoArrowMat";
 			m_MeshData->Type = TRIANGLE_LIST;
@@ -478,11 +512,12 @@ namespace GASS
 
 	void GizmoComponent::OnNewCursorInfo(CursorMoved3DMessagePtr message)
 	{
-		bool grid = true;
+		
+		bool grid = false;
 		if(m_Type == "grid")
 			grid = true;
 		SceneObjectPtr obj_under_cursor = message->GetSceneObjectUnderCursor();
-		if(obj_under_cursor == GetSceneObject())
+		if(m_Active || obj_under_cursor == GetSceneObject())
 		{
 			if(!m_Highlight)
 			{
@@ -529,18 +564,44 @@ namespace GASS
 		Vec3 v_vec = rot_mat.GetViewDirVector();
 		Vec3 up_vec = rot_mat.GetUpVector();
 
-		float value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
-		if(value > 0)
+		//check all planes
+
+		
+		
+		//float value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
+		//float value2 = Math::IsectRayPlane(ray_start,ray_dir,c_pos,v_vec);
+		//if(value2 < value)
+		//	value = value2;
+		
+
+
+		//select projection plane
+		if(m_Type == "arrow")
 		{
-			Vec3 isect_pos = ray_start + ray_dir*value;
-			
-			if(m_Type == "arrow")
+			float v1 = fabs(Math::Dot(ray_dir,up_vec));
+			float v2 = fabs(Math::Dot(ray_dir,v_vec));
+			float value;
+			if(v1 > v2)
+				value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
+			else 
+				value  = Math::IsectRayPlane(ray_start,ray_dir,c_pos,v_vec);
+
+			if(value > 0)
 			{
+				Vec3 isect_pos = ray_start + ray_dir*value;
+
 				Vec3 ret = ProjectPointOnAxis(c_pos, r_vec, isect_pos);
 				return ret;
+
 			}
-			else
+		}
+		else
+		{
+			float value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
+			if(value > 0)
 			{
+				Vec3 isect_pos = ray_start + ray_dir*value;
+
 				Vec3 proj_r = ProjectPointOnAxis(c_pos, r_vec, isect_pos);
 				Vec3 proj_v = ProjectPointOnAxis(c_pos, v_vec, isect_pos);
 

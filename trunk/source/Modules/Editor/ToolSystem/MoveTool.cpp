@@ -114,6 +114,8 @@ namespace GASS
 			if(gc)
 			{
 				m_CurrentGizmo = obj_under_cursor;
+				if(gc)
+					gc->SetActive(true);
 			}
 			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,boost::detail::sp_nothrow_tag()))
 			{
@@ -150,6 +152,17 @@ namespace GASS
 		{
 			slection_mode = true;
 		}
+
+		SceneObjectPtr g_obj(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
+		if(g_obj)
+		{
+			GizmoComponentPtr gc = g_obj->GetFirstComponent<GizmoComponent>();
+			if(gc)
+			{
+				gc->SetActive(false);
+			}
+		}
+
 		m_CurrentGizmo.reset();
 
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());

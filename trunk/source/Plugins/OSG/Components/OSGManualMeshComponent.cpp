@@ -100,7 +100,10 @@ namespace GASS
 		
 		
 
-		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
+		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+
+		if(!lc)
+			Log::Error("Failed to find location component for OSGManualMeshComponent: %s",GetSceneObject()->GetName().c_str());
 
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
@@ -208,13 +211,19 @@ namespace GASS
 		osg::Vec4Array::iterator citr = colors->begin();
 
 		//m_MeshObject->begin(data->Material, op);
+		bool flip = OSGConvert::Get().m_FlipYZ;
 		for(int i = 0; i < data->VertexVector.size(); i++)
 		{
 			Vec3 pos = data->VertexVector[i].Pos;
 			Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 			Vec4 color  = data->VertexVector[i].Color;
 
-			osg::Vec3 opos = OSGConvert::Get().ToOSG(pos);
+			osg::Vec3 opos; 
+			if(flip)
+				opos.set(pos.x,pos.z,pos.y);
+			else
+				opos.set(pos.x,pos.y,pos.z);
+
 			(vitr++)->set(opos.x(), opos.y(), opos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
 			
@@ -234,6 +243,14 @@ namespace GASS
 		osg::BoundingBox osg_box = m_OSGGeometry->getBound();
 		AABox box(OSGConvert::Get().ToGASS(osg_box._min),
 				OSGConvert::Get().ToGASS(osg_box._max));
+
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		if(lc)
+		{
+			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());
+			box.m_Max = box.m_Max*scale;
+			box.m_Min = box.m_Min*scale;
+		}
 		return box;
 		//assert(m_MeshObject);
 		//return Convert::ToGASS(m_MeshObject->getBoundingBox());
@@ -249,6 +266,12 @@ namespace GASS
 		osg::BoundingSphere bsphere = m_OSGGeometry->getBound();
 		sphere.m_Radius = bsphere._radius;
 
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		if(lc)
+		{
+			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());
+			sphere.m_Radius *= Math::Max(scale.x,scale.y,scale.z);
+		}
 		return sphere;
 	}
 

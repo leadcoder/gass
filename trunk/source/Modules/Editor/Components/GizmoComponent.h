@@ -16,6 +16,8 @@ namespace GASS
 		
 		Vec3 GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir);
 		Quaternion GetRotation(float detla);
+		void SetActive(bool active)  {m_Active =active;}
+		bool GetActive() const {return m_Active;}
 	private:
 		void BuildMesh();
 		void OnSnapModeMessage(SnapModeMessagePtr message);
@@ -55,6 +57,7 @@ namespace GASS
 		GASS::SceneObjectWeakPtr m_SelectedObject;
 		std::string m_Mode;
 		Float m_GridDist;
+		bool m_Active;
 	};
 
 	typedef boost::shared_ptr<GizmoComponent> GizmoComponentPtr;
