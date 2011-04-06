@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	TurretComponent::TurretComponent()  :m_Controller("Yaw"),m_MaxSteerVelocity(1),m_SteerForce(10),m_MaxSteerAngle(0)
+	TurretComponent::TurretComponent()  :m_Controller("Yaw"),m_MaxSteerVelocity(1),m_SteerForce(10),m_MaxSteerAngle(0),m_MinAngle(-1000),m_MaxAngle(1000),m_CurrentAngle(0)
 	{
 
 	}
@@ -54,13 +54,14 @@ namespace GASS
 		RegisterProperty<float>("MaxSteerVelocity", &TurretComponent::GetMaxSteerVelocity, &TurretComponent::SetMaxSteerVelocity);
 		RegisterProperty<float>("MaxSteerAngle", &TurretComponent::GetMaxSteerAngle, &TurretComponent::SetMaxSteerAngle);
 		RegisterProperty<float>("SteerForce", &TurretComponent::GetSteerForce, &TurretComponent::SetSteerForce);
+		RegisterProperty<Vec2>("MaxMinAngle", &TurretComponent::GetMaxMinAngle, &TurretComponent::SetMaxMinAngle);
 	}
 
 	void TurretComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnRotation,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 	}
 
 	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -86,14 +87,18 @@ namespace GASS
 			if(fabs(value) < 0.1) //clamp
 				value  = 0;
 			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*value));
-			
-			GetSceneObject()->PostMessage(force_msg);
-			GetSceneObject()->PostMessage(vel_msg);
 
-			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
-			GetSceneObject()->PostMessage(volume_msg);
+			//if((m_CurrentAngle > m_MinAngle && value > 0) || (m_CurrentAngle < m_MaxAngle && value < 0))
+			{
+				MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+				MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*value));
+
+				GetSceneObject()->PostMessage(force_msg);
+				GetSceneObject()->PostMessage(vel_msg);
+
+				MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
+				GetSceneObject()->PostMessage(volume_msg);
+			}
 
 			/*if(fabs(value) > 0)
 			{
@@ -106,6 +111,11 @@ namespace GASS
 				GetSceneObject()->PostMessage(play_msg);
 			}*/
 		}
+	}
+
+	void TurretComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
+	{
+		m_CurrentAngle = message->GetAngle();
 	}
 
 	/*void TurretComponent::OnRotation(VelocityNotifyMessagePtr message)

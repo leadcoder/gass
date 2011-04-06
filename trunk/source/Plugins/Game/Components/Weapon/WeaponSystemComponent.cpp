@@ -80,8 +80,6 @@ namespace GASS
 
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
 		RegisterProperty<std::string>("InputToFire", &WeaponSystemComponent::GetInputToFire, &WeaponSystemComponent::SetInputToFire);
-
-
 		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
 

@@ -50,15 +50,21 @@ namespace GASS
 		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
+		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = value.x;m_MinAngle = value.y;}
+		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
 		
-		void OnRotation(VelocityNotifyMessagePtr message);
+		
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
+		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 
 		std::string m_Controller;
 		float m_MaxSteerVelocity;
 		float m_MaxSteerAngle;
 		float m_SteerForce;
+		float m_CurrentAngle;
+		float m_MinAngle;
+		float m_MaxAngle;
 		
 	};
 }
