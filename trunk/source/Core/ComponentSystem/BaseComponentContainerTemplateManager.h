@@ -79,13 +79,33 @@ namespace GASS
 			from the CreateFromTemplate function should have a
 			unique name.
 		*/
-		bool GetForceUniqueName() const{return m_ForceUniqueName;}
+		bool GetAddObjectIDToName() const{return m_AddObjectIDToName;}
 		/**
 			Set whether each new component container instance returned
 			from the CreateFromTemplate function should have a
 			unique name or not.
 		*/
-		void SetForceUniqueName(bool value) {m_ForceUniqueName = value;}
+		void SetAddObjectIDToName(bool value) {m_AddObjectIDToName = value;}
+
+
+		/**
+			Get unique name prefix, default is "_"
+		*/
+		std::string GetObjectIDPrefix() const {return m_ObjectIDPrefix;}
+		/**
+			Set unique name prefix
+		*/
+		void SetObjectIDPrefix(const std::string &prefix) {m_ObjectIDPrefix = prefix;}
+
+
+		/**
+			Get unique name suffix, default is ""
+		*/
+		std::string GetObjectIDSuffix() const {return m_ObjectIDSuffix;}
+		/**
+			Set unique name suffix
+		*/
+		void SetObjectIDSuffix(const std::string &suffix) {m_ObjectIDSuffix = suffix;}
 		
 		/**
 		Get a vector of all templates hold by this manager
@@ -93,7 +113,9 @@ namespace GASS
 		std::vector<std::string> GetTemplateNames() const;
 	protected:
 		//void AddRecursive(IComponentContainer* ct);
-		bool m_ForceUniqueName;
+		bool m_AddObjectIDToName;
+		std::string m_ObjectIDPrefix;
+		std::string m_ObjectIDSuffix;
 		TemplateMap m_TemplateMap;
 	};
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;

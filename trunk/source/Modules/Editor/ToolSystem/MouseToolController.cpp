@@ -31,7 +31,8 @@ namespace GASS
 		m_SnapMovment(1),
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
-		m_EnableAngleSnap(false)
+		m_EnableAngleSnap(false),
+		m_RayPickDistance(2000)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));
@@ -82,8 +83,15 @@ namespace GASS
 			//EditorManager::GetPtr()->GetMessageManager()->SendImmediate(MessagePtr(new ObjectLockMessage(obj,true)));
 			if(!m_ScenarioObjectsSelectable)
 				m_StaticObjects.insert(obj);
+
+			
+	
 		}
 		m_Scene = scene;
+
+
+		//load selection object
+		GASS::SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("SelectionObject");
 	}
 
 	void MouseToolController::OnNewScene(GASS::ScenarioSceneAboutToLoadNotifyMessagePtr message)
@@ -121,10 +129,8 @@ namespace GASS
 	void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
 	{
 		std::string new_tool = message->GetTool();
-		std::cout << "Try new tool:" << new_tool << "\n";
 		SelectTool(new_tool);
-		//m_CursorInfo.m_3DPos = boost::any_cast<Vec3>(message->GetData("3DPosition"));
-		//m_CursorInfo.m_ObjectUnderCursor = boost::any_cast<SceneObject*>(message->GetData("ObjectUnderCursor"));
+
 	}
 
 	void MouseToolController::OnMouseButton(MouseButtonMessagePtr message)
@@ -149,13 +155,7 @@ namespace GASS
 		{
 			std::string name = message->GetController();
 			float value = message->GetValue();
-			/*if(name == "LeftMouseButton")
-			{
-			if(value > 0)
-			MouseDown(m_CursorInfo);
-			else 
-			MouseUp(m_CursorInfo);
-			}*/
+			
 			if(name == "MouseX")
 			{
 				m_CursorInfo.m_Delta.x = value;
@@ -208,8 +208,6 @@ namespace GASS
 					m_ActiveTool->Stop();
 				m_ActiveTool = m_Tools[i];
 				m_ActiveTool->Start();
-
-				std::cout << "New tool:" << m_ActiveTool->GetName() << "\n";
 				return true;
 			}
 		}
@@ -327,7 +325,7 @@ namespace GASS
 			cam->GetCameraToViewportRay(norm_x,norm_y,ray_start,ray_direction);
 			m_CursorInfo.m_RayDir = ray_direction;
 			m_CursorInfo.m_RayStart = ray_start;
-			ray_direction = ray_direction*200;
+			ray_direction = ray_direction*m_RayPickDistance;
 			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
 			GASS::CollisionRequest request;
@@ -369,7 +367,7 @@ namespace GASS
 			m_CursorInfo.m_RayDir = ray_direction;
 			m_CursorInfo.m_RayStart = ray_start;
 
-			ray_direction = ray_direction*200;
+			ray_direction = ray_direction*m_RayPickDistance;
 			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
 			//Check for gizmo first
@@ -603,6 +601,10 @@ namespace GASS
 
 	void MouseToolController::Update()
 	{
+		//fade mouse delta
+		m_CursorInfo.m_Delta.x *= 0.9;
+		m_CursorInfo.m_Delta.y *= 0.9;
+
 		CheckScenePosition();
 		RequestScenePosition();
 
@@ -610,12 +612,12 @@ namespace GASS
 
 		//debug message
 
-		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
-		}
+		}*/
 	}
 }
 

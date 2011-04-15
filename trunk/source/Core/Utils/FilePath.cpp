@@ -20,6 +20,7 @@
 
 #include "Core/Utils/FilePath.h"
 #include "Core/Utils/Log.h"
+#include "Core/Utils/Misc.h"
 #include <stdarg.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -63,7 +64,6 @@ namespace GASS
 		std::string::size_type occurIndex1 = curStr.find("%");
 		std::string varName = "";
 		std::string replaceStr = "";
-		char * replaceVal = 0;
 		if ( occurIndex1 != std::string::npos )
 		{
 			std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
@@ -78,10 +78,13 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex1, endVarIndex-occurIndex1+1);
 				if (varName.length() > 0)
 				{
-					replaceVal = getenv(varName.c_str());
-					if (replaceVal)
+					char* temp_str = getenv(varName.c_str());
+					
+					if (temp_str)
 					{
-						curStr.replace( occurIndex1, replaceStr.length(), replaceVal );
+						curStr.replace( occurIndex1, replaceStr.length(), std::string(temp_str));
+						curStr = Misc::Replace(curStr, "\\", "/");
+						curStr = Misc::Replace(curStr, "//", "/");
 					}
 					else
 					{
@@ -107,10 +110,16 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex2, endVarIndex-occurIndex2+1);
 				if (varName.length() > 0)
 				{
-					replaceVal = getenv(varName.c_str());
-					if (replaceVal)
+					char* temp_str = getenv(varName.c_str());
+					if (temp_str)
 					{
-						curStr.replace( occurIndex2, replaceStr.length(), replaceVal );
+						curStr.replace( occurIndex2, replaceStr.length(), std::string(temp_str) );
+						curStr = Misc::Replace(curStr, "\\", "/");
+						curStr = Misc::Replace(curStr, "//", "/");
+					}
+					else
+					{
+						Log::Warning("Failed to find env var: %s",varName.c_str());
 					}
 				}
 			}

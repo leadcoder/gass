@@ -48,6 +48,7 @@ namespace GASS
 		Vec2 m_MouseDownPos;
 		bool m_GroundSnapMove;
 		bool  m_Active;
+		bool m_SnapToMouse;
 
 	};
 }

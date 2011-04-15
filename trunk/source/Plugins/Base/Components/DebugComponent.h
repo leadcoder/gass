@@ -31,10 +31,13 @@ namespace GASS
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);
+		void OnSettings(GASS::MessagePtr message);
+		bool m_ShowNodeName;
 		bool GetShowNodeName() const;
 		void SetShowNodeName(bool value);
-		bool m_ShowNodeName;
 	private:
 	};
+
+	typedef boost::shared_ptr<DebugComponent> DebugComponentPtr;
 }
 #endif

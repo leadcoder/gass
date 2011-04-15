@@ -10,6 +10,8 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/SimEngine.h"
+
 
 
 namespace GASS
@@ -48,25 +50,21 @@ namespace GASS
 
 				GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
 				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
-			}
-			else if(m_RotateY)
-			{
-				/*GASS::LocationComponentPtr comp = selected->GetFirstComponent<GASS::ILocationComponent>();
-				Vec3 new_rot = comp->GetEulerRotation();
-
-				float rot_angle = EditorManager::Get().GetMouseToolController()->SetSnapAngle(info.m_Delta.x*10);
 
 
-				//rotate selected object
-				if(selected->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp() == Vec3(0,1,0))
-				new_rot.x += rot_angle;
-				else if(selected->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp() == Vec3(0,0,1))
-				new_rot.z += rot_angle;
+				const double time = SimEngine::Get().GetTime();
+				static double last_time = 0;
+				const double send_freq = 5; 
+				if(time - last_time > 1.0/send_freq)
+				{
+					last_time = time;
+					std::vector<std::string> attribs;
+					attribs.push_back("Rotation");
+					attribs.push_back("Quaternion");
+					GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
+					EditorManager::GetPtr()->GetMessageManager()->SendImmediate(attrib_change_msg);
+				}
 
-				comp->SetEulerRotation(new_rot);
-				int from_id = (int) this;
-				GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
-				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);*/
 			}
 		}
 	}

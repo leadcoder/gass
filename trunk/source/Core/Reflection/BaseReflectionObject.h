@@ -76,7 +76,7 @@ namespace GASS
 		void SaveProperties(TiXmlElement *parent);
 
 		bool SerializeProperties(ISerializer* serializer);
-		void SetProperties(BaseReflectionObjectPtr dest);
+		void SetProperties(BaseReflectionObjectPtr dest) const;
 	};
 
 }

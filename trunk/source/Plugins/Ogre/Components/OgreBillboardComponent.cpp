@@ -76,6 +76,8 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(typeid(LoadGFXComponentsMessage),TYPED_MESSAGE_FUNC(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
+		
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -165,6 +167,7 @@ namespace GASS
 		}
 	}
 
+	
 	AABox OgreBillboardComponent::GetBoundingBox() const
 	{
 		float max_size = Math::Max(m_Width,m_Height);
@@ -189,11 +192,18 @@ namespace GASS
 
 	void OgreBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-		Vec4 color = message->GetDiffuse();
+		const Vec4 color = message->GetDiffuse();
 		if(m_Billboard)
 			m_Billboard->setColour(Ogre::ColourValue(color.x,color.y,color.z,color.w));
 	}
 
-
-
+	void OgreBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	{
+		const Vec3 scale = message->GetScale();
+		if(m_Billboard)
+		{
+			m_Billboard->setPosition(Ogre::Vector3(0,scale.y*m_Height/2.0,0));
+			m_Billboard->setDimensions(m_Width*scale.x,m_Height*scale.y);
+		}
+	}
 }

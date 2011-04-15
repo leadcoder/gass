@@ -66,8 +66,15 @@ namespace GASS
 			Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 			if(sm)
 			{
+				Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 				Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-				ocam->getViewport()->getTarget()->removeListener(this);
+				Ogre::RenderTarget *target = NULL;
+				if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+				{
+					target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+					target->removeListener(this);
+				}
+				
 			}
 		}
 		if(m_Attribs)
@@ -175,7 +182,15 @@ namespace GASS
 		
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		ocam->getViewport()->getTarget()->addListener(this);
+
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+		{
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+			target->addListener(this);
+		}
+
+		//ocam->getViewport()->getTarget()->addListener(this);
 		
 		m_Attribs = new MovableTextOverlayAttributes("Attrs1",ocam,"BlueHighway",m_Size,color,"RedTransparent");
 		//m_TextObject = new MovableText(m_Name + "Text", ConvertToUTF(m_TextToDisplay), "BlueHighway",m_Size,color);

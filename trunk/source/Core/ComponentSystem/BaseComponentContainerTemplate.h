@@ -65,8 +65,8 @@ namespace GASS
 		virtual void AddComponent(ComponentPtr comp);
 		virtual ComponentPtr GetComponent(const std::string &name) const;
 		virtual ComponentIterator GetComponents();
-		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager);
-		void CreateFromComponentContainer(ComponentContainerPtr cc);
+		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) const;
+		virtual void CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerPtr manager);
 
 
 		//xml serialize interface
@@ -102,13 +102,13 @@ namespace GASS
 		//Another case could be that some attributes have to be transfered 
 		//from template to instance in a custom way.
 		
-		virtual ComponentContainerPtr CreateComponentContainer();
+		virtual ComponentContainerPtr CreateComponentContainer() const;
 
 		
 
 		//Help functions for template creation
-		std::string CreateUniqueName();
-		void InheritComponentData(ComponentContainerPtr cc);
+		std::string CreateUniqueName(ComponentContainerTemplateManagerPtr manager) const;
+		void InheritComponentData(ComponentContainerPtr cc) const;
 
 		ComponentPtr LoadComponent(TiXmlElement *comp_template);
 

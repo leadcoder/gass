@@ -334,6 +334,19 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ObjectChangedMessage> ObjectChangedMessagePtr;
 
+	class ObjectAttributeChangedMessage : public BaseMessage
+	{
+	public:
+		ObjectAttributeChangedMessage(BaseReflectionObjectPtr obj, const std::vector<std::string> &attribs, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Object(obj), m_Attributes(attribs){}
+		  BaseReflectionObjectPtr GetObject() const {return m_Object;}
+		  std::vector<std::string> GetAttributes() const {return m_Attributes;}
+	private:
+		BaseReflectionObjectPtr m_Object;
+		std::vector<std::string> m_Attributes;
+	};
+	typedef boost::shared_ptr<ObjectAttributeChangedMessage> ObjectAttributeChangedMessagePtr;
+
 
 	class TextFeedbackMessage : public BaseMessage
 	{

@@ -6,6 +6,8 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/SimEngine.h"
+
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
@@ -18,7 +20,8 @@ namespace GASS
 		m_Controller(controller),
 		m_MoveUpdateCount(0),
 		m_UseGizmo(true),
-		m_Active(false)
+		m_Active(false),
+		m_SnapToMouse(false)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
 	}
@@ -30,6 +33,8 @@ namespace GASS
 
 	void MoveTool::MoveTo(const CursorInfo &info)
 	{
+		int from_id = (int) this;
+
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected && CheckIfEditable(selected))
 		{
@@ -39,25 +44,30 @@ namespace GASS
 				GizmoComponentPtr gc = gizmo->GetFirstComponent<GizmoComponent>();
 				Vec3 new_position = gc->GetPosition(info.m_RayStart,info.m_RayDir);
 
+				
+				
 				if(m_MoveUpdateCount == 0)
 				{
 					//calc offset
 					LocationComponentPtr comp = gizmo->GetFirstComponent<GASS::ILocationComponent>();
 					m_Offset = comp->GetWorldPosition();
+					if(gc->GetSpaceMode() == "World")
+					{
+						m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
+						m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
+						m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
+					}
+
 					m_Offset = new_position - m_Offset;
 				}
 				new_position = new_position - m_Offset;
-				int from_id = (int) this;
-
+				
 				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
 				gizmo->PostMessage(pos_msg);
 
 				//SceneObjectPtr master_gizmo = GetMasterGizmo();
 				//if(master_gizmo)
 				//	SendMessageRec(master_gizmo,pos_msg);
-
-				GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
-				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 			}
 			else if(m_GroundSnapMove)
 			{
@@ -73,13 +83,29 @@ namespace GASS
 						LocationComponentPtr comp = selected->GetFirstComponent<GASS::ILocationComponent>();
 						m_Offset = comp->GetWorldPosition();
 						m_Offset = info.m_3DPos - m_Offset;
+
+						SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
+						if(gizmo)
+						{
+							GizmoComponentPtr gc = gizmo->GetFirstComponent<GizmoComponent>();
+							if(gc->GetSpaceMode() == "World")
+							{
+								m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
+								m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
+								m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
+							}
+						}
 						//m_Offset.Set(0,0,0);
 					}
 					else
 					{
 						//move seleced object
+
+						if(m_SnapToMouse)
+							m_Offset.Set(0,0,0);
+
 						Vec3 new_position = info.m_3DPos - m_Offset;
-						int from_id = (int) this;
+						
 
 						new_position.x = EditorManager::Get().GetMouseToolController()->SnapPosition(new_position.x);
 						new_position.y = EditorManager::Get().GetMouseToolController()->SnapPosition(new_position.y);
@@ -89,13 +115,25 @@ namespace GASS
 						GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
 						selected->PostMessage(pos_msg);
 
-
-						GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
-						EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 					}
 				}
 
 			}
+			const double time = SimEngine::Get().GetTime();
+			static double last_time = 0;
+			const double send_freq = 5; 
+			if(time - last_time > 1.0/send_freq)
+			{
+				last_time = time;
+				std::vector<std::string> attribs;
+				attribs.push_back("Position");
+				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
+				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(attrib_change_msg);
+			}
+
+			GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
+			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
+
 			m_MoveUpdateCount++;
 		}
 	}

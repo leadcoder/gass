@@ -78,6 +78,7 @@ namespace GASS
 		
 		std::string m_Mode;
 		ControlSetting* m_ControlSetting;
+		ControlSetting* m_AltControlSetting;
 		Float m_FovChangeSpeed;
 		Float m_RunSpeed;
 		Float m_TurnSpeed;

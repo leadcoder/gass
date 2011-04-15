@@ -107,6 +107,7 @@ namespace GASS
 
 		bool m_EnableMovmentSnap;
 		bool m_EnableAngleSnap;
+		float m_RayPickDistance;
 
 		GASS::SceneObjectWeakPtr m_PointerObject;
 	};

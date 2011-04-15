@@ -435,6 +435,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<SceneObjectNameMessage> SceneObjectNameMessagePtr;
 
+	/**
+	Message used to load mesh files, mesh components will listen to this message
+	*/
 
 	class MeshFileMessage : public BaseMessage
 	{
@@ -450,8 +453,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<MeshFileMessage> MeshFileMessagePtr;
 
-
-
+	/**
+	Modify mesh texture coordinates,  mesh components will listen to this message
+	*/
 	class TextureCoordinateMessage : public BaseMessage
 	{
 	public:
@@ -463,10 +467,13 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TextureCoordinateMessage> TextureCoordinateMessagePtr;
 
+	/**
+	Change material of mesh components
+	*/
 	class MaterialMessage : public BaseMessage
 	{
 	public:
-		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(0,0,0), const Vec3 &selfIllumination = Vec3(0,0,0), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) :
+		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(-1,-1,-1), const Vec3 &selfIllumination = Vec3(-1,-1,-1), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess), m_DepthTest(depth_test_on){}
 		  Vec4 GetDiffuse()const {return m_Diffuse;}
 		  Vec3 GetAmbient()const {return m_Ambient;}
@@ -483,6 +490,23 @@ namespace GASS
 		bool m_DepthTest;
 	};
 	typedef boost::shared_ptr<MaterialMessage> MaterialMessagePtr;
+
+
+	/**
+	Message used to change texture of manual mesh object
+	param 
+	*/
+	class TextureMessage : public BaseMessage
+	{
+	public:
+		TextureMessage(const std::string &texture ,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Texture(texture){}
+		  std::string GetTexture()const {return m_Texture;}
+		  void SetTexture(const std::string &texture) {m_Texture=texture;}
+	private:
+		std::string m_Texture;
+	};
+	typedef boost::shared_ptr<TextureMessage> TextureMessagePtr;
 
 
 	class BoneTransformationMessage : public BaseMessage
@@ -554,6 +578,22 @@ namespace GASS
 		GeometryComponentPtr m_Geometry;
 	};
 	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
+
+
+	class GeometryScaleMessage : public BaseMessage
+	{
+	public:
+
+		GeometryScaleMessage(const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Scale(scale)
+		  {
+
+		  }
+		  Vec3 GetScale() const {return m_Scale;}
+	private:
+		Vec3 m_Scale;
+	};
+	typedef boost::shared_ptr<GeometryScaleMessage> GeometryScaleMessagePtr;
 
 
 	class ParticleSystemParameterMessage : public BaseMessage
@@ -777,6 +817,23 @@ namespace GASS
 		
 	};
 	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
+
+
+	//debug messages
+	
+	class DebugComponentSettingsMessage : public BaseMessage
+	{
+	public:
+		DebugComponentSettingsMessage(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
+		BaseMessage( sender_id , delay),
+		m_ShowObjectName(show_object_name)
+		{
+		}
+		bool GetShowObjectName() const {return m_ShowObjectName;}
+	private:
+		bool m_ShowObjectName;
+	};
+	typedef boost::shared_ptr<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
 
 
 }

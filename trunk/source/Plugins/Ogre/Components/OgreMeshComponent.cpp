@@ -363,9 +363,9 @@ namespace GASS
 
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
-			
+
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-			
+
 			Ogre::MaterialPtr mat = se->getMaterial();
 			if(mat->getNumTechniques() > 0)
 			{
@@ -380,7 +380,7 @@ namespace GASS
 
 					if(pass->getVertexProgram().get())
 					{
-						pass->getVertexProgramParameters()->setNamedConstant("texOffset",Ogre::Vector3(uv_offset.x ,uv_offset.y,0));
+					pass->getVertexProgramParameters()->setNamedConstant("texOffset",Ogre::Vector3(uv_offset.x ,uv_offset.y,0));
 					}
 					else*/
 					{
@@ -431,11 +431,16 @@ namespace GASS
 			Vec3 specular = message->GetSpecular();
 			Vec3 si = message->GetSelfIllumination();
 
-			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
-			mat->setAmbient(ambient.x,ambient.y,ambient.z);
-			mat->setSpecular(specular.x,specular.y,specular.z,1);
-			mat->setSelfIllumination(si.x,si.y,si.z);
-			mat->setShininess(message->GetShininess());
+			if(diffuse.w >= 0)
+				mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
+			if(ambient.x >= 0)
+				mat->setAmbient(ambient.x,ambient.y,ambient.z);
+			if(specular.x >= 0)
+				mat->setSpecular(specular.x,specular.y,specular.z,1);
+			if(si.x >= 0)
+				mat->setSelfIllumination(si.x,si.y,si.z);
+			if(message->GetShininess() >= 0)
+				mat->setShininess(message->GetShininess());
 
 			//mat->setAmbient(ambinet.x,ambinet.y,ambinet.z);
 			if(diffuse.w < 1.0)
@@ -455,7 +460,7 @@ namespace GASS
 	{
 		Ogre::Bone* bone;
 
-		
+
 		if(message->GetName() == "")
 		{
 			//bone = GetClosestBone(pos);

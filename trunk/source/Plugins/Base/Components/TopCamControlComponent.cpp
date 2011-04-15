@@ -174,6 +174,11 @@ namespace GASS
 			m_ZoomInput = value;
 
 		}
+		else if(name == "FreeCameraZoom")
+		{
+			//m_ZoomInput = value;
+		
+		}
 	}
 
 	void TopCamControlComponent::OnInit(MessagePtr message)
@@ -235,6 +240,7 @@ namespace GASS
 
 		MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostMessage(cam_msg);
+		m_ZoomInput *= 0.9; 
 	}
 
 

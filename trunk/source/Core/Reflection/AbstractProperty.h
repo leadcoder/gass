@@ -81,7 +81,7 @@ namespace GASS
             @param dest The object that should be modified
             @param src The object that the property value should be fetch from
         */
-		virtual void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src) = 0;
+		virtual void SetValue(BaseReflectionObject* dest, const BaseReflectionObject* src) = 0;
 
 		/**
             Set this property value by providing the value by the boost any class

@@ -50,6 +50,7 @@ namespace GASS
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnTextureMessage(TextureMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();

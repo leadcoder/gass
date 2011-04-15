@@ -740,18 +740,22 @@ namespace GASS
 		// Create water
 		//m_Hydrax->create();
 
-		//force default load
-		Ogre::ConfigFile CfgFile;
-		CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource("DefaultEditorWater.hdx", "Hydrax"));
-		SetActiveModule(CfgFile.getSetting("Module"));
-		SetActiveNoise(CfgFile.getSetting("Perlin"));
-		m_Hydrax->loadCfg("DefaultEditorWater.hdx");
-		// Create water
-		m_Hydrax->create();
+		
 
 		if(m_ConfigurationFile != "")
 		{
 			SetConfigurationFile(m_ConfigurationFile);
+		}
+		else
+		{
+			//force default load
+			Ogre::ConfigFile CfgFile;
+			CfgFile.load(Ogre::ResourceGroupManager::getSingleton().openResource("DefaultEditorWater.hdx", "Hydrax"));
+			SetActiveModule(CfgFile.getSetting("Module"));
+			SetActiveNoise(CfgFile.getSetting("Perlin"));
+			m_Hydrax->loadCfg("DefaultEditorWater.hdx");
+			// Create water
+			m_Hydrax->create();
 		}
 	}
 

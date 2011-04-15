@@ -177,7 +177,7 @@ namespace GASS
 
 
 
-	void BaseReflectionObject::SetProperties(BaseReflectionObjectPtr dest)
+	void BaseReflectionObject::SetProperties(BaseReflectionObjectPtr dest) const
 	{
 		RTTI* pRTTI = GetRTTI();
 		RTTI* pdestRTTI = dest->GetRTTI();

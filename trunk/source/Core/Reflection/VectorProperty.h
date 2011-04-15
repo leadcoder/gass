@@ -158,7 +158,7 @@ namespace GASS
 			return res;
 		}
 
-		void SetValue(BaseReflectionObject* dest, BaseReflectionObject* src)
+		void SetValue(BaseReflectionObject* dest, const BaseReflectionObject* src)
 		{
 			SetValue(dest,GetValue(src));
 		}

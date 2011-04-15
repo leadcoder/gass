@@ -70,11 +70,29 @@ namespace GASS
 		/**
 			Should all objects returned by this manager have unique names?
 		*/
-		virtual bool GetForceUniqueName() const = 0;
+		virtual bool GetAddObjectIDToName() const = 0;
 		/**
 			Set whether objects created by this manager should have unique names or not,
 		*/
-		virtual void SetForceUniqueName(bool value) = 0;
+		virtual void SetAddObjectIDToName(bool value) = 0;
+
+		/**
+			Get unique name prefix
+		*/
+		virtual std::string GetObjectIDPrefix() const = 0;
+		/**
+			Set unique name prefix
+		*/
+		virtual void SetObjectIDPrefix(const std::string &sufix) = 0;
+
+		/**
+			Get unique name suffix, default is ""
+		*/
+		virtual std::string GetObjectIDSuffix() const = 0;
+		/**
+			Set unique name suffix
+		*/
+		virtual void SetObjectIDSuffix(const std::string &suffix) = 0;
 	protected:
 
 	};

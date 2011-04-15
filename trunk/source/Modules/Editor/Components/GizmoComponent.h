@@ -18,11 +18,13 @@ namespace GASS
 		Quaternion GetRotation(float detla);
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
+		std::string GetSpaceMode() const {return m_Mode;}
 	private:
 		void BuildMesh();
 		void OnSnapModeMessage(SnapModeMessagePtr message);
 		void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnGridMessage(GridMessagePtr message);
+		void OnCameraParameter(CameraParameterMessagePtr message);
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
 		void OnLoad(LoadCoreComponentsMessagePtr message);

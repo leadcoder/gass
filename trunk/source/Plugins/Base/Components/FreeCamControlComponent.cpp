@@ -64,7 +64,8 @@ namespace GASS
 		m_CurrentFov(45),
 		m_UpDownInput(0),
 		m_Mode("Aircraft"),
-		m_Debug(false)
+		m_Debug(false),
+		m_AltControlSetting(NULL)
 	{
 
 	}
@@ -98,6 +99,11 @@ namespace GASS
 		assert(m_ControlSetting);
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
+		m_AltControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraAltInputSettings");
+		if(m_AltControlSetting)
+			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
+
+
 		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
 
 		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
@@ -112,6 +118,11 @@ namespace GASS
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
+
+		if(m_AltControlSetting)
+		{
+			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
+		}
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -254,7 +265,7 @@ namespace GASS
 
 		Float forward_speed = m_ThrottleInput*delta*speed_factor;
 		Float strafe_speed = m_StrafeInput*delta*speed_factor;
-		Float updown_speed = m_UpDownInput*delta*speed_factor*0.4;
+		Float updown_speed = m_UpDownInput*delta*speed_factor;
 
 		Float teta = m_Rot.x; //heading
 		Float beta = m_Rot.y; //pitch
@@ -367,8 +378,8 @@ namespace GASS
 	
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
-		m_UpDownInput = 0;
-
+		m_UpDownInput = m_UpDownInput*0.9;
+	
 		if(m_Debug)
 		{
 			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_Rot << std::endl;

@@ -48,6 +48,7 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
+		void OnGeometryScale(GeometryScaleMessagePtr message);
 		float GetWidth() const;
 		void SetWidth(float width);
 		float GetHeight() const;

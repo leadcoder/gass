@@ -108,6 +108,7 @@ namespace GASS
 		SceneObjectPtr GetDebugObject();
 		void UpdateDebug(bool enable);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
+		void OnGeometryScale(GeometryScaleMessagePtr message);
 	protected:
 		dGeomID m_GeomID;
 		dGeomID m_TransformGeomID;

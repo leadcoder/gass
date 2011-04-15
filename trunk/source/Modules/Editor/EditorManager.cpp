@@ -36,4 +36,7 @@ namespace GASS
 	{
 		return m_MessageManager;
 	}
+
+
+	
 }

@@ -95,6 +95,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEGeometryComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
 
 	void ODEGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
@@ -103,6 +104,11 @@ namespace GASS
 		SetPosition(pos);
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
+		SetScale(message->GetScale());
+	}
+
+	void ODEGeometryComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	{
 		SetScale(message->GetScale());
 	}
 

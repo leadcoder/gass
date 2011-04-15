@@ -166,11 +166,16 @@ namespace GASS
 
 		osg::ref_ptr<osg::Material> mat (new osg::Material);
 		//Specifying the yellow colour of the object
-		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
-		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
-		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
-		mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
-		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
+		if( diffuse.x >= 0)
+			mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
+		if( ambient.x >= 0)
+			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
+		if( specular.x >= 0)
+			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
+		if( message->GetShininess() >= 0)
+			mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
+		if( si.x >= 0)
+			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
 
 		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
 		//Attaching the newly defined state set object to the node state set

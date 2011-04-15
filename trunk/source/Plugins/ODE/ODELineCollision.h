@@ -39,6 +39,7 @@ namespace GASS
 		dGeomID m_RayGeom;
 		Vec3 m_RayDir;
 		Vec3 m_RayStart;
+		double m_RayLength;
 		CollisionRequest* m_Request;
 		CollisionResult* m_Result;
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;

@@ -40,6 +40,10 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/Resource/IResourceSystem.h"
+#include "Sim/Systems/SimSystemManager.h"
+
 
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
@@ -68,6 +72,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
 	}
 
 	void OgreManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -183,6 +188,66 @@ namespace GASS
 	}
 
 
+	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
+	{
+		if(message->GetTexture() == "")
+			return;
+
+		if(!m_UniqueMaterialCreated) 
+		{
+			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+			std::string mat_name = m_MeshObject->getName() + mat->getName();
+			mat = mat->clone(mat_name);
+			m_MeshObject->getSection(0)->setMaterialName(mat_name);
+			m_UniqueMaterialCreated = true;
+		}
+		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+
+		if(mat->getNumTechniques() > 0)
+		{
+			Ogre::Technique * technique = mat->getTechnique(0);
+			if(technique->getNumPasses() > 0)
+			{
+				Ogre::Pass* pass = technique->getPass(0);
+				if(pass->getNumTextureUnitStates() == 0)
+				{
+					pass->createTextureUnitState();
+				}
+
+				if(pass->getNumTextureUnitStates() > 0)
+				{
+					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
+					std::string texture_name = message->GetTexture();
+					//Check in resource manager
+
+					if(texture_name != "")
+					{
+						ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+						if(rs == NULL)
+							return;
+			
+						std::string full_path;
+						if(!rs->GetFullPath(full_path,texture_name))
+						{
+							//add resource location
+							std::string path = Misc::RemoveFilename(texture_name);
+							if(path != "")
+							{
+								rs->AddResourceLocation(path,"ManualTextures","FileSystem",false);
+							}
+							else 
+								return;
+						}
+						
+						const std::string stripped_name = Misc::GetFilename(texture_name);
+						textureUnit->setTextureName(stripped_name);
+					}
+				}
+			}
+		}
+	}
+
+
 	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		
@@ -201,11 +266,16 @@ namespace GASS
 		Vec3 si = message->GetSelfIllumination();
 		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
 		
-		mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
-		mat->setAmbient(ambient.x,ambient.y,ambient.z);
-		mat->setSpecular(specular.x,specular.y,specular.z,1);
-		mat->setSelfIllumination(si.x,si.y,si.z);
-		mat->setShininess(message->GetShininess());
+		if(diffuse.w >= 0)
+			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
+		if(ambient.x >= 0)
+			mat->setAmbient(ambient.x,ambient.y,ambient.z);
+		if(specular.x >= 0)
+			mat->setSpecular(specular.x,specular.y,specular.z,1);
+		if(si.x >= 0)
+			mat->setSelfIllumination(si.x,si.y,si.z);
+		if(message->GetShininess() >= 0)
+			mat->setShininess(message->GetShininess());
 
 		/*if(color.w < 1.0)
 		{

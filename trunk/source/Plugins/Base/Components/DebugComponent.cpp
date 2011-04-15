@@ -45,6 +45,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(typeid(LoadCoreComponentsMessage),MESSAGE_FUNC(DebugComponent::OnLoad),0);
 		GetSceneObject()->RegisterForMessage(typeid(SceneObjectNameMessage),MESSAGE_FUNC(DebugComponent::OnChangeName),0);
+		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsMessage),MESSAGE_FUNC(DebugComponent::OnSettings),0);
 	}
 
 	bool DebugComponent::GetShowNodeName() const
@@ -55,6 +56,21 @@ namespace GASS
 	void DebugComponent::SetShowNodeName(bool value)
 	{
 		m_ShowNodeName = value;
+		if(GetSceneObject())
+		{
+			if(m_ShowNodeName)
+			{
+				std::string name = GetSceneObject()->GetName();
+				MessagePtr text_mess(new TextCaptionMessage(name));
+				GetSceneObject()->PostMessage(text_mess);
+			}
+			else
+			{
+				std::string name = "";
+				MessagePtr text_mess(new TextCaptionMessage(name));
+				GetSceneObject()->PostMessage(text_mess);
+			}
+		}
 	}
 	
 	void DebugComponent::OnChangeName(GASS::MessagePtr message)
@@ -68,6 +84,16 @@ namespace GASS
 				MessagePtr text_mess(new TextCaptionMessage(name));
 				GetSceneObject()->PostMessage(text_mess);
 			}
+		}
+	}
+
+
+	void DebugComponent::OnSettings(GASS::MessagePtr message)
+	{
+		DebugComponentSettingsMessagePtr settings_mess = boost::shared_dynamic_cast<DebugComponentSettingsMessage>(message);
+		if(settings_mess)
+		{
+			SetShowNodeName(settings_mess->GetShowObjectName());
 		}
 	}
 	

@@ -36,6 +36,7 @@ namespace GASS
 		virtual Vec3 GetEulerRotation() const = 0;
 		virtual Quaternion GetRotation() const = 0;
 		virtual Quaternion GetWorldRotation() const = 0;
+		virtual Vec3 GetScale() const = 0;
 	protected:
 	};
 

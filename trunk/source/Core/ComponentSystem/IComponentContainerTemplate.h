@@ -125,7 +125,7 @@ namespace GASS
 			Return a component container created from this template.
 		*/
 		//Manager argument needed if we want to used inheritance
-		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) = 0;
+		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) const = 0;
 
 		/**
 			Return a component container created from this template

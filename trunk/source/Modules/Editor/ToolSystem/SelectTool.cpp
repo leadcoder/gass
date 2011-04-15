@@ -66,5 +66,8 @@ namespace GASS
 		}
 		m_SelectedObject.reset();;
 	}
+
+
+	
 }
 

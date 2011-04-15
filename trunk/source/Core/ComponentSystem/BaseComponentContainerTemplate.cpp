@@ -320,20 +320,20 @@ namespace GASS
 		return comp;
 	}
 
-	std::string BaseComponentContainerTemplate::CreateUniqueName()
+	std::string BaseComponentContainerTemplate::CreateUniqueName(ComponentContainerTemplateManagerPtr manager) const
 	{
 		static int object_counter = 0;
 		std::stringstream ss;
-		ss << GetName() << "_" << object_counter;
+		ss << GetName() << manager->GetObjectIDPrefix() << object_counter << manager->GetObjectIDSuffix();
 		std::string u_name;
 		ss >> u_name;
 		object_counter++;
 		return u_name ;
 	}
 
-	void BaseComponentContainerTemplate::InheritComponentData(ComponentContainerPtr cc)
+	void BaseComponentContainerTemplate::InheritComponentData(ComponentContainerPtr cc) const
 	{
-		ComponentVector::iterator iter; 
+		ComponentVector::const_iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
 		{
 			ComponentPtr comp = (*iter);
@@ -358,7 +358,7 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager)
+	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) const
 	{
 		ComponentContainerPtr new_object;
 		if(m_Inheritance != "")
@@ -368,8 +368,8 @@ namespace GASS
 			{
 				new_object =  inheritance->CreateComponentContainer(part_id,manager);
 
-				if(manager->GetForceUniqueName())
-					new_object->SetName(CreateUniqueName());
+				if(manager->GetAddObjectIDToName())
+					new_object->SetName(CreateUniqueName(manager));
 				else 
 					new_object->SetName(GetName());
 				//set template name
@@ -396,8 +396,8 @@ namespace GASS
 				obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
 				}
 				}*/
-				if(manager->GetForceUniqueName())
-					new_object->SetName(CreateUniqueName());
+				if(manager->GetAddObjectIDToName())
+					new_object->SetName(CreateUniqueName(manager));
 				else 
 					new_object->SetName(GetName());
 
@@ -411,7 +411,7 @@ namespace GASS
 			}
 		}
 		//recursive add children
-		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator iter;
+		BaseComponentContainerTemplate::ComponentContainerTemplateVector::const_iterator iter;
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); iter++)
 		{
 			ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(*iter);
@@ -429,7 +429,7 @@ namespace GASS
 	}
 
 
-	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer()
+	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer() const
 	{
 		std::string type = GetRTTI()->GetClassName();
 		type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
@@ -444,7 +444,7 @@ namespace GASS
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
 
-		ComponentVector::iterator iter; 
+		ComponentVector::const_iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
 		{
 			ComponentPtr comp = (*iter);
@@ -458,17 +458,16 @@ namespace GASS
 		return container;
 	}
 
-	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc)
+	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerPtr manager)
 	{
-		//std::string type = cc->GetRTTI()->GetClassName();
-		//type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
+		const std::string old_template_name = cc->GetTemplateName();
+		if(old_template_name != "")
+		{
+			BaseComponentContainerTemplatePtr old_temp = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(manager->GetTemplate(old_template_name));
+			if(old_temp)
+				SetInheritance(old_temp->GetInheritance());
+		}
 
-		//remove template from name
-		//type += "Template";
-		//ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
-
-		//if(!container)
-		//	Log::Error("Failed to create instance %s",type.c_str());
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(cc);
 		ref_obj->SetProperties(shared_from_this());
 
@@ -492,7 +491,7 @@ namespace GASS
 			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
 			if(new_child)
 			{
-				new_child->CreateFromComponentContainer(child);
+				new_child->CreateFromComponentContainer(child,manager);
 				AddChild(new_child);
 			}
 		}

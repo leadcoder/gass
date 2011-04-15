@@ -32,7 +32,7 @@
 namespace GASS
 {
 
-	BaseComponentContainerTemplateManager::BaseComponentContainerTemplateManager() : m_ForceUniqueName(true)
+	BaseComponentContainerTemplateManager::BaseComponentContainerTemplateManager() : m_AddObjectIDToName(true), m_ObjectIDPrefix("_")
 	{
 		
 	}

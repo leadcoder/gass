@@ -22,9 +22,9 @@ namespace GASS
 		void Init();
 		GASS::MessageManager* GetMessageManager(void);
 		MouseToolController* GetMouseToolController() {return m_MouseTools;}
-		const std::string GetWorkingDirPath(void) {return m_WorkingDirPath;}
+		//const std::string GetWorkingDirPath(void) {return m_WorkingDirPath;}
 	protected:
-		std::string m_WorkingDirPath;
+		//std::string m_WorkingDirPath;
 		//Create tool controller
 		MouseToolController* m_MouseTools;
 		MessageManager* m_MessageManager;

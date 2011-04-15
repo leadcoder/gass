@@ -17,6 +17,8 @@
 
 
 #define MOVMENT_EPSILON 0.0000001
+#define MAX_SCALE_DISTANCE 300.0 //meters
+#define MIN_SCALE_DISTANCE 0.1 //meters
 #define GIZMO_SENDER 999
 
 namespace GASS
@@ -101,30 +103,62 @@ namespace GASS
 
 	void GizmoComponent::OnGridMessage(GridMessagePtr message)
 	{
-		if(m_Type == "grid")
+		if(m_Type == "grid" || m_Type == "fixed_grid")
 			BuildMesh();
 	}
 
 	void GizmoComponent::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
-		//Unregister from previos camera
+		//Unregister from previous camera
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage));
+			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage));
 		}
 		SceneObjectPtr cam_obj =  message->GetCamera();
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
+		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage,1));
+	}
+
+	void GizmoComponent::OnCameraParameter(CameraParameterMessagePtr message)
+	{
+		if(m_Type == "grid" || m_Type == "fixed_grid")
+			return;
+		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		switch(type)
+		{
+		case CameraParameterMessage::CAMERA_FOV:
+			{
+				float value = message->GetValue1();
+			}
+			break;
+		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+			{
+				float value = message->GetValue1();
+				float scale_factor = 0.06;
+				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
+				GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+			}
+			break;
+		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+			{
+				
+			}
+			break;
+		}
 	}
 
 	void GizmoComponent::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
 	{
-		//Unregister form previos
-		SceneObjectPtr  previos_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
-		if(previos_selected)
+		if(m_Type == "fixed_grid")
+			return;
+		//Unregister form previous
+		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		if(previous_selected)
 		{
-			previos_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage));
+			previous_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage));
 		}
 
 		SceneObjectPtr  new_selected = message->GetSceneObject();
@@ -158,6 +192,9 @@ namespace GASS
 
 	void GizmoComponent::OnSelectedTransformation(TransformationNotifyMessagePtr message)
 	{
+		if(m_Type == "fixed_grid")
+			return;
+
 		//move gizmo
 		LocationComponentPtr lc = GetSceneObject()->GetFirstComponent<ILocationComponent>();
 		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
@@ -176,6 +213,8 @@ namespace GASS
 
 	void GizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
+		if(m_Type == "fixed_grid")
+			return;
 		UpdateScale();
 	}
 
@@ -199,11 +238,16 @@ namespace GASS
 
 	void GizmoComponent::OnCameraMoved(TransformationNotifyMessagePtr message)
 	{
+		if(m_Type == "fixed_grid")
+			return;
 		UpdateScale();
 	}
 
 	void GizmoComponent::UpdateScale()
 	{
+		if(m_Type == "fixed_grid")
+			return;
+
 		if(m_Type == "grid")
 			return;
 		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -223,10 +267,10 @@ namespace GASS
 			{
 				m_LastDist = dist;
 				//clamp
-				if(dist > 200)
-					dist = 200;
-				if(dist < 0.1)
-					dist = 0.1;
+				if(dist > MAX_SCALE_DISTANCE)
+					dist = MAX_SCALE_DISTANCE;
+				if(dist < MIN_SCALE_DISTANCE)
+					dist = MIN_SCALE_DISTANCE;
 
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
@@ -471,8 +515,8 @@ namespace GASS
 			m_MeshData->Type = TRIANGLE_LIST;
 		}
 
-		//Arrow
-		else if (m_Type == "grid")
+		
+		else if (m_Type == "grid" || m_Type == "fixed_grid")
 		{
 			MeshVertex vertex;
 			
@@ -480,7 +524,11 @@ namespace GASS
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = m_Color;
 
-			float grid_size = EditorManager::Get().GetMouseToolController()->GetGridSize();
+			float grid_size = 0;
+			if(m_Type == "fixed_grid")
+				grid_size = m_Size;
+			else
+				grid_size = EditorManager::Get().GetMouseToolController()->GetGridSize();
 			float half_grid_size = grid_size/2.0;
 			float grid_spacing = EditorManager::Get().GetMouseToolController()->GetGridSpacing();
 			int n = (grid_size / grid_spacing)/2;
@@ -503,7 +551,7 @@ namespace GASS
 				m_MeshData->IndexVector.push_back(index++);
 				m_MeshData->IndexVector.push_back(index++);
 			}
-			m_MeshData->Material = "GizmoPlaneMat";
+			m_MeshData->Material = "PlaneGeometry";
 			m_MeshData->Type = LINE_LIST;
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
@@ -512,6 +560,8 @@ namespace GASS
 
 	void GizmoComponent::OnNewCursorInfo(CursorMoved3DMessagePtr message)
 	{
+		if(m_Type == "fixed_grid")
+			return;
 		
 		bool grid = false;
 		if(m_Type == "grid")
@@ -612,7 +662,7 @@ namespace GASS
 			//return isect_pos;
 		}
 		return c_pos;
-	}
+		}
 
 	Quaternion  GizmoComponent::GetRotation(float delta)
 	{
@@ -649,18 +699,38 @@ namespace GASS
 			return selected_rot*final_rot;	
 		}
 		return Quaternion::IDENTITY;
-		
+	}
+
+	void GizmoComponent::OnSnapModeMessage(SnapModeMessagePtr message)
+	{
+		if(message->MovementSnapEnabled())
+		{
+			//snap 
+		}
+
 	}
 
 	Vec3 GizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p)
 	{
-		// Determine t (the length of the vector from a to p)
 		Vec3 c = p-axis_origin;
 		Float t = Math::Dot(axis_dir,c);
-		t = EditorManager::Get().GetMouseToolController()->SnapPosition(t);
+		if(m_Mode == "Local")
+		{
+			t = EditorManager::Get().GetMouseToolController()->SnapPosition(t);
+		}
 			//t = SnapValue(t,m_MovmentSnap);
 		Vec3 point_on_axis = axis_dir*t;
-		return (axis_origin + point_on_axis);
+
+		Vec3 res = (axis_origin + point_on_axis);
+
+		if(m_Mode == "World")
+		{
+			res.x = EditorManager::Get().GetMouseToolController()->SnapPosition(res.x);
+			res.z = EditorManager::Get().GetMouseToolController()->SnapPosition(res.z);
+			res.y = EditorManager::Get().GetMouseToolController()->SnapPosition(res.y);
+		}
+
+		return res;
 	}
 
 	Float GizmoComponent::SnapValue(Float value, Float snap)
