@@ -835,5 +835,18 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
 
+	class TerrainHeightModifyMessage : public BaseMessage
+	{
+	public:
+		TerrainHeightModifyMessage(const Vec3 &pos, float brush_size,SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Position(pos), m_BrushSize(brush_size){}
+		  float GetBrushSize() const {return m_BrushSize;}
+		  Vec3 GetPosition() const {return m_Position;}
+	private:
+		Vec3 m_Position;
+		float m_BrushSize;
+	};
+	typedef boost::shared_ptr<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
+
 
 }

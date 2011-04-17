@@ -173,6 +173,7 @@ namespace GASS
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				//SetPosition(m_Pos);
 				UpdatePosition();
+				SetColorMap(m_ColorMap);
 
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
@@ -199,6 +200,7 @@ namespace GASS
 		if(m_Terrain && m_ColorMap != "")
 		{
 
+			std::cout << "try to load" << colormap << "\n";
 			std::fstream fstr(colormap.c_str(), std::ios::in|std::ios::binary);
 			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
 

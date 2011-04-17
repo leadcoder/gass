@@ -64,13 +64,13 @@ namespace GASS
 
 	OgreTerrainGroupComponent::~OgreTerrainGroupComponent()
 	{
-	
+
 	}
 
 	void OgreTerrainGroupComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainGroupComponent",new Creator<OgreTerrainGroupComponent, IComponent>);
-		
+
 		RegisterProperty<float>("ImportScale", &GASS::OgreTerrainGroupComponent::GetImportScale, &GASS::OgreTerrainGroupComponent::SetImportScale);
 		RegisterProperty<int>("ImportTerrainSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainSize);
 		RegisterProperty<Float>("ImportTerrainWorldSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainWorldSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainWorldSize);
@@ -79,13 +79,15 @@ namespace GASS
 		RegisterProperty<std::string>("CustomMaterial", &GASS::OgreTerrainGroupComponent::GetCustomMaterial, &GASS::OgreTerrainGroupComponent::SetCustomMaterial);
 		RegisterProperty<Vec2i>("CreatePages", &GASS::OgreTerrainGroupComponent::GetPages, &GASS::OgreTerrainGroupComponent::CreatePages);
 		RegisterProperty<Vec3>("Origin", &GASS::OgreTerrainGroupComponent::GetOrigin, &GASS::OgreTerrainGroupComponent::SetOrigin);
-		
+
 	}
 
 	void OgreTerrainGroupComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnLoad,LoadGFXComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
+		
 	}
 
 	void OgreTerrainGroupComponent::SetOrigin(const Vec3 &pos)
@@ -124,7 +126,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::CreatePages(const Vec2i  &size)
 	{
-		
+
 		if(GetSceneObject())
 		{
 			RemoveAllPages();
@@ -192,7 +194,7 @@ namespace GASS
 		//
 		delete m_TerrainGroup;
 		//delete m_TerrainGlobals;
-		
+
 		m_TerrainGlobals =Ogre::TerrainGlobalOptions::getSingletonPtr();
 
 		if(!m_TerrainGlobals)
@@ -219,7 +221,7 @@ namespace GASS
 		m_TerrainGlobals->setMaxPixelError(8);
 		// testing composite map
 		m_TerrainGlobals->setCompositeMapDistance(3000);
-		
+
 		//mTerrainGlobals->setUseRayBoxDistanceCalculation(true);
 		//mTerrainGlobals->getDefaultMaterialGenerator()->setDebugLevel(1);
 		//mTerrainGlobals->setLightMapSize(256);
@@ -227,7 +229,7 @@ namespace GASS
 		//matProfile->setLightmapEnabled(false);
 		// Important to set these so that the terrain knows what to use for derived (non-realtime) data
 		//m_TerrainGlobals->setLightMapDirection(l->getDerivedDirection());
-		
+
 		//m_TerrainGlobals->setCompositeMapAmbient(m_OgreSceneManager->getAmbientLight());
 		m_TerrainGlobals->setLayerBlendMapSize(1024);
 		//mTerrainGlobals->setCompositeMapAmbient(ColourValue::Red);
@@ -240,7 +242,7 @@ namespace GASS
 		defaultimp.inputScale = 600;
 		defaultimp.minBatchSize = 33;
 		defaultimp.maxBatchSize = 65;
-	
+
 		defaultimp.layerList.resize(3);
 		defaultimp.layerList[0].worldSize = 10;
 		defaultimp.layerList[0].textureNames.push_back("default.dds");
@@ -252,7 +254,7 @@ namespace GASS
 		defaultimp.layerList[2].textureNames.push_back("default.dds");
 
 		m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
-		
+
 	}
 
 	float OgreTerrainGroupComponent::GetImportScale() const
@@ -267,7 +269,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetImportScale(const float &value)
 	{
-		
+
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
@@ -337,12 +339,12 @@ namespace GASS
 
 		/*ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
-			Log::Error("No Resource Manager Found");
+		Log::Error("No Resource Manager Found");
 		std::string location = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario()->GetPath();
 		location += "gfx/terrain";
 		rs->AddResourceLocation(location,"TerrainResourceLocation","FileSystem",true);
 		rs->LoadResourceGroup("TerrainResourceLocation");*/
-		
+
 		ConfigureTerrainDefaults();
 	}
 
@@ -381,7 +383,7 @@ namespace GASS
 	AABox OgreTerrainGroupComponent::GetBoundingBox() const
 	{
 		AABox aabox;
-		
+
 		if(m_TerrainGroup)
 		{
 			//Get all components
@@ -393,7 +395,7 @@ namespace GASS
 				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
 				if(page)
 				{
-					
+
 					AABox page_bb = page->GetBoundingBox();
 					aabox.Union(page_bb);
 				}
@@ -416,7 +418,7 @@ namespace GASS
 				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
 				if(page)
 				{
-					
+
 					Sphere page_sphere = page->GetBoundingSphere();
 					sphere.Union(page_sphere);
 				}
@@ -437,7 +439,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
-	
+
 	}
 
 	Float OgreTerrainGroupComponent::GetHeight(Float x, Float z)
@@ -447,5 +449,62 @@ namespace GASS
 			return m_TerrainGroup->getHeightAtWorldPosition(x,0,z);
 		}
 		return 0;
+	}
+
+
+	void OgreTerrainGroupComponent::OnTerrainHeightModify(TerrainHeightModifyMessagePtr message)
+	{
+		float mBrushSizeTerrainSpace = 0.02;
+		// figure out which terrains this affects
+		Ogre::TerrainGroup::TerrainList terrainList;
+		Ogre::Real brushSizeWorldSpace = m_TerrainGroup->getTerrainWorldSize()* mBrushSizeTerrainSpace;
+		Ogre::Vector3 position = Convert::ToOgre(message->GetPosition());
+		float delta = 1.0/50.0;
+		Ogre::Sphere sphere(position, brushSizeWorldSpace);
+		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
+
+		for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+			DoTerrainModify(*ti, position, delta,mBrushSizeTerrainSpace);
+		m_TerrainGroup->update();
+	}
+
+	void OgreTerrainGroupComponent::DoTerrainModify(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size)
+	{
+		Ogre::Vector3 tsPos;
+		terrain->getTerrainPosition(centrepos, &tsPos);
+//#if OGRE_PLATFORM != OGRE_PLATFORM_IPHONE
+		// we need point coords
+		Ogre::Real terrainSize = (terrain->getSize() - 1);
+		long startx = (tsPos.x - brush_size) * terrainSize;
+		long starty = (tsPos.y - brush_size) * terrainSize;
+		long endx = (tsPos.x + brush_size) * terrainSize;
+		long endy= (tsPos.y + brush_size) * terrainSize;
+		startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)terrainSize);
+		endy = std::min(endy, (long)terrainSize);
+		for (long y = starty; y <= endy; ++y)
+		{
+			for (long x = startx; x <= endx; ++x)
+			{
+				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
+				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
+
+				Ogre::Real weight = std::min((Ogre::Real)1.0, 
+					Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist) / Ogre::Real(0.5 * brush_size));
+				weight = 1.0 - (weight * weight);
+
+				float addedHeight = weight * 250.0 * timeElapsed;
+				float newheight;
+				//if (mKeyboard->isKeyDown(OIS::KC_EQUALS))
+					newheight = terrain->getHeightAtPoint(x, y) + addedHeight;
+				//else
+				//	newheight = terrain->getHeightAtPoint(x, y) - addedHeight;
+				terrain->setHeightAtPoint(x, y, newheight);
+
+			}
+		}
+		//if (mHeightUpdateCountDown == 0)
+		//	mHeightUpdateCountDown = mHeightUpdateRate;
 	}
 }

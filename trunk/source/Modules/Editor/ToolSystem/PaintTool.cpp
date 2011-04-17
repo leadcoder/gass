@@ -9,6 +9,7 @@
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 
 
 namespace GASS
@@ -17,7 +18,7 @@ namespace GASS
 	PaintTool::PaintTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-
+EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
 	}
 
 	PaintTool::~PaintTool()
@@ -31,6 +32,16 @@ namespace GASS
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)// && selected)
 		{
+			if(selected)
+			{
+				TerrainComponentPtr terrain = selected->GetFirstComponent<ITerrainComponent>();
+				if(terrain)
+				{
+					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,6)));
+				}
+			}
+
+			
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
 			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(paint_msg);
 			/*int from_id = (int) this;

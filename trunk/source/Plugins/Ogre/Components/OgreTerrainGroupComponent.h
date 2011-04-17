@@ -91,7 +91,10 @@ namespace GASS
 		Vec3 GetOrigin() const;
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		
+
+		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
+		void DoTerrainModify(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size);
+			
 		
 		Vec3 m_Scale;
 		bool m_Center;
