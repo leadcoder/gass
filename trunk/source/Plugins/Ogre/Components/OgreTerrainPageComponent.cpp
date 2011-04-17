@@ -174,6 +174,11 @@ namespace GASS
 				//SetPosition(m_Pos);
 				UpdatePosition();
 
+				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
+				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
+				//std::cout << "bb size:" << m_Terrain->getAABB().getMaximum().x <<" "<< m_Terrain->getAABB().getMaximum().y <<" " << m_Terrain->getAABB().getMaximum().z << "\n";
+
+
 				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
 				//std::string name = ptr->getName();	
 				//Terrain page created
@@ -426,16 +431,23 @@ namespace GASS
 
 	void OgreTerrainPageComponent::GetBounds(Vec3 &min,Vec3 &max)
 	{
-		AABox aabox;
-		if(m_Terrain)
-			aabox = Convert::ToGASS(m_Terrain->getAABB());
-		min = aabox.m_Min + GetPosition();
-		max = aabox.m_Max + GetPosition();
+		//AABox aabox;
+		if(m_TerrainGroup)
+		{
+		//	aabox = Convert::ToGASS(m_Terrain->getAABB());
+			//std::cout << "size:" << m_TerrainGroup->getTerrainWorldSize();
+			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
+			Vec3 pos = GetPosition();
+			min = Vec3(pos.x -size,0, pos.z -size);
+			max = Vec3(pos.x +size,0, pos.z +size);
+			
+		}
 	}
 
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
 	{
 		AABox aabox;
+		//aabox.m_Min = Vec3(0,0,0);
 		
 		if(m_Terrain)
 			aabox = Convert::ToGASS(m_Terrain->getAABB());
@@ -459,15 +471,22 @@ namespace GASS
 
 	unsigned int OgreTerrainPageComponent::GetSamplesX()
 	{
-		if(m_Terrain)
-			return m_Terrain->getSize();
+		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		if(!terrain_man) //try parent
+			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		if(terrain_man) //try parent
+			return terrain_man->GetImportTerrainSize();
 		else return 0;
 	}
 
 	unsigned int OgreTerrainPageComponent::GetSamplesZ()
 	{
-		if(m_Terrain)
-			return m_Terrain->getSize();
+		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		if(!terrain_man) //try parent
+			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		if(terrain_man) //try parent
+			return terrain_man->GetImportTerrainSize();
+
 		else return 0;
 	}
 
@@ -514,8 +533,8 @@ namespace GASS
 	Vec3 OgreTerrainPageComponent::GetPosition() const
 	{
 		Vec3 pos(0,0,0);
-		if(m_Terrain)
-			pos= Convert::ToGASS(m_Terrain->getPosition());;
+		if(m_TerrainGroup)
+			pos= Convert::ToGASS(m_TerrainGroup->getOrigin());
 		return pos;
 	}
 

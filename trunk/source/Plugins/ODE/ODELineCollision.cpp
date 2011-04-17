@@ -27,10 +27,11 @@ namespace GASS
 {
 
 
-	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,ODEPhysicsSceneManagerPtr ode_scene) :	m_Request(request),
+	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,ODEPhysicsSceneManagerPtr ode_scene, float segment_length) :	m_Request(request),
 		m_Result(result),
 		m_SceneManager(ode_scene),
-		m_RayGeom(0)
+		m_RayGeom(0),
+		m_SegmentLength(segment_length)
 	{
 		
 		m_RayDir = request->LineEnd - request->LineStart;
@@ -47,66 +48,65 @@ namespace GASS
 	void ODELineCollision::Process()
 	{
 		//split ray into segments
-		const double ray_segment_length = 200.0;
-
-		const int segments = int (m_RayLength/ray_segment_length);
-		double last_ray_length =  m_RayLength - segments * ray_segment_length;
-
-		m_Result->Coll = false;
-		m_Result->CollDist = 0;
 		
-		for(int i=0 ; i < segments; i++)
+		if(m_SegmentLength > 0)
 		{
-			dGeomID ray = dCreateRay (0, ray_segment_length);
+			dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
+			dGeomID ray = dCreateRay (0, m_SegmentLength);
 			dGeomSetCollideBits (ray,m_Request->CollisionBits);
 			dGeomSetCategoryBits(ray,m_Request->CollisionBits);
-			const Vec3 rayStart = m_RayStart + m_RayDir*(i*ray_segment_length);
-			dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+			const int segments = int (m_RayLength/m_SegmentLength);
+			double last_ray_length =  m_RayLength - segments * m_SegmentLength;
 
 			m_Result->Coll = false;
 			m_Result->CollDist = 0;
-			dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
-			dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
-			if(m_Result->Coll == true)
+
+			for(int i=0 ; i < segments; i++)
 			{
-				dGeomDestroy(ray);
-				m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
-				return;
+				m_Result->Coll = false;
+				m_Result->CollDist = 0;
+				const Vec3 rayStart = m_RayStart + m_RayDir*(i*m_SegmentLength);
+				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
+				if(m_Result->Coll == true)
+				{
+					dGeomDestroy(ray);
+					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					return;
+				}
+			}
+			if(last_ray_length > 0)
+			{
+				m_Result->Coll = false;
+				m_Result->CollDist = 0;
+				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*m_SegmentLength);
+				dGeomRaySetLength(ray,last_ray_length);
+				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
+				if(m_Result->Coll == true)
+				{
+					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+				}
 			}
 			dGeomDestroy(ray);
 		}
-		if(last_ray_length > 0)
+		else
 		{
-			dGeomID ray = dCreateRay (0, last_ray_length);
-			dGeomSetCollideBits (ray,m_Request->CollisionBits);
-			dGeomSetCategoryBits(ray,m_Request->CollisionBits);
-			const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment_length);
-			dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
-
-			
+			m_RayGeom = dCreateRay (0, m_RayLength);
+			dGeomSetCollideBits (m_RayGeom,m_Request->CollisionBits);
+			dGeomSetCategoryBits(m_RayGeom,m_Request->CollisionBits);
+			dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+			assert(m_Result);
+			m_Result->Coll = false;
+			m_Result->CollDist = 0;
 			dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
-			dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
+			dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
 			if(m_Result->Coll == true)
 			{
-				m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+				m_Result->CollPosition = m_RayStart + m_RayDir*m_Result->CollDist;
 			}
-			dGeomDestroy(ray);
+			dGeomDestroy(m_RayGeom);
 		}
-
-		/*m_RayGeom = dCreateRay (0, m_RayLength);
-		dGeomSetCollideBits (m_RayGeom,m_Request->CollisionBits);
-		dGeomSetCategoryBits(m_RayGeom,m_Request->CollisionBits);
-		dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
-		assert(m_Result);
-		m_Result->Coll = false;
-		m_Result->CollDist = 0;
-		dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
-		dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
-		if(m_Result->Coll == true)
-		{
-			m_Result->CollPosition = m_RayStart + m_RayDir*m_Result->CollDist;
-		}
-		dGeomDestroy(m_RayGeom);*/
 	}
 
 	void ODELineCollision::Callback(void *data, dGeomID o1, dGeomID o2)

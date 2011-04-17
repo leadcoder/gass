@@ -154,6 +154,8 @@ namespace GASS
 			center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
 			center_position.y = 0;
 			dGeomSetPosition(geom_id, center_position.x, center_position.y, center_position.z);
+
+			//Log::Print("Terrain  pos:%f %f %f",center_position.x, center_position.y, center_position.z);
 			//m_Offset = center_position;
 			//dGeomSetPosition(geom_id,center_position.x,center_position.y,center_position.z);
 		}
@@ -172,7 +174,11 @@ namespace GASS
 	{
 		Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
-		return m_TerrainGeom->GetHeight(world_x,world_z);
+		Float h = m_TerrainGeom->GetHeight(world_x,world_z);
+		//std::cout << "hpos:" << world_x << world_z << "\n";
+		//std::cout << "height:" << h << "\n";
+		return h;
+		
 	}
 
 	long int ODETerrainGeometryComponent::GetCollisionBits() const 

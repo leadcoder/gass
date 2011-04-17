@@ -32,7 +32,7 @@ namespace GASS
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
-		m_RayPickDistance(2000)
+		m_RayPickDistance(3000)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));
@@ -191,12 +191,12 @@ namespace GASS
 				MessagePtr tool_msg(new ToolChangedMessage("RotateTool",id));
 				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
 			}
-			/*else if(name == "PaintTool")
+			else if(name == "PaintTool")
 			{
 			int id = (int) this;
 			MessagePtr tool_msg(new ToolChangedMessage("PaintTool",id));
 			EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}*/
+			}
 		}
 	}
 
@@ -663,12 +663,12 @@ namespace GASS
 
 		//debug message
 
-		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
-		}*/
+		}
 	}
 }
 

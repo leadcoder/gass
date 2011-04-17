@@ -51,13 +51,10 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		
-
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
 		long int GetCollisionBits() const;
@@ -71,7 +68,6 @@ namespace GASS
 		dSpaceID GetSpace();
 		dGeomID CreateTerrain();
 		TerrainComponentPtr GetTerrainComponent() const;
-
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:

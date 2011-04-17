@@ -46,7 +46,8 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		
-
+		
+		
 		std::string GetFilename()const {return m_TerrainName;}
 		
 		virtual Float GetSizeX(){return m_WorldWidth;}
@@ -68,6 +69,7 @@ namespace GASS
 		Sphere GetBoundingSphere() const;
 		float* GetHeightData() {return NULL;}
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
+		int GetImportTerrainSize() const;
 	protected:
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
@@ -78,7 +80,7 @@ namespace GASS
 		std::string GetLoadTerrain() const;
 		float GetImportScale() const;
 		void SetImportScale(const float &value);
-		int GetImportTerrainSize() const;
+		
 		void SetImportTerrainSize(const int &value);
 		Float GetImportTerrainWorldSize() const;
 		void SetImportTerrainWorldSize(const Float &value);

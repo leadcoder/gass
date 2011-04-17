@@ -7,6 +7,8 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 
 namespace GASS
@@ -36,6 +38,12 @@ namespace GASS
 			rot_msg->SetData("Rotation",Quaternion(new_rot));
 			m_SelectedObject->GetMessageManager()->SendImmediate(rot_msg);*/
 		}
+		SceneObjectPtr gizmo = GetMasterGizmo();
+		if(gizmo)
+		{
+			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(info.m_3DPos,from_id));
+			gizmo->PostMessage(pos_msg);
+		}
 	}
 
 	void PaintTool::MouseDown(const CursorInfo &info)
@@ -49,13 +57,90 @@ namespace GASS
 
 	}
 
-	void PaintTool::Start()
-	{
-
-	}
-
 	void PaintTool::Stop()
 	{
+		SetGizmoVisiblity(false);
+		m_Active = false;
+	}
 
+	void PaintTool::Start() 
+	{
+		SetGizmoVisiblity(true);
+		m_Active = true;
+	}
+
+	SceneObjectPtr PaintTool::GetMasterGizmo()
+	{
+		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
+		if(!gizmo &&  m_Controller->GetScene())
+		{
+			ScenarioScenePtr scene = m_Controller->GetScene();
+			std::string gizmo_name = "PaintGizmo";
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			m_MasterGizmoObject = scene_object;
+			gizmo = scene_object;
+
+			//Send selection message to inform gizmo about current object
+			if(gizmo)
+			{
+				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
+				if(current)
+				{
+					MessagePtr selection_msg(new ObjectSelectedMessage(current,(int) this));
+					EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
+				}
+			}
+		}
+		return gizmo;
+	}
+
+	void PaintTool::SetGizmoVisiblity(bool value)
+	{
+		SceneObjectPtr gizmo = GetMasterGizmo();
+		if(gizmo)
+		{
+			int from_id = (int) this;
+			MessagePtr col_msg(new GASS::CollisionSettingsMessage(value,from_id));
+			SendMessageRec(gizmo,col_msg);
+			MessagePtr vis_msg(new GASS::VisibilityMessage(value,from_id));
+			SendMessageRec(gizmo,vis_msg);
+		}
+	}
+
+	void PaintTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	{
+		if(m_Active)
+		{
+			//hide gizmo
+			if(message->GetSceneObject())
+			{
+				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				if(lc) //only support gizmo for objects with location component
+				{
+					SetGizmoVisiblity(true);
+				}
+				else
+				{
+					SetGizmoVisiblity(false);
+				}
+			}
+			else
+			{
+				SetGizmoVisiblity(false);
+			}
+		}
+		m_SelectedObject = message->GetSceneObject();
+	}
+
+
+	void PaintTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
+	{
+		obj->PostMessage(msg);
+		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			SendMessageRec(child,msg);
+		}
 	}
 }

@@ -82,7 +82,7 @@ namespace GASS
 				if(request.Type == COL_LINE)
 				{
 					CollisionResult result;
-					ODELineCollision raycast(&request,&result,ode_scene);
+					ODELineCollision raycast(&request,&result,ode_scene,300);
 					raycast.Process();
 					resultMap[handle] = result;
 				}
