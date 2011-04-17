@@ -150,7 +150,7 @@ namespace GASS
 				dJointDestroy(m_ODEJoint);
 
 			m_ODEJoint = dJointCreateHinge2(world, 0);
-			GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
+			//GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
 
 			dJointAttach(m_ODEJoint, b1,b2);
 			UpdateAnchor();

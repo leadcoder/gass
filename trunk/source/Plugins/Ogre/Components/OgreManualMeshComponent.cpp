@@ -251,9 +251,13 @@ namespace GASS
 	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		
+		if(!m_MeshObject->getSection(0))
+			return;
 		if(!m_UniqueMaterialCreated) 
 		{
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+			if(mat.isNull()) 
+				return;
 			std::string mat_name = m_MeshObject->getName() + mat->getName();
 			mat = mat->clone(mat_name);
 			m_MeshObject->getSection(0)->setMaterialName(mat_name);
@@ -265,6 +269,9 @@ namespace GASS
 		Vec3 specular = message->GetSpecular();
 		Vec3 si = message->GetSelfIllumination();
 		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
+		if(mat.isNull()) 
+				return;
+			
 		
 		if(diffuse.w >= 0)
 			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);

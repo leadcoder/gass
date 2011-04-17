@@ -58,6 +58,11 @@ namespace GASS
 		Float SnapPosition(Float value);
 		Float SnapAngle(Float value);
 		void Update();
+		
+		void NextTool();
+		void PrevTool();
+
+
 	private:
 		void RequestScenePosition();
 		bool CheckScenePosition();

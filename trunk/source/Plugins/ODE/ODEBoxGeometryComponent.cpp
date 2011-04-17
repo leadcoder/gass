@@ -165,7 +165,7 @@ namespace GASS
 
 		//Vec3 pos  = m_Offset + offset;
 		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(pos);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
+		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));
 	}
 
 	void ODEBoxGeometryComponent::UpdateDebug()

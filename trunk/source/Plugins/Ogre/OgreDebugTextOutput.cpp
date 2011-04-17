@@ -104,7 +104,7 @@ namespace GASS
 			m_Panel->setPosition(0, 0);
 			m_Overlay->add2D(m_Panel);
 			m_Overlay->show();
-			AddTextBox("DebugPrint", "Hello", 10, 10, 100, 20);
+			AddTextBox("DebugPrint", "Hello", 10, 50, 100, 20);
 		}
 
 		int line = 0;

@@ -137,7 +137,7 @@ namespace GASS
 		UpdateBodyMass();
 		SetCollisionBits(m_CollisionBits);
 		SetCollisionCategory(m_CollisionCategory);
-
+		SetOffset(m_Offset);
 	}
 	
 	void ODEBaseGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)

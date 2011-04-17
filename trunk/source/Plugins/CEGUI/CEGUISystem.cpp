@@ -32,6 +32,7 @@ int mytest();
 
 
 #include "RendererModules/Ogre/CEGUIOgreRenderer.h"
+#include "RendererModules/OpenGL/CEGUIOpenGLRenderer.h"
 
 //int tolua_LuaTest_open (lua_State* L);
 //int GASS_SWIG_init(lua_State* L);
@@ -68,6 +69,7 @@ namespace GASS
 	{
 		// initialise GUI system using the new automagic function
 		CEGUI::OgreRenderer* d_renderer = &CEGUI::OgreRenderer::bootstrapSystem();
+		//CEGUI::OpenGLRenderer* d_renderer = &CEGUI::OpenGLRenderer::bootstrapSystem();
 
 	    //create a script module.
         CEGUI::LuaScriptModule& scriptmod(CEGUI::LuaScriptModule::create());

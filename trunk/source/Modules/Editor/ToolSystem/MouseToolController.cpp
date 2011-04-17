@@ -164,6 +164,14 @@ namespace GASS
 			{
 				m_CursorInfo.m_Delta.y = value;
 			}
+			else if(name == "ChangeTool")
+			{
+				//std::cout << value << "\n";
+				if(value > 0.5) 
+					NextTool();
+				else if(value < -0.5) 
+					PrevTool();
+			}
 			//temp solution, implement this in custom tool selection class
 			else if(name == "MoveTool")
 			{
@@ -212,6 +220,49 @@ namespace GASS
 			}
 		}
 		return false;
+	}
+
+
+	void MouseToolController::NextTool()
+	{
+		if(m_ActiveTool)
+		{
+			for(int i = 0; i < m_Tools.size(); i++)
+			{
+				if(m_ActiveTool == m_Tools[i])
+				{
+					int new_tool = i+1;
+					if(new_tool > m_Tools.size()-1)
+						new_tool = 0;
+					int id = (int) this;
+					MessagePtr tool_msg(new ToolChangedMessage(m_Tools[new_tool]->GetName(),id));
+					EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
+					return;
+				}
+			}
+		}
+	}
+
+	void MouseToolController::PrevTool()
+	{
+		if(m_ActiveTool)
+		{
+			for(int i = 0; i < m_Tools.size(); i++)
+			{
+				if(m_ActiveTool == m_Tools[i])
+				{
+					int new_tool = i-1;
+					if(new_tool < 0)
+						new_tool = m_Tools.size()-1;
+
+					int id = (int) this;
+					MessagePtr tool_msg(new ToolChangedMessage(m_Tools[new_tool]->GetName(),id));
+					EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
+
+					return;
+				}
+			}
+		}
 	}
 
 
