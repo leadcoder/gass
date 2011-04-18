@@ -37,11 +37,10 @@ EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(Paint
 				TerrainComponentPtr terrain = selected->GetFirstComponent<ITerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,6)));
+					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,116, 90,1.0)));
 				}
 			}
 
-			
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
 			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(paint_msg);
 			/*int from_id = (int) this;

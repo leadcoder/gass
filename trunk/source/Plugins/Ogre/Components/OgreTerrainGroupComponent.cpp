@@ -454,35 +454,47 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::OnTerrainHeightModify(TerrainHeightModifyMessagePtr message)
 	{
-		float mBrushSizeTerrainSpace = 0.02;
+		//float mBrushSizeTerrainSpace = 0.02;
 		// figure out which terrains this affects
 		Ogre::TerrainGroup::TerrainList terrainList;
-		Ogre::Real brushSizeWorldSpace = m_TerrainGroup->getTerrainWorldSize()* mBrushSizeTerrainSpace;
+		Ogre::Real brush_size = message->GetBrushSize();
+		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5;
+		if(inner_radius > brush_size*0.5)
+			inner_radius = brush_size*0.5;
 		Ogre::Vector3 position = Convert::ToOgre(message->GetPosition());
-		float delta = 1.0/50.0;
-		Ogre::Sphere sphere(position, brushSizeWorldSpace);
+		float intensity = message->GetIntensity();
+		Ogre::Sphere sphere(position, brush_size);
 		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 
+		/*for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+			DeformTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());*/
+
+
+		Ogre::Real avg_height = 0;
 		for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-			DoTerrainModify(*ti, position, delta,mBrushSizeTerrainSpace);
+			GetAverageHeight(*ti, position,brush_size/m_TerrainGroup->getTerrainWorldSize(),avg_height);
+		
+		for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+			SmoothTerrain(*ti, position, intensity ,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(),avg_height);
 		m_TerrainGroup->update();
 	}
 
-	void OgreTerrainGroupComponent::DoTerrainModify(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size)
+	void OgreTerrainGroupComponent::DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius)
 	{
 		Ogre::Vector3 tsPos;
 		terrain->getTerrainPosition(centrepos, &tsPos);
 //#if OGRE_PLATFORM != OGRE_PLATFORM_IPHONE
 		// we need point coords
 		Ogre::Real terrainSize = (terrain->getSize() - 1);
-		long startx = (tsPos.x - brush_size) * terrainSize;
-		long starty = (tsPos.y - brush_size) * terrainSize;
-		long endx = (tsPos.x + brush_size) * terrainSize;
-		long endy= (tsPos.y + brush_size) * terrainSize;
+		long startx = (tsPos.x - brush_size_terrain_space) * terrainSize;
+		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
+		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
+		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
 		startx = std::max(startx, 0L);
 		starty = std::max(starty, 0L);
 		endx = std::min(endx, (long)terrainSize);
 		endy = std::min(endy, (long)terrainSize);
+		//Ogre::Real inner_radius = brush_size_terrain_space*0.5*0.7;
 		for (long y = starty; y <= endy; ++y)
 		{
 			for (long x = startx; x <= endx; ++x)
@@ -491,20 +503,88 @@ namespace GASS
 				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
 
 				Ogre::Real weight = std::min((Ogre::Real)1.0, 
-					Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist) / Ogre::Real(0.5 * brush_size));
+					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
+				if( weight < 0) weight = 0;
 				weight = 1.0 - (weight * weight);
 
-				float addedHeight = weight * 250.0 * timeElapsed;
+				float addedHeight = weight * timeElapsed;
 				float newheight;
 				//if (mKeyboard->isKeyDown(OIS::KC_EQUALS))
-					newheight = terrain->getHeightAtPoint(x, y) + addedHeight;
+				newheight = terrain->getHeightAtPoint(x, y) + addedHeight;
 				//else
 				//	newheight = terrain->getHeightAtPoint(x, y) - addedHeight;
 				terrain->setHeightAtPoint(x, y, newheight);
-
 			}
 		}
 		//if (mHeightUpdateCountDown == 0)
 		//	mHeightUpdateCountDown = mHeightUpdateRate;
+	}
+
+
+	void OgreTerrainGroupComponent::GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height)
+	{
+		Ogre::Vector3 tsPos;
+		terrain->getTerrainPosition(centrepos, &tsPos);
+
+		Ogre::Real terrainSize = (terrain->getSize() - 1);
+		long startx = (tsPos.x - brush_size_terrain_space) * terrainSize;
+		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
+		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
+		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
+		startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)terrainSize);
+		endy = std::min(endy, (long)terrainSize);
+		
+		long count = 0;
+		for (long y = starty; y <= endy; ++y)
+		{
+			for (long x = startx; x <= endx; ++x)
+			{
+				count++;
+				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
+				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
+				avg_height += terrain->getHeightAtPoint(x, y);
+			}
+		}
+		avg_height = avg_height/Ogre::Real(count);
+
+		        
+	}
+
+
+	void OgreTerrainGroupComponent::SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height)
+	{
+		Ogre::Vector3 tsPos;
+		terrain->getTerrainPosition(centrepos, &tsPos);
+		const Ogre::Real terrainSize = (terrain->getSize() - 1);
+		long startx = (tsPos.x - brush_size_terrain_space) * terrainSize;
+		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
+		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
+		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
+		startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)terrainSize);
+		endy = std::min(endy, (long)terrainSize);
+		
+		for (long y = starty; y <= endy; ++y)
+		{
+			for (long x = startx; x <= endx; ++x)
+			{
+				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
+				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
+
+				Ogre::Real weight = std::min((Ogre::Real)1.0, 
+					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
+				if( weight < 0) weight = 0;
+				weight = 1.0 - (weight * weight);
+				
+				float height = terrain->getHeightAtPoint(x, y);
+				float newheight = average_height - height;
+                newheight = newheight * weight * intensity;
+				terrain->setHeightAtPoint(x, y, height + newheight);
+			}
+		}
+		
 	}
 }

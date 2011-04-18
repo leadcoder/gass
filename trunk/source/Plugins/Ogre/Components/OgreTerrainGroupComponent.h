@@ -93,8 +93,10 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
-		void DoTerrainModify(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size);
-			
+		void DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius);
+		void GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height);
+		void SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height);
+	
 		
 		Vec3 m_Scale;
 		bool m_Center;
