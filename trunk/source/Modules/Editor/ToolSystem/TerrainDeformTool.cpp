@@ -1,6 +1,7 @@
-#include "PaintTool.h"
+#include "TerrainDeformTool.h"
 #include "MouseToolController.h"
 #include "../EditorManager.h"
+#include "../Components/PaintGizmoComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -10,23 +11,33 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/Input/ControlSettingsManager.h"
+#include "Sim/Systems/Input/ControlSetting.h"
 
 
 namespace GASS
 {
 
-	PaintTool::PaintTool(MouseToolController* controller): m_MouseIsDown(false),
-		m_Controller(controller)
+	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),
+		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
+
+		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("EditorInputSettings");
+		if(cs)
+		{
+			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllerMessage,0));
+		}
+		
 	}
 
-	PaintTool::~PaintTool()
+	TerrainDeformTool::~TerrainDeformTool()
 	{
 
 	}
 
-	void PaintTool::MoveTo(const CursorInfo &info)
+	void TerrainDeformTool::MoveTo(const CursorInfo &info)
 	{
 		int from_id = (int) this;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -37,10 +48,9 @@ namespace GASS
 				TerrainComponentPtr terrain = selected->GetFirstComponent<ITerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,116, 90,1.0)));
+					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity)));
 				}
 			}
-
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
 			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(paint_msg);
 			/*int from_id = (int) this;
@@ -56,29 +66,29 @@ namespace GASS
 		}
 	}
 
-	void PaintTool::MouseDown(const CursorInfo &info)
+	void TerrainDeformTool::MouseDown(const CursorInfo &info)
 	{
 		m_MouseIsDown = true;
 	}
 
-	void PaintTool::MouseUp(const CursorInfo &info)
+	void TerrainDeformTool::MouseUp(const CursorInfo &info)
 	{
 		m_MouseIsDown = false;
 	}
 
-	void PaintTool::Stop()
+	void TerrainDeformTool::Stop()
 	{
 		SetGizmoVisiblity(false);
 		m_Active = false;
 	}
 
-	void PaintTool::Start() 
+	void TerrainDeformTool::Start() 
 	{
 		SetGizmoVisiblity(true);
 		m_Active = true;
 	}
 
-	SceneObjectPtr PaintTool::GetMasterGizmo()
+	SceneObjectPtr TerrainDeformTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
 		if(!gizmo &&  m_Controller->GetScene())
@@ -103,7 +113,7 @@ namespace GASS
 		return gizmo;
 	}
 
-	void PaintTool::SetGizmoVisiblity(bool value)
+	void TerrainDeformTool::SetGizmoVisiblity(bool value)
 	{
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
@@ -116,7 +126,7 @@ namespace GASS
 		}
 	}
 
-	void PaintTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
 	{
 		if(m_Active)
 		{
@@ -142,7 +152,7 @@ namespace GASS
 	}
 
 
-	void PaintTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
+	void TerrainDeformTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
 	{
 		obj->PostMessage(msg);
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
@@ -150,6 +160,31 @@ namespace GASS
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
+		}
+	}
+
+	void TerrainDeformTool::OnInput(ControllerMessagePtr message)
+	{
+		if(m_Active)
+		{
+			std::string name = message->GetController();
+			float value = message->GetValue();
+			if(name == "ChangeBrushSize")
+			{
+				//std::cout << value << "\n";
+				if(value > 0.5) 
+					m_BrushSize++;
+				else if(value < -0.5) 
+					m_BrushSize--;
+
+				SceneObjectPtr gizmo = GetMasterGizmo();
+				if(gizmo)
+				{
+					PaintGizmoComponentPtr comp = gizmo->GetFirstComponent<PaintGizmoComponent>();
+					comp->SetSize(m_BrushSize);
+					comp->BuildMesh();
+				}
+			}
 		}
 	}
 }
