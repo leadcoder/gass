@@ -6,7 +6,7 @@
 
 namespace GASS
 {
-	class PaintGizmoComponent : public Reflection<PaintGizmoComponent,BaseSceneComponent>
+	class EditorModuleExport PaintGizmoComponent : public Reflection<PaintGizmoComponent,BaseSceneComponent>
 	{
 	public:
 		PaintGizmoComponent();

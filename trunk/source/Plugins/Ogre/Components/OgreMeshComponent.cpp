@@ -103,8 +103,11 @@ namespace GASS
 
 	void OgreMeshComponent::SetFilename(const std::string &filename) 
 	{
-		m_Filename = filename;
-		if(m_ReadyToLoadMesh)
+		//remove path
+		m_Filename = FilePath(filename).GetFilename();
+
+
+		if(m_Filename != "" && m_ReadyToLoadMesh)
 		{
 			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
 			if(m_OgreEntity) //release previous mesh
@@ -122,24 +125,9 @@ namespace GASS
 			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
 			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
 			//LoadLightmap();
-			if(m_CastShadow)
-			{
-				m_OgreEntity->setCastShadows(true);
-				//??
-			}
-			else
-			{
-				m_OgreEntity->setCastShadows(false);
-			}
+			SetCastShadow(m_CastShadow);
+			SetRenderQueue(m_RenderQueue);
 
-			if(m_RenderQueue == "SkiesLate")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-			}
-			else if(m_RenderQueue == "SkiesEarly")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-			}
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
@@ -181,7 +169,8 @@ namespace GASS
 
 	Ogre::Bone* OgreMeshComponent::GetClosestBone(const Vec3 &pos)
 	{
-		assert(m_OgreEntity);
+		if(!m_OgreEntity)
+			return NULL;
 		Ogre::Bone* bone = NULL;
 		float min_dist = 0;
 		if(m_OgreEntity->hasSkeleton())
@@ -208,24 +197,32 @@ namespace GASS
 
 	bool OgreMeshComponent::HasSkeleton() const
 	{
-		assert(m_OgreEntity);
-		return m_OgreEntity->hasSkeleton();
+		if(m_OgreEntity)
+			return m_OgreEntity->hasSkeleton();
+		else
+			return false;
 	}
 
 	AABox OgreMeshComponent::GetBoundingBox() const
 	{
-		assert(m_OgreEntity);
-		return Convert::ToGASS(m_OgreEntity->getBoundingBox());
+		if(m_OgreEntity)
+			return Convert::ToGASS(m_OgreEntity->getBoundingBox());
+		else
+			return AABox(Vec3(-1,-1,-1),Vec3(1,1,1));
 	}
 
 
 	Sphere OgreMeshComponent::GetBoundingSphere() const
 	{
-		Sphere sphere;
-		assert(m_OgreEntity);
-		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = m_OgreEntity->getBoundingRadius();
-		return sphere;
+		if(m_OgreEntity)
+		{
+			Sphere sphere;
+			sphere.m_Pos = Vec3(0,0,0);
+			sphere.m_Radius = m_OgreEntity->getBoundingRadius();
+			return sphere;
+		}
+		else
+			return Sphere(Vec3(0,0,0),1);
 	}
 
 
@@ -349,6 +346,9 @@ namespace GASS
 
 	void OgreMeshComponent::SetTexCoordSpeed(const Vec2 &speed)
 	{
+		if(!m_OgreEntity)
+			return;
+
 		if(!m_UniqueMaterialCreated) //material clone hack to only set texcoord scroll speed for this mesh
 		{
 			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
@@ -410,6 +410,9 @@ namespace GASS
 	void OgreMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 
+		if(!m_OgreEntity)
+			return;
+
 
 		if(!m_UniqueMaterialCreated) 
 		{
@@ -455,6 +458,103 @@ namespace GASS
 			}
 		}
 	}
+
+
+	void OgreMeshComponent::SetCastShadow(bool castShadow) 
+	{
+		m_CastShadow = castShadow;
+		if(m_OgreEntity)
+			m_OgreEntity->setCastShadows(m_CastShadow);
+	}
+
+
+	void OgreMeshComponent::SetRenderQueue(const std::string &rq) 
+	{
+
+		/*RENDER_QUEUE_BACKGROUND = 0,
+		/// First queue (after backgrounds), used for skyboxes if rendered first
+		RENDER_QUEUE_SKIES_EARLY = 5,
+		RENDER_QUEUE_1 = 10,
+		RENDER_QUEUE_2 = 20,
+		RENDER_QUEUE_WORLD_GEOMETRY_1 = 25,
+		RENDER_QUEUE_3 = 30,
+		RENDER_QUEUE_4 = 40,
+		/// The default render queue
+		RENDER_QUEUE_MAIN = 50,
+		RENDER_QUEUE_6 = 60,
+		RENDER_QUEUE_7 = 70,
+		RENDER_QUEUE_WORLD_GEOMETRY_2 = 75,
+		RENDER_QUEUE_8 = 80,
+		RENDER_QUEUE_9 = 90,
+		/// Penultimate queue(before overlays), used for skyboxes if rendered last
+		RENDER_QUEUE_SKIES_LATE = 95,
+		/// Use this queue for objects which must be rendered last e.g. overlays
+		RENDER_QUEUE_OVERLAY = 100, 
+		/// Final possible render queue, don't exceed this
+		RENDER_QUEUE_MAX = 105*/
+
+		m_RenderQueue = rq;
+		if(m_OgreEntity)
+		{
+			if(m_RenderQueue == "RENDER_QUEUE_BACKGROUND")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_SKIES_EARLY")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_1")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_1);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_WORLD_GEOMETRY_1")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_3")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_3);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_4")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_4);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_MAIN")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_6")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_6);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_7")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_7);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_WORLD_GEOMETRY_2")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_2);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_8")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_8);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_9")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_9);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_SKIES_LATE")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
+			}
+			else if(m_RenderQueue == "RENDER_QUEUE_OVERLAY")
+			{
+				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY);
+			}
+		}
+	}
+
 
 	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
 	{

@@ -124,7 +124,7 @@ namespace GASS
 			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
 			if(request.Type == COL_LINE)
 			{
-				ODELineCollision raycast(&request,&result,ode_scene);
+				ODELineCollision raycast(&request,&result,ode_scene,300);
 				raycast.Process();
 			}
 		}

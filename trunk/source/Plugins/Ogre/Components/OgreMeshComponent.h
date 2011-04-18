@@ -54,10 +54,10 @@ namespace GASS
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
-		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
+		void SetRenderQueue(const std::string &rq);
 		void SetFilename(const std::string &filename);
 		bool GetCastShadow()const {return m_CastShadow;}
-		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
+		void SetCastShadow(bool castShadow);
 
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
