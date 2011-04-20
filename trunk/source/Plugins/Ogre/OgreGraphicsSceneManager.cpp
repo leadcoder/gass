@@ -164,8 +164,8 @@ namespace GASS
 		//don't save this object
 		scene_object->SetSerialize(false);
 		//SceneObject* scene_object = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("FreeCameraObject");
-		//OgreCameraComponent* cam_comp = scene_object->GetFirstComponent<OgreCameraComponent>();
-		//OgreLocationComponent* loc_comp = scene_object->GetFirstComponent<OgreLocationComponent>();
+		//OgreCameraComponent* cam_comp = scene_object->GetFirstComponentByClass<OgreCameraComponent>();
+		//OgreLocationComponent* loc_comp = scene_object->GetFirstComponentByClass<OgreLocationComponent>();
 		//loc_comp->SetPosition(GetOwner()->GetStartPos());
 		//loc_comp->SetEulerRotation(GetOwner()->GetStartRot());
 		//m_Scene->GetObjectManager()->LoadObject(scene_object);
@@ -194,7 +194,7 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
-		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponent<OgreCameraComponent>();
+		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
 		OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
 
 		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);

@@ -99,7 +99,7 @@ namespace GASS
 		{
 			geom = boost::shared_dynamic_cast<ITerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+		else geom = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
 		return geom;
 	}
 

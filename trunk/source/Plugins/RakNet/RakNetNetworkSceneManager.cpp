@@ -91,7 +91,7 @@ namespace GASS
 		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
 		if(so)
 		{
-			RakNetNetworkComponentPtr comp = so->GetFirstComponent<RakNetNetworkComponent>();
+			RakNetNetworkComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkComponent>();
 			comp->SetReplica(replica);
 			GetScenarioScene()->GetObjectManager()->LoadObject(so);
 		}
@@ -104,7 +104,7 @@ namespace GASS
 		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
 		if(so)
 		{
-			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponent<RakNetNetworkMasterComponent>();
+			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
 
 
@@ -120,7 +120,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id)
 	{
-		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkChildComponent>();
+		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();

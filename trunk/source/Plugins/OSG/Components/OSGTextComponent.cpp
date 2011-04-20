@@ -117,7 +117,7 @@ namespace GASS
 		m_OSGGeode = new osg::Geode;
 		m_OSGGeode->addDrawable(m_OSGText.get());
     
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGGeode.get());
 
 		m_OSGGeode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & m_OSGGeode->getNodeMask());

@@ -84,12 +84,11 @@ namespace GASS
 		m_DriveWheelName = wheel;
 		if(m_Initialized)
 		{
-			SceneObjectVector objects;
-			GetSceneObject()->GetObjectUnderRoot()->GetObjectsByName(objects,m_DriveWheelName,false);
-			if(objects.size() > 0)
+			SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_DriveWheelName,false);
+			if(obj)
 			{
-				m_DriveWheel = (objects.front());
-				objects.front()->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
+				m_DriveWheel = obj;
+				obj->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
 			}
 		}
 	}

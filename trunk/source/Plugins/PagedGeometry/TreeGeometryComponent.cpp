@@ -131,7 +131,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
 			if(terrain)
 			{
 				Vec3 bmin,bmax;
@@ -188,7 +188,7 @@ namespace GASS
 		if(m_DensityMapFilename != "")
 			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 
-		//TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponent<ITerrainComponent>();
+		//TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
 		//m_Terrain = terrain.get();
 		/*Image shadowMap;
 		int shadow_size = 4096;

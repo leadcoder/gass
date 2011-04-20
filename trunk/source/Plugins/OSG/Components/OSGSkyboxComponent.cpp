@@ -115,7 +115,7 @@ namespace GASS
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());*/
 
 	}
@@ -244,7 +244,7 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(cam_obj)
 		{
-			LocationComponentPtr lc = cam_obj->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr lc = cam_obj->GetFirstComponentByClass<ILocationComponent>();
 			if(lc)
 			{
 				pos = lc->GetWorldPosition();

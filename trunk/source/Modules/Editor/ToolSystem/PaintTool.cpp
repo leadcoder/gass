@@ -34,10 +34,10 @@ namespace GASS
 		{
 			if(selected)
 			{
-				TerrainComponentPtr terrain = selected->GetFirstComponent<ITerrainComponent>();
+				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,116, 90,1.0)));
+					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
 				}
 			}
 
@@ -123,7 +123,7 @@ namespace GASS
 			//hide gizmo
 			if(message->GetSceneObject())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
 				{
 					SetGizmoVisiblity(true);

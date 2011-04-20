@@ -114,27 +114,15 @@ namespace GASS
 	{
 		
 
-		SceneObjectVector objs = GetSceneObject()->GetObjectsByName("FireSound1Fp",false);
-		if(objs.size() >0)
-		{
-			m_FireSound1Fp = objs.front();
-		}
-
-		objs = GetSceneObject()->GetObjectsByName("FireSound3Fp",false);
-		if(objs.size() >0)
-		{
-			m_FireSound3Fp = objs.front();
-			
-		}
-
+		
+		m_FireSound1Fp = GetSceneObject()->GetFirstChildByName("FireSound1Fp",false);
+		m_FireSound3Fp = GetSceneObject()->GetFirstChildByName("FireSound3Fp",false);
+		
 		if(!m_FireSound1Fp)
 		{
-			objs = GetSceneObject()->GetObjectsByName("FireSound",false);
-			if(objs.size() >0)
-			{
-				m_FireSound1Fp = objs.front();
-				m_FireSound3Fp = objs.front();
-			}
+			m_FireSound1Fp = GetSceneObject()->GetFirstChildByName("FireSound",false);
+			m_FireSound3Fp = m_FireSound1Fp;
+			
 		}
 
 		m_CurrentMagSize = m_MagazineSize;

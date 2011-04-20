@@ -105,7 +105,7 @@ namespace GASS
 
 		m_DynLines->setMaterial(m_MaterialName);
 
-		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
+		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 
 		lc->GetOgreNode()->attachObject(m_DynLines);
 

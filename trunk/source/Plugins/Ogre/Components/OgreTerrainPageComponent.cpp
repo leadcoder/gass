@@ -149,10 +149,10 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
-		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 
 		if(!terrain_man) //try parent
-			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(terrain_man)
 		{
 			m_TerrainGroup = terrain_man->GetTerrainGroup();
@@ -473,9 +473,9 @@ namespace GASS
 
 	unsigned int OgreTerrainPageComponent::GetSamplesX()
 	{
-		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(!terrain_man) //try parent
-			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(terrain_man) //try parent
 			return terrain_man->GetImportTerrainSize();
 		else return 0;
@@ -483,9 +483,9 @@ namespace GASS
 
 	unsigned int OgreTerrainPageComponent::GetSamplesZ()
 	{
-		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(!terrain_man) //try parent
-			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<OgreTerrainGroupComponent>();
+			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(terrain_man) //try parent
 			return terrain_man->GetImportTerrainSize();
 

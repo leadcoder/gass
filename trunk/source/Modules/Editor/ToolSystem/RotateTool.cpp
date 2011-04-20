@@ -38,7 +38,7 @@ namespace GASS
 			SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
 			if(gizmo)
 			{
-				GizmoComponentPtr gc = gizmo->GetFirstComponent<GizmoComponent>();
+				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				Float rotation_rad_step = (info.m_Delta.x + info.m_Delta.y)*0.1;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;
@@ -82,7 +82,7 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 		{
-			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponent<GizmoComponent>();
+			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 			if(gc)
 			{
 				m_CurrentGizmo = obj_under_cursor;
@@ -137,7 +137,7 @@ namespace GASS
 				{
 					if(!m_Controller->IsObjectLocked(obj_under_cursor))
 					{
-						GizmoComponentPtr gc = obj_under_cursor->GetFirstComponent<GizmoComponent>();
+						GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 						//Send selection message
 						if(!gc) //don't select gizmo objects
 						{
@@ -212,7 +212,7 @@ namespace GASS
 			//hide gizmo
 			if(message->GetSceneObject())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
 				{
 					SetGizmoVisiblity(true);

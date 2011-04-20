@@ -214,7 +214,7 @@ namespace GASS
 	void SkyXVolumeCloudComponent::Load()
 	{
 		//Get Skyx component
-		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponent<SkyXComponent>();
+		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
 		if(skyx)
 		{
 			skyx->GetSkyX()->getVCloudsManager()->remove();

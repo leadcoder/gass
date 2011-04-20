@@ -230,7 +230,7 @@ namespace GASS
 			//Check if parent has physics
 		}
 
-		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);

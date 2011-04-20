@@ -153,7 +153,7 @@ namespace GASS
 				//check that we differ from input source, we dont want to duplicate our own input 
 				if(input_source != raknet->GetRakPeer()->GetInternalID())
 				{
-					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponent<RakNetInputTransferComponent>();	
+					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponentByClass<RakNetInputTransferComponent>();	
 					//std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
 					//int id = 8888;
 					input_comp->ReceivedInput(controller,value);

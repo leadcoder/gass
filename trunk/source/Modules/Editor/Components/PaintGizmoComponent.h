@@ -13,17 +13,18 @@ namespace GASS
 		virtual ~PaintGizmoComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		
+		void SetSize(float value){m_Size =value;}
+			void BuildMesh();
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 	private:
-		void BuildMesh();
+	
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
 		void OnLoad(LoadCoreComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetSize() const{return m_Size;}
-		void SetSize(float value){m_Size =value;}
+		
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);

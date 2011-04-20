@@ -173,7 +173,7 @@ namespace GASS
 		SceneObjectPtr scene_object = GetDebugObject();
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		scene_object->PostMessage(mesh_message);
-		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(offset);
+		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
 	}
 

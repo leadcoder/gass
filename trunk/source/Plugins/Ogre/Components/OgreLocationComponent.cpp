@@ -349,7 +349,7 @@ namespace GASS
 		SceneObjectPtr scene_obj  = boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent());
 		while(scene_obj && !parent_location)
 		{
-			parent_location  = scene_obj->GetFirstComponent<OgreLocationComponent>();
+			parent_location  = scene_obj->GetFirstComponentByClass<OgreLocationComponent>();
 			if(parent_location)
 				return parent_location;
 			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());

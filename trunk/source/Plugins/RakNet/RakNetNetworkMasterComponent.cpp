@@ -96,7 +96,7 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::GeneratePartID(SceneObjectPtr obj, int &id)
 	{
-		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponent<RakNetNetworkChildComponent>();
+		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();

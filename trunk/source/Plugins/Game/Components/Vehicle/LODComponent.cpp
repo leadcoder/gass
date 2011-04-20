@@ -69,17 +69,17 @@ namespace GASS
 	{
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		//get active camera
-		SceneObjectVector objects = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetObjectsByName("FreeCamera",false);
-		if(objects.size() == 0)
+		
+		SceneObjectPtr camera = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstChildByName("FreeCamera",false);
+		m_ActiveCameraObject = camera;
+		if(!camera)
 		{
 			Log::Warning("Failed to find free camera for LODComponent");
 		}
-		else
-			m_ActiveCameraObject = objects.front();
-		SceneObjectPtr cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
-		if(cam)
+		
+		if(camera)
 		{
-			cam->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage,0));
+			camera->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage,0));
 		}
 	}
 

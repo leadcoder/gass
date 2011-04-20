@@ -131,7 +131,7 @@ namespace GASS
 	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
-		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponent<OSGCameraComponent>();
+		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
 
 
 		osgViewer::ViewerBase::Views views;

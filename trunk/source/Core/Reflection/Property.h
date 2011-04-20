@@ -42,6 +42,8 @@ namespace GASS
     bool GetValueFromString(type &res,const std::string &s)
     {
         std::stringstream str;
+		str.precision(10);
+		//str.setf(std::ios::boolalpha);
         str << s;
         str >> res;
         return true;
@@ -52,11 +54,19 @@ namespace GASS
     bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
 
+	//Use specialized template to catch bool
+    template <>
+    bool GASSCoreExport GetValueFromString<bool>(bool &res,const std::string &s);
+
+
     template <class type>
     bool GetStringFromValue(const type &val,std::string &res)
     {
         std::stringstream sstream;
         sstream.unsetf(std::ios::skipws);
+		sstream.setf(std::ios::boolalpha);
+		sstream.precision(10);
+		
         sstream << val;
         res = sstream.str();
         return true;

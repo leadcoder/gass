@@ -352,7 +352,7 @@ namespace GASS
 
 	TerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
 	{
-		TerrainComponentPtr terrain = obj->GetFirstComponent<ITerrainComponent>();
+		TerrainComponentPtr terrain = obj->GetFirstComponentByClass<ITerrainComponent>();
 		if(terrain)
 			return terrain;
 

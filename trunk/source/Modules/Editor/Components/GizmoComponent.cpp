@@ -89,7 +89,7 @@ namespace GASS
 			SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 			if(selected)
 			{
-				LocationComponentPtr selected_lc = selected->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
 				GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
 			}
 		}
@@ -165,7 +165,7 @@ namespace GASS
 		if(new_selected)
 		{
 			//move gismo to position
-			LocationComponentPtr lc = new_selected->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr lc = new_selected->GetFirstComponentByClass<ILocationComponent>();
 			if(lc)
 			{
 				//move to selecetd location
@@ -196,7 +196,7 @@ namespace GASS
 			return;
 
 		//move gizmo
-		LocationComponentPtr lc = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
 		{
 			//move to selecetd location
@@ -225,8 +225,8 @@ namespace GASS
 			SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 			if(selected)
 			{
-				LocationComponentPtr selected_lc = selected->GetFirstComponent<ILocationComponent>();
-				//LocationComponentPtr gizmo_lc = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
+				//LocationComponentPtr gizmo_lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(selected_lc && ((message->GetPosition() - selected_lc->GetWorldPosition()).Length()) > MOVMENT_EPSILON)
 				{
 					selected->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
@@ -253,10 +253,10 @@ namespace GASS
 		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(camera)
 		{
-			LocationComponentPtr cam_location = camera->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr cam_location = camera->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 cam_pos = cam_location->GetWorldPosition();
 
-			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 gizmo_pos = gizmo_location->GetWorldPosition();
 			
 
@@ -289,7 +289,7 @@ namespace GASS
 		if(cam_obj)
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
 
-		LocationComponentPtr lc = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
 	}
 
@@ -603,12 +603,12 @@ namespace GASS
 
 	Vec3 GizmoComponent::GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir)
 	{
-		Quaternion rot = GetSceneObject()->GetFirstComponent<ILocationComponent>()->GetRotation();
+		Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetRotation();
 		Mat4 rot_mat;
 		rot_mat.Identity();
 		rot.ToRotationMatrix(rot_mat);
 
-		Vec3 c_pos = GetSceneObject()->GetFirstComponent<ILocationComponent>()->GetPosition();
+		Vec3 c_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 r_vec = rot_mat.GetRightVector();
 
 		Vec3 v_vec = rot_mat.GetViewDirVector();
@@ -670,8 +670,8 @@ namespace GASS
 		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)
 		{
-			Quaternion selected_rot = selected->GetFirstComponent<ILocationComponent>()->GetWorldRotation();
-			Quaternion rot = GetSceneObject()->GetFirstComponent<ILocationComponent>()->GetWorldRotation();
+			Quaternion selected_rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
 			Mat4 rot_mat;
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);

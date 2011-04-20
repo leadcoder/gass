@@ -113,7 +113,7 @@ namespace GASS
 	{
 		SceneObjectPtr cam_obj =  message->GetCamera();
 		m_ActiveCameraObject = cam_obj;
-		m_ActiveCamera = cam_obj->GetFirstComponent<ICameraComponent>();
+		m_ActiveCamera = cam_obj->GetFirstComponentByClass<ICameraComponent>();
 	}
 
 	void MouseToolController::OnCursorMoved(CursorMoved2DMessagePtr message)
@@ -194,7 +194,7 @@ namespace GASS
 			else if(name == "PaintTool")
 			{
 			int id = (int) this;
-			MessagePtr tool_msg(new ToolChangedMessage("PaintTool",id));
+			MessagePtr tool_msg(new ToolChangedMessage("TerrainDeformTool",id));
 			EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
 			}
 		}
@@ -440,7 +440,7 @@ namespace GASS
 			SceneObjectPtr hit_obj(result.CollSceneObject);
 			if(hit_obj)
 			{
-			GizmoComponentPtr gc = hit_obj->GetFirstComponent<GizmoComponent>();
+			GizmoComponentPtr gc = hit_obj->GetFirstComponentByClass<GizmoComponent>();
 			if(gc)
 			//					gc->HighLight();
 			}

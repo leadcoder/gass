@@ -37,6 +37,17 @@ namespace GASS
 		return true;
 	}
 
+	template <>
+	bool GetValueFromString<bool>(bool &res,const std::string &s)
+	{
+		std::stringstream sstream;
+		if(s == "true" || s == "false" || s == "TRUE" || s == "FALSE")
+			sstream.setf(std::ios::boolalpha);
+        sstream << s;
+        sstream >> res;
+        return true;
+	}
+
     /*template <>
 	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s)
 	{

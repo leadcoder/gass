@@ -127,7 +127,7 @@ namespace GASS
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		//m_OSGBillboard->setNodeMask();

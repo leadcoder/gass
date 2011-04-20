@@ -89,7 +89,7 @@ namespace GASS
 			{
 				m_Replica->SetOwner(GetSceneObject());
 			}*/
-			RakNetNetworkMasterComponentPtr master = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
+			RakNetNetworkMasterComponentPtr master = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			if(master && master->GetReplica())
 				m_Replica = raknet->FindReplica(master->GetReplica()->GetNetworkID(),m_PartId);
 
@@ -106,7 +106,7 @@ namespace GASS
 	void RakNetNetworkChildComponent::OnNewChildReplica(ChildReplicaCreatedMessagePtr message)
 	{
 		RakNetChildReplica* replica = message->GetReplica();
-		RakNetNetworkMasterComponentPtr top_comp = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkMasterComponentPtr top_comp = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		if(top_comp->GetReplica())
 		{
 			NetworkID part_of_id = top_comp->GetReplica()->GetNetworkID();

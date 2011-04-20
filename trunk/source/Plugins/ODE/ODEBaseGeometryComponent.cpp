@@ -116,7 +116,7 @@ namespace GASS
 	void ODEBaseGeometryComponent::UpdateODEGeom()
 	{
 		Reset();
-		m_Body = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		m_Body = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 		dSpaceID space = GetSpace();
 
 		m_GeomID  = CreateODEGeom();
@@ -205,7 +205,7 @@ namespace GASS
 		{
 			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
+		else geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		return geom;
 	}
 
@@ -347,7 +347,7 @@ namespace GASS
 	void ODEBaseGeometryComponent::OnDebugTransformation(TransformationNotifyMessagePtr message)
 	{
 		SceneObjectPtr obj = GetDebugObject();
-		Vec3 pos  =obj->GetFirstComponent<ILocationComponent>()->GetPosition();
+		Vec3 pos  =obj->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		if(pos != m_Offset)
 		{
 			m_Offset = pos;

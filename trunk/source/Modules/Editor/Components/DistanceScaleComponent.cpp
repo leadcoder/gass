@@ -121,10 +121,10 @@ namespace GASS
 		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(camera)
 		{
-			LocationComponentPtr cam_location = camera->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr cam_location = camera->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 cam_pos = cam_location->GetWorldPosition();
 
-			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 gizmo_pos = gizmo_location->GetWorldPosition();
 			
 			Float dist = (gizmo_pos-cam_pos).Length();

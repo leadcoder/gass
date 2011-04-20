@@ -196,7 +196,7 @@ namespace GASS
 		//m_TextObject = new MovableText(m_Name + "Text", ConvertToUTF(m_TextToDisplay), "BlueHighway",m_Size,color);
 
 		Ogre::MovableObject* mobj = NULL;
-		OgreMeshComponentPtr mesh = GetSceneObject()->GetFirstComponent<OgreMeshComponent>();
+		OgreMeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<OgreMeshComponent>();
 		
 		if(mesh)
 		{
@@ -205,12 +205,12 @@ namespace GASS
 		}
 		else
 		{
-			OgreBillboardComponentPtr billboard = GetSceneObject()->GetFirstComponent<OgreBillboardComponent>();
+			OgreBillboardComponentPtr billboard = GetSceneObject()->GetFirstComponentByClass<OgreBillboardComponent>();
 			if(billboard)
 				mobj = billboard->GetBillboardSet();
 			else
 			{
-				boost::shared_ptr<OgreLineComponent> line = GetSceneObject()->GetFirstComponent<OgreLineComponent>();
+				boost::shared_ptr<OgreLineComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreLineComponent>();
 				if(line)
 					mobj = line->GetLineObject();
 			}

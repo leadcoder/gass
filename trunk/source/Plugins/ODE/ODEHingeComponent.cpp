@@ -111,12 +111,12 @@ namespace GASS
 	{
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
 
-		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 		
 
 		if(m_Body1)
 		{
-			m_Body2 = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+			m_Body2 = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 
 			dBodyID b1 = m_Body1->GetODEBodyComponent();
 			dBodyID b2 = m_Body2->GetODEBodyComponent();
@@ -148,8 +148,8 @@ namespace GASS
 
 	void ODEHingeComponent::UpdateJointAxis()
 	{
-		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
-		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 
 		Quaternion rot = location1->GetRotation();
 
@@ -178,8 +178,8 @@ namespace GASS
 
 	void ODEHingeComponent::UpdateAnchor()
 	{
-		//LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
-		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		//LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 
 		//Vec3 pos_b1 = location1->GetPosition();
 		Vec3 pos_b2 = location2->GetPosition();

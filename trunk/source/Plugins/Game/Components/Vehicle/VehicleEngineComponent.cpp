@@ -331,11 +331,11 @@ namespace GASS
 			m_Wheels.clear();
 			for(int i = 0; i < m_WheelNames.size(); i++)
 			{
-				SceneObjectVector objects;
-				GetSceneObject()->GetObjectUnderRoot()->GetObjectsByName(objects,m_WheelNames[i],false);
-				if(objects.size() > 0)
+				
+				SceneObjectPtr object =  GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_WheelNames[i],false);
+				if(object)
 				{
-					VehicleWheelPtr wheel(new VehicleWheel(objects.front()));
+					VehicleWheelPtr wheel(new VehicleWheel(object));
 					m_Wheels.push_back(wheel);
 				}
 			}

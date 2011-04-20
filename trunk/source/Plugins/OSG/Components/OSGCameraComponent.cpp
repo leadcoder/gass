@@ -144,7 +144,7 @@ namespace GASS
 
 	void OSGCameraComponent::UpdateFromLocation()
 	{
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		//lc->GetOSGNode()->getAttitude();
 
 		//osg::Vec3d pos = lc->GetOSGNode()->getPosition();
@@ -243,7 +243,7 @@ namespace GASS
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 
 		
 		osgViewer::ViewerBase::Views views;
@@ -281,7 +281,7 @@ namespace GASS
 		}
 
 		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
-		//OSGLocationComponent * lc = GetOwner()->GetFirstComponent<OSGLocationComponent>();
+		//OSGLocationComponent * lc = GetOwner()->GetFirstComponentByClass<OSGLocationComponent>();
 		/*m_Camera = sm->createCamera(m_Name);
 		m_Camera->setNearClipDistance(1.0);
 		m_Camera->setFarClipDistance(5000);

@@ -100,7 +100,7 @@ namespace GASS
 		
 		
 
-		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 
 		if(!lc)
 			Log::Error("Failed to find location component for OSGManualMeshComponent: %s",GetSceneObject()->GetName().c_str());
@@ -244,7 +244,7 @@ namespace GASS
 		AABox box(OSGConvert::Get().ToGASS(osg_box._min),
 				OSGConvert::Get().ToGASS(osg_box._max));
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(lc)
 		{
 			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());
@@ -266,7 +266,7 @@ namespace GASS
 		osg::BoundingSphere bsphere = m_OSGGeometry->getBound();
 		sphere.m_Radius = bsphere._radius;
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(lc)
 		{
 			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());

@@ -74,13 +74,13 @@ namespace GASS
 		if(!LineComponentPtr(m_RulerLine,boost::detail::sp_nothrow_tag()))
 		{
 			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate("RulerObject");
-			SceneObjectVector sovec;
-			sovec = scene_object->GetObjectsByName("RulerObject",false);
-			if(sovec.size() > 0)
+			m_RulerObject = scene_object;
+			
+			//m_RulerObject = scene_object->GetFirstChildByName("RulerObject",false);
+			if(scene_object)
 			{
-				m_RulerObject =sovec.front();
-				m_RulerLine = sovec.front()->GetFirstComponent<ILineComponent>();
-				m_TextComp = sovec.front()->GetComponent("TextComponent");
+				m_RulerLine = scene_object->GetFirstComponentByClass<ILineComponent>();
+				m_TextComp = scene_object->GetComponent("TextComponent");
 			}
 		}
 

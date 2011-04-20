@@ -90,7 +90,7 @@ namespace GASS
 		//check if enter message
 		if(name == "EnterVehicle" && value > 0)
 		{
-			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
 			IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetChildren();
@@ -98,10 +98,10 @@ namespace GASS
 			{
 				ComponentContainerPtr cc = objects.getNext();
 				SceneObjectPtr so = boost::shared_static_cast<SceneObject>(cc);
-				InputHandlerComponentPtr ihc = so->GetFirstComponent<InputHandlerComponent>();
+				InputHandlerComponentPtr ihc = so->GetFirstComponentByClass<InputHandlerComponent>();
 				if(ihc)
 				{
-					LocationComponentPtr location = so->GetFirstComponent<ILocationComponent>();
+					LocationComponentPtr location = so->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 obj_pos = location->GetWorldPosition();
 					Float dist = (my_pos-obj_pos).FastLength();
 					if(dist < 5)
@@ -121,7 +121,7 @@ namespace GASS
 				if(components.size() > 0)
 				{
 					InputHandlerComponentPtr ih = boost::shared_dynamic_cast<InputHandlerComponent>(components[seat]);
-					LocationComponentPtr location = ih->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+					LocationComponentPtr location = ih->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 obj_pos = location->GetWorldPosition();
 					Float dist = (my_pos-obj_pos).FastLength();
 					if(dist < 5)
@@ -164,7 +164,7 @@ namespace GASS
 		else if(name == "ExitVehicle" && value > 0)
 		{
 			//Take camera control
-			CameraComponentPtr camera = GetSceneObject()->GetFirstComponent<ICameraComponent>();
+			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{
 				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject()));

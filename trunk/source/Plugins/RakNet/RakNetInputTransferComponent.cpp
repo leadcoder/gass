@@ -118,14 +118,14 @@ namespace GASS
 			GetSceneObject()->SendImmediate(serialize_message);*/
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 			SystemAddress address = raknet->GetRakPeer()->GetInternalID();
-			RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkMasterComponent>();
+			RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			if(comp)
 			{
 				comp->GetReplica()->RemoteInput(address ,controller_index, message->GetValue(),0);
 			}
 			else
 			{
-				RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkChildComponent>();
+				RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 				if(comp)
 				{
 					comp->GetReplica()->RemoteInput(address,controller_index,message->GetValue(),0);
@@ -193,14 +193,14 @@ namespace GASS
 
 	void RakNetInputTransferComponent::OnClientRemoteMessage(ClientRemoteMessagePtr message)
 	{
-		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		if(comp)
 		{
 			comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);
 		}
 		else
 		{
-			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponent<RakNetNetworkChildComponent>();
+			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 			if(comp)
 			{
 				comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);

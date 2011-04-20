@@ -188,7 +188,7 @@ namespace GASS
 	void SkyXCloudLayerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		//Get Skyx component
-		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponent<SkyXComponent>();
+		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
 		if(skyx)
 			m_CloudLayer = skyx->GetSkyX()->getCloudsManager()->add(m_Options);
 	}

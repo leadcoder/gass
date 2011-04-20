@@ -109,7 +109,7 @@ namespace GASS
 
 		if(m_Filename != "" && m_ReadyToLoadMesh)
 		{
-			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
+			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 			if(m_OgreEntity) //release previous mesh
 			{
 				lc->GetOgreNode()->detachObject(m_OgreEntity);
@@ -582,7 +582,7 @@ namespace GASS
 			bone->setPosition(pos.x,pos.y,pos.z);
 
 			/*Ogre::Vector3 worldPos(pos.x, pos.y, pos.z); // desired position in world coords
-			Ogre::SceneNode* parent = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get()->GetOgreNode();
+			Ogre::SceneNode* parent = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get()->GetOgreNode();
 			Ogre::Vector3 parentPos = parent->_getDerivedPosition(); // node local pos
 			Ogre::Vector3 parentQuatXbonePos = worldPos - parentPos;
 			Ogre::Quaternion parentQuat = parent->_getDerivedOrientation(); // node local ori

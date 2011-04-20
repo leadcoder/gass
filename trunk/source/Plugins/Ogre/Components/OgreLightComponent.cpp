@@ -136,7 +136,7 @@ namespace GASS
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
-		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
+		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
 		
 		static unsigned int obj_id = 0;
 		obj_id++;

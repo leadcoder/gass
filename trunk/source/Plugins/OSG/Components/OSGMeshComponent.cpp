@@ -153,7 +153,7 @@ namespace GASS
 		if(!GetSceneObject()) //not loaded
 			return;
 
-		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
 		{
 			Log::Error("Failed loading %s , not possible to use mesh components without location compoent",GetSceneObject()->GetName().c_str());
@@ -252,7 +252,7 @@ namespace GASS
 			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
 			if (geode) 
 			{
-				//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+				//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 				//lc->GetOSGNode()->addChild(geode);
 		
 				osg::BoundingBox bbox = geode->getBoundingBox();

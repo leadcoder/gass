@@ -102,7 +102,7 @@ namespace GASS
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-				OgreTerrainPageComponentPtr page = child->GetFirstComponent<OgreTerrainPageComponent>();
+				OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 				if(page)
 				{
 					page->UpdatePosition();
@@ -138,7 +138,7 @@ namespace GASS
 					SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("OgreTerrainPageObject"));
 					if(so)
 					{
-						OgreTerrainPageComponentPtr comp = so->GetFirstComponent<OgreTerrainPageComponent>();
+						OgreTerrainPageComponentPtr comp = so->GetFirstComponentByClass<OgreTerrainPageComponent>();
 						comp->SetIndexX(x);
 						comp->SetIndexY(y);
 						GetSceneObject()->AddChild(so);
@@ -321,7 +321,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			OgreTerrainPageComponentPtr page = child->GetFirstComponent<OgreTerrainPageComponent>();
+			OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 			if(page)
 			{
 				GetSceneObject()->GetSceneObjectManager()->DeleteObject(child);
@@ -466,16 +466,20 @@ namespace GASS
 		Ogre::Sphere sphere(position, brush_size);
 		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 
-		/*for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-			DeformTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());*/
+		if(message->GetModifyType() == TerrainHeightModifyMessage::MT_DEFORM)
+		{
+			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+				DeformTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());
+		}
+		else if(message->GetModifyType() == TerrainHeightModifyMessage::MT_SMOOTH)
+		{
+			Ogre::Real avg_height = 0;
+			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+				GetAverageHeight(*ti, position,brush_size/m_TerrainGroup->getTerrainWorldSize(),avg_height);
 
-
-		Ogre::Real avg_height = 0;
-		for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-			GetAverageHeight(*ti, position,brush_size/m_TerrainGroup->getTerrainWorldSize(),avg_height);
-		
-		for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-			SmoothTerrain(*ti, position, intensity ,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(),avg_height);
+			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+				SmoothTerrain(*ti, position, intensity ,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(),avg_height);
+		}
 		m_TerrainGroup->update();
 	}
 

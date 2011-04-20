@@ -144,7 +144,7 @@ namespace GASS
 		m_OSGLightSource->setLight(m_OSGLight);
 		m_OSGLightSource->setLocalStateSetModes(osg::StateAttribute::ON); 
 
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGLightSource);
 
 		//Always global light?

@@ -164,7 +164,7 @@ namespace GASS
 		scene_object->PostMessage(mesh_message);
 
 		//Vec3 pos  = m_Offset + offset;
-		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(pos);
+		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));
 	}
 

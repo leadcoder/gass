@@ -100,7 +100,7 @@ namespace GASS
 		ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
 
 
-		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
+		OSGLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>().get();
 		
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
@@ -243,7 +243,7 @@ namespace GASS
 			//osg::ref_ptr<osg::DrawArrays> drawable = new osg::DrawArrays(op, 0, m_ControlPoints.size());
 
 		
-			OSGLocationComponent * lc = GetSceneObject()->GetFirstComponent<OSGLocationComponent>().get();
+			OSGLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>().get();
 		
 			
 			osg::DrawArrays* drawable = static_cast<osg::DrawArrays*>(m_OSGGeometry->getPrimitiveSet(0));//drawable.get());

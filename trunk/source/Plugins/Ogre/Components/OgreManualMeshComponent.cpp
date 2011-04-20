@@ -91,7 +91,7 @@ namespace GASS
 		m_MeshObject = sm->createManualObject(name);
 		m_MeshObject->setDynamic(true);
 		m_MeshObject->setCastShadows(false);
-		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
+		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 		
 	}

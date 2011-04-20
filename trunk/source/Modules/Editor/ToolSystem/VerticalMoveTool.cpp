@@ -29,7 +29,7 @@ namespace GASS
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected)
 		{
-			LocationComponentPtr comp = selected->GetFirstComponent<GASS::ILocationComponent>();
+			LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
 			if(comp)
 			{
 				ScenarioScenePtr scene = selected->GetSceneObjectManager()->GetScenarioScene();

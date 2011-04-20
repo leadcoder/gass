@@ -134,8 +134,8 @@ namespace GASS
 		Ogre::Root::getSingleton().addFrameListener(this);
 
 		
-		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponent<SkyXComponent>();
-		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponent<HydraxWaterComponent>();
+		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
+		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
 		if(hydrax && skyx)
 		{
 			m_Hydrax = hydrax->GetHydrax();

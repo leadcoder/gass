@@ -45,10 +45,10 @@ namespace GASS
 		{
 			if(selected)
 			{
-				TerrainComponentPtr terrain = selected->GetFirstComponent<ITerrainComponent>();
+				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity)));
+					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity)));
 				}
 			}
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
@@ -133,7 +133,7 @@ namespace GASS
 			//hide gizmo
 			if(message->GetSceneObject())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
 				{
 					SetGizmoVisiblity(true);
@@ -180,7 +180,7 @@ namespace GASS
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
 				{
-					PaintGizmoComponentPtr comp = gizmo->GetFirstComponent<PaintGizmoComponent>();
+					PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
 					comp->SetSize(m_BrushSize);
 					comp->BuildMesh();
 				}

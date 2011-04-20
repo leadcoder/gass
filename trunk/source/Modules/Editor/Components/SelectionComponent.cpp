@@ -80,8 +80,8 @@ namespace GASS
 		if(new_selected)
 		{
 			//move gismo to position
-			LocationComponentPtr lc = new_selected->GetFirstComponent<ILocationComponent>();
-			EditorComponentPtr ec = new_selected->GetFirstComponent<EditorComponent>();
+			LocationComponentPtr lc = new_selected->GetFirstComponentByClass<ILocationComponent>();
+			EditorComponentPtr ec = new_selected->GetFirstComponentByClass<EditorComponent>();
 			bool show_bb = true;
 			if(ec)
 			{
@@ -97,7 +97,7 @@ namespace GASS
 				new_selected->RegisterForMessage(REG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
 				m_SelectedObject = new_selected;
 
-				GeometryComponentPtr gc = new_selected->GetFirstComponent<IGeometryComponent>();
+				GeometryComponentPtr gc = new_selected->GetFirstComponentByClass<IGeometryComponent>();
 				if(gc)
 				{
 					m_BBox = gc->GetBoundingBox();
@@ -121,7 +121,7 @@ namespace GASS
 	void SelectionComponent::OnSelectedTransformation(TransformationNotifyMessagePtr message)
 	{
 		//move gizmo
-		LocationComponentPtr lc = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
 		{
 			//move to selecetd location

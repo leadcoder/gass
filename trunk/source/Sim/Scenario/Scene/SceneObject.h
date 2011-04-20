@@ -42,16 +42,16 @@ namespace GASS
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
 
 	/**
-		This class is derived from the BaseComponentContainer class and extend
-		the BaseComponentContainer with message functionality.
-		To communicate with components owned by the SceneObject a message manager is used.
-		Some basic object messages is enumerated below.
+	This class is derived from the BaseComponentContainer class and extend
+	the BaseComponentContainer with message functionality.
+	To communicate with components owned by the SceneObject a message manager is used.
+	Some basic object messages is enumerated below.
 
-		As the name indicates a SceneObject is a object in a scenario scene.
-		The SceneObject is owned by a SceneObjectManager which in turn is owned
-		by a ScenarioScene.
-		By design the SceneObject class is not intended to be derived from,
-		Instead new functionality should be added through components
+	As the name indicates a SceneObject is a object in a scenario scene.
+	The SceneObject is owned by a SceneObjectManager which in turn is owned
+	by a ScenarioScene.
+	By design the SceneObject class is not intended to be derived from,
+	Instead new functionality should be added through components
 	*/
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer>
 	{
@@ -71,25 +71,9 @@ namespace GASS
 		void SetSceneObjectManager(SceneObjectManagerPtr manager);
 
 		/**
-			Get owner object that is direct under scene root
+		Get owner object that is direct under scene root
 		*/
 		SceneObjectPtr GetObjectUnderRoot();
-
-		template <class T>
-		boost::shared_ptr<T> GetFirstComponent()
-		{
-			boost::shared_ptr<T> ret;
-			for(int i = 0 ; i < m_ComponentVector.size(); i++)
-			{
-				ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
-				if(ret)
-					break;
-			}
-
-			return ret;
-		}
-
-
 
 
 		//convenience functions
@@ -98,11 +82,61 @@ namespace GASS
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
 			return boost::shared_static_cast<SceneObject>(GetParent());
 		}
-		void GetComponentsByClass(ComponentVector &components, const std::string &class_name);
+		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true);
+		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true);
+
+		template <class T>
+		void GetComponentsByClass(ComponentVector &components, bool recursive = true)
+		{
+			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			{
+				boost::shared_ptr<T> ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				if(ret)
+					components.push_back(ret);
+			}
+
+			if(recursive)
+			{
+				IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+				while(cc_iter.hasMoreElements())
+				{
+					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+					GetComponentsByClass<T>(components,recursive);
+				}
+			}
+		}
+
+		template <class T>
+		boost::shared_ptr<T> GetFirstComponentByClass(bool recursive = false)
+		{
+			boost::shared_ptr<T> ret;
+			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			{
+				ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				if(ret)
+					return ret;
+			}
+
+			if(recursive)
+			{
+				IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+				while(cc_iter.hasMoreElements())
+				{
+					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+					ret = GetFirstComponentByClass<T>(recursive);
+					if(ret)
+						return ret;
+				}
+			}
+			return ret;
+		}
+
+
 
 		//should we return result or pass it as ref arg?
-		SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
-		void GetObjectsByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true);
+		//SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
+		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true);
+		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true);
 
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);

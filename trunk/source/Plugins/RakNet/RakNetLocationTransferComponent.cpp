@@ -92,7 +92,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
+		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkComponent>();
 		//if(!nc)
 		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
@@ -127,7 +127,7 @@ namespace GASS
 			if(m_RelativeToParent == 1 || m_RelativeToParent == 2)
 			{
 				//attach this to parent node
-				LocationComponentPtr location = GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				BaseSceneComponentPtr base = boost::shared_dynamic_cast<BaseSceneComponent>(location);
 				base->SetPropertyByType("AttachToParent",boost::any(true));
 			}
@@ -280,7 +280,7 @@ namespace GASS
 
 
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponent<RakNetNetworkComponent>();
+		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkComponent>();
 		//if(!nc)
 		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		if(raknet->IsServer())

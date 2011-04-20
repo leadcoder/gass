@@ -41,7 +41,7 @@ namespace GASS
 			SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
 			if(gizmo)
 			{
-				GizmoComponentPtr gc = gizmo->GetFirstComponent<GizmoComponent>();
+				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				Vec3 new_position = gc->GetPosition(info.m_RayStart,info.m_RayDir);
 
 				
@@ -49,7 +49,7 @@ namespace GASS
 				if(m_MoveUpdateCount == 0)
 				{
 					//calc offset
-					LocationComponentPtr comp = gizmo->GetFirstComponent<GASS::ILocationComponent>();
+					LocationComponentPtr comp = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
 					m_Offset = comp->GetWorldPosition();
 					if(gc->GetSpaceMode() == "World")
 					{
@@ -80,14 +80,14 @@ namespace GASS
 					if(m_MoveUpdateCount == 4)
 					{
 						//calc offset
-						LocationComponentPtr comp = selected->GetFirstComponent<GASS::ILocationComponent>();
+						LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
 						m_Offset = comp->GetWorldPosition();
 						m_Offset = info.m_3DPos - m_Offset;
 
 						SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
 						if(gizmo)
 						{
-							GizmoComponentPtr gc = gizmo->GetFirstComponent<GizmoComponent>();
+							GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 							if(gc->GetSpaceMode() == "World")
 							{
 								m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
@@ -127,6 +127,8 @@ namespace GASS
 				last_time = time;
 				std::vector<std::string> attribs;
 				attribs.push_back("Position");
+				attribs.push_back("Latitude");
+				attribs.push_back("Longitude");
 				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
 				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(attrib_change_msg);
 			}
@@ -148,7 +150,7 @@ namespace GASS
 
 		if(obj_under_cursor  && CheckIfEditable(obj_under_cursor ))
 		{
-			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponent<GizmoComponent>();
+			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 			if(gc)
 			{
 				m_CurrentGizmo = obj_under_cursor;
@@ -194,7 +196,7 @@ namespace GASS
 		SceneObjectPtr g_obj(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
 		if(g_obj)
 		{
-			GizmoComponentPtr gc = g_obj->GetFirstComponent<GizmoComponent>();
+			GizmoComponentPtr gc = g_obj->GetFirstComponentByClass<GizmoComponent>();
 			if(gc)
 			{
 				gc->SetActive(false);
@@ -224,7 +226,7 @@ namespace GASS
 			{
 				if(CheckIfEditable(obj_under_cursor))
 				{
-					GizmoComponentPtr gc = obj_under_cursor->GetFirstComponent<GizmoComponent>();
+					GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
@@ -308,7 +310,7 @@ namespace GASS
 			//hide gizmo
 			if(message->GetSceneObject())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
 				{
 					SetGizmoVisiblity(true);

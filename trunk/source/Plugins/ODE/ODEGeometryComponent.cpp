@@ -127,7 +127,7 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 
-		m_Body = GetSceneObject()->GetFirstComponent<ODEBodyComponent>().get();
+		m_Body = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 	}
 
 	dSpaceID ODEGeometryComponent::GetStaticSpace()
@@ -318,7 +318,7 @@ namespace GASS
 		{
 			geom = boost::shared_dynamic_cast<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponent<IGeometryComponent>();
+		else geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(geom)
 		{
 			if(m_Body)
@@ -657,7 +657,7 @@ namespace GASS
 		scene_object->PostMessage(mesh_message);
 
 		//Vec3 pos  = m_Offset + offset;
-		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(pos);
+		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
 	}
 
@@ -707,7 +707,7 @@ namespace GASS
 		SceneObjectPtr scene_object = GetDebugObject();
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		scene_object->PostMessage(mesh_message);
-		//scene_object->GetFirstComponent<ILocationComponent>()->SetPosition(offset);
+		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
 	}
 

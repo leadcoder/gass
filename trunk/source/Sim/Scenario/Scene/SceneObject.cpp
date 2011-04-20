@@ -107,7 +107,7 @@ namespace GASS
 		}
 	}
 
-	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name)
+	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive)
 	{
 		//Check all components
 		IComponentContainer::ComponentIterator comp_iter = GetComponents();
@@ -120,26 +120,52 @@ namespace GASS
 			}
 		}
 
-		IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
-		while(cc_iter.hasMoreElements())
+		if(recursive)
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
-			child->GetComponentsByClass(components, class_name);
+			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+			while(cc_iter.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+				child->GetComponentsByClass(components, class_name);
+			}
 		}
 	}
 
-
-	SceneObjectVector SceneObject::GetObjectsByName(const std::string &name, bool exact_math)
+	ComponentPtr SceneObject::GetFirstComponentByClass(const std::string &class_name, bool recursive) 
 	{
-		SceneObjectVector objects;
-		GetObjectsByName(objects, name,exact_math);
-		return objects;
+		//Check all components
+		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		while(comp_iter.hasMoreElements())
+		{
+			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
+			if(comp->GetRTTI()->IsDerivedFrom(class_name))
+			{
+				return comp;
+			}
+		}
+		if(recursive)
+		{
+			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+			while(cc_iter.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+				ComponentPtr res = GetFirstComponentByClass(class_name,recursive);
+				if(res)
+					return res;
+			}
+		}
+		return ComponentPtr();
 	}
 
-	void SceneObject::GetObjectsByName(SceneObjectVector &objects, const std::string &name, bool exact_math)
+	/*SceneObjectVector SceneObject::GetObjectsByName(const std::string &name, bool exact_math)
 	{
-		SceneObjectPtr ret;
+	SceneObjectVector objects;
+	GetObjectsByName(objects, name,exact_math);
+	return objects;
+	}*/
 
+	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive)
+	{
 		if(exact_math)
 		{
 			if(GetName()== name)
@@ -158,14 +184,52 @@ namespace GASS
 			}
 		}
 
-		IComponentContainer::ComponentContainerIterator children = GetChildren();
-		while(children.hasMoreElements())
+		if(recursive)
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			child->GetObjectsByName(objects,name,exact_math);
+			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				child->GetChildrenByName(objects,name,exact_math,recursive);
+			}
 		}
 	}
 
+	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive)
+	{
+		
+
+		if(exact_math)
+		{
+			if(GetName()== name)
+			{
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+				return obj;
+			}
+		}
+		else
+		{
+			int pos = GetName().find(name);
+			if(pos  >= 0)
+			{
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+				return obj;
+			}
+		}
+
+		if(recursive)
+		{
+			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr ret = child->GetFirstChildByName(name,exact_math,recursive);
+				if(ret)
+					return ret;
+			}
+		}
+		return SceneObjectPtr();
+	}
 
 	int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
 	{

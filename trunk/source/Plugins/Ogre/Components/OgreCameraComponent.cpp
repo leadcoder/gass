@@ -94,7 +94,7 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
-		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>();
+		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
 
 		if(!lc)
 		{

@@ -76,16 +76,13 @@ namespace GASS
 	void BoneModifierComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		//SetBoneName(m_BoneName);
-		//IMeshComponentPtr mesh = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<IMeshComponent>();
+		//IMeshComponentPtr mesh = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnTransformation,TransformationNotifyMessage,0));
 
 		if(m_SourceObjectName != "")
 		{
-			SceneObjectVector objects;
-			GetSceneObject()->GetObjectUnderRoot()->GetObjectsByName(objects,m_SourceObjectName,false);
-			if(objects.size() > 0)
-				m_SourceObject  = objects.front();
-			else
+			m_SourceObject = GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_SourceObjectName,false);
+			if(!SceneObjectPtr(m_SourceObject))
 				Log::Warning("Failed to find source %s for bone modifier %s",m_SourceObjectName.c_str(),m_BoneName.c_str());
 		}
 		else
@@ -107,9 +104,9 @@ namespace GASS
 		if(so)
 		{
 				//GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName, message->GetPosition(),message->GetRotation())));
-				LocationComponentPtr location1 = so->GetFirstComponent<ILocationComponent>();
-				LocationComponentPtr location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>();
-				//LocationComponentPtr location2 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>();
+				LocationComponentPtr location1 = so->GetFirstComponentByClass<ILocationComponent>();
+				LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+				//LocationComponentPtr location2 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 
 				Mat4 trans1,trans2;
 

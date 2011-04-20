@@ -92,7 +92,7 @@ namespace GASS
 		m_LineObject->setDynamic(true);
 		m_LineObject->setCastShadows(false);
 
-		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponent<OgreLocationComponent>().get();
+		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 
 		lc->GetOgreNode()->attachObject(m_LineObject);
 

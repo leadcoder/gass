@@ -188,7 +188,7 @@ namespace GASS
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
-			OSGLocationComponentPtr c_location = obj->GetFirstComponent<OSGLocationComponent>();
+			OSGLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if(c_location)
 				c_location->SendTransMessage();
 		}
@@ -420,7 +420,7 @@ namespace GASS
 		SceneObjectPtr scene_obj  = boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent());
 		while(scene_obj && !parent_location)
 		{
-			parent_location  = scene_obj->GetFirstComponent<OSGLocationComponent>();
+			parent_location  = scene_obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if(parent_location)
 				return parent_location;
 			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());

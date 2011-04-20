@@ -178,7 +178,7 @@ namespace GASS
 
 	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
-		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
 		SerialSaver ss(NULL,0);
 		for(int i = 0 ;  i < attributes.size(); i++)
@@ -249,7 +249,7 @@ namespace GASS
 		//	return REPLICA_PROCESSING_DONE;
 		//outBitStream->Write(testInteger);
 
-		RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+		RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		net_obj->Serialize(sendTimestamp, outBitStream, lastSendTime, priority, reliability, currentTime, systemAddress, flags);
 		return REPLICA_PROCESSING_DONE;
 	}
@@ -261,7 +261,7 @@ namespace GASS
 		if(m_Owner)
 		{
 			//std::cout << "RakNetMasterReplica::Deserialize got owner" << std::endl;
-			RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponent<RakNetNetworkMasterComponent>();
+			RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
 			// If this is a server
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
