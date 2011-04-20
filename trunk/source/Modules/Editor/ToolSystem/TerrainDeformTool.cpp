@@ -108,6 +108,10 @@ namespace GASS
 					MessagePtr selection_msg(new ObjectSelectedMessage(current,(int) this));
 					EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
 				}
+
+				PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
+				comp->SetSize(m_BrushSize*0.5);
+				comp->BuildMesh();
 			}
 		}
 		return gizmo;
@@ -131,7 +135,7 @@ namespace GASS
 		if(m_Active)
 		{
 			//hide gizmo
-			if(message->GetSceneObject())
+			/*if(message->GetSceneObject())
 			{
 				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
@@ -146,7 +150,7 @@ namespace GASS
 			else
 			{
 				SetGizmoVisiblity(false);
-			}
+			}*/
 		}
 		m_SelectedObject = message->GetSceneObject();
 	}
@@ -169,20 +173,21 @@ namespace GASS
 		{
 			std::string name = message->GetController();
 			float value = message->GetValue();
-			if(name == "ChangeBrushSize")
+			if(name == "ChangeBrushSize" && fabs(value)  > 0.5)
 			{
 				//std::cout << value << "\n";
 				if(value > 0.5) 
-					m_BrushSize++;
+					m_BrushSize += m_BrushSize*0.3;
 				else if(value < -0.5) 
-					m_BrushSize--;
+					m_BrushSize -= m_BrushSize*0.3;
 
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
 				{
 					PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
-					comp->SetSize(m_BrushSize);
+					comp->SetSize(m_BrushSize*0.5);
 					comp->BuildMesh();
+				
 				}
 			}
 		}
