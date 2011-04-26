@@ -251,7 +251,7 @@ namespace GASS
 	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		
-		if(!m_MeshObject->getSection(0))
+		if(m_MeshObject->getNumSections() <= 0)
 			return;
 		if(!m_UniqueMaterialCreated) 
 		{

@@ -12,6 +12,7 @@ dofile "GASSPluginGame4.lua"
 dofile "GASSPluginBase4.lua"
 dofile "GASSPluginRaknet4.lua"
 dofile "GASSPluginEnvironment4.lua"
+dofile "GASSEditorModule4.lua"
 
 -- Optional Plugins
 --dofile "GASSPluginOSG4.lua"

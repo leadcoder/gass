@@ -6,6 +6,7 @@ set VSVERSION=%1
 if '%VSVERSION%'=='vs2003' goto VS2003
 if '%VSVERSION%'=='vs2005' goto VS2005
 if '%VSVERSION%'=='vs2008' goto VS2008
+if '%VSVERSION%'=='vs2010' goto VS2010
 
 
 GOTO START
@@ -17,6 +18,9 @@ call "%VS80COMNTOOLS%vsvars32.bat"
 GOTO END
 :VS2008
 call "%VS90COMNTOOLS%vsvars32.bat"
+GOTO END
+:VS2010
+call "%VS100COMNTOOLS%vsvars32.bat"
 GOTO END
 :END
 
@@ -58,6 +62,7 @@ call :COMPILE GASSSim.sln "GASSPluginPagedGeometry" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginGame" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginBase" "Debug|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginRakNet" "Debug|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSEditorModule" "Debug|Win32" /USEENV
 
 rem Build Release
 call :COMPILE GASSSim.sln "GASSCore" "Release|Win32" /USEENV
@@ -70,6 +75,7 @@ call :COMPILE GASSSim.sln "GASSPluginPagedGeometry" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginGame" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginBase" "Release|Win32" /USEENV
 call :COMPILE GASSSim.sln "GASSPluginRakNet" "Release|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSEditorModule" "Release|Win32" /USEENV
 
 pause
 cd ..\..
