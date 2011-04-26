@@ -33,7 +33,7 @@
 
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
-
+#include "PGMessages.h"
 
 namespace Forests
 {
@@ -59,6 +59,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnPaint(GrassPaintMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;
@@ -123,6 +124,8 @@ protected:
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
 		static ICollisionSystem* m_CollisionSystem;
+
+		void GrassGeometryComponent::update();
 		
 	};
 }

@@ -94,6 +94,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnLoad,LoadGFXComponentsMessage,999));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnPaint,GrassPaintMessage,0));
+
+		
 	}
 
 	std::string GrassGeometryComponent::GetDensityMap() const
@@ -240,7 +243,7 @@ namespace GASS
 		m_MaxSize = size;
 
 		if(m_GrassLayer)
-				m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
+			m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 	}
 
 	Vec2 GrassGeometryComponent::GetMinSize() const
@@ -416,7 +419,7 @@ namespace GASS
 		else 
 		{
 			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
-			
+
 		}
 		//What camera should be used?
 
@@ -448,7 +451,7 @@ namespace GASS
 		UpdateSway();
 
 
-//		Root::Get().AddRenderListener(this);
+		//		Root::Get().AddRenderListener(this);
 	}
 
 	float GrassGeometryComponent::GetCollisionSystemHeight(float x, float z)
@@ -480,8 +483,8 @@ namespace GASS
 		{
 			GrassGeometryComponent* grass = static_cast<GrassGeometryComponent*> (user_data);
 			return grass->GetCollisionSystemHeight(x, z);
-			
-			
+
+
 		}
 	}
 
@@ -516,14 +519,97 @@ namespace GASS
 		}
 	}
 
-/*	void GrassGeometryComponent::RenderUpdate(float delta)
+	void GrassGeometryComponent::OnPaint(GrassPaintMessagePtr message)
 	{
-		if(m_GrassLoader ) m_GrassLoader->updateAnimation();
+		const Vec3 world_pos = message->GetPosition();
+		//Ogre::Image mPGDensityMap;
+		Forests::DensityMap *dmap = m_GrassLayer->getDensityMap();
+		if(dmap)
+		{
+			Ogre::PixelBox pbox = dmap->getPixelBox();
+			Ogre::uchar *data = static_cast<Ogre::uchar*>(dmap->getPixelBox().data);
+//			Ogre::uchar *data2 = mPGDensityMap.getData();
+
+			int wsize = dmap->getPixelBox().getWidth()-1;
+
+			unsigned char rgbaShift[4];
+//			Ogre::PixelUtil::getBitShifts(mPGDensityMap.getFormat(), rgbaShift);
+			int layerID = 0;
+			int pos = rgbaShift[layerID] / 8;
+
+			Ogre::uint val;
+
+			const Ogre::Real height = m_MapBounds.height();
+			const Ogre::Real width = m_MapBounds.width();
+			const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
+			const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
+
+			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
+			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
+			const Ogre::Real brush_inner_radius = message->GetBrushInnerSize()/height;
+			
+			long startx = (x_pos - brush_size_texture_space_x) * wsize;
+			long starty = (y_pos - brush_size_texture_space_y) * wsize;
+			long endx = (x_pos + brush_size_texture_space_x) * wsize;
+			long endy= (y_pos + brush_size_texture_space_y) * wsize;
+			startx = std::max(startx, 0L);
+			starty = std::max(starty, 0L);
+			endx = std::min(endx, (long)wsize);
+			endy = std::min(endy, (long)wsize);
+			for (long y = starty; y <= endy; ++y)
+			{
+				int tmploc = y * (wsize+1);
+				for (long x = startx; x <= endx; ++x)
+				{
+
+					Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
+					Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
+
+					Ogre::Real weight = std::min((Ogre::Real)1.0, 
+						(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius));
+					if( weight < 0) weight = 0;
+					weight = 1.0 - (weight * weight);
+					weight = 1;
+
+					float val = data[tmploc + x];
+					val += weight*message->GetIntensity()*3;
+					val = std::min(val, 255.0f);
+					val = std::max(val, 0.0f);
+					data[tmploc + x] = val;
+				}
+			}
+			float posL = world_pos.x - message->GetBrushSize();
+			float posT = world_pos.z - message->GetBrushSize();
+			float posR = world_pos.x + message->GetBrushSize();
+			float posB = world_pos.z + message->GetBrushSize();
+
+			Forests::TBounds bounds(posL, posT, posR, posB);
+
+			m_PagedGeometry->reloadGeometryPages(bounds);
+    
+
+			 /*for(int j = mPGDirtyRect.top;j < mPGDirtyRect.bottom;j++)
+			{
+			int tmploc = j * wsize;
+			for(int i = mPGDirtyRect.left;i < mPGDirtyRect.right;i++)
+			{
+			val = static_cast<Ogre::uint>(mPGLayerData[layerID][tmploc + i]);
+			data[tmploc + i] = val;
+			data2[((tmploc + i) << 2) + pos] = val;
+			}
+			}*/
+		}
+		//parentEditor->getPGHandle()->reloadGeometryPages(bounds);
+	}
+
+	/*	void GrassGeometryComponent::RenderUpdate(float delta)
+	{
+	if(m_GrassLoader ) m_GrassLoader->updateAnimation();
 	}*/
 
-/*	void GrassGeometryComponent::Update()
+	/*	void GrassGeometryComponent::Update()
 	{
-		IPagedGeometry::Update();
+	IPagedGeometry::Update();
 	}*/
 }
 
