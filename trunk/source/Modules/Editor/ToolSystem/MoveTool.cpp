@@ -121,7 +121,7 @@ namespace GASS
 			}
 			const double time = SimEngine::Get().GetTime();
 			static double last_time = 0;
-			const double send_freq = 5; 
+			const double send_freq = 2; 
 			if(time - last_time > 1.0/send_freq)
 			{
 				last_time = time;
@@ -129,8 +129,9 @@ namespace GASS
 				attribs.push_back("Position");
 				attribs.push_back("Latitude");
 				attribs.push_back("Longitude");
+				attribs.push_back("Projected");
 				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
-				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(attrib_change_msg);
+				EditorManager::GetPtr()->GetMessageManager()->PostMessage(attrib_change_msg);
 			}
 
 			GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
