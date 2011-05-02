@@ -31,7 +31,7 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Simengine.h"
+#include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -96,7 +96,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnPaint,GrassPaintMessage,0));
 
-		
+
 	}
 
 	std::string GrassGeometryComponent::GetDensityMap() const
@@ -416,7 +416,7 @@ namespace GASS
 			}
 			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 		}
-		else 
+		else
 		{
 			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
 
@@ -479,7 +479,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 			return m_Terrain->GetHeight(x,z);
-		else 
+		else
 		{
 			GrassGeometryComponent* grass = static_cast<GrassGeometryComponent*> (user_data);
 			return grass->GetCollisionSystemHeight(x, z);
@@ -547,7 +547,7 @@ namespace GASS
 			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
 			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
 			const Ogre::Real brush_inner_radius = message->GetBrushInnerSize()/height;
-			
+
 			long startx = (x_pos - brush_size_texture_space_x) * wsize;
 			long starty = (y_pos - brush_size_texture_space_y) * wsize;
 			long endx = (x_pos + brush_size_texture_space_x) * wsize;
@@ -565,7 +565,7 @@ namespace GASS
 					Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
 					Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
 
-					Ogre::Real weight = std::min((Ogre::Real)1.0, 
+					Ogre::Real weight = std::min((Ogre::Real)1.0,
 						(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius));
 					if( weight < 0) weight = 0;
 					weight = 1.0 - (weight * weight);
@@ -586,7 +586,7 @@ namespace GASS
 			Forests::TBounds bounds(posL, posT, posR, posB);
 
 			m_PagedGeometry->reloadGeometryPages(bounds);
-    
+
 
 			 /*for(int j = mPGDirtyRect.top;j < mPGDirtyRect.bottom;j++)
 			{

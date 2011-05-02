@@ -76,7 +76,7 @@ namespace GASS
 		void SetMaterial(const std::string &name);
 		std::string GetFadeTech() const;
 		void SetFadeTech(const std::string &tech);
-		std::string GetRenderTechnique() const; 
+		std::string GetRenderTechnique() const;
 		void SetRenderTechnique(const std::string &tech);
 		bool GetBlendWithGround() const;
 		void SetBlendWithGround(bool value);
@@ -90,7 +90,7 @@ namespace GASS
 		void SetSwayLength(float length);
 		bool GetEnableSway() const;
 		void SetEnableSway(bool value);
-		float GetSwayDistribution() const; 
+		float GetSwayDistribution() const;
 		void SetSwayDistribution(float distribution);
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
@@ -125,9 +125,9 @@ protected:
 		static ITerrainComponent *m_Terrain;
 		static ICollisionSystem* m_CollisionSystem;
 
-		void GrassGeometryComponent::update();
-		
+		void update();
+
 	};
 }
 
-#endif 
+#endif
