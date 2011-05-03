@@ -21,9 +21,16 @@
 #include "Plugins/OSG/OSGCollisionSystem.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
+#include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
 
 #include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Components/Graphics/ILocationComponent.h"
+
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/SimEngine.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -35,10 +42,71 @@
 #include <osgSim/LineOfSight>
 #include <osgSim/HeightAboveTerrain>
 #include <osgSim/ElevationSlice>
+#include <osgViewer/Viewer>
+#include <osgViewer/CompositeViewer>
+
 
 
 namespace GASS
 {
+	class MyVisitor : public osgUtil::IntersectionVisitor
+	{
+	public:
+
+		MyVisitor(osgUtil::Intersector* intersector, osgUtil::IntersectionVisitor::ReadCallback* readCallback) : IntersectionVisitor(intersector, readCallback)
+		{
+		}
+
+		virtual ~MyVisitor()
+		{
+
+		}
+		void apply(osg::Billboard& billboard)
+		{
+			if (!enter(billboard)) return;
+
+#if 1
+			// IntersectVisitor doesn't have getEyeLocal(), can we use NodeVisitor::getEyePoint()?
+			osg::Vec3 eye_local = getEyePoint();
+
+			for(unsigned int i = 0; i < billboard.getNumDrawables(); i++ )
+			{
+				const osg::Vec3& pos = billboard.getPosition(i);
+				osg::ref_ptr<osg::RefMatrix> billboard_matrix = new osg::RefMatrix;
+				if (getViewMatrix())
+				{
+					if (getModelMatrix()) billboard_matrix->mult( *getModelMatrix(), *getViewMatrix() );
+					else billboard_matrix->set( *getViewMatrix() );
+				}
+				else if (getModelMatrix()) billboard_matrix->set( *getModelMatrix() );
+
+				billboard.computeMatrix(*billboard_matrix,eye_local,pos);
+
+				if (getViewMatrix()) billboard_matrix->postMult( osg::Matrix::inverse(*getViewMatrix()) );
+				pushModelMatrix(billboard_matrix.get());
+
+				// now push an new intersector clone transform to the new local coordinates
+				push_clone();
+
+				intersect( billboard.getDrawable(i) );
+
+				// now push an new intersector clone transform to the new local coordinates
+				pop_clone();
+
+				popModelMatrix();
+
+			}
+#else
+
+			for(unsigned int i=0; i<billboard.getNumDrawables(); ++i)
+			{
+				intersect( billboard.getDrawable(i) );
+			}
+#endif
+
+			leave();
+		}
+	};
 
 	OSGCollisionSystem::OSGCollisionSystem()
 	{
@@ -60,7 +128,182 @@ namespace GASS
 		return handle;
 	}
 
-	void OSGCollisionSystem::Process()
+
+
+	bool OSGCollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
+		ResultMap::iterator iter = m_ResultMap.find(handle);
+		if(iter != m_ResultMap.end())
+		{
+			result = m_ResultMap[handle];
+			m_ResultMap.erase(iter);
+			return true;
+		}
+		return false;
+	}
+
+	void OSGCollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
+	{
+		ScenarioScenePtr scene(request.Scene);
+		if(scene)
+		{
+			OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+
+			OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+			osgViewer::ViewerBase::Views views;
+			gfx_sys->GetViewer()->getViews(views);
+
+			if(gfx_sm)
+			{
+				if(request.Type == COL_LINE)
+				{
+					ProcessRaycast(&request,&result,views[0]->getCamera());//gfx_sm->GetOSGRootNode());
+				}
+			}
+		}
+	}
+
+	void OSGCollisionSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, ISystem>);
+	}
+
+	void OSGCollisionSystem::OnCreate()
+	{
+		int address = (int) this;
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,ScenarioSceneAboutToLoadNotifyMessage,0));
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+	}
+
+	void OSGCollisionSystem::OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message)
+	{
+		m_RequestMap.clear();
+		m_ResultMap.clear();
+		message->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
+	}
+
+
+	void OSGCollisionSystem::OnLoadScene(ScenarioSceneAboutToLoadNotifyMessagePtr message)
+	{
+		message->GetScenarioScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
+	}
+
+	void OSGCollisionSystem::OnChangeCamera(ChangeCameraMessagePtr message)
+	{
+		//SceneObjectPtr cam_obj = message->GetCamera();
+		//OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
+		//m_CurrentCamera = cam_comp;
+	}
+
+	Float OSGCollisionSystem::GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute) const
+	{
+		CollisionRequest request;
+		CollisionResult result;
+
+		Vec3 up = scene->GetSceneUp();
+
+		Vec3 ray_start = pos;
+		Vec3 ray_direction = -up;
+		//max raycast 2000000 units down
+		ray_direction = ray_direction*2000000;
+
+		request.LineStart = ray_start;
+		request.LineEnd = ray_start + ray_direction;
+		request.Type = COL_LINE;
+		request.Scene = scene;
+		request.ReturnFirstCollisionPoint = false;
+		request.CollisionBits = 2;
+
+		OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+		if(gfx_sm)
+		{
+			ProcessRaycast(&request,&result,gfx_sm->GetOSGRootNode());
+		}
+
+		if(result.Coll)
+		{
+			Vec3 col_pos;
+			if(absolute)
+				col_pos  = result.CollPosition;
+			else
+				col_pos = pos - result.CollPosition;
+
+			col_pos = col_pos *up;
+			return col_pos.Length();
+		}
+		return 0;
+	}
+
+	void OSGCollisionSystem::ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const
+	{
+		osg::Vec3d start = OSGConvert::Get().ToOSG(request->LineStart);
+		osg::Vec3d end = OSGConvert::Get().ToOSG(request->LineEnd);
+
+		result->Coll = false;
+		
+		osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector = new osgUtil::LineSegmentIntersector(osgUtil::Intersector::MODEL, start, end);
+		//osgUtil::IntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
+		MyVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
+
+		//OSGCameraComponentPtr camera (m_CurrentCamera);
+		//LocationComponentPtr location = camera->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		//Vec3 cam_pos = location->GetWorldPosition();
+		
+		//intersectVisitor.setReferenceEyePoint(OSGConvert::Get().ToOSG(cam_pos)); 
+		//intersectVisitor.setReferenceEyePointCoordinateFrame(osgUtil::Intersector::MODEL); 
+		//node = camera->GetOSGCamera();
+
+
+		GeometryCategory cat(GT_REGULAR);
+
+		if(request->CollisionBits == 1)
+		{
+			intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY);
+
+		}
+		else if(request->CollisionBits == 2)
+		{
+			intersectVisitor.setTraversalMask(NM_GIZMO_GEOMETRY);
+			cat.Set(GT_GIZMO);
+		}
+
+		node->accept(intersectVisitor);
+
+		if ( intersector->containsIntersections() )
+		{
+			osgUtil::LineSegmentIntersector::Intersections& intersections = intersector->getIntersections();
+			for(osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
+				itr != intersections.end();
+				++itr)
+			{
+				const osgUtil::LineSegmentIntersector::Intersection& intersection = *itr;
+
+				//get first user data
+				for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
+				{
+					if(intersection.nodePath[i]->getUserData())
+					{
+						BaseSceneComponent* pobj = (BaseSceneComponent*)intersection.nodePath[i]->getUserData();
+
+						IGeometryComponent* geom  = dynamic_cast<IGeometryComponent*>(pobj);
+						if(geom && geom->GetGeometryCategory() == cat)
+						{
+							result->CollSceneObject = pobj->GetSceneObject();
+							result->Coll = true;
+							result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+							result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
+							return;		
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	void OSGCollisionSystem::Update(double delta_time)
 	{
 		RequestMap::iterator iter;
 		RequestMap requestMap;
@@ -81,16 +324,26 @@ namespace GASS
 
 			if(scene)
 			{
-				//ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
-				if(request.Type == COL_LINE)
+				OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+				OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+
+				osgViewer::ViewerBase::Views views;
+				gfx_sys->GetViewer()->getViews(views);
+				//set same scene in all viewports for the moment 
+				if(views.size() > 0)
 				{
-					CollisionResult result;
-					//ODELineCollision raycast(&request,&result,ode_scene);
-					//raycast.Process();
-					resultMap[handle] = result;
+					
+					//if(gfx_sm)
+					//{
+						if(request.Type == COL_LINE)
+						{
+							CollisionResult result;
+							ProcessRaycast(&request,&result,views[0]->getCamera());//gfx_sm->GetOSGRootNode());
+							resultMap[handle] = result;
+						}
+					//}
 				}
 			}
-
 		}
 		{
 			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
@@ -103,150 +356,8 @@ namespace GASS
 		}
 	}
 
-	bool OSGCollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
+	TaskGroup OSGCollisionSystem::GetTaskGroup() const
 	{
-		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-		ResultMap::iterator iter = m_ResultMap.find(handle);
-		if(iter != m_ResultMap.end())
-		{
-			result = m_ResultMap[handle];
-			m_ResultMap.erase(iter);
-			return true;
-		}
-		return false;
-	}
-
-	void OSGCollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
-	{
-		ScenarioScenePtr scene(request.Scene);
-		if(scene)
-		{
-			//ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
-			if(request.Type == COL_LINE)
-			{
-				//ODELineCollision raycast(&request,&result,ode_scene);
-				//raycast.Process();
-			}
-		}
-	}
-
-	void OSGCollisionSystem::RegisterReflection()
-	{
-		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, ISystem>);
-	}
-
-	void OSGCollisionSystem::OnCreate()
-	{
-		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
-	}
-
-	void OSGCollisionSystem::OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message)
-	{
-		m_RequestMap.clear();
-		m_ResultMap.clear();
-	}
-
-	Float OSGCollisionSystem::GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute) const
-	{
-		//ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
-		CollisionRequest request;
-		CollisionResult result;
-
-		Vec3 up = scene->GetSceneUp();
-
-		Vec3 ray_start = pos;
-		Vec3 ray_direction = -up;
-		//max raycast 2000000 units down
-		ray_direction = ray_direction*2000000;
-
-		request.LineStart = ray_start;
-		request.LineEnd = ray_start + ray_direction;
-		request.Type = COL_LINE;
-		request.Scene = scene;
-		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = 2;
-		//OSGLineCollision raycast(&request,&result,ode_scene);
-		//raycast.Process();
-
-		if(result.Coll)
-		{
-			Vec3 col_pos;
-			if(absolute)
-				col_pos  = result.CollPosition;
-			else
-				col_pos = pos - result.CollPosition;
-
-			col_pos = col_pos *up;
-			return col_pos.Length();
-		}
-		return 0;
-	}
-
-	void OSGCollisionSystem::ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node)
-	{
-		osg::Vec3d start = OSGConvert::Get().ToOSG(request->LineStart);
-		osg::Vec3d end = OSGConvert::Get().ToOSG(request->LineEnd);
-		/*osgSim::LineOfSight los;
-		los.addLOS(start,end);
-		los.computeIntersections(node);
-
-		result->Coll = false;
-		result->CollDist = 0;
-
-		for(unsigned int i=0; i<los.getNumLOS(); i++)
-		{
-			const osgSim::LineOfSight::Intersections& intersections = los.getIntersections(i);
-			for(osgSim::LineOfSight::Intersections::const_iterator itr = intersections.begin();
-				itr != intersections.end();
-				++itr)
-			{
-				//std::cout<<"  point "<<*itr<<std::endl;
-				//return (*itr).z();
-				result->Coll = true;
-				//result->CollSceneObject = scene_object;	
-				result->CollPosition = OSGConvert::Get().ToGASS(*itr);
-			}
-		}*/
-
-
-		osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector = new osgUtil::LineSegmentIntersector(start, end);
-        osgUtil::IntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
-        node->accept(intersectVisitor);
-
-        if ( intersector->containsIntersections() )
-        {
-            osgUtil::LineSegmentIntersector::Intersections& intersections = intersector->getIntersections();
-            for(osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
-                itr != intersections.end();
-                ++itr)
-            {
-                const osgUtil::LineSegmentIntersector::Intersection& intersection = *itr;
-
-				result->Coll = true;
-				//result->CollSceneObject = scene_object;	
-				result->CollPosition = OSGConvert::Get().ToGASS(intersection.localIntersectionPoint);
-				result->CollNormal =  OSGConvert::Get().ToGASS(intersection.localIntersectionNormal);
-
-				//get first user data
-				for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
-				{
-					if(intersection.nodePath[i]->getUserData())
-					{
-						OSGMeshComponent* mesh = (OSGMeshComponent*) intersection.nodePath[i]->getUserData();
-						result->CollSceneObject = mesh->GetSceneObject();
-						break;		
-					}
-				}
-				break;
-				
-               /* std::cout << "  ratio "<<intersection.ratio<<std::endl;
-                std::cout << "  point "<<intersection.localIntersectionPoint<<std::endl;
-                std::cout << "  normal "<<intersection.localIntersectionNormal<<std::endl;
-                std::cout << "  indices "<<intersection.indexList.size()<<std::endl;
-                std::cout << "  primitiveIndex "<<intersection.primitiveIndex<<std::endl;
-                std::cout<<std::endl;*/
-            }
-        }
+		return MAIN_TASK_GROUP;
 	}
 }

@@ -26,13 +26,16 @@
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include "Core/System/BaseSystem.h"
+#include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "tbb/spin_mutex.h"
 #include <osg/Geode>
 
 namespace GASS
 {
-	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , BaseSystem> , public ICollisionSystem
+	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , BaseSystem> , public ICollisionSystem, public ITaskListener
 	{
 	public:
 		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
@@ -47,15 +50,23 @@ namespace GASS
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result);
 		Float GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute=true) const;
-		void Process();
+		//void Process();
+
+		//ITaskListener interface
+		void Update(double delta);
+		TaskGroup GetTaskGroup() const;
+
 	private:
-		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node);
+		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
 		void OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message);
+		void OnLoadScene(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnChangeCamera(ChangeCameraMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;
 		tbb::spin_mutex m_RequestMutex;
 		tbb::spin_mutex m_ResultMutex;
+		OSGCameraComponentWeakPtr m_CurrentCamera;
 	};
 	typedef boost::shared_ptr<OSGCollisionSystem> OSGCollisionSystemPtr;
 
