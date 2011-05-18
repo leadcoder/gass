@@ -87,43 +87,33 @@ public:
 		m_Scenario = scenario;
 		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
 
-		/*for(int i = 0; i <  16 ;i++)
-		{
-			GASS::SimEngine::Get().GetControlSettingsManager()->Clear();
-			GASS::SimEngine::Get().GetSimSystemManager()->ClearMessagesManager();
-			m_Scenario.reset();
-			
-			m_Scenario = GASS::ScenarioPtr(new GASS::Scenario());
-
-			m_Scenario->Load(m_ScenarioName);
-
-			m_Engine->Update(0.1);
-			m_Scenario->OnUpdate(0.1);
-			
-			
-		}*/
-
 		if(m_Scenario->Load(m_ScenarioName))
 		{
-			m_Scenario->Save("c:/temp/scenario_test");
-			//if(m_Instances != "")
-			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
-
             GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
 
 			//only populate first scene
 			GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
 
+
+			//create free camera and set start pos
+			GASS::SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+			GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+			if(free_obj)
+			{
+				free_obj->SendImmediate(pos_msg);
+				GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+				scene->PostMessage(camera_msg);
+			}
+
 			for(int i = 0; i <  m_Objects.size();i++)
 			{
-
 				GASS::SceneObjectPtr object = scene->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
-
 				GASS::Vec3 pos = scene->GetStartPos();
 				pos.x += 10*i;
-				GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+				
+				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 				if(object)
-					object->SendImmediate(pos_msg);
+					object->PostMessage(pos_msg);
 			}
 		}
 		else
@@ -206,10 +196,6 @@ public:
 			m_Scenario->OnUpdate(update_time);//time - prev);
 			prev = time;
 		}
-
-
-
-
 
 
 //		if(GetAsyncKeyState(VK_ESCAPE))
