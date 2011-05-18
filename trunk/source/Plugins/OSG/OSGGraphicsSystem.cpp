@@ -41,10 +41,18 @@
 #include <osgShadow/ParallelSplitShadowMap>
 #include <osgShadow/LightSpacePerspectiveShadowMap>
 #include <osgShadow/StandardShadowMap>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/GUIEventHandler>
+#include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
+
+
 
 
 #if defined(WIN32) && !defined(__CYGWIN__) 
-#include <osgViewer/api/Win32/GraphicsWindowWin32> 
+
+#include <osgViewer/api/Win32/GraphicsWindowWin32>
+
 typedef HWND WindowHandle; 
 typedef osgViewer::GraphicsWindowWin32::WindowData WindowData; 
 #elif defined(__APPLE__) // Assume using Carbon on Mac. 
@@ -57,10 +65,13 @@ typedef Window WindowHandle;
 typedef osgViewer::GraphicsWindowX11::WindowData WindowData; 
 #endif 
 
-
-
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Utils/TextBox.h"
+#include "Plugins/OSG/Components/OSGCameraComponent.h"
+#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
+#include "Plugins/OSG/IOSGCameraManipulator.h"
+
+
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -68,22 +79,18 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
 #include <osgDB/ReadFile> 
 #include "tinyxml.h"
 
 
-
-
 namespace GASS
 {
 
-	int OSGGraphicsSystem::m_ReceivesShadowTraversalMask = 0x40;
-	int OSGGraphicsSystem::m_CastsShadowTraversalMask = 0x80;
 	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml"), m_DebugTextBox(new TextBox())
 	{
-
 
 	}
 
@@ -97,16 +104,14 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OSGGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OSGGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
-		
-		//RegisterProperty<std::string>( "Plugin", NULL, &GASS::OSGGraphicsSystem::AddPlugin);
 	}
 
 	void OSGGraphicsSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0));
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 	}
 
@@ -134,13 +139,135 @@ namespace GASS
 		//m_Viewer->realize();
 	}
 
-	void OSGGraphicsSystem::OnInit(MessagePtr message)
+	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle)
 	{
+		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
+			
+		traits->x = 0;
+		traits->y = 0;
+		traits->width = width;
+		traits->height = height;
+		traits->doubleBuffer = true;
+		traits->sharedContext = 0;
+		if(m_Windows.size() > 0)
+			traits->sharedContext = m_Windows.begin()->second;
+		
 
-		m_Viewer = new osgViewer::CompositeViewer();
+		if(handle) //external window
+		{
+			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)handle);
+			traits->windowDecoration = false;
+			traits->setInheritedWindowPixelFormat = true;
+			traits->inheritedWindowData = windata;
+		}
+		else //create window here
+		{
+			traits->windowDecoration = true;
+			traits->windowName = name;
+		}
+		
+		osg::ref_ptr<osg::GraphicsContext> graphics_context = osg::GraphicsContext::createGraphicsContext(traits.get());
+		if (graphics_context.valid())
+		{
+			osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
+			//need to ensure that the window is cleared make sure that the complete window is set the correct colour
+			//rather than just the parts of the window that are under the camera's viewports
+			graphics_context->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
+			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+		else
+		{
+			osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
+		}
+		m_Windows[name] = graphics_context;
 
 		
+
+		if(m_Windows.size() == 1) //first window created?
+		{
+			if(handle == 0) //internal window
+			{
+				#if defined(WIN32) && !defined(__CYGWIN__) 	
+				osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
+				main_handle = (size_t) win32_window->getHWND();
+				handle = main_handle;
+				#endif
+			}
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
+			GetSimSystemManager()->SendImmediate(window_msg);
+			
+		}
+	}
+
+	void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height)
+	//void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, int pos_x, int pos_y, int width, int height)
+	{
+		if(m_Windows.find(render_window) != m_Windows.end())
+		{
+			//
+			osgViewer::View* view = new osgViewer::View;
+			view->setName(name);
+		
+			int win_w = m_Windows[render_window]->getTraits()->width;
+			int win_h = m_Windows[render_window]->getTraits()->height;
+
+			int p_left = win_w*left;
+			int p_top = win_h*top;
+
+			int p_width = win_w*width;
+			int p_height = win_h*height;
+
+			m_Viewer->addView(view);
+
+			view->getCamera()->setViewport(new osg::Viewport(p_left, p_top, p_width,p_height));
+			view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+			view->setLightingMode(osg::View::SKY_LIGHT); 
+			view->getDatabasePager()->setDoPreCompile( true );
+			view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
+    		// add some stock OSG handlers:
+			
+			osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
+			stats->setKeyEventTogglesOnScreenStats('y');
+			view->addEventHandler(stats);
+			view->addEventHandler(new osgViewer::WindowSizeHandler());
+			view->addEventHandler(new osgViewer::ThreadingHandler());
+			view->addEventHandler(new osgViewer::LODScaleHandler());
+
+			osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
+			ssm->setKeyEventCyclePolygonMode('u');
+			view->addEventHandler(ssm);
+			//    view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
+			view->getCamera()->setGraphicsContext(m_Windows[render_window]);
+			view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+		}
+	}
+
+	void OSGGraphicsSystem::ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp)
+	{
+		osgViewer::ViewerBase::Views views;
+		GetViewer()->getViews(views);
+		
+		for(int i = 0; i < views.size(); i++)
+		{
+			if(views[i]->getName() == viewport || viewport == "ALL")
+			{
+				cam_comp->SetOSGCamera( views[i]->getCamera());
+				//set manipulator
+				OSGCameraManipulatorPtr man = cam_comp->GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
+				if(man)
+					views[i]->setCameraManipulator(man->GetManipulator());
+				else 
+					views[i]->setCameraManipulator(NULL);
+			}
+		}
+	}
+
+	void OSGGraphicsSystem::OnInit(MessagePtr message)
+	{
+		m_Viewer = new osgViewer::CompositeViewer();
+		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		std::string full_path;
+		
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath("arial.ttf",full_path))
 		{
@@ -153,11 +280,8 @@ namespace GASS
 		m_DebugTextBox->setTextSize(12);
 		
 		
-
-
 		if(m_CreateMainWindowOnInit)
 		{
-
 			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
 			if (!wsi) 
 			{
@@ -165,51 +289,11 @@ namespace GASS
 				return;
 			}
 
-			osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-			traits->x = 100;
-			traits->y = 100;
-			traits->width = 800;
-			traits->height = 600;
-			traits->windowDecoration = true;
-			traits->doubleBuffer = true;
-			traits->sharedContext = 0;
-			traits->windowName = "OSG Render window";
-
-
-
-			m_GraphicsContext = osg::GraphicsContext::createGraphicsContext(traits.get());
-			if (m_GraphicsContext.valid())
-			{
-				osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
-
-				//need to ensure that the window is cleared make sure that the complete window is set the correct colour
-				//rather than just the parts of the window that are under the camera's viewports
-				m_GraphicsContext->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
-				m_GraphicsContext->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			}
-			else
-			{
-				osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
-			}
-
-			//osg::ref_ptr<osg::Group> rootNode;
-			//rootNode = new osg::Group();
-			CreateView(m_Viewer,m_GraphicsContext,  0, 0, traits->width, traits->height);
-
-			m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
-
-			m_Viewer->frame();
-			size_t windowHnd = 0;
-
-			//there must be a better way to gte the window handle!
-#if defined(WIN32) && !defined(__CYGWIN__) 	
-			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_GraphicsContext.get());
-			windowHnd = (size_t) win32_window->getHWND();
-#endif
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)windowHnd,(int)windowHnd));
-			GetSimSystemManager()->SendImmediate(window_msg);
+			CreateRenderWindow("MainWindow",800, 600,0);
+			CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
 		}
 
+		
 		//Load shadow settings
 		if(m_ShadowSettingsFile != "")
 		{
@@ -233,73 +317,63 @@ namespace GASS
 			}
 		}
 
-
-		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
-		options->setOptionString("dds_flip"); 
-		osgDB::Registry::instance()->setOptions(options); 
-
-
-		/*osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
-		if (opt == NULL) { 
-		opt = new osgDB::ReaderWriter::Options(); 
+		//osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
+		
+		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
+		if (opt == NULL) 
+		{ 
+			opt = new osgDB::ReaderWriter::Options(); 
 		} 
-		opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
-		osgDB::Registry::instance()->setOptions(opt); */
+		
+		const std::string options = opt->getOptionString();
+		opt->setOptionString("dds_flip"); 
+		osgDB::Registry::instance()->setOptions(opt); 
 
-		/*	IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
-		if(is)
-		{
-		is->SetWindow(windowHnd);
-		}*/
-
-		/*boost::shared_ptr<Message> update_msg(new Message(SimSystemManager::SYSTEM_MESSAGE_UPDATE,(int) this));
-		update_msg->m_Timer = 1.0/30.0f; //update with 100hz
-		GetMessageManager()->PostMessage(update_msg);*/
+		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
+		//osgDB::Registry::instance()->setOptions(opt); 
 	}
 
-	void OSGGraphicsSystem::CreateView(osgViewer::CompositeViewer *viewer,
-		//osg::ref_ptr<osg::Group> scene,
-		osg::ref_ptr<osg::GraphicsContext> gc,
-		int x, int y, int width, int height)
+	/*void OSGGraphicsSystem::CreateView(osgViewer::CompositeViewer *viewer,	osg::ref_ptr<osg::GraphicsContext> gc, int x, int y, int width, int height)
 	{
-		//		double left,right,top,bottom, near_clip;
-		//double far_clip;
-		//double aspectratio;
-		//double frusht, fruswid, fudge;
-		//		bool gotfrustum;
 		osgViewer::View* view = new osgViewer::View;
 		viewer->addView(view);
-
-		//view->setCameraManipulator(Tman);
-		//view->setSceneData(scene.get());
 		view->getCamera()->setViewport(new osg::Viewport(x, y, width,height));
 		view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 		view->setLightingMode(osg::View::SKY_LIGHT); 
 		//view->getLight()->setDirection(osg::Vec3(1,1,1));
+		//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
+		osgGA::TrackballManipulator *fly_man = new osgGA::TrackballManipulator();
 
-		/*osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
+		//view->setCameraManipulator(fly_man);
+		//osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
+		//statesetManipulator->setStateSet(view->getCamera()->getOrCreateStateSet());
+		//view->addEventHandler( statesetManipulator.get() );
+		// osgEarth benefits from pre-compilation of GL objects in the pager. In newer versions of
+		// OSG, this activates OSG's IncrementalCompileOpeartion in order to avoid frame breaks.
+		view->getDatabasePager()->setDoPreCompile( true );
+		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
+    
 
-		view->setCameraManipulator(Tman1);
+		//osgEarth::Util::EarthManipulator* manip = new osgEarth::Util::EarthManipulator();
+		//view->setCameraManipulator( manip );
+		//view->setCameraManipulator( Tman1 );
 
-		osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
-		statesetManipulator->setStateSet(view->getCamera()->getOrCreateStateSet());
+    // add some stock OSG handlers:
+		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
+		stats->setKeyEventTogglesOnScreenStats('y');
+		view->addEventHandler(stats);
+		view->addEventHandler(new osgViewer::WindowSizeHandler());
+		view->addEventHandler(new osgViewer::ThreadingHandler());
+		view->addEventHandler(new osgViewer::LODScaleHandler());
 
-		view->addEventHandler( statesetManipulator.get() );*/
+		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
+		ssm->setKeyEventCyclePolygonMode('u');
+		view->addEventHandler(ssm);
+//    view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
 
 
-		/*	view->getCamera()->getProjectionMatrixAsFrustum(left, right, bottom, top, near_clip, far_clip);
-		if (gotfrustum) 
-		{
-		aspectratio = (double) width/ (double) height; 
-		frusht = top - bottom;
-		fruswid = right - left;
-		fudge = frusht*aspectratio/fruswid;
-		right = right*fudge;
-		left = left*fudge;
-		view->getCamera()->setProjectionMatrixAsFrustum(left,right,
-		bottom,top,
-		near_clip,far_clip);
-		}*/
+
+		
 		view->getCamera()->setGraphicsContext(gc.get());
 		view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 
@@ -309,72 +383,26 @@ namespace GASS
 		// view->addEventHandler( statesetManipulator.get() );
 
 
-	}
+	}*/
 
-	void OSGGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
+	/*void OSGGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
 	{
 		std::string name = message->GetName();
+		
 		int height = message->GetHeight();
 		int width = message->GetWidth();
-		int handel = message->GetHandle();
+		int handle = message->GetHandle();
+		int main_handle = message->GetMainHandle();
 
-		if(!m_GraphicsContext) // first window
-		{
-			int main_handel = message->GetMainHandle();
-			// Init the Windata Variable that holds the handle for the Window to display OSG in.
-			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)handel);
-			osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-
-
-
-			traits->x = 0;
-			traits->y = 0;
-			traits->width = width;
-			traits->height = height;
-			traits->windowDecoration = false;
-			traits->doubleBuffer = true;
-			traits->sharedContext = 0;
-			traits->setInheritedWindowPixelFormat = true;
-			traits->inheritedWindowData = windata;
-
-			m_GraphicsContext = osg::GraphicsContext::createGraphicsContext(traits.get());
-			if (m_GraphicsContext.valid())
-			{
-				osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
-
-				//need to ensure that the window is cleared make sure that the complete window is set the correct colour
-				//rather than just the parts of the window that are under the camera's viewports
-				m_GraphicsContext->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
-				m_GraphicsContext->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			}
-			else
-			{
-				osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
-			}
-
-			
-
-			//osg::ref_ptr<osg::Group> rootNode;
-			//rootNode = new osg::Group();
-			CreateView(m_Viewer,m_GraphicsContext,  0, 0, traits->width, traits->height);
-
-			m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
-
-			m_Viewer->frame();
-
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(message->GetHandle(),message->GetMainHandle()));
-			GetSimSystemManager()->SendImmediate(window_msg);
-		}
-	}
+		CreateRenderWindow(name,width,height, handle, main_handle);
+	}*/
 
 
 	void OSGGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top)
 	{
-		//		unsigned int depth;
-
-		if(m_GraphicsContext.get())
+		if(m_Windows.size() > 0)
 		{
-			const osg::GraphicsContext::Traits* traits = m_GraphicsContext->getTraits();
+			const osg::GraphicsContext::Traits* traits = m_Windows.begin()->second->getTraits();
 			width = traits->width;
 			height = traits->height;
 			left = traits->x;
@@ -383,27 +411,32 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)
+
+	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
 	{
 		//m_Window->windowMovedOrResized();
 		osgViewer::ViewerBase::Views views;
-		
 		
 		m_Viewer->getViews(views);
 		//set same size in all viewports for the moment
 		for(int i = 0; i < views.size(); i++)
 		{
-			views[i]->getCamera()->setViewport(0,0,message->GetWidth(),message->GetHeight());
+			if(views[i]->getName() == message->GetViewportName())
+				views[i]->getCamera()->setViewport(message->GetPositionX(),message->GetPositionY(),message->GetWidth(), message->GetHeight());
 		}
 	}
 
 	void OSGGraphicsSystem::Update(double delta_time)
 	{
 		static int tick = 0;
-		m_Viewer->frame(delta_time);
-
-
+		
 		if(m_Viewer->done())
+		{
+			return;
+		}
+		//m_Viewer->frame(delta_time);
+		m_Viewer->frame(delta_time);
+		//if(m_Viewer->done())
 		{
 			//Exit
 		//	Log::Error("Exit");
@@ -430,7 +463,7 @@ namespace GASS
 			
 			if(type == "ShadowVolume")
 			{
-				GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+				//GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 				// hint to tell viewer to request stencil buffer when setting up windows
 				osg::DisplaySettings::instance()->setMinimumNumStencilBits(8);
 				osg::ref_ptr<osgShadow::ShadowVolume> sv = new osgShadow::ShadowVolume;
@@ -457,7 +490,7 @@ namespace GASS
 			else if(type == "ParallelSplitShadowMap")
 			{
 				// pssm isn't yet thread safe
-				GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+				//GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 				int mapcount = 4;
 				int mapres = 1024;
 				float maxFarPlane = 200;
@@ -533,6 +566,11 @@ namespace GASS
 		}
 	}
 }
+
+
+
+
+
 
 
 

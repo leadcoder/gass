@@ -40,12 +40,14 @@ namespace GASS
 		virtual void Clear();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
+		virtual GeometryCategory GetGeometryCategory() const;
 
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void SetMaterialName(const std::string &name){m_MaterialName = name;}
 		std::string GetMaterialName()const {return m_MaterialName;}
 		void SetType(const std::string &name){m_Type = name;}
 		std::string GetType()const {return m_Type;}
+		
 	protected:
 		virtual void UpdateLineFromControlPoints();
 		virtual void BuildLineFromControlPoints();

@@ -55,7 +55,7 @@ namespace GASS
 		m_BBoxSize(0,0,0),
 		m_BSphereSize(0),
 		m_Slip(0),
-		m_GeometryType(PGT_BOX),
+		m_SceneNodeType(PGT_BOX),
 		m_CollisionGeomScale(1,1,1),
 		m_CollisionCategory(1),
 		m_CollisionBits(1),
@@ -85,7 +85,7 @@ namespace GASS
 
 		//RegisterVectorProperty<std::string>("CollisionBits", &GASS::ODEGeometryComponent::GetCollisionBits, &GASS::ODEGeometryComponent::SetCollisionBits);
 		//RegisterVectorProperty<std::string>("CollisionCategories", &GASS::ODEGeometryComponent::GetCollisionCategory, &GASS::ODEGeometryComponent::SetCollisionCategory);
-		RegisterProperty<std::string>("GeometryType", &GASS::ODEGeometryComponent::GetGeometryType, &GASS::ODEGeometryComponent::SetGeometryType);
+		RegisterProperty<std::string>("SceneNodeType", &GASS::ODEGeometryComponent::GetSceneNodeType, &GASS::ODEGeometryComponent::SetSceneNodeType);
 	}
 
 	void ODEGeometryComponent::OnCreate()
@@ -181,7 +181,7 @@ namespace GASS
 		Vec3 geom_offset(0,0,0);
 
 
-		switch(m_GeometryType)
+		switch(m_SceneNodeType)
 		{
 		case PGT_PLANE:
 			{
@@ -238,7 +238,7 @@ namespace GASS
 		//then the encapsulated object will be destroyed when the geometry transform is destroyed.
 		//If the clean-up mode is 0 this does not happen. The default clean-up mode is 0.
 
-		if(m_GeometryType != PGT_PLANE)
+		if(m_SceneNodeType != PGT_PLANE)
 		{
 			trans_geom_id = dCreateGeomTransform(space);
 			dGeomTransformSetCleanup(trans_geom_id, 1 );
@@ -264,7 +264,7 @@ namespace GASS
 
 	void ODEGeometryComponent::SetPosition(const Vec3 &pos)
 	{
-		if(m_Body == NULL && m_TransformGeomID && m_GeometryType != PGT_PLANE)
+		if(m_Body == NULL && m_TransformGeomID && m_SceneNodeType != PGT_PLANE)
 		{
 			dGeomSetPosition(m_TransformGeomID, pos.x, pos.y, pos.z);
 			dGeomSetPosition(m_SecondTransformGeomID, pos.x, pos.y, pos.z);
@@ -273,7 +273,7 @@ namespace GASS
 
 	void ODEGeometryComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_Body == NULL && m_TransformGeomID && m_GeometryType != PGT_PLANE)
+		if(m_Body == NULL && m_TransformGeomID && m_SceneNodeType != PGT_PLANE)
 		{
 			dReal ode_rot_mat[12];
 			Mat4 rot_mat;
@@ -346,7 +346,7 @@ namespace GASS
 		//we we only resize/rescale box,sphere and cylinder right now
 		float radius = geom->GetBoundingSphere().m_Radius;
 		Vec3 bbsize = geom->GetBoundingBox().m_Max - geom->GetBoundingBox().m_Min;
-		switch(m_GeometryType)
+		switch(m_SceneNodeType)
 		{
 		case PGT_BOX:
 			dGeomBoxSetLengths(id,bbsize.x,bbsize.y,bbsize.z);
@@ -371,7 +371,7 @@ namespace GASS
 		if(m_Body == NULL && m_TransformGeomID)
 		{
 			Vec3 offset = m_Offset + m_BBOffset*value;
-			switch(m_GeometryType)
+			switch(m_SceneNodeType)
 			{
 			case PGT_BOX:
 				if(bbsize.Length() > 0)
@@ -407,42 +407,42 @@ namespace GASS
 		SetScale(value,m_SecondGeomID);
 	}
 
-	void ODEGeometryComponent::SetGeometryType(const std::string &geom_type)
+	void ODEGeometryComponent::SetSceneNodeType(const std::string &geom_type)
 	{
-		std::string geometryTypeNameLC = Misc::ToLower(geom_type);
-		if(geometryTypeNameLC.compare("mesh")==0)
+		std::string SceneNodeTypeNameLC = Misc::ToLower(geom_type);
+		if(SceneNodeTypeNameLC.compare("mesh")==0)
 		{
-			m_GeometryType = PGT_MESH;
+			m_SceneNodeType = PGT_MESH;
 		}
-		else if(geometryTypeNameLC.compare("box")==0)
+		else if(SceneNodeTypeNameLC.compare("box")==0)
 		{
-			m_GeometryType = PGT_BOX;
+			m_SceneNodeType = PGT_BOX;
 		}
-		else if(geometryTypeNameLC.compare("terrain")==0)
+		else if(SceneNodeTypeNameLC.compare("terrain")==0)
 		{
-			m_GeometryType = PGT_TERRAIN;
+			m_SceneNodeType = PGT_TERRAIN;
 		}
-		else if(geometryTypeNameLC.compare("cylinder")==0)
+		else if(SceneNodeTypeNameLC.compare("cylinder")==0)
 		{
-			m_GeometryType = PGT_CYLINDER;
+			m_SceneNodeType = PGT_CYLINDER;
 		}
-		else if(geometryTypeNameLC.compare("sphere")==0)
+		else if(SceneNodeTypeNameLC.compare("sphere")==0)
 		{
-			m_GeometryType = PGT_SPHERE;
+			m_SceneNodeType = PGT_SPHERE;
 		}
-		else if(geometryTypeNameLC.compare("plane")==0)
+		else if(SceneNodeTypeNameLC.compare("plane")==0)
 		{
-			m_GeometryType = PGT_PLANE;
+			m_SceneNodeType = PGT_PLANE;
 		}
 		else
 		{
-			Log::Error("Unknown geometry type %s",geometryTypeNameLC.c_str());
+			Log::Error("Unknown geometry type %s",SceneNodeTypeNameLC.c_str());
 		}
 	}
 
-	std::string ODEGeometryComponent::GetGeometryType() const
+	std::string ODEGeometryComponent::GetSceneNodeType() const
 	{
-		switch(m_GeometryType)
+		switch(m_SceneNodeType)
 		{
 		case PGT_MESH:
 			return "mesh";
@@ -469,7 +469,7 @@ namespace GASS
 		//Vec3 min = box.m_Min - m_Owner->GetPosition();
 		Vec3 bb_size = (box.m_Max - box.m_Min)*m_CollisionGeomScale;
 		dMass ode_mass;
-		switch(m_GeometryType)
+		switch(m_SceneNodeType)
 		{
 			//case PGT_PLANE:
 		case PGT_MESH:
@@ -717,7 +717,7 @@ namespace GASS
 
 		if(m_GeomID && enable)
 		{
-			switch(m_GeometryType)
+			switch(m_SceneNodeType)
 			{
 			case PGT_PLANE:
 				{

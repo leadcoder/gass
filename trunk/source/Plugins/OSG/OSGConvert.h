@@ -39,8 +39,9 @@ namespace GASS
 		virtual ~OSGConvert();
 		static OSGConvert* GetPtr();
 		static OSGConvert& Get();
-		osg::Vec3 ToOSG(const Vec3 &v) const; 
+		osg::Vec3d ToOSG(const Vec3 &v) const; 
 		Vec3 ToGASS(const osg::Vec3 &v) const; 
+		Vec3 ToGASS(const osg::Vec3d &v) const; 
 		osg::Quat ToOSG(const Quaternion &value) const;
 		Quaternion ToGASS(const osg::Quat &value) const;
 		Mat4 m_Tranform;

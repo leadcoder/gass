@@ -70,14 +70,16 @@ namespace GASS
 	class ChangeCameraMessage : public BaseMessage
 	{
 	public:
-		ChangeCameraMessage(SceneObjectPtr camera , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera)
+		ChangeCameraMessage(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
 		  {
 
 		  }
 		  SceneObjectPtr GetCamera() const {return m_Camera;}
+		  std::string GetViewport() const {return m_Viewport;}
 	private:
 		SceneObjectPtr m_Camera;
+		std::string m_Viewport;
 	};
 	typedef boost::shared_ptr<ChangeCameraMessage> ChangeCameraMessagePtr;
 

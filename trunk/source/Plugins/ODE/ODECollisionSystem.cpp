@@ -31,7 +31,7 @@
 namespace GASS
 {
 
-	ODECollisionSystem::ODECollisionSystem()
+	ODECollisionSystem::ODECollisionSystem() : m_MaxRaySegment(300)
 	{
 		m_HandleCount = 5;
 	}
@@ -82,7 +82,7 @@ namespace GASS
 				if(request.Type == COL_LINE)
 				{
 					CollisionResult result;
-					ODELineCollision raycast(&request,&result,ode_scene,300);
+					ODELineCollision raycast(&request,&result,ode_scene,m_MaxRaySegment);
 					raycast.Process();
 					resultMap[handle] = result;
 				}
@@ -124,7 +124,7 @@ namespace GASS
 			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
 			if(request.Type == COL_LINE)
 			{
-				ODELineCollision raycast(&request,&result,ode_scene,300);
+				ODELineCollision raycast(&request,&result,ode_scene,m_MaxRaySegment);
 				raycast.Process();
 			}
 		}

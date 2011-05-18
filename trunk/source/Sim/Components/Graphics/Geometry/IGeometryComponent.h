@@ -23,6 +23,7 @@
 #include "Sim/Common.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
+#include "Sim/Components/Graphics/GeometryCategory.h"
 
 namespace GASS
 {
@@ -32,6 +33,7 @@ namespace GASS
 		virtual ~IGeometryComponent(){}
 		virtual AABox GetBoundingBox()const = 0;
 		virtual Sphere GetBoundingSphere()const = 0;
+		virtual GeometryCategory GetGeometryCategory() const = 0;
 	protected:
 	};
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;

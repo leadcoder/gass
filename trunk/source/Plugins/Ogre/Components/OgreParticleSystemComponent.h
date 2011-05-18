@@ -41,6 +41,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
+		virtual GeometryCategory GetGeometryCategory() const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}

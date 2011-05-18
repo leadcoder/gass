@@ -63,10 +63,15 @@ namespace GASS
 		int GetNodesPerSideAllPagesW() const {return 0;}
 		int GetNodesPerSideAllPagesH() const  {return 0;}
 		//Vec3 GetScale() const {return m_Scale;}
-		AABox GetBoundingBox() const;
-		Sphere GetBoundingSphere() const;
+		
+		
+		virtual AABox GetBoundingBox() const;
+		virtual Sphere GetBoundingSphere() const;
+		virtual GeometryCategory GetGeometryCategory() const;
+
 		float* GetHeightData();
 		void LoadFromFile();
+		
 	protected:
 		void UpdatePosition();
 		int GetIndexX() const;

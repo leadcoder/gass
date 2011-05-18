@@ -44,7 +44,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-	
+		virtual GeometryCategory GetGeometryCategory() const;
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);

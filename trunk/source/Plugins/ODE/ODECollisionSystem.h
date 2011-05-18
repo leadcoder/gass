@@ -54,6 +54,7 @@ namespace GASS
 		unsigned int m_HandleCount;
 		tbb::spin_mutex m_RequestMutex;
 		tbb::spin_mutex m_ResultMutex;
+		float m_MaxRaySegment;
 	};
 	typedef boost::shared_ptr<ODECollisionSystem> ODECollisionSystemPtr;
 

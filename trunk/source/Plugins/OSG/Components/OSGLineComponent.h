@@ -54,6 +54,7 @@ namespace GASS
 		std::string GetType()const {return m_Type;}
 		void SetHeightOffset(float value){m_HeightOffset = value;}
 		float GetHeightOffset()const {return m_HeightOffset;}
+		GeometryCategory GetGeometryCategory() const;
 	protected:
 		void GetControlPoints();
 		virtual void UpdateLineFromControlPoints();

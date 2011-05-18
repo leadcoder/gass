@@ -23,13 +23,15 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Components/Graphics/GeometryCategory.h"
 
 #include "Sim/Common.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/AAbox.h"
 #include "Core/MessageSystem/IMessage.h"
 
-//mesh fecth
+
+//mesh fetch
 #include <osg/TriangleFunctor>
 #include <osg/NodeVisitor>
 
@@ -100,7 +102,7 @@ namespace GASS
 		
 		std::vector<StridedTriangle> mTriangles;
 		
-		osg::Matrix mMatrix;
+		osg::Matrixd mMatrix;
 		
 		/**
 		 * Called once for each visited triangle.
@@ -120,9 +122,9 @@ namespace GASS
 			/*mMatrix.set(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
 									     Math::Deg2Rad(180),osg::Vec3(0,1,0),
 										 Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
-			osg::Vec3 tv1 = v1*mMatrix;
-			osg::Vec3 tv2 = v2*mMatrix;
-			osg::Vec3 tv3 = v3*mMatrix;
+			osg::Vec3d tv1 = v1*mMatrix;
+			osg::Vec3d tv2 = v2*mMatrix;
+			osg::Vec3d tv3 = v3*mMatrix;
 
 			//osg::Vec3 tv1 = v1;
 			//osg::Vec3 tv2 = v2;
@@ -170,7 +172,12 @@ namespace GASS
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual std::string GetFilename()const {return m_Filename;}
+		
 	protected:
+		void SetGeometryCategory(const GeometryCategory &value);
+		GeometryCategory GetGeometryCategory() const;
+		bool GetLighting() const;
+		void SetLighting(bool value);
 		void SetFilename(const std::string &filename);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool value);
@@ -179,12 +186,16 @@ namespace GASS
 		void GetMeshData(MeshDataPtr mesh_data);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		std::string m_Filename;
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
 		osg::ref_ptr<osg::Group> m_MeshNode;
 		AABox m_BBox;
+		bool m_ReadyToLoadMesh;
+		GeometryCategory m_Category;
+		bool m_Lighting;
 	};
 }
 

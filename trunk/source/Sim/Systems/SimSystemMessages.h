@@ -62,9 +62,10 @@ namespace GASS
 
 	/**
 	Message that can be posted by anyone to request that a new render window should be created.
+	@remark DEPRECATED, not possible to create renderwindows in runtime
 	*/
 
-	class CreateRenderWindowMessage : public BaseMessage
+	/*class CreateRenderWindowMessage : public BaseMessage
 	{
 	public:
 		CreateRenderWindowMessage(const std::string &name, int width, int height, int handle,int main_handle = 0, SenderID sender_id = -1, double delay= 0) :
@@ -86,7 +87,7 @@ namespace GASS
 		int m_Handle;
 		int m_MainHandle;
 	};
-	typedef boost::shared_ptr<CreateRenderWindowMessage> CreateRenderWindowMessagePtr;
+	typedef boost::shared_ptr<CreateRenderWindowMessage> CreateRenderWindowMessagePtr;*/
 
 	/**
 	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
@@ -164,19 +165,26 @@ namespace GASS
 		it's internal window system about the change
 	*/
 
-	class MainWindowMovedOrResizedNotifyMessage : public BaseMessage
+	class ViewportMovedOrResizedNotifyMessage : public BaseMessage
 	{
 	public:
-		MainWindowMovedOrResizedNotifyMessage (int width,int height,SenderID sender_id = -1, double delay= 0) :
+		ViewportMovedOrResizedNotifyMessage (const std::string &viewport_name, int pos_x, int pos_y, int width,int height,SenderID sender_id = -1, double delay= 0) :
+		  m_PosX(pos_x),
+		  m_PosY(pos_y),
 		  m_Width(width),
 		  m_Height(height),
+		  m_VPName(viewport_name),
 		  BaseMessage(sender_id , delay)  {}
+		  int GetPositionX()const {return m_PosX;}
+		  int GetPositionY()const {return m_PosY;}
 		  int GetWidth()const {return m_Width;}
 		  int GetHeight()const {return m_Height;}
+		  std::string GetViewportName() const {return m_VPName;}
 	private:
-		int m_Width,m_Height;
+		int m_Width,m_Height,m_PosX,m_PosY;
+		std::string m_VPName;
 	};
-	typedef boost::shared_ptr<MainWindowMovedOrResizedNotifyMessage> MainWindowMovedOrResizedNotifyMessagePtr;
+	typedef boost::shared_ptr<ViewportMovedOrResizedNotifyMessage> ViewportMovedOrResizedNotifyMessagePtr;
 
 	/**
 		This message is posted by the ScenarioScene class when a scene in a scenario has loaded successfully.

@@ -304,8 +304,6 @@ namespace GASS
 	{
 
 		//Move gizmo to new object
-
-
 		if(m_Active)
 		{
 			//hide gizmo

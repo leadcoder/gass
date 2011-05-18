@@ -22,6 +22,8 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
+
 
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -40,7 +42,8 @@ namespace GASS
 		//m_LastRot(0,0,0),
 		//m_LastPos(0,0,0), 
 		m_Scale(1,1,1),
-		m_AttachToParent(false)
+		m_AttachToParent(false),
+		m_NodeMask(0)
 	{
 	}
 
@@ -61,7 +64,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OSGLocationComponent, IComponent>);
 		RegisterProperty<Vec3>("Position", &GetPosition, &SetPosition);
 		RegisterProperty<Vec3>("Rotation", &GetEulerRotation, &SetEulerRotation);
+		RegisterProperty<Vec3>("Scale", &GetScale, &SetScale);
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent);
+		//RegisterProperty<SceneNodeState>("State", &GetSceneNodeState, &SetSceneNodeState);
 	}
 
 	void OSGLocationComponent::OnCreate()
@@ -106,6 +111,9 @@ namespace GASS
 		MessagePtr rot_msg(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
+		GetSceneObject()->PostMessage(MessagePtr (new ScaleMessage(m_Scale)));
+		
+		
 	}
 
 	void OSGLocationComponent::OnPositionMessage(PositionMessagePtr message)
@@ -152,6 +160,14 @@ namespace GASS
 	void OSGLocationComponent::SetScale(const Vec3 &value)
 	{
 		m_Scale = value;
+		if(m_TransformNode.valid())
+		{
+			osg::Vec3d scale = OSGConvert::Get().ToOSG(m_Scale);
+			double y = fabs(scale.y());
+			double z = fabs(scale.z());
+			scale.set(scale.x(),y,z);
+			m_TransformNode->setScale(scale);
+		}
 	}
 
 	
@@ -171,7 +187,12 @@ namespace GASS
 		m_Scale = message->GetScale();
 		if(m_TransformNode.valid())
 		{
-			m_TransformNode->setScale( OSGConvert::Get().ToOSG(m_Scale));
+			osg::Vec3d scale = OSGConvert::Get().ToOSG(m_Scale);
+			double y = fabs(scale.y());
+			double z = fabs(scale.z());
+			scale.set(scale.x(),y,z);
+
+			m_TransformNode->setScale( scale);
 			SendTransMessage();
 		}
 	}
@@ -371,9 +392,16 @@ namespace GASS
 	void OSGLocationComponent::OnVisibilityMessage(VisibilityMessagePtr message)
 	{
 		bool visibility = message->GetValue();
-		if(visibility)  
-			m_TransformNode->setNodeMask(1 | m_TransformNode->getNodeMask()); //TODO:Change this to keep old flags
-		else m_TransformNode->setNodeMask(0 & m_TransformNode->getNodeMask());
+		if(visibility)
+			if(m_NodeMask)
+				m_TransformNode->setNodeMask(m_NodeMask);
+		    //m_TransformNode->setNodeMask(NM_VISIBLE | m_TransformNode->getNodeMask());
+		else
+		{
+			m_NodeMask = m_TransformNode->getNodeMask();
+			m_TransformNode->setNodeMask(0);
+			//m_TransformNode->setNodeMask(~NM_VISIBLE & m_TransformNode->getNodeMask());
+		}
 	}
 
 	void OSGLocationComponent::SetAttachToParent(bool value)

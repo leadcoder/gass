@@ -24,8 +24,9 @@
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Core/MessageSystem/IMessage.h"
-
+#include <osg/Camera>
 
 namespace GASS
 {
@@ -39,14 +40,17 @@ namespace GASS
 		//ICameraComponent interface
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 		osg::ref_ptr<osg::Camera> GetOSGCamera() const {return m_OSGCamera;}
-
+		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
+		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}
 	protected:
 		void OnParameter(CameraParameterMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		//void OnPositionChanged(PositionMessagePtr message);
 		//void OnRotationChanged(RotationMessagePtr message);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
-
+		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnChangeCamera(ChangeCameraMessagePtr message);
+	
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);
 		float GetNearClipDistance() const;
@@ -60,13 +64,18 @@ namespace GASS
 		void UpdateProjection();
 	
 		osg::ref_ptr<osg::Camera> m_OSGCamera;
+		//cameras to reflect
+		//std::map<std::string,osg::ref_ptr<osg::Camera> > m_OSGCameras;
+
 		float m_NearClip;
 		float m_FarClip;
 		float m_Fov;
 		bool m_Ortho;
 		float m_OrthoWindowHeight;
+		bool m_UpdateCameraFromLocation;
 	};
 
 	typedef boost::shared_ptr<OSGCameraComponent> OSGCameraComponentPtr;
+	typedef boost::weak_ptr<OSGCameraComponent> OSGCameraComponentWeakPtr;
 }
 

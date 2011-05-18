@@ -40,10 +40,13 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/IOSGCameraManipulator.h"
+
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
 
@@ -53,7 +56,8 @@ namespace GASS
 		m_FarClip(1000),
 		m_Fov(45.0),
 		m_Ortho(false),
-		m_OSGCamera(NULL)
+		m_OSGCamera(NULL),
+		m_UpdateCameraFromLocation(true)
 	{
 
 	}
@@ -75,10 +79,48 @@ namespace GASS
 	void OSGCameraComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnUnload,UnloadComponentsMessage,1));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnPositionChanged,PositionMessage,10));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnRotationChanged,RotationMessage,10));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
+	}
+
+
+	void OSGCameraComponent::OnChangeCamera(ChangeCameraMessagePtr message)
+	{
+		SceneObjectPtr cam_obj = message->GetCamera();
+		
+		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
+		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		osgViewer::ViewerBase::Views views;
+		gfx_sys->GetViewer()->getViews(views);
+
+		bool this_camera = false;
+		if(cam_obj == GetSceneObject())
+		{
+			this_camera = true;
+		}
+		if(this_camera)
+		{
+			
+		}
+		else
+		{
+
+		}
+
+		for(int i = 0; i < views.size(); i++)
+		{
+			//if(views[i]->getCamera() != cam_comp->GetOSGCamera().get())
+			{
+				/*cam_comp->GetOSGCamera()->setGraphicsContext(views[i]->getCamera()->getGraphicsContext());
+				cam_comp->GetOSGCamera()->setViewport(views[i]->getCamera()->getViewport());
+				views[i]->getCamera()->setViewport(NULL);
+				views[i]->getCamera()->setGraphicsContext(NULL);
+				views[i]->setCamera(cam_comp->GetOSGCamera());*/
+			}
+		}
 	}
 
 	void OSGCameraComponent::OnParameter(CameraParameterMessagePtr message)
@@ -111,12 +153,13 @@ namespace GASS
 
 	void OSGCameraComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		UpdateFromLocation();
+		if(m_UpdateCameraFromLocation)
+			UpdateFromLocation();
 	}
 
 	void OSGCameraComponent::UpdateProjection()
 	{
-		if(m_OSGCamera)
+		if(m_OSGCamera.valid())
 		{
 			if(m_Ortho)
 			{
@@ -130,8 +173,11 @@ namespace GASS
 			}
 			else
 			{
-				double fovy, aspectRatio, zNear, zFar;
-				m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+				//double fovy, aspectRatio, zNear, zFar;
+				//m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+				double aspectRatio = 4.0/3.0;
+				if(m_OSGCamera->getViewport())
+					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
 				m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
 			}
 		}
@@ -144,12 +190,15 @@ namespace GASS
 
 	void OSGCameraComponent::UpdateFromLocation()
 	{
+		if(!m_OSGCamera.valid())
+			return;
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		//lc->GetOSGNode()->getAttitude();
 
 		//osg::Vec3d pos = lc->GetOSGNode()->getPosition();
 		//osg::Quat rot = lc->GetOSGNode()->getAttitude();
 
+		Vec3 w_pos = lc->GetWorldPosition();
 		osg::Vec3d pos = OSGConvert::Get().ToOSG(lc->GetWorldPosition());
 		osg::Quat rot = OSGConvert::Get().ToOSG(lc->GetWorldRotation());
 
@@ -178,9 +227,16 @@ namespace GASS
 		//m_OSGCamera->getInverseViewMatrix().setRotate(lc->GetOSGNode()->getAttitude());
 	}
 
+	void OSGCameraComponent::SetOSGCamera(osg::ref_ptr<osg::Camera> camera)
+	{
+		//update osg camera with gass camera attributes?
+		m_OSGCamera = camera;
+		UpdateProjection();
+	}
+
 	bool OSGCameraComponent::GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const
 	{
-		if(m_OSGCamera)
+		if(m_OSGCamera.valid())
 		{
 		/*	osg::Vec3d origin; 
 			osg::Vec3d direction;
@@ -236,43 +292,58 @@ namespace GASS
 			return false;
 	}
 
+	void OSGCameraComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+
+	}
+
 	void OSGCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-//		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-//		assert(osgsm);
+
+
+		OSGCameraManipulatorPtr camera_man = GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
+		if(camera_man)
+			m_UpdateCameraFromLocation = false;
+
+
+		return;
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+
+		//GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 
 		
 		osgViewer::ViewerBase::Views views;
 		gfx_sys->GetViewer()->getViews(views);
-		//set same scene in all viewports for the moment 
 
-		for(int i = 0; i < views.size(); i++)
+		int vp_id = 0;
+		
+			
+		//set same scene in all viewports for the moment 
+		//for(int i = 0; i < views.size(); i++)
+		if(vp_id < views.size())
 		{
-			/*osgGA::NodeTrackerManipulator* tm = new osgGA::NodeTrackerManipulator;
-			tm->setTrackerMode(osgGA::NodeTrackerManipulator::NODE_CENTER_AND_ROTATION);
-			tm->setRotationMode(osgGA::NodeTrackerManipulator::ELEVATION_AZIM);
-			tm->setTrackNode(lc->GetOSGNode().get());*/
+		
 			//uhh?
 
 			//m_OSGCamera = new osg::Camera;
 			//m_OSGCamera->setClearColor(osg::Vec4(1,1,1,1));
 
 			double fovy, aspectRatio, zNear, zFar;
-			m_OSGCamera = new osg::Camera(*views[i]->getCamera());
+			m_OSGCamera = new osg::Camera(*views[vp_id]->getCamera());
+			//m_OSGCamera = views[vp_id]->getCamera();
+			//m_OSGCamera->setCullMask(NM_VISIBLE);
 			
-			views[i]->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+			m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
 			m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
 
 			//m_OSGCamera->setReadBuffer(GL_BACK);
 			//m_OSGCamera->setDrawBuffer(GL_BACK);
 			//m_OSGCamera = views[i]->getCamera();
-			m_OrthoWindowHeight = views[i]->getCamera()->getViewport()->height();
+			m_OrthoWindowHeight = m_OSGCamera->getViewport()->height();
 			UpdateProjection();
-			
 			//m_OSGCamera->setViewMatrix(
 
 			//views[i]->getCamera()->addParent(lc->GetOSGNode());

@@ -41,13 +41,13 @@
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 #include <osg/Material>
 #include <osg/BlendFunc>
 
 
 namespace GASS
 {
-
 	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(false),
 		m_OSGBillboard (NULL),
 		m_Width(1.0f),
@@ -58,7 +58,7 @@ namespace GASS
 
 	OSGBillboardComponent::~OSGBillboardComponent()
 	{
-		m_OSGBillboard.release();
+		//m_OSGBillboard.release();
 	}
 
 	void OSGBillboardComponent::RegisterReflection()
@@ -78,18 +78,25 @@ namespace GASS
 	void OSGBillboardComponent::SetWidth(float width)
 	{
 		m_Width = width;
-
-		//TODO::support run time change
-		
+		UpdateSize(m_Width,m_Height);
 	}
+
 	float OSGBillboardComponent::GetHeight() const
 	{
 		return m_Height;
 	}
+
 	void OSGBillboardComponent::SetHeight(float height)
 	{
 		m_Height = height;
-		//TODO::support run-time change
+		UpdateSize(m_Width,m_Height);
+	}
+
+
+
+	GeometryCategory OSGBillboardComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
 	}
 
 
@@ -97,13 +104,12 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
 
 	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		//OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
-		//assert(osgsm);
-
+		
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath(m_Material,full_path))
@@ -123,12 +129,16 @@ namespace GASS
 			CreateSquare(osg::Vec3(corner.x,corner.y,corner.z),
 			osg::Vec3(east.x,east.y,east.z),
 			osg::Vec3(up.x,up.y,up.z),
-			//osgDB::readImageFile("Images/reflect.rgb")),
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
+		m_OSGBillboard->setUserData((osg::Referenced*)this);
+
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
+
+		SetCastShadow(m_CastShadow);
+		
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		//m_OSGBillboard->setNodeMask();
 	}
@@ -235,15 +245,40 @@ namespace GASS
 		return geom;
 	}
 
-
 	void OSGBillboardComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
 		if(m_CastShadow && m_OSGBillboard.valid())
-			m_OSGBillboard->setNodeMask(OSGGraphicsSystem::m_CastsShadowTraversalMask | m_OSGBillboard->getNodeMask());
+			m_OSGBillboard->setNodeMask(NM_CAST_SHADOWS | m_OSGBillboard->getNodeMask());
 		else if(m_OSGBillboard.valid())
 		{
-			m_OSGBillboard->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_OSGBillboard->getNodeMask());
+			m_OSGBillboard->setNodeMask(~NM_CAST_SHADOWS & m_OSGBillboard->getNodeMask());
 		}
+	}
+
+	void OSGBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	{
+		const Vec3 scale = message->GetScale();
+		UpdateSize(m_Width*scale.x,m_Height*scale.y);
+	}
+
+	void OSGBillboardComponent::UpdateSize(float width,float height)
+	{
+		if(m_OSGBillboard.valid())
+		{
+			osg::Geometry *geom = static_cast<osg::Geometry*>(m_OSGBillboard->getDrawable(0));
+			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (geom->getVertexArray());
+
+			osg::Vec3 height(0,0,height);
+			osg::Vec3 width(width,0,0);
+			osg::Vec3 corner = -width*0.5;
+
+			(*coords)[0] = corner;
+			(*coords)[1] = corner+width;
+			(*coords)[2] = corner+width+height;
+			(*coords)[3] = corner+height;
+			geom->setVertexArray(coords);
+		}
+
 	}
 }

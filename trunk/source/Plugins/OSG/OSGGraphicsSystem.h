@@ -32,6 +32,8 @@
 class TextBox;
 namespace GASS
 {
+	class OSGCameraComponent;
+	typedef boost::shared_ptr<OSGCameraComponent> OSGCameraComponentPtr;
 	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem, public ITaskListener
 	{
 		friend class OSGGraphicsSceneManager;
@@ -43,36 +45,32 @@ namespace GASS
 		SystemType GetSystemType() {return "GraphicsSystem";}
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
-		//osg::Group* GetActiveData() {return m_Root;}
-
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 
-
-		static int m_ReceivesShadowTraversalMask;
-		static int m_CastsShadowTraversalMask;
-
+		
+		void CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle = 0);
+		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
-		void OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message);
-		void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
+		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
+		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
-
-		void CreateView(osgViewer::CompositeViewer *viewer,
-                 //osg::ref_ptr<osg::Group> scene,
-                 osg::ref_ptr<osg::GraphicsContext> gc,
-                 int x, int y, int width, int height);
+		
 		void SetActiveData(osg::Group* root);
 		void OnInit(MessagePtr message);		
 		void LoadShadowSettings(TiXmlElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
 		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}
+		void ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp);
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
-		osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;
+
+		std::map<std::string,osg::ref_ptr<osg::GraphicsContext> > m_Windows;
+		//osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;
 		//osg::Group* m_Root;
 		bool m_CreateMainWindowOnInit;
 		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;

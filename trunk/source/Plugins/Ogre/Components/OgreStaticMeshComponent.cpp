@@ -378,4 +378,10 @@ void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,
 		}
 	}
 
+
+	GeometryCategory OgreStaticMeshComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
+
 }

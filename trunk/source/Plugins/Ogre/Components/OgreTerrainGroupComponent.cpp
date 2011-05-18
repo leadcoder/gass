@@ -591,4 +591,9 @@ namespace GASS
 		}
 		
 	}
+
+	GeometryCategory OgreTerrainGroupComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_TERRAIN);
+	}
 }

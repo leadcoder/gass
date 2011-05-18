@@ -326,4 +326,9 @@ namespace GASS
 		return sphere;
 	}
 
+	GeometryCategory OgreManualMeshComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
+
 }

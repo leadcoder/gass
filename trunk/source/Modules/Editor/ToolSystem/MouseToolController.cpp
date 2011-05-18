@@ -663,12 +663,12 @@ namespace GASS
 
 		//debug message
 
-		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
-		}*/
+		}
 	}
 }
 

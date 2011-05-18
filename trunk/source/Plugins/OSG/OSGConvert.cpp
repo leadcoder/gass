@@ -55,25 +55,31 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	osg::Vec3 OSGConvert::ToOSG(const Vec3 &v) const
+	osg::Vec3d OSGConvert::ToOSG(const Vec3 &v) const
 	{
 		//Vec3 osg_v = m_Tranform*v;
 		//return osg::Vec3(osg_v.x,osg_v.y,osg_v.z);
 		if(m_FlipYZ)
-			return osg::Vec3(v.x,-v.z,v.y);
+			return osg::Vec3d(v.x,-v.z,v.y);
 		else
-			return osg::Vec3(v.x,v.y,v.z);
+			return osg::Vec3d(v.x,v.y,v.z);
 	}
 
 	Vec3 OSGConvert::ToGASS(const osg::Vec3 &v) const
 	{
-		//Vec3 gass_v = m_InvTranform*Vec3(v.x(),v.y(),v.z());
-		//return gass_v;
 		if(m_FlipYZ)
 			return Vec3(v.x(),v.z(),-v.y());
 		else
 			return Vec3(v.x(),v.y(),v.z());
 
+	}
+
+	Vec3 OSGConvert::ToGASS(const osg::Vec3d &v) const
+	{
+		if(m_FlipYZ)
+			return Vec3(v.x(),v.z(),-v.y());
+		else
+			return Vec3(v.x(),v.y(),v.z());
 	}
 
 	Quaternion OSGConvert::ToGASS(const osg::Quat &value) const

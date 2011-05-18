@@ -40,8 +40,7 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_Window(NULL),
-		m_CreateMainWindowOnInit(true),
+	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), m_SceneMgr(NULL),
 		m_TaskGroup(GRAPHICS_TASK_GROUP)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
@@ -61,14 +60,14 @@ namespace GASS
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::OgreGraphicsSystem::GetTaskGroup, &GASS::OgreGraphicsSystem::SetTaskGroup);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
-		
+
 	}
 
 	void OgreGraphicsSystem::OnCreate()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInit,InitMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnWindowMovedOrResized,MainWindowMovedOrResizedNotifyMessage,0));
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 
 	}
@@ -76,31 +75,31 @@ namespace GASS
 
 
 
-    //Create custom load
+	//Create custom load
 	/*void OgreGraphicsSystem::Load(TiXmlElement *elem)
 	{
-		TiXmlElement *attrib = elem->FirstChildElement();
-		while(attrib)
-		{
-			std::string attrib_name = attrib->Value();
+	TiXmlElement *attrib = elem->FirstChildElement();
+	while(attrib)
+	{
+	std::string attrib_name = attrib->Value();
 
-			if(attrib_name == "AddViewport")
-			{
-				ViewportData vpd;
-				rl.m_SMName = attrib->Attribute("SceneManager");
-				rl.m_WindowName = attrib->Attribute("Window");
-				rl.m_LeftX = atof(attrib->Attribute("LeftX"));
-				rl.m_RightX = atof(attrib->Attribute("RightX"));
-				rl.m_TopY = atof(attrib->Attribute("TopY"));
-				rl.m_BottomY = atof(attrib->Attribute("BottomY"));
-			}
-			else
-			{
-				std::string attrib_val = attrib->FirstAttribute()->Value();
-				SetProperty(attrib_name,attrib_val);
-			}
-			attrib  = attrib->NextSiblingElement();
-		}
+	if(attrib_name == "AddViewport")
+	{
+	ViewportData vpd;
+	rl.m_SMName = attrib->Attribute("SceneManager");
+	rl.m_WindowName = attrib->Attribute("Window");
+	rl.m_LeftX = atof(attrib->Attribute("LeftX"));
+	rl.m_RightX = atof(attrib->Attribute("RightX"));
+	rl.m_TopY = atof(attrib->Attribute("TopY"));
+	rl.m_BottomY = atof(attrib->Attribute("BottomY"));
+	}
+	else
+	{
+	std::string attrib_val = attrib->FirstAttribute()->Value();
+	SetProperty(attrib_name,attrib_val);
+	}
+	attrib  = attrib->NextSiblingElement();
+	}
 	}*/
 
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
@@ -135,37 +134,13 @@ namespace GASS
 
 		if(m_CreateMainWindowOnInit)
 		{
-			m_Window = m_Root->initialise(true);
-			m_Window->setDeactivateOnFocusChange(false);
-			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
-			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
-			cam->setPosition(Vector3(0,2,0));
-			cam->lookAt(Vector3(0,2,-1));
-			cam->setNearClipDistance(1.2f);
-			cam->setFarClipDistance(25000);
-			// Create one viewport, entire window
-			Viewport *vp = m_Window->addViewport(cam);
-			vp->setBackgroundColour(ColourValue(0.5,0,0));
-			// Alter the camera aspect ratio to match the viewport
-			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
-
-			size_t windowHnd = 0;
-			m_Window->getCustomAttribute("WINDOW", &windowHnd);
-
-			//IInputSystem*  is = GetOwner()->GetFirstSystem<IInputSystem>();
-			//is->SetWindow(windowHnd);
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(windowHnd,windowHnd));
-			GetSimSystemManager()->SendImmediate(window_msg);
-
-
+			CreateRenderWindow("MainWindow", 800, 600, 0, 0);
+			CreateViewport("Viewport0","MainWindow", 0, 0, 1, 1);
 		}
 		else
 		{
 			m_Root->initialise(false);
 		}
-		//MessagePtr update_msg(new Message(SystemManager::SYSTEM_RM_UPDATE,(int) this));
-		//update_msg->m_Timer = 1.0/100.0f; //update with 100hz
-		//m_Owner->GetMessageManager()->PostMessage(update_msg);
 	}
 
 
@@ -176,80 +151,65 @@ namespace GASS
 		m_DebugTextBox->SetActive(true);
 	}
 
-	void OgreGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
+	/*void OgreGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
 	{
 		std::string name = message->GetName();
 		int height = message->GetHeight();
 		int width = message->GetWidth();
 		int handel = message->GetHandle();
+		int main_handel = message->GetMainHandle();
+		CreateRenderWindow(name,width,height,handel,main_handel);
+	}*/
 
-
-		{
-			int main_handel = message->GetMainHandle();
-			Ogre::NameValuePairList miscParams;
-			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handel);
-			Ogre::RenderWindow *window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
-
-
-			
-
-			m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
-			Camera* cam = m_SceneMgr->createCamera("DefaultViewportCamera0");
-			cam->setPosition(Vector3(0,2,0));
-			cam->lookAt(Vector3(0,2,-1));
-			cam->setNearClipDistance(0.02f);
-			cam->setFarClipDistance(5000);
-			// Create one viewport, entire window
-			Viewport *vp = window->addViewport(cam);
-			vp->setBackgroundColour(ColourValue(0.5,0,0));
-			// Alter the camera aspect ratio to match the viewport
-			cam->setAspectRatio( Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
-
-			if(m_Window == NULL) // first window
-			{
-				m_Window = window;
-				MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handel,main_handel));
-				GetSimSystemManager()->SendImmediate(window_msg);
-			}
-		}
-
-	}
-
-	void OgreGraphicsSystem::OnWindowMovedOrResized(MainWindowMovedOrResizedNotifyMessagePtr message)
+	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
 	{
-		m_Window->windowMovedOrResized();
-		/*int handel = boost::any_cast<int>(message->GetData("Handle"));
-		size_t main_window_handel = 0;
-		m_Window->getCustomAttribute("WINDOW", &main_window_handel);
-
-		if(handel == main_window_handel)
+		std::map<std::string, Ogre::RenderWindow*>::iterator iter = m_Windows.begin();
+		while(iter != m_Windows.end())
 		{
+			//resize all temporary
+			iter->second->windowMovedOrResized();
+			/*for(int i = 0; i < iter->second->getNumViewports();i++)
+			{
 
-		}*/
+			}*/
+			iter++;
+
+		}
 	}
 
 	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)
 	{
-		m_Window->removeAllViewports();
-		AddViewport(sm,m_Window, 0, 0, 1, 1, Ogre::ColourValue (0,0,0));
+		std::map<std::string, Ogre::RenderWindow*>::iterator win_iter = m_Windows.begin();
+		while(win_iter != m_Windows.end())
+		{
+			//set same scene manager in all views
+			win_iter->second->removeAllViewports();	
+			win_iter++;
+		}
+
+		//readd all viewports?
+		std::map<std::string, Viewport>::iterator vp_iter = m_Viewports.begin();
+		while(vp_iter != m_Viewports.end())
+		{
+			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue());
+			vp_iter++;
+		}
+		
+		
 	}
 
 	void OgreGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top)
 	{
 		unsigned int depth;
-		if(m_Window)
-			m_Window->getMetrics(width, height, depth, left, top);
+		if(m_Windows.size() > 0)
+			m_Windows.begin()->second->getMetrics(width, height, depth, left, top);
 	}
 
-	
+
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		//boost::shared_ptr<UpdateMessage> update_msg = boost::static_pointer_cast<UpdateMessage>( message);
-		//if(((int) update_msg->m_Tick) % 10 == 0)
-		//static int tick = 0;
-		//std::cout << " tick:" << tick++ <<std::endl;
-
+		
 		//set thread priority to highest!!
 		WindowEventUtilities::messagePump();
 		m_Root->renderOneFrame();
@@ -258,34 +218,40 @@ namespace GASS
 		m_DebugTextBox->UpdateTextBox();
 
 
-		if(m_Window && m_ShowStats)
+		if(m_Windows.size() > 0 && m_ShowStats)
 		{
-			float a_fps = m_Window->getAverageFPS(); 
-			size_t tri_count = m_Window->getTriangleCount(); 
-			size_t batch_count = m_Window->getBatchCount();
+			float a_fps = m_Windows.begin()->second->getAverageFPS(); 
+			size_t tri_count = m_Windows.begin()->second->getTriangleCount(); 
+			size_t batch_count = m_Windows.begin()->second->getBatchCount();
 
 			std::stringstream sstream;
 			sstream << "AVERAGE FPS:" << a_fps << "\n" <<
-					   "TRIANGLE COUNT: " << tri_count << "\n"
-					   "BATCH COUNT: " << batch_count << "\n";
+				"TRIANGLE COUNT: " << tri_count << "\n"
+				"BATCH COUNT: " << batch_count << "\n";
 			std::string stats_text = sstream.str();
 			GetSimSystemManager()->SendImmediate(MessagePtr( new DebugPrintMessage(stats_text)));
 		}
 	}
 
-	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour)
+	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour)
 	{
+		
+		
+		Ogre::RenderWindow* win = m_Windows[win_name];
+		
 		int num_viewports = win->getNumViewports();
+		
+		//we need a camera before we can create the viewport!
 		std::stringstream ss;
 		ss << "DefaultViewportCamera" << num_viewports;
-		std::string name;
-		ss >> name;
+		std::string cam_name;
+		ss >> cam_name;
 
 		Ogre::Camera* cam;
-		if(sm->hasCamera(name))
-			sm->getCamera(name);
+		if(sm->hasCamera(cam_name))
+			cam = sm->getCamera(cam_name);
 		else
-			cam = sm->createCamera(name);
+			cam = sm->createCamera(cam_name);
 
 		cam->setPosition(Ogre::Vector3(0,0,0));
 		cam->setNearClipDistance(0.02f);
@@ -298,13 +264,18 @@ namespace GASS
 		//Alter the camera aspect ratio to match the viewport
 		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
 
+		//add post process to all windows, change this to camera effect instead
 		if(m_PostProcess)
 		{
 			m_PostProcess.reset();
 		}
+
 		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
 		m_PostProcess->SetActiveCompositors(GetPostFilters());
 
+		//save viewport settings for recreation when scenario manager is changed
+		Viewport save_vp(name,win_name,left,top,width,height,vp);
+		m_Viewports[name] = save_vp;
 	}
 
 	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
@@ -325,6 +296,77 @@ namespace GASS
 	TaskGroup OgreGraphicsSystem::GetTaskGroup() const
 	{
 		return m_TaskGroup;
+	}
+
+	void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle)
+	{
+		Ogre::RenderWindow *window = NULL;
+
+		if(main_handle == 0) //autocreate?
+		{
+			window = m_Root->initialise(true,name);
+			window->setDeactivateOnFocusChange(false);
+			size_t window_hnd = 0;
+			window->getCustomAttribute("WINDOW", &window_hnd);
+			handle =window_hnd;
+			main_handle = window_hnd;
+		}
+		else
+		{
+			if(handle)
+			{
+				Ogre::NameValuePairList miscParams;
+				miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handle);
+				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
+			}
+			else
+			{
+				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+			}
+		}
+		
+		m_Windows[name] = window;
+
+		if(m_Windows.size() == 1) // first window
+		{
+			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handle,main_handle));
+			GetSimSystemManager()->SendImmediate(window_msg);
+		}
+	}
+
+	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
+	{
+		//check that this window exist!
+		Ogre::RenderWindow* window = m_Windows[render_window];
+		if(window)
+		{
+			if(m_SceneMgr == NULL) //we need a scene mananger before we can create viewports
+				m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
+
+			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue());
+		}
+	}
+
+	void OgreGraphicsSystem::ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp)
+	{
+
+		if(vp_name == "ALL")
+		{
+			std::map<std::string,Viewport>::iterator iter = m_Viewports.begin();
+			while(iter != m_Viewports.end())
+			{
+
+				if(iter->second.m_OgreViewport)
+					iter->second.m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
+				iter++;
+			}
+		}
+		
+		else if(m_Viewports.find(vp_name) != m_Viewports.end() && m_Viewports[vp_name].m_OgreViewport != NULL)
+		{
+			m_Viewports[vp_name].m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
+		}
 	}
 }
 

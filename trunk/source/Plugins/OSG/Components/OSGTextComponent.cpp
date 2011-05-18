@@ -39,7 +39,7 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGTextComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
-
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 namespace GASS
 {
@@ -120,8 +120,8 @@ namespace GASS
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGGeode.get());
 
-		m_OSGGeode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & m_OSGGeode->getNodeMask());
-		m_OSGGeode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_OSGGeode->getNodeMask());
+		m_OSGGeode->setNodeMask(~NM_RECEIVE_SHADOWS & m_OSGGeode->getNodeMask());
+		m_OSGGeode->setNodeMask(~NM_CAST_SHADOWS & m_OSGGeode->getNodeMask());
 		
 	}
 

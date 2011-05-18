@@ -44,6 +44,7 @@ namespace GASS
 		virtual void Clear();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
+		virtual GeometryCategory GetGeometryCategory() const;
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void SetMaterialName(const std::string &name){m_MaterialName = name;}
 		std::string GetMaterialName()const {return m_MaterialName;}

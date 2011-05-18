@@ -53,6 +53,7 @@
 #include "Plugins/OSG/Components/OSGSkyboxComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 
 
@@ -213,8 +214,11 @@ namespace GASS
 			osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			if (cv)
 			{
-				Vec3 pos = m_Skybox->GetEyePosition();
-				osg::Vec3 eyePointLocal = OSGConvert::Get().ToOSG(pos);
+				
+				//Vec3 pos = m_Skybox->GetEyePosition();
+				//osg::Vec3 eyePointLocal = OSGConvert::Get().ToOSG(pos);
+				osg::Vec3 eyePointLocal = cv->getEyePoint();
+				
 				matrix.preMult(osg::Matrix::translate(eyePointLocal.x(),eyePointLocal.y(),eyePointLocal.z()));
 				//matrix.preMultTranslate(eyePointLocal);
 			}
@@ -228,9 +232,9 @@ namespace GASS
 			if (cv)
 			{
 				//osg::Vec3 eyePointLocal(1.52206e+006,6.49688e+006,10);
-				//osg::Vec3 eyePointLocal = cv->getEyeLocal();
-				Vec3 pos = m_Skybox->GetEyePosition();
-				osg::Vec3 eyePointLocal(pos.x,pos.y,pos.z);// =
+				osg::Vec3 eyePointLocal = cv->getEyeLocal();
+				//Vec3 pos = m_Skybox->GetEyePosition();
+				//osg::Vec3 eyePointLocal(pos.x,pos.y,pos.z);// =
 				matrix.postMult(osg::Matrixd::translate(-eyePointLocal.x(),-eyePointLocal.y(),-eyePointLocal.z()));
 				//matrix.postMultTranslate(-eyePointLocal);
 			}
@@ -312,12 +316,12 @@ namespace GASS
 		clearNode->setCullCallback(new TexMatCallback(*tm));
 		clearNode->addChild(transform);
 
-		geode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & geode->getNodeMask());
-		geode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & geode->getNodeMask());
-		clearNode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & clearNode->getNodeMask());
-		clearNode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & clearNode->getNodeMask());
-		transform->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & transform->getNodeMask());
-		transform->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & transform->getNodeMask());
+		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
+		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
+		clearNode->setNodeMask(~NM_RECEIVE_SHADOWS & clearNode->getNodeMask());
+		clearNode->setNodeMask(~NM_CAST_SHADOWS & clearNode->getNodeMask());
+		transform->setNodeMask(~NM_RECEIVE_SHADOWS & transform->getNodeMask());
+		transform->setNodeMask(~NM_CAST_SHADOWS & transform->getNodeMask());
 
 		return clearNode;
 	}

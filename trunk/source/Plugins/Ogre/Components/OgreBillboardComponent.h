@@ -45,6 +45,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
+		virtual GeometryCategory GetGeometryCategory() const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:

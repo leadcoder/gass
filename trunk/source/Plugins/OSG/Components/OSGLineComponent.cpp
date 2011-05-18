@@ -70,6 +70,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLineComponent::OnLoad,LoadGFXComponentsMessage,1));
 	}
 
+
+	GeometryCategory OSGLineComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
+
 	void OSGLineComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 //		OSGGraphicsSceneManager* osgsm = static_cast<OSGGraphicsSceneManager*>(message->GetGFXSceneManager());
@@ -147,8 +153,7 @@ namespace GASS
 	void OSGLineComponent::Clear()
 	{
 		m_ControlPoints.clear();
-		//	if(m_LineObject)
-		//		m_LineObject->clear();
+		
 		if(m_OSGGeometry == NULL)
 			return;
 
@@ -158,6 +163,9 @@ namespace GASS
 			vertices->clear();
 		if(colors)
 			colors->clear();
+
+		m_OSGGeometry->setVertexArray(vertices);
+		m_OSGGeometry->setColorArray(colors);
 	}
 
 

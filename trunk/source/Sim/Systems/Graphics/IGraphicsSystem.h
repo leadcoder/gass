@@ -31,8 +31,9 @@ namespace GASS
 	public:
 		virtual ~IGraphicsSystem(){}
 		virtual void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) = 0;
+		virtual void CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle = 0) = 0;
+		virtual void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height) = 0;
 	protected:
 	};
-
 	typedef boost::shared_ptr<IGraphicsSystem> GraphicsSystemPtr;
 }

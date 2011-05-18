@@ -65,8 +65,10 @@ namespace GASS
 		int GetNodesPerSideAllPagesW() const {return m_NodesPerSideAllPagesW;}
 		int GetNodesPerSideAllPagesH() const  {return m_NodesPerSideAllPagesH;}
 		Vec3 GetScale() const {return m_Scale;}
-		AABox GetBoundingBox() const;
-		Sphere GetBoundingSphere() const;
+
+		virtual GeometryCategory GetGeometryCategory() const;
+		virtual AABox GetBoundingBox() const;
+		virtual Sphere GetBoundingSphere() const;
 		float* GetHeightData() {return NULL;}
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;

@@ -335,4 +335,10 @@ namespace GASS
 	{
 		return m_HeightData;
 	}
+
+	GeometryCategory OgreSceneManagerTerrainComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_TERRAIN);
+	}
+
 }

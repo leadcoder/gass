@@ -114,7 +114,6 @@ namespace GASS
 		if(m_SceneMgr)
 		{
 			m_SceneMgr->clearScene();
-			//m_MainWindow->removeAllViewports();
 			Root::getSingleton().destroySceneManager(m_SceneMgr);
 			m_SceneMgr = NULL;
 		}
@@ -132,7 +131,7 @@ namespace GASS
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 
 		// Try to load default camera
-		ScenarioScenePtr scene = GetScenarioScene();
+		/*ScenarioScenePtr scene = GetScenarioScene();
 		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		if(!scene_object) //If no FreeCameraObject template found, create one
@@ -155,34 +154,22 @@ namespace GASS
 			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
 
 			scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		}*/
 
-		}
-
-
-		assert(scene_object);
+		//assert(scene_object);
 
 		//don't save this object
-		scene_object->SetSerialize(false);
-		//SceneObject* scene_object = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("FreeCameraObject");
-		//OgreCameraComponent* cam_comp = scene_object->GetFirstComponentByClass<OgreCameraComponent>();
-		//OgreLocationComponent* loc_comp = scene_object->GetFirstComponentByClass<OgreLocationComponent>();
-		//loc_comp->SetPosition(GetOwner()->GetStartPos());
-		//loc_comp->SetEulerRotation(GetOwner()->GetStartRot());
-		//m_Scene->GetObjectManager()->LoadObject(scene_object);
-
-
+		//scene_object->SetSerialize(false);
 		//Send message to load all gfx components
-
-		//m_GFXSystem->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
-		MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
+		//MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
 
 		//ScenarioScenePtr scene = ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());
 		//ScenarioScenePtr scene = GetScenarioScene();
-		scene->SendImmediate(camera_msg);
+		//scene->SendImmediate(camera_msg);
 
 		//move camera to spawn position
-		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
-		scene_object->SendImmediate(pos_msg);
+		//MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
+		//scene_object->SendImmediate(pos_msg);
 
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
@@ -194,10 +181,14 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
-		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
-		OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
+		const std::string vp_name = message->GetViewport();
 
-		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
+		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
+		
+		OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
+		//OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
+		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
+
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
 		GetScenarioScene()->PostMessage(cam_message);
 	}
@@ -240,11 +231,7 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::Update(double delta_time)
 	{
-		/*for(int i = 0; i < m_GFXComponents.size(); i++)
-		{
-			m_GFXComponents[i]->OnUpdate(delta_time);
-		}*/
-		//update scene settings
+		
 	}
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()

@@ -197,9 +197,27 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive)
 	{
-		
-
-		if(exact_math)
+ 		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			if(exact_math)
+			{
+				if(child->GetName() == name)
+				{
+					return child;
+				}
+			}
+			else
+			{
+				int pos = child->GetName().find(name);
+				if(pos  >= 0)
+				{
+					return child;
+				}
+			}
+		}
+		/*if(exact_math)
 		{
 			if(GetName()== name)
 			{
@@ -215,7 +233,7 @@ namespace GASS
 				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 				return obj;
 			}
-		}
+		}*/
 
 		if(recursive)
 		{

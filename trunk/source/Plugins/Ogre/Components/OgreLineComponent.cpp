@@ -238,4 +238,9 @@ namespace GASS
 		return sphere;
 	}
 
+	GeometryCategory OgreLineComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
+
 }

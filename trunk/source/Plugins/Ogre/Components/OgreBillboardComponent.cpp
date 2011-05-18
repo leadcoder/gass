@@ -77,7 +77,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(typeid(LoadGFXComponentsMessage),TYPED_MESSAGE_FUNC(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,MaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
-		
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -205,5 +204,10 @@ namespace GASS
 			m_Billboard->setPosition(Ogre::Vector3(0,scale.y*m_Height/2.0,0));
 			m_Billboard->setDimensions(m_Width*scale.x,m_Height*scale.y);
 		}
+	}
+
+	GeometryCategory OgreBillboardComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
 	}
 }

@@ -167,7 +167,7 @@ namespace GASS
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{
-				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject()));
+				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),"MainVP"));
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 			}
 			m_CurrentVehicle.reset();

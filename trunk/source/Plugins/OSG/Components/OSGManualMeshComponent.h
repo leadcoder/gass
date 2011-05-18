@@ -22,9 +22,11 @@
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/Graphics/GeometryCategory.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/MeshData.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+
 
 #include <osg/Geometry>
 
@@ -46,6 +48,11 @@ namespace GASS
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void SetGeometryCategory(const GeometryCategory &value);
+		GeometryCategory GetGeometryCategory() const;
+	
+
 
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
@@ -57,6 +64,7 @@ namespace GASS
 
 		osg::ref_ptr<osg::DrawArrays> m_DrawArrays;
 		osg::ref_ptr<osg::DrawElementsUInt> m_DrawElements;
+		GeometryCategory m_Category;
 		
 	};
 }

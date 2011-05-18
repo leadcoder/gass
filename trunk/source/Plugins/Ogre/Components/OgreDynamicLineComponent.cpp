@@ -73,6 +73,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreDynamicLineComponent::OnLoad,LoadGFXComponentsMessage,1));
 	}
 
+	GeometryCategory OgreDynamicLineComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
+
 	void OgreDynamicLineComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());

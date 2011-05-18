@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Components/Graphics/GeometryCategory.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
@@ -35,6 +36,7 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
@@ -49,10 +51,14 @@ namespace GASS
 {
 
 	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
-		m_ReceiveShadow  (false)
+		m_ReceiveShadow  (false),
+		m_ReadyToLoadMesh(false),
+		m_Lighting(true),
+		m_Category(GT_REGULAR)
 	{
 		
-	}	
+	}
+
 
 	OSGMeshComponent::~OSGMeshComponent()
 	{
@@ -65,17 +71,32 @@ namespace GASS
 		RegisterProperty<std::string>("Filename", &GetFilename, &SetFilename);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
+		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
+		RegisterProperty<GeometryCategory>("GeometryCategory", &GetGeometryCategory, &SetGeometryCategory);
 	}
 
+	void OSGMeshComponent::SetGeometryCategory(const GeometryCategory &value)
+	{
+		m_Category = value;
+		if(m_MeshNode.valid())
+		{
+			OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),value);
+		}
+	}
+
+	GeometryCategory OSGMeshComponent::GetGeometryCategory() const
+	{
+		return m_Category;
+	}
 
 	void OSGMeshComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
 		if(m_CastShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(OSGGraphicsSystem::m_CastsShadowTraversalMask | m_MeshNode->getNodeMask());
+			m_MeshNode->setNodeMask(NM_CAST_SHADOWS | m_MeshNode->getNodeMask());
 		else if(m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~OSGGraphicsSystem::m_CastsShadowTraversalMask & m_MeshNode->getNodeMask());
+			m_MeshNode->setNodeMask(~NM_CAST_SHADOWS & m_MeshNode->getNodeMask());
 		}
 	}
 
@@ -83,10 +104,10 @@ namespace GASS
 	{
 		m_ReceiveShadow = value;
 		if(m_ReceiveShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(OSGGraphicsSystem::m_ReceivesShadowTraversalMask | m_MeshNode->getNodeMask());
+			m_MeshNode->setNodeMask(NM_RECEIVE_SHADOWS | m_MeshNode->getNodeMask());
 		else if(m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~OSGGraphicsSystem::m_ReceivesShadowTraversalMask & m_MeshNode->getNodeMask());
+			m_MeshNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_MeshNode->getNodeMask());
 		}
 	}
 
@@ -94,6 +115,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 	}
 
 
@@ -141,16 +163,18 @@ namespace GASS
 		{
 			lc->GetOSGNode()->addChild(getChild(i));
 		}*/
-		
+		m_ReadyToLoadMesh = true;
 		SetFilename(m_Filename);
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
+
+		//std::cout << "Min:" << m_BBox.m_Min << " Max:" << m_BBox.m_Max << "\n";
 	}
 
 	void OSGMeshComponent::SetFilename(const std::string &filename)
 	{
 		m_Filename = filename;
-		if(!GetSceneObject()) //not loaded
+		if(!m_ReadyToLoadMesh) //not loaded
 			return;
 
 		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -161,7 +185,7 @@ namespace GASS
 		
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		//check if extenstion exist?
+		//check if extension exist?
 		std::string extesion =  Misc::GetExtension(m_Filename);
 		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
 		{
@@ -185,13 +209,14 @@ namespace GASS
 			if( ! m_MeshNode)
 			{
 				Log::Error("Failed to load mesh:%s",full_path.c_str());
+				return;
 			}
 
 			osgUtil::Optimizer optimizer;
 		    optimizer.optimize(m_MeshNode.get());
 
 			m_MeshNode->setUserData((osg::Referenced*)this);
-
+			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
@@ -213,6 +238,24 @@ namespace GASS
 		return m_BBox;//Convert::ToGASS(m_OgreEntity->getBoundingBox());
 
 	}
+
+	bool OSGMeshComponent::GetLighting() const
+	{
+		return m_Lighting;
+	}
+
+	void OSGMeshComponent::SetLighting(bool value)
+	{
+		m_Lighting = value;
+		if(m_MeshNode.valid())
+		{
+			osg::ref_ptr<osg::StateSet> nodess = m_MeshNode->getOrCreateStateSet();
+			if(value) nodess->setMode(GL_LIGHTING,osg::StateAttribute::ON);
+			else nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+		}
+	}
+
+
 	Sphere OSGMeshComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
@@ -264,8 +307,8 @@ namespace GASS
 				//osg::Vec3 t_max = bbox._max*trans;
 				//osg::Vec3 t_min = bbox._min*trans;
 
-				osg::Vec3 p1 = bbox._max;//*trans;
-				osg::Vec3 p2 = bbox._min;//*trans;
+				osg::Vec3d p1 = bbox._max*M;
+				osg::Vec3d p2 = bbox._min*M;
 
 				AABox box;
 				box.Union(OSGConvert::Get().ToGASS(p1));
@@ -279,8 +322,8 @@ namespace GASS
 					osg::BoundingBox bbox = geode->getDrawable(i)->getBound();
 					AABox box;
 
-					osg::Vec3 p1 = bbox._max;//*trans;
-					osg::Vec3 p2 = bbox._min;//*trans;
+					osg::Vec3d p1 = bbox._max*M;
+					osg::Vec3d p2 = bbox._min*M;
 
 					box.Union(OSGConvert::Get().ToGASS(p1));
 					box.Union(OSGConvert::Get().ToGASS(p2));
@@ -289,36 +332,6 @@ namespace GASS
 			}
 		}
 	}
-
-
-/*	bool OSGMeshComponent::checkDrawable(osg::Geode *geode)
-	{
-		if( 1 < geode->getNumDrawables())
-		{
-			osg::notify(osg::WARN) << "Geode contains more than one Drawable." <<std::endl;
-			return false;
-		}
-		else
-		{
-			osg::Drawable *drawable=geode->getDrawable(0);
-			osg::Geometry *geom=dynamic_cast<osg::Geometry *> (drawable);
-
-			for(unsigned int pc=0; pc < geom->getNumPrimitiveSets() ; pc++)
-			{
-				osg::PrimitiveSet * prset = geom->getPrimitiveSet(pc);
-				if(prset->getMode() == osg::PrimitiveSet::TRIANGLES)
-				{
-					osg::notify(osg::WARN) << "Primitive Set " << pc << " passed." <<std::endl;
-				}
-				else
-				{
-					osg::notify(osg::WARN) << "Primitive Set " << pc << " :this is not a Triangle Primitive Set" <<std::endl;
-					return false;
-				}
-			}
-			return true;
-		}
-	}*/
 
 	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data)
 	{
@@ -352,6 +365,17 @@ namespace GASS
 			memcpy(  mesh_data->FaceVector,
 				&mv.mFunctor.mTriangles[0],
 				mv.mFunctor.mTriangles.size()*sizeof(StridedTriangle) );
+		}
+	}
+
+	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	{
+		if(m_MeshNode.valid())
+		{
+			if(message->EnableCollision())
+				SetGeometryCategory(m_Category);
+			else
+				OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),GeometryCategory(GT_UNKNOWN));
 		}
 	}
 }

@@ -595,4 +595,10 @@ namespace GASS
 			bone->setOrientation(boneQuat);*/
 		}
 	}
+
+
+	GeometryCategory OgreMeshComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_REGULAR);
+	}
 }

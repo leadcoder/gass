@@ -24,6 +24,7 @@
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Components/Graphics/GeometryCategory.h"
 #include <osg/Node>
 #include <osg/Fog>
 #include <osg/PositionAttitudeTransform>
@@ -48,23 +49,18 @@ namespace GASS
 		virtual void OnCreate();
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
+
+		static void UpdateNodeMask(osg::Node *node, GeometryCategory category);
 		//osg::ref_ptr<osg::PositionAttitudeTransform> GetSceneTransformatation() {return m_SceneTransform;}
 	protected:
 		void OnLoad(MessagePtr message);		
-		void Update(double delta_time);
 		void OnUnload(MessagePtr message);
 		void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 
 	private:
-		void UpdateShadowSettings();
 		void UpdateFogSettings();
-		void UpdateLightSettings();
-		void UpdateSkySettings();
-
-	
-		//Keep private for now, 
-
+		
 		//Fog
 		float GetFogStart() const {return m_FogStart;}
 		float GetFogEnd() const {return m_FogEnd;}
@@ -76,35 +72,8 @@ namespace GASS
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 
-		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value; UpdateLightSettings();}
+		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
-
-		void SetSceneManagerType(const std::string &name) {m_SceneManagerType = name;}
-		std::string GetSceneManagerType() const {return m_SceneManagerType;}
-
-		void SetSkyboxMaterial(const std::string &name) {m_SkyboxMaterial = name; UpdateSkySettings();}
-		std::string GetSkyboxMaterial() const {return m_SkyboxMaterial;}
-
-		//shadows
-		std::string GetShadowType() const {return m_ShadowType;}
-		std::string GetShadowCasterMaterial() const {return m_ShadowCasterMaterial;}
-		std::string GetShadowProjType() const {return m_ShadowProjType;}
-		int GetTextureShadowSize() const {return m_TextureShadowSize;}
-		int GetNumShadowTextures() const {return m_NumShadowTextures;}
-		float GetOptimalAdjustFactor() const {return m_OptimalAdjustFactor;}
-		float GetFarShadowDistance() const {return m_FarShadowDistance;}
-		bool GetSelfShadowing() const {return m_SelfShadowing;}
-
-		void SetSelfShadowing(bool value) {m_SelfShadowing = value;UpdateShadowSettings();}
-		void SetFarShadowDistance(float value) {m_FarShadowDistance = value;UpdateShadowSettings();}
-		void SetOptimalAdjustFactor(float value) {m_OptimalAdjustFactor = value;UpdateShadowSettings();}
-		void SetNumShadowTextures(int size) {m_NumShadowTextures = size;UpdateShadowSettings();}
-		void SetTextureShadowSize(int size) {m_TextureShadowSize = size;UpdateShadowSettings();}
-		void SetShadowProjType(const std::string &name) {m_ShadowProjType = name;UpdateShadowSettings();}
-		void SetShadowType(const std::string &name) {m_ShadowType = name;UpdateShadowSettings();}
-		void SetShadowCasterMaterial(const std::string &name) {m_ShadowCasterMaterial = name;UpdateShadowSettings();}
-
-	
 	private:	
 		//fog
 		float m_FogDensity;
@@ -117,25 +86,12 @@ namespace GASS
 		//light attributes
 		Vec3 m_AmbientColor;
 		
-		//Type of scene mangaer
-		std::string m_SceneManagerType;
-
-		//Sky
-		std::string m_SkyboxMaterial;
-
 		//Shadows
 		std::string m_ShadowType;
 		std::string m_ShadowCasterMaterial;
 		std::string m_ShadowProjType;
-		int m_TextureShadowSize;
-		int m_NumShadowTextures;
-		bool m_SelfShadowing;
-		float m_OptimalAdjustFactor;
-		float m_FarShadowDistance;
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
-		//osg::ref_ptr<osg::Group> m_RootNode;
 		osg::ref_ptr<osg::Group> m_RootNode;
-		//osg::ref_ptr<osg::PositionAttitudeTransform> m_SceneTransform;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};

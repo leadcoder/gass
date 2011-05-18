@@ -27,6 +27,7 @@
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Components/Graphics/SceneNodeState.h"
 #include "Core/MessageSystem/IMessage.h"
 
 
@@ -64,13 +65,6 @@ namespace GASS
 		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	protected:
-
-		/*Vec3 FromOSGToGASS(const osg::Vec3d &value) const;
-		osg::Vec3d ToOSGFromGASS(const Vec3 &value) const;
-		Quaternion FromOSGToGASS(const osg::Quat &value) const;
-		osg::Quat ToOSGFromGASS(const Quaternion &value) const;*/
-
-
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
@@ -78,6 +72,7 @@ namespace GASS
 		void OnWorldPositionMessage(WorldPositionMessagePtr message);
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
 		void OnParentChangedMessage(ParentChangedMessagePtr message);
+		
 
 		void SetAttachToParent(bool value);
 		bool GetAttachToParent() const;
@@ -102,6 +97,9 @@ namespace GASS
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		//osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
+
+		int m_NodeMask;
+		
 	};
 
 	typedef boost::weak_ptr<OSGLocationComponent> OSGLocationComponentWeakPtr;

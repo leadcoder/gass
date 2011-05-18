@@ -33,8 +33,9 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -49,7 +50,7 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent()
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_Category(GT_REGULAR)
 	{
 
 	}
@@ -62,6 +63,7 @@ namespace GASS
 	void OSGManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, IComponent>);
+		RegisterProperty<GeometryCategory>("GeometryCategory", &OSGManualMeshComponent::GetGeometryCategory, &OSGManualMeshComponent::SetGeometryCategory);
 	}
 
 	void OSGManualMeshComponent::OnCreate()
@@ -70,6 +72,29 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+	}
+
+	void OSGManualMeshComponent::SetGeometryCategory(const GeometryCategory &value)
+	{
+		m_Category = value;
+		if(m_OSGGeometry.valid())
+		{
+			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),value);
+		}
+	}
+
+	GeometryCategory OSGManualMeshComponent::GetGeometryCategory() const
+	{
+		return m_Category;
+	}
+
+	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	{
+		if(message->EnableCollision())
+			SetGeometryCategory(m_Category);
+		else
+			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GeometryCategory(GT_UNKNOWN));
 	}
 
 	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -108,11 +133,13 @@ namespace GASS
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
 
-		osg::ref_ptr<osg::Vec3dArray> vertices = new osg::Vec3dArray();
-		osg::ref_ptr<osg::Vec4Array> colors= new osg::Vec4Array;
+		//osg::ref_ptr<osg::Vec3dArray> vertices = new osg::Vec3dArray();
+		//osg::ref_ptr<osg::Vec4Array> colors= new osg::Vec4Array;
 
-		m_OSGGeometry->setVertexArray(vertices.get());
-		m_OSGGeometry->setColorArray(colors.get());
+		//m_OSGGeometry->setVertexArray(vertices.get());
+		//m_OSGGeometry->setColorArray(colors.get());
+
+		m_GeoNode->setUserData((osg::Referenced*)this);
 
 		//m_DrawArrays = new osg::DrawArrays();
 		//m_DrawElements = new osg::DrawElementsUInt():
@@ -137,7 +164,7 @@ namespace GASS
 		if(m_OSGGeometry == NULL)
 			return;
 
-		osg::Vec3dArray* vertices = static_cast<osg::Vec3dArray*>( m_OSGGeometry->getVertexArray());
+		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		if(vertices)
 			vertices->clear();
@@ -177,26 +204,42 @@ namespace GASS
 			break;
 		}
 
-		osg::Vec3dArray* vertices = static_cast<osg::Vec3dArray*>( m_OSGGeometry->getVertexArray());
+		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		
 		if(vertices)
 			vertices->clear();
+		else
+			vertices = new osg::Vec3Array();
+		
 		if(colors)
-		{
 			colors->clear();
-		}
+		else
+			colors = new osg::Vec4Array;
 
 		vertices->resize(data->VertexVector.size());
 		colors->resize(data->VertexVector.size());
 
+//CopyOp::SHALLOW_COPY
+
+		
 
 		if(data->IndexVector.size() > 0)
 		{
+			osg::DrawElementsUInt* de = new osg::DrawElementsUInt(op);
+			for(int i = 0; i < data->IndexVector.size(); i++)
+			{
+				de->push_back(data->IndexVector[i]);
+			}
 			if(m_OSGGeometry->getNumPrimitiveSets() > 0)
+				m_OSGGeometry->setPrimitiveSet(0,de);
+			else
+				m_OSGGeometry->addPrimitiveSet(de);
+
+			/*if(m_OSGGeometry->getNumPrimitiveSets() > 0)
 				m_OSGGeometry->setPrimitiveSet(0,new osg::DrawElementsUInt(op,data->IndexVector.size(),&data->IndexVector[0]));
 			else 
-				m_OSGGeometry->addPrimitiveSet(new osg::DrawElementsUInt(op,data->IndexVector.size(),&data->IndexVector[0]));
+				m_OSGGeometry->addPrimitiveSet(new osg::DrawElementsUInt(op,data->IndexVector.size(),&data->IndexVector[0]));*/
 			
 		}
 		else
@@ -207,7 +250,11 @@ namespace GASS
 				m_OSGGeometry->addPrimitiveSet(new osg::DrawArrays(op, 0, data->VertexVector.size()));
 		}
 
-		osg::Vec3dArray::iterator vitr = vertices->begin();
+
+		
+
+
+		osg::Vec3Array::iterator vitr = vertices->begin();
 		osg::Vec4Array::iterator citr = colors->begin();
 
 		//m_MeshObject->begin(data->Material, op);

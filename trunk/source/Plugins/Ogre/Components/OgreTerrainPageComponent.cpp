@@ -540,4 +540,9 @@ namespace GASS
 		return pos;
 	}
 
+	GeometryCategory OgreTerrainPageComponent::GetGeometryCategory() const
+	{
+		return GeometryCategory(GT_TERRAIN);
+	}
+
 }
