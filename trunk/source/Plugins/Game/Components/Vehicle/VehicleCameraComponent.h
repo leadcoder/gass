@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef INPUT_HANDLER_COMPONENT_H
-#define INPUT_HANDLER_COMPONENT_H
+#ifndef VEHICLE_CAMERA_COMPONENT_H
+#define VEHICLE_CAMERA_COMPONENT_H
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
@@ -35,28 +35,22 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
+	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,BaseSceneComponent>
 	{
 	public:
-		InputHandlerComponent();
-		virtual ~InputHandlerComponent();
+		VehicleCameraComponent();
+		virtual ~VehicleCameraComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void OnEnter(EnterVehicleMessagePtr message);
 		void OnExit(ExitVehicleMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
-
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-
+		void SetPreferredViewport(const std::string &viewport);
+		std::string GetPreferredViewport() const;
 	private:
-		void SetControlSetting(const std::string &controlsetting);
-		std::string GetControlSetting() const;
-
-		std::string m_ControlSetting;
-		bool m_Empty;
+		std::string m_PreferredViewport;
 	};
-
-	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
+	typedef boost::shared_ptr<VehicleCameraComponent> VehicleCameraComponentPtr;
 }
 #endif

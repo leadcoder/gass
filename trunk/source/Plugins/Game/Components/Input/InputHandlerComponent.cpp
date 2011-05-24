@@ -50,6 +50,22 @@ namespace GASS
 
 	}
 
+	void InputHandlerComponent::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, IComponent>);
+		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
+		//RegisterVectorProperty<std::string>("CameraList", &InputHandlerComponent::GetCameraMapping, &InputHandlerComponent::SetCameraMapping);
+	}
+
+	void InputHandlerComponent::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadGameComponentsMessage,0));
+	}
+
+
 	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
@@ -63,38 +79,26 @@ namespace GASS
 
 
 		IComponentContainerTemplate::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components,"OgreCameraComponent");
-		GetSceneObject()->GetComponentsByClass(components,"OSGCameraComponent");
 
+		/*GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
+		
+		//configure all cameras
 		if(components.size() > 0)
 		{
 			BaseSceneComponentPtr camera = boost::shared_dynamic_cast<BaseSceneComponent>(components[0]);
-
 			if(camera)
 			{
-				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject(),"MainVP"));
+				//const std::string vp_name = camera->GetPrefredViewport();
+				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject(),vp_name));
 				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
 			}
-		}
+		}*/
 
 		//try find camera, move this to vehicle camera class
 
 	}
 
-	void InputHandlerComponent::RegisterReflection()
-	{
-		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, IComponent>);
-		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
-	}
-
-	void InputHandlerComponent::OnCreate()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadGameComponentsMessage,0));
-	}
-
+	
 	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
 	{
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);

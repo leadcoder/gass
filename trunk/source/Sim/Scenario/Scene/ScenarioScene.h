@@ -185,6 +185,16 @@ namespace GASS
 		Vec3 GetSceneUp() {return m_Up;}
 		Vec3 GetSceneEast() {return m_East;}
 		Vec3 GetSceneNorth() {return m_North;}
+
+
+		
+		double GetOrigoOffsetEast() const;
+		double GetOrigoOffsetNorth() const;
+		void SetOrigoOffsetEast(double value);
+		void SetOrigoOffsetNorth(double value);
+		std::string GetProjection() const;
+		void SetProjection(const std::string &proj);
+
 	protected:
         /**
           Load scenario scene from xml,
@@ -238,6 +248,10 @@ namespace GASS
 		Vec3 m_East;
 
 		std::string m_InstancesFile;
+
+		double m_OffsetNorth;
+		double m_OffsetEast;
+		std::string m_Projection;
 
 	};
 

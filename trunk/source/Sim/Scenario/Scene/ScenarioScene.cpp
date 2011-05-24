@@ -103,6 +103,10 @@ namespace GASS
 		RegisterProperty<std::string>("Instances", &GASS::ScenarioScene::GetInstancesFile, &GASS::ScenarioScene::SetInstancesFile);
 		RegisterProperty<Vec2>("SetRT90Origo", &GASS::ScenarioScene::GetRT90Origo, &GASS::ScenarioScene::SetRT90Origo);
 		
+		RegisterProperty<double>("OrigoOffsetEast", &ScenarioScene::GetOrigoOffsetEast, &ScenarioScene::SetOrigoOffsetEast);
+		RegisterProperty<double>("OrigoOffsetNorth", &ScenarioScene::GetOrigoOffsetNorth, &ScenarioScene::SetOrigoOffsetNorth);
+		RegisterProperty<std::string>("Projection", &ScenarioScene::GetProjection, &ScenarioScene::SetProjection);
+		
 	}
 
 
@@ -368,5 +372,35 @@ namespace GASS
 	SceneManagerIterator ScenarioScene::GetSceneManagers()
 	{
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
+	}
+
+	double ScenarioScene::GetOrigoOffsetEast() const
+	{
+		return m_OffsetEast;
+	}
+
+	double ScenarioScene::GetOrigoOffsetNorth() const
+	{
+		return m_OffsetNorth;
+	}
+
+	void ScenarioScene::SetOrigoOffsetEast(double value)
+	{
+		m_OffsetEast = value;
+	}
+
+	void ScenarioScene::SetOrigoOffsetNorth(double value) 
+	{
+		m_OffsetNorth = value;
+	}
+
+	void ScenarioScene::SetProjection(const std::string &proj)
+	{
+		m_Projection = proj;
+	}
+
+	std::string ScenarioScene::GetProjection() const
+	{
+		return m_Projection;
 	}
 }

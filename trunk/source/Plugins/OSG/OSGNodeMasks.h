@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://sourceforge.net/projects/gass/                                 *
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
@@ -18,45 +18,22 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef INPUT_HANDLER_COMPONENT_H
-#define INPUT_HANDLER_COMPONENT_H
-
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
-
+#pragma once
 
 namespace GASS
 {
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-
-	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
+	enum OSGNodeMasks
 	{
-	public:
-		InputHandlerComponent();
-		virtual ~InputHandlerComponent();
-		static void RegisterReflection();
-		virtual void OnCreate();
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		NM_VISIBLE = 1,
+		NM_RECEIVE_SHADOWS = 1 << 1,
+		NM_CAST_SHADOWS = 1 << 2,
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		//Collision masks
+		NM_REGULAR_GEOMETRY = 1 << 3,
+		NM_TERRAIN_GEOMETRY  = 1 << 4,
+		NM_GIZMO_GEOMETRY = 1 << 5,
 
-	private:
-		void SetControlSetting(const std::string &controlsetting);
-		std::string GetControlSetting() const;
-
-		std::string m_ControlSetting;
-		bool m_Empty;
+		//user defined start here
+		NM_USER  = 1 << 6
 	};
-
-	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
 }
-#endif

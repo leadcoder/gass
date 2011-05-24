@@ -43,7 +43,7 @@ namespace GASS
 	class Viewport
 	{
 	public:
-		Viewport(const std::string &name, const std::string &window, float left,float top,float width, float height, Ogre::Viewport* vp = NULL) : m_Name(name),m_Window(window),m_Left(left),m_Top(top),m_Width(width), m_Height(height),m_OgreViewport(vp)
+		Viewport(const std::string &name, const std::string &window, float left,float top,float width, float height, int z_depth, Ogre::Viewport* vp = NULL) : m_Name(name),m_Window(window),m_Left(left),m_Top(top),m_Width(width), m_Height(height),m_OgreViewport(vp),m_ZDepth(z_depth)
 		{
 		}
 		Viewport(){}
@@ -53,6 +53,7 @@ namespace GASS
 		float m_Top;
 		float m_Width;
 		float m_Height;
+		int m_ZDepth;
 		Ogre::Viewport* m_OgreViewport;
 	};
 	class OgreDebugTextOutput;
@@ -87,7 +88,7 @@ namespace GASS
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		//void AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour);
-		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour);
+		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		bool GetShowStats() const {return m_ShowStats;}

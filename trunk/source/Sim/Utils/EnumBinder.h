@@ -18,45 +18,91 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef INPUT_HANDLER_COMPONENT_H
-#define INPUT_HANDLER_COMPONENT_H
+#pragma once
 
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
-
+#include "Core/Math/Vector.h"
 
 namespace GASS
 {
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-
-	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
+	template< class ENUM,class CLASS>
+	class EnumBinder
 	{
 	public:
-		InputHandlerComponent();
-		virtual ~InputHandlerComponent();
-		static void RegisterReflection();
-		virtual void OnCreate();
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		EnumBinder(ENUM type) : m_Type(type)
+		{
+			CLASS::Register();
+		}
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		EnumBinder() 
+		{
+			CLASS::Register();
+		}
 
-	private:
-		void SetControlSetting(const std::string &controlsetting);
-		std::string GetControlSetting() const;
+		virtual ~EnumBinder(){}
 
-		std::string m_ControlSetting;
-		bool m_Empty;
+		void Set(ENUM value) 
+		{
+			m_Type = value;
+		}
+
+		ENUM Get() const 
+		{
+			return m_Type;
+		}
+
+		bool operator== (const CLASS &v) const
+		{
+			return (m_Type == v.Get());
+		}
+
+		//virtual void Register() = 0;
+	protected:
+		void SetTypeFromName(const std::string &name) 
+		{
+			m_Type = m_Names[name];
+		}
+
+		std::string GetName() const
+		{
+			return m_Types[m_Type];	
+		}
+
+		static std::vector<std::string> GetAllNames() 
+		{
+			std::vector<std::string> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_Names.begin();
+			while(iter != m_Names.end())
+			{
+				types.push_back(iter->first);
+				iter++;
+			}
+			return types;
+		}
+
+		friend std::ostream& operator << (std::ostream& os, const CLASS& cat)
+		{
+			std::string name (cat.GetName());
+			os << name;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, CLASS& cat)
+		{
+			std::string name;
+			os >> name;
+			cat.SetTypeFromName(name);
+			return os;
+		}
+
+		static void Bind(const std::string &name, ENUM type)
+		{
+			m_Names[name] = type;
+			m_Types[type] = name;
+		}
+
+		ENUM m_Type;
+		static std::map<std::string ,ENUM> m_Names;
+		static std::map<ENUM,std::string > m_Types;
 	};
-
-	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
 }
-#endif

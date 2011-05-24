@@ -17,46 +17,33 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#ifndef INPUT_HANDLER_COMPONENT_H
-#define INPUT_HANDLER_COMPONENT_H
-
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
-
+#include "GeometryCategory.h"
+#include "Core/Math/Vector.h"
 
 namespace GASS
 {
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	template<> std::map<std::string ,GeometryType> EnumBinder<GeometryType,GeometryCategory>::m_Names;
+	template<> std::map<GeometryType,std::string> EnumBinder<GeometryType,GeometryCategory>::m_Types;
 
-	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
+	GeometryCategory::GeometryCategory() : EnumBinder<GeometryType,GeometryCategory>()
 	{
-	public:
-		InputHandlerComponent();
-		virtual ~InputHandlerComponent();
-		static void RegisterReflection();
-		virtual void OnCreate();
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		//Set(GT_MESH);
+	}	
+	GeometryCategory::GeometryCategory(GeometryType type) : EnumBinder<GeometryType,GeometryCategory>(type)
+	{
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+	}
 
-	private:
-		void SetControlSetting(const std::string &controlsetting);
-		std::string GetControlSetting() const;
+	GeometryCategory::~GeometryCategory()
+	{
 
-		std::string m_ControlSetting;
-		bool m_Empty;
-	};
+	}
 
-	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
+	void GeometryCategory::Register()
+	{
+		Bind("GT_REGULAR", GT_REGULAR);
+		Bind("GT_TERRAIN", GT_TERRAIN);
+		Bind("GT_GIZMO", GT_GIZMO);
+		Bind("GT_UNKNOWN", GT_UNKNOWN);
+	}
 }
-#endif

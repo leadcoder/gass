@@ -135,7 +135,7 @@ namespace GASS
 		if(m_CreateMainWindowOnInit)
 		{
 			CreateRenderWindow("MainWindow", 800, 600, 0, 0);
-			CreateViewport("Viewport0","MainWindow", 0, 0, 1, 1);
+			//CreateViewport("Viewport0","MainWindow", 0, 0, 1, 1);
 		}
 		else
 		{
@@ -191,7 +191,7 @@ namespace GASS
 		std::map<std::string, Viewport>::iterator vp_iter = m_Viewports.begin();
 		while(vp_iter != m_Viewports.end())
 		{
-			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue());
+			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue(),vp_iter->second.m_ZDepth);
 			vp_iter++;
 		}
 		
@@ -233,10 +233,8 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour)
+	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
 	{
-		
-		
 		Ogre::RenderWindow* win = m_Windows[win_name];
 		
 		int num_viewports = win->getNumViewports();
@@ -257,7 +255,7 @@ namespace GASS
 		cam->setNearClipDistance(0.02f);
 		cam->setFarClipDistance(5000);
 		assert(cam && win);
-		Ogre::Viewport* vp = win->addViewport(cam, num_viewports, left , top, width , height);
+		Ogre::Viewport* vp = win->addViewport(cam, zdepth, left , top, width , height);
 
 		// Create one viewport, entire window
 		vp->setBackgroundColour(colour);
@@ -274,7 +272,7 @@ namespace GASS
 		m_PostProcess->SetActiveCompositors(GetPostFilters());
 
 		//save viewport settings for recreation when scenario manager is changed
-		Viewport save_vp(name,win_name,left,top,width,height,vp);
+		Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
 		m_Viewports[name] = save_vp;
 	}
 
@@ -344,13 +342,12 @@ namespace GASS
 			if(m_SceneMgr == NULL) //we need a scene mananger before we can create viewports
 				m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 
-			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue());
+			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),m_Viewports.size());
 		}
 	}
 
 	void OgreGraphicsSystem::ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp)
 	{
-
 		if(vp_name == "ALL")
 		{
 			std::map<std::string,Viewport>::iterator iter = m_Viewports.begin();
@@ -362,7 +359,6 @@ namespace GASS
 				iter++;
 			}
 		}
-		
 		else if(m_Viewports.find(vp_name) != m_Viewports.end() && m_Viewports[vp_name].m_OgreViewport != NULL)
 		{
 			m_Viewports[vp_name].m_OgreViewport->setCamera(cam_comp->GetOgreCamera());

@@ -131,7 +131,24 @@ namespace GASS
 			return ret;
 		}
 
+		template <class T>
+		boost::shared_ptr<T> GetFirstParentComponentByClass()
+		{
+			boost::shared_ptr<T> ret;
+			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			{
+				ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				if(ret)
+					return ret;
+			}
 
+			SceneObjectPtr parent = GetParentSceneObject();
+			if(parent)
+			{
+				return parent->GetFirstParentComponentByClass<T>();
+			}
+			return ret;
+		}
 
 		//should we return result or pass it as ref arg?
 		//SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);

@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef INPUT_HANDLER_H
-#define INPUT_HANDLER_H
+#ifndef INPUT_PROXY_COMPONENT_H
+#define INPUT_PROXY_COMPONENT_H
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
