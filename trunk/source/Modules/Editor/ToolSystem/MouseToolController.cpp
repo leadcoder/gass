@@ -32,7 +32,8 @@ namespace GASS
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
-		m_RayPickDistance(3000)
+		m_RayPickDistance(3000),
+		m_EnableGizmo(true)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));
@@ -668,6 +669,16 @@ namespace GASS
 		{
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+		}
+	}
+
+	void MouseToolController::SetEnableGizmo(int value) 
+	{
+		m_EnableGizmo=value;
+		if(m_ActiveTool)
+		{
+			m_ActiveTool->Stop();
+			m_ActiveTool->Start();
 		}
 	}
 }

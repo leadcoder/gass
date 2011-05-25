@@ -116,23 +116,23 @@ namespace GASS
 		/**
           Deprecated
         */
-		Vec2 GetRT90Origo() const {return m_RT90Origo;}
+		//Vec2 GetRT90Origo() const {return m_RT90Origo;}
 
 		/**
           Deprecated
         */
-		void SetRT90Origo(const Vec2& origo);
+		//void SetRT90Origo(const Vec2& origo);
 
 		//Remove this
 		/**
           Deprecated
         */
-		Vec3 RT90ToGASSPosition(const Vec3 &pos);
+		//Vec3 RT90ToGASSPosition(const Vec3 &pos);
 
 		/**
           Deprecated
         */
-		Vec3 GASSToRT90Position(const Vec3 &pos);
+		//Vec3 GASSToRT90Position(const Vec3 &pos);
 
 		/**
 		Should be called by creator.
@@ -236,7 +236,7 @@ namespace GASS
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
-		Vec2 m_RT90Origo;
+		//Vec2 m_RT90Origo;
 		SceneManagerVector m_SceneManagers;
 		MessageManagerPtr m_SceneMessageManager;
 		ScenarioWeakPtr m_Scenario;

@@ -55,6 +55,8 @@ namespace GASS
 		Float GetGridSize() const {return m_GridSize;}
 		Float GetSnapMovment() const {return m_SnapMovment;}
 		Float GetSnapAngle() const {return m_SnapAngle;}
+		int GetEnableGizmo() const {return m_EnableGizmo;}
+		void SetEnableGizmo(int value);
 		Float SnapPosition(Float value);
 		Float SnapAngle(Float value);
 		void Update();
@@ -113,6 +115,7 @@ namespace GASS
 		bool m_EnableMovmentSnap;
 		bool m_EnableAngleSnap;
 		float m_RayPickDistance;
+		bool m_EnableGizmo;
 
 		GASS::SceneObjectWeakPtr m_PointerObject;
 	};

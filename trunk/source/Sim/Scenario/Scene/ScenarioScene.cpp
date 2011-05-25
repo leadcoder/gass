@@ -41,13 +41,14 @@ namespace GASS
 	ScenarioScene::ScenarioScene(ScenarioPtr scenario):
 		m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
-		m_RT90Origo(Vec2(0,0)),
 		m_Up(0,1,0),
 		m_North(0,0,-1),
 		m_East(1,0,0),
 		m_Scenario(scenario),
 		m_SceneMessageManager(new MessageManager()),
-		m_InstancesFile("instances.xml")
+		m_InstancesFile("instances.xml"),
+		m_OffsetNorth(0),
+		m_OffsetEast(0)
 	{
 
 	}
@@ -101,20 +102,11 @@ namespace GASS
 		RegisterProperty<std::string>("SceneEast", &GASS::ScenarioScene::GetEastVector, &GASS::ScenarioScene::SetEastVector);
 		RegisterProperty<std::string>("SceneNorth", &GASS::ScenarioScene::GetNorthVector, &GASS::ScenarioScene::SetNorthVector);
 		RegisterProperty<std::string>("Instances", &GASS::ScenarioScene::GetInstancesFile, &GASS::ScenarioScene::SetInstancesFile);
-		RegisterProperty<Vec2>("SetRT90Origo", &GASS::ScenarioScene::GetRT90Origo, &GASS::ScenarioScene::SetRT90Origo);
-		
 		RegisterProperty<double>("OrigoOffsetEast", &ScenarioScene::GetOrigoOffsetEast, &ScenarioScene::SetOrigoOffsetEast);
 		RegisterProperty<double>("OrigoOffsetNorth", &ScenarioScene::GetOrigoOffsetNorth, &ScenarioScene::SetOrigoOffsetNorth);
 		RegisterProperty<std::string>("Projection", &ScenarioScene::GetProjection, &ScenarioScene::SetProjection);
-		
 	}
 
-
-	void ScenarioScene::SetRT90Origo(const Vec2& origo) 
-	{
-		m_RT90Origo=origo;
-	}
-	
 
 	void ScenarioScene::SetInstancesFile(const std::string &value)
 	{
@@ -199,24 +191,6 @@ namespace GASS
 		else if(vec.z < 0)
 			return std::string("-z");
 		return std::string("undefined");
-	}
-
-	Vec3 ScenarioScene::RT90ToGASSPosition(const Vec3 &pos)
-	{
-		Vec3 new_pos;
-		new_pos.y = pos.z;
-		new_pos.x = pos.x - m_RT90Origo.x;
-		new_pos.z = m_RT90Origo.y - pos.y;
-		return new_pos;
-	}
-
-	Vec3 ScenarioScene::GASSToRT90Position(const Vec3 &pos)
-	{
-		Vec3 new_pos;
-		new_pos.z = pos.y;
-		new_pos.x = pos.x + m_RT90Origo.x;
-		new_pos.y = m_RT90Origo.y - pos.z;
-		return new_pos;
 	}
 
 

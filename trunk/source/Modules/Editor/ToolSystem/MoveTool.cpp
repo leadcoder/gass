@@ -216,7 +216,7 @@ namespace GASS
 			SendMessageRec(selected,col_msg);
 
 			SceneObjectPtr gizmo = GetMasterGizmo();
-			if(gizmo)
+			if(gizmo && m_Controller->GetEnableGizmo())
 				SendMessageRec(gizmo,col_msg);
 		}
 
@@ -283,7 +283,7 @@ namespace GASS
 
 	void MoveTool::Start() 
 	{
-		SetGizmoVisiblity(true);
+		SetGizmoVisiblity(m_Controller->GetEnableGizmo());
 		m_Active = true;
 	}
 
@@ -312,7 +312,7 @@ namespace GASS
 				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //only support gizmo for objects with location component
 				{
-					SetGizmoVisiblity(true);
+					SetGizmoVisiblity(m_Controller->GetEnableGizmo());
 				}
 				else
 				{

@@ -69,6 +69,9 @@ namespace GASS
 		void SetRegionSize(Float size) {m_RegionSize = size;}
 		Float GetRegionSize() const {return m_RegionSize;}
 
+		void SetGlobalScale(const Vec3 &scale) {m_GlobalScale = scale;}
+		Vec3 GetGlobalScale() const {return m_GlobalScale;}
+
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset);
 		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 	
@@ -92,6 +95,7 @@ namespace GASS
 		OgreGraphicsSceneManagerWeakPtr m_OgreSceneManager;
 		std::string m_Filename;
 		Float m_RegionSize;
+		Vec3 m_GlobalScale;
 	};
 
 	typedef boost::shared_ptr<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;

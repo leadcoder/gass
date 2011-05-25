@@ -49,7 +49,8 @@ namespace GASS
 	OgreInstancedMeshComponent::OgreInstancedMeshComponent() : m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_RegionSize(300.0)
+		m_RegionSize(300.0),
+		m_GlobalScale(1,1,1)
 	{
 
 	}
@@ -66,6 +67,7 @@ namespace GASS
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreInstancedMeshComponent::GetRenderQueue, &GASS::OgreInstancedMeshComponent::SetRenderQueue);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreInstancedMeshComponent::GetCastShadow, &GASS::OgreInstancedMeshComponent::SetCastShadow);
 		RegisterProperty<Float>("RegionSize", &GASS::OgreInstancedMeshComponent::GetRegionSize, &GASS::OgreInstancedMeshComponent::SetRegionSize);
+		RegisterProperty<Vec3>("GlobalScale", &GASS::OgreInstancedMeshComponent::GetGlobalScale, &GASS::OgreInstancedMeshComponent::SetGlobalScale);
 	}
 
 	void OgreInstancedMeshComponent::OnCreate()
@@ -213,9 +215,9 @@ namespace GASS
 						Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(index).m_Position);
 						//Ogre::Quaternion orientation = Convert::ToOgre(iter->second.at(index).m_Rotation);
 						Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(index).m_Scale);
-						scale.x *= 0.2;
-						scale.y *= 0.07;
-						scale.z *= 0.2;
+						scale.x *= m_GlobalScale.x;
+						scale.y *= m_GlobalScale.y;//0.07;
+						scale.z *= m_GlobalScale.z;//0.2;
 						obj->setPosition(pos);
 						obj->setScale(scale);
 						//obj->setOrientation(orientation);
