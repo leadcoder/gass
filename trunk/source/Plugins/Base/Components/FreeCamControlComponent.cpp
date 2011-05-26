@@ -123,6 +123,9 @@ namespace GASS
 		{
 			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 		}
+
+		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)

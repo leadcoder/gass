@@ -15,7 +15,16 @@
 namespace GASS
 {
 
-	EditorComponent::EditorComponent() : m_Lock (false), m_Visible(true), m_VisibilityTransparency(0.3), m_Selected(false), m_SelectedColor(1,1,0,1),m_ChangeMaterialWhenSelected(false),m_ShowBBWhenSelected(true)
+	EditorComponent::EditorComponent() : m_Lock (false), 
+		m_Visible(true), 
+		m_VisibilityTransparency(0.3), 
+		m_Selected(false), 
+		m_SelectedColor(1,1,0,1),
+		m_ChangeMaterialWhenSelected(false),
+		m_ShowBBWhenSelected(true),
+		m_ShowInTree(false),
+		m_AllowRemove(false),
+		m_AllowDragAndDrop(false)
 	{
 		
 	}
@@ -33,6 +42,10 @@ namespace GASS
 		RegisterProperty<bool>("ChangeMaterialWhenSelected",&EditorComponent::GetChangeMaterialWhenSelected, &EditorComponent::SetChangeMaterialWhenSelected);
 		RegisterProperty<bool>("ShowBBWhenSelected",&EditorComponent::GetShowBBWhenSelected, &EditorComponent::SetShowBBWhenSelected);
 		RegisterProperty<float>("VisibilityTransparency",&EditorComponent::GetVisibilityTransparency, &EditorComponent::SetVisibilityTransparency);
+		RegisterProperty<std::string>("IconFile",&EditorComponent::GetIconFile, &EditorComponent::SetIconFile);
+		RegisterProperty<bool>("ShowInTree",&EditorComponent::GetShowInTree, &EditorComponent::SetShowInTree);
+		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
+		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
 	}
 
 	void EditorComponent::OnCreate()

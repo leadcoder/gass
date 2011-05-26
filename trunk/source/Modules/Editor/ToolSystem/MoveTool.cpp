@@ -7,7 +7,6 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/SimEngine.h"
-
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
