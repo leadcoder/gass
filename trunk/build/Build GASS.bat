@@ -37,13 +37,16 @@ goto BUILDGASS
 Rem Parameters: <solutionname> <projectname> <configurationname> (</USEENV>)
 if exist "C:\Program Files\Xoreax\IncrediBuild\BuildConsole.exe". (
 		echo "Building using C:\Program Files\Xoreax\IncrediBuild\BuildConsole.exe" 
+		echo Solution: %1 Project: %2 Configuration: %3
 	"C:\Program Files\Xoreax\IncrediBuild\BuildConsole.exe" %1 /prj=%2 /build /cfg=%3 %4 >> %GASS_BUILDLOG%
 ) else (
 	if exist "C:\Program Files (x86)\Xoreax\IncrediBuild\BuildConsole.exe". (
 		echo "Building using C:\Program Files (x86)\Xoreax\IncrediBuild\BuildConsole.exe"
+		echo Solution: %1 Project: %2 Configuration: %3
 		"C:\Program Files (x86)\Xoreax\IncrediBuild\BuildConsole.exe" %1 /prj=%2 /build /cfg=%3 %4 >> %GASS_BUILDLOG%
 	) else (
 		echo "Building using devenv.exe"
+		echo Solution: %1 Project: %2 Configuration: %3
 		devenv /build %3 %1 /project %2 %4 >> %GASS_BUILDLOG%
 	)
 )
@@ -101,5 +104,4 @@ REM call :COMPILE GASSSim.sln "GASSPluginRakNet" "Release|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSEditorModule" "Release|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginEnvironment" "Release|Win32" /USEENV
 
-pause
 cd ..\..

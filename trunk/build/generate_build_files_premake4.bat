@@ -36,9 +36,8 @@ goto start
 ..\Tools\premake4.exe --file=GASSSim4sln.lua  --os=windows %target%
 ..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows %target%
 
-pause
 
-cls
+rem cls
 
 set choice=
 set /p choice="Do you want to build GASS? (Y/N)"
@@ -64,5 +63,5 @@ call "Build GASS.bat" %target%
 
 
 :ENDOFFILE
-pause
+
 @echo on
