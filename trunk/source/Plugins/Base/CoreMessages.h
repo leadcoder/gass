@@ -38,5 +38,16 @@ namespace GASS
 		CoreSceneManagerPtr m_CoreSceneManager;
 	};
 	typedef boost::shared_ptr<LoadCoreComponentsMessage> LoadCoreComponentsMessagePtr;
+
+
+	class UpdateWaypointListMessage : public BaseMessage
+	{
+	public:
+		UpdateWaypointListMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef boost::shared_ptr<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;
+
 }
 #endif

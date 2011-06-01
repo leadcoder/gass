@@ -46,6 +46,18 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ObjectVisibleMessage > ObjectVisibleMessagePtr;
 
+	class ObjectSiteSelectMessage : public BaseMessage
+	{
+	public:
+		ObjectSiteSelectMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Object(obj) {}
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+	private:
+		SceneObjectPtr m_Object;
+	};
+	typedef boost::shared_ptr<ObjectSiteSelectMessage> ObjectSiteSelectMessagePtr;
+
+	
 
 	/*class GotoPositionMessage : public BaseMessage
 	{

@@ -216,7 +216,7 @@ namespace GASS
 
 		// No smooth fading
 		m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
-
+		
 		// A little change to default atmosphere settings :)
 		SkyX::AtmosphereManager::Options atOpt = m_SkyX->getAtmosphereManager()->getOptions();
 		atOpt.RayleighMultiplier = 0.003075f;
@@ -233,10 +233,8 @@ namespace GASS
 
 		// Create the sky
 		m_SkyX->create();
-
-
 		//ocam->setFarClipDistance(save_clip);
-		
+
 	}
 
 	bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)

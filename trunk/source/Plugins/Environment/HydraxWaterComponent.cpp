@@ -21,12 +21,16 @@
 #include "HydraxWaterComponent.h"
 #include "HydraxRTTListener.h"
 #include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/IOgreCameraProxy.h"
+
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
 #include <Ogre.h>
 
 #include "Hydrax/Hydrax.h"
@@ -105,6 +109,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnUnload,UnloadComponentsMessage,0));
+		
 	}
 
 	void HydraxWaterComponent::SetSave(const std::string &value)
@@ -605,10 +610,42 @@ namespace GASS
 		m_Hydrax->remove();
 		delete m_Hydrax;
 		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
+
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage));
+	}
+
+	void HydraxWaterComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	{
+		if(m_Hydrax)
+		{
+			//OgreCameraProxyPtr cam2 = message->GetCamera()->GetFirstComponentByClass<IOgreCameraProxy>();
+			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
+			if(cam)
+			{
+				m_Hydrax->setCamera(cam);
+				if(m_ProjectedGridGeometryModuleVertex)
+					m_ProjectedGridGeometryModuleVertex->setRenderingCamera(cam);
+				if(m_ProjectedGridGeometryModuleRtt)
+					m_ProjectedGridGeometryModuleRtt->setRenderingCamera(cam);
+			}
+			
+			/*Ogre::Root::getSingleton().removeFrameListener(this);
+			Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+			compMgr.removeCompositor(m_Hydrax->getViewport(),"_Hydrax_Underwater_Compositor_Name");
+
+			m_Hydrax->remove();
+			delete m_Hydrax;
+			Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
+			m_Hydrax = NULL;
+			Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+			CreateHydrax(sm,cam,cam->getViewport());*/
+		}
 	}
 
 	void HydraxWaterComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 
@@ -616,21 +653,26 @@ namespace GASS
 
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-
 		Ogre::Viewport* vp = target->getViewport(0);
 			
 
+		
+		
+		Ogre::Root::getSingleton().addFrameListener(this);
+
+		CreateHydrax(sm, ocam, vp);
+	}
+
+	void HydraxWaterComponent::CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp)
+	{
 		if(m_ResourceLocation.GetPath() != "")
 		{
 			Ogre::ResourceGroupManager *mngr = Ogre::ResourceGroupManager::getSingletonPtr();
 			mngr->addResourceLocation(m_ResourceLocation.GetPath() ,"FileSystem","Hydrax");
 		}
-		
-		Ogre::Root::getSingleton().addFrameListener(this);
-		
+
 		m_Hydrax = new Hydrax::Hydrax(sm, ocam, vp);
 
-		
 		// Create our projected grid module  
 
 		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));

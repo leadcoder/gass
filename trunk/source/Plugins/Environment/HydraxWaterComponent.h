@@ -22,6 +22,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreFrameListener.h>
@@ -60,9 +61,11 @@ namespace GASS
 		virtual void OnCreate();
 		Hydrax::Hydrax* GetHydrax() const {return m_Hydrax;}
 	protected:
+		void CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp);
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void SetConfigurationFile(const std::string &cfg_file);
 		std::string GetConfigurationFile() const 
 		{

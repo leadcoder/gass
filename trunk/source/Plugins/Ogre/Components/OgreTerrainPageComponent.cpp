@@ -178,8 +178,6 @@ namespace GASS
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
 				//std::cout << "bb size:" << m_Terrain->getAABB().getMaximum().x <<" "<< m_Terrain->getAABB().getMaximum().y <<" " << m_Terrain->getAABB().getMaximum().z << "\n";
-
-
 				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
 				//std::string name = ptr->getName();	
 				//Terrain page created

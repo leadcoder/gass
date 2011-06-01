@@ -38,6 +38,8 @@ public:
 	void AddPoint(Vec3 &p);
 	void RecalcTangents(void);
 	void SetAutoCalc(bool value){m_AutoCalc = value;}
+	std::vector<Vec3>& GetPoints() {return m_Points;}
+	std::vector<Vec3>& GetTangents() {return m_Tangents;}
 private:
 	std::vector<Vec3> m_Points;
 	std::vector<Vec3> m_Tangents;
