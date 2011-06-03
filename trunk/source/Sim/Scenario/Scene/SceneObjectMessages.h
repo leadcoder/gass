@@ -81,9 +81,9 @@ namespace GASS
 	Typically the location component respond to this message
 	by apply the rotation to the node in the scene graph.
 	The location component is usually implemented in the
-    graphic system and is used by GASS to transfer location
-    information to a scene graph node.
-    However, it's also possible to have other type of components
+	graphic system and is used by GASS to transfer location
+	information to a scene graph node.
+	However, it's also possible to have other type of components
 	that respond to rotation messages, for instance a light source
 	probably also want to catch rotation information if its
 	not attached to a scene node.
@@ -105,7 +105,7 @@ namespace GASS
 
 
 
-/**
+	/**
 	Position change is requested,
 	Typically the location component respond to this message
 	by moving the node in the scene graph. The location component
@@ -145,9 +145,9 @@ namespace GASS
 	Typically the location component respond to this message
 	by apply the rotation to the node in the scene graph.
 	The location component is usually implemented in the
-    graphic system and is used by GASS to transfer location
-    information to a scene graph node.
-    However, it's also possible to have other type of components
+	graphic system and is used by GASS to transfer location
+	information to a scene graph node.
+	However, it's also possible to have other type of components
 	that respond to rotation messages, for instance a light source
 	probably also want to catch rotation information if its
 	not attached to a scene node.
@@ -175,17 +175,17 @@ namespace GASS
 	typedef boost::shared_ptr<WorldRotationMessage> WorldRotationMessagePtr;
 
 	/**
-        Scale (relative to parent) change requested.
-        Typically the location component respond to this message
-        by apply the scale to the node in the scene graph.
-        The location component is usually implemented in the
-        graphic system and is used by GASS to transfer location
-        information to a scene graph node.
-        Note that scaling scene nodes should be used by care,
-        due to the fact that mesh normals can get out of
-        hand and as a result the lightning will not look correct.
-        Instead try to prescale your meshes before loading.
-  */
+	Scale (relative to parent) change requested.
+	Typically the location component respond to this message
+	by apply the scale to the node in the scene graph.
+	The location component is usually implemented in the
+	graphic system and is used by GASS to transfer location
+	information to a scene graph node.
+	Note that scaling scene nodes should be used by care,
+	due to the fact that mesh normals can get out of
+	hand and as a result the lightning will not look correct.
+	Instead try to prescale your meshes before loading.
+	*/
 	class ScaleMessage : public BaseMessage
 	{
 	public:
@@ -203,15 +203,15 @@ namespace GASS
 
 	/**
 	Message used to change visibility of scene nodes,
-    Typically the location component respond to this message
-    by hiding/unhiding the node in the graphic system scene graph.
+	Typically the location component respond to this message
+	by hiding/unhiding the node in the graphic system scene graph.
 
-    Note: that this messages only intended to hide the visual part
-    of a object, sound, physics or any other components
-    should not respond to this message. For instance, to disable
-    the physics collision component instead use the
-    CollisionSettingsMessage.
-    */
+	Note: that this messages only intended to hide the visual part
+	of a object, sound, physics or any other components
+	should not respond to this message. For instance, to disable
+	the physics collision component instead use the
+	CollisionSettingsMessage.
+	*/
 
 	class VisibilityMessage : public BaseMessage
 	{
@@ -228,12 +228,12 @@ namespace GASS
 
 	typedef boost::shared_ptr<VisibilityMessage> VisibilityMessagePtr;
 
-    /**
+	/**
 	Message used to change visibility of the bounding box,
-    Typically the location component respond to this message
-    by hiding/unhiding the scene nodes bounding box.
+	Typically the location component respond to this message
+	by hiding/unhiding the scene nodes bounding box.
 
-    */
+	*/
 
 	class BoundingInfoMessage : public BaseMessage
 	{
@@ -266,15 +266,15 @@ namespace GASS
 
 	typedef boost::shared_ptr<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
 
-	
 
-    /**
+
+	/**
 	Message used to change collisiion settings,
-    Typically the physics system has
-    components that respond to this message
-    by disable/enable collision models.
+	Typically the physics system has
+	components that respond to this message
+	by disable/enable collision models.
 
-    */
+	*/
 	class CollisionSettingsMessage : public BaseMessage
 	{
 	public:
@@ -288,10 +288,10 @@ namespace GASS
 		bool m_Enable;
 	};
 	typedef boost::shared_ptr<CollisionSettingsMessage> CollisionSettingsMessagePtr;
-	
+
 	/**
 	Message used to enable/disable physics debugging
-    */
+	*/
 
 	class PhysicsDebugMessage : public BaseMessage
 	{
@@ -340,12 +340,12 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsJointMessage> PhysicsJointMessagePtr;
 
-    /**
-        Message used to interact with physics bodies.
-        The user provide a paramerter type and a
-        value for that type. Physics body implementations
-        are responsible to suscribe to this message.
-    */
+	/**
+	Message used to interact with physics bodies.
+	The user provide a paramerter type and a
+	value for that type. Physics body implementations
+	are responsible to suscribe to this message.
+	*/
 	class PhysicsBodyMessage : public BaseMessage
 	{
 	public:
@@ -371,9 +371,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsBodyMessage> PhysicsBodyMessagePtr;
 
-    /**
-        Message used to change mass of physics bodies.
-    */
+	/**
+	Message used to change mass of physics bodies.
+	*/
 	class PhysicsMassMessage : public BaseMessage
 	{
 	public:
@@ -778,15 +778,15 @@ namespace GASS
 
 	public:
 		NetworkSerializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		BaseMessage( sender_id , delay),
-		m_Package(package),
-		m_TimeStamp(time_stamp),
-		m_Address(address)
-		{
-		}
-		NetworkPackagePtr GetPackage() const {return m_Package;}
-		unsigned int GetTimeStamp() const {return m_TimeStamp;}
-		NetworkAddress GetAddress() const {return m_Address;}
+		  BaseMessage( sender_id , delay),
+			  m_Package(package),
+			  m_TimeStamp(time_stamp),
+			  m_Address(address)
+		  {
+		  }
+		  NetworkPackagePtr GetPackage() const {return m_Package;}
+		  unsigned int GetTimeStamp() const {return m_TimeStamp;}
+		  NetworkAddress GetAddress() const {return m_Address;}
 	private:
 		NetworkPackagePtr m_Package;
 		unsigned int m_TimeStamp;
@@ -796,40 +796,40 @@ namespace GASS
 	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
 
 
-	
+
 	class NetworkDeserializeMessage : public BaseMessage
 	{
 	public:
 		NetworkDeserializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		BaseMessage( sender_id , delay),
-		m_Package(package),
-		m_TimeStamp(time_stamp),
-		m_Address(address)
-		{
-		}
-		NetworkPackagePtr GetPackage() const {return m_Package;}
-		unsigned int GetTimeStamp() const {return m_TimeStamp;}
-		NetworkAddress GetAddress() const {return m_Address;}
+		  BaseMessage( sender_id , delay),
+			  m_Package(package),
+			  m_TimeStamp(time_stamp),
+			  m_Address(address)
+		  {
+		  }
+		  NetworkPackagePtr GetPackage() const {return m_Package;}
+		  unsigned int GetTimeStamp() const {return m_TimeStamp;}
+		  NetworkAddress GetAddress() const {return m_Address;}
 	private:
 		NetworkPackagePtr m_Package;
 		unsigned int m_TimeStamp;
 		NetworkAddress m_Address;
-		
+
 	};
 	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
 
 
 	//debug messages
-	
+
 	class DebugComponentSettingsMessage : public BaseMessage
 	{
 	public:
 		DebugComponentSettingsMessage(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
-		BaseMessage( sender_id , delay),
-		m_ShowObjectName(show_object_name)
-		{
-		}
-		bool GetShowObjectName() const {return m_ShowObjectName;}
+		  BaseMessage( sender_id , delay),
+			  m_ShowObjectName(show_object_name)
+		  {
+		  }
+		  bool GetShowObjectName() const {return m_ShowObjectName;}
 	private:
 		bool m_ShowObjectName;
 	};
@@ -843,28 +843,91 @@ namespace GASS
 			MT_DEFORM,
 			MT_SMOOTH
 		};
-		TerrainHeightModifyMessage(ModifyType type, const Vec3 &pos, float brush_size, float brush_inner_size, float intensity, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+		TerrainHeightModifyMessage(ModifyType type, const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
 			m_Type(type),
 			m_Position(pos), 
 			m_BrushSize(brush_size),
 			m_BrushInnerSize(brush_inner_size),
-			m_Intensity(intensity) 
+			m_Intensity(intensity) ,
+			m_Noise(noise)
 		{
 
 		}
-		  ModifyType GetModifyType() const { return m_Type;}
-		  float GetBrushSize() const {return m_BrushSize;}
-		  float GetBrushInnerSize() const {return m_BrushInnerSize;}
-		  float GetIntensity() const {return m_Intensity;}
-		  Vec3 GetPosition() const {return m_Position;}
+		ModifyType GetModifyType() const { return m_Type;}
+		float GetBrushSize() const {return m_BrushSize;}
+		float GetBrushInnerSize() const {return m_BrushInnerSize;}
+		float GetIntensity() const {return m_Intensity;}
+		float GetNoise() const {return m_Noise;}
+		Vec3 GetPosition() const {return m_Position;}
 	private:
 		ModifyType m_Type;
 		Vec3 m_Position;
 		float m_BrushSize;
 		float m_BrushInnerSize;
 		float m_Intensity;
+		float m_Noise;
 	};
 	typedef boost::shared_ptr<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
 
+
+	enum TerrainLayer
+	{
+		TL_0,
+		TL_1,
+		TL_2,
+		TL_3,
+		TL_4
+
+	};
+	class TerrainPaintMessage : public BaseMessage
+	{
+	public:
+		TerrainPaintMessage(const Vec3 &pos, float brush_size, float brush_inner_size, TerrainLayer layer, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+			m_Position(pos), 
+			m_BrushSize(brush_size),
+			m_BrushInnerSize(brush_inner_size),
+			m_Intensity(intensity),
+			m_Layer(layer),
+			m_Noise(noise)
+		{
+
+		}
+		float GetBrushSize() const {return m_BrushSize;}
+		float GetBrushInnerSize() const {return m_BrushInnerSize;}
+		float GetIntensity() const {return m_Intensity;}
+		TerrainLayer GetLayer() const {return m_Layer;}
+		Vec3 GetPosition() const {return m_Position;}
+		float GetNoise() const {return m_Noise;}
+	private:
+		TerrainLayer m_Layer;
+		Vec3 m_Position;
+		float m_BrushSize;
+		float m_BrushInnerSize;
+		float m_Intensity;
+		float m_Noise;
+	};
+	typedef boost::shared_ptr<TerrainPaintMessage> TerrainPaintMessagePtr;
+
+
+	class TerrainLayerMessage : public BaseMessage
+	{
+	public:
+
+		TerrainLayerMessage(TerrainLayer layer, const std::string &texture, float tiling, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+			m_Layer(layer),
+			m_Texture(texture), 
+			m_Tiling(tiling)
+		{
+
+		}
+		TerrainLayer  GetLayer() const { return m_Layer;}
+		float GetTiling() const {return m_Tiling;}
+		std::string GetTexture() const {return m_Texture;}
+	private:
+		TerrainLayer m_Layer;
+		std::string m_Texture;
+		float m_Tiling;
+	};
+	typedef boost::shared_ptr<TerrainLayerMessage> TerrainLayerMessagePtr;
 
 }

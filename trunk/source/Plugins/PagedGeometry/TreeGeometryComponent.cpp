@@ -110,6 +110,8 @@ namespace GASS
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 
+		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
+
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(ogsm);
 		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
@@ -156,15 +158,21 @@ namespace GASS
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 
-		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.5,0.5,0.5,1));
+		ImpostorPage::setImpostorColor(Ogre::ColourValue(0,0,0,1));
 		assert(m_PagedGeometry);
 		m_PagedGeometry->setImposterAlphaRejectValue(m_ImposterAlphaRejectionValue);
 		if(m_MeshDist > 0)
-			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,m_MeshFadeDist);
+		{
+			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.1,m_MeshFadeDist,Ogre::Any(1));
+			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.5,m_MeshFadeDist,Ogre::Any(0));
+			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,m_MeshFadeDist,Ogre::Any(1));
+
+			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,0,Ogre::Any(3));
+		}
 		if(m_ImposterDist >  0)
 		{
-			m_PagedGeometry->addDetailLevel<ImpostorPage>(m_ImposterDist,m_ImposterFadeDist);
-
+			GeometryPageManager* geom_man = m_PagedGeometry->addDetailLevel<ImpostorPage>(m_ImposterDist,m_ImposterFadeDist);
+			
 		}
 		//Set up a TreeLoader for easy use
 		TreeLoader2D *treeLoader2d = NULL;

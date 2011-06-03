@@ -14,9 +14,10 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		void SetSize(float value){m_Size =value;}
-			void BuildMesh();
+		void SetInnerSize(float value){m_InnerSize =value;}
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
+		void BuildMesh();
 	private:
 	
 		std::string GetType() const {return m_Type;}
@@ -33,6 +34,7 @@ namespace GASS
 		ManualMeshDataPtr m_MeshData;	
 		Vec4 m_Color;
 		float m_Size;
+		float m_InnerSize;
 		std::string m_Type;
 		//helpers
 		std::string m_Mode;

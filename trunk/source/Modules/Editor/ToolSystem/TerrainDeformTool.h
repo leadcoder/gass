@@ -18,7 +18,15 @@ namespace GASS
 
 	class EditorModuleExport TerrainDeformTool : public IMouseTool
 	{
+		
 	public:
+		enum TerrainEditMode
+		{
+			TEM_DEFORM,
+			TEM_SMOOTH,
+			TEM_LAYER_PAINT
+		};
+
 		TerrainDeformTool(MouseToolController* controller);
 		virtual ~TerrainDeformTool(void);
 
@@ -29,6 +37,14 @@ namespace GASS
 		virtual std::string GetName() {return "TerrainDeformTool";}
 		virtual void Stop();
 		virtual void Start();
+		void SetBrushSize(float value);
+		void SetBrushInnerSize(float value);
+		float GetBrushSize() const {return m_BrushSize;}
+		void SetIntensity(float value);
+		void SetNoise(float value);
+		void SetModMode(TerrainEditMode value) {m_TEM = value;}
+		void SetLayerTexture(const std::string &texture, float tiling);
+		void SetActiveLayer(TerrainLayer layer) {m_ActiveLayer = layer;}
 	private:
 		GASS::SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
@@ -45,6 +61,10 @@ namespace GASS
 		float m_BrushSize;
 		float m_BrushInnerSize;
 		float m_Intensity;
+		float m_Noise;
+		float m_InvertBrush;
+		TerrainEditMode m_TEM;
+		TerrainLayer m_ActiveLayer;
 
 	};
 }

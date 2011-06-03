@@ -63,6 +63,7 @@ namespace GASS
 		
 		void NextTool();
 		void PrevTool();
+		void SetActive(bool value) {m_Active = value;}
 
 
 	private:

@@ -108,7 +108,7 @@ namespace GASS
 	}
 	void GrassGeometryComponent::SetDensityMap(const std::string &dm)
 	{
-		m_DensityMapFilename = Misc::GetFilename(dm);
+		m_DensityMapFilename = dm;//Misc::GetFilename(dm);
 		if(m_GrassLayer)
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 	}
@@ -164,7 +164,7 @@ namespace GASS
 
 	void GrassGeometryComponent::SetColorMap(const std::string &name)
 	{
-		m_ColorMapFilename = Misc::GetFilename(name);
+		m_ColorMapFilename = name;//Misc::GetFilename(name);
 		if(m_GrassLayer)
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
@@ -189,14 +189,7 @@ namespace GASS
 		m_FadeTech = tech;
 		if(m_GrassLayer)
 		{
-			if(m_RenderTechnique == "Quad")
-			{
-				m_GrassLayer->setRenderTechnique(GRASSTECH_QUAD,m_Blend);
-			}
-			else if(m_RenderTechnique == "CrossQuads")
-			{
-				m_GrassLayer->setRenderTechnique(GRASSTECH_CROSSQUADS,m_Blend);
-			}
+			
 			if(m_FadeTech == "AlphaGrow")
 			{
 				m_GrassLayer->setFadeTechnique(FADETECH_ALPHAGROW);
@@ -220,6 +213,21 @@ namespace GASS
 	void GrassGeometryComponent::SetRenderTechnique(const std::string &tech)
 	{
 		m_RenderTechnique = tech;
+		if(m_GrassLayer)
+		{
+			if(m_RenderTechnique == "Quad")
+			{
+				m_GrassLayer->setRenderTechnique(GRASSTECH_QUAD,m_Blend);
+			}
+			else if(m_RenderTechnique == "CrossQuads")
+			{
+				m_GrassLayer->setRenderTechnique(GRASSTECH_CROSSQUADS,m_Blend);
+			}
+			else if(m_RenderTechnique == "Sprite")
+			{
+				m_GrassLayer->setRenderTechnique(GRASSTECH_SPRITE,m_Blend);
+			}
+		}
 	}
 
 	bool GrassGeometryComponent::GetBlendWithGround() const
@@ -231,6 +239,7 @@ namespace GASS
 	void GrassGeometryComponent::SetBlendWithGround(bool value)
 	{
 		m_Blend = value;
+		SetRenderTechnique(m_RenderTechnique);
 	}
 
 	Vec2 GrassGeometryComponent::GetMaxSize() const
@@ -448,7 +457,13 @@ namespace GASS
 		m_GrassLoader = loader;
 
 		SetFadeTech(m_FadeTech);
-		UpdateSway();
+		SetRenderTechnique(m_RenderTechnique );
+		if(m_GrassLayer)
+		{
+			UpdateSway();
+			m_GrassLayer->setLightingEnabled(true);
+		}
+
 
 
 		//		Root::Get().AddRenderListener(this);

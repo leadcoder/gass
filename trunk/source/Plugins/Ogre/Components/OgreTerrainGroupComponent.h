@@ -45,11 +45,11 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void GetMeshData(MeshDataPtr mesh_data);
-		
-		
-		
+
+
+
 		std::string GetFilename()const {return m_TerrainName;}
-		
+
 		virtual Float GetSizeX(){return m_WorldWidth;}
 		virtual Float GetSizeZ(){return m_WorldHeight;}
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
@@ -82,7 +82,7 @@ namespace GASS
 		std::string GetLoadTerrain() const;
 		float GetImportScale() const;
 		void SetImportScale(const float &value);
-		
+
 		void SetImportTerrainSize(const int &value);
 		Float GetImportTerrainWorldSize() const;
 		void SetImportTerrainWorldSize(const Float &value);
@@ -95,11 +95,24 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
-		void DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius);
+		void OnTerrainLayerPaint(TerrainPaintMessagePtr message);
+		void DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius, float noise);
 		void GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height);
 		void SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height);
-	
-		
+		void PaintTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, int layer_index, float noise);
+
+
+		bool GetFadeDetail() const {return m_FadeDetail;}
+		Ogre::Real GetDetailFadeDist() const {return m_DetailFadeDist;}
+		bool GetFadeOutColor() const {return m_FadeOutColor;}
+		Ogre::Real GetNearColorWeight() const {return m_NearColorWeight;}
+
+		void SetFadeDetail(bool value) {m_FadeDetail = value;}
+		void SetDetailFadeDist(float value) {m_DetailFadeDist = value;}
+		void SetFadeOutColor(bool  value) {m_FadeOutColor= value;}
+		void SetNearColorWeight(float value) {m_NearColorWeight= value;}
+
+
 		Vec3 m_Scale;
 		bool m_Center;
 		Float m_WorldWidth;
@@ -107,7 +120,7 @@ namespace GASS
 		int m_NodesPerSideAllPagesW;
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;
-		
+
 		Ogre::SceneManager* m_OgreSceneManager;
 
 		//Helpers to access terrain height very fast
@@ -128,10 +141,16 @@ namespace GASS
 		std::string m_TerrainName;
 		std::string m_CustomMaterial;
 		Vec3 m_Origin;
+
+
+		bool m_FadeDetail;
+		float m_DetailFadeDist;
+		bool m_FadeOutColor;
+		float m_NearColorWeight;
 	};
 	typedef boost::shared_ptr<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 
-	
+
 
 
 }

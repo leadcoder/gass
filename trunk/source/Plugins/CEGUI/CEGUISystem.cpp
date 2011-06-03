@@ -188,8 +188,11 @@ namespace GASS
 	{
 		CEGUI::System& cegui = CEGUI::System::getSingleton();
 
+		
 		cegui.injectMouseMove(x*10, y*10);
-		cegui.injectMouseWheelChange(z * 0.03);
+		cegui.injectMouseWheelChange(z*10);
+
+		
 
 		return true;
 	}

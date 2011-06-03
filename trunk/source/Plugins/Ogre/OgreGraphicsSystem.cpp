@@ -217,7 +217,6 @@ namespace GASS
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
 
-
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
 			float a_fps = m_Windows.begin()->second->getAverageFPS(); 

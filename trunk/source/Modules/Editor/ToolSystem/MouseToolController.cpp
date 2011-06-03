@@ -198,6 +198,12 @@ namespace GASS
 			MessagePtr tool_msg(new ToolChangedMessage("TerrainDeformTool",id));
 			EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
 			}
+			else if(name == "TerrainDeformTool")
+			{
+			int id = (int) this;
+			MessagePtr tool_msg(new ToolChangedMessage("TerrainDeformTool",id));
+			EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
+			}
 		}
 	}
 
@@ -667,7 +673,9 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
-			const std::string message = "Object under cursor:" + obj_under_cursor->GetName();
+			std::stringstream ss;
+			ss << " Cursor pos:" << m_CursorInfo.m_3DPos << " 2d:" << m_CursorInfo.m_ScreenPos << "\n";
+			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
 		}
 	}

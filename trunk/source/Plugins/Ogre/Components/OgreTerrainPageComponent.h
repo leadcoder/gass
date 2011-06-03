@@ -86,8 +86,14 @@ namespace GASS
 		std::string GetColorMap() const; 
 		void SetDiffuseLayer0(const std::string &diffuse);
 		std::string GetDiffuseLayer0() const;
+		void SetNormalLayer0(const std::string &diffuse);
+		std::string GetNormalLayer0() const;
+		
 		void SetDiffuseLayer1(const std::string &diffuse);
 		std::string GetDiffuseLayer1() const;
+		void SetNormalLayer1(const std::string &diffuse);
+		std::string GetNormalLayer1() const;
+
 		void SetDiffuseLayer2(const std::string &diffuse);
 		std::string GetDiffuseLayer2() const;
 		void SetTilingLayer0(float value);
@@ -110,6 +116,7 @@ namespace GASS
 		void ImportTerrain(const std::string &filename);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
 		bool m_CreateCollisionMesh;
 		std::string m_TerrainConfigFile;
 		std::string m_ColorMap;
@@ -117,7 +124,9 @@ namespace GASS
 		std::string m_MaskLayer1;
 		std::string m_MaskLayer2;
 		std::string m_DiffuseLayer0;
+		std::string m_NormalLayer0;
 		std::string m_DiffuseLayer1;
+		std::string m_NormalLayer1;
 		std::string m_DiffuseLayer2;
 		std::string m_DiffuseLayer3;
 		Ogre::SceneManager* m_OgreSceneManager;

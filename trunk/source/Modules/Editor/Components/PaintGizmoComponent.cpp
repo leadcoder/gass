@@ -22,7 +22,8 @@ namespace GASS
 {
 
 	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new ManualMeshData), m_Color(1,0,0,1),
-		m_Size(5),
+		m_Size(30),
+		m_InnerSize(20),
 		m_Type("follow_height"),
 		m_Active(false)
 	{
@@ -76,8 +77,8 @@ namespace GASS
 		m_MeshData->Type = LINE_STRIP;
 		m_MeshData->Material = "WhiteTransparentNoLighting";
 
-		float samples = 30;
-		float rad = 2*MY_PI/samples;
+		const float samples = 30;
+		const float rad = 2*MY_PI/samples;
 		float x,y,z;
 		for(float i = 0 ;i <= samples; i++)
 		{
@@ -87,6 +88,16 @@ namespace GASS
 			m_MeshData->VertexVector.push_back(vertex);
 		}
 		m_MeshData->VertexVector.push_back(vertex);
+
+		for(float i = 0 ;i <= samples; i++)
+		{
+			x = cos(rad*i)*m_InnerSize;
+			y = sin(rad*i)*m_InnerSize;
+			vertex.Pos.Set(x,0,y);
+			m_MeshData->VertexVector.push_back(vertex);
+		}
+		m_MeshData->VertexVector.push_back(vertex);
+
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);

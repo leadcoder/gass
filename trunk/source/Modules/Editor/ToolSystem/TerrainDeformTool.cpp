@@ -14,13 +14,13 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
-
+#include "Plugins/PagedGeometry/PGMessages.h"
 
 namespace GASS
 {
 
 	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),
-		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1)
+		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1),m_Noise(0), m_TEM(TEM_DEFORM),m_InvertBrush(1),m_ActiveLayer(TL_1)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
 
@@ -48,7 +48,14 @@ namespace GASS
 				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity)));
+					if(m_TEM == TEM_DEFORM)
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
+						
+					else if(m_TEM == TEM_SMOOTH)
+						selected->PostMessage(MessagePtr(new GrassPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
+						//selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
+					else if(m_TEM == TEM_LAYER_PAINT)
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,m_Intensity*m_InvertBrush,m_Noise)));
 				}
 			}
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
@@ -167,6 +174,56 @@ namespace GASS
 		}
 	}
 
+	void TerrainDeformTool::SetBrushSize(float value)
+	{
+		m_BrushSize = value;
+
+		SceneObjectPtr gizmo = GetMasterGizmo();
+		if(gizmo)
+		{
+			PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
+			comp->SetSize(m_BrushSize*0.5);
+			comp->BuildMesh();
+		}
+	}
+
+	void TerrainDeformTool::SetBrushInnerSize(float value)
+	{
+		m_BrushInnerSize = value;
+		SceneObjectPtr gizmo = GetMasterGizmo();
+		if(gizmo)
+		{
+			PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
+			comp->SetInnerSize(m_BrushInnerSize*0.5);
+			comp->BuildMesh();
+		}
+	}
+
+	void TerrainDeformTool::SetIntensity(float value)
+	{
+		m_Intensity = value;
+	}
+
+
+	void TerrainDeformTool::SetNoise(float value)
+	{
+		m_Noise= value;
+	}
+
+	void TerrainDeformTool::SetLayerTexture(const std::string &texture, float tiling)
+	{
+		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		if(selected)
+		{
+			TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
+			if(terrain)
+			{
+				selected->PostMessage(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
+			}
+		}
+	}
+	
+
 	void TerrainDeformTool::OnInput(ControllerMessagePtr message)
 	{
 		if(m_Active)
@@ -180,15 +237,15 @@ namespace GASS
 					m_BrushSize += m_BrushSize*0.3;
 				else if(value < -0.5) 
 					m_BrushSize -= m_BrushSize*0.3;
-
-				SceneObjectPtr gizmo = GetMasterGizmo();
-				if(gizmo)
-				{
-					PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
-					comp->SetSize(m_BrushSize*0.5);
-					comp->BuildMesh();
+			    SetBrushSize(m_BrushSize);
 				
-				}
+			}
+			if(name == "InvertBrush")
+			{
+				if(value > 0.5) 
+					m_InvertBrush = -1;
+				else
+					m_InvertBrush = 1;
 			}
 		}
 	}
