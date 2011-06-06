@@ -59,12 +59,12 @@ namespace GASS
 		void SetEnableGizmo(int value);
 		Float SnapPosition(Float value);
 		Float SnapAngle(Float value);
-		void Update();
+		void Update(double delta);
 		
 		void NextTool();
 		void PrevTool();
 		void SetActive(bool value) {m_Active = value;}
-
+		double GetDeltaTime() const {return m_Delta;}
 
 	private:
 		void RequestScenePosition();
@@ -83,8 +83,7 @@ namespace GASS
 		void OnSceneLoaded(GASS::ScenarioSceneLoadedNotifyMessagePtr message);
 		void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnSnapModeMessage(SnapModeMessagePtr message);
-
-
+		
 		SceneObjectPtr GetPointerObject();
 
 
@@ -117,6 +116,7 @@ namespace GASS
 		bool m_EnableAngleSnap;
 		float m_RayPickDistance;
 		bool m_EnableGizmo;
+		double m_Delta;
 
 		GASS::SceneObjectWeakPtr m_PointerObject;
 	};

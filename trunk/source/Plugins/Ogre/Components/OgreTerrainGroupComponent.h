@@ -32,6 +32,9 @@
 #include "OgreTerrainQuadTreeNode.h"
 #include "OgreTerrainMaterialGeneratorA.h"
 #include "OgreTerrainPaging.h"
+#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
+
+
 
 namespace GASS
 {
@@ -45,16 +48,13 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void GetMeshData(MeshDataPtr mesh_data);
-
-
-
 		std::string GetFilename()const {return m_TerrainName;}
+
 
 		virtual Float GetSizeX(){return m_WorldWidth;}
 		virtual Float GetSizeZ(){return m_WorldHeight;}
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
 		virtual bool CheckOnTerrain(Float x, Float z){return true;}
-
 		virtual void GetBounds(Vec3 &min,Vec3 &max);
 		virtual unsigned int GetSamplesX();
 		virtual unsigned int GetSamplesZ();
@@ -72,6 +72,10 @@ namespace GASS
 		float* GetHeightData() {return NULL;}
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;
+
+		//IXMLSerialize interface, we need a way to trigger terrain save!
+		virtual void SaveXML(TiXmlElement *obj_elem);
+		
 	protected:
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
@@ -107,10 +111,10 @@ namespace GASS
 		bool GetFadeOutColor() const {return m_FadeOutColor;}
 		Ogre::Real GetNearColorWeight() const {return m_NearColorWeight;}
 
-		void SetFadeDetail(bool value) {m_FadeDetail = value;}
-		void SetDetailFadeDist(float value) {m_DetailFadeDist = value;}
-		void SetFadeOutColor(bool  value) {m_FadeOutColor= value;}
-		void SetNearColorWeight(float value) {m_NearColorWeight= value;}
+		void SetFadeDetail(bool value) ;
+		void SetDetailFadeDist(float value) ;
+		void SetFadeOutColor(bool  value) ;
+		void SetNearColorWeight(float value) ;
 
 
 		Vec3 m_Scale;
@@ -147,11 +151,9 @@ namespace GASS
 		float m_DetailFadeDist;
 		bool m_FadeOutColor;
 		float m_NearColorWeight;
+		Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
+
 	};
 	typedef boost::shared_ptr<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
-
-
-
-
 }
 

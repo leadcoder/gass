@@ -29,7 +29,7 @@ namespace GASS
 	void EditorManager::Init()
 	{
 		m_MessageManager = new MessageManager();
-		m_MouseTools=  new MouseToolController(false);
+		m_MouseTools =  new MouseToolController(false);
 	}
 
 	MessageManager* EditorManager::GetMessageManager(void)

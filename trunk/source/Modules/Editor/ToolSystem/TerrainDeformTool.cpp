@@ -45,18 +45,19 @@ namespace GASS
 		{
 			if(selected)
 			{
+				float intensity = m_Intensity*m_InvertBrush*m_Controller->GetDeltaTime();
 				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 				if(terrain)
 				{
 					if(m_TEM == TEM_DEFORM)
-						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
-						
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					else if(m_TEM == TEM_SMOOTH)
-						selected->PostMessage(MessagePtr(new GrassPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
-						//selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_Intensity*m_InvertBrush,m_Noise)));
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					else if(m_TEM == TEM_LAYER_PAINT)
-						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,m_Intensity*m_InvertBrush,m_Noise)));
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
 				}
+				if(m_TEM == TEM_VEGETATION_PAINT)
+					selected->PostMessage(MessagePtr(new GrassPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 			}
 			GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
 			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(paint_msg);

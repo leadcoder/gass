@@ -21,7 +21,7 @@
 #include "HydraxWaterComponent.h"
 #include "HydraxRTTListener.h"
 #include "Plugins/Ogre/OgreConvert.h"
-#include "Plugins/Ogre/IOgreCameraProxy.h"
+//#include "Plugins/Ogre/IOgreCameraProxy.h"
 
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -620,14 +620,14 @@ namespace GASS
 		{
 			//OgreCameraProxyPtr cam2 = message->GetCamera()->GetFirstComponentByClass<IOgreCameraProxy>();
 			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
-			if(cam)
+			/*if(cam)
 			{
 				m_Hydrax->setCamera(cam);
 				if(m_ProjectedGridGeometryModuleVertex)
 					m_ProjectedGridGeometryModuleVertex->setRenderingCamera(cam);
 				if(m_ProjectedGridGeometryModuleRtt)
 					m_ProjectedGridGeometryModuleRtt->setRenderingCamera(cam);
-			}
+			}*/
 			
 			/*Ogre::Root::getSingleton().removeFrameListener(this);
 			Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();

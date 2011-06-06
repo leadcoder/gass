@@ -99,6 +99,10 @@ namespace GASS
 	{
 		GASS::ScenarioScenePtr scene = message->GetScenarioScene();
 		scene->RegisterForMessage(REG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage,0));
+
+		m_ColMeshHandle = 0;
+		m_ColGizmoHandle = 0;
+		
 	}
 
 	void MouseToolController::OnUnloadScene(GASS::ScenarioSceneUnloadNotifyMessagePtr message)
@@ -108,6 +112,9 @@ namespace GASS
 		m_InvisibleObjects.clear();
 		ScenarioScenePtr scene = message->GetScenarioScene();
 		scene->UnregisterForMessage(UNREG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage));
+
+		m_ColMeshHandle = 0;
+		m_ColGizmoHandle = 0;
 	}
 
 	void MouseToolController::OnChangeCamera(ChangeCameraMessagePtr message)
@@ -657,7 +664,7 @@ namespace GASS
 		return pointer;
 	}
 
-	void MouseToolController::Update()
+	void MouseToolController::Update(double delta)
 	{
 		//fade mouse delta
 		m_CursorInfo.m_Delta.x *= 0.9;
@@ -668,6 +675,7 @@ namespace GASS
 
 
 
+		m_Delta = delta;
 		//debug message
 
 		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());

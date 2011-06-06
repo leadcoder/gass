@@ -24,7 +24,8 @@ namespace GASS
 		{
 			TEM_DEFORM,
 			TEM_SMOOTH,
-			TEM_LAYER_PAINT
+			TEM_LAYER_PAINT,
+			TEM_VEGETATION_PAINT
 		};
 
 		TerrainDeformTool(MouseToolController* controller);

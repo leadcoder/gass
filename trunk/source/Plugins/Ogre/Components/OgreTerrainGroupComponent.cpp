@@ -45,7 +45,7 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreGASSTerrainMaterialGenerator.h"
 #include "Plugins/Ogre/OgreConvert.h"
-#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
+
 
 
 
@@ -57,12 +57,13 @@ namespace GASS
 		m_TerrainGroup(NULL),
 		m_TerrainWorldSize(5000),
 		m_TerrainSize(513),
-		m_TerrainName("UnkownTerrain"),
+		m_TerrainName("OgrePagedTerrain"),
 		m_Origin(0,0,0)
 		,m_FadeDetail(true)
 		,m_DetailFadeDist(20.0f)
 		,m_FadeOutColor(true)
 		,m_NearColorWeight(0.2f)
+		,m_TerrainProfile(NULL)
 	{
 
 
@@ -89,7 +90,6 @@ namespace GASS
 		RegisterProperty<float>("DetailFadeDist", &GASS::OgreTerrainGroupComponent::GetDetailFadeDist, &GASS::OgreTerrainGroupComponent::SetDetailFadeDist);
 		RegisterProperty<bool>("FadeOutColor", &GASS::OgreTerrainGroupComponent::GetFadeOutColor, &GASS::OgreTerrainGroupComponent::SetFadeOutColor);
 		RegisterProperty<float>("NearColorWeight", &GASS::OgreTerrainGroupComponent::GetNearColorWeight, &GASS::OgreTerrainGroupComponent::SetNearColorWeight);
-		
 
 	}
 
@@ -100,6 +100,18 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintMessage,0));
 
+	}
+
+	void OgreTerrainGroupComponent::SaveXML(TiXmlElement *obj_elem)
+	{
+		BaseSceneComponent::SaveXML(obj_elem);
+
+		if(m_TerrainGroup)
+		{
+			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+			m_TerrainGroup->saveAllTerrains(false);
+		}
+		//also save terrain to data file?
 	}
 
 	void OgreTerrainGroupComponent::SetOrigin(const Vec3 &pos)
@@ -182,7 +194,7 @@ namespace GASS
 		m_TerrainName = filename;
 		if(m_TerrainGroup)
 		{
-			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+ 			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
 
 			//Get all components
 			IComponentContainer::ComponentVector comps;
@@ -219,25 +231,28 @@ namespace GASS
 
 		if(m_CustomMaterial != "")
 		{
+
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW GASSTerrainMaterialGenerator(m_CustomMaterial)));
-			GASSTerrainMaterialGenerator::CustomMaterialProfile* matProfile =	static_cast<GASSTerrainMaterialGenerator::CustomMaterialProfile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
-			matProfile->setCompositeMapEnabled(false);
-			matProfile->setLightmapEnabled(false);
-			
+			GASSTerrainMaterialGenerator::CustomMaterialProfile *profile = static_cast<GASSTerrainMaterialGenerator::CustomMaterialProfile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
+			profile->setCompositeMapEnabled(false);
+			profile->setLightmapEnabled(false);
 		}
 		else
 		{
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorB()));
-			Ogre::TerrainMaterialGeneratorB::SM2Profile* matProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
-			matProfile->setLightmapEnabled(false);
-			matProfile->setReceiveDynamicShadowsEnabled(true);
-			matProfile->setReceiveDynamicShadowsDepth(true);
-			matProfile->setReceiveDynamicShadowsLowLod(true);
+			m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
+			m_TerrainProfile->setLightmapEnabled(false);
+			
+			m_TerrainProfile->setReceiveDynamicShadowsEnabled(true);
+			m_TerrainProfile->setReceiveDynamicShadowsDepth(true);
+			m_TerrainProfile->setReceiveDynamicShadowsLowLod(true);
 
-			matProfile->SetFadeDetail(GetFadeDetail());
-			matProfile->SetDetailFadeDist(GetDetailFadeDist());
-			matProfile->SetFadeOutColor(GetFadeOutColor());
-			matProfile->SetNearColorWeight(GetNearColorWeight());
+			m_TerrainProfile->SetFadeDetail(GetFadeDetail());
+			m_TerrainProfile->SetDetailFadeDist(GetDetailFadeDist());
+			m_TerrainProfile->SetFadeOutColor(GetFadeOutColor());
+			m_TerrainProfile->SetNearColorWeight(GetNearColorWeight());
+			m_TerrainProfile->setLayerNormalMappingEnabled(false);
+
 		}
 
 		m_TerrainGlobals->setMaxPixelError(8);
@@ -270,20 +285,20 @@ namespace GASS
 		defaultimp.layerList[0].textureNames.push_back("default.dds");
 
 		defaultimp.layerList[1].worldSize = 10;
-		defaultimp.layerList[1].textureNames.push_back("detail_sand_gk03.dds");
+		defaultimp.layerList[1].textureNames.push_back("default.dds");
 
 		defaultimp.layerList[2].worldSize = 10;
-		defaultimp.layerList[2].textureNames.push_back("detail_sand_gk04.dds");
+		defaultimp.layerList[2].textureNames.push_back("default.dds");
 
 		defaultimp.layerList[3].worldSize = 10;
-		defaultimp.layerList[3].textureNames.push_back("detail_sand_gk04.dds");
+		defaultimp.layerList[3].textureNames.push_back("default.dds");
 
 		defaultimp.layerList[4].worldSize = 10;
-		defaultimp.layerList[4].textureNames.push_back("detail_sand_gk04.dds");
+		defaultimp.layerList[4].textureNames.push_back("default.dds");
 
 		m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
 
-		
+
 
 	}
 
@@ -366,15 +381,6 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
-
-		/*ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		if(rs == NULL)
-		Log::Error("No Resource Manager Found");
-		std::string location = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario()->GetPath();
-		location += "gfx/terrain";
-		rs->AddResourceLocation(location,"TerrainResourceLocation","FileSystem",true);
-		rs->LoadResourceGroup("TerrainResourceLocation");*/
-
 		ConfigureTerrainDefaults();
 	}
 
@@ -397,10 +403,7 @@ namespace GASS
 	void OgreTerrainGroupComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		delete m_TerrainGroup;
-		//delete m_TerrainGlobals;	
 
-		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		//rs->RemoveResourceGroup("TerrainResourceLocation");
 	}
 
 	void OgreTerrainGroupComponent::GetBounds(Vec3 &min,Vec3 &max)
@@ -668,24 +671,20 @@ namespace GASS
 				Ogre::Real tsYdist = (y / imgSize)  - tsPos.y;
 
 
-
-				
-				
-
 				Ogre::Real weight = std::min((Ogre::Real)1.0, 
 					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
-				
-				
+
+
 				if( weight < 0) 
 					weight = 0;
 
-				
-				
+
+
 				weight = 1.0 - (weight * weight);
 
 				float rand_w = Ogre::Math::RangeRandom(0, 1);
 				weight -= rand_w*noise*0.5;
-				
+
 				if( weight < 0) 
 					weight = 0;
 
@@ -707,4 +706,32 @@ namespace GASS
 		return GeometryCategory(GT_TERRAIN);
 	}
 
+	void OgreTerrainGroupComponent::SetFadeDetail(bool value) 
+	{
+		m_FadeDetail = value;
+		if(m_TerrainProfile)
+			m_TerrainProfile->SetFadeDetail(GetFadeDetail());
+	}
+	void OgreTerrainGroupComponent::SetDetailFadeDist(float value) 
+	{
+		m_DetailFadeDist = value;
+		if(m_TerrainProfile)
+			m_TerrainProfile->SetDetailFadeDist(GetDetailFadeDist());
+
+	}
+	void OgreTerrainGroupComponent::SetFadeOutColor(bool  value) 
+	{
+		m_FadeOutColor= value;
+		if(m_TerrainProfile)
+			m_TerrainProfile->SetFadeOutColor(GetFadeOutColor());
+
+	}
+
+	void OgreTerrainGroupComponent::SetNearColorWeight(float value) 
+	{
+		m_NearColorWeight= value;
+		if(m_TerrainProfile)
+			m_TerrainProfile->SetNearColorWeight(GetNearColorWeight());
+
+	}
 }
