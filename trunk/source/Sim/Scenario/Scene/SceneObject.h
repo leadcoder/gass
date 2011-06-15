@@ -101,7 +101,7 @@ namespace GASS
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
-					GetComponentsByClass<T>(components,recursive);
+					child->GetComponentsByClass<T>(components,recursive);
 				}
 			}
 		}
@@ -123,7 +123,7 @@ namespace GASS
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
-					ret = GetFirstComponentByClass<T>(recursive);
+					ret = child->GetFirstComponentByClass<T>(recursive);
 					if(ret)
 						return ret;
 				}

@@ -27,47 +27,31 @@
 
 namespace GASS
 {
-	class SplineAnimation;
-	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>
+	class RoadComponent : public Reflection<RoadComponent,BaseSceneComponent>
 	{
-		friend class WaypointComponent;
 	public:
-		WaypointListComponent();
-		virtual ~WaypointListComponent();
+		RoadComponent();
+		virtual ~RoadComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		std::vector<Vec3> GetWaypoints() const;
 	protected:
-		float GetRadius()const;
-		void SetRadius(float radius);
-		int GetSplineSteps()const;
-		void SetSplineSteps(int steps);
-		
-		bool GetEnableSpline()const;
-		void SetEnableSpline(bool value);
-		bool GetAutoUpdateTangents()const;
-		void SetAutoUpdateTangents(bool value);
-		
-		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
-		
+		void SetFlatTerrain(bool value);
+		bool GetFlatTerrain() const;
+		void SetFlatWidth(float value) {m_FlatWidth = value;}
+		float GetFlatWidth() const {return m_FlatWidth;}
+		void SetFlatFade(float value) {m_FlatFade = value;}
+		float GetFlatFade() const {return m_FlatFade;}
+
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLoad(LoadCoreComponentsMessagePtr message);
-		void OnMoved(TransformationNotifyMessagePtr message);
-		void OnUpdate(UpdateWaypointListMessagePtr message);
-
-		//Helpers
-		
-		void UpdatePath();
-
-		float m_Radius;
-		int m_SplineSteps;
-		bool m_EnableSpline;
 		bool m_Initialized;
-		bool m_AutoUpdateTangents;
+		float m_FlatFade;
+		float m_FlatWidth;
+		
 	};
 
-	typedef boost::shared_ptr<WaypointListComponent> WaypointListComponentPtr;
-	typedef boost::weak_ptr<WaypointListComponent> WaypointListComponentWeakPtr;
+	typedef boost::shared_ptr<RoadComponent> RoadComponentPtr;
+	typedef boost::weak_ptr<RoadComponent> RoadComponentWeakPtr;
 	
 }
 

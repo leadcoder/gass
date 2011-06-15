@@ -40,6 +40,7 @@ namespace Forests
 	class PagedGeometry;
 	class GrassLoader;
 	class GrassLayer;
+	class GeometryPageManager;
 }
 
 using namespace Forests;
@@ -56,6 +57,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
+		virtual void SaveXML(TiXmlElement *obj_elem);
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
@@ -94,6 +96,7 @@ namespace GASS
 		void SetSwayDistribution(float distribution);
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
+		
 protected:
 		float GetCollisionSystemHeight(float x, float z);
 		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
@@ -124,6 +127,11 @@ protected:
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
 		static ICollisionSystem* m_CollisionSystem;
+
+		Ogre::TexturePtr m_DensityTexture;
+		Ogre::Image m_DensityImage;
+
+		GeometryPageManager* m_LOD0;
 
 		void update();
 

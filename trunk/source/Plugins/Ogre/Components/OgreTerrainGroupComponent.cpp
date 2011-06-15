@@ -99,7 +99,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintMessage,0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnRoadMessage,RoadMessage,0));
 	}
 
 	void OgreTerrainGroupComponent::SaveXML(TiXmlElement *obj_elem)
@@ -537,6 +537,75 @@ namespace GASS
 		m_TerrainGroup->update();
 	}
 
+
+
+	void OgreTerrainGroupComponent::OnRoadMessage(RoadMessagePtr message)
+	{
+		// figure out which terrains this affects
+		Ogre::Real brush_size = message->GetWidth();
+		Ogre::Real inner_radius = message->GetWidth()*0.5 - message->GetFade();
+		
+		std::vector<Vec3> rwps = message->GetRoadWaypoints();
+		for(size_t i = 0; i < rwps.size()-1; i++)
+		{
+			const Vec3 line = rwps[i+1] - rwps[i];
+			const Float  length = line.Length();
+			const Vec3 dir = line*(1.0/length);
+			const Float  step_size = 0.1;
+			Float dist = 0;
+			while(dist < length)
+			{
+				Vec3 pos = rwps[i] + dir*dist;
+				dist += step_size;
+
+				Ogre::TerrainGroup::TerrainList terrainList;
+				Ogre::Vector3 position = Convert::ToOgre(pos);
+				Ogre::Sphere sphere(position, brush_size);
+				m_TerrainGroup->sphereIntersects(sphere, &terrainList);
+				for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+					FlattenTerrain(*ti, position,1.0,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());
+			}
+		}
+		m_TerrainGroup->update();
+	}
+	
+	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius)
+	{
+		Ogre::Vector3 tsPos;
+		terrain->getTerrainPosition(centrepos, &tsPos);
+		//#if OGRE_PLATFORM != OGRE_PLATFORM_IPHONE
+		// we need point coords
+		Ogre::Real terrainSize = (terrain->getSize() - 1);
+		long startx = (tsPos.x - brush_size_terrain_space) * terrainSize;
+		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
+		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
+		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
+		startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)terrainSize);
+		endy = std::min(endy, (long)terrainSize);
+		float newheight = centrepos.y;
+		for (long y = starty; y <= endy; ++y)
+		{
+			for (long x = startx; x <= endx; ++x)
+			{
+				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
+				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
+
+				Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
+				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius)));
+
+				//Ogre::Real weight = std::min((Ogre::Real)1.0, 
+				//	(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
+				if( weight < 0) weight = 0;
+				weight = 1.0 - (weight * weight);
+
+				float current_height = terrain->getHeightAtPoint(x, y);
+				terrain->setHeightAtPoint(x, y, newheight);//*weight + current_height*(1-weight));
+			}
+		}
+	}
+
 	void OgreTerrainGroupComponent::DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius, float noise)
 	{
 		Ogre::Vector3 tsPos;
@@ -569,15 +638,10 @@ namespace GASS
 
 				float addedHeight = weight * timeElapsed + weight*rand_w*noise*timeElapsed;
 				float newheight;
-				//if (mKeyboard->isKeyDown(OIS::KC_EQUALS))
 				newheight = terrain->getHeightAtPoint(x, y) + addedHeight;
-				//else
-				//	newheight = terrain->getHeightAtPoint(x, y) - addedHeight;
 				terrain->setHeightAtPoint(x, y, newheight);
 			}
 		}
-		//if (mHeightUpdateCountDown == 0)
-		//	mHeightUpdateCountDown = mHeightUpdateRate;
 	}
 
 

@@ -100,12 +100,14 @@ namespace GASS
 
 		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
 		void OnTerrainLayerPaint(TerrainPaintMessagePtr message);
+		void OnRoadMessage(RoadMessagePtr message);
+	
 		void DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius, float noise);
 		void GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height);
 		void SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height);
 		void PaintTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, int layer_index, float noise);
-
-
+		void FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius);
+	
 		bool GetFadeDetail() const {return m_FadeDetail;}
 		Ogre::Real GetDetailFadeDist() const {return m_DetailFadeDist;}
 		bool GetFadeOutColor() const {return m_FadeOutColor;}

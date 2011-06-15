@@ -133,6 +133,7 @@ namespace GASS
 
 		std::vector<Vec3> wps = WaypointListComponent::GetWaypoints();
 
+		
 		//LocationComponentPtr line_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		//Vec3 line_pos = line_location->GetWorldPosition();
 		for(size_t i = 0; i < wps.size(); i++)

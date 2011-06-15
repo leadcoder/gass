@@ -57,7 +57,8 @@ namespace GASS
 		m_ViewDist(50),
 		m_RenderTechnique("Quad"),
 		m_Blend(false),
-		m_GrassLayer(NULL)
+		m_GrassLayer(NULL),
+		m_LOD0(0)
 	{
 
 	}
@@ -103,14 +104,31 @@ namespace GASS
 	{
 
 		return m_DensityMapFilename;
-
-
 	}
+
 	void GrassGeometryComponent::SetDensityMap(const std::string &dm)
 	{
 		m_DensityMapFilename = dm;//Misc::GetFilename(dm);
 		if(m_GrassLayer)
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
+	}
+
+
+	void GrassGeometryComponent::SaveXML(TiXmlElement *obj_elem)
+	{
+		BaseSceneComponent::SaveXML(obj_elem);
+
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		std::string scenario_path = scenario->GetPath();
+		std::string denmapname;
+		if(m_DensityMapFilename != "")
+		{
+			denmapname = m_DensityMapFilename;
+		}
+		else
+			denmapname = "density_map_" + GetName() + ".tga";
+		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		m_DensityImage.save(fp_denmap);
 	}
 
 	float GrassGeometryComponent::GetDensityFactor() const
@@ -338,6 +356,8 @@ namespace GASS
 	void GrassGeometryComponent::SetViewDistance(float distance)
 	{
 		m_ViewDist = distance;
+		//if(m_LOD0)
+		//	m_LOD0->setFarRange(distance);
 	}
 
 
@@ -403,7 +423,7 @@ namespace GASS
 			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
 			if(!terrain)
 			{
-				SceneObjectPtr root = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject();
+				SceneObjectPtr root = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot();
 				terrain = GetTerrainComponent(root);
 			}
 			if(terrain)
@@ -434,19 +454,59 @@ namespace GASS
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 
-		GrassLoader* loader = new GrassLoader(m_PagedGeometry);
-		loader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
-		m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
-		m_PagedGeometry->setPageLoader(loader);
-
-		loader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
-		m_GrassLayer = loader->addLayer(m_Material);
+		m_GrassLoader = new GrassLoader(m_PagedGeometry);
+		m_GrassLoader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
+		m_LOD0 = m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
+		
+		m_PagedGeometry->setPageLoader(m_GrassLoader);
+		
+		m_GrassLoader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 		m_GrassLayer->setDensity(m_DensityFactor);
 		m_GrassLayer->setMapBounds(m_MapBounds);
-		if(m_DensityMapFilename != "")
-			m_GrassLayer->setDensityMap(m_DensityMapFilename);
+		//if(m_DensityMapFilename != "")
+		//	m_GrassLayer->setDensityMap(m_DensityMapFilename);
+		//else
+		{
+			//create from in run time?
+			//try to load 
+
+			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+			std::string scenario_path = scenario->GetPath();
+
+
+			std::string denmapname;
+			if(m_DensityMapFilename != "")
+			{
+				denmapname = m_DensityMapFilename;
+			}
+			else
+				denmapname = "density_map_" + GetName() + ".tga";
+
+			const std::string fp_denmap = scenario_path + "/" + denmapname;
+			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+			try
+			{
+				m_DensityImage.load(stream);
+			}
+			catch(...)
+			{
+				int densize = 1024;
+				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
+				memset(data, 0, densize * densize * 4);
+
+				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
+				m_DensityImage.save(fp_denmap);
+			}
+			stream.setNull();
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScenario").first;
+			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			m_GrassLayer->setDensityMap(m_DensityTexture);
+		}
+		
 
 		if(m_ColorMapFilename != "")
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
@@ -454,7 +514,7 @@ namespace GASS
 		//loader->setRenderQueueGroup();
 
 
-		m_GrassLoader = loader;
+		//m_GrassLoader = loader;
 
 		SetFadeTech(m_FadeTech);
 		SetRenderTechnique(m_RenderTechnique );
@@ -463,9 +523,6 @@ namespace GASS
 			UpdateSway();
 			m_GrassLayer->setLightingEnabled(true);
 		}
-
-
-
 		//		Root::Get().AddRenderListener(this);
 	}
 
@@ -543,7 +600,7 @@ namespace GASS
 		{
 			Ogre::PixelBox pbox = dmap->getPixelBox();
 			Ogre::uchar *data = static_cast<Ogre::uchar*>(dmap->getPixelBox().data);
-//			Ogre::uchar *data2 = mPGDensityMap.getData();
+			Ogre::uchar *data2 = m_DensityImage.getData();
 
 			int wsize = dmap->getPixelBox().getWidth()-1;
 
@@ -561,16 +618,16 @@ namespace GASS
 
 			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
 			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
-			const Ogre::Real brush_inner_radius = message->GetBrushInnerSize()/height;
+			const Ogre::Real brush_inner_radius = (message->GetBrushInnerSize()*0.5)/height;
 
-			long startx = (x_pos - brush_size_texture_space_x) * wsize;
-			long starty = (y_pos - brush_size_texture_space_y) * wsize;
-			long endx = (x_pos + brush_size_texture_space_x) * wsize;
-			long endy= (y_pos + brush_size_texture_space_y) * wsize;
+			long startx = (x_pos - brush_size_texture_space_x) * (wsize);
+			long starty = (y_pos - brush_size_texture_space_y) * (wsize);
+			long endx = (x_pos + brush_size_texture_space_x) * (wsize);
+			long endy= (y_pos + brush_size_texture_space_y) * (wsize);
 			startx = std::max(startx, 0L);
 			starty = std::max(starty, 0L);
-			endx = std::min(endx, (long)wsize);
-			endy = std::min(endy, (long)wsize);
+			endx = std::min(endx, (long)wsize-1);
+			endy = std::min(endy, (long)wsize-1);
 			for (long y = starty; y <= endy; ++y)
 			{
 				int tmploc = y * (wsize+1);
@@ -580,17 +637,25 @@ namespace GASS
 					Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
 					Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
 
-					Ogre::Real weight = std::min((Ogre::Real)1.0,
-						(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius));
+					Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
+
+					Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
 					if( weight < 0) weight = 0;
 					weight = 1.0 - (weight * weight);
-					weight = 1;
+					//weight = 1;
 
-					float val = data[tmploc + x];
+					float val = float(data[tmploc + x])/255.0f;
 					val += weight*message->GetIntensity()*3;
-					val = std::min(val, 255.0f);
-					val = std::max(val, 0.0f);
-					data[tmploc + x] = val;
+					//val = std::min(val, 255.0f);
+					//val = std::max(val, 0.0f);
+					if(val > 1.0)
+						val = 1;
+					if(val < 0.0)
+						val = 0;
+
+					data[tmploc + x] = val*255;
+					//data2[tmploc + x] = val;
+					data2[((tmploc+ x)*4)] = val*255;
 				}
 			}
 			float posL = world_pos.x - message->GetBrushSize();
@@ -601,6 +666,15 @@ namespace GASS
 			Forests::TBounds bounds(posL, posT, posR, posB);
 
 			m_PagedGeometry->reloadGeometryPages(bounds);
+			
+
+			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+			std::string scenario_path = scenario->GetPath();
+			const std::string denmapname = "density_map_" + GetName() + ".tga";
+			const std::string fp_denmap = scenario_path + "/" + denmapname;
+			//m_DensityImage.save(fp_denmap);
+
+			
 
 
 			 /*for(int j = mPGDirtyRect.top;j < mPGDirtyRect.bottom;j++)
