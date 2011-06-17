@@ -678,14 +678,14 @@ namespace GASS
 		m_Delta = delta;
 		//debug message
 
-		SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			std::stringstream ss;
 			ss << " Cursor pos:" << m_CursorInfo.m_3DPos << " 2d:" << m_CursorInfo.m_ScreenPos << "\n";
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
 			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
-		}
+		}*/
 	}
 
 	void MouseToolController::SetEnableGizmo(int value) 

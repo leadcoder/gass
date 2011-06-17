@@ -137,6 +137,9 @@ namespace GASS
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
+		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
+		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
 		SetCastShadow(m_CastShadow);
 		
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));

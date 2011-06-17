@@ -26,6 +26,7 @@
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Plugins/Ogre/IOgreCameraProxy.h"
 
 namespace Ogre
 {
@@ -34,7 +35,7 @@ namespace Ogre
 
 namespace GASS
 {
-	class OgreCameraComponent : public Reflection<OgreCameraComponent,BaseSceneComponent>, public ICameraComponent
+	class OgreCameraComponent : public Reflection<OgreCameraComponent,BaseSceneComponent>, public ICameraComponent, public IOgreCameraProxy
 	{
 	public:
 		OgreCameraComponent();
@@ -42,7 +43,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
-		inline Ogre::Camera* GetOgreCamera(){return m_Camera;}
+		inline Ogre::Camera* GetOgreCamera() const {return m_Camera;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 	protected:

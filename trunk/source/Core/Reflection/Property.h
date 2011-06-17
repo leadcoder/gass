@@ -42,7 +42,9 @@ namespace GASS
     bool GetValueFromString(type &res,const std::string &s)
     {
         std::stringstream str;
+		str.setf(0,std::ios::floatfield);
 		str.precision(10);
+
 		//str.setf(std::ios::boolalpha);
         str << s;
         str >> res;
@@ -53,6 +55,10 @@ namespace GASS
     template <>
     bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
+
+	//Use specialized template to catch float
+    template <>
+    bool GASSCoreExport GetValueFromString<float>(float &res,const std::string &s);
 
 	//Use specialized template to catch bool
     template <>
@@ -65,12 +71,17 @@ namespace GASS
         std::stringstream sstream;
         sstream.unsetf(std::ios::skipws);
 		sstream.setf(std::ios::boolalpha);
+		sstream.setf(0,std::ios::floatfield);
 		sstream.precision(10);
 		
         sstream << val;
         res = sstream.str();
         return true;
     }
+
+	//Use specialized template to catch float
+    template <>
+    bool GASSCoreExport GetStringFromValue<float>(const float &val, std::string &res);
 
     /**
     Template class used to define a property of a specific type.

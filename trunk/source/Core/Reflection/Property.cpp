@@ -48,6 +48,32 @@ namespace GASS
         return true;
 	}
 
+	//Use specialized template to catch float
+    template <>
+    bool GetValueFromString<float>(float &res,const std::string &s)
+	{
+		std::stringstream str;
+		str.setf(0,std::ios::floatfield);
+		str.precision(6);
+		str << s;
+        str >> res;
+        return true;
+	}
+
+	template <>
+    bool GetStringFromValue(const float &val,std::string &res)
+    {
+        std::stringstream sstream;
+        sstream.unsetf(std::ios::skipws);
+		sstream.setf(std::ios::boolalpha);
+		sstream.setf(0,std::ios::floatfield);
+		sstream.precision(6);
+		
+        sstream << val;
+        res = sstream.str();
+        return true;
+    }
+
     /*template <>
 	bool GASSCoreExport GetValueFromString<std::vector<int> >(std::vector<int> &res,const std::string &s)
 	{

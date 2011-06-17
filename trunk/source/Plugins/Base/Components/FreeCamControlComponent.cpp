@@ -381,7 +381,7 @@ namespace GASS
 	
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
-		m_UpDownInput = m_UpDownInput*0.9;
+		//m_UpDownInput = m_UpDownInput*0.9;
 	
 		if(m_Debug)
 		{

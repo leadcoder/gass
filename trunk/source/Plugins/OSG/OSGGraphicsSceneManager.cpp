@@ -184,7 +184,9 @@ namespace GASS
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),NULL));
+		void* root = static_cast<void*>(m_RootNode.get());
+
+		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),root));
 		obj->SendImmediate(gfx_msg);
 		
 		//update scene data
