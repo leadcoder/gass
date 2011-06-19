@@ -146,7 +146,7 @@ namespace GASS
 		if(mesh_data->VertexVector.size() > 0)
 		{
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			GetSceneObject()->PostMessage(mesh_message);
+			//GetSceneObject()->PostMessage(mesh_message);
 		}
 	}
 
@@ -207,12 +207,16 @@ namespace GASS
 			//update tangents
 			pos_vec.clear();
 
+			Vec3 last_point(0,0,0);
+
 			for(int  i = 0; i < spline.GetPoints().size(); i++)
 			{
-				for(double t = 0; t <= (1 + (1.0 / steps)); t += 1.0 / steps)
+				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{
 					Vec3 point =  spline.Interpolate(i, t);
-					pos_vec.push_back(point);
+					if(point != last_point)
+						pos_vec.push_back(point);
+					last_point = point;
 				}
 			}
 		}

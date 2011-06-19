@@ -522,8 +522,12 @@ namespace GASS
 		if(message->GetModifyType() == TerrainHeightModifyMessage::MT_DEFORM)
 		{
 			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-				//PaintTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), 1);
 				DeformTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), message->GetNoise());
+		}
+		else if(message->GetModifyType() == TerrainHeightModifyMessage::MT_FLATTEN)
+		{
+			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+				FlattenTerrain(*ti, position,intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());
 		}
 		else if(message->GetModifyType() == TerrainHeightModifyMessage::MT_SMOOTH)
 		{
@@ -543,11 +547,18 @@ namespace GASS
 	{
 		// figure out which terrains this affects
 		Ogre::Real brush_size = message->GetWidth();
-		Ogre::Real inner_radius = message->GetWidth()*0.5 - message->GetFade();
+		Ogre::Real inner_radius = message->GetWidth()*0.5*0.2;
 		
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();
 		for(size_t i = 0; i < rwps.size()-1; i++)
 		{
+			/*Ogre::TerrainGroup::TerrainList terrainList;
+			Ogre::Vector3 start_pos = Convert::ToOgre(rwps[i]);
+			Ogre::Vector3 end_pos = Convert::ToOgre(rwps[i+1]);
+			Ogre::Sphere sphere(start_pos, 10);
+			m_TerrainGroup->sphereIntersects(sphere, &terrainList);
+			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
+				FlattenTerrain(*ti,start_pos, end_pos, message->GetWidth(), message->GetFade());*/
 			const Vec3 line = rwps[i+1] - rwps[i];
 			const Float  length = line.Length();
 			const Vec3 dir = line*(1.0/length);
@@ -563,10 +574,119 @@ namespace GASS
 				Ogre::Sphere sphere(position, brush_size);
 				m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 				for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-					FlattenTerrain(*ti, position,1.0,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());
+				{
+					FlattenTerrain(*ti, position,1.0,brush_size/m_TerrainGroup->getTerrainWorldSize(),brush_size*0.5/m_TerrainGroup->getTerrainWorldSize());
+					PaintTerrain(*ti,position, message->GetFade(), brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), message->GetLayer(), 0);
+				}
 			}
 		}
 		m_TerrainGroup->update();
+	}
+
+	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& start, Ogre::Vector3& end, float width, float fade)
+	{
+		Ogre::Vector3 ts_start;
+		Ogre::Vector3 ts_end;
+		terrain->getTerrainPosition(start, &ts_start);
+		terrain->getTerrainPosition(end, &ts_end);
+		Ogre::Real terrainSize = (terrain->getSize() - 1);
+		long start_x = ts_start.x  * terrainSize;
+		long start_y = ts_start.y  * terrainSize;
+		long end_x = ts_end.x * terrainSize;
+		long end_y= ts_end.y * terrainSize;
+		/*startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)terrainSize);
+		endy = std::min(endy, (long)terrainSize);
+		*/
+
+
+		float x_dist = end_x - start_x;
+		float y_dist = end_y - start_y;
+
+		if(abs(x_dist) > abs(y_dist))
+		{
+
+			Ogre::Vector3 dir,start_pos;
+			if(start_x > end_x) //swap
+			{
+				long temp = end_x;
+				end_x = start_x;
+				start_x = temp;
+
+				temp = end_y;
+				end_y = start_y;
+				start_y = temp;
+
+				dir = start-end;
+				start_pos = end;
+			}
+			else
+			{
+				dir = end-start;
+				start_pos = start;
+			}
+
+			Ogre::Real dist = dir.normalise();
+
+			x_dist = end_x - start_x;
+			y_dist = end_y - start_y;
+
+			float step = y_dist/x_dist;
+
+			int count = 0;
+			for (long x = start_x; x <= end_x; ++x)
+			{
+				long y = start_y + step*count;
+
+				Ogre::Real tsXdist = (x / terrainSize);
+				Ogre::Real tsYdist = (y / terrainSize);
+
+				Ogre::Vector3 pos = start_pos + dir * Ogre::Real(count)/Ogre::Real(x_dist);
+				terrain->setHeightAtPoint(x, y, pos.y);//*weight + current_height*(1-weight));
+				count++;
+			}
+		}
+		else
+		{
+			
+			Ogre::Vector3 dir,start_pos;
+			if(start_y > end_y) //swap
+			{
+				long temp = end_y;
+				end_y = start_y;
+				start_y = temp;
+
+				temp = end_x;
+				end_x = start_x;
+				start_x = temp;
+
+				dir = start-end;
+				start_pos = end;
+			}
+			else
+			{
+				dir = end-start;
+				start_pos = start;
+			}
+
+			Ogre::Real dist = dir.normalise();
+
+			x_dist = end_x - start_x;
+			y_dist = end_y - start_y;
+
+			float step = x_dist/y_dist;
+
+			int count = 0;
+			for (long y = start_y; y <= end_y; ++y)
+			{
+				long x = start_x + step*count;
+
+				Ogre::Vector3 pos = start_pos + dir * Ogre::Real(count)/Ogre::Real(y_dist);
+				terrain->setHeightAtPoint(x, y, pos.y);//*weight + current_height*(1-weight));
+				count++;
+			}
+		}
 	}
 	
 	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius)
@@ -600,8 +720,20 @@ namespace GASS
 				if( weight < 0) weight = 0;
 				weight = 1.0 - (weight * weight);
 
-				float current_height = terrain->getHeightAtPoint(x, y);
-				terrain->setHeightAtPoint(x, y, newheight);//*weight + current_height*(1-weight));
+				float addedHeight = weight * intensity;
+
+				float current_h = terrain->getHeightAtPoint(x, y);
+				if(weight >= 1)
+				{
+					terrain->setHeightAtPoint(x, y, newheight);
+				}
+				/*else
+				{
+					if((current_h + addedHeight) < newheight)
+						terrain->setHeightAtPoint(x, y, current_h + addedHeight);
+					else
+						terrain->setHeightAtPoint(x, y, current_h - addedHeight);
+				}*/
 			}
 		}
 	}

@@ -24,9 +24,28 @@
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Sim/Utils/EnumBinder.h"
 
 namespace GASS
 {
+
+	class TerrainLayerBinder : public EnumBinder<TerrainLayer,TerrainLayerBinder>
+	{
+	public:
+		TerrainLayerBinder(){}
+		TerrainLayerBinder(TerrainLayer type) : EnumBinder<TerrainLayer,TerrainLayerBinder>(type)
+		{
+		}
+		virtual ~TerrainLayerBinder(){}
+		static void Register()
+		{
+			Bind("TERRAIN_LAYER_0", TL_0);
+			Bind("TERRAIN_LAYER_1", TL_1);
+			Bind("TERRAIN_LAYER_2", TL_2);
+			Bind("TERRAIN_LAYER_3", TL_3);
+		}
+	};
+
 	class RoadComponent : public Reflection<RoadComponent,BaseSceneComponent>
 	{
 	public:
@@ -37,21 +56,54 @@ namespace GASS
 	protected:
 		void SetFlatTerrain(bool value);
 		bool GetFlatTerrain() const;
-		void SetFlatWidth(float value) {m_FlatWidth = value;}
-		float GetFlatWidth() const {return m_FlatWidth;}
-		void SetFlatFade(float value) {m_FlatFade = value;}
-		float GetFlatFade() const {return m_FlatFade;}
 
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadCoreComponentsMessagePtr message);
-		bool m_Initialized;
-		float m_FlatFade;
-		float m_FlatWidth;
+		void SetUseSkirts(bool value) {m_UseSkirts = value; UpdateRoadMesh();}
+		bool GetUseSkirts() const {return m_UseSkirts;}
+
+		void SetTerrainFlattenWidth(float value) {m_TerrainFlattenWidth = value; UpdateRoadMesh();}
+		float GetTerrainFlattenWidth() const {return m_TerrainFlattenWidth;}
+
+		void SetTerrainPaintIntensity(float value) {m_TerrainPaintIntensity = value;}
+		float GetTerrainPaintIntensity() const {return m_TerrainPaintIntensity;}
+
+		void SetRoadWidth(float value) {m_RoadWidth = value;UpdateRoadMesh();}
+		float GetRoadWidth() const {return m_RoadWidth;}
+
+		void SetRoadOffset(float value) {m_RoadOffset = value;UpdateRoadMesh();}
+		float GetRoadOffset() const {return m_RoadOffset;}
+
+		void SetDitchWidth(float value) {m_DitchWidth = value;UpdateRoadMesh();}
+		float GetDitchWidth() const {return m_DitchWidth;}
+
+		void SetMaterial(const std::string value);
+		std::string GetMaterial() const;
+
 		
+		void SetTerrainPaintLayer(TerrainLayerBinder value) {m_TerrainPaintLayer = value;}
+		TerrainLayerBinder GetTerrainPaintLayer() const {return m_TerrainPaintLayer;}
+
+		
+
+		void UpdateRoadMesh();
+		void OnUnload(UnloadComponentsMessagePtr message);	
+		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnUpdate(UpdateWaypointListMessagePtr message);
+
+		bool m_Initialized;
+		bool m_UseSkirts;
+		float m_TerrainPaintIntensity;
+		float m_TerrainFlattenWidth;
+		float m_RoadWidth;
+		float m_RoadOffset;
+		float m_DitchWidth;
+		std::string m_Material;
+
+		TerrainLayerBinder m_TerrainPaintLayer;
+
 	};
 
 	typedef boost::shared_ptr<RoadComponent> RoadComponentPtr;
 	typedef boost::weak_ptr<RoadComponent> RoadComponentWeakPtr;
-	
+
 }
 

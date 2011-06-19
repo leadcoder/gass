@@ -50,7 +50,7 @@ namespace GASS
 				if(terrain)
 				{
 					if(m_TEM == TEM_DEFORM)
-						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					else if(m_TEM == TEM_SMOOTH)
 						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					else if(m_TEM == TEM_LAYER_PAINT)

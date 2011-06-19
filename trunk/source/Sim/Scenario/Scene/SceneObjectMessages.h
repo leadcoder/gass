@@ -841,6 +841,7 @@ namespace GASS
 		enum ModifyType
 		{
 			MT_DEFORM,
+			MT_FLATTEN,
 			MT_SMOOTH
 		};
 		TerrainHeightModifyMessage(ModifyType type, const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
@@ -881,6 +882,9 @@ namespace GASS
 		TL_4
 
 	};
+
+	
+
 	class TerrainPaintMessage : public BaseMessage
 	{
 	public:
