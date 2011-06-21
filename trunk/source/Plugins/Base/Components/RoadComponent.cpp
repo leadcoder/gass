@@ -48,7 +48,8 @@ namespace GASS
 	RoadComponent::RoadComponent() : m_Initialized(false), 
 		m_TerrainPaintIntensity(0.01), 
 		m_RoadOffset(0.3), 
-		m_TerrainFlattenWidth(10), 
+		m_TerrainFlattenWidth(30), 
+		m_TerrainPaintWidth(20),
 		m_Material("RoadMat"),
 		m_RoadWidth(10),
 		m_DitchWidth(1),
@@ -66,14 +67,16 @@ namespace GASS
 	void RoadComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("RoadComponent",new Creator<RoadComponent, IComponent>);
-		RegisterProperty<bool>("FlatTerrain", &GASS::RoadComponent::GetFlatTerrain, &GASS::RoadComponent::SetFlatTerrain);
+		RegisterProperty<bool>("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain);
+		RegisterProperty<bool>("PaintTerrain", &GASS::RoadComponent::GetPaintTerrain, &GASS::RoadComponent::SetPaintTerrain);
 		RegisterProperty<float>("TerrainFlattenWidth", &GASS::RoadComponent::GetTerrainFlattenWidth, &GASS::RoadComponent::SetTerrainFlattenWidth);
+		RegisterProperty<float>("TerrainPaintWidth", &GASS::RoadComponent::GetTerrainPaintWidth, &GASS::RoadComponent::SetTerrainPaintWidth);
+		RegisterProperty<float>("TerrainPaintIntensity", &GASS::RoadComponent::GetTerrainPaintIntensity, &GASS::RoadComponent::SetTerrainPaintIntensity);
 		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::RoadComponent::GetTerrainPaintLayer, &GASS::RoadComponent::SetTerrainPaintLayer);
 		RegisterProperty<float>("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth);
 		RegisterProperty<float>("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset);
 		
 		RegisterProperty<float>("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth);
-		RegisterProperty<float>("TerrainPaintIntensity", &GASS::RoadComponent::GetTerrainPaintIntensity, &GASS::RoadComponent::SetTerrainPaintIntensity);
 		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts);
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
 	}
@@ -111,7 +114,51 @@ namespace GASS
 			Log::Warning("RoadComponent depends on WaypointListComponent");
 	}
 
-	void RoadComponent::SetFlatTerrain(bool value)
+	void RoadComponent::SetPaintTerrain(bool value)
+	{
+		if(!m_Initialized)
+			return;
+
+
+		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		if(wpl)
+		{
+
+			std::vector<Vec3> points = wpl->GetWaypoints();
+			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			const Vec3 origo = location->GetWorldPosition();
+			//create absolute positions
+			for(int i = 0 ; i < points.size(); i++)
+				points[i] = points[i] + origo;
+
+
+			TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+			if(terrain)
+			{
+				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
+				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.Get())));
+			}
+
+
+			SceneObjectPtr last_obj;
+			IComponentContainer::ComponentVector components;
+			GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass(components, "GrassLayerComponent", true);
+			for(int i = 0 ;  i < components.size(); i++)
+			{
+				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
+				if(last_obj != bsc->GetSceneObject())
+					bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.Get())));
+				last_obj = bsc->GetSceneObject();
+			}
+		}
+	}
+	bool RoadComponent::GetPaintTerrain() const
+	{
+		return false;
+	}
+
+
+	void RoadComponent::SetFlattenTerrain(bool value)
 	{
 		if(!m_Initialized)
 			return;
@@ -132,12 +179,12 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.Get())));
+				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.Get())));
 			}
 		}
 	}
 
-	bool RoadComponent::GetFlatTerrain() const
+	bool RoadComponent::GetFlattenTerrain() const
 	{
 		return false;
 	}

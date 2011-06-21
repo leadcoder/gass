@@ -541,24 +541,13 @@ namespace GASS
 		m_TerrainGroup->update();
 	}
 
-
-
 	void OgreTerrainGroupComponent::OnRoadMessage(RoadMessagePtr message)
 	{
 		// figure out which terrains this affects
-		Ogre::Real brush_size = message->GetWidth();
-		Ogre::Real inner_radius = message->GetWidth()*0.5*0.2;
-		
+		Ogre::Real brush_size = std::max(message->GetFlattenWidth(),message->GetPaintWidth());
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();
 		for(size_t i = 0; i < rwps.size()-1; i++)
 		{
-			/*Ogre::TerrainGroup::TerrainList terrainList;
-			Ogre::Vector3 start_pos = Convert::ToOgre(rwps[i]);
-			Ogre::Vector3 end_pos = Convert::ToOgre(rwps[i+1]);
-			Ogre::Sphere sphere(start_pos, 10);
-			m_TerrainGroup->sphereIntersects(sphere, &terrainList);
-			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
-				FlattenTerrain(*ti,start_pos, end_pos, message->GetWidth(), message->GetFade());*/
 			const Vec3 line = rwps[i+1] - rwps[i];
 			const Float  length = line.Length();
 			const Vec3 dir = line*(1.0/length);
@@ -575,8 +564,10 @@ namespace GASS
 				m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 				for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
 				{
-					FlattenTerrain(*ti, position,1.0,brush_size/m_TerrainGroup->getTerrainWorldSize(),brush_size*0.5/m_TerrainGroup->getTerrainWorldSize());
-					PaintTerrain(*ti,position, message->GetFade(), brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), message->GetLayer(), 0);
+					if(message->GetFlattenWidth() > 0)
+						FlattenTerrain(*ti, position,1.0,message->GetFlattenWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetFlattenWidth()*0.5/m_TerrainGroup->getTerrainWorldSize());
+					if(message->GetPaintWidth())
+						PaintTerrain(*ti,position, message->GetPaintIntensity(), message->GetPaintWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetPaintWidth()*0.5*0.5/m_TerrainGroup->getTerrainWorldSize(), message->GetLayer(), 0);
 				}
 			}
 		}

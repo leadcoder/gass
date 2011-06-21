@@ -78,7 +78,16 @@ public:
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 		m_Scenario = scenario;
 		m_Scenario->Load(mess->GetScenarioName());
-	}
+
+		//temp
+		GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
+		/*GASS::SceneObjectPtr object = scene->GetObjectManager()->LoadFromTemplate("JimTank");
+
+		GASS::Vec3 pos = scene->GetStartPos();
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+		if(object)
+			object->SendImmediate(pos_msg);
+	*/}
 
 	virtual bool Init()
 	{

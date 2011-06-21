@@ -939,28 +939,30 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TerrainLayerMessage> TerrainLayerMessagePtr;
 
-
 	class RoadMessage : public BaseMessage
 	{
 	public:
-		RoadMessage(const std::vector<Vec3> road, float width, float fade,  TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+		RoadMessage(const std::vector<Vec3> road, float flatten_width, float paint_width, float paint_intensity, TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
 			m_RoadWaypoints(road),
 			m_Layer(layer),
-			m_Width(width),
-			m_Fade(fade)
+			m_FlattenWidth(flatten_width),
+			m_PaintWidth(paint_width),
+			m_PaintIntensity(paint_intensity)
 		{
 
 		}
-		float GetWidth() const {return m_Width;}
-		float GetFade() const {return m_Fade;}
+		float GetFlattenWidth() const {return m_FlattenWidth;}
+		float GetPaintWidth() const {return m_PaintWidth;}
+		float GetPaintIntensity() const {return m_PaintIntensity;}
 		std::vector<Vec3>  GetRoadWaypoints() const {return m_RoadWaypoints;}
 		TerrainLayer GetLayer() const {return m_Layer;}
 	private:
 		TerrainLayer m_Layer;
 		std::vector<Vec3>  m_RoadWaypoints;
-		float m_Width;
-		float m_Fade;
+		float m_PaintWidth;
+		float m_FlattenWidth;
+		float m_PaintIntensity;
 	};
 	typedef boost::shared_ptr<RoadMessage> RoadMessagePtr;
-
+    
 }

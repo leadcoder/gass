@@ -43,6 +43,7 @@ namespace GASS
 			Bind("TERRAIN_LAYER_1", TL_1);
 			Bind("TERRAIN_LAYER_2", TL_2);
 			Bind("TERRAIN_LAYER_3", TL_3);
+			Bind("TERRAIN_LAYER_4", TL_4);
 		}
 	};
 
@@ -54,14 +55,20 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		void SetFlatTerrain(bool value);
-		bool GetFlatTerrain() const;
+		void SetFlattenTerrain(bool value);
+		bool GetFlattenTerrain() const;
+
+		void SetPaintTerrain(bool value);
+		bool GetPaintTerrain() const;
 
 		void SetUseSkirts(bool value) {m_UseSkirts = value; UpdateRoadMesh();}
 		bool GetUseSkirts() const {return m_UseSkirts;}
 
-		void SetTerrainFlattenWidth(float value) {m_TerrainFlattenWidth = value; UpdateRoadMesh();}
+		void SetTerrainFlattenWidth(float value) {m_TerrainFlattenWidth = value; }
 		float GetTerrainFlattenWidth() const {return m_TerrainFlattenWidth;}
+
+		void SetTerrainPaintWidth(float value) {m_TerrainPaintWidth = value; }
+		float GetTerrainPaintWidth() const {return m_TerrainPaintWidth;}
 
 		void SetTerrainPaintIntensity(float value) {m_TerrainPaintIntensity = value;}
 		float GetTerrainPaintIntensity() const {return m_TerrainPaintIntensity;}
@@ -92,6 +99,7 @@ namespace GASS
 		bool m_Initialized;
 		bool m_UseSkirts;
 		float m_TerrainPaintIntensity;
+		float m_TerrainPaintWidth;
 		float m_TerrainFlattenWidth;
 		float m_RoadWidth;
 		float m_RoadOffset;
