@@ -25,6 +25,7 @@
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "PGMessages.h"
 #include <OgreRenderTargetListener.h>
 namespace Ogre
 {
@@ -33,7 +34,11 @@ namespace Ogre
 namespace Forests
 {
 	class PagedGeometry;
+	class TreeLoader2D;
+	class TreeLoader3D;
+
 }
+class RandomTable;
 
 using namespace Forests;
 
@@ -211,7 +216,11 @@ namespace GASS
 			m_ImposterAlphaRejectionValue =value;
 		}
 
+		void OnPaint(GrassPaintMessagePtr message);
+		void UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z);
+
 		Ogre::PixelBox *m_DensityMap;
+		RandomTable* m_RandomTable;
 		Vec2 m_MaxMinScale;
 		bool m_CastShadows;
 		float m_MeshDist;
@@ -231,7 +240,10 @@ namespace GASS
 		std::string m_MeshFileName;
 		static ITerrainComponent *m_Terrain;
 
+		TreeLoader2D *m_TreeLoader2d;
+		TreeLoader3D *m_TreeLoader3d;
 
+		Ogre::Entity *m_TreeEntity;
 	};
 }
 

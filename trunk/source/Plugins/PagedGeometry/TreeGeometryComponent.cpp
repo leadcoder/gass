@@ -32,6 +32,8 @@
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
 
 
 //#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -67,25 +69,28 @@ namespace GASS
 	}
 
 
-	TreeGeometryComponent::TreeGeometryComponent(void) : m_Bounds(0,0,0,0)
+	TreeGeometryComponent::TreeGeometryComponent(void) : m_Bounds(0,0,0,0), 
+		m_TreeLoader2d(NULL),
+		m_TreeLoader3d(NULL),
+		m_DensityFactor(0.001),
+		m_MaxMinScale(1.1, 0.9),
+		m_CastShadows(true),
+		m_MeshDist(100),
+		m_ImposterDist(500),
+		m_PrecalcHeight(true),
+		m_PageSize(80),
+		m_MeshFadeDist(0),
+		m_ImposterFadeDist(0),
+		m_ImposterAlphaRejectionValue(50),
+		m_CreateShadowMap(false),
+		m_TreeEntity(NULL)
 	{
-		m_DensityFactor = 0.001;
-		m_MaxMinScale.x = 1.1;
-		m_MaxMinScale.y = 0.9;
-		m_CastShadows = true;
-		m_MeshDist = 100;
-		m_ImposterDist = 500;
-		m_PrecalcHeight = true;
-		m_PageSize = 80;
-		m_MeshFadeDist = 0;
-		m_ImposterFadeDist = 0;
-		m_ImposterAlphaRejectionValue = 50;
-		m_CreateShadowMap = false;
-
+		m_RandomTable = new RandomTable();
 	}
 
 	TreeGeometryComponent::~TreeGeometryComponent(void)
 	{
+		delete m_RandomTable;
 	}
 
 
@@ -109,7 +114,6 @@ namespace GASS
 
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-
 		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
@@ -133,7 +137,8 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
+			SceneObjectPtr root = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot();
+			TerrainComponentPtr terrain = root->GetFirstComponentByClass<ITerrainComponent>(true);
 			if(terrain)
 			{
 				Vec3 bmin,bmax;
@@ -172,24 +177,23 @@ namespace GASS
 		if(m_ImposterDist >  0)
 		{
 			GeometryPageManager* geom_man = m_PagedGeometry->addDetailLevel<ImpostorPage>(m_ImposterDist,m_ImposterFadeDist);
-			
 		}
-		//Set up a TreeLoader for easy use
-		TreeLoader2D *treeLoader2d = NULL;
-		TreeLoader3D *treeLoader3d = NULL;
 
 		if(m_PrecalcHeight)
 		{
-			treeLoader3d = new TreeLoader3D(m_PagedGeometry, m_MapBounds);
-			if(m_ColorMapFilename!= "") treeLoader2d->setColorMap(m_ColorMapFilename);
-			m_PagedGeometry->setPageLoader(treeLoader3d);
+			m_TreeLoader3d = new TreeLoader3D(m_PagedGeometry, m_MapBounds);
+			if(m_ColorMapFilename!= "") 
+				m_TreeLoader3d->setColorMap(m_ColorMapFilename);
+
+			m_PagedGeometry->setPageLoader(m_TreeLoader3d);
 		}
 		else
 		{
-			treeLoader2d = new TreeLoader2D(m_PagedGeometry, m_MapBounds);
-			treeLoader2d->setHeightFunction(TreeGeometryComponent::GetTerrainHeight);
-			if(m_ColorMapFilename!= "") treeLoader2d->setColorMap(m_ColorMapFilename);
-			m_PagedGeometry->setPageLoader(treeLoader2d);
+			m_TreeLoader2d = new TreeLoader2D(m_PagedGeometry, m_MapBounds);
+			m_TreeLoader2d->setHeightFunction(TreeGeometryComponent::GetTerrainHeight);
+			if(m_ColorMapFilename!= "") 
+				m_TreeLoader2d->setColorMap(m_ColorMapFilename);
+			m_PagedGeometry->setPageLoader(m_TreeLoader2d);
 		}
 		float volume = m_MapBounds.width() * m_MapBounds.height();
 		unsigned int treeCount = m_DensityFactor * volume;
@@ -204,9 +208,24 @@ namespace GASS
 		{
 			shadowMap.Allocate(shadow_size, shadow_size, 24);
 		}*/
-		Ogre::Entity *myTree = sm->createEntity(m_Name, m_MeshFileName);
-		myTree->setCastShadows(m_CastShadows);
-		if (m_DensityMap != NULL)
+		m_TreeEntity = sm->createEntity(m_Name, m_MeshFileName);
+		m_TreeEntity->setCastShadows(m_CastShadows);
+		//add one dummy tree to allocate grid list
+		if(m_TreeLoader3d)
+		{
+			m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(0, 0, 0));
+			m_TreeLoader3d->deleteTrees(Ogre::Vector3(0, 0, 0),10, m_TreeEntity);
+		}
+		else if(m_TreeLoader2d)
+		{
+			m_TreeLoader2d->addTree(m_TreeEntity,  Ogre::Vector3(0, 0, 0));
+			m_TreeLoader2d->deleteTrees(Ogre::Vector3(0, 0, 0),10, m_TreeEntity);
+		}
+
+		//m_RandomTable->resetRandomIndex();
+		UpdateArea(m_MapBounds.left, m_MapBounds.top,m_MapBounds.right, m_MapBounds.bottom);
+		m_PagedGeometry->update();
+		/*if (m_DensityMap != NULL)
 		{
 			for (int i = 0; i < treeCount; i++)
 			{
@@ -216,17 +235,18 @@ namespace GASS
 				float x, z, yaw, scale;
 				x = Ogre::Math::RangeRandom(m_MapBounds.left, m_MapBounds.right);
 				z = Ogre::Math::RangeRandom(m_MapBounds.top, m_MapBounds.bottom);
-				if (Ogre::Math::UnitRandom() <= GetDensityAt(x, z))
+				float density = GetDensityAt(x, z);
+				if (density > 0  && Ogre::Math::UnitRandom() <= density)
 				{
 					yaw = Ogre::Math::RangeRandom(0, 360);
 					scale = Ogre::Math::RangeRandom(m_MaxMinScale.x, m_MaxMinScale.y);
-					if(m_PrecalcHeight)
+					if(m_TreeLoader3d && m_Terrain)
 					{
 						float y = m_Terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
-						treeLoader3d->addTree(myTree,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
+						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
-					else
-						treeLoader2d->addTree(myTree,  Ogre::Vector3(x,0, z) ,Ogre::Degree(yaw), scale);
+					if(m_TreeLoader2d)
+						m_TreeLoader2d->addTree(m_TreeEntity,  Ogre::Vector3(x,0, z) ,Ogre::Degree(yaw), scale);
 					//treeLoader->addTree(myTree, x, z,yaw, scale);
 				/*	if(m_CreateShadowMap)
 					{
@@ -259,20 +279,92 @@ namespace GASS
 							shadowMap.SetPixel(c_pix_x,c_pix_y-1, tmpVec);
 						}
 					}*/
-				}
-			}
+			//	}
+			//}
 
 			/*if(m_CreateShadowMap)
 			{
 				shadowMap.SaveTGA("ShadowMap" + m_FileName + ".tga");
 			}*/
-			delete[] m_DensityMap->data;
-			delete m_DensityMap;
-			m_DensityMap = NULL;
+			//delete[] m_DensityMap->data;
+			//delete m_DensityMap;
+			//m_DensityMap = NULL;
 			//make update to create imposters
-			m_PagedGeometry->update();
+		//m_PagedGeometry->update();	
+		//}
+	}
+
+
+	void TreeGeometryComponent::OnPaint(GrassPaintMessagePtr message)
+	{
+		const Vec3 world_pos = message->GetPosition();
+		if(m_DensityMap)
+		{
+			Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityMap->data);
+			int wsize = m_DensityMap->getWidth()-1;
+
+			const Ogre::Real height = m_MapBounds.height();
+			const Ogre::Real width = m_MapBounds.width();
+			const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
+			const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
+
+			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
+			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
+			const Ogre::Real brush_inner_radius = (message->GetBrushInnerSize()*0.5)/height;
+
+			long startx = (x_pos - brush_size_texture_space_x) * (wsize);
+			long starty = (y_pos - brush_size_texture_space_y) * (wsize);
+			long endx = (x_pos + brush_size_texture_space_x) * (wsize);
+			long endy= (y_pos + brush_size_texture_space_y) * (wsize);
+			startx = std::max(startx, 0L);
+			starty = std::max(starty, 0L);
+			endx = std::min(endx, (long)wsize-1);
+			endy = std::min(endy, (long)wsize-1);
+			for (long y = starty; y <= endy; ++y)
+			{
+				int tmploc = y * (wsize+1);
+				for (long x = startx; x <= endx; ++x)
+				{
+
+					Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
+					Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
+
+					Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
+
+					Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
+					if( weight < 0) weight = 0;
+					weight = 1.0 - (weight * weight);
+					//weight = 1;
+
+					float val = float(data[tmploc + x])/255.0f;
+					val += weight*message->GetIntensity()*3;
+					//val = std::min(val, 255.0f);
+					//val = std::max(val, 0.0f);
+					if(val > 1.0)
+						val = 1;
+					if(val < 0.0)
+						val = 0;
+					data[tmploc + x] = val*255;
+				}
+			}
+
+			float radius = message->GetBrushSize();
+			
+
+			int minPageX = Ogre::Math::Floor(((world_pos.x-radius) - m_MapBounds.left) / m_PageSize);
+			int minPageZ = Ogre::Math::Floor(((world_pos.z-radius) - m_MapBounds.top) / m_PageSize);
+			int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
+			int maxPageZ = Ogre::Math::Ceil(((world_pos.z+radius) - m_MapBounds.top) / m_PageSize);
+	
+			Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
+									m_MapBounds.top + minPageZ*m_PageSize, 
+									m_MapBounds.left + maxPageX*m_PageSize,
+									m_MapBounds.top + maxPageZ*m_PageSize);
+
+			UpdateArea(bounds.left, bounds.top,bounds.right, bounds.bottom);
 		}
 	}
+
 
 
 /*	void TreeGeometryComponent::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
@@ -395,6 +487,8 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
+		
 	}
 
 	void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
@@ -457,7 +551,6 @@ namespace GASS
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
-
 	float TreeGeometryComponent::GetDensityAt(float x, float z)
 	{
 		assert(m_DensityMap);
@@ -485,6 +578,48 @@ namespace GASS
 			return 0;
 	}
 
+	void TreeGeometryComponent::UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z)
+	{
+		m_RandomTable->resetRandomIndex();
+		Float width = end_x - start_x;
+		Float height = end_z - start_z;
+
+		Float volume = width * height;
+		unsigned int treeCount = m_DensityFactor * volume;
+
+		//delete all trees in area!
+		if(m_TreeLoader3d)
+			m_TreeLoader3d->deleteTrees(TBounds(start_x, start_z,end_x,end_z),m_TreeEntity);
+		else	
+			m_TreeLoader2d->deleteTrees(TBounds(start_x, start_z,end_x,end_z),m_TreeEntity);
+
+		if (m_DensityMap != NULL)
+		{
+			for (int i = 0; i < treeCount; i++)
+			{
+				//Determine whether this grass will be added based on the local density.
+				//For example, if localDensity is .32, grasses will be added 32% of the time.
+				Float x, y, z, yaw, scale;
+				
+				x = m_RandomTable->getRangeRandom(start_x, end_x);
+				z = m_RandomTable->getRangeRandom(start_z, end_z);
+				float density = GetDensityAt(x, z);
+				if (density  > 0 && Ogre::Math::UnitRandom() <= density)
+				{
+					yaw = m_RandomTable->getRangeRandom(0, 360);
+					scale = m_RandomTable->getRangeRandom(m_MaxMinScale.x, m_MaxMinScale.y);
+					y = 0;
+					if(m_PrecalcHeight)
+					{
+						y = m_Terrain->GetHeight(x,z);
+						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
+					}
+					else
+						m_TreeLoader2d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
+				}
+			}
+		}
+	}
 }
 
 
