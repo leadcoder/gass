@@ -64,6 +64,9 @@ namespace GASS
 		void SetUseSkirts(bool value) {m_UseSkirts = value; UpdateRoadMesh();}
 		bool GetUseSkirts() const {return m_UseSkirts;}
 
+		void SetClampToTerrain(bool value) {m_ClampToTerrain = value; UpdateRoadMesh();}
+		bool GetClampToTerrain() const {return m_ClampToTerrain;}
+
 		void SetTerrainFlattenWidth(float value) {m_TerrainFlattenWidth = value; }
 		float GetTerrainFlattenWidth() const {return m_TerrainFlattenWidth;}
 
@@ -98,6 +101,7 @@ namespace GASS
 
 		bool m_Initialized;
 		bool m_UseSkirts;
+		bool m_ClampToTerrain;
 		float m_TerrainPaintIntensity;
 		float m_TerrainPaintWidth;
 		float m_TerrainFlattenWidth;

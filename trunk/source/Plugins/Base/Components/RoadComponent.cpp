@@ -50,11 +50,12 @@ namespace GASS
 		m_RoadOffset(0.3), 
 		m_TerrainFlattenWidth(30), 
 		m_TerrainPaintWidth(20),
-		m_Material("RoadMat"),
+		m_Material("MuddyRoadWithTracks"),
 		m_RoadWidth(10),
 		m_DitchWidth(1),
 		m_UseSkirts(false),
-		m_TerrainPaintLayer(TL_2)
+		m_TerrainPaintLayer(TL_2),
+		m_ClampToTerrain(true)
 	{
 
 	}
@@ -75,9 +76,9 @@ namespace GASS
 		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::RoadComponent::GetTerrainPaintLayer, &GASS::RoadComponent::SetTerrainPaintLayer);
 		RegisterProperty<float>("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth);
 		RegisterProperty<float>("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset);
-		
 		RegisterProperty<float>("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth);
 		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts);
+		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain);
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
 	}
 
@@ -196,11 +197,19 @@ namespace GASS
 	}
 
 
+
+	
+
 	void RoadComponent::UpdateRoadMesh() 
 	{ 
 		if(!m_Initialized)
 			return;
 
+
+		TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		const Vec3 origo = location->GetWorldPosition();
+	
 		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
@@ -272,22 +281,38 @@ namespace GASS
 
 				// update height 
 				//curr_vertices[j].y = mTerrainMesh->getHeight(curr_vertices[j]); 
-				curr_vertices[j].y = vertex.y; 
+				/*curr_vertices[j].y = vertex.y; 
 				if (curr_vertices[j].y > curr_height && j != 0 && j != num_horizontal_pts-1)
 				{
 					curr_height = curr_vertices[j].y; 
-				}
+				}*/
 			} 
 
 
-			for (int j = 1; j < num_horizontal_pts-1; j++) 
-				curr_vertices[j].y = curr_height + m_RoadOffset; 
-
-			if(!m_UseSkirts)
+			if(terrain && m_ClampToTerrain)
 			{
-				curr_vertices[0].y = curr_height;
-				curr_vertices[num_horizontal_pts-1].y = curr_height;
+				for (int j = 1; j < num_horizontal_pts-1; j++) 
+					curr_vertices[j].y = terrain->GetHeight(curr_vertices[j].x + origo.x,curr_vertices[j].z + origo.z) + m_RoadOffset - origo.y;
+
+				if(!m_UseSkirts)
+				{
+					curr_vertices[0].y = terrain->GetHeight(curr_vertices[0].x + origo.x,curr_vertices[0].z + origo.z) - origo.y;
+					curr_vertices[num_horizontal_pts-1].y = terrain->GetHeight(curr_vertices[num_horizontal_pts-1].x + origo.x,curr_vertices[num_horizontal_pts-1].z + origo.z)-origo.y;
+				}
 			}
+			else
+			{
+				for (int j = 1; j < num_horizontal_pts-1; j++) 
+					curr_vertices[j].y = curr_height + m_RoadOffset; 
+
+				if(!m_UseSkirts)
+				{
+					curr_vertices[0].y = curr_height;
+					curr_vertices[num_horizontal_pts-1].y = curr_height;
+				}
+			}
+
+			
 
 			last_pos = curr_vertices[2]; 
 
