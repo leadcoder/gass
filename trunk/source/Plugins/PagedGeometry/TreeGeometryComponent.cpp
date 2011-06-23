@@ -30,6 +30,8 @@
 #include "TreeLoader2D.h"
 #include "TreeLoader3D.h"
 #include "GrassLoader.h"
+#include "DensityMapComponent.h"
+
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -135,6 +137,8 @@ namespace GASS
 			user_bounds = false;
 		}
 
+		
+
 		if(!user_bounds)
 		{
 			SceneObjectPtr root = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot();
@@ -162,6 +166,13 @@ namespace GASS
 
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
+
+
+		DensityMapComponentPtr dm = GetSceneObject()->GetFirstComponentByClass<DensityMapComponent>();
+		if(dm)
+			dm->SetMapBounds(m_MapBounds);
+
+
 
 		ImpostorPage::setImpostorColor(Ogre::ColourValue(0,0,0,1));
 		assert(m_PagedGeometry);
@@ -611,7 +622,8 @@ namespace GASS
 					y = 0;
 					if(m_PrecalcHeight)
 					{
-						y = m_Terrain->GetHeight(x,z);
+						if(m_Terrain)
+							y = m_Terrain->GetHeight(x,z);
 						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
 					else

@@ -60,7 +60,7 @@ namespace GASS
 	}
 
 
-	DensityMapComponent::DensityMapComponent(void) : m_DensityMap(NULL)
+	DensityMapComponent::DensityMapComponent(void)// : m_DensityMap(NULL)
 	{
 		
 	}
@@ -77,18 +77,46 @@ namespace GASS
 
 	void DensityMapComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
+
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		std::string scenario_path = scenario->GetPath();
+
+		std::string denmapname;
 		if(m_DensityMapFilename != "")
-			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
+		{
+			denmapname = m_DensityMapFilename;
+		}
+		else
+			denmapname = "mesh_density_map_" + GetName() + ".tga";
+		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
+		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+		try
+		{
+			m_DensityImage.load(stream);
+		}
+		catch(...)
+		{
+			int densize = 1024;
+			Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
+			memset(data, 0, densize * densize * 4);
+			m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
+			m_DensityImage.save(fp_denmap);
+		}
+		stream.setNull();
+
+		//if(m_DensityMapFilename != "")
+		//	LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 	}
 
 
 	void DensityMapComponent::OnPaint(GrassPaintMessagePtr message)
 	{
 		const Vec3 world_pos = message->GetPosition();
-		if(m_DensityMap)
+		//if(m_DensityMap)
 		{
-			Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityMap->data);
-			int wsize = m_DensityMap->getWidth()-1;
+			Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityImage.getData());
+			int wsize = m_DensityImage.getWidth()-1;
 
 			const Ogre::Real height = m_MapBounds.height();
 			const Ogre::Real width = m_MapBounds.width();
@@ -122,7 +150,7 @@ namespace GASS
 					weight = 1.0 - (weight * weight);
 					//weight = 1;
 
-					float val = float(data[tmploc + x])/255.0f;
+					float val = float(data[(tmploc + x)*4])/255.0f;
 					val += weight*message->GetIntensity()*3;
 					//val = std::min(val, 255.0f);
 					//val = std::max(val, 0.0f);
@@ -130,25 +158,27 @@ namespace GASS
 						val = 1;
 					if(val < 0.0)
 						val = 0;
-					data[tmploc + x] = val*255;
+					data[(tmploc + x)*4] = val*255;
 				}
 			}
 		}
 	}
 
-	void DensityMapComponent::LoadDensityMap(const std::string &mapFile, int channel)
+	/*void DensityMapComponent::LoadDensityMap(const std::string &mapFile, int channel)
 	{
 		//Load image
-		Ogre::TexturePtr map = Ogre::TextureManager::getSingleton().load(mapFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+		//Ogre::TexturePtr map = Ogre::TextureManager::getSingleton().load(mapFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		
 		//Copy image to pixelbox
-		if (!map.isNull())
+		//if ()
 		{
 			//Get the texture buffer
-			Ogre::HardwarePixelBufferSharedPtr buff = map->getBuffer();
+			//Ogre::HardwarePixelBufferSharedPtr buff = map->getBuffer();
 
 			//Prepare a PixelBox (8-bit greyscale) to receive the density values
-			m_DensityMap = new Ogre::PixelBox(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_BYTE_L);
-			m_DensityMap->data = new Ogre::uint8[m_DensityMap->getConsecutiveSize()];
+			//m_DensityMap = new Ogre::PixelBox(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_BYTE_L);
+			//m_DensityMap->data = new Ogre::uint8[m_DensityMap->getConsecutiveSize()];
 
 			if (channel == CHANNEL_COLOR)
 			{
@@ -159,9 +189,11 @@ namespace GASS
 			{
 				//If channel extraction is necessary, first convert to a PF_R8G8B8A8 format PixelBox
 				//This is necessary for the code below to properly extract the desired channel
-				Ogre::PixelBox pixels(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_R8G8B8A8);
-				pixels.data = new Ogre::uint8[pixels.getConsecutiveSize()];
-				buff->blitToMemory(pixels);
+				//Ogre::PixelBox pixels(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_R8G8B8A8);
+				//pixels.data = new Ogre::uint8[pixels.getConsecutiveSize()];
+				//buff->blitToMemory(pixels);
+
+				//!m_DensityImage.getPixelBox();
 
 				//Pick out a channel from the pixel buffer
 				size_t channelOffset;
@@ -186,14 +218,14 @@ namespace GASS
 				delete[] pixels.data;
 			}
 		}
-	}
+	}*/
 
 	float DensityMapComponent::GetDensityAt(float x, float z)
 	{
-		assert(m_DensityMap);
+		//assert(m_DensityMap);
 
-		unsigned int mapWidth = (unsigned int)m_DensityMap->getWidth();
-		unsigned int mapHeight = (unsigned int)m_DensityMap->getHeight();
+		unsigned int mapWidth = (unsigned int)m_DensityImage.getWidth();
+		unsigned int mapHeight = (unsigned int)m_DensityImage.getHeight();
 		float boundsWidth = m_MapBounds.width();
 		float boundsHeight = m_MapBounds.height();
 
@@ -202,9 +234,29 @@ namespace GASS
 		if (xindex < 0 || zindex < 0 || xindex >= mapWidth || zindex >= mapHeight)
 			return 0.0f;
 
-		Ogre::uint8 *data = (Ogre::uint8*)m_DensityMap->data;
-		float val = data[mapWidth * zindex + xindex] / 255.0f;
+		
+		//Ogre::uint8 *data = (Ogre::uint8*)m_DensityMap->data;
+		Ogre::uint8 *data = m_DensityImage.getData();
+		float val = data[(mapWidth * zindex + xindex)*4] / 255.0f;
 		return val;
+	}
+
+
+	void DensityMapComponent::SaveXML(TiXmlElement *obj_elem)
+	{
+		BaseSceneComponent::SaveXML(obj_elem);
+
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		std::string scenario_path = scenario->GetPath();
+		std::string denmapname;
+		if(m_DensityMapFilename != "")
+		{
+			denmapname = m_DensityMapFilename;
+		}
+		else
+			denmapname = "mesh_density_map_" + GetName() + ".tga";
+		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		m_DensityImage.save(fp_denmap);
 	}
 }
 

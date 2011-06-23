@@ -17,8 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef TREE_GEOMETRY_COMPONENT_H
-#define TREE_GEOMETRY_COMPONENT_H
+#ifndef DENSITY_MAP_COMPONENT_H
+#define DENSITY_MAP_COMPONENT_H
 
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
@@ -54,12 +54,16 @@ namespace GASS
 		~DensityMapComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void SaveXML(TiXmlElement *obj_elem);
 		float GetDensityAt(float x, float z);
+
+		void SetMapBounds(TBounds bounds) {m_MapBounds = bounds;}
 	protected:
-		void LoadDensityMap(const std::string &mapFile, int channel);
+		//void LoadDensityMap(const std::string &mapFile, int channel);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
+		
 
 		std::string GetDensityMap() const
 		{
@@ -69,10 +73,12 @@ namespace GASS
 		{
 			m_DensityMapFilename = colormap;
 		}
-		Ogre::PixelBox *m_DensityMap;
+		//Ogre::PixelBox *m_DensityMap;
 		std::string m_DensityMapFilename;
 		TBounds m_MapBounds;
+		Ogre::Image m_DensityImage;
 	};
+	typedef boost::shared_ptr<DensityMapComponent> DensityMapComponentPtr; 
 }
 
 #endif
