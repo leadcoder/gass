@@ -46,6 +46,9 @@ using namespace Forests;
 namespace GASS
 {
 	class ITerrainComponent;
+	class DensityMapComponent;
+	typedef boost::shared_ptr<DensityMapComponent> DensityMapComponentPtr;
+
 
 	class TreeGeometryComponent : public Reflection<TreeGeometryComponent,BaseSceneComponent>  , public Ogre::RenderTargetListener
 	{
@@ -54,14 +57,16 @@ namespace GASS
 		~TreeGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z);
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		void LoadDensityMap(const std::string &mapFile, int channel);
-		float GetDensityAt(float x, float z);
+		//void LoadDensityMap(const std::string &mapFile, int channel);
+		//float GetDensityAt(float x, float z);
 
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		static float GetTerrainHeight(float x, float z, void* user_data);
+		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 
 		std::string GetMesh() const
 		{
@@ -145,14 +150,14 @@ namespace GASS
 			m_ImposterFadeDist = value;
 		}
 
-		Vec4 GetBounds() const
+		Vec4 GetCustomBounds() const
 		{
-			return m_Bounds;
+			return m_CustomBounds;
 		}
 
-		void SetBounds(const Vec4 &value)
+		void SetCustomBounds(const Vec4 &value)
 		{
-			m_Bounds = value;
+			m_CustomBounds = value;
 		}
 
 
@@ -217,9 +222,10 @@ namespace GASS
 		}
 
 		void OnPaint(GrassPaintMessagePtr message);
-		void UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z);
+		
 
-		Ogre::PixelBox *m_DensityMap;
+		DensityMapComponentPtr m_DensityMap;
+		//Ogre::PixelBox *m_DensityMap;
 		RandomTable* m_RandomTable;
 		Vec2 m_MaxMinScale;
 		bool m_CastShadows;
@@ -233,7 +239,7 @@ namespace GASS
 		float m_DensityFactor;
 		bool m_CreateShadowMap;
 		float m_PageSize;
-		Vec4 m_Bounds;
+		Vec4 m_CustomBounds;
 		PagedGeometry *m_PagedGeometry;
 		TBounds m_MapBounds;
 		float m_ImposterAlphaRejectionValue;
@@ -245,6 +251,7 @@ namespace GASS
 
 		Ogre::Entity *m_TreeEntity;
 	};
+	typedef boost::shared_ptr<TreeGeometryComponent> TreeGeometryComponentPtr;
 }
 
 #endif

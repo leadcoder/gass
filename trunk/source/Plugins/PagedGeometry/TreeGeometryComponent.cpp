@@ -61,7 +61,7 @@ namespace GASS
 		RegisterProperty<float>("MeshFadeDistance", &TreeGeometryComponent::GetMeshFadeDistance, &TreeGeometryComponent::SetMeshFadeDistance);
 		RegisterProperty<float>("ImposterDistance", &TreeGeometryComponent::GetImposterDistance, &TreeGeometryComponent::SetImposterDistance);
 		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometryComponent::GetImposterFadeDistance, &TreeGeometryComponent::SetImposterFadeDistance);
-		RegisterProperty<Vec4>("Bounds", &TreeGeometryComponent::GetBounds, &TreeGeometryComponent::SetBounds);
+		RegisterProperty<Vec4>("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds);
 		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale);
 		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows);
 		RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
@@ -71,7 +71,7 @@ namespace GASS
 	}
 
 
-	TreeGeometryComponent::TreeGeometryComponent(void) : m_Bounds(0,0,0,0), 
+	TreeGeometryComponent::TreeGeometryComponent(void) : m_CustomBounds(0,0,0,0), 
 		m_TreeLoader2d(NULL),
 		m_TreeLoader3d(NULL),
 		m_DensityFactor(0.001),
@@ -132,9 +132,10 @@ namespace GASS
 		target->addListener(this);
 
 		bool user_bounds = true;
-		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
+		if(m_CustomBounds.x == 0 && m_CustomBounds.y == 0 && m_CustomBounds.z == 0 && m_CustomBounds.w == 0)
 		{
 			user_bounds = false;
+			m_MapBounds = TBounds(m_CustomBounds.x, m_CustomBounds.y, m_CustomBounds.z, m_CustomBounds.w);
 		}
 
 		
@@ -148,29 +149,20 @@ namespace GASS
 				Vec3 bmin,bmax;
 				terrain->GetBounds(bmin,bmax);
 
-				m_Bounds.x = bmin.x;
-				m_Bounds.y = bmin.z;
-
-				m_Bounds.z = bmax.x;
-				m_Bounds.w = bmax.z;
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
+				m_MapBounds = TBounds(bmin.x, bmin.y, bmax.x, bmax.y);
 			}
-			else
-			{
-				m_Bounds.Set(0,0,2000,2000);
-			}
-			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+			
 		}
-		else m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
-
+	
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
 
 
-		DensityMapComponentPtr dm = GetSceneObject()->GetFirstComponentByClass<DensityMapComponent>();
-		if(dm)
-			dm->SetMapBounds(m_MapBounds);
+		m_DensityMap = GetSceneObject()->GetFirstComponentByClass<DensityMapComponent>();
+		if(m_DensityMap)
+			m_DensityMap->SetMapBounds(m_MapBounds);
 
 
 
@@ -208,8 +200,8 @@ namespace GASS
 		}
 		float volume = m_MapBounds.width() * m_MapBounds.height();
 		unsigned int treeCount = m_DensityFactor * volume;
-		if(m_DensityMapFilename != "")
-			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
+//		if(m_DensityMapFilename != "")
+//			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 
 		//TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
 		//m_Terrain = terrain.get();
@@ -309,71 +301,23 @@ namespace GASS
 	void TreeGeometryComponent::OnPaint(GrassPaintMessagePtr message)
 	{
 		const Vec3 world_pos = message->GetPosition();
-		if(m_DensityMap)
-		{
-			Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityMap->data);
-			int wsize = m_DensityMap->getWidth()-1;
+		
 
-			const Ogre::Real height = m_MapBounds.height();
-			const Ogre::Real width = m_MapBounds.width();
-			const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
-			const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
-
-			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
-			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
-			const Ogre::Real brush_inner_radius = (message->GetBrushInnerSize()*0.5)/height;
-
-			long startx = (x_pos - brush_size_texture_space_x) * (wsize);
-			long starty = (y_pos - brush_size_texture_space_y) * (wsize);
-			long endx = (x_pos + brush_size_texture_space_x) * (wsize);
-			long endy= (y_pos + brush_size_texture_space_y) * (wsize);
-			startx = std::max(startx, 0L);
-			starty = std::max(starty, 0L);
-			endx = std::min(endx, (long)wsize-1);
-			endy = std::min(endy, (long)wsize-1);
-			for (long y = starty; y <= endy; ++y)
-			{
-				int tmploc = y * (wsize+1);
-				for (long x = startx; x <= endx; ++x)
-				{
-
-					Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
-					Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
-
-					Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
-
-					Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
-					if( weight < 0) weight = 0;
-					weight = 1.0 - (weight * weight);
-					//weight = 1;
-
-					float val = float(data[tmploc + x])/255.0f;
-					val += weight*message->GetIntensity()*3;
-					//val = std::min(val, 255.0f);
-					//val = std::max(val, 0.0f);
-					if(val > 1.0)
-						val = 1;
-					if(val < 0.0)
-						val = 0;
-					data[tmploc + x] = val*255;
-				}
-			}
-
-			float radius = message->GetBrushSize();
+		float radius = message->GetBrushSize();
 			
 
-			int minPageX = Ogre::Math::Floor(((world_pos.x-radius) - m_MapBounds.left) / m_PageSize);
-			int minPageZ = Ogre::Math::Floor(((world_pos.z-radius) - m_MapBounds.top) / m_PageSize);
-			int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
-			int maxPageZ = Ogre::Math::Ceil(((world_pos.z+radius) - m_MapBounds.top) / m_PageSize);
+		int minPageX = Ogre::Math::Floor(((world_pos.x-radius) - m_MapBounds.left) / m_PageSize);
+		int minPageZ = Ogre::Math::Floor(((world_pos.z-radius) - m_MapBounds.top) / m_PageSize);
+		int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
+		int maxPageZ = Ogre::Math::Ceil(((world_pos.z+radius) - m_MapBounds.top) / m_PageSize);
 	
-			Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
+		Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
 									m_MapBounds.top + minPageZ*m_PageSize, 
 									m_MapBounds.left + maxPageX*m_PageSize,
 									m_MapBounds.top + maxPageZ*m_PageSize);
 
-			UpdateArea(bounds.left, bounds.top,bounds.right, bounds.bottom);
-		}
+		UpdateArea(bounds.left, bounds.top,bounds.right, bounds.bottom);
+		
 	}
 
 
@@ -502,7 +446,7 @@ namespace GASS
 		
 	}
 
-	void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
+	/*void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
 	{
 		//Load image
 		Ogre::TexturePtr map = Ogre::TextureManager::getSingleton().load(mapFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
@@ -552,6 +496,62 @@ namespace GASS
 				delete[] pixels.data;
 			}
 		}
+	}*/
+
+
+	void TreeGeometryComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
+	{
+/*		Ogre::uchar *data = m_DensityMap->getData();
+		int wsize = m_DensityMap->getWidth()-1;
+
+		const Ogre::Real height = m_MapBounds.height();
+		const Ogre::Real width = m_MapBounds.width();
+		const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
+		const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
+
+		const Ogre::Real brush_size_texture_space_x = brush_size/width;
+		const Ogre::Real brush_size_texture_space_y = brush_size/height;
+		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
+
+		long startx = (x_pos - brush_size_texture_space_x) * (wsize);
+		long starty = (y_pos - brush_size_texture_space_y) * (wsize);
+		long endx = (x_pos + brush_size_texture_space_x) * (wsize);
+		long endy= (y_pos + brush_size_texture_space_y) * (wsize);
+		startx = std::max(startx, 0L);
+		starty = std::max(starty, 0L);
+		endx = std::min(endx, (long)wsize-1);
+		endy = std::min(endy, (long)wsize-1);
+		for (long y = starty; y <= endy; ++y)
+		{
+			int tmploc = y * (wsize+1);
+			for (long x = startx; x <= endx; ++x)
+			{
+
+				Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
+				Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
+
+				Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
+
+				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
+				if( weight < 0) weight = 0;
+				weight = 1.0 - (weight * weight);
+			
+				float val = float(data[((tmploc+ x)*4)])/255.0f;
+				val += weight*intensity;
+				if(val > 1.0)
+					val = 1;
+				if(val < 0.0)
+					val = 0;
+				data[((tmploc+ x)*4)] = val*255;
+			}
+		}
+
+		float posL = world_pos.x - brush_size;
+		float posT = world_pos.z - brush_size;
+		float posR = world_pos.x + brush_size;
+		float posB = world_pos.z + brush_size;
+		Forests::TBounds bounds(posL, posT, posR, posB);
+		m_PagedGeometry->reloadGeometryPages(bounds);*/
 	}
 
 	void TreeGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
@@ -562,7 +562,7 @@ namespace GASS
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
-	float TreeGeometryComponent::GetDensityAt(float x, float z)
+	/*float TreeGeometryComponent::GetDensityAt(float x, float z)
 	{
 		assert(m_DensityMap);
 
@@ -579,7 +579,7 @@ namespace GASS
 		Ogre::uint8 *data = (Ogre::uint8*)m_DensityMap->data;
 		float val = data[mapWidth * zindex + xindex] / 255.0f;
 		return val;
-	}
+	}*/
 
 	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
@@ -604,7 +604,7 @@ namespace GASS
 		else	
 			m_TreeLoader2d->deleteTrees(TBounds(start_x, start_z,end_x,end_z),m_TreeEntity);
 
-		if (m_DensityMap != NULL)
+		if (m_DensityMap)
 		{
 			for (int i = 0; i < treeCount; i++)
 			{
@@ -614,7 +614,7 @@ namespace GASS
 				
 				x = m_RandomTable->getRangeRandom(start_x, end_x);
 				z = m_RandomTable->getRangeRandom(start_z, end_z);
-				float density = GetDensityAt(x, z);
+				float density = m_DensityMap->GetDensityAt(x, z);
 				if (density  > 0 && Ogre::Math::UnitRandom() <= density)
 				{
 					yaw = m_RandomTable->getRangeRandom(0, 360);

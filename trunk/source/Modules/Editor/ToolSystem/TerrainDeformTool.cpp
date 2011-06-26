@@ -29,7 +29,7 @@ namespace GASS
 		{
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllerMessage,0));
 		}
-		
+
 	}
 
 	TerrainDeformTool::~TerrainDeformTool()
@@ -49,12 +49,21 @@ namespace GASS
 				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 				if(terrain)
 				{
-					if(m_TEM == TEM_DEFORM)
+					switch(m_TEM)
+					{
+					case TEM_DEFORM:
+						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+						break;
+					case TEM_FLATTEN:
 						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
-					else if(m_TEM == TEM_SMOOTH)
+						break;
+					case TEM_SMOOTH:
 						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
-					else if(m_TEM == TEM_LAYER_PAINT)
+						break;
+					case TEM_LAYER_PAINT:
 						selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
+						break;
+					}
 				}
 				if(m_TEM == TEM_VEGETATION_PAINT)
 					selected->PostMessage(MessagePtr(new GrassPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
@@ -145,19 +154,19 @@ namespace GASS
 			//hide gizmo
 			/*if(message->GetSceneObject())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(lc) //only support gizmo for objects with location component
-				{
-					SetGizmoVisiblity(true);
-				}
-				else
-				{
-					SetGizmoVisiblity(false);
-				}
+			LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			if(lc) //only support gizmo for objects with location component
+			{
+			SetGizmoVisiblity(true);
 			}
 			else
 			{
-				SetGizmoVisiblity(false);
+			SetGizmoVisiblity(false);
+			}
+			}
+			else
+			{
+			SetGizmoVisiblity(false);
 			}*/
 		}
 		m_SelectedObject = message->GetSceneObject();
@@ -223,7 +232,7 @@ namespace GASS
 			}
 		}
 	}
-	
+
 
 	void TerrainDeformTool::OnInput(ControllerMessagePtr message)
 	{
@@ -238,8 +247,8 @@ namespace GASS
 					m_BrushSize += m_BrushSize*0.3;
 				else if(value < -0.5) 
 					m_BrushSize -= m_BrushSize*0.3;
-			    SetBrushSize(m_BrushSize);
-				
+				SetBrushSize(m_BrushSize);
+
 			}
 			if(name == "InvertBrush")
 			{

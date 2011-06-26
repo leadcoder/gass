@@ -24,6 +24,7 @@ namespace GASS
 		{
 			TEM_DEFORM,
 			TEM_SMOOTH,
+			TEM_FLATTEN,
 			TEM_LAYER_PAINT,
 			TEM_VEGETATION_PAINT
 		};

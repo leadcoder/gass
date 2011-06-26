@@ -41,6 +41,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "TreeGeometryComponent.h"
 
 
 namespace GASS
@@ -48,7 +49,8 @@ namespace GASS
 	void DensityMapComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, IComponent>);
-		RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap);
+		//RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap);
+		RegisterProperty<std::string>("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport);
 	}
 
 	void DensityMapComponent::OnCreate()
@@ -107,6 +109,28 @@ namespace GASS
 
 		//if(m_DensityMapFilename != "")
 		//	LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
+	}
+
+	void DensityMapComponent::SetImport(const std::string &dm)
+	{
+		std::fstream fstr(dm.c_str(), std::ios::in|std::ios::binary);
+		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+		try
+		{
+			m_DensityImage.load(stream);
+		}
+		catch(...)
+		{
+			return;	
+		}
+
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			TreeGeometryComponentPtr trees = boost::shared_dynamic_cast<TreeGeometryComponent>(components[i]);
+			trees->UpdateArea(m_MapBounds.left, m_MapBounds.top,m_MapBounds.right, m_MapBounds.bottom);
+		}
 	}
 
 
@@ -234,7 +258,7 @@ namespace GASS
 		if (xindex < 0 || zindex < 0 || xindex >= mapWidth || zindex >= mapHeight)
 			return 0.0f;
 
-		
+				
 		//Ogre::uint8 *data = (Ogre::uint8*)m_DensityMap->data;
 		Ogre::uint8 *data = m_DensityImage.getData();
 		float val = data[(mapWidth * zindex + xindex)*4] / 255.0f;
