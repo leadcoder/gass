@@ -59,14 +59,14 @@ namespace GASS
 
 		void SetMapBounds(TBounds bounds) {m_MapBounds = bounds;}
 	protected:
-
+		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 		void SetImport(const std::string &dm);
 		std::string GetImport() const {return std::string("");}
 		//void LoadDensityMap(const std::string &mapFile, int channel);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
-		
+		void OnRoadMessage(RoadMessagePtr message);
 
 		std::string GetDensityMap() const
 		{

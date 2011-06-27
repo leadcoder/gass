@@ -108,6 +108,7 @@ namespace GASS
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 
+		sm->destroyEntity(m_TreeEntity);
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
@@ -151,7 +152,7 @@ namespace GASS
 
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
-				m_MapBounds = TBounds(bmin.x, bmin.y, bmax.x, bmax.y);
+				m_MapBounds = TBounds(bmin.x, bmin.z, bmax.x, bmax.z);
 			}
 			
 		}
@@ -211,7 +212,14 @@ namespace GASS
 		{
 			shadowMap.Allocate(shadow_size, shadow_size, 24);
 		}*/
-		m_TreeEntity = sm->createEntity(m_Name, m_MeshFileName);
+		static unsigned int tree_id = 0;
+		tree_id++;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << tree_id;
+		ss >> name;
+		
+		m_TreeEntity = sm->createEntity(name, m_MeshFileName);
 		m_TreeEntity->setCastShadows(m_CastShadows);
 		//add one dummy tree to allocate grid list
 		if(m_TreeLoader3d)
@@ -300,12 +308,12 @@ namespace GASS
 
 	void TreeGeometryComponent::OnPaint(GrassPaintMessagePtr message)
 	{
-		const Vec3 world_pos = message->GetPosition();
-		
+		Paint(message->GetPosition(), message->GetBrushSize(), message->GetBrushInnerSize(), message->GetIntensity());
+	}
 
-		float radius = message->GetBrushSize();
-			
-
+	void TreeGeometryComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
+	{
+		float radius = brush_size;
 		int minPageX = Ogre::Math::Floor(((world_pos.x-radius) - m_MapBounds.left) / m_PageSize);
 		int minPageZ = Ogre::Math::Floor(((world_pos.z-radius) - m_MapBounds.top) / m_PageSize);
 		int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
@@ -316,11 +324,20 @@ namespace GASS
 									m_MapBounds.left + maxPageX*m_PageSize,
 									m_MapBounds.top + maxPageZ*m_PageSize);
 
-		UpdateArea(bounds.left, bounds.top,bounds.right, bounds.bottom);
+		//update page by page
 		
+		for(int i = minPageX ; i < maxPageX; i++)
+		{
+			for(int j = minPageZ ; j < maxPageZ ; j++)
+			{
+				Forests::TBounds bounds(m_MapBounds.left + i*m_PageSize, 
+									m_MapBounds.top + j*m_PageSize, 
+									m_MapBounds.left + (i+1)*m_PageSize,
+									m_MapBounds.top + (j+1)*m_PageSize);
+				UpdateArea(bounds.left, bounds.top,bounds.right, bounds.bottom);
+			}
+		}
 	}
-
-
 
 /*	void TreeGeometryComponent::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
 	{
@@ -498,61 +515,6 @@ namespace GASS
 		}
 	}*/
 
-
-	void TreeGeometryComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
-	{
-/*		Ogre::uchar *data = m_DensityMap->getData();
-		int wsize = m_DensityMap->getWidth()-1;
-
-		const Ogre::Real height = m_MapBounds.height();
-		const Ogre::Real width = m_MapBounds.width();
-		const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
-		const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
-
-		const Ogre::Real brush_size_texture_space_x = brush_size/width;
-		const Ogre::Real brush_size_texture_space_y = brush_size/height;
-		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
-
-		long startx = (x_pos - brush_size_texture_space_x) * (wsize);
-		long starty = (y_pos - brush_size_texture_space_y) * (wsize);
-		long endx = (x_pos + brush_size_texture_space_x) * (wsize);
-		long endy= (y_pos + brush_size_texture_space_y) * (wsize);
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)wsize-1);
-		endy = std::min(endy, (long)wsize-1);
-		for (long y = starty; y <= endy; ++y)
-		{
-			int tmploc = y * (wsize+1);
-			for (long x = startx; x <= endx; ++x)
-			{
-
-				Ogre::Real tsXdist = (x / (float)wsize) - x_pos;
-				Ogre::Real tsYdist = (y / (float)wsize) - y_pos;
-
-				Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
-
-				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
-				if( weight < 0) weight = 0;
-				weight = 1.0 - (weight * weight);
-			
-				float val = float(data[((tmploc+ x)*4)])/255.0f;
-				val += weight*intensity;
-				if(val > 1.0)
-					val = 1;
-				if(val < 0.0)
-					val = 0;
-				data[((tmploc+ x)*4)] = val*255;
-			}
-		}
-
-		float posL = world_pos.x - brush_size;
-		float posT = world_pos.z - brush_size;
-		float posR = world_pos.x + brush_size;
-		float posB = world_pos.z + brush_size;
-		Forests::TBounds bounds(posL, posT, posR, posB);
-		m_PagedGeometry->reloadGeometryPages(bounds);*/
-	}
 
 	void TreeGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{

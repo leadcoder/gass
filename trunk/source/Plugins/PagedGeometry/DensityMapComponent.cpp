@@ -58,6 +58,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnPaint,GrassPaintMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnRoadMessage,RoadMessage,0));
 		
 	}
 
@@ -133,12 +134,13 @@ namespace GASS
 		}
 	}
 
-
 	void DensityMapComponent::OnPaint(GrassPaintMessagePtr message)
 	{
-		const Vec3 world_pos = message->GetPosition();
-		//if(m_DensityMap)
-		{
+		Paint(message->GetPosition(), message->GetBrushSize(), message->GetBrushInnerSize(), message->GetIntensity());
+	}
+
+	void DensityMapComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
+	{
 			Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityImage.getData());
 			int wsize = m_DensityImage.getWidth()-1;
 
@@ -147,9 +149,9 @@ namespace GASS
 			const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
 			const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
 
-			const Ogre::Real brush_size_texture_space_x = message->GetBrushSize()/width;
-			const Ogre::Real brush_size_texture_space_y = message->GetBrushSize()/height;
-			const Ogre::Real brush_inner_radius = (message->GetBrushInnerSize()*0.5)/height;
+			const Ogre::Real brush_size_texture_space_x = brush_size/width;
+			const Ogre::Real brush_size_texture_space_y = brush_size/height;
+			const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
 
 			long startx = (x_pos - brush_size_texture_space_x) * (wsize);
 			long starty = (y_pos - brush_size_texture_space_y) * (wsize);
@@ -175,7 +177,7 @@ namespace GASS
 					//weight = 1;
 
 					float val = float(data[(tmploc + x)*4])/255.0f;
-					val += weight*message->GetIntensity()*3;
+					val += weight*intensity*3;
 					//val = std::min(val, 255.0f);
 					//val = std::max(val, 0.0f);
 					if(val > 1.0)
@@ -185,7 +187,7 @@ namespace GASS
 					data[(tmploc + x)*4] = val*255;
 				}
 			}
-		}
+		
 	}
 
 	/*void DensityMapComponent::LoadDensityMap(const std::string &mapFile, int channel)
@@ -263,6 +265,39 @@ namespace GASS
 		Ogre::uint8 *data = m_DensityImage.getData();
 		float val = data[(mapWidth * zindex + xindex)*4] / 255.0f;
 		return val;
+	}
+
+
+	void DensityMapComponent::OnRoadMessage(RoadMessagePtr message)
+	{
+
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+
+		Ogre::Real brush_size = message->GetPaintWidth();
+		std::vector<Vec3> rwps = message->GetRoadWaypoints();
+		for(size_t i = 0; i < rwps.size()-1; i++)
+		{
+			const Vec3 line = rwps[i+1] - rwps[i];
+			const Float  length = line.Length();
+			const Vec3 dir = line*(1.0/length);
+			const Float  step_size = 0.1;
+			Float dist = 0;
+			while(dist < length)
+			{
+				Vec3 pos = rwps[i] + dir*dist;
+				dist += step_size;
+				if(message->GetPaintWidth())
+				{
+					Paint(pos, message->GetPaintWidth(),message->GetPaintWidth(), -10);
+					for(int i = 0 ;  i < components.size(); i++)
+					{
+						TreeGeometryComponentPtr trees = boost::shared_dynamic_cast<TreeGeometryComponent>(components[i]);
+						trees->Paint(pos, message->GetPaintWidth(),message->GetPaintWidth(), -10);
+					}
+				}
+			}
+		}
 	}
 
 

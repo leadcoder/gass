@@ -144,6 +144,7 @@ namespace GASS
 			SceneObjectPtr last_obj;
 			IComponentContainer::ComponentVector components;
 			GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass(components, "GrassLayerComponent", true);
+			GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass(components, "TreeGeometryComponent", true);
 			for(int i = 0 ;  i < components.size(); i++)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
