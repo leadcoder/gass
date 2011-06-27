@@ -457,7 +457,7 @@ namespace GASS
 
 	void TreeGeometryComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
 		
@@ -573,9 +573,12 @@ namespace GASS
 				//Determine whether this grass will be added based on the local density.
 				//For example, if localDensity is .32, grasses will be added 32% of the time.
 				Float x, y, z, yaw, scale;
+
+				x = Ogre::Math::RangeRandom(start_x, end_x);
+				z = Ogre::Math::RangeRandom(start_z, end_z);
 				
-				x = m_RandomTable->getRangeRandom(start_x, end_x);
-				z = m_RandomTable->getRangeRandom(start_z, end_z);
+				//x = m_RandomTable->getRangeRandom(start_x, end_x);
+				//z = m_RandomTable->getRangeRandom(start_z, end_z);
 				float density = m_DensityMap->GetDensityAt(x, z);
 				if (density  > 0 && Ogre::Math::UnitRandom() <= density)
 				{

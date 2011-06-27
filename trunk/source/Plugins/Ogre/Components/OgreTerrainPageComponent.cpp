@@ -219,10 +219,10 @@ namespace GASS
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
 					if(m_HeightMapFile != "") //import height map
 						ImportHeightMap(GetFromResourceSystem(m_HeightMapFile));
-
 				}
-				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY);
+				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
+				
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				//SetPosition(m_Pos);
