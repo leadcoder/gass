@@ -66,6 +66,9 @@ namespace GASS
 		void SetActive(bool value) {m_Active = value;}
 		double GetDeltaTime() const {return m_Delta;}
 
+		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
+		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
+
 	private:
 		void RequestScenePosition();
 		bool CheckScenePosition();
@@ -116,6 +119,7 @@ namespace GASS
 		bool m_EnableAngleSnap;
 		float m_RayPickDistance;
 		bool m_EnableGizmo;
+		bool m_UseTerrainNormalOnDrop;
 		double m_Delta;
 
 		GASS::SceneObjectWeakPtr m_PointerObject;

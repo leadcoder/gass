@@ -67,10 +67,6 @@ namespace GASS
 		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;
 		void SetDensityFactor(float factor);
-		float GetImposterAlphaRejectionValue() const;
-		void SetImposterAlphaRejectionValue(float value);
-		//Vec4 GetBounds() const;
-		//void SetBounds(const Vec4 &bounds);
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
 		std::string GetMaterial() const;

@@ -62,6 +62,7 @@ namespace GASS
 		TBounds GetMapBounds() const {return m_MapBounds;}
 		Ogre::TexturePtr GetDensityTexture() const {return  m_DensityTexture;}
 		std::string GetColorMap() const;
+		void ReloadGeometry();
 	protected:
 		void SaveDensityMap();
 		void OnRoadMessage(RoadMessagePtr message);

@@ -33,7 +33,8 @@ namespace GASS
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
 		m_RayPickDistance(3000),
-		m_EnableGizmo(true)
+		m_EnableGizmo(true),
+		m_UseTerrainNormalOnDrop(false)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));

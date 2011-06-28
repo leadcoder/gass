@@ -166,6 +166,14 @@ namespace GASS
 		m_ViewDist = distance;
 	}
 
+	void GrassLoaderComponent::ReloadGeometry()
+	{
+		if(m_PagedGeometry)
+		{
+			m_PagedGeometry->reloadGeometry();
+		}
+	}
+
 	void GrassLoaderComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		if(m_PagedGeometry)

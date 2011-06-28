@@ -22,6 +22,7 @@
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
@@ -44,6 +45,7 @@ namespace GASS
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void SetInnerRadius(const Float &value);
 		Float GetInnerRadius() const;
 		void SetOuterRadius(const Float &value);
@@ -69,6 +71,7 @@ namespace GASS
 
 		void UpdateOptions();
 	private:
+		void Init(Ogre::Camera* ocam);
 		Ogre::RenderTarget* m_Target;
 		double m_TimeMultiplier;
 		SkyX::SkyX* m_SkyX;

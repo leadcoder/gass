@@ -25,6 +25,7 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include <Ogre.h>
@@ -195,6 +196,9 @@ namespace GASS
 	{
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
+		m_SkyX = NULL;
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
+
 	}
 
 	void SkyXComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -212,8 +216,27 @@ namespace GASS
 		//m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
 
 		// Create SkyX object
-		m_SkyX = new SkyX::SkyX(sm, ocam);
+		Init(ocam);
 
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		
+	}
+
+	void SkyXComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	{
+		if(m_SkyX)
+		{
+			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
+			Init(cam);
+		}
+	}
+
+	void SkyXComponent::Init(Ogre::Camera* ocam)
+	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+
+		delete m_SkyX;
+		m_SkyX = new SkyX::SkyX(sm, ocam);
 		// No smooth fading
 		m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
 		
@@ -224,7 +247,9 @@ namespace GASS
 		atOpt.InnerRadius = 9.92f;
 		atOpt.OuterRadius = 10.3311f;
 		m_SkyX->getAtmosphereManager()->setOptions(atOpt);
+		
 
+		
 		UpdateOptions();
 
 		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
@@ -234,7 +259,6 @@ namespace GASS
 		// Create the sky
 		m_SkyX->create();
 		//ocam->setFarClipDistance(save_clip);
-
 	}
 
 	bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)

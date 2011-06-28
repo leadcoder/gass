@@ -73,9 +73,6 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
-		//RegisterProperty<float>("PageSize", &GrassLayerComponent::GetPageSize, &GrassLayerComponent::SetPageSize);
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassLayerComponent::GetImposterAlphaRejectionValue, &GrassLayerComponent::SetImposterAlphaRejectionValue);
-		//RegisterProperty<Vec4>("Bounds", &GrassLayerComponent::GetBounds, &GrassLayerComponent::SetBounds);
 		RegisterProperty<std::string>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
 		RegisterProperty<std::string>("FadeTech", &GrassLayerComponent::GetFadeTech, &GrassLayerComponent::SetFadeTech);
 		RegisterProperty<std::string>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
@@ -86,16 +83,12 @@ namespace GASS
 		RegisterProperty<float>("SwayLength", &GrassLayerComponent::GetSwayLength, &GrassLayerComponent::SetSwayLength);
 		RegisterProperty<bool>("EnableSway", &GrassLayerComponent::GetEnableSway, &GrassLayerComponent::SetEnableSway);
 		RegisterProperty<float>("SwayDistribution", &GrassLayerComponent::GetSwayDistribution, &GrassLayerComponent::SetSwayDistribution);
-		//RegisterProperty<float>("ViewDistance", &GrassLayerComponent::GetViewDistance, &GrassLayerComponent::SetViewDistance);
-
 	}
 
 	void GrassLayerComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,LoadGFXComponentsMessage,1000));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnUnload,UnloadComponentsMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnPaint,GrassPaintMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnRoadMessage,RoadMessage,0));
 	}
 
 	void GrassLayerComponent::SetDensityFactor(float factor)
@@ -110,18 +103,6 @@ namespace GASS
 		return m_DensityFactor;
 	}
 
-	
-	float GrassLayerComponent::GetImposterAlphaRejectionValue() const
-	{
-		return m_ImposterAlphaRejectionValue;
-	}
-
-	void GrassLayerComponent::SetImposterAlphaRejectionValue(float value)
-	{
-		m_ImposterAlphaRejectionValue =value;
-	}
-
-	
 	
 	void GrassLayerComponent::SetColorMap(const std::string &name)
 	{
@@ -138,7 +119,13 @@ namespace GASS
 	{
 		m_Material = name;
 		if(m_GrassLayer)
+		{
 			m_GrassLayer->setMaterialName(name);
+			GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
+			{
+				gl_component->ReloadGeometry();
+			}
+		}
 	}
 
 	std::string GrassLayerComponent::GetFadeTech() const
@@ -311,9 +298,10 @@ namespace GASS
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		
-		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>();
+		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
 		m_GrassLoader = gl_component->GetGrassLoader();
-
+		
+		
 		
 		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);

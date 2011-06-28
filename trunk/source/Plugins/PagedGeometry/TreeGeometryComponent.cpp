@@ -64,7 +64,7 @@ namespace GASS
 		RegisterProperty<Vec4>("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds);
 		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale);
 		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows);
-		RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
+		//RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
 		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight);
 		RegisterProperty<float>("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize);
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue);

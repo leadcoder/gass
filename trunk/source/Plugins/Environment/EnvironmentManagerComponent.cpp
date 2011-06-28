@@ -32,12 +32,14 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
 #include <Ogre.h>
 
 
 namespace GASS
 {
-	EnvironmentManagerComponent::EnvironmentManagerComponent(void) :m_SkyX(NULL),m_Hydrax(NULL), m_Target(NULL)
+	EnvironmentManagerComponent::EnvironmentManagerComponent(void) :m_SkyX(NULL),m_Hydrax(NULL), m_Target(NULL),m_CurrentCamera(NULL)
 	{
 		
 		m_WaterGradientValues.push_back(Vec3(0.058209*0.4,0.535822*0.4,0.779105*0.4));
@@ -76,6 +78,7 @@ namespace GASS
 	void EnvironmentManagerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		Ogre::Root::getSingleton().removeFrameListener(this);
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
 	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
@@ -125,10 +128,22 @@ namespace GASS
 	}
 
 
+	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	{
+		
+		m_CurrentCamera = static_cast<Ogre::Camera*> (message->GetUserData());
+
+		/*if(m_SkyX)
+		{
+			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
+			Init(cam);
+		}*/
+	}
+
 	void EnvironmentManagerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		
 		
 		Ogre::Root::getSingleton().addFrameListener(this);
@@ -136,16 +151,20 @@ namespace GASS
 		
 		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
 		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
+
+		if(hydrax)
+			m_Hydrax = hydrax->GetHydrax();
+		if(skyx)
+			m_SkyX = skyx->GetSkyX();
 		if(hydrax && skyx)
 		{
-			m_Hydrax = hydrax->GetHydrax();
-			m_SkyX = skyx->GetSkyX();
+			
 			hydrax->GetHydrax()->getRttManager()->addRttListener(new HydraxRttListener(skyx->GetSkyX(), hydrax->GetHydrax()));
-
-			 // Light
-			m_SunLight= sm->createLight("SunLight");
-			m_SunLight->setType(Ogre::Light::LT_DIRECTIONAL);
 		}
+
+		 // Light
+		m_SunLight= sm->createLight("SunLight");
+		m_SunLight->setType(Ogre::Light::LT_DIRECTIONAL);
 
 		// Color gradients
 		// Water
@@ -169,6 +188,8 @@ namespace GASS
 		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.3, 0.45f));
 		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.1, 0.35f));
 		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.05, 0.0f));
+
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 
@@ -181,9 +202,10 @@ namespace GASS
 	void EnvironmentManagerComponent::UpdateEnvironmentLighting()
 	{
 		Ogre::Vector3 lightDir = m_SkyX->getAtmosphereManager()->getSunDirection();
+		float point = (-lightDir.y + 1.0f) / 2.0f;
 
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		/*bool preForceDisableShadows = m_ForceDisableShadows;
 		m_ForceDisableShadows = (lightDir.y > 0.15f) ? true : false;
 
@@ -192,10 +214,18 @@ namespace GASS
 			setShadowMode(mSceneMgr, static_cast<ShadowMode>(mShadowMode));
 		}*/
 		// Calculate current color gradients point
-		float point = (-lightDir.y + 1.0f) / 2.0f;
-		m_Hydrax->setWaterColor(m_WaterGradient.getColor(point));
-		Ogre::Vector3 sunPos = ocam->getDerivedPosition() - lightDir*m_SkyX->getMeshManager()->getSkydomeRadius()*0.1;
-		m_Hydrax->setSunPosition(sunPos);
+
+		if(m_Hydrax)
+		{
+			
+			m_Hydrax->setWaterColor(m_WaterGradient.getColor(point));
+		}
+
+		Ogre::Vector3 sunPos(0,0,0);
+		if(m_CurrentCamera)
+			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*m_SkyX->getMeshManager()->getSkydomeRadius()*0.1;
+		if(m_Hydrax)
+			m_Hydrax->setSunPosition(sunPos);
 
 		//Light0->setPosition(mCamera->getDerivedPosition() - lightDir*mSkyX->getMeshManager()->getSkydomeRadius()*0.02);
 		m_SunLight->setDirection(lightDir);
@@ -204,7 +234,9 @@ namespace GASS
 		m_SunLight->setSpecularColour(sunCol.x, sunCol.y, sunCol.z);
 		Ogre::Vector3 ambientCol = m_AmbientGradient.getColor(point);
 		m_SunLight->setDiffuseColour(ambientCol.x, ambientCol.y, ambientCol.z);
-		m_Hydrax->setSunColor(sunCol);
+
+		if(m_Hydrax)
+			m_Hydrax->setSunColor(sunCol);
 	}
 
 }
