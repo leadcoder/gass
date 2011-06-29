@@ -64,6 +64,9 @@ namespace GASS
 		,m_FadeOutColor(true)
 		,m_NearColorWeight(0.2f)
 		,m_TerrainProfile(NULL)
+		,m_EnableLayerParallax(true)
+		,m_EnableLayerSpecular(true)
+		,m_EnableLayerNormal(true)
 	{
 
 
@@ -90,6 +93,10 @@ namespace GASS
 		RegisterProperty<float>("DetailFadeDist", &GASS::OgreTerrainGroupComponent::GetDetailFadeDist, &GASS::OgreTerrainGroupComponent::SetDetailFadeDist);
 		RegisterProperty<bool>("FadeOutColor", &GASS::OgreTerrainGroupComponent::GetFadeOutColor, &GASS::OgreTerrainGroupComponent::SetFadeOutColor);
 		RegisterProperty<float>("NearColorWeight", &GASS::OgreTerrainGroupComponent::GetNearColorWeight, &GASS::OgreTerrainGroupComponent::SetNearColorWeight);
+
+		RegisterProperty<bool>("EnableLayerNormal", &GASS::OgreTerrainGroupComponent::GetEnableLayerNormal, &GASS::OgreTerrainGroupComponent::SetEnableLayerNormal);
+		RegisterProperty<bool>("EnableLayerSpecular", &GASS::OgreTerrainGroupComponent::GetEnableLayerSpecular, &GASS::OgreTerrainGroupComponent::SetEnableLayerSpecular);
+		RegisterProperty<bool>("EnableLayerParallax", &GASS::OgreTerrainGroupComponent::GetEnableLayerParallax, &GASS::OgreTerrainGroupComponent::SetEnableLayerParallax);
 
 	}
 
@@ -194,7 +201,7 @@ namespace GASS
 		m_TerrainName = filename;
 		if(m_TerrainGroup)
 		{
- 			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
 
 			//Get all components
 			IComponentContainer::ComponentVector comps;
@@ -242,7 +249,7 @@ namespace GASS
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorB()));
 			m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
 			m_TerrainProfile->setLightmapEnabled(false);
-			
+
 			m_TerrainProfile->setReceiveDynamicShadowsEnabled(true);
 			m_TerrainProfile->setReceiveDynamicShadowsDepth(true);
 			m_TerrainProfile->setReceiveDynamicShadowsLowLod(true);
@@ -251,7 +258,11 @@ namespace GASS
 			m_TerrainProfile->SetDetailFadeDist(GetDetailFadeDist());
 			m_TerrainProfile->SetFadeOutColor(GetFadeOutColor());
 			m_TerrainProfile->SetNearColorWeight(GetNearColorWeight());
-			m_TerrainProfile->setLayerNormalMappingEnabled(false);
+
+
+			m_TerrainProfile->setLayerNormalMappingEnabled(m_EnableLayerNormal);
+			m_TerrainProfile->setLayerParallaxMappingEnabled(m_EnableLayerParallax);
+			m_TerrainProfile->setLayerSpecularMappingEnabled(m_EnableLayerSpecular);
 
 		}
 
@@ -640,7 +651,7 @@ namespace GASS
 		}
 		else
 		{
-			
+
 			Ogre::Vector3 dir,start_pos;
 			if(start_y > end_y) //swap
 			{
@@ -679,7 +690,7 @@ namespace GASS
 			}
 		}
 	}
-	
+
 	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius)
 	{
 		Ogre::Vector3 tsPos;
@@ -720,10 +731,10 @@ namespace GASS
 				}
 				/*else
 				{
-					if((current_h + addedHeight) < newheight)
-						terrain->setHeightAtPoint(x, y, current_h + addedHeight);
-					else
-						terrain->setHeightAtPoint(x, y, current_h - addedHeight);
+				if((current_h + addedHeight) < newheight)
+				terrain->setHeightAtPoint(x, y, current_h + addedHeight);
+				else
+				terrain->setHeightAtPoint(x, y, current_h - addedHeight);
 				}*/
 			}
 		}

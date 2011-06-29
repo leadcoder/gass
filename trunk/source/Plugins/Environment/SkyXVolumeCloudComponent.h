@@ -37,6 +37,7 @@ namespace GASS
 		~SkyXVolumeCloudComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void CreateVolume();
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
@@ -61,7 +62,7 @@ namespace GASS
 		void SetAutoupdate(const bool& value);
 		bool GetAutoupdate() const;
 	
-		void Load();
+		
 	private:
 		
 		SkyX::VCloudsManager* m_CloudManager;
@@ -78,6 +79,8 @@ namespace GASS
 		
 	
 	};
+	typedef boost::shared_ptr<SkyXVolumeCloudComponent> SkyXVolumeCloudComponentPtr; 
+
 }
 
 #endif

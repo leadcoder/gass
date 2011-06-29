@@ -120,6 +120,17 @@ namespace GASS
 		void SetNearColorWeight(float value) ;
 
 
+		bool GetEnableLayerNormal() const {return m_EnableLayerNormal;}
+		void SetEnableLayerNormal(bool value) {m_EnableLayerNormal = value;}
+		bool GetEnableLayerSpecular() const {return m_EnableLayerSpecular;}
+		void SetEnableLayerSpecular(bool value) {m_EnableLayerSpecular = value;}
+		bool GetEnableLayerParallax() const {return m_EnableLayerParallax;}
+		void SetEnableLayerParallax(bool value) {m_EnableLayerParallax = value;}
+
+		bool m_EnableLayerParallax;
+		bool m_EnableLayerSpecular;
+		bool m_EnableLayerNormal;
+
 		Vec3 m_Scale;
 		bool m_Center;
 		Float m_WorldWidth;

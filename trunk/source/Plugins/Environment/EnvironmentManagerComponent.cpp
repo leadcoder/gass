@@ -31,6 +31,8 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
+
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
@@ -39,7 +41,7 @@
 
 namespace GASS
 {
-	EnvironmentManagerComponent::EnvironmentManagerComponent(void) :m_SkyX(NULL),m_Hydrax(NULL), m_Target(NULL),m_CurrentCamera(NULL)
+	EnvironmentManagerComponent::EnvironmentManagerComponent(void) : m_Hydrax(NULL), m_Target(NULL),m_CurrentCamera(NULL), m_SunLight(NULL), m_SpecularWeight(0)
 	{
 		
 		m_WaterGradientValues.push_back(Vec3(0.058209*0.4,0.535822*0.4,0.779105*0.4));
@@ -55,6 +57,51 @@ namespace GASS
 		m_WaterGradientWeights.push_back(0.5);
 		m_WaterGradientWeights.push_back(0.45);
 		m_WaterGradientWeights.push_back(0);
+
+		
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.5);
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.4);
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.3);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.5);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*0.25);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*0.01);
+
+		m_SunGradientWeights.push_back(1.0);
+		m_SunGradientWeights.push_back(0.75);
+		m_SunGradientWeights.push_back(0.5625);
+		m_SunGradientWeights.push_back(0.5);
+		m_SunGradientWeights.push_back(0.45);
+		m_SunGradientWeights.push_back(0.0);
+
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.6);
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.3);
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.1);
+		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.05);
+
+		m_AmbientGradientWeights.push_back(1.0);
+		m_AmbientGradientWeights.push_back(0.6);
+		m_AmbientGradientWeights.push_back(0.5);
+		m_AmbientGradientWeights.push_back(0.45);
+		m_AmbientGradientWeights.push_back(0.35);
+		m_AmbientGradientWeights.push_back(0.0);
+
+
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		
+		m_FogGradientWeights.push_back(1.0);
+		m_FogGradientWeights.push_back(0.6);
+		m_FogGradientWeights.push_back(0.5);
+		m_FogGradientWeights.push_back(0.45);
+		m_FogGradientWeights.push_back(0.35);
+		m_FogGradientWeights.push_back(0.0);
+
 	}
 
 	EnvironmentManagerComponent::~EnvironmentManagerComponent(void)
@@ -67,6 +114,13 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("EnvironmentManagerComponent",new Creator<EnvironmentManagerComponent, IComponent>);
 		RegisterVectorProperty<Vec3>("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient);
 		RegisterVectorProperty<float>("WaterGradientWeights", &EnvironmentManagerComponent::GetWaterGradientWeights, &EnvironmentManagerComponent::SetWaterGradientWeights);
+		RegisterVectorProperty<Vec3>("SunGradient", &EnvironmentManagerComponent::GetSunGradient, &EnvironmentManagerComponent::SetSunGradient);
+		RegisterVectorProperty<float>("SunGradientWeights", &EnvironmentManagerComponent::GetSunGradientWeights, &EnvironmentManagerComponent::SetSunGradientWeights);
+		RegisterVectorProperty<Vec3>("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient);
+		RegisterVectorProperty<float>("AmbientGradientWeights", &EnvironmentManagerComponent::GetAmbientGradientWeights, &EnvironmentManagerComponent::SetAmbientGradientWeights);
+		RegisterVectorProperty<Vec3>("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient);
+		RegisterVectorProperty<float>("FogGradientWeights", &EnvironmentManagerComponent::GetFogGradientWeights, &EnvironmentManagerComponent::SetFogGradientWeights);
+		RegisterProperty<float>("SpecularWeight", &EnvironmentManagerComponent::GetSpecularWeight, &EnvironmentManagerComponent::SetSpecularWeight);
 	}
 
 	void EnvironmentManagerComponent::OnCreate()
@@ -77,6 +131,11 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		if(sm && m_SunLight)
+			sm->destroyLight(m_SunLight);
+
+		m_SunLight = NULL;
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
@@ -110,6 +169,7 @@ namespace GASS
 	}
 
 
+
 	void EnvironmentManagerComponent::SetWaterGradientWeights(const std::vector<float> &value)
 	{
 		m_WaterGradientWeights = value;
@@ -121,23 +181,155 @@ namespace GASS
 		}
 	}
 
-
 	std::vector<float>  EnvironmentManagerComponent::GetWaterGradientWeights() const 
 	{
 		return m_WaterGradientWeights;
 	}
 
 
+	void EnvironmentManagerComponent::SetSunGradient(const std::vector<Vec3> &value)
+	{
+		m_SunGradientValues = value;
+		m_SunGradient.clear();
+		m_SunGradient = SkyX::ColorGradient();
+
+		if(m_SunGradientWeights.size() != m_SunGradientValues.size())
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_SunGradientValues.size()-1.0)));
+			}
+		}
+		else
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), m_SunGradientWeights[i]));
+			}
+		}
+	}
+
+
+	std::vector<Vec3>  EnvironmentManagerComponent::GetSunGradient() const 
+	{
+		return m_SunGradientValues;
+	}
+
+
+
+	void EnvironmentManagerComponent::SetSunGradientWeights(const std::vector<float> &value)
+	{
+		m_SunGradientWeights = value;
+		m_SunGradient.clear();
+		m_SunGradient = SkyX::ColorGradient();
+		if(m_SunGradientWeights.size() == m_SunGradientValues.size())
+		{
+			SetSunGradient(m_SunGradientValues);
+		}
+	}
+
+	std::vector<float>  EnvironmentManagerComponent::GetSunGradientWeights() const 
+	{
+		return m_SunGradientWeights;
+	}
+
+	void EnvironmentManagerComponent::SetAmbientGradient(const std::vector<Vec3> &value)
+	{
+		m_AmbientGradientValues = value;
+		m_AmbientGradient.clear();
+		m_AmbientGradient = SkyX::ColorGradient();
+
+		if(m_AmbientGradientWeights.size() != m_AmbientGradientValues.size())
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_AmbientGradientValues.size()-1.0)));
+			}
+		}
+		else
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), m_AmbientGradientWeights[i]));
+			}
+		}
+	}
+
+
+	std::vector<Vec3>  EnvironmentManagerComponent::GetAmbientGradient() const 
+	{
+		return m_AmbientGradientValues;
+	}
+
+
+
+	void EnvironmentManagerComponent::SetAmbientGradientWeights(const std::vector<float> &value)
+	{
+		m_AmbientGradientWeights = value;
+		m_AmbientGradient.clear();
+		m_AmbientGradient = SkyX::ColorGradient();
+		if(m_AmbientGradientWeights.size() == m_AmbientGradientValues.size())
+		{
+			SetAmbientGradient(m_AmbientGradientValues);
+		}
+	}
+
+	std::vector<float>  EnvironmentManagerComponent::GetAmbientGradientWeights() const 
+	{
+		return m_AmbientGradientWeights;
+	}
+
+	void EnvironmentManagerComponent::SetFogGradient(const std::vector<Vec3> &value)
+	{
+		m_FogGradientValues = value;
+		m_FogGradient.clear();
+		m_FogGradient = SkyX::ColorGradient();
+
+		if(m_FogGradientWeights.size() != m_FogGradientValues.size())
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_FogGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_FogGradientValues.size()-1.0)));
+			}
+		}
+		else
+		{
+			for(int i = 0; i < value.size(); i++)
+			{
+				m_FogGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), m_FogGradientWeights[i]));
+			}
+		}
+	}
+
+
+	std::vector<Vec3>  EnvironmentManagerComponent::GetFogGradient() const 
+	{
+		return m_FogGradientValues;
+	}
+
+
+
+	void EnvironmentManagerComponent::SetFogGradientWeights(const std::vector<float> &value)
+	{
+		m_FogGradientWeights = value;
+		m_FogGradient.clear();
+		m_FogGradient = SkyX::ColorGradient();
+		if(m_FogGradientWeights.size() == m_FogGradientValues.size())
+		{
+			SetFogGradient(m_FogGradientValues);
+		}
+	}
+
+	std::vector<float>  EnvironmentManagerComponent::GetFogGradientWeights() const 
+	{
+		return m_FogGradientWeights;
+	}
+
+
+
 	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
 	{
-		
 		m_CurrentCamera = static_cast<Ogre::Camera*> (message->GetUserData());
-
-		/*if(m_SkyX)
-		{
-			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
-			Init(cam);
-		}*/
 	}
 
 	void EnvironmentManagerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
@@ -154,16 +346,15 @@ namespace GASS
 
 		if(hydrax)
 			m_Hydrax = hydrax->GetHydrax();
-		if(skyx)
-			m_SkyX = skyx->GetSkyX();
-		if(hydrax && skyx)
+		
+		if(hydrax && skyx->GetSkyX())
 		{
 			
 			hydrax->GetHydrax()->getRttManager()->addRttListener(new HydraxRttListener(skyx->GetSkyX(), hydrax->GetHydrax()));
 		}
 
 		 // Light
-		m_SunLight= sm->createLight("SunLight");
+		m_SunLight = sm->createLight("EnvironmentManagerComponentSunLight");
 		m_SunLight->setType(Ogre::Light::LT_DIRECTIONAL);
 
 		// Color gradients
@@ -171,24 +362,10 @@ namespace GASS
 		m_WaterGradient = SkyX::ColorGradient();
 
 		SetWaterGradient(m_WaterGradientValues);
-
-		// Sun
-		m_SunGradient = SkyX::ColorGradient();
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.8,0.75,0.55)*1.5, 1.0f));
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.8,0.75,0.55)*1.4, 0.75f));
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.8,0.75,0.55)*1.3, 0.5625f));
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.6,0.5,0.2)*1.5, 0.5f));
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.5,0.5,0.5)*0.25, 0.45f));
-		m_SunGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(0.5,0.5,0.5)*0.01, 0.0f));
-		// Ambient
-		m_AmbientGradient = SkyX::ColorGradient();
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*1, 1.0f));
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*1, 0.6f));
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.6, 0.5f));
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.3, 0.45f));
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.1, 0.35f));
-		m_AmbientGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(1,1,1)*0.05, 0.0f));
-
+		SetSunGradient(m_SunGradientValues);
+		SetAmbientGradient(m_AmbientGradientValues);
+		SetFogGradient(m_FogGradientValues);
+	
 		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
@@ -201,8 +378,18 @@ namespace GASS
 
 	void EnvironmentManagerComponent::UpdateEnvironmentLighting()
 	{
-		Ogre::Vector3 lightDir = m_SkyX->getAtmosphereManager()->getSunDirection();
+		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
+		if(!skyx)
+			return;
+
+		if(skyx->GetSkyX() == NULL)
+			return;
+		
+		Ogre::Vector3 lightDir = skyx->GetSkyX()->getAtmosphereManager()->getSunDirection();
 		float point = (-lightDir.y + 1.0f) / 2.0f;
+
+		
+		
 
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
@@ -223,7 +410,7 @@ namespace GASS
 
 		Ogre::Vector3 sunPos(0,0,0);
 		if(m_CurrentCamera)
-			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*m_SkyX->getMeshManager()->getSkydomeRadius()*0.1;
+			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*skyx->GetSkyX()->getMeshManager()->getSkydomeRadius()*0.1;
 		if(m_Hydrax)
 			m_Hydrax->setSunPosition(sunPos);
 
@@ -231,12 +418,26 @@ namespace GASS
 		m_SunLight->setDirection(lightDir);
 
 		Ogre::Vector3 sunCol = m_SunGradient.getColor(point);
-		m_SunLight->setSpecularColour(sunCol.x, sunCol.y, sunCol.z);
+		m_SunLight->setSpecularColour(sunCol.x*m_SpecularWeight, sunCol.y*m_SpecularWeight, sunCol.z*m_SpecularWeight);
 		Ogre::Vector3 ambientCol = m_AmbientGradient.getColor(point);
-		m_SunLight->setDiffuseColour(ambientCol.x, ambientCol.y, ambientCol.z);
+		m_SunLight->setDiffuseColour(sunCol.x, sunCol.y, sunCol.z);
+		sm->setAmbientLight(Ogre::ColourValue(ambientCol.x, ambientCol.y, ambientCol.z,1));
+
+
+		Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
+		Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
+		sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
 
 		if(m_Hydrax)
 			m_Hydrax->setSunColor(sunCol);
+
+
+		std::stringstream ss;
+		ss << "Gradient value:" << point << "\n";
+		ss << "Sun color :" << sunCol.x << sunCol.y << sunCol.z << "\n";
+		ss << "Ambient color :" << ambientCol.x << ambientCol.y << ambientCol.z << "\n";
+		ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));
 	}
 
 }

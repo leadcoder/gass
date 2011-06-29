@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "SkyXComponent.h"
+#include "SkyXVolumeCloudComponent.h"
+#include "SkyXCloudLayerComponent.h"
 
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -29,7 +31,6 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include <Ogre.h>
-
 
 namespace GASS
 {
@@ -259,6 +260,23 @@ namespace GASS
 		// Create the sky
 		m_SkyX->create();
 		//ocam->setFarClipDistance(save_clip);
+
+		//create clouds
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			SkyXCloudLayerComponentPtr layer = boost::shared_dynamic_cast<SkyXCloudLayerComponent>(components[i]);
+			layer->CreateLayer();
+		}
+
+		components.clear();
+		GetSceneObject()->GetComponentsByClass(components, "SkyXVolumeCloudComponent", true);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			SkyXVolumeCloudComponentPtr volume = boost::shared_dynamic_cast<SkyXVolumeCloudComponent>(components[i]);
+			volume->CreateVolume();
+		}
 	}
 
 	bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)

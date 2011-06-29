@@ -23,6 +23,7 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreLight.h>
+#include <OgreRoot.h>
 
 
 #include "Core/Math/Quaternion.h"
@@ -73,6 +74,7 @@ namespace GASS
 	void OgreLightComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnUnload,UnloadComponentsMessage,1));
 	}
 
 
@@ -161,4 +163,12 @@ namespace GASS
 		//m_OgreLight->setDirection(0,1,0);
 
 	}
+
+	void OgreLightComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		if(sm && m_OgreLight)
+			sm->destroyLight(m_OgreLight);
+	}
+
 }

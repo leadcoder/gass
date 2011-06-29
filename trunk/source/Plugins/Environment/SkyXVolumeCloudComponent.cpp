@@ -158,7 +158,7 @@ namespace GASS
 	{
 		m_Height = value;
 		if(m_CloudManager)
-			Load();	//reload
+			CreateVolume();	//reload
 	}
 
 	Vec2 SkyXVolumeCloudComponent::GetHeight() const 
@@ -182,7 +182,7 @@ namespace GASS
 	{
 		m_Radius = value;
 		if(m_CloudManager)
-			Load();	 //reload
+			CreateVolume();	 //reload
 		//	m_CloudManager->getVClouds()->setRadius(value);
 	}
 
@@ -204,14 +204,10 @@ namespace GASS
 
 	void SkyXVolumeCloudComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		//Get Skyx component
-		Load();
-
-
 
 	}
 
-	void SkyXVolumeCloudComponent::Load()
+	void SkyXVolumeCloudComponent::CreateVolume()
 	{
 		//Get Skyx component
 		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();

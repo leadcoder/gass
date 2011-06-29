@@ -37,6 +37,7 @@ namespace GASS
 		~SkyXCloudLayerComponent(void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void CreateLayer();
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
@@ -59,11 +60,13 @@ namespace GASS
 		void SetHeight(const Float &value);
 		Float GetHeight() const ;
 		void UpdateOptions();
+		
 	private:
 		SkyX::CloudLayer* m_CloudLayer;
 		SkyX::CloudLayer::Options m_Options;
 
 	};
+	typedef boost::shared_ptr<SkyXCloudLayerComponent> SkyXCloudLayerComponentPtr; 
 }
 
 #endif

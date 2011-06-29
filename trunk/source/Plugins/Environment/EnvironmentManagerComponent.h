@@ -51,15 +51,45 @@ namespace GASS
 		std::vector<Vec3>  GetWaterGradient() const ;
 		void SetWaterGradientWeights(const std::vector<float> &value);
 		std::vector<float>  GetWaterGradientWeights() const;
+
+		void SetSunGradient(const std::vector<Vec3> &value);
+		std::vector<Vec3>  GetSunGradient() const ;
+		void SetSunGradientWeights(const std::vector<float> &value);
+		std::vector<float>  GetSunGradientWeights() const;
+
+		void SetAmbientGradient(const std::vector<Vec3> &value);
+		std::vector<Vec3>  GetAmbientGradient() const ;
+		void SetAmbientGradientWeights(const std::vector<float> &value);
+		std::vector<float>  GetAmbientGradientWeights() const;
+
+		void SetFogGradient(const std::vector<Vec3> &value);
+		std::vector<Vec3>  GetFogGradient() const ;
+		void SetFogGradientWeights(const std::vector<float> &value);
+		std::vector<float>  GetFogGradientWeights() const;
+		
+		float  GetSpecularWeight() const {return m_SpecularWeight;}
+		void SetSpecularWeight(float value) {m_SpecularWeight = value;}
 	private:
 		Ogre::Light *m_SunLight;
-		SkyX::ColorGradient m_WaterGradient;
+		
 		std::vector<Vec3> m_WaterGradientValues;
+		std::vector<Vec3> m_SunGradientValues;
+		std::vector<Vec3> m_AmbientGradientValues;
+		std::vector<Vec3> m_FogGradientValues;
+		
 		std::vector<float> m_WaterGradientWeights;
+		std::vector<float> m_SunGradientWeights;
+		std::vector<float> m_AmbientGradientWeights;
+		std::vector<float> m_FogGradientWeights;
+
+		float m_SpecularWeight;
+
+		SkyX::ColorGradient m_WaterGradient;
 		SkyX::ColorGradient m_SunGradient; 
 		SkyX::ColorGradient m_AmbientGradient;
+		SkyX::ColorGradient m_FogGradient;
+
 		Hydrax::Hydrax *m_Hydrax;
-		SkyX::SkyX *m_SkyX;
 		Ogre::RenderTarget* m_Target;
 		Ogre::Camera * m_CurrentCamera;
 	};
