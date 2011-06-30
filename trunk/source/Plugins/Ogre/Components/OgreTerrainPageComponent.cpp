@@ -254,7 +254,7 @@ namespace GASS
 				if(m_DiffuseLayer2 != "")
 					SetDiffuseLayer2(m_DiffuseLayer2);
 
-				if(m_NormalLayer1 != "")
+				if(m_NormalLayer2 != "")
 					SetNormalLayer2(m_NormalLayer2);
 
 				if(m_TilingLayer2)
@@ -264,7 +264,9 @@ namespace GASS
 					SetDiffuseLayer3(m_DiffuseLayer3);
 
 				if(m_NormalLayer3 != "")
+				{
 					SetNormalLayer3(m_NormalLayer3);
+				}
 
 				if(m_TilingLayer3)
 					SetTilingLayer3(m_TilingLayer3);
@@ -277,9 +279,7 @@ namespace GASS
 
 				if(m_TilingLayer4)
 					SetTilingLayer4(m_TilingLayer4);
-
 				
-
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
 				//std::cout << "bb size:" << m_Terrain->getAABB().getMaximum().x <<" "<< m_Terrain->getAABB().getMaximum().y <<" " << m_Terrain->getAABB().getMaximum().z << "\n";

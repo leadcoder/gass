@@ -555,7 +555,7 @@ namespace GASS
 	void OgreTerrainGroupComponent::OnRoadMessage(RoadMessagePtr message)
 	{
 		// figure out which terrains this affects
-		Ogre::Real brush_size = std::max(message->GetFlattenWidth(),message->GetPaintWidth());
+		Ogre::Real brush_size = (std::max)(message->GetFlattenWidth(),message->GetPaintWidth());
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();
 		for(size_t i = 0; i < rwps.size()-1; i++)
 		{
@@ -596,10 +596,10 @@ namespace GASS
 		long start_y = ts_start.y  * terrainSize;
 		long end_x = ts_end.x * terrainSize;
 		long end_y= ts_end.y * terrainSize;
-		/*startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)terrainSize);
-		endy = std::min(endy, (long)terrainSize);
+		/*startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)terrainSize);
+		endy = (std::min)(endy, (long)terrainSize);
 		*/
 
 
@@ -702,10 +702,10 @@ namespace GASS
 		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
 		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
 		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)terrainSize);
-		endy = std::min(endy, (long)terrainSize);
+		startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)terrainSize);
+		endy = (std::min)(endy, (long)terrainSize);
 		float newheight = centrepos.y;
 		for (long y = starty; y <= endy; ++y)
 		{
@@ -715,9 +715,9 @@ namespace GASS
 				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
 
 				Ogre::Real dist = Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist);
-				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius)));
+				Ogre::Real weight = (std::min)((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius)));
 
-				//Ogre::Real weight = std::min((Ogre::Real)1.0, 
+				//Ogre::Real weight = (std::min)((Ogre::Real)1.0, 
 				//	(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
 				if( weight < 0) weight = 0;
 				weight = 1.0 - (weight * weight);
@@ -751,10 +751,10 @@ namespace GASS
 		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
 		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
 		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)terrainSize);
-		endy = std::min(endy, (long)terrainSize);
+		startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)terrainSize);
+		endy = (std::min)(endy, (long)terrainSize);
 		//Ogre::Real inner_radius = brush_size_terrain_space*0.5*0.7;
 		for (long y = starty; y <= endy; ++y)
 		{
@@ -763,7 +763,7 @@ namespace GASS
 				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
 				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
 
-				Ogre::Real weight = std::min((Ogre::Real)1.0, 
+				Ogre::Real weight = (std::min)((Ogre::Real)1.0, 
 					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
 				if( weight < 0) weight = 0;
 				weight = 1.0 - (weight * weight);
@@ -789,10 +789,10 @@ namespace GASS
 		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
 		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
 		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)terrainSize);
-		endy = std::min(endy, (long)terrainSize);
+		startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)terrainSize);
+		endy = (std::min)(endy, (long)terrainSize);
 
 		long count = 0;
 		for (long y = starty; y <= endy; ++y)
@@ -820,10 +820,10 @@ namespace GASS
 		long starty = (tsPos.y - brush_size_terrain_space) * terrainSize;
 		long endx = (tsPos.x + brush_size_terrain_space) * terrainSize;
 		long endy= (tsPos.y + brush_size_terrain_space) * terrainSize;
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)terrainSize);
-		endy = std::min(endy, (long)terrainSize);
+		startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)terrainSize);
+		endy = (std::min)(endy, (long)terrainSize);
 
 		for (long y = starty; y <= endy; ++y)
 		{
@@ -832,7 +832,7 @@ namespace GASS
 				Ogre::Real tsXdist = (x / terrainSize) - tsPos.x;
 				Ogre::Real tsYdist = (y / terrainSize)  - tsPos.y;
 
-				Ogre::Real weight = std::min((Ogre::Real)1.0, 
+				Ogre::Real weight = (std::min)((Ogre::Real)1.0, 
 					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
 				if( weight < 0) weight = 0;
 				weight = 1.0 - (weight * weight);
@@ -857,10 +857,10 @@ namespace GASS
 		long starty = (tsPos.y - brush_size_terrain_space) * imgSize;
 		long endx = (tsPos.x + brush_size_terrain_space) * imgSize;
 		long endy= (tsPos.y + brush_size_terrain_space) * imgSize;
-		startx = std::max(startx, 0L);
-		starty = std::max(starty, 0L);
-		endx = std::min(endx, (long)imgSize);
-		endy = std::min(endy, (long)imgSize);
+		startx = (std::max)(startx, 0L);
+		starty = (std::max)(starty, 0L);
+		endx = (std::min)(endx, (long)imgSize);
+		endy = (std::min)(endy, (long)imgSize);
 		for (long y = starty; y <= endy; ++y)
 		{
 			for (long x = startx; x <= endx; ++x)
@@ -869,7 +869,7 @@ namespace GASS
 				Ogre::Real tsYdist = (y / imgSize)  - tsPos.y;
 
 
-				Ogre::Real weight = std::min((Ogre::Real)1.0, 
+				Ogre::Real weight = (std::min)((Ogre::Real)1.0, 
 					(Ogre::Math::Sqrt(tsYdist * tsYdist + tsXdist * tsXdist)- brush_inner_radius )/ Ogre::Real(0.5 * brush_size_terrain_space - brush_inner_radius));
 
 

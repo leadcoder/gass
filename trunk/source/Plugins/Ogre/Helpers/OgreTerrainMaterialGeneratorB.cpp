@@ -1230,12 +1230,12 @@ namespace Ogre
 			if (terrain->getGlobalColourMapEnabled() && prof->isGlobalColourMapEnabled())
 			{
 				// sample colour map and apply to diffuse
-				// sample colour map and apply to diffuse
 				if(prof->GetFadeDetail())
 				{
 					outStream << "  float eye_dist = length(eyePosObjSpace-position.xyz);\n";
 					outStream << "  float fade_val = saturate((eye_dist -" << prof->GetDetailFadeDist() << ") / " << prof->GetDetailFadeDist() << ");\n";
-					outStream << "  float4 globalColour = tex2D(globalColourMap, uv);\n";
+					outStream << "  float4 globalColour = tex2D(globalColourMap, uv) * 0.5;\n";
+					
 					if(prof->GetFadeOutColor())
 						outStream << "	diffuse = lerp(lerp(diffuse,globalColour,"<< prof->GetNearColorWeight() << "), globalColour.xyz, fade_val);\n";
 					else
