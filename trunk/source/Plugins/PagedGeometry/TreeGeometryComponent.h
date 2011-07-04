@@ -220,6 +220,17 @@ namespace GASS
 			m_ImposterAlphaRejectionValue =value;
 		}
 
+		int GetImposterResolution() const
+		{
+			return m_ImposterResolution;
+		}
+
+		void SetImposterResolution(int value)
+		{
+			m_ImposterResolution=value;
+		}
+		
+
 		void OnPaint(GrassPaintMessagePtr message);
 		
 
@@ -244,6 +255,7 @@ namespace GASS
 		float m_ImposterAlphaRejectionValue;
 		std::string m_MeshFileName;
 		static ITerrainComponent *m_Terrain;
+		int m_ImposterResolution;
 
 		TreeLoader2D *m_TreeLoader2d;
 		TreeLoader3D *m_TreeLoader3d;

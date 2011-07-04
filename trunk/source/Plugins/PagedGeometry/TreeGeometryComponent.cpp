@@ -68,6 +68,7 @@ namespace GASS
 		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight);
 		RegisterProperty<float>("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize);
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue);
+		RegisterProperty<int>("ImposterResolution", &TreeGeometryComponent::GetImposterResolution, &TreeGeometryComponent::SetImposterResolution);
 	}
 
 
@@ -85,7 +86,8 @@ namespace GASS
 		m_ImposterFadeDist(0),
 		m_ImposterAlphaRejectionValue(50),
 		m_CreateShadowMap(false),
-		m_TreeEntity(NULL)
+		m_TreeEntity(NULL),
+		m_ImposterResolution(128)
 	{
 		m_RandomTable = new RandomTable();
 	}
@@ -117,7 +119,9 @@ namespace GASS
 
 	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		ImpostorPage::setImpostorColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
+		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
+		ImpostorPage::setImpostorResolution(m_ImposterResolution);
+		//ImpostorPage::setImpostorColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 
 		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
 		//assert(ogsm);
@@ -167,7 +171,8 @@ namespace GASS
 
 
 
-		ImpostorPage::setImpostorColor(Ogre::ColourValue(0,0,0,1));
+		//ImpostorPage::setImpostorColor(Ogre::ColourValue(0,0,0,1));
+		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0,0,0,1));
 		assert(m_PagedGeometry);
 		m_PagedGeometry->setImposterAlphaRejectValue(m_ImposterAlphaRejectionValue);
 		if(m_MeshDist > 0)

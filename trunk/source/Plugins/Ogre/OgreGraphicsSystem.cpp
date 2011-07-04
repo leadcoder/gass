@@ -72,36 +72,6 @@ namespace GASS
 
 	}
 
-
-
-
-	//Create custom load
-	/*void OgreGraphicsSystem::Load(TiXmlElement *elem)
-	{
-	TiXmlElement *attrib = elem->FirstChildElement();
-	while(attrib)
-	{
-	std::string attrib_name = attrib->Value();
-
-	if(attrib_name == "AddViewport")
-	{
-	ViewportData vpd;
-	rl.m_SMName = attrib->Attribute("SceneManager");
-	rl.m_WindowName = attrib->Attribute("Window");
-	rl.m_LeftX = atof(attrib->Attribute("LeftX"));
-	rl.m_RightX = atof(attrib->Attribute("RightX"));
-	rl.m_TopY = atof(attrib->Attribute("TopY"));
-	rl.m_BottomY = atof(attrib->Attribute("BottomY"));
-	}
-	else
-	{
-	std::string attrib_val = attrib->FirstAttribute()->Value();
-	SetProperty(attrib_name,attrib_val);
-	}
-	attrib  = attrib->NextSiblingElement();
-	}
-	}*/
-
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
 	{
 
@@ -150,16 +120,6 @@ namespace GASS
 		m_DebugTextBox->Print(debug_text.c_str());
 		m_DebugTextBox->SetActive(true);
 	}
-
-	/*void OgreGraphicsSystem::OnCreateRenderWindow(CreateRenderWindowMessagePtr message)
-	{
-		std::string name = message->GetName();
-		int height = message->GetHeight();
-		int width = message->GetWidth();
-		int handel = message->GetHandle();
-		int main_handel = message->GetMainHandle();
-		CreateRenderWindow(name,width,height,handel,main_handel);
-	}*/
 
 	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
 	{

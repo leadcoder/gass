@@ -42,7 +42,7 @@ namespace GASS
 		{
 			const std::string attrib_name = attrib->Value();
 			const std::string attrib_val = attrib->FirstAttribute()->Value();
-			if (SetPropertyByString(attrib_name,attrib_val))
+			if (!SetPropertyByString(attrib_name,attrib_val))
 				Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\tproperty not found: %s", attrib->GetDocument()->Value(), attrib_name.c_str());
 
 			attrib  = attrib->NextSiblingElement();
@@ -208,7 +208,7 @@ namespace GASS
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					AbstractProperty * prop = (*iter);
-					if (dest->SetPropertyByString(prop->GetName(),prop->GetValueAsString(this)))
+					if (!dest->SetPropertyByString(prop->GetName(),prop->GetValueAsString(this)))
 						Log::Warning("BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
 					iter++;
 				}

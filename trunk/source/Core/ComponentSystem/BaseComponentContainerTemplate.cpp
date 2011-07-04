@@ -295,7 +295,7 @@ namespace GASS
 			{
 				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
 				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
-				if (SetPropertyByString(data_name,attrib_val))
+				if (!SetPropertyByString(data_name,attrib_val))
 					Log::Warning("BaseComponentContainerTemplate::LoadXML() - Filename: %s\tproperty not found: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
@@ -316,7 +316,7 @@ namespace GASS
 		}
 		else
 		{
-			Log::Warning("Failed to create component:%s",comp_type.c_str());
+			Log::Warning("Failed to create component:%s in ´%s",comp_type.c_str(), comp_template->GetDocument()->Value());
 		}
 		return comp;
 	}
