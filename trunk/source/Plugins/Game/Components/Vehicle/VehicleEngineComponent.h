@@ -115,7 +115,9 @@ namespace GASS
 		std::vector<float> GetGearRatio() const;
 		void SetSmoothRPMOutput(const bool &value);
 		bool GetSmoothRPMOutput() const;
-
+		bool GetDebug() const {return m_Debug;}
+		void SetDebug(bool value) {m_Debug =value;}
+		
 		
 
 		//Update clutch and gear selection
@@ -150,7 +152,7 @@ namespace GASS
 		float m_MinRPM;
 		float m_MaxRPM;
 		float m_WheelRPM;
-		float m_VehicleEngineComponentRPM;
+		float m_VehicleEngineRPM;
 		float m_ThrottleAccel;
 		
 		float m_RPM;
@@ -194,6 +196,7 @@ namespace GASS
 		Vec3 m_AngularVelocity;
 		PIDControl m_SteerCtrl;
 		bool m_Initialized;
+		bool m_Debug;
 		EngineType m_EngineType;
 
 	};

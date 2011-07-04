@@ -67,7 +67,8 @@ namespace GASS
 	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false),
 		m_VehicleSpeed(0),
 		m_Invert(false),
-		m_ConstantTorque(0)
+		m_ConstantTorque(0),
+		m_Debug(false)
 	{
 		m_RPM = 0;
 		m_AutoShiftStart = 0;
@@ -75,6 +76,7 @@ namespace GASS
 		m_TurnForce = 10;
 		m_MaxTurnForce = 200;
 		m_SmoothRPMOutput = true;
+		
 
 
 		m_InputToThrottle = "Throttle";
@@ -107,7 +109,7 @@ namespace GASS
 		m_CurrentTime = 0;
 		m_DesiredThrottle = 0;
 		m_DesiredSteer = 0;
-		m_VehicleEngineComponentRPM = 0;
+		m_VehicleEngineRPM = 0;
 
 		m_Power = 0.2;
 		m_SteerCtrl = PIDControl(1,1,1);
@@ -140,6 +142,7 @@ namespace GASS
 		RegisterProperty<float>("TurnForce", &VehicleEngineComponent::GetTurnForce, &VehicleEngineComponent::SetTurnForce);
 		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio);
 		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput);
+		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug);
 	}
 
 	void VehicleEngineComponent::OnCreate()
@@ -403,15 +406,15 @@ namespace GASS
 		float throttle = m_DesiredThrottle;
 
 		//select gear if in automatic otherwise only handle clutch timing
-		UpdateGearShift(throttle, m_VehicleEngineComponentRPM,m_CurrentTime);
+		UpdateGearShift(throttle, m_VehicleEngineRPM,m_CurrentTime);
 		float brake_q = GetBreakTorq(throttle);
 		//clamp throttle 0-1 and zero out if we want to break
 		throttle = ClampThrottle(throttle);
 		UpdateDriveTrain(delta,throttle, m_VehicleSpeed, brake_q);
 
 		//clamp rpm
-		if(m_VehicleEngineComponentRPM > m_MaxRPM) m_VehicleEngineComponentRPM = m_MaxRPM;
-		if(m_VehicleEngineComponentRPM < m_MinRPM) m_VehicleEngineComponentRPM = m_MinRPM;
+		if(m_VehicleEngineRPM > m_MaxRPM) m_VehicleEngineRPM = m_MaxRPM;
+		if(m_VehicleEngineRPM < m_MinRPM) m_VehicleEngineRPM = m_MinRPM;
 
 		//TODO: Simulate hydrostatic transmission instead
 		if(m_EngineType == ET_TANK)
@@ -422,8 +425,23 @@ namespace GASS
 		UpdateSound(delta);
 		UpdateExhaustFumes(delta);
 
+
+
+		if(m_Debug)
+		{
+			std::stringstream ss;
+			ss << "Speed(m/s): "<< m_VehicleSpeed << "\n";
+			ss << "Gear: "<< m_Gear<< "\n";
+			ss << "Throttle: "<< throttle<< "\n";
+			ss << "RPM: "<< m_VehicleEngineRPM << "\n";
+			ss << "Clutch: "<< m_Clutch << "\n";
+			std::string engine_data = ss.str();
+			MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		}
+
 		/*char dtxt[256];
-		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineComponentRPM,m_Clutch);
+		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineRPM,m_Clutch);
 		std::string engine_data = dtxt;
 		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
@@ -463,13 +481,21 @@ namespace GASS
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce);
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
 
+
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
-		/*char dtxt[256];
-		sprintf(dtxt,"Speed(km/h): %f\n Hull ang vel:%f %f %f\n Q:%f \n DesiredSteer vel %f",m_VehicleSpeed*3.6f, m_AngularVelocity.x,m_AngularVelocity.y,m_AngularVelocity.z,turn_torque,-m_DesiredSteer);
-		std::string engine_data = dtxt;
-		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
+		
+		/*if(m_Debug)
+		{
+			std::stringstream ss;
+			ss << "Speed(m/s): "<< m_VehicleSpeed << "Hull angle velocity:" << m_AngularVelocity << "\n Desired steer velocity" << m_DesiredSteer;
+			//char dtxt[256];
+			//sprintf(dtxt,"Speed(km/h): %f\n Hull ang vel:%f %f %f\n Q:%f \n DesiredSteer vel %f",m_VehicleSpeed*3.6f, m_AngularVelocity.x,m_AngularVelocity.y,m_AngularVelocity.z,turn_torque,-m_DesiredSteer);
+			//std::string engine_data = dtxt;
+			std::string engine_data = ss.str();
+			MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		}*/
 	}
 
 	float VehicleEngineComponent::DampThrottle(float delta, float desired_throttle,float current_throttle, float throttle_accel)
@@ -555,7 +581,7 @@ namespace GASS
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 
 		//max power at half of max_rpm
-		float angle= (m_VehicleEngineComponentRPM / m_MaxRPM)*MY_PI;
+		float angle= (m_VehicleEngineRPM / m_MaxRPM)*MY_PI;
 		float current_engine_power = sin(angle)*m_Power;
 
 		float wheel_torque;
@@ -610,10 +636,10 @@ namespace GASS
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 		//give feedback to engine, when clutch down throttle is directly mapped to rpm, this is not correct and alternatives are to be tested
 		//this could be ok if we ha separate clutch input
-		//m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
+		//m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
 
 		//give feedback to engine, when clutch down engine rmp is decreased by 1000rpm each second...throttle is released during shifting
-		m_VehicleEngineComponentRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineComponentRPM-1000*delta);
+		m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineRPM-1000*delta);
 
 
 		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
@@ -628,7 +654,7 @@ namespace GASS
 		}
 		else
 		{
-			m_RPM = m_VehicleEngineComponentRPM;
+			m_RPM = m_VehicleEngineRPM;
 		}
 	}
 
