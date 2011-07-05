@@ -914,10 +914,6 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TerrainPaintMessage> TerrainPaintMessagePtr;
 
-
-
-
-
 	class TerrainLayerMessage : public BaseMessage
 	{
 	public:
@@ -964,5 +960,34 @@ namespace GASS
 		float m_PaintIntensity;
 	};
 	typedef boost::shared_ptr<RoadMessage> RoadMessagePtr;
-    
+
+
+	/**
+	Change time of day, this message can be used to change current time in
+	scenarios that support dynamic lighting
+	*/
+
+	class TimeOfDayMessage : public BaseMessage
+	{
+	public:
+		TimeOfDayMessage(double time, double sun_set,double sun_rise, double speed, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay),
+			  m_Time(time),
+			  m_Speed(speed),
+			  m_SunRise(sun_rise),
+			  m_SunSet(sun_set)
+		  {
+
+		  }
+		  double GetTime() const {return m_Time;}
+		  double GetSunSet() const {return m_SunSet;}
+		  double GetSunRise() const {return m_SunRise;}
+		  double GetSpeed() const {return m_Speed;}
+	private:
+		double m_Time;
+		double m_Speed;
+		double m_SunRise;
+		double m_SunSet;
+	};
+	typedef boost::shared_ptr<TimeOfDayMessage> TimeOfDayMessagePtr;
 }

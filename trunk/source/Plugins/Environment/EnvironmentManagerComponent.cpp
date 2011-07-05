@@ -119,6 +119,7 @@ namespace GASS
 		RegisterVectorProperty<Vec3>("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient);
 		RegisterVectorProperty<float>("AmbientGradientWeights", &EnvironmentManagerComponent::GetAmbientGradientWeights, &EnvironmentManagerComponent::SetAmbientGradientWeights);
 		RegisterVectorProperty<Vec3>("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient);
+		//RegisterVectorProperty<float>("FogDistance", &EnvironmentManagerComponent::GetFogDistance, &EnvironmentManagerComponent::SetFogDistance);
 		RegisterVectorProperty<float>("FogGradientWeights", &EnvironmentManagerComponent::GetFogGradientWeights, &EnvironmentManagerComponent::SetFogGradientWeights);
 		RegisterProperty<float>("SpecularWeight", &EnvironmentManagerComponent::GetSpecularWeight, &EnvironmentManagerComponent::SetSpecularWeight);
 	}
@@ -424,9 +425,12 @@ namespace GASS
 		sm->setAmbientLight(Ogre::ColourValue(ambientCol.x, ambientCol.y, ambientCol.z,1));
 
 
-		Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
-		Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
-		sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
+		if(m_FogGradientValues.size() > 0)
+		{
+			Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
+			Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
+			sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
+		}
 
 		if(m_Hydrax)
 			m_Hydrax->setSunColor(sunCol);
@@ -436,7 +440,7 @@ namespace GASS
 		ss << "Gradient value:" << point << "\n";
 		ss << "Sun color :" << sunCol.x << sunCol.y << sunCol.z << "\n";
 		ss << "Ambient color :" << ambientCol.x << ambientCol.y << ambientCol.z << "\n";
-		ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
+		//ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));
 	}
 

@@ -34,7 +34,7 @@
 
 namespace GASS
 {
-	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), m_MoonSize(1),m_SkyX(NULL), m_Radius(5000),m_Target(NULL)
+	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), m_MoonSize(1),m_SkyX(NULL), m_Radius(5000),m_Target(NULL), m_SkyDomeFog(false)
 	{
 				
 	}
@@ -57,6 +57,7 @@ namespace GASS
 		RegisterProperty<Float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier);
 		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples);
 		RegisterProperty<Float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize);
+		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog);
 	}
 
 	void SkyXComponent::SetMoonSize(const Float &value)
@@ -183,6 +184,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
 	}
 
 	void SkyXComponent::UpdateOptions()
@@ -241,6 +243,7 @@ namespace GASS
 		// No smooth fading
 		m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
 		
+		
 		// A little change to default atmosphere settings :)
 		SkyX::AtmosphereManager::Options atOpt = m_SkyX->getAtmosphereManager()->getOptions();
 		atOpt.RayleighMultiplier = 0.003075f;
@@ -259,6 +262,20 @@ namespace GASS
 
 		// Create the sky
 		m_SkyX->create();
+
+		Ogre::String mat_name = m_SkyX->getMeshManager()->getMaterialName();
+		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(mat_name);
+
+		if(!mat.isNull() && mat->getNumTechniques() > 0)
+		{
+			Ogre::Technique * technique = mat->getTechnique(0);
+			if(technique && technique->getNumPasses() > 0)
+			{
+				Ogre::Pass* pass = technique->getPass(0);
+				if(pass)
+					pass->setFog(m_SkyDomeFog);
+			}
+		}
 		//ocam->setFarClipDistance(save_clip);
 
 		//create clouds
@@ -291,6 +308,12 @@ namespace GASS
 
 		prev_time = c_time;
 		return true;
+	}
+
+	void SkyXComponent::OnTimeOfDayMessage(TimeOfDayMessagePtr message)
+	{
+		SetTimeMultiplier(message->GetSpeed());
+		SetTime(Vec3(message->GetTime(),message->GetSunRise(),message->GetSunSet()));
 	}
 }
 

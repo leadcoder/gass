@@ -43,7 +43,7 @@ namespace GASS
 	{
 	friend class ODEPhysicsSceneManager;
 	public:
-		enum PhysicsSceneNodeType
+		enum PhysicsGeometryType
 		{
 			PGT_MESH,
 			PGT_BOX,
@@ -86,8 +86,8 @@ namespace GASS
 		Vec3 GetOffset() const {return m_Offset;}
 		void SetSlip(float value){m_Friction = value;}
 		float GetSlip() const {return m_Friction;}
-		void SetSceneNodeType(const std::string &geom_type);
-		std::string GetSceneNodeType() const;
+		void SetGeometryType(const std::string &geom_type);
+		std::string GetGeometryType() const;
 		dGeomID CreateTerrain(IGeometryComponent* geom, dSpaceID space);
 
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
@@ -120,7 +120,7 @@ namespace GASS
 		Vec3 m_BBoxSize; // bounding box start size
 		float m_BSphereSize; // bounding sphere start size
 		
-		PhysicsSceneNodeType m_SceneNodeType;
+		PhysicsGeometryType m_PhysicsGeometryType;
 		std::string m_GeometryTemplate;
 		std::string m_AddToBody;
 		Vec3 m_Offset;

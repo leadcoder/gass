@@ -45,6 +45,7 @@ namespace GASS
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnTimeOfDayMessage(TimeOfDayMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void SetInnerRadius(const Float &value);
 		Float GetInnerRadius() const;
@@ -70,6 +71,9 @@ namespace GASS
 		Vec3 GetTime() const;
 
 		void UpdateOptions();
+
+		bool GetSkyDomeFog() const {return m_SkyDomeFog;}
+		void SetSkyDomeFog(bool value) {m_SkyDomeFog=value;}
 	private:
 		void Init(Ogre::Camera* ocam);
 		Ogre::RenderTarget* m_Target;
@@ -78,6 +82,7 @@ namespace GASS
 		Float m_MoonSize;
 		SkyX::AtmosphereManager::Options m_SkyXOptions;
 		Float m_Radius;
+		bool m_SkyDomeFog;
 	};
 	typedef boost::shared_ptr<SkyXComponent> SkyXComponentPtr;
 }

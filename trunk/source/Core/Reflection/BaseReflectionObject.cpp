@@ -179,8 +179,6 @@ namespace GASS
 		return false;
 	}
 
-
-
 	void BaseReflectionObject::SetProperties(BaseReflectionObjectPtr dest) const
 	{
 		RTTI* pRTTI = GetRTTI();
@@ -208,8 +206,11 @@ namespace GASS
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					AbstractProperty * prop = (*iter);
-					if (!dest->SetPropertyByString(prop->GetName(),prop->GetValueAsString(this)))
-						Log::Warning("BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
+					bool ret = dest->SetPropertyByString(prop->GetName(),prop->GetValueAsString(this));
+					//Here we want to copy all common properties from one object to another 
+					//(typically from template to instance), so ignore if some properties don't exist in destination object
+					//if (!ret)
+					//	Log::Warning("BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
 					iter++;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();

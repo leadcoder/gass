@@ -712,8 +712,14 @@ namespace GASS
 			//std::cout << "size:" << m_TerrainGroup->getTerrainWorldSize();
 			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
 			Vec3 pos = GetPosition();
-			min = Vec3(pos.x -size,0, pos.z -size);
-			max = Vec3(pos.x +size,0, pos.z +size);
+			min = Vec3(pos.x -size,-100, pos.z -size);
+			max = Vec3(pos.x +size,1000, pos.z +size);
+
+			AABox aabox = Convert::ToGASS(m_Terrain->getAABB());
+
+			min.y = aabox.m_Min.y;
+			max.y = aabox.m_Max.y;
+						
 
 		}
 	}
