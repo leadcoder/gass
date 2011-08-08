@@ -55,7 +55,7 @@ namespace GASS
 		each represented by it's own scenario scene.
 	*/
 
-	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>, public boost::enable_shared_from_this<ScenarioScene>
+	class GASSExport ScenarioScene : public Reflection<ScenarioScene, BaseReflectionObject>, public boost::enable_shared_from_this<ScenarioScene>, public IMessageListener
 	{
 	public:
 		// Default priorities for component loading

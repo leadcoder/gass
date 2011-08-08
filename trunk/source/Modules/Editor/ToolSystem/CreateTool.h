@@ -11,7 +11,7 @@ namespace GASS
 	class SceneObject;
 	class MouseToolController;
 
-	class EditorModuleExport CreateTool : public IMouseTool
+	class EditorModuleExport CreateTool :  public IMouseTool
 	{
 	public:
 		CreateTool(MouseToolController* controller);

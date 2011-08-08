@@ -15,7 +15,7 @@ namespace GASS
 	typedef boost::shared_ptr<IMessage> MessagePtr;
 
 
-	class EditorModuleExport MoveTool : public IMouseTool
+	class EditorModuleExport MoveTool : public IMouseTool 
 	{
 	public:
 		MoveTool(MouseToolController* controller);

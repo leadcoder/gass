@@ -25,7 +25,7 @@
 #include "Sim/Scenario/Scene/ISceneManager.h"
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/Serialize/IXMLSerialize.h"
-
+#include "Core/MessageSystem/IMessage.h"
 
 
 namespace GASS
@@ -41,7 +41,7 @@ namespace GASS
 		impossible, so we keep it public for now.
 	*/
 
-	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public boost::enable_shared_from_this<BaseSceneManager>, public ISceneManager, public IXMLSerialize
+	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public boost::enable_shared_from_this<BaseSceneManager>, public ISceneManager, public IXMLSerialize, public IMessageListener
 	{
 	public:
 		BaseSceneManager();

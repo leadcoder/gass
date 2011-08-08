@@ -191,7 +191,7 @@ namespace GASS
 
 			// sync load since we want everything in place when we start
 			m_TerrainGroup->loadAllTerrains(true);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 
@@ -795,8 +795,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 		{
-			//m_Pos = Convert::ToGASS(m_Terrain->getPosition());
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

@@ -23,14 +23,14 @@
 
 #include "Sim/Common.h"
 #include "Core/ComponentSystem/BaseComponent.h"
-
+#include "Core/MessageSystem/IMessage.h"
 namespace GASS
 {
 	class SceneObject;
 	
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent>
+	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public boost::enable_shared_from_this<BaseSceneComponent>, public IMessageListener
 	{
 	public:
 		BaseSceneComponent();

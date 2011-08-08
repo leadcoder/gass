@@ -144,8 +144,7 @@ namespace GASS
 			m_WorldHeight = m_Scale.z * (nodes_per_side-1);
 			m_NodesPerSideAllPagesW = nodes_per_side;
 			m_NodesPerSideAllPagesH = nodes_per_side;
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
-
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

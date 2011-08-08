@@ -39,7 +39,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class VehicleWheel
+	class VehicleWheel :  public boost::enable_shared_from_this<VehicleWheel> ,public IMessageListener
 	{
 	public:
 		VehicleWheel(SceneObjectPtr  wheel);

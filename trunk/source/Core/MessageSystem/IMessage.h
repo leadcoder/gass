@@ -66,9 +66,18 @@ namespace GASS
 	};
 	class IMessageFunc;
 	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
-
 	typedef boost::shared_ptr<IMessage> MessagePtr;
 
+	class IMessageListener
+	{
+	public:
+		virtual ~IMessageListener(){};
+	};
+	typedef boost::shared_ptr<IMessageListener> MessageListenerPtr;
+	typedef boost::weak_ptr<IMessageListener> MessageListenerWeakPtr;
+
+
+	
 	/**
 
 		Message function interface that is used by the message manager.
@@ -94,7 +103,7 @@ namespace GASS
 		/*
 		This function should return a pointer to the object the class callback belongs to
 		*/
-		virtual void* GetObjectPtr() const = 0;
+		virtual MessageListenerPtr GetObjectPtr() const = 0;
 
 		/*
 		This function should return a pointer to the actual callback function
@@ -119,7 +128,7 @@ namespace GASS
 
 		}
 
-		MessageFunc(boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> func, void* object) : m_Func(func), m_Object(object)
+		MessageFunc(boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> func, MessageListenerPtr object) : m_Func(func), m_Object(object)
 		{
 
 		}
@@ -139,14 +148,16 @@ namespace GASS
 			boost::shared_ptr<MESSAGE_TYPE> typed_mess = boost::shared_static_cast<MESSAGE_TYPE>(message);
 			m_Func(typed_mess);
 		}
+
 		bool operator== (const IMessageFunc &func) const
 		{
-			return (func.GetObjectPtr() == m_Object) &&
+			return (func.GetObjectPtr() == GetObjectPtr()) &&
 				(m_Func.functor.func_ptr == func.GetFuncPtr());
 		}
-		void* GetObjectPtr() const
+
+		MessageListenerPtr GetObjectPtr() const
 		{
-			return m_Object;
+			return MessageListenerPtr(m_Object);
 		}
 
 		void* GetFuncPtr() const
@@ -154,13 +165,13 @@ namespace GASS
 			return (void*) m_Func.functor.func_ptr;
 		}
 
-		void* m_Object;
+		MessageListenerWeakPtr m_Object;
 		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
 	};
 
 	//Standard message function
 }
 
-#define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &FUNCTION, this, _1 ),this))
-#define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),this))
+#define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &FUNCTION, this, _1 ),shared_from_this()))
+#define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),shared_from_this()))
 #endif // #ifndef MESSAGE_HH

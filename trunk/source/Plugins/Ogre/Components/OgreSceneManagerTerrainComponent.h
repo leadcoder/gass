@@ -34,7 +34,7 @@ namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener, public boost::enable_shared_from_this<OgreSceneManagerTerrainComponent>
+	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
 	{
 	public:
 		OgreSceneManagerTerrainComponent();

@@ -24,7 +24,7 @@ namespace GASS
 	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
 
 
-	class EditorModuleExport MouseToolController 
+	class EditorModuleExport MouseToolController : public boost::enable_shared_from_this<MouseToolController>, public IMessageListener
 	{
 		friend class IMouseTool;
 	public:

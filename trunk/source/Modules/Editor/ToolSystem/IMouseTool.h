@@ -2,12 +2,14 @@
 
 #include "../EditorCommon.h"
 #include "CursorInfo.h"
+#include "Core/MessageSystem/IMessage.h"
+#include <boost/enable_shared_from_this.hpp>
 #include <string>
 
 //State pattern
 namespace GASS
 {
-	class EditorModuleExport IMouseTool
+	class EditorModuleExport IMouseTool : public boost::enable_shared_from_this<IMouseTool>, public IMessageListener
 	{
 	public:
 		virtual ~IMouseTool(void){}

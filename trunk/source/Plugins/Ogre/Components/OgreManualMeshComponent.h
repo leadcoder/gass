@@ -35,7 +35,7 @@ namespace Ogre
 namespace GASS
 {
 	class DynamicLines;
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent, public boost::enable_shared_from_this<OgreManualMeshComponent>
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
 		OgreManualMeshComponent(void);

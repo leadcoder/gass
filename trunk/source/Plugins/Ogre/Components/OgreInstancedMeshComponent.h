@@ -47,7 +47,7 @@ namespace GASS
 		Vec3 m_Scale;
 	};
 
-	class OgreInstancedMeshComponent : public Reflection<OgreInstancedMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public boost::enable_shared_from_this<OgreInstancedMeshComponent>
+	class OgreInstancedMeshComponent : public Reflection<OgreInstancedMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent
 	{
 	public:
 		OgreInstancedMeshComponent (void);

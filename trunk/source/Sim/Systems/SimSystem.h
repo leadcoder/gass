@@ -22,13 +22,14 @@
 
 #include "Sim/Common.h"
 #include "Core/System/BaseSystem.h"
+#include "Core/MessageSystem/IMessage.h"
 #include <string>
 
 namespace GASS
 {
 	class SimSystemManager;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
-	class GASSExport SimSystem : public BaseSystem
+	class GASSExport SimSystem : public BaseSystem, public boost::enable_shared_from_this<SimSystem>,  public IMessageListener
 	{
 	public:
 		SimSystem();

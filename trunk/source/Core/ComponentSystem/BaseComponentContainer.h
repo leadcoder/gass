@@ -28,10 +28,10 @@
 #include "Core/ComponentSystem/IComponentContainerTemplate.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "Core/Serialize/ISerialize.h"
+#include "Core/MessageSystem/IMessage.h"
 
 namespace GASS
 {
-
 	/**
 			This is the class that a game or simulation object should be derive from.
 			The BaseComponentContainer is a convinience class that implements the
@@ -44,7 +44,7 @@ namespace GASS
 			class see the documentation for each interface
 
 	*/
-	class GASSCoreExport BaseComponentContainer : public Reflection<BaseComponentContainer, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseComponentContainer>, public IComponentContainer, public IXMLSerialize, public ISerialize
+	class GASSCoreExport BaseComponentContainer : public Reflection<BaseComponentContainer, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseComponentContainer>, public IComponentContainer, public IXMLSerialize, public ISerialize, public IMessageListener
 	{
 	public:
 		BaseComponentContainer();

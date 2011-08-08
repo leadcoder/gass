@@ -36,7 +36,7 @@ namespace Ogre
 
 namespace GASS
 {
-	class OgreBillboardComponent : public Reflection<OgreBillboardComponent,BaseSceneComponent> , public IGeometryComponent,  public boost::enable_shared_from_this<OgreBillboardComponent>
+	class OgreBillboardComponent : public Reflection<OgreBillboardComponent,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
 		OgreBillboardComponent (void);
