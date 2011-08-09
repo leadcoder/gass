@@ -20,6 +20,8 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/MessageSystem/MessageType.h"
+#include "Core/MessageSystem/StaticMessageListener.h"
+
 #include "Core/Utils/Log.h"
 
 #include "tbb/spin_mutex.h"

@@ -280,7 +280,7 @@ namespace GASS
 		m_OSGGeometry->setColorArray(colors);
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 	}
 
 

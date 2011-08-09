@@ -219,7 +219,7 @@ namespace GASS
 			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 		else 
 			Log::Error("Failed to find mesh:%s",full_path.c_str());

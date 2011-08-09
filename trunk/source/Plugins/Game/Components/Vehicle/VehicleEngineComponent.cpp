@@ -41,9 +41,16 @@ namespace GASS
 		m_AngularVelocity (0),
 		m_WheelObject(wheel)
 	{
-		if(wheel)
+		
+	}
+
+
+	void VehicleWheel::Init()
+	{
+		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
+		if(wheel_obj)
 		{
-			wheel->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
+			wheel_obj->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
 		}
 	}
 
@@ -339,6 +346,7 @@ namespace GASS
 				if(object)
 				{
 					VehicleWheelPtr wheel(new VehicleWheel(object));
+					wheel->Init();
 					m_Wheels.push_back(wheel);
 				}
 			}

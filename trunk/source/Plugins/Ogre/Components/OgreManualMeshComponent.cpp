@@ -233,7 +233,7 @@ namespace GASS
 							std::string path = Misc::RemoveFilename(texture_name);
 							if(path != "")
 							{
-								rs->AddResourceLocation(path,"ManualTextures","FileSystem",false);
+								rs->AddResourceLocation(path,"GASSScenario","FileSystem",false);
 							}
 							else 
 								return;

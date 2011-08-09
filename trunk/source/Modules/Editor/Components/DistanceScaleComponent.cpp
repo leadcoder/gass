@@ -22,7 +22,7 @@
 namespace GASS
 {
 
-	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(300), m_MinDistance(0.1)
+	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000), m_MinDistance(0.1)
 	{
 
 	}

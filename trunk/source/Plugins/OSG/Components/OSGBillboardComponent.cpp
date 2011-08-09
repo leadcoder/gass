@@ -142,7 +142,7 @@ namespace GASS
 
 		SetCastShadow(m_CastShadow);
 		
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		//m_OSGBillboard->setNodeMask();
 	}
 

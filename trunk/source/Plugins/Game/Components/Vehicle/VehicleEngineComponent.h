@@ -44,6 +44,7 @@ namespace GASS
 	public:
 		VehicleWheel(SceneObjectPtr  wheel);
 		virtual ~VehicleWheel();
+		void Init();
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 
 		//private: //public for fast access

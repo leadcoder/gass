@@ -38,7 +38,7 @@ namespace GASS
 	
 
 
-	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,BaseSceneComponent> , public IGeometryComponent, public boost::enable_shared_from_this<OSGBillboardComponent>
+	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
 		OSGBillboardComponent (void);

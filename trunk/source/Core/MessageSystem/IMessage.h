@@ -123,7 +123,7 @@ namespace GASS
 	class MessageFunc : public IMessageFunc
 	{
 	public:
-		MessageFunc() : m_Object(NULL)
+		MessageFunc() 
 		{
 
 		}
@@ -132,6 +132,7 @@ namespace GASS
 		{
 
 		}
+
 		virtual ~MessageFunc()
 		{
 		}
@@ -169,9 +170,14 @@ namespace GASS
 		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
 	};
 
-	//Standard message function
+
+	
 }
 
 #define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &FUNCTION, this, _1 ),shared_from_this()))
 #define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),shared_from_this()))
+//#define TYPED_MESSAGE_FUNC_CUSTOM_LISTENER(FUNCTION,TYPED_MESSAGE, LISTENER) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(boost::bind( &FUNCTION, this, _1 ),LISTENER))
+
+
+
 #endif // #ifndef MESSAGE_HH

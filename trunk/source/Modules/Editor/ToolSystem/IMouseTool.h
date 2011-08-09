@@ -9,9 +9,21 @@
 //State pattern
 namespace GASS
 {
-	class EditorModuleExport IMouseTool : public boost::enable_shared_from_this<IMouseTool>, public IMessageListener
+	struct message_null_deleter
+	{
+		void operator()(void const *) const
+		{
+		}
+	};
+
+
+	class EditorModuleExport IMouseTool : public IMessageListener
 	{
 	public:
+		IMouseTool()
+		{
+			m_SharedFromThis = boost::shared_ptr<IMouseTool>(this,message_null_deleter());
+		}
 		virtual ~IMouseTool(void){}
 		virtual void MoveTo(const CursorInfo &info) = 0;
 		virtual void MouseDown(const CursorInfo &info) = 0;
@@ -19,5 +31,13 @@ namespace GASS
 		virtual std::string GetName() = 0;
 		virtual void Stop() = 0;
 		virtual void Start() = 0;
+
+		boost::shared_ptr<IMouseTool> shared_from_this()
+		{
+			return m_SharedFromThis;
+		}
+
+	protected:
+		boost::shared_ptr<IMouseTool> m_SharedFromThis;
 	};
 }

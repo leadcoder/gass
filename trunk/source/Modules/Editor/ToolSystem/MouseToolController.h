@@ -28,9 +28,10 @@ namespace GASS
 	{
 		friend class IMouseTool;
 	public:
-
+		
 		MouseToolController(bool scenario_objects_selectable);
 		virtual ~MouseToolController(void);
+		void Init();
 		void AddTool(IMouseTool* tool);
 		bool SelectTool(const std::string &tool_name);
 		void MoveTo(const CursorInfo &info);

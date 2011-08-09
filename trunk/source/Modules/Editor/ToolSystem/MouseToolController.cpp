@@ -36,6 +36,17 @@ namespace GASS
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false)
 	{
+		
+	}
+
+	MouseToolController::~MouseToolController(void)
+	{
+
+
+	}
+
+	void MouseToolController::Init()
+	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnToolChanged,ToolChangedMessage,0));
@@ -59,11 +70,6 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
 	}
 
-	MouseToolController::~MouseToolController(void)
-	{
-
-
-	}
 
 	void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
 	{

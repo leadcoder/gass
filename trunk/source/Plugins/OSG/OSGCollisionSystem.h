@@ -35,7 +35,7 @@
 
 namespace GASS
 {
-	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , BaseSystem> , public ICollisionSystem, public ITaskListener
+	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , BaseSystem> , public boost::enable_shared_from_this<OSGCollisionSystem>, public ICollisionSystem, public ITaskListener, public IMessageListener
 	{
 	public:
 		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;

@@ -4,13 +4,13 @@
 #include "ToolSystem/MouseToolController.h"
 namespace GASS
 {
-	EditorManager::EditorManager()	: m_MouseTools (NULL), m_MessageManager(NULL)
+	EditorManager::EditorManager()	: m_MessageManager(NULL)
 	{
 	}
 
 	EditorManager::~EditorManager(void)
 	{
-		delete m_MouseTools;
+		delete m_MessageManager;
 	}
 
 	template<> EditorManager* Singleton<EditorManager>::m_Instance = 0;
@@ -29,7 +29,8 @@ namespace GASS
 	void EditorManager::Init()
 	{
 		m_MessageManager = new MessageManager();
-		m_MouseTools =  new MouseToolController(false);
+		m_MouseTools =  MouseToolControllerPtr(new MouseToolController(false));
+		m_MouseTools->Init();
 	}
 
 	MessageManager* EditorManager::GetMessageManager(void)
