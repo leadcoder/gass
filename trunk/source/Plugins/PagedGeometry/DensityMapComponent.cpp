@@ -250,13 +250,13 @@ namespace GASS
 	{
 		//assert(m_DensityMap);
 
-		unsigned int mapWidth = (unsigned int)m_DensityImage.getWidth();
-		unsigned int mapHeight = (unsigned int)m_DensityImage.getHeight();
+		int mapWidth = (unsigned int)m_DensityImage.getWidth();
+		int mapHeight = (int)m_DensityImage.getHeight();
 		float boundsWidth = m_MapBounds.width();
 		float boundsHeight = m_MapBounds.height();
 
-		unsigned int xindex = mapWidth * (x - m_MapBounds.left) / boundsWidth;
-		unsigned int zindex = mapHeight * (z - m_MapBounds.top) / boundsHeight;
+		int xindex = mapWidth * (x - m_MapBounds.left) / boundsWidth;
+		int zindex = mapHeight * (z - m_MapBounds.top) / boundsHeight;
 		if (xindex < 0 || zindex < 0 || xindex >= mapWidth || zindex >= mapHeight)
 			return 0.0f;
 

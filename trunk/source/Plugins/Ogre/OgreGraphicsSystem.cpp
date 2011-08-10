@@ -132,7 +132,7 @@ namespace GASS
 			{
 
 			}*/
-			iter++;
+			++iter;
 
 		}
 	}
@@ -144,7 +144,7 @@ namespace GASS
 		{
 			//set same scene manager in all views
 			win_iter->second->removeAllViewports();	
-			win_iter++;
+			++win_iter;
 		}
 
 		//readd all viewports?
@@ -152,7 +152,7 @@ namespace GASS
 		while(vp_iter != m_Viewports.end())
 		{
 			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue(),vp_iter->second.m_ZDepth);
-			vp_iter++;
+			++vp_iter;
 		}
 		
 		
@@ -315,7 +315,7 @@ namespace GASS
 
 				if(iter->second.m_OgreViewport)
 					iter->second.m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
-				iter++;
+				++iter;
 			}
 		}
 		else if(m_Viewports.find(vp_name) != m_Viewports.end() && m_Viewports[vp_name].m_OgreViewport != NULL)

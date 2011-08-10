@@ -332,7 +332,7 @@ namespace GASS
 		return m_WheelNames;
 	}
 
-	void VehicleEngineComponent::SetWheels(const std::vector<std::string> wheels)
+	void VehicleEngineComponent::SetWheels(const std::vector<std::string> &wheels)
 	{
 		m_WheelNames = wheels;
 		//Update wheel list
@@ -395,7 +395,6 @@ namespace GASS
 
 		else if (name == "Steer")
 		{
-			m_DesiredSteer = value;
 			//let there be a dead span in input
 			m_DesiredSteer = value;
 			if(fabs(m_DesiredSteer) < 0.1)

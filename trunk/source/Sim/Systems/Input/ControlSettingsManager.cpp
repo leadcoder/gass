@@ -278,7 +278,7 @@ namespace GASS
 		while(iter != m_ControlSettingMap.end())
 		{
 			iter->second->Update(delta_time);
-			iter++;
+			++iter;
 		}
 	}
 
@@ -290,7 +290,7 @@ namespace GASS
 		while(iter != m_ControlSettingMap.end())
 		{
 			iter->second->GetMessageManager()->Clear();
-			iter++;
+			++iter;
 		}
 	}
 
@@ -436,7 +436,7 @@ namespace GASS
 			remote->m_IndexToName = local->m_IndexToName;
 			remote->m_NameToIndex = local->m_NameToIndex;
 			ControlSetting::ControllerMap::iterator iter;
-			for(iter = local->m_ControllerMap.begin(); iter != local->m_ControllerMap.end(); iter++)
+			for(iter = local->m_ControllerMap.begin(); iter != local->m_ControllerMap.end(); ++iter)
 			{
 				const std::string name = (std::string) iter->first;
 				Controller* remote_controller  = new RemoteController("remotecontroller",local);

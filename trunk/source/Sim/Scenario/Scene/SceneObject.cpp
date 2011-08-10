@@ -64,7 +64,7 @@ namespace GASS
 	{
 		m_Manager = manager;
 		IComponentContainer::ComponentContainerVector::iterator go_iter;
-		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
+		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
 			child->SetSceneObjectManager(manager);
@@ -92,7 +92,7 @@ namespace GASS
 			//Create copy before update
 			IComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
 			IComponentContainer::ComponentContainerVector::iterator go_iter;
-			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); go_iter++)
+			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); ++go_iter)
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
 				child->SyncMessages(delta_time);

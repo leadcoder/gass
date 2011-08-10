@@ -442,7 +442,7 @@ namespace GASS
 	class MeshFileMessage : public BaseMessage
 	{
 	public:
-		MeshFileMessage(const std::string mesh_file, SenderID sender_id = -1, double delay= 0) :
+		MeshFileMessage(const std::string &mesh_file, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_FileName(mesh_file)
 		  {
 
@@ -938,7 +938,7 @@ namespace GASS
 	class RoadMessage : public BaseMessage
 	{
 	public:
-		RoadMessage(const std::vector<Vec3> road, float flatten_width, float paint_width, float paint_intensity, TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+		RoadMessage(const std::vector<Vec3> &road, float flatten_width, float paint_width, float paint_intensity, TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
 			m_RoadWaypoints(road),
 			m_Layer(layer),
 			m_FlattenWidth(flatten_width),

@@ -85,7 +85,7 @@ namespace GASS
 		void SetDitchWidth(float value) {m_DitchWidth = value;UpdateRoadMesh();}
 		float GetDitchWidth() const {return m_DitchWidth;}
 
-		void SetMaterial(const std::string value);
+		void SetMaterial(const std::string &value);
 		std::string GetMaterial() const;
 
 		

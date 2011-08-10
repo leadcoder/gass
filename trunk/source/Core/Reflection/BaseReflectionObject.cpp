@@ -62,7 +62,7 @@ namespace GASS
 				TiXmlElement *prop_elem = new TiXmlElement( prop->GetName().c_str());
 				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
 				parent->LinkEndChild( prop_elem);
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -78,7 +78,7 @@ namespace GASS
 			{
 				AbstractProperty * prop = (*iter);
 				prop->Serialize(this,serializer);
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -101,7 +101,7 @@ namespace GASS
 
 					return true;
 				}
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -124,7 +124,7 @@ namespace GASS
 					prop->SetValue(this,value);
 					return true;
 				}
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -147,7 +147,7 @@ namespace GASS
 					prop->GetValue(this,value);
 					return true;
 				}
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -172,7 +172,7 @@ namespace GASS
 					value = prop->GetValueAsString(this);
 					return true;
 				}
-				iter++;
+				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
@@ -193,7 +193,7 @@ namespace GASS
 				{
 					AbstractProperty * prop = (*iter);
 					prop->SetValue(dest.get(),this);
-					iter++;
+					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();
 			}
@@ -211,7 +211,7 @@ namespace GASS
 					//(typically from template to instance), so ignore if some properties don't exist in destination object
 					//if (!ret)
 					//	Log::Warning("BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
-					iter++;
+					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();
 			}

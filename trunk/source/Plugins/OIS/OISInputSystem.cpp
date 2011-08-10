@@ -215,7 +215,7 @@ namespace GASS
 			{
 				iter = m_KeyListeners.erase(iter);
 			}
-			else iter++;
+			else ++iter;
 		}
 	}
 
@@ -234,7 +234,7 @@ namespace GASS
 			{
 				iter = m_MouseListeners.erase(iter);
 			}
-			else iter++;
+			else ++iter;
 		}
 	}
 
@@ -253,7 +253,7 @@ namespace GASS
 			{
 				iter = m_GameControllerListeners.erase(iter);
 			}
-			else iter++;
+			else ++iter;
 		}
 	}
 
@@ -266,7 +266,7 @@ namespace GASS
 		{
 			IKeyListener* kl = *iter;
 			kl->KeyPressed(arg.key,arg.text);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -279,7 +279,7 @@ namespace GASS
 		{
 			IKeyListener* kl = *iter;
 			kl->KeyReleased(arg.key,arg.text);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -292,7 +292,7 @@ namespace GASS
 
 			//Normalize values
 			ml->MouseMoved(NormalizeMouse(arg.state.X.rel),NormalizeMouse(arg.state.Y.rel),NormalizeMouse(arg.state.Z.rel));
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -304,7 +304,7 @@ namespace GASS
 		{
 			IMouseListener* ml = *iter;
 			ml->MousePressed(id);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -316,7 +316,7 @@ namespace GASS
 		{
 			IMouseListener* ml = *iter;
 			ml->MouseReleased(id);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -341,7 +341,7 @@ namespace GASS
 		{
 			IGameControllerListener* ml = *iter;
 			ml->ButtonPressed(arg.device->getID(),button);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -352,7 +352,7 @@ namespace GASS
 		{
 			IGameControllerListener* ml = *iter;
 			ml->ButtonReleased(arg.device->getID(),button);
-			iter++;
+			++iter;
 		}
 		return true;
 	}
@@ -368,7 +368,7 @@ namespace GASS
 			IGameControllerListener* ml = *iter;
 
 			ml->AxisMoved(arg.device->getID(),axis, value);
-			iter++;
+			++iter;
 		}
 		return true;
 	}

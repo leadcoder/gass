@@ -270,7 +270,7 @@ namespace GASS
 	class StartServerMessage : public BaseMessage
 	{
 	public:
-		StartServerMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) :
+		StartServerMessage(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
 
@@ -303,7 +303,7 @@ namespace GASS
 	class ClientConnectedMessage : public BaseMessage
 	{
 	public:
-		ClientConnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		ClientConnectedMessage(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port){}
 
@@ -321,7 +321,7 @@ namespace GASS
 	class ClientDisconnectedMessage : public BaseMessage
 	{
 	public:
-		ClientDisconnectedMessage(const std::string name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		ClientDisconnectedMessage(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port){}
 
@@ -340,7 +340,7 @@ namespace GASS
 	class StartClientMessage : public BaseMessage
 	{
 	public:
-		StartClientMessage(const std::string name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) :
+		StartClientMessage(const std::string &name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port), m_ServerPort(server_port){}
 
@@ -361,7 +361,7 @@ namespace GASS
 	class ServerDisconnectedMessage : public BaseMessage
 	{
 	public:
-		ServerDisconnectedMessage(const std::string name, int port, SenderID sender_id = -1, double delay= 0) :
+		ServerDisconnectedMessage(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
 		 std::string GetServerName() const {return m_Name;}
@@ -390,7 +390,7 @@ namespace GASS
 	class ServerResponseMessage : public BaseMessage
 	{
 	public:
-		ServerResponseMessage(const std::string server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) :
+		ServerResponseMessage(const std::string &server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port), m_PingTime(ping_time){}
 
@@ -411,7 +411,7 @@ namespace GASS
 	class ConnectToServerMessage : public BaseMessage
 	{
 	public:
-		ConnectToServerMessage(const std::string server_name, int server_port,SenderID sender_id = -1, double delay= 0) :
+		ConnectToServerMessage(const std::string &server_name, int server_port,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port){}
 
@@ -445,7 +445,7 @@ namespace GASS
 	class StartSceanrioRequestMessage : public BaseMessage
 	{
 	public:
-		StartSceanrioRequestMessage(const std::string scenario_name, SenderID sender_id = -1, double delay= 0) :
+		StartSceanrioRequestMessage(const std::string &scenario_name, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(scenario_name){}
 
@@ -489,7 +489,7 @@ namespace GASS
 	class GUIScriptMessage : public BaseMessage
 	{
 	public:
-		GUIScriptMessage(const std::string filename, SenderID sender_id = -1, double delay= 0) :
+		GUIScriptMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
 			  m_Name(filename){}
 

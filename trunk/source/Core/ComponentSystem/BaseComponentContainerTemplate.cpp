@@ -161,7 +161,7 @@ namespace GASS
 			saver->IO<int>(num_children);
 
 			BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
-			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); go_iter++)
+			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 			{
 				ComponentContainerTemplatePtr child = *go_iter;
 				SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
@@ -178,7 +178,7 @@ namespace GASS
 	void BaseComponentContainerTemplate::RemoveChild(ComponentContainerTemplatePtr child)
 	{
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator bo_iter;
-		for(bo_iter = m_ComponentContainerVector.begin(); bo_iter!= m_ComponentContainerVector.end(); bo_iter++)
+		for(bo_iter = m_ComponentContainerVector.begin(); bo_iter!= m_ComponentContainerVector.end(); ++bo_iter)
 		{
 			if(child == *bo_iter)
 			{
@@ -212,7 +212,7 @@ namespace GASS
 		this_elem->LinkEndChild(comp_elem);
 
 		ComponentVector::iterator iter; 
-		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
+		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
 			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
@@ -225,7 +225,7 @@ namespace GASS
 		this_elem->LinkEndChild(cc_elem);
 
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator cc_iter;
-		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); cc_iter++)
+		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); ++cc_iter)
 		{
 			XMLSerializePtr child = boost::shared_dynamic_cast<IXMLSerialize>(*cc_iter);
 			if(child)
@@ -335,7 +335,7 @@ namespace GASS
 	void BaseComponentContainerTemplate::InheritComponentData(ComponentContainerPtr cc) const
 	{
 		ComponentVector::const_iterator iter; 
-		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
+		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
 			ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
@@ -413,7 +413,7 @@ namespace GASS
 		}
 		//recursive add children
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::const_iterator iter;
-		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); iter++)
+		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); ++iter)
 		{
 			ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(*iter);
 			if(child)
@@ -446,7 +446,7 @@ namespace GASS
 		BaseReflectionObject::SetProperties(ref_obj);
 
 		ComponentVector::const_iterator iter; 
-		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); iter++)
+		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
 			ComponentTemplatePtr temp_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
@@ -525,7 +525,7 @@ namespace GASS
 		{
 			TAB(tc) << "Children" << std::endl;
 		}
-		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); iter++)
+		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); ++iter)
 		{
 			BaseComponentContainerTemplatePtr child = boost::shared_static_cast<BaseComponentContainerTemplate>( *iter);
 			child->DebugPrint(tc+1);

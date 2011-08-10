@@ -167,7 +167,7 @@ namespace GASS
 						{
 							return prop;
 						}
-						iter++;
+						++iter;
 					}
 					pRTTI = pRTTI->GetAncestorRTTI();
 				}

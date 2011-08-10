@@ -98,11 +98,11 @@ namespace GASS
 		{
 			
 			(*msg_reg)->m_Callback->Fire(message);
-			msg_reg++;
+			++msg_reg;
 		}
 	}
 
-	bool MessageRegSortPredicate(const MessageRegPtr lhs, const MessageRegPtr rhs)
+	bool MessageRegSortPredicate(const MessageRegPtr &lhs, const MessageRegPtr &rhs)
 	{
 		return lhs->m_Priority < rhs->m_Priority;
 	}
@@ -132,7 +132,7 @@ namespace GASS
 				Log::Error("Callback already registered for message: %s", type.name());
 				return 1;
 			}
-			msg_reg++;
+			++msg_reg;
 		}
 		MessageRegPtr new_reg (new MessageReg());
 		new_reg->m_Callback = callback;
@@ -167,7 +167,7 @@ namespace GASS
 				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
 				return;
 			}
-			msg_reg++;
+			++msg_reg;
 		}
 	}
 
@@ -184,7 +184,7 @@ namespace GASS
 	// Updates the message handler and sends any messages than need to be sent
 	void MessageManager::Update(float dt)
 	{
-		//lock
+		//lock message queue and copy to temporary queue for processing
 		MessageQueue work_queue;
 		{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
@@ -199,6 +199,7 @@ namespace GASS
 		//std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
 		MessageQueue::iterator iter = work_queue.begin();
 
+		//start processing messages!
 		while (iter !=  work_queue.end())
 		{
 			float delay = (*iter)->GetDeliverDelay();
@@ -206,13 +207,14 @@ namespace GASS
 			{
 				delay -= dt;
 				(*iter)->SetDeliverDelay(delay);
-				iter++;
+				++iter;
 			}
 			else
 			{
 				MessageTypeListenerMap::iterator message_type;
 				message_type = m_MessageTypes.find((*iter)->GetType());
 
+				//if message type not found, add this type to the message type list
 				if(message_type == m_MessageTypes.end())
 				{
 					AddMessageToSystem((*iter)->GetType());
@@ -224,10 +226,17 @@ namespace GASS
 				MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 				while(msg_reg != message_type->second->m_MessageRegistrations.end())
 				{
-					(*msg_reg)->m_Callback->Fire(*iter);
-					msg_reg++;
+					//Check if message listener object is alive, remove from message registration list  if not
+					if(!(*msg_reg)->m_Callback->GetObjectPtr())
+					{
+						msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
+					}
+					else
+					{
+						(*msg_reg)->m_Callback->Fire(*iter);
+						++msg_reg;	
+					}
 				}
-				//delete (*iter);
 				iter = work_queue.erase(iter);
 			}
 		}
@@ -239,7 +248,7 @@ namespace GASS
 			while (iter !=  work_queue.end())
 			{
 				m_MessageQueue.push_back(*iter);
-				iter++;
+				++iter;
 			}
 		}
 	}

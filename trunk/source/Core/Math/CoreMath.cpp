@@ -140,9 +140,10 @@ namespace GASS
 			if(CheckPointInTriangle1(isect_point, 
 				poly.m_VertexVector[0],
 				poly.m_VertexVector[index],
-				poly.m_VertexVector[index++],
+				poly.m_VertexVector[index+1],
 				poly.m_Normal)) 
 				return true;
+			++index;
 		}
 		return false;
 	}

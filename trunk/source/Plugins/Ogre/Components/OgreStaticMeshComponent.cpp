@@ -175,7 +175,7 @@ namespace GASS
 				Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(i).m_Scale);
 				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
 			}
-			iter++;
+			++iter;
 		}
 		m_StaticGeometry->build();
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));

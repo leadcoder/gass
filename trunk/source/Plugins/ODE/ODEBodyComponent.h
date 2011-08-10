@@ -78,11 +78,11 @@ namespace GASS
 	
 
 		Vec3 GetCGPosition() const {return m_CGPosition;}
-		void SetCGPosition(const Vec3 value) {m_CGPosition = value;}
+		void SetCGPosition(const Vec3 &value) {m_CGPosition = value;}
 		Vec3 GetSymmetricInertia() const {return m_SymmetricInertia;}
-		void SetSymmetricInertia(const Vec3 value) {m_SymmetricInertia = value;}
+		void SetSymmetricInertia(const Vec3 &value) {m_SymmetricInertia = value;}
 		Vec3 GetAssymetricInertia() const {return m_AssymetricInertia;}
-		void SetAssymetricInertia(const Vec3 value) {m_AssymetricInertia = value;}
+		void SetAssymetricInertia(const Vec3 &value) {m_AssymetricInertia = value;}
 		bool GetEffectJoints() const {return m_EffectJoints;}
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
 

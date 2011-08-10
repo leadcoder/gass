@@ -761,13 +761,7 @@ namespace GASS
 
 	unsigned int OgreTerrainPageComponent::GetSamplesZ()
 	{
-		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
-		if(!terrain_man) //try parent
-			terrain_man = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
-		if(terrain_man) //try parent
-			return terrain_man->GetImportTerrainSize();
-
-		else return 0;
+		return GetSamplesX();
 	}
 
 

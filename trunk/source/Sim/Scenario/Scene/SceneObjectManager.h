@@ -50,8 +50,8 @@ namespace GASS
 		SceneObjectManager(ScenarioScenePtr ss);
 		virtual ~SceneObjectManager();
 
-		bool LoadXML(const std::string filename);
-		bool SaveXML(const std::string filename);
+		bool LoadXML(const std::string &filename);
+		bool SaveXML(const std::string &filename);
 
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);

@@ -170,7 +170,7 @@ namespace GASS
 			m_TurnPID.setGain(2.0,0.02,0.01);
 			m_TurnPID.set(0);
 			float turn = -m_TurnPID.update(angle_to_drive_dir/180.0f,time);
-			float throttle = 1;
+			
 			float m_TurnRadius = 3.0;
 			float m_BrakeDist= 10.0;
 
@@ -196,7 +196,7 @@ namespace GASS
 
 			m_TrottlePID.setGain(1.0,0,0);
 			m_TrottlePID.set(desired_speed);
-			throttle = m_TrottlePID.update(current_speed,time);
+			float throttle = m_TrottlePID.update(current_speed,time);
 
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;

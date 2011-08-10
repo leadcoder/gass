@@ -145,7 +145,7 @@ namespace GASS
 				iter = m_ResourceLocations.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -159,7 +159,7 @@ namespace GASS
 				iter = m_ResourceLocations.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 

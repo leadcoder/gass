@@ -89,7 +89,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,UpdateWaypointListMessage,1));
 	}
 
-	void RoadComponent::SetMaterial(const std::string value)
+	void RoadComponent::SetMaterial(const std::string &value)
 	{
 		m_Material = value;
 		UpdateRoadMesh();

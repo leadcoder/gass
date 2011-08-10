@@ -69,10 +69,10 @@ namespace GASS
 
 		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
-		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
+		void SetFogColor(const Vec3 &value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 
-		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value;}
+		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
 	private:	
 		//fog

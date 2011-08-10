@@ -75,7 +75,7 @@ namespace GASS
 			while(iter != m_Names.end())
 			{
 				types.push_back(iter->first);
-				iter++;
+				++iter;
 			}
 			return types;
 		}

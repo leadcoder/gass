@@ -111,7 +111,7 @@ namespace GASS
 		int line_size = 18;
 		std::list < DebugString>::iterator iter;
 		std::string dout;
-		for(iter = m_DebugStringList.begin();iter != m_DebugStringList.end(); iter++)
+		for(iter = m_DebugStringList.begin();iter != m_DebugStringList.end(); ++iter)
 		{
 			DebugString ds = (DebugString) *iter;
 			dout += ds.m_Text;

@@ -48,7 +48,7 @@ namespace GASS
 
 	}
 
-	bool SceneObjectManager::LoadXML(const std::string filename)
+	bool SceneObjectManager::LoadXML(const std::string &filename)
 	{
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
@@ -81,7 +81,7 @@ namespace GASS
 		return true;
 	}
 
-	bool SceneObjectManager::SaveXML(const std::string filename)
+	bool SceneObjectManager::SaveXML(const std::string &filename)
 	{
 		TiXmlDocument doc;
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );

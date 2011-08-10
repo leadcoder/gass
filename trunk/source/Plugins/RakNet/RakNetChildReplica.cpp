@@ -179,7 +179,7 @@ namespace GASS
 							component = comp.get();
 							return true;
 						}
-						iter++;
+						++iter;
 					}
 					pRTTI = pRTTI->GetAncestorRTTI();
 				}

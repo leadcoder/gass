@@ -111,7 +111,7 @@ namespace GASS
 
 		BaseReflectionObject::LoadProperties(settings);
 
-		for(std::vector<std::string>::iterator iter = m_ResourceFolders.begin(); iter != m_ResourceFolders.end(); iter++)
+		for(std::vector<std::string>::iterator iter = m_ResourceFolders.begin(); iter != m_ResourceFolders.end(); ++iter)
 		{
 			std::string location = scenario_path + "/" + *iter;
 			rs->AddResourceLocation(location,"GASSScenario","FileSystem",false);

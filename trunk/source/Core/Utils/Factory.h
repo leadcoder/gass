@@ -123,7 +123,7 @@ namespace GASS
 			{
 				return (*it).first;
 			}
-			it++;
+			++it;
 		}
 		return std::string("");
 	}
@@ -137,7 +137,7 @@ namespace GASS
 		{
 			//names.push_back((*it).second->GetClassName());
 			names.push_back((*it).first);
-			it++;
+			++it;
 		}
 		return names;
 	}

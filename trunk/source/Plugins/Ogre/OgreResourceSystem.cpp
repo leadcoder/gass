@@ -157,7 +157,7 @@ namespace GASS
 				iter = m_ResourceLocations.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -178,7 +178,7 @@ namespace GASS
 				iter = m_ResourceLocations.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -212,7 +212,7 @@ namespace GASS
 			Ogre::StringVector groups = rsm->getResourceGroups();
 			Ogre::StringVector::iterator iter;
 
-			for(iter = groups.begin(); iter != groups.end();iter++)
+			for(iter = groups.begin(); iter != groups.end();++iter)
 			{
 				std::string gname = *iter;
 				bool found = rsm->resourceExists(gname,file_name);

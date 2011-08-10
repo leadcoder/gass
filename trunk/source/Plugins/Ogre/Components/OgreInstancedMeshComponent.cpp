@@ -232,7 +232,7 @@ namespace GASS
 			instancedGeometry->setVisible(true);
 			ogsm->GetSceneManger()->destroyEntity (entity);
 			m_InstancedGeometries.push_back(instancedGeometry);
-			iter++;
+			++iter;
 			/*for(size_t i = 0;  i < iter->second.size(); i++)
 			{
 			Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);

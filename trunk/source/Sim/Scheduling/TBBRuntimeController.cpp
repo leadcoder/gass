@@ -73,7 +73,7 @@ namespace GASS
 					iter = m_PrimaryUpdateVector.erase(iter);
 				}
 				else
-					iter++;
+					++iter;
 			}
 			return;
 		}
@@ -88,7 +88,7 @@ namespace GASS
 					iter = m_TaskGroups[group].erase(iter);
 				}
 				else
-					iter++;
+					++iter;
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace GASS
 
 			TaskGroupMap::iterator iter = groups.begin();
 
-			for(; iter != groups.end();iter++)
+			for(; iter != groups.end();++iter)
 			{
 				//	tbb::task* test = new( tbb::task::allocate_root() ) tbb::empty_task;
 				TBBUpdateTask* update_task = new( m_TasksRoot->allocate_additional_child_of( *m_TasksRoot ) ) TBBUpdateTask(delta_time,iter->second);
@@ -151,7 +151,7 @@ namespace GASS
 		Log::Print("Num registred groups:%d",m_TaskGroups.size());
 
 		TaskGroupMap::iterator iter = m_TaskGroups.begin();
-		for(; iter != m_TaskGroups.end();iter++)
+		for(; iter != m_TaskGroups.end();++iter)
 		{
 			Log::Print("Num registred in %s: %d",iter->first.c_str(), iter->second.size());
 		}

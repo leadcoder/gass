@@ -173,7 +173,7 @@ namespace GASS
 	class ClientRemoteMessage : public BaseMessage
 	{
 	public:
-		ClientRemoteMessage(const std::string client, const std::string message, SenderID sender_id = -1, double delay= 0) :
+		ClientRemoteMessage(const std::string &client, const std::string message, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) , m_Client(client),m_Message(message){}
 		std::string GetClient() const {return m_Client;}
 		std::string GetMessage() const {return m_Message;}

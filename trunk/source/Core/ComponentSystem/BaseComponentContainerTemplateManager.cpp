@@ -91,7 +91,7 @@ namespace GASS
 		while(iter != m_TemplateMap.end())
 		{
 			templates.push_back(iter->first);
-			iter++;
+			++iter;
 		}
 		return templates;
 	}

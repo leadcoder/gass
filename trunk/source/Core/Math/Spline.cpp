@@ -54,7 +54,7 @@ Spline::~Spline(void)
 Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
     {
         // Bounds check
-        assert(fromIndex >= 0 && fromIndex < m_Points.size() &&
+        assert(fromIndex < m_Points.size() &&
             "fromIndex out of bounds");
 
         if((fromIndex + 1) == m_Points.size())

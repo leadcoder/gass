@@ -77,7 +77,7 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 	private:
 		std::vector<std::string> GetWheels() const;
-		void SetWheels(const std::vector<std::string> wheels);
+		void SetWheels(const std::vector<std::string> &wheels);
 
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

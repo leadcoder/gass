@@ -84,8 +84,8 @@ namespace GASS
 		void SetScale(const Vec3 &value, dGeomID id);
 		void SetOffset(const Vec3 &value){m_Offset = value;}
 		Vec3 GetOffset() const {return m_Offset;}
-		void SetSlip(float value){m_Friction = value;}
-		float GetSlip() const {return m_Friction;}
+		void SetSlip(float value){m_Slip = value;}
+		float GetSlip() const {return m_Slip;}
 		void SetGeometryType(const std::string &geom_type);
 		std::string GetGeometryType() const;
 		dGeomID CreateTerrain(IGeometryComponent* geom, dSpaceID space);

@@ -316,7 +316,7 @@ namespace GASS
 			m_RequestMap.clear();
 		}
 
-		for(iter = requestMap.begin(); iter != requestMap.end(); iter++)
+		for(iter = requestMap.begin(); iter != requestMap.end(); ++iter)
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
@@ -348,7 +348,7 @@ namespace GASS
 		{
 			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
 			//transfer results
-			for(res_iter = resultMap.begin(); res_iter != resultMap.end(); res_iter++)
+			for(res_iter = resultMap.begin(); res_iter != resultMap.end(); ++res_iter)
 			{
 				CollisionHandle handle = res_iter->first;
 				m_ResultMap[handle] = res_iter->second;
