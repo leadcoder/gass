@@ -27,7 +27,7 @@ namespace GASS
 
 	GeometryCategory::GeometryCategory() : EnumBinder<GeometryType,GeometryCategory>()
 	{
-		//Set(GT_MESH);
+		
 	}	
 	GeometryCategory::GeometryCategory(GeometryType type) : EnumBinder<GeometryType,GeometryCategory>(type)
 	{

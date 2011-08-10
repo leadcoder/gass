@@ -59,7 +59,7 @@ namespace GASS
 		virtual GeometryCategory GetGeometryCategory() const;
 
 		virtual std::string GetFilename()const {return m_Filename;}
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}

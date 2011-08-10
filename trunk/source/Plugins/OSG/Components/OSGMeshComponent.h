@@ -169,13 +169,17 @@ namespace GASS
 		~OSGMeshComponent (void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+
+		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		virtual std::string GetFilename()const {return m_Filename;}
-		
+		virtual GeometryCategory GetGeometryCategory() const;
+
+		//IMeshComponent
+		virtual std::string GetFilename() const {return m_Filename;}
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 	protected:
 		void SetGeometryCategory(const GeometryCategory &value);
-		GeometryCategory GetGeometryCategory() const;
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		void SetFilename(const std::string &filename);
@@ -183,7 +187,7 @@ namespace GASS
 		void SetCastShadow(bool value);
 		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
-		void GetMeshData(MeshDataPtr mesh_data);
+		
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);

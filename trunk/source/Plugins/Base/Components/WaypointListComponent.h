@@ -18,7 +18,6 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"

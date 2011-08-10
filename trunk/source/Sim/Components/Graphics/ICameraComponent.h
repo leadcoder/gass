@@ -25,6 +25,12 @@
 
 namespace GASS
 {
+
+	/**
+		Camera interface that all camera components should be derived from
+		Note that all runtime interaction should be done through 
+		messages if running multi-threaded.
+	*/
 	
 	class GASSExport ICameraComponent
 	{

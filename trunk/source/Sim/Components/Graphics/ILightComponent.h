@@ -34,10 +34,8 @@ namespace GASS
 
 	class GASSExport ILightComponent
 	{
-		
 	public:
 		virtual ~ILightComponent(){}
-		
 	protected:
 	};
 }

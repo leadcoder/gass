@@ -413,11 +413,8 @@ namespace GASS
 
 			request.CollisionBits = 1;
 
-
 			if(m_ColMeshHandle == 0)
 				m_ColMeshHandle = col_sys->Request(request);
-
-
 		}
 	}
 

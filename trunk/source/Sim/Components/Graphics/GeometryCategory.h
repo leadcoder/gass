@@ -26,7 +26,13 @@
 
 namespace GASS
 {
-		enum GeometryType
+
+	/**
+		Enumeration of geometry types. 
+		This can be used by a collision system to find certain
+		geomtries or a physics engine to separate dynamic and static objects
+	*/
+	enum GeometryType
 	{
 		GT_REGULAR,
 		GT_GIZMO,
@@ -34,6 +40,10 @@ namespace GASS
 		GT_UNKNOWN,
 	};
 
+	
+	/**
+		Class used to make GeometryType reflection possible
+	*/
 	class GASSExport GeometryCategory : public EnumBinder<GeometryType,GeometryCategory>
 	{
 	public:

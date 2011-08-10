@@ -105,22 +105,21 @@ namespace GASS
 
 	dGeomID ODETerrainGeometryComponent::CreateTerrain()
 	{
-		m_TerrainGeom = GetTerrainComponent().get();
+		TerrainComponentPtr terrain = GetTerrainComponent();
+		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+
+		//save raw point for fast height access, not thread safe!!
+		m_TerrainGeom = terrain.get();
+
 		dGeomID geom_id = 0;
 
-		if(m_TerrainGeom)
+		if(terrain)
 		{
-			int samples_x;
-			int samples_z;
-			Float size_x;
-			Float size_z;
-			Vec3 center_pos;
-
-			m_TerrainGeom->GetBounds(m_TerrainBounds.m_Min,m_TerrainBounds.m_Max);
-			samples_x = m_TerrainGeom->GetSamplesX();
-			samples_z = m_TerrainGeom->GetSamplesZ();
-			size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
-			size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
+			m_TerrainBounds = geom->GetBoundingBox();
+			int samples_x = terrain->GetSamplesX();
+			int samples_z = terrain->GetSamplesZ();
+			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
+			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
 			m_SampleWidth = size_x/(samples_x-1);
 			m_SampleHeight = size_z/(samples_z-1);
 
@@ -178,7 +177,6 @@ namespace GASS
 		//std::cout << "hpos:" << world_x << world_z << "\n";
 		//std::cout << "height:" << h << "\n";
 		return h;
-		
 	}
 
 	long int ODETerrainGeometryComponent::GetCollisionBits() const 

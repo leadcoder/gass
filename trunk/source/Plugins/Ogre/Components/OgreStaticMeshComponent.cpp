@@ -133,7 +133,7 @@ namespace GASS
 		}
 	}
 
-	void OgreStaticMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreStaticMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message) 
 	{
 		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
 		m_OgreSceneManager = ogsm;
@@ -238,7 +238,7 @@ namespace GASS
 		return final_sphere;
 	}
 
-	void OgreStaticMeshComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreStaticMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 		mesh_data->NumVertex = 0;
 		mesh_data->VertexVector = NULL;
@@ -290,7 +290,7 @@ namespace GASS
 	}
 	
 
-void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset)
+void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset) const
 	{
 		if (!vertex_data)
 			return;
@@ -335,7 +335,7 @@ void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,
 		}
 	}
 
-	void OgreStaticMeshComponent::AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
+	void OgreStaticMeshComponent::AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const
 	{
 		const unsigned int prev_size = mesh->NumFaces;
 		mesh->NumFaces += (unsigned int)data->indexCount;

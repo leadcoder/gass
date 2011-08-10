@@ -428,14 +428,14 @@ namespace GASS
 			}
 			if(terrain)
 			{
-				Vec3 bmin,bmax;
-				terrain->GetBounds(bmin,bmax);
+				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				AABox aabox = geom->GetBoundingBox();
 
-				m_Bounds.x = bmin.x;
-				m_Bounds.y = bmin.z;
+				m_Bounds.x = aabox.m_Min.x;
+				m_Bounds.y = aabox.m_Min.z;
 
-				m_Bounds.z = bmax.x;
-				m_Bounds.w = bmax.z;
+				m_Bounds.z = aabox.m_Max.x;
+				m_Bounds.w = aabox.m_Max.z;
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
 			}

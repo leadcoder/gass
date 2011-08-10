@@ -417,13 +417,6 @@ namespace GASS
 
 	}
 
-	void OgreTerrainGroupComponent::GetBounds(Vec3 &min,Vec3 &max)
-	{
-		AABox aabox = GetBoundingBox();
-		min = aabox.m_Min;
-		max = aabox.m_Max;
-	}
-
 	AABox OgreTerrainGroupComponent::GetBoundingBox() const
 	{
 		AABox aabox;
@@ -471,22 +464,22 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreTerrainGroupComponent::GetSamplesX()
+	unsigned int OgreTerrainGroupComponent::GetSamplesX() const
 	{
 		return 0;
 	}
 
-	unsigned int OgreTerrainGroupComponent::GetSamplesZ()
+	unsigned int OgreTerrainGroupComponent::GetSamplesZ() const
 	{
 		return 0;
 	}
 
-	void OgreTerrainGroupComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreTerrainGroupComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 
 	}
 
-	Float OgreTerrainGroupComponent::GetHeight(Float x, Float z)
+	Float OgreTerrainGroupComponent::GetHeight(Float x, Float z) const 
 	{
 		if(m_TerrainGroup)
 		{

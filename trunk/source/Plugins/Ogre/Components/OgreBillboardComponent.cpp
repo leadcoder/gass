@@ -185,7 +185,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreBillboardComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreBillboardComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 
 	}

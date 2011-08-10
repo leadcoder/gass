@@ -48,28 +48,20 @@ namespace GASS
 
 		//IMeshComponent interface
 		virtual std::string GetFilename() const;
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
+		//ITerrainComponent
+		virtual Float GetHeight(Float x, Float z) const;
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const{}
+		virtual unsigned int GetSamplesX() const;
+		virtual unsigned int GetSamplesZ() const;
+		virtual float* GetHeightData() const;
 		
-		
-		virtual Float GetSizeX(){return 0;}
-		virtual Float GetSizeZ(){return 0;}
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
-		virtual bool CheckOnTerrain(Float x, Float z){return true;}
-		virtual void GetBounds(Vec3 &min,Vec3 &max);
-		virtual unsigned int GetSamplesX();
-		virtual unsigned int GetSamplesZ();
-		Float GetHeight(Float x, Float z);
-		Float GetWorldWidth()const {return  0;}
-		Float GetWorldHeight()const {return 0;}
-		int GetNodesPerSideAllPagesW() const {return 0;}
-		int GetNodesPerSideAllPagesH() const  {return 0;}
+		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryCategory GetGeometryCategory() const;
-		float* GetHeightData();
 	protected:
-
 		void LoadFromFile();
 		std::string GetHeightMap()const {return m_HeightMapFile;}
 		void SetHeightMap(const std::string &filename);

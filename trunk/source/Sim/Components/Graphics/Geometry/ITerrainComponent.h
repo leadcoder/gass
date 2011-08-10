@@ -25,22 +25,44 @@
 
 namespace GASS
 {
+	/**
+		Interface that all terrain components should be derived from.
+		This can for instanace be used by a physics engine to get information
+		how to create a collision heightfield or by other components that 
+		new terrain height information in a fast way.
+
+		Note that all runtime interaction should be done through 
+		messages if running multi-threaded.
+
+	*/
 	class GASSExport ITerrainComponent
 	{
 	public:
 		virtual ~ITerrainComponent(){}
-		virtual Float GetHeight(Float x, Float z) = 0;
-		virtual bool CheckOnTerrain(Float x, Float z)= 0;
-		virtual Float GetSizeZ() = 0;
-		virtual Float GetSizeX() = 0;
-		virtual unsigned int GetSamplesX()=0;
-		virtual unsigned int GetSamplesZ()=0;
-		virtual void  GetBounds(Vec3 &min,Vec3 &max) = 0;
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) = 0;
-		virtual float* GetHeightData() = 0;
+
+		/**
+		Get terrain height at world position x,z (assume y up direction)
+		*/
+		virtual Float GetHeight(Float x, Float z) const = 0;
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
+
+		/**
+		Get terrain samples x dir
+		*/
+		virtual unsigned int GetSamplesX() const =0;
+
+		/**
+		Get terrain samples z dir
+		*/
+		virtual unsigned int GetSamplesZ() const =0;
+
+		/**
+		Get pointer to terrain data height field, if not available return NULL
+		*/
+		virtual float* GetHeightData() const = 0;
+
 	private:
 	};
-
 	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
 }
 

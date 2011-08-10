@@ -29,6 +29,8 @@ namespace GASS
 		Vec3 pos;
 		Vec3 color;
 	};
+
+	//deprecated
 	class GASSExport ILineComponent
 	{
 	public:

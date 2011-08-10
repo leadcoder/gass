@@ -31,6 +31,7 @@
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
+#include "Sim/Systems/Graphics/IGraphicsSystem.h"
 
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Components/Graphics/Geometry/ILineComponent.h"
@@ -44,7 +45,7 @@
 #include <iostream>
 #include <fstream>
 
-class SimApplication
+class SimApplication : public GASS::IMessageListener, public boost::enable_shared_from_this<SimApplication> 
 {
 protected:
 	std::string m_SystemConfig;
@@ -77,6 +78,11 @@ public:
 	{
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
+
+		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
+		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
+		
+
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 
 		for(int i = 0; i <  m_Templates.size();i++)

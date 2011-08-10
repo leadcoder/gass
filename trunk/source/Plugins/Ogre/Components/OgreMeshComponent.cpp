@@ -226,7 +226,7 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 		mesh_data->NumVertex = 0;
 		mesh_data->VertexVector = NULL;
@@ -257,7 +257,7 @@ namespace GASS
 		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
 	}
 
-	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
+	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const
 	{
 		if (!vertex_data)
 			return;
@@ -302,7 +302,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
+	void OgreMeshComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const
 	{
 		const unsigned int prev_size = mesh->NumFaces;
 		mesh->NumFaces += (unsigned int)data->indexCount;

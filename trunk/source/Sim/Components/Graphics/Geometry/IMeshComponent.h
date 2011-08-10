@@ -24,12 +24,27 @@
 
 namespace GASS
 {
+	/**
+		Interface that all mesh components should be derived from.
+		Note that all runtime interaction should be done through 
+		messages if running multi-threaded.
+		
+	*/
 	class GASSExport IMeshComponent
 	{
 	public:
 		virtual ~IMeshComponent(){}
+
+		/**
+		Should if possible return the filename of the mesh if available.
+		If the mesh is prodecural created just return empty string
+		*/
 		virtual std::string GetFilename() const=0;
-		virtual void GetMeshData(MeshDataPtr mesh_data) =0;
+
+		/**
+		Should return actual mesh data (polygons), see MeshData for more info
+		*/
+		virtual void GetMeshData(MeshDataPtr mesh_data) const =0;
 	};
 	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
 }

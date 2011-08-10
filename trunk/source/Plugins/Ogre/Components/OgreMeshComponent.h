@@ -47,11 +47,16 @@ namespace GASS
 		~OgreMeshComponent (void);
 		static void RegisterReflection();
 		virtual void OnCreate();
+		//IGeometryComponent
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryCategory GetGeometryCategory() const;
+
+		//IMeshComponent
 		virtual std::string GetFilename()const {return m_Filename;}
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+
+
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
@@ -60,8 +65,8 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
 
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh);
-		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
+		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const;
+		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);

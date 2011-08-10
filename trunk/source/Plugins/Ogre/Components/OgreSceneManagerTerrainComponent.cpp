@@ -49,7 +49,7 @@ namespace GASS
 		m_MaxHeight(0),
 		m_WorldWidth(0),
 		m_WorldHeight(0),
-		m_NodesPerSideAllPagesW (0),
+		m_NodesPerSideAllPagesW(0),
 		m_NodesPerSideAllPagesH(0),
 		m_OgreSceneManager(NULL)
 	{
@@ -172,18 +172,6 @@ namespace GASS
 		}
 	}
 
-
-	void OgreSceneManagerTerrainComponent::GetBounds(Vec3 &min,Vec3 &max)
-	{
-		min.x = 0;
-		min.y = 0;
-		min.z = 0;
-
-		max.x = m_WorldWidth;
-		max.y = m_MaxHeight;
-		max.z = m_WorldHeight;
-	}
-
 	AABox OgreSceneManagerTerrainComponent::GetBoundingBox() const
 	{
 		AABox aabox;
@@ -205,11 +193,11 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreSceneManagerTerrainComponent::GetSamplesX()
+	unsigned int OgreSceneManagerTerrainComponent::GetSamplesX() const
 	{
 		return m_NodesPerSideAllPagesW;
 	}
-	unsigned int OgreSceneManagerTerrainComponent::GetSamplesZ()
+	unsigned int OgreSceneManagerTerrainComponent::GetSamplesZ() const
 	{
 		return m_NodesPerSideAllPagesH;
 	}
@@ -235,7 +223,7 @@ namespace GASS
 		}
 	}
 
-	void OgreSceneManagerTerrainComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreSceneManagerTerrainComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 		size_t tWidth = m_HMDim;
 		size_t tHeight = m_HMDim;
@@ -281,7 +269,7 @@ namespace GASS
 #define LERP(a, b, t) (a + (b - a) * t)
 #endif
 
-	Float OgreSceneManagerTerrainComponent::GetHeight(Float x, Float z)
+	Float OgreSceneManagerTerrainComponent::GetHeight(Float x, Float z) const
 	{
 		//Factor in our horizontal scaling
 		x /= m_Scale.x;
@@ -330,7 +318,7 @@ namespace GASS
 		return height;
 	}
 
-	float* OgreSceneManagerTerrainComponent::GetHeightData()
+	float* OgreSceneManagerTerrainComponent::GetHeightData() const
 	{
 		return m_HeightData;
 	}

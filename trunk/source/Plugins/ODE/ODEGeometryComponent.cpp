@@ -498,6 +498,7 @@ namespace GASS
 	dGeomID ODEGeometryComponent::CreateTerrain(IGeometryComponent* geom,  dSpaceID space)
 	{
 		m_TerrainGeom = dynamic_cast<ITerrainComponent*>(geom);
+		
 		dGeomID geom_id = 0;
 
 		if(m_TerrainGeom)
@@ -508,7 +509,7 @@ namespace GASS
 			Float size_z;
 			Vec3 center_pos;
 
-			m_TerrainGeom->GetBounds(m_TerrainBounds.m_Min,m_TerrainBounds.m_Max);
+			m_TerrainBounds = geom->GetBoundingBox();
 			samples_x = m_TerrainGeom->GetSamplesX();
 			samples_z = m_TerrainGeom->GetSamplesZ();
 			size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;

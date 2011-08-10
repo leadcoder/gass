@@ -703,38 +703,18 @@ namespace GASS
 		}
 	}
 
-	void OgreTerrainPageComponent::GetBounds(Vec3 &min,Vec3 &max)
-	{
-		//AABox aabox;
-		if(m_TerrainGroup)
-		{
-			//	aabox = Convert::ToGASS(m_Terrain->getAABB());
-			//std::cout << "size:" << m_TerrainGroup->getTerrainWorldSize();
-			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
-			Vec3 pos = GetPosition();
-			min = Vec3(pos.x -size,-100, pos.z -size);
-			max = Vec3(pos.x +size,1000, pos.z +size);
-
-			AABox aabox = Convert::ToGASS(m_Terrain->getAABB());
-
-			min.y = aabox.m_Min.y;
-			max.y = aabox.m_Max.y;
-						
-
-		}
-	}
-
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
 	{
 		AABox aabox;
-		//aabox.m_Min = Vec3(0,0,0);
-
-		if(m_Terrain)
+		if(m_TerrainGroup)
+		{
 			aabox = Convert::ToGASS(m_Terrain->getAABB());
-
-		aabox.m_Min += GetPosition();
-		aabox.m_Max += GetPosition();
-
+			//Hack to get terrain size before loaded
+			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
+			Vec3 pos = GetPosition();
+			aabox.m_Min = Vec3(pos.x -size,aabox.m_Min.y, pos.z -size);
+			aabox.m_Max = Vec3(pos.x +size,aabox.m_Max.y, pos.z +size);
+		}
 		return aabox;
 	}
 
@@ -749,7 +729,7 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreTerrainPageComponent::GetSamplesX()
+	unsigned int OgreTerrainPageComponent::GetSamplesX() const
 	{
 		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(!terrain_man) //try parent
@@ -759,25 +739,25 @@ namespace GASS
 		else return 0;
 	}
 
-	unsigned int OgreTerrainPageComponent::GetSamplesZ()
+	unsigned int OgreTerrainPageComponent::GetSamplesZ() const
 	{
 		return GetSamplesX();
 	}
 
 
-	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 
 	}
 
-	Float OgreTerrainPageComponent::GetHeight(Float x, Float z)
+	Float OgreTerrainPageComponent::GetHeight(Float x, Float z) const
 	{
 		if(m_Terrain)
 			return m_Terrain->getHeightAtWorldPosition(x,10000,z);
 		return 0;
 	}
 
-	float* OgreTerrainPageComponent::GetHeightData()
+	float* OgreTerrainPageComponent::GetHeightData() const
 	{
 		if(m_Terrain)
 			return m_Terrain->getHeightData();

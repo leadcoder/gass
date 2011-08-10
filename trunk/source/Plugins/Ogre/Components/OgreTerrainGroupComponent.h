@@ -40,41 +40,38 @@ namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreTerrainGroupComponent : public Reflection<OgreTerrainGroupComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent //,  public boost::enable_shared_from_this<OgreTerrainGroupComponent>
+	class OgreTerrainGroupComponent : public Reflection<OgreTerrainGroupComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent
 	{
 	public:
 		OgreTerrainGroupComponent();
 		~OgreTerrainGroupComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		virtual void GetMeshData(MeshDataPtr mesh_data);
-		std::string GetFilename()const {return m_TerrainName;}
+		
+		//IMeshComponent
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual std::string GetFilename()const {return m_TerrainName;}
 
+		//ITerrainComponent
+		virtual Float GetHeight(Float x, Float z) const;
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const {}
+		virtual unsigned int GetSamplesX() const;
+		virtual unsigned int GetSamplesZ() const;
+		virtual float* GetHeightData() const {return NULL;}
 
-		virtual Float GetSizeX(){return m_WorldWidth;}
-		virtual Float GetSizeZ(){return m_WorldHeight;}
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
-		virtual bool CheckOnTerrain(Float x, Float z){return true;}
-		virtual void GetBounds(Vec3 &min,Vec3 &max);
-		virtual unsigned int GetSamplesX();
-		virtual unsigned int GetSamplesZ();
-
-		Float GetHeight(Float x, Float z);
-		Float GetWorldWidth()const {return  m_WorldWidth;}
-		Float GetWorldHeight()const {return m_WorldHeight;}
-		int GetNodesPerSideAllPagesW() const {return m_NodesPerSideAllPagesW;}
-		int GetNodesPerSideAllPagesH() const  {return m_NodesPerSideAllPagesH;}
-		Vec3 GetScale() const {return m_Scale;}
-
+		//IGeometryComponent
 		virtual GeometryCategory GetGeometryCategory() const;
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		float* GetHeightData() {return NULL;}
+		
+		//IXMLSerialize interface overload, we need a way to trigger terrain save!
+		virtual void SaveXML(TiXmlElement *obj_elem);
+
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;
+		Vec3 GetScale() const {return m_Scale;}
 
-		//IXMLSerialize interface, we need a way to trigger terrain save!
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		
 		
 	protected:
 		void RemoveAllPages();
@@ -159,7 +156,6 @@ namespace GASS
 		std::string m_TerrainName;
 		std::string m_CustomMaterial;
 		Vec3 m_Origin;
-
 
 		bool m_FadeDetail;
 		float m_DetailFadeDist;

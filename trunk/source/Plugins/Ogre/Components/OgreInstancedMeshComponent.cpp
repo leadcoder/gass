@@ -349,7 +349,7 @@ namespace GASS
 		return final_sphere;
 	}
 
-	void OgreInstancedMeshComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OgreInstancedMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 		mesh_data->NumVertex = 0;
 		mesh_data->VertexVector = NULL;

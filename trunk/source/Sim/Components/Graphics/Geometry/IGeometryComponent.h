@@ -27,12 +27,34 @@
 
 namespace GASS
 {
+	/**
+		Basic geometry interface that all geometry components (mesh, terrain, lines etc) 
+		should be derived from.
+		This can for instanace be used by a physics engine to get information
+		about geomtry size. 
+		Note that all runtime interaction should be done through 
+		messages if running multi-threaded.
+	*/
+
 	class GASSExport IGeometryComponent 
 	{
 	public:
 		virtual ~IGeometryComponent(){}
+
+		/**
+			Should return axis aligned bounding box in world coordinates
+		*/
 		virtual AABox GetBoundingBox()const = 0;
+
+		/**
+			Should return bounding sphere in world coordinates
+		*/
 		virtual Sphere GetBoundingSphere()const = 0;
+
+		/**
+			Should return the geometry category, for instance
+			a terrain geometry should return GT_TERRAIN
+		*/
 		virtual GeometryCategory GetGeometryCategory() const = 0;
 	protected:
 	};

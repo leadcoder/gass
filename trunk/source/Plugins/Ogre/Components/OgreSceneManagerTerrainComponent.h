@@ -41,32 +41,27 @@ namespace GASS
 		~OgreSceneManagerTerrainComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+
+		//IMeshComponent
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		virtual void pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
+		virtual std::string GetFilename()const {return m_TerrainConfigFile;}
+		virtual void SetFilename(const std::string &filename);
 
-		std::string GetFilename()const {return m_TerrainConfigFile;}
-		void SetFilename(const std::string &filename);
-		virtual Float GetSizeX(){return m_WorldWidth;}
-		virtual Float GetSizeZ(){return m_WorldHeight;}
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal){}
-		virtual bool CheckOnTerrain(Float x, Float z){return true;}
-
-		virtual void GetBounds(Vec3 &min,Vec3 &max);
-		virtual unsigned int GetSamplesX();
-		virtual unsigned int GetSamplesZ();
-
-		Float GetHeight(Float x, Float z);
-		Float GetWorldWidth()const {return  m_WorldWidth;}
-		Float GetWorldHeight()const {return m_WorldHeight;}
-		int GetNodesPerSideAllPagesW() const {return m_NodesPerSideAllPagesW;}
-		int GetNodesPerSideAllPagesH() const  {return m_NodesPerSideAllPagesH;}
-		Vec3 GetScale() const {return m_Scale;}
-		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
+		//ITerrainComponent
+		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal)const {}
+		virtual Float GetHeight(Float x, Float z) const;
+		virtual unsigned int GetSamplesX() const;
+		virtual unsigned int GetSamplesZ() const;
+		float* GetHeightData() const;
+		
+		//IGeometryComponent
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
 		virtual GeometryCategory GetGeometryCategory() const;
-		float* GetHeightData();
+		Vec3 GetScale() const {return m_Scale;}
 	protected:
+		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		void LoadTerrain(const std::string &filename);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

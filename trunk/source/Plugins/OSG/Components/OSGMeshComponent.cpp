@@ -333,7 +333,7 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 		mesh_data->NumVertex = 0;
 		mesh_data->VertexVector = NULL;

@@ -151,12 +151,12 @@ namespace GASS
 			TerrainComponentPtr terrain = root->GetFirstComponentByClass<ITerrainComponent>(true);
 			if(terrain)
 			{
-				Vec3 bmin,bmax;
-				terrain->GetBounds(bmin,bmax);
+				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				AABox aabox = geom->GetBoundingBox();
 
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
-				m_MapBounds = TBounds(bmin.x, bmin.z, bmax.x, bmax.z);
+				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
 			}
 			
 		}
