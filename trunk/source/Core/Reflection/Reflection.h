@@ -37,6 +37,8 @@ class TiXmlElement;
 namespace GASS
 {
 
+
+
 	static std::string UnDecorateClassName(const std::string &name)
 	{
 		//substr(6) is used for removing "class_" from string returned by typeid,
@@ -55,6 +57,13 @@ namespace GASS
     //forward declaration
 	class BaseReflectionObject;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+
+	*/
     /** Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
      supporting RTTI need to derived from this class, with their ancestor specified as the TInClass
     template parameter.*/

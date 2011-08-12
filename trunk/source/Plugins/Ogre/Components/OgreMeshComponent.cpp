@@ -124,6 +124,7 @@ namespace GASS
 
 			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
 			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
+			//m_OgreEntity->setQueryFlags(1);
 			//LoadLightmap();
 			SetCastShadow(m_CastShadow);
 			SetRenderQueue(m_RenderQueue);

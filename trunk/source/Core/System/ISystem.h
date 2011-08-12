@@ -30,6 +30,14 @@ namespace GASS
 	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
 	typedef std::string SystemType;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
+
 	/**
 		Interface for arbitrary system. 
 		Many applications can be divided in to different 

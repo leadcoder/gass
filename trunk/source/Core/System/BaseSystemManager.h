@@ -34,6 +34,14 @@
 class TiXmlElement;
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
 	/**
 		Convinience system manager that load system from xml file
 	*/

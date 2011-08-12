@@ -31,12 +31,27 @@
 
 namespace GASS
 {
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Serialize
+	*  @{
+	*/
+
+	/**
+		Common Interface for all binary serialization operations
+	*/
+
 	class GASSCoreExport ISerializer
 	{
 	public:
 		virtual ~ISerializer(){}
 		virtual bool Loading()=0;
 	};
+
+	/**
+		Class used to save binaray data
+	*/
 
 	class GASSCoreExport SerialSaver : public ISerializer
 	{
@@ -92,6 +107,11 @@ namespace GASS
     template <>
     GASSCoreExport void SerialSaver::IO<FilePath>(FilePath &path);
 
+
+
+	/**
+		Class used to load binaray data
+	*/
 
 	class GASSCoreExport SerialLoader : public ISerializer
 	{

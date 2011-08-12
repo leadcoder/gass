@@ -38,6 +38,14 @@ namespace GASS
 	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
 	typedef boost::shared_ptr<IComponent> ComponentPtr;
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 			The BaseComponent is a convinience class that implements the
 			IComponent interface it also inherite from the reflection template class
@@ -48,6 +56,7 @@ namespace GASS
 			class to inherit from or use as starting point for your own
 			IComponent implementation
 	*/
+
 	class GASSCoreExport BaseComponent : public Reflection<BaseComponent, BaseReflectionObject>, public IComponent , public IXMLSerialize, public ISerialize, public IComponentTemplate
 	{
 	public:

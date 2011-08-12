@@ -35,6 +35,14 @@ THE SOFTWARE.
 
 namespace GASS {
 
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
     /** Wraps iteration over a vector.
     @remarks
         This class is here just to allow clients to iterate over an internal

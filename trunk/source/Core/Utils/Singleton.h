@@ -25,9 +25,20 @@
 #include "Core/Common.h"
 namespace GASS
 {
-template<typename T>
-class Singleton
-{
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+	/**
+		Template class that implement the singleton pattern
+	*/
+
+	template<typename T>
+	class Singleton
+	{
 	protected:
 		static T* m_Instance;
 	public:
@@ -54,7 +65,7 @@ class Singleton
 			assert(m_Instance);
 			return m_Instance;
 		}
-};
+	};
 }
 //template <typename T> T* Singleton <T>::m_Instance = 0;
 #endif // #ifndef SINGLETON_HH

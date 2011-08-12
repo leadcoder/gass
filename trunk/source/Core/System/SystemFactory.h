@@ -27,6 +27,18 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
+	/**	
+		The factory where all systems should be registred in
+	*/
+
 	class GASSCoreExport SystemFactory : public Factory<ISystem,std::string>
 	{
 	public:

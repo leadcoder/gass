@@ -30,6 +30,19 @@ namespace GASS
 {
 	class Polygon;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+
+	/** \addtogroup Math
+	*  @{
+	*/
+
+	/**
+		A Axis Aligned Box usually holding bounding information. 
+		The box is represented by a max 3d-coordinate and min 3d-coordinate
+	*/
+
 	class GASSCoreExport AABox
 	{
 	public:

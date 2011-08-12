@@ -27,6 +27,16 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+
+
     /**
     Table used to map strings to unique integers
     It's also possible to map custom int values to

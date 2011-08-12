@@ -34,8 +34,16 @@ namespace GASS
 		Float m_Data[3][3];
 	};
 
-	/**\class GASSCoreExport Mat4
-	* \brief Class representing a Float-matrix with 16 elements.
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Math
+	*  @{
+	*/
+
+
+	/**
+	* Class representing a Float-matrix with 16 elements.
 	*/
 	class GASSCoreExport Mat4
 	{
@@ -43,8 +51,8 @@ namespace GASS
 
 		static const Float EPSILON; 
 		
-		/**\var Float m_Data[4][4]
-		* \brief Contains the data of the matrix.
+		/**
+		* Contains the data of the matrix.
 		*/
 		union
 		{
@@ -67,17 +75,15 @@ namespace GASS
 		Vec3 operator* ( const Vec3 &vec) const;
 		Vec4 operator* ( const Vec4 &vec) const;
 
-		/**\fn void Zero()
-		* \brief Set all matrix elements to zero.
+		/**
+		* Set all matrix elements to zero.
 		*/
 		void Zero();
-		/**\fn void Zero()
-		* \brief Set the matrix to the indentity matrix.
-		*/
-
+		
 		void Rotate(Float h,Float p,Float r);
-		/**\fn void Rotate(Float h,Float p,Float r);
-		* \brief Set the rotation matrix for heading, pitch, roll.
+		
+		/**
+		* Set the rotation matrix for heading, pitch, roll.
 		*/
 		void RotateY(Float amount);
 		void RotateX(Float amount);

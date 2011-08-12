@@ -37,6 +37,13 @@ namespace GASS
 	typedef int SenderID;
 
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Message
+	*  @{
+	*/
+
 	/**
 	Message interface that all messages should implement.
 	Most of the methods of this interface is a product of what message manager
@@ -79,7 +86,6 @@ namespace GASS
 
 	
 	/**
-
 		Message function interface that is used by the message manager.
 	*/
 	class IMessageFunc
@@ -158,7 +164,7 @@ namespace GASS
 
 		MessageListenerPtr GetObjectPtr() const
 		{
-			return MessageListenerPtr(m_Object);
+			return MessageListenerPtr(m_Object, boost::detail::sp_nothrow_tag());
 		}
 
 		void* GetFuncPtr() const

@@ -27,6 +27,14 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+
+	*/
 	/**
 		The one and only factory holding component containers.
 		This is a singleton implementation of the Factory template.

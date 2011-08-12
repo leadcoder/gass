@@ -28,9 +28,18 @@
 namespace GASS
 {
 
-/**\class FilePath
-* \brief Class used to handel filesystem paths with environment variables.
-*/
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+	/**
+	*	Class used to handel filesystem paths with environment variables.
+	*/
+
 	class GASSCoreExport FilePath
 	{
 	public:

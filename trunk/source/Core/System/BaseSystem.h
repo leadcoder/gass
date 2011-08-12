@@ -33,6 +33,21 @@ namespace GASS
 	class ISystemManager;
 	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
 
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
+	/**
+		Convinience class that implement the ISystem and 
+		IXMLSerialize interfaces, 
+		A system that want attribute xml-serialization can derived
+		from this class.
+	*/
+
 	class GASSCoreExport BaseSystem : public Reflection<BaseSystem, BaseReflectionObject>, public ISystem, public IXMLSerialize
 	{
 	public:
@@ -47,7 +62,6 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name = name;}
 		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		void SetOwner(SystemManagerPtr owner){m_Owner = owner;}
-		
 		virtual SystemType GetSystemType() const {return "BaseSystem";}
 
 		//IXMLSerialize interface

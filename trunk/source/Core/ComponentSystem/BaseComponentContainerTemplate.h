@@ -33,6 +33,13 @@ namespace GASS
 {
 	class MessageManager;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 			The BaseComponentContainerTemplate is a convinience class that implements
 			the	IComponentContainerTemplate it also inherite from the reflection template

@@ -55,6 +55,7 @@ namespace GASS
 		bool m_UseTime;
 	};
 
+	
 	class GASSCoreExport KeyframeAnimation
 	{
 	public:

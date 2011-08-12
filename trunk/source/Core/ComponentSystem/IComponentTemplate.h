@@ -29,6 +29,13 @@ namespace GASS
 	typedef boost::shared_ptr<IComponent> ComponentPtr;
 
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 	Interface that components should derive from
 	if template functionality is desired.

@@ -33,6 +33,13 @@ namespace GASS
 	typedef boost::shared_ptr<IComponentContainerTemplate> ComponentContainerTemplatePtr;
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 	A component container template manager is responsible for holding component container templates
 	and creating component containers.

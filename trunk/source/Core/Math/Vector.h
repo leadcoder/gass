@@ -42,8 +42,15 @@ LGPL tex goes here?
 namespace GASS
 {
 
-	/**\class Vec2
-	* \brief Class that holds two Floats.
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Math
+	*  @{
+	*/
+
+	/**
+	* Class that holds two Floats.
 	*/
 	class GASSCoreExport Vec2
 	{
@@ -77,8 +84,11 @@ namespace GASS
 		}
 	};
 
-	/**\class Vec2
-	* \brief Class that holds two integer.
+	
+
+
+	/**
+	* Class that holds two integer.
 	*/
 	class GASSCoreExport Vec2i
 	{
@@ -133,15 +143,12 @@ namespace GASS
 
 	};
 
-	/**\class Vec3
-	* \brief Class representing a Float-vector with 3 elements.
+	/**
+	* Class representing a Float-vector with 3 elements.
 	*/
 	class GASSCoreExport Vec3
 	{
 	public:
-		/**\var Float x,y,z
-		* \brief Contains the data of the vector.
-		*/
 		Float x;//,h;
 		Float y;//,p;
 		Float z;//,r;
@@ -294,30 +301,7 @@ namespace GASS
 				z = 0;
 			}
 		}
-
-		void FastNormalize();
-		Float FastLength() const;
-		Float FastInvLength() const;
-
-
-		/**\fn InRange(Vec3 &v, Float radius);
-		* \brief Check if vector is inside a sphere.
-		* \param v Center of sphere.
-		* \param radius Radius of sphere.
-		* \return True if inside sphere.
-		*/
-		bool InSphere(Vec3 &v, Float radius) const;
-		std::string ToString(const std::string &separator);
-		//char CheckRange2(Vec3 &v, Float radius) const;
-		/**\fn Print();
-		* \brief Print the vector to the text console (command window).
-		*/
-		//void Print() const;
-		//std::string ToString();
-		//Float Length() const;
-		//void Normalize();
-		//void Transform3(const Mat4 &m);
-
+	
 		friend std::ostream& operator << (std::ostream& os, const Vec3& vec)
 		{
 			os << vec.x << " " << vec.y << " " << vec.z;
@@ -330,15 +314,21 @@ namespace GASS
 			return os;
 		}
 
+		void FastNormalize();
+		Float FastLength() const;
+		Float FastInvLength() const;
+		bool InSphere(Vec3 &v, Float radius) const;
+		std::string ToString(const std::string &separator);
 	};
 
+	
+	/**
+	* Class representing a Float-vector with 4 elements.
+	*/
 
 	class GASSCoreExport Vec4
 	{
 	public:
-		/**\var Float x,y,z
-		* \brief Contains the data of the vector.
-		*/
 		Float x,y,z,w;
 
 		inline Vec4(){}

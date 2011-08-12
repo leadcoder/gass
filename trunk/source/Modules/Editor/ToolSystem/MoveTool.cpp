@@ -63,10 +63,6 @@ namespace GASS
 				
 				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
 				gizmo->PostMessage(pos_msg);
-
-				//SceneObjectPtr master_gizmo = GetMasterGizmo();
-				//if(master_gizmo)
-				//	SendMessageRec(master_gizmo,pos_msg);
 			}
 			else if(m_GroundSnapMove)
 			{
@@ -120,7 +116,7 @@ namespace GASS
 			}
 			const double time = SimEngine::Get().GetTime();
 			static double last_time = 0;
-			const double send_freq = 2; 
+			const double send_freq = 20; 
 			if(time - last_time > 1.0/send_freq)
 			{
 				last_time = time;
@@ -132,9 +128,6 @@ namespace GASS
 				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
 				EditorManager::GetPtr()->GetMessageManager()->PostMessage(attrib_change_msg);
 			}
-
-			GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
-			EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 
 			m_MoveUpdateCount++;
 		}
@@ -170,6 +163,9 @@ namespace GASS
 			}
 			m_MoveUpdateCount = 0;
 		}
+
+		
+
 	}
 
 	void MoveTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
@@ -238,6 +234,10 @@ namespace GASS
 
 			}
 		}
+
+		int from_id = (int) this;
+		GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
+		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 	}
 
 

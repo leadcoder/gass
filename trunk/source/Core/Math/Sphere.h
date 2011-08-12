@@ -28,6 +28,17 @@
 namespace GASS
 {
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Math
+	*  @{
+	*/
+
+	/**
+	 Class holding Sphere information, position and radius
+	*/
+
 	class AABox;
 	class GASSCoreExport Sphere
 	{
@@ -41,6 +52,7 @@ namespace GASS
 		bool SphereInside(const Sphere &sphere);
 		void Union(const Sphere &sphere);
 
+		//public for fast access
 		float m_Radius;
 		Vec3 m_Pos;
 	};

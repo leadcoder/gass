@@ -26,6 +26,19 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Math
+	*  @{
+	*/
+
+	/**
+	* Class holding quaternion information used for 
+	   rotatation representation.
+	*/
+
 	class GASSCoreExport Quaternion
 	{
 	public:

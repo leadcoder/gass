@@ -26,6 +26,12 @@
 namespace GASS
 {
 
+
+
+	/**
+	* Class representing a plane in 3D.
+	*/
+
 	class GASSCoreExport Plane4
 	{
 	public:

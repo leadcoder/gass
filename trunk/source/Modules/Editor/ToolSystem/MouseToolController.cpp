@@ -535,7 +535,7 @@ namespace GASS
 				m_CursorInfo.m_3DPos = gizmo_result.CollPosition;
 				m_CursorInfo.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
 				//std::cout << result.CollPosition << std::endl;
-				MoveTo(m_CursorInfo);
+				//MoveTo(m_CursorInfo);
 			}
 		}
 		else if(mesh_result.Coll)
@@ -548,9 +548,13 @@ namespace GASS
 				m_CursorInfo.m_3DPos = mesh_result.CollPosition;
 				m_CursorInfo.m_ObjectUnderCursor = mesh_result.CollSceneObject;
 				//std::cout << result.CollPosition << std::endl;
-				MoveTo(m_CursorInfo);
+				if(!m_EnableGizmo)
+					MoveTo(m_CursorInfo);
 			}
 		}
+
+		if(m_EnableGizmo)
+			MoveTo(m_CursorInfo);
 		//SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		//	if(obj_under_cursor)
 		//		std::cout << obj_under_cursor->GetName() << std::endl;

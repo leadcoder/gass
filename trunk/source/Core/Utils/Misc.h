@@ -44,6 +44,18 @@ namespace GASS
 	const int GASS_MAX_EXT	= 256;
 
 
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+	/**
+		Class used for string operations
+	*/
+
 	class GASSCoreExport Misc
 	{
 	public:

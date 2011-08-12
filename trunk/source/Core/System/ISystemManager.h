@@ -32,8 +32,18 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
 	/**
-		Interface for a system manager
+		Interface for a system manager, a system manager 
+		is the owner of all systems and responsible for 
+		intialize and updating it's system 
 	*/
 	class GASSCoreExport ISystemManager
 	{

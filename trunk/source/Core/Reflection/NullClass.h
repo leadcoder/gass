@@ -33,6 +33,13 @@ namespace GASS
 {
 	class RTTI;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+
     /**
         Class use by BaseReflectionObject in reflection template inheritance.
     */

@@ -37,6 +37,13 @@ namespace GASS
 	typedef boost::weak_ptr<IComponentContainerTemplate> ComponentContainerTemplateWeakPtr;
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 	Interface that component-containers should derive from
 	if template functionality is desired.

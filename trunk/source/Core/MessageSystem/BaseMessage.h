@@ -31,6 +31,14 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Message
+	*  @{
+	*/
+
 	/**
 	Message implementation that can be used to send messages without any data 
 	besides the default data needed to support the IMessage interface.

@@ -29,6 +29,13 @@ class TiXmlElement;
 
 namespace GASS
 {
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Serialize
+	*  @{
+	*/
+
 	/**
 		Interface for xml serialization
 	*/

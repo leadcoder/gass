@@ -35,6 +35,13 @@ namespace GASS
 	typedef boost::shared_ptr<BaseReflectionObject> BaseReflectionObjectPtr;
 	typedef boost::weak_ptr<BaseReflectionObject> BaseReflectionObjectWeakPtr;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+
     /**
         This class implement basic reflection functionality.
         All classes that want reflection support should be derived from this class

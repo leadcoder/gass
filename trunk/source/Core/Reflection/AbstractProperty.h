@@ -34,6 +34,15 @@ namespace GASS
 {
 	class ISerializer;
 	class BaseReflectionObject;
+
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	** \addtogroup Reflection
+	*  @{
+	*/
+
 	/**
         Interface class for all properties
 	*/

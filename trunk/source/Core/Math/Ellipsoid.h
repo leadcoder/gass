@@ -24,6 +24,10 @@
 #include "Core/Math/Vector.h"
 namespace GASS
 {
+
+
+
+
 	class GASSCoreExport Ellipsoid
 	{
 	public:

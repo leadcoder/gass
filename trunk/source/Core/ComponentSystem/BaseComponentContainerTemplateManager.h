@@ -37,7 +37,12 @@ namespace GASS
 	class BaseObjectTemplate;
 
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
-
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
 
 	/**
 		  Implementaion of the IComponentContainerTemplateManager interface

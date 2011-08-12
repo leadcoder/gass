@@ -30,9 +30,14 @@
 namespace GASS
 {
 
-    /**
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
 
-    */
+    
 
 	template<class Base>
 	class CreatorBase
@@ -68,6 +73,9 @@ namespace GASS
 
 
 
+	/**
+		Template class that implement the factory pattern
+    */
 
 	template<class Base, class ObjectType>
 	class Factory

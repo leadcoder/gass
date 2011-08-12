@@ -600,7 +600,6 @@ namespace GASS
 		}
 	}
 
-
 	Vec3 GizmoComponent::GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir)
 	{
 		Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetRotation();
@@ -637,7 +636,7 @@ namespace GASS
 				value  = Math::IsectRayPlane(ray_start,ray_dir,c_pos,v_vec);
 
 			if(value > 0)
-			{
+			{	
 				Vec3 isect_pos = ray_start + ray_dir*value;
 
 				Vec3 ret = ProjectPointOnAxis(c_pos, r_vec, isect_pos);

@@ -48,13 +48,9 @@ namespace GASS
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesMessage(from_id)));
 
-				GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
-				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
-
-
 				const double time = SimEngine::Get().GetTime();
 				static double last_time = 0;
-				const double send_freq = 5; 
+				const double send_freq = 20; 
 				if(time - last_time > 1.0/send_freq)
 				{
 					last_time = time;
@@ -149,6 +145,10 @@ namespace GASS
 				}
 			}
 		}
+
+		int from_id = (int) this;
+		GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
+		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 	}
 
 

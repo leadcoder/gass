@@ -38,7 +38,21 @@ namespace tbb
 namespace GASS
 {
 	class IMessage;
-	//class MessageType;
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Message
+	*  @{
+	*/
+
+	/**
+		The message manager is responsible to send queued messages to 
+		message subscribers. A message subscriber is added to the message manager
+		by using the RegisterForMessage method. And messages are posted by using
+		the PostMessage method. The user is responsible for calling
+		the Update method each tick, it's inside the update method messages get
+		delivered to subscribers.
+	*/
 
 	class GASSCoreExport MessageManager
 	{

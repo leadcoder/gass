@@ -37,6 +37,13 @@ namespace GASS
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
 
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 		Interface that a component container should implement
 		A component container is a owner of components and child

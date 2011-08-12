@@ -42,6 +42,14 @@ namespace GASS
 	typedef BaseReflectionObject* (*ClassFactoryFunc)( ClassID );
 	typedef bool (*RegisterReflectionFunc)();
 
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+
 	/**
 	RTTI class used to store properties for classes
 	*/

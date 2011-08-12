@@ -28,9 +28,17 @@
 namespace GASS
 {
 
-/**\class GASSCoreExport Log
-* \brief Class used for printing messages to file.
-*/
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+	/**
+	* Class used for printing messages to file.
+	*/
 
 	class GASSCoreExport Log
 	{

@@ -28,6 +28,14 @@
 namespace GASS
 {
 	class DynamicModule;
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Plugin
+	*  @{
+	*/
+
 	/**
 		Manager used to load and hold plugins. 
 		A GASS plugin is the same as a regular 

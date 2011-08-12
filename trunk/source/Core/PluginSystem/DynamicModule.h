@@ -28,6 +28,18 @@ namespace GASS
 {
 	typedef void* ModuleHandle;
 
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Plugin
+	*  @{
+	*/
+
+	/**
+		Class used to handle dynamic modules (dll under windows and so for linux)
+	*/
+
 	class GASSCoreExport DynamicModule
 	{
 	public:

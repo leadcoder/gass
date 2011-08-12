@@ -30,6 +30,18 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
+
+	/**
+		Class used for timing 
+	*/
+
 	class GASSCoreExport Timer
 	{
 	public:

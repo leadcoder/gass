@@ -123,6 +123,7 @@ namespace GASS
 		SetScale(m_Scale);
 
 		m_OgreNode->setListener(this);
+		m_OgreNode->setUserAny(Ogre::Any(this));
 
 		MessagePtr pos_msg(new GASS::PositionMessage(m_Pos));
 		MessagePtr rot_msg;

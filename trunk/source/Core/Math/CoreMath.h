@@ -35,7 +35,13 @@ namespace GASS
 	class Polygon;
 
 
-
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Math
+	*  @{
+	*/
+	
 	/**\class Math
 	* \brief Class with a couple of math functions.
 	*/

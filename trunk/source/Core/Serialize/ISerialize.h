@@ -27,8 +27,16 @@ namespace GASS
 {
 	class ISerializer;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Serialize
+	*  @{
+	*/
+
 	/**
-		Interface for binary serialization
+		Interface for binary serialization, classes that want to support 
+		binary serialization should be derived from this interface
 	*/
 	class GASSCoreExport ISerialize
 	{

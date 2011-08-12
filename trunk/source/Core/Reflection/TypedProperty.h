@@ -32,7 +32,18 @@ This class is based on the Game Programming Gems 5 article
 namespace GASS
 {
 
+	
+
+
 	class BaseReflectionObject;
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+
 	/** TypedProperty This intermediate class defines a property that is typed, but not bound as a member of a particular
 	 class.
 	*/

@@ -32,6 +32,14 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+	*/
+
 	/**
 			This is the class that a game or simulation object should be derive from.
 			The BaseComponentContainer is a convinience class that implements the

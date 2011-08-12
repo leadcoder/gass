@@ -38,6 +38,8 @@ This class is based on the Game Programming Gems 5 article
 namespace GASS
 {
 
+
+
 	class IVectorProperty
 	{
 	public:

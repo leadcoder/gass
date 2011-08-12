@@ -27,6 +27,16 @@
 
 namespace GASS
 {
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Message
+	*  @{
+	*/
+
+	/**
+		Class holding the message suscriber registration
+	*/
 	class MessageReg
 	{
 	public:
@@ -36,22 +46,18 @@ namespace GASS
 		int m_Priority;
 	};
 	typedef boost::shared_ptr<MessageReg> MessageRegPtr;
-
 	typedef std::list<MessageRegPtr> MessageRegList;
 	
+	
+	/**
+		Class holding all suscribers of a certain message type
+	*/
 	class MessageTypeListeners
 	{
 	public:
 		MessageTypeListeners(){}
 		virtual ~MessageTypeListeners()
 		{
-			/*MessageRegList::iterator iter = m_MessageRegistrations.begin();
-			while(iter != m_MessageRegistrations.end())
-			{
-				MessageReg*  reg  = (*iter);
-				delete reg;
-				iter++;
-			}*/
 		}
 
 		MessageType m_TypeID;

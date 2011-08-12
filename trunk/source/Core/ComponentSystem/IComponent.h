@@ -30,6 +30,13 @@ namespace GASS
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
 	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
 
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Component
+	*  @{
+
+	*/
 	/**
 		Interface that every component have to implement
 		A component is the core building block in the component system,
