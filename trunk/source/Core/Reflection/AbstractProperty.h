@@ -39,7 +39,7 @@ namespace GASS
 	/** \addtogroup GASSCore
 	*  @{
 	*/
-	** \addtogroup Reflection
+	/** \addtogroup Reflection
 	*  @{
 	*/
 
