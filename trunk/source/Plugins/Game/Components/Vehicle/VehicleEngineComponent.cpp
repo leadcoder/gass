@@ -56,9 +56,9 @@ namespace GASS
 
 	VehicleWheel::~VehicleWheel()
 	{
-		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
-		if(wheel_obj)
-			wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
+		//SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
+		//if(wheel_obj)
+		//	wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
 	}
 
 	void VehicleWheel::OnPhysicsMessage(VelocityNotifyMessagePtr message)

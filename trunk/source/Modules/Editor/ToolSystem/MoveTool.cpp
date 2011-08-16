@@ -258,6 +258,7 @@ namespace GASS
 		if(!gizmo &&  m_Controller->GetScene())
 		{
 			ScenarioScenePtr scene = m_Controller->GetScene();
+
 			std::string gizmo_name = "GizmoMoveObject_YUp";
 			if(abs(scene->GetSceneUp().z) > 0)
 				gizmo_name = "GizmoMoveObject_ZUp";

@@ -8,8 +8,8 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Components/Graphics/MeshData.h"
 
 
 namespace GASS
@@ -47,11 +47,8 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 
-		LineComponentPtr line(m_RulerLine);
-		if(line)
-		{
-			line->Clear();
-		}
+		SceneObjectPtr(m_RulerObject)->PostMessage(MessagePtr(new ClearManualMeshMessage()));
+
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -70,37 +67,33 @@ namespace GASS
 	{
 
 		Vec3 text_pos = start;//(start + end)* 0.5; 
-
-		if(!LineComponentPtr(m_RulerLine,boost::detail::sp_nothrow_tag()))
+		if(!SceneObjectPtr(m_RulerObject,boost::detail::sp_nothrow_tag()))
 		{
 			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate("RulerObject");
 			m_RulerObject = scene_object;
-			
-			//m_RulerObject = scene_object->GetFirstChildByName("RulerObject",false);
 			if(scene_object)
 			{
-				m_RulerLine = scene_object->GetFirstComponentByClass<ILineComponent>();
 				m_TextComp = scene_object->GetComponent("TextComponent");
 			}
 		}
 
-		LineComponentPtr line(m_RulerLine);
-		if(line)
-		{
-			line->Clear();
-			LineData start_data;
-			LineData end_data;
-			start_data.pos = start-text_pos;  
-			start_data.color = Vec3(1,0,0);
-			end_data.pos = end-text_pos; 
-			end_data.color = Vec3(1,0,0);
-			std::vector<LineData> line_data;
-			line_data.push_back(start_data);
-			line_data.push_back(end_data);
-			line->Add(line_data);
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		MeshVertex vertex;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+		mesh_data->Type = LINE_STRIP;
+		vertex.TexCoord.Set(0,0);
+		vertex.Color = Vec4(1,0,0,1);
+		vertex.Pos = start - text_pos;
+		mesh_data->VertexVector.push_back(vertex);
+		vertex.Pos = end - text_pos;
+		mesh_data->VertexVector.push_back(vertex);
+		mesh_data->IndexVector.push_back(0);
+		mesh_data->IndexVector.push_back(1);
 
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		SceneObjectPtr(m_RulerObject)->PostMessage(mesh_message);
 
-		}
+		
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -114,7 +107,6 @@ namespace GASS
 			//text_mess->SetData("Parameter",SceneObject::CAPTION);
 			//text_mess->SetData("Caption",measurement_value);
 			SceneObjectPtr(m_RulerObject)->PostMessage(text_mess);
-
 
 			GASS::MessagePtr pos_msg(new PositionMessage(text_pos));
 			SceneObjectPtr(m_RulerObject)->PostMessage(pos_msg);

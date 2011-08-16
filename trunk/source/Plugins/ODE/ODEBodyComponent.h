@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Plugins/ODE/ODEGeometryComponent.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
 
@@ -36,7 +35,6 @@ namespace GASS
 		friend class ODEJoint;
 		friend class ODEHingeComponent;
 		friend class ODESuspensionComponent;
-		friend class ODEGeometryComponent;
 	public:
 		enum MassRepresentationType
 		{

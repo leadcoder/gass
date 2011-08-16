@@ -93,7 +93,6 @@ namespace GASS
 		m_MeshObject->setCastShadows(false);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
-		
 	}
 
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
@@ -101,7 +100,6 @@ namespace GASS
 		ManualMeshDataPtr data = message->GetData();
 		CreateMesh(data);
 	}
-
 
 	void OgreManualMeshComponent::OnClearMessage(ClearManualMeshMessagePtr message)
 	{

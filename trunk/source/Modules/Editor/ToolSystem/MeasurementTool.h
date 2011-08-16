@@ -9,10 +9,8 @@ namespace GASS
 {
 	class MouseToolController;
 	class SceneObject;
-	class ILineComponent;
 	class IComponent;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<ILineComponent> LineComponentWeakPtr;
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
 
 
@@ -31,11 +29,9 @@ namespace GASS
 		virtual void Start() {};
 	private:
 		void UpdateLine(const GASS::Vec3 &start, const GASS::Vec3 &end);
-
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_RulerObject;
 		MouseToolController* m_Controller;
-		GASS::LineComponentWeakPtr m_RulerLine;
 		GASS::ComponentWeakPtr m_TextComp;
 		GASS::Vec3 m_StartPos;
 

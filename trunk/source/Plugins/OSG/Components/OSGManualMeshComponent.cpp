@@ -250,26 +250,22 @@ namespace GASS
 				m_OSGGeometry->addPrimitiveSet(new osg::DrawArrays(op, 0, data->VertexVector.size()));
 		}
 
-
-		
-
-
 		osg::Vec3Array::iterator vitr = vertices->begin();
 		osg::Vec4Array::iterator citr = colors->begin();
 
 		//m_MeshObject->begin(data->Material, op);
-		bool flip = OSGConvert::Get().m_FlipYZ;
+		//bool flip = OSGConvert::Get().m_FlipYZ;
 		for(int i = 0; i < data->VertexVector.size(); i++)
 		{
 			Vec3 pos = data->VertexVector[i].Pos;
 			Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 			Vec4 color  = data->VertexVector[i].Color;
 
-			osg::Vec3 opos; 
-			if(flip)
-				opos.set(pos.x,pos.z,pos.y);
-			else
-				opos.set(pos.x,pos.y,pos.z);
+			osg::Vec3 opos = OSGConvert::Get().ToOSG(pos); 
+			//if(flip)
+			//	opos.set(pos.x,pos.z,pos.y);
+			//else
+			//	opos.set(pos.x,pos.y,pos.z);
 
 			(vitr++)->set(opos.x(), opos.y(), opos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
@@ -301,7 +297,6 @@ namespace GASS
 		return box;
 		//assert(m_MeshObject);
 		//return Convert::ToGASS(m_MeshObject->getBoundingBox());
-
 	}
 
 	Sphere OSGManualMeshComponent::GetBoundingSphere() const
