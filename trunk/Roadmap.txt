@@ -12,9 +12,8 @@ TODO:	Replace interator with const_iterator where appropriate and as a result ma
 
 90%:	Add simple GUI example (CEGUI Example exist but build instructions need to be created)
 
-99%:	Split ODEGeomtryComponent into new components for the diffrent geometry  
-	types types, ie ODEBoxGeometryComponent etc. (this is done but ODEGeomtryComponent still present, 
-	need to remove and update all templates)
+100%:	Split ODEGeomtryComponent into new components for the diffrent geometry  
+	types types, ie ODEBoxGeometryComponent etc.
 
 50%:    Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
 
