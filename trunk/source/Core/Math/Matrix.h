@@ -27,6 +27,7 @@ namespace GASS
 {
 	class Vec3;
 	class Vec4;
+	class Quaternion;
 
 	class GASSCoreExport Mat3
 	{
@@ -99,6 +100,7 @@ namespace GASS
 		void InverseTranslateVect( Vec3 &vec);
 		Vec3 GetTranslation() const;
 		void SetTransformation(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale);
+		void SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
 		Float Determinant();
 		Float Determinant(int row, int col);
 		Mat4 Invert();

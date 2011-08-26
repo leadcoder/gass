@@ -25,6 +25,20 @@
 
 namespace GASS
 {
+
+	/** \addtogroup GASSSim
+	*  @{
+	*/
+	/** \addtogroup Utilities
+	*  @{
+	*/
+
+	/**
+		Helper class enable enums to be 
+		used in reflection attribute registration
+		TODO: Move this to GASSCore
+	*/
+
 	template< class ENUM,class CLASS>
 	class EnumBinder
 	{

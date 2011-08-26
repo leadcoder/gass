@@ -38,7 +38,6 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"

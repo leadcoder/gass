@@ -38,6 +38,12 @@ namespace GASS
 	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
 
+
+	/** \addtogroup GASSSim
+	*  @{
+	*/
+	
+
 	/**\
 	* \brief Main class for GASS Sim.
 		The SimEngine is a singleton class that hold some basic functionality

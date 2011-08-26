@@ -49,7 +49,7 @@ namespace GASS
 	void DensityMapComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, IComponent>);
-		//RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap);
+		RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap);
 		RegisterProperty<std::string>("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport);
 	}
 

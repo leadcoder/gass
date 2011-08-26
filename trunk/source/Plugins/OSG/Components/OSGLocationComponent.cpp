@@ -394,12 +394,14 @@ namespace GASS
 		bool visibility = message->GetValue();
 		if(visibility)
 		{
-			if(m_NodeMask)
-				m_TransformNode->setNodeMask(m_NodeMask);
+			//if(m_NodeMask)
+			//	m_TransformNode->setNodeMask(m_NodeMask);
+			//m_TransformNode->setNodeMask(NM_VISIBLE | m_TransformNode->getNodeMask());
+			m_TransformNode->setNodeMask(~0);
 		}
 		else
 		{
-			m_NodeMask = m_TransformNode->getNodeMask();
+			//m_NodeMask = m_TransformNode->getNodeMask();
 			m_TransformNode->setNodeMask(0);
 			//m_TransformNode->setNodeMask(~NM_VISIBLE & m_TransformNode->getNodeMask());
 		}

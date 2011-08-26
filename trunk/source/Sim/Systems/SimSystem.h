@@ -29,6 +29,17 @@ namespace GASS
 {
 	class SimSystemManager;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
+
+	/** \addtogroup GASSSim
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
+	*/
+
+	/**
+		Base class that GASSSim systems should be derived from 
+	*/
 	class GASSExport SimSystem : public BaseSystem, public boost::enable_shared_from_this<SimSystem>,  public IMessageListener
 	{
 	public:

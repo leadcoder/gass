@@ -21,7 +21,6 @@
 
 
 #include "Sim/Common.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/Graphics/MeshData.h"
@@ -45,6 +44,7 @@ namespace GASS
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryCategory GetGeometryCategory() const;
+		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);

@@ -29,7 +29,7 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
-#include "Plugins/Ogre/Components/OgreLineComponent.h"
+#include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
 
 
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -210,9 +210,9 @@ namespace GASS
 				mobj = billboard->GetBillboardSet();
 			else
 			{
-				boost::shared_ptr<OgreLineComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreLineComponent>();
+				boost::shared_ptr<OgreManualMeshComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreManualMeshComponent>();
 				if(line)
-					mobj = line->GetLineObject();
+					mobj = line->GetManualObject();
 			}
 		}
 		if(mobj == NULL)

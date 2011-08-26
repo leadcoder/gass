@@ -261,6 +261,18 @@ namespace GASS
 
 
 
+	class RequestTimeStepMessage : public BaseMessage
+	{
+	public:
+		RequestTimeStepMessage  (const double &step, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay), m_TimeStep(step)
+		{
+		}
+		double GetTimeStep() const {return m_TimeStep;}
+	private:
+		double m_TimeStep;
+	};
+	typedef boost::shared_ptr<RequestTimeStepMessage> RequestTimeStepMessagePtr;
+
 	/////////NETWORK SERVER MESSAGES////////////////
 
 	/**

@@ -20,7 +20,6 @@
 #pragma once
 
 #include "Sim/Common.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/GeometryCategory.h"
 #include "Sim/Components/BaseSceneComponent.h"

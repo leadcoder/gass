@@ -22,6 +22,7 @@
 #include "Core/Math/CoreMath.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Vector.h"
+#include "Core/Math/Quaternion.h"
 
 
 
@@ -159,46 +160,11 @@ namespace GASS
 
 		Rotate(rot.x,rot.y,rot.z);
 
-		m_Data[0][3] = 0;//scale.x;
-		m_Data[1][3] = 0;//scale.y;
-		m_Data[2][3] = 0;//scale.z;
-
-		/*Mat4 h,p,r,res;
-
-		h.RotateY(rot.h);p.RotateX(rot.p);r.RotateZ(rot.r);
-		res = h*p*r;
-
-		memcpy(m_Data,res.m_Data,sizeof(Float)*16);
-
-		m_Data[3][0] = pos.x;
-		m_Data[3][1] = pos.y;
-		m_Data[3][2] = pos.z;*/
-
-
-		/*Float cr = (Float)cos( rot.p );
-		Float sr = (Float)sin( rot.p );
-		Float cp = (Float)cos( rot.h );
-		Float sp = (Float)sin( rot.h );
-		Float cy = (Float)cos( rot.r );
-		Float sy = (Float)sin( rot.r);
-
-		m_Data[0][0] = (Float)( cp*cy );
-		m_Data[0][1] = (Float)( cp*sy );
-		m_Data[0][2] = (Float)( -sp );
-
-		Float srsp = sr*sp;
-		Float crsp = cr*sp;
-
-		m_Data[1][0] = (Float)( srsp*cy-cr*sy );
-		m_Data[1][1] = (Float)( srsp*sy+cr*cy );
-		m_Data[1][2] = (Float)( sr*cp );
-
-		m_Data[2][0] = (Float)( crsp*cy+sr*sy );
-		m_Data[2][1] = (Float)( crsp*sy-sr*cy );
-		m_Data[2][2] = (Float)( cr*cp );*/
+		m_Data[0][3] = 0;
+		m_Data[1][3] = 0;
+		m_Data[2][3] = 0;
 
 		//Scale
-
 		m_Data[0][0] *= scale.x;
 		m_Data[0][1] *= scale.x;
 		m_Data[0][2] *= scale.x;
@@ -213,8 +179,37 @@ namespace GASS
 		m_Data[2][1] *= scale.z;
 		m_Data[2][2] *= scale.z;
 		m_Data[2][3] *= scale.z;
-		//m_Data[1][1] *= scale.y;
-		//m_Data[2][2] *= scale.z;
+		
+	}
+
+	void Mat4::SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale)
+	{
+		Identity();
+		rot.ToRotationMatrix(*this);
+
+		m_Data[3][0] = pos.x;
+		m_Data[3][1] = pos.y;
+		m_Data[3][2] = pos.z;
+
+		m_Data[0][3] = 0;
+		m_Data[1][3] = 0;
+		m_Data[2][3] = 0;
+
+		//Scale
+		m_Data[0][0] *= scale.x;
+		m_Data[0][1] *= scale.x;
+		m_Data[0][2] *= scale.x;
+		m_Data[0][3] *= scale.x;
+
+		m_Data[1][0] *= scale.y;
+		m_Data[1][1] *= scale.y;
+		m_Data[1][2] *= scale.y;
+		m_Data[1][3] *= scale.y;
+
+		m_Data[2][0] *= scale.z;
+		m_Data[2][1] *= scale.z;
+		m_Data[2][2] *= scale.z;
+		m_Data[2][3] *= scale.z;
 	}
 
 

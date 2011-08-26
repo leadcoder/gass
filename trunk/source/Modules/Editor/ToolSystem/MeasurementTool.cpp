@@ -93,8 +93,6 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		SceneObjectPtr(m_RulerObject)->PostMessage(mesh_message);
 
-		
-
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
