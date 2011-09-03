@@ -201,6 +201,48 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
 
+
+
+	/**
+	Message use indicate that a the scene node structure has changed and that this should 
+	be reflected in gfx-scene node should be attached 
+	to the first parent gfx-node
+	*/
+
+	class ParentChangedMessage : public BaseMessage
+	{
+	public:
+		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay)
+		  {
+
+		  }
+	private:
+
+	};
+	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
+
+
+	/**
+	Message use to alternate whether or not a gfx-scene node should be attached 
+	to the first parent gfx-node
+	*/
+	class AttachToParentMessage : public BaseMessage
+	{
+	public:
+		AttachToParentMessage(bool value,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay)
+		  {
+
+		  }
+		  bool GetAttachToParent() const {return m_AttachToParent;}
+	private:
+		bool m_AttachToParent;
+	};
+	typedef boost::shared_ptr<AttachToParentMessage> AttachToParentMessagePtr;
+
+
+
 	/**
 	Message used to change visibility of scene nodes,
 	Typically the location component respond to this message
@@ -732,21 +774,6 @@ namespace GASS
 		SceneManagerPtr m_NetworkSceneManager;
 	};
 	typedef boost::shared_ptr<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
-
-
-
-	class ParentChangedMessage : public BaseMessage
-	{
-	public:
-		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay)
-		  {
-
-		  }
-	private:
-
-	};
-	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
 
 
 	//typedef boost::shared_ptr<char> NetworkDataPtr;

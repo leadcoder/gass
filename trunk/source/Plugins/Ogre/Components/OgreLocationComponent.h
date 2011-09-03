@@ -90,7 +90,8 @@ namespace GASS
 		void WorldRotationMessage(WorldRotationMessagePtr message);
 		void BoundingInfoMessage(BoundingInfoMessagePtr message);
 		void OnUpdateEulerAngles(UpdateEulerAnglesMessagePtr message);
-
+		void OnAttachToParent(AttachToParentMessagePtr message);
+	
 		
 	
 	

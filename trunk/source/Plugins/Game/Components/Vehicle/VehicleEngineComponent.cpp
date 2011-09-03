@@ -403,7 +403,6 @@ namespace GASS
 
 	}
 
-
 	void VehicleEngineComponent::Update(double delta)
 	{
 		m_CurrentTime += delta;
@@ -431,6 +430,7 @@ namespace GASS
 
 		UpdateSound(delta);
 		UpdateExhaustFumes(delta);
+		UpdateInstruments(delta);
 
 
 
@@ -467,6 +467,12 @@ namespace GASS
 
 		float emission = GetNormRPM()*30;
 		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
+		GetSceneObject()->PostMessage(particle_msg);
+	}
+
+	void VehicleEngineComponent::UpdateInstruments(double delta)
+	{
+		MessagePtr particle_msg(new VehicleEngineStatusMessage(m_RPM,m_VehicleSpeed,m_Gear));
 		GetSceneObject()->PostMessage(particle_msg);
 	}
 

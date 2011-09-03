@@ -72,7 +72,7 @@ namespace GASS
 		void OnWorldPositionMessage(WorldPositionMessagePtr message);
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
 		void OnParentChangedMessage(ParentChangedMessagePtr message);
-		
+		void OnAttachToParent(AttachToParentMessagePtr message);
 
 		void SetAttachToParent(bool value);
 		bool GetAttachToParent() const;

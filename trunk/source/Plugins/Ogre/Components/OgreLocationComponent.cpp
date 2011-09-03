@@ -86,6 +86,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::VisibilityMessage,GASS::VisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
 		
 	}
 
@@ -154,6 +155,12 @@ namespace GASS
 				sm->destroySceneNode(m_OgreNode->getName());
 			}
 		}
+	}
+
+
+	void OgreLocationComponent::OnAttachToParent(AttachToParentMessagePtr message)
+	{
+		SetAttachToParent(message->GetAttachToParent());
 	}
 
 	void OgreLocationComponent::ParentChangedMessage(ParentChangedMessagePtr message)

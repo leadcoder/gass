@@ -136,6 +136,7 @@ namespace GASS
 		void UpdateSteering(double delta);
 		void UpdateSound(double delta);
 		void UpdateExhaustFumes(double delta);
+		void UpdateInstruments(double delta);
 
 		//Helpers
 		float RPM2AngleVel(float rpm);

@@ -205,5 +205,23 @@ namespace GASS
 		LODLevel m_Level;
 	};
 	typedef boost::shared_ptr<LODMessage> LODMessagePtr;
+
+
+	class VehicleEngineStatusMessage : public BaseMessage
+	{
+	public:
+		VehicleEngineStatusMessage(float rpm, float speed,int gear, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+			m_RPM(rpm),
+			m_Speed(speed),
+			m_Gear(gear){}
+		float GetRPM() const {return m_RPM;}
+		float GetSpeed() const {return m_Speed;}
+		int GetGear() const {return m_Gear;}
+	private:
+		float m_RPM;
+		float m_Speed;
+		int m_Gear;
+	};
+	typedef boost::shared_ptr<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
 }
 #endif

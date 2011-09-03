@@ -79,6 +79,13 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
+	}
+
+
+	void OSGLocationComponent::OnAttachToParent(AttachToParentMessagePtr message)
+	{
+		SetAttachToParent(message->GetAttachToParent());
 	}
 
 	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
