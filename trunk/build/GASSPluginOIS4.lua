@@ -7,6 +7,7 @@ project "GASSPluginOIS"
 
 	targetdir ( "../lib/" .. _ACTION )
 
+	dofile "helpfunctions.lua"
 
 if (os.is("windows")) then
 
