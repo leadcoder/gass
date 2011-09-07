@@ -123,8 +123,8 @@ namespace GASS
 			{
 				if ( !boost::filesystem::is_directory( *iter ) )      
 				{   
-					std::string exstension = iter->path().extension();
-					std::string filename = iter->path().filename();
+					std::string exstension = iter->path().extension().generic_string();
+					std::string filename = iter->path().filename().generic_string();
 
 					if(exstension == ext)
 					{

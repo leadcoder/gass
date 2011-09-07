@@ -355,8 +355,8 @@ namespace GASS
 				}
 				else
 				{
-					const std::string exstension = iter->path().extension();
-					const std::string filename = iter->path().filename();
+					const std::string exstension = iter->path().extension().generic_string();
+					const std::string filename = iter->path().filename().generic_string();
 					files.push_back(filename);
 				}
 			}
