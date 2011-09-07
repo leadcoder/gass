@@ -13,7 +13,7 @@ if (os.is("windows")) then
 		"../source",
 		"$(OGRE_PATH)/include/OGRE",
 		"$(OGRE_PATH)/OgreMain/include",
-		"../dependencies/PagedGeometry-1.1.0/include",
+		"../dependencies/PagedGeometry-1.1.1/include",
 		"../dependencies/tinyxml",
 		"$(BOOST_PATH)"
 	}
@@ -23,7 +23,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"$(OGRE_PATH)/lib/$(ConfigurationName)",
-		"../dependencies/PagedGeometry-1.1.0/lib",
+		"../dependencies/PagedGeometry-1.1.1/lib",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_PATH)/lib"
 	}
@@ -38,14 +38,14 @@ else
 		"$(BOOST_PATH)",
 		"$(OGRE_PATH)/include/OGRE",
 		"$(OGRE_PATH)/OgreMain/include",
-		"../dependencies/PagedGeometry-1.1.0/include",
+		"../dependencies/PagedGeometry-1.1.1/include",
 		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"../dependencies/PagedGeometry-1.1.0/lib",
+		"../dependencies/PagedGeometry-1.1.1/lib",
 		"$(BOOST_PATH)/lib",
 		"../dependencies/tinyxml/lib",
 	}
