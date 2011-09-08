@@ -37,15 +37,15 @@ namespace GASS
 	}
 	MessageManager::~MessageManager()
 	{
-        delete m_Mutex;
+		delete m_Mutex;
 
 		//release mem
 		/*MessageTypeListenerMap::iterator type_iter  = m_MessageTypes.begin();
 		while(type_iter != m_MessageTypes.end())
 		{
-			MessageTypeListeners* listener = type_iter->second;
-			delete listener;
-			type_iter++;
+		MessageTypeListeners* listener = type_iter->second;
+		delete listener;
+		type_iter++;
 		}*/
 	}
 
@@ -80,23 +80,23 @@ namespace GASS
 		if(message_type == m_MessageTypes.end())
 		{
 
-        /*    MessageType mt = message->GetType();
-            Log::Print("Failed %s",message->GetType().name());
-		    message_type = m_MessageTypes.begin();
-		    while(message_type != m_MessageTypes.end())
-		    {
-		        if(mt == message_type->first)
-                    Log::Print("REG failed name %s",message_type->first.name());
-                else
-                    Log::Print("REG name %s",message_type->first.name());
-		        message_type++;
-		    }*/
-		 	return;
+			/*    MessageType mt = message->GetType();
+			Log::Print("Failed %s",message->GetType().name());
+			message_type = m_MessageTypes.begin();
+			while(message_type != m_MessageTypes.end())
+			{
+			if(mt == message_type->first)
+			Log::Print("REG failed name %s",message_type->first.name());
+			else
+			Log::Print("REG name %s",message_type->first.name());
+			message_type++;
+			}*/
+			return;
 		}
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-			
+
 			(*msg_reg)->m_Callback->Fire(message);
 			++msg_reg;
 		}
@@ -181,15 +181,15 @@ namespace GASS
 		//m_MessageTypes.clear();
 	}
 
-	// Updates the message handler and sends any messages than need to be sent
+	// Updates the message manager and deliver messages to suscribers
 	void MessageManager::Update(float dt)
 	{
 		//lock message queue and copy to temporary queue for processing
 		MessageQueue work_queue;
 		{
-		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
-		if(m_MessageQueue.size() == 0)
-			return;
+			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+			if(m_MessageQueue.size() == 0)
+				return;
 
 			work_queue =  m_MessageQueue;
 			m_MessageQueue.clear();
@@ -241,7 +241,7 @@ namespace GASS
 			}
 		}
 
-		//lock and sync
+		//lock and add unprocessed messages back to queue due to delayed delivery
 		{
 			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 			MessageQueue::iterator iter = work_queue.begin();

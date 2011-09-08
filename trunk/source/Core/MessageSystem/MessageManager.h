@@ -81,7 +81,7 @@ namespace GASS
 
 		/**
 			Register to listen to messages of certain type.
-			The message callback has to be of the follwing type
+			The message callback has to be of the following type
 			void MyClass::MyMessageCallback(MessagePtr messsage)
 			Priority argument let you tell the message manager if
 			you want to be called early or late when a message is
