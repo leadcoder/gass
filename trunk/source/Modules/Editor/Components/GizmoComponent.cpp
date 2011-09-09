@@ -287,7 +287,10 @@ namespace GASS
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
+		{
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
+			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage,0));
+		}
 
 		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));

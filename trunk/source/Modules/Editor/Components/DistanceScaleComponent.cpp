@@ -36,7 +36,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("DistanceScaleComponent",new Creator<DistanceScaleComponent, IComponent>);
 		RegisterProperty<float>("MaxDistance",&DistanceScaleComponent::GetMaxDistance, &DistanceScaleComponent::SetMaxDistance);
-		RegisterProperty<float>("MinDistance",&DistanceScaleComponent::GetMaxDistance, &DistanceScaleComponent::SetMaxDistance);
+		RegisterProperty<float>("MinDistance",&DistanceScaleComponent::GetMinDistance, &DistanceScaleComponent::SetMinDistance);
 	}
 
 	void DistanceScaleComponent::OnCreate()
@@ -152,7 +152,10 @@ namespace GASS
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
+		{
 			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
+			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage,1));
+		}
 
 	}
 }
