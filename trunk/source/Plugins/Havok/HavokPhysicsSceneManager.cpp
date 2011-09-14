@@ -146,11 +146,7 @@ namespace GASS
 
 			for (int i = 0; i < clamp_num_steps; ++i)
 			{
-				//dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-				//dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-				//dWorldQuickStep(m_World, m_SimulationUpdateInterval);
-				//dJointGroupEmpty(m_ContactGroup);
-
+			
 				m_pPhysicsWorld->stepMultithreaded(m_pJobQueue, m_pThreadPool, m_SimulationUpdateInterval);
 				//stepVisualDebugger(deltaTime);
 				hkMonitorStream::getInstance().reset();

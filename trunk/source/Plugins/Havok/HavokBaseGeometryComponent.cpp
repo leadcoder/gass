@@ -42,6 +42,7 @@
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/SimEngine.h"
 #include <boost/bind.hpp>
+#include <Physics/Collide/Shape/Misc/Transform/hkpTransformShape.h>
 
 namespace GASS
 {
@@ -52,14 +53,14 @@ namespace GASS
 		m_CollisionCategory(1),
 		m_CollisionBits(1),
 		m_SizeFromMesh(true),
-		m_Debug(false)
+		m_Debug(false),
+		m_Shape(NULL)
 	{
 
 	}
 
 	HavokBaseGeometryComponent::~HavokBaseGeometryComponent()
 	{
-		Reset();
 	}
 
 	void HavokBaseGeometryComponent::RegisterReflection()
@@ -74,7 +75,7 @@ namespace GASS
 
 	void HavokBaseGeometryComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
@@ -86,7 +87,22 @@ namespace GASS
 		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
-		UpdateHavokGeom();
+		m_Shape = CreateHavokShape();
+
+		hkTransform transform;
+		hkQuaternion rotate;
+		rotate.setIdentity();
+		hkVector4 translate = hkVector4(m_Offset.x, m_Offset.y, m_Offset.z);
+		transform.setRotation(rotate);
+		transform.setTranslation(translate);
+
+		m_TransformShape = new hkpTransformShape(m_Shape, transform);
+
+		SetCollisionBits(m_CollisionBits);
+		SetCollisionCategory(m_CollisionCategory);
+		SetOffset(m_Offset);
+		UpdateBodyMass();
+		//UpdateHavokGeom();
 		if(m_Debug) 
 			SetDebug(true);
 	}
@@ -109,14 +125,11 @@ namespace GASS
 		return m_SizeFromMesh;
 	}
 
-	void HavokBaseGeometryComponent::UpdateHavokGeom()
+/*	void HavokBaseGeometryComponent::UpdateHavokGeom()
 	{
 		m_Body = GetSceneObject()->GetFirstComponentByClass<HavokBodyComponent>().get();
 		UpdateBodyMass();
-		SetCollisionBits(m_CollisionBits);
-		SetCollisionCategory(m_CollisionCategory);
-		SetOffset(m_Offset);
-	}
+	}*/
 	
 	void HavokBaseGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
@@ -207,6 +220,13 @@ namespace GASS
 	void HavokBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
 	{
 		SetDebug(message->DebugGeometry());
+	}
+
+	bool HavokBaseGeometryComponent::IsInitialized() const 
+	{
+		if(m_Shape)
+		return true;
+		else return false;
 	}
 
 	void HavokBaseGeometryComponent::SetDebug(bool value)

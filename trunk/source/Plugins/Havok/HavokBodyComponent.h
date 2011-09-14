@@ -29,6 +29,7 @@
 
 class hkpRigidBody;
 class hkpWorld;
+class hkpShape;
 namespace GASS
 {
 	class HavokBodyComponent : public Reflection<HavokBodyComponent,BaseSceneComponent>  , public ITaskListener
@@ -52,6 +53,7 @@ namespace GASS
 		void SetMass(float mass);
 		void Update(double delta_time);
 		TaskGroup GetTaskGroup() const;
+		void UpdateMass();
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -116,6 +118,8 @@ namespace GASS
 		MassRepresentationType m_MassRepresentation;
 		hkpRigidBody* m_RigidBody;
 		hkpWorld* m_World;
+
+		hkpShape* m_Shape;
 	};
 }
 

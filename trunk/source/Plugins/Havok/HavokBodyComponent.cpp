@@ -27,6 +27,7 @@
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "HavokBaseGeometryComponent.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include <boost/bind.hpp>
@@ -43,7 +44,8 @@ namespace GASS
 		m_AssymetricInertia(0,0,0),
 		m_EffectJoints(true),
 		m_Active(true),
-		m_RigidBody(NULL)
+		m_RigidBody(NULL),
+		m_Shape(NULL)
 	{
 	}
 
@@ -65,7 +67,7 @@ namespace GASS
 
 	void HavokBodyComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnLoad,LoadPhysicsComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnRotationChanged,RotationMessage,0));
@@ -180,29 +182,51 @@ namespace GASS
 		hkReal fhkConvexShapeRadius=0.05;
 
 
-		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 pos = location->GetPosition();
-		hkVector4 position(pos.x,pos.y,pos.z,1);
-		hkVector4 dimensions(1,1,1,1);
+		/*m_Shape = new hkpCompoundShape(cs);
+		//Get All shapes!
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetComponentsByClass<HavokBaseGeometryComponent>(comps,false);
+		for(int i =0; i < comps.size(); i++)
+		{
+			HavokBaseGeometryComponentPtr geom = boost::shared_dynamic_cast<HavokBaseGeometryComponent>(comps[i]);
+			if(geom)
+			{
+				hkpShape* shape = geom->GetShape();
+			}
+		}*/
 
-		//dimensions.
+		IComponentContainer::ComponentVector comps;
+		
+		GetSceneObject()->GetComponentsByClass<HavokBaseGeometryComponent>(comps,false);
+		for(int i =0; i < comps.size(); i++)
+		{
+			HavokBaseGeometryComponentPtr geom = boost::shared_dynamic_cast<HavokBaseGeometryComponent>(comps[i]);
+			if(geom)
+			{
+				m_Shape = geom->GetShape();
+				break;
+			}
+		}
 
-		hkpShape* movingBodyShape = new hkpBoxShape(dimensions,fhkConvexShapeRadius);
-
+		
 		// Compute the inertia tensor from the shape
 		hkpMassProperties massProperties;
-		
-		hkpInertiaTensorComputer::computeShapeVolumeMassProperties(movingBodyShape, m_Mass, massProperties);
+		hkpInertiaTensorComputer::computeShapeVolumeMassProperties(m_Shape, m_Mass, massProperties);
 
 		//create rigid body information structure 
 		hkpRigidBodyCinfo rigidBodyInfo;
+
+		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 pos = location->GetPosition();
+		hkVector4 position(pos.x,pos.y,pos.z,1);
+		
 
 		// Assign the rigid body properties
 		rigidBodyInfo.m_position = position;
 		rigidBodyInfo.m_mass = massProperties.m_mass;
 		rigidBodyInfo.m_centerOfMass = massProperties.m_centerOfMass;
 		rigidBodyInfo.m_inertiaTensor = massProperties.m_inertiaTensor;
-		rigidBodyInfo.m_shape = movingBodyShape;
+		rigidBodyInfo.m_shape = m_Shape;
 		rigidBodyInfo.m_motionType = hkpMotion::MOTION_BOX_INERTIA;
 
 		//create new rigid body with supplied info
@@ -214,13 +238,24 @@ namespace GASS
 
 		//decerase reference counter for rigid body and shape
 		m_RigidBody->removeReference();
-		movingBodyShape->removeReference();
+		m_Shape->removeReference();
 
 		pPhysicsWorld->unlock();
 
+	}
 
-		//	SetPosition(location->GetPosition());
-
+	void HavokBodyComponent::UpdateMass()
+	{
+		// Compute the inertia tensor from the shape
+		hkpMassProperties massProperties;
+		if(m_Shape && m_RigidBody)
+		{
+			hkpInertiaTensorComputer::computeShapeVolumeMassProperties(m_Shape, m_Mass, massProperties);
+			m_RigidBody->setCenterOfMassLocal(massProperties.m_centerOfMass);
+			m_RigidBody->setMass(massProperties.m_mass);
+			m_RigidBody->setInertiaLocal(massProperties.m_inertiaTensor);
+		}
+		
 	}
 
 	void HavokBodyComponent::Update(double delta_time)
@@ -229,6 +264,9 @@ namespace GASS
 		Vec3 pos = GetPosition();
 		MessagePtr pos_msg(new WorldPositionMessage(pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
+
+		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
+		GetSceneObject()->PostMessage(rot_msg);
 	}
 
 	TaskGroup HavokBodyComponent::GetTaskGroup() const
@@ -316,11 +354,6 @@ namespace GASS
 	}
 
 
-
-
-
-
-
 	void HavokBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
 	{
 
@@ -377,13 +410,28 @@ namespace GASS
 	void HavokBodyComponent::SetRotation(const Quaternion &rot)
 	{
 
+		if(m_RigidBody)
+		{
+			m_World->lock();
+			hkQuaternion h_rot(rot.x,rot.y,rot.z,rot.w);
+			m_RigidBody->getRigidMotion()->setRotation(h_rot);
+			m_RigidBody->updateCachedAabb();
+			m_World->unlock();
+		}
+
 	}
 
 	Quaternion HavokBodyComponent::GetRotation()
 	{
-		Quaternion q;
-
-
-		return q;
+		Quaternion rot;
+		if(m_RigidBody)
+		{
+			hkQuaternion h_rot = m_RigidBody->getRotation();
+			rot.x = h_rot(0);
+			rot.y = h_rot(1);
+			rot.z = h_rot(2);
+			rot.w = h_rot(3);
+		}
+		return rot;
 	}
 }

@@ -28,6 +28,8 @@
 #include "HavokPhysicsSceneManager.h"
 #include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 
+class hkpTransformShape;
+
 namespace GASS
 {
 	class IGeometryComponent;
@@ -52,6 +54,7 @@ namespace GASS
 		virtual ~HavokBaseGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual hkpShape* GetShape() const {return (hkpShape*) m_TransformShape;}
 	protected:
 
 		//Message functions
@@ -66,12 +69,14 @@ namespace GASS
 
 		//common Havok geometry functionality, 
 		//all functions are virtual for max flexibility
-		virtual void UpdateHavokGeom();
+		//virtual void UpdateHavokGeom();
+		virtual hkpShape*  CreateHavokShape() {return NULL;}
+		
 		virtual void Disable();
 		virtual void Enable();
 		virtual void SetFriction(float value){m_Friction = value;}
 		virtual float GetFriction() const {return m_Friction;}
-		virtual void Reset();
+		//virtual void Reset();
 		virtual void SetPosition(const Vec3 &pos);
 		virtual void SetRotation(const Quaternion &rot);
 		virtual void SetOffset(const Vec3 &value);
@@ -91,6 +96,7 @@ namespace GASS
 		virtual void SetDebug(bool value);
 		virtual bool GetDebug() const;
 		virtual SceneObjectPtr GetDebugObject();
+
 	protected:
 		HavokBodyComponent* m_Body; //pointer to body!
 		std::string m_GeometryTemplate;
@@ -102,5 +108,9 @@ namespace GASS
 		bool m_SizeFromMesh;
 		bool m_Debug;
 		HavokPhysicsSceneManagerWeakPtr m_SceneManager;
+		hkpShape* m_Shape;
+		hkpTransformShape* m_TransformShape;
 	};
+
+	typedef boost::shared_ptr<HavokBaseGeometryComponent> HavokBaseGeometryComponentPtr;
 }

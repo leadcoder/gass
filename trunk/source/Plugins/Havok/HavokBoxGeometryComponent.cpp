@@ -46,8 +46,8 @@
 namespace GASS
 {
 	HavokBoxGeometryComponent::HavokBoxGeometryComponent():
-		m_Size(1,1,1)
-		
+		m_Size(1,1,1),
+		m_BoxShape(NULL)
 	{
 
 	}
@@ -65,7 +65,16 @@ namespace GASS
 
 	void HavokBoxGeometryComponent::OnCreate()
 	{
-		
+		HavokBaseGeometryComponent::OnCreate();
+	}
+
+	hkpShape*  HavokBoxGeometryComponent::CreateHavokShape()
+	{
+		hkReal fhkConvexShapeRadius=0.05;
+		hkVector4 dimensions(m_Size.x,m_Size.y,m_Size.z,1);
+		hkpBoxShape* boxShape = new hkpBoxShape(dimensions,fhkConvexShapeRadius);
+		m_BoxShape = boxShape;
+		return boxShape;
 	}
 
 	void HavokBoxGeometryComponent::SetSizeFromMesh(bool value)
@@ -89,10 +98,11 @@ namespace GASS
 		if(size.x > 0 && size.y > 0 && size.z > 0)
 		{
 			m_Size = size;
-		//	if(m_GeomID)
+			if(m_BoxShape)
 			{
-		//		dGeomBoxSetLengths(m_GeomID, m_Size.x, m_Size.y, m_Size.z);
-			//	UpdateBodyMass();
+				hkVector4 dimensions(m_Size.x,m_Size.y,m_Size.z,1);
+				m_BoxShape->setHalfExtents(dimensions);
+				UpdateBodyMass();
 				UpdateDebug();
 			}
 		}
@@ -103,16 +113,7 @@ namespace GASS
 		return m_Size;
 	}
 
-/*	void HavokBoxGeometryComponent::UpdateBodyMass()
-	{
-		if(m_Body && m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
-		{
-			dMass ode_mass;
-			dMassSetBoxTotal(&ode_mass, m_Body->GetMass(), m_Size.x, m_Size.y, m_Size.z);
-			m_Body->SetODEMass(ode_mass);
-		}
-	}
-	*/
+	
 	void HavokBoxGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
 	{
 		ManualMeshDataPtr mesh_data(new ManualMeshData());

@@ -45,15 +45,21 @@ namespace GASS
 		virtual ~HavokBoxGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		
+		//HavokBaseGeometryComponent
+	
+		//virtual hkpShape* GetShape() const {return m_BoxShape;}
 	protected:
+		virtual hkpShape*  CreateHavokShape();
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
 		void SetSizeFromMesh(bool value);
 		//debug functions
-
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		void UpdateDebug();
+		
 	protected:
+		hkpBoxShape* m_BoxShape;
 		Vec3 m_Size; 
 	};
 }
