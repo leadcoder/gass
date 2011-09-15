@@ -70,8 +70,8 @@ namespace GASS
 		RegisterProperty<Vec3>("Offset", &GASS::ODEBaseGeometryComponent::GetOffset, &GASS::ODEBaseGeometryComponent::SetOffset);
 		RegisterProperty<float>("Friction", &GASS::ODEBaseGeometryComponent::GetFriction, &GASS::ODEBaseGeometryComponent::SetFriction);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::ODEBaseGeometryComponent::GetSizeFromMesh, &GASS::ODEBaseGeometryComponent::SetSizeFromMesh);
-		RegisterProperty<long int>("CollisionBits", &GASS::ODEBaseGeometryComponent::GetCollisionBits, &GASS::ODEBaseGeometryComponent::SetCollisionBits);
-		RegisterProperty<long int>("CollisionCategory", &GASS::ODEBaseGeometryComponent::GetCollisionCategory, &GASS::ODEBaseGeometryComponent::SetCollisionCategory);
+		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODEBaseGeometryComponent::GetCollisionBits, &GASS::ODEBaseGeometryComponent::SetCollisionBits);
+		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODEBaseGeometryComponent::GetCollisionCategory, &GASS::ODEBaseGeometryComponent::SetCollisionCategory);
 
 		RegisterProperty<bool>("Debug", &GASS::ODEBaseGeometryComponent::GetDebug, &GASS::ODEBaseGeometryComponent::SetDebug);
 	}
@@ -217,12 +217,12 @@ namespace GASS
 		}
 	}
 
-	long int ODEBaseGeometryComponent::GetCollisionBits() const 
+	unsigned long ODEBaseGeometryComponent::GetCollisionBits() const 
 	{
 		return m_CollisionBits;
 	}
 
-	void ODEBaseGeometryComponent::SetCollisionBits(long int value)
+	void ODEBaseGeometryComponent::SetCollisionBits(unsigned long value)
 	{
 		m_CollisionBits = value;
 		if(m_GeomID)
@@ -237,12 +237,12 @@ namespace GASS
 		return (m_GeomID == 0) ? false:true;
 	}
 
-	long int ODEBaseGeometryComponent::GetCollisionCategory() const 
+	unsigned long  ODEBaseGeometryComponent::GetCollisionCategory() const 
 	{
 		return m_CollisionCategory;
 	}
 
-	void ODEBaseGeometryComponent::SetCollisionCategory(long int value)
+	void ODEBaseGeometryComponent::SetCollisionCategory(unsigned long value)
 	{
 		m_CollisionCategory =value;
 		if(m_GeomID)

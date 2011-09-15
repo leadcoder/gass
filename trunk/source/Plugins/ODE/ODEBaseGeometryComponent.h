@@ -79,10 +79,10 @@ namespace GASS
 		virtual dSpaceID GetSpace();
 		virtual void SetOffset(const Vec3 &value);
 		virtual Vec3 GetOffset() const {return m_Offset;}
-		virtual long int GetCollisionBits() const;
-		virtual void SetCollisionBits(long int value);
-		virtual long int GetCollisionCategory() const;
-		virtual void SetCollisionCategory(long int value);
+		virtual unsigned long GetCollisionBits() const;
+		virtual void SetCollisionBits(unsigned long value);
+		virtual unsigned long GetCollisionCategory() const;
+		virtual void SetCollisionCategory(unsigned long value);
 		virtual bool GetSizeFromMesh() const;
 		virtual GeometryComponentPtr GetGeometry() const;
 		virtual bool IsInitialized() const;
@@ -103,8 +103,8 @@ namespace GASS
 		std::string m_AddToBody;
 		Vec3 m_Offset;
 		float m_Friction;
-		long int m_CollisionCategory;
-		long int m_CollisionBits;
+		unsigned long m_CollisionCategory;
+		unsigned long m_CollisionBits;
 		bool m_SizeFromMesh;
 		bool m_Debug;
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;

@@ -305,7 +305,7 @@ namespace GASS
 			Quaternion new_rot;
 			Vec3 new_pos;
 
-			static RakNetTime  step_back = 100;
+			RakNetTime  step_back = raknet->GetInterpolationLag();
 
 #ifdef _DEBUG_LTC_
 

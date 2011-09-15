@@ -101,6 +101,11 @@ namespace GASS
 		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
 		ScenarioScenePtr GetScene() {return ScenarioScenePtr(m_Scene);}
 		RakNet::AutoRPC* GetRPC() {return  &m_AutoRPC;}
+
+		// get time to step back when values need to be interpolated
+		double GetInterpolationLag() const {return m_InterpolationLag;}
+		void SetInterpolationLag(double  value) {m_InterpolationLag = value;}
+
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -151,6 +156,7 @@ namespace GASS
 		ScenarioSceneWeakPtr m_Scene;
 
 		RakNet::AutoRPC m_AutoRPC;
+		double m_InterpolationLag;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

@@ -241,6 +241,18 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<FileOpenMessage> FileOpenMessagePtr;
 
+	class FileOpenedMessage : public BaseMessage
+	{
+	public:
+		FileOpenedMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Filename(filename){}
+		  std::string GetFilename() const {return m_Filename;}
+	private:
+		std::string m_Filename;
+	};
+	typedef boost::shared_ptr<FileOpenedMessage> FileOpenedMessagePtr;
+
+
 	class FileNewMessage : public BaseMessage
 	{
 	public:

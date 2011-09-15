@@ -66,7 +66,8 @@ namespace GASS
 		m_ScenarioIsRunning (false),
 		m_AcceptLateJoin (true),
 		m_RemoteCreatePlayers (true),
-		m_Active(false)
+		m_Active(false),
+		m_InterpolationLag(100.0) //100ms , this should be based on ping time
 	{
 
 	}
@@ -83,6 +84,7 @@ namespace GASS
 	void RakNetNetworkSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, ISystem>);
+		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 	}
 
 	void RakNetNetworkSystem::OnCreate()
@@ -95,8 +97,6 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
 		//		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnClientEnter,ClientEnterVehicleMessage,0));
-
-
 	}
 
 	void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)

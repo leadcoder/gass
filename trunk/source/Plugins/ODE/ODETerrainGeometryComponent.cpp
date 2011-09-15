@@ -64,8 +64,8 @@ namespace GASS
 	void ODETerrainGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, IComponent>);
-		RegisterProperty<long int>("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
-		RegisterProperty<long int>("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
+		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
+		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
 	}
 
 	void ODETerrainGeometryComponent::OnCreate()
@@ -179,12 +179,12 @@ namespace GASS
 		return h;
 	}
 
-	long int ODETerrainGeometryComponent::GetCollisionBits() const 
+	unsigned long ODETerrainGeometryComponent::GetCollisionBits() const 
 	{
 		return m_CollisionBits;
 	}
 
-	void ODETerrainGeometryComponent::SetCollisionBits(long int value)
+	void ODETerrainGeometryComponent::SetCollisionBits(unsigned long value)
 	{
 		m_CollisionBits = value;
 		if(m_GeomID)
@@ -218,12 +218,12 @@ namespace GASS
 		if(m_GeomID) dGeomEnable(m_GeomID);
 	}
 
-	long int ODETerrainGeometryComponent::GetCollisionCategory() const 
+	unsigned long ODETerrainGeometryComponent::GetCollisionCategory() const 
 	{
 		return m_CollisionCategory;
 	}
 
-	void ODETerrainGeometryComponent::SetCollisionCategory(long int value)
+	void ODETerrainGeometryComponent::SetCollisionCategory(unsigned long value)
 	{
 		m_CollisionCategory =value;
 		if(m_GeomID)

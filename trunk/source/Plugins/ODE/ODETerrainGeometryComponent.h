@@ -57,10 +57,10 @@ namespace GASS
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
-		long int GetCollisionBits() const;
-		void SetCollisionBits(long int value);
-		long int GetCollisionCategory() const;
-		void SetCollisionCategory(long int value);
+		unsigned long GetCollisionBits() const;
+		void SetCollisionBits(unsigned long value);
+		unsigned long GetCollisionCategory() const;
+		void SetCollisionCategory(unsigned long value);
 		dGeomID CreateODEGeom();
 		void Disable();
 		void Enable();
@@ -76,8 +76,8 @@ namespace GASS
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		ITerrainComponent* m_TerrainGeom;
-		long int m_CollisionCategory;
-		long int m_CollisionBits;
+		unsigned long m_CollisionCategory;
+		unsigned long m_CollisionBits;
 		dGeomID m_GeomID;
 		dSpaceID m_SpaceID;
 		std::string m_GeometryTemplate;
