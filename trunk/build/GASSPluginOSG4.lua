@@ -15,7 +15,7 @@ if (os.is("windows")) then
 		"$(OSG_PATH)/build/include",
 		"../dependencies/tinyxml",
 		"../dependencies/tbb/include",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
 	libdirs 
@@ -25,8 +25,8 @@ if (os.is("windows")) then
 		"$(OSG_PATH)/lib",
 		"$(OSG_PATH)/build/lib",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"$(BOOST_HOME)/lib",
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -36,7 +36,7 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"$(OSG_PATH)/include",
 		"$(OSG_PATH)/build/include",
 		"../dependencies/include/tinyxml",
@@ -48,7 +48,7 @@ else
 		"../lib/" .. _ACTION,
 		"$(OSG_PATH)/lib",
 		"$(OSG_PATH)/build/lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 

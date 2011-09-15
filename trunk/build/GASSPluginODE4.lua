@@ -22,7 +22,7 @@ end
 		"../source",
 		"../dependencies/ode/include",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"../dependencies/tbb/include"
 	}
 
@@ -46,10 +46,10 @@ end
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/DebugDoubleLib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 
@@ -69,10 +69,10 @@ libdirs
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/ReleaseDoubleLib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 

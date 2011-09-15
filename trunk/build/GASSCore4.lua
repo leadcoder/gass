@@ -15,15 +15,15 @@ project "GASSCore"
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{ 
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"$(BOOST_HOME)/lib",
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 	}
 
 

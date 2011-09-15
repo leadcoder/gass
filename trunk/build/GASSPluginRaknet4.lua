@@ -14,7 +14,7 @@ if (os.is("windows")) then
 		"../source",
 		"../dependencies/RakNet/Source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"../dependencies/tbb/include"
 	}
 
@@ -22,10 +22,10 @@ if (os.is("windows")) then
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -66,7 +66,7 @@ else
 		"../source",
 		"../dependencies/RakNet/Source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"../dependencies/tbb/include"	
 	}
 
@@ -74,10 +74,10 @@ else
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 configuration "Debug"

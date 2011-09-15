@@ -18,7 +18,7 @@ end
 		"../source/Plugins/Base",
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
 	libdirs 
@@ -26,7 +26,7 @@ end
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 	}
 
 

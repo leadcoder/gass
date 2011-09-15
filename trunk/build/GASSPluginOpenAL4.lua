@@ -12,7 +12,7 @@ project "GASSPluginOpenAL"
 		"../source",
 		"../dependencies/OpenAL1.1/include",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
 	libdirs 
@@ -22,7 +22,7 @@ project "GASSPluginOpenAL"
 		"../dependencies/ogre/lib",
 		"../dependencies/OpenAL1.1/libs/Win32",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 	}
 
 if (os.is("windows")) then

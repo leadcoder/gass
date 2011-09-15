@@ -17,7 +17,7 @@ if (os.is("windows")) then
 		"../source",
 		"../dependencies/tinyxml",
 		"../dependencies/lua/include",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 
 	}
 	
@@ -26,7 +26,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
 		"../dependencies/lua/lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
 
@@ -39,7 +39,7 @@ else
 		"../source",
 		"../dependencies/tinyxml",
 		"../dependencies/lua/include",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 
 	}
 
@@ -48,7 +48,7 @@ else
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
 		"../dependencies/lua/lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
 

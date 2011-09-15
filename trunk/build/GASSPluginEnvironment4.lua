@@ -11,23 +11,35 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/OgreMain/include",
+		"$(OGRE_HOME)/include/OGRE",
+		"$(OGRE_HOME)/OgreMain/include",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
 		"../dependencies/SkyX-v0.1/SkyX",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
+	configuration "Release"
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(OGRE_PATH)/lib/$(ConfigurationName)",
+		"$(OGRE_HOME)/lib/Release",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
 		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
+	}
+	configuration "Debug"
+	libdirs 
+	{ 
+		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(OGRE_HOME)/lib/Debug",
+		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
+		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
+		"../dependencies/tinyxml/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -37,8 +49,8 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)",
-		"$(OGRE_PATH)/OgreMain/include",
+		"$(BOOST_HOME)",
+		"$(OGRE_HOME)/OgreMain/include",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
 		"../dependencies/SkyX-v0.1/SkyX",
 		"../dependencies/include/tinyxml"
@@ -47,11 +59,11 @@ else
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
-		"$(OGRE_PATH)/build/lib",
+		"$(OGRE_HOME)/build/lib",
 		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
 		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 	}
 
 end

@@ -19,9 +19,9 @@ if (os.is("windows")) then
 		"$(CEGUI_HOME)/CEGUI/include",
 		"$(CEGUI_HOME)/CEGUI/include/ScriptingModules/LuaScriptModule/support/tolua++",
 		"$(CEGUI_HOME)/dependencies/include",
-		"$(OGRE_PATH)/OgreMain/include",
-		"$(OGRE_PATH)/include/Ogre",
-		"$(BOOST_PATH)"
+		"$(OGRE_HOME)/OgreMain/include",
+		"$(OGRE_HOME)/include/Ogre",
+		"$(BOOST_HOME)"
 
 	}
 	
@@ -31,7 +31,7 @@ if (os.is("windows")) then
 		"../dependencies/tinyxml/lib",
 		"$(CEGUI_HOME)/lib",
 		"$(CEGUI_HOME)/dependencies/lib/static",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
 
@@ -43,7 +43,7 @@ else
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 
 	}
 
@@ -51,7 +51,7 @@ else
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
 

@@ -21,7 +21,7 @@ end
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"../dependencies/tbb/include"
 	}
 
@@ -41,9 +41,9 @@ end
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 
@@ -62,9 +62,9 @@ libdirs
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/ia32/" .. tbverdir .. "/lib"
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 	}
 
 

@@ -14,51 +14,67 @@ if (os.is("windows")) then
 		"../dependencies/tinyxml",
 		--support both source build and SDK
 		--SDK
-		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/include/OGRE/Plugins/OctreeSceneManager",
-		"$(OGRE_PATH)/include/OGRE/Terrain",
-		"$(OGRE_PATH)/include/OGRE/Paging",
+		"$(OGRE_HOME)/include/OGRE",
+		"$(OGRE_HOME)/include/OGRE/Plugins/OctreeSceneManager",
+		"$(OGRE_HOME)/include/OGRE/Terrain",
+		"$(OGRE_HOME)/include/OGRE/Paging",
 		--Same  inludes but form source
-		"$(OGRE_PATH)/OGREMain/include",
-		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
-		"$(OGRE_PATH)/Components/Terrain/include",
-		"$(OGRE_PATH)/Components/Paging/include",
-		"$(BOOST_PATH)"
+		"$(OGRE_HOME)/OGREMain/include",
+		"$(OGRE_HOME)/PlugIns/OctreeSceneManager/include",
+		"$(OGRE_HOME)/Components/Terrain/include",
+		"$(OGRE_HOME)/Components/Paging/include",
+		"$(BOOST_HOME)"
 	}
+	
+	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
+	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 
+	configuration "Debug"
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(OGRE_PATH)/lib/$(ConfigurationName)",
-		"$(OGRE_PATH)/lib/$(ConfigurationName)/opt",
+		"$(OGRE_HOME)/lib\\debug",
+		"$(OGRE_HOME)\\lib\\debug\\opt",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
+	
+	
+	configuration "Release"
+	libdirs 
+	{
+		"../lib/" .. _ACTION,
+		"../dependencies",
+		"$(OGRE_HOME)/lib/release",
+		"$(OGRE_HOME)/lib/release/opt",
+		"../dependencies/tinyxml/lib",
+		"$(BOOST_HOME)/lib"
+	}
 
-	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
-	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
+	
 	
 else
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)",
-		"$(OGRE_PATH)/OgreMain/include",
-		"$(OGRE_PATH)/PlugIns/OctreeSceneManager/include",
-		"$(OGRE_PATH)/Components/Terrain/include",
-		"$(OGRE_PATH)/Components/Paging/include",
-		"$(OGRE_PATH)/build/include",		
+		"$(BOOST_HOME)",
+		"$(OGRE_HOME)/OgreMain/include",
+		"$(OGRE_HOME)/PlugIns/OctreeSceneManager/include",
+		"$(OGRE_HOME)/Components/Terrain/include",
+		"$(OGRE_HOME)/Components/Paging/include",
+		"$(OGRE_HOME)/build/include",		
 		"../dependencies/tinyxml"
 	}
 
+	
 	libdirs 
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"$(OGRE_PATH)/build/lib",
-		"$(BOOST_PATH)/lib"
+		"$(OGRE_HOME)/build/lib",
+		"$(BOOST_HOME)/lib"
 
 	}
 

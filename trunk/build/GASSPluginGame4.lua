@@ -13,7 +13,7 @@ project "GASSPluginGame"
 		"../source/Plugins/Game",
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 
 	}
 
@@ -22,7 +22,7 @@ project "GASSPluginGame"
 		"../lib/" .. _ACTION,
 		"../dependencies",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 
 	}
 

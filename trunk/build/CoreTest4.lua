@@ -11,7 +11,7 @@ project "CoreTest"
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)" ,
+		"$(BOOST_HOME)" ,
 		"../dependencies/tinyxml",
 
 
@@ -20,7 +20,7 @@ project "CoreTest"
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 	}
 

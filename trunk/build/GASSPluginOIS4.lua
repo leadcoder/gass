@@ -16,7 +16,7 @@ if (os.is("windows")) then
 		"../source",
 		"../dependencies/tinyxml",
 		"../dependencies/ois/includes",
-		"$(BOOST_PATH)",
+		"$(BOOST_HOME)",
 		"$(DXSDK_DIR)/include"
 	}
 	
@@ -25,7 +25,7 @@ if (os.is("windows")) then
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ois/lib",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"$(DXSDK_DIR)/lib/x86"
 	}
 
@@ -61,14 +61,14 @@ else
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 	}
 
 configuration "Debug"
