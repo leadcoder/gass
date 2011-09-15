@@ -5,6 +5,7 @@ cls
 echo 1) Visual Studio 7.1
 echo 2) Visual Studio 8.0
 echo 3) Visual Studio 9.0
+echo 4) Visual Studio 10.0
 
 :start
 set choice=
@@ -20,6 +21,11 @@ goto GENERATE
 )
 if '%choice%'=='3' (
 set target=vs2008
+goto GENERATE
+)
+
+if '%choice%'=='4' (
+set target=vs2010
 goto GENERATE
 )
 ECHO "%choice%" is not valid please try again

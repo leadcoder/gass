@@ -13,10 +13,10 @@
   </OgreGraphicsSystem>
   <OgreResourceSystem>
     <Name value = "ResourceSystem"/>
-    <AddResourceLocation Path="%OGRE_PATH%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_PATH%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_PATH%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_PATH%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>

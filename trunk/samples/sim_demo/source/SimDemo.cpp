@@ -140,10 +140,11 @@ int _getch( ) {
 }
 #endif
 
+typedef boost::shared_ptr<SimApplication> SimApplicationPtr;
 
 int main(int argc, char* argv[])
 {
-	SimApplication* app;
+	SimApplicationPtr app;
 	bool is_server = false;
 	std::string config = "../Configuration/app_config.xml";
 	int index = 1;
@@ -172,11 +173,11 @@ int main(int argc, char* argv[])
 		app_mode = 2;
 
 	if(app_mode == 0)
-		app = new SimClient(config);
+		app = SimApplicationPtr(new SimClient(config));
 	else if(app_mode == 1)
-		app = new SimServer(config);
+		app = SimApplicationPtr(new SimServer(config));
 	else if(app_mode == 2)
-		app = new SimApplication(config);
+		app = SimApplicationPtr(new SimApplication(config));
 
 	app->Init();
 
@@ -184,7 +185,7 @@ int main(int argc, char* argv[])
 	{
 
 	}
-	delete app;
+	
 	exit(0);
 
 
