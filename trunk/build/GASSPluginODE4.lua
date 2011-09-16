@@ -71,11 +71,6 @@ libdirs
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/ReleaseDoubleLib",
-<<<<<<< .mine
-		"../dependencies/tbb/lib/ia32/" .. tbverdir
-=======
 		"../dependencies/tbb/lib/ia32/" .. tbverdir 
->>>>>>> .r500
-
 	}
 	

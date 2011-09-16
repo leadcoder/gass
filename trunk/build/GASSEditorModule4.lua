@@ -63,11 +63,7 @@ libdirs
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
-<<<<<<< .mine
-		"../dependencies/tbb/lib/ia32/" .. tbverdir
-=======
 		"../dependencies/tbb/lib/ia32/" .. tbverdir 
->>>>>>> .r500
 	}
 
 

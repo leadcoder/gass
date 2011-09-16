@@ -72,11 +72,10 @@ goto :EOF
 
 rem Build Debug
 call :COMPILE GASSSim.sln "GASSCore" "Debug|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSSim" "Debug|Win32" /USEENV
 call :COMPILESOLUTION GASSSim.sln "Debug|Win32" /USEENV
 
 
-
-REM call :COMPILE GASSSim.sln "GASSSim" "Debug|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginOgre" "Debug|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginODE" "Debug|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginOIS" "Debug|Win32" /USEENV
@@ -90,9 +89,10 @@ REM call :COMPILE GASSSim.sln "GASSPluginEnvironment" "Debug|Win32" /USEENV
 
 rem Build Release
 call :COMPILE GASSSim.sln "GASSCore" "Release|Win32" /USEENV
+call :COMPILE GASSSim.sln "GASSSim" "Release|Win32" /USEENV
 call :COMPILESOLUTION GASSSim.sln "Release|Win32" /USEENV
 
-REM call :COMPILE GASSSim.sln "GASSSim" "Release|Win32" /USEENV
+
 REM call :COMPILE GASSSim.sln "GASSPluginOgre" "Release|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginODE" "Release|Win32" /USEENV
 REM call :COMPILE GASSSim.sln "GASSPluginOIS" "Release|Win32" /USEENV
