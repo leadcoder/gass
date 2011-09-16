@@ -5,7 +5,7 @@ dofile "GASSCore4.lua"
 dofile "GASSSim4.lua"
 dofile "GASSPluginOgre4.lua"
 dofile "GASSPluginODE4.lua"
-dofile "GASSPluginHavok4.lua"
+--dofile "GASSPluginHavok4.lua"
 dofile "GASSPluginOIS4.lua"
 dofile "GASSPluginPagedGeometry4.lua"
 dofile "GASSPluginOpenAL4.lua"
@@ -16,9 +16,10 @@ dofile "GASSPluginEnvironment4.lua"
 dofile "GASSEditorModule4.lua"
 
 -- Optional Plugins
---dofile "GASSPluginOSG4.lua"
+dofile "GASSPluginOSG4.lua"
 --dofile "GASSPluginApplication4.lua" 
 --dofile "GASSPluginPhysX4.lua"
+dofile "GASSEditorModule4.lua"
 --[[newoption {
    trigger     = "gfxapi",
    value       = "API",
