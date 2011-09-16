@@ -78,7 +78,6 @@ else
 		"../dependencies/tinyxml/lib",
 		"../dependencies/RakNet/Lib",
 		"../dependencies/tbb/lib/ia32/" .. tbverdir 
-
 	}
 configuration "Debug"
 		targetname "GASSPluginRakNet_d"

@@ -26,7 +26,7 @@ if (os.is("windows")) then
 		"$(OSG_PATH)/build/lib",
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/ia32/" .. tbverdir
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -48,8 +48,7 @@ else
 		"../lib/" .. _ACTION,
 		"$(OSG_PATH)/lib",
 		"$(OSG_PATH)/build/lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
-
+		"../dependencies/tbb/lib/ia32/" .. tbverdir
 	}
 
 end
