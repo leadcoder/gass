@@ -16,7 +16,7 @@ dofile "GASSPluginEnvironment4.lua"
 dofile "GASSEditorModule4.lua"
 
 -- Optional Plugins
-dofile "GASSPluginOSG4.lua"
+--dofile "GASSPluginOSG4.lua"
 --dofile "GASSPluginApplication4.lua" 
 --dofile "GASSPluginPhysX4.lua"
 dofile "GASSEditorModule4.lua"
