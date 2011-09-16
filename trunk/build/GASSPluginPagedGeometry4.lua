@@ -11,21 +11,21 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/OgreMain/include",
+		"$(OGRE_HOME)/include/OGRE",
+		"$(OGRE_HOME)/OgreMain/include",
 		"../dependencies/PagedGeometry-1.1.1/include",
 		"../dependencies/tinyxml",
-		"$(BOOST_PATH)"
+		"$(BOOST_HOME)"
 	}
 
 	libdirs 
 	{ 
 		"../lib/" .. _ACTION,
 		"../dependencies",
-		"$(OGRE_PATH)/lib/$(ConfigurationName)",
+		"$(OGRE_HOME)/lib/$(ConfigurationName)",
 		"../dependencies/PagedGeometry-1.1.1/lib",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_PATH)/lib"
+		"$(BOOST_HOME)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -35,9 +35,9 @@ else
 	includedirs 
 	{ 
 		"../source",
-		"$(BOOST_PATH)",
-		"$(OGRE_PATH)/include/OGRE",
-		"$(OGRE_PATH)/OgreMain/include",
+		"$(BOOST_HOME)",
+		"$(OGRE_HOME)/include/OGRE",
+		"$(OGRE_HOME)/OgreMain/include",
 		"../dependencies/PagedGeometry-1.1.1/include",
 		"../dependencies/include/tinyxml"
 	}
@@ -46,7 +46,7 @@ else
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies/PagedGeometry-1.1.1/lib",
-		"$(BOOST_PATH)/lib",
+		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 	}
 

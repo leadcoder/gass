@@ -12,13 +12,14 @@ if (os.is("windows")) then
 	{ 
 		"../source",
 		"../dependencies/tinyxml",
+		"../dependencies/tbb/include",
 		--support both source build and SDK
 		--SDK
 		"$(OGRE_HOME)/include/OGRE",
 		"$(OGRE_HOME)/include/OGRE/Plugins/OctreeSceneManager",
 		"$(OGRE_HOME)/include/OGRE/Terrain",
 		"$(OGRE_HOME)/include/OGRE/Paging",
-		--Same  inludes but form source
+		--Same  inludes but from source
 		"$(OGRE_HOME)/OGREMain/include",
 		"$(OGRE_HOME)/PlugIns/OctreeSceneManager/include",
 		"$(OGRE_HOME)/Components/Terrain/include",
@@ -37,7 +38,8 @@ if (os.is("windows")) then
 		"$(OGRE_HOME)/lib\\debug",
 		"$(OGRE_HOME)\\lib\\debug\\opt",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib"
+		"$(BOOST_HOME)/lib",
+		"../dependencies/tbb/lib/ia32/" .. tbverdir 
 
 	}
 	
@@ -47,10 +49,12 @@ if (os.is("windows")) then
 	{
 		"../lib/" .. _ACTION,
 		"../dependencies",
+		"../dependencies/tbb/include",
 		"$(OGRE_HOME)/lib/release",
 		"$(OGRE_HOME)/lib/release/opt",
 		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib"
+		"$(BOOST_HOME)/lib",
+		"../dependencies/tbb/lib/ia32/" .. tbverdir
 	}
 
 	
@@ -95,7 +99,8 @@ if (os.is("windows")) then
 			"Plugin_OctreeSceneManager_d",
 			"OgreTerrain_d",
 			"OgrePaging_d",
-			"tinyxmld"
+			"tinyxmld",
+			"tbb_debug"
 		}
 else
 		links 
@@ -105,7 +110,8 @@ else
 			"OgreMain",
 			"OgreTerrain",
 			"OgrePaging",
-			"tinyxmld"
+			"tinyxmld",
+			"tbb_debug"
 		}
 end
 
@@ -122,7 +128,8 @@ if (os.is("windows")) then
 			"Plugin_OctreeSceneManager",
 			"OgreTerrain",
 			"OgrePaging",
-			"tinyxml"
+			"tinyxml",
+			"tbb"
 		}
 else
 		links 
@@ -132,7 +139,8 @@ else
 			"OgreMain",
 			"OgreTerrain",
 			"OgrePaging",
-			"tinyxml"
+			"tinyxml",
+			"tbb"
 		}
 end
 
