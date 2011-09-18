@@ -103,6 +103,9 @@ namespace GASS
 		SetOffset(m_Offset);
 		UpdateBodyMass();
 		//UpdateHavokGeom();
+
+		HavokBodyComponentPtr hbc = GetSceneObject()->GetFirstComponentByClass<HavokBodyComponent>();
+		m_Body = hbc.get(); 
 		if(m_Debug) 
 			SetDebug(true);
 	}

@@ -23,7 +23,7 @@
 #include <algorithm>
 #endif
 
-#include "Plugins/Havok/HavokBoxGeometryComponent.h"
+#include "Plugins/Havok/HavokSphereGeometryComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -45,39 +45,30 @@
 
 namespace GASS
 {
-	HavokBoxGeometryComponent::HavokBoxGeometryComponent():
-		m_Size(1,1,1),
-		m_BoxShape(NULL)
+	HavokSphereGeometryComponent::HavokSphereGeometryComponent(): m_Radius(1),
+		m_SphereShape(NULL)
 	{
 
 	}
 
-	HavokBoxGeometryComponent::~HavokBoxGeometryComponent()
+	HavokSphereGeometryComponent::~HavokSphereGeometryComponent()
 	{
 		
 	}
 
-	void HavokBoxGeometryComponent::RegisterReflection()
+	void HavokSphereGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<HavokBoxGeometryComponent, IComponent>);
-		RegisterProperty<Vec3>("Size", &GASS::HavokBoxGeometryComponent::GetSize, &GASS::HavokBoxGeometryComponent::SetSize);
+		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<HavokSphereGeometryComponent, IComponent>);
+		RegisterProperty<Float>("Radius", &GASS::HavokSphereGeometryComponent::GetRadius, &GASS::HavokSphereGeometryComponent::SetRadius);
 	}
 
-	void HavokBoxGeometryComponent::OnCreate()
+	void HavokSphereGeometryComponent::OnCreate()
 	{
 		HavokBaseGeometryComponent::OnCreate();
 	}
 
-	hkpShape*  HavokBoxGeometryComponent::CreateHavokShape()
-	{
-		hkReal fhkConvexShapeRadius=0.05;
-		hkVector4 dimensions(m_Size.x,m_Size.y,m_Size.z,1);
-		hkpBoxShape* boxShape = new hkpBoxShape(dimensions,fhkConvexShapeRadius);
-		m_BoxShape = boxShape;
-		return boxShape;
-	}
-
-	void HavokBoxGeometryComponent::SetSizeFromMesh(bool value)
+	
+	void HavokSphereGeometryComponent::SetSizeFromMesh(bool value)
 	{
 		m_SizeFromMesh = value;
 		if(m_SizeFromMesh && IsInitialized())
@@ -85,36 +76,57 @@ namespace GASS
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
 			{
-				AABox box = geom->GetBoundingBox();
-				SetSize((box.m_Max - box.m_Min));
-				SetOffset((box.m_Max + box.m_Min)*0.5);
+				Sphere sphere = geom->GetBoundingSphere();
+				if(sphere.m_Radius > 0)
+				{
+					SetRadius(sphere.m_Radius);
+					AABox box = geom->GetBoundingBox();
+					SetOffset((box.m_Max + box.m_Min)*0.5);
+				}
 			}
 		}
 	}
 
+
 	
-	void HavokBoxGeometryComponent::SetSize(const Vec3 &size)
+	hkpShape*  HavokSphereGeometryComponent::CreateHavokShape()
 	{
-		if(size.x > 0 && size.y > 0 && size.z > 0)
+		m_SphereShape = new hkpSphereShape(m_Radius);
+		return m_SphereShape;
+	}
+
+
+	void HavokSphereGeometryComponent::SetRadius(Float value)
+	{
+		if(value > 0)
 		{
-			m_Size = size;
-			if(m_BoxShape)
+			m_Radius = value;
+			if(m_SphereShape)
 			{
-				hkVector4 dimensions(m_Size.x,m_Size.y,m_Size.z,1);
-				m_BoxShape->setHalfExtents(dimensions);
-				UpdateBodyMass();
+				m_SphereShape->setRadius(m_Radius);
+				//UpdateBodyMass();
 				UpdateDebug();
 			}
 		}
 	}
 
-	Vec3 HavokBoxGeometryComponent::GetSize() const
+	Float HavokSphereGeometryComponent::GetRadius() const
 	{
-		return m_Size;
+		return m_Radius;
 	}
 
-	
-	void HavokBoxGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
+	void HavokSphereGeometryComponent::UpdateBodyMass()
+	{
+		/*if(m_Body && m_Body->GetMassRepresentation() == ODEBodyComponent::MR_GEOMETRY)
+		{
+			dMass ode_mass;
+			dMassSetSphereTotal(&ode_mass, m_Body->GetMass(), m_Radius);
+			m_Body->SetODEMass(ode_mass);
+		}*/
+	}
+
+
+	void HavokSphereGeometryComponent::CreateDebugSphere(Float size,const Vec3 &offset)
 	{
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
@@ -123,61 +135,64 @@ namespace GASS
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(1,1,1,1);
 		mesh_data->Type = LINE_LIST;
-		std::vector<Vec3> conrners;
 
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
+		const float samples = 24;
+		const float rad = 2*MY_PI/samples;
 
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-
-		for(int i = 0; i < 4; i++)
+		float x,y,z;
+		for(float i = 0 ;i <= samples; i++)
 		{
-			vertex.Pos = conrners[i];
+			x = cos(rad*i)*size;
+			y = sin(rad*i)*size;
+			vertex.Pos.Set(x,y,0);
 			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
-
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
-			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
 		}
-
-		for(int i = 0; i < 4; i++)
+		//mesh_data->VertexVector.push_back(vertex);
+		for(float i = 0 ;i <= samples; i++)
 		{
-			vertex.Pos = conrners[4 + i];
+			x = cos(rad*i)*size;
+			z = sin(rad*i)*size;
+			vertex.Pos.Set(x,0,z);
 			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
-			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
 		}
+		//mesh_data->VertexVector.push_back(vertex);
+
+		for(float i = 0 ;i <= samples; i++)
+		{
+			y = cos(rad*i)*size;
+			z = sin(rad*i)*size;
+			vertex.Pos.Set(0,y,z);
+			mesh_data->VertexVector.push_back(vertex);
+			if(i > 0 && i < samples)
+				mesh_data->VertexVector.push_back(vertex);
+		}
+		//mesh_data->VertexVector.push_back(vertex);
+
 
 		SceneObjectPtr scene_object = GetDebugObject();
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		scene_object->PostMessage(mesh_message);
-
-		//Vec3 pos  = m_Offset + offset;
-		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));
+		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
+		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
 	}
 
-	void HavokBoxGeometryComponent::UpdateDebug()
+	void HavokSphereGeometryComponent::UpdateDebug()
 	{
+
 		if(m_Debug)
 		{
-			if(m_BoxShape)
+			if(m_SphereShape)
 			{
-				//dVector3 temp_size;
-				//dGeomBoxGetLengths (m_GeomID, temp_size);
-				hkVector4 h_size = m_BoxShape->getHalfExtents();
-				Vec3 size(h_size(0),h_size(1),h_size(2));
+				
+				//dReal radius = dGeomSphereGetRadius (m_GeomID);
 				//const dReal* pos =  dGeomGetPosition(m_GeomID);
-				CreateDebugBox(size,Vec3(0,0,0 ));
+				CreateDebugSphere(m_SphereShape->getRadius(),Vec3( 0, 0, 0));
 			}
 		}
+		
 	}
 }

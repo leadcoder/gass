@@ -54,6 +54,7 @@ namespace GASS
 		void Update(double delta_time);
 		TaskGroup GetTaskGroup() const;
 		void UpdateMass();
+		hkpRigidBody* GetHavokBody() const {return m_RigidBody;}
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -101,6 +102,7 @@ namespace GASS
 		void OnWorldRotationChanged(WorldRotationMessagePtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
+		int GetCollisionGroup();
 	protected:
 		void Wake();
 		
@@ -118,8 +120,12 @@ namespace GASS
 		MassRepresentationType m_MassRepresentation;
 		hkpRigidBody* m_RigidBody;
 		hkpWorld* m_World;
-
 		hkpShape* m_Shape;
+		int m_SystemCollisionGroup;
+
+
+	
 	};
+	typedef boost::shared_ptr<HavokBodyComponent> HavokBodyComponentPtr;
 }
 
