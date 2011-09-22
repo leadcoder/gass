@@ -106,6 +106,10 @@ namespace GASS
 		double GetInterpolationLag() const {return m_InterpolationLag;}
 		void SetInterpolationLag(double  value) {m_InterpolationLag = value;}
 
+		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
+		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
+		
+
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -157,6 +161,7 @@ namespace GASS
 
 		RakNet::AutoRPC m_AutoRPC;
 		double m_InterpolationLag;
+		double m_LocationSendFrequency;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

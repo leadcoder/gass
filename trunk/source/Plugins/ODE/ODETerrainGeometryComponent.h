@@ -52,6 +52,7 @@ namespace GASS
 		virtual void OnCreate();
 	protected:
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);

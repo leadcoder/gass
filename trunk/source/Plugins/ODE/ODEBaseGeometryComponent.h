@@ -57,6 +57,7 @@ namespace GASS
 
 		//Message functions
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);

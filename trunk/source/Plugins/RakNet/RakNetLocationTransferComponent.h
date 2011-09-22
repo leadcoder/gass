@@ -56,10 +56,6 @@ namespace GASS
 			Rotation(rot),
 			AngularVelocity(ang_vel),
 			TimeStamp(time_stamp){}
-		/*static void RegisterToFactory()
-		{
-			GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::EnumCreator<TransformationPackage, NetworkPackage>);	
-		}*/
 		virtual ~TransformationPackage(){}
 		int GetSize() {return sizeof(TransformationPackage);}
 		void Assign(char* data)
@@ -76,6 +72,18 @@ namespace GASS
 	
 
 
+	class LocationHistory
+	{
+		public:
+		LocationHistory() : Position(0,0,0),Rotation(1,0,0,0), Time(0)
+		{
+		}
+		~LocationHistory(){}
+
+		Vec3 Position;
+		Quaternion Rotation;
+		unsigned int Time;
+	};
 	class SceneObject;
 	
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
@@ -109,18 +117,12 @@ namespace GASS
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-
 		
 		Vec3 m_Velocity;
 		Vec3 m_AngularVelocity;
-
-
-		//Vec3 m_LocalVelocity;
-		//Vec3 m_LocalAngularVelocity;
-
-		Quaternion m_RotationHistory[3];
-		Vec3 m_PositionHistory[3];
-		unsigned int m_TimeStampHistory[3];
+	
+		std::vector<LocationHistory> m_LocationHistory;
+		
 		double m_DeadReckoning;
 		double m_LastSerialize;
 		float m_SendFreq;
@@ -128,6 +130,7 @@ namespace GASS
 		bool m_UpdatePosition;
 		bool m_UpdateRotation;
 		Vec3 m_ParentPos;
+		int m_NumHistoryFrames;
 		Quaternion m_ParentRot;
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;

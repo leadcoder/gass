@@ -58,7 +58,7 @@ namespace GASS
 
 	ODETerrainGeometryComponent::~ODETerrainGeometryComponent()
 	{
-		Reset();
+		//Reset();
 	}
 
 	void ODETerrainGeometryComponent::RegisterReflection()
@@ -71,6 +71,7 @@ namespace GASS
 	void ODETerrainGeometryComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
@@ -81,6 +82,11 @@ namespace GASS
 		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
+	}
+
+	void ODETerrainGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		Reset();
 	}
 
 	void ODETerrainGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)

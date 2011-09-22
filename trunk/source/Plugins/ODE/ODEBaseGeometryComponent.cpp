@@ -62,7 +62,7 @@ namespace GASS
 
 	ODEBaseGeometryComponent::~ODEBaseGeometryComponent()
 	{
-		Reset();
+		
 	}
 
 	void ODEBaseGeometryComponent::RegisterReflection()
@@ -79,6 +79,7 @@ namespace GASS
 	void ODEBaseGeometryComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
@@ -93,6 +94,11 @@ namespace GASS
 		UpdateODEGeom();
 		if(m_Debug) 
 			SetDebug(true);
+	}
+
+	void ODEBaseGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		Reset();
 	}
 
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)

@@ -638,7 +638,7 @@ namespace Ogre
 	{
 		params->setIgnoreMissingParams(true);
 		// TODO - parameterise this?
-		Vector4 scaleBiasSpecular(0.03, -0.04, 32, 1);
+		Vector4 scaleBiasSpecular(0.03f, -0.04f, 32.f, 1.f);
 		params->setNamedConstant("scaleBiasSpecular", scaleBiasSpecular);
 
 	}
@@ -1328,7 +1328,7 @@ namespace Ogre
 				"			// to avoid gradient issues inside loops \n"
 				"			newUV = newUV / newUV.w; \n"
 				"			float depth = tex2D(shadowMap, newUV.xy, 1, 1).x; \n"
-				//"			if (depth >= 1 || depth >= uv.z)\n"
+				//"			if (depth >= 1 || depth >= uv.z)\n" JH?
 				"			if (depth >= uv.z/uv.w)\n"
 				"				shadow += 1.0;\n"
 				"		} \n"

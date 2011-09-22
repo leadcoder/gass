@@ -57,14 +57,17 @@ namespace GASS
 		m_RelativeToParent(0),
 		m_UpdatePosition(true),
 		m_UpdateRotation(true),
-		m_SendFreq(1.0f/20.0f) // 20fps
+		m_SendFreq(0), // 20fps
+		m_NumHistoryFrames(6)
 	{
-		for(int i = 0 ; i < 3; i++)
+		
+		m_LocationHistory.resize(m_NumHistoryFrames);
+		/*for(int i = 0 ; i < m_NumHistoryFrames; i++)
 		{
-			m_PositionHistory[i] = Vec3(0,0,0);
-			m_RotationHistory[i] = Quaternion::IDENTITY;
-			m_TimeStampHistory[i] = 0;
-		}
+			m_LocationHistory[i].Position = Vec3(0,0,0);
+			m_LocationHistory[i].Rotation = Quaternion::IDENTITY;
+			m_LocationHistory[i].Time = 0;
+		}*/
 	}
 
 	RakNetLocationTransferComponent::~RakNetLocationTransferComponent()
@@ -103,8 +106,6 @@ namespace GASS
 		}
 		if(raknet->IsServer())
 		{
-			
-
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,VelocityNotifyMessage,0));
 			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -180,76 +181,13 @@ namespace GASS
 			//pos = pos - m_ParentPos;
 			//std::cout << "pos" << pos << std::endl;
 		}
-		
 
 		double current_time = SimEngine::Get().GetTime();
-		double delta = current_time - m_TimeStampHistory[0];
+		double delta = current_time - m_LocationHistory[0].Time;
 
-		//m_Position[1] = m_LastPosition;
-		/*if(pos != m_PositionHistory[0])
-		{
-		m_Velocity = (pos - m_PositionHistory[0]);
-		m_Velocity = m_Velocity*(1.0/delta);
-		}
-
-		if(rot != m_RotationHistory[0])
-		{
-		m_AngularVelocity = (rot - m_RotationHistory[0]);
-		m_AngularVelocity = m_AngularVelocity*(1.0/delta);
-		}
-
-		std::cout << "Velocity:" << m_Velocity << std::endl;*/
-
-		m_PositionHistory[0] = pos;
-		m_RotationHistory[0] = rot;
-		m_TimeStampHistory[0] = current_time;
-
-		/*double current_time = SimEngine::Get().GetTime();
-		double delta = current_time - m_LastSerialize;
-
-
-		char debug_text[256];
-		sprintf(debug_text,"delta: %f",delta);
-		MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);
-
-		if(delta > m_SendFreq) //serialize transformation at fix freq
-		{
-		if(delta > 5) //clamp
-		delta = 5;
-		m_LastSerialize = current_time;
-
-
-		Vec3 pos = message->GetPosition();
-		Quaternion rot = message->GetRotation();
-
-		Vec3 delta_pos(0,0,0);
-		Quaternion delta_rot(0,0,0,0);
-
-		//m_Position[1] = m_LastPosition;
-		if(pos != m_PositionHistory[0])
-		{
-		delta_pos = (pos - m_PositionHistory[0]);
-		delta_pos = delta_pos*(1.0/delta);
-		}
-
-		if(rot != m_RotationHistory[0])
-		{
-		delta_rot = (rot - m_RotationHistory[0]);
-		delta_rot = delta_rot*(1.0/delta);
-		}
-
-		m_PositionHistory[0] = pos;
-		m_RotationHistory[0] = rot;
-
-		unsigned int time_stamp = RakNet::GetTime();
-		//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
-
-		boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,pos,delta_pos, rot,delta_rot));
-		MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
-		GetSceneObject()->SendImmediate(serialize_message);
-		}*/
-
+		m_LocationHistory[0].Position = pos;
+		m_LocationHistory[0].Rotation = rot;
+		m_LocationHistory[0].Time = current_time;
 	}
 
 	void RakNetLocationTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -261,52 +199,41 @@ namespace GASS
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
 		}
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-
-		/*RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		if(raknet->IsServer())
-		{
-			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-		}
-		else
-		{
-
-		}*/
-		
 	}
 
 
 	void RakNetLocationTransferComponent::Update(double delta)
 	{
 
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkComponent>();
-		//if(!nc)
-		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
+		
 		if(raknet->IsServer())
 		{
 			double current_time = SimEngine::Get().GetTime();
 			double delta = current_time - m_LastSerialize;
+			double send_intervall = 1.0/raknet->GetLocationSendFrequency();
 
-			if(delta > m_SendFreq) //serialize transformation at fix freq
+			if(m_SendFreq > 0) //override?
+			{
+				send_intervall = 1.0/m_SendFreq;
+			}
+
+			if(delta > send_intervall) //serialize transformation at fix freq
 			{
 				m_LastSerialize = current_time;
 				unsigned int time_stamp = RakNet::GetTime();
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
-				boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_PositionHistory[0],m_Velocity, m_RotationHistory[0],m_AngularVelocity));
+				boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
 				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediate(serialize_message);
 			}
-
 		}
-		else
+		else //client
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-
 			RakNetTime  step_back = raknet->GetInterpolationLag();
-
 #ifdef _DEBUG_LTC_
 
 			if(GetAsyncKeyState(VK_F2))
@@ -323,62 +250,69 @@ namespace GASS
 			//std::cout << "Time since last data received: " <<(time - m_TimeStampHistory[0]) << std::endl; 
 			//Font::DebugPrint("Time since last data recieved : %d",(time -m_UpdateTimeStamp[0]));
 			//Font::DebugPrint("inte time: %d",(m_UpdateTimeStamp[0] -m_UpdateTimeStamp[1]));
-
 			time = time - step_back;
 
 #ifdef _DEBUG_LTC_
 			char debug_text[256];
 #endif
-			if(time > m_TimeStampHistory[0])  
+			if(time > m_LocationHistory[0].Time)  
 			{
 				//we have no new data ,extrapolate?
-				//Font::DebugPrint("extrapolation Time before: %d",(time -m_UpdateTimeStamp[0]));
-				//std::cout << "extrapolation Time before: " <<(time - m_TimeStampHistory[0]) << std::endl; 
-				/*float prev_delta_time = float(m_UpdateTimeStamp[0] - m_UpdateTimeStamp[1]);
-				float delta_time = time - m_UpdateTimeStamp[0];
-				Vec3 delta_dir = m_Pos[0]-m_Pos[1];
-				float speed = delta_dir.Length()*(1.0/prev_delta_time);*/
-
-				m_DeadReckoning = (float(time - m_TimeStampHistory[0]))/1000.0f;
-
+				m_DeadReckoning = (float(time - m_LocationHistory[0].Time))/1000.0f;
 				Mat4 trans;
 				trans.Identity();
-				m_RotationHistory[0].ToRotationMatrix(trans);
-			
+				m_LocationHistory[0].Rotation.ToRotationMatrix(trans);
 				Vec3 local_velocity = trans*m_Velocity;
 				Vec3 local_angular_velocity = trans*m_AngularVelocity;
-
 				Float length = local_velocity.Length();
 				if(length > 0.0000001)
 				{
 					Vec3 delta_dir = local_velocity;
 					delta_dir.Normalize();
 					delta_dir = delta_dir*(length*m_DeadReckoning);
-					//delta_dir = delta_dir* (1.0/prev_delta_time);
-					//delta_dir = delta_dir*delta_time;
-					new_pos = m_PositionHistory[0] + delta_dir;
+					new_pos = m_LocationHistory[0].Position + delta_dir;
 				}
 				else 
-					new_pos = m_PositionHistory[0];
+					new_pos = m_LocationHistory[0].Position;
 
 #ifdef _DEBUG_LTC_
 				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_TimeStampHistory[0]),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 #endif
-
-				//transform to local space
 				Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
-				new_rot = Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z))*m_RotationHistory[0];
-
-				//new_rot.x = m_RotationHistory[0].x  + m_AngularVelocity.x*m_DeadReckoning;
-				//new_rot.y = m_RotationHistory[0].y  + m_AngularVelocity.y*m_DeadReckoning;
-				//new_rot.z = m_RotationHistory[0].z  + m_AngularVelocity.z*m_DeadReckoning;
-				//new_rot.w = m_RotationHistory[0].w  + m_AngularVelocity.w*m_DeadReckoning;
-
-				//new_rot = m_RotationHistory[0];
-				//new_pos = m_PositionHistory[0];
+				new_rot = Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z))*m_LocationHistory[0].Rotation;
 
 			}
-			else if(time >= m_TimeStampHistory[1])
+			else 
+			{
+				//pick last element as default
+				
+				new_pos = m_LocationHistory[m_LocationHistory.size()-1].Position;
+				new_rot = m_LocationHistory[m_LocationHistory.size()-1].Rotation;
+#ifdef _DEBUG_LTC_
+				sprintf(debug_text,"Too much behinde, no history available, time: %d",(m_TimeStampHistory[m_TimeStampHistory.size()-1] - time));
+#endif
+				for(int i = 1; i < m_LocationHistory.size(); i++)
+				{
+					if(time >= m_LocationHistory[i].Time)
+					{
+
+						RakNetTime elapsed = m_LocationHistory[i-1].Time - time;
+						RakNetTime tot = m_LocationHistory[i-1].Time - m_LocationHistory[i].Time;
+						double inter = 0;
+						if(tot > 0)
+							inter = double(elapsed)/double(tot);
+						new_pos = (m_LocationHistory[i].Position*inter) + (m_LocationHistory[i-1].Position*(1.0-inter));
+						new_rot = Quaternion::Slerp2(inter,m_LocationHistory[i-1].Rotation, m_LocationHistory[i].Rotation);
+#ifdef _DEBUG_LTC_
+						sprintf(debug_text,"interpolation %d: Time before: %d inter:%f",i,(m_TimeStampHistory[i-1] - time),inter);
+#endif
+						break;
+					}
+				}
+
+			}
+
+			/*else if(time >= m_TimeStampHistory[1])
 			{
 
 				//std::cout << "interpolation 1: " <<(m_TimeStampHistory[0] - time) << std::endl; 
@@ -418,7 +352,7 @@ namespace GASS
 				//std::cout << "behinde last update: " <<(m_TimeStampHistory[1] - time) << std::endl; 
 				new_rot = m_RotationHistory[2];
 				new_pos = m_PositionHistory[2];
-			}
+			}*/
 
 			
 
@@ -466,21 +400,13 @@ namespace GASS
 			m_Velocity = trans_package->Velocity;
 			m_AngularVelocity = trans_package->AngularVelocity;
 
-			
-			m_PositionHistory[2] = m_PositionHistory[1];
-			m_PositionHistory[1] = m_PositionHistory[0];
-			m_PositionHistory[0] = trans_package->Position;
-
-			m_RotationHistory[2] = m_RotationHistory[1];
-			m_RotationHistory[1] = m_RotationHistory[0];
-			m_RotationHistory[0] = trans_package->Rotation;
-
-			m_TimeStampHistory[2] = m_TimeStampHistory[1];
-			m_TimeStampHistory[1] = m_TimeStampHistory[0];
-			m_TimeStampHistory[0] = message->GetTimeStamp();//->TimeStamp;
-
-			//m_DeadReckoning = 0;
-
+			for(int i = m_LocationHistory.size()-1; i > 0 ;i--)
+			{
+				m_LocationHistory[i] = m_LocationHistory[i-1];
+			}
+			m_LocationHistory[0].Position = trans_package->Position;
+			m_LocationHistory[0].Rotation = trans_package->Rotation;
+			m_LocationHistory[0].Time = message->GetTimeStamp();
 
 			
 			

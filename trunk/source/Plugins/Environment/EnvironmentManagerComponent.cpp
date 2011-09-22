@@ -59,12 +59,12 @@ namespace GASS
 		m_WaterGradientWeights.push_back(0);
 
 		
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.5);
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.4);
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.3);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.5);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*0.25);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*0.01);
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
+		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
+		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
 
 		m_SunGradientWeights.push_back(1.0);
 		m_SunGradientWeights.push_back(0.75);
@@ -389,8 +389,6 @@ namespace GASS
 		Ogre::Vector3 lightDir = skyx->GetSkyX()->getAtmosphereManager()->getSunDirection();
 		float point = (-lightDir.y + 1.0f) / 2.0f;
 
-		
-		
 
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
@@ -405,7 +403,6 @@ namespace GASS
 
 		if(m_Hydrax)
 		{
-			
 			m_Hydrax->setWaterColor(m_WaterGradient.getColor(point));
 		}
 
@@ -422,24 +419,22 @@ namespace GASS
 		m_SunLight->setSpecularColour(sunCol.x*m_SpecularWeight, sunCol.y*m_SpecularWeight, sunCol.z*m_SpecularWeight);
 		Ogre::Vector3 ambientCol = m_AmbientGradient.getColor(point);
 		m_SunLight->setDiffuseColour(sunCol.x, sunCol.y, sunCol.z);
+				
 		sm->setAmbientLight(Ogre::ColourValue(ambientCol.x, ambientCol.y, ambientCol.z,1));
-
-
+		
 		if(m_FogGradientValues.size() > 0)
 		{
 			Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
 			Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
 			sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
 		}
-
 		if(m_Hydrax)
 			m_Hydrax->setSunColor(sunCol);
 
-
 		std::stringstream ss;
 		ss << "Gradient value:" << point << "\n";
-		ss << "Sun color :" << sunCol.x << sunCol.y << sunCol.z << "\n";
-		ss << "Ambient color :" << ambientCol.x << ambientCol.y << ambientCol.z << "\n";
+		ss << "Sun color:" << sunCol.x << " " << sunCol.y << " " << sunCol.z << "\n";
+		ss << "Ambient color:" << ambientCol.x << " " << ambientCol.y << " " << ambientCol.z << "\n";
 		//ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));
 	}

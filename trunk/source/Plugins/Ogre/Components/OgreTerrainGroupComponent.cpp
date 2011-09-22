@@ -67,6 +67,7 @@ namespace GASS
 		,m_EnableLayerParallax(true)
 		,m_EnableLayerSpecular(true)
 		,m_EnableLayerNormal(true)
+		,m_TerrainScale(10)
 	{
 
 
@@ -235,7 +236,6 @@ namespace GASS
 		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
 		m_TerrainGroup->setResourceGroup("GASSScenario");
 
-
 		if(m_CustomMaterial != "")
 		{
 
@@ -287,7 +287,7 @@ namespace GASS
 		Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 		defaultimp.terrainSize = m_TerrainSize;
 		defaultimp.worldSize = m_TerrainWorldSize;
-		defaultimp.inputScale = 60;
+		defaultimp.inputScale = m_TerrainScale;
 		defaultimp.minBatchSize = 33;
 		defaultimp.maxBatchSize = 65;
 
@@ -315,23 +315,23 @@ namespace GASS
 
 	float OgreTerrainGroupComponent::GetImportScale() const
 	{
-		if(m_TerrainGroup)
+		return m_TerrainScale;
+		/*if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			return defaultimp.inputScale;
 		}
-		return 1;
+		return 1;*/
 	}
 
 	void OgreTerrainGroupComponent::SetImportScale(const float &value)
 	{
-
+		m_TerrainScale = value;
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.inputScale = value;
 		}
-
 	}
 
 	int OgreTerrainGroupComponent::GetImportTerrainSize() const
@@ -346,6 +346,7 @@ namespace GASS
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.terrainSize = value;
+			
 			RemoveAllPages();
 			ConfigureTerrainDefaults();
 		}

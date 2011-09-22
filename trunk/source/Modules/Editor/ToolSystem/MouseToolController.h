@@ -69,7 +69,7 @@ namespace GASS
 
 		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
-
+		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 	private:
 		void RequestScenePosition();
 		bool CheckScenePosition();

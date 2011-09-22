@@ -44,7 +44,6 @@ namespace GASS
 		
 	}
 
-
 	void VehicleWheel::Init()
 	{
 		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
@@ -75,20 +74,36 @@ namespace GASS
 		m_VehicleSpeed(0),
 		m_Invert(false),
 		m_ConstantTorque(0),
-		m_Debug(false)
+		m_Debug(false),
+		m_RPM(0),
+		m_AutoShiftStart(0),
+		m_ThrottleAccel(2),
+		m_TurnForce(10),
+		m_MaxTurnForce(200),
+		m_SmoothRPMOutput(true),
+		m_InputToThrottle("Throttle"),
+		m_InputToSteer("Steering"),
+		m_NeutralGear(1),
+		m_Gear (2),
+		m_Clutch (1),
+		m_Automatic (1),
+		m_RPMGearChangeUp (1500),
+		m_RPMGearChangeDown (700),
+		m_MaxBrakeTorque (1000),
+		m_MinRPM (500),
+		m_MaxRPM (4000),
+		m_DeclutchTimeChangeGear (0.5),
+		m_ClutchTimeChangeGear (0.5),
+		m_AutoClutchStart (0),
+		m_CurrentTime (0),
+		m_DesiredThrottle (0),
+		m_DesiredSteer (0),
+		m_VehicleEngineRPM (0),
+		m_Power (0.2),
+		m_AngularVelocity(0,0,0),
+		m_EngineType(ET_TANK)
 	{
-		m_RPM = 0;
-		m_AutoShiftStart = 0;
-		m_ThrottleAccel = 2;
-		m_TurnForce = 10;
-		m_MaxTurnForce = 200;
-		m_SmoothRPMOutput = true;
-		
-
-
-		m_InputToThrottle = "Throttle";
-		m_InputToSteer = "Steering";
-
+		m_SteerCtrl = PIDControl(1,1,1);
 		m_GearBoxRatio.resize(6);
 		m_GearBoxRatio[0] = -16.42;
 		m_GearBoxRatio[1] = 0;
@@ -96,31 +111,7 @@ namespace GASS
 		m_GearBoxRatio[3] = 12.15;
 		m_GearBoxRatio[4] = 11.52;
 		m_GearBoxRatio[5] = 11.17;
-		m_EngineType = ET_TANK;
 		//m_GearBoxRatio[6] = 0.71;
-
-		m_NeutralGear = 1;
-		m_Gear = 2;
-		m_Clutch = 1;
-		m_Automatic = 1;
-
-		m_RPMGearChangeUp = 1500;
-		m_RPMGearChangeDown = 700;
-		m_MaxBrakeTorque = 1000;
-		m_MinRPM = 500;
-		m_MaxRPM = 4000;
-
-		m_DeclutchTimeChangeGear = 0.5;
-		m_ClutchTimeChangeGear = 0.5;
-		m_AutoClutchStart = 0;
-		m_CurrentTime = 0;
-		m_DesiredThrottle = 0;
-		m_DesiredSteer = 0;
-		m_VehicleEngineRPM = 0;
-
-		m_Power = 0.2;
-		m_SteerCtrl = PIDControl(1,1,1);
-		m_AngularVelocity = Vec3(0,0,0);
 	}
 
 	VehicleEngineComponent::~VehicleEngineComponent()

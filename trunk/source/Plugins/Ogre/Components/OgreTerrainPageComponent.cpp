@@ -91,7 +91,7 @@ namespace GASS
 		RegisterProperty<int>("IndexX", &GASS::OgreTerrainPageComponent::GetIndexX, &GASS::OgreTerrainPageComponent::SetIndexX);
 		RegisterProperty<int>("IndexY", &GASS::OgreTerrainPageComponent::GetIndexY, &GASS::OgreTerrainPageComponent::SetIndexY);
 
-		//import functions, can be used from editor, use  full path to resource and execute import
+		//import functions, can be used from editor, use full-path to resource and execute import
 		RegisterProperty<std::string>("ImportHeightMap", &GASS::OgreTerrainPageComponent::GetImportHeightMap, &GASS::OgreTerrainPageComponent::ImportHeightMap);
 		RegisterProperty<std::string>("ImportColorMap", &GASS::OgreTerrainPageComponent::GetImportColorMap, &GASS::OgreTerrainPageComponent::ImportColorMap);
 		RegisterProperty<std::string>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask);
@@ -146,14 +146,10 @@ namespace GASS
 			SetTilingLayer2(message->GetTiling());
 			break;
 		case TL_3:
-			//m_Terrain->setLayerTextureName(3,0,message->GetTexture());
-			//	m_Terrain->setLayerWorldSize(3,message->GetTiling());
 			SetDiffuseLayer3(message->GetTexture());
 			SetTilingLayer3(message->GetTiling());
 			break;
 		case TL_4:
-			//	m_Terrain->setLayerTextureName(4,0,message->GetTexture());
-			//	m_Terrain->setLayerWorldSize(4,message->GetTiling());
 			SetDiffuseLayer4(message->GetTexture());
 			SetTilingLayer4(message->GetTiling());
 			break;

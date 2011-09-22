@@ -67,7 +67,8 @@ namespace GASS
 		m_AcceptLateJoin (true),
 		m_RemoteCreatePlayers (true),
 		m_Active(false),
-		m_InterpolationLag(100.0) //100ms , this should be based on ping time
+		m_InterpolationLag(100.0), //100ms , this should be based on ping time
+		m_LocationSendFrequency(20)  //20 Hz
 	{
 
 	}
@@ -85,6 +86,8 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, ISystem>);
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
+		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
+		
 	}
 
 	void RakNetNetworkSystem::OnCreate()

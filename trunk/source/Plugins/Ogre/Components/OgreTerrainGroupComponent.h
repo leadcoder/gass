@@ -135,6 +135,7 @@ namespace GASS
 		int m_NodesPerSideAllPagesW;
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;
+		float m_TerrainScale;
 
 		Ogre::SceneManager* m_OgreSceneManager;
 

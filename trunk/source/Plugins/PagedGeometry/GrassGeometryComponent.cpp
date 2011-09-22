@@ -506,8 +506,6 @@ namespace GASS
 			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_GrassLayer->setDensityMap(m_DensityTexture);
 		}
-		
-
 		if(m_ColorMapFilename != "")
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 
@@ -521,7 +519,7 @@ namespace GASS
 		if(m_GrassLayer)
 		{
 			UpdateSway();
-			m_GrassLayer->setLightingEnabled(true);
+			m_GrassLayer->setLightingEnabled(false);
 		}
 		//		Root::Get().AddRenderListener(this);
 	}
