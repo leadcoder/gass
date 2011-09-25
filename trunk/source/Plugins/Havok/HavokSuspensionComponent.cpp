@@ -167,6 +167,7 @@ namespace GASS
 			world->addConstraint(constraint);
 			constraint->removeReference();
 			world->unlock();
+	
 			/*UpdateAnchor();
 			UpdateJointAxis();
 			UpdateLimits();
@@ -256,8 +257,9 @@ namespace GASS
 
 	void HavokSuspensionComponent::SetAxis1Vel(float velocity)
 	{
-		if(m_WheelConstraintData)
+		if(m_WheelBody)
 		{
+			m_WheelBody->SetAngularVelocity(Vec3(velocity,0,0));
 	//		dJointSetHinge2Param(m_WheelConstraintData,dParamVel,velocity);
 		}
 	}
@@ -272,8 +274,9 @@ namespace GASS
 
 	void HavokSuspensionComponent::SetAxis2Force(float value)
 	{
-		if(m_WheelConstraintData)
+		if(m_WheelBody)
 		{
+			m_WheelBody->SetForce(Vec3(value,0,0));
 		//	dJointSetHinge2Param(m_WheelConstraintData, dParamFMax2,value);
 		}
 	}
@@ -331,11 +334,13 @@ namespace GASS
 	void HavokSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 	{
 		MessagePtr joint_message;
-		if(m_WheelConstraintData)
+		if(m_WheelBody)
 		{
-		//	float angle = dJointGetHinge2Angle1(m_WheelConstraintData);
-		//	float angle_rate = dJointGetHinge2Angle1Rate (m_WheelConstraintData);
-		//	joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+			Vec3 vel = m_WheelBody->GetAngularVelocity();
+			
+			//float angle = dJointGetHinge2Angle1(m_WheelConstraintData);
+			//float angle_rate = dJointGetHinge2Angle1Rate (m_WheelConstraintData);
+			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
 		//	if(joint_message)
 		//		GetSceneObject()->PostMessage(joint_message);
 		}

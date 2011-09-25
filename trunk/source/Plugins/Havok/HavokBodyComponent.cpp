@@ -244,7 +244,6 @@ namespace GASS
 
 		m_RigidBody->setCollisionFilterInfo(hkpGroupFilter::calcFilterInfo( hkpGroupFilterSetup::LAYER_DYNAMIC,  group) );
 		
-
 		pPhysicsWorld->addEntity(m_RigidBody);
 
 		//decerase reference counter for rigid body and shape
@@ -334,10 +333,11 @@ namespace GASS
 			m_RigidBody->markForWrite();
 			if(rel)
 			{
-			hkVector4 local_rot(torque_vec.x,torque_vec.y,torque_vec.z);
-			hkVector4 rotateWorld;
-			rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
-			m_RigidBody->applyAngularImpulse(rotateWorld);
+
+				hkVector4 local_rot(torque_vec.x,torque_vec.y,torque_vec.z);
+				hkVector4 rotateWorld;
+				rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
+				m_RigidBody->applyAngularImpulse(rotateWorld);
 			}
 			else
 				m_RigidBody->applyAngularImpulse(hkVector4(torque_vec.x,torque_vec.y,torque_vec.z));
@@ -359,7 +359,19 @@ namespace GASS
 
 	Vec3 HavokBodyComponent::GetAngularVelocity(bool rel)
 	{
-		return Vec3(0,0,0);
+		Vec3 velocity(0,0,0);
+		if(m_RigidBody)
+		{
+			hkVector4 vel = m_RigidBody->getAngularVelocity();
+			if(rel)
+			{
+				hkVector4 rotateWorld;
+				rotateWorld.setRotatedInverseDir( m_RigidBody->getTransform().getRotation(), vel);
+				vel = rotateWorld;
+			}
+			velocity.Set(vel(0),vel(1),vel(2));
+		}
+		return velocity;
 	}
 
 	void HavokBodyComponent::SetActive(bool value)
@@ -414,8 +426,19 @@ namespace GASS
 
 	Vec3 HavokBodyComponent::GetVelocity(bool rel)
 	{
-		Vec3 vel(0,0,0);
-		return vel;
+		Vec3 velocity(0,0,0);
+		if(m_RigidBody)
+		{
+			hkVector4 vel = m_RigidBody->getLinearVelocity();
+			if(rel)
+			{
+				hkVector4 rotateWorld;
+				rotateWorld.setRotatedInverseDir( m_RigidBody->getTransform().getRotation(), vel);
+				vel = rotateWorld;
+			}
+			velocity.Set(vel(0),vel(1),vel(2));
+		}
+		return velocity;
 	}
 
 	void HavokBodyComponent::SetPosition(const Vec3 &value)
@@ -483,6 +506,7 @@ namespace GASS
 		Quaternion rot;
 		if(m_RigidBody)
 		{
+			
 			hkQuaternion h_rot = m_RigidBody->getRotation();
 			rot.x = h_rot(0);
 			rot.y = h_rot(1);
