@@ -22,6 +22,8 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 
 namespace GASS

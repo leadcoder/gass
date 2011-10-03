@@ -1317,7 +1317,10 @@ namespace Ogre
 				"float calcDepthShadow(sampler2D shadowMap, float4 uv, float invShadowMapSize) \n"
 				"{ \n"
 				"	// 4-sample PCF \n"
-
+				"   float4 temp_uv = uv/uv.w; \n"
+				"   float center_depth = tex2D(shadowMap, temp_uv.xy).x; \n"
+				"   if(center_depth >= 1.0) return 1.0;\n" //JH
+				
 				"	float shadow = 0.0; \n"
 				"	float offset = (NUM_SHADOW_SAMPLES_1D/2 - 0.5) * SHADOW_FILTER_SCALE; \n"
 				"	for (float y = -offset; y <= offset; y += SHADOW_FILTER_SCALE) \n"

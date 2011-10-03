@@ -34,8 +34,10 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
-	Request message sent when loading a scenario scene
-	It's up to each scene manager to catch this and load its stuff
+	Message sent by the scenario scene class while loading a 
+	new scenario scene.
+	It's up to each scene manager to catch this and load it's 
+	dependencies
 	*/
 	class LoadSceneManagersMessage : public BaseMessage
 	{
@@ -52,6 +54,13 @@ namespace GASS
 	typedef boost::shared_ptr<LoadSceneManagersMessage> LoadSceneManagersMessagePtr;
 
 
+	/**
+	Message sent by the scenario scene class 
+	while unloading a scenario scene.
+	It's up to each scene manager to catch this free 
+	it's resources.
+	
+	*/
 	class UnloadSceneManagersMessage : public BaseMessage
 	{
 	public:
@@ -67,25 +76,17 @@ namespace GASS
 	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
 
 
-	class ChangeCameraMessage : public BaseMessage
-	{
-	public:
-		ChangeCameraMessage(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
-		  {
-
-		  }
-		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  std::string GetViewport() const {return m_Viewport;}
-	private:
-		SceneObjectPtr m_Camera;
-		std::string m_Viewport;
-	};
-	typedef boost::shared_ptr<ChangeCameraMessage> ChangeCameraMessagePtr;
-
+	
+	/**
+	Message used to remove a scene object from the scenario scene
+	*/
 	class RemoveSceneObjectMessage : public BaseMessage
 	{
 	public:
+		/**
+		Constructor
+		@param object The object to remove
+		*/
 		RemoveSceneObjectMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
@@ -98,9 +99,20 @@ namespace GASS
 	typedef boost::shared_ptr<RemoveSceneObjectMessage> RemoveSceneObjectMessagePtr;
 
 
+	/**
+	Message used to spawn a scene object from from template in the scenario scene
+	*/
 	class SpawnObjectFromTemplateMessage : public BaseMessage
 	{
 	public:
+		/**
+		Constructor
+		@param template_name Name of the template to use for  the new object
+		@param position Position of the new object
+		@param rotation Rotation of the new object
+		@param veclocity Veclocity of the new object
+		@param parent Optional parent object, otherwise this object is attached to the scene root
+		*/
 		SpawnObjectFromTemplateMessage(const std::string &template_name, 
 			const Vec3 &position,
 			const Quaternion &rotation,
@@ -132,9 +144,16 @@ namespace GASS
 
 	typedef boost::shared_ptr<SpawnObjectFromTemplateMessage> SpawnObjectFromTemplateMessagePtr;
 
+	/**
+		Message sent by SceneObjectManager after scene object is created and added to the scene 
+	*/
 	class SceneObjectCreatedNotifyMessage : public BaseMessage
 	{
 	public:
+		/**
+		Constructor
+		@param object Pointer to the new object
+		*/
 		SceneObjectCreatedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
@@ -146,9 +165,17 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<SceneObjectCreatedNotifyMessage> SceneObjectCreatedNotifyMessagePtr;
 
+
+	/**
+		Message sent by SceneObjectManager after scene object is removed from the scenario scene 
+	*/
 	class SceneObjectRemovedNotifyMessage : public BaseMessage
 	{
 	public:
+		/**
+		Constructor
+		@param object Pointer to the object that has been removed
+		*/
 		SceneObjectRemovedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
@@ -159,37 +186,7 @@ namespace GASS
 		SceneObjectPtr m_Object;
 	};
 	typedef boost::shared_ptr<SceneObjectRemovedNotifyMessage> SceneObjectRemovedNotifyMessagePtr;
-
-	class CameraChangedNotifyMessage : public BaseMessage
-	{
-	public:
-		CameraChangedNotifyMessage(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
-		  {
-
-		  }
-		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  void* GetUserData() const {return m_UserData;}
-	private:
-		SceneObjectPtr m_Camera;
-		void *m_UserData;
-	};
-	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
-
-
-		///////Physics messages/////////////////
 	
-	class ActivatePhysicsMessage : public BaseMessage
-	{
-	public:
-		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
-			  m_Activate(activate){}
-		  int Activate() const {return m_Activate;}
-	private:
-		int m_Activate;
-	};
-	typedef boost::shared_ptr<ActivatePhysicsMessage> ActivatePhysicsMessagePtr;
 }
 
 #endif

@@ -3,7 +3,8 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/MeshData.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 namespace GASS
 {
@@ -27,9 +28,7 @@ namespace GASS
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
 		void OnSceneObjectSelected(ObjectSelectedMessagePtr message);
-		
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
-		
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		
 		Vec4 m_Color;

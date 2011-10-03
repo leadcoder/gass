@@ -268,7 +268,7 @@ namespace GASS
 
 		m_TerrainGlobals->setMaxPixelError(8);
 		// testing composite map
-		m_TerrainGlobals->setCompositeMapDistance(3000);
+		m_TerrainGlobals->setCompositeMapDistance(2000);
 
 		//mTerrainGlobals->setUseRayBoxDistanceCalculation(true);
 		//mTerrainGlobals->getDefaultMaterialGenerator()->setDebugLevel(1);

@@ -27,6 +27,7 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"

@@ -184,7 +184,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
 	}
 
 	void SkyXComponent::UpdateOptions()
@@ -314,6 +314,7 @@ namespace GASS
 	{
 		SetTimeMultiplier(message->GetSpeed());
 		SetTime(Vec3(message->GetTime(),message->GetSunRise(),message->GetSunSet()));
+		//std::cout << "Set time of day, time:" << message->GetTime() << " rise:" << message->GetSunRise() << " Set:" << message->GetSunSet() << " speed:" << message->GetSpeed() << "\n";
 	}
 }
 

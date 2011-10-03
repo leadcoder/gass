@@ -17,6 +17,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/Graphics/MeshData.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 
 namespace GASS

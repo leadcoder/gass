@@ -294,9 +294,16 @@ namespace GASS
 			else //base object attribute
 			{
 				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
+				if(class_attribute->FirstAttribute())
+				{
 				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
 				if (!SetPropertyByString(data_name,attrib_val))
 					Log::Warning("BaseComponentContainerTemplate::LoadXML() - Filename: %s\tproperty not found: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
+				}
+				else
+				{
+					Log::Warning("BaseComponentContainerTemplate::LoadXML() - Filename: %s\tno value attribute found for xml tag: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
+				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
 		}
@@ -459,14 +466,18 @@ namespace GASS
 		return container;
 	}
 
-	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerPtr manager)
+	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerPtr manager, bool keep_inheritance)
 	{
-		const std::string old_template_name = cc->GetTemplateName();
-		if(old_template_name != "")
+		BaseComponentContainerTemplatePtr old_temp;
+		if(keep_inheritance)
 		{
-			BaseComponentContainerTemplatePtr old_temp = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(manager->GetTemplate(old_template_name));
-			if(old_temp)
-				SetInheritance(old_temp->GetInheritance());
+			const std::string old_template_name = cc->GetTemplateName();
+			if(old_template_name != "")
+			{
+				old_temp = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(manager->GetTemplate(old_template_name));
+				if(old_temp)
+					SetInheritance(old_temp->GetInheritance());
+			}
 		}
 
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(cc);
@@ -489,10 +500,25 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			ComponentContainerPtr child = children.getNext();
-			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
-			if(new_child)
+			bool found = false;
+			if(old_temp)
 			{
-				new_child->CreateFromComponentContainer(child,manager);
+				IComponentContainerTemplate::ComponentContainerTemplateIterator temp_children = old_temp->GetChildren();
+				while(temp_children.hasMoreElements())
+				{
+					ComponentContainerTemplatePtr temp_child = temp_children.getNext();
+					if(child->GetTemplateName() == temp_child->GetName())
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+			
+			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
+			if(!found && new_child)
+			{
+				new_child->CreateFromComponentContainer(child,manager,keep_inheritance);
 				AddChild(new_child);
 			}
 		}

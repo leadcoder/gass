@@ -22,7 +22,8 @@
 
 #include "PagedGeometry.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "PGMessages.h"
@@ -234,6 +235,10 @@ namespace GASS
 		void OnPaint(GrassPaintMessagePtr message);
 		
 
+		//expose impostor regeneration for gui
+		void SetRegenerateAllImpostors(bool value);
+		bool GetRegenerateAllImpostors() const;
+		
 		DensityMapComponentPtr m_DensityMap;
 		//Ogre::PixelBox *m_DensityMap;
 		RandomTable* m_RandomTable;

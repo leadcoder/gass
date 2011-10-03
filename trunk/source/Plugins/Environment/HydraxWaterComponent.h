@@ -21,8 +21,9 @@
 #define HYDRAX_WATER_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreFrameListener.h>

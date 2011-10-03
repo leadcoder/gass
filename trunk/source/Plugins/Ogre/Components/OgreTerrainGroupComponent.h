@@ -23,6 +23,7 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include <tinyxml.h>
 
 #include "Sim/Components/BaseSceneComponent.h"
@@ -33,8 +34,6 @@
 #include "OgreTerrainMaterialGeneratorA.h"
 #include "OgreTerrainPaging.h"
 #include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
-
-
 
 namespace GASS
 {

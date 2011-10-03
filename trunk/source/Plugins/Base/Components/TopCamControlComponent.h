@@ -25,7 +25,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

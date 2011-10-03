@@ -221,7 +221,7 @@ namespace GASS
 		//Alter the camera aspect ratio to match the viewport
 		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
 
-		//add post process to all windows, change this to camera effect instead
+		//add post process to all windows, change this to camera effect instead?
 		if(m_PostProcess)
 		{
 			m_PostProcess.reset();

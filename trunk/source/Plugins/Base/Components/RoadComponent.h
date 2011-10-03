@@ -21,6 +21,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Utils/EnumBinder.h"
@@ -87,6 +88,9 @@ namespace GASS
 		void SetMaterial(const std::string &value);
 		std::string GetMaterial() const;
 
+		Vec2 GetTileScale() const {return m_TileScale;}
+		void SetTileScale(const Vec2 &value) {m_TileScale = value;}
+
 		
 		void SetTerrainPaintLayer(TerrainLayerBinder value) {m_TerrainPaintLayer = value;}
 		TerrainLayerBinder GetTerrainPaintLayer() const {return m_TerrainPaintLayer;}
@@ -108,6 +112,7 @@ namespace GASS
 		float m_RoadOffset;
 		float m_DitchWidth;
 		std::string m_Material;
+		Vec2 m_TileScale;
 
 		TerrainLayerBinder m_TerrainPaintLayer;
 

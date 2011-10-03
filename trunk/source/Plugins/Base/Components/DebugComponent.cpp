@@ -21,6 +21,7 @@
 #include "Core/Utils/Log.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/SimEngine.h"
 
 namespace GASS

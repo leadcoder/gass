@@ -23,8 +23,10 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <osg/Camera>
 
@@ -45,8 +47,6 @@ namespace GASS
 	protected:
 		void OnParameter(CameraParameterMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		//void OnPositionChanged(PositionMessagePtr message);
-		//void OnRotationChanged(RotationMessagePtr message);
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);

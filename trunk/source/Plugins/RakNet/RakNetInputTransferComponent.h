@@ -23,7 +23,8 @@
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Scheduling/ITaskListener.h"
 

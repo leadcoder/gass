@@ -96,8 +96,14 @@ namespace GASS
 
 	void WaypointComponent::OnLoad(LoadCoreComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetFirstChildByName("Tangent",false)->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionMessage,1));
-		GetSceneObject()->GetFirstChildByName("Tangent",false)->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionMessage,1));
+		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
+		if(tangent)
+		{
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionMessage,1));
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionMessage,1));
+		}
+		else
+			std::cout << "Failed to find tangent in waypoint compoenent\n";
 		//notify parent
 		m_Initialized = true;
 		NotifyUpdate();
@@ -169,7 +175,11 @@ namespace GASS
 			//GetSceneObject()->GetFirstChildByClass<ILocationComponent>();
 			//LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 t_pos = tangent;
-			GetSceneObject()->GetFirstChildByName("Tangent",false)->PostMessage(MessagePtr(new PositionMessage(t_pos*0.1,id)));
+			SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
+			if(tangent)
+				tangent->PostMessage(MessagePtr(new PositionMessage(t_pos*0.1,id)));
+			else
+				std::cout << "Failed to find tangent in waypoint compoenent\n";
 			
 		}
 	}

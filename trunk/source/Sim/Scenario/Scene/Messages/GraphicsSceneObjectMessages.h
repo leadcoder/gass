@@ -49,6 +49,21 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
+
+	class LoadGFXComponentsMessage : public BaseMessage
+	{
+	public:
+		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
+		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
+		  void* GetUserData() const {return m_UserData;}
+	private:
+		SceneManagerPtr m_GFXSceneManager;
+		void *m_UserData;
+	};
+	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
+
+
 	/**
 	Position (relative to parent) change is requested,
 	Typically the location component respond to this message
@@ -202,45 +217,29 @@ namespace GASS
 	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
 
 
-
-	/**
-	Message use indicate that a the scene node structure has changed and that this should 
-	be reflected in gfx-scene node should be attached 
-	to the first parent gfx-node
+	/** Message sent by scene node when scene node is moved
 	*/
 
-	class ParentChangedMessage : public BaseMessage
+	class TransformationNotifyMessage : public BaseMessage
 	{
 	public:
-		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay)
-		  {
-
-		  }
+		/**
+			Constructor
+			@param pos Position in world coordiante space
+			@param rot	Rotation in world coordiante space
+			@param scale Scale in world coordiante space
+		*/
+		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
+		  Vec3 GetPosition() const {return m_Position;}
+		  Quaternion  GetRotation() const {return m_Rotation;}
+		  Vec3 GetScale() const {return m_Scale;}
 	private:
-
+		Vec3 m_Position;
+		Quaternion m_Rotation;
+		Vec3 m_Scale;
 	};
-	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
-
-
-	/**
-	Message use to alternate whether or not a gfx-scene node should be attached 
-	to the first parent gfx-node
-	*/
-	class AttachToParentMessage : public BaseMessage
-	{
-	public:
-		AttachToParentMessage(bool value,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay)
-		  {
-
-		  }
-		  bool GetAttachToParent() const {return m_AttachToParent;}
-	private:
-		bool m_AttachToParent;
-	};
-	typedef boost::shared_ptr<AttachToParentMessage> AttachToParentMessagePtr;
-
+	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
 
 
 	/**
@@ -270,12 +269,70 @@ namespace GASS
 
 	typedef boost::shared_ptr<VisibilityMessage> VisibilityMessagePtr;
 
-	/**
-	Message used to change visibility of the bounding box,
-	Typically the location component respond to this message
-	by hiding/unhiding the scene nodes bounding box.
 
+	/**
+	Message use to alternate whether or not a gfx-scene node should be attached 
+	to the first parent gfx-node
 	*/
+	class AttachToParentMessage : public BaseMessage
+	{
+	public:
+		AttachToParentMessage(bool value,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay)
+		  {
+
+		  }
+		  bool GetAttachToParent() const {return m_AttachToParent;}
+	private:
+		bool m_AttachToParent;
+	};
+	typedef boost::shared_ptr<AttachToParentMessage> AttachToParentMessagePtr;
+
+
+	/**
+	Message use indicate that a the scene node structure has changed and that this should 
+	be reflected in gfx-scene node should be attached 
+	to the first parent gfx-node
+	*/
+
+	class ParentChangedMessage : public BaseMessage
+	{
+	public:
+		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay)
+		  {
+
+		  }
+	private:
+
+	};
+	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
+
+	/**
+		Message used to modify camera settings
+	*/
+	class CameraParameterMessage : public BaseMessage
+	{
+	public:
+		enum CameraParameterType
+		{
+			CAMERA_FOV,
+			CAMERA_CLIP_DISTANCE,
+			CAMERA_ORTHO_WIN_SIZE,
+		};
+	public:
+		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
+		  float GetValue1()const {return m_Value1;}
+		  float GetValue2()const {return m_Value2;}
+		  CameraParameterType GetParameter()const {return m_Parameter;}
+	private:
+		float m_Value1;
+		float m_Value2;
+		CameraParameterType m_Parameter;
+	};
+	typedef boost::shared_ptr<CameraParameterMessage> CameraParameterMessagePtr;
+
 
 	class BoundingInfoMessage : public BaseMessage
 	{
@@ -309,174 +366,7 @@ namespace GASS
 	typedef boost::shared_ptr<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
 
 
-
-	/**
-	Message used to change collisiion settings,
-	Typically the physics system has
-	components that respond to this message
-	by disable/enable collision models.
-
-	*/
-	class CollisionSettingsMessage : public BaseMessage
-	{
-	public:
-		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Enable(enable)
-		  {
-
-		  }
-		  bool EnableCollision() const {return m_Enable;}
-	private:
-		bool m_Enable;
-	};
-	typedef boost::shared_ptr<CollisionSettingsMessage> CollisionSettingsMessagePtr;
-
-	/**
-	Message used to enable/disable physics debugging
-	*/
-
-	class PhysicsDebugMessage : public BaseMessage
-	{
-	public:
-		PhysicsDebugMessage(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
-		  {
-
-		  }
-		  bool DebugGeometry() const {return m_DebugGeometry;}
-	private:
-		bool m_DebugGeometry;
-	};
-
-	typedef boost::shared_ptr<PhysicsDebugMessage> PhysicsDebugMessagePtr;
-
-	/**
-	Messages used to interact with joint components usually found in
-	the physics system. This message should probably be divided into
-	separate messages (one for force, one for velocity ec.) but
-	for now we use enums to specify what parameter we want to change.
-	*/
-
-	class PhysicsJointMessage : public BaseMessage
-	{
-	public:
-		enum PhysicsJointParameterType
-		{
-			AXIS1_VELOCITY,
-			AXIS2_VELOCITY,
-			AXIS1_FORCE,
-			AXIS2_FORCE,
-			AXIS1_DESIRED_ANGLE
-		};
-	public:
-		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
-		  {
-
-		  }
-		  float GetValue()const {return m_Value;}
-		  PhysicsJointParameterType GetParameter()const {return m_Parameter;}
-	private:
-		PhysicsJointParameterType m_Parameter;
-		float m_Value;
-	};
-	typedef boost::shared_ptr<PhysicsJointMessage> PhysicsJointMessagePtr;
-
-	/**
-	Message used to interact with physics bodies.
-	The user provide a paramerter type and a
-	value for that type. Physics body implementations
-	are responsible to suscribe to this message.
-	*/
-	class PhysicsBodyMessage : public BaseMessage
-	{
-	public:
-		enum PhysicsBodyParameterType
-		{
-			TORQUE,
-			FORCE,
-			VELOCITY,
-			ENABLE,
-			DISABLE
-		};
-	public:
-		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
-		  {
-
-		  }
-		  Vec3 GetValue()const {return m_Value;}
-		  PhysicsBodyParameterType GetParameter()const {return m_Parameter;}
-	private:
-		PhysicsBodyParameterType m_Parameter;
-		Vec3 m_Value;
-	};
-	typedef boost::shared_ptr<PhysicsBodyMessage> PhysicsBodyMessagePtr;
-
-	/**
-	Message used to change mass of physics bodies.
-	*/
-	class PhysicsMassMessage : public BaseMessage
-	{
-	public:
-		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(mass)
-		  {
-
-		  }
-		  Float GetMass()const {return m_Value;}
-	private:
-		Float m_Value;
-	};
-
-	typedef boost::shared_ptr<PhysicsMassMessage> PhysicsMassMessagePtr;
-
-	class SoundParameterMessage : public BaseMessage
-	{
-	public:
-		enum SoundParameterType
-		{
-			PLAY,
-			STOP,
-			PAUSE,
-			PITCH,
-			LOOP,
-			VOLUME,
-		};
-	public:
-		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
-		  {
-
-		  }
-		  float GetValue()const {return m_Value;}
-		  SoundParameterType GetParameter()const {return m_Parameter;}
-	private:
-		SoundParameterType m_Parameter;
-		float m_Value;
-	};
-	typedef boost::shared_ptr<SoundParameterMessage> SoundParameterMessagePtr;
-
-
-	/**
-	Change name of scene object
-	*/
-	class SceneObjectNameMessage : public BaseMessage
-	{
-	public:
-		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Name(name)
-		  {
-
-		  }
-		  std::string GetName()const {return m_Name;}
-	private:
-		std::string m_Name;
-
-
-	};
-	typedef boost::shared_ptr<SceneObjectNameMessage> SceneObjectNameMessagePtr;
-
+	
 	/**
 	Message used to load mesh files, mesh components will listen to this message
 	*/
@@ -551,6 +441,9 @@ namespace GASS
 	typedef boost::shared_ptr<TextureMessage> TextureMessagePtr;
 
 
+	/**
+		Message used to modify bone transformation	
+	*/
 	class BoneTransformationMessage : public BaseMessage
 	{
 	public:
@@ -565,28 +458,6 @@ namespace GASS
 		Quaternion m_Rotation;
 	};
 	typedef boost::shared_ptr<BoneTransformationMessage> BoneTransformationMessagePtr;
-
-	class CameraParameterMessage : public BaseMessage
-	{
-	public:
-		enum CameraParameterType
-		{
-			CAMERA_FOV,
-			CAMERA_CLIP_DISTANCE,
-			CAMERA_ORTHO_WIN_SIZE,
-		};
-	public:
-		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
-		  float GetValue1()const {return m_Value1;}
-		  float GetValue2()const {return m_Value2;}
-		  CameraParameterType GetParameter()const {return m_Parameter;}
-	private:
-		float m_Value1;
-		float m_Value2;
-		CameraParameterType m_Parameter;
-	};
-	typedef boost::shared_ptr<CameraParameterMessage> CameraParameterMessagePtr;
 
 
 	class ManualMeshDataMessage : public BaseMessage
@@ -609,7 +480,6 @@ namespace GASS
 	private:
 	};
 	typedef boost::shared_ptr<ClearManualMeshMessage> ClearManualMeshMessagePtr;
-
 
 	class GeometryChangedMessage : public BaseMessage
 	{
@@ -662,8 +532,6 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ParticleSystemParameterMessage> ParticleSystemParameterMessagePtr;
 
-
-
 	class TextCaptionMessage : public BaseMessage
 	{
 	public:
@@ -674,193 +542,6 @@ namespace GASS
 		std::string m_Caption;
 	};
 	typedef boost::shared_ptr<TextCaptionMessage> TextCaptionMessagePtr;
-
-
-	class VelocityNotifyMessage : public BaseMessage
-	{
-	public:
-		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
-		  Vec3 GetLinearVelocity() const {return m_LinearVel;}
-		  Vec3 GetAngularVelocity() const {return m_AngularVel;}
-	private:
-		Vec3 m_LinearVel;
-		Vec3 m_AngularVel;
-	};
-	typedef boost::shared_ptr<VelocityNotifyMessage> VelocityNotifyMessagePtr;
-
-	class HingeJointNotifyMessage : public BaseMessage
-	{
-	public:
-		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
-		  float GetAngle() const {return m_Angle;}
-		  float GetAngleRate() const {return m_AngleRate;}
-	private:
-		float m_Angle;
-		float m_AngleRate;
-	};
-	typedef boost::shared_ptr<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
-
-
-
-	/** \brief message data:
-	Vec3 = "Position"		- Position (relative to parent) is changed for SceneObject
-	Vec3 = "Scale"			- Scale is changed for SceneObject
-	Quaternion = "Rotation"	- Position (relative to parent) is changed for SceneObject
-	*/
-
-	class TransformationNotifyMessage : public BaseMessage
-	{
-	public:
-		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
-		  Vec3 GetPosition() const {return m_Position;}
-		  Quaternion  GetRotation() const {return m_Rotation;}
-		  Vec3 GetScale() const {return m_Scale;}
-	private:
-		Vec3 m_Position;
-		Quaternion m_Rotation;
-		Vec3 m_Scale;
-	};
-	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
-
-	class UnloadComponentsMessage : public BaseMessage
-	{
-	public:
-		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay)
-		  {
-
-		  }
-	private:
-	};
-	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
-
-
-	class LoadGFXComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
-		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
-		  void* GetUserData() const {return m_UserData;}
-	private:
-		SceneManagerPtr m_GFXSceneManager;
-		void *m_UserData;
-	};
-	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
-
-
-	class LoadPhysicsComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
-		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
-	private:
-		SceneManagerPtr m_PhysicsSceneManager;
-	};
-	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
-
-
-	class LoadNetworkComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
-		  SceneManagerPtr GetNetworkSceneManager() const {return m_NetworkSceneManager;}
-	private:
-		SceneManagerPtr m_NetworkSceneManager;
-	};
-	typedef boost::shared_ptr<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
-
-
-	//typedef boost::shared_ptr<char> NetworkDataPtr;
-	class NetworkPackage
-	{
-	public:
-		NetworkPackage()
-		{}
-		NetworkPackage(int id) : Id(id)
-		{}
-		virtual ~NetworkPackage(){}
-		virtual int GetSize() = 0;
-		virtual void Assign(char* data) = 0;
-		int Id;
-		//NetworkDataPtr Data;
-	};
-	typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
-
-	class NetworkAddress
-	{
-	public:
-		NetworkAddress(unsigned int address = 0, unsigned int port = 0) : m_Address(address),m_Port(port) {}
-		unsigned int m_Address;
-		unsigned int m_Port;
-	};
-
-	class NetworkSerializeMessage : public BaseMessage
-	{
-
-	public:
-		NetworkSerializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
-			  m_Package(package),
-			  m_TimeStamp(time_stamp),
-			  m_Address(address)
-		  {
-		  }
-		  NetworkPackagePtr GetPackage() const {return m_Package;}
-		  unsigned int GetTimeStamp() const {return m_TimeStamp;}
-		  NetworkAddress GetAddress() const {return m_Address;}
-	private:
-		NetworkPackagePtr m_Package;
-		unsigned int m_TimeStamp;
-		NetworkAddress m_Address;
-
-	};
-	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
-
-
-
-	class NetworkDeserializeMessage : public BaseMessage
-	{
-	public:
-		NetworkDeserializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
-			  m_Package(package),
-			  m_TimeStamp(time_stamp),
-			  m_Address(address)
-		  {
-		  }
-		  NetworkPackagePtr GetPackage() const {return m_Package;}
-		  unsigned int GetTimeStamp() const {return m_TimeStamp;}
-		  NetworkAddress GetAddress() const {return m_Address;}
-	private:
-		NetworkPackagePtr m_Package;
-		unsigned int m_TimeStamp;
-		NetworkAddress m_Address;
-
-	};
-	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
-
-
-	//debug messages
-
-	class DebugComponentSettingsMessage : public BaseMessage
-	{
-	public:
-		DebugComponentSettingsMessage(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
-			  m_ShowObjectName(show_object_name)
-		  {
-		  }
-		  bool GetShowObjectName() const {return m_ShowObjectName;}
-	private:
-		bool m_ShowObjectName;
-	};
-	typedef boost::shared_ptr<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
 
 	class TerrainHeightModifyMessage : public BaseMessage
 	{
@@ -898,8 +579,6 @@ namespace GASS
 	typedef boost::shared_ptr<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
 
 	
-
-
 	enum TerrainLayer
 	{
 		TL_0,
@@ -987,34 +666,5 @@ namespace GASS
 		float m_PaintIntensity;
 	};
 	typedef boost::shared_ptr<RoadMessage> RoadMessagePtr;
-
-
-	/**
-	Change time of day, this message can be used to change current time in
-	scenarios that support dynamic lighting
-	*/
-
-	class TimeOfDayMessage : public BaseMessage
-	{
-	public:
-		TimeOfDayMessage(double time, double sun_set,double sun_rise, double speed, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
-			  m_Time(time),
-			  m_Speed(speed),
-			  m_SunRise(sun_rise),
-			  m_SunSet(sun_set)
-		  {
-
-		  }
-		  double GetTime() const {return m_Time;}
-		  double GetSunSet() const {return m_SunSet;}
-		  double GetSunRise() const {return m_SunRise;}
-		  double GetSpeed() const {return m_Speed;}
-	private:
-		double m_Time;
-		double m_Speed;
-		double m_SunRise;
-		double m_SunSet;
-	};
-	typedef boost::shared_ptr<TimeOfDayMessage> TimeOfDayMessagePtr;
+	
 }

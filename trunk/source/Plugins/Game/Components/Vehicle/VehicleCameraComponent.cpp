@@ -39,7 +39,9 @@
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Plugins/Game/Components/Input/InputHandlerComponent.h"
+
 
 
 

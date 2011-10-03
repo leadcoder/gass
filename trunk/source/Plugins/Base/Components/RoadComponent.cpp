@@ -55,7 +55,8 @@ namespace GASS
 		m_DitchWidth(1),
 		m_UseSkirts(false),
 		m_TerrainPaintLayer(TL_2),
-		m_ClampToTerrain(true)
+		m_ClampToTerrain(true),
+		m_TileScale(1,10)
 	{
 
 	}
@@ -77,6 +78,8 @@ namespace GASS
 		RegisterProperty<float>("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth);
 		RegisterProperty<float>("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset);
 		RegisterProperty<float>("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth);
+		RegisterProperty<Vec2>("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale);
+		
 		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts);
 		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain);
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
@@ -197,10 +200,6 @@ namespace GASS
 		UpdateRoadMesh();
 	}
 
-
-
-	
-
 	void RoadComponent::UpdateRoadMesh() 
 	{ 
 		if(!m_Initialized)
@@ -250,7 +249,7 @@ namespace GASS
 		for(int i = 0 ;  i < points.size() ;i++)
 		{
 			uv_new_pos = points[i]; 
-			v_coord += (uv_new_pos - uv_old_pos).Length()/10; 
+			v_coord += (uv_new_pos - uv_old_pos).Length()/m_TileScale.y; 
 			uv_old_pos = uv_new_pos; 
 
 			// move left or right 

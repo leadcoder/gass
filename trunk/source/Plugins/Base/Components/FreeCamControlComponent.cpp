@@ -31,6 +31,8 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"

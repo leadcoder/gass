@@ -30,7 +30,8 @@
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystem.h"
 #include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
 
 
 namespace GASS

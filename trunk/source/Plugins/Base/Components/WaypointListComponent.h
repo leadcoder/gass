@@ -21,6 +21,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Plugins/Base/CoreMessages.h"
 
@@ -44,8 +45,16 @@ namespace GASS
 		
 		bool GetEnableSpline()const;
 		void SetEnableSpline(bool value);
+
+		void SetShowWaypoints(bool value);
+		bool GetShowWaypoints() const;
+
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
+
+		void SetExport(const std::string &filename);
+		std::string GetExport() const;
+
 		
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
 		
@@ -63,6 +72,7 @@ namespace GASS
 		bool m_EnableSpline;
 		bool m_Initialized;
 		bool m_AutoUpdateTangents;
+		bool m_ShowWaypoints;
 	};
 
 	typedef boost::shared_ptr<WaypointListComponent> WaypointListComponentPtr;

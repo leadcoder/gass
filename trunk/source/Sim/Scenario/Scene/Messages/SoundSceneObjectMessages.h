@@ -17,11 +17,48 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Core/Common.h"
-#include "Sim/Systems/SimSystemMessages.h"
+
+#pragma once
+
+#include "Sim/Common.h"
+#include "Core/MessageSystem/BaseMessage.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Quaternion.h"
 
 namespace GASS
 {
+	class SimSceneManager;
+	class ISceneManager;
+	class IGeometryComponent;
+	struct ManualMeshData;
+	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
+	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
+	class SoundParameterMessage : public BaseMessage
+	{
+	public:
+		enum SoundParameterType
+		{
+			PLAY,
+			STOP,
+			PAUSE,
+			PITCH,
+			LOOP,
+			VOLUME,
+		};
+	public:
+		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
+		  {
+
+		  }
+		  float GetValue()const {return m_Value;}
+		  SoundParameterType GetParameter()const {return m_Parameter;}
+	private:
+		SoundParameterType m_Parameter;
+		float m_Value;
+	};
+	typedef boost::shared_ptr<SoundParameterMessage> SoundParameterMessagePtr;
 }
-

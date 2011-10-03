@@ -27,7 +27,7 @@
 #include "Sim/Common.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Core/System/BaseSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
 
 namespace GASS
 {

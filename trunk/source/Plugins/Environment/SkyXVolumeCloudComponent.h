@@ -22,8 +22,12 @@
 
 #include "Core/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
+
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
 #include "SkyX/SkyX.h"
@@ -41,6 +45,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnWeatherMessage(WeatherMessagePtr message);
 		void SetNoiseScale(const Float &value);
 		Float GetNoiseScale() const;
 		void SetCloudFieldScale(const Float &value);
@@ -61,7 +66,7 @@ namespace GASS
 		void SetLightResponse(const Vec4 &value);
 		void SetAutoupdate(const bool& value);
 		bool GetAutoupdate() const;
-	
+		
 		
 	private:
 		

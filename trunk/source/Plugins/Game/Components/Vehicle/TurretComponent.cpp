@@ -33,6 +33,7 @@
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
 
 
 namespace GASS

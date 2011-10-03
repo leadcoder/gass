@@ -22,8 +22,10 @@
 
 #include "Core/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
@@ -46,6 +48,7 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnWeatherMessage(WeatherMessagePtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void SetWaterGradient(const std::vector<Vec3> &value);
 		std::vector<Vec3>  GetWaterGradient() const ;
@@ -92,6 +95,7 @@ namespace GASS
 		Hydrax::Hydrax *m_Hydrax;
 		Ogre::RenderTarget* m_Target;
 		Ogre::Camera * m_CurrentCamera;
+		float m_CloudFactor;
 	};
 }
 

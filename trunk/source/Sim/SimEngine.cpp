@@ -41,7 +41,7 @@
 #include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
 
 namespace GASS
 {

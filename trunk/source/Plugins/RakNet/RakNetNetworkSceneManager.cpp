@@ -69,6 +69,7 @@ namespace GASS
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
 		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage,0));
 	}
 
@@ -83,6 +84,8 @@ namespace GASS
 			obj->SendImmediate(net_msg);
 		}
 	}
+
+	
 
 	/*void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)
 	{

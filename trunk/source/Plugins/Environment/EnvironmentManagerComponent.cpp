@@ -41,7 +41,12 @@
 
 namespace GASS
 {
-	EnvironmentManagerComponent::EnvironmentManagerComponent(void) : m_Hydrax(NULL), m_Target(NULL),m_CurrentCamera(NULL), m_SunLight(NULL), m_SpecularWeight(0)
+	EnvironmentManagerComponent::EnvironmentManagerComponent(void) : m_Hydrax(NULL), 
+		m_Target(NULL),
+		m_CurrentCamera(NULL), 
+		m_SunLight(NULL), 
+		m_SpecularWeight(0),
+		m_CloudFactor(0)
 	{
 		
 		m_WaterGradientValues.push_back(Vec3(0.058209*0.4,0.535822*0.4,0.779105*0.4));
@@ -128,6 +133,13 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLoad,LoadGFXComponentsMessage,4));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
+
+	}
+
+	void EnvironmentManagerComponent::OnWeatherMessage(WeatherMessagePtr message)
+	{
+		m_CloudFactor = message->GetClouds();
 	}
 
 	void EnvironmentManagerComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -415,7 +427,7 @@ namespace GASS
 		//Light0->setPosition(mCamera->getDerivedPosition() - lightDir*mSkyX->getMeshManager()->getSkydomeRadius()*0.02);
 		m_SunLight->setDirection(lightDir);
 
-		Ogre::Vector3 sunCol = m_SunGradient.getColor(point);
+		Ogre::Vector3 sunCol = m_SunGradient.getColor(point)*(1-m_CloudFactor);
 		m_SunLight->setSpecularColour(sunCol.x*m_SpecularWeight, sunCol.y*m_SpecularWeight, sunCol.z*m_SpecularWeight);
 		Ogre::Vector3 ambientCol = m_AmbientGradient.getColor(point);
 		m_SunLight->setDiffuseColour(sunCol.x, sunCol.y, sunCol.z);
@@ -425,18 +437,24 @@ namespace GASS
 		if(m_FogGradientValues.size() > 0)
 		{
 			Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
+			Ogre::Real cloud_colour = ambientCol.x*0.5;
+			
+			fogCol.x = fogCol.x*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
+			fogCol.y = fogCol.y*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
+			fogCol.z = fogCol.z*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
+
 			Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
 			sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
 		}
 		if(m_Hydrax)
 			m_Hydrax->setSunColor(sunCol);
 
-		std::stringstream ss;
+		/*std::stringstream ss;
 		ss << "Gradient value:" << point << "\n";
 		ss << "Sun color:" << sunCol.x << " " << sunCol.y << " " << sunCol.z << "\n";
 		ss << "Ambient color:" << ambientCol.x << " " << ambientCol.y << " " << ambientCol.z << "\n";
 		//ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));*/
 	}
 
 }

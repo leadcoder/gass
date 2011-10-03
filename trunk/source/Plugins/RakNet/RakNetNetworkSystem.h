@@ -33,8 +33,12 @@
 //GASS includes
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+
 #include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/Messages/NetworkSystemMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 
 
@@ -57,6 +61,8 @@ namespace GASS
 		ID_START_SCENARIO = ID_USER_PACKET_ENUM+1,
 		ID_REMOTE_COMMAND = ID_USER_PACKET_ENUM+2,
 		ID_REMOTE_CREATE = ID_USER_PACKET_ENUM+3,
+		ID_TIME_OF_DAY = ID_USER_PACKET_ENUM+4,
+		ID_WEATHER = ID_USER_PACKET_ENUM+5,
 	};
 
 
@@ -109,7 +115,6 @@ namespace GASS
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
 		
-
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -120,6 +125,8 @@ namespace GASS
 		void OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message);
 		void OnStopServer(StopServerMessagePtr message);
 		void OnStopClient(StopClientMessagePtr message);
+		void OnTimeOfDay(TimeOfDayMessagePtr message);
+		void OnWeatherMessage(WeatherMessagePtr message);
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}

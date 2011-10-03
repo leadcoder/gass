@@ -26,7 +26,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Components/Graphics/SceneNodeState.h"
 #include "Core/MessageSystem/IMessage.h"
 

@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include <boost/bind.hpp>
-#include "OgreCameraComponent.h"
+#include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreRay.h>
@@ -44,13 +44,15 @@
 
 namespace GASS
 {
+
 	OgreCameraComponent::OgreCameraComponent(): 
 		m_NearClip(0.5),
 		m_FarClip(1000),
 		m_Fov(45.0),
 		m_Ortho(false),
 		m_Camera(NULL),
-		m_ClipToFog(false)
+		m_ClipToFog(false),
+		m_PolygonMode(Ogre::PM_SOLID)
 	{
 		
 	}
@@ -68,6 +70,7 @@ namespace GASS
 		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
 		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
 		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog);
+		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode);
 		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 	}
 
@@ -86,6 +89,15 @@ namespace GASS
 	void OgreCameraComponent::SetPostFilters(const std::vector<std::string> &filters)
 	{
 		m_PostFilters = filters;
+	}
+
+	void OgreCameraComponent::SetPolygonMode(PolygonModeWrapper value) 
+	{
+		m_PolygonMode= value;
+		if(m_Camera)
+		{
+			m_Camera->setPolygonMode(m_PolygonMode.Get());
+		}
 	}
 
 
@@ -118,6 +130,7 @@ namespace GASS
 		SetFarClipDistance(m_FarClip);
 		SetFov(m_Fov);
 		SetOrtho(m_Ortho);
+		SetPolygonMode(m_PolygonMode);
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 

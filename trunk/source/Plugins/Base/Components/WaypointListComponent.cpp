@@ -25,22 +25,31 @@
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Sim/SimEngine.h"
+#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Components/Graphics/MeshData.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "WaypointComponent.h"
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 
 namespace GASS
 {
-	WaypointListComponent::WaypointListComponent() : m_Radius(0), m_EnableSpline(false), m_Initialized(false), m_AutoUpdateTangents(true), m_SplineSteps(10)
+	WaypointListComponent::WaypointListComponent() : m_Radius(0), 
+		m_EnableSpline(false), 
+		m_Initialized(false), 
+		m_AutoUpdateTangents(true), 
+		m_SplineSteps(10),
+		m_ShowWaypoints(true)
 	{
 
 	}
@@ -56,7 +65,9 @@ namespace GASS
 		RegisterProperty<float>("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius);
 		RegisterProperty<bool>("EnableSpline", &WaypointListComponent::GetEnableSpline, &WaypointListComponent::SetEnableSpline);
 		RegisterProperty<bool>("AutoUpdateTangents", &WaypointListComponent::GetAutoUpdateTangents, &WaypointListComponent::SetAutoUpdateTangents);
+		RegisterProperty<bool>("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints);
 		RegisterProperty<int>("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps);
+		RegisterProperty<std::string>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport);
 	}
 
 	void WaypointListComponent::OnCreate()
@@ -75,7 +86,8 @@ namespace GASS
 	void WaypointListComponent::SetSplineSteps(int steps)
 	{
 		m_SplineSteps = steps;
-		UpdatePath();
+		if(m_Initialized)
+			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
 	}
 
 
@@ -87,7 +99,8 @@ namespace GASS
 	void WaypointListComponent::SetRadius(float radius)
 	{
 		m_Radius = radius;
-		UpdatePath();
+		if(m_Initialized)
+			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
 	}
 
 	bool WaypointListComponent::GetEnableSpline() const
@@ -98,7 +111,43 @@ namespace GASS
 	void WaypointListComponent::SetEnableSpline(bool value)
 	{
 		m_EnableSpline = value;
-		UpdatePath();
+		if(m_Initialized)
+			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+		//UpdatePath();
+	}
+
+	bool WaypointListComponent::GetShowWaypoints() const
+	{
+		return m_ShowWaypoints;
+	}
+
+	void WaypointListComponent::SetShowWaypoints(bool value)
+	{
+		m_ShowWaypoints = value;
+		
+
+		if(m_Initialized)
+		{
+			std::vector<WaypointComponentPtr> wp_vec;
+			IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
+				if(comp)
+				{
+					child_obj->PostMessage(MessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+					child_obj->PostMessage(MessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+
+					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
+					if(tangent)
+					{
+						tangent->PostMessage(MessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+						tangent->PostMessage(MessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+					}
+				}
+			}
+		}
 	}
 
 	void WaypointListComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -110,6 +159,7 @@ namespace GASS
 	{
 		m_Initialized = true;
 		UpdatePath();
+		SetShowWaypoints(m_ShowWaypoints);
 	}
 
 	void WaypointListComponent::OnUpdate(UpdateWaypointListMessagePtr message)
@@ -123,7 +173,7 @@ namespace GASS
 			return;
 		//collect all children and update path
 		//const double line_steps = 115;
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		/*ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
@@ -146,8 +196,8 @@ namespace GASS
 		if(mesh_data->VertexVector.size() > 0)
 		{
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			//GetSceneObject()->PostMessage(mesh_message);
-		}
+			GetSceneObject()->PostMessage(mesh_message);
+		}*/
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints() const
@@ -244,7 +294,38 @@ namespace GASS
 	void WaypointListComponent::SetAutoUpdateTangents(bool value)
 	{
 		m_AutoUpdateTangents = value;
-		UpdatePath();
+		if(m_Initialized)
+			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
 	}
 
+	void WaypointListComponent::SetExport(const std::string &filename)
+	{
+		if(!m_Initialized)
+			return;
+		std::vector<Vec3> wps = WaypointListComponent::GetWaypoints();
+
+		if(wps.size() > 0)
+		{
+			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			Vec3 world_pos = location->GetWorldPosition();
+		
+
+
+			std::stringstream ss;
+			std::ofstream file_ptr;   
+			file_ptr.open(filename.c_str());      
+
+			for(size_t i = 0; i < wps.size(); i++)
+			{
+				ss << (wps[i] + world_pos) << "\n";
+			}
+			file_ptr << ss.str().c_str();     
+			file_ptr.close(); 
+		}
+	}
+
+	std::string WaypointListComponent::GetExport() const
+	{
+		return "";
+	}
 }

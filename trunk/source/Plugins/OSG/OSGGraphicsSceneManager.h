@@ -23,7 +23,8 @@
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
 #include "Core/MessageSystem/MessageType.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/GeometryCategory.h"
 #include <osg/Node>
 #include <osg/Fog>

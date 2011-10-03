@@ -2,7 +2,7 @@
 #include "../EditorManager.h"
 #include "../ToolSystem/MouseToolController.h"
 #include "GizmoComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "Sim/Scenario/Scene/SceneObject.h"

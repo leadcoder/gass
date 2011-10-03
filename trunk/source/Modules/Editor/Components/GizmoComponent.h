@@ -2,7 +2,9 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/MeshData.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

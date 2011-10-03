@@ -22,7 +22,8 @@
 
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
 #include "Core/MessageSystem/MessageType.h"
 #include <string>
 
@@ -66,6 +67,7 @@ namespace GASS
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		void OnWeatherMessage(WeatherMessagePtr message);
 
 		
 		
@@ -97,6 +99,8 @@ namespace GASS
 		int GetNumShadowTextures() const {return m_NumShadowTextures;}
 		float GetOptimalAdjustFactor() const {return m_OptimalAdjustFactor;}
 		float GetFarShadowDistance() const {return m_FarShadowDistance;}
+		float GetShadowDirectionalLightExtrusionDistance() const {return m_ShadowDirectionalLightExtrusionDistance;}
+		bool GetUseAggressiveFocusRegion() const {return m_UseAggressiveFocusRegion;}
 		bool GetSelfShadowing() const {return m_SelfShadowing;}
 
 		void SetSelfShadowing(bool value) {m_SelfShadowing = value;UpdateShadowSettings();}
@@ -107,6 +111,9 @@ namespace GASS
 		void SetShadowProjType(const std::string &name) {m_ShadowProjType = name;UpdateShadowSettings();}
 		void SetShadowType(const std::string &name) {m_ShadowType = name;UpdateShadowSettings();}
 		void SetShadowCasterMaterial(const std::string &name) {m_ShadowCasterMaterial = name;UpdateShadowSettings();}
+		void SetUseAggressiveFocusRegion(bool value) {m_UseAggressiveFocusRegion = value ;UpdateShadowSettings();}
+		void SetShadowDirectionalLightExtrusionDistance(float value) {m_ShadowDirectionalLightExtrusionDistance = value;UpdateShadowSettings();}
+		
 		
 	
 	private:	
@@ -134,8 +141,10 @@ namespace GASS
 		int m_TextureShadowSize;
 		int m_NumShadowTextures;
 		bool m_SelfShadowing;
+		bool m_UseAggressiveFocusRegion;
 		float m_OptimalAdjustFactor;
 		float m_FarShadowDistance;
+		float m_ShadowDirectionalLightExtrusionDistance;
 		Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
 
 		Ogre::SceneManager* m_SceneMgr;

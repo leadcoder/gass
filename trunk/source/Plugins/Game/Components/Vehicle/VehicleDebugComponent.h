@@ -22,7 +22,8 @@
 #define VEHICLE_DEBUG_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
 

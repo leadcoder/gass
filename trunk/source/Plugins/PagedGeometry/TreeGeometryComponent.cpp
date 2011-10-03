@@ -69,6 +69,7 @@ namespace GASS
 		RegisterProperty<float>("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize);
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue);
 		RegisterProperty<int>("ImposterResolution", &TreeGeometryComponent::GetImposterResolution, &TreeGeometryComponent::SetImposterResolution);
+		RegisterProperty<bool>("RegenerateAllImpostors", &TreeGeometryComponent::GetRegenerateAllImpostors, &TreeGeometryComponent::SetRegenerateAllImpostors);
 	}
 
 
@@ -554,6 +555,21 @@ namespace GASS
 			return m_Terrain->GetHeight(x,z);
 		else
 			return 0;
+	}
+
+	void TreeGeometryComponent::SetRegenerateAllImpostors(bool value)
+	{
+		if(value)
+		{
+			ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
+			ImpostorPage::setImpostorResolution(m_ImposterResolution);
+			ImpostorPage::regenerateAll();
+		}
+	}
+
+	bool TreeGeometryComponent::GetRegenerateAllImpostors() const
+	{
+		return false;
 	}
 
 	void TreeGeometryComponent::UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z)

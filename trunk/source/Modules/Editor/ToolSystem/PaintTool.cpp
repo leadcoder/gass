@@ -10,6 +10,8 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 
 
 namespace GASS

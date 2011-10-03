@@ -18,8 +18,34 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#ifndef PHYSICS_SCENARIO_SCENE_MESSAGES_H
+#define PHYSICS_SCENARIO_SCENE_MESSAGES_H
 
+#include "Sim/Common.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Quaternion.h"
+#include "Core/MessageSystem/BaseMessage.h"
 
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+namespace GASS
+{
+	/**
+		Message used to activate/deactive physics
+	*/
+	class ActivatePhysicsMessage : public BaseMessage
+	{
+	public:
+		/**
+		Constructor
+		@param activate Indicate mode (0 == inactive, 1==active)
+		*/
+		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay) ,
+			  m_Activate(activate){}
+		  int Activate() const {return m_Activate;}
+	private:
+		int m_Activate;
+	};
+	typedef boost::shared_ptr<ActivatePhysicsMessage> ActivatePhysicsMessagePtr;
+}
 
-
+#endif

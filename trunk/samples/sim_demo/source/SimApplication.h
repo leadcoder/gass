@@ -5,40 +5,8 @@
 #define SIM_APPLICATION_H
 #include <boost/bind.hpp>
 
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/Math/Vector.h"
-#include "Core/Utils/Factory.h"
-#include "Core/Utils/Log.h"
-#include "Core/Serialize/Serialize.h"
-#include "Core/Utils/Timer.h"
-#include "Core/Utils/Log.h"
-#include "Core/ComponentSystem/BaseComponentContainer.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-
-#include "Core/ComponentSystem/ComponentContainerFactory.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponent.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Sim/Systems/SimSystemManager.h"
-
-#include "Core/PluginSystem/PluginManager.h"
-#include "Core/Utils/Log.h"
-
-#include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
-#include "Sim/Systems/Graphics/IGraphicsSystem.h"
-
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
-
-#include "Sim/Systems/Input/IInputSystem.h"
+#include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
-
 #include "tinyxml.h"
 
 #include <stdio.h>

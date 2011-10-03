@@ -5,11 +5,13 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/IComponent.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 namespace GASS
@@ -49,15 +51,18 @@ namespace GASS
 				{
 					//calc offset
 					LocationComponentPtr comp = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
-					m_Offset = comp->GetWorldPosition();
-					if(gc->GetSpaceMode() == "World")
+					if(comp)
 					{
-						m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
-						m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
-						m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
-					}
+						m_Offset = comp->GetWorldPosition();
+						if(gc->GetSpaceMode() == "World")
+						{
+							m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
+							m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
+							m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
+						}
 
-					m_Offset = new_position - m_Offset;
+						m_Offset = new_position - m_Offset;
+					}
 				}
 				new_position = new_position - m_Offset;
 				
@@ -76,18 +81,21 @@ namespace GASS
 					{
 						//calc offset
 						LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
-						m_Offset = comp->GetWorldPosition();
-						m_Offset = info.m_3DPos - m_Offset;
-
-						SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
-						if(gizmo)
+						if(comp)
 						{
-							GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-							if(gc->GetSpaceMode() == "World")
+							m_Offset = comp->GetWorldPosition();
+							m_Offset = info.m_3DPos - m_Offset;
+
+							SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
+							if(gizmo)
 							{
-								m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
-								m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
-								m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
+								GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
+								if(gc->GetSpaceMode() == "World")
+								{
+									m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
+									m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
+									m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
+								}
 							}
 						}
 						//m_Offset.Set(0,0,0);

@@ -167,6 +167,7 @@ namespace GASS
 				Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 				Vec4 color  = data->VertexVector[i].Color;
 				m_MeshObject->position(pos.x, pos.y, pos.z);
+				m_MeshObject->normal(0,1,0);
 				m_MeshObject->textureCoord(tex_coord.x,tex_coord.y);
 				Ogre::ColourValue col;
 				col.r = color.x;

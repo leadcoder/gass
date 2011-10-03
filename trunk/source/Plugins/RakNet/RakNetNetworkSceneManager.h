@@ -23,8 +23,9 @@
 #include <map>
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Plugins/RakNet/RakNetMessages.h"

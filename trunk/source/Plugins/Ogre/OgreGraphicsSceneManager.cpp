@@ -41,6 +41,8 @@
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
+#include <OgreOverlayManager.h>
+#include <OgreOverlayContainer.h>
 #include <OgreShadowCameraSetupLiSPSM.h>
 #include <OgreShadowCameraSetupPlaneOptimal.h>
 
@@ -62,8 +64,10 @@ namespace GASS
 		m_TextureShadowSize (1024),
 		m_NumShadowTextures (1),
 		m_SelfShadowing (false),
+		m_UseAggressiveFocusRegion(true),
 		m_OptimalAdjustFactor (1),
 		m_FarShadowDistance (100),
+		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SkyboxMaterial(""),
 		m_SceneManagerType("TerrainSceneManager"),
 		m_SceneMgr (NULL)
@@ -86,7 +90,9 @@ namespace GASS
 		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType);
 		RegisterProperty<std::string>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
 		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing );
+		RegisterProperty<bool> ("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion,&GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion);
 		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance);
+		RegisterProperty<float> ("ShadowDirectionalLightExtrusionDistance", &GASS::OgreGraphicsSceneManager::GetShadowDirectionalLightExtrusionDistance,&GASS::OgreGraphicsSceneManager::SetShadowDirectionalLightExtrusionDistance);
 		RegisterProperty<float> ("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor,&GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor);
 		RegisterProperty<int>("NumShadowTextures",&GASS::OgreGraphicsSceneManager::GetNumShadowTextures,&GASS::OgreGraphicsSceneManager::SetNumShadowTextures);
 		RegisterProperty<int>("TextureShadowSize",&GASS::OgreGraphicsSceneManager::GetTextureShadowSize,&GASS::OgreGraphicsSceneManager::SetTextureShadowSize);
@@ -107,6 +113,8 @@ namespace GASS
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
+
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)
@@ -130,30 +138,32 @@ namespace GASS
 		UpdateFogSettings();
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 
+
+
 		// Try to load default camera
 		/*ScenarioScenePtr scene = GetScenarioScene();
 		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		if(!scene_object) //If no FreeCameraObject template found, create one
 		{
-			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
-			fre_cam_template->SetName("FreeCameraObject");
-			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
-			location_comp->SetName("LocationComp");
+		SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
+		fre_cam_template->SetName("FreeCameraObject");
+		ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
+		location_comp->SetName("LocationComp");
 
-			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
-			camera_comp->SetName("FreeCameraComp");
+		ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
+		camera_comp->SetName("FreeCameraComp");
 
-			ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
-			cc_comp->SetName("FreeCameraCtrlComp");
+		ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
+		cc_comp->SetName("FreeCameraCtrlComp");
 
-			fre_cam_template->AddComponent(location_comp);
-			fre_cam_template->AddComponent(camera_comp);
-			fre_cam_template->AddComponent(cc_comp);
+		fre_cam_template->AddComponent(location_comp);
+		fre_cam_template->AddComponent(camera_comp);
+		fre_cam_template->AddComponent(cc_comp);
 
-			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
+		SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
 
-			scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		}*/
 
 		//assert(scene_object);
@@ -178,16 +188,22 @@ namespace GASS
 		sim_sm->SendImmediate(loaded_msg);
 	}
 
+	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)
+	{
+		//float fog_end = 100 + (1.0-(message->GetFog()))*2000;
+		SetFogEnd(message->GetFogDistance());
+	}
+
 	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		const std::string vp_name = message->GetViewport();
 
 		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
-		
+
 		OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
 		//OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
-		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
+		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
 		GetScenarioScene()->PostMessage(cam_message);
@@ -226,17 +242,18 @@ namespace GASS
 	void OgreGraphicsSceneManager::UpdateLightSettings()
 	{
 		if(m_SceneMgr == NULL) return;
-			m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.x, m_AmbientColor.y, m_AmbientColor.z));
+		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.x, m_AmbientColor.y, m_AmbientColor.z));
 	}
 
 	void OgreGraphicsSceneManager::Update(double delta_time)
 	{
-		
+
 	}
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
 	{
-		if(m_SceneMgr == NULL) return;
+		if(m_SceneMgr == NULL) 
+			return;
 		bool isOpenGL = false;
 		if(Root::getSingleton().getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 		{
@@ -297,21 +314,72 @@ namespace GASS
 				m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
 				currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
 				m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
+				m_LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
+				m_LiSPSMSetup->setCameraLightDirectionThreshold(Ogre::Degree( 10));
 			}
 			else if (m_ShadowProjType == "Uniform")
 			{
 				currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
 				m_SceneMgr->setShadowCasterRenderBackFaces(false);
+
 			}
 			else if (m_ShadowProjType == "UniformFocused")
-				currentShadowCameraSetup = ShadowCameraSetupPtr(new Ogre::FocusedShadowCameraSetup());
+			{
+				Ogre::FocusedShadowCameraSetup* fscs = new Ogre::FocusedShadowCameraSetup();
+				fscs->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
+				currentShadowCameraSetup = ShadowCameraSetupPtr(fscs);
+
+			}
 			else
 				Log::Error("Undefined projection %s",m_ShadowProjType.c_str());
-		//	else if (m_ShadowProjType == "PlaneOptimal")
-		//		currentShadowCameraSetup = Ogre::ShadowCameraSetupPtr(new Ogre::PlaneOptimalShadowCameraSetup(mPlane));
+			//	else if (m_ShadowProjType == "PlaneOptimal")
+			//		currentShadowCameraSetup = Ogre::ShadowCameraSetupPtr(new Ogre::PlaneOptimalShadowCameraSetup(mPlane));
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
+
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
+		m_SceneMgr->setShowDebugShadows(true);
+		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
+
+
+		
+		/*if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))
+		{
+
+			MaterialPtr debugMat = 	MaterialManager::getSingleton().getByName("Ogre/DebugShadowMap0");
+			TexturePtr shadowTex = m_SceneMgr->getShadowTexture(0);
+			debugMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(shadowTex->getName());
+
+		}
+		else
+		{
+
+			MaterialPtr debugMat = MaterialManager::getSingleton().create("Ogre/DebugShadowMap0", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			debugMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+			TexturePtr shadowTex = m_SceneMgr->getShadowTexture(0);
+			TextureUnitState *t = debugMat->getTechnique(0)->getPass(0)->createTextureUnitState(shadowTex->getName());
+			t->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
+
+
+			OverlayContainer* debugPanel =  NULL;
+			debugPanel = (OverlayContainer*)	(OverlayManager::getSingleton().createOverlayElement("Panel", "Ogre/DebugShadowPanel0"));
+			debugPanel->_setPosition(0, 0);
+			debugPanel->_setDimensions(0.3, 0.3);
+			debugPanel->setMaterialName("Ogre/DebugShadowMap0");
+
+			Overlay* debugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+			debugOverlay->add2D(debugPanel);
+			debugOverlay->show();
+		}*/
+
+
+		//END OF SET DEBUG OVERLAY WITH SHADOW_MAP
+
+		
+		/*debugMat = MaterialManager::getSingleton().getByName("Ogre/DebugShadowMap1");
+		shadowTex = mSceneMgr->getShadowTexture(1);
+		debugMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(shadowTex->getName());*/
+
 	}
 
 }

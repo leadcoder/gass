@@ -24,7 +24,9 @@
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/ComponentSystem/BaseComponentContainer.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+
 
 
 namespace GASS
@@ -76,15 +78,34 @@ namespace GASS
 		SceneObjectPtr GetObjectUnderRoot();
 
 
-		//convenience functions
+		/**Convenience function the get parent scene object
+			to hide object casting*/
 		SceneObjectPtr GetParentSceneObject()
 		{
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
 			return boost::shared_static_cast<SceneObject>(GetParent());
 		}
+
+		/**Get all components of certain class. This function allow you to pass the class name as a string
+			@components Return componnets that are found
+			@class_name Name of the component class to search for, note that this is the c++ class name 
+						and not the one you have registred to the object factory
+			@recursive Indicates if we should search for components in child scene objects
+		*/
 		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true);
+
+		/**Get first component of certain class. This function allow you to pass the class name as a string
+			@class_name Name of the component class to search for, note that this is the c++ class name 
+						and not the one you have registred to the object factory
+			@recursive Indicates if we should search for components in child scene objects
+		*/
 		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true);
 
+
+		/**Get all components of certain class. This function allow you to pass the class as a template argument
+			@components Return componnets that are found
+			@recursive Indicates if we should search for components in child scene objects
+		*/
 		template <class T>
 		void GetComponentsByClass(ComponentVector &components, bool recursive = true)
 		{
@@ -106,6 +127,9 @@ namespace GASS
 			}
 		}
 
+		/**Get first component of certain class. This function allow you to pass the class as a template argument
+			@recursive Indicates if we should search for component in child scene objects
+		*/
 		template <class T>
 		boost::shared_ptr<T> GetFirstComponentByClass(bool recursive = false)
 		{
@@ -131,6 +155,10 @@ namespace GASS
 			return ret;
 		}
 
+
+		/**Get first component of certain class from parent scene node. 
+			This function allow you to pass the class as a template argument
+		*/
 		template <class T>
 		boost::shared_ptr<T> GetFirstParentComponentByClass()
 		{
@@ -150,13 +178,28 @@ namespace GASS
 			return ret;
 		}
 
-		//should we return result or pass it as ref arg?
-		//SceneObjectVector GetObjectsByName(const std::string &name, bool exact_math = true);
+		/** Get children scene objects that match name. 
+			@objects Return scene objects that match name
+			@name The object name to search for
+			@exact_math Should the name be a exact match or should we allow 
+				that the name argument is found in the scene object name string, this
+				can be usefull in case that every object has a unique id as part of 
+				the name wich is not known in compiletime.
+		*/
 		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true);
+
+		/** Get first child scene objects that match name. 
+			@name The object name to search for
+			@exact_math Should the name be a exact match or should we allow 
+				that the name argument is found in the scene object name string, this
+				can be usefull in case that every object has a unique id as part of 
+				the name wich is not known in compiletime.
+		*/
 		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true);
 
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
+		
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);

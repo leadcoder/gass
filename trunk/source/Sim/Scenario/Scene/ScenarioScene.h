@@ -22,7 +22,7 @@
 
 #include "Sim/Common.h"
 #include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
 #include "Core/Math/Vector.h"
 #include "Core/Reflection/BaseReflectionObject.h"
 #include "Core/MessageSystem/IMessage.h"

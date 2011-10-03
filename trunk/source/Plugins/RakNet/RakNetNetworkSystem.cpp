@@ -105,8 +105,38 @@ namespace GASS
 	void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
 	{
 		m_Scene = message->GetScenarioScene();
+		GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
 	}
 
+	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayMessagePtr message)
+	{
+		if(m_IsServer && m_RakPeer)
+		{
+			RakNet::BitStream out;
+			out.Reset();
+			
+			out.Write((MessageID)ID_TIME_OF_DAY);
+			out.Write(message->GetTime());
+			out.Write(message->GetSpeed());
+			out.Write(message->GetSunRise());
+			out.Write(message->GetSunSet());
+			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,UNASSIGNED_SYSTEM_ADDRESS,true);
+		}
+	}
+
+	void RakNetNetworkSystem::OnWeatherMessage(WeatherMessagePtr message)
+	{
+		if(m_IsServer && m_RakPeer)
+		{
+			RakNet::BitStream out;
+			out.Reset();
+			out.Write((MessageID)ID_WEATHER);
+			out.Write(message->GetFogDistance());
+			out.Write(message->GetClouds());
+			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,UNASSIGNED_SYSTEM_ADDRESS,true);
+		}
+	}
 
 
 	void RakNetNetworkSystem::OnInit(MessagePtr message)
@@ -469,11 +499,7 @@ namespace GASS
 
 				}
 			}
-			/*else if (p->data[0]==ID_REMOTE_COMMAND)
-			{
-			RakNet::BitStream remote_data(p->data+1,p->length,false);
-			ReceiveRemoteCommand(&remote_data,p->systemAddress);
-			}*/
+			
 			m_RakPeer->DeallocatePacket(p);
 			p = m_RakPeer->Receive();
 		}
@@ -552,7 +578,7 @@ namespace GASS
 				DeserializeServerData(&server_data,&data);
 				MessagePtr message(new StartSceanrioRequestMessage(data.MapName));
 				GetSimSystemManager()->PostMessage(message);
-
+				
 				std::cout << "ID_START_SCENARIO" << std::endl;
 
 				//load scenario
@@ -582,6 +608,38 @@ namespace GASS
 				int port = p->systemAddress.port;
 				MessagePtr message (new ServerDisconnectedMessage(name,port));
 				GetSimSystemManager()->PostMessage(message);
+			}
+			else if (p->data[0]==ID_TIME_OF_DAY)
+			{
+				
+				RakNet::BitStream bs(p->data+1,p->length-1,false);
+				double time,speed,rise,set;
+				bs.Read(time);
+				bs.Read(speed);
+				bs.Read(rise);
+				bs.Read(set);
+				MessagePtr message(new TimeOfDayMessage(time,set,rise,speed));
+				
+				ScenarioScenePtr scene = GetScene();
+				if(scene)
+				{
+					scene->PostMessage(message);
+				}
+			}
+			else if (p->data[0]==ID_WEATHER)
+			{
+				
+				RakNet::BitStream bs(p->data+1,p->length-1,false);
+				float fog_dist,cloud_factor;
+				bs.Read(fog_dist);
+				bs.Read(cloud_factor);
+				MessagePtr message(new WeatherMessage(fog_dist,cloud_factor));
+				
+				ScenarioScenePtr scene = GetScene();
+				if(scene)
+				{
+					scene->PostMessage(message);
+				}
 			}
 			else if(p->data[0]==ID_RPC_REMOTE_ERROR)
 			{
@@ -618,6 +676,7 @@ namespace GASS
 
 				}
 			}
+
 
 			m_RakPeer->DeallocatePacket(p);
 			p = m_RakPeer->Receive();

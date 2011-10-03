@@ -23,7 +23,8 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include <string>
 #include <osgViewer/Viewer>

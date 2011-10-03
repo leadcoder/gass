@@ -22,4 +22,9 @@ namespace GASS
 		std::string ServerName;
 		std::string MapName;
 	};
+
+	struct TimeOfDayData
+	{
+		double Time;
+	};
 }

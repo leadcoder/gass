@@ -25,7 +25,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/AABox.h"
 #include "Core/Math/Sphere.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 
 namespace Ogre
 {

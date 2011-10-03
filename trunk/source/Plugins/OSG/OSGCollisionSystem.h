@@ -24,9 +24,11 @@
 #include <map>
 
 #include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Systems/SimSystemMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Sim/Scheduling/ITaskListener.h"
 #include "Core/System/BaseSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"

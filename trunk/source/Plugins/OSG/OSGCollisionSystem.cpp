@@ -260,13 +260,17 @@ namespace GASS
 
 		if(request->CollisionBits == 1)
 		{
-			intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY);
-
+			intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY);
 		}
 		else if(request->CollisionBits == 2)
 		{
 			intersectVisitor.setTraversalMask(NM_GIZMO_GEOMETRY);
 			cat.Set(GT_GIZMO);
+		}
+		else if(request->CollisionBits == 4)
+		{
+			intersectVisitor.setTraversalMask(NM_TERRAIN_GEOMETRY);
+			cat.Set(GT_TERRAIN);
 		}
 
 		node->accept(intersectVisitor);
@@ -288,13 +292,38 @@ namespace GASS
 						BaseSceneComponent* pobj = (BaseSceneComponent*)intersection.nodePath[i]->getUserData();
 
 						IGeometryComponent* geom  = dynamic_cast<IGeometryComponent*>(pobj);
-						if(geom && geom->GetGeometryCategory() == cat)
+						/*if(geom && geom->GetGeometryCategory() == cat)
 						{
 							result->CollSceneObject = pobj->GetSceneObject();
 							result->Coll = true;
 							result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
 							result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
 							return;		
+						}*/
+						if(geom)
+						{
+							bool found = false;
+							if(request->CollisionBits == 1 && geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN)
+							{
+								found = true;
+							}
+							else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
+							{
+								found = true;
+							}
+							else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
+							{
+								found = true;
+							}
+
+							if(found)
+							{
+								result->CollSceneObject = pobj->GetSceneObject();
+								result->Coll = true;
+								result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+								result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
+								return;		
+							}
 						}
 					}
 				}

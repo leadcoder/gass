@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+
+#include "Sim/GASS.h"
+/*#include <boost/bind.hpp>
 
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/Math/Vector.h"
@@ -44,7 +46,7 @@
 
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"
+#include "Sim/Components/Graphics/Geometry/ILineComponent.h"*/
 #include "Plugins/Game/GameMessages.h"
 
 #include "Client.h"

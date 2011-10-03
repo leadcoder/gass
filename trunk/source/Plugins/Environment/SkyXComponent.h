@@ -21,8 +21,9 @@
 #define SKY_X_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Scenario/Scene/ScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
@@ -32,7 +33,6 @@
 
 namespace GASS
 {
-
 	class SkyXComponent : public Reflection<SkyXComponent,BaseSceneComponent> , public Ogre::FrameListener
 	{
 	public:
@@ -65,7 +65,6 @@ namespace GASS
 		double GetTimeMultiplier() const;
 		void SetMoonSize(const Float &value);
 		Float GetMoonSize() const ;
-
 
 		void SetTime(const Vec3 &value);
 		Vec3 GetTime() const;

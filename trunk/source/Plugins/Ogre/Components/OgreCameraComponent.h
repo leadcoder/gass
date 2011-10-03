@@ -25,8 +25,10 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Utils/EnumBinder.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
+#include "Plugins/Ogre/OgrePolygonMode.h"
 
 namespace Ogre
 {
@@ -58,8 +60,9 @@ namespace GASS
 		void SetOrtho(bool value);
 		bool GetClipToFog() const {return m_ClipToFog;}
 		void SetClipToFog(bool value) {m_ClipToFog = value;}
+		PolygonModeWrapper GetPolygonMode() const {return m_PolygonMode;}
+		void SetPolygonMode(PolygonModeWrapper value);
 		
-	
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Camera* m_Camera;
 		float m_NearClip;
@@ -68,6 +71,7 @@ namespace GASS
 		bool m_Ortho;
 		bool m_ClipToFog;
 		std::vector<std::string> m_PostFilters;
+		PolygonModeWrapper m_PolygonMode;
 
 	};
 

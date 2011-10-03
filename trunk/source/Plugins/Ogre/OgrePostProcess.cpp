@@ -420,8 +420,8 @@ namespace GASS
 		{
 			DisableCompositor(m_ActiveVec[i]);
 		}
-		//if(camera->GetPostFilters().size() > 0)
-		m_ActiveVec = camera->GetPostFilters();
+		if(camera->GetPostFilters().size() > 0)
+			m_ActiveVec = camera->GetPostFilters();
 
 		for(int i = 0 ; i < m_ActiveVec.size(); i++ )
 		{

@@ -2,7 +2,9 @@
 #include "../EditorManager.h"
 #include "../EditorMessages.h"
 #include "EditorComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/SimSystemManager.h"
 

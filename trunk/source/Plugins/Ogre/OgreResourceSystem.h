@@ -22,7 +22,9 @@
 
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/SimSystem.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Core/Utils/FilePath.h"
 
 #include "Core/MessageSystem/MessageType.h"

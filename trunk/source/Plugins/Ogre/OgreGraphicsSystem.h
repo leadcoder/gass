@@ -22,7 +22,8 @@
 
 #include "Sim/Systems/Graphics/IGraphicsSystem.h"
 #include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/SimSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Sim/Scheduling/TaskGroups.h"
