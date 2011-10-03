@@ -49,7 +49,7 @@ end
 "hkaAnimation",
 "hkInternal",
 "hkGeometryUtilities",
---hkVisualize",
+"hkVisualize",
 "hkSerialize",
 "hkCompat",
 "hkSceneData",
@@ -79,7 +79,27 @@ end
 			"GASSSim",
 	--		"ode_double",
 			"tinyxml",
-			"tbb" 
+			"tbb",
+"hkgBridge",
+			"hkgCommon",
+"hkpUtilities",
+"hkpVehicle",
+"hkpDynamics",
+"hkpCollide",
+"hkpInternal",
+"hkpConstraintSolver",
+"hkaRagdoll",
+"hkaInternal",
+"hkaAnimation",
+"hkInternal",
+"hkGeometryUtilities",
+"hkVisualize",
+"hkSerialize",
+"hkCompat",
+"hkSceneData",
+"hkBase",
+"hkcdInternal",
+"hkcdCollide"
 		}
 libdirs 
 	{
