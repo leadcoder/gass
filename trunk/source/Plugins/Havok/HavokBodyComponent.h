@@ -21,7 +21,9 @@
 #pragma once
 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Core/Math/Vector.h"
 #include "Sim/Scheduling/TaskGroups.h"
 #include "Sim/Scheduling/ITaskListener.h"
@@ -55,7 +57,9 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 		void UpdateMass();
 		hkpRigidBody* GetHavokBody() const {return m_RigidBody;}
-	protected:
+		void SetForce(const Vec3 &force);
+		Vec3 GetForce(bool rel = false);
+
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
 		void SetVelocity(const Vec3 &vel, bool rel = false);
@@ -63,13 +67,16 @@ namespace GASS
 		void SetAngularVelocity(const Vec3 &vel, bool rel = false);
 		Vec3 GetAngularVelocity(bool rel = false);
 		void SetActive(bool value);
-		bool GetActive() const;
-		
+
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
-		void SetForce(const Vec3 &force);
-		Vec3 GetForce(bool rel = false);
+		
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
+	protected:
+	
+		bool GetActive() const;
+		
+	
 		
 		//reflection functions
 		

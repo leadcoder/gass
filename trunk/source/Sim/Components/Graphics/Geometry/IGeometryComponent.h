@@ -32,8 +32,9 @@ namespace GASS
 		should be derived from.
 		This can for instanace be used by a physics engine to get information
 		about geomtry size. 
-		Note that all runtime interaction should be done through 
-		messages if running multi-threaded.
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with components should 
+		instead be done through messages.
 	*/
 
 	class GASSExport IGeometryComponent 

@@ -36,6 +36,11 @@ namespace GASS
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
+
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
+
 	class SoundParameterMessage : public BaseMessage
 	{
 	public:

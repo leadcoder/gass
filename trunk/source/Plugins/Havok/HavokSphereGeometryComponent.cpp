@@ -66,7 +66,6 @@ namespace GASS
 	{
 		HavokBaseGeometryComponent::OnCreate();
 	}
-
 	
 	void HavokSphereGeometryComponent::SetSizeFromMesh(bool value)
 	{
@@ -92,6 +91,7 @@ namespace GASS
 	hkpShape*  HavokSphereGeometryComponent::CreateHavokShape()
 	{
 		m_SphereShape = new hkpSphereShape(m_Radius);
+		
 		return m_SphereShape;
 	}
 

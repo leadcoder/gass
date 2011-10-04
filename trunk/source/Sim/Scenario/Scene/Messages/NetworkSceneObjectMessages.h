@@ -37,6 +37,15 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
+
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
+
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+
 	class LoadNetworkComponentsMessage : public BaseMessage
 	{
 	public:
@@ -48,6 +57,8 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
 
+	
+	
 
 	//typedef boost::shared_ptr<char> NetworkDataPtr;
 	class NetworkPackage
@@ -117,5 +128,8 @@ namespace GASS
 
 	};
 	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
+
+
+
 	
 }

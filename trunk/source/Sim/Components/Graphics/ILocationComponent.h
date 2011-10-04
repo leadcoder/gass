@@ -25,6 +25,15 @@
 
 namespace GASS
 {
+
+	/**
+		Interface that all location components should be derived from.
+		
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with components should 
+		instead be done through messages.
+	*/
+
 	class GASSExport ILocationComponent
 	{
 	public:

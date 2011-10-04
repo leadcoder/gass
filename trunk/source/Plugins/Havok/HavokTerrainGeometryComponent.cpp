@@ -156,7 +156,7 @@ namespace GASS
 					hkpRigidBodyCinfo rci;
 					rci.m_motionType = hkpMotion::MOTION_FIXED;
 					rci.m_shape = m_Shape;
-					rci.m_friction = 0.2f;
+					rci.m_friction = 1.0f;
 
 					hkpRigidBody* body = new hkpRigidBody( rci );
 

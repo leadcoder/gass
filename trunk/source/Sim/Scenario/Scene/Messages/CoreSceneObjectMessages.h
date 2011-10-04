@@ -49,6 +49,10 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
 
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
+
 	/**
 	Change name of scene object
 	*/
@@ -68,21 +72,10 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<SceneObjectNameMessage> SceneObjectNameMessagePtr;
 
-
-
-	class UnloadComponentsMessage : public BaseMessage
-	{
-	public:
-		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay)
-		  {
-
-		  }
-	private:
-	};
-	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
-
-	//debug messages
+	/**
+		Message that can be used to show debug information about a object
+		TODO: move this object to other place?
+	*/
 	class DebugComponentSettingsMessage : public BaseMessage
 	{
 	public:
@@ -96,4 +89,27 @@ namespace GASS
 		bool m_ShowObjectName;
 	};
 	typedef boost::shared_ptr<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
+
+	
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+	
+	/**
+	Messaged sent by SceneObjectManager to inform component that the scene object unloaded
+	*/
+	class UnloadComponentsMessage : public BaseMessage
+	{
+	public:
+		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay)
+		  {
+
+		  }
+	private:
+	};
+	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
+
+	
+	
 }

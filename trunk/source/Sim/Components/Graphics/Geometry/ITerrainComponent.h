@@ -31,9 +31,9 @@ namespace GASS
 		how to create a collision heightfield or by other components that 
 		new terrain height information in a fast way.
 
-		Note that all runtime interaction should be done through 
-		messages if running multi-threaded.
-
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with components should 
+		instead be done through messages.
 	*/
 	class GASSExport ITerrainComponent
 	{

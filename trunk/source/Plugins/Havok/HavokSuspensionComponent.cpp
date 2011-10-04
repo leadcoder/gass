@@ -37,6 +37,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include <boost/bind.hpp>
 #include <Physics/Dynamics/Constraint/Bilateral/Wheel/hkpWheelConstraintData.h>
+#include <Physics/Utilities/Actions/Motor/hkpMotorAction.h>
 
 namespace GASS
 {
@@ -163,8 +164,15 @@ namespace GASS
 			m_WheelConstraintData->setSuspensionDamping(world->m_dynamicsStepInfo.m_solverInfo.m_damping * 0.25f);
 
 			hkpConstraintInstance* constraint = new hkpConstraintInstance( m_WheelBody->GetHavokBody(), m_ChassisBody->GetHavokBody(), m_WheelConstraintData );
+			
+
+			hkVector4 drive_axis(1.0f, 0.0f, 0.0f);
+			m_MotorAction = new hkpMotorAction( m_WheelBody->GetHavokBody(), drive_axis, 0, 2);
+			
+			
 			world->lock();
 			world->addConstraint(constraint);
+			world->addAction( m_MotorAction );
 			constraint->removeReference();
 			world->unlock();
 	
@@ -259,7 +267,8 @@ namespace GASS
 	{
 		if(m_WheelBody)
 		{
-			m_WheelBody->SetAngularVelocity(Vec3(velocity,0,0));
+			
+			//m_WheelBody->SetAngularVelocity(Vec3(velocity,0,0));
 	//		dJointSetHinge2Param(m_WheelConstraintData,dParamVel,velocity);
 		}
 	}
@@ -268,6 +277,7 @@ namespace GASS
 	{
 		if(m_WheelConstraintData)
 		{
+			m_MotorAction->setSpinRate(value);
 		//	dJointSetHinge2Param(m_WheelConstraintData, dParamVel2,value);
 		}
 	}
@@ -276,7 +286,8 @@ namespace GASS
 	{
 		if(m_WheelBody)
 		{
-			m_WheelBody->SetForce(Vec3(value,0,0));
+			m_MotorAction->setGain(value*10);
+//			m_WheelBody->AddTorque(Vec3(value,0,0));
 		//	dJointSetHinge2Param(m_WheelConstraintData, dParamFMax2,value);
 		}
 	}
@@ -336,10 +347,11 @@ namespace GASS
 		MessagePtr joint_message;
 		if(m_WheelBody)
 		{
-			Vec3 vel = m_WheelBody->GetAngularVelocity();
-			
+			//Vec3 vel = m_WheelBody->GetAngularVelocity();
 			//float angle = dJointGetHinge2Angle1(m_WheelConstraintData);
 			//float angle_rate = dJointGetHinge2Angle1Rate (m_WheelConstraintData);
+			float angle = 0;
+			float angle_rate = 0;
 			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
 		//	if(joint_message)
 		//		GetSceneObject()->PostMessage(joint_message);

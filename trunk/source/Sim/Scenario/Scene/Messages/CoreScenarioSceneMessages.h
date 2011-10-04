@@ -33,49 +33,10 @@ namespace GASS
 	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	/**
-	Message sent by the scenario scene class while loading a 
-	new scenario scene.
-	It's up to each scene manager to catch this and load it's 
-	dependencies
-	*/
-	class LoadSceneManagersMessage : public BaseMessage
-	{
-	public:
-		LoadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
-		  {
 
-		  }
-		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
-	private:
-		ScenarioScenePtr m_SS;
-	};
-	typedef boost::shared_ptr<LoadSceneManagersMessage> LoadSceneManagersMessagePtr;
-
-
-	/**
-	Message sent by the scenario scene class 
-	while unloading a scenario scene.
-	It's up to each scene manager to catch this free 
-	it's resources.
-	
-	*/
-	class UnloadSceneManagersMessage : public BaseMessage
-	{
-	public:
-		UnloadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
-		  {
-
-		  }
-		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
-	private:
-		ScenarioScenePtr m_SS;
-	};
-	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
-
-
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
 	
 	/**
 	Message used to remove a scene object from the scenario scene
@@ -143,6 +104,55 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<SpawnObjectFromTemplateMessage> SpawnObjectFromTemplateMessagePtr;
+
+	
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+
+
+	/**
+	Message sent by the scenario scene class while loading a 
+	new scenario scene.
+	It's up to each scene manager to catch this and load it's 
+	dependencies
+	*/
+	class LoadSceneManagersMessage : public BaseMessage
+	{
+	public:
+		LoadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
+		  {
+
+		  }
+		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
+	private:
+		ScenarioScenePtr m_SS;
+	};
+	typedef boost::shared_ptr<LoadSceneManagersMessage> LoadSceneManagersMessagePtr;
+
+
+	/**
+	Message sent by the scenario scene class 
+	while unloading a scenario scene.
+	It's up to each scene manager to catch this free 
+	it's resources.
+	
+	*/
+	class UnloadSceneManagersMessage : public BaseMessage
+	{
+	public:
+		UnloadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
+		  {
+
+		  }
+		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
+	private:
+		ScenarioScenePtr m_SS;
+	};
+	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
+
 
 	/**
 		Message sent by SceneObjectManager after scene object is created and added to the scene 

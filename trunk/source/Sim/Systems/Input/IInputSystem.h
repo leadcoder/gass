@@ -274,6 +274,13 @@ namespace GASS
 		virtual bool PovMoved(int device,int axis, float value)=0;
 	};
 
+	/**
+		Input interface that all input systems must be derived from
+
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with systems should 
+		instead be done through messages.
+	*/
 	class GASSExport IInputSystem  
 	{
 	public:

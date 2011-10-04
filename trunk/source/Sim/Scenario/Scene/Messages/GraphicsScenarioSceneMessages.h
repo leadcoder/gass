@@ -34,6 +34,10 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
+
 	/**
 	Message used for changing camera un viewport. 
 	This message can be sent by user.
@@ -59,48 +63,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ChangeCameraMessage> ChangeCameraMessagePtr;
 
-	/**
-		Message sent when viewport camera is changed 
-	*/
-	class CameraChangedNotifyMessage : public BaseMessage
-	{
-	public:
-		/**
-		Constructor
-		@param camera Pointer to the new camera
-		*/
-		CameraChangedNotifyMessage(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
-		  {
 
-		  }
-		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  void* GetUserData() const {return m_UserData;}
-	private:
-		SceneObjectPtr m_Camera;
-		void *m_UserData;
-	};
-	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
-
-
-	/**
-		Message used to activate/deactive physics
-	*/
-	class ActivatePhysicsMessage : public BaseMessage
-	{
-	public:
-		/**
-		Constructor
-		@param activate Indicate mode (0 == inactive, 1==active)
-		*/
-		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
-			  m_Activate(activate){}
-		  int Activate() const {return m_Activate;}
-	private:
-		int m_Activate;
-	};
-	typedef boost::shared_ptr<ActivatePhysicsMessage> ActivatePhysicsMessagePtr;
 
 
 	/**
@@ -169,6 +132,34 @@ namespace GASS
 		Vec3 m_FogColor;
 	};
 	typedef boost::shared_ptr<WeatherMessage> WeatherMessagePtr;
+
+
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+
+	/**
+		Message sent by graphics system when viewport camera is changed 
+	*/
+	class CameraChangedNotifyMessage : public BaseMessage
+	{
+	public:
+		/**
+		Constructor
+		@param camera Pointer to the new camera
+		*/
+		CameraChangedNotifyMessage(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
+		  {
+
+		  }
+		  SceneObjectPtr GetCamera() const {return m_Camera;}
+		  void* GetUserData() const {return m_UserData;}
+	private:
+		SceneObjectPtr m_Camera;
+		void *m_UserData;
+	};
+	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
 }
 
 #endif

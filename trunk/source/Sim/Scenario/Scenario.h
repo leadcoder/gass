@@ -37,7 +37,7 @@ namespace GASS
 	typedef VectorIterator<ScenarioSceneVector> ScenarioSceneIterator;
 
 	/**
-		A scenario in GASS is compounded by scenarios scenes. The scenario class is
+		A scenario in GASS consist of scenarios scenes. The scenario class is
 		therefore only a container of scenario scenes and the actual scenario 
 		functionality is capsulated in its scenario scenes.
 

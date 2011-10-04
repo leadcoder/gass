@@ -27,13 +27,13 @@
 #include "Core/Math/Quaternion.h"
 
 /**
-This file hold messages that should be posted to
+This file hold messages that can be posted to
 SceneObjects. SceneObjectMessages are used to
 enable communication between components hold by
 a SceneObject. The user is free to extend this
 set of messages but this file hold the "core"
-messages that all components share.
-If a scene object message is added and it's
+graphic messages that all components share.
+If a scene object message is needed and it's
 of common interest it can be a candidate for
 this file.
 */
@@ -48,21 +48,9 @@ namespace GASS
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
-
-
-	class LoadGFXComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
-		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
-		  void* GetUserData() const {return m_UserData;}
-	private:
-		SceneManagerPtr m_GFXSceneManager;
-		void *m_UserData;
-	};
-	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
-
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
 
 	/**
 	Position (relative to parent) change is requested,
@@ -217,29 +205,7 @@ namespace GASS
 	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
 
 
-	/** Message sent by scene node when scene node is moved
-	*/
-
-	class TransformationNotifyMessage : public BaseMessage
-	{
-	public:
-		/**
-			Constructor
-			@param pos Position in world coordiante space
-			@param rot	Rotation in world coordiante space
-			@param scale Scale in world coordiante space
-		*/
-		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
-		  Vec3 GetPosition() const {return m_Position;}
-		  Quaternion  GetRotation() const {return m_Rotation;}
-		  Vec3 GetScale() const {return m_Scale;}
-	private:
-		Vec3 m_Position;
-		Quaternion m_Rotation;
-		Vec3 m_Scale;
-	};
-	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
+	
 
 
 	/**
@@ -460,6 +426,9 @@ namespace GASS
 	typedef boost::shared_ptr<BoneTransformationMessage> BoneTransformationMessagePtr;
 
 
+	/**
+		Message used to send new mesh data to manual mesh compnents
+	*/
 	class ManualMeshDataMessage : public BaseMessage
 	{
 	public:
@@ -472,6 +441,10 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ManualMeshDataMessage> ManualMeshDataMessagePtr;
 
+	
+	/**
+		Message used to clear manual mesh compnents
+	*/
 	class ClearManualMeshMessage : public BaseMessage
 	{
 	public:
@@ -481,16 +454,11 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ClearManualMeshMessage> ClearManualMeshMessagePtr;
 
-	class GeometryChangedMessage : public BaseMessage
-	{
-	public:
-		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Geometry(geom){}
-	private:
-		GeometryComponentPtr m_Geometry;
-	};
-	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
-
+	
+	/**
+		Scale actual geometry and not scene node, 
+		Note that only a few geometry components support this.
+	*/
 
 	class GeometryScaleMessage : public BaseMessage
 	{
@@ -507,6 +475,9 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<GeometryScaleMessage> GeometryScaleMessagePtr;
 
+	/**
+	  Change particle system parameter
+	*/
 
 	class ParticleSystemParameterMessage : public BaseMessage
 	{
@@ -666,5 +637,68 @@ namespace GASS
 		float m_PaintIntensity;
 	};
 	typedef boost::shared_ptr<RoadMessage> RoadMessagePtr;
+
+
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+	
+	/**
+		Message sent by graphics scene manager when new scene object is loaded. 
+		Graphics components should subscribe to this message and do its loading
+		on delivery.
+	*/
+	class LoadGFXComponentsMessage : public BaseMessage
+	{
+	public:
+		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
+		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
+		  void* GetUserData() const {return m_UserData;}
+	private:
+		SceneManagerPtr m_GFXSceneManager;
+		void *m_UserData;
+	};
+	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
+
+
+	/** Message sent by scene node when scene node is moved
+	*/
+
+	class TransformationNotifyMessage : public BaseMessage
+	{
+	public:
+		/**
+			Constructor
+			@param pos Position in world coordiante space
+			@param rot	Rotation in world coordiante space
+			@param scale Scale in world coordiante space
+		*/
+		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
+		  Vec3 GetPosition() const {return m_Position;}
+		  Quaternion  GetRotation() const {return m_Rotation;}
+		  Vec3 GetScale() const {return m_Scale;}
+	private:
+		Vec3 m_Position;
+		Quaternion m_Rotation;
+		Vec3 m_Scale;
+	};
+	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
+
+	/**
+		Messages sent by geomtery components when its geometry is changed. 
+	*/
+	class GeometryChangedMessage : public BaseMessage
+	{
+	public:
+		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Geometry(geom){}
+	private:
+		GeometryComponentPtr m_Geometry;
+	};
+	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
+
+
 	
 }

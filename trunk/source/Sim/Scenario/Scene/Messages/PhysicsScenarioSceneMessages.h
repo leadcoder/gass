@@ -28,6 +28,11 @@
 
 namespace GASS
 {
+
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
+
 	/**
 		Message used to activate/deactive physics
 	*/

@@ -52,13 +52,33 @@ namespace GASS
 		*/
 		void Init();
 		/**
-		Register for SimSystemMessages
+		Register for system messages
 		*/
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
+		
+		/**
+		Unregister for system messages
+		*/
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
+		
+		/**
+		Post system message
+		*/
 		void PostMessage(MessagePtr message);
+		
+		/**
+		Force send of system message
+		*/
 		void SendImmediate(MessagePtr message);
+		
+		/**
+		Update System
+		*/
 		void Update(float delta_time);
+		
+		/**
+		Clear all unproccessed messages
+		*/
 		void ClearMessages();
 	private:
 		MessageManager* m_SystemMessageManager;

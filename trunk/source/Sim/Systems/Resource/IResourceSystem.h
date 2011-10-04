@@ -25,14 +25,54 @@
 
 namespace GASS
 {
+
+	/**
+		Interface that all resource systems must be derived from
+
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with systems should 
+		instead be done through messages.
+	*/
+
 	class GASSExport IResourceSystem
 	{
 	public:
 		virtual ~IResourceSystem(){}
+
+		/**
+			Get the full resource path if resource is found in any resource group
+			@file_name Resource name
+			@file_path Will hold full path to resrouce on return
+			@return true if resource is found
+		*/
 		virtual bool GetFullPath(const std::string &file_name,std::string &file_path) = 0;
+		
+		/**
+			Add new resource location
+			@path Full file path to resources
+			@resource_group Add resources to this group
+			@type  resrouce type FileSystem or Zip
+			@recursive Search in subfolders or not
+		*/
 		virtual void AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
+		
+		/**
+			Remove resource location from resource group
+			@path Full file path to the resource location
+			@resource_group The resource group that hold the location
+		*/
 		virtual void RemoveResourceLocation(const std::string &path,const std::string &resource_group) = 0;
+
+		/**
+			Remove resource group
+			@resource_group The resources group
+		*/
 		virtual void RemoveResourceGroup(const std::string &resource_group) = 0;
+		
+		/**
+			Force load of resource group
+			@resource_group The resources group
+		*/
 		virtual void LoadResourceGroup(const std::string &resource_group) = 0;
 	protected:
 	};

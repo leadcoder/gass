@@ -47,7 +47,7 @@ namespace GASS
 	This class is derived from the BaseComponentContainer class and extend
 	the BaseComponentContainer with message functionality.
 	To communicate with components owned by the SceneObject a message manager is used.
-	Some basic object messages is enumerated below.
+	Some basic object messages is found in SceneObjectNameMessage.h
 
 	As the name indicates a SceneObject is a object in a scenario scene.
 	The SceneObject is owned by a SceneObjectManager which in turn is owned

@@ -20,10 +20,13 @@
 
 #pragma once 
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Core/MessageSystem/IMessage.h"
 
 class hkpWheelConstraintData;
+class hkpMotorAction;
 namespace GASS
 {
 	class HavokPhysicsSceneManager;
@@ -94,6 +97,7 @@ namespace GASS
 
 		HavokBodyComponent* m_WheelBody;
 		HavokBodyComponent* m_ChassisBody;
+		hkpMotorAction* m_MotorAction;
 		
 		float m_JointForce;
 		float m_SwayForce;

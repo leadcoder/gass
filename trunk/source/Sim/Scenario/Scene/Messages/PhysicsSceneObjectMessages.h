@@ -36,19 +36,9 @@ namespace GASS
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 
-
-
-	class LoadPhysicsComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
-		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
-	private:
-		SceneManagerPtr m_PhysicsSceneManager;
-	};
-	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
-
+	//*********************************************************
+	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
+	//*********************************************************
 
 	/**
 	Message used to change collisiion settings,
@@ -170,6 +160,23 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<PhysicsMassMessage> PhysicsMassMessagePtr;
+
+
+
+	//*********************************************************
+	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
+	//*********************************************************
+
+	class LoadPhysicsComponentsMessage : public BaseMessage
+	{
+	public:
+		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
+		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
+	private:
+		SceneManagerPtr m_PhysicsSceneManager;
+	};
+	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
 
 
 	class VelocityNotifyMessage : public BaseMessage

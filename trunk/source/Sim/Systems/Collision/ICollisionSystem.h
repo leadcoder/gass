@@ -62,6 +62,10 @@ namespace GASS
 
 	/**
 		Collision interface
+		
+		Implementaion of this interface must be thread safe so that 
+		interaction is can be done during RTC update if running GASS 
+		in multi-threaded mode. 
 	*/
 
 	class GASSExport ICollisionSystem

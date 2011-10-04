@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Plugins/Havok/HavokBodyComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
+#include "HavokSphereGeometryComponent.h"
 #include "Core/Math/AABox.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -199,7 +200,7 @@ namespace GASS
 		}*/
 
 		IComponentContainer::ComponentVector comps;
-
+		hkpMotion::MotionType mt = hkpMotion::MOTION_BOX_INERTIA;
 		GetSceneObject()->GetComponentsByClass<HavokBaseGeometryComponent>(comps,false);
 		for(int i =0; i < comps.size(); i++)
 		{
@@ -207,6 +208,10 @@ namespace GASS
 			if(geom)
 			{
 				m_Shape = geom->GetShape();
+				//classify
+				HavokSphereGeometryComponentPtr sphere = boost::shared_dynamic_cast<HavokSphereGeometryComponent>(comps[i]);
+				if(sphere)
+					mt = hkpMotion::MOTION_SPHERE_INERTIA;			
 				break;
 			}
 		}
@@ -230,7 +235,8 @@ namespace GASS
 		rigidBodyInfo.m_centerOfMass = massProperties.m_centerOfMass;
 		rigidBodyInfo.m_inertiaTensor = massProperties.m_inertiaTensor;
 		rigidBodyInfo.m_shape = m_Shape;
-		rigidBodyInfo.m_motionType = hkpMotion::MOTION_BOX_INERTIA;
+		rigidBodyInfo.m_motionType = mt;
+		rigidBodyInfo.m_friction = 1.0f;
 
 		//create new rigid body with supplied info
 		m_RigidBody = new hkpRigidBody(rigidBodyInfo);
@@ -277,6 +283,9 @@ namespace GASS
 
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
+
+		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
+		GetSceneObject()->PostMessage(physics_msg);
 	}
 
 	TaskGroup HavokBodyComponent::GetTaskGroup() const
@@ -333,11 +342,14 @@ namespace GASS
 			m_RigidBody->markForWrite();
 			if(rel)
 			{
-
-				hkVector4 local_rot(torque_vec.x,torque_vec.y,torque_vec.z);
+				hkVector4 local_rot(1,0,0);
 				hkVector4 rotateWorld;
 				rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
-				m_RigidBody->applyAngularImpulse(rotateWorld);
+				m_RigidBody->applyTorque(1.0/6.0, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2),-torque_vec.x));
+				local_rot.set(0,1,0);
+				rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
+				m_RigidBody->applyTorque(1.0/6.0, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2),-torque_vec.y));
+				//m_RigidBody->applyAngularImpulse(rotateWorld);
 			}
 			else
 				m_RigidBody->applyAngularImpulse(hkVector4(torque_vec.x,torque_vec.y,torque_vec.z));
@@ -369,7 +381,7 @@ namespace GASS
 				rotateWorld.setRotatedInverseDir( m_RigidBody->getTransform().getRotation(), vel);
 				vel = rotateWorld;
 			}
-			velocity.Set(vel(0),vel(1),vel(2));
+			velocity.Set(-vel(0),-vel(1),-vel(2));
 		}
 		return velocity;
 	}
@@ -493,7 +505,7 @@ namespace GASS
 		if(m_RigidBody)
 		{
 			m_World->lock();
-			hkQuaternion h_rot(rot.x,rot.y,rot.z,rot.w);
+			hkQuaternion h_rot(rot.x,rot.y,rot.z,-rot.w);
 			m_RigidBody->getRigidMotion()->setRotation(h_rot);
 			m_RigidBody->updateCachedAabb();
 			m_World->unlock();
@@ -511,11 +523,10 @@ namespace GASS
 			rot.x = h_rot(0);
 			rot.y = h_rot(1);
 			rot.z = h_rot(2);
-			rot.w = h_rot(3);
+			rot.w = -h_rot(3);
 		}
 		return rot;
 	}
-
 
 	int HavokBodyComponent::GetCollisionGroup()
 	{
