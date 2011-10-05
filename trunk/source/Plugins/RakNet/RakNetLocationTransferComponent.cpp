@@ -43,7 +43,7 @@
 #include "GetTime.h"
 
 
-//#define _DEBUG_LTC_
+#define _DEBUG_LTC_
 
 namespace GASS
 {
@@ -276,7 +276,7 @@ namespace GASS
 					new_pos = m_LocationHistory[0].Position;
 
 #ifdef _DEBUG_LTC_
-				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_TimeStampHistory[0]),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
+				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 #endif
 				Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
 				new_rot = Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z))*m_LocationHistory[0].Rotation;
@@ -289,7 +289,7 @@ namespace GASS
 				new_pos = m_LocationHistory[m_LocationHistory.size()-1].Position;
 				new_rot = m_LocationHistory[m_LocationHistory.size()-1].Rotation;
 #ifdef _DEBUG_LTC_
-				sprintf(debug_text,"Too much behinde, no history available, time: %d",(m_TimeStampHistory[m_TimeStampHistory.size()-1] - time));
+				sprintf(debug_text,"Too much behinde, no history available, time: %d",(m_LocationHistory[m_LocationHistory.size()-1].Time - time));
 #endif
 				for(int i = 1; i < m_LocationHistory.size(); i++)
 				{
@@ -304,7 +304,7 @@ namespace GASS
 						new_pos = (m_LocationHistory[i].Position*inter) + (m_LocationHistory[i-1].Position*(1.0-inter));
 						new_rot = Quaternion::Slerp2(inter,m_LocationHistory[i-1].Rotation, m_LocationHistory[i].Rotation);
 #ifdef _DEBUG_LTC_
-						sprintf(debug_text,"interpolation %d: Time before: %d inter:%f",i,(m_TimeStampHistory[i-1] - time),inter);
+						sprintf(debug_text,"interpolation %d: Time before: %d inter:%f",i,(m_LocationHistory[i-1].Time - time),inter);
 #endif
 						break;
 					}
@@ -312,52 +312,6 @@ namespace GASS
 
 			}
 
-			/*else if(time >= m_TimeStampHistory[1])
-			{
-
-				//std::cout << "interpolation 1: " <<(m_TimeStampHistory[0] - time) << std::endl; 
-				//Font::DebugPrint("interpolation");
-				RakNetTime elapsed = m_TimeStampHistory[0] - time;
-				RakNetTime tot = m_TimeStampHistory[0] - m_TimeStampHistory[1];
-				double inter = 0;
-				if(tot > 0)
-					inter = double(elapsed)/double(tot);
-				new_pos = (m_PositionHistory[1]*inter) + (m_PositionHistory[0]*(1.0-inter));
-				new_rot = Quaternion::Slerp2(inter,m_RotationHistory[0], m_RotationHistory[1]);
-#ifdef _DEBUG_LTC_
-				sprintf(debug_text,"interpolation 1: Time before: %d inter:%f",(m_TimeStampHistory[0] - time),inter);
-#endif
-			}
-			else if(time >= m_TimeStampHistory[2])
-			{
-				//sprintf(debug_text,"interpolation 2: Time before: %d",(m_TimeStampHistory[1] - time));
-				//std::cout << "interpolation 2: " <<(m_TimeStampHistory[1] - time) << std::endl; 
-				RakNetTime elapsed = m_TimeStampHistory[1] - time;
-				RakNetTime tot = m_TimeStampHistory[1] - m_TimeStampHistory[2];
-				double inter = 0;
-				if(tot > 0)
-					inter = double(elapsed)/double(tot);
-				new_pos = (m_PositionHistory[2]*inter) + (m_PositionHistory[1]*(1.0-inter));
-				new_rot = Quaternion::Slerp2(inter,m_RotationHistory[1], m_RotationHistory[2]);
-#ifdef _DEBUG_LTC_
-				sprintf(debug_text,"interpolation 2: Time before: %d inter %f",(m_TimeStampHistory[1] - time),inter);
-#endif
-			}
-			else
-			{
-				//Font::DebugPrint("behinde last update: %d",(m_UpdateTimeStamp[1]-time));
-#ifdef _DEBUG_LTC_
-				sprintf(debug_text,"behinde last update: %d",(m_TimeStampHistory[2] - time));
-#endif
-				//std::cout << "behinde last update: " <<(m_TimeStampHistory[1] - time) << std::endl; 
-				new_rot = m_RotationHistory[2];
-				new_pos = m_PositionHistory[2];
-			}*/
-
-			
-
-			//m_DeadReckoning += delta;
-			
 			if(m_RelativeToParent == 1 || m_RelativeToParent == 0)
 			{
 				if(m_UpdatePosition)
