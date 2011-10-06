@@ -54,10 +54,15 @@ namespace GASS
 		void UpdateODEGeom();
 		void SetNormal(const Vec3 &normal);
 		Vec3 GetNormal() const;
-		void UpdateBodyMass() {};
+		void SetPlaneOffset(Float offset);
+		Float GetPlaneOffset() const;
+
+
+		//override and do nothting to avoid crashen, plane dont support positions and rotations!!!!!
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
-		//void SetSizeFromMesh(bool value);
+	
+		void UpdateBodyMass() {};
 	protected:
 		Vec3 m_Normal; 
 		Float m_PlaneOffset;

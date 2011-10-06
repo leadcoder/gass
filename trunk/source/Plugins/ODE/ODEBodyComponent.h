@@ -50,7 +50,6 @@ namespace GASS
 		virtual ~ODEBodyComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-
 		dBodyID GetODEBodyComponent(){return m_ODEBodyID;}
 		dSpaceID GetSpace();
 		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
@@ -66,17 +65,12 @@ namespace GASS
 		Vec3 GetAngularVelocity(bool rel = false);
 		void SetActive(bool value);
 		bool GetActive() const;
-		
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void SetForce(const Vec3 &force);
 		Vec3 GetForce(bool rel = false);
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
-		
 		//reflection functions
-		
-	
-
 		Vec3 GetCGPosition() const {return m_CGPosition;}
 		void SetCGPosition(const Vec3 &value) {m_CGPosition = value;}
 		Vec3 GetSymmetricInertia() const {return m_SymmetricInertia;}
@@ -85,17 +79,11 @@ namespace GASS
 		void SetAssymetricInertia(const Vec3 &value) {m_AssymetricInertia = value;}
 		bool GetEffectJoints() const {return m_EffectJoints;}
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
-
-		
-		
 		void SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymetricInertia);
-		
-
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
 		Quaternion GetRotation();
-
 		void BodyMoved();
 		void static BodyMovedCallback(dBodyID id);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
@@ -105,11 +93,7 @@ namespace GASS
 		void OnWorldRotationChanged(WorldRotationMessagePtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
-	
-		
-		
 		void DampenBody( dBodyID body, float vScale, float aScale );
-		
 		dSpaceID GetSecondarySpace();
 	protected:
 		void Wake();

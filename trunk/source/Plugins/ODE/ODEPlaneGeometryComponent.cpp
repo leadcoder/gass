@@ -58,6 +58,8 @@ namespace GASS
 	void ODEPlaneGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<ODEPlaneGeometryComponent, IComponent>);
+		RegisterProperty<Vec3>("Normal",&ODEPlaneGeometryComponent::GetNormal, &ODEPlaneGeometryComponent::SetNormal);
+		RegisterProperty<Float>("PlaneOffset",&ODEPlaneGeometryComponent::GetPlaneOffset, &ODEPlaneGeometryComponent::SetPlaneOffset);
 	}
 
 	void ODEPlaneGeometryComponent::OnCreate()
@@ -67,8 +69,8 @@ namespace GASS
 
 	dGeomID ODEPlaneGeometryComponent::CreateODEGeom()
 	{
-		Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
-		return dCreatePlane(GetSpace(), plane_normal.x, plane_normal.y, plane_normal.z,m_PlaneOffset);
+		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
+		return dCreatePlane(GetSpace(), m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 	}
 
 	void ODEPlaneGeometryComponent::UpdateODEGeom()
@@ -84,22 +86,31 @@ namespace GASS
 
 	void ODEPlaneGeometryComponent::SetNormal(const Vec3 &normal)
 	{
-		if(normal.x > 0 || normal.y > 0 || normal.z > 0)
+		m_Normal = normal;
+		if(m_GeomID)
 		{
-			m_Normal = normal;
-			if(m_GeomID)
-			{
-				dGeomPlaneSetParams(m_GeomID,normal.x,normal.y,normal.z,m_PlaneOffset);
-				//dGeomBoxSetLengths(m_GeomID, m_Size.x, m_Size.y, m_Size.z);
-				//UpdateBodyMass();
-				//UpdateDebug();
-			}
+			dGeomPlaneSetParams(m_GeomID, m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 		}
+		
 	}
 
 	Vec3 ODEPlaneGeometryComponent::GetNormal() const
 	{
 		return m_Normal;
+	}
+
+	void ODEPlaneGeometryComponent::SetPlaneOffset(Float offset)
+	{
+		m_PlaneOffset = offset;
+		if(m_GeomID)
+		{
+			dGeomPlaneSetParams(m_GeomID, m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
+		}
+	}
+
+	Float ODEPlaneGeometryComponent::GetPlaneOffset() const
+	{
+		return m_PlaneOffset;
 	}
 
 	void ODEPlaneGeometryComponent::SetPosition(const Vec3 &pos)
@@ -109,6 +120,7 @@ namespace GASS
 
 	void ODEPlaneGeometryComponent::SetRotation(const Quaternion &rot)
 	{
+		
 	}
 }
  
