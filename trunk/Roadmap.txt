@@ -17,4 +17,6 @@ TODO:	Replace interator with const_iterator where appropriate and as a result ma
 
 50%:    Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
 
+TODO:   Rename corescenemanager to basescenemanager and add new scenemanagers to other plugins
+
 
