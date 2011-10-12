@@ -21,7 +21,10 @@
 #ifndef GAME_MESSAGES_H
 #define GAME_MESSAGES_H
 #include "Core/MessageSystem/BaseMessage.h"
+#include "Plugins/Game/PlatformType.h"
+#include "Plugins/Game/DetectionData.h"
 #include "Core/Math/Vector.h"
+
 
 namespace GASS
 {
@@ -223,5 +226,44 @@ namespace GASS
 		int m_Gear;
 	};
 	typedef boost::shared_ptr<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
+
+
+	
+
+	class SensorMessage : public BaseMessage
+	{
+	public:
+		SensorMessage(const DetectionVector &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+			m_DetectionData(detection_data){}
+		DetectionVector GetDetectionVector() const {return m_DetectionData;}
+	private:
+		DetectionVector m_DetectionData;
+	};
+	typedef boost::shared_ptr<SensorMessage> SensorMessagePtr;
+
+
+	class SensorGotTargetMessage : public BaseMessage
+	{
+	public:
+		SensorGotTargetMessage (const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+			m_DetectionData(detection_data){}
+		DetectionData GetDetectionData() const {return m_DetectionData;}
+	private:
+		DetectionData m_DetectionData;
+	};
+	typedef boost::shared_ptr<SensorGotTargetMessage> SensorGotTargetMessagePtr;
+
+
+	class SensorLostTargetMessage : public BaseMessage
+	{
+	public:
+		SensorLostTargetMessage(const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+			m_DetectionData(detection_data){}
+		DetectionData GetDetectionData() const {return m_DetectionData;}
+	private:
+		DetectionData m_DetectionData;
+	};
+	typedef boost::shared_ptr<SensorLostTargetMessage> SensorLostTargetMessagePtr;
+	
 }
 #endif

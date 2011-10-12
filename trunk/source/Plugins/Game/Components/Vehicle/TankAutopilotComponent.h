@@ -43,7 +43,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 
-			//ITaskListener interface
+		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 	private:

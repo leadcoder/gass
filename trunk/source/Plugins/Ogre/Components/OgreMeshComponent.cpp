@@ -449,12 +449,12 @@ namespace GASS
 			//mat->setAmbient(ambinet.x,ambinet.y,ambinet.z);
 			if(diffuse.w < 1.0)
 			{
-				mat->setDepthCheckEnabled(false);
+				mat->setDepthWriteEnabled(false);
 				mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
 			}
 			else
 			{
-				mat->setDepthCheckEnabled(true);
+				mat->setDepthWriteEnabled(true);
 				mat->setSceneBlending(SBT_REPLACE);
 			}
 		}
