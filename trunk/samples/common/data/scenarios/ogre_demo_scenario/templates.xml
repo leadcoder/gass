@@ -10,12 +10,13 @@
         <Position value="0 0 0"/>
         <Rotation value="0 0 0"/>
       </LocationComponent>
-      <PhysicsGeometryComponent>
-        <GeometryType value="terrain"/>
-      </PhysicsGeometryComponent>
-     <TreeGeometryComponent>
+      <PhysicsTerrainGeometryComponent>
+      </PhysicsTerrainGeometryComponent>
+      <DensityMapComponent>
+        <DensityMap value= "gfx/terrain/grassmask.tga"/>
+      </DensityMapComponent>
+      <TreeGeometryComponent>
         <Mesh value= "fir06_30.mesh"/>
-        <DensityMap value= "gfx/terrain/grassmask.dds"/>
         <ImposterAlphaRejectionValue value ="40"/>
         <DensityFactor value= "0.002"/>
         <MeshDistance value ="200"/>
@@ -24,9 +25,9 @@
         <ImposterDistance value ="2000"/>
         <ImposterFadeDistance value ="20"/>
         <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.05 0.1"/>
+        <MaxMinScale value ="1 1"/>
      </TreeGeometryComponent>
-      <GrassGeometryComponent>
+    <!--  <GrassGeometryComponent>
         <PageSize value = "15"/>
         <ViewDistance value ="35"/>
         <Material value="FadeGrass"/>
@@ -42,7 +43,7 @@
         <FadeTech value ="AlphaGrow"/>
         <RenderTechnique value ="CrossQuads"/>
         <BlendWithGround value="false"/>
-      </GrassGeometryComponent>
+      </GrassGeometryComponent>-->
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
