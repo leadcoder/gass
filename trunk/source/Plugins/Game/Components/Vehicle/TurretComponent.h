@@ -75,6 +75,7 @@ namespace GASS
 		Mat4 m_Transformation;
 		Vec3 m_DesiredDir;
 		PIDControl m_TurnPID;
+		bool m_Active;
 	};
 }
 #endif

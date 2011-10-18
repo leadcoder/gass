@@ -45,7 +45,8 @@ namespace GASS
 		m_MinAngle(-1000),
 		m_MaxAngle(1000),
 		m_CurrentAngle(0),
-		m_DesiredDir(0,0,-1)
+		m_DesiredDir(0,0,-1),
+		m_Active(false)
 	{
 
 	}
@@ -82,10 +83,20 @@ namespace GASS
 
 	void TurretComponent::Update(double delta_time)
 	{
-		Vec3 aim_dir(0,0,-1);
-		aim_dir = m_DesiredDir;
-		Mat4 trans = m_Transformation;
-		Vec3 turret_dir = -trans.GetViewDirVector();
+		Vec3 turret_dir = -m_Transformation.GetViewDirVector();
+
+		if(!m_Active)
+		{
+			m_DesiredDir = turret_dir;
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
+			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+			GetSceneObject()->PostMessage(vel_msg);
+			GetSceneObject()->PostMessage(volume_msg);
+			return;
+		}
+
+		Vec3 aim_dir = m_DesiredDir;
+		
 		turret_dir.y = 0;
 		turret_dir.Normalize();
 		Vec3 cross = Math::Cross(turret_dir,aim_dir);
@@ -95,7 +106,7 @@ namespace GASS
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
 		if(cross.y > 0) angle_to_aim_dir *= -1;
 
-		m_TurnPID.setGain(3.0,0.1,0.05);
+		m_TurnPID.setGain(3.0,0.01,0.005);
 		m_TurnPID.set(0);
 		float turn = -m_TurnPID.update(angle_to_aim_dir/180.0f,delta_time);
 
@@ -136,7 +147,21 @@ namespace GASS
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
-		if (name == m_Controller)
+		if (name == "ActivateTurret")
+		{
+			if(value > 0)
+			{	
+				m_Active = true;
+				std::cout << "activate\n";
+			}
+
+			else
+			{
+				m_Active = false;
+				std::cout << "deactivate\n";
+			}
+		}
+		else if (m_Active && name == m_Controller)
 		{
 			if(fabs(value) < 0.1) //clamp
 				value  = 0;
