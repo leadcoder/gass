@@ -10,9 +10,8 @@
         <Filename value="JIM_TANK_hull.mesh"/>
         <CastShadow value="1"/>
       </MeshComponent>
-      <PhysicsGeometryComponent>
-        <GeometryType value="box"/>
-      </PhysicsGeometryComponent>
+      <PhysicsBoxGeometryComponent>
+      </PhysicsBoxGeometryComponent>
       <PhysicsBodyComponent>
         <Mass value="1.0"/>
       </PhysicsBodyComponent>
@@ -71,10 +70,10 @@
               <CastShadow value="1"/>
             </MeshComponent>
             <TurretComponent>
+              <MaxSteerVelocity value="12"/>
             </TurretComponent>
-            <PhysicsGeometryComponent>
-              <GeometryType value="box"/>
-            </PhysicsGeometryComponent>
+            <PhysicsBoxGeometryComponent>
+            </PhysicsBoxGeometryComponent>
             <PhysicsBodyComponent>
               <Mass value="0.1"/>
             </PhysicsBodyComponent>
@@ -301,10 +300,9 @@
     <Components>
       <LocationComponent>
       </LocationComponent>
-      <PhysicsGeometryComponent>
-        <GeometryType value="sphere"/>
+      <PhysicsSphereGeometryComponent>
         <Friction value="1.0"/>
-      </PhysicsGeometryComponent>
+      </PhysicsSphereGeometryComponent>
       <PhysicsBodyComponent>
         <GeometryType value="sphere"/>
         <Mass value="0.02"/>
@@ -362,6 +360,9 @@
     <Components>
       <CameraComponent>
       </CameraComponent>
+     <VehicleCameraComponent>
+        <PreferredViewport value="ALL"/>
+      </VehicleCameraComponent>
       <LocationComponent>
         <AttachToParent value ="1"/>
         <Position value="0 0.0 0"/>
