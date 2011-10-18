@@ -38,7 +38,14 @@
 
 namespace GASS
 {
-	TurretComponent::TurretComponent()  :m_Controller("Yaw"),m_MaxSteerVelocity(1),m_SteerForce(10),m_MaxSteerAngle(0),m_MinAngle(-1000),m_MaxAngle(1000),m_CurrentAngle(0)
+	TurretComponent::TurretComponent()  :m_Controller("Yaw"),
+		m_MaxSteerVelocity(1),
+		m_SteerForce(10),
+		m_MaxSteerAngle(0),
+		m_MinAngle(-1000),
+		m_MaxAngle(1000),
+		m_CurrentAngle(0),
+		m_DesiredDir(0,0,-1)
 	{
 
 	}
@@ -61,8 +68,46 @@ namespace GASS
 	void TurretComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
+	}
+
+	void TurretComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	{
+		m_Transformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
+
+	}
+
+	void TurretComponent::Update(double delta_time)
+	{
+		Vec3 aim_dir(0,0,-1);
+		aim_dir = m_DesiredDir;
+		Mat4 trans = m_Transformation;
+		Vec3 turret_dir = -trans.GetViewDirVector();
+		turret_dir.y = 0;
+		turret_dir.Normalize();
+		Vec3 cross = Math::Cross(turret_dir,aim_dir);
+		float cos_angle = Math::Dot(turret_dir,aim_dir);
+		if(cos_angle > 1) cos_angle = 1;
+		if(cos_angle < -1) cos_angle = -1;
+		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
+		if(cross.y > 0) angle_to_aim_dir *= -1;
+
+		m_TurnPID.setGain(3.0,0.1,0.05);
+		m_TurnPID.set(0);
+		float turn = -m_TurnPID.update(angle_to_aim_dir/180.0f,delta_time);
+
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*turn ));
+
+		GetSceneObject()->PostMessage(force_msg);
+		GetSceneObject()->PostMessage(vel_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(turn )));
+		GetSceneObject()->PostMessage(volume_msg);
+
 	}
 
 	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -77,7 +122,15 @@ namespace GASS
 
 		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 		GetSceneObject()->PostMessage(volume_msg);
+
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
+
+	void TurretComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+	}
+
 
 	void TurretComponent::OnInput(ControllerMessagePtr message)
 	{
@@ -87,29 +140,35 @@ namespace GASS
 		{
 			if(fabs(value) < 0.1) //clamp
 				value  = 0;
+
+			Mat4 rot_mat;
+			rot_mat.RotateY(value*MY_PI/180);
+			m_DesiredDir = rot_mat*m_DesiredDir;
+			
+
 			//send rotaion message to physics engine
 
 			//if((m_CurrentAngle > m_MinAngle && value > 0) || (m_CurrentAngle < m_MaxAngle && value < 0))
-			{
-				MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-				MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*value));
+			/*	{
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*value));
 
-				GetSceneObject()->PostMessage(force_msg);
-				GetSceneObject()->PostMessage(vel_msg);
+			GetSceneObject()->PostMessage(force_msg);
+			GetSceneObject()->PostMessage(vel_msg);
 
-				MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
-				GetSceneObject()->PostMessage(volume_msg);
-			}
+			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
+			GetSceneObject()->PostMessage(volume_msg);
+			}*/
 
 			/*if(fabs(value) > 0)
 			{
-				MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-				GetSceneObject()->PostMessage(play_msg);
+			MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+			GetSceneObject()->PostMessage(play_msg);
 			}
 			else
 			{
-				MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
-				GetSceneObject()->PostMessage(play_msg);
+			MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			GetSceneObject()->PostMessage(play_msg);
 			}*/
 		}
 	}
@@ -121,24 +180,27 @@ namespace GASS
 
 	/*void TurretComponent::OnRotation(VelocityNotifyMessagePtr message)
 	{
-		Vec3 ang_vel  = message->GetAngularVelocity();
-		const float speed = fabs(ang_vel.y);
-		const float max_volume_at_speed = 1;
-		if(speed < max_volume_at_speed)
-		{
-			//std::cout << speed << std::endl;
-			//Play engine sound
-			const float volume = (speed/max_volume_at_speed);
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
-			GetSceneObject()->PostMessage(sound_msg);
-		}
-		if(speed > 0)
-		{
-			float pitch = 0.8 + speed*0.01;
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-			GetSceneObject()->PostMessage(sound_msg);
-		}
+	Vec3 ang_vel  = message->GetAngularVelocity();
+	const float speed = fabs(ang_vel.y);
+	const float max_volume_at_speed = 1;
+	if(speed < max_volume_at_speed)
+	{
+	//std::cout << speed << std::endl;
+	//Play engine sound
+	const float volume = (speed/max_volume_at_speed);
+	MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+	GetSceneObject()->PostMessage(sound_msg);
+	}
+	if(speed > 0)
+	{
+	float pitch = 0.8 + speed*0.01;
+	MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+	GetSceneObject()->PostMessage(sound_msg);
+	}
 	}*/
 
-	
+	TaskGroup TurretComponent::GetTaskGroup() const
+	{
+		return "VEHICLE_TASK_GROUP";
+	}
 }

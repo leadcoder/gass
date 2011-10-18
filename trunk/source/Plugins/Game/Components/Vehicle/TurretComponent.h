@@ -27,7 +27,9 @@
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
+#include "Sim/Scheduling/ITaskListener.h"
 #include "Plugins/Game/GameMessages.h"
+#include "Utils/PIDControl.h"
 
 namespace GASS
 {
@@ -36,7 +38,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
+	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>, public ITaskListener
 	{
 	public:
 		TurretComponent();
@@ -59,7 +61,10 @@ namespace GASS
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
-
+		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
+		TaskGroup GetTaskGroup() const;
+		void Update(double delta_time);
 		std::string m_Controller;
 		float m_MaxSteerVelocity;
 		float m_MaxSteerAngle;
@@ -67,7 +72,9 @@ namespace GASS
 		float m_CurrentAngle;
 		float m_MinAngle;
 		float m_MaxAngle;
-		
+		Mat4 m_Transformation;
+		Vec3 m_DesiredDir;
+		PIDControl m_TurnPID;
 	};
 }
 #endif
