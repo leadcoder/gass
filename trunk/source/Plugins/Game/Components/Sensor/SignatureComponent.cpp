@@ -18,8 +18,9 @@ namespace GASS
 		m_Initialized(false),
 		m_RadarCrossSection(1.0),
 		m_Pos(0,0,0),
-		m_Velocity(0,0,0)
-		
+		m_Velocity(0,0,0),
+		m_PlatformType(PT_CAR),
+		m_PlatformTeam(BLUE_TEAM)
 	{
 		
 	}	
@@ -34,6 +35,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("SignatureComponent",new Creator<SignatureComponent, IComponent>);
 		REG_ATTRIBUTE(float,RadarCrossSection,SignatureComponent)
 		REG_ATTRIBUTE(PlatformTypeReflection,PlatformType,SignatureComponent)
+		REG_ATTRIBUTE(PlatformTeamReflection,PlatformTeam,SignatureComponent)
 	}
 
 	void SignatureComponent::OnCreate()

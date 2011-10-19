@@ -76,6 +76,8 @@ namespace GASS
 		Vec3 m_DesiredDir;
 		PIDControl m_TurnPID;
 		bool m_Active;
+		float m_TurnInput;
 	};
+	typedef boost::shared_ptr<TurretComponent> TurretComponentPtr;
 }
 #endif

@@ -6,6 +6,7 @@
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Game/PlatformType.h"
+#include "Plugins/Game/PlatformTeam.h"
 
 namespace GASS
 {
@@ -22,6 +23,7 @@ namespace GASS
 		Vec3 GetVelocity() const {return m_Velocity;}
 		ADD_ATTRIBUTE(float,RadarCrossSection)
 		ADD_ATTRIBUTE(PlatformTypeReflection,PlatformType)
+		ADD_ATTRIBUTE(PlatformTeamReflection,PlatformTeam)
 	protected:
 		void SetPlatformType(PlatformType pt) {m_PlatformType = pt;}
 		void OnLoad(MessagePtr message);
