@@ -47,7 +47,8 @@ namespace GASS
 		m_CurrentAngle(0),
 		m_DesiredDir(0,0,-1),
 		m_Active(false),
-		m_TurnInput(0)
+		m_TurnInput(0),
+		m_AngularVelocity(0)
 	{
 
 	}
@@ -74,12 +75,21 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
+	
 	}
 
 	void TurretComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
 		m_Transformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 
+	}
+
+	void TurretComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	{
+		
+		m_AngularVelocity = message->GetAngularVelocity().y;
+	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
 	void TurretComponent::Update(double delta_time)
@@ -93,6 +103,10 @@ namespace GASS
 			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 			GetSceneObject()->PostMessage(vel_msg);
 			GetSceneObject()->PostMessage(volume_msg);
+
+			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+			GetSceneObject()->PostMessage(force_msg);
+		
 			return;
 		}
 		
@@ -166,25 +180,42 @@ namespace GASS
 		{
 			if(cross.y < 0) 
 			angle_to_aim_dir *= -1;
+			//std::cout << "CurrentAngle:" << m_CurrentAngle << "\n";
 		}
 
 		//std::cout << "angle diff:" << angle_to_aim_dir << "\n";
 		
 
 		
+	/*	if(angle_to_aim_dir > 4)
+			angle_to_aim_dir = 4;
 
-		m_TurnPID.setGain(30.0,0.01,0.005);
+		if(angle_to_aim_dir < -4)
+			angle_to_aim_dir = -4;
+
+			*/
+		//angle_to_aim_dir = angle_to_aim_dir/4.0;
+		//angle_to_aim_dir = angle_to_aim_dir*fabs(angle_to_aim_dir)*fabs(angle_to_aim_dir);
+
+		//float turn_velocity = -angle_to_aim_dir*m_MaxSteerVelocity*4;
+		m_TurnPID.setOutputLimit(m_SteerForce*3);
+		m_TurnPID.setGain(0.0003,0.0001,0.0009);
 		m_TurnPID.set(0);
-		float turn = m_TurnPID.update(angle_to_aim_dir/180.0f,delta_time);
+		float turn_velocity = m_TurnPID.update(angle_to_aim_dir,delta_time);
+		std::cout << "turn_velocity:" << turn_velocity << "\n";
 
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,m_MaxSteerVelocity*turn ));
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,0));//m_SteerForce));
+		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
 
 		GetSceneObject()->PostMessage(force_msg);
-		GetSceneObject()->PostMessage(vel_msg);
+		
+		//GetSceneObject()->PostMessage(vel_msg);
 
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(turn )));
-		GetSceneObject()->PostMessage(volume_msg);
+		MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,-turn_velocity,0)));
+		GetSceneObject()->PostMessage(body_force_msg);
+		
+		//MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(turn )));
+		//GetSceneObject()->PostMessage(volume_msg);
 
 	}
 

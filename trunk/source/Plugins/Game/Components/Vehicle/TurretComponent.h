@@ -63,6 +63,7 @@ namespace GASS
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		TaskGroup GetTaskGroup() const;
 		void Update(double delta_time);
 		std::string m_Controller;
@@ -77,6 +78,7 @@ namespace GASS
 		PIDControl m_TurnPID;
 		bool m_Active;
 		float m_TurnInput;
+		Float m_AngularVelocity;
 	};
 	typedef boost::shared_ptr<TurretComponent> TurretComponentPtr;
 }
