@@ -31,6 +31,8 @@
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/Helpers/DebugDrawer.h"
+
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/System/SystemFactory.h"
@@ -121,9 +123,11 @@ namespace GASS
 	{
 		if(m_SceneMgr)
 		{
+			delete DebugDrawer::getSingletonPtr();
 			m_SceneMgr->clearScene();
 			Root::getSingleton().destroySceneManager(m_SceneMgr);
 			m_SceneMgr = NULL;
+			
 		}
 	}
 
@@ -186,6 +190,9 @@ namespace GASS
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OgreGraphicsSystemPtr(m_GFXSystem)->GetOwner());
 		sim_sm->SendImmediate(loaded_msg);
+
+		//Create debug render system
+		new DebugDrawer(m_SceneMgr, 0.5f);
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)

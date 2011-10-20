@@ -82,13 +82,13 @@ namespace GASS
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 
-		//Ogre::RenderWindow* GetMainWindow() const {return m_Window;}
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
+		void OnDrawLine(DrawLineMessagePtr message);
+		
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
-		//void AddViewport(Ogre::SceneManager *sm, Ogre::RenderWindow* win, float left , float top, float width , float height,Ogre::ColourValue colour);
 		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
@@ -98,8 +98,6 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void SetTaskGroup(TaskGroup value);
-
-
 		void OnInit(InitMessagePtr message);
 		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);

@@ -21,6 +21,9 @@
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/Ogre/Helpers/DebugDrawer.h"
+#include "Plugins/Ogre/OgreConvert.h"
+
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -66,10 +69,9 @@ namespace GASS
 	void OgreGraphicsSystem::OnCreate()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInit,InitMessage,0));
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateRenderWindow, CreateRenderWindowMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
-
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
 	}
 
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
@@ -172,7 +174,14 @@ namespace GASS
 		
 		//set thread priority to highest!!
 		WindowEventUtilities::messagePump();
+
+		if(DebugDrawer::getSingletonPtr())
+			DebugDrawer::getSingleton().build();
+
 		m_Root->renderOneFrame();
+
+		if(DebugDrawer::getSingletonPtr())
+			DebugDrawer::getSingleton().clear();
 
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
@@ -323,6 +332,16 @@ namespace GASS
 			m_Viewports[vp_name].m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
 		}
 	}
+
+	void OgreGraphicsSystem::OnDrawLine(DrawLineMessagePtr message)
+	{
+		Vec4 color = message->GetColor();
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		if(DebugDrawer::getSingletonPtr())
+			DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
+	}
+
+	
 }
 
 
