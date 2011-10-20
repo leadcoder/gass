@@ -46,6 +46,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
+		Vec3 GetDesiredAimDirection(double delta_time);
 		std::string GetController() const {return m_Controller;}
 		void SetController(const std::string &value) {m_Controller = value;}
 		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}
@@ -79,6 +80,7 @@ namespace GASS
 		bool m_Active;
 		float m_TurnInput;
 		Float m_AngularVelocity;
+		Float m_RotValue;
 	};
 	typedef boost::shared_ptr<TurretComponent> TurretComponentPtr;
 }
