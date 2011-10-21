@@ -57,12 +57,15 @@ namespace GASS
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = value.x;m_MinAngle = value.y;}
 		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
-		
+		Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);
+		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
+		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnParentTransformation(TransformationNotifyMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		TaskGroup GetTaskGroup() const;
@@ -75,6 +78,9 @@ namespace GASS
 		float m_MinAngle;
 		float m_MaxAngle;
 		Mat4 m_Transformation;
+		Mat4 m_ParentTransformation;
+		Mat4 m_RelTrans;
+		Mat4 m_AimTrans;
 		Vec3 m_DesiredDir;
 		PIDControl m_TurnPID;
 		bool m_Active;

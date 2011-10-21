@@ -52,7 +52,7 @@ namespace GASS
 		m_AngularVelocity(0),
 		m_RotValue(0)
 	{
-
+		m_RelTrans.Identity();
 	}
 
 	TurretComponent::~TurretComponent()
@@ -77,6 +77,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
 	
 	}
@@ -85,6 +86,11 @@ namespace GASS
 	{
 		m_Transformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 
+	}
+
+	void TurretComponent::OnParentTransformation(TransformationNotifyMessagePtr message)
+	{
+		m_ParentTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
 
 	void TurretComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
@@ -97,26 +103,71 @@ namespace GASS
 #define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DrawLineMessage(start,end,color)));
 
 
+/*	Float pitch TurretComponent::GetPitch(Mat4 &transform, Vec3 &dir)
+	{
+		Mat4 inv_trans = transform.Invert();
+		Vec3 new_dir = inv_trans * dir;
+	}*/
+
+	Vec3 TurretComponent::ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v)
+	{
+		return  v - Math::Dot(v, plane_normal) * plane_normal;
+	}
+
 	Vec3 TurretComponent::GetDesiredAimDirection(double delta_time)
 	{
-
 		Mat4 rot_mat;
 		if(!((m_CurrentAngle < m_MinAngle && m_TurnInput > 0) ||
 				(m_CurrentAngle > m_MaxAngle && m_TurnInput < 0)))
 				//ouside envelope
 		{
-			m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
+			m_RotValue = m_RotValue + m_TurnInput*m_MaxSteerVelocity*delta_time;
+			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
 		}
-		else
-			m_RotValue = 0;
-		
+		//else
+		//	m_RotValue = 0;
+		rot_mat.Identity();
+
 		if(m_Controller == "Pitch")
-			rot_mat.RotateX(m_RotValue);
+		{
+			rot_mat.Rotate(m_ParentTransformation.GetEulerHeading(),m_RotValue,0);
+		}
 		else
 			rot_mat.RotateY(m_RotValue);
 
-		Mat4 trans = rot_mat*m_Transformation;
-		return -trans.GetViewDirVector();
+		//add relative tranformation, we start rotation from this transformation 
+		m_RelTrans.SetTranslation(0,0,0);
+		//Mat4 parent_rot = m_RelTrans;
+		//parent_rot.SetTranslation(0,0,0);
+		m_AimTrans = rot_mat*m_RelTrans;
+
+		return -m_AimTrans.GetViewDirVector();
+	}
+
+
+	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
+	{
+		Vec3 cross = Math::Cross(v1,v2);
+		float cos_angle = Math::Dot(v1,v2);
+		if(cos_angle > 1) cos_angle = 1;
+		if(cos_angle < -1) cos_angle = -1;
+		float angle = Math::Rad2Deg(acos(cos_angle));
+		if(Math::Dot(plane_normal,cross) > 0) 
+			angle *= -1;
+		return angle;
+	}
+
+	
+	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2)
+	{
+		Vec3 cross = Math::Cross(v1,v2);
+		float cos_angle = Math::Dot(v1,v2);
+		if(cos_angle > 1) cos_angle = 1;
+		if(cos_angle < -1) cos_angle = -1;
+		float angle = Math::Rad2Deg(acos(cos_angle));
+		if(v1.y < v2.y) 
+			angle *= -1;
+		return angle;
 	}
 
 	void TurretComponent::Update(double delta_time)
@@ -127,6 +178,7 @@ namespace GASS
 		{
 			//m_DesiredDir = turret_dir;
 			m_RotValue = 0;
+			m_RelTrans = m_ParentTransformation;
 			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
 			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 			GetSceneObject()->PostMessage(vel_msg);
@@ -140,7 +192,46 @@ namespace GASS
 
 		Vec3 desired_aim_direction = GetDesiredAimDirection(delta_time);
 
-		Vec3 turrent_direction(0,0,-1);
+		
+		Float angle_to_aim_dir = 0;
+		if(m_Controller == "Pitch")
+		{
+			const Vec3 plane_normal = m_ParentTransformation.GetRightVector();
+			Vec3 projected_aim = ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			projected_aim.Normalize();
+			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
+
+			Vec3 start = m_Transformation.GetTranslation();
+			Vec3 end = start + turret_dir;
+			DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1))
+			end = start + projected_aim;
+			DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1))
+		}
+		else
+		{
+			const Vec3 plane_normal = m_ParentTransformation.GetUpVector();
+			Vec3 projected_aim = ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			projected_aim.Normalize();
+			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
+
+			
+		}
+
+
+		
+		/*Float angle1 = GetAngle(-m_ParentTransformation.GetViewDirVector(), desired_aim_direction);
+		Float angle2 = GetAngle(-m_ParentTransformation.GetViewDirVector(), -m_Transformation.GetViewDirVector());
+
+		Float angle_to_aim_dir =  angle1 - angle2;
+		while(angle_to_aim_dir > 180)
+			angle_to_aim_dir = angle_to_aim_dir - 180;
+
+		while(angle_to_aim_dir < -180)
+			angle_to_aim_dir = angle_to_aim_dir + 180;*/
+
+		
+
+		/*Vec3 turrent_direction(0,0,-1);
 
 		Mat4 invers_rot_mat = m_Transformation;
 		invers_rot_mat.SetTranslation(0,0,0);
@@ -159,8 +250,8 @@ namespace GASS
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
-		if(cross.y < 0) 
-			angle_to_aim_dir *= -1;
+		if(cross.y > 0) 
+			angle_to_aim_dir *= -1;*/
 
 		//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 
@@ -291,9 +382,14 @@ namespace GASS
 		//angle_to_aim_dir = angle_to_aim_dir/4.0;
 		//angle_to_aim_dir = angle_to_aim_dir*fabs(angle_to_aim_dir)*fabs(angle_to_aim_dir);
 
+
+		
+		
+
+
 		//float turn_velocity = -angle_to_aim_dir*m_MaxSteerVelocity*4;
 		m_TurnPID.setOutputLimit(m_SteerForce*3);
-		m_TurnPID.setGain(0.0003,0.0001,0.0009);
+		m_TurnPID.setGain(0.00003,0.0001,0.0009);
 		m_TurnPID.set(0);
 		float turn_velocity = m_TurnPID.update(angle_to_aim_dir,delta_time);
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
@@ -305,16 +401,25 @@ namespace GASS
 		
 		//GetSceneObject()->PostMessage(vel_msg);
 
+		
+		
+
 		if(m_Controller == "Pitch")
 		{
-			//MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(-turn_velocity,0,0)));
-			//GetSceneObject()->PostMessage(body_force_msg);
+			MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(turn_velocity,0,0)));
+			GetSceneObject()->PostMessage(body_force_msg);
+			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
+			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir <<"\n";;
+			//std::cout << "THeading:" << t_heading << " AHeading:" << a_heading << "\n";
+			//std::cout << "TPitch:" << t_pitch << " APitch:" << a_pitch << "\n";
 		}
 		else if (m_Controller == "Yaw")
 		{
 			MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_velocity,0)));
 			GetSceneObject()->PostMessage(body_force_msg);
 			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
+			
+			
 			
 		}
 
