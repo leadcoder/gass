@@ -33,7 +33,7 @@ namespace Ogre
 
 namespace GASS
 {
-	class DynamicLines;
+	
 	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:

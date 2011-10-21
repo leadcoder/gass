@@ -23,6 +23,9 @@ namespace GASS
 		void SetMaxDistance(float value){m_MaxDistance =value;}
 		float GetMinDistance() const{return m_MinDistance;}
 		void SetMinDistance(float value){m_MinDistance =value;}
+		bool GetScaleLocation()const {return  m_ScaleLocation;}
+		void SetScaleLocation(bool value) {m_ScaleLocation = value;}
+
 	
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
@@ -38,6 +41,7 @@ namespace GASS
 
 		float m_MaxDistance;
 		float m_MinDistance;
+		bool m_ScaleLocation;
 	};
 
 	typedef boost::shared_ptr<DistanceScaleComponent> DistanceScaleComponentPtr;

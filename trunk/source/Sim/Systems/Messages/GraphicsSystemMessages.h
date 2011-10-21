@@ -117,5 +117,24 @@ namespace GASS
 		std::string m_VPName;
 	};
 	typedef boost::shared_ptr<ViewportMovedOrResizedNotifyMessage> ViewportMovedOrResizedNotifyMessagePtr;
+
+
+	//debug messages
+	class DrawLineMessage : public BaseMessage
+	{
+	public:
+		DrawLineMessage(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) :
+		  m_Start(start),
+		  m_End(end),
+		  m_Color(color),
+		  BaseMessage(sender_id , delay)  {}
+		  Vec3 GetStart()const {return m_Start;}
+		  Vec3 GetEnd()const {return m_End;}
+		  Vec4 GetColor()const {return m_Color;}
+	private:
+		Vec3 m_Start,m_End;
+		Vec4 m_Color;
+	};
+	typedef boost::shared_ptr<DrawLineMessage> DrawLineMessagePtr;
 }
 #endif

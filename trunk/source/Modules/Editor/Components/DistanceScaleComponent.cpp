@@ -22,7 +22,7 @@
 namespace GASS
 {
 
-	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000), m_MinDistance(0.1)
+	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000), m_MinDistance(0.1),m_ScaleLocation(false)
 	{
 
 	}
@@ -37,6 +37,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("DistanceScaleComponent",new Creator<DistanceScaleComponent, IComponent>);
 		RegisterProperty<float>("MaxDistance",&DistanceScaleComponent::GetMaxDistance, &DistanceScaleComponent::SetMaxDistance);
 		RegisterProperty<float>("MinDistance",&DistanceScaleComponent::GetMinDistance, &DistanceScaleComponent::SetMinDistance);
+		RegisterProperty<bool>("ScaleLocation",&DistanceScaleComponent::GetScaleLocation, &DistanceScaleComponent::SetScaleLocation);
 	}
 
 	void DistanceScaleComponent::OnCreate()
@@ -89,8 +90,11 @@ namespace GASS
 				float value = message->GetValue1();
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
-				//GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
-				GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
+
+				if(m_ScaleLocation)
+					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+				else
+					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
 			}
 			break;
 		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
@@ -140,8 +144,10 @@ namespace GASS
 
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
-				//GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
-				GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
+				if(m_ScaleLocation)
+					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+				else
+					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
 			}
 		}
 	}
