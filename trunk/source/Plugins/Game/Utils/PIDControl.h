@@ -4,6 +4,7 @@
 #ifndef PIDControl_H
 #define PIDControl_H
 
+#include <iostream>
 
 namespace GASS 
 {
@@ -12,7 +13,7 @@ namespace GASS
 	public:
 		PIDControl();
 		PIDControl(double kp, double ki = 0.0, double kd = 0.0);
-
+		virtual ~PIDControl() {}
 		void setGain(double kp, double ki = 0.0, double kd = 0.0);
 		void set(double r);
 		double update(double input, double dt);
@@ -25,6 +26,17 @@ namespace GASS
 		void setIntCap(double limit);
 		double getIntCap() { return intcap; }
 
+		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
+		{
+			os << pid.Kp << pid.Ki << pid.Kd;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, PIDControl& pid)
+		{
+			os >> pid.Kp >> pid.Ki >> pid.Kd;
+			return os;
+		}
 	protected:
 		// Proportional, integerator and derivator gains
 		double Kp, Ki, Kd;
