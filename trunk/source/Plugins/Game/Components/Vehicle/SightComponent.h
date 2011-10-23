@@ -18,13 +18,14 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef AUTO_AIM_COMPONENT_H
-#define AUTO_AIM_COMPONENT_H
+#ifndef SIGHT_COMPONENT_H
+#define SIGHT_COMPONENT_H
 
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Sim/Scheduling/ITaskListener.h"
@@ -38,11 +39,11 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class AutoAimComponent :  public Reflection<AutoAimComponent,BaseSceneComponent>, public ITaskListener
+	class SightComponent :  public Reflection<SightComponent,BaseSceneComponent>, public ITaskListener
 	{
 	public:
-		AutoAimComponent();
-		virtual ~AutoAimComponent();
+		SightComponent();
+		virtual ~SightComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
@@ -53,7 +54,7 @@ namespace GASS
 		SceneObjectPtr  GetTurretHingeObject() const;
 		SceneObjectPtr  GetBarrelHingeObject() const;
 
-		Vec3 GetDesiredAimDirection(double delta_time);
+		void UpdateAimTransformation(double delta_time);
 		std::string GetYawController() const {return m_YawController;}
 		void SetYawController(const std::string &value) {m_YawController = value;}
 		std::string GetPitchController() const {return m_PitchController;}
@@ -75,6 +76,10 @@ namespace GASS
 		
 		PIDControl GetYawPID() const {return m_YawPID;}
 		void SetYawPID(const PIDControl &value) {m_YawPID = value;}
+		
+		SceneObjectLink  GetAutoAimObject() const {return m_AutoAimObject;}
+		void SetAutoAimObject(const SceneObjectLink  &value) {m_AutoAimObject = value;}
+		
 		
 
 		Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);
@@ -132,8 +137,10 @@ namespace GASS
 		Float m_YawInput;
 		Float m_PitchInput;
 
+		SceneObjectLink m_AutoAimObject;
+
 			
 	};
-	typedef boost::shared_ptr<AutoAimComponent> AutoAimComponentPtr;
+	typedef boost::shared_ptr<SightComponent> SightComponentPtr;
 }
 #endif

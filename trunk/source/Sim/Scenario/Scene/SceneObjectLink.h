@@ -17,35 +17,48 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
+
+#pragma once
+
+#include "Sim/Common.h"
+#include "Core/Reflection/BaseReflectionObject.h"
+#include "Core/ComponentSystem/BaseComponentContainer.h"
+#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/BaseSceneComponent.h"
-
-#include "Core/Common.h"
-#include "Core/Serialize/Serialize.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
-
 namespace GASS
 {
-	SceneObjectTemplate::SceneObjectTemplate()
+	class GASSExport SceneObjectLink 
 	{
+		friend class BaseSceneComponent;
+	public:
+		SceneObjectLink();
+		virtual ~SceneObjectLink();
+		SceneObjectPtr operator ->()
+		{
+			return SceneObjectPtr(m_Link);
+		}
+	protected:
+		friend std::ostream& operator << (std::ostream& os, const SceneObjectLink& sol)
+		{
+			os << sol.m_LinkObjectID;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, SceneObjectLink& sol)
+		{
+			os >> sol.m_LinkObjectID;
+			return os;
+		}
+		void Initlize(SceneObjectPtr owner);
+		SceneObjectPtr GetOwnerObject() const;
+		void UpdateLink();
+		//SceneObjectPtr FindLinkObject(const std::string &name) const;
 		
-	}
-
-	SceneObjectTemplate::~SceneObjectTemplate(void)
-	{
-	}
-
-	void SceneObjectTemplate::RegisterReflection()
-	{
-		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
-	}
-
+		SceneObjectWeakPtr m_Link;
+		SceneObjectWeakPtr m_Owner;
+		SceneObjectID m_LinkObjectID;
+		bool m_Initialized;
+	};
 }
-
-
-
-

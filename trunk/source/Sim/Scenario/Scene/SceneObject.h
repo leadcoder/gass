@@ -31,6 +31,7 @@
 
 namespace GASS
 {
+	typedef std::string SceneObjectID;
 	class MessageManager;
 	class SceneObjectManager;
 	class SceneObject;
@@ -80,7 +81,7 @@ namespace GASS
 
 		/**Convenience function the get parent scene object
 			to hide object casting*/
-		SceneObjectPtr GetParentSceneObject()
+		SceneObjectPtr GetParentSceneObject() const
 		{
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
 			return boost::shared_static_cast<SceneObject>(GetParent());
@@ -160,7 +161,7 @@ namespace GASS
 			This function allow you to pass the class as a template argument
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstParentComponentByClass()
+		boost::shared_ptr<T> GetFirstParentComponentByClass() const
 		{
 			boost::shared_ptr<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
@@ -195,17 +196,26 @@ namespace GASS
 				can be usefull in case that every object has a unique id as part of 
 				the name wich is not known in compiletime.
 		*/
-		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true);
+		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true) const;
 
+		/** Get first child scene objects that match id.
+			@id The object id to search for
+		*/
+		SceneObjectPtr GetChildByID(const SceneObjectID &id) const;
+	
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);
+
+		void SetID(const SceneObjectID &id){m_ID = id;}
+		SceneObjectID GetID() const {return m_ID;}
 	protected:
 		SceneObjectManagerWeakPtr m_Manager;
 		MessageManagerPtr m_MessageManager;
+		SceneObjectID m_ID;
 
 	};
 

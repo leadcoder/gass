@@ -22,6 +22,7 @@
 #include "Sim/Common.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 
 namespace GASS
 {
@@ -42,6 +43,38 @@ namespace GASS
 
 	SceneObjectPtr BaseSceneComponent::GetSceneObject() const
 	{
-			return boost::shared_static_cast<SceneObject>(GetOwner());
+		return boost::shared_static_cast<SceneObject>(GetOwner());
+	}
+
+
+	void BaseSceneComponent::OnCreate()
+	{
+		BaseComponent::OnCreate();
+		InitializePointers();
+	}
+
+	void BaseSceneComponent::InitializePointers()
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				AbstractProperty * prop = (*iter);
+				const std::string prop_name = prop->GetTypeName();
+				if(prop_name == "SceneObjectLink")
+				{
+					boost::any any_link;
+					prop->GetValue(this,any_link);
+					SceneObjectLink link = boost::any_cast<SceneObjectLink>(any_link);
+					link.Initlize(GetSceneObject());
+					prop->SetValue(this,boost::any(link));
+					
+				}
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
 	}
 }

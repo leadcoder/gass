@@ -22,21 +22,26 @@
 #define BASESCENECOMPONENT_HH
 
 #include "Sim/Common.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 #include "Core/ComponentSystem/BaseComponent.h"
 #include "Core/MessageSystem/IMessage.h"
 namespace GASS
 {
-	class SceneObject;
+	//class SceneObject;
 	
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	//typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public boost::enable_shared_from_this<BaseSceneComponent>, public IMessageListener
 	{
+		friend class SceneObject;
 	public:
 		BaseSceneComponent();
 		virtual ~BaseSceneComponent();
 		SceneObjectPtr GetSceneObject() const;
+		//called when component is created
+		virtual void OnCreate();
 	protected:
+		void InitializePointers();
 
 	};
 	typedef boost::shared_ptr<BaseSceneComponent> BaseSceneComponentPtr;

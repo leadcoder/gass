@@ -46,6 +46,7 @@ namespace GASS
 	void SceneObject::RegisterReflection()
 	{
 		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
+		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
 	}
 
 	void SceneObject::OnCreate()
@@ -55,7 +56,9 @@ namespace GASS
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			(*iter)->OnCreate();
+			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			
+			bsc->OnCreate();
 			++iter;
 		}
 	}
@@ -176,8 +179,8 @@ namespace GASS
 		}
 		else
 		{
-			int pos = GetName().find(name);
-			if(pos  >= 0)
+			std::string::size_type pos = GetName().find(name);
+			if(pos != std::string::npos)
 			{
 				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 				objects.push_back(obj);
@@ -186,21 +189,29 @@ namespace GASS
 
 		if(recursive)
 		{
-			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+			while(iter != m_ComponentContainerVector.end())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+				child->GetChildrenByName(objects,name,exact_math,recursive);
+				iter++;
+			}
+			/*IComponentContainer::ComponentContainerIterator children = GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 				child->GetChildrenByName(objects,name,exact_math,recursive);
-			}
+			}*/
 		}
 	}
 
-	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive)
+	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive) const
 	{
- 		IComponentContainer::ComponentContainerIterator children = GetChildren();
-		while(children.hasMoreElements())
+		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+		while(iter != m_ComponentContainerVector.end())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			iter++;
 			if(exact_math)
 			{
 				if(child->GetName() == name)
@@ -210,41 +221,50 @@ namespace GASS
 			}
 			else
 			{
-				int pos = child->GetName().find(name);
-				if(pos  >= 0)
+				std::string::size_type pos = child->GetName().find(name);
+				if(pos != std::string::npos)
 				{
 					return child;
 				}
 			}
 		}
-		/*if(exact_math)
-		{
-			if(GetName()== name)
-			{
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-				return obj;
-			}
-		}
-		else
-		{
-			int pos = GetName().find(name);
-			if(pos  >= 0)
-			{
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-				return obj;
-			}
-		}*/
-
 		if(recursive)
 		{
-			IComponentContainer::ComponentContainerIterator children = GetChildren();
-			while(children.hasMoreElements())
+			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+			
+			while(iter != m_ComponentContainerVector.end())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
 				SceneObjectPtr ret = child->GetFirstChildByName(name,exact_math,recursive);
 				if(ret)
 					return ret;
+				iter++;
 			}
+		}
+		return SceneObjectPtr();
+	}
+
+	SceneObjectPtr SceneObject::GetChildByID(const SceneObjectID &id) const
+	{
+		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+		while(iter != m_ComponentContainerVector.end())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			iter++;
+			if(child->GetID() == id)
+			{
+				return child;
+			}
+		}
+ 		
+		iter =  m_ComponentContainerVector.begin();
+		while(iter != m_ComponentContainerVector.end())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			iter++;
+			SceneObjectPtr ret = child->GetChildByID(id);
+			if(ret)
+				return ret;
 		}
 		return SceneObjectPtr();
 	}

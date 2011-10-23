@@ -65,6 +65,12 @@ namespace GASS
 		virtual PropertyType GetTypeID() const;
 
 		/**
+		 Returns the name of this property.
+		 */
+		virtual std::string GetTypeName() const;
+
+		
+		/**
 		Get the value of this property.
 		@param object BaseReflectionObject that is owner of this property
 		*/
@@ -118,5 +124,13 @@ namespace GASS
 		else
 			return PROP_UNKNOWN;
 	}
+
+	template <class T>
+	std::string TypedProperty<T>::GetTypeName() const
+	{
+		return Misc::Demangle(std::string(typeid(T).name()));
+	}
+
+	
 }
 #endif

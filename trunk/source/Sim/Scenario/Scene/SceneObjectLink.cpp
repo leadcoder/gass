@@ -17,33 +17,51 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Components/BaseSceneComponent.h"
-
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 #include "Core/Common.h"
-#include "Core/Serialize/Serialize.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
-
+/*#include "Core/Serialize/Serialize.h"
+#include <iostream>
+#include <iomanip>
+#include <tinyxml.h>
+*/
 namespace GASS
 {
-	SceneObjectTemplate::SceneObjectTemplate()
+	SceneObjectLink::SceneObjectLink() : m_Initialized(false)
+	{
+
+	}
+
+	SceneObjectLink::~SceneObjectLink(void)
 	{
 		
 	}
 
-	SceneObjectTemplate::~SceneObjectTemplate(void)
+	void SceneObjectLink::Initlize(SceneObjectPtr owner)
 	{
+		m_Owner = owner;
+		if(m_LinkObjectID != "")
+		{
+			SceneObjectPtr obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
+			if(obj)
+				m_Link = obj;
+			else 
+				Log::Error("No object found with id %s",m_LinkObjectID.c_str());
+		}
+		else 
+			Log::Error("No id specified for SceneObjectLink");
+		m_Initialized = true;
 	}
 
-	void SceneObjectTemplate::RegisterReflection()
+	/*SceneObjectPtr SceneObjectLink::GetLinkObject() const
 	{
-		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
-	}
+		return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());
+	}*/
 
+	SceneObjectPtr SceneObjectLink::GetOwnerObject() const
+	{
+		return SceneObjectPtr(m_Owner,boost::detail::sp_nothrow_tag());
+	}
 }
 
 

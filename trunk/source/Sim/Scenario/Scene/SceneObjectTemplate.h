@@ -27,7 +27,8 @@
 
 
 namespace GASS
-{	
+{
+	typedef std::string SceneObjectID; 
 	class SceneObjectTemplate;
 	typedef boost::shared_ptr<SceneObjectTemplate> SceneObjectTemplatePtr;
 	typedef boost::weak_ptr<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
@@ -38,7 +39,9 @@ namespace GASS
 		SceneObjectTemplate();
 		virtual ~SceneObjectTemplate();
 		static	void RegisterReflection();
+		void SetID(const SceneObjectID &id){m_ID = id;}
+		SceneObjectID GetID() const {return m_ID;}
 	protected:
+		SceneObjectID m_ID;
 	};
-
 }

@@ -326,6 +326,8 @@ namespace GASS
 		//UnDecorateSymbolName(name.c_str(),out,len,flags);
 		//std::string ret = out;
 		//remove "class " from name
+		if(std::string::npos == name.find("class"))
+			return name;
 		std::string ret = name.substr(6);
 #else
 		int status;

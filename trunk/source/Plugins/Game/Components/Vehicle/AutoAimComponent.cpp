@@ -149,15 +149,15 @@ namespace GASS
 	Vec3 AutoAimComponent::GetDesiredAimDirection(double delta_time)
 	{
 		Mat4 rot_mat;
-		if(!((m_TurretAngle < Math::Deg2Rad(m_TurretMinAngle) && m_YawInput > 0) ||
-			(m_TurretAngle > Math::Deg2Rad(m_TurretMaxAngle) && m_YawInput < 0)))
+		if(!((m_TurretAngle < Math::Deg2Rad(m_TurretMinAngle) && m_YawInput < 0) ||
+			(m_TurretAngle > Math::Deg2Rad(m_TurretMaxAngle) && m_YawInput > 0)))
 			//ouside envelope
 		{
 			m_YawValue = m_YawValue + m_YawInput*m_MaxSteerVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
 		}
-		if(!((m_BarrelAngle < Math::Deg2Rad(m_BarrelMinAngle) && m_PitchInput > 0) ||
-			(m_BarrelAngle > Math::Deg2Rad(m_BarrelMaxAngle) && m_PitchInput  < 0)))
+		if(!((m_BarrelAngle < Math::Deg2Rad(m_BarrelMinAngle) && m_PitchInput < 0) ||
+			(m_BarrelAngle > Math::Deg2Rad(m_BarrelMaxAngle) && m_PitchInput  > 0)))
 			//ouside envelope
 		{
 			m_PitchValue  = m_PitchValue  + m_PitchInput *m_MaxSteerVelocity*delta_time;
@@ -373,13 +373,13 @@ namespace GASS
 
 	void AutoAimComponent::OnTurretHingeUpdate(HingeJointNotifyMessagePtr message)
 	{
-		m_TurretAngle = message->GetAngle();
+		m_TurretAngle = -message->GetAngle();
 		//Send turret information message
 	}
 
 	void AutoAimComponent::OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message)
 	{
-		m_BarrelAngle = message->GetAngle();
+		m_BarrelAngle = -message->GetAngle();
 		//Send turret information message
 	}
 

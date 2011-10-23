@@ -65,6 +65,7 @@ namespace GASS
         }
 
 		virtual PropertyType GetTypeID() const = 0;
+		virtual std::string GetTypeName() const = 0;
 
 		/**
             Set value of this property by string
