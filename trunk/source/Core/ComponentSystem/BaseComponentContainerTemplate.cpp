@@ -375,7 +375,12 @@ namespace GASS
 			if(inheritance)
 			{
 				new_object =  inheritance->CreateComponentContainer(part_id,manager);
-
+				
+				BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(new_object);
+				//copy container attributes to new object
+				if(ref_obj)
+					BaseReflectionObject::SetProperties(ref_obj);
+		
 				if(manager->GetAddObjectIDToName())
 					new_object->SetName(CreateUniqueName(manager));
 				else 
