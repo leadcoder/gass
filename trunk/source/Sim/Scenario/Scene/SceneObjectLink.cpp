@@ -38,7 +38,11 @@ namespace GASS
 		m_Owner = owner;
 		if(m_LinkObjectID != "")
 		{
-			SceneObjectPtr obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
+			SceneObjectPtr obj;
+			if(owner->GetObjectUnderRoot()->GetID()  == m_LinkObjectID)
+				obj = owner->GetObjectUnderRoot();
+			else obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
+			
 			if(obj)
 				m_Link = obj;
 			else 
