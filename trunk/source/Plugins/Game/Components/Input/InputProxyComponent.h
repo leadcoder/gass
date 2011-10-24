@@ -25,6 +25,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
@@ -49,10 +50,7 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:
-	//	void SetInputHandler(const std::string &handler);
-	//	std::string GetInputHandler() const;
-
-	//	std::string m_InputHandler;
+		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};
 
 	typedef boost::shared_ptr<InputProxyComponent> InputProxyComponentPtr;

@@ -53,18 +53,19 @@ namespace GASS
 	void InputProxyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, IComponent>);
-		//RegisterProperty<std::string>("InputHandler", &InputProxyComponent::GetInputHandler, &InputProxyComponent::SetInputHandler);
+		RegisterProperty<SceneObjectLink>("InputHandlerObject", &InputProxyComponent::GetInputHandlerObject, &InputProxyComponent::SetInputHandlerObject);
 	}
 
 	void InputProxyComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnUnload,UnloadComponentsMessage,0));
+		BaseSceneComponent::OnCreate();
 	}
 
 	void InputProxyComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage,0));
 	}
 
 	void InputProxyComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -76,15 +77,5 @@ namespace GASS
 	{
 		GetSceneObject()->SendImmediate(message);
 	}
-
-	/*void InputProxyComponent::SetInputHandler(const std::string &handler)
-	{
-		m_InputHandler = handler;
-	}
-
-	std::string InputProxyComponent::GetInputHandler() const
-	{
-		return m_InputHandler;
-	}*/
 
 }
