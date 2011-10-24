@@ -25,6 +25,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Plugins/Game/GameMessages.h"
@@ -46,8 +47,6 @@ namespace GASS
 	private:
 		std::string GetBoneName() const;
 		void SetBoneName(const std::string &name);
-		std::string GetSourceObject() const;
-		void SetSourceObject(const std::string &name);
 		std::string GetMeshObject() const;
 		void SetMeshObject(const std::string &name);
 
@@ -57,14 +56,11 @@ namespace GASS
 
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
-		SceneObjectWeakPtr m_SourceObject;
-
+		
 		std::string m_BoneName;
-		std::string m_MeshObjectName;
-		std::string m_SourceObjectName;
 		bool m_Active;
 
-
+		ADD_ATTRIBUTE(SceneObjectLink, SourceObject);
 	};
 }
 #endif

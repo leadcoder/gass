@@ -140,6 +140,10 @@ namespace GASS
 			m_StartTransformation = m_BaseTransformation;
 			return;
 		}
+		//damp input values every frame
+		m_YawInput = m_YawInput* 0.9;
+		m_PitchInput = m_PitchInput *0.9; 
+
 		UpdateAimTransformation(delta_time);
 		
 		Quaternion rot;

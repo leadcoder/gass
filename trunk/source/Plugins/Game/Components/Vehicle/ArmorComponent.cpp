@@ -59,9 +59,7 @@ namespace GASS
 
 	void ArmorComponent::OnCreate()
 	{
-		//GetSceneObject()->RegisterForMessage(SceneObject::OBJECT_RM_LOAD_SIM_COMPONENTS, MESSAGE_FUNC(ArmorComponent::OnLoad));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnHit,HitMessage,0));
-		//register for physics messages on engine?
 	}
 
 	void ArmorComponent::OnHit(HitMessagePtr message)
@@ -106,13 +104,6 @@ namespace GASS
 					GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 				}
 			
-					/*Vec3 vel(0,0,0);
-					MessagePtr spawn_msg(new Message(ScenarioScene::SCENARIO_RM_SPAWN_OBJECT_FROM_TEMPLATE));
-					spawn_msg->SetData("Template",effect);
-					spawn_msg->SetData("Position",m_Pos);
-					spawn_msg->SetData("Rotation",m_Rot);
-					spawn_msg->SetData("Velocity",vel);
-					GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);*/
 			}
 		}
 	}

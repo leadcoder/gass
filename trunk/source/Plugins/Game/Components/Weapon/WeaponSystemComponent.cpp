@@ -113,9 +113,6 @@ namespace GASS
 
 	void WeaponSystemComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		
-
-		
 		m_FireSound1Fp = GetSceneObject()->GetFirstChildByName("FireSound1Fp",false);
 		m_FireSound3Fp = GetSceneObject()->GetFirstChildByName("FireSound3Fp",false);
 		

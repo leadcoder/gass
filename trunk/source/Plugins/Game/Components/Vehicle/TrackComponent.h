@@ -25,6 +25,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Common.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Plugins/Game/GameMessages.h"
@@ -44,8 +45,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		std::string GetDriveWheel() const;
-		void SetDriveWheel(const std::string &wheel);
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		float GetParticleEmissionFactor() const{return m_ParticleEmissionFactor;}
 		void SetParticleEmissionFactor(float value) {m_ParticleEmissionFactor = value;}
@@ -55,8 +54,8 @@ namespace GASS
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 
-		SceneObjectWeakPtr m_DriveWheel;
-		std::string m_DriveWheelName;
+		ADD_ATTRIBUTE(SceneObjectLink,DriveWheel)
+		
 		bool m_Initialized;
 		Vec2 m_AnimationSpeedFactor;
 		Vec2 m_AnimationValue;

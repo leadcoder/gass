@@ -87,7 +87,6 @@ namespace GASS
 
 	void AdaptiveSteerComponent::OnInput(ControllerMessagePtr message)
 	{
-
 		std::string name = message->GetController();
 		float value = message->GetValue();
 		float sign = 1;
@@ -120,19 +119,6 @@ namespace GASS
 				m_DesiredAngle = value* rad_angle;
 			m_DesiredAngle *= sign;
 		}
-
-		/*float value = boost::any_cast<float>(any_mess->GetData("Value"));
-		float angular_vel = value*m_MaxSteerVelocity;
-		if (name == "Steer")
-		{
-			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
-
-			GetSceneObject()->PostMessage(force_msg);
-			GetSceneObject()->PostMessage(vel_msg);
-		}*/
-
 	}
 
 	void AdaptiveSteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
@@ -150,17 +136,6 @@ namespace GASS
 		GetSceneObject()->PostMessage(force_msg);
 		GetSceneObject()->PostMessage(vel_msg);
 
-
-
-		/*float angular_vel = value*m_MaxSteerVelocity;
-		if (name == "Steer")
-		{
-			//send rotaion message to physics engine
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,angular_vel));
-			GetSceneObject()->PostMessage(force_msg);
-			GetSceneObject()->PostMessage(vel_msg);
-		}*/
 	}
 
 

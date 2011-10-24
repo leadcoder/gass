@@ -49,7 +49,7 @@ namespace GASS
 	void TrackComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TrackComponent",new Creator<TrackComponent, IComponent>);
-		RegisterProperty<std::string>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
+		RegisterProperty<SceneObjectLink>("DriveWheel", &TrackComponent::GetDriveWheel, &TrackComponent::SetDriveWheel);
 		RegisterProperty<Vec2>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
 		RegisterProperty<float>("ParticleEmissionFactor", &TrackComponent::GetParticleEmissionFactor, &TrackComponent::SetParticleEmissionFactor);
 		RegisterProperty<float>("SoundVolumeFactor", &TrackComponent::GetSoundVolumeFactor, &TrackComponent::SetSoundVolumeFactor);
@@ -58,40 +58,26 @@ namespace GASS
 	void TrackComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadGameComponentsMessage,0));
-		//register for physics messages on engine?
+		BaseSceneComponent::OnCreate();
 	}
 
 	void TrackComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		m_Initialized = true;
-		SetDriveWheel(m_DriveWheelName);
+		
+		//SetDriveWheel(m_DriveWheelName);
 
 		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 		GetSceneObject()->PostMessage(play_msg);
 
 		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 		GetSceneObject()->PostMessage(volume_msg);
-
 		
-	}
-
-	std::string TrackComponent::GetDriveWheel() const
-	{
-		return m_DriveWheelName;
-	}
-
-	void TrackComponent::SetDriveWheel(const std::string &wheel)
-	{
-		m_DriveWheelName = wheel;
-		if(m_Initialized)
-		{
-			SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_DriveWheelName,false);
-			if(obj)
-			{
-				m_DriveWheel = obj;
-				obj->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
-			}
-		}
+		if(m_DriveWheel.IsValid())
+			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
+		else
+			Log::Error("Failed to find drive wheel");
+		m_Initialized = true;
+		
 	}
 
 	void TrackComponent::OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message)
