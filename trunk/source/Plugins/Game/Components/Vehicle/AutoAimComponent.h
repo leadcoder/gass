@@ -25,6 +25,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Sim/Scheduling/ITaskListener.h"
@@ -46,23 +47,11 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	private:
-		void SetBarrelHinge(const std::string &name);
-		std::string GetBarrelHinge() const;
-		void SetTurretHinge(const std::string &name);
-		std::string GetTurretHinge() const;
-		SceneObjectPtr  GetTurretHingeObject() const;
-		SceneObjectPtr  GetBarrelHingeObject() const;
-
-		Vec3 GetDesiredAimDirection(double delta_time);
-		std::string GetYawController() const {return m_YawController;}
-		void SetYawController(const std::string &value) {m_YawController = value;}
-		std::string GetPitchController() const {return m_PitchController;}
-		void SetPitchController(const std::string &value) {m_PitchController = value;}
+		void SetBarrelObject(const SceneObjectLink &value);
+		SceneObjectLink GetBarrelObject() const;
+		void SetTurretObject(const SceneObjectLink &value);
+		SceneObjectLink GetTurretObject() const;
 		
-		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}
-		float GetMaxSteerVelocity() const {return m_MaxSteerVelocity;}
-		void SetMaxSteerAngle(float value) {m_MaxSteerAngle = value;}
-		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetTurretMaxMinAngle(const Vec2 &value) {m_TurretMaxAngle = value.x;m_TurretMinAngle= value.y;}
@@ -82,22 +71,19 @@ namespace GASS
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		
 		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnUnload(UnloadComponentsMessagePtr message);
+
 		void OnTurretHingeUpdate(HingeJointNotifyMessagePtr message);	
 		void OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message);
 		void OnTurretTransformation(TransformationNotifyMessagePtr message);
 		void OnBarrelTransformation(TransformationNotifyMessagePtr message);
 		void OnBaseTransformation(TransformationNotifyMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnAimAtPosition( AimAtPositionMessagePtr message);
+		void OnActivateAutoAim(ActivateAutoAimMessagePtr message);
+	
 		TaskGroup GetTaskGroup() const;
 		void Update(double delta_time);
-
-		std::string m_YawController;
-		std::string m_PitchController;
-		
-		float m_MaxSteerVelocity;
-		float m_MaxSteerAngle;
 		float m_SteerForce;
 		float m_MaxYawTorque;
 		float m_MaxPitchTorque;
@@ -110,29 +96,15 @@ namespace GASS
 		Mat4 m_BaseTransformation;
 		Mat4 m_TurretTransformation;
 		Mat4 m_BarrelTransformation;
-		Mat4 m_StartTransformation;
-		Mat4 m_AimTransformation;
-		
 		PIDControl m_YawPID;
 		PIDControl m_PitchPID;
 		bool m_Active;
-		
-		Float m_AngularVelocity;
-		
-
-		SceneObjectWeakPtr m_TurretHingeObject;
-		SceneObjectWeakPtr m_BarrelHingeObject;
-
-		std::string m_TurretHingeName;
-		std::string m_BarrelHingeName;
-
-		Float m_YawValue;
-		Float m_PitchValue;
-
-		Float m_YawInput;
-		Float m_PitchInput;
-
-			
+		//Float m_AngularVelocity;
+		SceneObjectLink  m_TurretObject;
+		SceneObjectLink  m_BarrelObject;
+		Vec3 m_AimPoint;
+		bool m_GotNewAimPoint;
+		int m_CurrentAimPriority;
 	};
 	typedef boost::shared_ptr<AutoAimComponent> AutoAimComponentPtr;
 }

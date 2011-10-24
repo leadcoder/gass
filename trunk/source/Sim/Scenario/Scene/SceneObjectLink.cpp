@@ -20,11 +20,7 @@
 #include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Core/Common.h"
-/*#include "Core/Serialize/Serialize.h"
-#include <iostream>
-#include <iomanip>
-#include <tinyxml.h>
-*/
+
 namespace GASS
 {
 	SceneObjectLink::SceneObjectLink() : m_Initialized(false)

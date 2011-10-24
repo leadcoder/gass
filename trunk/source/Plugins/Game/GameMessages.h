@@ -80,6 +80,57 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<GotoPositionMessage> GotoPositionMessagePtr;
 
+
+
+	class AimAtPositionMessage : public BaseMessage
+	{
+	public:
+		AimAtPositionMessage(const Vec3 &pos, int priority = 0, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Position(pos), m_Priority(priority)
+		  {
+
+		  }
+		  Vec3 GetPosition() const {return m_Position;}
+		  int GetPriority() const {return m_Priority;}
+	private:
+		Vec3 m_Position;
+		int m_Priority;
+	};
+	typedef boost::shared_ptr<AimAtPositionMessage> AimAtPositionMessagePtr;
+
+	class ActivateAutoAimMessage : public BaseMessage
+	{
+	public:
+		ActivateAutoAimMessage(bool value, int priority = 0, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Active(value), m_Priority(priority)
+		  {
+
+		  }
+		  bool GetActive() const {return m_Active;}
+		  int GetPriority() const {return m_Priority;}
+	private:
+		bool m_Active;
+		int m_Priority;
+	};
+	typedef boost::shared_ptr<ActivateAutoAimMessage> ActivateAutoAimMessagePtr;
+
+
+	class BarrelTransformationMessage : public BaseMessage
+	{
+	public:
+		BarrelTransformationMessage(const Mat4 &value, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Trans(value)
+		  {
+
+		  }
+		  
+		  Mat4 GetTransformation() const {return m_Trans;}
+	private:
+		Mat4 m_Trans;
+		
+	};
+	typedef boost::shared_ptr<BarrelTransformationMessage> BarrelTransformationMessagePtr;
+
 	/*class PlayerInputMessage : public BaseMessage
 	{
 	public:

@@ -73,11 +73,14 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/BaseSceneManager.h"
+#include "Sim/Scenario/Scene/SceneManagerFactory.h"
 
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
+
 
 #include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"

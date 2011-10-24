@@ -40,27 +40,26 @@
 namespace GASS
 {
 	SightComponent::SightComponent() : m_YawController("Yaw"),m_PitchController("Pitch"),
-		m_MaxSteerVelocity(1),
-		m_SteerForce(10),
-		m_MaxSteerAngle(0),
-		m_BarrelMinAngle(-1000),
-		m_BarrelMaxAngle(1000),
-		m_TurretMinAngle(-1000),
-		m_TurretMaxAngle(1000),
-		m_TurretAngle(0),
-		m_BarrelAngle(0),
+		m_MaxYawVelocity(1),
+		m_MaxPitchVelocity(1),
+		m_PitchMinAngle(-1000),
+		m_PitchMaxAngle(1000),
+		m_YawMinAngle(-1000),
+		m_YawMaxAngle(1000),
 		m_Active(false),
-		m_AngularVelocity(0),
+		//m_AngularVelocity(0),
 		m_YawValue(0),
 		m_PitchValue(0),
 		m_YawInput(0),
 		m_PitchInput(0),
-		m_MaxYawTorque(10),
-		m_MaxPitchTorque(10)
+		m_CurrentYawAngle(0),
+		m_CurrentPitchAngle(0)
 	{
+		
 		m_BaseTransformation.Identity();
-		m_TurretTransformation.Identity();
-		m_BarrelTransformation.Identity();
+		m_StartTransformation.Identity();
+		//m_TurretTransformation.Identity();
+		//m_BarrelTransformation.Identity();
 	}
 
 	SightComponent::~SightComponent()
@@ -71,19 +70,16 @@ namespace GASS
 	void SightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SightComponent",new Creator<SightComponent, IComponent>);
+		RegisterProperty<std::string>("ActivateController", &SightComponent::GetActivateController, &SightComponent::SetActivateController);
 		RegisterProperty<std::string>("YawController", &SightComponent::GetYawController, &SightComponent::SetYawController);
 		RegisterProperty<std::string>("PitchController", &SightComponent::GetPitchController, &SightComponent::SetPitchController);
-		RegisterProperty<float>("MaxSteerVelocity", &SightComponent::GetMaxSteerVelocity, &SightComponent::SetMaxSteerVelocity);
-		RegisterProperty<float>("MaxSteerAngle", &SightComponent::GetMaxSteerAngle, &SightComponent::SetMaxSteerAngle);
-		RegisterProperty<float>("SteerForce", &SightComponent::GetSteerForce, &SightComponent::SetSteerForce);
-		RegisterProperty<Vec2>("TurretMaxMinAngle", &SightComponent::GetTurretMaxMinAngle, &SightComponent::SetTurretMaxMinAngle);
-		RegisterProperty<Vec2>("BarrelMaxMinAngle", &SightComponent::GetBarrelMaxMinAngle, &SightComponent::SetBarrelMaxMinAngle);
-
-		RegisterProperty<std::string>("BarrelHinge", &SightComponent::GetBarrelHinge, &SightComponent::SetBarrelHinge);
-		RegisterProperty<std::string>("TurretHinge", &SightComponent::GetTurretHinge, &SightComponent::SetTurretHinge);
-		RegisterProperty<PIDControl>("YawPID", &SightComponent::GetYawPID, &SightComponent::SetYawPID);
-		RegisterProperty<PIDControl>("PitchPID", &SightComponent::GetPitchPID, &SightComponent::SetPitchPID);
-
+		RegisterProperty<std::string>("SendDesiredPointController", &SightComponent::GetSendDesiredPointController, &SightComponent::SetSendDesiredPointController);
+		RegisterProperty<std::string>("ResetToBarrelController", &SightComponent::GetResetToBarrelController, &SightComponent::SetResetToBarrelController);
+		RegisterProperty<float>("MaxYawVelocity", &SightComponent::GetMaxYawVelocity, &SightComponent::SetMaxYawVelocity);
+		RegisterProperty<float>("MaxPitchVelocity", &SightComponent::GetMaxPitchVelocity, &SightComponent::SetMaxPitchVelocity);
+		RegisterProperty<int>("AutoAimPriority", &SightComponent::GetAutoAimPriority, &SightComponent::SetAutoAimPriority);
+		RegisterProperty<Vec2>("YawMaxMinAngle", &SightComponent::GetYawMaxMinAngle, &SightComponent::SetYawMaxMinAngle);
+		RegisterProperty<Vec2>("PitchMaxMinAngle", &SightComponent::GetPitchMaxMinAngle, &SightComponent::SetPitchMaxMinAngle);
 		RegisterProperty<SceneObjectLink >("AutoAimObject", &SightComponent::GetAutoAimObject, &SightComponent::SetAutoAimObject);
 	}
 
@@ -96,64 +92,34 @@ namespace GASS
 		BaseSceneComponent::OnCreate();
 	}
 
-	void SightComponent::SetBarrelHinge(const std::string &name)
-	{
-		m_BarrelHingeName = name;
-	}
-
-	std::string SightComponent::GetBarrelHinge() const
-	{
-		return m_BarrelHingeName;
-	}
-
-	void SightComponent::SetTurretHinge(const std::string &name)
-	{
-		m_TurretHingeName = name;
-	}
-
-	std::string SightComponent::GetTurretHinge() const
-	{
-		return m_TurretHingeName;
-	}
-
-	void SightComponent::OnTurretTransformation(TransformationNotifyMessagePtr message)
-	{
-		m_TurretTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
-	}
-
-	void SightComponent::OnBarrelTransformation(TransformationNotifyMessagePtr message)
-	{
-		m_BarrelTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
-	}
-
 	void SightComponent::OnBaseTransformation(TransformationNotifyMessagePtr message)
 	{
 		m_BaseTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
 
+	void SightComponent::OnBarrelTransformation(BarrelTransformationMessagePtr message)
+	{
+		m_BarrelTransformation = message->GetTransformation();
+	}
+
 #define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DrawLineMessage(start,end,color)))
 #define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(text)))
-
-	Vec3 SightComponent::ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v)
-	{
-		return  v - Math::Dot(v, plane_normal) * plane_normal;
-	}
 
 	void SightComponent::UpdateAimTransformation(double delta_time)
 	{
 		Mat4 rot_mat;
-		if(!((m_TurretAngle < Math::Deg2Rad(m_TurretMinAngle) && m_YawInput < 0) ||
-			(m_TurretAngle > Math::Deg2Rad(m_TurretMaxAngle) && m_YawInput > 0)))
+		if(!((m_CurrentYawAngle < Math::Deg2Rad(m_YawMinAngle) && m_YawInput < 0) ||
+			(m_CurrentYawAngle > Math::Deg2Rad(m_YawMaxAngle) && m_YawInput > 0)))
 			//ouside envelope
 		{
-			m_YawValue = m_YawValue + m_YawInput*m_MaxSteerVelocity*delta_time;
+			m_YawValue = m_YawValue + m_YawInput*m_MaxYawVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
 		}
-		if(!((m_BarrelAngle < Math::Deg2Rad(m_BarrelMinAngle) && m_PitchInput < 0) ||
-			(m_BarrelAngle > Math::Deg2Rad(m_BarrelMaxAngle) && m_PitchInput  > 0)))
+		if(!((m_CurrentPitchAngle < Math::Deg2Rad(m_PitchMinAngle) && m_PitchInput < 0) ||
+			(m_CurrentPitchAngle > Math::Deg2Rad(m_PitchMaxAngle) && m_PitchInput  > 0)))
 			//ouside envelope
 		{
-			m_PitchValue  = m_PitchValue  + m_PitchInput *m_MaxSteerVelocity*delta_time;
+			m_PitchValue  = m_PitchValue  + m_PitchInput *m_MaxPitchVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
 		}
 		rot_mat.Identity();
@@ -164,18 +130,6 @@ namespace GASS
 		m_AimTransformation = rot_mat*m_StartTransformation;
 	}
 
-
-	Float SightComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
-	{
-		Vec3 cross = Math::Cross(v1,v2);
-		float cos_angle = Math::Dot(v1,v2);
-		if(cos_angle > 1) cos_angle = 1;
-		if(cos_angle < -1) cos_angle = -1;
-		float angle = Math::Rad2Deg(acos(cos_angle));
-		if(Math::Dot(plane_normal,cross) > 0) 
-			angle *= -1;
-		return angle;
-	}
 
 	void SightComponent::Update(double delta_time)
 	{
@@ -192,9 +146,14 @@ namespace GASS
 		rot.FromRotationMatrix(m_AimTransformation.GetRotation());
 		GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
 
+
 		//Send message to auto aim system to control weapon system
-		//m_AutoAimObject->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
-		
+
+		//Create point in terrain to aim at, here we can take lead and distance into consideration
+		//but for now we just extrude the aim direction 100 m
+		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimTransformation.GetViewDirVector()*1000;
+		m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority)));
+
 		
 		Vec3 desired_aim_direction = -m_AimTransformation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();
@@ -206,20 +165,22 @@ namespace GASS
 		DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1));
 
 		
-		m_BarrelAngle = m_AimTransformation.GetEulerPitch();
-		m_TurretAngle = m_AimTransformation.GetEulerHeading();
+		//update current angle
+		m_CurrentYawAngle = m_AimTransformation.GetEulerHeading();
+		m_CurrentPitchAngle = m_AimTransformation.GetEulerPitch();
+
 		std::stringstream ss;
-		ss << "BarrelAngle:" << Math::Rad2Deg(m_BarrelAngle) << " MaxMin"  << m_BarrelMaxAngle << m_BarrelMinAngle << "\n"
-		<< "TurretAngle:" << Math::Rad2Deg(m_TurretAngle) << "\n"; 
-		
+		ss << "Yaw:" << Math::Rad2Deg(m_CurrentYawAngle) << " MaxMin"  << m_PitchMaxAngle << m_PitchMinAngle << "\n"
+		<< "Pitch:" << Math::Rad2Deg(m_CurrentPitchAngle) << "\n"; 
 		DEBUG_PRINT(ss.str());
-		
 	}
 
 	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+
+		m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
 	}
 
 	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -231,12 +192,13 @@ namespace GASS
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
-		if (name == "ActivateTurret")
+		if (name == m_ActivateController)
 		{
 			if(value > 0)
 			{	
 				m_Active = true;
-				std::cout << "activate\n";
+				//std::cout << "activate\n";
+				
 			}
 
 			else
@@ -244,51 +206,53 @@ namespace GASS
 				m_Active = false;
 				m_YawInput = 0;
 				m_PitchInput = 0;
-				std::cout << "deactivate\n";
+				//std::cout << "deactivate\n";
+			}
+			//m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(m_Active)));
+		}
+		if (m_Active && name == m_SendDesiredPointController)
+		{
+			bool auto_aim = false;
+			if(value > 0)
+				auto_aim = true;
+			m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(auto_aim,m_AutoAimPriority)));
+		}
+
+		if (name == m_ResetToBarrelController)
+		{
+			if(value > 0)
+			{
+				Quaternion rot;
+				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
+				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+
+				m_YawValue = 0;
+				m_PitchValue = 0;
+				m_StartTransformation = m_BarrelTransformation.GetRotation();
 			}
 		}
-		else if (m_Active && name == m_YawController)
+
+		
+		if (m_Active && name == m_YawController)
 		{
 			if(fabs(value) < 0.1) //clamp
 				value  = 0;
 
 			m_YawInput = value;
 		}
-		else if (m_Active && name == m_PitchController)
+		if (m_Active && name == m_PitchController)
 		{
 			if(fabs(value) < 0.1) //clamp
 				value  = 0;
 
 			m_PitchInput = value;
 		}
-	}
 
-	void SightComponent::OnTurretHingeUpdate(HingeJointNotifyMessagePtr message)
-	{
-		m_TurretAngle = message->GetAngle();
-		//Send turret information message
+		
 	}
-
-	void SightComponent::OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message)
-	{
-		m_BarrelAngle = message->GetAngle();
-		//Send turret information message
-	}
-
 	
 	TaskGroup SightComponent::GetTaskGroup() const
 	{
 		return "VEHICLE_TASK_GROUP";
 	}
-
-	SceneObjectPtr  SightComponent::GetTurretHingeObject() const
-	{
-		return SceneObjectPtr(m_TurretHingeObject,boost::detail::sp_nothrow_tag());
-	}
-
-	SceneObjectPtr  SightComponent::GetBarrelHingeObject() const
-	{
-		return SceneObjectPtr(m_BarrelHingeObject,boost::detail::sp_nothrow_tag());
-	}
-
 }
