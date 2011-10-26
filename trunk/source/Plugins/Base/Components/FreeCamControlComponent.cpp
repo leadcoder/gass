@@ -245,7 +245,7 @@ namespace GASS
 
 		static Float speed_factor = 0;
 
-		if(fabs(m_ThrottleInput) > 0.1 || fabs(m_StrafeInput) > 0.1 || fabs(m_UpDownInput) > 0.1)
+		if(fabs(m_ThrottleInput) > 0 || fabs(m_StrafeInput) > 0 || fabs(m_UpDownInput) > 0)
 		{
 			speed_factor += (fabs(m_ThrottleInput) + fabs(m_StrafeInput) + fabs(m_UpDownInput));
 			speed_factor *= 1.03;

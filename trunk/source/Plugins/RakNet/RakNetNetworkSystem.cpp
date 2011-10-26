@@ -68,7 +68,8 @@ namespace GASS
 		m_RemoteCreatePlayers (true),
 		m_Active(false),
 		m_InterpolationLag(100.0), //100ms , this should be based on ping time
-		m_LocationSendFrequency(20)  //20 Hz
+		m_LocationSendFrequency(20),  //20 Hz
+		m_SleepTime(0)
 	{
 
 	}
@@ -87,6 +88,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, ISystem>);
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
+		RegisterProperty<double>("SleepTime", &RakNetNetworkSystem::GetSleepTime, &RakNetNetworkSystem::SetSleepTime);
 		
 	}
 
@@ -242,7 +244,7 @@ namespace GASS
 
 		SocketDescriptor socketDescriptor(port,0);
 		Log::Print("Raknet starup....");
-		bool ret = m_RakPeer->Startup(MAX_PEERS,0,&socketDescriptor, 1);
+		bool ret = m_RakPeer->Startup(MAX_PEERS,m_SleepTime,&socketDescriptor, 1);
 		if(ret == false)
 		{
 			Log::Error("Failed to start raknet server");
@@ -263,6 +265,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::StartClient(int client_port,int server_port)
 	{
+		m_IsServer = 0;
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage,0));
 
@@ -287,12 +290,10 @@ namespace GASS
 		m_ReplicaManager->SetDefaultScope(true);
 
 		SocketDescriptor socketDescriptor(0,0);
-		m_RakPeer->Startup(1,0,&socketDescriptor, 1);
+		m_RakPeer->Startup(1,m_SleepTime,&socketDescriptor, 1);
 
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
 		m_RakPeer->SetOccasionalPing(true);
-
-
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -563,12 +564,14 @@ namespace GASS
 				//printf("Time is %i\n",time);
 				//printf("Ping is %i\n", (unsigned int)(RakNet::GetTime()-time));
 				//printf("Data is %i bytes longIBaseSound.hn", dataLength);
-
 				//m_ServerMap[response.IP] = response;
-
-
 				MessagePtr message(new ServerResponseMessage(response.IP, response.Port, response.Ping));
 				GetSimSystemManager()->PostMessage(message);
+
+				std::stringstream ss;
+				ss << "Ping time:" << response.Ping << " Time:" <<response.Time << "\n";
+				MessagePtr debug_msg(new DebugPrintMessage(ss.str()));
+				SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg);
 				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
 			}
 			else if(packetIdentifier == ID_START_SCENARIO)

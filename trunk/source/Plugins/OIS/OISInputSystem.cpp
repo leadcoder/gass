@@ -41,7 +41,10 @@ namespace GASS
 		m_Active (true),
 		m_OnlyUpdateWhenFocued (true),
 		m_MouseSpeed(20),
-		m_ExclusiveMode(true)
+		m_ExclusiveMode(true),
+		m_UpdateFrequency(0),
+		m_TimeSinceLastUpdate(0),
+		m_GameControllerAxisMinValue(0)
 	{
 		m_KeyBuffer =  new char[256];
 		m_OldKeyBuffer =  new char[256];
@@ -59,6 +62,9 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OISInputSystem",new GASS::Creator<OISInputSystem, ISystem>);
 		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
+		RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
+		RegisterProperty<float>("GameControllerAxisMinValue", &GASS::OISInputSystem::GetGameControllerAxisMinValue, &GASS::OISInputSystem::SetGameControllerAxisMinValue);
+		
 	}
 
 	void OISInputSystem::OnCreate()
@@ -171,32 +177,41 @@ namespace GASS
 		m_InputManager = 0;
 	}
 
-	void OISInputSystem::Update(double double_delta)
+	void OISInputSystem::Update(double delta_time)
 	{
+
+
 		if(m_Window == 0)
 			return;
 
-		if(!m_Active) //check if we are out of focus
+		//capture input at max freq
+		m_TimeSinceLastUpdate += delta_time;
+		if(m_UpdateFrequency == 0 || m_TimeSinceLastUpdate > 1.0/m_UpdateFrequency)
 		{
-			//feed console and gui?
+			//reset
+			m_TimeSinceLastUpdate = 0;
+			if(!m_Active) //check if we are out of focus
+			{
+				//feed console and gui?
+				m_Keyboard->capture();
+				memset(m_KeyBuffer,0,256);
+				memset(m_OldKeyBuffer,0,256);
+				return;
+			}
 			m_Keyboard->capture();
-			memset(m_KeyBuffer,0,256);
-			memset(m_OldKeyBuffer,0,256);
-			return;
-		}
-		m_Keyboard->capture();
-		memcpy(m_OldKeyBuffer,m_KeyBuffer,256);
-		m_Keyboard->copyKeyStates(m_KeyBuffer);
+			memcpy(m_OldKeyBuffer,m_KeyBuffer,256);
+			m_Keyboard->copyKeyStates(m_KeyBuffer);
 
-		m_Mouse->capture();
+			m_Mouse->capture();
 
-		m_OldMouseState = m_MouseState;
-		m_MouseState = m_Mouse->getMouseState();
-		for (int i = 0; i < m_Joys.size(); i++) 
-		{
-			m_Joys[i]->capture();
-			//m_OldJoyState[i] = m_JoyState[i];
-			//m_JoyState[i] = m_Joys[i]->getJoyStickState();
+			m_OldMouseState = m_MouseState;
+			m_MouseState = m_Mouse->getMouseState();
+			for (int i = 0; i < m_Joys.size(); i++) 
+			{
+				m_Joys[i]->capture();
+				//m_OldJoyState[i] = m_JoyState[i];
+				//m_JoyState[i] = m_Joys[i]->getJoyStickState();
+			}
 		}
 	}
 
@@ -361,6 +376,11 @@ namespace GASS
 	{
 		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
 		float value = ((float)arg.state.mAxes[axis].abs) / 32768.0;
+
+		//Clamp axis value?
+		if(fabs(value) < m_GameControllerAxisMinValue) //clamp
+			value  = 0;
+
 
 		while(iter != m_GameControllerListeners.end())
 		{

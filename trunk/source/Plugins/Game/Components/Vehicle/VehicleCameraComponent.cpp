@@ -61,12 +61,14 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("VehicleCameraComponent",new Creator<VehicleCameraComponent, IComponent>);
 		RegisterProperty<std::string>("PreferredViewport", &VehicleCameraComponent::GetPreferredViewport, &VehicleCameraComponent::SetPreferredViewport);
+		RegisterProperty<SceneObjectLink>("InputHandlerObject", &VehicleCameraComponent::GetInputHandlerObject, &VehicleCameraComponent::SetInputHandlerObject);
 	}
 
 	void VehicleCameraComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnLoad,LoadGameComponentsMessage,0));
+		BaseSceneComponent::OnCreate();
 	}
 
 	void VehicleCameraComponent::SetPreferredViewport(const std::string &viewport)
@@ -92,11 +94,9 @@ namespace GASS
 
 	void VehicleCameraComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		InputHandlerComponentPtr vehicle = GetSceneObject()->GetFirstParentComponentByClass<InputHandlerComponent>();
-		if(!vehicle)
-			Log::Error("No InputHandlerComponent found for VehicleCameraComponent");
-		vehicle->GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
-		vehicle->GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
+		
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
 		/*GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
 		if(gfx_sys)
 		{

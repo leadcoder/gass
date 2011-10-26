@@ -26,6 +26,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scheduling/ITaskListener.h"
@@ -78,8 +79,8 @@ namespace GASS
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 	private:
-		std::vector<std::string> GetWheels() const;
-		void SetWheels(const std::vector<std::string> &wheels);
+		std::vector<SceneObjectLink> GetWheels() const;
+		void SetWheels(const std::vector<SceneObjectLink> &wheels);
 
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
@@ -195,8 +196,8 @@ namespace GASS
 		float m_TurnForce;
 		float m_MaxTurnForce;
 
-		std::vector<std::string> m_WheelNames;
-		std::vector<VehicleWheelPtr> m_Wheels;
+		std::vector<SceneObjectLink> m_WheelObjects;
+		std::vector<VehicleWheelPtr> m_VehicleWheels;
 		Vec3 m_AngularVelocity;
 		PIDControl m_SteerCtrl;
 		bool m_Initialized;

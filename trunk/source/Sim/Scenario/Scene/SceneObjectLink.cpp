@@ -23,7 +23,8 @@
 
 namespace GASS
 {
-	SceneObjectLink::SceneObjectLink() : m_Initialized(false)
+	SceneObjectLink::SceneObjectLink() : m_Initialized(false),
+		m_LinkObjectID(UNKOWN_LINK_ID)
 	{
 
 	}
@@ -33,24 +34,38 @@ namespace GASS
 		
 	}
 
-	void SceneObjectLink::Initlize(SceneObjectPtr owner)
+	bool SceneObjectLink::UpdateLink()
+	{
+		if(m_Initialized)
+		{
+			SceneObjectPtr owner(m_Owner,boost::detail::sp_nothrow_tag());
+			if(owner && m_LinkObjectID != UNKOWN_LINK_ID)
+			{
+				SceneObjectPtr obj;
+				if(owner->GetObjectUnderRoot()->GetID()  == m_LinkObjectID)
+					obj = owner->GetObjectUnderRoot();
+				else obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
+
+				if(obj)
+					m_Link = obj;
+				else 
+				{
+					return false;
+				}
+			}
+			else 
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool SceneObjectLink::Initlize(SceneObjectPtr owner)
 	{
 		m_Owner = owner;
-		if(m_LinkObjectID != "")
-		{
-			SceneObjectPtr obj;
-			if(owner->GetObjectUnderRoot()->GetID()  == m_LinkObjectID)
-				obj = owner->GetObjectUnderRoot();
-			else obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
-			
-			if(obj)
-				m_Link = obj;
-			else 
-				Log::Error("No object found with id %s",m_LinkObjectID.c_str());
-		}
-		else 
-			Log::Error("No id specified for SceneObjectLink");
 		m_Initialized = true;
+		return UpdateLink();
 	}
 
 	/*SceneObjectPtr SceneObjectLink::GetLinkObject() const

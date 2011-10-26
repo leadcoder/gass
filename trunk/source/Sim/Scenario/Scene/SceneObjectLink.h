@@ -29,6 +29,8 @@
 #include "Sim/Components/BaseSceneComponent.h"
 namespace GASS
 {
+	static const SceneObjectID UNKOWN_LINK_ID = "";	
+
 	class GASSExport SceneObjectLink 
 	{
 		friend class BaseSceneComponent;
@@ -40,6 +42,8 @@ namespace GASS
 			return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());
 		}
 		bool IsValid() const {return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());}
+		SceneObjectID GetLinkObjectID() const {return m_LinkObjectID;}
+		SceneObjectPtr GetObjectPtr() const {return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());}
 	protected:
 		friend std::ostream& operator << (std::ostream& os, const SceneObjectLink& sol)
 		{
@@ -50,12 +54,13 @@ namespace GASS
 		friend std::istream& operator >> (std::istream& os, SceneObjectLink& sol)
 		{
 			os >> sol.m_LinkObjectID;
+			if(!sol.UpdateLink())
+				std::cout << "SceneObjectLink - Faild to update link " << sol.m_LinkObjectID << "\n";
 			return os;
 		}
-		void Initlize(SceneObjectPtr owner);
+		bool Initlize(SceneObjectPtr owner);
+		bool UpdateLink();
 		SceneObjectPtr GetOwnerObject() const;
-		void UpdateLink();
-		//SceneObjectPtr FindLinkObject(const std::string &name) const;
 		
 		SceneObjectWeakPtr m_Link;
 		SceneObjectWeakPtr m_Owner;

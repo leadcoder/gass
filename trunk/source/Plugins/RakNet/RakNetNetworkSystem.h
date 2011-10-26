@@ -143,7 +143,7 @@ namespace GASS
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
 		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
-
+		ADD_ATTRIBUTE(double,SleepTime);
 
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;

@@ -46,7 +46,7 @@ namespace GASS
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
 
-	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> , ITaskListener
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> , public  ITaskListener
 	{
 	public:
 		RakNetNetworkChildComponent();

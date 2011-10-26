@@ -43,7 +43,7 @@
 #include "GetTime.h"
 
 
-#define _DEBUG_LTC_
+//#define _DEBUG_LTC_
 
 namespace GASS
 {
@@ -54,11 +54,12 @@ namespace GASS
 		m_DeadReckoning(0),
 		m_LastSerialize(0),
 		m_ParentPos(0,0,0),
-		m_RelativeToParent(0),
+		//m_ClientLocationMode(0),
 		m_UpdatePosition(true),
 		m_UpdateRotation(true),
 		m_SendFreq(0), // 20fps
-		m_NumHistoryFrames(6)
+		m_NumHistoryFrames(6),
+		m_ClientLocationMode(UNCHANGED)
 	{
 		
 		m_LocationHistory.resize(m_NumHistoryFrames);
@@ -80,7 +81,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
 		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
-		RegisterProperty<int>("RelativeToParent", &RakNetLocationTransferComponent::GetRelativeToParent, &RakNetLocationTransferComponent::SetRelativeToParent);
+		RegisterProperty<ClientLocationMode>("ClientLocationMode", &RakNetLocationTransferComponent::GetClientLocationMode, &RakNetLocationTransferComponent::SetClientLocationMode);
 		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
 	}
@@ -99,7 +100,7 @@ namespace GASS
 		//if(!nc)
 		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		if(parent && m_RelativeToParent == 1)
+		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
 			
@@ -125,18 +126,17 @@ namespace GASS
 				comp->GetSceneObject()->PostMessage(disable_msg);
 			}
 
-			if(m_RelativeToParent == 1 || m_RelativeToParent == 2)
+			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || 
+				m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
 			{
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				BaseSceneComponentPtr base = boost::shared_dynamic_cast<BaseSceneComponent>(location);
 				base->SetPropertyByType("AttachToParent",boost::any(true));
 			}
-
 			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 	}
-
 
 	void RakNetLocationTransferComponent::OnVelocityNotify(VelocityNotifyMessagePtr message)
 	{
@@ -164,7 +164,7 @@ namespace GASS
 		Vec3 pos = message->GetPosition();
 		Quaternion rot = message->GetRotation();
 
-		if(m_RelativeToParent == 1)
+		if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			Mat4 transform;
 			m_ParentRot.ToRotationMatrix(transform);
@@ -194,11 +194,20 @@ namespace GASS
 	{
 
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		if(parent && m_RelativeToParent == 1)
+		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
 		}
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+	}
+
+
+	bool RakNetLocationTransferComponent::IsRemote() const
+	{
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(raknet && raknet->IsActive())
+			return !raknet->IsServer();
+		return false;
 	}
 
 
@@ -312,14 +321,14 @@ namespace GASS
 
 			}
 
-			if(m_RelativeToParent == 1 || m_RelativeToParent == 0)
+			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || m_ClientLocationMode == UNCHANGED)
 			{
 				if(m_UpdatePosition)
 					GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(new_pos)));
 				if(m_UpdateRotation)
 					GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(new_rot)));
 			}
-			else if (m_RelativeToParent == 2)
+			else if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
 			{
 				if(m_UpdatePosition)
 					GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(new_pos)));

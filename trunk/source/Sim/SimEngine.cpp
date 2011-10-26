@@ -39,6 +39,7 @@
 #include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
+#include "Sim/Components/Network/INetworkComponent.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Messages/CoreSystemMessages.h"
@@ -72,7 +73,7 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	bool SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings)
+	bool SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings, int num_rtc_threads)
 	{
 	    Log::Print("SimEngine::Init -- Start");
 		m_PluginManager->LoadFromFile(plugin_file);
@@ -81,7 +82,7 @@ namespace GASS
 		//Initialize systems
 		m_SystemManager->Init();
 
-		m_RTC->Init();
+		m_RTC->Init(num_rtc_threads);
 		Log::Print("SimEngine::Init -- Done");
 
 		//intilize profiler

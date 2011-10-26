@@ -93,10 +93,12 @@ namespace GASS
 		SystemType GetSystemType() const {return "InputSystem";}
 
 		//ITaskListener interface
-		void Update(double delta);
+		void Update(double delta_time);
 		TaskGroup GetTaskGroup() const;
-
 	private:
+		ADD_ATTRIBUTE(double,UpdateFrequency);
+		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);
+
 		float NormalizeMouse(float value);
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);
 
@@ -140,6 +142,9 @@ namespace GASS
 		float m_MouseSpeed;
 		int m_Window;
 		bool m_ExclusiveMode;
+		
+		double m_TimeSinceLastUpdate;
+		
 
 	};
 }

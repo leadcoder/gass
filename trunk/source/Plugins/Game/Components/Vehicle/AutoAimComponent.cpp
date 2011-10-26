@@ -196,9 +196,9 @@ namespace GASS
 		m_GotNewAimPoint = false;
 		Vec3 desired_aim_direction = m_AimPoint - m_TurretTransformation.GetTranslation();
 
-		Vec3 start = m_BarrelTransformation.GetTranslation();
+		/*Vec3 start = m_BarrelTransformation.GetTranslation();
 		Vec3 end = start + desired_aim_direction*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(1,0,0,1));
+		DEBUG_DRAW_LINE(start,end,Vec4(1,0,0,1));*/
 
 		//pitch calculation
 
@@ -258,7 +258,7 @@ namespace GASS
 		m_PitchPID.set(0);
 		float pitch_torque = m_PitchPID.update(pitch_angle_to_aim_dir,delta_time);
 		
-		std::stringstream ss;
+	/*	std::stringstream ss;
 		ss << "pitch_angle_to_aim_dir:" << pitch_angle_to_aim_dir << "\n"
 			<< "aimpoint:" << m_AimPoint << "\n"
 		<< "pitch_torque:" << pitch_torque << "\n"
@@ -267,7 +267,7 @@ namespace GASS
 		<< "BarrelAngle:" << Math::Rad2Deg(m_BarrelAngle) << " MaxMin"  << m_BarrelMaxAngle << m_BarrelMinAngle << "\n"
 		<< "TurretAngle:" << Math::Rad2Deg(m_TurretAngle) << "\n"; 
 		
-		DEBUG_PRINT(ss.str());
+		DEBUG_PRINT(ss.str());*/
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,0));//m_SteerForce));
 		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
 		m_TurretObject->PostMessage(force_msg);

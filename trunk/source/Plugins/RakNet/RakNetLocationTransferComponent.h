@@ -23,6 +23,7 @@
 
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Components/Network/INetworkComponent.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
@@ -48,11 +49,11 @@ namespace GASS
 	public:
 		TransformationPackage() 
 		{
-			
+
 		}
 		TransformationPackage(int id ) : NetworkPackage(id) 
 		{
-		
+
 		}
 		TransformationPackage(int id, unsigned int time_stamp,const Vec3 &pos,const Vec3 &vel,const Quaternion &rot,const Vec3 &ang_vel) : NetworkPackage(id), 
 			Position(pos),
@@ -73,12 +74,12 @@ namespace GASS
 		unsigned int TimeStamp;
 	};
 	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
-	
+
 
 
 	class LocationHistory
 	{
-		public:
+	public:
 		LocationHistory() : Position(0,0,0),Rotation(1,0,0,0), Time(0)
 		{
 		}
@@ -88,18 +89,46 @@ namespace GASS
 		Quaternion Rotation;
 		unsigned int Time;
 	};
+
+
+	enum ClientLocationMode
+	{
+		UNCHANGED = 0,
+		FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE = 1,
+		FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD = 2
+	};
+
+	inline std::ostream& operator << (std::ostream& os, const ClientLocationMode& clm)
+	{
+		os << ((int) clm);
+		return os;
+	}
+
+	inline std::istream& operator >> (std::istream& os, ClientLocationMode& clm)
+	{
+		int value;
+		os >> value;
+		clm = (ClientLocationMode) value;
+		return os;
+	}
+
 	class SceneObject;
-	
+
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public ITaskListener
+	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public ITaskListener, public INetworkComponent
 	{
 	public:
+
+		
+
 		RakNetLocationTransferComponent();
 		virtual ~RakNetLocationTransferComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		//INetworkComponent
+		virtual bool IsRemote() const;
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}
@@ -109,8 +138,8 @@ namespace GASS
 		void OnParentTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnVelocityNotify(VelocityNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
-		int GetRelativeToParent() const {return m_RelativeToParent;}
-		void SetRelativeToParent(int value) {m_RelativeToParent=value;}
+		//int GetRelativeToParent() const {return m_RelativeToParent;}
+		//void SetRelativeToParent(int value) {m_RelativeToParent=value;}
 
 
 		bool GetUpdatePosition() const {return m_UpdatePosition;}
@@ -121,21 +150,22 @@ namespace GASS
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
-		
+
 		Vec3 m_Velocity;
 		Vec3 m_AngularVelocity;
-	
+
 		std::vector<LocationHistory> m_LocationHistory;
-		
+
 		double m_DeadReckoning;
 		double m_LastSerialize;
 		float m_SendFreq;
-		int m_RelativeToParent;
+		//int m_RelativeToParent;
 		bool m_UpdatePosition;
 		bool m_UpdateRotation;
 		Vec3 m_ParentPos;
 		int m_NumHistoryFrames;
 		Quaternion m_ParentRot;
+		ADD_ATTRIBUTE(ClientLocationMode,ClientLocationMode);
 	};
 	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }

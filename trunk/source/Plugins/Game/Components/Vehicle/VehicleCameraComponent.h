@@ -25,6 +25,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Plugins/Game/GameMessages.h"
@@ -51,6 +52,7 @@ namespace GASS
 		std::string GetPreferredViewport() const;
 	private:
 		std::string m_PreferredViewport;
+		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};
 	typedef boost::shared_ptr<VehicleCameraComponent> VehicleCameraComponentPtr;
 }

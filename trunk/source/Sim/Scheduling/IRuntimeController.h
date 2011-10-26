@@ -59,8 +59,10 @@ namespace GASS
 		virtual ~IRuntimeController(){}
 		/**
 			Initilize the RTC
+			@param num_threads Number of threads to allocate for the RTC, 
+			-1 means that the RTC have to figure out how many to allocate
 		*/
-		virtual void Init() = 0;
+		virtual void Init(int num_threads = -1) = 0;
 		/**
 			Update the RTC
 			@param delta_time Time since last update

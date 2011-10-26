@@ -473,9 +473,6 @@ namespace GASS
 		}
 		else if (m_Active && name == m_Controller)
 		{
-			if(fabs(value) < 0.1) //clamp
-				value  = 0;
-
 			m_TurnInput = value;
 			
 

@@ -48,10 +48,6 @@ namespace GASS
 		virtual void OnCreate();
 	private:
 		void UpdateAimTransformation(double delta_time);
-		std::string GetYawController() const {return m_YawController;}
-		void SetYawController(const std::string &value) {m_YawController = value;}
-		std::string GetPitchController() const {return m_PitchController;}
-		void SetPitchController(const std::string &value) {m_PitchController = value;}
 		
 		void SetMaxPitchVelocity(float value) {m_MaxPitchVelocity = value;}
 		float GetMaxPitchVelocity() const {return m_MaxPitchVelocity;}
@@ -79,12 +75,11 @@ namespace GASS
 		void OnBaseTransformation(TransformationNotifyMessagePtr message);
 		void OnBarrelTransformation(BarrelTransformationMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnAimAtPosition(AimAtPositionMessagePtr message);
 		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		TaskGroup GetTaskGroup() const;
 		void Update(double delta_time);
 
-		std::string m_YawController;
-		std::string m_PitchController;
 		
 		float m_MaxYawVelocity;
 		float m_MaxPitchVelocity;
@@ -93,12 +88,16 @@ namespace GASS
 		float m_PitchMinAngle;
 		float m_PitchMaxAngle;
 
+		int m_CurrentZoom;
+		
+
 		Mat4 m_BaseTransformation;
 		Mat4 m_BarrelTransformation;
-		Mat4 m_StartTransformation;
-		Mat4 m_AimTransformation;
+		Mat4 m_StartRotation;
+		Mat4 m_AimRotation;
 		
 		bool m_Active;
+		bool m_RemoteSim;
 		//Float m_AngularVelocity;
 
 		Float m_YawValue;
@@ -115,7 +114,11 @@ namespace GASS
 		ADD_ATTRIBUTE(int,AutoAimPriority);
 		ADD_ATTRIBUTE(std::string,SendDesiredPointController);
 		ADD_ATTRIBUTE(std::string,ResetToBarrelController);
+		ADD_ATTRIBUTE(std::string,ToggleZoomController);
 		ADD_ATTRIBUTE(std::string,ActivateController);
+		ADD_ATTRIBUTE(std::string,YawController);
+		ADD_ATTRIBUTE(std::string,PitchController);
+		ADD_ATTRIBUTE(std::vector<float>,ZoomValues);
 	};
 	typedef boost::shared_ptr<SightComponent> SightComponentPtr;
 }

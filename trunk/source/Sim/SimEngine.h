@@ -72,10 +72,12 @@ namespace GASS
 			listed in the system_file. 
 			@param plugin_file xml-file listing all plugins to load.
 			@param system_file xml-file listing all systems to load.
+			@param num_rtc_threads Threads to use in the RTC, see RTCcontroller for more information.
 		*/
 		bool Init(const std::string &plugin_file = std::string("plugins.xml"), 
 				  const std::string &system_file = std::string("systems.xml"),
-				  const std::string &control_settings = std::string("control_settings.xml"));
+				  const std::string &control_settings = std::string("control_settings.xml"),
+				  int num_rtc_threads = -1);
 
 		/**
 		Main update for GASS.

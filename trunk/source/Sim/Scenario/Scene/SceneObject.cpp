@@ -80,7 +80,7 @@ namespace GASS
 
 		SceneObjectPtr root = GetSceneObjectManager()->GetSceneRoot();
 
-		while(ComponentContainerPtr(container->GetParent()) != root)
+		while(container->GetParent() && ComponentContainerPtr(container->GetParent()) != root)
 		{
 			container = ComponentContainerPtr(container->GetParent());
 		}

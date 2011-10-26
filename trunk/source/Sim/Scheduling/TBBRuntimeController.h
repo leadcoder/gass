@@ -38,7 +38,12 @@ namespace GASS
 	public:
 		TBBRuntimeController ();
 		virtual ~TBBRuntimeController();
-		void Init();
+		/**
+			Initialize the rtc controller, if number of threads is -1, TBB will
+			match number of threads with number of machine kernerls
+			
+		*/
+		void Init(int num_threads = -1);
 		void Update(double delta_time);
 		void Register(ITaskListener *);
 		void Unregister(ITaskListener *update_task);

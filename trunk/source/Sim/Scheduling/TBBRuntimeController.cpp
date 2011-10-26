@@ -38,12 +38,16 @@ namespace GASS
 
 	}
 
-	void TBBRuntimeController::Init()
+	void TBBRuntimeController::Init(int num_threads)
 	{
 		//int nthread = tbb::task_scheduler_init::automatic;
 		int  default_num_t = tbb::task_scheduler_init::default_num_threads();
-		m_Scheduler = new tbb::task_scheduler_init(default_num_t);
+		if(num_threads == -1)
+			num_threads = default_num_t;
+		
+		m_Scheduler = new tbb::task_scheduler_init(num_threads);
 		m_TasksRoot = new( tbb::task::allocate_root() ) tbb::empty_task;
+		Log::Print("TBBRuntimeController initialized with %d threads",num_threads);
 		//tbb::tick_count ts = tbb::tick_count::now();
 	}
 

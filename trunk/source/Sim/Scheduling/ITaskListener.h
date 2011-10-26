@@ -28,6 +28,7 @@
 
 namespace GASS
 {
+
 	class GASSExport ITaskListener
 	{
 	public:

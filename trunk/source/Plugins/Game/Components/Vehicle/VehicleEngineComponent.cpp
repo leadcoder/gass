@@ -123,7 +123,7 @@ namespace GASS
 	void VehicleEngineComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
-		RegisterVectorProperty<std::string>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
+		RegisterVectorProperty<SceneObjectLink>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType);
 		RegisterProperty<bool>("Automatic", &VehicleEngineComponent::GetAutomatic, &VehicleEngineComponent::SetAutomatic);
 		RegisterProperty<bool>("InvertDrivetrainOutput", &VehicleEngineComponent::GetInvert, &VehicleEngineComponent::SetInvert);
@@ -146,15 +146,12 @@ namespace GASS
 
 	void VehicleEngineComponent::OnCreate()
 	{
-	/*	ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("VehicleEngineComponentInputSettings");
-		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(ControlSetting::CONTROLLER_MESSAGE_NEW_INPUT, MESSAGE_FUNC(VehicleEngineComponent::OnInput));
-		else
-			Log::Warning("Failed to find control settings: VehicleEngineComponentInputSettings");*/
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+
+		BaseSceneComponent::OnCreate();
 		m_Initialized = true;
 	}
 
@@ -319,28 +316,23 @@ namespace GASS
 		return m_GearBoxRatio;
 	}
 
-	std::vector<std::string> VehicleEngineComponent::GetWheels() const
+	std::vector<SceneObjectLink> VehicleEngineComponent::GetWheels() const
 	{
-		return m_WheelNames;
+		return m_WheelObjects;
 	}
 
-	void VehicleEngineComponent::SetWheels(const std::vector<std::string> &wheels)
+	void VehicleEngineComponent::SetWheels(const std::vector<SceneObjectLink> &wheels)
 	{
-		m_WheelNames = wheels;
+		m_WheelObjects = wheels;
 		//Update wheel list
 		if(m_Initialized)
 		{
-			m_Wheels.clear();
-			for(int i = 0; i < m_WheelNames.size(); i++)
+			m_VehicleWheels.clear();
+			for(int i = 0; i < m_WheelObjects.size(); i++)
 			{
-				
-				SceneObjectPtr object =  GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_WheelNames[i],false);
-				if(object)
-				{
-					VehicleWheelPtr wheel(new VehicleWheel(object));
-					wheel->Init();
-					m_Wheels.push_back(wheel);
-				}
+				VehicleWheelPtr wheel(new VehicleWheel(m_WheelObjects[i].GetObjectPtr()));
+				wheel->Init();
+				m_VehicleWheels.push_back(wheel);
 			}
 		}
 	}
@@ -349,7 +341,7 @@ namespace GASS
 	void VehicleEngineComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		//Get wheels from children
-		SetWheels(m_WheelNames);
+		SetWheels(m_WheelObjects);
 
 		//Play engine sound
 		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
@@ -381,18 +373,16 @@ namespace GASS
 
 			//let there be a dead span in input
 			m_DesiredThrottle = value;
-			if(fabs(m_DesiredThrottle) < 0.1)
-				m_DesiredThrottle = 0;
+			//if(fabs(m_DesiredThrottle) < 0.1)
+			//m_DesiredThrottle = 0;
 		}
-
 		else if (name == "Steer")
 		{
 			//let there be a dead span in input
 			m_DesiredSteer = value;
-			if(fabs(m_DesiredSteer) < 0.1)
-				m_DesiredSteer = 0;
+			//if(fabs(m_DesiredSteer) < 0.1)
+			//	m_DesiredSteer = 0;
 		}
-
 	}
 
 	void VehicleEngineComponent::Update(double delta)
@@ -423,8 +413,6 @@ namespace GASS
 		UpdateSound(delta);
 		UpdateExhaustFumes(delta);
 		UpdateInstruments(delta);
-
-
 
 		if(m_Debug)
 		{
@@ -617,9 +605,9 @@ namespace GASS
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS2_VELOCITY,wheel_vel));
 
 		m_WheelRPM = 0;
-		for(int i = 0; i < m_Wheels.size(); i++)
+		for(int i = 0; i < m_VehicleWheels.size(); i++)
 		{
-			VehicleWheelPtr wheel = m_Wheels[i];
+			VehicleWheelPtr wheel = m_VehicleWheels[i];
 			SceneObjectPtr wheel_obj(wheel->m_WheelObject,boost::detail::sp_nothrow_tag());
 
 			if(wheel_obj)
