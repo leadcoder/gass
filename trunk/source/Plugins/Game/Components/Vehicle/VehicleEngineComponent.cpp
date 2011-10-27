@@ -368,7 +368,7 @@ namespace GASS
 		std::string name = message->GetController();
 		float value = message->GetValue();
 
-		if (name == "Throttle")
+		if (name == m_InputToThrottle)
 		{
 
 			//let there be a dead span in input

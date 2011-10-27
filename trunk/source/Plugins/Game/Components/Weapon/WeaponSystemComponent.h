@@ -81,16 +81,15 @@ namespace GASS
 		int GetCurrentMagazineSize() const;
 		void SetCurrentMagazineSize(int value);
 
+		ADD_ATTRIBUTE(std::string,FireController);
+		ADD_ATTRIBUTE(std::string,ReloadController);
+
 		SceneObjectPtr m_FireSound1Fp;
 		SceneObjectPtr m_FireSound3Fp;
 	
-
-
 		Vec3 m_ProjectilePosition;
 		std::string m_ProjectileTemplateName;
-		std::string m_InputToFire;
-		std::string m_InputToReload;
-
+		
 		std::string m_FireEffectTemplate;
 
 		Vec3 m_RecoilForce;

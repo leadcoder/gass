@@ -216,10 +216,10 @@ namespace GASS
 
 			//Send input message
 
-			MessagePtr throttle_message(new ControllerMessage(m_ThrottleInput,throttle));
+			MessagePtr throttle_message(new ControllerMessage(m_ThrottleInput,throttle,CT_AXIS));
 			GetSceneObject()->SendImmediate(throttle_message);
 
-			MessagePtr steering_message(new ControllerMessage(m_SteerInput,turn));
+			MessagePtr steering_message(new ControllerMessage(m_SteerInput,turn,CT_AXIS));
 			GetSceneObject()->SendImmediate(steering_message);
 
 		}

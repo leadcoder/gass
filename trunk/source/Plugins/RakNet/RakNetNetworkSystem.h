@@ -114,7 +114,8 @@ namespace GASS
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
-		
+		ADD_ATTRIBUTE(bool,Debug);
+		ADD_ATTRIBUTE(bool,RelayInputOnServer);
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -130,7 +131,7 @@ namespace GASS
 		//ITaskListener
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
-
+		
 	private:
 		//Helpers
 		void Stop();
@@ -144,6 +145,8 @@ namespace GASS
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
 		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
 		ADD_ATTRIBUTE(double,SleepTime);
+
+		
 
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;

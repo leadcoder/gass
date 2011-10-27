@@ -50,8 +50,8 @@ namespace GASS
 		m_1FP(false)
 	{
 
-		m_InputToFire = "Fire";
-		m_InputToReload = "Reload";
+		m_FireController = "Fire";
+		m_ReloadController= "Reload";
 		m_CurrentMagSize = 0;
 
 		m_RoundOfFire = 1;
@@ -80,7 +80,8 @@ namespace GASS
 		RegisterProperty<int>("CurrentMagazineSize", &WeaponSystemComponent::GetCurrentMagazineSize, &WeaponSystemComponent::SetCurrentMagazineSize);
 
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
-		RegisterProperty<std::string>("InputToFire", &WeaponSystemComponent::GetInputToFire, &WeaponSystemComponent::SetInputToFire);
+		RegisterProperty<std::string>("FireController", &WeaponSystemComponent::GetFireController, &WeaponSystemComponent::SetFireController);
+		RegisterProperty<std::string>("ReloadController", &WeaponSystemComponent::GetReloadController, &WeaponSystemComponent::SetReloadController);
 		//RegisterProperty<float>("FireDelay", &WeaponSystemComponent::GetFireDelay, &WeaponSystemComponent::SetFireDelay);
 	}
 
@@ -240,8 +241,6 @@ namespace GASS
 			//std::cout << "fire fP3" << std::endl;
 		}
 
-
-
 		Mat4 rotmat;
 		projectile_rot.ToRotationMatrix(rotmat);
 		Vec3 projectile_dir = -rotmat.GetViewDirVector();
@@ -260,6 +259,9 @@ namespace GASS
 		if(m_FireEffectTemplate != "")
 		{
 			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,Vec3(0,0,0),Quaternion::IDENTITY,vel,GetSceneObject()));
+			//MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,projectile_start_pos,projectile_rot,vel));
+			
+			
 			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 		}
 
@@ -307,8 +309,8 @@ namespace GASS
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
-		//std::cout << "Fire:" << name << "  " << m_InputToFire << std::endl;
-		if (name == m_InputToFire)
+		//std::cout << "Fire:" << name << "  " << m_FireController << std::endl;
+		if (name == m_FireController)
 		{
 			//send fire request
 			if(value > 0)
@@ -323,7 +325,7 @@ namespace GASS
 				m_FireRequest = false;
 			}
 		}
-		else if(name == m_InputToReload)
+		else if(name == m_ReloadController)
 		{
 			if(!m_Reloading)
 			{
@@ -438,17 +440,7 @@ namespace GASS
 	{
 		m_FireEffectTemplate = value;
 	}
-
-	std::string WeaponSystemComponent::GetInputToFire() const
-	{
-        return m_InputToFire;
-	}
-
-    void WeaponSystemComponent::SetInputToFire(const std::string &value)
-    {
-        m_InputToFire = value;
-    }
-
+	
     void WeaponSystemComponent::SetRoundOfFire(float value)
 	{
 		m_RoundOfFire = value;

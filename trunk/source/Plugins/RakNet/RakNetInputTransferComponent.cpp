@@ -107,28 +107,56 @@ namespace GASS
 		RakNetTime time_stamp = RakNet::GetTime();
 		std::string controller = message->GetController();
 
-		
+		float value = message->GetValue();
 
 		if(m_ControlSetting->GetController(controller))
 		{
+			//Check history
+			bool new_value = false;
 			int controller_index = m_ControlSetting->m_NameToIndex[controller];
-			/*float value = message->GetValue();
-			boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,index,value));
-			MessagePtr serialize_message(new NetworkSerializeMessage(0,package));
-			GetSceneObject()->SendImmediate(serialize_message);*/
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-			SystemAddress address = raknet->GetRakPeer()->GetInternalID();
-			RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
-			if(comp)
+			if(m_InputHistory.find(controller_index) == m_InputHistory.end())
 			{
-				comp->GetReplica()->RemoteInput(address ,controller_index, message->GetValue(),0);
+				new_value = true;
 			}
 			else
 			{
-				RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
+				float last_value = m_InputHistory[controller_index];
+				if(value != last_value) //add dead span epsilon here?
+				{
+					new_value = true;
+				}
+				//else
+				//	std::cout <<"Same value:" << value << " last:" << last_value << "\n";
+			}
+			m_InputHistory[controller_index] = value;
+			
+
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+
+			if(message->GetControllerType() == CT_AXIS && new_value)
+			{
+				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
+				boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
+				std::cout << "Send value:" << value  << "\n";	
+				
+				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
+				GetSceneObject()->SendImmediate(serialize_message);
+			}
+			else if(message->GetControllerType() == CT_TRIGGER)
+			{
+				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
+				RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 				if(comp)
 				{
-					comp->GetReplica()->RemoteInput(address,controller_index,message->GetValue(),0);
+					comp->GetReplica()->RemoteInput(address ,controller_index, message->GetValue(),0);
+				}
+				else
+				{
+					RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
+					if(comp)
+					{
+						comp->GetReplica()->RemoteInput(address,controller_index,message->GetValue(),0);
+					}
 				}
 			}
 		}
@@ -152,7 +180,7 @@ namespace GASS
 	{
 		int id = 8888;
 		std::string c_name = m_ControlSetting->m_IndexToName[controller];
-		MessagePtr message(new ControllerMessage(c_name,value,id));
+		MessagePtr message(new ControllerMessage(c_name,value,CT_TRIGGER,id));
 		GetSceneObject()->PostMessage(message);
 	}
 
@@ -160,12 +188,18 @@ namespace GASS
 	{
 		if(message->GetPackage()->Id == INPUT_DATA)
 		{
-			int id = int(this);
+			int id = 8888;
 			NetworkPackagePtr package = message->GetPackage();
 			InputPackagePtr input_package = boost::shared_dynamic_cast<InputPackage>(package);
 
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			SystemAddress address = raknet->GetRakPeer()->GetInternalID();
+			if(input_package->Generator == address.binaryAddress) //generate by my self!!!
+				return;
+			
+
 			std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
-			MessagePtr ctrl_message(new ControllerMessage(controller,input_package->Value,id));
+			MessagePtr ctrl_message(new ControllerMessage(controller,input_package->Value,CT_AXIS,id));
 			GetSceneObject()->PostMessage(ctrl_message);
 
 			/*if(controller == "Fire")
@@ -174,8 +208,13 @@ namespace GASS
 			}*/
 
 			//if server, relay this to all clients except sender
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-			if(raknet->IsServer())
+			
+
+			
+			if(raknet->GetDebug())
+				std::cout << "Got " << controller << " Input from:" <<   message->GetAddress().m_Address <<  " On port:" << message->GetAddress().m_Port << " With value value:" << input_package->Value << std::endl;
+			
+			if(raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
 				NetworkAddress address  = message->GetAddress();
 				MessagePtr serialize_message(new NetworkSerializeMessage(address ,0,package));

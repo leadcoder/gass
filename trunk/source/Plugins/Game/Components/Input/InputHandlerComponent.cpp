@@ -134,7 +134,7 @@ namespace GASS
 		}
 		else
 		{
-			MessagePtr input_message(new ControllerMessage(name,value));
+			MessagePtr input_message(new ControllerMessage(name,value,message->GetControllerType()));
 			GetSceneObject()->SendImmediate(input_message);
 		}
 	}

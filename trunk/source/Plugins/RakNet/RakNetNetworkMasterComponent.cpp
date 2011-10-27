@@ -70,13 +70,12 @@ namespace GASS
 	void RakNetNetworkMasterComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
 		int id = 0;
 		GeneratePartID(GetSceneObject(), id);
 		
 		if(raknet->IsServer())
 		{
-	
 			m_Replica = new RakNetMasterReplica(raknet->GetReplicaManager());
 			m_Replica->LocalInit(GetSceneObject());
 		}
@@ -155,6 +154,9 @@ namespace GASS
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
 		
+		if(m_Replica && m_Attributes.size() > 0)
+			m_Replica->SerializeProperties(outBitStream);
+		
 	}
 
 	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
@@ -203,6 +205,13 @@ namespace GASS
 			//Post messages
 			//GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));
 		}
+	}
+
+
+	void RakNetNetworkMasterComponent::OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message)
+	{
+		//everything is sent!
+		m_SerializePackages.clear();
 	}
 }
 

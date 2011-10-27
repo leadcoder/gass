@@ -65,6 +65,7 @@ namespace GASS
 
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {return m_PartId;}
+		void OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message);
 
 		
 

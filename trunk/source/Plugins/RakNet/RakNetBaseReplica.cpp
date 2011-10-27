@@ -146,15 +146,17 @@ namespace GASS
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
 				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", input_source ,controller, value);
 				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
-				//std::cout << "RemoteInput called" <<std::endl;
+				if(raknet->GetDebug())
+					std::cout << "RemoteInput called" <<std::endl;
 			}
 			else
 			{
 				//check that we differ from input source, we dont want to duplicate our own input 
 				if(input_source != raknet->GetRakPeer()->GetInternalID())
 				{
-					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponentByClass<RakNetInputTransferComponent>();	
-					//std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
+					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponentByClass<RakNetInputTransferComponent>();
+					if(raknet->GetDebug())
+						std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
 					//int id = 8888;
 					input_comp->ReceivedInput(controller,value);
 					//MessagePtr message(new ControllerMessage(controller,value,id));
@@ -162,6 +164,7 @@ namespace GASS
 					
 				}
 
+				//relay to all clients if server
 				if(raknet->IsServer())
 				{
 					raknet->GetRPC()->SetRecipientObject(GetNetworkID());

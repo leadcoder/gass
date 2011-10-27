@@ -74,6 +74,19 @@ namespace GASS
 	typedef boost::shared_ptr<ComponentGotReplicaMessage> ComponentGotReplicaMessagePtr;
 
 
+	class NetworkPostUpdateMessage : public BaseMessage
+	{
+	public:
+		NetworkPostUpdateMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+
+		  }
+		
+	};
+	typedef boost::shared_ptr<NetworkPostUpdateMessage> NetworkPostUpdateMessagePtr;
+
+
 	
 }
 #endif

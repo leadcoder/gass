@@ -92,7 +92,7 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
+				MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -102,7 +102,7 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -138,7 +138,7 @@ namespace GASS
 				{
 				case DEVICE_MOUSE:
 				
-					MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
+					MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
 					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
@@ -153,7 +153,7 @@ namespace GASS
 				{
 				case DEVICE_MOUSE:
 				
-					MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
+					MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
 					m_Owner->GetMessageManager()->PostMessage(system_msg);
 					break;
 				}
@@ -167,7 +167,7 @@ namespace GASS
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,1.0));
+				MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
@@ -177,7 +177,7 @@ namespace GASS
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;	
@@ -227,7 +227,7 @@ namespace GASS
 					value = -1.0f;
 				}
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,value));
+				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -238,7 +238,7 @@ namespace GASS
 			if(key == m_PosKey || key == m_NegKey)
 			{
 			
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0));
+				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_AXIS));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
@@ -284,7 +284,7 @@ namespace GASS
 					value  = 0;
 				}
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,value));
+				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 				break;
 			}
@@ -317,7 +317,7 @@ namespace GASS
 			if(device == m_Device-DEVICE_GAME_CONTROLLER_0 && axis == m_Axis-INPUT_AXIS_0)
 			{
 				value = value*m_Invert;
-				MessagePtr system_msg(new ControllerMessage(m_Name,value));
+				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
 				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;

@@ -69,10 +69,11 @@ namespace GASS
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
 		std::string GetTemplateName() {return m_TemplateName;}
 		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
+		void SerializeProperties(RakNet::BitStream *bit_stream);
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *str, RakNet::AutoRPC* networkCaller);
 	protected:
 		AbstractProperty* GetProperty(const std::string &prop_name);
-		void SerializeProperties(RakNet::BitStream *bit_stream);
+		
 		std::string m_TemplateName;
 		bool m_AllowRemoteOwner;
 	private:

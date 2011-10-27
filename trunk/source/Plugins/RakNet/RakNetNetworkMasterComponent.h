@@ -64,6 +64,7 @@ namespace GASS
 	private:
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 		void OnSerialize(NetworkSerializeMessagePtr message);
+		void OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		RakNetMasterReplica* m_Replica;
 		std::vector<std::string> m_Attributes;

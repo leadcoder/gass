@@ -37,19 +37,28 @@ namespace GASS
 	class Controller;
 
 
+	enum ControllerType
+	{
+		CT_TRIGGER,
+		CT_AXIS
+	};
+
+
 	class ControllerMessage : public BaseMessage
 	{
 	public:
-		ControllerMessage(const std::string &controller, float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Controller(controller), m_Value(value)
+		ControllerMessage(const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Controller(controller), m_Value(value),m_ControllerType(ct)
 		  {
 
 		  }
 		  std::string GetController()const {return m_Controller;}
 		  float GetValue()const {return m_Value;} 
+		  ControllerType GetControllerType(){return m_ControllerType;}
 	private:
 		std::string m_Controller;
 		float m_Value;
+		ControllerType m_ControllerType;
 	};
 
 	typedef boost::shared_ptr<ControllerMessage> ControllerMessagePtr;

@@ -69,7 +69,9 @@ namespace GASS
 		m_Active(false),
 		m_InterpolationLag(100.0), //100ms , this should be based on ping time
 		m_LocationSendFrequency(20),  //20 Hz
-		m_SleepTime(0)
+		m_SleepTime(0),
+		m_RelayInputOnServer(false),
+		m_Debug(false)
 	{
 
 	}
@@ -89,6 +91,8 @@ namespace GASS
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
 		RegisterProperty<double>("SleepTime", &RakNetNetworkSystem::GetSleepTime, &RakNetNetworkSystem::SetSleepTime);
+		RegisterProperty<bool>("Debug", &RakNetNetworkSystem::GetDebug, &RakNetNetworkSystem::SetDebug);
+		RegisterProperty<bool>("RelayInputOnServer", &RakNetNetworkSystem::GetRelayInputOnServer,&RakNetNetworkSystem::SetRelayInputOnServer);
 		
 	}
 
@@ -309,6 +313,9 @@ namespace GASS
 		}
 		else 
 			UpdateClient(delta);
+
+		//
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new NetworkPostUpdateMessage()));
 	}
 
 	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int client_port)

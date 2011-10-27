@@ -52,10 +52,11 @@ namespace GASS
 		{
 		
 		}
-		InputPackage(int id, unsigned int time_stamp,int index, float value) : NetworkPackage(id), 
+		InputPackage(int id, int generated_by, unsigned int time_stamp,int index, float value) : NetworkPackage(id), 
 			TimeStamp(time_stamp),
 			Index(index),
-			Value(value)
+			Value(value),
+			Generator(generated_by)
 			{}
 		virtual ~InputPackage(){}
 		int GetSize() {return sizeof(InputPackage);}
@@ -65,6 +66,7 @@ namespace GASS
 		}
 		int Index;
 		float Value;
+		unsigned int Generator;
 		unsigned int TimeStamp;
 	};
 
@@ -101,6 +103,8 @@ namespace GASS
 
 		std::string m_ControlSettingName;
 		ControlSetting* m_ControlSetting;
+		typedef std::map<int,float> InputHistoryMap;
+		InputHistoryMap m_InputHistory;
 	};
 	typedef boost::shared_ptr<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
 }

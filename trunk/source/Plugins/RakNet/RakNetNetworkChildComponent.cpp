@@ -73,6 +73,7 @@ namespace GASS
 
 	void RakNetNetworkChildComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
 		{
@@ -176,6 +177,7 @@ namespace GASS
 			int size = m_SerializePackages[i]->GetSize();
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
+		
 		if(m_Replica && m_Attributes.size() > 0)
 			m_Replica->SerializeProperties(outBitStream);
 	}
@@ -219,6 +221,12 @@ namespace GASS
 			//Signal serialize
 			raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
 		}
+	}
+
+	void RakNetNetworkChildComponent::OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message)
+	{
+		//everything is sent!
+		m_SerializePackages.clear();
 	}
 
 	TaskGroup RakNetNetworkChildComponent::GetTaskGroup() const 
