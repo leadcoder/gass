@@ -227,13 +227,15 @@ namespace GASS
 	class ClientRemoteMessage : public BaseMessage
 	{
 	public:
-		ClientRemoteMessage(const std::string &client, const std::string message, SenderID sender_id = -1, double delay= 0) :
+		ClientRemoteMessage(const std::string &client, const std::string message, const std::string data, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) , m_Client(client),m_Message(message){}
 		std::string GetClient() const {return m_Client;}
 		std::string GetMessage() const {return m_Message;}
+		std::string GetData() const {return m_Data;}
 	private:
 		std::string m_Client;
 		std::string m_Message;
+		std::string m_Data;
 	};
 	typedef boost::shared_ptr<ClientRemoteMessage> ClientRemoteMessagePtr;
 

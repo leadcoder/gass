@@ -79,6 +79,7 @@ namespace GASS
 		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		TaskGroup GetTaskGroup() const;
 		void Update(double delta_time);
+		void UpdateTargetDistance();
 
 		
 		float m_MaxYawVelocity;
@@ -98,17 +99,19 @@ namespace GASS
 		
 		bool m_Active;
 		bool m_RemoteSim;
+		std::string m_TargetName;
 		//Float m_AngularVelocity;
 
 		Float m_YawValue;
 		Float m_PitchValue;
+		Float m_TargetDistance;
 
 		Float m_YawInput;
 		Float m_PitchInput;
 
 		Float m_CurrentYawAngle;
 		Float m_CurrentPitchAngle;
-
+		
 		SceneObjectLink m_AutoAimObject;
 
 		ADD_ATTRIBUTE(int,AutoAimPriority);
@@ -118,6 +121,7 @@ namespace GASS
 		ADD_ATTRIBUTE(std::string,ActivateController);
 		ADD_ATTRIBUTE(std::string,YawController);
 		ADD_ATTRIBUTE(std::string,PitchController);
+		ADD_ATTRIBUTE(std::string,TargetDistanceController);
 		ADD_ATTRIBUTE(std::vector<float>,ZoomValues);
 	};
 	typedef boost::shared_ptr<SightComponent> SightComponentPtr;

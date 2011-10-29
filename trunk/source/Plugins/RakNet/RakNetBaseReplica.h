@@ -47,7 +47,9 @@ namespace GASS
 		//int AUTO_RPC_CALLSPEC EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
 		//int AUTO_RPC_CALLSPEC ExitVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteMessage(const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
+		int AUTO_RPC_CALLSPEC RemoteMessageWithData(const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteInput(SystemAddress input_source, int controller, float value, RakNet::AutoRPC* networkCaller); 
+		
 	
 	protected:
 		SceneObjectPtr m_Owner;

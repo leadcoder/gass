@@ -36,6 +36,7 @@
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 #include "RakNetInputTransferComponent.h"
+#include "RakNetMessageTransferComponent.h"
 #include "Plugins/Game/GameMessages.h"
 
 
@@ -100,6 +101,32 @@ namespace GASS
 		}
 		return 1;
 	}*/
+
+	int RakNetBaseReplica::RemoteMessageWithData(const char *message, const char *data, RakNet::AutoRPC* networkCaller)
+	{
+		if(m_Owner)
+		{
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			if (networkCaller==0)
+			{
+				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
+				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteMessageWithData", message,data);
+				raknet->GetRPC()->SetRecipientObject(UNASSIGNED_NETWORK_ID);
+			}
+			else
+			{
+				RakNetMessageTransferComponentPtr comp = m_Owner->GetFirstComponentByClass<RakNetMessageTransferComponent>();
+				comp->Called(std::string(message),std::string(data));
+				/*if(std::string(message) == "OutOfArmor")
+				{
+					MessagePtr message(new OutOfArmorMessage());
+					m_Owner->PostMessage(message);
+				}*/
+				//std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;
+			}
+		}
+		return 1;
+	}
 
 	int RakNetBaseReplica::RemoteMessage(const char *client_address, const char *message , RakNet::AutoRPC* networkCaller) 
 	{

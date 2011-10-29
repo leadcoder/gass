@@ -28,6 +28,8 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/Components/Network/INetworkComponent.h"
 
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
@@ -59,7 +61,16 @@ namespace GASS
 
 	void ArmorComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnHit,HitMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LoadGameComponentsMessage,1));
+	}
+	void ArmorComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	{
+		NetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
+		if(nc && !nc->IsRemote())
+		{
+			GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnHit,HitMessage,0));
+		}
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnOutOfArmor,OutOfArmorMessage ,0));
 	}
 
 	void ArmorComponent::OnHit(HitMessagePtr message)
@@ -84,27 +95,31 @@ namespace GASS
 				//Send armor message
 				MessagePtr armor_msg(new OutOfArmorMessage());
 				GetSceneObject()->PostMessage(armor_msg);
-
-				//load damage mesh
-				if(m_DamageMesh != "")
-				{
-					MessagePtr mesh_msg(new MeshFileMessage(m_DamageMesh));
-					GetSceneObject()->PostMessage(mesh_msg);
-				}
-				std::cout<< "HIT!!!\n";
-
-				
-				message->GetHitDirection();
-				//effect
-				if(m_DamageEffect1 != "")
-				{
-					Vec3 vel(0,0,0);
-					Quaternion rot = Quaternion::IDENTITY;
-					MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_DamageEffect1,message->GetHitPosition(),rot,vel));
-					GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
-				}
-			
 			}
+		}
+	}
+
+	void ArmorComponent::OnOutOfArmor(OutOfArmorMessagePtr message)
+	{
+		m_CurrentArmor = 0;
+		//load damage mesh
+		if(m_DamageMesh != "")
+		{
+			MessagePtr mesh_msg(new MeshFileMessage(m_DamageMesh));
+			GetSceneObject()->PostMessage(mesh_msg);
+		}
+		std::cout<< "Dead!!!\n";
+				
+		//message->GetHitDirection();
+		//effect
+		if(m_DamageEffect1 != "")
+		{
+			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			Vec3 vel(0,0,0);
+			Quaternion rot = Quaternion::IDENTITY;
+			Vec3 pos = location->GetWorldPosition();
+			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_DamageEffect1,pos,rot,vel));
+			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
 		}
 	}
 

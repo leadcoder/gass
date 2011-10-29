@@ -73,6 +73,7 @@ namespace GASS
 				{
 					dGeomDestroy(ray);
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollDist = m_Result->CollDist+i*m_SegmentLength;
 					return;
 				}
 			}
@@ -87,6 +88,7 @@ namespace GASS
 				if(m_Result->Coll == true)
 				{
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollDist = m_Result->CollDist+segments*m_SegmentLength;
 				}
 			}
 			dGeomDestroy(ray);

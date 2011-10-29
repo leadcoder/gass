@@ -137,7 +137,7 @@ namespace GASS
 			{
 				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
 				boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
-				std::cout << "Send value:" << value  << "\n";	
+				
 				
 				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediate(serialize_message);

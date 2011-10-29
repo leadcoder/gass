@@ -27,6 +27,7 @@
 #include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Components/Network/INetworkComponent.h"
 
 #include "Sim/Common.h"
 #include "Plugins/RakNet/RakNetMessages.h"

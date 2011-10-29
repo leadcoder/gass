@@ -210,6 +210,8 @@ namespace GASS
 			request.Type = COL_LINE;
 			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
 			request.ReturnFirstCollisionPoint = false;
+			request.CollisionBits = 1;
+				
 
 			m_ColHandle = m_ColSys->Request(request);
 			m_HasColHandle = true;

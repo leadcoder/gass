@@ -25,6 +25,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/SceneObjectLink.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
 #include "Core/Math/Quaternion.h"
@@ -57,6 +58,11 @@ namespace GASS
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
 
+		ADD_ATTRIBUTE(SceneObjectLink,FireSoundObject1P);
+		ADD_ATTRIBUTE(SceneObjectLink,FireSoundObject3P);
+		ADD_ATTRIBUTE(std::string,FireController);
+		ADD_ATTRIBUTE(std::string,ReloadController);
+
 		//get/set section
 		float GetProjectileStartOffset() const;
 		void SetProjectileStartOffset(float offset);
@@ -81,15 +87,8 @@ namespace GASS
 		int GetCurrentMagazineSize() const;
 		void SetCurrentMagazineSize(int value);
 
-		ADD_ATTRIBUTE(std::string,FireController);
-		ADD_ATTRIBUTE(std::string,ReloadController);
-
-		SceneObjectPtr m_FireSound1Fp;
-		SceneObjectPtr m_FireSound3Fp;
-	
 		Vec3 m_ProjectilePosition;
 		std::string m_ProjectileTemplateName;
-		
 		std::string m_FireEffectTemplate;
 
 		Vec3 m_RecoilForce;
@@ -115,10 +114,7 @@ namespace GASS
 
 		Quaternion m_ProjectileStartRot;
 		Vec3 m_ProjectileStartPos;
-
 		bool m_1FP;
-
-
 	};
 }
 #endif

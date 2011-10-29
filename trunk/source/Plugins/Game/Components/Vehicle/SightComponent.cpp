@@ -29,6 +29,7 @@
 #include "Sim/Components/Network/INetworkComponent.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/Messages/GraphicsSystemMessages.h"
 #include "Sim/SimEngine.h"
@@ -37,7 +38,7 @@
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
-
+#include "Sim/Systems/Collision/ICollisionSystem.h"
 
 namespace GASS
 {
@@ -59,7 +60,8 @@ namespace GASS
 		m_CurrentYawAngle(0),
 		m_CurrentPitchAngle(0),
 		m_CurrentZoom(0),
-		m_RemoteSim(false)
+		m_RemoteSim(false),
+		m_TargetDistance(900)
 	{
 		
 		m_BaseTransformation.Identity();
@@ -84,6 +86,7 @@ namespace GASS
 		RegisterProperty<std::string>("PitchController", &SightComponent::GetPitchController, &SightComponent::SetPitchController);
 		RegisterProperty<std::string>("SendDesiredPointController", &SightComponent::GetSendDesiredPointController, &SightComponent::SetSendDesiredPointController);
 		RegisterProperty<std::string>("ResetToBarrelController", &SightComponent::GetResetToBarrelController, &SightComponent::SetResetToBarrelController);
+		RegisterProperty<std::string>("TargetDistanceController", &SightComponent::GetTargetDistanceController, &SightComponent::SetTargetDistanceController);
 		RegisterProperty<std::string>("ToggleZoomController", &SightComponent::GetToggleZoomController, &SightComponent::SetToggleZoomController);
 		RegisterProperty<float>("MaxYawVelocity", &SightComponent::GetMaxYawVelocity, &SightComponent::SetMaxYawVelocity);
 		RegisterProperty<float>("MaxPitchVelocity", &SightComponent::GetMaxPitchVelocity, &SightComponent::SetMaxPitchVelocity);
@@ -178,12 +181,19 @@ namespace GASS
 		//Send message to auto aim system to control weapon system
 
 		//Create point in terrain to aim at, here we can take lead and distance into consideration
-		//but for now we just extrude the aim direction 100 m
-		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*1000;
+		//but for now we just extrude the aim direction 1000 m
+
+		std::stringstream ss;
+		ss << "TargetDistance:" << m_TargetDistance << " Target:" << m_TargetName << "\n";
+		DEBUG_PRINT(ss.str());
+		
+
+		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*m_TargetDistance;
 
 		int id = (int) this; 
 		m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
 
+		DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(),aim_point,Vec4(0,1,1,1));
 		
 		/*Vec3 desired_aim_direction = -m_AimRotation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();
@@ -212,10 +222,11 @@ namespace GASS
 			m_RemoteSim = net_comp->IsRemote();
 
 
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
 		if(!m_RemoteSim)
 		{
 			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-			GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+			
 
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnAimAtPosition,AimAtPositionMessage,0));
@@ -311,6 +322,12 @@ namespace GASS
 			}
 		}
 
+		if (name == m_TargetDistanceController)
+		{
+			//get target distance!
+			UpdateTargetDistance();
+		}
+
 		if (!m_RemoteSim && m_Active && name == m_YawController)
 		{
 			m_YawInput = value;
@@ -319,6 +336,34 @@ namespace GASS
 		if (!m_RemoteSim && m_Active && name == m_PitchController)
 		{
 			m_PitchInput = value;
+		}
+	}
+
+	void SightComponent::UpdateTargetDistance()
+	{
+		CollisionSystemPtr col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+
+		if(col_sys)
+		{
+		GASS::CollisionRequest request;
+		CollisionResult result;
+		request.LineStart = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*10;
+		//max distance is 20000m
+		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
+		request.Type = COL_LINE;
+		request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		request.ReturnFirstCollisionPoint = false;
+		request.CollisionBits = 1;
+		col_sys->Force(request,result);
+		if(result.Coll)
+		{
+			//m_TargetDistance = (request.LineStart - result.CollPosition).Length() + 10;
+			m_TargetDistance = result.CollDist+10;
+			if(SceneObjectPtr(result.CollSceneObject))
+				m_TargetName = SceneObjectPtr(result.CollSceneObject)->GetName();
+		}
+		else
+			m_TargetDistance = 5000;
 		}
 	}
 	

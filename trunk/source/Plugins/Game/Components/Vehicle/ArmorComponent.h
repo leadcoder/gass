@@ -43,13 +43,15 @@ namespace GASS
 		virtual void OnCreate();
 	private:
 		void OnHit(HitMessagePtr message);
+		void OnOutOfArmor(OutOfArmorMessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		float GetArmor() const; 
 		void SetArmor(float value);
 		std::string GetDamageMesh() const;
 		void SetDamageMesh(const std::string &value);
 		std::string GetDamageEffect1() const;
 		void SetDamageEffect1(const std::string &name);
-
+		
 		float m_Armor;
 		float m_CurrentArmor;
 		std::string m_DamageMesh;
