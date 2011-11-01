@@ -106,6 +106,37 @@ namespace GASS
 		BaseSceneComponent::OnCreate();
 	}
 
+	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	{
+		NetworkComponentPtr net_comp = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
+		if(net_comp)
+			m_RemoteSim = net_comp->IsRemote();
+
+
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+
+		if(!m_RemoteSim)
+		{
+			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
+			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnAimAtPosition,AimAtPositionMessage,0));
+		}
+
+		//set start zoom
+		if(m_ZoomValues.size() > 0)
+		{
+			MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0));
+			GetSceneObject()->PostMessage(cam_msg);
+		}
+	}
+
+	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		
+	}
+
+
 	void SightComponent::OnBaseTransformation(TransformationNotifyMessagePtr message)
 	{
 		m_BaseTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
@@ -156,6 +187,7 @@ namespace GASS
 
 	void SightComponent::Update(double delta_time)
 	{
+		
 		if(!m_Active)
 		{
 			m_YawValue = 0;
@@ -167,6 +199,12 @@ namespace GASS
 		//damp input values every frame if we use mouse input
 		//m_YawInput = m_YawInput* 0.9;
 		//m_PitchInput = m_PitchInput *0.9; 
+
+		std::stringstream ss;
+		ss << "TargetDistance:" << m_TargetDistance << " Target:" << m_TargetName << "\n";
+		DEBUG_PRINT(ss.str());
+		if(m_RemoteSim)
+			return;
 
 		UpdateAimTransformation(delta_time);
 		
@@ -183,9 +221,7 @@ namespace GASS
 		//Create point in terrain to aim at, here we can take lead and distance into consideration
 		//but for now we just extrude the aim direction 1000 m
 
-		std::stringstream ss;
-		ss << "TargetDistance:" << m_TargetDistance << " Target:" << m_TargetName << "\n";
-		DEBUG_PRINT(ss.str());
+		
 		
 
 		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*m_TargetDistance;
@@ -215,30 +251,7 @@ namespace GASS
 		DEBUG_PRINT(ss.str());*/
 	}
 
-	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
-	{
-		NetworkComponentPtr net_comp = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
-		if(net_comp)
-			m_RemoteSim = net_comp->IsRemote();
-
-
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
-		if(!m_RemoteSim)
-		{
-			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-			
-
-			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
-			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnAimAtPosition,AimAtPositionMessage,0));
-		}
-
-		//set start zoom
-		if(m_ZoomValues.size() > 0)
-		{
-			MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0));
-			GetSceneObject()->PostMessage(cam_msg);
-		}
-	}
+	
 
 	void SightComponent::OnAimAtPosition(AimAtPositionMessagePtr message)
 	{
@@ -250,13 +263,7 @@ namespace GASS
 		}
 	}
 
-	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		if(!m_RemoteSim)
-		{
-			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-		}
-	}
+	
 
 	void SightComponent::OnInput(ControllerMessagePtr message)
 	{

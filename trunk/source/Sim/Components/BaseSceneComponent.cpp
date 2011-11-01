@@ -85,7 +85,7 @@ namespace GASS
 									links[i].GetLinkObjectID().c_str());
 							}
 							else
-								Log::Error("Component:%s in object:%s has no link id for:%s",
+								Log::Warning("Component:%s in object:%s has no link id for:%s",
 								GetName().c_str(),
 								GetSceneObject()->GetName().c_str(),
 								prop->GetName().c_str());

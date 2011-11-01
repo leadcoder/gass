@@ -322,10 +322,8 @@ namespace GASS
 		
 		std::string obj_template = message->GetTemplateName();
 		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template,message->GetParent());
-		std::cout << "SpawnObjectFromTemplateMessage:" << obj_template << "\n";
 		if(so)
 		{
-			std::cout << "success!\n";
 			Vec3 pos = message->GetPosition();
 			Quaternion rot = message->GetRotation();
 			Vec3 vel = message->GetVelocity();
