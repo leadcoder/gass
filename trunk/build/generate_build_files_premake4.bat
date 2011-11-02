@@ -33,6 +33,8 @@ goto start
 
 
 rem cls
+pause
+goto endoffile
 
 set choice=
 set /p choice="Do you want to build GASS? (Y/N)"
@@ -47,6 +49,7 @@ goto ENDOFFILE
 
 
 :BUILDGASS
+
 
 Echo To proceed environment variables OGRE_HOME, OGRE_PATH need to be defined. 
 Echo When you have made sure that they are

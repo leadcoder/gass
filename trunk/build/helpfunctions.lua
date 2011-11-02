@@ -1,12 +1,18 @@
 
-tbverdir = ""
-if (_ACTION == "vs2005") then tbverdir = "vc8"
-elseif (_ACTION == "vs2008") then tbverdir = "vc9"
-elseif (_ACTION == "vs2010") then tbverdir = "vc10"
+tbverdir = "";
+if (_OPTIONS["platform"] == "x64") then tbverdir = "intel64/"
+else tbverdir = "ia32/";
+end
 
-elseif (_ACTION == "vs2010") then tbverdir = "vc10"
+if (_ACTION == "vs2005") then tbverdir = tbverdir .. "vc8"
+elseif (_ACTION == "vs2008") then tbverdir = tbverdir .. "vc9"
+elseif (_ACTION == "vs2010") then tbverdir = tbverdir .. "vc10"
+elseif (_ACTION == "vs2010") then tbverdir = tbverdir .. "vc10"
 
-elseif (_ACTION == "codeblocks") then tbverdir = "cc4.1.0_libc2.4_kernel2.6.16.21"  end
+elseif (_ACTION == "codeblocks") then tbverdir = "cc4.1.0_libc2.4_kernel2.6.16.21"  
+end
+
+
 
 vsVersion = "";
 if (_ACTION == "vs2005") then vsVersion = "vs8"
