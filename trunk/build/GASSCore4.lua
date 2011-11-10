@@ -23,7 +23,7 @@ project "GASSCore"
 	{ 
 		"../dependencies/tinyxml/lib",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 
 

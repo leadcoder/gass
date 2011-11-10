@@ -49,7 +49,7 @@ end
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/DebugDoubleLib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 
 	configuration "Release"
@@ -71,6 +71,6 @@ libdirs
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/ode/lib/ReleaseDoubleLib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 	

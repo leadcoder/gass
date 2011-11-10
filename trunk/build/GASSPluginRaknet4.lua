@@ -25,7 +25,7 @@ if (os.is("windows")) then
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir
+		"../dependencies/tbb/lib/" .. tbverdir
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -77,7 +77,7 @@ else
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 configuration "Debug"
 		targetname "GASSPluginRakNet_d"

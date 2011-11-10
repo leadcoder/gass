@@ -43,7 +43,7 @@ end
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 
 	configuration "Release"
@@ -63,7 +63,7 @@ libdirs
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 
 

@@ -65,7 +65,7 @@ end
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"$(HAVOK_HOME)/Lib/win32_vs2010/Debug_Multithreaded_DLL",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 
 	}
 
@@ -108,7 +108,7 @@ libdirs
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 		"$(HAVOK_HOME)/Lib/win32_vs2010/Release_Multithreaded_DLL",
-		"../dependencies/tbb/lib/ia32/" .. tbverdir 
+		"../dependencies/tbb/lib/" .. tbverdir 
 
 	}
 
