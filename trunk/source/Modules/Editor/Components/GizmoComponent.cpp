@@ -90,7 +90,8 @@ namespace GASS
 			if(selected)
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-				GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
+				if (selected_lc)
+					GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
 			}
 		}
 		else if(m_Mode == "World")
