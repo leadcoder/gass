@@ -87,9 +87,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
-		
 	}
-
 
 	void OgreLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{

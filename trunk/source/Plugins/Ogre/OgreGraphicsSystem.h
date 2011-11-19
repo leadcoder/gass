@@ -90,6 +90,7 @@ namespace GASS
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
+		void RemoveViewport(const std::string &name, const std::string &win_name);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		bool GetShowStats() const {return m_ShowStats;}

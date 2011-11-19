@@ -143,6 +143,7 @@ namespace GASS
 	void AutoAimComponent::OnBaseTransformation(TransformationNotifyMessagePtr message)
 	{
 		m_BaseTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
+		
 	}
 
 	/*void AutoAimComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)

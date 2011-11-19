@@ -123,6 +123,8 @@ namespace GASS
 		ADD_ATTRIBUTE(std::string,PitchController);
 		ADD_ATTRIBUTE(std::string,TargetDistanceController);
 		ADD_ATTRIBUTE(std::vector<float>,ZoomValues);
+		ADD_ATTRIBUTE(bool,Debug);
+		
 	};
 	typedef boost::shared_ptr<SightComponent> SightComponentPtr;
 }

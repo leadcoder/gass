@@ -206,14 +206,19 @@ namespace GASS
 		SceneObjectPtr cam_obj = message->GetCamera();
 		const std::string vp_name = message->GetViewport();
 
-		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
+		if(cam_obj)
+		{
+			OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
+			OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
+			OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 
-		OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
-		//OgreGraphicsSystemPtr(m_GFXSystem)->m_Window->getViewport(0)->setCamera(cam_comp->GetOgreCamera());
-		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
-
-		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
-		GetScenarioScene()->PostMessage(cam_message);
+			MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
+			GetScenarioScene()->PostMessage(cam_message);
+		}
+		else
+		{
+			OgreGraphicsSystemPtr(m_GFXSystem)->RemoveViewport(vp_name,"MainWindow");
+		}
 	}
 
 	void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)

@@ -27,15 +27,12 @@
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-
-
-
 #include <osg/Geometry>
 
 namespace GASS
 {
-	class DynamicLines;
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
+	
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
 		OSGManualMeshComponent(void);
@@ -44,7 +41,6 @@ namespace GASS
 		virtual void OnCreate();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-	
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
@@ -53,9 +49,6 @@ namespace GASS
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void SetGeometryCategory(const GeometryCategory &value);
 		GeometryCategory GetGeometryCategory() const;
-	
-
-
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
 		
@@ -63,11 +56,9 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 
 		std::vector<MeshData> m_MeshData;
-
 		osg::ref_ptr<osg::DrawArrays> m_DrawArrays;
 		osg::ref_ptr<osg::DrawElementsUInt> m_DrawElements;
 		GeometryCategory m_Category;
-		
 	};
 }
 

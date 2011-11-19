@@ -62,9 +62,9 @@ namespace GASS
 	void OSGLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OSGLocationComponent, IComponent>);
-		RegisterProperty<Vec3>("Position", &GetPosition, &SetPosition);
-		RegisterProperty<Vec3>("Rotation", &GetEulerRotation, &SetEulerRotation);
-		RegisterProperty<Vec3>("Scale", &GetScale, &SetScale);
+		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition);
+		RegisterProperty<Vec3>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation);
+		RegisterProperty<Vec3>("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale);
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent);
 		//RegisterProperty<SceneNodeState>("State", &GetSceneNodeState, &SetSceneNodeState);
 	}

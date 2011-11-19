@@ -42,6 +42,7 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGNodeData.h"
 #include <osg/Material>
 #include <osg/BlendFunc>
 
@@ -99,7 +100,6 @@ namespace GASS
 		return GeometryCategory(GT_REGULAR);
 	}
 
-
 	void OSGBillboardComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
@@ -132,7 +132,9 @@ namespace GASS
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
-		m_OSGBillboard->setUserData((osg::Referenced*)this);
+		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		m_OSGBillboard->setUserData((osg::Referenced*)data);
+
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());

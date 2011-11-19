@@ -74,7 +74,7 @@ namespace GASS
 
 	void OgreBillboardComponent::OnCreate()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadGFXComponentsMessage),TYPED_MESSAGE_FUNC(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage),1);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,MaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}

@@ -28,6 +28,7 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Components/Network/INetworkComponent.h"
 
@@ -41,7 +42,7 @@
 
 namespace GASS
 {
-	ArmorComponent::ArmorComponent() : m_Armor(10), m_CurrentArmor(0)
+	ArmorComponent::ArmorComponent() : m_Armor(10), m_CurrentArmor(0), m_OutOfArmorForce(0)
 	{
 	}
 
@@ -56,6 +57,7 @@ namespace GASS
 		RegisterProperty<float>("Armor", &ArmorComponent::GetArmor, &ArmorComponent::SetArmor);
 		RegisterProperty<std::string>("DamageMesh", &ArmorComponent::GetDamageMesh, &ArmorComponent::SetDamageMesh);
 		RegisterProperty<std::string>("DamageEffect1", &ArmorComponent::GetDamageEffect1, &ArmorComponent::SetDamageEffect1);
+		RegisterProperty<float>("OutOfArmorForce", &ArmorComponent::GetOutOfArmorForce, &ArmorComponent::SetOutOfArmorForce);
 		
 	}
 
@@ -82,8 +84,8 @@ namespace GASS
 			SceneObjectPtr child = boost::shared_dynamic_cast<GASS::SceneObject>(cc_iter1.getNext());
 			child->PostMessage(message);
 		}
-		std::cout<< "armor=" << m_CurrentArmor << std::endl;
-		std::cout<< "armor=" << m_Armor << std::endl;
+		//std::cout<< "armor=" << m_CurrentArmor << std::endl;
+		//std::cout<< "armor=" << m_Armor << std::endl;
 
 		if(m_CurrentArmor > 0)
 		{
@@ -95,6 +97,14 @@ namespace GASS
 				//Send armor message
 				MessagePtr armor_msg(new OutOfArmorMessage());
 				GetSceneObject()->PostMessage(armor_msg);
+
+
+				if(m_OutOfArmorForce > 0)
+				{
+					Vec3 force = Vec3(0,1,0)*m_OutOfArmorForce;
+					MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,force));
+					GetSceneObject()->PostMessage(force_msg);
+				}
 			}
 		}
 	}
@@ -108,7 +118,7 @@ namespace GASS
 			MessagePtr mesh_msg(new MeshFileMessage(m_DamageMesh));
 			GetSceneObject()->PostMessage(mesh_msg);
 		}
-		std::cout<< "Dead!!!\n";
+		//std::cout<< "Dead!!!\n";
 				
 		//message->GetHitDirection();
 		//effect

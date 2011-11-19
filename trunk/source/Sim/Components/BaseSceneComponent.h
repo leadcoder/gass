@@ -45,5 +45,6 @@ namespace GASS
 
 	};
 	typedef boost::shared_ptr<BaseSceneComponent> BaseSceneComponentPtr;
+	typedef boost::weak_ptr<BaseSceneComponent> BaseSceneComponentWeakPtr;
 }
 #endif // #ifndef BASESCENECOMPONENT_HH

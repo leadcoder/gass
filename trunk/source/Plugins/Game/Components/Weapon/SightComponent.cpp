@@ -61,7 +61,8 @@ namespace GASS
 		m_CurrentPitchAngle(0),
 		m_CurrentZoom(0),
 		m_RemoteSim(false),
-		m_TargetDistance(900)
+		m_TargetDistance(900),
+		m_Debug(false)
 	{
 		
 		m_BaseTransformation.Identity();
@@ -95,6 +96,7 @@ namespace GASS
 		RegisterProperty<Vec2>("PitchMaxMinAngle", &SightComponent::GetPitchMaxMinAngle, &SightComponent::SetPitchMaxMinAngle);
 		RegisterProperty<SceneObjectLink >("AutoAimObject", &SightComponent::GetAutoAimObject, &SightComponent::SetAutoAimObject);
 		RegisterVectorProperty<float>("ZoomValues", &SightComponent::GetZoomValues, &SightComponent::SetZoomValues);
+		RegisterProperty<bool>("Debug", &SightComponent::GetDebug, &SightComponent::SetDebug);
 	}
 
 	void SightComponent::OnCreate()
@@ -201,7 +203,7 @@ namespace GASS
 		//m_PitchInput = m_PitchInput *0.9; 
 
 		std::stringstream ss;
-		ss << "TargetDistance:" << m_TargetDistance << " Target:" << m_TargetName << "\n";
+		ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
 		DEBUG_PRINT(ss.str());
 		if(m_RemoteSim)
 			return;
@@ -229,7 +231,8 @@ namespace GASS
 		int id = (int) this; 
 		m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
 
-		DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(),aim_point,Vec4(0,1,1,1));
+		if(m_Debug)
+			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(),aim_point,Vec4(0,1,1,1));
 		
 		/*Vec3 desired_aim_direction = -m_AimRotation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();

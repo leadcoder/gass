@@ -36,9 +36,6 @@ class osg::Geometry;
 
 namespace GASS
 {
-	
-
-
 	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
@@ -70,9 +67,7 @@ namespace GASS
 
 		float m_Width;
 		float m_Height;
-
-
-		 osg::ref_ptr<osg::Billboard> m_OSGBillboard;
+		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
 
 	};
 }

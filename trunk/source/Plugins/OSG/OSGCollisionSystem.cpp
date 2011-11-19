@@ -24,6 +24,7 @@
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/OSGNodeData.h"
 
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -289,40 +290,35 @@ namespace GASS
 				{
 					if(intersection.nodePath[i]->getUserData())
 					{
-						BaseSceneComponent* pobj = (BaseSceneComponent*)intersection.nodePath[i]->getUserData();
-
-						IGeometryComponent* geom  = dynamic_cast<IGeometryComponent*>(pobj);
-						/*if(geom && geom->GetGeometryCategory() == cat)
+						OSGNodeData* data = (OSGNodeData*)intersection.nodePath[i]->getUserData();
+						BaseSceneComponentPtr bo(data->m_Component,boost::detail::sp_nothrow_tag());
+						if(bo)
 						{
-							result->CollSceneObject = pobj->GetSceneObject();
-							result->Coll = true;
-							result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
-							result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
-							return;		
-						}*/
-						if(geom)
-						{
-							bool found = false;
-							if(request->CollisionBits == 1 && geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN)
+							GeometryComponentPtr geom  = boost::shared_dynamic_cast<IGeometryComponent>(bo);
+							if(geom)
 							{
-								found = true;
-							}
-							else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
-							{
-								found = true;
-							}
-							else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
-							{
-								found = true;
-							}
+								bool found = false;
+								if(request->CollisionBits == 1 && geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN)
+								{
+									found = true;
+								}
+								else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
+								{
+									found = true;
+								}
+								else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
+								{
+									found = true;
+								}
 
-							if(found)
-							{
-								result->CollSceneObject = pobj->GetSceneObject();
-								result->Coll = true;
-								result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
-								result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
-								return;		
+								if(found)
+								{
+									result->CollSceneObject = bo->GetSceneObject();
+									result->Coll = true;
+									result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+									result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
+									return;		
+								}
 							}
 						}
 					}

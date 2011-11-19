@@ -106,8 +106,18 @@ namespace GASS
 
 		if(m_CreateMainWindowOnInit)
 		{
-			CreateRenderWindow("MainWindow", 800, 600, 0, 0);
-			//CreateViewport("Viewport0","MainWindow", 0, 0, 1, 1);
+			//CreateRenderWindow("MainWindow", 800, 600, 0, 0);
+			std::string name = "MainWindow";
+			Ogre::RenderWindow *window = m_Root->initialise(true,name);
+			window->setDeactivateOnFocusChange(false);
+			size_t window_hnd = 0;
+			window->getCustomAttribute("WINDOW", &window_hnd);
+			int handle = window_hnd;
+			int main_handle = window_hnd;
+			m_Windows[name] = window;
+			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handle,main_handle));
+			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 		else
 		{
@@ -268,17 +278,9 @@ namespace GASS
 	{
 		Ogre::RenderWindow *window = NULL;
 
-		if(main_handle == 0) //autocreate?
-		{
-			window = m_Root->initialise(true,name);
-			window->setDeactivateOnFocusChange(false);
-			size_t window_hnd = 0;
-			window->getCustomAttribute("WINDOW", &window_hnd);
-			handle =window_hnd;
-			main_handle = window_hnd;
-		}
-		else
-		{
+		if(m_Windows.find(name) != m_Windows.end())
+			return;
+		
 			if(handle)
 			{
 				Ogre::NameValuePairList miscParams;
@@ -288,8 +290,15 @@ namespace GASS
 			else
 			{
 				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+				if(main_handle == 0)
+				{
+					size_t window_hnd = 0;
+					window->getCustomAttribute("WINDOW", &window_hnd);
+					handle = window_hnd;
+					main_handle = window_hnd;
+				}
 			}
-		}
+		
 		
 		m_Windows[name] = window;
 
@@ -310,6 +319,8 @@ namespace GASS
 			if(m_SceneMgr == NULL) //we need a scene mananger before we can create viewports
 				m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 
+			if(m_Viewports.find(name) != m_Viewports.end())
+				return;
 			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),m_Viewports.size());
 		}
 	}
@@ -330,6 +341,14 @@ namespace GASS
 		else if(m_Viewports.find(vp_name) != m_Viewports.end() && m_Viewports[vp_name].m_OgreViewport != NULL)
 		{
 			m_Viewports[vp_name].m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
+		}
+	}
+
+	void OgreGraphicsSystem::RemoveViewport(const std::string &name, const std::string &win_name)
+	{
+		if(m_Viewports.find(name) != m_Viewports.end() && m_Viewports[name].m_OgreViewport != NULL)
+		{
+			m_Windows[win_name]->removeViewport(m_Viewports[name].m_ZDepth);
 		}
 	}
 

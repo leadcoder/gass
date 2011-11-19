@@ -37,6 +37,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGNodeData.h"
 
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
@@ -171,6 +172,8 @@ namespace GASS
 		//std::cout << "Min:" << m_BBox.m_Min << " Max:" << m_BBox.m_Max << "\n";
 	}
 
+	
+
 	void OSGMeshComponent::SetFilename(const std::string &filename)
 	{
 		m_Filename = filename;
@@ -215,7 +218,9 @@ namespace GASS
 			osgUtil::Optimizer optimizer;
 		    optimizer.optimize(m_MeshNode.get());
 
-			m_MeshNode->setUserData((osg::Referenced*)this);
+			OSGNodeData* data = new OSGNodeData(shared_from_this());
+			m_MeshNode->setUserData((osg::Referenced*)data);
+			
 			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);

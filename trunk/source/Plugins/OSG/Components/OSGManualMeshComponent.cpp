@@ -36,6 +36,7 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGNodeData.h"
 
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -73,6 +74,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		BaseSceneComponent::OnCreate();
 	}
 
 	void OSGManualMeshComponent::SetGeometryCategory(const GeometryCategory &value)
@@ -139,7 +141,10 @@ namespace GASS
 		//m_OSGGeometry->setVertexArray(vertices.get());
 		//m_OSGGeometry->setColorArray(colors.get());
 
-		m_GeoNode->setUserData((osg::Referenced*)this);
+		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		m_GeoNode->setUserData((osg::Referenced*)data);
+
+		//m_GeoNode->setUserData((osg::Referenced*)this);
 
 		//m_DrawArrays = new osg::DrawArrays();
 		//m_DrawElements = new osg::DrawElementsUInt():
