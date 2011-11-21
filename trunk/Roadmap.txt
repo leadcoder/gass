@@ -1,4 +1,8 @@
-TODO:	Complete PhysX plugin, premakescript etc.
+TODO: 	Redesign RTC system, it should be possible to have background threads and to force task groups to execute in parallel
+
+TODO:	Make unified geomtry classification system, ie it should be possible to detect Terrain, water roads etc during raycasting
+
+TODO:   Rename corescenemanager to basescenemanager and add new scenemanagers to other plugins
 
 TODO:	Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
 
@@ -6,17 +10,31 @@ TODO:	Add more test cases using boost unit test framework.
 
 TODO:	Test raycast wheels in vehicle-simulation
 
-TODO:	Replace interator with const_iterator where appropriate and as a result make functions const where possible
+TODO:	Replace interator with const_iterator where appropriate and then make functions const where possible
 
-50%:	Add more scene-tree serach functions, ie search for template name or class factory name, only search in child objects
+TODO:	Update Ogre to 1.8
+
+TODO:	Update OSG to 3.x
+
+TODO:	Update Skyx to latest version
+
+TODO:	Make sequence diagrams for initialize- ,update- and shutdown-phase.
+
+TODO:	Make new network plugin using ENET
+
+60%:	Add more scene-tree serach functions, ie search for template name or class factory name, only search in child objects
 
 90%:	Add simple GUI example (CEGUI Example exist but build instructions need to be created)
 
-100%:	Split ODEGeomtryComponent into new components for the diffrent geometry  
-	types types, ie ODEBoxGeometryComponent etc.
-
 50%:    Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
 
-TODO:   Rename corescenemanager to basescenemanager and add new scenemanagers to other plugins
+60%:	Complete PhysX plugin, premakescript etc.
+
+20%:	Complete Havok plugin
+
+
+
+
+	
 
 
