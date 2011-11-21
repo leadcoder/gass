@@ -44,6 +44,7 @@ namespace GASS
 {
 	ArmorComponent::ArmorComponent() : m_Armor(10), m_CurrentArmor(0), m_OutOfArmorForce(0)
 	{
+
 	}
 
 	ArmorComponent::~ArmorComponent()

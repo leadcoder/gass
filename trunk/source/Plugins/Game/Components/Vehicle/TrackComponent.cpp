@@ -109,18 +109,24 @@ namespace GASS
 
 		const float speed = fabs(ang_vel.x);
 		const float max_volume_at_speed = 10;
+		float volume = m_SoundVolumeFactor;
 		if(speed < max_volume_at_speed)
 		{
 			//std::cout << speed << std::endl;
 			//Play engine sound
-			const float volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
-			GetSceneObject()->PostMessage(sound_msg);
+			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
+		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+		GetSceneObject()->PostMessage(sound_msg);
 
 		if(speed > 0)
 		{
 			float pitch = 0.8 + speed*0.015;
+
+			if(pitch > 1.7)
+				pitch = 1.7;
+			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
+			
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
 			GetSceneObject()->PostMessage(sound_msg);
 		}
