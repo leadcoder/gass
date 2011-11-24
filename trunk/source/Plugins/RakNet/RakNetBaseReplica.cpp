@@ -182,10 +182,13 @@ namespace GASS
 				if(input_source != raknet->GetRakPeer()->GetInternalID())
 				{
 					RakNetInputTransferComponentPtr input_comp =  m_Owner->GetFirstComponentByClass<RakNetInputTransferComponent>();
-					if(raknet->GetDebug())
-						std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
-					//int id = 8888;
-					input_comp->ReceivedInput(controller,value);
+					if(input_comp)
+					{
+						if(raknet->GetDebug())
+							std::cout << "RemoteInput received:" << input_source.ToString() <<std::endl;
+						//int id = 8888;
+						input_comp->ReceivedInput(controller,value);
+					}
 					//MessagePtr message(new ControllerMessage(controller,value,id));
 					//m_Owner->PostMessage(message);
 					

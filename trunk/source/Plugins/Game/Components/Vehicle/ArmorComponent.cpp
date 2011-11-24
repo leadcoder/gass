@@ -92,7 +92,7 @@ namespace GASS
 		{
 			float damage = message->GetDamage();
 			m_CurrentArmor -= damage;
-			std::cout<< "damage=" << damage << std::endl;
+			//std::cout<< "damage=" << damage << std::endl;
 			if(m_CurrentArmor <= 0)
 			{
 				//Send armor message

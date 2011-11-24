@@ -38,7 +38,7 @@
 
 namespace GASS
 {
-	SoundVolumeComponent::SoundVolumeComponent()  
+	SoundVolumeComponent::SoundVolumeComponent() : m_MaxVolumeAtSpeed(0.3)
 	{
 
 	}
@@ -51,6 +51,8 @@ namespace GASS
 	void SoundVolumeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SoundVolumeComponent",new Creator<SoundVolumeComponent, IComponent>);
+		RegisterProperty<Float>("MaxVolumeAtSpeed", &SoundVolumeComponent::GetMaxVolumeAtSpeed, &SoundVolumeComponent::SetMaxVolumeAtSpeed);
+		
 	}
 
 	void SoundVolumeComponent::OnCreate()
@@ -72,12 +74,11 @@ namespace GASS
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		const float speed = fabs(ang_vel.y + ang_vel.x);
-		const float max_volume_at_speed = 0.5;
-		if(speed < max_volume_at_speed)
+		if(speed < m_MaxVolumeAtSpeed)
 		{
 			//std::cout << speed << std::endl;
 			//turret sound
-			const float volume = (speed/max_volume_at_speed);
+			const float volume = (speed/m_MaxVolumeAtSpeed);
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
 			GetSceneObject()->PostMessage(sound_msg);
 		}

@@ -18,34 +18,20 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef SOUND_VOLUME_COMPONENT_H
-#define SOUND_VOLUME_COMPONENT_H
-
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
+#pragma once
 #include "Sim/Common.h"
-#include "Plugins/Game/GameMessages.h"
+
+namespace Ogre
+{
+	class SceneNode;
+}
 
 namespace GASS
 {
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-
-	class SoundVolumeComponent :  public Reflection<SoundVolumeComponent,BaseSceneComponent>
+	class GASSPluginExport OgreSceneNodeSource
 	{
 	public:
-		SoundVolumeComponent();
-		virtual ~SoundVolumeComponent();
-		static void RegisterReflection();
-		virtual void OnCreate();
-	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
-		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
-		ADD_ATTRIBUTE(Float,MaxVolumeAtSpeed)
+		virtual ~OgreSceneNodeSource() {};
+		virtual Ogre::SceneNode* GetOgreNode() = 0;
 	};
 }
-#endif

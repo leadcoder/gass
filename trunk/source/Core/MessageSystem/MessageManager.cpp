@@ -97,8 +97,17 @@ namespace GASS
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
 
-			(*msg_reg)->m_Callback->Fire(message);
-			++msg_reg;
+			//(*msg_reg)->m_Callback->Fire(message);
+			//++msg_reg;
+			if(!(*msg_reg)->m_Callback->GetObjectPtr())
+			{
+				msg_reg = message_type->second->m_MessageRegistrations.erase(msg_reg);
+			}
+			else
+			{
+				(*msg_reg)->m_Callback->Fire(message);
+				++msg_reg;
+			}
 		}
 	}
 

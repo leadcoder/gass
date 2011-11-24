@@ -26,6 +26,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "OgreSceneNodeSource.h"
 #include <OgreNode.h>
 
 
@@ -39,7 +40,7 @@ namespace GASS
 	class OgreLocationComponent;
 	typedef boost::shared_ptr<OgreLocationComponent> OgreLocationComponentPtr;
 
-	class GASSPluginExport OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener
+	class GASSPluginExport OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener, public OgreSceneNodeSource
 	{
 	public:
 		OgreLocationComponent();
