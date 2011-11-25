@@ -467,13 +467,23 @@ namespace GASS
 
 	void VehicleEngineComponent::UpdateSteering(double delta)
 	{
+		float norm_rpm = 0.3*GetNormRPM() + 0.3;
+		
+
 		//if tank, try to keep angular velocity to steer factor
 		m_SteerCtrl.setGain(m_TurnForce,0.1,0);
 		m_SteerCtrl.set(-m_DesiredSteer);
 		//limit pid to max turn force
-		m_SteerCtrl.setOutputLimit(m_MaxTurnForce);
+		m_SteerCtrl.setOutputLimit(m_MaxTurnForce*norm_rpm);
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
 
+		//damp
+		if(fabs(m_DesiredSteer) < 0.1)
+			m_DesiredSteer = m_DesiredSteer*0.9;
+
+
+
+		
 
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
