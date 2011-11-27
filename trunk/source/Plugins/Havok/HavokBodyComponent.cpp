@@ -26,14 +26,18 @@
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
 #include "HavokBaseGeometryComponent.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include <boost/bind.hpp>
 #include <Physics/Collide/Filter/Group/hkpGroupFilter.h>
 #include <Physics/Collide/Filter/Group/hkpGroupFilterSetup.h>
+
 
 namespace GASS
 {
@@ -49,7 +53,8 @@ namespace GASS
 		m_Active(true),
 		m_RigidBody(NULL),
 		m_Shape(NULL),
-		m_SystemCollisionGroup(-1)
+		m_SystemCollisionGroup(-1),
+		m_DeltaTime(0)
 	{
 	}
 
@@ -175,6 +180,7 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		m_DeltaTime = scene_manager->GetSimulationUpdateInterval();
 		assert(scene_manager);
 
 		Vec3 abs_pos;
@@ -240,6 +246,8 @@ namespace GASS
 
 		//create new rigid body with supplied info
 		m_RigidBody = new hkpRigidBody(rigidBodyInfo);
+
+		m_RigidBody->setUserData(hkUlong(this));
 
 		
 
@@ -342,14 +350,23 @@ namespace GASS
 			m_RigidBody->markForWrite();
 			if(rel)
 			{
-				hkVector4 local_rot(1,0,0);
+				hkVector4 local_rot(torque_vec.x,0,0);
 				hkVector4 rotateWorld;
 				rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
-				m_RigidBody->applyTorque(1.0/6.0, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2),-torque_vec.x));
-				local_rot.set(0,1,0);
-				rotateWorld.setRotatedDir( m_RigidBody->getTransform().getRotation(), local_rot);
-				m_RigidBody->applyTorque(1.0/6.0, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2),-torque_vec.y));
+				m_RigidBody->applyTorque(m_DeltaTime, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2)));
+				local_rot.set(0,torque_vec.y,0);
+				rotateWorld.setRotatedDir(m_RigidBody->getTransform().getRotation(), local_rot);
+				m_RigidBody->applyTorque(m_DeltaTime, hkVector4(rotateWorld(0),rotateWorld(1),rotateWorld(2)));
 				//m_RigidBody->applyAngularImpulse(rotateWorld);
+
+				if(fabs(torque_vec.y) > 0)
+				{
+					std::stringstream ss;
+					ss << "torq"<< torque_vec.y << "\n";
+					std::string engine_data = ss.str();
+					MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+					SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+				}
 			}
 			else
 				m_RigidBody->applyAngularImpulse(hkVector4(torque_vec.x,torque_vec.y,torque_vec.z));
@@ -381,7 +398,7 @@ namespace GASS
 				rotateWorld.setRotatedInverseDir( m_RigidBody->getTransform().getRotation(), vel);
 				vel = rotateWorld;
 			}
-			velocity.Set(-vel(0),-vel(1),-vel(2));
+			velocity.Set(vel(0),vel(1),vel(2));
 		}
 		return velocity;
 	}
@@ -479,7 +496,13 @@ namespace GASS
 					
 					hkVector4 child_pos = child_rb->getPosition();
 					child_pos.add(h_trans_vec);
-					child_rb->getRigidMotion()->setPosition(child_pos);
+					//child_rb->getRigidMotion()->setPosition(child_pos);
+
+					//recursive!
+					HavokBodyComponent* child_body = (HavokBodyComponent*) child_rb->getUserData();
+					if(child_body)
+						child_body->SetPosition(Vec3(child_pos(0),child_pos(1),child_pos(2)));
+
 				}
 									//const hkpConstraintData* data = constraint->getData();
 			}

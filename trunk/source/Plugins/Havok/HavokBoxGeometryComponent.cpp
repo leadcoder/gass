@@ -100,7 +100,7 @@ namespace GASS
 			m_Size = size;
 			if(m_BoxShape)
 			{
-				hkVector4 dimensions(m_Size.x,m_Size.y,m_Size.z,1);
+				hkVector4 dimensions(m_Size.x*0.5,m_Size.y*0.5,m_Size.z*0.5,1);
 				m_BoxShape->setHalfExtents(dimensions);
 				UpdateBodyMass();
 				UpdateDebug();
@@ -176,7 +176,7 @@ namespace GASS
 				hkVector4 h_size = m_BoxShape->getHalfExtents();
 				Vec3 size(h_size(0),h_size(1),h_size(2));
 				//const dReal* pos =  dGeomGetPosition(m_GeomID);
-				CreateDebugBox(size,Vec3(0,0,0 ));
+				CreateDebugBox(size*2,m_Offset);
 			}
 		}
 	}

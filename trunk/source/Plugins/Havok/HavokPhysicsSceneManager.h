@@ -87,6 +87,7 @@ namespace GASS
 
 		bool IsActive()const {return !m_Paused;}
 		hkpWorld* GetWorld() const {return m_pPhysicsWorld;}
+		double GetSimulationUpdateInterval() const {return m_SimulationUpdateInterval;}
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);

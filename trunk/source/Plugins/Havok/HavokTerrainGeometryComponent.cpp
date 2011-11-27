@@ -146,7 +146,7 @@ namespace GASS
 			hkpSampledHeightFieldBaseCinfo ci;
 			ci.m_xRes = samples_x;
 			ci.m_zRes = samples_z;
-			ci.m_scale.set(size_x/samples_x,1.0f,size_z/samples_z);
+			ci.m_scale.set(size_x/(samples_x-1),1.0f,size_z/(samples_z-1));
 
 			m_Shape = new CoarseSampledHeightFieldShape( ci , this);
 

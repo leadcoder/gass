@@ -118,6 +118,8 @@ namespace GASS
 		bool m_AutoDisable;
 		bool m_FastRotation;
 		bool m_Active;
+
+		double m_DeltaTime;
 		
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;
