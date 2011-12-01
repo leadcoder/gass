@@ -49,5 +49,16 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;
 
+	class WaypointListUpdatedMessage : public BaseMessage
+	{
+	public:
+		WaypointListUpdatedMessage(const std::vector<Vec3> &wps, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Waypoints(wps){}
+		  std::vector<Vec3> m_Waypoints;
+	private:
+		
+	};
+	typedef boost::shared_ptr<WaypointListUpdatedMessage> WaypointListUpdatedMessagePtr;
+
 }
 #endif

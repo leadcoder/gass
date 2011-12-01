@@ -171,9 +171,12 @@ namespace GASS
 	{
 		if(!m_Initialized)
 			return;
+
+		std::vector<Vec3> wps = WaypointListComponent::GetWaypoints();
+		
 		//collect all children and update path
 		//const double line_steps = 115;
-		/*ManualMeshDataPtr mesh_data(new ManualMeshData());
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
@@ -181,15 +184,15 @@ namespace GASS
 		vertex.Color = Vec4(1,1,1,1);
 		mesh_data->Type = LINE_STRIP;
 
-		std::vector<Vec3> wps = WaypointListComponent::GetWaypoints();
-
+	
 		
-		//LocationComponentPtr line_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		//Vec3 line_pos = line_location->GetWorldPosition();
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 world_pos = location->GetWorldPosition();
 		for(size_t i = 0; i < wps.size(); i++)
 		{
 			vertex.Pos = wps[i];
 			mesh_data->VertexVector.push_back(vertex);
+			wps[i] += world_pos;
 		}
 
 
@@ -197,7 +200,10 @@ namespace GASS
 		{
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			GetSceneObject()->PostMessage(mesh_message);
-		}*/
+		}
+
+		GetSceneObject()->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wps)));
+
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints() const
