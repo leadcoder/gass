@@ -390,6 +390,10 @@ namespace GASS
 		m_CurrentTime += delta;
 		//m_Throttle =  DampThrottle(delta, m_DesiredThrottle,m_Throttle, m_ThrottleAccel);
 
+		//fade out in case we don't get any input from joystick
+		if(fabs(m_DesiredThrottle) < 0.1)
+			m_DesiredThrottle = m_DesiredThrottle*0.9;
+
 		//Direct mapping, use the above function to damp input
 		float throttle = m_DesiredThrottle;
 

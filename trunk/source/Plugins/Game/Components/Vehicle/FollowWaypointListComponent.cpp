@@ -42,7 +42,8 @@ namespace GASS
 		m_HasWaypoints(false),
 		m_CurrentWaypoint(-1),
 		m_Direction(1),
-		m_Mode(PFM_LOOP_TO_START)
+		m_Mode(PFM_LOOP_TO_START),
+		m_InvertDirection(false)
 	{
 
 	}
@@ -58,6 +59,18 @@ namespace GASS
 		RegisterProperty<std::string>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList);
 		RegisterProperty<Float>("WaypointRadius", &FollowWaypointListComponent::GetWaypointRadius, &FollowWaypointListComponent::SetWaypointRadius);
 		RegisterProperty<std::string>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode);
+		RegisterProperty<bool>("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection);
+	}
+
+	void FollowWaypointListComponent::SetInvertDirection(bool value)
+	{
+		m_InvertDirection = value;
+		m_Direction = m_Direction * -1;
+	}
+
+	bool FollowWaypointListComponent::GetInvertDirection() const
+	{
+		return m_InvertDirection;
 	}
 
 	void FollowWaypointListComponent::OnCreate()
@@ -78,12 +91,36 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
-
-
 	void FollowWaypointListComponent::OnTransMessage(TransformationNotifyMessagePtr message)
 	{
 		m_CurrentPos = message->GetPosition();
 	}
+
+	int FollowWaypointListComponent::GetCloesetWaypoint()
+	{
+		Vec3 pos = m_CurrentPos;
+		pos.y = 0;
+		int wp_index = -1;
+		double shortest_dist = 100000000000000000;
+		if(m_Waypoints.size() > 0)
+		{
+			for(int i = 0; i < m_Waypoints.size(); i++)
+			{
+				Vec3 wp_pos = m_Waypoints[i];
+				wp_pos.y = 0;
+				double dist = (wp_pos - pos).FastLength();
+				if(i == 0 || dist < shortest_dist)
+				{
+					wp_index = i;
+					shortest_dist = dist;
+				}
+			}
+		}
+		return wp_index;
+	}
+
+
+
 
 	void FollowWaypointListComponent::Update(double delta)
 	{
@@ -94,36 +131,66 @@ namespace GASS
 			wp_pos.y = 0;
 			Vec3 pos = m_CurrentPos;
 			pos.y = 0;
+
+			int num_waypoints = m_Waypoints.size();
 			
 			if((wp_pos - pos).Length() < m_WaypointRadius)
 			{
 				
 				if(m_Mode == PFM_LOOP_TO_START)
 				{
-					m_CurrentWaypoint++;
-					m_CurrentWaypoint = m_CurrentWaypoint % m_Waypoints.size();
+					m_CurrentWaypoint += m_Direction;
+					if(m_CurrentWaypoint >= num_waypoints)
+						m_CurrentWaypoint = 0;
+					if(m_CurrentWaypoint < 0)
+						m_CurrentWaypoint = num_waypoints-1;
 				}
+
 				else if(m_Mode == PFM_STOP_AT_END)
 				{
-					if(m_CurrentWaypoint == m_Waypoints.size())
-						m_CurrentWaypoint = m_Waypoints.size()-1;
+					
+					m_CurrentWaypoint += m_Direction;
+
+					
+					if(m_Direction > 0 && m_CurrentWaypoint >= num_waypoints)
+					{
+						m_CurrentWaypoint = num_waypoints-1;
+						GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+						
+					}
+					if(m_Direction < 0 && m_CurrentWaypoint < 0)
+					{
+						m_CurrentWaypoint = 0;
+						GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+					
+					}
+
+
+					if(m_CurrentWaypoint >= num_waypoints)
+						m_CurrentWaypoint = 0;
+					if(m_CurrentWaypoint < 0)
+						m_CurrentWaypoint = num_waypoints-1;
+
+					
 				}
+
 				else if(m_Mode == PFM_REVERSE_LOOP)
 				{
-					m_CurrentWaypoint += m_Direction;
-					
-					if(m_Direction > 0 && m_CurrentWaypoint >= m_Waypoints.size())
+					if(num_waypoints > 1)
 					{
-						m_Direction = -1;
-						m_CurrentWaypoint = m_Waypoints.size();
+						m_CurrentWaypoint += m_Direction;
+
+						if(m_CurrentWaypoint < 0)
+						{
+							m_Direction = 1;
+							m_CurrentWaypoint = 1;
+						}
+						if(m_CurrentWaypoint >= num_waypoints)
+						{
+							m_Direction = -1;
+							m_CurrentWaypoint = num_waypoints-2;
+						}
 					}
-					else if(m_Direction < 0 && m_CurrentWaypoint < 0)
-					{
-						m_Direction = 1;
-						m_CurrentWaypoint = 0;
-					}
-					
-				
 				}
 			}
 
@@ -139,24 +206,45 @@ namespace GASS
 	{
 		m_Waypoints = message->m_Waypoints;
 		if(m_Waypoints.size() > 0)
+		{
 			m_HasWaypoints = true;
+			if(m_CurrentWaypoint == 0) //only select new start waypoint if current is first wp
+				m_CurrentWaypoint = GetCloesetWaypoint();
+		}
 		else
 			m_HasWaypoints = false;
+
+		
 	}
 
 	void FollowWaypointListComponent::SetWaypointList(const std::string &waypointlist)
 	{
-		m_WaypointListName = waypointlist; 
+		
 		if(GetSceneObject())
 		{
-			SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject()->GetFirstChildByName(waypointlist,false);
-			if(obj) 
+			//first unregister from previous waypointlist
+			if(m_WaypointListName != "" && m_WaypointListName != "RefNotSet")
 			{
-				m_CurrentWaypoint = 0;
-				
-				obj->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
+				SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject()->GetFirstChildByName(m_WaypointListName,true);
+				if(obj) 
+				{
+					obj->UnregisterForMessage(UNREG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage));
+				}
+			}
+			if(waypointlist != "" && waypointlist != "RefNotSet")
+			{
+				SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject()->GetFirstChildByName(waypointlist,true);
+				if(obj) 
+				{
+					m_CurrentWaypoint = 0;
+
+					obj->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
+					//force update				
+					obj->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+				}
 			}
 		}
+		m_WaypointListName = waypointlist; 
 	}
 	std::string FollowWaypointListComponent::GetWaypointList() const
 	{

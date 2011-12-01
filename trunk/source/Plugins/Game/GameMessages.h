@@ -81,6 +81,22 @@ namespace GASS
 	typedef boost::shared_ptr<GotoPositionMessage> GotoPositionMessagePtr;
 
 
+	class DesiredSpeedMessage : public BaseMessage
+	{
+	public:
+		DesiredSpeedMessage(float speed, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Speed(speed)
+		  {
+
+		  }
+		  float GetSpeed() const {return m_Speed;}
+	private:
+		float m_Speed;
+	};
+	typedef boost::shared_ptr<DesiredSpeedMessage> DesiredSpeedMessagePtr;
+
+
+	
 
 	class AimAtPositionMessage : public BaseMessage
 	{

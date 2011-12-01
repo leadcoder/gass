@@ -94,7 +94,11 @@ namespace GASS
 				if(m_ScaleLocation)
 					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
 				else
+				{
+					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(Vec3(1,1,1))));
 					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
+				}
+
 			}
 			break;
 		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:

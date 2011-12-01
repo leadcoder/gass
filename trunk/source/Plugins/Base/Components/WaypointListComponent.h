@@ -38,6 +38,7 @@ namespace GASS
 		virtual void OnCreate();
 		std::vector<Vec3> GetWaypoints() const;
 	protected:
+		ADD_ATTRIBUTE(bool,ShowPathLine);
 		float GetRadius()const;
 		void SetRadius(float radius);
 		int GetSplineSteps()const;

@@ -47,7 +47,15 @@ namespace GASS
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 	private:
+		ADD_ATTRIBUTE(bool,Enable);
+		ADD_ATTRIBUTE(float,DesiredSpeed);
+		ADD_ATTRIBUTE(float,DesiredPosRadius);
+		ADD_ATTRIBUTE(PIDControl,TurnPID);
+		ADD_ATTRIBUTE(PIDControl,TrottlePID);
 
+		//PIDControl m_TurnPID;
+		//PIDControl m_TrottlePID;
+		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
@@ -61,15 +69,13 @@ namespace GASS
 		void OnInput(ControllerMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnGotoPosition(GotoPositionMessagePtr message);
+		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
 		Vec3 m_LastPos;
 		Vec3 m_DesiredPos;
-		PIDControl m_TurnPID;
-		PIDControl m_TrottlePID;
-		float m_DesiredSpeed;
-		float m_DesiredPosRadius;
+		
 		std::string m_ThrottleInput;
 		std::string m_SteerInput;
 		Vec3 m_VehicleSpeed;

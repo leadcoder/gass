@@ -67,6 +67,7 @@
 #include "Sim/Systems/Messages/GraphicsSystemMessages.h"
 #include "Sim/Systems/Messages/NetworkSystemMessages.h"
 
+
 #include "Sim/Scheduling/IRuntimeController.h"
 
 #include "Sim/Scenario/Scenario.h"
@@ -80,6 +81,7 @@
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/PhysicsScenarioSceneMessages.h"
 
 
 #include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"

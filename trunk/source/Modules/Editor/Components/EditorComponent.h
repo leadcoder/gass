@@ -16,6 +16,8 @@ namespace GASS
 		bool GetAllowRemove() const {return m_AllowRemove;}
 		bool GetAllowDragAndDrop() const {return m_AllowDragAndDrop;}
 	private:
+		ADD_ATTRIBUTE(Vec4,SelectedColor)
+
 		bool GetVisible() const{return m_Visible;}
 		void SetVisible(bool value) ;
 		void OnObjectVisible(ObjectVisibleMessagePtr message);
@@ -42,7 +44,7 @@ namespace GASS
 		bool m_Visible;
 		float m_VisibilityTransparency;
 		bool m_Selected;
-		Vec4 m_SelectedColor;
+		
 		bool m_ChangeMaterialWhenSelected;
 		bool m_ShowBBWhenSelected;
 		std::string m_IconFile;

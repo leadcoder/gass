@@ -49,7 +49,8 @@ namespace GASS
 		m_Initialized(false), 
 		m_AutoUpdateTangents(true), 
 		m_SplineSteps(10),
-		m_ShowWaypoints(true)
+		m_ShowWaypoints(true),
+		m_ShowPathLine(false)
 	{
 
 	}
@@ -66,6 +67,7 @@ namespace GASS
 		RegisterProperty<bool>("EnableSpline", &WaypointListComponent::GetEnableSpline, &WaypointListComponent::SetEnableSpline);
 		RegisterProperty<bool>("AutoUpdateTangents", &WaypointListComponent::GetAutoUpdateTangents, &WaypointListComponent::SetAutoUpdateTangents);
 		RegisterProperty<bool>("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints);
+		RegisterProperty<bool>("ShowPathLine", &WaypointListComponent::GetShowPathLine, &WaypointListComponent::SetShowPathLine);
 		RegisterProperty<int>("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps);
 		RegisterProperty<std::string>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport);
 	}
@@ -176,30 +178,36 @@ namespace GASS
 		
 		//collect all children and update path
 		//const double line_steps = 115;
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
 
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		mesh_data->Type = LINE_STRIP;
+		if(m_ShowPathLine)
+		{
+			ManualMeshDataPtr mesh_data(new ManualMeshData());
+			MeshVertex vertex;
+			mesh_data->Material = "WhiteTransparentNoLighting";
 
-	
-		
+			vertex.TexCoord.Set(0,0);
+			vertex.Color = Vec4(1,1,1,1);
+			mesh_data->Type = LINE_STRIP;
+			
+			for(size_t i = 0; i < wps.size(); i++)
+			{
+				vertex.Pos = wps[i];
+				mesh_data->VertexVector.push_back(vertex);
+			}
+
+
+			if(mesh_data->VertexVector.size() > 0)
+			{
+				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+				GetSceneObject()->PostMessage(mesh_message);
+			}
+		}
+		//create absolute positions
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 world_pos = location->GetWorldPosition();
 		for(size_t i = 0; i < wps.size(); i++)
 		{
-			vertex.Pos = wps[i];
-			mesh_data->VertexVector.push_back(vertex);
 			wps[i] += world_pos;
-		}
-
-
-		if(mesh_data->VertexVector.size() > 0)
-		{
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			GetSceneObject()->PostMessage(mesh_message);
 		}
 
 		GetSceneObject()->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wps)));

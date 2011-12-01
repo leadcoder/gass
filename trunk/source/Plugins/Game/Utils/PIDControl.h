@@ -28,7 +28,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
 		{
-			os << pid.Kp << pid.Ki << pid.Kd;
+			os << pid.Kp << " " << pid.Ki << " " << pid.Kd;
 			return os;
 		}
 

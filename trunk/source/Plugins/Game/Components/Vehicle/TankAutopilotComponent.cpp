@@ -43,10 +43,12 @@ namespace GASS
 		m_DesiredPos(0,0,0),
 		m_CurrentPos(0,0,0),
 		m_LastPos(0,0,0),
-		m_DesiredSpeed(10)
+		m_DesiredSpeed(0),
+		m_Enable(false)
 
 	{
-
+		m_TurnPID.setGain(2.0,0.02,0.01);
+		m_TrottlePID.setGain(1.0,0,0);
 	}
 
 	TankAutopilotComponent::~TankAutopilotComponent()
@@ -59,12 +61,22 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("TankAutopilotComponent",new Creator<TankAutopilotComponent, IComponent>);
 		RegisterProperty<std::string>("SteerInput", &TankAutopilotComponent::GetSteerInput, &TankAutopilotComponent::SetSteerInput);
 		RegisterProperty<std::string>("ThrottleInput", &TankAutopilotComponent::GetThrottleInput, &TankAutopilotComponent::SetThrottleInput);
+		RegisterProperty<float>("DesiredSpeed", &TankAutopilotComponent::GetDesiredSpeed, &TankAutopilotComponent::SetDesiredSpeed);
+		RegisterProperty<bool>("Enable", &TankAutopilotComponent::GetEnable, &TankAutopilotComponent::SetEnable);
+		RegisterProperty<float>("DesiredPosRadius", &TankAutopilotComponent::GetDesiredPosRadius, &TankAutopilotComponent::SetDesiredPosRadius);
+		RegisterProperty<PIDControl>("TurnPID", &TankAutopilotComponent::GetTurnPID, &TankAutopilotComponent::SetTurnPID);
+		RegisterProperty<PIDControl>("TrottlePID", &TankAutopilotComponent::GetTrottlePID, &TankAutopilotComponent::SetTrottlePID);
+		
+		
+		
 	}
 
 	void TankAutopilotComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
@@ -85,6 +97,12 @@ namespace GASS
 	{
 		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,0,pos.z);
+	}
+
+	void TankAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
+	{
+		m_DesiredSpeed = message->GetSpeed();
+		
 	}
 
 	void TankAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
@@ -113,7 +131,8 @@ namespace GASS
 
 	void TankAutopilotComponent::Update(double delta)
 	{
-		DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
+		if(m_Enable)
+			DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 	}
 
 	void TankAutopilotComponent::DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time)
@@ -130,6 +149,9 @@ namespace GASS
 
 		Vec3 target_pos;
 
+		
+		const float current_speed = -m_VehicleSpeed.z;
+
 		if(speed > 0.01)
 		{
 			follow_line.Normalize();
@@ -137,8 +159,16 @@ namespace GASS
 
 			if(Math::Dot(follow_line,dir_to_wp) > 0) // check that we are not "behide" the waypoint
 			{
-				//Try to goto a postion 3m ahead
-				target_pos = closest_point_on_line + follow_line*20;
+				//Try to goto a postion 20m ahead
+				float look_ahead = fabs(current_speed);
+				if(look_ahead > 20)
+					look_ahead = 20;
+
+				if(look_ahead < 4)
+					look_ahead > 4;
+				
+
+				target_pos = closest_point_on_line + follow_line*look_ahead;
 			}
 			else
 				target_pos = pos;
@@ -155,21 +185,24 @@ namespace GASS
 		//Font::DebugPrint("drive_dist %f ",drive_dist);
 		if(drive_dist > 0.1 && dist_to_wp > m_DesiredPosRadius)
 		{
+			drive_dir.y = 0;
 			drive_dir.Normalize();
 			Mat4 trans = m_Transformation;
 			Vec3 hull_dir = -trans.GetViewDirVector();
 			hull_dir.y = 0;
 			hull_dir.Normalize();
+			
 			Vec3 cross = Math::Cross(hull_dir,drive_dir);
 			float cos_angle = Math::Dot(hull_dir,drive_dir);
+
 			if(cos_angle > 1) cos_angle = 1;
 			if(cos_angle < -1) cos_angle = -1;
 			float angle_to_drive_dir = Math::Rad2Deg(acos(cos_angle));
-			if(cross.y > 0) angle_to_drive_dir *= -1;
+			if(cross.y < 0) angle_to_drive_dir *= -1;
 
-			m_TurnPID.setGain(2.0,0.02,0.01);
+			
 			m_TurnPID.set(0);
-			float turn = -m_TurnPID.update(angle_to_drive_dir/180.0f,time);
+			float turn = m_TurnPID.update(angle_to_drive_dir,time);
 			
 			float m_TurnRadius = 3.0;
 			float m_BrakeDist= 10.0;
@@ -177,8 +210,7 @@ namespace GASS
 			//std::cout << "Drive dir angle:" << angle_to_drive_dir << "turn:" << turn << std::endl;
 
 
-			float current_speed = 0;
-			current_speed = m_VehicleSpeed.Length();
+		
 			//if(m_ActionHandler->GetOwner()->GetFirstPhysicsBody())
 			//current_speed = m_ActionHandler->GetOwner()->GetFirstPhysicsBody()->GetVelocity().Length();
 		/*/	if(drive_dist < m_BrakeDist)
@@ -194,7 +226,7 @@ namespace GASS
 				turn *=-1;
 			}*/
 
-			m_TrottlePID.setGain(1.0,0,0);
+			
 			m_TrottlePID.set(desired_speed);
 			float throttle = m_TrottlePID.update(current_speed,time);
 

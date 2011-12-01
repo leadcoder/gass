@@ -55,11 +55,16 @@ namespace GASS
 		TaskGroup GetTaskGroup() const;
 	private:
 		ADD_ATTRIBUTE(Float,WaypointRadius);
+		void SetInvertDirection(bool value);
+		bool GetInvertDirection() const;
+		
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void SetWaypointList(const std::string &waypointlist);
 		std::string GetWaypointList() const;
 		std::string GetMode() const;
 		void SetMode(const std::string &mode);
+
+		int GetCloesetWaypoint();
 
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
@@ -69,7 +74,11 @@ namespace GASS
 
 		std::vector<Vec3> m_Waypoints;
 		std::string m_WaypointListName;
+		
 		float m_Direction;
+		bool m_InvertDirection;
+		
+	
 	
 		bool m_HasWaypoints;
 		int m_CurrentWaypoint;
