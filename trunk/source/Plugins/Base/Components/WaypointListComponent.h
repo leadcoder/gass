@@ -18,6 +18,7 @@
 #include "Core/Math/Vector.h"
 #include "Sim/Common.h"
 #include "Sim/Components/Graphics/ICameraComponent.h"
+#include "Sim/Components/Common/IWaypointListComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -28,7 +29,7 @@
 namespace GASS
 {
 	class SplineAnimation;
-	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>
+	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>, public IWaypointListComponent
 	{
 		friend class WaypointComponent;
 	public:
@@ -36,10 +37,11 @@ namespace GASS
 		virtual ~WaypointListComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		std::vector<Vec3> GetWaypoints() const;
+		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const;
+		float GetRadius()const;
 	protected:
 		ADD_ATTRIBUTE(bool,ShowPathLine);
-		float GetRadius()const;
+		
 		void SetRadius(float radius);
 		int GetSplineSteps()const;
 		void SetSplineSteps(int steps);
@@ -74,6 +76,7 @@ namespace GASS
 		bool m_Initialized;
 		bool m_AutoUpdateTangents;
 		bool m_ShowWaypoints;
+		Vec4 m_LineColor;
 	};
 
 	typedef boost::shared_ptr<WaypointListComponent> WaypointListComponentPtr;

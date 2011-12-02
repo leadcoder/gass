@@ -52,11 +52,13 @@ namespace GASS
 
 
 		//Fog
+		std::string GetFogMode() const {return m_FogMode;}
 		float GetFogStart() const {return m_FogStart;}
 		float GetFogEnd() const {return m_FogEnd;}
 		float GetFogDensity() const {return m_FogDensity;}
 		Vec3 GetFogColor() const {return m_FogColor;}
 
+		void SetFogMode(const std::string &mode) {m_FogMode=mode; UpdateFogSettings();}
 		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}

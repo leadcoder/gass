@@ -32,7 +32,11 @@
 namespace GASS
 {
 
-	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0), m_Initialized(false),  m_Tangent(0,0,0), m_CustomTangent(false)
+	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0), 
+		m_Initialized(false),  
+		m_Tangent(0,0,0), 
+		m_CustomTangent(false)
+		
 	{
 
 	}

@@ -444,6 +444,7 @@ namespace GASS
 			fogCol.z = fogCol.z*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
 
 			Ogre::ColourValue fogColour(fogCol.x, fogCol.y, fogCol.z);
+
 			sm->setFog(sm->getFogMode(),fogColour, sm->getFogDensity(), sm->getFogStart(), sm->getFogEnd());
 		}
 		if(m_Hydrax)

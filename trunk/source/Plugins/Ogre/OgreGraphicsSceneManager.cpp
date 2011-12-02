@@ -84,6 +84,7 @@ namespace GASS
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
+		RegisterProperty<std::string>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode);
 		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart);
 		RegisterProperty<float>( "FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd);
 		RegisterProperty<float>( "FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity);
@@ -198,7 +199,9 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)
 	{
 		//float fog_end = 100 + (1.0-(message->GetFog()))*2000;
+
 		SetFogEnd(message->GetFogDistance());
+		SetFogDensity(message->GetFogDensity());
 	}
 
 	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
@@ -240,8 +243,9 @@ namespace GASS
 			m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "Exp2")
 			m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		//else if(m_FogMode == "None")
-		//Set Light color
+		else if(m_FogMode == "None")
+			m_SceneMgr->setFog(Ogre::FOG_NONE, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+		
 	}
 
 	void OgreGraphicsSceneManager::UpdateSkySettings()

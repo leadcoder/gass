@@ -1194,7 +1194,7 @@ namespace Ogre
 			else
 			{
 				outStream <<
-					"	fogVal = saturate(1 / (exp(oPos.z * fogParams.x)));\n";
+					"	fogVal = 1.0 - saturate(1 / (exp(oPos.z * fogParams.x)));\n";
 			}
 		}
 

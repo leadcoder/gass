@@ -139,6 +139,7 @@ namespace GASS
 			out.Reset();
 			out.Write((MessageID)ID_WEATHER);
 			out.Write(message->GetFogDistance());
+			out.Write(message->GetFogDensity());
 			out.Write(message->GetClouds());
 			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,UNASSIGNED_SYSTEM_ADDRESS,true);
 		}
@@ -641,10 +642,11 @@ namespace GASS
 			{
 				
 				RakNet::BitStream bs(p->data+1,p->length-1,false);
-				float fog_dist,cloud_factor;
+				float fog_dist,fog_density,cloud_factor;
 				bs.Read(fog_dist);
+				bs.Read(fog_density);
 				bs.Read(cloud_factor);
-				MessagePtr message(new WeatherMessage(fog_dist,cloud_factor));
+				MessagePtr message(new WeatherMessage(fog_dist,fog_density,cloud_factor));
 				
 				ScenarioScenePtr scene = GetScene();
 				if(scene)

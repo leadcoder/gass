@@ -50,7 +50,8 @@ namespace GASS
 		m_AutoUpdateTangents(true), 
 		m_SplineSteps(10),
 		m_ShowWaypoints(true),
-		m_ShowPathLine(false)
+		m_ShowPathLine(false),
+		m_LineColor(0,0,1,1)
 	{
 
 	}
@@ -186,7 +187,7 @@ namespace GASS
 			mesh_data->Material = "WhiteTransparentNoLighting";
 
 			vertex.TexCoord.Set(0,0);
-			vertex.Color = Vec4(1,1,1,1);
+			vertex.Color = m_LineColor;
 			mesh_data->Type = LINE_STRIP;
 			
 			for(size_t i = 0; i < wps.size(); i++)
@@ -214,8 +215,16 @@ namespace GASS
 
 	}
 
-	std::vector<Vec3> WaypointListComponent::GetWaypoints() const
+	std::vector<Vec3> WaypointListComponent::GetWaypoints(bool relative_position) const
 	{
+		Vec3 offset(0,0,0);
+
+		if(!relative_position)
+		{
+			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			offset = my_location->GetWorldPosition();
+		}
+
 		Spline spline;
 		std::vector<Vec3> pos_vec;
 		std::vector<WaypointComponentPtr> wp_vec;
@@ -227,7 +236,7 @@ namespace GASS
 			if(comp)
 			{
 				LocationComponentPtr wp_location = child_obj->GetFirstComponentByClass<ILocationComponent>();
-				pos_vec.push_back(wp_location->GetPosition());
+				pos_vec.push_back(wp_location->GetPosition()+offset);
 				wp_vec.push_back(comp);
 			}
 		}
