@@ -40,6 +40,7 @@
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
 #include "Sim/Components/Network/INetworkComponent.h"
+#include "Sim/Components/Common/IWaypointListComponent.h"
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Systems/Messages/CoreSystemMessages.h"

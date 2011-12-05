@@ -116,18 +116,21 @@ namespace GASS
 		@param fog_dist Distance where fog starts
 		@param clouds Value between 0-1 to indicate cloud factor
 		*/
-		WeatherMessage(float fog_dist, float clouds, SenderID sender_id = -1, double delay= 0) :
+		WeatherMessage(float fog_dist, float fog_density, float clouds, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay),
+			  m_FogDensity(fog_density),
 			  m_FogDistance(fog_dist),
 			  m_Clouds(clouds)
 		  {
 
 		  }
+		  float GetFogDensity() const {return m_FogDensity;}
 		  float GetFogDistance() const {return m_FogDistance;}
 		  Vec3 GetFogColor() const {return m_FogColor;}
 		  float GetClouds() const {return m_Clouds;}
 	private:
 		float m_FogDistance;
+		float m_FogDensity;
 		float m_Clouds;
 		Vec3 m_FogColor;
 	};
