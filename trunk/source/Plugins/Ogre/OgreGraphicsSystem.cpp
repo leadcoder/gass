@@ -81,6 +81,9 @@ namespace GASS
 
 		//Load plugins
 		m_Root = new Root("","ogre.cfg","ogre.log");
+
+		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
+
 		for(int i = 0; i < m_Plugins.size(); i++)
 		{
 			std::string plugin_name = m_Plugins[i];

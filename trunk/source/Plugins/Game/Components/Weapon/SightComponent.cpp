@@ -62,7 +62,8 @@ namespace GASS
 		m_CurrentZoom(0),
 		m_RemoteSim(false),
 		m_TargetDistance(900),
-		m_Debug(false)
+		m_Debug(false),
+		m_ResetToBarrelWhileInactive(true)
 	{
 		
 		m_BaseTransformation.Identity();
@@ -97,6 +98,8 @@ namespace GASS
 		RegisterProperty<SceneObjectLink >("AutoAimObject", &SightComponent::GetAutoAimObject, &SightComponent::SetAutoAimObject);
 		RegisterVectorProperty<float>("ZoomValues", &SightComponent::GetZoomValues, &SightComponent::SetZoomValues);
 		RegisterProperty<bool>("Debug", &SightComponent::GetDebug, &SightComponent::SetDebug);
+		RegisterProperty<bool>("ResetToBarrelWhileInactive", &SightComponent::GetResetToBarrelWhileInactive, &SightComponent::SetResetToBarrelWhileInactive);
+		
 	}
 
 	void SightComponent::OnCreate()
@@ -130,6 +133,12 @@ namespace GASS
 			MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0));
 			GetSceneObject()->PostMessage(cam_msg);
 		}
+
+		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(play_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+		GetSceneObject()->PostMessage(volume_msg);
 	}
 
 	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -194,7 +203,18 @@ namespace GASS
 		{
 			m_YawValue = 0;
 			m_PitchValue = 0;
-			m_StartRotation = m_BaseTransformation;
+
+			if(!m_RemoteSim && m_ResetToBarrelWhileInactive)
+			{
+
+				Quaternion rot;
+				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
+				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+				m_StartRotation = m_BarrelTransformation;
+			}
+			else
+				m_StartRotation = m_BaseTransformation;
+
 			m_StartRotation.SetTranslation(0,0,0);
 			return;
 		}
@@ -284,6 +304,9 @@ namespace GASS
 
 			else
 			{
+				MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+				GetSceneObject()->PostMessage(volume_msg);
+
 				m_Active = false;
 				 
 				if (!m_RemoteSim) //also release auto aim?
@@ -338,13 +361,21 @@ namespace GASS
 			UpdateTargetDistance();
 		}
 
-		if (!m_RemoteSim && m_Active && name == m_YawController)
+		if (m_Active && name == m_YawController)
 		{
+			//update sound
+			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_PitchInput)));
+			GetSceneObject()->PostMessage(volume_msg);
+			//if(!m_RemoteSim)
 			m_YawInput = value;
 		}
 
-		if (!m_RemoteSim && m_Active && name == m_PitchController)
+		if (m_Active && name == m_PitchController)
 		{
+			//udate sound
+			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_YawInput)));
+			GetSceneObject()->PostMessage(volume_msg);
+			//if(!m_RemoteSim)
 			m_PitchInput = value;
 		}
 	}

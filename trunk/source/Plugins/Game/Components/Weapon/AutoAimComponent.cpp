@@ -185,7 +185,7 @@ namespace GASS
 			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
 			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 			GetSceneObject()->PostMessage(vel_msg);
-			GetSceneObject()->PostMessage(volume_msg);
+			//GetSceneObject()->PostMessage(volume_msg);
 
 			
 

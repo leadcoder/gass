@@ -744,6 +744,59 @@ namespace GASS
 	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 
+		if(!m_Terrain)
+			return;
+		size_t tWidth = m_Terrain->getSize();
+		size_t tHeight = m_Terrain->getSize();
+
+		//Create indices
+		size_t index_size = (tWidth - 1) * (tHeight - 1) * 6;
+		mesh_data->FaceVector = new unsigned int[index_size];
+		mesh_data->NumFaces = index_size/3;
+		for( size_t x = 0; x < tWidth - 1; x++)
+		{
+			for( size_t y=0; y < tHeight - 1; y++)
+			{
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = x+y * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6] = (x+1)+(y+1) * tWidth;
+				
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = x+(y+1) * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = (x+1)+(y+1) * tWidth;
+
+			}
+		}
+
+		// Create vertices
+		size_t vertex_size = tWidth * tHeight;
+		mesh_data->VertexVector = new Vec3[vertex_size];
+		mesh_data->NumVertex = vertex_size;
+		size_t index = 0;
+		
+		Vec3 center = Convert::ToGASS(m_Terrain->getPosition());
+		Vec3 offset = center - Vec3(m_Terrain->getWorldSize()/2.0,0,-m_Terrain->getWorldSize()/2.0);
+
+		Float scale = m_Terrain->getWorldSize()/(m_Terrain->getSize()-1);
+		for(size_t x = 0; x < tWidth; x++)
+		{
+			for(size_t z = 0; z < tHeight; z++)
+			{
+				/*Ogre::Real wx, wy, wz;
+				wx = Ogre::Real(x)/(m_Terrain->getSize()-1);
+				wy = 0;
+				wz = Ogre::Real(z)/(m_Terrain->getSize()-1);
+				Ogre::Vector3 outWSpos;
+				m_Terrain->getPositionAlign(wx,wz,wy, Ogre::Terrain::ALIGN_X_Z, &outWSpos);*/
+				//Ogre::Vector3 terrain_space_pos; 
+				//void getPosition(Real x, Real y, Real z, &terrain_space_pos);
+				//Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset;
+				Float fx = x;
+				Float fz = z;
+				mesh_data->VertexVector[index] = Vec3(fx*scale, m_Terrain->getHeightAtPoint(x,z),-fz * scale) + offset;
+				index++;
+			}
+		}
 	}
 
 	Float OgreTerrainPageComponent::GetHeight(Float x, Float z) const
