@@ -84,7 +84,7 @@ namespace GASS
 		Vec3 m_Rot;
 
 		bool m_Active;
-		bool m_EnableZoomInput;
+		bool m_EnablePanInput;
 		float m_ScrollBoostInput;
 		float m_ScrollUpInput;
 		float m_ScrollDownInput;

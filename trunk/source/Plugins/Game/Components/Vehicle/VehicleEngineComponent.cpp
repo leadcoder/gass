@@ -102,7 +102,8 @@ namespace GASS
 		m_VehicleEngineRPM (0),
 		m_Power (0.2),
 		m_AngularVelocity(0,0,0),
-		m_EngineType(ET_TANK)
+		m_EngineType(ET_TANK),
+		m_TurnRPMAmount(1.0)
 	{
 		m_SteerCtrl = PIDControl(1,1,1);
 		m_GearBoxRatio.resize(6);
@@ -142,6 +143,8 @@ namespace GASS
 		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio);
 		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput);
 		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug);
+		RegisterProperty<float>("TurnRPMAmount", &VehicleEngineComponent::GetTurnRPMAmount, &VehicleEngineComponent::SetTurnRPMAmount);
+		
 	}
 
 	void VehicleEngineComponent::OnCreate()
@@ -471,7 +474,7 @@ namespace GASS
 
 	void VehicleEngineComponent::UpdateSteering(double delta)
 	{
-		float norm_rpm = 0.3*GetNormRPM() + 0.3;
+		float norm_rpm = m_TurnRPMAmount*GetNormRPM() + (1-m_TurnRPMAmount);
 		
 
 		//if tank, try to keep angular velocity to steer factor

@@ -37,7 +37,7 @@
 
 namespace GASS
 {
-	BoneModifierComponent::BoneModifierComponent() : m_Active(false)
+	BoneModifierComponent::BoneModifierComponent() : m_Active(true)
 	{
 	}
 
@@ -96,8 +96,8 @@ namespace GASS
 
 	void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		if(!m_Active)
-			return;
+		//if(!m_Active)
+		//	return;
 
 		//SceneObjectPtr so = ;
 		if(m_SourceObject.IsValid())

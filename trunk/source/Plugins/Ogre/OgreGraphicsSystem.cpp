@@ -72,6 +72,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
 	}
 
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
@@ -361,6 +362,15 @@ namespace GASS
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(DebugDrawer::getSingletonPtr())
 			DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
+	}
+
+
+	void OgreGraphicsSystem::OnDrawCircle(DrawCircleMessagePtr message)
+	{
+		Vec4 color = message->GetColor();
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		if(DebugDrawer::getSingletonPtr())
+			DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
 	}
 
 	

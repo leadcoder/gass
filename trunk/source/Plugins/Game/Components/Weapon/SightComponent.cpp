@@ -24,6 +24,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/Utils/Log.h"
 
 #include "Sim/Components/Network/INetworkComponent.h"
@@ -32,6 +33,7 @@
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scheduling/IRuntimeController.h"
@@ -63,7 +65,8 @@ namespace GASS
 		m_RemoteSim(false),
 		m_TargetDistance(900),
 		m_Debug(false),
-		m_ResetToBarrelWhileInactive(true)
+		m_ResetToBarrelWhileInactive(true),
+		m_TurnInputExp(1)
 	{
 		
 		m_BaseTransformation.Identity();
@@ -99,7 +102,8 @@ namespace GASS
 		RegisterVectorProperty<float>("ZoomValues", &SightComponent::GetZoomValues, &SightComponent::SetZoomValues);
 		RegisterProperty<bool>("Debug", &SightComponent::GetDebug, &SightComponent::SetDebug);
 		RegisterProperty<bool>("ResetToBarrelWhileInactive", &SightComponent::GetResetToBarrelWhileInactive, &SightComponent::SetResetToBarrelWhileInactive);
-		
+		RegisterProperty<std::string>("TargetObjectTemplate", &SightComponent::GetTargetObjectTemplate, &SightComponent::SetTargetObjectTemplate);
+		RegisterProperty<int>("TurnInputExp", &SightComponent::GetTurnInputExp, &SightComponent::SetTurnInputExp);
 	}
 
 	void SightComponent::OnCreate()
@@ -109,6 +113,10 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,ControllerMessage,0));
 		//call this to ensure that scene object pointers get initlized
 		BaseSceneComponent::OnCreate();
+
+		//load target object
+		
+
 	}
 
 	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -139,6 +147,13 @@ namespace GASS
 
 		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
 		GetSceneObject()->PostMessage(volume_msg);
+
+
+		if(m_TargetObjectTemplate != "")
+		{
+			SceneObjectPtr so =  GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_TargetObjectTemplate);
+			m_TargetObject = so;
+		}
 	}
 
 	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -358,7 +373,14 @@ namespace GASS
 		if (name == m_TargetDistanceController)
 		{
 			//get target distance!
-			UpdateTargetDistance();
+			if(value > 0)
+			{
+				UpdateTargetDistance();
+			}
+
+			//Move target object 
+
+			
 		}
 
 		if (m_Active && name == m_YawController)
@@ -367,7 +389,10 @@ namespace GASS
 			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_PitchInput)));
 			GetSceneObject()->PostMessage(volume_msg);
 			//if(!m_RemoteSim)
-			m_YawInput = value;
+			m_YawInput = pow(abs(value),m_TurnInputExp);
+
+			if(value < 0)
+				m_YawInput = -m_YawInput;
 		}
 
 		if (m_Active && name == m_PitchController)
@@ -376,7 +401,9 @@ namespace GASS
 			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_YawInput)));
 			GetSceneObject()->PostMessage(volume_msg);
 			//if(!m_RemoteSim)
-			m_PitchInput = value;
+			m_PitchInput = pow(abs(value),m_TurnInputExp);
+			if(value < 0)
+				m_PitchInput = -m_PitchInput;
 		}
 	}
 
@@ -398,14 +425,24 @@ namespace GASS
 		col_sys->Force(request,result);
 		if(result.Coll)
 		{
+			
 			//m_TargetDistance = (request.LineStart - result.CollPosition).Length() + 10;
 			m_TargetDistance = result.CollDist+10;
 			if(SceneObjectPtr(result.CollSceneObject))
 				m_TargetName = SceneObjectPtr(result.CollSceneObject)->GetName();
+
+			SceneObjectPtr so(m_TargetObject,boost::detail::sp_nothrow_tag());
+			if(so)
+			{
+				so->PostMessage(MessagePtr(new WorldPositionMessage(result.CollPosition)));
+			}
 		}
 		else
 			m_TargetDistance = 5000;
 		}
+
+
+		
 	}
 	
 	TaskGroup SightComponent::GetTaskGroup() const

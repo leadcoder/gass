@@ -79,6 +79,8 @@ namespace GASS
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 	private:
+
+		ADD_ATTRIBUTE(float,TurnRPMAmount)
 		std::vector<SceneObjectLink> GetWheels() const;
 		void SetWheels(const std::vector<SceneObjectLink> &wheels);
 

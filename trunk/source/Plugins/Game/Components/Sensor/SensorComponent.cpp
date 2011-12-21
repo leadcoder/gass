@@ -20,7 +20,8 @@ namespace GASS
 		m_Initialized(false),
 		m_DefaultMaxDetectionDistance(100000),
 		m_UpdateFrequency(10),
-		m_CurrentTime(0)
+		m_CurrentTime(0),
+		m_Debug(false)
 	{
 		
 	}	
@@ -35,6 +36,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("SensorComponent",new Creator<SensorComponent, IComponent>);
 		REG_ATTRIBUTE(Float,DefaultMaxDetectionDistance,SensorComponent)
 		REG_ATTRIBUTE(Float,UpdateFrequency,SensorComponent)
+		REG_ATTRIBUTE(bool,Debug,SensorComponent)
+		
 	}
 
 	void SensorComponent::OnCreate()
@@ -49,6 +52,16 @@ namespace GASS
 	{
 		m_Initialized = true;
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+
+		// get all signature objects and add them
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass<SignatureComponent>(comps,true);
+		for(size_t i = 0; i < comps.size(); i++)
+		{
+			SignatureComponentPtr sig = boost::shared_dynamic_cast<SignatureComponent>(comps[i]);
+			m_AllObjects.push_back(sig);
+		}
+		
 	}
 
 	void SensorComponent::OnUnload(MessagePtr message)
@@ -62,7 +75,7 @@ namespace GASS
 		SignatureComponentPtr signature = message->GetSceneObject()->GetFirstComponentByClass<SignatureComponent>();
 		if(signature)
 		{
-			signature->GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
+			//signature->GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
 			m_AllObjects.push_back(signature);
 		}
 	}
@@ -74,6 +87,13 @@ namespace GASS
 
 	void SensorComponent::Update(double delta_time)
 	{
+		//debug?
+		if(m_Debug)
+		{
+			MessagePtr message(new DrawCircleMessage(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+		}
+
 		//update sensor data at x hz 
 		m_CurrentTime += delta_time;
 		if(m_CurrentTime > 1.0/m_UpdateFrequency)
@@ -138,8 +158,8 @@ namespace GASS
 	bool SensorComponent::IsNewTarget(SignatureComponentWeakPtr sig) const
 	{
 		if(m_DetectedObjects.find(sig) != m_DetectedObjects.end())
-			return true;
-		return false;
+			return false;
+		return true;
 	}
 
 	bool SensorComponent::RemoveTarget(SignatureComponentWeakPtr sig)

@@ -52,7 +52,7 @@ namespace GASS
 		m_ControlSetting (NULL),
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
-		m_EnableZoomInput(false),
+		m_EnablePanInput(false),
 		m_ScrollBoostInput(0),
 		m_ZoomInput(0),
 		m_ScrollUpInput(0),
@@ -155,23 +155,30 @@ namespace GASS
 			else 
 				m_ScrollBoostInput = false;
 		}
-		else if(name == "FreeCameraEnableRot")
+		/*else if(name == "FreeCameraEnableRot")
 		{
 			if(value > 0)
 				m_EnableZoomInput = true;
 			else 
 				m_EnableZoomInput = false;
+		}*/
+		else if(name == "2dCameraEnablePan")
+		{
+			if(value > 0)
+				m_EnablePanInput = true;
+			else 
+				m_EnablePanInput = false;
 		}
-		else if(name == "FreeCameraThrottle")
+		else if(name == "2dCameraPanV")
 		{
 			m_ScrollUpInput = value;
 			//std::cout << "Input: " << name << "Value:" << value << std::endl;
 		}
-		else if(name == "FreeCameraStrafe")
+		else if(name == "2dCameraPanH")
 		{
 			m_ScrollDownInput = value;
 		}
-		else if(name == "FreeCameraHeading")
+		else if(name == "2dCameraZoom")
 		{
 			m_ZoomInput = value;
 
@@ -210,6 +217,9 @@ namespace GASS
 			m_Rot = Vec3(0,0,0);
 		speed_factor = m_CurrentWindowSize;
 
+		if(m_ScrollBoostInput)
+			speed_factor *= 2;
+
 		
 		
 		Vec3 filter;
@@ -220,15 +230,18 @@ namespace GASS
 		up = up*m_FixedHeight;
 		m_Pos = (m_Pos*filter) + up;
 
+
+		
 		Vec3 move_north = north*delta*speed_factor * m_ScrollUpInput;
 		Vec3 move_east = east*delta*speed_factor * m_ScrollDownInput;
 		
-		m_Pos = ((m_Pos + move_north) + move_east);
+		if(m_EnablePanInput) 
+			m_Pos = ((m_Pos + move_north) + move_east);
 		
 		
 		//
-		if(m_EnableZoomInput) 
-			m_CurrentWindowSize += speed_factor*m_ZoomSpeed*m_ZoomInput*delta;
+		//if(m_EnableZoomInput) 
+		m_CurrentWindowSize += speed_factor*m_ZoomSpeed*m_ZoomInput*delta;
 		//m_Fov -= time_step*m_FovChangeSpeed*m_ControlSetting->Get("TopCamControlComponentZoom");
 		if(m_CurrentWindowSize < m_MinWindowSize) m_CurrentWindowSize = m_MinWindowSize;
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;

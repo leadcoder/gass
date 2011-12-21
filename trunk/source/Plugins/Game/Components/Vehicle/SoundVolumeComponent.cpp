@@ -59,6 +59,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,VelocityNotifyMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnHingeUpdated,HingeJointNotifyMessage,0));
 	}
 
 	void SoundVolumeComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -70,17 +71,47 @@ namespace GASS
 		GetSceneObject()->PostMessage(volume_msg);
 	}
 
+	void SoundVolumeComponent::OnHingeUpdated(HingeJointNotifyMessagePtr message)
+	{
+		Float new_angle = message->GetAngle();
+		Float speed =  fabs(m_HingeAngle - new_angle);
+		m_HingeAngle = new_angle;
+		if(speed < m_MaxVolumeAtSpeed)
+		{
+			//turret sound
+			const float volume = (speed/m_MaxVolumeAtSpeed);
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+			GetSceneObject()->PostMessage(sound_msg);
+
+			/*std::stringstream ss;
+			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
+			std::string soundinfo = ss.str();
+			MessagePtr debug_msg(new DebugPrintMessage(soundinfo));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+			*/
+			//std::cout << speed << std::endl;
+		}
+	}
+
 	void SoundVolumeComponent::OnVelocityNotifyMessage(VelocityNotifyMessagePtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		const float speed = fabs(ang_vel.y + ang_vel.x);
 		if(speed < m_MaxVolumeAtSpeed)
 		{
-			//std::cout << speed << std::endl;
+			
 			//turret sound
 			const float volume = (speed/m_MaxVolumeAtSpeed);
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume*0.5));
 			GetSceneObject()->PostMessage(sound_msg);
+
+			/*std::stringstream ss;
+			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
+			std::string soundinfo = ss.str();
+			MessagePtr debug_msg(new DebugPrintMessage(soundinfo));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+			*/
+			//std::cout << speed << std::endl;
 		}
 		/*if(speed > 0)
 		{

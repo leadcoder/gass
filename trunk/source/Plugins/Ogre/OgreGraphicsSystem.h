@@ -86,6 +86,7 @@ namespace GASS
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnDrawLine(DrawLineMessagePtr message);
+		void OnDrawCircle(DrawCircleMessagePtr message);
 		
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}

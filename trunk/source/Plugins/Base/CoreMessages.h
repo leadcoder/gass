@@ -22,6 +22,7 @@
 #define CORE_MESSAGES_H
 
 #include "Core/MessageSystem/BaseMessage.h"
+#include "Sim/Scenario/Scene/SceneObject.h"
 
 
 namespace GASS
@@ -59,6 +60,30 @@ namespace GASS
 		
 	};
 	typedef boost::shared_ptr<WaypointListUpdatedMessage> WaypointListUpdatedMessagePtr;
+
+
+	class TriggerEnterMessage : public BaseMessage
+	{
+	public:
+		TriggerEnterMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
+		  SceneObjectPtr  m_Trigger;
+	private:
+	};
+	typedef boost::shared_ptr<TriggerEnterMessage> TriggerEnterMessagePtr;
+
+
+	class TriggerExitMessage : public BaseMessage
+	{
+	public:
+		TriggerExitMessage (SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
+		  SceneObjectPtr  m_Trigger;
+	private:
+		
+	};
+	typedef boost::shared_ptr<TriggerExitMessage > TriggerExitMessagePtr;
+
 
 }
 #endif

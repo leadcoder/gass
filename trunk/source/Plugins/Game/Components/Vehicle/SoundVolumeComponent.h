@@ -45,7 +45,10 @@ namespace GASS
 	private:
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
+		void OnHingeUpdated(HingeJointNotifyMessagePtr message);
 		ADD_ATTRIBUTE(Float,MaxVolumeAtSpeed)
+
+		Float m_HingeAngle;
 	};
 }
 #endif

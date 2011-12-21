@@ -136,5 +136,36 @@ namespace GASS
 		Vec4 m_Color;
 	};
 	typedef boost::shared_ptr<DrawLineMessage> DrawLineMessagePtr;
+
+
+	class DrawCircleMessage : public BaseMessage
+	{
+	public:
+		DrawCircleMessage(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
+		  m_Center(center),
+		  m_Radius(radius),
+		  m_Color(color),
+		  m_Segments(segments),
+		  m_Filled(filled),
+		  BaseMessage(sender_id , delay)  
+		  {
+
+		  }
+		  Vec3 GetCenter()const {return m_Center;}
+		  Float GetRadius() const {return m_Radius;}
+		  Vec4 GetColor()const {return m_Color;}
+		  int  GetSegments() const {return m_Segments;}
+		  bool GetFilled() const {return m_Filled;}
+	private:
+		Vec3 m_Center;
+		Float m_Radius;
+		Vec4 m_Color;
+		int m_Segments;
+		bool m_Filled;
+	};
+	typedef boost::shared_ptr<DrawCircleMessage> DrawCircleMessagePtr;
+
+ 
 }
+
 #endif

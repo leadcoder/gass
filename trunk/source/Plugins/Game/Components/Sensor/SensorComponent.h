@@ -34,6 +34,7 @@ namespace GASS
 	private:
 		ADD_ATTRIBUTE(Float,DefaultMaxDetectionDistance)
 		ADD_ATTRIBUTE(Float,UpdateFrequency)
+		ADD_ATTRIBUTE(bool,Debug)
 
 		void Update();
 		bool m_Initialized;

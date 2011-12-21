@@ -111,6 +111,8 @@ namespace GASS
 
 		Float m_CurrentYawAngle;
 		Float m_CurrentPitchAngle;
+
+		SceneObjectWeakPtr m_TargetObject;
 		
 		SceneObjectLink m_AutoAimObject;
 
@@ -121,10 +123,12 @@ namespace GASS
 		ADD_ATTRIBUTE(std::string,ActivateController);
 		ADD_ATTRIBUTE(std::string,YawController);
 		ADD_ATTRIBUTE(std::string,PitchController);
+		ADD_ATTRIBUTE(std::string,TargetObjectTemplate);
 		ADD_ATTRIBUTE(std::string,TargetDistanceController);
 		ADD_ATTRIBUTE(std::vector<float>,ZoomValues);
 		ADD_ATTRIBUTE(bool,Debug);
 		ADD_ATTRIBUTE(bool,ResetToBarrelWhileInactive);
+		ADD_ATTRIBUTE(int,TurnInputExp);
 		
 		
 	};
