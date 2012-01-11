@@ -71,6 +71,7 @@ namespace GASS
 		
 		m_BaseTransformation.Identity();
 		m_StartRotation.Identity();
+		m_BarrelTransformation.Identity();
 		//m_ZoomValues.push_back(45);
 		//m_ZoomValues.push_back(20);
 		//m_ZoomValues.push_back(10);

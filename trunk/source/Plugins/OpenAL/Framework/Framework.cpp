@@ -99,8 +99,8 @@ void ALFWShutdown()
 		g_pWaveLoader = NULL;
 	}
 
-	ALFWprintf("\nPress a key to quit\n");
-	ALchar ch = _getch();
+	//ALFWprintf("\nPress a key to quit\n");
+	//ALchar ch = _getch();
 }
 
 ALboolean ALFWInitOpenAL()

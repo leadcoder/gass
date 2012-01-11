@@ -28,7 +28,17 @@ namespace GASS
 
 	OpenALSoundSystem::~OpenALSoundSystem()
 	{
+		ALFWShutdown();
 
+		ALCcontext *pContext;
+		ALCdevice *pDevice;
+
+		pContext = alcGetCurrentContext();
+		pDevice = alcGetContextsDevice(pContext);
+	
+		alcMakeContextCurrent(NULL);
+		alcDestroyContext(pContext);
+		alcCloseDevice(pDevice);
 	}
 
 	void OpenALSoundSystem::RegisterReflection()
@@ -139,6 +149,8 @@ namespace GASS
 		alDopplerVelocity( 343.0f ); // m/s this may need to be scaled at some point
 		alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
 
+
+		ALFWInit();
 		// Ok
 		m_IsInitialised = true;
 
