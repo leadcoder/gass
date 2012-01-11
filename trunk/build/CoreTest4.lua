@@ -19,7 +19,7 @@ project "CoreTest"
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"$(BOOST_HOME)/lib",
 		"../dependencies/tinyxml/lib",
 	}

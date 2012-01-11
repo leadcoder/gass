@@ -5,7 +5,7 @@ project "GASSPluginOIS"
 
 	files { "../source/Plugins/OIS/**.cpp", "../source/Plugins/OIS/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 	dofile "helpfunctions.lua"
 
@@ -22,11 +22,9 @@ if (os.is("windows")) then
 	
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
-		"../dependencies/ois/lib",
-		"$(BOOST_HOME)/lib",
-		"$(DXSDK_DIR)/lib/x86"
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -40,8 +38,8 @@ configuration "Debug"
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OIS_static_d",
-			"tinyxmld"
+			"OIS_d",
+			"tinyxml_d"
 		}
 
 	configuration "Release"
@@ -52,7 +50,7 @@ configuration "Debug"
 		{
 			"GASSCore",
 			"GASSSim",
-			"OIS_static",
+			"OIS",
 			"tinyxml"
 		}
 	
@@ -66,8 +64,8 @@ else
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 
@@ -79,8 +77,8 @@ configuration "Debug"
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"OIS",
-			"tinyxmld"
+			"OIS_d",
+			"tinyxml_d"
 		}
 
 	configuration "Release"

@@ -5,7 +5,7 @@ project "GASSPluginOgre"
 
 	files { "../source/Plugins/Ogre/**.cpp", "../source/Plugins/Ogre/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 	includedirs 
@@ -33,13 +33,11 @@ if (os.is("windows")) then
 	configuration "Debug"
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
+		"../lib/",
 		"$(OGRE_HOME)/lib\\debug",
 		"$(OGRE_HOME)\\lib\\debug\\opt",
-		"../dependencies/tinyxml/lib",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../dependencies/lib/" 
 
 	}
 	
@@ -47,14 +45,11 @@ if (os.is("windows")) then
 	configuration "Release"
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"../dependencies/tbb/include",
+		"../lib/",
+		"../dependencies/lib",
 		"$(OGRE_HOME)/lib/release",
 		"$(OGRE_HOME)/lib/release/opt",
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/" .. tbverdir
+		"$(BOOST_HOME)/lib"
 	}
 
 	
@@ -75,8 +70,8 @@ else
 	
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(OGRE_HOME)/build/lib",
 		"$(BOOST_HOME)/lib"
 
@@ -99,7 +94,7 @@ if (os.is("windows")) then
 			"Plugin_OctreeSceneManager_d",
 			"OgreTerrain_d",
 			"OgrePaging_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"tbb_debug"
 		}
 else
@@ -110,7 +105,7 @@ else
 			"OgreMain",
 			"OgreTerrain",
 			"OgrePaging",
-			"tinyxmld",
+			"tinyxml_d",
 			"tbb_debug"
 		}
 end

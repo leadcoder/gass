@@ -5,14 +5,13 @@ project "GASSPluginOSG"
 
 	files { "../source/Plugins/OSG/**.cpp", "../source/Plugins/OSG/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
 		"$(OSG_PATH)/include",
-		"$(OSG_PATH)/build/include",
 		"../dependencies/tinyxml",
 		"../dependencies/tbb/include",
 		"$(BOOST_HOME)"
@@ -20,13 +19,10 @@ if (os.is("windows")) then
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
+		"../lib/",
 		"$(OSG_PATH)/lib",
-		"$(OSG_PATH)/build/lib",
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/" .. tbverdir
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -38,17 +34,15 @@ else
 		"../source",
 		"$(BOOST_HOME)",
 		"$(OSG_PATH)/include",
-		"$(OSG_PATH)/build/include",
 		"../dependencies/include/tinyxml",
 		"../dependencies/tbb/include"
 	}
 
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"$(OSG_PATH)/lib",
-		"$(OSG_PATH)/build/lib",
-		"../dependencies/tbb/lib/" .. tbverdir
+		"../dependencies/lib/"
 	}
 
 end
@@ -73,7 +67,7 @@ end
 			"osgShadowd",
 			"opengl32",
 			"glu32",
-			"tinyxmld",
+			"tinyxml_d",
 			"tbb_debug"  
 		}
 

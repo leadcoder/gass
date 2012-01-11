@@ -5,7 +5,7 @@ project "GASSPluginPagedGeometry"
 
 	files { "../source/Plugins/PagedGeometry/**.cpp", "../source/Plugins/PagedGeometry/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 	includedirs 
@@ -20,11 +20,9 @@ if (os.is("windows")) then
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
+		"../lib/",
+		"../dependencies/lib",
 		"$(OGRE_HOME)/lib/$(ConfigurationName)",
-		"../dependencies/PagedGeometry-1.1.1/lib",
-		"../dependencies/tinyxml/lib",
 		"$(BOOST_HOME)/lib"
 	}
 
@@ -44,10 +42,9 @@ else
 
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies/PagedGeometry-1.1.1/lib",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 end
@@ -63,7 +60,7 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"OgreMain_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"PagedGeometry_d"
 		}
 

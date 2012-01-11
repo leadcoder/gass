@@ -5,7 +5,7 @@ project "GASSCore"
 
 	files { "../source/Core/**.cpp", "../source/Core/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 
 
@@ -21,9 +21,8 @@ project "GASSCore"
 
 	libdirs 
 	{ 
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 
@@ -35,7 +34,7 @@ if (os.is("windows")) then
 		targetname "GASSCore_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
-		links { "tinyxmld", "Winmm" }
+		links { "tinyxml_d", "Winmm" }
 
 
 	
@@ -50,7 +49,7 @@ else
 		targetname "libGASSCore_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
-		links { "tinyxmld" }
+		links { "tinyxml_d" }
 
 
 	

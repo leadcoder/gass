@@ -5,7 +5,7 @@ project "GASSEditorModule"
 
 	files { "../source/Modules/Editor/**.cpp", "../source/Modules/Editor/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 
@@ -34,16 +34,15 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"tbb_debug"  
 		}
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../dependencies/lib"
 	}
 
 	configuration "Release"
@@ -59,11 +58,10 @@ end
 		}
 libdirs 
 	{
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../dependencies/lib" 
 	}
 
 

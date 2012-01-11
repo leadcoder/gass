@@ -5,7 +5,7 @@ project "GASSPluginRakNet"
 
 	files { "../source/Plugins/RakNet/**.cpp", "../source/Plugins/RakNet/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 	dofile "helpfunctions.lua"
 
 if (os.is("windows")) then
@@ -20,12 +20,9 @@ if (os.is("windows")) then
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/lib/" .. tbverdir
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS", "dDOUBLE" }
@@ -40,8 +37,8 @@ configuration "Debug"
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"RakNetLibStaticDebug",
-			"tinyxmld",
+			"RakNet_d",
+			"tinyxml_d",
 			"tbb_debug",
 			"ws2_32"
 		}
@@ -54,7 +51,7 @@ configuration "Debug"
 		{
 			"GASSCore",
 			"GASSSim",
-			"RakNetLibStatic",
+			"RakNet",
 			"tinyxml",
 			"tbb",
 			"ws2_32"
@@ -72,12 +69,9 @@ else
 
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/RakNet/Lib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib" 
 	}
 configuration "Debug"
 		targetname "GASSPluginRakNet_d"
@@ -88,8 +82,8 @@ configuration "Debug"
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"RakNetLibStaticDebug",
-			"tinyxmld",
+			"RakNet_d",
+			"tinyxml_d",
 			"tbb_debug"
 		}
 
@@ -101,7 +95,7 @@ configuration "Debug"
 		{
 			"GASSCore",
 			"GASSSim",
-			"RakNetLibStatic",
+			"RakNet",
 			"tinyxml",
 			"tbb"
 		}

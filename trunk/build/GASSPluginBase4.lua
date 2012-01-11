@@ -5,7 +5,7 @@ project "GASSPluginBase"
 
 	files { "../source/Plugins/Base/**.cpp", "../source/Plugins/Base/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 
@@ -23,9 +23,9 @@ end
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
-		"../dependencies/tinyxml/lib",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 
@@ -40,7 +40,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 		}
 
 	configuration "Release"

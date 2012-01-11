@@ -5,7 +5,7 @@ project "GASSSim"
 
 	files { "../source/Sim/**.cpp", "../source/Sim/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_EXPORTS" }
@@ -24,11 +24,9 @@ end
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"../dependencies/tinyxml/lib",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tbb/lib/" .. tbverdir
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 
 
@@ -40,7 +38,7 @@ if (os.is("windows")) then
 		links 
 		{
 		   "GASSCore_d",
-		   "tinyxmld",
+		   "tinyxml_d",
 		   "tbb_debug"  
 		}
 
@@ -63,7 +61,7 @@ else
 		links 
 		{
 		   "GASSCore_d",
-		   "tinyxmld",
+		   "tinyxml_d",
 		   "tbb_debug"  
 		}
 

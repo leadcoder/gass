@@ -5,7 +5,7 @@ project "GASSPluginGame"
 
 	files { "../source/Plugins/Game/**.cpp", "../source/Plugins/Game/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 
 	includedirs 
@@ -19,9 +19,8 @@ project "GASSPluginGame"
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 
 	}
@@ -42,7 +41,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 		}
 
 	configuration "Release"

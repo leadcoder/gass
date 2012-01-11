@@ -5,7 +5,7 @@ project "GASSPluginCEGUI"
 
 	files { "../source/Plugins/CEGUI/**.cpp", "../source/Plugins/CEGUI/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 	
 
@@ -27,8 +27,8 @@ if (os.is("windows")) then
 	
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(CEGUI_HOME)/lib",
 		"$(CEGUI_HOME)/dependencies/lib/static",
 		"$(BOOST_HOME)/lib"
@@ -49,8 +49,8 @@ else
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 
 	}
@@ -70,7 +70,7 @@ end
 			"CEGUIBase_d",
 			"CEGUIOgreRenderer_d",
 			"CEGUILuaScriptModule_d",
-			"tinyxmld"
+			"tinyxml_d"
 		}
 
 	configuration "Release"

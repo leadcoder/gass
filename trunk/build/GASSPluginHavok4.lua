@@ -5,7 +5,7 @@ project "GASSPluginHavok"
 
 	files { "../source/Plugins/Havok/**.cpp", "../source/Plugins/Havok/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 
@@ -34,7 +34,7 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"tbb_debug",
 			"hkgBridge",
 			"hkgCommon",
@@ -60,12 +60,11 @@ end
 	
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"$(HAVOK_HOME)/Lib/win32_vs2010/Debug_Multithreaded_DLL",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../dependencies/lib",
+		"$(HAVOK_HOME)/Lib/win32_vs2010/Debug_Multithreaded_DLL"
 
 	}
 
@@ -77,7 +76,6 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-	--		"ode_double",
 			"tinyxml",
 			"tbb",
 "hkgBridge",
@@ -103,13 +101,10 @@ end
 		}
 libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"$(HAVOK_HOME)/Lib/win32_vs2010/Release_Multithreaded_DLL",
-		"../dependencies/tbb/lib/" .. tbverdir 
-
+		"$(HAVOK_HOME)/Lib/win32_vs2010/Release_Multithreaded_DLL"
 	}
 
 

@@ -5,7 +5,7 @@ project "GASSPluginOpenAL"
 
 	files { "../source/Plugins/OpenAL/**.cpp", "../source/Plugins/OpenAL/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 	includedirs 
 	{ 
@@ -15,13 +15,12 @@ project "GASSPluginOpenAL"
 		"$(BOOST_HOME)"
 	}
 
+	dofile "helpfunctions.lua"
+
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"../dependencies/ogre/lib",
-		"../dependencies/OpenAL1.1/libs/Win32",
-		"../dependencies/tinyxml/lib",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 
@@ -42,9 +41,8 @@ if (os.is("windows")) then
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"OpenAL32",
-			"ALut",
 		}
 
 	configuration "Release"
@@ -57,7 +55,6 @@ if (os.is("windows")) then
 			"GASSSim",
 			"tinyxml",
 			"OpenAL32",
-			"ALut",
 		}
 else 
 	configuration "Debug"
@@ -69,7 +66,7 @@ else
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"openal",
 			"alut",
 		}

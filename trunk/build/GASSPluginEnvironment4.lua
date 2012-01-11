@@ -5,7 +5,7 @@ project "GASSPluginEnvironment"
 
 	files { "../source/Plugins/Environment/**.cpp", "../source/Plugins/Environment/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 	includedirs 
@@ -13,8 +13,8 @@ if (os.is("windows")) then
 		"../source",
 		"$(OGRE_HOME)/include/OGRE",
 		"$(OGRE_HOME)/OgreMain/include",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
-		"../dependencies/SkyX-v0.1/SkyX",
+		"../dependencies/Hydrax-v0.5.1/src",
+		"../dependencies/SkyX-v0.1",
 		"../dependencies/tinyxml",
 		"$(BOOST_HOME)"
 	}
@@ -25,12 +25,10 @@ if (os.is("windows")) then
 	configuration "Release"
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
 		"$(OGRE_HOME)/lib/Release",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
-		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
-		"../dependencies/tinyxml/lib",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 	
@@ -38,12 +36,10 @@ if (os.is("windows")) then
 	configuration "Debug"
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"../dependencies",
 		"$(OGRE_HOME)/lib/Debug",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
-		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
-		"../dependencies/tinyxml/lib",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 	
@@ -53,18 +49,16 @@ else
 		"../source",
 		"$(BOOST_HOME)",
 		"$(OGRE_HOME)/OgreMain/include",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/src",
-		"../dependencies/SkyX-v0.1/SkyX",
+		"../dependencies/Hydrax-v0.5.1/src",
+		"../dependencies/SkyX-v0.1",
 		"../dependencies/include/tinyxml"
 	}
 
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
+		"../lib/",
 		"$(OGRE_HOME)/build/lib",
-		"../dependencies/Hydrax-v0.5.1/Hydrax/bin",
-		"../dependencies/SkyX-v0.1/SkyX/SkyX/bin",
-		"../dependencies/tinyxml/lib",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
 
@@ -81,7 +75,7 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"OgreMain_d",
-			"tinyxmld",
+			"tinyxml_d",
 			"Hydrax_d",
 			"SkyX_d"
 

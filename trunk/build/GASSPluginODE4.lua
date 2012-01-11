@@ -5,7 +5,7 @@ project "GASSPluginODE"
 
 	files { "../source/Plugins/ODE/**.cpp", "../source/Plugins/ODE/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
+	targetdir ( "../lib/" )
 
 if (os.is("windows")) then
 
@@ -38,18 +38,15 @@ end
 		{
 			"GASSCore_d",
 			"GASSSim_d",
-			"ode_doubled",
-			"tinyxmld",
+			"ODE_d",
+			"tinyxml_d",
 			"tbb_debug"  
 		}
 	libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/ode/lib/DebugDoubleLib",
-		"../dependencies/tbb/lib/" .. tbverdir 
 	}
 
 	configuration "Release"
@@ -60,17 +57,14 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-			"ode_double",
+			"ODE",
 			"tinyxml",
 			"tbb" 
 		}
 libdirs 
 	{
-		"../lib/" .. _ACTION,
-		"../dependencies",
-		"$(BOOST_HOME)/lib",
-		"../dependencies/tinyxml/lib",
-		"../dependencies/ode/lib/ReleaseDoubleLib",
-		"../dependencies/tbb/lib/" .. tbverdir 
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib"
 	}
 	

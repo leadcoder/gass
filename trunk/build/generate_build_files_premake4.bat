@@ -5,6 +5,7 @@ cls
 echo 1) Visual Studio 8.0 (2005)
 echo 2) Visual Studio 9.0 (2008)
 echo 3) Visual Studio 10.0 (2010)
+echo 4) Visual Studio 10.0 (2010 x64)
 
 :start
 set choice=
@@ -12,14 +13,22 @@ set /p choice="What kind of build files do you want to generate? "
 if not '%choice%'=='' set choice=%choice:~0,2%
 if '%choice%'=='1' (
 set target=vs2005
+set platform=x32
 goto GENERATE
 )
 if '%choice%'=='2' (
 set target=vs2008
+set platform=x32
 goto GENERATE
 )
 if '%choice%'=='3' (
 set target=vs2010
+set platform=x32
+goto GENERATE
+)
+if '%choice%'=='4' (
+set target=vs2010
+set platform=x64
 goto GENERATE
 )
 ECHO "%choice%" is not valid please try again
@@ -28,8 +37,8 @@ goto start
 
 :GENERATE
 
-..\Tools\premake4.exe --file=GASSSim4sln.lua  --os=windows %target%
-..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows %target%
+..\Tools\premake4.exe --file=GASSSim4sln.lua --platform=%platform%  --os=windows %target%
+rem ..\Tools\premake4.exe --file=CoreTest4sln.lua  --os=windows --platform=%platform% %target%
 
 
 rem cls

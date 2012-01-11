@@ -5,9 +5,7 @@ project "GASSPluginScript"
 
 	files { "../source/Plugins/Script/**.cpp", "../source/Plugins/Script/**.cxx", "../source/Plugins/Script/**.h" }
 
-	targetdir ( "../lib/" .. _ACTION )
-
-	
+	targetdir ( "../lib/" )
 
 
 if (os.is("windows")) then
@@ -23,11 +21,9 @@ if (os.is("windows")) then
 	
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
-		"../dependencies/lua/lib/" .. _ACTION,
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
-
 	}
 
 	defines { "WIN32", "_CRT_SECURE_NO_WARNINGS", "GASS_PLUGIN_EXPORTS" }
@@ -45,9 +41,8 @@ else
 
 	libdirs 
 	{ 
-		"../lib/" .. _ACTION,
-		"../dependencies/tinyxml/lib",
-		"../dependencies/lua/lib/" .. _ACTION,
+		"../lib/",
+		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 
 	}
@@ -65,7 +60,7 @@ end
 			"GASSCore_d",
 			"GASSSim_d",
 			"lua_d",
-			"tinyxmld"
+			"tinyxml_d"
 		}
 
 	configuration "Release"
