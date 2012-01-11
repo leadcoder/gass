@@ -87,7 +87,7 @@ namespace GASS
 	}
 	void PluginManager::Shutdown()
 	{
-		for(int i = 0 ; i < m_Plugins.size(); i++)
+		for(size_t i = 0 ; i < m_Plugins.size(); i++)
 		{
 			m_Plugins[i]->Unload();
 			delete m_Plugins[i];
@@ -97,7 +97,7 @@ namespace GASS
 
 	void PluginManager::Reload()
 	{
-		for(int i = 0 ; i < m_Plugins.size(); i++)
+		for(size_t i = 0 ; i < m_Plugins.size(); i++)
 		{
 			m_Plugins[i]->Unload();
 			m_Plugins[i]->Load();
@@ -134,7 +134,7 @@ namespace GASS
 			}
 			boost::filesystem::path saved_path = boost::filesystem::current_path();
 			boost::filesystem::current_path(path);
-			for(int i = 0 ; i < plugins.size() ; i++)
+			for(size_t i = 0 ; i < plugins.size() ; i++)
 			{
 				DynamicModule* module = new DynamicModule(plugins[i]);
 				if(module->Load())

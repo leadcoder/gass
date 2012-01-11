@@ -127,7 +127,7 @@ namespace GASS
 	AABox AABox::GetAABox(std::vector<Polygon> &poly_vec)
 	{
 		AABox aabox;
-		for(int i = 0; i < poly_vec.size(); i++)
+		for(size_t i = 0; i < poly_vec.size(); i++)
 		{
 			//Polygon poly = &(poly_vec[i]);
 			//Vec3 center = poly->GetCenter();
@@ -143,7 +143,7 @@ namespace GASS
 	AABox AABox::GetAABox(const Polygon &poly)
 	{
 		AABox ret;
-		for(int i = 0; i < poly.m_VertexVector.size(); i++)
+		for(size_t i = 0; i < poly.m_VertexVector.size(); i++)
 		{
 			const Vec3* pos = &poly.m_VertexVector[i];
 			if(i == 0)
@@ -171,7 +171,7 @@ namespace GASS
 
 	bool AABox::PolyInside(const Polygon &poly) const
 	{
-		int i = 0;
+		size_t i = 0;
 		for(; i < poly.m_VertexVector.size(); i++)
 		{
 			const Vec3* pos = &poly.m_VertexVector[i];

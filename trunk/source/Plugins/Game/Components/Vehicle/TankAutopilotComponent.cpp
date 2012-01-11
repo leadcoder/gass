@@ -161,11 +161,11 @@ namespace GASS
 			{
 				//Try to goto a postion 20m ahead
 				float look_ahead = fabs(current_speed);
-				if(look_ahead > 20)
-					look_ahead = 20;
+				if(look_ahead > 20.0f)
+					look_ahead = 20.0f;
 
 				if(look_ahead < 4)
-					look_ahead > 4;
+					look_ahead = 4;
 				
 
 				target_pos = closest_point_on_line + follow_line*look_ahead;
