@@ -16,6 +16,8 @@ public:
 		//Connect to server?
 		//try to connect
 		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2005)));
+
+
 		m_IsConnected = true;
 	}
 
@@ -23,13 +25,28 @@ public:
 	{
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
 		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
-		m_Scenario->Load(mess->GetScenarioName());
+		//m_Scenario->Load("../../../common/data/scenarios/" + mess->GetScenarioName());
+		m_Scenario->Load(m_ScenarioName);
+		GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
+
+		GASS::SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		if(free_obj)
+		{
+			free_obj->SendImmediate(pos_msg);
+			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+			scene->PostMessage(camera_msg);
+		}
 	}
 
 	bool Init()
 	{
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
+
+		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
+		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
+
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
@@ -53,10 +70,10 @@ public:
 			//send ping request
 			m_Engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));
 			update_time += 1.0;
-//			Sleep(1000);
+			//			Sleep(1000);
 			std::cout << ".";
-//			if(GetAsyncKeyState(VK_ESCAPE))
-//				return false;
+			//			if(GetAsyncKeyState(VK_ESCAPE))
+			//				return false;
 		}
 		return true;
 	}

@@ -24,6 +24,10 @@ public:
 	{
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
+
+		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
+		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
+		
 		
 		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartServerMessage("SimDemoServer",2005)));
 		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),shared_from_this()));
@@ -42,7 +46,16 @@ public:
 			//	scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromFile(m_Instances);
 
 			GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
-
+			//create free camera and set start pos
+			GASS::SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+			GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+			if(free_obj)
+			{
+				free_obj->SendImmediate(pos_msg);
+				GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+				scene->PostMessage(camera_msg);
+			}
+		
 			for(int i = 0; i <  m_Objects.size();i++)
 			{
 

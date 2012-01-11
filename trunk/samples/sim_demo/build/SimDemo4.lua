@@ -21,7 +21,7 @@ end
 	{ 
 		"../../../lib/" .. _ACTION,
 		"../../../dependencies/tinyxml/lib",
-		"../../../dependencies/tbb/lib/ia32/" .. tbverdir
+		"../../../dependencies/tbb/lib/" .. tbverdir
 	}
 
 	configuration "Debug"
@@ -43,7 +43,7 @@ end
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame_d.dll ..\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase_d.dll ..\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet_d.dll ..\\bin\\$(ConfigurationName)" ,
-			"copy ..\\..\\..\\Dependencies\\tbb\\bin\\ia32\\" .. tbverdir .. "\\tbb_debug.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\Dependencies\\tbb\\bin\\" .. tbverdir .. "\\tbb_debug.dll ..\\bin\\$(ConfigurationName)" ,
 			"postbuild_debug.bat" 
 		}
 	
@@ -67,6 +67,6 @@ end
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginGame.dll ..\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginBase.dll ..\\bin\\$(ConfigurationName)" ,
 			"copy ..\\..\\..\\lib\\" .. _ACTION .. "\\GASSPluginRakNet.dll ..\\bin\\$(ConfigurationName)" ,		
-			"copy ..\\..\\..\\Dependencies\\tbb\\bin\\ia32\\" .. tbverdir .. "\\tbb.dll ..\\bin\\$(ConfigurationName)" ,
+			"copy ..\\..\\..\\Dependencies\\tbb\\bin\\" .. tbverdir .. "\\tbb.dll ..\\bin\\$(ConfigurationName)" ,
 			"postbuild_release.bat" 
 		}

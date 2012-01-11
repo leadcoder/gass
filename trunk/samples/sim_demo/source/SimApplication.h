@@ -63,6 +63,7 @@ public:
 
 		if(m_Scenario->Load(m_ScenarioName))
 		{
+		
             GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
 
 			//only populate first scene
@@ -169,7 +170,10 @@ public:
 			m_Engine->Update(update_time);//time - prev);
 			m_Scenario->OnUpdate(update_time);//time - prev);
 			prev = time;
+			Sleep(0);
 		}
+		//else 
+		//	Sleep(30);
 
 
 //		if(GetAsyncKeyState(VK_ESCAPE))

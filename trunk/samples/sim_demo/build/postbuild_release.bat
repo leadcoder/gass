@@ -11,3 +11,4 @@ copy %OGRE_HOME%\bin\release\OIS.dll ..\bin\Release\
 copy %OGRE_HOME%\bin\release\cg.dll ..\bin\Release\
 copy ..\..\..\Dependencies\tbb\bin\tbb.dll ..\bin\Release\
 copy ..\..\..\Dependencies\OpenAL1.1\dll\*.dll ..\bin\Release\
+

@@ -59,8 +59,6 @@
 #ifdef WIN32
 #include <conio.h>
 #endif
-
-
 GASS::MessageManager mm;
 
 void CreateManualObject()
@@ -183,9 +181,11 @@ int main(int argc, char* argv[])
 
 	app->Init();
 
+
+	std::cout << "----------------Update-------------------\n";
 	while(app->Update())
 	{
-
+		
 	}
 	
 	exit(0);
