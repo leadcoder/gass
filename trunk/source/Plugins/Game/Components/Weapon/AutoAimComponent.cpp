@@ -155,11 +155,6 @@ namespace GASS
 #define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DrawLineMessage(start,end,color)))
 #define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(text)))
 
-	Vec3 AutoAimComponent::ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v)
-	{
-		return  v - Math::Dot(v, plane_normal) * plane_normal;
-	}
-
 	Float AutoAimComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
 	{
 		Vec3 cross = Math::Cross(v1,v2);
@@ -210,6 +205,8 @@ namespace GASS
 		
 		
 		//rotate in world space to turret dir, this should be inproved!
+
+		//solution, project aimdirection to barrel up direction plane and take dot product
 		Vec3 projected_barrel_aim = barrel_dir;
 		projected_barrel_aim.y = 0;
 		projected_barrel_aim.Normalize();
@@ -219,7 +216,7 @@ namespace GASS
 		projected_barrel_aim.y = desired_aim_direction.y;
 
 		//project to turret plane to take roll in consideration
-		projected_barrel_aim = ProjectVectorOnPlane(barrel_plane_normal,projected_barrel_aim);
+		projected_barrel_aim = Math::ProjectVectorOnPlane(barrel_plane_normal,projected_barrel_aim);
 		
 		
 		projected_barrel_aim.Normalize();
@@ -236,7 +233,7 @@ namespace GASS
 		//Yaw calculation
 
 		const Vec3 base_plane_normal = m_BaseTransformation.GetUpVector();
-		Vec3 projected_aim = ProjectVectorOnPlane(base_plane_normal,desired_aim_direction);
+		Vec3 projected_aim = Math::ProjectVectorOnPlane(base_plane_normal,desired_aim_direction);
 		
 		projected_aim.Normalize();
 		const Vec3 turret_dir = -m_TurretTransformation.GetViewDirVector();

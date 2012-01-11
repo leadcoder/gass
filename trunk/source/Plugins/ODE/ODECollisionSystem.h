@@ -47,7 +47,7 @@ namespace GASS
 		SystemType GetSystemType() const {return "CollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
-		void Force(CollisionRequest &request, CollisionResult &result);
+		void Force(CollisionRequest &request, CollisionResult &result) const;
 		void Process();
 		Float GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute=true) const;
 	private:

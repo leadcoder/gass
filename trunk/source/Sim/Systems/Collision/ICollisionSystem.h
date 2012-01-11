@@ -82,7 +82,7 @@ namespace GASS
 			Check is a collision request is processed. The function return true is the 
 			request is processed and the result is placed in the CollisionResult argument.
 		*/
-		virtual bool Check(CollisionHandle handle, CollisionResult &result)= 0;
+		virtual bool Check(CollisionHandle handle, CollisionResult &result) = 0;
 
 		/**
 			This function will force a the collision system to process 
@@ -91,7 +91,7 @@ namespace GASS
 			@remarks Calling this method can stall the caller if the collision system
 			implementation is threaded and therefore is busy processing other requests
 		*/
-		virtual void Force(CollisionRequest &request, CollisionResult &result)= 0;
+		virtual void Force(CollisionRequest &request, CollisionResult &result) const = 0;
 	protected:
 	};
 

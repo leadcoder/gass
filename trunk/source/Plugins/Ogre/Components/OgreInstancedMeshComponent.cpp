@@ -192,7 +192,7 @@ namespace GASS
 			instancedGeometry->setOrigin(Vector3::ZERO);
 			instancedGeometry->build();
 
-			const int num_batches = (iter->second.size() / maxObjectsPerBatch); 
+			const int num_batches = static_cast<int>(iter->second.size() / maxObjectsPerBatch); 
 
 			for (size_t k = 0; k < num_batches; k++)
 			{

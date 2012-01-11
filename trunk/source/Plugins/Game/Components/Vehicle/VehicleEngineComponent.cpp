@@ -670,7 +670,7 @@ namespace GASS
 
 	void VehicleEngineComponent::UpdateGearShift(float throttle, float rpm, double time)
 	{
-		int number_of_gears = m_GearBoxRatio.size();
+		int number_of_gears = static_cast<int>(m_GearBoxRatio.size());
 		if(m_AutoClutchStart == 0 && m_AutoShiftStart == 0)
 		{
 			if(m_Automatic)

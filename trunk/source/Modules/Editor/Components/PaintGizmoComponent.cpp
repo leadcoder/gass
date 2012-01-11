@@ -79,7 +79,7 @@ namespace GASS
 
 		const float samples = 30;
 		const float rad = 2*MY_PI/samples;
-		float x,y,z;
+		float x,y;
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*m_Size;

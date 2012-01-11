@@ -60,7 +60,7 @@
 #   pragma warning( disable: 4530)
 
 // disable: "signed/unsigned mismatch"
-#   pragma warning( disable: 4018)
+//#   pragma warning( disable: 4018)
 
 #endif /* WIN32 */
 

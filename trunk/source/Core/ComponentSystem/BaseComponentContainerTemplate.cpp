@@ -139,7 +139,7 @@ namespace GASS
 		}
 		else
 		{
-			int num_comp = m_ComponentVector.size();
+			int num_comp = static_cast<int>(m_ComponentVector.size());
 			SerialSaver* saver = (SerialSaver*) serializer;
 			saver->IO<int>(num_comp);
 			
@@ -157,7 +157,7 @@ namespace GASS
 				++iter;
 			}
 
-			int num_children = m_ComponentContainerVector.size();
+			int num_children = static_cast<int>( m_ComponentContainerVector.size());
 			saver->IO<int>(num_children);
 
 			BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
@@ -448,7 +448,7 @@ namespace GASS
 		type = ComponentContainerTemplateFactory::Get().GetFactoryName(type);
 
 		//remove template from name
-		const int pos = type.find("Template");
+		const std::string::size_type pos = type.find("Template");
 		type = type.substr(0,pos);
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 

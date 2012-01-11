@@ -6,7 +6,7 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
-
+#include "Framework/Framework.h"
 
 namespace GASS
 {

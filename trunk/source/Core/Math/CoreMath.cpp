@@ -54,7 +54,10 @@ namespace GASS
 	}
 
 
-
+	Vec3 Math::ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v)
+	{
+		return  v - Math::Dot(v, plane_normal) * plane_normal;
+	}
 
 
 	Vec3 Math::GetNormal(const Vec3 &p1,const Vec3 &p2,const Vec3 &p3)
@@ -131,10 +134,10 @@ namespace GASS
 
 		const Vec3 isect_point = start + ray_dir * ray_scale;
 
-		int size = poly.m_VertexVector.size();
+		size_t size = poly.m_VertexVector.size();
 		size %= 3;
-		int index = 1;
-		for(int i = 0; i < size+1;i++)
+		size_t index = 1;
+		for(size_t i = 0; i < size+1;i++)
 		{
 
 			if(CheckPointInTriangle1(isect_point, 

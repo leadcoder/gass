@@ -109,10 +109,6 @@ namespace GASS
 		Vec3 new_dir = inv_trans * dir;
 	}*/
 
-	Vec3 TurretComponent::ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v)
-	{
-		return  v - Math::Dot(v, plane_normal) * plane_normal;
-	}
 
 	Vec3 TurretComponent::GetDesiredAimDirection(double delta_time)
 	{
@@ -197,7 +193,7 @@ namespace GASS
 		if(m_Controller == "Pitch")
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetRightVector();
-			Vec3 projected_aim = ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
@@ -210,7 +206,7 @@ namespace GASS
 		else
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetUpVector();
-			Vec3 projected_aim = ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 

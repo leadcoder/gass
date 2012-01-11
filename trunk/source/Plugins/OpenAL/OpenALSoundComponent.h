@@ -16,12 +16,11 @@
 #ifdef WIN32
 #include "al.h"
 #include "alc.h"
-#include "alut.h"
 #else 
 #include "AL/al.h"
 #include "AL/alc.h"
-#include "AL/alut.h"
 #endif
+
 namespace GASS
 {
 	class OpenALSoundComponent : public Reflection<OpenALSoundComponent,BaseSceneComponent>

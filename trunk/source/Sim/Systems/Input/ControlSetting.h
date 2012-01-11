@@ -53,8 +53,8 @@ namespace GASS
 
 		  }
 		  std::string GetController()const {return m_Controller;}
-		  float GetValue()const {return m_Value;} 
-		  ControllerType GetControllerType(){return m_ControllerType;}
+		  float GetValue() const {return m_Value;} 
+		  ControllerType GetControllerType() const {return m_ControllerType;}
 	private:
 		std::string m_Controller;
 		float m_Value;
@@ -72,14 +72,12 @@ namespace GASS
 		~ControlSetting(void);
 		void Update(double delta_time);
 		void AddController(Controller *controller, const std::string &name,int action);
-		//virtual void Set(const std::string &input,float value);
-		//virtual void TrySet(const std::string &input,float value);
-		//virtual void DisableOverride(const std::string &input);
-		//virtual float Get(const std::string &input);
-		virtual Controller* GetController(const std::string &input);
-		IInputSystem* GetInputSystem(){return m_Input;}
-		MessageManager* GetMessageManager(){return m_MM;}
+		virtual Controller* GetController(const std::string &input) const;
+		IInputSystem* GetInputSystem() const {return m_Input;}
+		MessageManager* GetMessageManager() const {return m_MM;}
+
 		typedef std::map<std::string,Controller*> ControllerMap;
+		
 		std::map<std::string,int> m_NameToIndex;
 		std::map<int,std::string> m_IndexToName;
 		ControllerMap m_ControllerMap;

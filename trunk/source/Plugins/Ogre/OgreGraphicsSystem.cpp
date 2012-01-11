@@ -116,8 +116,8 @@ namespace GASS
 			window->setDeactivateOnFocusChange(false);
 			size_t window_hnd = 0;
 			window->getCustomAttribute("WINDOW", &window_hnd);
-			int handle = window_hnd;
-			int main_handle = window_hnd;
+			int handle = static_cast<int>(window_hnd);
+			int main_handle = static_cast<int>(window_hnd);
 			m_Windows[name] = window;
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
 			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handle,main_handle));
@@ -174,7 +174,7 @@ namespace GASS
 		
 	}
 
-	void OgreGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top)
+	void OgreGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
 	{
 		unsigned int depth;
 		if(m_Windows.size() > 0)
@@ -298,8 +298,8 @@ namespace GASS
 				{
 					size_t window_hnd = 0;
 					window->getCustomAttribute("WINDOW", &window_hnd);
-					handle = window_hnd;
-					main_handle = window_hnd;
+					handle = static_cast<int>(window_hnd);
+					main_handle = static_cast<int>(window_hnd);
 				}
 			}
 		
@@ -325,7 +325,7 @@ namespace GASS
 
 			if(m_Viewports.find(name) != m_Viewports.end())
 				return;
-			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),m_Viewports.size());
+			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),static_cast<int>(m_Viewports.size()));
 		}
 	}
 

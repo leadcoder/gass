@@ -13,6 +13,7 @@
 
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/SimEngine.h"
+#include "Framework/Framework.h"
 
 
 namespace GASS
@@ -217,8 +218,6 @@ namespace GASS
 
 	bool OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format)
 	{
-		ALsizei		size;		//the bit depth
-		ALboolean	loop;
 		ALvoid*		data=NULL;
 		std::string full_path = "";
 
@@ -243,13 +242,14 @@ namespace GASS
 
 				alGetError();   // Clear Error Code
 
-				alutLoadWAVFile( (ALbyte*)full_path.c_str(), &format, &data, &size, &freq, &loop);
+				//ALFWLoadWaveToBuffer (ALbyte*)full_path.c_str(), &format, &data, &size, &freq, &loop);
+				ALFWLoadWaveToBuffer( (ALbyte*)full_path.c_str(),buffer);
 
 				if ( CheckAlError("loadWAV::alutLoadWAVFile: ") )
 					return false;
 
 				// Copy the new WAV data into the buffer
-				alBufferData(buffer, format, data, size, freq);
+				//alBufferData(buffer, format, data, size, freq);
 				/*
 				AL_INVALID_VALUE :
 				The size parameter is not valid for the format
@@ -260,7 +260,7 @@ namespace GASS
 					return false;
 
 				// Unload the WAV file
-				alutUnloadWAV(format, data, size, freq);
+				//alutUnloadWAV(format, data, size, freq);
 				if (CheckAlError("loadWAV::alutUnloadWAV: ") )
 					return false;
 				if(buffer) 

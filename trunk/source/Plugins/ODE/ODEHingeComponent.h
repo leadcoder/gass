@@ -58,10 +58,6 @@ namespace GASS
 		//get set section
 		std::string GetType()const;
 		void SetType(const std::string &type);
-		std::string GetBody1Name()const {return m_Body1Name;}
-		void SetBody1Name(const std::string &name) {m_Body1Name = name;}
-		std::string GetBody2Name()const {return m_Body2Name;}
-		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
 		
 		Vec3 GetAxis()const {return m_Axis;}
 		void SetAxis(const Vec3 &value);
@@ -76,9 +72,6 @@ namespace GASS
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
 
-		std::string m_Body1Name;
-		std::string m_Body2Name;
-		
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
 		

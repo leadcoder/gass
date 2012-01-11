@@ -110,7 +110,8 @@ namespace GASS
 			return x;
 		}
 		static Float GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2);
-		#define MY_PI 3.14159265358f
+		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
+#define MY_PI 3.14159265358f
 	private:
 		static int	ClassifyPoint(const Vec3 &point, const Polygon &poly);
 		static int	ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);

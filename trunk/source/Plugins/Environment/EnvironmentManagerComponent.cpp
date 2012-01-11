@@ -23,7 +23,7 @@
 #include "HydraxWaterComponent.h"
 #include "HydraxRttListener.h"
 #include <Hydrax/Hydrax.h>
-#include <SkyX/SkyX.h>
+#include <SkyX.h>
 
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Core/ComponentSystem/ComponentFactory.h"

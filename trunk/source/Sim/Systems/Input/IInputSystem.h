@@ -256,7 +256,7 @@ namespace GASS
 	{
 	public:
 		virtual ~IMouseListener() {}
-		virtual bool MouseMoved(float x,float y, float z)=0;
+		virtual bool MouseMoved(float x,float y, float z) =0;
 		virtual bool MousePressed( int id ) = 0;
 		virtual bool MouseReleased( int id ) = 0;
 	};
@@ -266,7 +266,7 @@ namespace GASS
 	public:
 		virtual ~IGameControllerListener() {}
 		virtual bool ButtonPressed(int device, int button) =0 ;
-		virtual bool ButtonReleased(int device,int button)=0 ;
+		virtual bool ButtonReleased(int device,int button) =0 ;
 		virtual bool AxisMoved(int device,int axis,float value)=0;
 		//Joystick Event, amd sliderID
 		virtual bool SliderMoved(int device,int axis, float value)=0;

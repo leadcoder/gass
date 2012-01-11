@@ -43,13 +43,13 @@ namespace GASS
 	public:
 		ControlSettingsManager();
 		virtual ~ControlSettingsManager();
-		ControlSetting* GetControlSetting(const std::string &name);
+		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
 		bool Load(const std::string &filename);
 		void Update(double delta_time);
 		void Clear();
 	private:
-		int GetDevice(std::string device);
+		int GetDevice(std::string device) const;
 		void Add(const std::string &name,ControlSetting* cs);
 		typedef std::map<std::string,ControlSetting*> ControlSettingMap;
 		ControlSettingMap m_ControlSettingMap;

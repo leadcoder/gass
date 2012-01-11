@@ -114,7 +114,7 @@ namespace GASS
 				SerialSaver* saver = (SerialSaver*) serializer;
 
 				std::vector<T> val = GetValue(object);
-				int num_val = (int) val.size();
+				int num_val = static_cast<int>( val.size());
 				saver->IO<int>(num_val);
 
 				for(int i = 0 ; i < val.size(); i++)

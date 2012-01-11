@@ -311,8 +311,8 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			int pos = child->GetName().find(GetName() + "DebugPhysics");
-			if(pos  >= 0)
+			std::string::size_type pos = child->GetName().find(GetName() + "DebugPhysics");
+			if(pos  != std::string::npos)
 			{
 				scene_object = child;
 			}

@@ -275,7 +275,7 @@ namespace GASS
 				{
 					int new_tool = i-1;
 					if(new_tool < 0)
-						new_tool = m_Tools.size()-1;
+						new_tool = static_cast<int>(m_Tools.size()-1);
 
 					int id = (int) this;
 					MessagePtr tool_msg(new ToolChangedMessage(m_Tools[new_tool]->GetName(),id));

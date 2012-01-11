@@ -600,15 +600,12 @@ namespace GASS
 			Ogre::uchar *data = static_cast<Ogre::uchar*>(dmap->getPixelBox().data);
 			Ogre::uchar *data2 = m_DensityImage.getData();
 
-			int wsize = dmap->getPixelBox().getWidth()-1;
+			int wsize = static_cast<int>(dmap->getPixelBox().getWidth()-1);
 
 			unsigned char rgbaShift[4];
 //			Ogre::PixelUtil::getBitShifts(mPGDensityMap.getFormat(), rgbaShift);
 			int layerID = 0;
 			int pos = rgbaShift[layerID] / 8;
-
-			Ogre::uint val;
-
 			const Ogre::Real height = m_MapBounds.height();
 			const Ogre::Real width = m_MapBounds.width();
 			const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;

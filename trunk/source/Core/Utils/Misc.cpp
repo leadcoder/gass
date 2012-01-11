@@ -63,7 +63,7 @@ namespace GASS
 	std::string Misc::RemoveExtension(const std::string &file_name)
 	{
 		std::string ret;
-		int pos = 0;
+		std::string::size_type pos;
 		pos = file_name.find_last_of(".");
 		ret = file_name.substr(0,pos);
 		return ret;
@@ -72,7 +72,7 @@ namespace GASS
 	std::string Misc::GetExtension(const std::string &file_name)
 	{
 		std::string ret, reversed_string;
-		int pos = file_name.find_last_of(".");
+		std::string::size_type pos  = file_name.find_last_of(".");
 
 		if (pos == file_name.npos)
 			return "";
@@ -85,17 +85,16 @@ namespace GASS
 	std::string Misc::GetFilename(const std::string &path)
 	{
 		std::string ret = path;
-		int pos = 0;
-
-		pos = ret.find("/",0);
-		while(pos >= 0)
+		
+		std::string::size_type pos = ret.find("/",0);
+		while(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
 			pos = ret.find("/",0);
 		}
 		pos = ret.find("\\",0);
 
-		while(pos >= 0)
+		while(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
 			pos = ret.find("\\",0);
@@ -106,16 +105,15 @@ namespace GASS
 	std::string Misc::RemoveFilename(const std::string &path)
 	{
 		std::string ret = path;
-		int pos1 = 0;
-		int pos2 = 0;
 
-		pos1 = ret.find_last_of("/",ret.size());
-		pos2 = ret.find_last_of("\\",ret.size());
-		if(pos1 > pos2 && pos1 > -1)
+		
+		std::string::size_type pos1 = ret.find_last_of("/",ret.size());
+		std::string::size_type pos2 = ret.find_last_of("\\",ret.size());
+		if(pos1 > pos2 && pos1 != std::string::npos)
 		{
 			ret = ret.substr(0,pos1+1);
 		}
-		else if(pos2 > -1)
+		else if(pos2  != std::string::npos)
 		{
 			ret = ret.substr(0,pos2+1);
 		}
@@ -153,9 +151,9 @@ namespace GASS
 	{
 		std::string ext,temp;
 
-		int pos = name.find(".",0);
+		std::string::size_type pos = name.find(".",0);
 
-		if(pos != -1)
+		if(pos != std::string::npos)
 		{
 			name = name.substr(0,pos);
 		}
@@ -209,12 +207,12 @@ namespace GASS
 
 	std::string Misc::Replace(const std::string &str, const std::string &find, const std::string &replacement)
 	{
-		int pos = 0;
-		int look_here = 0;
+		std::string::size_type  pos = 0;
+		std::string::size_type  look_here = 0;
 		std::string new_str = str;
 
 		//if(find.find(replacement)) // what we are going to replace already exist replecement string -> infinite while
-		while ((pos = new_str.find(find,look_here)) != -1)
+		while ((pos = new_str.find(find,look_here)) != std::string::npos)
 		{
 			new_str.replace(pos, find.size(), replacement);
 			look_here = pos + replacement.size();

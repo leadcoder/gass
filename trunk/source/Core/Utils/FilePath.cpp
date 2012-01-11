@@ -134,8 +134,7 @@ namespace GASS
 	std::string FilePath::GetPathNoExtension() const
 	{
 		std::string ret;
-		int pos = 0;
-		pos = m_ExpandPath.find_last_of(".");
+		std::string::size_type pos = m_ExpandPath.find_last_of(".");
 		ret = m_ExpandPath.substr(0,pos);
 		return ret;
 	}
@@ -143,7 +142,7 @@ namespace GASS
 	std::string FilePath::GetExtension() const
 	{
 		std::string ret, reversed_string;
-		int pos = m_ExpandPath.find_last_of(".");
+		std::string::size_type pos = m_ExpandPath.find_last_of(".");
 
 		if (pos == m_ExpandPath.npos)
 			return "";
@@ -156,17 +155,16 @@ namespace GASS
 	std::string FilePath::GetFilename() const
 	{
 		std::string ret = m_ExpandPath;
-		int pos = 0;
 
-		pos = ret.find("/",0);
-		while(pos >= 0)
+		std::string::size_type  pos = ret.find("/",0);
+		while(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
 			pos = ret.find("/",0);
 		}
 		pos = ret.find("\\",0);
 
-		while(pos >= 0)
+		while(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
 			pos = ret.find("\\",0);
@@ -177,11 +175,8 @@ namespace GASS
 	std::string FilePath::GetPathNoFile() const
 	{
 		std::string ret = m_ExpandPath;
-		int pos1 = 0;
-		int pos2 = 0;
-
-		pos1 = ret.find_last_of("/",ret.size());
-		pos2 = ret.find_last_of("\\",ret.size());
+		std::string::size_type  pos1 = ret.find_last_of("/",ret.size());
+		std::string::size_type pos2 = ret.find_last_of("\\",ret.size());
 		if(pos1 > pos2 && pos1 > -1)
 		{
 			ret = ret.substr(0,pos1+1);

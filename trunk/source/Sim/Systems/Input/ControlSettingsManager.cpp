@@ -254,15 +254,15 @@ namespace GASS
 	}
 
 	
-	ControlSetting* ControlSettingsManager::GetControlSetting(const std::string &name)
+	ControlSetting* ControlSettingsManager::GetControlSetting(const std::string &name) const
 	{
-		ControlSettingMap::iterator pos;
+		ControlSettingMap::const_iterator pos;
 		//	name = Misc::ToLower(name);
 		pos = m_ControlSettingMap.find(name);
 
 		if (pos != m_ControlSettingMap.end()) // not in map.
 		{
-			return m_ControlSettingMap[name];
+			return (*pos).second;
 		}
 		else
 		{

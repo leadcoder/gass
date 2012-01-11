@@ -207,7 +207,7 @@ int IcoSphere::addToVertices(std::list<VertexPair> *target, const Ogre::Vector3 
 	for (int i = 0; i < (int)vertices.size(); i++)
 		target->push_back(VertexPair(transform * vertices[i], colour));
 
-	return vertices.size();
+	return static_cast<int>(vertices.size());
 }
  
 // ===============================================================================================

@@ -38,7 +38,7 @@ namespace GASS
 		{
 			int type_size = sizeof(unsigned long);
 			length +=type_size;
-			length += (int) value.length();
+			length += static_cast<int>( value.length());
 		}
 	}
 

@@ -45,30 +45,26 @@ namespace GASS
 	void ControlSetting::AddController(Controller *controller, const std::string &name,int action)
 	{
 		m_ControllerMap[name] = controller;
-		int index = m_ControllerMap.size();
+		const int index = static_cast<int>(m_ControllerMap.size());
 		m_NameToIndex[name] = index;
 		m_IndexToName[index] = name;
 		controller->m_Owner = this;
 	}
 
 
-	Controller*  ControlSetting::GetController(const std::string &input)
+	Controller*  ControlSetting::GetController(const std::string &input) const
 	{
-		ControllerMap::iterator pos;
-
-
+		ControllerMap::const_iterator pos;
 		pos = m_ControllerMap.find(input);
 
 		if (pos != m_ControllerMap.end()) // not in map.
 		{
-			Controller* ctrl = m_ControllerMap[input];
+			Controller* ctrl = (*pos).second;
 			return ctrl;
 		}
 		else
 		{
-			//if(m_Log) Log::Warning("Unknown object type: %s",name.c_str());
 			return NULL;
 		}
 	}
-
 }

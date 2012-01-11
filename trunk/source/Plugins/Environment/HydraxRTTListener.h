@@ -29,7 +29,7 @@
 #include "Hydrax/Hydrax.h"
 #include "Hydrax/Noise/Perlin/Perlin.h"
 #include "Hydrax/Modules/ProjectedGrid/ProjectedGrid.h"
-#include "SkyX/SkyX.h"
+#include "SkyX.h"
 
 namespace GASS
 {

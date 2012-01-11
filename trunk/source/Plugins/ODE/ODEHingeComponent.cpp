@@ -56,9 +56,6 @@ namespace GASS
 	void ODEHingeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsHingeComponent",new Creator<ODEHingeComponent, IComponent>);
-
-		RegisterProperty<std::string>("Body1Name", &GASS::ODEHingeComponent::GetBody1Name, &GASS::ODEHingeComponent::SetBody1Name);
-		RegisterProperty<std::string>("Body2Name", &GASS::ODEHingeComponent::GetBody2Name, &GASS::ODEHingeComponent::SetBody2Name);
 		RegisterProperty<float>("AxisForce", &GASS::ODEHingeComponent::GetAxisForce, &GASS::ODEHingeComponent::SetAxisForce);
 		RegisterProperty<float>("HighStop", &GASS::ODEHingeComponent::GetHighStop, &GASS::ODEHingeComponent::SetHighStop);
 		RegisterProperty<float>("LowStop", &GASS::ODEHingeComponent::GetLowStop, &GASS::ODEHingeComponent::SetLowStop);

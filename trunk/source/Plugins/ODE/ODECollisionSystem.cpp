@@ -109,14 +109,14 @@ namespace GASS
 		ResultMap::iterator iter = m_ResultMap.find(handle);
 		if(iter != m_ResultMap.end())
 		{
-			result = m_ResultMap[handle];
+			result = (*iter).second;
 			m_ResultMap.erase(iter);
 			return true;
 		}
 		return false;
 	}
 
-	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
+	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result) const
 	{
 		ScenarioScenePtr scene(request.Scene);
 		if(scene)

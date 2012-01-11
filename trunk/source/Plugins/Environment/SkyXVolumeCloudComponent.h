@@ -30,7 +30,7 @@
 
 #include "Core/MessageSystem/IMessage.h"
 #include <OgreRenderTargetListener.h>
-#include "SkyX/SkyX.h"
+#include "SkyX.h"
 
 namespace GASS
 {

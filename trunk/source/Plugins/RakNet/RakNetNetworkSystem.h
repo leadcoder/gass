@@ -27,6 +27,7 @@
 #include "NetworkIDManager.h"
 #include "ReplicaEnums.h"
 #include "ReplicaManager.h"
+#include "PacketLogger.h"
 #include "BitStream.h"
 #include "AutoRPC.h"
 
@@ -172,6 +173,7 @@ namespace GASS
 		RakNet::AutoRPC m_AutoRPC;
 		double m_InterpolationLag;
 		double m_LocationSendFrequency;
+		PacketLogger m_Logger;
 	};
 	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

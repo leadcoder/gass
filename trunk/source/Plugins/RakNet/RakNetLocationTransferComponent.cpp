@@ -363,7 +363,7 @@ namespace GASS
 			m_Velocity = trans_package->Velocity;
 			m_AngularVelocity = trans_package->AngularVelocity;
 
-			for(int i = m_LocationHistory.size()-1; i > 0 ;i--)
+			for(size_t i = m_LocationHistory.size()-1; i > 0 ;i--)
 			{
 				m_LocationHistory[i] = m_LocationHistory[i-1];
 			}

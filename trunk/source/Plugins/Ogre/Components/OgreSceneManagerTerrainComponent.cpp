@@ -231,25 +231,25 @@ namespace GASS
 		//Create indices
 		size_t index_size = (tWidth - 1) * (tHeight - 1) * 6;
 		mesh_data->FaceVector = new unsigned int[index_size];
-		mesh_data->NumFaces = index_size/3;
+		mesh_data->NumFaces = static_cast<int>(index_size/3);
 		for( size_t x = 0; x < tWidth - 1; x++)
 		{
 			for( size_t y=0; y < tHeight - 1; y++)
 			{
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6] = x+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = (x+1)+(y+1) * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6] = static_cast<int>(x+y * tWidth);
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = static_cast<int>((x+1)+y * tWidth);
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = static_cast<int>((x+1)+(y+1) * tWidth);
 
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = x+(y+1) * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = (x+1)+(y+1) * tWidth;
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = static_cast<int>(x+(y+1) * tWidth);
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = static_cast<int>(x+y * tWidth);
+				mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = static_cast<int>((x+1)+(y+1) * tWidth);
 			}
 		}
 
 		// Create vertices
 		size_t vertex_size = tWidth * tHeight;
 		mesh_data->VertexVector = new Vec3[vertex_size];
-		mesh_data->NumVertex = vertex_size;
+		mesh_data->NumVertex = static_cast<int>(vertex_size);
 		size_t index = 0;
 		Ogre::Vector3 offset(0,0,0);
 		for(size_t x = 0; x < tWidth; x++)

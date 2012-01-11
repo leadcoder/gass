@@ -136,7 +136,7 @@ namespace GASS
 		}
 		else
 		{
-			int num_comp = m_ComponentVector.size();
+			int num_comp = static_cast<int>(m_ComponentVector.size());
 			SerialSaver* saver = (SerialSaver*) serializer;
 			
 			saver->IO<int>(num_comp);
@@ -154,7 +154,7 @@ namespace GASS
 				++iter;
 			}
 
-			int num_children = m_ComponentContainerVector.size();
+			int num_children = static_cast<int>(m_ComponentContainerVector.size());
 			saver->IO<int>(num_children);
 			BaseComponentContainer::ComponentContainerVector::iterator go_iter;
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)

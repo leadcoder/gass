@@ -78,7 +78,7 @@ namespace GASS
 
 	void DynamicLines::fillHardwareBuffers()
 	{
-		int size = mPoints.size();
+		int size =static_cast<int>( mPoints.size());
 
 		prepareHardwareBuffers(size,0);
 

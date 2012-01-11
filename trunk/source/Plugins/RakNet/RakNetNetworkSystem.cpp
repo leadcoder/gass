@@ -152,6 +152,7 @@ namespace GASS
 		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
 		m_RakPeer->AttachPlugin(&m_AutoRPC);
+		//m_RakPeer->AttachPlugin(&m_Logger);
 
 		//RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
 		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
@@ -266,6 +267,8 @@ namespace GASS
 		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
+		//m_Logger.LogHeader();
+		
 	}
 
 
@@ -781,7 +784,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::WriteString(const std::string &str,RakNet::BitStream *outBitStream)
 	{
-		int str_size = str.length();
+		int str_size = static_cast<int>(str.length());
 		outBitStream->Write(str_size);
 		if	(str_size > 0)
 		{

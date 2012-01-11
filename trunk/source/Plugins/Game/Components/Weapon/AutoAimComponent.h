@@ -66,7 +66,6 @@ namespace GASS
 		void SetYawPID(const PIDControl &value) {m_YawPID = value;}
 		
 
-		Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		

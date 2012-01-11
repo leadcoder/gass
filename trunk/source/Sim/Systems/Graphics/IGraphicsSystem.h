@@ -41,7 +41,7 @@ namespace GASS
 		/**
 			Retrieve information about the main window (used by input system?)
 		*/
-		virtual void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) = 0;
+		virtual void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const = 0;
 		
 		/**
 			Create new render window 

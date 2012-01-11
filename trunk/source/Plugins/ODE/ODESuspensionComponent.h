@@ -61,10 +61,6 @@ namespace GASS
 		void UpdateJointAxis();
 
 		//get set section
-		std::string GetBody1Name()const {return m_Body1Name;}
-		void SetBody1Name(const std::string &name) {m_Body1Name = name;}
-		std::string GetBody2Name()const {return m_Body2Name;}
-		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
 		
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value);
@@ -83,19 +79,12 @@ namespace GASS
 		void SetHighStop(float value);
 		float GetLowStop()const {return m_LowStop;}
 		void SetLowStop(float value);
-
-		
 	private:
 		void JointCorrectHinge2();
 		void UpdateSwayBars(VelocityNotifyMessagePtr message);
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
-
-		std::string m_Body1Name;
-		std::string m_Body2Name;
 		
-	
-
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
 		

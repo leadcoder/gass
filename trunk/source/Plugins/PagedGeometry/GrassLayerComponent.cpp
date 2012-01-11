@@ -379,7 +379,7 @@ namespace GASS
 			Ogre::PixelBox pbox = dmap->getPixelBox();
 			Ogre::uchar *data = static_cast<Ogre::uchar*>(dmap->getPixelBox().data);
 			
-			int wsize = dmap->getPixelBox().getWidth()-1;
+			int wsize = static_cast<int>(dmap->getPixelBox().getWidth()-1);
 
 			unsigned char rgbaShift[4];
 			int layerID = 0;

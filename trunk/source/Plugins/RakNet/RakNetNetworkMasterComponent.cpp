@@ -142,7 +142,7 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
 	{
-		int num_packs = m_SerializePackages.size();
+		int num_packs = static_cast<int>(m_SerializePackages.size());
 		outBitStream->Write(num_packs);
 		for(int i = 0 ; i < m_SerializePackages.size(); i++)
 		{

@@ -244,6 +244,6 @@ namespace GASS
 
 		//end of spline
 		time = 0;
-		index = m_NodeVector.size()-1;
+		index =static_cast<int>(m_NodeVector.size()-1);
 	}
 }

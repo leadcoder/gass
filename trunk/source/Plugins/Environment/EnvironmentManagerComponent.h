@@ -32,7 +32,7 @@
 #include <OgreLight.h>
 
 #include "Hydrax/Hydrax.h"
-#include "SkyX/SkyX.h"
+#include "SkyX.h"
 
 namespace GASS
 {

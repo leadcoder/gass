@@ -62,7 +62,7 @@ namespace GASS
 		{
 
 		}
-		float virtual GetValue(){return 0;};
+		float virtual GetValue() const {return 0;};
 	};
 
 	class TriggerController : public Controller
@@ -72,7 +72,7 @@ namespace GASS
 		{
 
 		}
-		float virtual GetValue(){return 0;};
+		float virtual GetValue() const {return 0;};
 	};
 
 	class KeyTriggerController : public TriggerController, public IKeyListener
@@ -88,7 +88,7 @@ namespace GASS
 			m_Owner->GetInputSystem()->RemoveKeyListener(this);
 		}
 
-		bool KeyPressed( int key, unsigned int text)
+		bool KeyPressed( int key, unsigned int text) 
 		{
 			if(key == m_Key)
 			{
@@ -212,7 +212,7 @@ namespace GASS
 		{
 			m_Owner->GetInputSystem()->RemoveKeyListener(this);
 		}
-		bool KeyPressed(int key, unsigned int text)
+		bool KeyPressed(int key, unsigned int text) 
 		{
 			if(key == m_PosKey || key == m_NegKey)
 			{
