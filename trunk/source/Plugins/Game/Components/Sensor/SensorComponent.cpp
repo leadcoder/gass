@@ -21,7 +21,8 @@ namespace GASS
 		m_DefaultMaxDetectionDistance(100000),
 		m_UpdateFrequency(10),
 		m_CurrentTime(0),
-		m_Debug(false)
+		m_Debug(false),
+		m_Position(0,0,0)
 	{
 		
 	}	
