@@ -433,7 +433,6 @@ namespace GASS
 			MessagePtr debug_msg(new DebugPrintMessage(engine_data));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 		}
-
 		/*char dtxt[256];
 		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineRPM,m_Clutch);
 		std::string engine_data = dtxt;

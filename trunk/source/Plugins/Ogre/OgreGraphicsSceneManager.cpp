@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
+#include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -32,6 +33,7 @@
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
+
 
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
@@ -194,6 +196,8 @@ namespace GASS
 
 		//Create debug render system
 		new DebugDrawer(m_SceneMgr, 0.5f);
+
+		
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)

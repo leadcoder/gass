@@ -23,6 +23,7 @@
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/Helpers/OgreText.h"
 
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -63,7 +64,6 @@ namespace GASS
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::OgreGraphicsSystem::GetTaskGroup, &GASS::OgreGraphicsSystem::SetTaskGroup);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
-
 	}
 
 	void OgreGraphicsSystem::OnCreate()
@@ -73,6 +73,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateTextBox,CreateTextBoxMessage ,0));
 	}
 
 	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
@@ -127,6 +128,10 @@ namespace GASS
 		{
 			m_Root->initialise(false);
 		}
+
+		new TextRenderer();
+
+		
 	}
 
 
@@ -199,6 +204,8 @@ namespace GASS
 
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
+
+		
 
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
@@ -370,10 +377,28 @@ namespace GASS
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(DebugDrawer::getSingletonPtr())
+		{
+			
 			DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
+		}
 	}
 
-	
+	void OgreGraphicsSystem::OnCreateTextBox(CreateTextBoxMessagePtr message)
+	{
+		/*static TextRenderer* tr = NULL;
+		if(!tr) 
+		{
+			tr = new TextRenderer();
+		}*/
+
+		Vec4 color = message->m_Color;
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+
+		if(!TextRenderer::getSingleton().hasTextBox(message->m_BoxID))
+			TextRenderer::getSingleton().addTextBox(message->m_BoxID, message->m_Text, message->m_PosX, message->m_PosY, message->m_Width, message->m_Width, ogre_color);
+		else
+			TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);
+	}
 }
 
 

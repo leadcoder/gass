@@ -87,7 +87,8 @@ namespace GASS
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnDrawLine(DrawLineMessagePtr message);
 		void OnDrawCircle(DrawCircleMessagePtr message);
-		
+		void OnCreateTextBox(CreateTextBoxMessagePtr message);
+
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);

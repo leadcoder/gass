@@ -99,6 +99,7 @@ namespace GASS
 		
 		bool m_Active;
 		bool m_RemoteSim;
+		bool m_AimAtPos;
 		std::string m_TargetName;
 		//Float m_AngularVelocity;
 

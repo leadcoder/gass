@@ -66,7 +66,8 @@ namespace GASS
 		m_TargetDistance(900),
 		m_Debug(false),
 		m_ResetToBarrelWhileInactive(true),
-		m_TurnInputExp(1)
+		m_TurnInputExp(1),
+		m_AimAtPos(false)
 	{
 		
 		m_BaseTransformation.Identity();
@@ -240,7 +241,7 @@ namespace GASS
 
 		std::stringstream ss;
 		ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
-		DEBUG_PRINT(ss.str());
+		//DEBUG_PRINT(ss.str());
 		if(m_RemoteSim)
 			return;
 
@@ -264,8 +265,14 @@ namespace GASS
 
 		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*m_TargetDistance;
 
-		int id = (int) this; 
-		m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
+
+		if(m_AimAtPos)
+		{
+			int id = (int) this; 
+			m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
+			
+			//DEBUG_PRINT("Aim at pos");
+		}
 
 		if(m_Debug)
 			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(),aim_point,Vec4(0,1,1,1));
@@ -314,8 +321,6 @@ namespace GASS
 			if(value > 0)
 			{	
 				m_Active = true;
-				//std::cout << "activate\n";
-				
 			}
 
 			else
@@ -325,22 +330,19 @@ namespace GASS
 
 				m_Active = false;
 				 
-				if (!m_RemoteSim) //also release auto aim?
-					m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(false,m_AutoAimPriority,id)));
 				m_YawInput = 0;
 				m_PitchInput = 0;
 				//std::cout << "deactivate\n";
 			}
-			//m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(m_Active)));
+			
 		}
 		if (!m_RemoteSim && m_Active && name == m_SendDesiredPointController)
 		{
-			bool auto_aim = false;
+			m_AimAtPos = false;
 			if(value > 0)
-				auto_aim = true;
+				m_AimAtPos = true;
 
-			
-			m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(auto_aim,m_AutoAimPriority,id)));
+			m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(m_AimAtPos,m_AutoAimPriority,id)));
 		}
 
 		if (!m_RemoteSim && name == m_ResetToBarrelController)

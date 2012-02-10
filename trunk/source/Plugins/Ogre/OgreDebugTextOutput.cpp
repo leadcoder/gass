@@ -98,8 +98,8 @@ namespace GASS
 		if(m_OverlayMgr ==NULL)
 		{
 			m_OverlayMgr = Ogre::OverlayManager::getSingletonPtr();
-			m_Overlay = m_OverlayMgr->create("overlay1");
-			m_Panel = static_cast<Ogre::OverlayContainer*>(m_OverlayMgr->createOverlayElement("Panel", "container1"));
+			m_Overlay = m_OverlayMgr->create("DebugOverlay");
+			m_Panel = static_cast<Ogre::OverlayContainer*>(m_OverlayMgr->createOverlayElement("Panel", "DebugContainer"));
 			m_Panel->setDimensions(1, 1);
 			m_Panel->setPosition(0, 0);
 			m_Overlay->add2D(m_Panel);
