@@ -1,6 +1,7 @@
 #pragma once
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "../EditorCommon.h"
 namespace GASS
 {
 	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,BaseSceneComponent>

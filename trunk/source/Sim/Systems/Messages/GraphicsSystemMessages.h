@@ -165,7 +165,32 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<DrawCircleMessage> DrawCircleMessagePtr;
 
- 
+	class CreateTextBoxMessage : public BaseMessage
+	{
+	public:
+		CreateTextBoxMessage(const std::string &text_area_id, const std::string &text ,const Vec4 &color, float pos_x,float pos_y, float width, float height, SenderID sender_id = -1, double delay= 0) :
+		  m_BoxID(text_area_id),
+		  m_Text(text),
+		  m_Color(color),
+		  m_PosX(pos_x),
+		  m_PosY(pos_y),
+		  m_Width(width),
+		  m_Height(height),
+
+		  BaseMessage(sender_id , delay)  
+		  {
+
+		  }
+
+		  std::string m_BoxID;
+		  std::string m_Text;
+		  Vec4 m_Color;
+		  float m_PosX;
+		  float m_PosY;
+		  float m_Width;
+		  float m_Height;
+	};
+	typedef boost::shared_ptr<CreateTextBoxMessage> CreateTextBoxMessagePtr;
 }
 
 #endif

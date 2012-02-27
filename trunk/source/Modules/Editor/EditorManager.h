@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Utils/Singleton.h"
+#include "Core/Utils/FilePath.h"
 #include "EditorCommon.h"
 #include <list>
 #include <vector>
@@ -21,14 +22,15 @@ namespace GASS
 		static EditorManager* GetPtr();
 		static EditorManager& Get();
 
-		void Init();
+		void Init(const FilePath &working_folder);
 		GASS::MessageManager* GetMessageManager(void);
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
-		//const std::string GetWorkingDirPath(void) {return m_WorkingDirPath;}
+		const FilePath GetWorkingFolder(void) {return m_WorkingFolder;}
 	protected:
 		//std::string m_WorkingDirPath;
 		//Create tool controller
 		MouseToolControllerPtr m_MouseTools;
 		MessageManager* m_MessageManager;
+		FilePath m_WorkingFolder;
 	};
 }

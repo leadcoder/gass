@@ -57,21 +57,6 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ObjectSiteSelectMessage> ObjectSiteSelectMessagePtr;
 
-	
-
-	/*class GotoPositionMessage : public BaseMessage
-	{
-	public:
-		GotoPositionMessage(const Vec3 &position, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Pos(position){}
-		  Vec3 GetPosition() const {return m_Pos;}
-	private:
-		Vec3 m_Pos;
-	};
-	typedef boost::shared_ptr<GotoPositionMessage> GotoPositionMessagePtr;*/
-
-
-
 
 	class ZoomObjectMessage : public BaseMessage
 	{

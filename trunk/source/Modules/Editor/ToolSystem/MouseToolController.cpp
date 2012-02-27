@@ -687,7 +687,7 @@ namespace GASS
 		m_Delta = delta;
 		//debug message
 
-		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+	/*	SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			std::stringstream ss;

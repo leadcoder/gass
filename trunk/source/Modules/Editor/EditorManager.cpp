@@ -26,9 +26,9 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void EditorManager::Init()
+	void EditorManager::Init(const FilePath &working_folder)
 	{
-		
+		m_WorkingFolder = working_folder;
 		m_MouseTools =  MouseToolControllerPtr(new MouseToolController(false));
 		m_MouseTools->Init();
 	}
