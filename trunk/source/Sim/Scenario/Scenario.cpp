@@ -84,14 +84,9 @@ namespace GASS
 			Log::Error("No Resource Manager Found");
 		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",false);
 		
-
-		
-
 		std::string filename = scenario_path + "/scenario.xml";
-
 		//Load scenario specific templates, filename should probably be a scenario parameter
 		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
-
 
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());

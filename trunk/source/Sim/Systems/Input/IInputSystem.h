@@ -291,7 +291,7 @@ namespace GASS
 		virtual void RemoveMouseListener(IMouseListener* mouse_listener)=0;
 		virtual void AddGameControllerListener(IGameControllerListener* mouse_listener)=0;
 		virtual void RemoveGameControllerListener(IGameControllerListener* mouse_listener)=0;
-		virtual void SetWindow(int window) = 0;
+		virtual void SetWindow(void* window) = 0;
 		
 	};
 	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;

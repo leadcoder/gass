@@ -76,15 +76,15 @@ namespace GASS
 	class MainWindowCreatedNotifyMessage : public BaseMessage
 	{
 	public:
-		MainWindowCreatedNotifyMessage(int render_window_handle, int main_window_handle,SenderID sender_id = -1, double delay= 0) :
+		MainWindowCreatedNotifyMessage(void* render_window_handle, void* main_window_handle,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay),
 			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
-		  int GetRenderWindowHandle() const {return m_Handle;}
-		  int GetMainHandle() const {return m_MainHandle;}
+		  void* GetRenderWindowHandle() const {return m_Handle;}
+		  void* GetMainHandle() const {return m_MainHandle;}
 
 	private:
-		int m_Handle;
-		int m_MainHandle;
+		void* m_Handle;
+		void* m_MainHandle;
 
 	};
 	typedef boost::shared_ptr<MainWindowCreatedNotifyMessage> MainWindowCreatedNotifyMessagePtr;

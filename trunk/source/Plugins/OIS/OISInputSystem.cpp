@@ -77,7 +77,7 @@ namespace GASS
 	{
 		m_Window = message->GetMainHandle();
 		OIS::ParamList pl;
-		size_t windowHnd = m_Window;
+		size_t windowHnd = (size_t) m_Window;
 		std::ostringstream windowHndStr;
 		windowHndStr << windowHnd;
 		pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));

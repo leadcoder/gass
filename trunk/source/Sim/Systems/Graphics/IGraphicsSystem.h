@@ -50,7 +50,7 @@ namespace GASS
 			@param height Window height in pixels
 			@param handle Main window handle (parent window)
 		*/
-		virtual void CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle = 0) = 0;
+		virtual void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0) = 0;
 		
 		/**
 			Create new viewport in render window 

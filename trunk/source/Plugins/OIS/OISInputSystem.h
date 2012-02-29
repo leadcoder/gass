@@ -85,7 +85,7 @@ namespace GASS
 		int	 GetJoystickIndex() { return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }
 
-		void SetWindow(int window)
+		void SetWindow(void* window)
         {
             m_Window = window;
         }
@@ -140,7 +140,7 @@ namespace GASS
 		bool m_OnlyUpdateWhenFocued;
 		bool m_Active;
 		float m_MouseSpeed;
-		int m_Window;
+		void* m_Window;
 		bool m_ExclusiveMode;
 		
 		double m_TimeSinceLastUpdate;

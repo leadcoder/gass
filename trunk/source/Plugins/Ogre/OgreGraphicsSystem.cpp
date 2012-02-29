@@ -115,13 +115,13 @@ namespace GASS
 			std::string name = "MainWindow";
 			Ogre::RenderWindow *window = m_Root->initialise(true,name);
 			window->setDeactivateOnFocusChange(false);
-			size_t window_hnd = 0;
+			void* window_hnd = 0;
 			window->getCustomAttribute("WINDOW", &window_hnd);
-			int handle = static_cast<int>(window_hnd);
-			int main_handle = static_cast<int>(window_hnd);
+			void* handle = static_cast<void*>(window_hnd);
+			void* main_handle = static_cast<void*>(window_hnd);
 			m_Windows[name] = window;
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handle,main_handle));
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 		else
@@ -285,7 +285,7 @@ namespace GASS
 		return m_TaskGroup;
 	}
 
-	void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle)
+	void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
 	{
 		Ogre::RenderWindow *window = NULL;
 
@@ -303,10 +303,10 @@ namespace GASS
 				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
 				if(main_handle == 0)
 				{
-					size_t window_hnd = 0;
+					void* window_hnd = 0;
 					window->getCustomAttribute("WINDOW", &window_hnd);
-					handle = static_cast<int>(window_hnd);
-					main_handle = static_cast<int>(window_hnd);
+					handle = window_hnd;
+					main_handle = window_hnd;
 				}
 			}
 		
@@ -316,7 +316,7 @@ namespace GASS
 		if(m_Windows.size() == 1) // first window
 		{
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage((int)handle,main_handle));
+			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 	}
@@ -385,12 +385,6 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnCreateTextBox(CreateTextBoxMessagePtr message)
 	{
-		/*static TextRenderer* tr = NULL;
-		if(!tr) 
-		{
-			tr = new TextRenderer();
-		}*/
-
 		Vec4 color = message->m_Color;
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 
