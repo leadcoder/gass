@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
@@ -201,7 +201,7 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_dir;
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+			request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 				
@@ -231,7 +231,7 @@ namespace GASS
 			else
 			{
 				MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
-				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
+				GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(remove_msg);
 
 				return;
 			}
@@ -288,7 +288,7 @@ namespace GASS
 
 			//GetSceneObject()->GetSceneObjectManager()->DeleteObject(GetSceneObject());
 			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(remove_msg);
 
 			if(m_EndEffectTemplateName != "")
 				SpawnEffect(m_EndEffectTemplateName);
@@ -310,7 +310,7 @@ namespace GASS
 	{
 		Vec3 vel(0,0,0);
 		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(effect,m_Pos,m_Rot,vel));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(spawn_msg);
 	}
 
 	void ProjectileComponent::SetEndEffectTemplateName(const std::string &effect)

@@ -26,7 +26,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
@@ -169,7 +169,7 @@ namespace GASS
 			if(camera)
 			{
 				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),"Viewport0"));
-				GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+				GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
 			}
 			m_CurrentVehicle.reset();
 			m_CurrentSeat.reset();

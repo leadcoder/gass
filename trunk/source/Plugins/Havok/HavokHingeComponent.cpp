@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/ComponentSystem/IComponentContainer.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
@@ -135,7 +135,7 @@ namespace GASS
 		m_HingeConstraintData->setInWorldSpace(m_Body2->GetHavokBody()->getTransform(), m_Body1->GetHavokBody()->getTransform(), pivot, axis);		
 		hkpConstraintInstance* constraint = new hkpConstraintInstance(m_Body2->GetHavokBody(), m_Body1->GetHavokBody(), m_HingeConstraintData);
 
-
+		
 		m_MotorAction = new hkpMotorAction(m_Body2->GetHavokBody(), axis, 0, 2);
 
 		world->lock();

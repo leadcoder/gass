@@ -5,7 +5,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 
 #include "Core/ComponentSystem/IComponent.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
@@ -52,7 +52,7 @@ namespace GASS
 		if(obj_under_cursor)
 		{
 
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(m_ObjectName,parent_obj);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScenario()->GetObjectManager()->LoadFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				int from_id = (int) this;

@@ -25,10 +25,10 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scheduling/IRuntimeController.h"

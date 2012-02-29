@@ -20,7 +20,7 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectTemplate.h"
@@ -111,14 +111,14 @@ namespace GASS
 	{
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
-		ScenarioScenePtr scene = GetScenarioScene();
-		assert(scene);
+		ScenarioPtr scenario = GetScenario();
+		assert(scenario);
 
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
+		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,Scenario::GFX_SYSTEM_LOAD_PRIORITY));
+		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
+		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scenario::GFX_COMPONENT_LOAD_PRIORITY));
+		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
 
 	}
 
@@ -148,7 +148,7 @@ namespace GASS
 
 
 		// Try to load default camera
-		/*ScenarioScenePtr scene = GetScenarioScene();
+		/*ScenarioPtr scenario = GetScenario();
 		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 
 		if(!scene_object) //If no FreeCameraObject template found, create one
@@ -170,7 +170,7 @@ namespace GASS
 
 		SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
 
-		scene_object = GetScenarioScene()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		scene_object = GetScenario()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		}*/
 
 		//assert(scene_object);
@@ -181,7 +181,7 @@ namespace GASS
 		//MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
 
 		//ScenarioScenePtr scene = ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());
-		//ScenarioScenePtr scene = GetScenarioScene();
+		//ScenarioPtr scenario = GetScenario();
 		//scene->SendImmediate(camera_msg);
 
 		//move camera to spawn position
@@ -220,7 +220,7 @@ namespace GASS
 			OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 
 			MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
-			GetScenarioScene()->PostMessage(cam_message);
+			GetScenario()->PostMessage(cam_message);
 		}
 		else
 		{

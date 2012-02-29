@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/ComponentSystem/IComponentContainer.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"

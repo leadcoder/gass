@@ -23,7 +23,7 @@
 #include "Core/Math/AABox.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"

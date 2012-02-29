@@ -184,7 +184,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
 	}
 
 	void SkyXComponent::UpdateOptions()
@@ -200,7 +200,7 @@ namespace GASS
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
 		m_SkyX = NULL;
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
 
 	}
 
@@ -221,7 +221,7 @@ namespace GASS
 		// Create SkyX object
 		Init(ocam);
 
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		
 	}
 

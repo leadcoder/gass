@@ -40,7 +40,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/System/SystemFactory.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -104,15 +104,15 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioAboutToLoadNotifyMessage,0));
 		//		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnClientEnter,ClientEnterVehicleMessage,0));
 	}
 
-	void RakNetNetworkSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
+	void RakNetNetworkSystem::OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message)
 	{
-		m_Scene = message->GetScenarioScene();
-		GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
-		GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
+		m_Scenario = message->GetScenario();
+		message->GetScenario()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
+		message->GetScenario()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
 	}
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayMessagePtr message)
@@ -635,10 +635,10 @@ namespace GASS
 				bs.Read(set);
 				MessagePtr message(new TimeOfDayMessage(time,set,rise,speed));
 				
-				ScenarioScenePtr scene = GetScene();
-				if(scene)
+				ScenarioPtr scenario = GetScenario();
+				if(scenario)
 				{
-					scene->PostMessage(message);
+					scenario->PostMessage(message);
 				}
 			}
 			else if (p->data[0]==ID_WEATHER)
@@ -651,10 +651,10 @@ namespace GASS
 				bs.Read(cloud_factor);
 				MessagePtr message(new WeatherMessage(fog_dist,fog_density,cloud_factor));
 				
-				ScenarioScenePtr scene = GetScene();
-				if(scene)
+				ScenarioPtr scenario = GetScenario();
+				if(scenario)
 				{
-					scene->PostMessage(message);
+					scenario->PostMessage(message);
 				}
 			}
 			else if(p->data[0]==ID_RPC_REMOTE_ERROR)

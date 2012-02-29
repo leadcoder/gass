@@ -341,7 +341,7 @@ namespace GASS
 	}
 
 
-	void Misc::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, const bool recursive)
+	void Misc::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
 		boost::filesystem::path boost_path(path); 
 		if( boost::filesystem::exists(boost_path))  
@@ -351,12 +351,16 @@ namespace GASS
 			{
 				if (boost::filesystem::is_directory( *iter )  && recursive)      
 				{   
-					GetFilesFromPath(files,iter->path().string(), recursive);
+					GetFilesFromPath(files,iter->path().string(), recursive,full_path);
 				}
 				else
 				{
 					const std::string exstension = iter->path().extension().generic_string();
-					const std::string filename = iter->path().filename().generic_string();
+					std::string filename; 
+					if(full_path)
+						filename = iter->path().string();
+					else
+						filename = iter->path().filename().generic_string();
 					files.push_back(filename);
 				}
 			}

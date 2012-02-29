@@ -29,7 +29,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "RakNetMasterReplica.h"
@@ -223,7 +223,7 @@ namespace GASS
 		if(obj) //remove object	
 		{
 			MessagePtr remove_msg(new RemoveSceneObjectMessage(obj));
-			obj->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
+			obj->GetSceneObjectManager()->GetScenario()->PostMessage(remove_msg);
 			
 		}
 

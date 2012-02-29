@@ -6,7 +6,7 @@
 #include "Core/Math/Matrix.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
@@ -50,14 +50,14 @@ namespace GASS
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnInit,InitMessage,0));
 		//catch camera change messages to update openal listener
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,ScenarioSceneAboutToLoadNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,ScenarioAboutToLoadNotifyMessage,0));
 	}
 
-	void OpenALSoundSystem::OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message)
+	void OpenALSoundSystem::OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message)
 	{
-		m_Scene = message->GetScenarioScene();
-		if(message->GetScenarioScene())
-			message->GetScenarioScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
+		m_Scenario = message->GetScenario();
+		if(message->GetScenario())
+			message->GetScenario()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)

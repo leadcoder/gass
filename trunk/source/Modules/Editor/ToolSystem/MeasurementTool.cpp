@@ -5,7 +5,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/IComponent.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -31,8 +31,8 @@ namespace GASS
 		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)
 		{
-			ScenarioScenePtr scene = m_Controller->GetScene();
-			Vec3 offset = scene->GetSceneUp()*0.1f;
+			ScenarioPtr scenario = m_Controller->GetScenario();
+			Vec3 offset = Vec3(0,0.1f,0);
 			UpdateLine(m_StartPos+offset, info.m_3DPos+offset);
 		}
 	}
@@ -70,7 +70,7 @@ namespace GASS
 		Vec3 text_pos = start;//(start + end)* 0.5; 
 		if(!SceneObjectPtr(m_RulerObject,boost::detail::sp_nothrow_tag()))
 		{
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate("RulerObject");
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScenario()->GetObjectManager()->LoadFromTemplate("RulerObject");
 			m_RulerObject = scene_object;
 			if(scene_object)
 			{

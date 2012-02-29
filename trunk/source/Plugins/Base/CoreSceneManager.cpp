@@ -24,7 +24,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -61,12 +61,12 @@ namespace GASS
 	void CoreSceneManager::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		ScenarioScenePtr scene = GetScenarioScene();
-		if(scene)
+		ScenarioPtr scenario = GetScenario();
+		if(scenario)
 		{
-			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
-			scene->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnUnload ));
-			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),ScenarioScene::CORE_COMPONENT_LOAD_PRIORITY);
+			scenario->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
+			scenario->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnUnload ));
+			scenario->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scenario::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
 

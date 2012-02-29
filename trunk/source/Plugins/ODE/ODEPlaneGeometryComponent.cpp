@@ -32,7 +32,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/Math/AABox.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObjectTemplate.h"
@@ -69,7 +69,7 @@ namespace GASS
 
 	dGeomID ODEPlaneGeometryComponent::CreateODEGeom()
 	{
-		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
+		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenario()->GetSceneUp();
 		return dCreatePlane(GetSpace(), m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 	}
 

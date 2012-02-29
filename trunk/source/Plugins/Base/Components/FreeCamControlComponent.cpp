@@ -28,7 +28,7 @@
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
@@ -106,9 +106,9 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
 
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 
-		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		scenario->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
 	TaskGroup FreeCamControlComponent::GetTaskGroup() const
@@ -126,8 +126,8 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 		}
 
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		scenario->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -280,11 +280,11 @@ namespace GASS
 		Vec3 tot_vel;
 		//Vec3 gravity;
 
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 
-		Vec3 up = scene->GetSceneUp();
-		Vec3 north = scene->GetSceneNorth();
-		Vec3 east = scene->GetSceneEast();
+		Vec3 up(0,1,0);
+		Vec3 north (0,0,1);
+		Vec3 east (1,0,0);
 
 
 		if(m_Mode == "Aircraft")

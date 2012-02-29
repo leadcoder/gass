@@ -52,8 +52,8 @@ namespace GASS
 		//ISceneManager
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
-		virtual void SetScenarioScene(ScenarioScenePtr owner){m_Scene = owner;}
+		virtual ScenarioPtr GetScenario() const {return ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual void SetScenario(ScenarioPtr owner){m_Scenario = owner;}
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
 		//IXMLSerialize
@@ -61,6 +61,6 @@ namespace GASS
 		virtual void SaveXML(TiXmlElement *xml_elem);
 	protected:
 		std::string m_Name;
-		ScenarioSceneWeakPtr m_Scene;
+		ScenarioWeakPtr m_Scenario;
 	};
 }

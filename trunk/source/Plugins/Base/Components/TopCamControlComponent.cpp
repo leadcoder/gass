@@ -28,7 +28,7 @@
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Common.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
@@ -92,8 +92,8 @@ namespace GASS
 		assert(m_ControlSetting);
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		scenario->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
 	TaskGroup TopCamControlComponent::GetTaskGroup() const
@@ -106,8 +106,8 @@ namespace GASS
 		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		scenario->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void TopCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -205,10 +205,10 @@ namespace GASS
 
 	void TopCamControlComponent::UpdateTopCam(double delta)
 	{
-		ScenarioScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
-		Vec3 up = scene->GetSceneUp();
-		Vec3 north = scene->GetSceneNorth();
-		Vec3 east = scene->GetSceneEast();
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		Vec3 up(0,1,1);
+		Vec3 north (0,0,1);
+		Vec3 east (1,0,0);
 
 		float speed_factor = 0;
 		if(up.y > 0)

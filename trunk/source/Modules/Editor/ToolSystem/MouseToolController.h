@@ -17,7 +17,7 @@ namespace GASS
 {
 	class ControlSetting;
 	class SceneObject;
-	class ScenarioScene;
+	class Scenario;
 	class ICameraComponent;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
@@ -43,7 +43,7 @@ namespace GASS
 		bool IsObjectVisible(SceneObjectWeakPtr obj);
 		void UnlockObject(SceneObjectWeakPtr obj);
 		void LockObject(SceneObjectWeakPtr obj);
-		GASS::ScenarioScenePtr GetScene(){return GASS::ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+		GASS::ScenarioPtr GetScenario(){return GASS::ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}
 		void SetScenarioObjectsSelectable(bool value) {m_ScenarioObjectsSelectable = value;}
 		bool GetScenarioObjectsSelectable() const {return m_ScenarioObjectsSelectable;}
 		GASS::SceneObjectPtr GetActiveCameraObject() const {return GASS::SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
@@ -83,10 +83,10 @@ namespace GASS
 		void OnObjectLock(ObjectLockMessagePtr message);
 		void OnObjectVisible(ObjectVisibleMessagePtr message);
 
-		void OnNewScene(GASS::ScenarioSceneAboutToLoadNotifyMessagePtr message);
-		void OnUnloadScene(GASS::ScenarioSceneUnloadNotifyMessagePtr message);
+		void OnNewScenario(GASS::ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnUnloadScenario(GASS::ScenarioUnloadNotifyMessagePtr message);
 		void OnChangeCamera(GASS::ChangeCameraMessagePtr message);
-		void OnSceneLoaded(GASS::ScenarioSceneLoadedNotifyMessagePtr message);
+		void OnScenarioLoaded(GASS::ScenarioLoadedNotifyMessagePtr message);
 		void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnSnapModeMessage(SnapModeMessagePtr message);
 		
@@ -107,7 +107,7 @@ namespace GASS
 		GASS::CameraComponentWeakPtr m_ActiveCamera;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
 		bool m_Active;
-		GASS::ScenarioSceneWeakPtr m_Scene;
+		GASS::ScenarioWeakPtr m_Scenario;
 		GASS::CollisionHandle m_ColMeshHandle;
 		GASS::CollisionHandle m_ColGizmoHandle;
 		bool m_ScenarioObjectsSelectable;

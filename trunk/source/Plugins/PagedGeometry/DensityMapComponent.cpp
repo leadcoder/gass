@@ -81,7 +81,7 @@ namespace GASS
 	void DensityMapComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 		std::string scenario_path = scenario->GetPath();
 
 		std::string denmapname;
@@ -305,7 +305,7 @@ namespace GASS
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 		std::string scenario_path = scenario->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")

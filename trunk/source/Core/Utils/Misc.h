@@ -89,7 +89,7 @@ namespace GASS
 		static void splitpath(char *name, char *drive, char *path, char *base, char *ext);
 
 		static std::string Demangle(const std::string &name);
-		static void GetFilesFromPath(std::vector<std::string> &files, const std::string &path, const bool recursive = false);
+		static void GetFilesFromPath(std::vector<std::string> &files, const std::string &path,  bool recursive = false, bool full_path = false);
 	};
 }
 

@@ -118,7 +118,7 @@ namespace GASS
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 		std::string scenario_path = scenario->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -473,7 +473,7 @@ namespace GASS
 			//create from in run time?
 			//try to load 
 
-			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			std::string scenario_path = scenario->GetPath();
 
 
@@ -532,7 +532,7 @@ namespace GASS
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+			request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 			GASS::CollisionResult result;
@@ -663,7 +663,7 @@ namespace GASS
 			m_PagedGeometry->reloadGeometryPages(bounds);
 			
 
-			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			std::string scenario_path = scenario->GetPath();
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
 			const std::string fp_denmap = scenario_path + "/" + denmapname;

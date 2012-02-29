@@ -23,7 +23,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/System/SystemFactory.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/SimSystemManager.h"
 

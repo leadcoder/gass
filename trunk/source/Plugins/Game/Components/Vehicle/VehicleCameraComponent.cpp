@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/SimEngine.h"
@@ -84,7 +84,7 @@ namespace GASS
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),m_PreferredViewport));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+		//GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)
@@ -93,7 +93,7 @@ namespace GASS
 		{
 			SceneObjectPtr obj;
 			MessagePtr cam_msg(new ChangeCameraMessage(obj,m_PreferredViewport));
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->SendImmediate(cam_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
 		}*/
 	}
 
@@ -108,7 +108,7 @@ namespace GASS
 			gfx_sys->CreateViewport(m_PreferredViewport, "MainWindow", 0.2, 0.2, 0.3, 0.5);
 		}*/
 
-		//message->GetSimSceneManager()->GetScenarioScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(VehicleCameraComponent::OnEnter,AnyMessage));
+		//message->GetSimSceneManager()->GetScenario()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(VehicleCameraComponent::OnEnter,AnyMessage));
 		//register on enter message
 	}
 

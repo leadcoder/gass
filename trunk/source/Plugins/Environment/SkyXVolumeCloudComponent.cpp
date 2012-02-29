@@ -197,7 +197,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnLoad,LoadGFXComponentsMessage,3));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
 	}
 
 	void SkyXVolumeCloudComponent::OnWeatherMessage(WeatherMessagePtr message)

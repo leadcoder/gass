@@ -6,7 +6,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
@@ -46,7 +46,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadGFXComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
 	}
 
 	void SensorComponent::OnLoad(MessagePtr message)

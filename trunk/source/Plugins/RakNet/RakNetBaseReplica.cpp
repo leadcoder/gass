@@ -29,7 +29,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 
 #include "RakNetBaseReplica.h"

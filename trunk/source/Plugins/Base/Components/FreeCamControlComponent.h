@@ -31,9 +31,9 @@ namespace GASS
 	class ControlSetting;
 	class ILocationComponent;
 	class ICameraComponent;
-	class ScenarioScene;
-	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
-	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
+	class Scenario;
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 
 		/**
 			Basic motion modell that can be used to move a camera. 

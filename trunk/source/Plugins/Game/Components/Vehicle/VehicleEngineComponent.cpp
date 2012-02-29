@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/SimEngine.h"
@@ -477,7 +477,7 @@ namespace GASS
 		
 
 		//if tank, try to keep angular velocity to steer factor
-		m_SteerCtrl.setGain(m_TurnForce,0.1,0);
+		m_SteerCtrl.setGain(m_TurnForce*0.1,0.1,0);
 		m_SteerCtrl.set(-m_DesiredSteer);
 		//limit pid to max turn force
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce*norm_rpm);

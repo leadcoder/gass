@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
@@ -74,13 +74,13 @@ namespace GASS
 
 	void HUDComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage));
 	}
 	
 
 	void HUDComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
 		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
 		UpdateHUD();
 		m_Initialized = true;

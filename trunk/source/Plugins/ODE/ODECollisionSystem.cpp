@@ -21,7 +21,7 @@
 #include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODELineCollision.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/SimEngine.h"
 #include "Core/System/SystemFactory.h"
@@ -44,7 +44,7 @@ namespace GASS
 	CollisionHandle ODECollisionSystem::Request(const CollisionRequest &request)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-		//assert(request.Scene);
+		//assert(request.Scenario);
 		m_HandleCount = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
 		CollisionHandle handle = m_HandleCount;
 		m_RequestMap[handle] = request;
@@ -74,11 +74,11 @@ namespace GASS
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
-			ScenarioScenePtr scene = ScenarioScenePtr(request.Scene);
+			ScenarioPtr scenario = ScenarioPtr(request.Scenario);
 			
-			if(scene)
+			if(scenario)
 			{
-				ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+				ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scenario->GetSceneManager("PhysicsSceneManager"));
 				if(request.Type == COL_LINE)
 				{
 					CollisionResult result;
@@ -118,10 +118,10 @@ namespace GASS
 
 	void ODECollisionSystem::Force(CollisionRequest &request, CollisionResult &result) const
 	{
-		ScenarioScenePtr scene(request.Scene);
-		if(scene)
+		ScenarioPtr scenario(request.Scenario);
+		if(scenario)
 		{
-			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scenario->GetSceneManager("PhysicsSceneManager"));
 			if(request.Type == COL_LINE)
 			{
 				ODELineCollision raycast(&request,&result,ode_scene,m_MaxRaySegment);
@@ -138,23 +138,23 @@ namespace GASS
 	void ODECollisionSystem::OnCreate()
 	{
 		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnUnloadScene,ScenarioUnloadNotifyMessage,0));
 		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_RM_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
 	}
 
-	void ODECollisionSystem::OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message)
+	void ODECollisionSystem::OnUnloadScene(ScenarioUnloadNotifyMessagePtr message)
 	{
 		m_RequestMap.clear();
 		m_ResultMap.clear();
 	}
 
-	Float ODECollisionSystem::GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute) const
+	Float ODECollisionSystem::GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute) const
 	{
-		ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+		ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scenario->GetSceneManager("PhysicsSceneManager"));
 		CollisionRequest request;
 		CollisionResult result;
 
-		Vec3 up = scene->GetSceneUp();
+		Vec3 up(0,1,0);
 
 		Vec3 ray_start = pos;
 		Vec3 ray_direction = -up;
@@ -164,7 +164,7 @@ namespace GASS
 		request.LineStart = ray_start;
 		request.LineEnd = ray_start + ray_direction;
 		request.Type = COL_LINE;
-		request.Scene = scene;
+		request.Scenario = scenario;
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 2;
 		ODELineCollision raycast(&request,&result,ode_scene);

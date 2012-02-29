@@ -20,7 +20,7 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scheduling/IRuntimeController.h"

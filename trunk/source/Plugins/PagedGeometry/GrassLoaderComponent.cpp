@@ -248,7 +248,7 @@ namespace GASS
 			//create from in run time?
 			//try to load 
 
-			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			std::string scenario_path = scenario->GetPath();
 
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
@@ -282,7 +282,7 @@ namespace GASS
 
 	void GrassLoaderComponent::SaveDensityMap()
 	{
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetScenario();
+		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 		std::string scenario_path = scenario->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -303,7 +303,7 @@ namespace GASS
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+			request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 			GASS::CollisionResult result;

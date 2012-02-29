@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
@@ -130,7 +130,7 @@ namespace GASS
 			Quaternion rot = Quaternion::IDENTITY;
 			Vec3 pos = location->GetWorldPosition();
 			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_DamageEffect1,pos,rot,vel));
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(spawn_msg);
 		}
 	}
 

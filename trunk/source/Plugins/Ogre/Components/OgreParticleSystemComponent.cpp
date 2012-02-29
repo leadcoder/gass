@@ -29,7 +29,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -95,7 +95,7 @@ namespace GASS
 			//Send remove message with delay
 			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
 			remove_msg->SetDeliverDelay(m_TimeToLive);
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(remove_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(remove_msg);
 		}
 		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}

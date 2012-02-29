@@ -22,7 +22,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -83,10 +83,10 @@ namespace GASS
 	void ODEPhysicsSceneManager::OnCreate()
 	{
 		
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
+		GetScenario()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
+		GetScenario()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScenario()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scenario::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		GetScenario()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
 
 
@@ -147,7 +147,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioScenePtr scene = message->GetScenarioScene();
+		ScenarioPtr scenario = message->GetScenario();
 
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
@@ -161,7 +161,7 @@ namespace GASS
 		m_CollisionSpace = dHashSpaceCreate(m_CollisionSpace);
 		m_ContactGroup = dJointGroupCreate(0);
 
-		Vec3 gravity_vec = scene->GetSceneUp()*m_Gravity;
+		Vec3 gravity_vec = Vec3(0,m_Gravity,0);
 
 		dWorldSetGravity(m_World, gravity_vec.x,gravity_vec.y, gravity_vec.z);
 		dWorldSetAutoDisableFlag(m_World, 1);

@@ -106,7 +106,7 @@ namespace GASS
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
 		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
-		ScenarioScenePtr GetScene() {return ScenarioScenePtr(m_Scene);}
+		ScenarioPtr GetScenario() {return ScenarioPtr(m_Scenario);}
 		RakNet::AutoRPC* GetRPC() {return  &m_AutoRPC;}
 
 		// get time to step back when values need to be interpolated
@@ -144,7 +144,7 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
-		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message);
 		ADD_ATTRIBUTE(double,SleepTime);
 
 		
@@ -168,7 +168,7 @@ namespace GASS
 		bool m_AcceptLateJoin;
 		bool m_ScenarioIsRunning;
 		ClientDataMap m_ClientMap;
-		ScenarioSceneWeakPtr m_Scene;
+		ScenarioWeakPtr m_Scenario;
 
 		RakNet::AutoRPC m_AutoRPC;
 		double m_InterpolationLag;

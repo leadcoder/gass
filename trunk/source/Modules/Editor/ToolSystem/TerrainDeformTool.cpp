@@ -8,7 +8,7 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -111,11 +111,11 @@ namespace GASS
 	SceneObjectPtr TerrainDeformTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetScene())
+		if(!gizmo &&  m_Controller->GetScenario())
 		{
-			ScenarioScenePtr scene = m_Controller->GetScene();
+			ScenarioPtr scenario = m_Controller->GetScenario();
 			std::string gizmo_name = "PaintGizmo";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScenario()->GetObjectManager()->LoadFromTemplate(gizmo_name);
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 

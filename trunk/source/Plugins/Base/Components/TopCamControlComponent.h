@@ -32,7 +32,7 @@ namespace GASS
 	class ControlSetting;
 	class ILocationComponent;
 	class ICameraComponent;
-	class ScenarioScene;
+	class Scenario;
 
 		/**
 			Basic motion modell that can be used to move a camera. 

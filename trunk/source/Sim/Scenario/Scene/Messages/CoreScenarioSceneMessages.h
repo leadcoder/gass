@@ -29,8 +29,8 @@
 namespace GASS
 {
 	class SceneObject;
-	class ScenarioScene;
-	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
+	class Scenario;
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 
@@ -120,14 +120,14 @@ namespace GASS
 	class LoadSceneManagersMessage : public BaseMessage
 	{
 	public:
-		LoadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
+		LoadSceneManagersMessage(ScenarioPtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Scenario(scenario_scene)
 		  {
 
 		  }
-		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
+		  ScenarioPtr GetScenario() const {return m_Scenario;}
 	private:
-		ScenarioScenePtr m_SS;
+		ScenarioPtr m_Scenario;
 	};
 	typedef boost::shared_ptr<LoadSceneManagersMessage> LoadSceneManagersMessagePtr;
 
@@ -142,14 +142,14 @@ namespace GASS
 	class UnloadSceneManagersMessage : public BaseMessage
 	{
 	public:
-		UnloadSceneManagersMessage(ScenarioScenePtr scenario_scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_SS(scenario_scene)
+		UnloadSceneManagersMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Scenario(scenario)
 		  {
 
 		  }
-		  ScenarioScenePtr GetScenarioScene() const {return m_SS;}
+		  ScenarioPtr GetScenario() const {return m_Scenario;}
 	private:
-		ScenarioScenePtr m_SS;
+		ScenarioPtr m_Scenario;
 	};
 	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
 

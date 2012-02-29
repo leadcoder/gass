@@ -4,7 +4,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/IComponent.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -34,8 +34,8 @@ namespace GASS
 			LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
 			if(comp)
 			{
-				ScenarioScenePtr scene = selected->GetSceneObjectManager()->GetScenarioScene();
-				Vec3 up = scene->GetSceneUp();
+				ScenarioPtr scenario = selected->GetSceneObjectManager()->GetScenario();
+				Vec3 up(0,1,0);
 				Vec3 new_position = comp->GetPosition();
 
 				//move seleced object

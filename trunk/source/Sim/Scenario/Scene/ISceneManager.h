@@ -24,9 +24,9 @@
 
 namespace GASS
 {
-	class ScenarioScene;
-	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
-	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
+	class Scenario;
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 
 	/**
 		Interface that all scene managers must implement.
@@ -45,8 +45,8 @@ namespace GASS
 		virtual void Update(double delta_time) = 0;
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string &name) = 0;
-		virtual ScenarioScenePtr GetScenarioScene() const = 0;
-		virtual void SetScenarioScene(ScenarioScenePtr owner) = 0;
+		virtual ScenarioPtr GetScenario() const = 0;
+		virtual void SetScenario(ScenarioPtr owner) = 0;
 	};
 
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;

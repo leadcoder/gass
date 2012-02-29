@@ -28,7 +28,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObjectTemplate.h"

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Common.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Core/Math/Vector.h"
 
 class TiXmlElement;
@@ -30,24 +30,24 @@ namespace GASS
 {
 	class MessageManager;
 	class SceneObject;
-	class ScenarioScene;
+	class Scenario;
 
-	typedef boost::shared_ptr<ScenarioScene> ScenarioScenePtr;
-	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
-		The Scene object manager is owned by a scenario scene
+		The Scene object manager is owned by a scenario 
 		and could be seen as a decomposition (or helper class)
-		of the ScenarioScene class.
+		of the Scenario class.
 		In future this class may be merged into the
 		scenario scene class.
 	*/
 	class GASSExport SceneObjectManager : public boost::enable_shared_from_this<SceneObjectManager>
 	{
-		friend class ScenarioScene;
+		friend class Scenario;
 	public:
-		SceneObjectManager(ScenarioScenePtr ss);
+		SceneObjectManager(ScenarioPtr scenario);
 		virtual ~SceneObjectManager();
 
 		bool LoadXML(const std::string &filename);
@@ -55,7 +55,7 @@ namespace GASS
 
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);
-		ScenarioScenePtr GetScenarioScene() const {return ScenarioScenePtr(m_ScenarioScene,boost::detail::sp_nothrow_tag());}
+		ScenarioPtr GetScenario() const {return ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}
 		void Clear();
 		void Init();
 		void DeleteObject(SceneObjectPtr obj);
@@ -64,15 +64,12 @@ namespace GASS
 	protected:
 		bool LoadXML(TiXmlElement *parent);
 		bool SaveXML(TiXmlElement *parent) const;
-
-
 		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
-
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
 		//ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
-		ScenarioSceneWeakPtr m_ScenarioScene;
+		ScenarioWeakPtr m_Scenario;
 		SceneObjectPtr m_Root;
 	};
 }

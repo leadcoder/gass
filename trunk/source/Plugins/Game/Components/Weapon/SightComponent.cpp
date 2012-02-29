@@ -28,7 +28,7 @@
 #include "Core/Utils/Log.h"
 
 #include "Sim/Components/Network/INetworkComponent.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
@@ -422,7 +422,7 @@ namespace GASS
 		//max distance is 20000m
 		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
 		request.Type = COL_LINE;
-		request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene();
+		request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 1;
 		col_sys->Force(request,result);

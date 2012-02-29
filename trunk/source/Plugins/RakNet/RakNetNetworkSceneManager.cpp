@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -66,9 +66,9 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-		GetScenarioScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,ScenarioScene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
+		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scenario::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage,0));
 	}
@@ -96,7 +96,7 @@ namespace GASS
 		{
 			RakNetNetworkComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkComponent>();
 			comp->SetReplica(replica);
-			GetScenarioScene()->GetObjectManager()->LoadObject(so);
+			GetScenario()->GetObjectManager()->LoadObject(so);
 		}
 	}*/
 
@@ -111,7 +111,7 @@ namespace GASS
 			comp->SetReplica(replica);
 
 
-			GetScenarioScene()->GetObjectManager()->LoadObject(so);
+			GetScenario()->GetObjectManager()->LoadObject(so);
 		}
 	}
 
@@ -163,7 +163,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioScenePtr scene = message->GetScenarioScene();
+		ScenarioPtr scenario = message->GetScenario();
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 

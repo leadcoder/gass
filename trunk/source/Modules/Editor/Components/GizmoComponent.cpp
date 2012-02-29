@@ -67,7 +67,7 @@ namespace GASS
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectedMessage));
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnGridMessage,GridMessage));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -283,7 +283,7 @@ namespace GASS
 	void GizmoComponent::OnLoad(LoadCoreComponentsMessagePtr message)
 	{
 		BuildMesh();
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage,1));
 
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());

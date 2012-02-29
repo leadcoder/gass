@@ -49,9 +49,9 @@ namespace GASS
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
 		void Process();
-		Float GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute=true) const;
+		Float GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute=true) const;
 	private:
-		void OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message);
+		void OnUnloadScene(ScenarioUnloadNotifyMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

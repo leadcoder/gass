@@ -50,7 +50,7 @@ namespace GASS
 
 	void DistanceScaleComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -158,7 +158,7 @@ namespace GASS
 
 	void DistanceScaleComponent::OnLoad(LoadCoreComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)

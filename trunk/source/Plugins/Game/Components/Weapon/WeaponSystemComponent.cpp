@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
@@ -245,7 +245,7 @@ namespace GASS
 		Vec3 final_pos = projectile_start_pos +  projectile_dir*m_ProjectileStartOffset;
 
 		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_ProjectileTemplateName,final_pos,projectile_rot,vel));
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(spawn_msg);
 
 		//recoil
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,m_RecoilForce));
@@ -259,7 +259,7 @@ namespace GASS
 			//MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,projectile_start_pos,projectile_rot,vel));
 			
 			
-			GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->PostMessage(spawn_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(spawn_msg);
 		}
 
 

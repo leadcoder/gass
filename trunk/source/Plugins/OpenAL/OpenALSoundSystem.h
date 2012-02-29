@@ -32,10 +32,10 @@
 
 namespace GASS
 {
-	class ScenarioScene;
+	class Scenario;
 	class SceneObject;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<ScenarioScene> ScenarioSceneWeakPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>
@@ -61,7 +61,7 @@ namespace GASS
 		std::string ListAvailableDevices( void );
 
 		void OnInit(MessagePtr message);
-		void OnSceneLoaded(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
@@ -72,7 +72,7 @@ namespace GASS
 
 		SoundMap m_BufferMap;
 		SourceMap m_SourceMap;
-		ScenarioSceneWeakPtr m_Scene;
+		ScenarioWeakPtr m_Scenario;
 		SceneObjectWeakPtr m_CurrentCamera;
 	};
 

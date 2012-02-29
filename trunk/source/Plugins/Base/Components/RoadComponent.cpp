@@ -26,7 +26,7 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 #include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
