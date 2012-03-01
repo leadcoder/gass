@@ -10,8 +10,6 @@ TODO:	Add more test cases using boost unit test framework.
 
 TODO:	Test raycast wheels in vehicle-simulation
 
-TODO:	Replace interator with const_iterator where appropriate and then make functions const where possible
-
 TODO:	Update Ogre to 1.8
 
 TODO:	Update OSG to 3.x
@@ -22,11 +20,13 @@ TODO:	Make sequence diagrams for initialize- ,update- and shutdown-phase.
 
 TODO:	Make new network plugin using ENET
 
+50%	Replace iterator with const_iterator where appropriate and then make functions const where possible
+
 60%:	Add more scene-tree serach functions, ie search for template name or class factory name, only search in child objects
 
 90%:	Add simple GUI example (CEGUI Example exist but build instructions need to be created)
 
-50%:    Add new boost file system functionality, can be used to parse subtrees for dll- or xml-files
+50%:    Add more boost file system functionality, can be used to parse folder structures for dll- or xml-files
 
 60%:	Complete PhysX plugin, premakescript etc.
 
