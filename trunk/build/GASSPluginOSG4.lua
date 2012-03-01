@@ -11,7 +11,7 @@ if (os.is("windows")) then
 	includedirs 
 	{ 
 		"../source",
-		"$(OSG_PATH)/include",
+		"$(OSG_HOME)/include",
 		"../dependencies/tinyxml",
 		"../dependencies/tbb/include",
 		"$(BOOST_HOME)"
@@ -20,7 +20,7 @@ if (os.is("windows")) then
 	libdirs 
 	{ 
 		"../lib/",
-		"$(OSG_PATH)/lib",
+		"$(OSG_HOME)/lib",
 		"../dependencies/lib",
 		"$(BOOST_HOME)/lib"
 	}
@@ -33,7 +33,7 @@ else
 	{ 
 		"../source",
 		"$(BOOST_HOME)",
-		"$(OSG_PATH)/include",
+		"$(OSG_HOME)/include",
 		"../dependencies/include/tinyxml",
 		"../dependencies/tbb/include"
 	}
@@ -41,7 +41,7 @@ else
 	libdirs 
 	{
 		"../lib/",
-		"$(OSG_PATH)/lib",
+		"$(OSG_HOME)/lib",
 		"../dependencies/lib/"
 	}
 

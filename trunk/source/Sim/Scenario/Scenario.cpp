@@ -56,17 +56,20 @@ namespace GASS
 
 	Scenario::~Scenario()
 	{
-		m_ObjectManager->Clear();
-		MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
-		m_ScenarioMessageManager->SendImmediate(scenario_msg);
-		MessagePtr unload_msg(new ScenarioUnloadNotifyMessage(shared_from_this()));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
-		m_ScenarioMessageManager->Clear();
-		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		if(rs == NULL)
-			Log::Error("No Resource Manager Found");
+		if(m_ObjectManager)
+		{
+			m_ObjectManager->Clear();
+			MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
+			m_ScenarioMessageManager->SendImmediate(scenario_msg);
+			MessagePtr unload_msg(new ScenarioUnloadNotifyMessage(shared_from_this()));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
+			m_ScenarioMessageManager->Clear();
+
+			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+			if(rs == NULL)
+				Log::Error("No Resource Manager Found");
 			rs->RemoveResourceGroup("GASSScenario");
+		}
 	}
 
 	void Scenario::RegisterReflection()

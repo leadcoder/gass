@@ -283,7 +283,7 @@ namespace GASS
 		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
 
 		Vec3 up(0,1,0);
-		Vec3 north (0,0,1);
+		Vec3 north (0,0,-1);
 		Vec3 east (1,0,0);
 
 
