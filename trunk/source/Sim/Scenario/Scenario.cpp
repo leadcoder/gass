@@ -95,17 +95,13 @@ namespace GASS
 	bool Scenario::Load(const std::string &scenario_path)
 	{
 		m_ScenarioPath = scenario_path;
-		//MessagePtr system_msg(new ScenarioAboutToLoadNotifyMessage(shared_from_this()));
-		//SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
-
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			Log::Error("No Resource Manager Found");
 		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",false);
-
 		std::string filename = scenario_path + "/scenario.xml";
-		//Load scenario specific templates, filename should probably be a scenario parameter
 		
+		//Load scenario specific templates, filename should probably be a scenario parameter
 		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
 
 		if(filename =="") return false;
@@ -120,25 +116,19 @@ namespace GASS
 		if(scenario == NULL) 
 			Log::Error("Failed to get Scenario tag");
 
-		TiXmlElement *settings = scenario->FirstChildElement("ScenarioSettings");
-		if(settings == NULL) 
-			Log::Error("Failed to get ScenarioSettings tag");
-
-		BaseReflectionObject::LoadProperties(settings);
-
-		for(std::vector<std::string>::iterator iter = m_ResourceFolders.begin(); iter != m_ResourceFolders.end(); ++iter)
+		LoadXML(scenario);
+		
+		/*for(std::vector<std::string>::iterator iter = m_ResourceFolders.begin(); iter != m_ResourceFolders.end(); ++iter)
 		{
 			std::string location = scenario_path + "/" + *iter;
 			rs->AddResourceLocation(location,"GASSScenario","FileSystem",false);
-		}
-		rs->LoadResourceGroup("GASSScenario");
+		}*/
+		
+		//TiXmlElement *scene_elem = scenario->FirstChildElement("Scenes");
 
+		//OnCreate();
 
-		TiXmlElement *scene_elem = scenario->FirstChildElement("Scenes");
-
-		OnCreate();
-
-		if(scene_elem)
+		/*if(scene_elem)
 		{
 			scene_elem = scene_elem->FirstChildElement();
 			//Loop through each template
@@ -149,25 +139,17 @@ namespace GASS
 				LoadXML(scene_elem);			
 				scene_elem= scene_elem->NextSiblingElement();
 			}
-		}
-
-
+		}*/
 
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
-
-		Init();
-
-		return true;
-	}
-
-	bool Scenario::Init()
-	{
-		//load all scenes
+		rs->LoadResourceGroup("GASSScenario");
 		OnLoad();
+
 		return true;
 	}
+
 
 	bool Scenario::Save(const std::string &scenario_path)
 	{
@@ -206,24 +188,18 @@ namespace GASS
 		m_ObjectManager->SyncMessages(delta_time);
 	}
 
-
-	void Scenario::LoadXML(TiXmlElement *scene_elem)
+	void Scenario::LoadXML(TiXmlElement *scenario)
 	{
-		TiXmlElement *settings = scene_elem->FirstChildElement("SceneSettings");
-		if(settings == NULL)
-			Log::Error("Failed to get SceneSettings tag");
-
-		BaseReflectionObject::LoadProperties(settings);
-		TiXmlElement *scenemanager = scene_elem->FirstChildElement("SceneManagers");
-
-		if(scenemanager)
+		BaseReflectionObject::LoadProperties(scenario);
+		TiXmlElement *scene_manager = scenario->FirstChildElement("SceneManagers");
+		if(scene_manager)
 		{
-			scenemanager = scenemanager->FirstChildElement();
+			scene_manager = scene_manager->FirstChildElement();
 			//Load scene manager settings
-			while(scenemanager)
+			while(scene_manager)
 			{
-				SceneManagerPtr sm = LoadSceneManager(scenemanager);
-				scenemanager = scenemanager->NextSiblingElement();
+				SceneManagerPtr sm = LoadSceneManager(scene_manager);
+				scene_manager = scene_manager->NextSiblingElement();
 			}
 		}
 	}
@@ -266,7 +242,7 @@ namespace GASS
 
 		//Add all registered scene manangers to scene
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
-		for(int i = 0; i < managers.size();i++)
+		for(size_t i = 0; i < managers.size();i++)
 		{
 			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
 			sm->SetScenario(shared_from_this());
@@ -291,8 +267,6 @@ namespace GASS
 		MessagePtr system_msg(new ScenarioLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 	}
-
-	
 
 	SceneManagerPtr Scenario::LoadSceneManager(TiXmlElement *sm_elem)
 	{

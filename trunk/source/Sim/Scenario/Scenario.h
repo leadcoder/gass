@@ -92,8 +92,6 @@ namespace GASS
 		static void RegisterReflection();
 
 
-		bool Init();
-
 		/**
             Get the start position for this scene,
             can be used to give cameras or players a initial position
@@ -147,7 +145,6 @@ namespace GASS
 		*/
 		bool Save(const std::string &name);
 
-		
 		/**
 		Should be called by creator.
 		This function allocate the scene object manager which take the
@@ -158,9 +155,6 @@ namespace GASS
 		this stuff in the constructor
 		*/
 		void OnCreate();
-
-
-
 
 		std::string GetPath() const {return m_ScenarioPath;}
 
@@ -196,8 +190,6 @@ namespace GASS
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *so_elem);
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
-		void Shutdown();
-		
 		void OnLoad();
 
 		//Helper function to LoadXML
