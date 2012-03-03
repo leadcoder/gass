@@ -117,7 +117,7 @@ namespace GASS
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
 		{
 			ResourceLocation rl = m_ResourceLocations[i];
-			AddResourceLocation(rl.m_Path.GetPath(),rl.m_Group,rl.m_Type, rl.m_Recursive);
+			AddResourceLocation(rl.m_Path.GetPath(),rl.m_Group,rl.m_Type, false);
 		}
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	}
@@ -135,6 +135,20 @@ namespace GASS
 				rsm->createResourceGroup(resource_group);
 			}
 			rsm->addResourceLocation(path,type, resource_group,false);
+
+			if(recursive)
+			{
+				boost::filesystem::directory_iterator end;    
+				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+				{
+					if (boost::filesystem::is_directory( *iter ) )      
+					{   
+						
+						const std::string sub_dir_path  = iter->path().string();
+						AddResourceLocation(sub_dir_path,resource_group,type,recursive);
+					}     
+				}
+			}
 		}			
 	}
 

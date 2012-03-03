@@ -95,11 +95,6 @@ namespace GASS
 				return;
 			}
 			
-			
-			//add resrouce path to terrain
-			//std::string terrain_path = Misc::RemoveFilename(full_path);
-			//rs->AddResourceLocation(terrain_path,"GASSTerrain","FileSystem",true);
-			//rs->LoadResourceGroup("GASSTerrain");
 
 			m_OgreSceneManager->setWorldGeometry(full_path);
 			Ogre::Vector3 scale = Ogre::Vector3::ZERO;

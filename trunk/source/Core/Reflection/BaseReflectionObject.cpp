@@ -37,15 +37,30 @@ namespace GASS
 
 	void BaseReflectionObject::LoadProperties(TiXmlElement *elem)
 	{
-		TiXmlElement *attrib = elem->FirstChildElement();
-		while(attrib)
+		TiXmlElement *prop_elem = elem->FirstChildElement();
+		while(prop_elem)
 		{
-			const std::string attrib_name = attrib->Value();
-			const std::string attrib_val = attrib->FirstAttribute()->Value();
-			if (!SetPropertyByString(attrib_name,attrib_val))
-				Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\tproperty not found: %s", attrib->GetDocument()->Value(), attrib_name.c_str());
+			const std::string prop_name = prop_elem->Value();
+			if(prop_elem->FirstAttribute())
+			{
+				std::string attrib_name =  Misc::ToLower(prop_elem->FirstAttribute()->Name());
 
-			attrib  = attrib->NextSiblingElement();
+				if(attrib_name == "value") 
+				{
+					const std::string prop_val = prop_elem->FirstAttribute()->Value();
+					if (!SetPropertyByString(prop_name,prop_val))
+						Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\tproperty not found: %s", prop_elem->GetDocument()->Value(), prop_name.c_str());
+				}
+				else
+				{
+					Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\t unkown property syntax for %s, \"value\" expected, found %s", prop_elem->GetDocument()->Value(), prop_name.c_str(), attrib_name.c_str());
+				}
+			}
+			else
+			{
+				Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\t No attribute found for property %s", prop_elem->GetDocument()->Value(), prop_name.c_str());
+			}
+			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
 

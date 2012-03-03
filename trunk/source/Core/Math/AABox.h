@@ -58,12 +58,10 @@ namespace GASS
 		void Transform(const Mat4 &mat);
 		Sphere GetBoundingSphere() const;
 		Vec3 GetSize() const;
-		//void CreateBoundingBox(ISceneNode* node);
 		static AABox GetAABox(std::vector<Polygon> &poly_vec);
 		static AABox GetAABox(const Polygon &poly);
 		Vec3 m_Max;
 		Vec3 m_Min;
-
 	};
 }
 #endif // #ifndef AABOX_HH

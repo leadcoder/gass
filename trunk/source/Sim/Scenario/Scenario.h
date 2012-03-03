@@ -71,8 +71,19 @@ namespace GASS
 
 		Scenario();
 		virtual ~Scenario();
-
 		static void RegisterReflection();
+
+		/**
+		This function must be called by creator before using this class.
+		This function allocate the scene object manager which take the
+		Scenario as constructor argument and therefore can not be
+		allocated in the Scenario contructor where shared_from_this()
+		is not excepted. Further this function allocate all registred scene managers,
+		they also need a ScenarioScenePtr and therefore not possible to allocate
+		this stuff in the constructor
+		*/
+		void Create();
+
 
 
 		/**
@@ -119,26 +130,15 @@ namespace GASS
 
 		/**
 		Load a new scenario from path
-		return success if true or false if failure
 		*/
-		bool Load(const std::string &scenario_parh);
+		void Load(const std::string &scenario_parh);
 
 		/**
 		Save scenario to path
 		*/
-		bool Save(const std::string &name);
+		void Save(const std::string &name);
 
-		/**
-		Should be called by creator.
-		This function allocate the scene object manager which take the
-		Scenario as constructor argument and therefore can not be
-		allocated in the Scenario contructor where shared_from_this()
-		is not excepted. Further this function allocate all registred scene managers,
-		they also need a ScenarioScenePtr and therefore not possible to allocate
-		this stuff in the constructor
-		*/
-		void OnCreate();
-
+		
 		std::string GetPath() const {return m_ScenarioPath;}
 
 		void OnUpdate(double delta_time);
@@ -229,6 +229,8 @@ namespace GASS
 		void SetScenarioResourceFolders(const std::vector<std::string> &folders);
 		std::vector<std::string> m_ResourceFolders;
 		bool m_ScenarioLoaded;
+
+		bool m_CreateCalled;
 
 
 		typedef boost::shared_ptr<Scenario> ScenarioPtr;

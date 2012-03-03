@@ -49,7 +49,8 @@ namespace GASS
 	Scenario::Scenario() : m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
 		m_ScenarioMessageManager(new MessageManager()),
-		m_ScenarioLoaded(false)
+		m_ScenarioLoaded(false),
+		m_CreateCalled(false)
 	{
 
 	}
@@ -69,6 +70,28 @@ namespace GASS
 		//RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);
 	}
 
+
+	void Scenario::Create()
+	{
+		m_ScenarioMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scenario::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
+		m_ScenarioMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scenario::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
+
+		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+		m_ObjectManager->Init();
+
+		//Add all registered scene manangers to the scenario
+		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
+		for(size_t i = 0; i < managers.size();i++)
+		{
+			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
+			sm->SetScenario(shared_from_this());
+			sm->SetName(managers[i]);
+			sm->OnCreate();
+			m_SceneManagers.push_back(sm);
+		}
+		m_CreateCalled = true;
+	}
+
 	std::vector<std::string> Scenario::GetScenarioResourceFolders() const
 	{
 		return m_ResourceFolders;
@@ -79,8 +102,13 @@ namespace GASS
 		m_ResourceFolders = folders;
 	}
 
-	bool Scenario::Load(const std::string &scenario_path)
+	void Scenario::Load(const std::string &scenario_path)
 	{
+		if(!m_CreateCalled)
+		{
+			Log::Error("You must call Create before using the scenario class");
+		}
+
 		if(m_ScenarioLoaded)
 		{
 			Unload();
@@ -90,19 +118,17 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			Log::Error("No Resource Manager Found");
-		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",false);
-		std::string filename = scenario_path + "/scenario.xml";
 
+		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
+		const std::string filename = scenario_path + "/scenario.xml";
+		
 		//Load scenario specific templates, filename should probably be a scenario parameter
 		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
 
-		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
-			//Fatal error, cannot load
-			Log::Warning("SystemManager::Load() - Couldn't load: %s", filename.c_str());
-			return false;
+			Log::Error("Couldn't load: %s", filename.c_str());
 		}
 		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
 		if(scenario == NULL) 
@@ -110,17 +136,14 @@ namespace GASS
 
 		LoadXML(scenario);
 
-
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
 		rs->LoadResourceGroup("GASSScenario");
 		Load();
-		return true;
 	}
 
-
-	bool Scenario::Save(const std::string &scenario_path)
+	void Scenario::Save(const std::string &scenario_path)
 	{
 		m_ScenarioPath = scenario_path;
 		TiXmlDocument doc;  
@@ -130,22 +153,17 @@ namespace GASS
 		TiXmlElement * scenario_elem = new TiXmlElement("Scenario");  
 		doc.LinkEndChild( scenario_elem); 
 
-		TiXmlElement * ss_elem = new TiXmlElement( "ScenarioSettings" );  
-		scenario_elem->LinkEndChild(ss_elem);
+		BaseReflectionObject::SaveProperties(scenario_elem);
 
-		BaseReflectionObject::SaveProperties(ss_elem);
+		TiXmlElement * sms_elem = new TiXmlElement("SceneManagerSettings");  
+		scenario_elem->LinkEndChild(sms_elem);
 
-		TiXmlElement * scenes_elem = new TiXmlElement("Scenes");  
-		scenario_elem->LinkEndChild(scenes_elem);
-
-		SaveXML(scenes_elem);
+		SaveXML(sms_elem);
 
 		std::string filename = scenario_path + "/scenario.xml";
 		doc.SaveFile(filename.c_str());
 		//Save scenario specific object templates, filename should probably be a scenario parameter
 		//SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
-
-		return true;
 	}
 
 
@@ -161,7 +179,7 @@ namespace GASS
 	void Scenario::LoadXML(TiXmlElement *scenario)
 	{
 		BaseReflectionObject::LoadProperties(scenario);
-		TiXmlElement *scene_manager = scenario->FirstChildElement("SceneManagers");
+		TiXmlElement *scene_manager = scenario->FirstChildElement("SceneManagerSettings");
 		if(scene_manager)
 		{
 			scene_manager = scene_manager->FirstChildElement();
@@ -184,7 +202,7 @@ namespace GASS
 
 		BaseReflectionObject::SaveProperties(scenario);
 
-		TiXmlElement *sms_elem = new TiXmlElement("SceneManagers");
+		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
 		scenario->LinkEndChild(sms_elem);
 
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
@@ -197,7 +215,6 @@ namespace GASS
 		//std::string scenario_path = GetPath();
 		//save instances at same place
 		FilePath path (std::string(parent->GetDocument()->Value()));
-
 
 		m_ObjectManager->SaveXML(path.GetPathNoFile() + "/instances.xml");
 	}
@@ -217,27 +234,6 @@ namespace GASS
 				Log::Error("No Resource Manager Found");
 			rs->RemoveResourceGroup("GASSScenario");
 			m_ScenarioLoaded = false;
-		}
-	}
-
-
-	void Scenario::OnCreate()
-	{
-		m_ScenarioMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scenario::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
-		m_ScenarioMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scenario::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
-
-		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
-		m_ObjectManager->Init();
-
-		//Add all registered scene manangers to scene
-		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
-		for(size_t i = 0; i < managers.size();i++)
-		{
-			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-			sm->SetScenario(shared_from_this());
-			sm->SetName(managers[i]);
-			sm->OnCreate();
-			m_SceneManagers.push_back(sm);
 		}
 	}
 
