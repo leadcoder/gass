@@ -27,15 +27,15 @@ public:
 		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
 		//m_Scenario->Load("../../../common/data/scenarios/" + mess->GetScenarioName());
 		m_Scenario->Load(m_ScenarioName);
-		GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
+		
 
-		GASS::SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		GASS::SceneObjectPtr free_obj = m_Scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scenario->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
 			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
-			scene->PostMessage(camera_msg);
+			m_Scenario->PostMessage(camera_msg);
 		}
 	}
 

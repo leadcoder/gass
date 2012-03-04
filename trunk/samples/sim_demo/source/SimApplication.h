@@ -49,7 +49,7 @@ public:
 
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
-		
+
 
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 
@@ -59,42 +59,31 @@ public:
 		}
 
 		m_Scenario = scenario;
+		scenario->Create();
 		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
 
-		if(m_Scenario->Load(m_ScenarioName))
+		m_Scenario->Load(m_ScenarioName);
+
+		GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
+		//create free camera and set start pos
+		GASS::SceneObjectPtr free_obj = m_Scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scenario->GetStartPos()));
+		if(free_obj)
 		{
-		
-            GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
-
-			//only populate first scene
-			GASS::ScenarioScenePtr scene = m_Scenario->GetScenarioScenes().getNext();
-
-
-			//create free camera and set start pos
-			GASS::SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-			GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
-			if(free_obj)
-			{
-				free_obj->SendImmediate(pos_msg);
-				GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
-				scene->PostMessage(camera_msg);
-			}
-
-			for(int i = 0; i <  m_Objects.size();i++)
-			{
-				GASS::SceneObjectPtr object = scene->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
-				GASS::Vec3 pos = scene->GetStartPos();
-				pos.x += 10*i;
-				
-				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
-				if(object)
-					object->PostMessage(pos_msg);
-			}
+			free_obj->SendImmediate(pos_msg);
+			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+			m_Scenario->PostMessage(camera_msg);
 		}
-		else
+
+		for(int i = 0; i <  m_Objects.size();i++)
 		{
-			GASS::Log::Error("Failed to load scenario %s", m_ScenarioName.c_str());
-			return false;
+			GASS::SceneObjectPtr object = m_Scenario->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+			GASS::Vec3 pos = m_Scenario->GetStartPos();
+			pos.x += 10*i;
+
+			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
+			if(object)
+				object->PostMessage(pos_msg);
 		}
 		m_Timer->Reset();
 
@@ -176,8 +165,8 @@ public:
 		//	Sleep(30);
 
 
-//		if(GetAsyncKeyState(VK_ESCAPE))
-//			return false;
+		//		if(GetAsyncKeyState(VK_ESCAPE))
+		//			return false;
 		return true;
 	}
 

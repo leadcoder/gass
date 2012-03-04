@@ -89,7 +89,7 @@ void CreateManualObject()
 	GASS::SimEngine::Get().GetSimObjectManager()->AddTemplate(container);
 }
 
-void TestCollision(GASS::ScenarioScenePtr scene)
+void TestCollision(GASS::ScenarioPtr scenario)
 {
 	GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
@@ -103,7 +103,7 @@ void TestCollision(GASS::ScenarioScenePtr scene)
 	request.LineStart = GASS::Vec3(100.49,1000, 100.78);
 	request.LineEnd = GASS::Vec3(100.49,-1000, 100.78);
 //	request.Type = GASS::CollisionType::COL_LINE;
-	request.Scene = scene;
+	request.Scenario = scenario;
 	request.ReturnFirstCollisionPoint = 0;
 
 	handle = col_sys->Request(request);
