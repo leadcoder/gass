@@ -138,6 +138,26 @@ namespace GASS
 		*/
 		void Save(const std::string &name);
 
+			/**
+		Get scenario scene name
+		*/
+		std::string GetName() const {return m_Name;}
+
+		/**
+		Set scenario scene name
+		*/
+		void SetName(const std::string &name) {m_Name = name;}
+
+		/**
+		Register for scenario scene messages, see ScenarioSceneMessages.h for available messages
+		*/
+
+
+		/**
+		Get scene manager iterator
+		*/
+		SceneManagerIterator GetSceneManagers();
+
 		
 		std::string GetPath() const {return m_ScenarioPath;}
 
@@ -154,6 +174,9 @@ namespace GASS
 
 		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
+
+		void Load();
+		void Unload();
 
 	protected:
 		/**
@@ -174,8 +197,7 @@ namespace GASS
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 
-		void Load();
-		void Unload();
+		
 
 		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
@@ -194,47 +216,11 @@ namespace GASS
 
 		MessageManagerPtr m_ScenarioMessageManager;
 
-		/**
-		Get scene manager iterator
-		*/
-		SceneManagerIterator GetSceneManagers();
 
-
-
-		/**
-		Get scenario scene name
-		*/
-		std::string GetName() const {return m_Name;}
-
-		/**
-		Set scenario scene name
-		*/
-		void SetName(const std::string &name) {m_Name = name;}
-
-		/**
-		Register for scenario scene messages, see ScenarioSceneMessages.h for available messages
-		*/
-
-
-
-
-
-		/**
-		Get optional resource locations relative to scenario path
-		*/
-		std::vector<std::string> GetScenarioResourceFolders() const;
-		/**
-		Set optional resource locations relative to scenario path
-		*/
-		void SetScenarioResourceFolders(const std::vector<std::string> &folders);
-		std::vector<std::string> m_ResourceFolders;
 		bool m_ScenarioLoaded;
-
 		bool m_CreateCalled;
-
-
-		typedef boost::shared_ptr<Scenario> ScenarioPtr;
-		typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 	};
+	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
 }
 

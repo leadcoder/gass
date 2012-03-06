@@ -57,12 +57,12 @@ namespace GASS
 
 	Scenario::~Scenario()
 	{
-		Unload();
+		//Unload();
 	}
 
 	void Scenario::RegisterReflection()
 	{
-		RegisterVectorProperty<std::string>("ScenarioResourceFolders", &GASS::Scenario::GetScenarioResourceFolders, &GASS::Scenario::SetScenarioResourceFolders);
+		//RegisterVectorProperty<std::string>("ScenarioResourceFolders", &GASS::Scenario::GetScenarioResourceFolders, &GASS::Scenario::SetScenarioResourceFolders);
 		RegisterProperty<Vec3>("StartPosition", &Scenario::GetStartPos, &Scenario::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scenario::GetStartRot, &Scenario::SetStartRot);
 		//RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
@@ -92,15 +92,7 @@ namespace GASS
 		m_CreateCalled = true;
 	}
 
-	std::vector<std::string> Scenario::GetScenarioResourceFolders() const
-	{
-		return m_ResourceFolders;
-	}
 
-	void Scenario::SetScenarioResourceFolders(const std::vector<std::string> &folders)
-	{
-		m_ResourceFolders = folders;
-	}
 
 	void Scenario::Load(const std::string &scenario_path)
 	{
@@ -191,7 +183,6 @@ namespace GASS
 			}
 		}
 	}
-
 
 	void Scenario::SaveXML(TiXmlElement *parent)
 	{
