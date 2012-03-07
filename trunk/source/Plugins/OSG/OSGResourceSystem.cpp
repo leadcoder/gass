@@ -111,12 +111,7 @@ namespace GASS
 
 	void OSGResourceSystem::OnInit(MessagePtr message)
 	{
-	/*	for(int i = 0; i < m_ResourceLocations.size(); i++)
-		{
-			ResourceLocation rl = m_ResourceLocations[i];
-			AddResourceLocation(rl.m_Path,rl.m_Group,rl.m_Type, rl.m_Recursive);
-		}
-		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();*/
+
 	}
 
 	void OSGResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
@@ -126,11 +121,13 @@ namespace GASS
 		rl.m_Type= type;
 		rl.m_Group = resource_group;
 		rl.m_Recursive = recursive;
-		m_ResourceLocations.push_back(rl);
+		AddResourceLocationRecursive(rl);
+		//m_ResourceLocations.push_back(rl);
 	}
 
 	void OSGResourceSystem::LoadResourceGroup(const std::string &resource_group)
 	{
+
 	}
 
 
