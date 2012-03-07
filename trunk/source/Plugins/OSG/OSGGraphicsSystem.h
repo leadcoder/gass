@@ -44,14 +44,13 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		SystemType GetSystemType() {return "GraphicsSystem";}
-		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top);
+		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 
-		
-		void CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle = 0);
+		void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);

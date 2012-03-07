@@ -30,7 +30,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+//#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/SimSystemManager.h"

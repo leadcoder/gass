@@ -42,7 +42,7 @@
 #include "Core/Utils/Log.h"
 
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+//#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
@@ -87,13 +87,13 @@ namespace GASS
 	void OSGGraphicsSceneManager::OnCreate()
 	{
 		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
-		ScenarioScenePtr scene = GetScenarioScene();
-		if(scene)
+		ScenarioPtr scenario = GetScenario();
+		if(scenario)
 		{
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,ScenarioScene::GFX_COMPONENT_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,ScenarioScene::GFX_SYSTEM_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scenario::GFX_COMPONENT_LOAD_PRIORITY));
+			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,Scenario::GFX_SYSTEM_LOAD_PRIORITY));
+			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 		}
 		else
 		{
@@ -122,7 +122,7 @@ namespace GASS
 		}*/
 
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
-		GetScenarioScene()->PostMessage(cam_message);
+		GetScenario()->PostMessage(cam_message);
 	}
 
 	void OSGGraphicsSceneManager::OnUnload(MessagePtr message)
@@ -132,10 +132,10 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
-		ScenarioScenePtr scene = GetScenarioScene();
-		assert(scene);
-		if(scene->GetSceneUp().z > 0)
-			OSGConvert::Get().m_FlipYZ = false;
+		ScenarioPtr scenario = GetScenario();
+		assert(scenario);
+		//if(scenario->GetSceneUp().z > 0)
+		//OSGConvert::Get().m_FlipYZ = false;
 
 		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 		m_RootNode = new osg::PositionAttitudeTransform();

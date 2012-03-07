@@ -139,7 +139,7 @@ namespace GASS
 		//m_Viewer->realize();
 	}
 
-	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, int handle, int main_handle)
+	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
 	{
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 			
@@ -189,7 +189,7 @@ namespace GASS
 			{
 				#if defined(WIN32) && !defined(__CYGWIN__) 	
 				osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
-				main_handle = (size_t) win32_window->getHWND();
+				main_handle = (void*) win32_window->getHWND();
 				handle = main_handle;
 				#endif
 			}
@@ -398,7 +398,7 @@ namespace GASS
 	}*/
 
 
-	void OSGGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top)
+	void OSGGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
 	{
 		if(m_Windows.size() > 0)
 		{

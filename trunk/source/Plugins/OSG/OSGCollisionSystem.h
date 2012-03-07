@@ -50,8 +50,8 @@ namespace GASS
 		SystemType GetSystemType() const {return "CollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
-		void Force(CollisionRequest &request, CollisionResult &result);
-		Float GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute=true) const;
+		void Force(CollisionRequest &request, CollisionResult &result) const;
+		Float GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute=true) const;
 		//void Process();
 
 		//ITaskListener interface
@@ -60,8 +60,8 @@ namespace GASS
 
 	private:
 		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
-		void OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message);
-		void OnLoadScene(ScenarioSceneAboutToLoadNotifyMessagePtr message);
+		void OnUnloadScenario(ScenarioUnloadNotifyMessagePtr message);
+		void OnLoadScenario(ScenarioAboutToLoadNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;

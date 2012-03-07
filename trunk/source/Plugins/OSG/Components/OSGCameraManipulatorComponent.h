@@ -42,7 +42,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		//IOSGCameraManipulator
-		osg::ref_ptr<osgGA::MatrixManipulator> GetManipulator() const {return m_Manipulator;}
+		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
 		
 		//ITaskListener
 		void Update(double delta);
@@ -55,7 +55,7 @@ namespace GASS
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
 
 		std::string m_ManName;// m_OrthoWindowHeight;
-		osg::ref_ptr<osgGA::MatrixManipulator> m_Manipulator;
+		osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
 	};
 	typedef boost::shared_ptr<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
 	typedef boost::weak_ptr<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;

@@ -26,7 +26,7 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+#include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
 
@@ -144,12 +144,12 @@ namespace GASS
 		return false;
 	}
 
-	void OSGCollisionSystem::Force(CollisionRequest &request, CollisionResult &result)
+	void OSGCollisionSystem::Force(CollisionRequest &request, CollisionResult &result) const
 	{
-		ScenarioScenePtr scene(request.Scene);
-		if(scene)
+		ScenarioPtr scenario(request.Scenario);
+		if(scenario)
 		{
-			OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+			OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scenario->GetSceneManager("OSGGraphicsSceneManager"));
 
 			OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 			osgViewer::ViewerBase::Views views;
@@ -173,37 +173,35 @@ namespace GASS
 	void OSGCollisionSystem::OnCreate()
 	{
 		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,ScenarioSceneUnloadNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,ScenarioSceneAboutToLoadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScenario,ScenarioUnloadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScenario,ScenarioAboutToLoadNotifyMessage,0));
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
-	void OSGCollisionSystem::OnUnloadScene(ScenarioSceneUnloadNotifyMessagePtr message)
+	void OSGCollisionSystem::OnUnloadScenario(ScenarioUnloadNotifyMessagePtr message)
 	{
 		m_RequestMap.clear();
 		m_ResultMap.clear();
-		message->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
+		message->GetScenario()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
 	}
 
 
-	void OSGCollisionSystem::OnLoadScene(ScenarioSceneAboutToLoadNotifyMessagePtr message)
+	void OSGCollisionSystem::OnLoadScenario(ScenarioAboutToLoadNotifyMessagePtr message)
 	{
-		message->GetScenarioScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
+		message->GetScenario()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
 	}
 
 	void OSGCollisionSystem::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
-		//SceneObjectPtr cam_obj = message->GetCamera();
-		//OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
-		//m_CurrentCamera = cam_comp;
+
 	}
 
-	Float OSGCollisionSystem::GetHeight(ScenarioScenePtr scene, const Vec3 &pos, bool absolute) const
+	Float OSGCollisionSystem::GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute) const
 	{
 		CollisionRequest request;
 		CollisionResult result;
 
-		Vec3 up = scene->GetSceneUp();
+		Vec3 up = Vec3(0,1,0);
 
 		Vec3 ray_start = pos;
 		Vec3 ray_direction = -up;
@@ -213,11 +211,11 @@ namespace GASS
 		request.LineStart = ray_start;
 		request.LineEnd = ray_start + ray_direction;
 		request.Type = COL_LINE;
-		request.Scene = scene;
+		request.Scenario = scenario;
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 2;
 
-		OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+		OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scenario->GetSceneManager("OSGGraphicsSceneManager"));
 		if(gfx_sm)
 		{
 			ProcessRaycast(&request,&result,gfx_sm->GetOSGRootNode());
@@ -345,11 +343,11 @@ namespace GASS
 		{
 			CollisionRequest request =  iter->second;
 			CollisionHandle handle = iter->first;
-			ScenarioScenePtr scene = ScenarioScenePtr(request.Scene);
+			ScenarioPtr scenario = ScenarioPtr(request.Scenario);
 
-			if(scene)
+			if(scenario)
 			{
-				OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+				OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scenario->GetSceneManager("OSGGraphicsSceneManager"));
 				OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
 				osgViewer::ViewerBase::Views views;

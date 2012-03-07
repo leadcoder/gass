@@ -28,7 +28,6 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Components/Graphics/SceneNodeState.h"
 #include "Core/MessageSystem/IMessage.h"
 
 

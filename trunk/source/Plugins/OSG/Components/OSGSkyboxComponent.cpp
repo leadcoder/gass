@@ -43,7 +43,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Utils/Log.h"
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+//#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -92,12 +92,12 @@ namespace GASS
 
 	void OSGSkyboxComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
 	void OSGSkyboxComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 
 		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();

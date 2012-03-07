@@ -28,9 +28,10 @@ namespace GASS
 	{
 	public:
 		virtual ~IOSGCameraManipulator(){};
-		virtual osg::ref_ptr<osgGA::MatrixManipulator> GetManipulator() const = 0;
+		virtual osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const = 0;
 	protected:
 	};
+
 	typedef boost::shared_ptr<IOSGCameraManipulator> OSGCameraManipulatorPtr;
 	typedef boost::weak_ptr<IOSGCameraManipulator> OSGCameraManipulatorWeakPtr;
 }

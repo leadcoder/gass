@@ -14,12 +14,12 @@
 #ifndef OSGGA_MyTrackballManipulator
 #define OSGGA_MyTrackballManipulator 
 
-#include <osgGA/MatrixManipulator>
+#include <osgGA/CameraManipulator>
 #include <osg/Quat>
 
 namespace osgGA{
 
-class MyTrackballManipulator : public MatrixManipulator
+class MyTrackballManipulator : public CameraManipulator
 {
     public:
         MyTrackballManipulator();

@@ -29,7 +29,7 @@
 #include "Sim/Components/Graphics/GeometryCategory.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
+//#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"

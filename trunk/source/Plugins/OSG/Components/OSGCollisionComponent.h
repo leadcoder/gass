@@ -22,7 +22,7 @@
 #include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 #include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
+//#include "Sim/Scenario/Scene/SceneObjectMessages.h"
 #include "Sim/Components/Graphics/GeometryCategory.h"
 
 #include "Sim/Common.h"
