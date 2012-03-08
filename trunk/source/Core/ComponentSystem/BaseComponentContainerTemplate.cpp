@@ -323,7 +323,7 @@ namespace GASS
 		}
 		else
 		{
-			Log::Warning("Failed to create component:%s in ´%s",comp_type.c_str(), comp_template->GetDocument()->Value());
+			Log::Warning("Failed to create component:%s in %s",comp_type.c_str(), comp_template->GetDocument()->Value());
 		}
 		return comp;
 	}
