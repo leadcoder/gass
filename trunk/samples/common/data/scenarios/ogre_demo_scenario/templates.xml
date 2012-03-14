@@ -25,9 +25,9 @@
         <ImposterDistance value ="2000"/>
         <ImposterFadeDistance value ="20"/>
         <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="1 1"/>
+        <MaxMinScale value ="0.1 0.1"/>
      </TreeGeometryComponent>
-    <!--  <GrassGeometryComponent>
+     <GrassGeometryComponent>
         <PageSize value = "15"/>
         <ViewDistance value ="35"/>
         <Material value="FadeGrass"/>
@@ -43,7 +43,7 @@
         <FadeTech value ="AlphaGrow"/>
         <RenderTechnique value ="CrossQuads"/>
         <BlendWithGround value="false"/>
-      </GrassGeometryComponent>-->
+      </GrassGeometryComponent>
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>

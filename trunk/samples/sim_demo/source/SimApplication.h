@@ -21,7 +21,6 @@ protected:
 	std::string m_Plugins;
 	std::string m_ScenarioName;
 	std::string m_Instances;
-	//std::string m_DataPath;
 	std::vector<std::string> m_Templates;
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
@@ -32,7 +31,6 @@ public:
 	SimApplication(const std::string configuration)
 	{
 		LoadConfig(configuration);
-		//Init();
 		m_Timer =  new GASS::Timer();
 
 	}
@@ -50,7 +48,6 @@ public:
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
 
-
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
 
 		for(int i = 0; i <  m_Templates.size();i++)
@@ -59,12 +56,12 @@ public:
 		}
 
 		m_Scenario = scenario;
-		scenario->Create();
-		GASS::Log::Print("SimApplication::Init -- Start Loading Scenario: %s", m_ScenarioName.c_str());
+		//scenario->Create();
+		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scenario:" <<  m_ScenarioName;
 
 		m_Scenario->Load(m_ScenarioName);
 
-		GASS::Log::Print("SimApplication::Init -- Scenario Loaded:%s", m_ScenarioName.c_str());
+		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scenario Loaded:" << m_ScenarioName;
 		//create free camera and set start pos
 		GASS::SceneObjectPtr free_obj = m_Scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scenario->GetStartPos()));
@@ -98,7 +95,7 @@ public:
 		if (!xmlDoc->LoadFile())
 		{
 			// Fatal error, cannot load
-			GASS::Log::Warning("SimApplication::LoadConfig() - Couldn't load xmlfile: %s", filename.c_str());
+			GASS::FileLog::Warning("SimApplication::LoadConfig() - Couldn't load xmlfile: %s", filename.c_str());
 			return 0;
 		}
 		TiXmlElement *app_settings = xmlDoc->FirstChildElement("SimApplication");
