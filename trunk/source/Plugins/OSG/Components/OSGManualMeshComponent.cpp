@@ -29,6 +29,8 @@
 
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 //#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 
@@ -130,7 +132,7 @@ namespace GASS
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 
 		if(!lc)
-			Log::Error("Failed to find location component for OSGManualMeshComponent: %s",GetSceneObject()->GetName().c_str());
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
 
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());

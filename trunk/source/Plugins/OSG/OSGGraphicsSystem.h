@@ -55,12 +55,11 @@ namespace GASS
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
-		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		
 		void SetActiveData(osg::Group* root);
-		void OnInit(MessagePtr message);		
+		void OnInit(InitSystemMessagePtr message);		
 		void LoadShadowSettings(TiXmlElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
@@ -70,8 +69,6 @@ namespace GASS
 		osgViewer::CompositeViewer* m_Viewer;
 
 		std::map<std::string,osg::ref_ptr<osg::GraphicsContext> > m_Windows;
-		//osg::ref_ptr<osg::GraphicsContext> m_GraphicsContext;
-		//osg::Group* m_Root;
 		bool m_CreateMainWindowOnInit;
 		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
 		std::string m_ShadowSettingsFile;

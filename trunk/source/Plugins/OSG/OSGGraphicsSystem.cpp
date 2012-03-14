@@ -75,6 +75,8 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -109,7 +111,7 @@ namespace GASS
 	void OSGGraphicsSystem::OnCreate()
 	{
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitSystemMessage,0));
 		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
@@ -262,7 +264,7 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::OnInit(MessagePtr message)
+	void OSGGraphicsSystem::OnInit(InitSystemMessagePtr message)
 	{
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
@@ -271,9 +273,8 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath("arial.ttf",full_path))
 		{
-			Log::Warning("Failed to find texture:%s",full_path.c_str());
+			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture" + full_path,"OSGGraphicsSystem::OnInit");
 		}
-		
 		
 		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
 		m_DebugTextBox->setFont(full_path);
@@ -285,7 +286,8 @@ namespace GASS
 			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
 			if (!wsi) 
 			{
-				osg::notify(osg::NOTICE)<<"Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No WindowSystemInterface available, cannot create windows","OSGGraphicsSystem::OnInit");
+				//osg::notify(osg::NOTICE)<<"Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
 				return;
 			}
 
@@ -301,7 +303,7 @@ namespace GASS
 			if (!xmlDoc->LoadFile())
 			{
 				//Fatal error, cannot load
-				Log::Warning("OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: %s", m_ShadowSettingsFile.c_str());
+				LogManager::getSingleton().stream() << "WARNING: OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " <<  m_ShadowSettingsFile;
 			}
 			else
 			{
@@ -369,16 +371,8 @@ namespace GASS
 		{
 			return;
 		}
-		//m_Viewer->frame(delta_time);
 		m_Viewer->frame(delta_time);
-		//if(m_Viewer->done())
-		{
-			//Exit
-		//	Log::Error("Exit");
-		}
 		m_DebugTextBox->setText("");
-		//WindowEventUtilities::messagePump();
-		//m_Root->renderOneFrame();
 	}
 
 	TaskGroup OSGGraphicsSystem::GetTaskGroup() const

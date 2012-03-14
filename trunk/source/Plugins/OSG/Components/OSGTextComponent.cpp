@@ -29,7 +29,8 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/SimEngine.h"
 //#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -80,35 +81,9 @@ namespace GASS
 
 	void OSGTextComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		//OSGGraphicsSceneManager* ogsm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		//assert(ogsm);
-		/*std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSystemManager()->GetFirstSystem<IResourceSystem>();
-		if(!rs->GetFullPath(m_Font,full_path))
-		{
-			Log::Error("Failed to find texture:%s",full_path.c_str());
-		}*/
-		
 		m_OSGText = new osgText::Text;
 
-		//osgText::Font* font =	osgText::readFontFile( "c:/fonts/times.ttf");
-		//m_OSGText->setFont( font);
 		SetFont(m_Font);
-		//m_OSGText->setFont("fonts/times.ttf");
-		//m_OSGText->setFontResolution(300.0f,300.0f);
-		//osg::Vec4 characterSizeModeColor(1.0f,0.0f,0.5f,1.0f);
-
-		//m_OSGText->setColor(characterSizeModeColor);
-		//m_OSGText->setCharacterSize(100);
-		//m_OSGText->setPosition(osg::Vec3(0,0,0.1));
-		//m_OSGText->setBackdropColor(osg::Vec4(0,0,0,1));
-
-		//m_OSGText->setAxisAlignment(osgText::Text::YZ_PLANE);
-		/*m_OSGText->setCharacterSize(30.0f);
-		//m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
-		m_OSGText->setCharacterSizeMode(osgText::Text::SCREEN_COORDS);
-		m_OSGText->setAutoRotateToScreen(true);
-		m_OSGText->setText("YZ_PLANE");*/
 
 		m_OSGText->setCharacterSize(m_CharSize);
 		m_OSGText->setAxisAlignment(osgText::Text::SCREEN);
@@ -134,7 +109,7 @@ namespace GASS
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(!rs->GetFullPath(m_Font,full_path))
 			{
-				Log::Warning("Failed to find texture:%s",full_path.c_str());
+				GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture:" + full_path,"OSGTextComponent::SetFont");
 			}
 			else
 				m_OSGText->setFont(full_path);

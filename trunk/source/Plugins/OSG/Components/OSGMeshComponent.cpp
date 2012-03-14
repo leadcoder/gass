@@ -21,7 +21,8 @@
 #include <boost/bind.hpp>
 
 #include "Core/Math/Quaternion.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -183,7 +184,7 @@ namespace GASS
 		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
 		{
-			Log::Error("Failed loading %s , not possible to use mesh components without location compoent",GetSceneObject()->GetName().c_str());
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
 		}
 		
 		std::string full_path;
@@ -211,8 +212,7 @@ namespace GASS
 			
 			if( ! m_MeshNode)
 			{
-				Log::Error("Failed to load mesh:%s",full_path.c_str());
-				return;
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + full_path,"OSGMeshComponent::SetFilename");
 			}
 
 			osgUtil::Optimizer optimizer;
@@ -227,7 +227,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 		else 
-			Log::Error("Failed to find mesh:%s",full_path.c_str());
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");
 
 	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
@@ -347,7 +347,7 @@ namespace GASS
 
 		if(!m_MeshNode.valid())
 		{
-			Log::Warning("You have to load mesh before trying to fetch mesh data. Mesh name %s",GetName().c_str());
+			LogManager::getSingleton().stream() << "WARNING:You have to load mesh before trying to fetch mesh data. Mesh name: " << GetName();
 			return;
 		}
 		DrawableVisitor<TriangleRecorder> mv;	

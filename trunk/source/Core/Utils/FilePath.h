@@ -55,16 +55,21 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
 		{
+			os.unsetf(std::ios::skipws);
 			os << path.GetPath();
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, FilePath& path)
+		friend std::istream& operator >> (std::istream& is, FilePath& path)
 		{
-			std::string value;
-			os >> value;
-			path.SetPath(value);
-			return os;
+			is.unsetf(std::ios::skipws);
+			//std::string value;
+			std::string line;
+			std::getline (is,line);
+
+			//is >> value;
+			path.SetPath(line);
+			return is;
 		}
 	private:
 		std::string ExpandEnvVariables(const std::string &inStr);

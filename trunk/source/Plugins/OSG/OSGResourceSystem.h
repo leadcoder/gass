@@ -23,6 +23,7 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Systems/SimSystem.h"
+#include "Sim/Systems/Messages/CoreSystemMessages.h"
 #include "Core/Utils/FilePath.h"
 
 #include <string>
@@ -59,7 +60,7 @@ namespace GASS
 		void RemoveResourceLocation(const std::string &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceLocationRecursive(const ResourceLocation &rl);
-		void OnInit(MessagePtr message);		
+		void OnInit(InitSystemMessagePtr message);		
 		void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;

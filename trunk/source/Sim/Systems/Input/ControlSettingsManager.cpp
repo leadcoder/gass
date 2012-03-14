@@ -266,7 +266,7 @@ namespace GASS
 		}
 		else
 		{
-			//FileLog::Error("Unknown input map type: %s",name.c_str());
+			
 			return NULL;
 		}
 	}

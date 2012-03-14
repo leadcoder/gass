@@ -21,6 +21,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -346,7 +347,7 @@ namespace GASS
 
 		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
 		{
-			//FileLog::Error("No verticies found for this mesh")
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No vertex or face data for mesh", "ODEPhysicsSceneManager::CreateCollisionMesh");
 		}
 		// This should equal above code, but without Opcode dependency and no duplicating data
 		dTriMeshDataID id = dGeomTriMeshDataCreate();

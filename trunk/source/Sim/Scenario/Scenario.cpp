@@ -63,12 +63,11 @@ namespace GASS
 
 	void Scenario::RegisterReflection()
 	{
-		//RegisterVectorProperty<std::string>("ScenarioResourceFolders", &GASS::Scenario::GetScenarioResourceFolders, &GASS::Scenario::SetScenarioResourceFolders);
 		RegisterProperty<Vec3>("StartPosition", &Scenario::GetStartPos, &Scenario::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scenario::GetStartRot, &Scenario::SetStartRot);
-		//RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
-		//RegisterProperty<double>("OrigoOffsetNorth", &Scenario::GetOrigoOffsetNorth, &Scenario::SetOrigoOffsetNorth);
-		//RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);
+		RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
+		RegisterProperty<double>("OrigoOffsetNorth", &Scenario::GetOrigoOffsetNorth, &Scenario::SetOrigoOffsetNorth);
+		RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);
 	}
 
 
@@ -113,10 +112,10 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scenario::Load");
-		
+
 		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
 		const std::string filename = scenario_path + "/scenario.xml";
-		
+
 		//Load scenario specific templates, filename should probably be a scenario parameter
 		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
 
@@ -129,13 +128,13 @@ namespace GASS
 		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
 		if(scenario == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scenario tag", "Scenario::Load");
-	
+
 		LoadXML(scenario);
 
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
-		//rs->LoadResourceGroup("GASSScenario");
+		rs->LoadResourceGroup("GASSScenario");
 		Load();
 	}
 
@@ -314,35 +313,35 @@ namespace GASS
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
 	}
 
-	/*double Scenario::GetOrigoOffsetEast() const
+	double Scenario::GetOrigoOffsetEast() const
 	{
-	return m_OffsetEast;
+		return m_OffsetEast;
 	}
 
 	double Scenario::GetOrigoOffsetNorth() const
 	{
-	return m_OffsetNorth;
+		return m_OffsetNorth;
 	}
 
 	void Scenario::SetOrigoOffsetEast(double value)
 	{
-	m_OffsetEast = value;
+		m_OffsetEast = value;
 	}
 
 	void Scenario::SetOrigoOffsetNorth(double value) 
 	{
-	m_OffsetNorth = value;
+		m_OffsetNorth = value;
 	}
 
 	void Scenario::SetProjection(const std::string &proj)
 	{
-	m_Projection = proj;
+		m_Projection = proj;
 	}
 
 	std::string Scenario::GetProjection() const
 	{
-	return m_Projection;
-	}*/
+		return m_Projection;
+	}
 
 	int Scenario::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{

@@ -351,9 +351,7 @@ namespace GASS
 			else
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
 
-				//FileLog::Error("Undefined projection %s",m_ShadowProjType.c_str());
-			//	else if (m_ShadowProjType == "PlaneOptimal")
-			//		currentShadowCameraSetup = Ogre::ShadowCameraSetupPtr(new Ogre::PlaneOptimalShadowCameraSetup(mPlane));
+				
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
 
 		}

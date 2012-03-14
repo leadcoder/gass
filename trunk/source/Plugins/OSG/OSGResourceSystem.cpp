@@ -25,7 +25,7 @@
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Systems/SimSystemManager.h"
 
 
@@ -52,7 +52,7 @@ namespace GASS
 
 	void OSGResourceSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGResourceSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGResourceSystem::OnInit,InitSystemMessage,0));
 	}
 
 	//Create custom load
@@ -109,7 +109,7 @@ namespace GASS
 	}
 
 
-	void OSGResourceSystem::OnInit(MessagePtr message)
+	void OSGResourceSystem::OnInit(InitSystemMessagePtr message)
 	{
 
 	}
@@ -188,7 +188,7 @@ namespace GASS
 				}
 			}
 		}
-		Log::Warning("Failed to find resource: %s",file_name.c_str());
+		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
 		return false;
 	}
 }

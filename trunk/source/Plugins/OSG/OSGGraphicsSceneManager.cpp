@@ -39,7 +39,7 @@
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSException.h"
 
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 //#include "Sim/Scenario/Scene/ScenarioScene.h"
@@ -97,7 +97,7 @@ namespace GASS
 		}
 		else
 		{
-			Log::Error("Scenario Scene not present in OSGGraphicsSceneManager::OnCreate");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scenario not present", "OSGGraphicsSceneManager::OnCreate");
 		}
 	}
 

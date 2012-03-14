@@ -96,9 +96,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkComponent>();
-		//if(!nc)
-		//	FileLog::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
+		
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{

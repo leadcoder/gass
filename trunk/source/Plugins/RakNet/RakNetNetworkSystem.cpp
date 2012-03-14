@@ -436,30 +436,6 @@ namespace GASS
 				MessagePtr message (new ClientConnectedMessage(name,port));
 				GetSimSystemManager()->PostMessage(message);
 
-
-				//printf("new connection\n");
-
-				/*if(m_RemoteCreatePlayers)
-				{
-				//Remote player!
-				m_RemoteOwnerId = p->systemAddress;
-				//RemotePlayer* player = 	new RemotePlayer();
-				BasePlayer* player = (BasePlayer*) Root::Get().GetBaseObjectTemplateManager()->CreateFromTemplate("DefaultPlayer");
-				//DYNAMIC_CAST(LocalPlayer,tempp);
-
-				if(player == NULL )
-				FileLog::Error("DefaultPlayer not found");
-
-				player->SetName(name);
-				player->Init();
-				//reset
-				m_RemoteOwnerId = UNASSIGNED_SYSTEM_ADDRESS;
-				Root::Get().GetPlayerContainer()->Add(player);
-
-				//Check if we also should create vehicle
-				//player->OnServerCreate();
-				//RakNetPlayer* rp = (RakNetPlayer*) player->GetNetworkObject();
-				}*/
 				//Send client config
 				if(m_ScenarioIsRunning && m_AcceptLateJoin)
 				{

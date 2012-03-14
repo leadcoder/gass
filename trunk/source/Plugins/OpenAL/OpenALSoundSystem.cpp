@@ -165,7 +165,6 @@ namespace GASS
 			
 
 			LogManager::getSingleton().stream() << err;
-			//FileLog::Error( "%s", err.c_str());
 
 			return true;
 		}

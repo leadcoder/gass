@@ -28,7 +28,8 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/SimEngine.h"
 //#include "Sim/Scenario/Scene/ScenarioScene.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -114,7 +115,7 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath(m_Material,full_path))
 		{
-			Log::Error("Failed to find texture:%s",full_path.c_str());
+			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture:" + full_path,"OSGBillboardComponent::OnLoad");
 		}
 
 		Vec3 up(0,0,m_Height);
