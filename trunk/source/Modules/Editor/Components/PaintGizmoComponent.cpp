@@ -12,7 +12,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 
 

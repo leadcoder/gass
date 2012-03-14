@@ -30,7 +30,7 @@ This code is based on the Game Programming Gems 5 article
 #include "Core/Reflection/RTTI.h"
 #include "Core/Reflection/Property.h"
 #include "Core/Reflection/VectorProperty.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/Misc.h"
 class TiXmlElement;
 

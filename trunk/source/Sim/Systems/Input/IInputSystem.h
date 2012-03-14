@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Common.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Core/System/ISystem.h"
 

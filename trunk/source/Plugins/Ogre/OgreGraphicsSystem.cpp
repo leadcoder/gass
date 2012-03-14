@@ -39,8 +39,9 @@
 #include <OgreRenderSystem.h>
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
+#include <OgreLogManager.h>
 
-using namespace Ogre;
+
 
 namespace GASS
 {
@@ -68,7 +69,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
@@ -76,13 +77,10 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateTextBox,CreateTextBoxMessage ,0));
 	}
 
-	void OgreGraphicsSystem::OnInit(InitMessagePtr message)
+	void OgreGraphicsSystem::OnInit(InitSystemMessagePtr message)
 	{
-
-		std::cout << "init:" << m_Name << std::endl;
-
 		//Load plugins
-		m_Root = new Root("","ogre.cfg","ogre.log");
+		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 
@@ -192,7 +190,7 @@ namespace GASS
 	{
 		
 		//set thread priority to highest!!
-		WindowEventUtilities::messagePump();
+		Ogre::WindowEventUtilities::messagePump();
 
 		if(DebugDrawer::getSingletonPtr())
 			DebugDrawer::getSingleton().build();

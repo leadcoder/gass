@@ -77,7 +77,7 @@ namespace GASS
 		/**
 			Load templates from xml-file
 		*/
-		bool Load(const std::string &filename);
+		void Load(const std::string &filename);
 
 		/**
 			Check if each new component container instance returned

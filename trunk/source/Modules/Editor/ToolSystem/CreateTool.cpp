@@ -3,6 +3,7 @@
 #include "MouseToolController.h"
 #include "../EditorManager.h"
 #include "Core/MessageSystem/MessageManager.h"
+#include "Core/Utils/GASSException.h"
 
 #include "Core/ComponentSystem/IComponent.h"
 #include "Sim/Scenario/Scenario.h"
@@ -62,7 +63,7 @@ namespace GASS
 			else
 			{
 				//failed to create object
-				Log::Error("Failed to create object");
+				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create object","MouseToolController::Init()");
 			}
 		}
 	}

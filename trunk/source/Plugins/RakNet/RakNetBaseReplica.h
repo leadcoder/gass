@@ -26,7 +26,7 @@
 #include "StringTable.h"
 #include "BitStream.h"
 #include "GetTime.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
 

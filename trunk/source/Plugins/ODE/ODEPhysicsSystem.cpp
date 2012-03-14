@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/System/SystemFactory.h"
@@ -57,7 +57,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODEPhysicsSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODEPhysicsSystem::OnInit,InitSystemMessage,0));
 	}
 
 	void ODEPhysicsSystem::OnInit(MessagePtr message)

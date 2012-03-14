@@ -21,7 +21,7 @@
 #include "GameSceneManager.h"
 #include "GameMessages.h"
 #include "Plugins/Game/GameMessages.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"

@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Core/Utils/FilePath.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/Misc.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -69,7 +69,7 @@ namespace GASS
 			std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
 			if (endVarIndex == std::string::npos)
 			{
-				Log::Warning("FilePath::ExpandEnvVariables - Erroneous use of environment variable: %s\nOnly one percent sign in string", curStr.c_str());
+				LogManager::getSingleton().stream() << "WARNING:FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << "\nOnly one percent sign in string";
 				assert(true);
 			}
 			else
@@ -88,7 +88,7 @@ namespace GASS
 					}
 					else
 					{
-						Log::Warning("Failed to find env var: %s",varName.c_str());
+						LogManager::getSingleton().stream() << "WARNING:Failed to find env var: " << varName;
 					}
 				}
 			}
@@ -101,7 +101,7 @@ namespace GASS
 			std::string::size_type endVarIndex = curStr.find(")");
 			if (startVarIndex == std::string::npos || endVarIndex == std::string::npos)
 			{
-				Log::Warning("FilePath::ExpandEnvVariables - Erroneous use of environment variable: %s\nMissing start or end parenthesis", curStr.c_str());
+				LogManager::getSingleton().stream() << "WARNING:FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << " Missing start or end parenthesis";
 				assert(true);
 			}
 			else
@@ -119,7 +119,7 @@ namespace GASS
 					}
 					else
 					{
-						Log::Warning("Failed to find env var: %s",varName.c_str());
+						LogManager::getSingleton().stream() << "WARNING:Failed to find env var: " << varName;
 					}
 				}
 			}

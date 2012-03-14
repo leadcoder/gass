@@ -37,7 +37,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 namespace GASS
 {
@@ -334,7 +334,7 @@ namespace GASS
 				m_GrassLayer->setSwaySpeed(m_SwaySpeed);
 				m_GrassLayer->setSwayLength(m_SwayLength);
 				m_GrassLayer->setSwayDistribution(m_SwayDistribution);
-				//Log::Print("speed:%f length:%f dist:%f",m_SwaySpeed,m_SwayLength,m_SwayDistribution);
+				//FileLog::Print("speed:%f length:%f dist:%f",m_SwaySpeed,m_SwayLength,m_SwayDistribution);
 			}
 			else
 			{

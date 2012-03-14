@@ -20,7 +20,8 @@
 
 #include "Core/PluginSystem/PluginManager.h"
 #include "Core/PluginSystem/DynamicModule.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "tinyxml.h"
 #include <assert.h>
 #include <boost/filesystem.hpp>
@@ -36,16 +37,17 @@ namespace GASS
 		Shutdown();
 	}
 
-	bool PluginManager::LoadFromFile(const std::string &filename)
+	void PluginManager::LoadFromFile(const std::string &filename)
 	{
-		if(filename =="") return false;
+		
+		if(filename =="")
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
+		
+		LogManager::getSingleton().stream() << "Start loading plugins from " << filename;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
-		{
-			// Fatal error, cannot load
-			Log::Warning("PluginManager::Load() - Couldn't load: %s", filename.c_str());
-			return false;
-		}
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
+		
 		TiXmlElement *plugins = xmlDoc->FirstChildElement("Plugins");
 
 		if(plugins)
@@ -66,11 +68,11 @@ namespace GASS
 #else
 					name += ".dll";
 #endif
+
 					DynamicModule* module = new DynamicModule(name);
-					if(module->Load())
-						m_Plugins.push_back(module);
-					else delete module;
-					
+					module->Load();
+					LogManager::getSingleton().stream() << name << " loaded";
+					m_Plugins.push_back(module);
 				}
 				else if(std::string(plugins->Value()) == "Directory")
 				{
@@ -83,7 +85,6 @@ namespace GASS
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
-		return true;
 	}
 	void PluginManager::Shutdown()
 	{
@@ -137,9 +138,9 @@ namespace GASS
 			for(size_t i = 0 ; i < plugins.size() ; i++)
 			{
 				DynamicModule* module = new DynamicModule(plugins[i]);
-				if(module->Load())
-					m_Plugins.push_back(module);
-				else delete module;
+				module->Load();
+				LogManager::getSingleton().stream() << plugins[i] << " loaded";
+				m_Plugins.push_back(module);
 			}
 			boost::filesystem::current_path(saved_path);
 		}

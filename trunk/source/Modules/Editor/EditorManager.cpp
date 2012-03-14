@@ -1,5 +1,5 @@
 #include "EditorManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "ToolSystem/MouseToolController.h"
 namespace GASS

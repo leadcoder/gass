@@ -33,7 +33,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -83,7 +83,7 @@ namespace GASS
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
 		if(m_ControlSetting == NULL)
-			Log::Error("could not find control settings: %s in RakNetInputTransferComponent",m_ControlSettingName.c_str());
+			LogManager::getSingleton().stream() << "WARNING: Could not find control settings:" << m_ControlSettingName << " in RakNetInputTransferComponent";
 
 		if(!raknet->IsServer())
 		{

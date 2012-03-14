@@ -23,7 +23,7 @@
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -79,7 +79,7 @@ namespace GASS
 				if(rec == "true")
 					rl.m_Recursive = true;
 
-				AddResourceLocationRecursive(rl);
+				m_ResourceLocations.push_back(rl);
 			}
 			else
 			{
@@ -90,7 +90,7 @@ namespace GASS
 		}
 	}
 
-	void OgreResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
+	/*void OgreResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
 	{
 		boost::filesystem::path boost_path(rl.m_Path.GetPath()); 
 		if( boost::filesystem::exists(boost_path))  
@@ -110,16 +110,20 @@ namespace GASS
 				}
 			}
 		}
-	}
+	}*/
 
 	void OgreResourceSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
+		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize Started";
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
 		{
 			ResourceLocation rl = m_ResourceLocations[i];
-			AddResourceLocation(rl.m_Path.GetPath(),rl.m_Group,rl.m_Type, false);
+			AddResourceLocation(rl.m_Path.GetPath(),rl.m_Group,rl.m_Type, rl.m_Recursive);
 		}
+		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize All Resource Groups";
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+		LogManager::getSingleton().stream() << "OgreResourceSystem Completed";
+		
 	}
 
 
@@ -151,6 +155,7 @@ namespace GASS
 			}
 		}			
 	}
+
 
 
 	void OgreResourceSystem::RemoveResourceLocation(const std::string &path,const std::string &resource_group)
@@ -205,15 +210,13 @@ namespace GASS
 
 	bool OgreResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
 	{
-		FILE*fp;
 		if(file_name == "")
 		{
 			return false;
 		}
 
-		if(fp = fopen(file_name.c_str(),"rb"))
+		if(boost::filesystem::exists(file_name))
 		{
-			fclose(fp);
 			file_path = file_name;
 			return true;
 		}
@@ -250,15 +253,14 @@ namespace GASS
 			{
 
 				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
-				if(fp = fopen(temp_file_path.c_str(),"rb"))
+				if(boost::filesystem::exists(temp_file_path))
 				{
-					fclose(fp);
 					file_path = temp_file_path;
 					return true;
 				}
 			}
 		}
-		Log::Warning("Failed to find resource: %s",file_name.c_str());
+		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
 		return false;
 	}
 }

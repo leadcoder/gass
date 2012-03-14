@@ -25,10 +25,10 @@
 #include "Sim/Systems/Input/ControlSettingsManager.h"
 #include "Sim/Systems/Input/ControlSetting.h"
 #include "Sim/Systems/Input/Controller.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/Misc.h"
 #include "Core/Utils/EnumLookup.h"
-
+#include "Core/Utils/GASSException.h"
 #include <tinyxml.h>
 
 namespace GASS
@@ -266,7 +266,7 @@ namespace GASS
 		}
 		else
 		{
-			//Log::Error("Unknown input map type: %s",name.c_str());
+			//FileLog::Error("Unknown input map type: %s",name.c_str());
 			return NULL;
 		}
 	}
@@ -295,15 +295,15 @@ namespace GASS
 	}
 
 
-	bool ControlSettingsManager::Load(const std::string &filename)
+	void ControlSettingsManager::Load(const std::string &filename)
 	{
-		if(filename =="") return false;
+		if(filename =="") 
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ControlSettingsManager::Load");
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
 			// Fatal error, cannot load
-			Log::Error("ControlSettingsManager::Load() - Couldn't load xmlfile: %s", filename.c_str());
-			return 0;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "ControlSettingsManager::Load");
 		}
 		TiXmlElement *control_settings = xmlDoc->FirstChildElement("ControlSettings");	
 		int nInputCount = 0;
@@ -314,8 +314,7 @@ namespace GASS
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 
 		if(!input_system)
-			Log::Error("ControlSettingsManager:: No input system found!");
-
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No input system found!", "ControlSettingsManager::Load");		
 		// Loop through each template
 		while(control_settings)
 		{
@@ -325,14 +324,12 @@ namespace GASS
 			TiXmlElement *control_map = control_settings->FirstChildElement();
 			while(control_map)
 			{
-
-
 				if(!control_map->Attribute("Controller")) 
-					Log::Error("No Controller parameter");
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Controller parameter", "ControlSettingsManager::Load");
 				const std::string controller_name = control_map->Attribute("Controller");
 				const int action = m_InputStringTable->Get(controller_name);
 				if(!control_map->Attribute("InputDevice")) 
-					Log::Error("No InputDevice parameter");
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputDevice parameter", "ControlSettingsManager::Load");
 				const std::string inputdevicename = control_map->Attribute("InputDevice");
 				const int inputdevice = m_InputStringTable->Get(inputdevicename);
 				if(inputdevice == DEVICE_KEYBOARD)
@@ -423,7 +420,6 @@ namespace GASS
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
-		return true;
 	}
 
 	

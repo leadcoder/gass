@@ -27,7 +27,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -98,7 +98,7 @@ namespace GASS
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		//RakNetNetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkComponent>();
 		//if(!nc)
-		//	Log::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
+		//	FileLog::Error("RakNetLocationTransferComponent require RakNetNetworkComponent to be present");
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{

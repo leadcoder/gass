@@ -35,7 +35,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/SimEngine.h"
@@ -216,7 +216,7 @@ namespace GASS
 			}
 		}
 		if(mobj == NULL)
-			Log::Warning("Failed to find moveable object for text component: %s",m_Name.c_str());
+			LogManager::getSingleton().stream() << "WARNING:Failed to find moveable object for text component: " << m_Name;
 
 		if(mobj)
 		{

@@ -40,12 +40,12 @@ namespace GASS
 	* Class used for printing messages to file.
 	*/
 
-	class GASSCoreExport Log
+	class GASSCoreExport FileLog
 	{
 	public:
-		Log();
-		Log(const std::string &file_name);
-		virtual ~Log();
+		FileLog();
+		FileLog(const std::string &file_name);
+		virtual ~FileLog();
 		bool Init(void);
 		bool Shutdown(void);
 		/**
@@ -70,13 +70,13 @@ namespace GASS
 		* \brief This function is used if the class GASSCoreExport is in non-singleton mode.
 		*/
 		bool Output(char* text, ...);
-		static Log* GetInstance();
+		static FileLog* GetInstance();
 		std::string GetFileName(){return m_FileName;};
 		void SetFileName(char* file_name){m_FileName = file_name;};
 	private:
 		std::string m_FileName;
 		FILE* m_File;
-		static Log *m_Instance;
+		static FileLog *m_Instance;
 	};
 
 }

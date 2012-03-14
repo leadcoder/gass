@@ -30,7 +30,7 @@
 
 #include "OgreManualMeshComponent.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"

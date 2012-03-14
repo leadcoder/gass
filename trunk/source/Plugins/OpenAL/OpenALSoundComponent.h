@@ -43,7 +43,7 @@ namespace GASS
 	protected:
 
 		//Helper to load sound from wave-file
-		bool LoadWaveSound(const std::string &filePath);
+		void LoadWaveSound(const std::string &filePath);
 
 		float GetMinDistance() const;
 		void SetMinDistance(float min_dist);

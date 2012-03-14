@@ -21,7 +21,7 @@
 #include "Core/System/ISystem.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
@@ -45,13 +45,10 @@ namespace GASS
 	
 	void SimSystemManager::Init()
 	{
-		MessagePtr init_msg(new InitMessage());
+		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
+		MessagePtr init_msg(new InitSystemMessage());
 		m_SystemMessageManager->SendImmediate(init_msg);
-		//Log all systems loaded
-		for(int i = 0 ;i< m_Systems.size(); i++)
-		{
-			Log::Print("%s Loaded",m_Systems[i]->GetName().c_str());
-		}
+		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	
 
 	void SimSystemManager::Update(float delta_time)

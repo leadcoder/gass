@@ -17,7 +17,7 @@
 #include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
 
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 
 

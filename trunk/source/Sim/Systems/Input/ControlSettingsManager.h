@@ -45,7 +45,7 @@ namespace GASS
 		virtual ~ControlSettingsManager();
 		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
-		bool Load(const std::string &filename);
+		void Load(const std::string &filename);
 		void Update(double delta_time);
 		void Clear();
 	private:

@@ -19,7 +19,8 @@
 *****************************************************************************/
 
 #include "Core/PluginSystem/DynamicModule.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include <assert.h>
 
 namespace GASS
@@ -29,7 +30,7 @@ namespace GASS
 		m_ModuleName = module_name;
 	}
 
-	bool DynamicModule::Load()
+	void DynamicModule::Load()
 	{
 		
 #ifndef WIN32
@@ -43,18 +44,17 @@ namespace GASS
 #ifndef WIN32
 		char *errstr = dlerror();
 		if (errstr != NULL)
-			Log::Warning("A dynamic linking error occurred: (%s)\n", errstr);
+			LogManager::getSingleton().stream() << "WARNING:A dynamic linking error occurred:"  << errstr;
 #endif
-		
 		//assert(m_ModuleHandle && "Unable to load dynamic module");
-		if (m_ModuleHandle == NULL) Log::Error("Unable to load dynamic module: %s",m_ModuleName.c_str());
+		if (m_ModuleHandle == NULL) 
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Unable to load dynamic module:" + m_ModuleName, "DynamicModule::Load()");
 		//OnLoadModule onLoadModule = (OnLoadModule)GetDynamicSymbol(m_ModuleHandle,"onLoadModule");
 		//OnLoadModule onLoadModule = (OnLoadModule)DYNLIB_GETSYM(m_ModuleHandle,"onLoadModule");
 		//assert(onLoadModule && "Unable to find onLoadModule function");
-		//if(onLoadModule == NULL ) Log::Error("Unable to find onLoadModule function, in %s",module_name.c_str());
+		//if(onLoadModule == NULL ) FileLog::Error("Unable to find onLoadModule function, in %s",module_name.c_str());
 		//m_EnginePlugin = (EnginePlugin*) (onLoadModule());
 		//assert(m_EnginePlugin);
-		return true;
 	}
 
 	void DynamicModule::Unload()

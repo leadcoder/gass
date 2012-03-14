@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <boost/bind.hpp>
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
@@ -346,7 +346,7 @@ namespace GASS
 
 		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
 		{
-			//Log::Error("No verticies found for this mesh")
+			//FileLog::Error("No verticies found for this mesh")
 		}
 		// This should equal above code, but without Opcode dependency and no duplicating data
 		dTriMeshDataID id = dGeomTriMeshDataCreate();

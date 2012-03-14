@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/Utils/Misc.h"
 //#include "FilePath.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include <algorithm>
 #include <string.h>
 #include <boost/filesystem.hpp>
@@ -232,7 +232,7 @@ namespace GASS
 		{
 			if(tok[i] == NULL)
 			{
-				Log::Warning("Failed to parse vector %s",tok);
+				LogManager::getSingleton().stream() << "WARNING:Failed to parse vector " << tok;
 				return;
 			}
 			i++;
@@ -248,7 +248,7 @@ namespace GASS
 			{
 				//only vec2?
 				vec.y = atof(tok);
-				//Log::Warning("Failed to parse vector %s",tok);
+				//LogManager::getSingleton().stream() << "WARNING:Failed to parse vector %s",tok);
 				return;
 			}
 			i++;

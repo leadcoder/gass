@@ -21,7 +21,8 @@
 #include "Core/System/BaseSystemManager.h"
 #include "Core/System/ISystem.h"
 #include "Core/System/SystemFactory.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/Serialize/IXMLSerialize.h"
 #include "tinyxml.h"
 
@@ -37,16 +38,17 @@ namespace GASS
 
 	}
 	
-	bool BaseSystemManager::Load(const std::string &filename)
+	void BaseSystemManager::Load(const std::string &filename)
 	{
-		if(filename =="") return false;
+		if(filename =="")
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "BaseSystemManager::Load");
+		
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
-			//Fatal error, cannot load
-			Log::Warning("BaseSystemManager::Load() - Couldn't load: %s", filename.c_str());
-			return 0;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"BaseSystemManager::Load");
 		}
+		
 		TiXmlElement *systems = xmlDoc->FirstChildElement("Systems");
 
 		if(systems)
@@ -60,6 +62,7 @@ namespace GASS
 				{
 					system->SetOwner(shared_from_this());
 					system->OnCreate();
+					LogManager::getSingleton().stream() << system->GetName() << " created";
 					m_Systems.push_back(system);
 				}
 				systems  = systems->NextSiblingElement();
@@ -68,7 +71,6 @@ namespace GASS
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
-		return 1;
 	}
 
 	SystemPtr BaseSystemManager::LoadSystem(TiXmlElement *system_elem)

@@ -25,8 +25,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#ifndef __Exception_H_
-#define __Exception_H_
+
+//This file is from the Ogre3D project, only namespace and
+//some syntax changes are different from the version
+//provided with Ogre3D
+
+#ifndef GASS_EXCEPTION_H
+#define GASS_EXCEPTION_H
 
 
 #include "Core/Common.h"
@@ -50,7 +55,7 @@ THE SOFTWARE.
 #   endif
 // EXCEPTIONS mode
 #elif GASS_ASSERT_MODE == 2
-#       define GASSAssert( a, b ) if( !(a) ) OGRE_EXCEPT( Ogre::Exception::ERR_RT_ASSERTION_FAILED, (b), "no function info")
+#       define GASSAssert( a, b ) if( !(a) ) GASS_EXCEPT( Ogre::Exception::ERR_RT_ASSERTION_FAILED, (b), "no function info")
 
 // STANDARD mode
 #else
@@ -97,10 +102,10 @@ namespace GASS {
             ERR_CANNOT_WRITE_TO_FILE,
             ERR_INVALID_STATE,
             ERR_INVALIDPARAMS,
-            ERR_RENDERINGAPI_ERROR,
             ERR_DUPLICATE_ITEM,
             ERR_ITEM_NOT_FOUND,
             ERR_FILE_NOT_FOUND,
+			ERR_CANNOT_READ_FILE,
             ERR_INTERNAL_ERROR,
             ERR_RT_ASSERTION_FAILED, 
 			ERR_NOT_IMPLEMENTED
@@ -130,10 +135,7 @@ namespace GASS {
                 The description contains the error number, the description
                 supplied by the thrower, what routine threw the exception,
                 and will also supply extra platform-specific information
-                where applicable. For example - in the case of a rendering
-                library error, the description of the error will include both
-                the place in which OGRE found the problem, and a text
-                description from the 3D rendering library, if available.
+                where applicable.
         */
         virtual const std::string & getFullDescription(void) const;
 
@@ -186,12 +188,21 @@ namespace GASS {
 		UnimplementedException(int inNumber, const std::string & inDescription, const std::string & inSource, const char* inFile, long inLine)
 			: Exception(inNumber, inDescription, inSource, "UnimplementedException", inFile, inLine) {}
 	};
+	
 	class GASSCoreExport FileNotFoundException : public Exception
 	{
 	public:
 		FileNotFoundException(int inNumber, const std::string & inDescription, const std::string & inSource, const char* inFile, long inLine)
 			: Exception(inNumber, inDescription, inSource, "FileNotFoundException", inFile, inLine) {}
 	};
+
+	class GASSCoreExport FileReadException : public Exception
+	{
+	public:
+		FileReadException(int inNumber, const std::string & inDescription, const std::string & inSource, const char* inFile, long inLine)
+			: Exception(inNumber, inDescription, inSource, "FileReadException", inFile, inLine) {}
+	};
+
 	class GASSCoreExport IOException : public Exception
 	{
 	public:
@@ -222,12 +233,7 @@ namespace GASS {
 		InternalErrorException(int inNumber, const std::string & inDescription, const std::string & inSource, const char* inFile, long inLine)
 			: Exception(inNumber, inDescription, inSource, "InternalErrorException", inFile, inLine) {}
 	};
-	class GASSCoreExport RenderingAPIException : public Exception
-	{
-	public:
-		RenderingAPIException(int inNumber, const std::string & inDescription, const std::string & inSource, const char* inFile, long inLine)
-			: Exception(inNumber, inDescription, inSource, "RenderingAPIException", inFile, inLine) {}
-	};
+
 	class GASSCoreExport RuntimeAssertionException : public Exception
 	{
 	public:
@@ -241,7 +247,7 @@ namespace GASS {
 	@remarks
 		This nicely handles construction of derived Exceptions by value (needed
 		for throwing) without suffering from ambiguity - each code is turned into
-		a distinct type so that methods can be overloaded. This allows OGRE_EXCEPT
+		a distinct type so that methods can be overloaded. This allows GASS_EXCEPT
 		to stay small in implementation (desirable since it is embedded) whilst
 		still performing rich code-to-type mapping. 
 	*/
@@ -265,6 +271,14 @@ namespace GASS {
 		{
 			return FileNotFoundException(code.number, desc, src, file, line);
 		}
+		static FileReadException create(
+			ExceptionCodeType<Exception::ERR_CANNOT_READ_FILE> code, 
+			const std::string & desc, 
+			const std::string & src, const char* file, long line)
+		{
+			return FileReadException(code.number, desc, src, file, line);
+		}
+
 		static IOException create(
 			ExceptionCodeType<Exception::ERR_CANNOT_WRITE_TO_FILE> code, 
 			const std::string & desc, 
@@ -306,13 +320,6 @@ namespace GASS {
 			const std::string & src, const char* file, long line)
 		{
 			return InternalErrorException(code.number, desc, src, file, line);
-		}
-		static RenderingAPIException create(
-			ExceptionCodeType<Exception::ERR_RENDERINGAPI_ERROR> code, 
-			const std::string & desc, 
-			const std::string & src, const char* file, long line)
-		{
-			return RenderingAPIException(code.number, desc, src, file, line);
 		}
 		static RuntimeAssertionException create(
 			ExceptionCodeType<Exception::ERR_RT_ASSERTION_FAILED> code, 

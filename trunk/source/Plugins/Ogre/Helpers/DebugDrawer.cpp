@@ -4,7 +4,7 @@
 #include <OgreRenderQueue.h>
 #include <OgreManualObject.h>
 #include <OgreAxisAlignedBox.h>
-//#include "Core/Utils/Log.h"
+//#include "Core/Utils/GASSLogManager.h"
 IcoSphere::IcoSphere()
 	: index(0)
 {

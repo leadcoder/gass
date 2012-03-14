@@ -22,7 +22,6 @@
 #define TIMER_HH
 
 #include "Core/Common.h"
-//#include "Core/Prerequisits.h"
 
 #ifndef WIN32
 #include <inttypes.h>

@@ -1,9 +1,10 @@
 #include "OpenALSoundSystem.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/Math/Matrix.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scenario.h"
@@ -48,7 +49,7 @@ namespace GASS
 
 	void OpenALSoundSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnInit,InitSystemMessage,0));
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,ScenarioAboutToLoadNotifyMessage,0));
 	}
@@ -91,24 +92,21 @@ namespace GASS
 		// Check for errors
 		if ( !m_Device )
 		{
-			Log::Error("SoundManager::init error : No sound device.");
-			return;
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"No sound device", "SoundManager::Init");
 		}
 
 		m_Context = alcCreateContext( m_Device, NULL );
 		//   if ( CheckAlError() || !mSoundContext ) // TODO seems not to work! why ?
 		if ( !m_Context )
 		{
-			Log::Error( "OpenALSoundSystem::Init error : No sound context.");
-			return;
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"No sound context", "SoundManager::Init");
 		}
 
 		// Make the context current and active
 		alcMakeContextCurrent( m_Context );
 		if ( CheckAlError( "Init()" ) )
 		{
-			Log::Error( "SoundManager::init error : could not make sound context current and active.");
-			return;
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Could not make sound context current and active", "SoundManager::Init");
 		}
 
 		// Check for EAX 2.0 support and
@@ -153,9 +151,7 @@ namespace GASS
 		ALFWInit();
 		// Ok
 		m_IsInitialised = true;
-
-		Log::Print("GASSSoundOpenOpenAL initialised.");
-		return;
+		LogManager::getSingleton().stream() << "GASSSoundOpenOpenAL initialised";
 	}
 
 
@@ -166,8 +162,11 @@ namespace GASS
 		{
 			std::string err = "ERROR SoundManager:: ";
 			err += (char*) alGetString( errCode );
+			
 
-			Log::Error( "%s", err.c_str());
+			LogManager::getSingleton().stream() << err;
+			//FileLog::Error( "%s", err.c_str());
+
 			return true;
 		}
 		return false;
@@ -205,30 +204,30 @@ namespace GASS
 		switch ( error )
 		{
 		case AL_INVALID_NAME:
-			Log::Error("ERROR SoundManager::%s Invalid Name", pMsg.c_str());
+			LogManager::getSingleton().stream() << "ERROR Invalid Name:" << pMsg;
 			break;
 		case AL_INVALID_ENUM:
-			Log::Error("ERROR SoundManager::%s Invalid Enum", pMsg.c_str());
+			LogManager::getSingleton().stream() << "ERROR SoundManager Invalid Enum:"<< pMsg;
 			break;
 		case AL_INVALID_VALUE:
-			Log::Error("ERROR SoundManager::%s Invalid Value", pMsg.c_str());
+			LogManager::getSingleton().stream() << "ERROR SoundManager Invalid Value:"<< pMsg;
 			break;
 		case AL_INVALID_OPERATION:
-			Log::Error("ERROR SoundManager::%s Invalid Operation", pMsg.c_str());
+			LogManager::getSingleton().stream() << "ERROR SoundManager Invalid Operation:" << pMsg;
 			break;
 		case AL_OUT_OF_MEMORY:
-			Log::Error("ERROR SoundManager::%s Out Of Memory", pMsg.c_str());
+			LogManager::getSingleton().stream() << "ERROR SoundManager Out Of Memory" << pMsg;
 			break;
 		default:
-			Log::Error("ERROR SoundManager::%s Unknown error (%i) case in testALError()", pMsg.c_str(), error);
+			LogManager::getSingleton().stream() << "ERROR SoundManager:: Unknown error case in testALError():" <<  pMsg;
 			break;
 		};
 
 		return true;
 	}
 
-
-	bool OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format)
+	//TODO: Fix exceptions
+	void OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format)
 	{
 		ALvoid*		data=NULL;
 		std::string full_path = "";
@@ -244,8 +243,7 @@ namespace GASS
 		{
 			if (m_BufferMap.size() >= MAX_AUDIO_BUFFERS)
 			{
-				Log::Warning("OpenALSoundComponent::LoadWaveSound() - All sound buffers are in use!");
-				return false;
+				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"All sound buffers are in use","OpenALSoundComponent::LoadWaveSound()");
 			}
 			if(rs->GetFullPath(filePath,full_path))
 			{
@@ -258,7 +256,7 @@ namespace GASS
 				ALFWLoadWaveToBuffer( (ALbyte*)full_path.c_str(),buffer);
 
 				if ( CheckAlError("loadWAV::alutLoadWAVFile: ") )
-					return false;
+					return ;
 
 				// Copy the new WAV data into the buffer
 				//alBufferData(buffer, format, data, size, freq);
@@ -269,12 +267,12 @@ namespace GASS
 				NULL pointer.
 				*/
 				if (CheckAlError("loadWAV::alBufferData: ") )
-					return false;
+					return;
 
 				// Unload the WAV file
 				//alutUnloadWAV(format, data, size, freq);
 				if (CheckAlError("loadWAV::alutUnloadWAV: ") )
-					return false;
+					return ;
 				if(buffer) 
 					m_BufferMap[filePath] = buffer;
 
@@ -282,10 +280,10 @@ namespace GASS
 			}
 			else
 			{
-				return false;
+				return;
 			}
 		}
-		return true;
+		return;
 	}
 
 	std::string OpenALSoundSystem::ListAvailableDevices( void )

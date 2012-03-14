@@ -37,7 +37,7 @@
 #include "Sim/SimEngine.h"
 #include "Sim/Scheduling/IRuntimeController.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -212,7 +212,7 @@ namespace GASS
 		else if(name == "FreeCameraUpDown")
 		{
 			m_UpDownInput = value;
-			//Log::Print("Scroll wheel input %f",value );
+			//FileLog::Print("Scroll wheel input %f",value );
 		}
 
 

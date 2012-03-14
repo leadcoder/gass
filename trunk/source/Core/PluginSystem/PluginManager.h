@@ -65,7 +65,7 @@ namespace GASS
 				<Plugin PluginFile = "TestPlugin3"/>
 			</Plugins>
 		*/
-		bool LoadFromFile(const std::string &filename);
+		void LoadFromFile(const std::string &filename);
 
 		/**
 			Reload all loaded plugins

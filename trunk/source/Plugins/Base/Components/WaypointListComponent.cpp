@@ -14,7 +14,7 @@
 
 #include <boost/bind.hpp>
 #include "WaypointListComponent.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/SplineAnimation.h"
 #include "Core/ComponentSystem/ComponentFactory.h"

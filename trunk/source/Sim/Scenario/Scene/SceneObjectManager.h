@@ -50,8 +50,8 @@ namespace GASS
 		SceneObjectManager(ScenarioPtr scenario);
 		virtual ~SceneObjectManager();
 
-		bool LoadXML(const std::string &filename);
-		bool SaveXML(const std::string &filename);
+		void LoadXML(const std::string &filename);
+		void SaveXML(const std::string &filename);
 
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);
@@ -62,8 +62,8 @@ namespace GASS
 		SceneObjectPtr GetSceneRoot() {return m_Root;}
 		void LoadObject(SceneObjectPtr obj);
 	protected:
-		bool LoadXML(TiXmlElement *parent);
-		bool SaveXML(TiXmlElement *parent) const;
+		void LoadXML(TiXmlElement *parent);
+		void SaveXML(TiXmlElement *parent) const;
 		//void GetObjectsByClass(SceneObjectPtr obj, std::vector<SceneObjectPtr> &objects, const std::string &class_name);
 		void UnloadObject(SceneObjectPtr obj);
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *go_elem);

@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/BaseComponentContainer.h"
 #include "Core/Serialize/Serialize.h"
 #include "Core/ComponentSystem/IComponent.h"
@@ -111,7 +111,7 @@ namespace GASS
 				}
 				else
 				{
-					Log::Warning("Failed to create component:%s",comp_type.c_str());
+					LogManager::getSingleton().stream() << "WARNING:Failed to create component: " << comp_type;
 				}
 			}
 
@@ -293,11 +293,9 @@ namespace GASS
 			}
 			else //base object attribute
 			{
-				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
-				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
+				const std::string attrib_val = class_attribute->FirstAttribute()->Value();
 				if (!SetPropertyByString(data_name,attrib_val))
-					Log::Warning("BaseComponentContainer::LoadXML() - Filename: %s\tproperty not found: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
-				
+					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainer::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tproperty not found: " << data_name;
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
 		}
@@ -318,7 +316,7 @@ namespace GASS
 		}
 		else
 		{
-			Log::Warning("Failed to create component:%s",comp_type.c_str());
+			LogManager::getSingleton().stream() << "WARNING:Failed to create component" << comp_type;
 		}
 		return comp;
 	}

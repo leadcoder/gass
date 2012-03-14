@@ -27,11 +27,11 @@
 //SSAO
 #include <OgreCompositorManager.h>
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
-
+#include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scenario.h"
@@ -110,7 +110,7 @@ namespace GASS
 
 		if(!lc)
 		{
-			Log::Error("OgreCameraComponent::OnLoad -- Failed to find location component");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component", "OgreCameraComponent::OnLoad");
 		}
 
 		static unsigned int obj_id = 0;

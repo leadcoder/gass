@@ -23,7 +23,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
@@ -83,7 +83,7 @@ namespace GASS
 		{
 			m_SourceObject = GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_SourceObjectName,false);
 			if(!SceneObjectPtr(m_SourceObject))
-				Log::Warning("Failed to find source %s for bone modifier %s",m_SourceObjectName.c_str(),m_BoneName.c_str());
+				LogManager::getSingleton().stream() << "WARNING:Failed to find source %s for bone modifier %s",m_SourceObjectName.c_str(),m_BoneName.c_str());
 		}
 		else
 			m_SourceObject  = GetSceneObject();*/

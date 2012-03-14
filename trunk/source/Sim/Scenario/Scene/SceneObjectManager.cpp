@@ -32,7 +32,8 @@
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/ComponentContainerFactory.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "tinyxml.h"
 
 namespace GASS
@@ -48,21 +49,23 @@ namespace GASS
 
 	}
 
-	bool SceneObjectManager::LoadXML(const std::string &filename)
+	void SceneObjectManager::LoadXML(const std::string &filename)
 	{
-		if(filename =="") return false;
+		if(filename =="") 
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObjectManager::LoadXML");
+		
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 
 		if(!xmlDoc->LoadFile())
 		{
 			//Fatal error, cannot load
-			Log::Warning("SystemManager::Load() - Couldn't load: %s", filename.c_str());
-			return 0;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObjectManager::LoadXML");
 		}
 
 		//LoadXML((TiXmlElement*)xmlDoc);
 		TiXmlElement *objects = xmlDoc->FirstChildElement("Objects");
-		if(objects == NULL) Log::Error("Failed to get Object tag");
+		if(objects == NULL) 
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Object tag", "SceneObjectManager::LoadXML");
 
 		TiXmlElement *object_elem = objects->FirstChildElement();
 		//Loop through each template
@@ -78,10 +81,9 @@ namespace GASS
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;
-		return true;
 	}
 
-	bool SceneObjectManager::SaveXML(const std::string &filename)
+	void SceneObjectManager::SaveXML(const std::string &filename)
 	{
 		TiXmlDocument doc;
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
@@ -98,14 +100,14 @@ namespace GASS
 		}
 
 		doc.SaveFile(filename.c_str());
-		return true;
 	}
 
-	bool SceneObjectManager::LoadXML(TiXmlElement *parent)
+	void SceneObjectManager::LoadXML(TiXmlElement *parent)
 	{
 		TiXmlElement *objects = parent->FirstChildElement("Objects");
-		if(objects == NULL) Log::Error("Failed to get Object tag");
-
+		if(objects == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Objects tag", "SceneObjectManager::LoadXML");
+	
 		TiXmlElement *object_elem = objects->FirstChildElement();
 		//Loop through each template
 		while(object_elem)
@@ -117,10 +119,9 @@ namespace GASS
 			}
 			object_elem= object_elem->NextSiblingElement();
 		}
-		return true;
 	}
 
-	bool SceneObjectManager::SaveXML(TiXmlElement *parent) const
+	void SceneObjectManager::SaveXML(TiXmlElement *parent) const
 	{
 		TiXmlElement *som_elem = new TiXmlElement("Objects");
 		parent->LinkEndChild(som_elem);
@@ -130,7 +131,6 @@ namespace GASS
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
 			child->SaveXML(som_elem);
 		}
-		return true;
 	}
 
 	void SceneObjectManager::LoadObject(SceneObjectPtr obj)

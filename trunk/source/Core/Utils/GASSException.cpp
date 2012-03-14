@@ -87,7 +87,7 @@ namespace GASS {
 		{
 			std::stringstream desc;
 			
-			desc <<  "OGRE EXCEPTION(" << number << ":" << typeName << "): "
+			desc <<  "GASS EXCEPTION(" << number << ":" << typeName << "): "
 				<< description 
 				<< " in " << source;
 

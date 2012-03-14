@@ -35,10 +35,11 @@
 #include "NetworkData.h"
 #include "GetTime.h"
 #include "AutoRPC.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/System/SystemFactory.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -99,7 +100,7 @@ namespace GASS
 	void RakNetNetworkSystem::OnCreate()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
@@ -221,10 +222,10 @@ namespace GASS
 	{
 		if(m_Active)
 		{
-			Log::Warning("Server already started");
+			LogManager::getSingleton().stream() << "Warning: Server already started";
 			return;
 		}
-		Log::Print("Starting raknet server:%s port:%d",name.c_str(),port);
+		LogManager::getSingleton().stream() << "Starting raknet server:" << name<<  "port:" << port;
 		m_IsServer = 1;
 
 
@@ -247,18 +248,16 @@ namespace GASS
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
-
-
 		SocketDescriptor socketDescriptor(port,0);
-		Log::Print("Raknet starup....");
+		LogManager::getSingleton().stream() << "Raknet starup....";
 		bool ret = m_RakPeer->Startup(MAX_PEERS,m_SleepTime,&socketDescriptor, 1);
 		if(ret == false)
 		{
-			Log::Error("Failed to start raknet server");
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to start raknet server","RakNetNetworkSystem::StartServer");
 		}
-		Log::Print("Raknet startup done");
+		LogManager::getSingleton().stream() << "Raknet startup done";
 		m_RakPeer->SetMaximumIncomingConnections(MAX_PEERS);
-		Log::Print("Raknet SetMaximumIncomingConnections done");
+		LogManager::getSingleton().stream() << "Raknet SetMaximumIncomingConnections done";
 
 		//Register update fucntion
 		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -449,7 +448,7 @@ namespace GASS
 				//DYNAMIC_CAST(LocalPlayer,tempp);
 
 				if(player == NULL )
-				Log::Error("DefaultPlayer not found");
+				FileLog::Error("DefaultPlayer not found");
 
 				player->SetName(name);
 				player->Init();

@@ -63,7 +63,6 @@ namespace GASS
 		void LoadResourceGroup(const std::string &resource_group);
 
 	protected:
-		void AddResourceLocationRecursive(const ResourceLocation &rl);
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;

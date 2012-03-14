@@ -49,16 +49,16 @@ namespace GASS
 				{
 					const std::string prop_val = prop_elem->FirstAttribute()->Value();
 					if (!SetPropertyByString(prop_name,prop_val))
-						Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\tproperty not found: %s", prop_elem->GetDocument()->Value(), prop_name.c_str());
+						LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\tproperty not found: "<< prop_name;
 				}
 				else
 				{
-					Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\t unkown property syntax for %s, \"value\" expected, found %s", prop_elem->GetDocument()->Value(), prop_name.c_str(), attrib_name.c_str());
+					LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename: " << prop_elem->GetDocument()->Value() << "\t unkown property syntax for " << prop_name << "\"value\" expected, found " << attrib_name;
 				}
 			}
 			else
 			{
-				Log::Warning("BaseReflectionObject::LoadProperties() - Filename: %s\t No attribute found for property %s", prop_elem->GetDocument()->Value(), prop_name.c_str());
+				LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" << prop_elem->GetDocument()->Value() <<" \t No attribute found for property " <<prop_name;
 			}
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
@@ -225,7 +225,7 @@ namespace GASS
 					//Here we want to copy all common properties from one object to another 
 					//(typically from template to instance), so ignore if some properties don't exist in destination object
 					//if (!ret)
-					//	Log::Warning("BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
+					//	LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::SetProperties() - Property not found: %s", prop->GetName().c_str());
 					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();

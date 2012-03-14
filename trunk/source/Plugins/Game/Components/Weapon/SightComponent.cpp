@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 #include "Sim/Components/Network/INetworkComponent.h"
 #include "Sim/Scenario/Scenario.h"

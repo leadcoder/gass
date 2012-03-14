@@ -101,7 +101,7 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void SetTaskGroup(TaskGroup value);
-		void OnInit(InitMessagePtr message);
+		void OnInit(InitSystemMessagePtr message);
 		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
 

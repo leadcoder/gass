@@ -11,7 +11,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 	
 namespace GASS

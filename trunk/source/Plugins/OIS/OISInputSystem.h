@@ -25,7 +25,7 @@
 #include <OIS/OIS.h>
 #endif
 #include "Sim/Common.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageType.h"
 #include "Sim/Systems/Input/IInputSystem.h"
 #include "Sim/Systems/SimSystem.h"

@@ -6,6 +6,7 @@
 #include "IMouseTool.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/ComponentSystem/IComponent.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
@@ -64,7 +65,7 @@ namespace GASS
 			m_EditorControlSetting->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllerMessage,0));
 		}
 		else
-			Log::Error("Failed to find EditorInputSettings in ControlSettingsManager");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find EditorInputSettings in ControlSettingsManager","MouseToolController::Init()");
 
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnScenarioLoaded,ScenarioLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnNewScenario,ScenarioAboutToLoadNotifyMessage,0));

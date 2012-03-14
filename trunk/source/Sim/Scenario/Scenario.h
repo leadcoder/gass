@@ -198,7 +198,6 @@ namespace GASS
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 
 		
-
 		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
 

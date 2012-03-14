@@ -26,27 +26,27 @@
 
 namespace GASS
 {
-	Log::Log()
+	FileLog::FileLog()
 	{
-		m_FileName = "Log.txt";
+		m_FileName = "FileLog.txt";
 		Init();
 	}
 
-	Log::Log(const std::string &file_name)
+	FileLog::FileLog(const std::string &file_name)
 	{
 		m_FileName = file_name;
 		Init();
 	}
 
 
-	Log::~Log()
+	FileLog::~FileLog()
 	{
 		Shutdown();
 	}
 
 
 
-	bool Log::Init(void)
+	bool FileLog::Init(void)
 	{
 		//Clear the log contents
 		if((m_File=fopen(m_FileName.c_str(), "wb"))==NULL)
@@ -57,7 +57,7 @@ namespace GASS
 		return true;
 	}
 
-	bool Log::Shutdown(void)
+	bool FileLog::Shutdown(void)
 	{
 		if(m_File)
 			fclose(m_File);
@@ -65,21 +65,21 @@ namespace GASS
 	}
 
 
-	Log* Log::m_Instance = NULL;
+	FileLog* FileLog::m_Instance = NULL;
 
-	Log* Log::GetInstance()
+	FileLog* FileLog::GetInstance()
 	{
 		if (m_Instance  == NULL) {
-			m_Instance  = new Log();
+			m_Instance  = new FileLog();
 		}
 		return m_Instance ;
 	}
 
-	bool Log::Print(const char* text, ...)
+	bool FileLog::Print(const char* text, ...)
 	{
 		va_list arg_list;
 		va_start(arg_list, text);
-		Log* log = Log::GetInstance();
+		FileLog* log = FileLog::GetInstance();
 		FILE* file;
 
 		//Open the log file for append
@@ -95,11 +95,11 @@ namespace GASS
 		return true;
 	}
 
-	bool Log::Error(const char* text, ...)
+	bool FileLog::Error(const char* text, ...)
 	{
 		va_list arg_list;
 		va_start(arg_list, text);
-		Log* log = Log::GetInstance();
+		FileLog* log = FileLog::GetInstance();
 		FILE* file;
 
 		//Open the log file for append
@@ -129,11 +129,11 @@ namespace GASS
 
 
 
-	bool Log::Warning(const char* text, ...)
+	bool FileLog::Warning(const char* text, ...)
 	{
 		va_list arg_list;
 		va_start(arg_list, text);
-		Log* log = Log::GetInstance();
+		FileLog* log = FileLog::GetInstance();
 		FILE* file;
 
 		//Open the log file for append
@@ -151,11 +151,11 @@ namespace GASS
 
 
 
-	bool Log::LinePrint(char* text, ...)
+	bool FileLog::LinePrint(char* text, ...)
 	{
 		va_list arg_list;
 		va_start(arg_list, text);
-		Log* log = Log::GetInstance();
+		FileLog* log = FileLog::GetInstance();
 		FILE* file;
 
 		//Open the log file for append
@@ -169,7 +169,7 @@ namespace GASS
 		return true;
 	}
 
-	bool Log::Output(char* text, ...)
+	bool FileLog::Output(char* text, ...)
 	{
 		va_list arg_list;
 

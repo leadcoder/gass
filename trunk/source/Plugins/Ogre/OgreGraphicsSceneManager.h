@@ -47,9 +47,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
-
 		Ogre::SceneManager* GetSceneManger() {return m_SceneMgr;}
-
 
 		//Fog
 		std::string GetFogMode() const {return m_FogMode;}
@@ -67,7 +65,7 @@ namespace GASS
 	protected:
 		void OnLoad(MessagePtr message);		
 		void OnChangeCamera(ChangeCameraMessagePtr message);
-		void OnUnload(MessagePtr message);
+		void OnUnload(UnloadSceneManagersMessagePtr message);
 		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 

@@ -26,6 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
+//This file is from the Ogre3D project, only namespace and
+//some syntax changes are different from the version
+//provided with Ogre3D
+
+
 #ifndef GASS_LOG_H
 #define GASS_LOG_H
 #include "Core/Common.h"
@@ -42,7 +47,7 @@ namespace GASS {
 	/** \addtogroup Utility
 	*  @{
 	*/
-	// LogMessageLevel + LoggingLevel > OGRE_LOG_THRESHOLD = message logged
+	// LogMessageLevel + LoggingLevel > GASS_LOG_THRESHOLD = message logged
     #define GASS_LOG_THRESHOLD 4
 
     /** The level of detail to which the log will go into.
@@ -130,7 +135,7 @@ namespace GASS {
 		bool isTimeStampEnabled() const { return mTimeStamp; }
 
         /** Log a message to the debugger and to log file (the default is
-            "<code>OGRE.log</code>"),
+            "<code>GASS.log</code>"),
         */
         void logMessage( const std::string& message, LogMessageLevel lml = LML_NORMAL, bool maskDebug = false );
 

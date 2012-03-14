@@ -26,7 +26,7 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 #include "GASSLogManager.h"
-//#include "OgreException.h"
+#include "GASSException.h"
 #include <algorithm>
 namespace GASS {
 
@@ -91,8 +91,8 @@ namespace GASS {
         LogList::iterator i = mLogs.find(name);
         if (i != mLogs.end())
             return i->second;
-        //else
-        //    OGRE_EXCEPT(Exception::ERR_INVALIDPARAMS, "Log not found. ", "LogManager::getLog");
+        else
+            GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Log not found. ", "LogManager::getLog");
     }
 	//-----------------------------------------------------------------------
 	void LogManager::destroyLog(const std::string& name)
@@ -140,7 +140,7 @@ namespace GASS {
 	{
 		if (mDefaultLog)
 			return mDefaultLog->stream(lml, maskDebug);
-		//else
-		//	OGRE_EXCEPT(Exception::ERR_INVALIDPARAMS, "Default log not found. ", "LogManager::stream");
+		else
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Default log not found. ", "LogManager::stream");
 	}
 }

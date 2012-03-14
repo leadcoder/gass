@@ -27,7 +27,8 @@
 #include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/ComponentSystem/IComponentContainerTemplateManager.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
 #include <tinyxml.h>
@@ -114,7 +115,7 @@ namespace GASS
 				}
 				else
 				{
-					Log::Warning("Failed to create component:%s",comp_type.c_str());
+					LogManager::getSingleton().stream() << "WARNING:Failed to create component: " << comp_type;
 				}
 			}
 
@@ -272,9 +273,6 @@ namespace GASS
 				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
-					//if(!cc_elem->Attribute("type"))
-					//	Log::Error("Failed to find type-attribute for %s tag", cc_elem->Value());
-					
 					const std::string type = cc_elem->Value(); //Attribute("type");
 					ComponentContainerTemplatePtr container (ComponentContainerTemplateFactory::Get().Create(type));
 					if(container)
@@ -286,7 +284,7 @@ namespace GASS
 					}
 					else
 					{
-						Log::Warning("Failed to create ComponentContainer instance from template: %s",type.c_str());
+						LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer instance from template: " << type;
 					}
 					cc_elem  = cc_elem->NextSiblingElement();
 				}
@@ -298,11 +296,11 @@ namespace GASS
 				{
 				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
 				if (!SetPropertyByString(data_name,attrib_val))
-					Log::Warning("BaseComponentContainerTemplate::LoadXML() - Filename: %s\tproperty not found: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
+					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tproperty not found: " << data_name;
 				}
 				else
 				{
-					Log::Warning("BaseComponentContainerTemplate::LoadXML() - Filename: %s\tno value attribute found for xml tag: %s", obj_elem->GetDocument()->Value(), data_name.c_str());
+					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tno value attribute found for xml tag: " << data_name;
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
@@ -323,7 +321,7 @@ namespace GASS
 		}
 		else
 		{
-			Log::Warning("Failed to create component:%s in %s",comp_type.c_str(), comp_template->GetDocument()->Value());
+			LogManager::getSingleton().stream() << "WARNING: Failed to create component:"<< comp_type << " in:" << comp_template->GetDocument()->Value();
 		}
 		return comp;
 	}
@@ -453,7 +451,8 @@ namespace GASS
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 
 		if(!container)
-			Log::Error("Failed to create instance %s",type.c_str());
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+				"Failed to create instance" + type,"BaseComponentContainerTemplate::CreateComponentContainer");
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
 

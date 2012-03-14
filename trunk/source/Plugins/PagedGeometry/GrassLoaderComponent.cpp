@@ -37,7 +37,8 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/ComponentSystem/IComponent.h"
 #include "Core/MessageSystem/MessageManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -226,7 +227,7 @@ namespace GASS
 			}
 			else
 			{
-				Log::Error("No terrain found in GrassLoaderComponent, you need to specify custom bounds if no terrain present");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No terrain found , you need to specify custom bounds if no terrain present","GrassLoaderComponent::OnLoad");
 			}
 		}
 		else

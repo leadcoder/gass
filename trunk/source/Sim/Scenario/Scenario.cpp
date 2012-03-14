@@ -35,7 +35,8 @@
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/SimEngine.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/System/ISystem.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/MessageManager.h"
@@ -98,7 +99,9 @@ namespace GASS
 	{
 		if(!m_CreateCalled)
 		{
-			Log::Error("You must call Create before using the scenario class");
+			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
+				"You must call Create before using the scenario class",
+				"Scenario::Load");
 		}
 
 		if(m_ScenarioLoaded)
@@ -109,8 +112,8 @@ namespace GASS
 		m_ScenarioPath = scenario_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
-			Log::Error("No Resource Manager Found");
-
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scenario::Load");
+		
 		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
 		const std::string filename = scenario_path + "/scenario.xml";
 		
@@ -120,18 +123,19 @@ namespace GASS
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
-			Log::Error("Couldn't load: %s", filename.c_str());
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "Scenario::Load");
 		}
-		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
-		if(scenario == NULL) 
-			Log::Error("Failed to get Scenario tag");
 
+		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
+		if(scenario == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scenario tag", "Scenario::Load");
+	
 		LoadXML(scenario);
 
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
-		rs->LoadResourceGroup("GASSScenario");
+		//rs->LoadResourceGroup("GASSScenario");
 		Load();
 	}
 
@@ -222,7 +226,7 @@ namespace GASS
 			m_ScenarioMessageManager->Clear();
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(rs == NULL)
-				Log::Error("No Resource Manager Found");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scenario::SaveXML");
 			rs->RemoveResourceGroup("GASSScenario");
 			m_ScenarioLoaded = false;
 		}

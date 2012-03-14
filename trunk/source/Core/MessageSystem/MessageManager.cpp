@@ -22,7 +22,8 @@
 #include "Core/MessageSystem/MessageType.h"
 #include "Core/MessageSystem/StaticMessageListener.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 
 #include "tbb/spin_mutex.h"
 #include <stdio.h>
@@ -81,14 +82,14 @@ namespace GASS
 		{
 
 			/*    MessageType mt = message->GetType();
-			Log::Print("Failed %s",message->GetType().name());
+			FileLog::Print("Failed %s",message->GetType().name());
 			message_type = m_MessageTypes.begin();
 			while(message_type != m_MessageTypes.end())
 			{
 			if(mt == message_type->first)
-			Log::Print("REG failed name %s",message_type->first.name());
+			FileLog::Print("REG failed name %s",message_type->first.name());
 			else
-			Log::Print("REG name %s",message_type->first.name());
+			FileLog::Print("REG name %s",message_type->first.name());
 			message_type++;
 			}*/
 			return;
@@ -134,18 +135,15 @@ namespace GASS
 		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
-
-			//if((*msg_reg)->m_Callback == callback)
 			if(*(*msg_reg)->m_Callback == *callback)
 			{
-				Log::Error("Callback already registered for message: %s", type.name());
+				GASS_EXCEPT(Exception::ERR_DUPLICATE_ITEM, "Callback already registered for message", "MessageManager::RegisterForMessage");
 				return 1;
 			}
 			++msg_reg;
 		}
 		MessageRegPtr new_reg (new MessageReg());
 		new_reg->m_Callback = callback;
-		//new_reg->m_ObjectID = object_id;
 		new_reg->m_Priority = priority;
 
 		message_type->second->m_MessageRegistrations.push_back(new_reg);

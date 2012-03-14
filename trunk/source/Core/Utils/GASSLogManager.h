@@ -26,9 +26,15 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __LogManager_H__
-#define __LogManager_H__
+//This file is from the Ogre3D project, only namespace and
+//some syntax changes are different from the version
+//provided with Ogre3D
 
+
+#ifndef GASS_LOG_MANAGER_H
+#define GASS_LOG_MANAGER_H
+
+#include "Core/Common.h"
 #include "GASSLog.h"
 #include "Singleton.h"
 #include <map>
@@ -78,7 +84,7 @@ namespace GASS
 
         /** Creates a new log with the given name.
             @param
-                name The name to give the log e.g. 'Ogre.log'
+                name The name to give the log e.g. 'GASS.log'
             @param
                 defaultLog If true, this is the default log output will be
                 sent to if the generic logging methods on this class are

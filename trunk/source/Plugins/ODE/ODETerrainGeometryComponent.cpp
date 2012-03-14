@@ -31,7 +31,7 @@
 
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/Math/AABox.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -129,9 +129,9 @@ namespace GASS
 			m_SampleWidth = size_x/(samples_x-1);
 			m_SampleHeight = size_z/(samples_z-1);
 
-			//Log::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
+			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
 			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
-			//Log::Print("thickness %f",thickness );
+			//FileLog::Print("thickness %f",thickness );
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
 			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space),
 				this, // pUserData ?
@@ -160,7 +160,7 @@ namespace GASS
 			center_position.y = 0;
 			dGeomSetPosition(geom_id, center_position.x, center_position.y, center_position.z);
 
-			//Log::Print("Terrain  pos:%f %f %f",center_position.x, center_position.y, center_position.z);
+			//FileLog::Print("Terrain  pos:%f %f %f",center_position.x, center_position.y, center_position.z);
 			//m_Offset = center_position;
 			//dGeomSetPosition(geom_id,center_position.x,center_position.y,center_position.z);
 		}

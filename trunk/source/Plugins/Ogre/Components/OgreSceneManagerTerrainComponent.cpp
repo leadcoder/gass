@@ -26,7 +26,8 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Systems/Resource/IResourceSystem.h"
@@ -91,10 +92,9 @@ namespace GASS
 			std::string full_path;
 			if(!rs->GetFullPath(filename,full_path))
 			{
-				Log::Warning("Faild to load terrain %s",filename.c_str());
-				return;
+				GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed find terrain configuration " + filename, "OgreSceneManagerTerrainComponent::LoadTerrain");
+				//LogManager::getSingleton().stream() << "WARNING:Faild to load terrain %s",filename.c_str());
 			}
-			
 
 			m_OgreSceneManager->setWorldGeometry(full_path);
 			Ogre::Vector3 scale = Ogre::Vector3::ZERO;

@@ -47,16 +47,16 @@ namespace GASS
 	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
 	*/
 
-	class InitMessage : public BaseMessage
+	class InitSystemMessage : public BaseMessage
 	{
 	public:
-		InitMessage (SenderID sender_id = -1, double delay= 0) :
+		InitSystemMessage (SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay)
 			{ }
 	private:
 
 	};
-	typedef boost::shared_ptr<InitMessage> InitMessagePtr;
+	typedef boost::shared_ptr<InitSystemMessage> InitSystemMessagePtr;
 
 
 

@@ -50,7 +50,7 @@ namespace GASS
 		void OnCreate();
 
 		// OpenAL-specific functions
-		bool LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
+		void LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
 		bool CheckAlError( void );
 		bool CheckAlError( std::string pMsg );
 		SystemType GetSystemType() const {return "SoundSystem";}

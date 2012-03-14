@@ -23,6 +23,7 @@
 #include "Sim/Components/BaseSceneComponent.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectLink.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -76,19 +77,15 @@ namespace GASS
 						{
 							if(links[i].GetLinkObjectID() != UNKOWN_LINK_ID)
 							{
-
 								if(!links[i].Initlize(GetSceneObject()))
-									Log::Error("Component:%s in object:%s failed to initilize scene object link:%s with id:%s",
-									GetName().c_str(),
-									GetSceneObject()->GetName().c_str(),
-									prop->GetName().c_str(),
-									links[i].GetLinkObjectID().c_str());
+								{
+									GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
+										"BaseSceneComponent::InitializePointers()");
+								}
 							}
 							else
-								Log::Warning("Component:%s in object:%s has no link id for:%s",
-								GetName().c_str(),
-								GetSceneObject()->GetName().c_str(),
-								prop->GetName().c_str());
+								LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() <<  " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 						}
 						prop->SetValue(this,boost::any(links));
 					}
@@ -101,18 +98,21 @@ namespace GASS
 						{
 
 							if(!link.Initlize(GetSceneObject()))
-								Log::Error("Component:%s in object:%s failed to initilize scene object link:%s with id:%s",
-								GetName().c_str(),
-								GetSceneObject()->GetName().c_str(),
-								prop->GetName().c_str(),
-								link.GetLinkObjectID().c_str());
+							{
+								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
+										"BaseSceneComponent::InitializePointers()");
+
+							}
 							prop->SetValue(this,boost::any(link));
 						}
 						else
-							Log::Error("Component:%s in object:%s has no link id for:%s",
-							GetName().c_str(),
-							GetSceneObject()->GetName().c_str(),
-							prop->GetName().c_str());
+						{
+							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
+										"BaseSceneComponent::InitializePointers()");
+
+						}
 					}
 				}
 				++iter;

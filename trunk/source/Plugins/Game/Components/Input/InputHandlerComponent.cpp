@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -75,7 +75,7 @@ namespace GASS
 			m_Empty = false;
 		}
 		else if(cs == NULL)
-			Log::Warning("InputHandlerComponent::OnEnter -Failed to find control settings: %s",m_ControlSetting.c_str());
+			LogManager::getSingleton().stream() << "WARNING:InputHandlerComponent::OnEnter -Failed to find control settings: " << m_ControlSetting;
 
 
 		IComponentContainerTemplate::ComponentVector components;

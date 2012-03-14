@@ -193,10 +193,10 @@ namespace GASS
 		Vec3 box = GetOwner()->GetFirstGeometry()->GetBoundingBox().GetSize();
 		if (box.x != 0 && box.y != 0 && box.z != 0) {
 		dMassSetBoxTotal(&m_ODEMass,m_Mass,box.x,box.y,box.z);
-		Log::Print("ODEBodyComponent BBox mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
+		FileLog::Print("ODEBodyComponent BBox mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		dBodySetMass(m_ODEBodyID,&m_ODEMass);
 		} else
-		Log::Warning("ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
+		LogManager::getSingleton().stream() << "WARNING:ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		*/
 		if (m_MassRepresentation != MR_GEOMETRY)
 		{

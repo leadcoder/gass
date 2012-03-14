@@ -20,7 +20,7 @@
 #include <boost/bind.hpp>
 #include "CoreSceneManager.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
 #include "Sim/Scenario/Scene/SceneManagerFactory.h"

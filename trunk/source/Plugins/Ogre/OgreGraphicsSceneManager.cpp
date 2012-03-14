@@ -40,7 +40,8 @@
 #include "Core/System/SystemFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
@@ -122,7 +123,7 @@ namespace GASS
 
 	}
 
-	void OgreGraphicsSceneManager::OnUnload(MessagePtr message)
+	void OgreGraphicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
 		if(m_SceneMgr)
 		{
@@ -138,7 +139,7 @@ namespace GASS
 	{
 		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, m_Name);
 		if(m_SceneMgr == NULL)
-			GASS::Log::Error("SceneManager %s not found",m_SceneManagerType.c_str());
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"SceneManager " + m_SceneManagerType +" not found","OgreGraphicsSceneManager::OnLoad");
 		UpdateShadowSettings();
 		UpdateSkySettings();
 		UpdateLightSettings();
@@ -196,14 +197,11 @@ namespace GASS
 
 		//Create debug render system
 		new DebugDrawer(m_SceneMgr, 0.5f);
-
-		
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)
 	{
 		//float fog_end = 100 + (1.0-(message->GetFog()))*2000;
-
 		SetFogEnd(message->GetFogDistance());
 		SetFogDensity(message->GetFogDensity());
 	}
@@ -351,7 +349,9 @@ namespace GASS
 
 			}
 			else
-				Log::Error("Undefined projection %s",m_ShadowProjType.c_str());
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
+
+				//FileLog::Error("Undefined projection %s",m_ShadowProjType.c_str());
 			//	else if (m_ShadowProjType == "PlaneOptimal")
 			//		currentShadowCameraSetup = Ogre::ShadowCameraSetupPtr(new Ogre::PlaneOptimalShadowCameraSetup(mPlane));
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);

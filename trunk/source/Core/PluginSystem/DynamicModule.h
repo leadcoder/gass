@@ -45,7 +45,7 @@ namespace GASS
 	public:
 		DynamicModule(const std::string &module_name);
 		virtual ~DynamicModule();
-		bool Load();
+		void Load();
 		void Unload();
 		inline const std::string &GetModuleName(){return m_ModuleName;}
 	protected:

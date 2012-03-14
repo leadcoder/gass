@@ -1,7 +1,8 @@
 #include "OpenALSoundComponent.h"
 #include "OpenALSoundSystem.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/MessageManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/SimEngine.h"
 #include "Sim/Systems/SimSystemManager.h"
 #include "Sim/Scenario/Scenario.h"
@@ -10,7 +11,6 @@
 
 namespace GASS
 {
-
 	OpenALSoundComponent::OpenALSoundComponent()
 	{
 		m_Buffer = 0;
@@ -33,7 +33,7 @@ namespace GASS
 
 	ALvoid OpenALSoundComponent::DisplayALError(ALchar *szText, ALint errorcode)
 	{
-		Log::Warning("%s%s",szText,alGetString(errorcode));
+		LogManager::getSingleton().stream() << "WARNING:" << szText << " ERRORCODE:" << alGetString(errorcode);
 		return;
 	}
 
@@ -71,13 +71,13 @@ namespace GASS
 
 	void OpenALSoundComponent::OnParameterMessage(SoundParameterMessagePtr message)
 	{
-		//Log::Warning("OpenALSoundComponent::OnParameterMessage");
+		//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::OnParameterMessage");
 		SoundParameterMessage::SoundParameterType type = message->GetParameter();
 		switch(type)
 		{
 		case SoundParameterMessage::PLAY:
 			{
-				//Log::Warning("OpenALSoundComponent::Play() - play!");
+				//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::Play() - play!");
 				Play();
 			}
 			break;
@@ -157,7 +157,7 @@ namespace GASS
 	{
 		if(volume <  0)
 		{
-			Log::Warning("Invalid volume %.3f",volume);
+			LogManager::getSingleton().stream() << "WARNING:Invalid volume " << volume;
 			return;
 		}
 		m_Volume = volume;
@@ -171,7 +171,7 @@ namespace GASS
 	{
 		if(pitch <=  0)
 		{
-			Log::Warning("Invalid pitch %.3f",pitch);
+			LogManager::getSingleton().stream() << "WARNING:Invalid pitch value:" << pitch;
 			return;
 		}
 		m_Pitch = pitch;
@@ -230,7 +230,7 @@ namespace GASS
 
 	void OpenALSoundComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		bool wasSoundLoaded  = LoadWaveSound(m_Filename);//, 0);
+		LoadWaveSound(m_Filename);//, 0);
 		//sound loaded, update sound settings
 		SetLoop(m_Loop);
 		SetMaxDistance(m_MaxDistance);
@@ -252,7 +252,8 @@ namespace GASS
 
 		if (m_Source == 0)
 		{
-			Log::Warning("OpenALSoundComponent::Play() called without m_Source set");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Play called without m_Source set","OpenALSoundComponent::Play()");
+			//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::Play() called without m_Source set";
 			return;
 		}
 
@@ -283,7 +284,7 @@ namespace GASS
 
 		if (m_Source == 0)
 		{
-			Log::Error("OpenALSoundComponent::SetFrequency() called without m_Source set");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"IsPlaying called without m_Source set","OpenALSoundComponent::IsPlaying()");
 		}
 
 		alGetSourcei(m_Source, AL_SOURCE_STATE, &iVal);
@@ -293,43 +294,33 @@ namespace GASS
 		return (iVal == AL_PLAYING);
 	}
 
-	bool OpenALSoundComponent::LoadWaveSound(const std::string &filePath)
+	void OpenALSoundComponent::LoadWaveSound(const std::string &filePath)
 	{
 		OpenALSoundSystem* ss = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OpenALSoundSystem>().get();
 		if(!ss)
 		{
-			Log::Error("OpenALSoundSystem is missing, you must add OpenALSoundSystem to SimSystemManager before loading OpenALSoundComponents");
-			return false;
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"OpenALSoundSystem is missing, you must add OpenALSoundSystem to SimSystemManager before loading OpenALSoundComponents","OpenALSoundComponent::LoadWaveSound");
 		}
 		ALenum      format;// = (sc->GetStereo() == 0  ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16	);     //for the buffer format
 		ALsizei		freq;		//for the frequency of the buffer
 		//ALboolean	loop;// = (sc->GetLoop() == 0 ? AL_FALSE : AL_TRUE);         //looped
+		ss->LoadWaveSound(filePath,m_Buffer,freq,format);
 
-		if(ss->LoadWaveSound(filePath,m_Buffer,freq,format))
-		{
-			alGenSources( 1, &m_Source);
-			//if ( sound_man->CheckAlError( "init::alGenSources :") )
-			//	return false;
-			alSourcei( m_Source, AL_BUFFER, m_Buffer );
-			//if ( sound_man->CheckAlError( "init::alGenSources :") )
-			//	return false;
-			alSourcei( m_Source, AL_LOOPING, m_Loop);
-			//if( CheckAlError( "loadSource()::alSourcei" ) )
-			//	return false;
-		}
-
-		else
-		{
-			Log::Warning("OpenALSoundComponent::LoadWaveSound() - Failed to load sound buffer!");
-			return false;
-		}
-		return true;
+		alGenSources( 1, &m_Source);
+		//if ( sound_man->CheckAlError( "init::alGenSources :") )
+		//	return false;
+		alSourcei( m_Source, AL_BUFFER, m_Buffer );
+		//if ( sound_man->CheckAlError( "init::alGenSources :") )
+		//	return false;
+		alSourcei( m_Source, AL_LOOPING, m_Loop);
+		//if( CheckAlError( "loadSource()::alSourcei" ) )
+		//	return false;
 	}
 
 	void OpenALSoundComponent::StopLooping()
 	{
 		if (m_Source == 0) return;
-			alSourcei( m_Source, AL_LOOPING, 0);
+		alSourcei( m_Source, AL_LOOPING, 0);
 	}
 
 	void OpenALSoundComponent::Stop()

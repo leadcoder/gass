@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -69,7 +69,7 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
 		else
-			Log::Warning("PlayerInputComponent::OnCreate -- Failed to find control settings: %s",m_ControlSetting.c_str());
+			LogManager::getSingleton().stream() << "WARNING:PlayerInputComponent::OnCreate -- Failed to find control settings: " << m_ControlSetting;
 
 	}
 

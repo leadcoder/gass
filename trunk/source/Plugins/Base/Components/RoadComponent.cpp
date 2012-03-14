@@ -14,7 +14,7 @@
 
 #include <boost/bind.hpp>
 #include "RoadComponent.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/SplineAnimation.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
@@ -115,7 +115,7 @@ namespace GASS
 		//get waypoint list
 		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 		if(!wpl)
-			Log::Warning("RoadComponent depends on WaypointListComponent");
+			LogManager::getSingleton().stream() << "WARNING:RoadComponent depends on WaypointListComponent";
 	}
 
 	void RoadComponent::SetPaintTerrain(bool value)

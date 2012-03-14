@@ -22,7 +22,7 @@
 
 #include "Sim/Common.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 
 #include <Ogre.h>

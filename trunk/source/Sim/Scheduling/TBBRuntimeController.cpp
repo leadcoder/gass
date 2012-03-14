@@ -47,7 +47,7 @@ namespace GASS
 		
 		m_Scheduler = new tbb::task_scheduler_init(num_threads);
 		m_TasksRoot = new( tbb::task::allocate_root() ) tbb::empty_task;
-		Log::Print("TBBRuntimeController initialized with %d threads",num_threads);
+		LogManager::getSingleton().stream() << "TBBRuntimeController initialized with "  << num_threads  << " threads";
 		//tbb::tick_count ts = tbb::tick_count::now();
 	}
 
@@ -151,13 +151,13 @@ namespace GASS
 
 	void TBBRuntimeController::Log()
 	{
-		Log::Print("Num registred tasks in primary vector:%d",m_PrimaryUpdateVector.size());
-		Log::Print("Num registred groups:%d",m_TaskGroups.size());
+		LogManager::getSingleton().stream() << "Num registred tasks in primary vector:" << m_PrimaryUpdateVector.size();
+		LogManager::getSingleton().stream() << "Num registred groups:" << m_TaskGroups.size();
 
 		TaskGroupMap::iterator iter = m_TaskGroups.begin();
 		for(; iter != m_TaskGroups.end();++iter)
 		{
-			Log::Print("Num registred in %s: %d",iter->first.c_str(), iter->second.size());
+			LogManager::getSingleton().stream() << "Num registred in"  <<  iter->first << ":" << iter->second.size();
 		}
 	}
 }

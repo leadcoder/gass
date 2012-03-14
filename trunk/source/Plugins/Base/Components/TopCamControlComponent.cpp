@@ -42,7 +42,7 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/Math/Quaternion.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 
 namespace GASS
 {

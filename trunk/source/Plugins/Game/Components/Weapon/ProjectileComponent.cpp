@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/ComponentFactory.h"
 #include "Core/MessageSystem/MessageManager.h"
 #include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scenario/Scenario.h"
 #include "Sim/Scenario/Scene/SceneObject.h"
 #include "Sim/Scenario/Scene/SceneObjectManager.h"
@@ -84,7 +84,7 @@ namespace GASS
 			/*EffectBundle* effect = (EffectBundle*) Root::Get().GetBaseObjectTemplateManager()->CreateFromTemplate(m_StartEffectTemplateName );
 			if(effect)
 			{
-			Log::Print("Effect loaded:%s",m_StartEffectTemplateName.c_str());
+			FileLog::Print("Effect loaded:%s",m_StartEffectTemplateName.c_str());
 			effect->Init();
 			//ISceneNode* root = Root::GetPtr()->GetLevel()->GetParticleManager()->GetRoot();
 			AddChild(effect);

@@ -29,7 +29,8 @@
 #include "Core/MessageSystem/IMessage.h"
 #include "Core/System/ISystemManager.h"
 #include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogManager.h"
 
 //include to ensure interface export
 #include "Sim/Components/Graphics/ILocationComponent.h"
@@ -74,24 +75,31 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	bool SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings, int num_rtc_threads)
+	void SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings, int num_rtc_threads)
 	{
-	    Log::Print("SimEngine::Init -- Start");
+		// Create log manager
+		if(LogManager::getSingletonPtr() == 0)
+		{
+			LogManager* log_man = new LogManager();
+			log_man->createLog("GASS.log", true, true);
+		}
+	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
 		m_PluginManager->LoadFromFile(plugin_file);
+		
 		m_SystemManager->Load(system_file);
+		
 		m_ControlSettingsManager->Load(control_settings);
+		
 		//Initialize systems
 		m_SystemManager->Init();
 
 		m_RTC->Init(num_rtc_threads);
-		Log::Print("SimEngine::Init -- Done");
 
 		//intilize profiler
-
 		ProfileSample::outputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
 
-		return true;
+		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}
 
 	void SimEngine::Update(double delta_time)

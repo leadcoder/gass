@@ -24,7 +24,8 @@
 #include "Core/ComponentSystem/ComponentContainerTemplateFactory.h"
 #include "Core/Serialize/IXMLSerialize.h"
 
-#include "Core/Utils/Log.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "tinyxml.h"
 
 #include <iostream>
@@ -96,15 +97,15 @@ namespace GASS
 		return templates;
 	}
 
-	bool BaseComponentContainerTemplateManager::Load(const std::string &filename)
+	void BaseComponentContainerTemplateManager::Load(const std::string &filename)
 	{
-		if(filename =="") return false;
+		if(filename =="")
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "BaseComponentContainerTemplateManager::Load");
+		
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
-			// Fatal error, cannot load
-			Log::Warning("BaseComponentContainerTemplateManager::Load() - Couldn't load: %s", filename.c_str());
-			return 0;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"BaseComponentContainerTemplateManager::Load()");
 		}
 		TiXmlElement *templates = xmlDoc->FirstChildElement("Templates");
 
@@ -125,7 +126,7 @@ namespace GASS
 				}
 				else
 				{
-					Log::Warning("Failed to create ComponentContainerTemplate:%s",type.c_str());
+					LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainerTemplate:" << type;
 				}
 				templates  = templates->NextSiblingElement();
 			}
@@ -133,6 +134,6 @@ namespace GASS
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
-		return 1;
+		
 	}
 }
