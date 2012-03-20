@@ -55,7 +55,7 @@ namespace GASS
 		m_RadialGridGeometryModuleVertex(NULL),
 		m_RadialGridGeometryModuleRtt(NULL),
 		m_Target(NULL),
-		m_ResourceLocation("%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax"),
+		m_ResourceLocation("%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax"),
 		m_ActiveModule("ProjectedGridRtt")
 	{
 

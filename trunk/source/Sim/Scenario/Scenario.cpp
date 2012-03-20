@@ -65,9 +65,9 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("StartPosition", &Scenario::GetStartPos, &Scenario::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scenario::GetStartRot, &Scenario::SetStartRot);
-		RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
+		/*RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
 		RegisterProperty<double>("OrigoOffsetNorth", &Scenario::GetOrigoOffsetNorth, &Scenario::SetOrigoOffsetNorth);
-		RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);
+		RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);*/
 	}
 
 
@@ -311,36 +311,6 @@ namespace GASS
 	SceneManagerIterator Scenario::GetSceneManagers()
 	{
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
-	}
-
-	double Scenario::GetOrigoOffsetEast() const
-	{
-		return m_OffsetEast;
-	}
-
-	double Scenario::GetOrigoOffsetNorth() const
-	{
-		return m_OffsetNorth;
-	}
-
-	void Scenario::SetOrigoOffsetEast(double value)
-	{
-		m_OffsetEast = value;
-	}
-
-	void Scenario::SetOrigoOffsetNorth(double value) 
-	{
-		m_OffsetNorth = value;
-	}
-
-	void Scenario::SetProjection(const std::string &proj)
-	{
-		m_Projection = proj;
-	}
-
-	std::string Scenario::GetProjection() const
-	{
-		return m_Projection;
 	}
 
 	int Scenario::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )

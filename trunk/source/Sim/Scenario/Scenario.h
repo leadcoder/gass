@@ -164,12 +164,7 @@ namespace GASS
 		void OnUpdate(double delta_time);
 
 
-		double GetOrigoOffsetEast() const;
-		double GetOrigoOffsetNorth() const;
-		void SetOrigoOffsetEast(double value);
-		void SetOrigoOffsetNorth(double value);
-		std::string GetProjection() const;
-		void SetProjection(const std::string &proj);
+		
 
 		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
@@ -217,11 +212,6 @@ namespace GASS
 
 		bool m_ScenarioLoaded;
 		bool m_CreateCalled;
-
-		//move this to GIS system?
-		double m_OffsetEast;
-		double m_OffsetNorth;
-		std::string m_Projection;
 	};
 	typedef boost::shared_ptr<Scenario> ScenarioPtr;
 	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
