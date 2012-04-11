@@ -22,15 +22,19 @@ namespace GASS
 		static EditorManager* GetPtr();
 		static EditorManager& Get();
 
-		void Init(const FilePath &working_folder);
+		void Init(const FilePath &execution_folder,
+					const FilePath &appdata_folder,
+					const FilePath &mydocuments_folder);
 		GASS::MessageManager* GetMessageManager(void);
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
-		const FilePath GetWorkingFolder(void) {return m_WorkingFolder;}
+		const FilePath GetWorkingFolder(void) {return m_ExecutionFolder;}
 	protected:
 		//std::string m_WorkingDirPath;
 		//Create tool controller
 		MouseToolControllerPtr m_MouseTools;
 		MessageManager* m_MessageManager;
-		FilePath m_WorkingFolder;
+		FilePath m_ExecutionFolder;
+		FilePath m_AppDataFolder;
+		FilePath m_MyDocumentsFolder;
 	};
 }
