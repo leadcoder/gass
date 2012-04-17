@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Systems>
+  <CoreSystem/>
   <OgreGraphicsSystem>
     <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
@@ -51,9 +52,6 @@
   <OpenALSoundSystem>
     <Name value = "SoundSystem"/>
   </OpenALSoundSystem>
-  <BaseSystem>
-    <Name value = "BaseSystem"/>
-  </BaseSystem>
   <CEGUISystem>
     <Name value = "GUISystem"/>
   </CEGUISystem>

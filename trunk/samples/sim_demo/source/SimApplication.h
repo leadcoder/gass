@@ -49,7 +49,7 @@ public:
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
 
 		GASS::ScenarioPtr scenario (new GASS::Scenario());
-
+		scenario->Create();
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
@@ -95,7 +95,7 @@ public:
 		if (!xmlDoc->LoadFile())
 		{
 			// Fatal error, cannot load
-			GASS::FileLog::Warning("SimApplication::LoadConfig() - Couldn't load xmlfile: %s", filename.c_str());
+			GASS::LogManager::getSingleton().stream() << "WARNING: SimApplication::LoadConfig() - Couldn't load xmlfile: " << filename;
 			return 0;
 		}
 		TiXmlElement *app_settings = xmlDoc->FirstChildElement("SimApplication");
