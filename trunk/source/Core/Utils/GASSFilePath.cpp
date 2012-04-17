@@ -172,18 +172,14 @@ namespace GASS
 		return ret;
 	}
 
+	
 	std::string FilePath::GetPathNoFile() const
 	{
-		std::string ret = m_ExpandPath;
-		std::string::size_type  pos1 = ret.find_last_of("/",ret.size());
-		std::string::size_type pos2 = ret.find_last_of("\\",ret.size());
-		if(pos1 > pos2 && pos1 > -1)
+		std::string ret = Misc::Replace(m_ExpandPath,"\\","/");
+		std::string::size_type  pos = ret.find_last_of("/",ret.size());
+		if(pos != std::string::npos)
 		{
-			ret = ret.substr(0,pos1+1);
-		}
-		else if(pos2 > -1)
-		{
-			ret = ret.substr(0,pos2+1);
+			ret = ret.substr(0,pos+1);
 		}
 		return ret;
 	}
