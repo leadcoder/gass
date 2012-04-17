@@ -108,12 +108,22 @@ namespace GASS
 	typedef double Float;
 }
 
+
+#include <assert.h>
+
 //stl
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/any.hpp>
+#include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #endif // #ifndef COMMON_HH

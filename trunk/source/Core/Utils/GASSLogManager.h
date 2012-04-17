@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 #include "Core/Common.h"
 #include "GASSLog.h"
-#include "Singleton.h"
+#include "GASSSingleton.h"
 #include <map>
 #include <string>
 
