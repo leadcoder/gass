@@ -3,16 +3,16 @@
 
 #include "MouseToolController.h"
 #include "../EditorManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/SimEngine.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/GASSSimEngine.h"
 
 
 

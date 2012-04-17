@@ -4,7 +4,7 @@
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 #include "../EditorMessages.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 
 namespace GASS
 {

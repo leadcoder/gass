@@ -2,15 +2,15 @@
 #include "../EditorManager.h"
 #include "../EditorMessages.h"
 #include "EditorComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 
 	

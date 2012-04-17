@@ -1,8 +1,8 @@
 #ifndef EDITOR_MESSAGES
 #define EDITOR_MESSAGES
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
+#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
 
 namespace GASS
 {

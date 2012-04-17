@@ -1,5 +1,5 @@
 #pragma once
-#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "../EditorCommon.h"
 namespace GASS

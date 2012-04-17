@@ -2,7 +2,7 @@
 
 #include "../EditorCommon.h"
 #include "CursorInfo.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
 

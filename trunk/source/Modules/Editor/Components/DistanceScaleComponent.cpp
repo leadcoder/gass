@@ -2,16 +2,16 @@
 #include "../EditorManager.h"
 #include "../ToolSystem/MouseToolController.h"
 #include "DistanceScaleComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Core/Utils/GASSLogManager.h"
 
 

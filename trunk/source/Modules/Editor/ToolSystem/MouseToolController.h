@@ -2,11 +2,11 @@
 
 #include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
 #include <string>

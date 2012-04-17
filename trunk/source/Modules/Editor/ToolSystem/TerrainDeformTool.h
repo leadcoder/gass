@@ -5,8 +5,8 @@
 #include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

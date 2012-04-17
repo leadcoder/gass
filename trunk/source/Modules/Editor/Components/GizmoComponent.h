@@ -1,10 +1,10 @@
 #pragma once
-#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/Components/Graphics/MeshData.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Components/Graphics/GASSMeshData.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

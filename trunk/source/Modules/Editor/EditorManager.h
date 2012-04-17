@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Utils/Singleton.h"
-#include "Core/Utils/FilePath.h"
+#include "Core/Utils/GASSSingleton.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "EditorCommon.h"
 #include <list>
 #include <vector>
