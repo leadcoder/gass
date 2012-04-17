@@ -2,7 +2,7 @@
 #ifndef SENSOR_COMPONENT
 #define SENSOR_COMPONENT
 
-#include "Core/Utils/FilePath.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Game/PlatformType.h"
@@ -12,19 +12,19 @@ namespace GASS
 	class SignatureComponent;
 	typedef boost::weak_ptr<SignatureComponent> SignatureComponentWeakPtr;
 
-	class SensorComponent :  public Reflection<SensorComponent,BaseSceneComponent> , public ITaskListener
+	class SensorComponent :  public Reflection<SensorComponent,BaseSceneComponent> 
 	{
 	public:
 		SensorComponent(void);
 		~SensorComponent(void);
 		static void RegisterReflection();
-		void OnCreate();
-
+		virtual void OnCreate();
+		virtual void AfterSMUpdate(double delta_time);
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;
 	protected:
-		void OnLoad(MessagePtr message);
+		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);

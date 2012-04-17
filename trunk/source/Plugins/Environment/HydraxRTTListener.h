@@ -20,10 +20,10 @@
 #ifndef HYDRAX_RTT_LISTENER_H
 #define HYDRAX_RTT_LISTENER_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 #include <OgreRenderTargetListener.h>
 #include "Hydrax/Hydrax.h"

@@ -21,10 +21,10 @@
 #ifndef VEHICLE_DEBUG_COMPONENT_H
 #define VEHICLE_DEBUG_COMPONENT_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Common.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 namespace GASS

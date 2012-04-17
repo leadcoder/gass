@@ -14,17 +14,17 @@
 
 #include "BoxGeometryComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/MeshData.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/GASSMeshData.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
 
 
 namespace GASS

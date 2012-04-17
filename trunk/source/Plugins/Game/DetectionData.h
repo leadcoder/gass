@@ -3,9 +3,9 @@
 #define DETECTION_DATA
 
 
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
 
 namespace GASS
 {

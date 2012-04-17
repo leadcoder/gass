@@ -20,27 +20,29 @@
 
 #include "SightComponent.h"
 #include "GameMessages.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Plugins/Game/GameSceneManager.h"
+
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 
-#include "Sim/Components/Network/INetworkComponent.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+#include "Sim/Components/Network/GASSINetworkComponent.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Input/ControlSettingsManager.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
-#include "Sim/Systems/Collision/ICollisionSystem.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Systems/Input/GASSControlSettingsManager.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Scenario/Scene/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Systems/Collision/GASSICollisionSystem.h"
 
 namespace GASS
 {
@@ -123,13 +125,16 @@ namespace GASS
 
 	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		message->GetGameSceneManager()->Register(listener);
+
+
 		NetworkComponentPtr net_comp = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
 		if(net_comp)
 			m_RemoteSim = net_comp->IsRemote();
 
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		if(!m_RemoteSim)
 		{
@@ -160,7 +165,6 @@ namespace GASS
 
 	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		
 	}
 
@@ -213,7 +217,7 @@ namespace GASS
 	}
 
 
-	void SightComponent::Update(double delta_time)
+	void SightComponent::SceneManagerTick(double delta_time)
 	{
 		
 		if(!m_Active)
@@ -447,9 +451,5 @@ namespace GASS
 
 		
 	}
-	
-	TaskGroup SightComponent::GetTaskGroup() const
-	{
-		return "VEHICLE_TASK_GROUP";
-	}
+
 }

@@ -21,22 +21,22 @@
 #ifndef FOLLOW_WAYPOINT_LIST_H
 #define FOLLOW_WAYPOINT_LIST_H
 
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Common.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Systems/Input/ControlSetting.h"
+#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
 
 namespace GASS
 {
-	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>, public ITaskListener
+	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>
 	{
 	public:
 		enum PathFollowMode

@@ -36,18 +36,18 @@
 #include "GetTime.h"
 #include "AutoRPC.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/System/SystemFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 
 
 
@@ -184,8 +184,8 @@ namespace GASS
 		{
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage));
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage));
-			//Register update fucntion
-			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+			//Unregister update fucntion
+			//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		}
 		if(m_RakPeer) 
 			m_RakPeer->Shutdown(100, 0);
@@ -260,14 +260,12 @@ namespace GASS
 		LogManager::getSingleton().stream() << "Raknet SetMaximumIncomingConnections done";
 
 		//Register update fucntion
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		//Catch scenario load messages
 		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
 		//m_Logger.LogHeader();
-		
 	}
 
 
@@ -304,7 +302,7 @@ namespace GASS
 		m_RakPeer->SetOccasionalPing(true);
 
 		//Register update fucntion
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		m_Active = true;
 	}

@@ -18,11 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Plugins/Ogre/OgreResourceSystem.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/System/GASSSystemFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include <boost/bind.hpp>
 #include <OgreRoot.h>

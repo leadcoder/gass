@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "Sim/Systems/Graphics/IGraphicsSystem.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
-#include "Core/MessageSystem/MessageType.h"
+#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Sim/Scheduling/TaskGroups.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Scheduling/GASSTaskGroups.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 #include <string>
 
 namespace Ogre
@@ -63,7 +63,7 @@ namespace GASS
 	typedef boost::shared_ptr<OgrePostProcess> OgrePostProcessPtr;
 	typedef boost::shared_ptr<OgreCameraComponent> OgreCameraComponentPtr;
 
-	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem, public ITaskListener
+	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
 	{
 		friend class OgreGraphicsSceneManager;
 	public:
@@ -72,16 +72,11 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		SystemType GetSystemType() const {return "GraphicsSystem";}
-
+		virtual void Update(double time);
 		//IGraphicsSystem
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
 		void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
-
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
-
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
@@ -100,7 +95,6 @@ namespace GASS
 		void ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp);
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
-		void SetTaskGroup(TaskGroup value);
 		void OnInit(InitSystemMessagePtr message);
 		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
@@ -117,7 +111,6 @@ namespace GASS
 		bool m_CreateMainWindowOnInit;
 		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
-		TaskGroup m_TaskGroup;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 }

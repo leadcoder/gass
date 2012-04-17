@@ -21,10 +21,10 @@
 #ifndef RAK_NET_PACKAGE_FACTORY_H
 #define RAK_NET_PACKAGE_FACTORY_H
 #include "Core/Common.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/Utils/Factory.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
+#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/Utils/GASSFactory.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSNetworkSceneObjectMessages.h"
 
 namespace GASS
 {

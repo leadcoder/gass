@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Core/Utils/FilePath.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Core/Utils/GASSFilePath.h"
 
-#include "Core/MessageSystem/MessageType.h"
+#include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
 namespace Ogre
 {

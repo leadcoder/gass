@@ -30,11 +30,11 @@
 #include <OgreAxisAlignedBox.h>
 #include <iostream>
 
-#include "Core/Math/Matrix.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/Math/Sphere.h"
-#include "Core/Math/AABox.h"
+#include "Core/Math/GASSMatrix.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSSphere.h"
+#include "Core/Math/GASSAABox.h"
 
 namespace GASS
 {

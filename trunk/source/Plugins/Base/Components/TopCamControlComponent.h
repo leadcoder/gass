@@ -21,11 +21,12 @@
 #pragma once
 
 
-#include "Sim/Common.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
 {
@@ -42,19 +43,18 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class TopCamControlComponent  :  public Reflection<TopCamControlComponent, BaseSceneComponent>, ITaskListener
+	class TopCamControlComponent : public Reflection<TopCamControlComponent, BaseSceneComponent>
 	{
 	public:
 		TopCamControlComponent();
 		virtual ~TopCamControlComponent();
 		static void RegisterReflection();
-		void OnCreate();
-		void Update(double delta_time);
-		TaskGroup GetTaskGroup() const;
+		virtual void OnCreate();
+		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
-		void OnInit(MessagePtr message);
+		void OnLoad(LoadCoreComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 	

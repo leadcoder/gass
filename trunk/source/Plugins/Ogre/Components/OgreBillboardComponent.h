@@ -18,15 +18,15 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Sphere.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSSphere.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace Ogre
 {

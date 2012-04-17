@@ -20,15 +20,15 @@
 
 #pragma once 
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Quaternion.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
 #include "ODEBaseGeometryComponent.h"
 

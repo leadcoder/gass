@@ -22,15 +22,15 @@
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 
 #include "RakNetBaseReplica.h"
 #include "RakNetNetworkMasterComponent.h"

@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-#include "Sim/Common.h"
+#include "Sim/GASSCommon.h"
 
 namespace Ogre
 {

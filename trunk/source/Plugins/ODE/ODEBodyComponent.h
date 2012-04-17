@@ -23,11 +23,11 @@
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Core/Math/Vector.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Core/Math/GASSVector.h"
 
 #include <ode/ode.h>
 namespace GASS

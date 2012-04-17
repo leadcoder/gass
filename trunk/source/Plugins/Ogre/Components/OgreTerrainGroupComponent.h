@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
+#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
 #include <tinyxml.h>
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Common.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSCommon.h"
 #include "OgreTerrain.h"
 #include "OgreTerrainGroup.h"
 #include "OgreTerrainQuadTreeNode.h"

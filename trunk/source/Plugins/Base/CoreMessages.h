@@ -21,25 +21,13 @@
 #ifndef CORE_MESSAGES_H
 #define CORE_MESSAGES_H
 
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 
 
 namespace GASS
 {
-	class CoreSceneManager;
-	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr;
-	class LoadCoreComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadCoreComponentsMessage(CoreSceneManagerPtr core_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_CoreSceneManager(core_scene_manager){}
-		  CoreSceneManagerPtr GetCoreSceneManager() const {return m_CoreSceneManager;}
-	private:
-		CoreSceneManagerPtr m_CoreSceneManager;
-	};
-	typedef boost::shared_ptr<LoadCoreComponentsMessage> LoadCoreComponentsMessagePtr;
-
+	
 
 	class UpdateWaypointListMessage : public BaseMessage
 	{

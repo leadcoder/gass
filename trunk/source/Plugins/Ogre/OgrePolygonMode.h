@@ -21,8 +21,8 @@
 #pragma once
 
 
-#include "Sim/Common.h"
-#include "Sim/Utils/EnumBinder.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Utils/GASSEnumBinder.h"
 #include <OgreCommon.h>
 
 namespace GASS

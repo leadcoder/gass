@@ -19,20 +19,20 @@
 *****************************************************************************/
 #include <boost/bind.hpp>
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/System/SystemFactory.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/System/GASSSystemFactory.h"
+#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 
 
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
 
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 //#include "Main/Root.h"
 #include "Plugins/ODE/ODEBodyComponent.h"

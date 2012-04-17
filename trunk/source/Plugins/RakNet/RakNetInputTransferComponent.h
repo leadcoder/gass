@@ -21,15 +21,15 @@
 #ifndef RAK_NET_INPUT_TRANSFER_COMPONENT_H
 #define RAK_NET_INPUT_TRANSFER_COMPONENT_H
 
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/NetworkSceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Components/Network/INetworkComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
+#include "Sim/Components/Network/GASSINetworkComponent.h"
 
-#include "Sim/Common.h"
+#include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Plugins/Game/GameMessages.h"
@@ -78,7 +78,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>, public ITaskListener
+	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>
 	{
 	public:
 		RakNetInputTransferComponent();

@@ -21,29 +21,29 @@
 #include <boost/bind.hpp>
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Components/Graphics/GASSICameraComponent.h"
 
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/Input/ControlSettingsManager.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/Input/GASSControlSettingsManager.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
 
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
 
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/Math/Quaternion.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/Math/GASSQuaternion.h"
 
-#include "Plugins/Base/CoreSceneManager.h"
+#include "Sim/Scenario/Scene/GASSCoreSceneManager.h"
 
 namespace GASS
 {
@@ -90,11 +90,10 @@ namespace GASS
 
 	void FreeCamControlComponent::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInit,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnLoad,LoadCoreComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
@@ -111,14 +110,15 @@ namespace GASS
 		scenario->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
-	TaskGroup FreeCamControlComponent::GetTaskGroup() const
+	void FreeCamControlComponent::OnLoad(LoadCoreComponentsMessagePtr message)
 	{
-		return MAIN_TASK_GROUP;
+		//register for updates
+		SceneManagerListenerPtr listener = shared_from_this();
+		message->GetCoreSceneManager()->Register(listener);
 	}
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
 		if(m_AltControlSetting)
@@ -218,12 +218,8 @@ namespace GASS
 
 	}
 
-	void FreeCamControlComponent::OnInit(MessagePtr message)
-	{
-	}
 
-
-	void FreeCamControlComponent::Update(double delta_time)
+	void FreeCamControlComponent::SceneManagerTick(double delta_time)
 	{
 		if(!m_ControlSetting) return;
 		if(m_Active)

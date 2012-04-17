@@ -21,10 +21,10 @@
 #pragma once
 
 
-#include "Sim/Common.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
 {
@@ -43,20 +43,19 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>, ITaskListener
+	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>
 	{
 	public:
 		FreeCamControlComponent();
 		virtual ~FreeCamControlComponent();
 		static void RegisterReflection();
-		void OnCreate();
-		void Update(double delta_time);
-		TaskGroup GetTaskGroup() const;
+		virtual void OnCreate();
+		virtual void SceneManagerTick(double delta_time);
 	protected:
 		
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
-		void OnInit(MessagePtr message);
+		void OnLoad(LoadCoreComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 
 		void PositionChange(MessagePtr message);

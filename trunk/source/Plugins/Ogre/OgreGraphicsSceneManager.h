@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include "Sim/Systems/Graphics/IGraphicsSystem.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Core/MessageSystem/MessageType.h"
+#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
+#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
 
 namespace Ogre

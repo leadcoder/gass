@@ -28,15 +28,15 @@
 #include <OgreBillboard.h>
 #include <OgreMaterialManager.h>
 
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
@@ -83,6 +83,7 @@ namespace GASS
 	{
 		return m_Width;
 	}
+
 	void OgreBillboardComponent::SetWidth(float width)
 	{
 		m_Width = width;

@@ -15,11 +15,11 @@
 #ifndef OGRE_TEXT_COMPONENT_H
 #define OGRE_TEXT_COMPONENT_H
 
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 
 class MovableTextOverlay;

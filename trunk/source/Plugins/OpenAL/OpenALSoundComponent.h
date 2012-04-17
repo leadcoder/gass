@@ -2,17 +2,17 @@
 #define OPEN_AL_SOUND_COMPONENT_HH
 
 
-#include "Sim/Common.h"
-#include "Sim/Components/Graphics/ILightComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/Vector.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Components/Graphics/GASSILightComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSVector.h"
 #ifdef WIN32
 #include "al.h"
 #include "alc.h"

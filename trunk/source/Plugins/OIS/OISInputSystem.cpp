@@ -20,14 +20,14 @@
 
 
 #include "Plugins/OIS/OISInputSystem.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Graphics/IGraphicsSystem.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
+#include "Core/System/GASSSystemFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 
 #include <boost/bind.hpp>
 
@@ -69,7 +69,6 @@ namespace GASS
 
 	void OISInputSystem::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(typeid(MainWindowCreatedNotifyMessage),TYPED_MESSAGE_FUNC(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage),1);
 	}
 

@@ -21,12 +21,12 @@
 #pragma once
 
 
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Utils/EnumBinder.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Utils/GASSEnumBinder.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Plugins/Ogre/OgrePolygonMode.h"
 

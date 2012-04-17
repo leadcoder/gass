@@ -19,20 +19,20 @@
 *****************************************************************************/
 
 #include "BoneModifierComponent.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Input/ControlSettingsManager.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Systems/Input/GASSControlSettingsManager.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
 
 
 namespace GASS

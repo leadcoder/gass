@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
+#include "Sim/GASSCommon.h"
+#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
 
 namespace GASS
 {

@@ -22,12 +22,12 @@
 #include "SkyXComponent.h"
 
 #include "Plugins/Ogre/OgreConvert.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 #include <Ogre.h>
 
 

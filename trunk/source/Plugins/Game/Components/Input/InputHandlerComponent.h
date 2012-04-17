@@ -21,12 +21,12 @@
 #ifndef INPUT_HANDLER_COMPONENT_H
 #define INPUT_HANDLER_COMPONENT_H
 
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 

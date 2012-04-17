@@ -24,20 +24,20 @@
 #else
 #include <OIS/OIS.h>
 #endif
-#include "Sim/Common.h"
+#include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageType.h"
-#include "Sim/Systems/Input/IInputSystem.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
+#include "Core/MessageSystem/GASSMessageType.h"
+#include "Sim/Systems/Input/GASSIInputSystem.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 
 
 namespace GASS
 {
 
-	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener, public ITaskListener
+	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener
 	{
 	public:
 		OISInputSystem();

@@ -20,14 +20,14 @@
 
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-#include "Core/Math/AABox.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/Math/GASSAABox.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 #include <boost/bind.hpp>
 
 

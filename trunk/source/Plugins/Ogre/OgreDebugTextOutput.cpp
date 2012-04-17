@@ -20,7 +20,7 @@
 
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
 
-#include "Sim/Common.h"
+#include "Sim/GASSCommon.h"
 
 #include "Core/Utils/GASSLogManager.h"
 

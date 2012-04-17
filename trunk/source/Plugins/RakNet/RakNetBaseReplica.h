@@ -27,8 +27,8 @@
 #include "BitStream.h"
 #include "GetTime.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
 
 class ReplicaManager;
 

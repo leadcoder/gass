@@ -25,13 +25,13 @@
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
 
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Input/IInputSystem.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/SimEngine.h"
+#include "Core/System/GASSSystemFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Systems/Input/GASSIInputSystem.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 #include <boost/bind.hpp>
 
 #include <OgreRoot.h>
@@ -45,8 +45,7 @@
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), m_SceneMgr(NULL),
-		m_TaskGroup(GRAPHICS_TASK_GROUP)
+	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), m_SceneMgr(NULL)
 	{
 		m_DebugTextBox = new OgreDebugTextOutput();
 
@@ -63,7 +62,6 @@ namespace GASS
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
 		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
-		RegisterProperty<TaskGroup>("TaskGroup", &GASS::OgreGraphicsSystem::GetTaskGroup, &GASS::OgreGraphicsSystem::SetTaskGroup);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
 	}
 
@@ -102,10 +100,10 @@ namespace GASS
 		}
 
 		//Force register in primary thread if ogl
-		if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
-			m_TaskGroup = MAIN_TASK_GROUP;
+		//if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
+		//	m_TaskGroup = MAIN_TASK_GROUP;
 
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		if(m_CreateMainWindowOnInit)
 		{
@@ -188,7 +186,6 @@ namespace GASS
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		
 		//set thread priority to highest!!
 		Ogre::WindowEventUtilities::messagePump();
 
@@ -271,16 +268,6 @@ namespace GASS
 	void OgreGraphicsSystem::SetPostFilters(const std::vector<std::string> &filters)
 	{
 		m_PostFilters = filters;
-	}
-
-	void OgreGraphicsSystem::SetTaskGroup(TaskGroup value)
-	{
-		m_TaskGroup = value;
-	}
-
-	TaskGroup OgreGraphicsSystem::GetTaskGroup() const
-	{
-		return m_TaskGroup;
 	}
 
 	void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)

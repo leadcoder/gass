@@ -14,13 +14,13 @@
 
 #pragma once
 #include "Core/Common.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/Vector.h"
-#include "Sim/Common.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSVector.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 #include "Plugins/Base/CoreMessages.h"
 
 

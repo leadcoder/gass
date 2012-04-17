@@ -26,8 +26,8 @@
 #include "BitStream.h"
 #include "GetTime.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
 #include "RakNetBaseReplica.h"
 class ReplicaManager;
 	
@@ -72,7 +72,7 @@ namespace GASS
 		void DeserializeProperties(RakNet::BitStream *bit_stream);
 		bool HasPropertiesChanged();
 	protected:
-		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, AbstractProperty* &abstract_property);
+		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property);
 		
 		bool m_AllowRemoteOwner;
 	private:

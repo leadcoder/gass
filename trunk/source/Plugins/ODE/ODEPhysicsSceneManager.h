@@ -22,15 +22,15 @@
 
 #include <ode/ode.h>
 #include <map>
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsScenarioSceneMessages.h"
-#include "Sim/Scheduling/TaskGroups.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsScenarioSceneMessages.h"
+#include "Sim/Scheduling/GASSTaskGroups.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 
 
 namespace GASS
@@ -44,7 +44,7 @@ namespace GASS
 		dTriMeshDataID ID;
 	};
 
-	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager> , public ITaskListener
+	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager> 
 	{
 	public:
 		typedef std::map<std::string,ODECollisionMesh> CollisionMeshMap;
@@ -62,8 +62,7 @@ namespace GASS
 		dWorldID GetWorld()const {return m_World;}
 
 		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		void SystemTick(double delta);
 		bool IsActive()const {return !m_Paused;}
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
@@ -83,7 +82,6 @@ namespace GASS
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;
 		bool m_Paused;
-		TaskGroup m_TaskGroup;
 		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		double m_SimulationUpdateInterval;

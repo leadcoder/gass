@@ -32,15 +32,15 @@
 #include "AutoRPC.h"
 
 //GASS includes
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
 
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/NetworkSystemMessages.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Messages/GASSNetworkSystemMessages.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 
 
 
@@ -87,7 +87,7 @@ namespace GASS
 
 
 
-	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface, public ITaskListener
+	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
 	{
 
 	public:

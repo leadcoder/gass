@@ -18,37 +18,32 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef SIMPLE_SCENE_MANAGER_H
-#define SIMPLE_SCENE_MANAGER_H
+#ifndef GAME_SCENE_MANAGER_H
+#define GAME_SCENE_MANAGER_H
 
 #include <map>
-#include "Core/MessageSystem/BaseMessage.h"
-#include "Sim/Common.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scheduling/TaskGroups.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scheduling/GASSTaskGroups.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 
 namespace GASS
 {
 	/**
 		Scene manager that owns all game components.
 	*/
-	class GameSceneManager : public Reflection<GameSceneManager, BaseSceneManager>, public ITaskListener
+	class GameSceneManager : public Reflection<GameSceneManager, BaseSceneManager>
 	{
 	public:
 		GameSceneManager();
 		virtual ~GameSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void Update(double delta_time);
-		TaskGroup GetTaskGroup() const;
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnLoadSceneObject(MessagePtr message);
-	private:
-		void SetTaskGroup(TaskGroup value);
-		TaskGroup m_TaskGroup;
 	};
 	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr; 
 

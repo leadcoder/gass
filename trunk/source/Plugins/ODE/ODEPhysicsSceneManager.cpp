@@ -19,24 +19,26 @@
 *****************************************************************************/
 #include <boost/bind.hpp>
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
 
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 //#include "Main/Root.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
-#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
+#include "Plugins/ODE/ODEPhysicsSystem.h"
+
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 
 
 namespace GASS
@@ -49,7 +51,6 @@ namespace GASS
 		m_CollisionSpace(0),
 		m_ContactGroup (0),
 		m_Paused(false),
-		m_TaskGroup(PHYSICS_TASK_GROUP),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the 
 											  //behavior of simulation is effected and values for 
@@ -68,7 +69,6 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
-		RegisterProperty<TaskGroup>("TaskGroup", &GASS::ODEPhysicsSceneManager::GetTaskGroup, &GASS::ODEPhysicsSceneManager::SetTaskGroup);
 	}
 
 	void ODEPhysicsSceneManager::SetGravity(float gravity)
@@ -110,7 +110,7 @@ namespace GASS
 	}
 
 
-	void ODEPhysicsSceneManager::Update(double delta_time)
+	void ODEPhysicsSceneManager::SystemTick(double delta_time)
 	{
 
 		if (!m_Paused)
@@ -150,7 +150,10 @@ namespace GASS
 	{
 		ScenarioPtr scenario = message->GetScenario();
 
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
+		SystemListenerPtr listener = shared_from_this();
+		system->Register(listener);
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		//dInitODE2(0);
 		m_Space = 0;
@@ -183,7 +186,10 @@ namespace GASS
 		if(m_World) dWorldDestroy (m_World);
 		//dCloseODE();
 		int address = (int) this;
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
+		SystemListenerPtr listener = shared_from_this();
+		system->Unregister(listener);
+		
 	}
 
 
@@ -393,15 +399,5 @@ namespace GASS
 			return true;
 		}
 		return false;
-	}
-
-	void ODEPhysicsSceneManager::SetTaskGroup(TaskGroup value)
-	{
-		m_TaskGroup = value;
-	}
-
-	TaskGroup ODEPhysicsSceneManager::GetTaskGroup() const
-	{
-		return m_TaskGroup;
 	}
 }

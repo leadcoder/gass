@@ -23,7 +23,7 @@
 
 #include <string>
 #include <list>
-#include "Core/Math/Vector.h"
+#include "Core/Math/GASSVector.h"
 
 namespace Ogre
 {

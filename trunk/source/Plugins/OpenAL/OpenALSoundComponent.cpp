@@ -1,12 +1,12 @@
 #include "OpenALSoundComponent.h"
 #include "OpenALSoundSystem.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 #include "Framework/Framework.h"
 
 namespace GASS

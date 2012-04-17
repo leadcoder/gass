@@ -32,17 +32,17 @@
 #include "GrassLoader.h"
 #include "DensityMapComponent.h"
 
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 
 
 
 //#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 
 
 namespace GASS

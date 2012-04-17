@@ -25,15 +25,15 @@
 
 
 #include "PagedGeometry.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Systems/Collision/ICollisionSystem.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Systems/Collision/GASSICollisionSystem.h"
 
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 #include "PGMessages.h"
 

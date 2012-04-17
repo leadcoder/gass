@@ -18,18 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/Common.h"
+#include "Sim/GASSCommon.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/ComponentSystem/IComponentContainer.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/ComponentSystem/GASSIComponentContainer.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include <boost/bind.hpp>
 //#include "Main/SceneNodes/BaseObject.h"
 //#include "Main/SceneNodes/TransformationNode.h"

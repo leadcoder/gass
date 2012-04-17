@@ -2,8 +2,8 @@
 #ifndef PLATFORM_TEAM
 #define PLATFORM_TEAM
 
-#include "Sim/Common.h"
-#include "Sim/Utils/EnumBinder.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Utils/GASSEnumBinder.h"
 
 
 namespace GASS

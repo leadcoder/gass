@@ -23,18 +23,19 @@
 
 #include <ode/ode.h>
 #include <map>
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
-#include "Core/System/BaseSystem.h"
+#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Core/System/GASSBaseSystem.h"
 #include "tbb/spin_mutex.h"
 
 namespace GASS
 {
-	class ODECollisionSystem : public Reflection<ODECollisionSystem , BaseSystem> , public ICollisionSystem, public boost::enable_shared_from_this<ODECollisionSystem>, public IMessageListener
+	class ODECollisionSystem : public Reflection<ODECollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
 		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;

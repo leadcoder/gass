@@ -21,12 +21,12 @@
 #ifndef SOUND_VOLUME_COMPONENT_H
 #define SOUND_VOLUME_COMPONENT_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 namespace GASS

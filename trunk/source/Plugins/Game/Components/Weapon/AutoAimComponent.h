@@ -21,14 +21,14 @@
 #ifndef AUTO_AIM_COMPONENT_H
 #define AUTO_AIM_COMPONENT_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/SceneObjectLink.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Common.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectLink.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 
@@ -39,7 +39,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class AutoAimComponent :  public Reflection<AutoAimComponent,BaseSceneComponent>, public ITaskListener
+	class AutoAimComponent :  public Reflection<AutoAimComponent,BaseSceneComponent>
 	{
 	public:
 		AutoAimComponent();
@@ -80,9 +80,7 @@ namespace GASS
 		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnAimAtPosition( AimAtPositionMessagePtr message);
 		void OnActivateAutoAim(ActivateAutoAimMessagePtr message);
-	
-		TaskGroup GetTaskGroup() const;
-		void Update(double delta_time);
+		void SceneManagerTick(double delta_time);
 		float m_SteerForce;
 		float m_MaxYawTorque;
 		float m_MaxPitchTorque;

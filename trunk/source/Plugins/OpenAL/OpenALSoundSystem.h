@@ -1,15 +1,15 @@
 #ifndef OPENAL_SOUND_SYSTEM_H
 #define OPENAL_SOUND_SYSTEM_H
 
-#include "Sim/Systems/SimSystem.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/Quaternion.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/SoundSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #ifdef WIN32
 #include "al.h"
 #include "alc.h"

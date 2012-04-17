@@ -28,8 +28,8 @@
 #include "GetTime.h"
 //#include "Network/INetworkObject.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
 //#include "RakNetNetworkComponent.h"
 //#include "RakNetReplicaMember.h"
 #include "RakNetBaseReplica.h"
@@ -72,7 +72,7 @@ namespace GASS
 		void SerializeProperties(RakNet::BitStream *bit_stream);
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *str, RakNet::AutoRPC* networkCaller);
 	protected:
-		AbstractProperty* GetProperty(const std::string &prop_name);
+		IProperty* GetProperty(const std::string &prop_name);
 		
 		std::string m_TemplateName;
 		bool m_AllowRemoteOwner;

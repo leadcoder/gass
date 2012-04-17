@@ -3,8 +3,8 @@
 #define PLATFORM_TYPE
 
 
-#include "Sim/Common.h"
-#include "Sim/Utils/EnumBinder.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Utils/GASSEnumBinder.h"
 
 namespace GASS
 {

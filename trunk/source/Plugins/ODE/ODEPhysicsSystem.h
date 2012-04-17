@@ -22,9 +22,9 @@
 
 #include <ode/ode.h>
 #include <map>
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Systems/SimSystem.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Systems/GASSSimSystem.h"
 
 namespace GASS
 {
@@ -43,5 +43,7 @@ namespace GASS
 	private:
 		bool m_Init;
 	};
+
+	typedef boost::shared_ptr<ODEPhysicsSystem> ODEPhysicsSystemPtr;
 }
 

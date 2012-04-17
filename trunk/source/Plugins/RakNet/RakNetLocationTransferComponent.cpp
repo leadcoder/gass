@@ -23,22 +23,22 @@
 #include "RakNetLocationTransferComponent.h"
 
 
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Input/ControlSettingsManager.h"
-#include "Sim/Systems/Input/ControlSetting.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
+#include "Sim/Systems/Input/GASSControlSettingsManager.h"
+#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 #include "GetTime.h"
 
@@ -95,19 +95,20 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
 	{
+		message->GetNetworkSceneManager()->Register(shared_from_this());
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
-			
 		}
 		if(raknet->IsServer())
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,VelocityNotifyMessage,0));
-			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+			//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 		else
 		{
@@ -132,8 +133,8 @@ namespace GASS
 				BaseSceneComponentPtr base = boost::shared_dynamic_cast<BaseSceneComponent>(location);
 				base->SetPropertyByType("AttachToParent",boost::any(true));
 			}
-			SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
+		
 	}
 
 	void RakNetLocationTransferComponent::OnVelocityNotify(VelocityNotifyMessagePtr message)
@@ -196,7 +197,7 @@ namespace GASS
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
 		}
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 

@@ -1,19 +1,19 @@
 #include "OpenALSoundSystem.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/Matrix.h"
+#include "Core/System/GASSSystemFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
 
 
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/SimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 #include "Framework/Framework.h"
 
 
@@ -60,6 +60,7 @@ namespace GASS
 		if(message->GetScenario())
 			message->GetScenario()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
+
 
 	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)
 	{

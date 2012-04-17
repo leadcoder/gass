@@ -21,13 +21,13 @@
 #ifndef TRACK_COMPONENT_H
 #define TRACK_COMPONENT_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/SceneObjectLink.h"
-#include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectLink.h"
+#include "Sim/GASSCommon.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Plugins/Game/GameMessages.h"
 
 namespace GASS

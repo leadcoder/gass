@@ -19,13 +19,13 @@
 *****************************************************************************/
 
 #pragma once
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
 #include "OgreSceneNodeSource.h"
 #include <OgreNode.h>
 

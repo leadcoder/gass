@@ -22,15 +22,15 @@
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/ComponentSystem/ComponentContainerFactory.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 
 #include "RakNetMasterReplica.h"
 #include "RakNetNetworkMasterComponent.h"
@@ -146,7 +146,7 @@ namespace GASS
 		RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
-	AbstractProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name)
+	IProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name)
 	{
 		m_Owner->GetComponents();
 		IComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
@@ -159,10 +159,10 @@ namespace GASS
 				RTTI* pRTTI = comp->GetRTTI();
 				while(pRTTI)
 				{
-					std::list<AbstractProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+					std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
 					while(iter != pRTTI->GetProperties()->end())
 					{
-						AbstractProperty * prop = (*iter);
+						IProperty * prop = (*iter);
 						if(prop->GetName() == prop_name)
 						{
 							return prop;
@@ -183,7 +183,7 @@ namespace GASS
 		SerialSaver ss(NULL,0);
 		for(int i = 0 ;  i < attributes.size(); i++)
 		{
-			//AbstractProperty * prop = GetProperty(attributes[i]);
+			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&ss);
 		}
 		unsigned long size=ss.getLength();
@@ -192,7 +192,7 @@ namespace GASS
 
 		for(int i = 0 ;  i < attributes.size(); i++)
 		{
-			//AbstractProperty * prop = GetProperty(attributes[i]);
+			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&sv);
 		}
 

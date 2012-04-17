@@ -21,16 +21,16 @@
 #ifndef PROJECTILE_COMPONENT_H
 #define PROJECTILE_COMPONENT_H
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
 #include "Plugins/Game/GameMessages.h"
-#include "Sim/Common.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Scheduling/GASSITaskListener.h"
 
 namespace GASS
 {

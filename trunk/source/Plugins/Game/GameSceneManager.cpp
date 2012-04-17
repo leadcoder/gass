@@ -22,16 +22,17 @@
 #include "GameMessages.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Systems/GASSCoreSystem.h"
 
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/IRuntimeController.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Scheduling/GASSIRuntimeController.h"
 
 
 
@@ -39,8 +40,7 @@
 
 namespace GASS
 {
-	GameSceneManager::GameSceneManager() :
-		m_TaskGroup(MAIN_TASK_GROUP)
+	GameSceneManager::GameSceneManager() 
 	{
 
 	}
@@ -78,29 +78,17 @@ namespace GASS
 		obj->SendImmediate(sim_msg);
 	}
 
-	void GameSceneManager::Update(double delta)
-	{
-
-	}
-
-	TaskGroup GameSceneManager::GetTaskGroup() const
-	{
-		return m_TaskGroup;
-	}
-
 	void GameSceneManager::OnLoad(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
+		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<CoreSystem>();
+		SystemListenerPtr listener = shared_from_this();
+		system->Register(listener);
 	}
+
 
 	void GameSceneManager::OnUnload(MessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-	}
 
-	void GameSceneManager::SetTaskGroup(TaskGroup value)
-	{
-		m_TaskGroup = value;
 	}
+	
 }
