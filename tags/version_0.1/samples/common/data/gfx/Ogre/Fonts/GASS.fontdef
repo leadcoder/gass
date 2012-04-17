@@ -1,0 +1,9 @@
+GASSFont
+{
+	type 		truetype
+	source 		arial.ttf
+	size 		16
+	resolution 	72
+}
+
+

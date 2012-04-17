@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+  <SceneObjectTemplate>
+    <Name value="TerrainObject"/> 
+    <Components>
+      <OgreTerrainComponent>
+        <TerrainConfigFile value="gfx/terrain/terrain.cfg"/>
+      </OgreTerrainComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </LocationComponent>
+      <PhysicsTerrainGeometryComponent>
+      </PhysicsTerrainGeometryComponent>
+      <DensityMapComponent>
+        <DensityMap value= "gfx/terrain/grassmask.tga"/>
+      </DensityMapComponent>
+      <TreeGeometryComponent>
+        <Mesh value= "fir06_30.mesh"/>
+        <ImposterAlphaRejectionValue value ="40"/>
+        <DensityFactor value= "0.002"/>
+        <MeshDistance value ="200"/>
+        <PageSize value ="200"/>
+        <MeshFadeDistance value ="20"/>
+        <ImposterDistance value ="2000"/>
+        <ImposterFadeDistance value ="20"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.1 0.1"/>
+     </TreeGeometryComponent>
+     <GrassGeometryComponent>
+        <PageSize value = "15"/>
+        <ViewDistance value ="35"/>
+        <Material value="FadeGrass"/>
+        <DensityMap value= "gfx/terrain/grassmask.dds"/>
+        <ColorMap value= "gfx/terrain/terrain_color.dds"/>
+        <DensityFactor value= "15"/>
+        <MaxSize value="1.0 0.7"/>
+        <MinSize value="0.5 0.4"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="AlphaGrow"/>
+        <RenderTechnique value ="CrossQuads"/>
+        <BlendWithGround value="false"/>
+      </GrassGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SunObject"/>
+    <Components>
+      <LightComponent>
+        <LightType value="0"/>
+        <CastShadow value="1"/>
+      </LightComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="45 45 0"/>
+      </LocationComponent>
+    </Components>
+  </SceneObjectTemplate>
+ </Templates>
+

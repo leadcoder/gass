@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Systems>
+  <OgreGraphicsSystem>
+    <Name value = "GraphicsSystem"/>
+    <Plugin value="RenderSystem_GL"/>
+    <Plugin value="RenderSystem_Direct3D9"/>
+    <Plugin value="Plugin_CgProgramManager"/>
+    <Plugin value="Plugin_BSPSceneManager"/>
+    <Plugin value="Plugin_OctreeSceneManager"/>
+    <Plugin value="Plugin_ParticleFX"/>
+    <TaskGroup value="MAIN_TASK_GROUP"/>
+    <PostFilters value="HDR"/>
+  </OgreGraphicsSystem>
+  <OgreResourceSystem>
+    <Name value = "ResourceSystem"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%OGRE_HOME%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data" Group="GASS" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/imagesets" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/layouts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/looknfeel" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/lua_scripts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/schemes" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/xml_schemas" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+  </OgreResourceSystem>
+  <ODEPhysicsSystem>
+    <Name value = "PhysicsSystem"/>
+  </ODEPhysicsSystem>
+  <ODECollisionSystem>
+    <Name value = "CollisionSystem"/>
+  </ODECollisionSystem>
+  <OISInputSystem>
+    <Name value = "InputSystem"/>
+  </OISInputSystem>
+  <RakNetNetworkSystem>
+    <Name value = "NetworkSystem"/>
+  </RakNetNetworkSystem>
+  <OpenALSoundSystem>
+    <Name value = "SoundSystem"/>
+  </OpenALSoundSystem>
+  <BaseSystem>
+    <Name value = "BaseSystem"/>
+  </BaseSystem>
+  <CEGUISystem>
+    <Name value = "GUISystem"/>
+  </CEGUISystem>
+  <LuaScriptSystem>
+    <Name value = "GUISystem"/>
+  </LuaScriptSystem>
+</Systems>

@@ -1,0 +1,483 @@
+material TerrainBase
+{ 
+	technique light 
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass 
+		{ 
+			// Vertex program reference 
+			vertex_program_ref DiffuseVP
+			{ 
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto eyePosition camera_position_object_space 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto spotDirection light_direction_object_space 0
+				//shadow texture projections
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+				
+			} 
+			//Fragment program 
+			fragment_program_ref TerrainBaseFP
+			{ 
+				param_named_auto lightDiffuse light_diffuse_colour 0 
+				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto exponent surface_shininess
+				param_named_auto ambient ambient_light_colour
+			} 
+			texture_unit color_map
+			{
+				texture BaseMap.tga
+			}
+			// shadowmap 1
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none	
+			}
+		}
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
+}
+
+material TerrainSplat1
+{ 
+	technique light 
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass 
+		{ 
+			// Vertex program reference 
+			vertex_program_ref DiffuseVP
+			{ 
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto eyePosition camera_position_object_space 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto spotDirection light_direction_object_space 0
+				//shadow texture projections
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+				
+			} 
+			//Fragment program 
+			fragment_program_ref TerrainSplat1FP
+			{ 
+				param_named_auto lightDiffuse light_diffuse_colour 0 
+				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto exponent surface_shininess
+				param_named_auto ambient ambient_light_colour
+				param_named splatScales float4 500 500 500 100
+			} 
+			texture_unit color_map
+			{
+				texture BaseMap.tga
+			}
+			texture_unit splat_map
+			{
+				// coverage texture : rgba handling alpha for each splat
+				texture Cover.tga
+			}
+
+			texture_unit detail0_map
+			{
+				texture detail_rock.dds
+			}
+			// shadowmap 1
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none	
+			}
+		}
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
+}
+
+material TerrainSplat2
+{ 
+	technique light 
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass 
+		{ 
+			// Vertex program reference 
+			vertex_program_ref DiffuseVP
+			{ 
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto eyePosition camera_position_object_space 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto spotDirection light_direction_object_space 0
+				//shadow texture projections
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+				
+			} 
+			//Fragment program 
+			fragment_program_ref TerrainSplat2FP
+			{ 
+				param_named_auto lightDiffuse light_diffuse_colour 0 
+				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto exponent surface_shininess
+				param_named_auto ambient ambient_light_colour
+				param_named splatScales float4 500 500 500 100
+			} 
+			texture_unit color_map
+			{
+				texture BaseMap.tga
+			}
+			texture_unit splat_map
+			{
+				// coverage texture : rgba handling alpha for each splat
+				texture Cover.tga
+			}
+
+			texture_unit detail0_map
+			{
+				texture default.dds
+			}
+
+			texture_unit detail1_map
+			{
+				texture default.dds
+			}
+			// shadowmap 1
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none	
+			}
+		}
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
+}
+
+material TerrainSplat3
+{ 
+	technique light 
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass 
+		{ 
+		 
+			// Vertex program reference 
+			vertex_program_ref DiffuseVP
+			{ 
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto eyePosition camera_position_object_space 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto spotDirection light_direction_object_space 0
+				//shadow texture projections
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+				
+			} 
+			//Fragment program 
+			fragment_program_ref TerrainSplat3FP
+			{ 
+				param_named_auto lightDiffuse light_diffuse_colour 0 
+				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto exponent surface_shininess
+				param_named_auto ambient ambient_light_colour
+				param_named splatScales float4 500 500 500 100
+			} 
+			texture_unit color_map
+			{
+				texture BaseMap.tga
+			}
+			texture_unit splat_map
+			{
+				// coverage texture : rgba handling alpha for each splat
+				texture Cover.tga
+			}
+
+			texture_unit detail0_map
+			{
+				texture detail_rock.dds
+			}
+
+			texture_unit detail1_map
+			{
+				texture default.dds
+			}
+
+			texture_unit detail2_map
+			{
+				texture default.dds
+			}
+			// shadowmap 1
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none
+				filtering none	
+			}
+		}
+	}
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+}
+
+
+material TerrainSplat3LightMap
+{ 
+	technique light
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass 
+		{ 
+	
+			// Vertex program reference 
+			vertex_program_ref DiffuseLightMapVP
+			{ 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+			} 
+			//Fragment program 
+			fragment_program_ref TerrainSplat3LightMapFP
+			{ 
+				param_named_auto ambient ambient_light_colour
+				param_named splatScales float4 500 500 500 100
+			} 
+				
+			texture_unit color_map
+			{
+				texture BaseMap.tga
+			}
+			texture_unit splat_map
+			{
+				// coverage texture : rgba handling alpha for each splat
+				texture Cover.tga
+			}
+
+			texture_unit detail0_map
+			{
+				texture default.dds
+			}
+
+			texture_unit detail1_map
+			{
+				texture default.dds
+			}
+
+			texture_unit detail2_map
+			{
+				texture default.dds
+			}
+			
+			texture_unit detail3_map
+			{
+				texture lightmap.dds
+			}
+			// shadowmap 1
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none
+				filtering none	
+			}
+		}
+	} 
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+}
+
+
+material DiffuseTemplate
+{ 
+	technique light 
+	{ 
+		// do the lighting  and bump mapping with parallax pass 
+		pass
+		{ 
+			diffuse 1 1 1 1
+			specular 1 1 1 1 20
+			// Vertex program reference 
+			vertex_program_ref DiffuseVP
+			{ 
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto eyePosition camera_position_object_space 
+				param_named_auto worldViewProj worldviewproj_matrix 
+				param_named_auto spotDirection light_direction_object_space 0
+				//shadow texture projections
+				param_named_auto worldMatrix world_matrix
+				param_named_auto texViewProj texture_viewproj_matrix 0
+			} 
+
+			//Fragment program 
+			fragment_program_ref DiffuseFP
+			{ 
+				param_named_auto lightDiffuse light_diffuse_colour 0 
+				param_named_auto lightSpecular surface_specular_colour
+				param_named_auto matDiffuse surface_diffuse_colour
+				param_named_auto exponent surface_shininess
+				param_named_auto ambient ambient_light_colour
+				//param_named shadowParams float4 0.98 0.01 0 0.00048828125
+			} 
+
+			texture_unit diffuse_map
+			{
+				texture BaseMap.tga
+
+			}
+			// shadowmap 1
+			texture_unit  shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none
+				filtering none	
+			}
+
+		}
+	}
+
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_ps
+	      {
+	      }
+	    }
+	}
+
+
+}
+
+material VegetationTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			//vertex program is assaiged by paged geometry
+			//Fragment program 
+			fragment_program_ref VegetationFP_Cg
+			{ 
+				param_named_auto lightDir light_position_object_space 0
+				param_named_auto ambient ambient_light_colour
+				param_named_auto lightDiffuse light_diffuse_colour 0
+				//param_named shadowParams float4 0.98 0 0 0.00048828125
+			} 
+
+			texture_unit diffuse_map
+			{
+				texture Cover.tga
+			}
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none 
+			}
+		}
+	}
+
+	technique geom
+	{
+	   scheme geom
+
+	    pass
+	    {
+	      vertex_program_ref depthmap_max_vs
+	      {
+	      }
+
+	      fragment_program_ref depthmap_max_ps
+	      {
+	      }
+	    }
+	}
+} 
+
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComponentContainers>
+  <GO1 type ="MyGameObject">
+    <Components>
+      <TestComponent1 type="TestComponent">
+        <Size value="10.0"/>
+      </TestComponent1>
+      <TestComponent2 type="TestComponent">
+        <Size value="200.0"/>
+      </TestComponent2>
+      <TestComponent3 type="LocationComponent">
+        <Pos value="10.0 15.0 20.0"/>
+      </TestComponent3>
+    </Components>
+    <ComponentContainers>
+      <ChildGO type ="MyGameObject">
+        <Components>
+          <TestComponent3 type="LocationComponent">
+            <Pos value="100.0 0.0 0.0"/>
+          </TestComponent3>
+        </Components>
+      </ChildGO>
+    </ComponentContainers>
+  </GO1>
+  <GO2 type ="MyGameObject">
+    <Inheritance value ="GO1"/>
+    <Components>
+      <TestComponent1 type="TestComponent">
+        <Size value="109.0"/>
+      </TestComponent1>
+    </Components>
+  </GO2>
+</ComponentContainers>
