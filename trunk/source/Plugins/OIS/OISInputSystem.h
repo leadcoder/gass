@@ -29,7 +29,6 @@
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 
@@ -91,10 +90,7 @@ namespace GASS
         }
 
 		SystemType GetSystemType() const {return "InputSystem";}
-
-		//ITaskListener interface
 		void Update(double delta_time);
-		TaskGroup GetTaskGroup() const;
 	private:
 		ADD_ATTRIBUTE(double,UpdateFrequency);
 		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);

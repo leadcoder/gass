@@ -129,6 +129,7 @@ namespace GASS
 		virtual void OnCreate();
 		//INetworkComponent
 		virtual bool IsRemote() const;
+		virtual void SceneManagerTick(double delta);
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}
@@ -138,18 +139,14 @@ namespace GASS
 		void OnParentTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnVelocityNotify(VelocityNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
-		//int GetRelativeToParent() const {return m_RelativeToParent;}
-		//void SetRelativeToParent(int value) {m_RelativeToParent=value;}
-
 
 		bool GetUpdatePosition() const {return m_UpdatePosition;}
 		void SetUpdatePosition(bool value) {m_UpdatePosition=value;}
 		bool GetUpdateRotation() const {return m_UpdateRotation;}
 		void SetUpdateRotation(bool value) {m_UpdateRotation=value;}
 
-		//ITaskListener
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		
+		
 
 		Vec3 m_Velocity;
 		Vec3 m_AngularVelocity;

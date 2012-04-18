@@ -29,24 +29,11 @@
 #include <GL/glu.h>
 
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
-
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/Log.h"
-#include "Sim/Systems/SimSystemManager.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
-
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
-
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
 

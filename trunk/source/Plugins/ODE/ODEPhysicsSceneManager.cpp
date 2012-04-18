@@ -153,7 +153,7 @@ namespace GASS
 		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		
 
 		//dInitODE2(0);
 		m_Space = 0;

@@ -49,10 +49,7 @@ namespace GASS
 		virtual ~FollowWaypointListComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		void SceneManagerTick(double delta);
 	private:
 		ADD_ATTRIBUTE(Float,WaypointRadius);
 		void SetInvertDirection(bool value);

@@ -19,18 +19,9 @@
 *****************************************************************************/
 #pragma once
 #   pragma warning (disable : 4541)
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-//#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Sim/Components/Graphics/GeometryCategory.h"
 
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/AAbox.h"
-#include "Core/MessageSystem/IMessage.h"
-
-
+#include "Sim/GASS.h"
+#include "Plugins/OSG/OSGConvert.h"
 //mesh fetch
 #include <osg/TriangleFunctor>
 #include <osg/NodeVisitor>

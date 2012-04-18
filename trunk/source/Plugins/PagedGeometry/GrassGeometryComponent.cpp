@@ -685,16 +685,7 @@ namespace GASS
 		}
 		//parentEditor->getPGHandle()->reloadGeometryPages(bounds);
 	}
-
-	/*	void GrassGeometryComponent::RenderUpdate(float delta)
-	{
-	if(m_GrassLoader ) m_GrassLoader->updateAnimation();
-	}*/
-
-	/*	void GrassGeometryComponent::Update()
-	{
-	IPagedGeometry::Update();
-	}*/
+	
 }
 
 

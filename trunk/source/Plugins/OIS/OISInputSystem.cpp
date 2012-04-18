@@ -24,7 +24,6 @@
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -401,11 +400,6 @@ namespace GASS
 	bool OISInputSystem::povMoved( const OIS::JoyStickEvent &, int )
 	{
 		return true;
-	}
-
-	TaskGroup OISInputSystem::GetTaskGroup() const
-	{
-		return MAIN_TASK_GROUP;
 	}
 }
 

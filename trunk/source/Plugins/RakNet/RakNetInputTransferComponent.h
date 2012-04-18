@@ -97,10 +97,7 @@ namespace GASS
 		//void OnClientEnterVehicle(ClientEnterVehicleMessagePtr message);
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		
-		
-		//ITaskListener
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+
 
 		std::string m_ControlSettingName;
 		ControlSetting* m_ControlSetting;

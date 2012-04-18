@@ -28,7 +28,6 @@
 #include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
@@ -42,10 +41,7 @@ namespace GASS
 		virtual ~TankAutopilotComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		virtual void SceneManagerTick(double delta);
 	private:
 		ADD_ATTRIBUTE(bool,Enable);
 		ADD_ATTRIBUTE(float,DesiredSpeed);

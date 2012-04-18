@@ -36,19 +36,6 @@
 #include <osg/ShapeDrawable>
 #include <osgUtil/CullVisitor>
 #include <osgShadow/ShadowTechnique>
-
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSException.h"
-#include "Sim/SimEngine.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGSkyboxComponent.h"

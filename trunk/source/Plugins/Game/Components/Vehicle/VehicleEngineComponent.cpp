@@ -393,7 +393,7 @@ namespace GASS
 		}
 	}
 
-	void VehicleEngineComponent::Update(double delta)
+	void VehicleEngineComponent::SceneManagerTick(double delta)
 	{
 		m_CurrentTime += delta;
 		//m_Throttle =  DampThrottle(delta, m_DesiredThrottle,m_Throttle, m_ThrottleAccel);
@@ -800,10 +800,6 @@ namespace GASS
 		return rps*60.0f/(2*MY_PI);
 	}
 
-	TaskGroup VehicleEngineComponent::GetTaskGroup() const
-	{
-		return "VEHICLE_TASK_GROUP";
-	}
 
 	void VehicleEngineComponent::SetSmoothRPMOutput(const bool &value)
 	{

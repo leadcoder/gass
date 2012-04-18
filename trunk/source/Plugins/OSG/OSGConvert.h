@@ -22,12 +22,7 @@
 
 #include <iostream>
 
-#include "Core/Math/Matrix.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/Math/Sphere.h"
-#include "Core/Math/AABox.h"
-#include "Core/Utils/Singleton.h"
+#include "Sim/GASS.h"
 #include <osg/Projection>
 
 namespace GASS

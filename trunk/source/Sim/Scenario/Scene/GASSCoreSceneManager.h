@@ -25,7 +25,6 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scheduling/GASSTaskGroups.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 
 namespace GASS
 {

@@ -123,10 +123,7 @@ namespace GASS
 		return wp_index;
 	}
 
-
-
-
-	void FollowWaypointListComponent::Update(double delta)
+	void FollowWaypointListComponent::SceneManagerTick(double delta)
 	{
 		
 		if(m_HasWaypoints)
@@ -278,10 +275,5 @@ namespace GASS
 		}
 		return "Error"; 
 	}
-	
 
-	TaskGroup FollowWaypointListComponent::GetTaskGroup() const
-	{
-		return "VEHICLE_TASK_GROUP";
-	}
 }

@@ -19,8 +19,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "Sim/Common.h"
-#include "Sim/Components/BaseSceneComponent.h"
+#include "Sim/GASS.h"
 #include <osg/Referenced>
 namespace GASS
 {

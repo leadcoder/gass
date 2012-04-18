@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "ProjectileComponent.h"
+#include "Plugins/Game/GameSceneManager.h"
 #include "GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -79,33 +80,18 @@ namespace GASS
 
 	void ProjectileComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		if(m_StartEffectTemplateName != "") 
-		{
-			/*EffectBundle* effect = (EffectBundle*) Root::Get().GetBaseObjectTemplateManager()->CreateFromTemplate(m_StartEffectTemplateName );
-			if(effect)
-			{
-			FileLog::Print("Effect loaded:%s",m_StartEffectTemplateName.c_str());
-			effect->Init();
-			//ISceneNode* root = Root::GetPtr()->GetLevel()->GetParticleManager()->GetRoot();
-			AddChild(effect);
-			effect->Restart();
-			}*/
-		}
 		m_TimeLeft = m_TimeToLive;
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-
-		//for fast access
+		//save for fast access
 		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
-
-		//std::cout << "Loaded:" << GetSceneObject()->GetName() << std::endl;
-		//Send delete message?
+		//register fot ticks
+		message->GetGameSceneManager()->Register(shared_from_this());
+		
 	}
 
 
 	void ProjectileComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-		//std::cout << "Unloaded:" << GetSceneObject()->GetName() << std::endl;
+		
 	}
 
 	void ProjectileComponent::OnPhysicsParameterMessage(PhysicsBodyMessagePtr message)
@@ -215,7 +201,7 @@ namespace GASS
 		}
 	}
 
-	void ProjectileComponent::Update(double time)
+	void ProjectileComponent::SceneManagerTick(double time)
 	{
 		//std::cout << "Update proj:" << GetSceneObject()->GetName() << std::endl;
 		bool impact = false;
@@ -299,11 +285,6 @@ namespace GASS
 
 		StepPhysics(m_PhysicsDeltaTime);
 		m_PhysicsDeltaTime = 0;
-	}
-
-	TaskGroup ProjectileComponent::GetTaskGroup() const
-	{
-		return "PROJECTILE_TASK_GROUP";
 	}
 
 	void ProjectileComponent::SpawnEffect(const std::string &effect)

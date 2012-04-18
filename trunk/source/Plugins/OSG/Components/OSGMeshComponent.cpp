@@ -18,20 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
-
-#include "Core/Math/Quaternion.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSException.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Components/Graphics/GeometryCategory.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
@@ -118,6 +104,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 	}
 
 
@@ -178,7 +165,7 @@ namespace GASS
 	void OSGMeshComponent::SetFilename(const std::string &filename)
 	{
 		m_Filename = filename;
-		if(!m_ReadyToLoadMesh) //not loaded
+		if(!m_ReadyToLoadMesh  || m_Filename == "") //not loaded
 			return;
 
 		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -231,6 +218,12 @@ namespace GASS
 
 	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
+	}
+
+	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
+	{
+		std::string name = message->GetFileName();
+		SetFilename(name);
 	}
 
 	AABox OSGMeshComponent::GetBoundingBox() const

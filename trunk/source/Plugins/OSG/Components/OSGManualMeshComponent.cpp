@@ -22,18 +22,6 @@
 #include <boost/bind.hpp>
 
 #include "OSGManualMeshComponent.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/IComponent.h"
-
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSException.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"

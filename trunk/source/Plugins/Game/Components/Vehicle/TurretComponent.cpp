@@ -81,7 +81,29 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
+	}
+
 	
+	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	{
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
+		GetSceneObject()->PostMessage(force_msg);
+		GetSceneObject()->PostMessage(vel_msg);
+
+		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(play_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+		GetSceneObject()->PostMessage(volume_msg);
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		message->GetGameSceneManager()->Register(listener);
+	}
+
+	void TurretComponent::OnUnload(UnloadComponentsMessagePtr message)
+	{
+
 	}
 
 	void TurretComponent::OnTransformation(TransformationNotifyMessagePtr message)
@@ -168,7 +190,7 @@ namespace GASS
 		return angle;
 	}
 
-	void TurretComponent::Update(double delta_time)
+	void TurretComponent::SceneManagerTick(double delta_time)
 	{
 
 		Vec3 turret_dir = -m_Transformation.GetViewDirVector();
@@ -428,27 +450,6 @@ namespace GASS
 
 	}
 
-	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
-	{
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
-		GetSceneObject()->PostMessage(force_msg);
-		GetSceneObject()->PostMessage(vel_msg);
-
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
-
-		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
-	}
-
-	void TurretComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
 
 
 	void TurretComponent::OnInput(ControllerMessagePtr message)
@@ -528,9 +529,4 @@ namespace GASS
 	GetSceneObject()->PostMessage(sound_msg);
 	}
 	}*/
-
-	TaskGroup TurretComponent::GetTaskGroup() const
-	{
-		return "VEHICLE_TASK_GROUP";
-	}
 }

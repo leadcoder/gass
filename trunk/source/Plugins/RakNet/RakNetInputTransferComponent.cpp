@@ -171,10 +171,7 @@ namespace GASS
 
 	}
 
-	void RakNetInputTransferComponent::Update(double delta)
-	{
-
-	}
+	
 
 	void RakNetInputTransferComponent::ReceivedInput(int controller, float value)
 	{
@@ -223,12 +220,6 @@ namespace GASS
 			//std::cout << "got input from client" << std::endl;
 		}
 	}
-
-	TaskGroup RakNetInputTransferComponent::GetTaskGroup() const
-	{
-		return NETWORK_TASK_GROUP;
-	}
-	
 
 	void RakNetInputTransferComponent::OnClientRemoteMessage(ClientRemoteMessagePtr message)
 	{

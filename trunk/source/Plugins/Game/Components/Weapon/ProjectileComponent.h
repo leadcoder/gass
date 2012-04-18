@@ -38,18 +38,14 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 
-	class ProjectileComponent :  public Reflection<ProjectileComponent,BaseSceneComponent>, ITaskListener
+	class ProjectileComponent :  public Reflection<ProjectileComponent,BaseSceneComponent>
 	{
 	public:
 		ProjectileComponent();
 		virtual ~ProjectileComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
-
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
-
+		virtual void SceneManagerTick(double delta);
 	private:
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

@@ -27,7 +27,6 @@
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Sim/Scheduling/GASSTaskGroups.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 #include <string>
 
 namespace Ogre
@@ -71,7 +70,7 @@ namespace GASS
 		virtual ~OgreGraphicsSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		SystemType GetSystemType() const {return "GraphicsSystem";}
+		virtual SystemType GetSystemType() const {return "GraphicsSystem";}
 		virtual void Update(double time);
 		//IGraphicsSystem
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;

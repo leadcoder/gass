@@ -209,10 +209,8 @@ namespace GASS
 		return false;
 	}
 
-
-	void RakNetLocationTransferComponent::Update(double delta)
+	void RakNetLocationTransferComponent::SceneManagerTick(double delta)
 	{
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		
 		if(raknet->IsServer())
@@ -377,11 +375,6 @@ namespace GASS
 			//std::cout << "Time:" <<  time  << " Stamp:" << message->GetTimeStamp() << " Diff:" <<(time - message->GetTimeStamp()) << std::endl; 
 
 		}
-	}
-
-	TaskGroup RakNetLocationTransferComponent::GetTaskGroup() const 
-	{
-		return NETWORK_TASK_GROUP;
 	}
 }
 

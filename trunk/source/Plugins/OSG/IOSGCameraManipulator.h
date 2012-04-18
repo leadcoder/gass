@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-#include "Sim/Common.h"
+#include "Sim/GASS.h"
 #include <osg/Camera>
 
 namespace GASS

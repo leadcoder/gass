@@ -20,17 +20,8 @@
 
 #pragma once
 #   pragma warning (disable : 4541)
-#include "Sim/Common.h"
+#include "Sim/GASS.h"
 #include <osg/PositionAttitudeTransform>
-#include "Core/Math/Vector.h"
-#include "Core/Math/Quaternion.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
-
-
 
 namespace GASS
 {

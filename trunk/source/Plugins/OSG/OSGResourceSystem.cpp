@@ -20,17 +20,8 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <tinyxml.h>
-#include "Core/Common.h"
 #include "Plugins/OSG/OSGResourceSystem.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/Systems/SimSystemManager.h"
 
-
-
-using namespace Ogre;
 
 namespace GASS
 {

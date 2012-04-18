@@ -131,7 +131,7 @@ namespace GASS
 		float value = message->GetValue();
 	}
 
-	void TankAutopilotComponent::Update(double delta)
+	void TankAutopilotComponent::SceneManagerTick(double delta)
 	{
 		if(m_Enable)
 			DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
@@ -259,8 +259,4 @@ namespace GASS
 		}
 	}
 
-	TaskGroup TankAutopilotComponent::GetTaskGroup() const
-	{
-		return "VEHICLE_TASK_GROUP";
-	}
 }

@@ -70,14 +70,12 @@ namespace GASS
 		virtual ~VehicleEngineComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void SceneManagerTick(double delta);
 		float GetTorque(float throttle);
 		float GetRPM(){return m_RPM;}
 		int GetGear(){return m_Gear;}
 		float GetNormRPM();
-
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		
 	private:
 
 		ADD_ATTRIBUTE(float,TurnRPMAmount)

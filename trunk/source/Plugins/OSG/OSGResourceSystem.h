@@ -20,19 +20,8 @@
 
 #pragma once
 
-#include "Core/MessageSystem/MessageType.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Core/Utils/FilePath.h"
-
+#include "Sim/GASS.h"
 #include <string>
-namespace Ogre
-{
-	class Root;
-	class RenderWindow;
-	class SceneManager;
-}
 
 namespace GASS
 {
@@ -63,9 +52,6 @@ namespace GASS
 		void OnInit(InitSystemMessagePtr message);		
 		void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;
-		Ogre::Root* m_Root;
-		Ogre::RenderWindow* m_Window;
-		Ogre::SceneManager* m_SceneMgr;
 		std::vector<ResourceLocation> m_ResourceLocations;
 
 	};

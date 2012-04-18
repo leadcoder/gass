@@ -29,8 +29,6 @@
 #include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
 #include "Sim/Scenario/Scene/Messages/GASSPhysicsScenarioSceneMessages.h"
-#include "Sim/Scheduling/GASSTaskGroups.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 
 
 namespace GASS
@@ -60,8 +58,6 @@ namespace GASS
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
 		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
 		dWorldID GetWorld()const {return m_World;}
-
-		//ITaskListener interface
 		void SystemTick(double delta);
 		bool IsActive()const {return !m_Paused;}
 	protected:
@@ -71,7 +67,6 @@ namespace GASS
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
-		void SetTaskGroup(TaskGroup value);
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
 	private:

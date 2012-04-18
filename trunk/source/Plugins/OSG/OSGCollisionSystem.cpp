@@ -26,16 +26,6 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/SimEngine.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
 
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>

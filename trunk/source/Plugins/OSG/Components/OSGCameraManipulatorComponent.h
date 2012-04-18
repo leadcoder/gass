@@ -19,17 +19,8 @@
 *****************************************************************************/
 
 #pragma once
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
+#include "Sim/GASS.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
-#include "Sim/Components/Graphics/ICameraComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Core/MessageSystem/IMessage.h"
 #include <osg/Camera>
 
 namespace GASS

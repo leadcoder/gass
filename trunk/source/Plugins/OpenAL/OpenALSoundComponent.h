@@ -28,18 +28,14 @@ namespace GASS
 	public:
 		OpenALSoundComponent(void);
 		virtual ~OpenALSoundComponent(void);
-
 		static void RegisterReflection();
-		virtual void OnCreate();
 
+		virtual void OnCreate();
 		//create sound interface for this?
-		virtual void Update(float delta);
 		virtual void Play();
 		virtual void Stop();
 		virtual void StopLooping();
 		virtual bool IsPlaying();
-
-
 	protected:
 
 		//Helper to load sound from wave-file

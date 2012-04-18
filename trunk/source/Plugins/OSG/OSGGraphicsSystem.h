@@ -20,12 +20,7 @@
 
 #pragma once
 
-#include "Core/MessageSystem/MessageType.h"
-#include "Sim/Systems/Graphics/IGraphicsSystem.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/GASS.h"
 #include <string>
 #include <osgViewer/Viewer>
 #include <osgShadow/ShadowTechnique>
@@ -35,7 +30,7 @@ namespace GASS
 {
 	class OSGCameraComponent;
 	typedef boost::shared_ptr<OSGCameraComponent> OSGCameraComponentPtr;
-	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem, public ITaskListener
+	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem
 	{
 		friend class OSGGraphicsSceneManager;
 	public:
@@ -43,15 +38,14 @@ namespace GASS
 		virtual ~OSGGraphicsSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		SystemType GetSystemType() {return "GraphicsSystem";}
-		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
-		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		virtual SystemType GetSystemType() {return "GraphicsSystem";}
+		virtual void Update(double delta);
 
+		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
 		void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
+
+		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 	protected:
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);

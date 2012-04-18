@@ -18,20 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
-
-
-#include "Core/Math/Quaternion.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-
 
 namespace GASS
 {

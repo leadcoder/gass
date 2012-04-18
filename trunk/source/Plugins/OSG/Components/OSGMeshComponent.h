@@ -19,20 +19,7 @@
 *****************************************************************************/
 #pragma once
 #   pragma warning (disable : 4541)
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Components/Graphics/GeometryCategory.h"
-
-#include "Sim/Common.h"
-#include "Core/Math/Vector.h"
-#include "Core/Math/AAbox.h"
-#include "Core/MessageSystem/IMessage.h"
-
-
+#include "Sim/GASS.h"
 //mesh fetch
 #include <osg/TriangleFunctor>
 #include <osg/NodeVisitor>
@@ -193,6 +180,7 @@ namespace GASS
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		std::string m_Filename;
 		bool m_CastShadow;

@@ -70,20 +70,8 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
+#include "Sim/GASS.h"
 
-
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSException.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include "Sim/Systems/Input/IInputSystem.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/SimEngine.h"
-#include <boost/bind.hpp>
 #include <osgDB/ReadFile> 
 #include "tinyxml.h"
 
@@ -110,11 +98,80 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnCreate()
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitSystemMessage,0));
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnCreateRenderWindow,CreateRenderWindowMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
+	}
+
+	void OSGGraphicsSystem::OnInit(InitSystemMessagePtr message)
+	{
+		m_Viewer = new osgViewer::CompositeViewer();
+		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
+		std::string full_path;
+		
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(!rs->GetFullPath("arial.ttf",full_path))
+		{
+			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture" + full_path,"OSGGraphicsSystem::OnInit");
+		}
+		
+		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
+		m_DebugTextBox->setFont(full_path);
+		m_DebugTextBox->setTextSize(12);
+		
+		
+		if(m_CreateMainWindowOnInit)
+		{
+			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
+			if (!wsi) 
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No WindowSystemInterface available, cannot create windows","OSGGraphicsSystem::OnInit");
+				//osg::notify(osg::NOTICE)<<"Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
+				return;
+			}
+
+			CreateRenderWindow("MainWindow",800, 600,0);
+			CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
+		}
+
+		
+		//Load shadow settings
+		if(m_ShadowSettingsFile != "")
+		{
+			TiXmlDocument *xmlDoc = new TiXmlDocument(m_ShadowSettingsFile.c_str());
+			if (!xmlDoc->LoadFile())
+			{
+				//Fatal error, cannot load
+				LogManager::getSingleton().stream() << "WARNING: OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " <<  m_ShadowSettingsFile;
+			}
+			else
+			{
+				//TiXmlElement *ss= xmlDoc->FirstChildElement("ShadowSettings");
+				TiXmlElement *ss= xmlDoc->FirstChildElement("Systems");
+				if(ss)
+				{
+					ss = ss->FirstChildElement("OSGGraphicsSystem");
+					if(ss)
+						ss = ss->FirstChildElement("ShadowSettings");
+				}
+				LoadShadowSettings(ss);
+			}
+		}
+
+		//osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
+		
+		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
+		if (opt == NULL) 
+		{ 
+			opt = new osgDB::ReaderWriter::Options(); 
+		} 
+		
+		const std::string options = opt->getOptionString();
+		opt->setOptionString("dds_flip"); 
+		osgDB::Registry::instance()->setOptions(opt); 
+
+		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
+		//osgDB::Registry::instance()->setOptions(opt); 
 	}
 
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
@@ -264,76 +321,6 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::OnInit(InitSystemMessagePtr message)
-	{
-		m_Viewer = new osgViewer::CompositeViewer();
-		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
-		std::string full_path;
-		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		if(!rs->GetFullPath("arial.ttf",full_path))
-		{
-			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture" + full_path,"OSGGraphicsSystem::OnInit");
-		}
-		
-		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
-		m_DebugTextBox->setFont(full_path);
-		m_DebugTextBox->setTextSize(12);
-		
-		
-		if(m_CreateMainWindowOnInit)
-		{
-			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
-			if (!wsi) 
-			{
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No WindowSystemInterface available, cannot create windows","OSGGraphicsSystem::OnInit");
-				//osg::notify(osg::NOTICE)<<"Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
-				return;
-			}
-
-			CreateRenderWindow("MainWindow",800, 600,0);
-			CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
-		}
-
-		
-		//Load shadow settings
-		if(m_ShadowSettingsFile != "")
-		{
-			TiXmlDocument *xmlDoc = new TiXmlDocument(m_ShadowSettingsFile.c_str());
-			if (!xmlDoc->LoadFile())
-			{
-				//Fatal error, cannot load
-				LogManager::getSingleton().stream() << "WARNING: OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " <<  m_ShadowSettingsFile;
-			}
-			else
-			{
-				//TiXmlElement *ss= xmlDoc->FirstChildElement("ShadowSettings");
-				TiXmlElement *ss= xmlDoc->FirstChildElement("Systems");
-				if(ss)
-				{
-					ss = ss->FirstChildElement("OSGGraphicsSystem");
-					if(ss)
-						ss = ss->FirstChildElement("ShadowSettings");
-				}
-				LoadShadowSettings(ss);
-			}
-		}
-
-		//osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
-		
-		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
-		if (opt == NULL) 
-		{ 
-			opt = new osgDB::ReaderWriter::Options(); 
-		} 
-		
-		const std::string options = opt->getOptionString();
-		opt->setOptionString("dds_flip"); 
-		osgDB::Registry::instance()->setOptions(opt); 
-
-		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
-		//osgDB::Registry::instance()->setOptions(opt); 
-	}
 
 	void OSGGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
 	{
@@ -346,7 +333,6 @@ namespace GASS
 			top = traits->y;
 		}
 	}
-
 
 
 	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
@@ -373,11 +359,6 @@ namespace GASS
 		}
 		m_Viewer->frame(delta_time);
 		m_DebugTextBox->setText("");
-	}
-
-	TaskGroup OSGGraphicsSystem::GetTaskGroup() const
-	{
-		return MAIN_TASK_GROUP;
 	}
 
 

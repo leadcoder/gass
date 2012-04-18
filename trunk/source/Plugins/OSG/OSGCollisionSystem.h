@@ -23,21 +23,14 @@
 
 #include <map>
 
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsScenarioSceneMessages.h"
-#include "Sim/Scheduling/ITaskListener.h"
-#include "Core/System/BaseSystem.h"
+#include "Sim/GASS.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "tbb/spin_mutex.h"
 #include <osg/Geode>
 
 namespace GASS
 {
-	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , BaseSystem> , public boost::enable_shared_from_this<OSGCollisionSystem>, public ICollisionSystem, public ITaskListener, public IMessageListener
+	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem, public ITaskListener
 	{
 	public:
 		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;

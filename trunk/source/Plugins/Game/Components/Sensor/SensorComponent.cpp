@@ -196,8 +196,4 @@ namespace GASS
 		return m_DefaultMaxDetectionDistance*radar_cross_section;
 	}
 
-	TaskGroup SensorComponent::GetTaskGroup() const
-	{
-		return "SENSOR_TASK_GROUP";
-	}
 }

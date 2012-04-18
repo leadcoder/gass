@@ -18,19 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
-
-#include "Core/Math/Quaternion.h"
-#include "Core/Utils/Log.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Components/Graphics/GeometryCategory.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/Resource/IResourceSystem.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "OSGCollisionComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"

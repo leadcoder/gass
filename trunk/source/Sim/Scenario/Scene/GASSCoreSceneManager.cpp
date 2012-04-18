@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
@@ -50,9 +51,13 @@ namespace GASS
 	void CoreSceneManager::OnCreate()
 	{
 		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<CoreSystem>();
-		SystemListenerPtr listener = shared_from_this();
+		
+		//core system not found, cast exception
+		if(!system)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find CoreSystem", "CoreSceneManager::RegisterReflection");
+		
+			SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		ScenarioPtr scenario = GetScenario();
 		if(scenario)
 		{

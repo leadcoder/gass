@@ -103,7 +103,7 @@ namespace GASS
 		//if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 		//	m_TaskGroup = MAIN_TASK_GROUP;
 
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		
 
 		if(m_CreateMainWindowOnInit)
 		{

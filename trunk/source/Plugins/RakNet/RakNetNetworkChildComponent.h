@@ -46,7 +46,7 @@ namespace GASS
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
 
-	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> , public  ITaskListener
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> 
 	{
 	public:
 		RakNetNetworkChildComponent();
@@ -70,9 +70,7 @@ namespace GASS
 		
 
 	private:
-		//ITaskListener
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
+		void SceneManagerTick(double delta);
 
 		void OnGotReplica(ComponentGotReplicaMessagePtr message);
 		void OnSerialize(NetworkSerializeMessagePtr message);

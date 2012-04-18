@@ -28,12 +28,13 @@
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Utils/GASSTimer.h"
-//#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSFactory.h"
 #include "Core/Utils/GASSFilePath.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainer.h"
@@ -42,6 +43,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
 #include "Core/System/GASSSystemFactory.h"
+#include "Core/Reflection/GASSIProperty.h"
 
 //#include "Core/PluginSystem/GASSPluginManager.h"
 
@@ -62,6 +64,7 @@
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Systems/Resource/GASSIResourceSystem.h"
 
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
@@ -74,6 +77,8 @@
 #include "Sim/Scenario/GASSScenario.h"
 #include "Sim/Scenario/GASSScenario.h"
 #include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
+
 #include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 #include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"

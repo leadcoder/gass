@@ -27,7 +27,6 @@
 #include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 
@@ -45,6 +44,7 @@ namespace GASS
 		virtual ~TurretComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		void SceneManagerTick(double delta_time);
 	private:
 		Vec3 GetDesiredAimDirection(double delta_time);
 		std::string GetController() const {return m_Controller;}
@@ -67,8 +67,7 @@ namespace GASS
 		void OnParentTransformation(TransformationNotifyMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		TaskGroup GetTaskGroup() const;
-		void Update(double delta_time);
+		
 		std::string m_Controller;
 		float m_MaxSteerVelocity;
 		float m_MaxSteerAngle;

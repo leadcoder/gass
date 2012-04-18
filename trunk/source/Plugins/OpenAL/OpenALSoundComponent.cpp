@@ -239,10 +239,6 @@ namespace GASS
 		//Play();
 	}
 
-	void OpenALSoundComponent::Update(float delta)
-	{
-		if(!m_Source) return;
-	}
 
 	void OpenALSoundComponent::Play()
 	{

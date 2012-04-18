@@ -22,7 +22,6 @@ namespace GASS
 		virtual void AfterSMUpdate(double delta_time);
 		//ITaskListener interface
 		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
 	protected:
 		void OnLoad(LoadGameComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);

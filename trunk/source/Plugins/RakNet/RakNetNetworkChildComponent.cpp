@@ -212,7 +212,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkChildComponent::Update(double delta)
+	void RakNetNetworkChildComponent::SceneManagerTick(double delta)
 	{
 		//check if attributes are changed
 		if(m_Replica && m_Replica->HasPropertiesChanged())
@@ -232,9 +232,5 @@ namespace GASS
 		m_SerializePackages.clear();
 	}
 
-	TaskGroup RakNetNetworkChildComponent::GetTaskGroup() const 
-	{
-		return NETWORK_TASK_GROUP;
-	}
 }
 

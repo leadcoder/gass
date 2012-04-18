@@ -23,8 +23,8 @@ This class is based on the Game Programming Gems 5 article
 "Using Templates for Reflection in C++" by Dominic Filion.
 */
 
-#ifndef GASS_ABSTRACTPROPERTY_H
-#define GASS_ABSTRACTPROPERTY_H
+#ifndef GASS_I_PROPERTY_H
+#define GASS_I_PROPERTY_H
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSPropertyTypes.h"

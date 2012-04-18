@@ -35,19 +35,6 @@
 #include <osgShadow/LightSpacePerspectiveShadowMap>
 #include <osgShadow/StandardShadowMap>
 
-#include "Core/Common.h"
-#include "Core/System/SystemFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Utils/GASSException.h"
-
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-//#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
@@ -101,6 +88,59 @@ namespace GASS
 		}
 	}
 
+
+	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
+	{
+		ScenarioPtr scenario = GetScenario();
+		assert(scenario);
+		//if(scenario->GetSceneUp().z > 0)
+		//OSGConvert::Get().m_FlipYZ = false;
+		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
+
+		m_RootNode = new osg::PositionAttitudeTransform();
+		m_RootNode->setName("GASSRootNode");
+
+		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
+		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
+		if(st.valid())
+		{
+			m_ShadowedScene = new osgShadow::ShadowedScene;
+			m_ShadowedScene->setName("ShadowRootNode");
+			m_ShadowedScene->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
+			m_ShadowedScene->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
+			m_ShadowedScene->setShadowTechnique(st);
+			m_RootNode->addChild(m_ShadowedScene);
+		}
+		UpdateFogSettings();
+		//add and enable fog
+		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
+		state->setAttributeAndModes(m_Fog.get());
+		short attr = osg::StateAttribute::ON;
+		state->setMode(GL_FOG, attr);
+		GetOSGShadowRootNode()->setStateSet(state);
+
+		// Load default camera ect
+		//std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
+		/*SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		MessagePtr camera_msg(new ChangeCameraMessage(scene_object,));
+		scene->SendImmediate(camera_msg);
+		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
+		scene_object->SendImmediate(pos_msg);*/
+
+		void* root = static_cast<void*>(m_RootNode.get());
+		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
+
+		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root,shadow_node));
+		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
+		sim_sm->SendImmediate(loaded_msg);
+		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+	}
+
+	void OSGGraphicsSceneManager::OnUnload(MessagePtr message)
+	{
+
+	}
+
 	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
@@ -125,59 +165,10 @@ namespace GASS
 		GetScenario()->PostMessage(cam_message);
 	}
 
-	void OSGGraphicsSceneManager::OnUnload(MessagePtr message)
-	{
 
-	}
+	
 
-	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
-	{
-		ScenarioPtr scenario = GetScenario();
-		assert(scenario);
-		//if(scenario->GetSceneUp().z > 0)
-		//OSGConvert::Get().m_FlipYZ = false;
-
-		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
-		m_RootNode = new osg::PositionAttitudeTransform();
-		m_RootNode->setName("GASSRootNode");
-
-		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
-		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
-		if(st.valid())
-		{
-			m_ShadowedScene = new osgShadow::ShadowedScene;
-			m_ShadowedScene->setName("ShadowRootNode");
-			m_ShadowedScene->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
-			m_ShadowedScene->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
-			m_ShadowedScene->setShadowTechnique(st);
-			m_RootNode->addChild(m_ShadowedScene);
-		}
-
-		UpdateFogSettings();
-
-		//add and enable fog
-		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
-		state->setAttributeAndModes(m_Fog.get());
-		short attr = osg::StateAttribute::ON;
-		state->setMode(GL_FOG, attr);
-		GetOSGShadowRootNode()->setStateSet(state);
-
-		// Load default camera ect
-		//std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
-		/*SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		MessagePtr camera_msg(new ChangeCameraMessage(scene_object,));
-		scene->SendImmediate(camera_msg);
-		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
-		scene_object->SendImmediate(pos_msg);*/
-
-		void* root = static_cast<void*>(m_RootNode.get());
-		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
-
-		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root,shadow_node));
-		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
-		sim_sm->SendImmediate(loaded_msg);
-		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
-	}
+	
 
 	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
 	{
