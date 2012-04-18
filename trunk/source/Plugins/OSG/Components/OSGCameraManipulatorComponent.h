@@ -25,20 +25,16 @@
 
 namespace GASS
 {
-	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,BaseSceneComponent> , public IOSGCameraManipulator, public ITaskListener
+	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,BaseSceneComponent> , public IOSGCameraManipulator
 	{
 	public:
 		OSGCameraManipulatorComponent();
 		virtual ~OSGCameraManipulatorComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void SceneManagerTick(double delta);
 		//IOSGCameraManipulator
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
-		
-		//ITaskListener
-		void Update(double delta);
-		TaskGroup GetTaskGroup()const;
-		
 	protected:
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

@@ -71,12 +71,12 @@ namespace GASS
 
 	void OSGCameraManipulatorComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-			SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
+			
 	}
 
 	void OSGCameraManipulatorComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		message->GetGFXSceneManager()->Register(shared_from_this());
 
 		/*OSGCameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<OSGCameraComponent>();
 		osg::ref_ptr<osg::Camera> osg_camera = camera->GetOSGCamera();
@@ -91,7 +91,7 @@ namespace GASS
 		//m_OSGCamera = new osg::Camera(*views[vp_id]->getCamera());
 	}
 
-	void OSGCameraManipulatorComponent::SceneManagerTick((double delta)
+	void OSGCameraManipulatorComponent::SceneManagerTick(double delta)
 	{
 		//update location
 		if(m_Manipulator.valid())
@@ -104,11 +104,6 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(OSGConvert::Get().ToGASS(translation))));
 			//GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(OSGConvert::Get().ToGASS(translation))));
 		}
-	}
-
-	TaskGroup OSGCameraManipulatorComponent::GetTaskGroup() const
-	{
-		return MAIN_TASK_GROUP;
 	}
 }
 
