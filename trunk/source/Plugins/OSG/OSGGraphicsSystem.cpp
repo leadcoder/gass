@@ -218,6 +218,7 @@ namespace GASS
 			traits->windowDecoration = false;
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
+			
 		}
 		else //create window here
 		{

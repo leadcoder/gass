@@ -296,11 +296,11 @@ namespace GASS
 				{
 				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
 				if (!SetPropertyByString(data_name,attrib_val))
-					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tproperty not found: " << data_name;
+					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
 				}
 				else
 				{
-					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tno value attribute found for xml tag: " << data_name;
+					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t no value attribute found for xml tag: " << data_name;
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();

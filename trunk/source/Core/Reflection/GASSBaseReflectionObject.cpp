@@ -49,7 +49,7 @@ namespace GASS
 				{
 					const std::string prop_val = prop_elem->FirstAttribute()->Value();
 					if (!SetPropertyByString(prop_name,prop_val))
-						LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\tproperty not found: "<< prop_name;
+						LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\t property not found: "<< prop_name;
 				}
 				else
 				{

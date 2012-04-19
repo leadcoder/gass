@@ -173,7 +173,11 @@ namespace GASS
 
 	void Scenario::LoadXML(TiXmlElement *scenario)
 	{
-		BaseReflectionObject::LoadProperties(scenario);
+		TiXmlElement *prop = scenario->FirstChildElement("Properties");
+		if(prop)
+			BaseReflectionObject::LoadProperties(prop);
+		else // fallback for old scenarios
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scenario::LoadXML");
 		TiXmlElement *scene_manager = scenario->FirstChildElement("SceneManagerSettings");
 		if(scene_manager)
 		{
@@ -185,6 +189,9 @@ namespace GASS
 				scene_manager = scene_manager->NextSiblingElement();
 			}
 		}
+		else
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scenario::LoadXML");
+
 	}
 
 	void Scenario::SaveXML(TiXmlElement *parent)
@@ -193,8 +200,10 @@ namespace GASS
 		TiXmlElement *scenario = new TiXmlElement("Scenario");
 		parent->LinkEndChild(scenario);
 
+		TiXmlElement *prop = new TiXmlElement("Properties");
+		scenario->LinkEndChild(prop);
 
-		BaseReflectionObject::SaveProperties(scenario);
+		BaseReflectionObject::SaveProperties(prop);
 
 		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
 		scenario->LinkEndChild(sms_elem);
