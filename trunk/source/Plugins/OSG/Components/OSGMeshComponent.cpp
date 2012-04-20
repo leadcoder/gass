@@ -40,7 +40,7 @@ namespace GASS
 
 	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
 		m_ReceiveShadow  (false),
-		m_ReadyToLoadMesh(false),
+		m_Initlized(false),
 		m_Lighting(true),
 		m_Category(GT_REGULAR)
 	{
@@ -144,28 +144,24 @@ namespace GASS
 
 	void OSGMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		//OSGGraphicsSceneManager* osg_sm = boost::any_cast<OSGGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		//assert(osg_sm);
-		//TODO: get resource manager and get full path
-	
-		/*for(int i = 0; i < m_MeshNode->getNumChildren(); i++)
-		{
-			lc->GetOSGNode()->addChild(getChild(i));
-		}*/
-		m_ReadyToLoadMesh = true;
-		SetFilename(m_Filename);
+		LoadMesh(m_Filename);
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
-
-		//std::cout << "Min:" << m_BBox.m_Min << " Max:" << m_BBox.m_Max << "\n";
+		m_Initlized = true;
 	}
 
-	
 
 	void OSGMeshComponent::SetFilename(const std::string &filename)
 	{
 		m_Filename = filename;
-		if(!m_ReadyToLoadMesh  || m_Filename == "") //not loaded
+		if(m_Initlized) //not loaded
+			LoadMesh(m_Filename);
+			
+	}
+
+	void OSGMeshComponent::LoadMesh(const std::string &filename)
+	{
+		if(filename == "") //not loaded
 			return;
 
 		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -177,10 +173,14 @@ namespace GASS
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		//check if extension exist?
-		std::string extesion =  Misc::GetExtension(m_Filename);
+		std::string extesion =  Misc::GetExtension(filename);
+
+
+		std::string mod_filename =  filename;
+		//hack to convert ogre meshes
 		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
 		{
-			m_Filename = Misc::Replace(m_Filename,".mesh",".3ds");
+			mod_filename = Misc::Replace(mod_filename,".mesh",".3ds");
 		}
 		
 		if(m_MeshNode.valid())
@@ -189,7 +189,7 @@ namespace GASS
 			m_MeshNode.release();
 		}
 
-		if(rs->GetFullPath(m_Filename,full_path))
+		if(rs->GetFullPath(mod_filename,full_path))
 		{
 			std::string path = Misc::RemoveFilename(full_path);
 			//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
@@ -212,12 +212,52 @@ namespace GASS
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+
+			//expand children
+			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+
+			unsigned int num_children = m_MeshNode->getNumChildren();
+			
 		}
 		else 
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");
 
 	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
+	}
+
+
+	void OSGMeshComponent::Expand(SceneObjectPtr parent, osg::Group* group, bool load) 
+	{
+		
+		//create gass scene object
+		for(unsigned int i = 0 ; i < group->getNumChildren(); i++)
+		{
+			osg::Node* child_node = group->getChild(i);
+			osg::Group* child_group = dynamic_cast<osg::Group*>(child_node);
+			if(child_group)
+			{
+				SceneObjectPtr so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create("SceneObject"));
+				so->SetName(child_group->getName());
+				so->SetID(child_group->getName());
+				parent->AddChild(so);
+
+
+				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+
+
+				OSGNodeData* data = new OSGNodeData(mesh_comp);
+				child_group->setUserData((osg::Referenced*)data);
+
+				mesh_comp->SetMeshNode(child_group);
+				so->AddComponent(mesh_comp);
+				//load this object
+				if(load)
+					GetSceneObject()->GetSceneObjectManager()->LoadObject(so);
+
+				Expand(so,child_group, load);
+			}
+		}
 	}
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)

@@ -167,27 +167,34 @@ namespace GASS
 		//IMeshComponent
 		virtual std::string GetFilename() const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+
+		//set external mesh
+		void SetMeshNode(osg::ref_ptr<osg::Group> mesh) {m_MeshNode =mesh;}
 	protected:
 		void SetGeometryCategory(const GeometryCategory &value);
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		void SetFilename(const std::string &filename);
+		
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool value);
 		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
+		void Expand(SceneObjectPtr parent, osg::Group *group, bool load);
 		
 		void OnLoad(LoadGFXComponentsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
+		void LoadMesh(const std::string &filename);
+
 		std::string m_Filename;
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
 		osg::ref_ptr<osg::Group> m_MeshNode;
 		AABox m_BBox;
-		bool m_ReadyToLoadMesh;
+		bool m_Initlized;
 		GeometryCategory m_Category;
 		bool m_Lighting;
 	};

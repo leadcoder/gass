@@ -346,7 +346,9 @@ namespace GASS
 		for(int i = 0; i < views.size(); i++)
 		{
 			if(views[i]->getName() == message->GetViewportName())
+			{
 				views[i]->getCamera()->setViewport(message->GetPositionX(),message->GetPositionY(),message->GetWidth(), message->GetHeight());
+			}
 		}
 	}
 

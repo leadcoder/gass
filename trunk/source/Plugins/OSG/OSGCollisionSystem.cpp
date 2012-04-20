@@ -264,6 +264,9 @@ namespace GASS
 
 		node->accept(intersectVisitor);
 
+
+		
+
 		if ( intersector->containsIntersections() )
 		{
 			osgUtil::LineSegmentIntersector::Intersections& intersections = intersector->getIntersections();
@@ -274,7 +277,12 @@ namespace GASS
 				const osgUtil::LineSegmentIntersector::Intersection& intersection = *itr;
 
 				//get first user data
-				for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
+
+				//reverse
+				if(intersection.nodePath.size() > 0)
+				{
+				for(int i = intersection.nodePath.size()-1; i >= 0  ;i--)
+				//for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
 				{
 					if(intersection.nodePath[i]->getUserData())
 					{
@@ -286,7 +294,7 @@ namespace GASS
 							if(geom)
 							{
 								bool found = false;
-								if(request->CollisionBits == 1 && geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN)
+								if(request->CollisionBits == 1 && (geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN))
 								{
 									found = true;
 								}
@@ -301,15 +309,20 @@ namespace GASS
 
 								if(found)
 								{
-									result->CollSceneObject = bo->GetSceneObject();
+									Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+									Float col_dist = (col_pos - request->LineStart).FastLength(); 
+
+									result->CollDist = col_dist;
 									result->Coll = true;
-									result->CollPosition = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+									result->CollPosition = col_pos;
 									result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
-									return;		
+									result->CollSceneObject = bo->GetSceneObject();
+									return;
 								}
 							}
 						}
 					}
+				}
 				}
 			}
 		}

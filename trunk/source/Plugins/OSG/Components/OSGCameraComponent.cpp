@@ -162,10 +162,13 @@ namespace GASS
 			{
 				//double fovy, aspectRatio, zNear, zFar;
 				//m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+				m_OSGCamera->setProjectionResizePolicy(osg::Camera::FIXED);
 				double aspectRatio = 4.0/3.0;
 				if(m_OSGCamera->getViewport())
 					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
 				m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
+
+				
 			}
 		}
 	}

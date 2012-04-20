@@ -151,6 +151,8 @@ namespace GASS
 		ScenarioPtr scenario = message->GetScenario();
 
 		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
+		if(system == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find ODEPhysicsSystem", "ODEPhysicsSceneManager::OnLoad");
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
 		

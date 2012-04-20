@@ -54,7 +54,7 @@ namespace GASS
 		
 		//core system not found, cast exception
 		if(!system)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find CoreSystem", "CoreSceneManager::RegisterReflection");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find CoreSystem", "CoreSceneManager::OnCreate");
 		
 			SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
