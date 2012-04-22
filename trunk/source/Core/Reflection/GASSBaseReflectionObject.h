@@ -31,8 +31,10 @@ class TiXmlElement;
 namespace GASS
 {
 	class BaseReflectionObject;
+	
 	typedef boost::shared_ptr<BaseReflectionObject> BaseReflectionObjectPtr;
 	typedef boost::weak_ptr<BaseReflectionObject> BaseReflectionObjectWeakPtr;
+	typedef std::vector<IProperty*> PropertyVector;
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -83,6 +85,11 @@ namespace GASS
 
 		bool SerializeProperties(ISerializer* serializer);
 		void SetProperties(BaseReflectionObjectPtr dest) const;
+
+		/**
+		Get all properties from this object
+		*/
+		PropertyVector GetProperties() const;
 	};
 
 }

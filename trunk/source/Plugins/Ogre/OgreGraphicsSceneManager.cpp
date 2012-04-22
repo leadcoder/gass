@@ -146,48 +146,7 @@ namespace GASS
 		UpdateFogSettings();
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 
-
-
-		// Try to load default camera
-		/*ScenarioPtr scenario = GetScenario();
-		SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-
-		if(!scene_object) //If no FreeCameraObject template found, create one
-		{
-		SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
-		fre_cam_template->SetName("FreeCameraObject");
-		ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
-		location_comp->SetName("LocationComp");
-
-		ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
-		camera_comp->SetName("FreeCameraComp");
-
-		ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
-		cc_comp->SetName("FreeCameraCtrlComp");
-
-		fre_cam_template->AddComponent(location_comp);
-		fre_cam_template->AddComponent(camera_comp);
-		fre_cam_template->AddComponent(cc_comp);
-
-		SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
-
-		scene_object = GetScenario()->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		}*/
-
-		//assert(scene_object);
-
-		//don't save this object
-		//scene_object->SetSerialize(false);
-		//Send message to load all gfx components
-		//MessagePtr camera_msg(new ChangeCameraMessage(scene_object));
-
-		//ScenarioScenePtr scene = ScenarioScenePtr(m_Scene,boost::detail::sp_nothrow_tag());
-		//ScenarioPtr scenario = GetScenario();
-		//scene->SendImmediate(camera_msg);
-
-		//move camera to spawn position
-		//MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
-		//scene_object->SendImmediate(pos_msg);
+		OgreGraphicsSystemPtr(m_GFXSystem)->Register(shared_from_this());
 
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());

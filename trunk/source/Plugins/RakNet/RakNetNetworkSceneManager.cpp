@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include <boost/bind.hpp>
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
@@ -38,6 +39,7 @@
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
+
 
 
 
@@ -87,18 +89,7 @@ namespace GASS
 
 	
 
-	/*void RaknetNetworkSceneManager::OnNewReplica(ReplicaCreatedMessagePtr message)
-	{
-		RakNetBase* replica = message->GetReplica();
-		std::string template_name = replica->GetTemplateName();
-		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
-		if(so)
-		{
-			RakNetNetworkComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkComponent>();
-			comp->SetReplica(replica);
-			GetScenario()->GetObjectManager()->LoadObject(so);
-		}
-	}*/
+	
 
 	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedMessagePtr message)
 	{
@@ -115,11 +106,7 @@ namespace GASS
 		}
 	}
 
-	/*void RaknetNetworkSceneManager::OnNewChildReplica(ChildReplicaCreatedMessagePtr message)
-	{
-		RakNetChildReplica* replica = message->GetReplica();
-	}*/
-
+	
 
 	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id)
 	{
@@ -165,6 +152,10 @@ namespace GASS
 	{
 		ScenarioPtr scenario = message->GetScenario();
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		RakNetNetworkSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(system == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find RakNetNetworkSystem", "RaketNetworkSceneManager::OnLoad");
+		system->Register(shared_from_this());
 	}
 
 	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)

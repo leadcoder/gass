@@ -233,4 +233,22 @@ namespace GASS
 		}
 	}
 
+
+	PropertyVector BaseReflectionObject::GetProperties() const
+	{
+		PropertyVector props;
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				IProperty * prop = (*iter);
+				props.push_back(prop);
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+		return props;
+	}
 }

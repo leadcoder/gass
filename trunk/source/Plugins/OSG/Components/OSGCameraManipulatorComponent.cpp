@@ -60,14 +60,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnLoad,LoadGFXComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnUnload,UnloadComponentsMessage,1));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnParameter,CameraParameterMessage,1));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnTransformationChanged,TransformationNotifyMessage,10));
+	
 	}
 
-	/*void OSGCameraManipulatorComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
-	{
-		UpdateFromLocation();
-	}*/
 
 	void OSGCameraManipulatorComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
@@ -78,10 +73,6 @@ namespace GASS
 	{
 		message->GetGFXSceneManager()->Register(shared_from_this());
 
-		/*OSGCameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<OSGCameraComponent>();
-		osg::ref_ptr<osg::Camera> osg_camera = camera->GetOSGCamera();
-		camera->SetUpdateCameraFromLocation(false);*/
-		
 		//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
 		m_Manipulator = new osgGA::MyTrackballManipulator();
 		
