@@ -214,10 +214,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 
 			//expand children
-			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
-
-			unsigned int num_children = m_MeshNode->getNumChildren();
-			
+			//Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
 		}
 		else 
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");

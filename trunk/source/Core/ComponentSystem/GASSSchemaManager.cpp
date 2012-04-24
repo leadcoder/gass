@@ -54,8 +54,9 @@ namespace GASS
 		{
 			ComponentPtr comp (ComponentFactory::Get().Create(names[i]));
 			BaseReflectionObjectPtr bro = boost::shared_dynamic_cast<BaseReflectionObject>(comp);
+			std::string class_name = bro->GetRTTI()->GetClassName();
 			if(bro)
-				Save(outpath,names[i],bro);
+				Save(outpath,class_name,bro);
 		}
 	}
 

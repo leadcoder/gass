@@ -191,7 +191,6 @@ namespace GASS
 		}
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scenario::LoadXML");
-
 	}
 
 	void Scenario::SaveXML(TiXmlElement *parent)

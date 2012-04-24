@@ -3,6 +3,7 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "EditorCommon.h"
+#include "GUISchemaLoader.h"
 #include <list>
 #include <vector>
 
@@ -28,6 +29,7 @@ namespace GASS
 		GASS::MessageManager* GetMessageManager(void);
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
 		const FilePath GetWorkingFolder(void) {return m_ExecutionFolder;}
+		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 	protected:
 		//std::string m_WorkingDirPath;
 		//Create tool controller
@@ -36,5 +38,7 @@ namespace GASS
 		FilePath m_ExecutionFolder;
 		FilePath m_AppDataFolder;
 		FilePath m_MyDocumentsFolder;
+		GUISchemaLoader* m_GUISettings;
+		
 	};
 }

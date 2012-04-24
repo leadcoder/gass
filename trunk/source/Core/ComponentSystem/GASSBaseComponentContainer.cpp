@@ -252,12 +252,21 @@ namespace GASS
 				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
 				while(comp_elem)
 				{
+					ComponentPtr target_comp;
+
+					//Try Get overload component by name first, if not found assume only one component of same type
 					TiXmlElement *name_elem =comp_elem->FirstChildElement("Name");
-					std::string comp_name;
 					if(name_elem)
-						comp_name = name_elem->Attribute("value"); //comp_name = comp_elem->Attribute("Value");
-						
-					ComponentPtr target_comp (GetComponent(comp_name));
+					{
+						const std::string comp_name = name_elem->Attribute("value");
+						target_comp  =  GetComponent(comp_name);
+					}
+					else
+					{
+						const std::string comp_name = comp_elem->Value();
+						target_comp = GetComponent(comp_name);
+					}					
+
 					if(target_comp) //over loading component
 					{
 						ComponentPtr comp = LoadComponent(comp_elem);
