@@ -24,7 +24,7 @@
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 namespace Ogre
 {

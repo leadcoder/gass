@@ -23,8 +23,8 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/Utils/GASSFactory.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
 
 namespace GASS
 {

@@ -142,8 +142,8 @@ namespace GASS
 	class UnloadSceneManagersMessage : public BaseMessage
 	{
 	public:
-		UnloadSceneManagersMessage(ScenePtr scenario, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Scene(scenario)
+		UnloadSceneManagersMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Scene(scene)
 		  {
 
 		  }

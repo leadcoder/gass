@@ -23,7 +23,7 @@
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include <tinyxml.h>
 
 #include "Sim/Components/GASSBaseSceneComponent.h"

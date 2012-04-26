@@ -23,8 +23,8 @@
 #include "Core/Math/GASSVector.h"
 #include "Sim/Components/Graphics/GASSILightComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 
 
 namespace Ogre

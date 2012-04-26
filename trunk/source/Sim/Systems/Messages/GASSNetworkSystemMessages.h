@@ -30,12 +30,12 @@
 
 namespace GASS
 {
-	class Scenario;
-	class Scenario;
+	class Scene;
+	class Scene;
 	class SceneObject;
 
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
@@ -215,16 +215,16 @@ namespace GASS
 
 
 	/**
-	Server inform client about scenario
+	Server inform client about scene
 	*/
 	class StartSceanrioRequestMessage : public BaseMessage
 	{
 	public:
-		StartSceanrioRequestMessage(const std::string &scenario_name, SenderID sender_id = -1, double delay= 0) :
+		StartSceanrioRequestMessage(const std::string &scene_name, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
-			  m_Name(scenario_name){}
+			  m_Name(scene_name){}
 
-		 std::string GetScenarioName() const {return m_Name;}
+		 std::string GetSceneName() const {return m_Name;}
 	private:
 		std::string m_Name;
 	};

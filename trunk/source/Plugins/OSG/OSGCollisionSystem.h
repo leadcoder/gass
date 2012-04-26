@@ -44,7 +44,7 @@ namespace GASS
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
-		Float GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute=true) const;
+		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
 		//void Process();
 
 		//ITaskListener interface
@@ -53,8 +53,8 @@ namespace GASS
 
 	private:
 		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
-		void OnUnloadScenario(ScenarioUnloadNotifyMessagePtr message);
-		void OnLoadScenario(ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);
+		void OnLoadScene(SceneAboutToLoadNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;

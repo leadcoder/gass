@@ -38,7 +38,7 @@
 
 namespace GASS
 {
-	SceneObjectManager::SceneObjectManager(ScenePtr scenario) : m_Scene (scenario)
+	SceneObjectManager::SceneObjectManager(ScenePtr scene) : m_Scene (scene)
 	{
 		
 
@@ -144,8 +144,8 @@ namespace GASS
 		//Send load message so that all scene manager can initilze it's components
 
 		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(obj));
-		ScenePtr scenario = GetScene();
-		scenario->SendImmediate(load_msg);
+		ScenePtr scene = GetScene();
+		scene->SendImmediate(load_msg);
 
 		//Pump initial messages around
 		obj->SyncMessages(0,false);

@@ -24,8 +24,8 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "OgreSceneNodeSource.h"
 #include <OgreNode.h>
 

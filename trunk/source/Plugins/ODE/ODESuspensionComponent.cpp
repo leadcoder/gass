@@ -27,9 +27,9 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/ComponentSystem/GASSIComponentContainer.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
@@ -364,7 +364,7 @@ namespace GASS
 			}
 
 			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ODECollisionSystem>();
-			Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetSceneObjectManager()->GetScenario(),hingePoint,false);
+			Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetSceneObjectManager()->GetScene(),hingePoint,false);
 			//std::cout << "height" <<  height_above_ground << "\n";
 
 			//get terrain height

@@ -255,7 +255,7 @@ namespace GASS
 		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
 		m_PostProcess->SetActiveCompositors(GetPostFilters());
 
-		//save viewport settings for recreation when scenario manager is changed
+		//save viewport settings for recreation when scene manager is changed
 		Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
 		m_Viewports[name] = save_vp;
 	}

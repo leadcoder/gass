@@ -68,7 +68,7 @@ namespace GASS
 
 	/**
 	Change time of day, this message can be used to change current time in
-	scenarios that support dynamic lighting
+	scenes that support dynamic lighting
 	*/
 
 	class TimeOfDayMessage : public BaseMessage

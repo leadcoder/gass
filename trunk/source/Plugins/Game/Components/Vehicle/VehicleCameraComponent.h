@@ -23,9 +23,9 @@
 
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectLink.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObjectLink.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"

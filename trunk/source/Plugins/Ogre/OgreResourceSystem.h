@@ -24,7 +24,7 @@
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Core/Utils/GASSFilePath.h"
 
 #include "Core/MessageSystem/GASSMessageType.h"

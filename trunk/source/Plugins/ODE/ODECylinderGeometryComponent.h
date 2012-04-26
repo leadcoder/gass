@@ -21,9 +21,9 @@
 #pragma once 
 
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include <ode/ode.h>
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"

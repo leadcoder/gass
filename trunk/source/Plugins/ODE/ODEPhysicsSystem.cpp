@@ -22,13 +22,13 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/System/GASSSystemFactory.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 
 
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 

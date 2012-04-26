@@ -33,8 +33,8 @@
 #include "DensityMapComponent.h"
 
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 
 

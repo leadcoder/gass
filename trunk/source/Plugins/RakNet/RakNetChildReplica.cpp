@@ -25,12 +25,12 @@
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 #include "RakNetChildReplica.h"
 #include "RakNetMasterReplica.h"

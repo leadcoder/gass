@@ -22,8 +22,8 @@
 #define GASS_BASE_SCENE_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSISceneManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSISceneManager.h"
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 namespace GASS

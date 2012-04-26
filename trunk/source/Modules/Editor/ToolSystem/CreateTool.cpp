@@ -6,10 +6,10 @@
 #include "Core/Utils/GASSException.h"
 
 #include "Core/ComponentSystem/GASSIComponent.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 
 
@@ -53,7 +53,7 @@ namespace GASS
 		if(obj_under_cursor)
 		{
 
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScenario()->GetObjectManager()->LoadFromTemplate(m_ObjectName,parent_obj);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				int from_id = (int) this;

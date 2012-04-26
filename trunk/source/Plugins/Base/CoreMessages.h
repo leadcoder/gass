@@ -22,7 +22,7 @@
 #define CORE_MESSAGES_H
 
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 
 
 namespace GASS

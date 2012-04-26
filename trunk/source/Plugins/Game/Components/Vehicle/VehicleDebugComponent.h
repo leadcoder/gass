@@ -22,8 +22,8 @@
 #define VEHICLE_DEBUG_COMPONENT_H
 
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 

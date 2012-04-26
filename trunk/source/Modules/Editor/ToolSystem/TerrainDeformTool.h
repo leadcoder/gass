@@ -6,7 +6,7 @@
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

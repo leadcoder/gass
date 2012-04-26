@@ -75,25 +75,24 @@
 
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectTemplate.h"
 
 
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
 
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneMessages.h"
 
 
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
 #include "Sim/Utils/GASSEnumBinder.h"
 

@@ -29,9 +29,9 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -234,7 +234,7 @@ namespace GASS
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
 		SetOrigin(m_Origin);
 		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
-		m_TerrainGroup->setResourceGroup("GASSScenario");
+		m_TerrainGroup->setResourceGroup("GASSScene");
 
 		if(m_CustomMaterial != "")
 		{

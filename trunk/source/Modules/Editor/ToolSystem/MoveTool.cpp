@@ -6,13 +6,13 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
-#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 namespace GASS
 {
@@ -244,7 +244,7 @@ namespace GASS
 		}
 
 		int from_id = (int) this;
-		GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
+		GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
 		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 	}
 
@@ -263,13 +263,13 @@ namespace GASS
 	SceneObjectPtr MoveTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetScenario())
+		if(!gizmo &&  m_Controller->GetScene())
 		{
-			ScenarioPtr scenario = m_Controller->GetScenario();
+			ScenePtr scene = m_Controller->GetScene();
 
 			std::string gizmo_name = "GizmoMoveObject_YUp";
 		
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScenario()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 

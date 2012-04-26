@@ -24,11 +24,11 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
 
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 
@@ -68,9 +68,9 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-		GetScenario()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scenario::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage,0));
 	}
@@ -102,7 +102,7 @@ namespace GASS
 			comp->SetReplica(replica);
 
 
-			GetScenario()->GetObjectManager()->LoadObject(so);
+			GetScene()->GetObjectManager()->LoadObject(so);
 		}
 	}
 
@@ -150,7 +150,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioPtr scenario = message->GetScenario();
+		ScenePtr scene = message->GetScene();
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		RakNetNetworkSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(system == NULL)

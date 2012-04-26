@@ -25,7 +25,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Utils/GASSEnumBinder.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Plugins/Ogre/OgrePolygonMode.h"

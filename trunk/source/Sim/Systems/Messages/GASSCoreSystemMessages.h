@@ -29,11 +29,11 @@
 
 namespace GASS
 {
-	class Scenario;
+	class Scene;
 	class SceneObject;
 
 	
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	
 
@@ -80,54 +80,54 @@ namespace GASS
 
 
 	/**
-		This message is posted by the Scenario class before the scenario scenes are loaded.
+		This message is posted by the Scene class before the scenes are loaded.
 	*/
 
-	class ScenarioAboutToLoadNotifyMessage : public BaseMessage
+	class SceneAboutToLoadNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioAboutToLoadNotifyMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) :
+		SceneAboutToLoadNotifyMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
-			  m_Scenario(scenario){}
+			  m_Scene(scene){}
 
-		  ScenarioPtr GetScenario() const {return m_Scenario;}
+		  ScenePtr GetScene() const {return m_Scene;}
 	private:
-		ScenarioPtr m_Scenario;
+		ScenePtr m_Scene;
 	};
 
-	typedef boost::shared_ptr<ScenarioAboutToLoadNotifyMessage> ScenarioAboutToLoadNotifyMessagePtr;
+	typedef boost::shared_ptr<SceneAboutToLoadNotifyMessage> SceneAboutToLoadNotifyMessagePtr;
 
 	
 	
 	/**
-		This message is posted by the Scenario class after a scenario scene is loaded.
+		This message is posted by the Scene class after a scene is loaded.
 	*/
-	class ScenarioLoadedNotifyMessage : public BaseMessage
+	class SceneLoadedNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioLoadedNotifyMessage(ScenarioPtr scenario,SenderID sender_id = -1, double delay= 0) :
+		SceneLoadedNotifyMessage(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
-			  m_Scenario(scenario){}
+			  m_Scene(scene){}
 
-		  ScenarioPtr GetScenario() const {return m_Scenario;}
+		  ScenePtr GetScene() const {return m_Scene;}
 	private:
-		ScenarioPtr m_Scenario;
+		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<ScenarioLoadedNotifyMessage> ScenarioLoadedNotifyMessagePtr;
+	typedef boost::shared_ptr<SceneLoadedNotifyMessage> SceneLoadedNotifyMessagePtr;
 
 
-	class ScenarioUnloadNotifyMessage : public BaseMessage
+	class SceneUnloadNotifyMessage : public BaseMessage
 	{
 	public:
-		ScenarioUnloadNotifyMessage(ScenarioPtr scenario, SenderID sender_id = -1, double delay= 0) :
+		SceneUnloadNotifyMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay) ,
-			  m_Scenario(scenario){}
+			  m_Scene(scene){}
 
-		  ScenarioPtr GetScenario() const {return m_Scenario;}
+		  ScenePtr GetScene() const {return m_Scene;}
 	private:
-		ScenarioPtr m_Scenario;
+		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<ScenarioUnloadNotifyMessage> ScenarioUnloadNotifyMessagePtr;
+	typedef boost::shared_ptr<SceneUnloadNotifyMessage> SceneUnloadNotifyMessagePtr;
 
 
 	class RequestTimeStepMessage : public BaseMessage

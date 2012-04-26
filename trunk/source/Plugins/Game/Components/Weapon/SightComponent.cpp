@@ -30,9 +30,9 @@
 #include "Core/Utils/GASSLogManager.h"
 
 #include "Sim/Components/Network/GASSINetworkComponent.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 
@@ -41,7 +41,7 @@
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
-#include "Sim/Scenario/Scene/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Scene/GASSSoundSceneObjectMessages.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 
 namespace GASS
@@ -426,7 +426,7 @@ namespace GASS
 		//max distance is 20000m
 		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
 		request.Type = COL_LINE;
-		request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 1;
 		col_sys->Force(request,result);

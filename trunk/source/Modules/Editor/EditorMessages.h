@@ -1,8 +1,8 @@
 #ifndef EDITOR_MESSAGES
 #define EDITOR_MESSAGES
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectTemplate.h"
 
 namespace GASS
 {
@@ -249,14 +249,14 @@ namespace GASS
 
 
 
-	class ScenarioChangedMessage : public BaseMessage
+	class SceneChangedMessage : public BaseMessage
 	{
 	public:
-		ScenarioChangedMessage(SenderID sender_id = -1, double delay= 0) : 
+		SceneChangedMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<ScenarioChangedMessage> ScenarioChangedMessagePtr;
+	typedef boost::shared_ptr<SceneChangedMessage> SceneChangedMessagePtr;
 
 
 
@@ -429,39 +429,39 @@ namespace GASS
 
 
 
-	class NewGASSScenarioMessage : public BaseMessage
+	class NewGASSSceneMessage : public BaseMessage
 	{
 	public:
-		NewGASSScenarioMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
+		NewGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetScenarioName() const {return m_Filename;}
+		  std::string GetSceneName() const {return m_Filename;}
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<NewGASSScenarioMessage> NewGASSScenarioMessagePtr;
+	typedef boost::shared_ptr<NewGASSSceneMessage> NewGASSSceneMessagePtr;
 
-	class LoadGASSScenarioMessage : public BaseMessage
+	class LoadGASSSceneMessage : public BaseMessage
 	{
 	public:
-		LoadGASSScenarioMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
+		LoadGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetScenarioName() const {return m_Filename;}
+		  std::string GetSceneName() const {return m_Filename;}
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<LoadGASSScenarioMessage> LoadGASSScenarioMessagePtr;
+	typedef boost::shared_ptr<LoadGASSSceneMessage> LoadGASSSceneMessagePtr;
 
 
-	class SaveGASSScenarioMessage : public BaseMessage
+	class SaveGASSSceneMessage : public BaseMessage
 	{
 	public:
-		SaveGASSScenarioMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
+		SaveGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetScenarioName() const {return m_Filename;}
+		  std::string GetSceneName() const {return m_Filename;}
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<SaveGASSScenarioMessage> SaveGASSScenarioMessagePtr;
+	typedef boost::shared_ptr<SaveGASSSceneMessage> SaveGASSSceneMessagePtr;
 
 	class EditModeMessage : public BaseMessage
 	{

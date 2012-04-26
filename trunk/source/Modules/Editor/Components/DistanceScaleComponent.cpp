@@ -2,10 +2,10 @@
 #include "../EditorManager.h"
 #include "../ToolSystem/MouseToolController.h"
 #include "DistanceScaleComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -50,7 +50,7 @@ namespace GASS
 
 	void DistanceScaleComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScene()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -158,7 +158,7 @@ namespace GASS
 
 	void DistanceScaleComponent::OnLoad(LoadCoreComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)

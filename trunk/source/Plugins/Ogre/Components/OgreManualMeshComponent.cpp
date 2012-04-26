@@ -38,8 +38,8 @@
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -234,7 +234,7 @@ namespace GASS
 							std::string path = Misc::RemoveFilename(texture_name);
 							if(path != "")
 							{
-								rs->AddResourceLocation(path,"GASSScenario","FileSystem",false);
+								rs->AddResourceLocation(path,"GASSScene","FileSystem",false);
 							}
 							else 
 								return;

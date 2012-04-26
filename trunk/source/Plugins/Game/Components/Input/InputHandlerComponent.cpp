@@ -25,9 +25,9 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
@@ -90,7 +90,7 @@ namespace GASS
 			{
 				//const std::string vp_name = camera->GetPrefredViewport();
 				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject(),vp_name));
-				GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
+				GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
 			}
 		}*/
 
@@ -109,12 +109,12 @@ namespace GASS
 
 	void InputHandlerComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-	//	message->GetSimSceneManager()->GetScenario()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
+	//	message->GetSimSceneManager()->GetScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
 	}
 
 	void InputHandlerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-	//	message->GetSimSceneManager()->GetScenario()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
+	//	message->GetSimSceneManager()->GetScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));

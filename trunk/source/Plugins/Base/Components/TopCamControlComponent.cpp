@@ -20,18 +20,18 @@
 
 #include <boost/bind.hpp>
 #include "Plugins/Base/Components/TopCamControlComponent.h"
-#include "Sim/Scenario/Scene/GASSCoreSceneManager.h"
+#include "Sim/Scene/GASSCoreSceneManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
@@ -89,8 +89,8 @@ namespace GASS
 		assert(m_ControlSetting);
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		scenario->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
 	void TopCamControlComponent::OnLoad(LoadCoreComponentsMessagePtr message)
@@ -103,8 +103,8 @@ namespace GASS
 	void TopCamControlComponent::OnUnload(MessagePtr message)
 	{
 		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		scenario->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void TopCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -199,7 +199,7 @@ namespace GASS
 
 	void TopCamControlComponent::UpdateTopCam(double delta)
 	{
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
 		Vec3 up(0,1,0);
 		Vec3 north (0,0,-1);
 		Vec3 east (1,0,0);

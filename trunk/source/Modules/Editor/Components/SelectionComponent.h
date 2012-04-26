@@ -3,8 +3,8 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {

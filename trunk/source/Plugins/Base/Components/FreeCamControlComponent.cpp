@@ -28,11 +28,11 @@
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
@@ -43,7 +43,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Math/GASSQuaternion.h"
 
-#include "Sim/Scenario/Scene/GASSCoreSceneManager.h"
+#include "Sim/Scene/GASSCoreSceneManager.h"
 
 namespace GASS
 {
@@ -105,9 +105,9 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
 
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
 
-		scenario->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
 	void FreeCamControlComponent::OnLoad(LoadCoreComponentsMessagePtr message)
@@ -126,8 +126,8 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 		}
 
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		scenario->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -276,7 +276,7 @@ namespace GASS
 		Vec3 tot_vel;
 		//Vec3 gravity;
 
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
 
 		Vec3 up(0,1,0);
 		Vec3 north (0,0,-1);
@@ -368,7 +368,7 @@ namespace GASS
 		Quaternion rot_to_send(m_Rot);
 		if(up.z == 1)
 		{
-			//fix rotation if we want z as up axis in gass scenario
+			//fix rotation if we want z as up axis in gass scene
 			rot_to_send = Quaternion(Vec3(0,0,m_Rot.x));
 			rot_to_send = Quaternion(Vec3(0,m_Rot.y,0))*rot_to_send;
 			//we have to rotate 90 deg if z is up

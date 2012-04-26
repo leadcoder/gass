@@ -4,10 +4,10 @@
 #include "SelectionComponent.h"
 #include "EditorComponent.h"
 
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"

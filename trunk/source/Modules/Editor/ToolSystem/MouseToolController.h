@@ -3,8 +3,8 @@
 #include "../EditorCommon.h"
 #include "../EditorMessages.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "CursorInfo.h"
@@ -17,7 +17,7 @@ namespace GASS
 {
 	class ControlSetting;
 	class SceneObject;
-	class Scenario;
+	class Scene;
 	class ICameraComponent;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
@@ -30,7 +30,7 @@ namespace GASS
 		friend class IMouseTool;
 	public:
 		
-		MouseToolController(bool scenario_objects_selectable);
+		MouseToolController(bool scene_objects_selectable);
 		virtual ~MouseToolController(void);
 		void Init();
 		void AddTool(IMouseTool* tool);
@@ -45,9 +45,9 @@ namespace GASS
 		bool IsObjectVisible(SceneObjectWeakPtr obj);
 		void UnlockObject(SceneObjectWeakPtr obj);
 		void LockObject(SceneObjectWeakPtr obj);
-		GASS::ScenarioPtr GetScenario(){return GASS::ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}
-		void SetScenarioObjectsSelectable(bool value) {m_ScenarioObjectsSelectable = value;}
-		bool GetScenarioObjectsSelectable() const {return m_ScenarioObjectsSelectable;}
+		GASS::ScenePtr GetScene(){return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
+		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
 		GASS::SceneObjectPtr GetActiveCameraObject() const {return GASS::SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
 
 		void SetGridSpacing(Float value); 
@@ -89,10 +89,10 @@ namespace GASS
 		void OnObjectLock(ObjectLockMessagePtr message);
 		void OnObjectVisible(ObjectVisibleMessagePtr message);
 
-		void OnNewScenario(GASS::ScenarioAboutToLoadNotifyMessagePtr message);
-		void OnUnloadScenario(GASS::ScenarioUnloadNotifyMessagePtr message);
+		void OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message);
+		void OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message);
 		void OnChangeCamera(GASS::ChangeCameraMessagePtr message);
-		void OnScenarioLoaded(GASS::ScenarioLoadedNotifyMessagePtr message);
+		void OnSceneLoaded(GASS::SceneLoadedNotifyMessagePtr message);
 		void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnSnapModeMessage(SnapModeMessagePtr message);
 		
@@ -113,10 +113,10 @@ namespace GASS
 		GASS::CameraComponentWeakPtr m_ActiveCamera;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
 		bool m_Active;
-		GASS::ScenarioWeakPtr m_Scenario;
+		GASS::SceneWeakPtr m_Scene;
 		GASS::CollisionHandle m_ColMeshHandle;
 		GASS::CollisionHandle m_ColGizmoHandle;
-		bool m_ScenarioObjectsSelectable;
+		bool m_SceneObjectsSelectable;
 
 		//Global settings
 		Float m_GridSpacing;

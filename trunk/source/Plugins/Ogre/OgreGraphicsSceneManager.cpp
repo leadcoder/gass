@@ -19,11 +19,11 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -112,14 +112,14 @@ namespace GASS
 	{
 		int address = (int) this;
 		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
-		ScenarioPtr scenario = GetScenario();
-		assert(scenario);
+		ScenePtr scene = GetScene();
+		assert(scene);
 
-		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,Scenario::GFX_SYSTEM_LOAD_PRIORITY));
-		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
-		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scenario::GFX_COMPONENT_LOAD_PRIORITY));
-		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
-		scenario->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
 
 	}
 
@@ -177,7 +177,7 @@ namespace GASS
 			OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 
 			MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
-			GetScenario()->PostMessage(cam_message);
+			GetScene()->PostMessage(cam_message);
 		}
 		else
 		{

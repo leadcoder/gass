@@ -26,7 +26,7 @@
 #include "Sim/Scene/GASSISceneManager.h"
 #include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"

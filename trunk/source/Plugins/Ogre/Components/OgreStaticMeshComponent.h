@@ -25,7 +25,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 
 namespace Ogre

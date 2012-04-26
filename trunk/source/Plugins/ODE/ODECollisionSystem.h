@@ -24,9 +24,9 @@
 #include <ode/ode.h>
 #include <map>
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
@@ -50,9 +50,9 @@ namespace GASS
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
 		void Process();
-		Float GetHeight(ScenarioPtr scenario, const Vec3 &pos, bool absolute=true) const;
+		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
 	private:
-		void OnUnloadScene(ScenarioUnloadNotifyMessagePtr message);
+		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

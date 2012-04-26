@@ -22,10 +22,10 @@
 
 #include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scheduling/GASSTaskGroups.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Plugins/RakNet/RakNetMessages.h"

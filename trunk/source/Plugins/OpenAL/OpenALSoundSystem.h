@@ -4,11 +4,11 @@
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSSoundSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSSoundSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #ifdef WIN32
 #include "al.h"
@@ -32,10 +32,10 @@
 
 namespace GASS
 {
-	class Scenario;
+	class Scene;
 	class SceneObject;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>
@@ -61,7 +61,7 @@ namespace GASS
 		std::string ListAvailableDevices( void );
 
 		void OnInit(MessagePtr message);
-		void OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
@@ -72,7 +72,7 @@ namespace GASS
 
 		SoundMap m_BufferMap;
 		SourceMap m_SourceMap;
-		ScenarioWeakPtr m_Scenario;
+		SceneWeakPtr m_Scene;
 		SceneObjectWeakPtr m_CurrentCamera;
 	};
 

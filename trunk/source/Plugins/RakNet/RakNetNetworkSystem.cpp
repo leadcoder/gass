@@ -40,11 +40,11 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
@@ -64,7 +64,7 @@ namespace GASS
 		m_RakPeer(NULL),
 		m_ServerData(new ServerData()),
 		m_ServerDataOnClient(new ServerData()),
-		m_ScenarioIsRunning (false),
+		m_SceneIsRunning (false),
 		m_AcceptLateJoin (true),
 		m_RemoteCreatePlayers (true),
 		m_Active(false),
@@ -99,21 +99,21 @@ namespace GASS
 
 	void RakNetNetworkSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,ScenarioAboutToLoadNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,SceneAboutToLoadNotifyMessage,0));
 		//		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnClientEnter,ClientEnterVehicleMessage,0));
 	}
 
-	void RakNetNetworkSystem::OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message)
+	void RakNetNetworkSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		m_Scenario = message->GetScenario();
-		message->GetScenario()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
-		message->GetScenario()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
+		m_Scene = message->GetScene();
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
 	}
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayMessagePtr message)
@@ -213,7 +213,7 @@ namespace GASS
 			m_RakPeer->Shutdown(100, 0);
 		if(m_Active)
 		{
-			//GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage));
+			//GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage));
 		}
 		m_Active=false;
 	}
@@ -261,8 +261,8 @@ namespace GASS
 
 		//Register update fucntion
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		//Catch scenario load messages
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnScenarioAboutToLoad,ScenarioAboutToLoadNotifyMessage,0));
+		//Catch scene load messages
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
 		//m_Logger.LogHeader();
@@ -435,7 +435,7 @@ namespace GASS
 				GetSimSystemManager()->PostMessage(message);
 
 				//Send client config
-				if(m_ScenarioIsRunning && m_AcceptLateJoin)
+				if(m_SceneIsRunning && m_AcceptLateJoin)
 				{
 					RakNet::BitStream out;
 					out.Reset();
@@ -499,17 +499,17 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message)
+	void RakNetNetworkSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		m_ServerData->MapName =	message->GetScenario()->GetPath();
-		//only keep scenario foldern name, scenario path is added in client
+		m_ServerData->MapName =	message->GetScene()->GetPath();
+		//only keep scene foldern name, scene path is added in client
 		m_ServerData->MapName = Misc::GetFilename(m_ServerData->MapName);
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
 
-		m_ScenarioIsRunning = true;
+		m_SceneIsRunning = true;
 		if(m_Active && m_IsServer)
 		{
-			//std::cout << "scenario about to load" << std::endl;
+			//std::cout << "scene about to load" << std::endl;
 			RakNet::BitStream out;
 			out.Reset();
 			out.Write((unsigned char)ID_START_SCENARIO);
@@ -522,7 +522,7 @@ namespace GASS
 					break;
 				m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,sa,false);
 
-				std::cout << "Send scenario data" << std::endl;
+				std::cout << "Send scene data" << std::endl;
 			}
 		}
 	}
@@ -569,7 +569,7 @@ namespace GASS
 				
 				std::cout << "ID_START_SCENARIO" << std::endl;
 
-				//load scenario
+				//load scene
 
 				//wait for local player?
 
@@ -608,10 +608,10 @@ namespace GASS
 				bs.Read(set);
 				MessagePtr message(new TimeOfDayMessage(time,set,rise,speed));
 				
-				ScenarioPtr scenario = GetScenario();
-				if(scenario)
+				ScenePtr scene = GetScene();
+				if(scene)
 				{
-					scenario->PostMessage(message);
+					scene->PostMessage(message);
 				}
 			}
 			else if (p->data[0]==ID_WEATHER)
@@ -624,10 +624,10 @@ namespace GASS
 				bs.Read(cloud_factor);
 				MessagePtr message(new WeatherMessage(fog_dist,fog_density,cloud_factor));
 				
-				ScenarioPtr scenario = GetScenario();
-				if(scenario)
+				ScenePtr scene = GetScene();
+				if(scene)
 				{
-					scenario->PostMessage(message);
+					scene->PostMessage(message);
 				}
 			}
 			else if(p->data[0]==ID_RPC_REMOTE_ERROR)

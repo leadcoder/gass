@@ -25,9 +25,9 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -67,7 +67,7 @@ namespace GASS
 
 	void LODComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenario()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		//get active camera
 		
 		SceneObjectPtr camera = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstChildByName("FreeCamera",false);
@@ -85,7 +85,7 @@ namespace GASS
 
 	void LODComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScenario()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetSceneObjectManager()->GetScene()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage));
 
 		SceneObjectPtr cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam)

@@ -33,9 +33,9 @@
 
 //GASS includes
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
@@ -106,7 +106,7 @@ namespace GASS
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
 		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
-		ScenarioPtr GetScenario() {return ScenarioPtr(m_Scenario);}
+		ScenePtr GetScene() {return ScenePtr(m_Scene);}
 		RakNet::AutoRPC* GetRPC() {return  &m_AutoRPC;}
 
 		// get time to step back when values need to be interpolated
@@ -124,7 +124,7 @@ namespace GASS
 		void OnStartClient(StartClientMessagePtr message);
 		void OnConnectToServer(ConnectToServerMessagePtr message);
 		void OnPingRequest(PingRequestMessagePtr message);
-		void OnScenarioAboutToLoad(ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message);
 		void OnStopServer(StopServerMessagePtr message);
 		void OnStopClient(StopClientMessagePtr message);
 		void OnTimeOfDay(TimeOfDayMessagePtr message);
@@ -144,7 +144,7 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
-		void OnSceneLoaded(ScenarioAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message);
 		ADD_ATTRIBUTE(double,SleepTime);
 
 		
@@ -166,9 +166,9 @@ namespace GASS
 		//if true, players will be be created on server but the client is master
 		bool m_RemoteCreatePlayers;
 		bool m_AcceptLateJoin;
-		bool m_ScenarioIsRunning;
+		bool m_SceneIsRunning;
 		ClientDataMap m_ClientMap;
-		ScenarioWeakPtr m_Scenario;
+		SceneWeakPtr m_Scene;
 
 		RakNet::AutoRPC m_AutoRPC;
 		double m_InterpolationLag;

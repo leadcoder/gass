@@ -37,7 +37,7 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
-		The Scene object manager is owned by a scenario 
+		The Scene object manager is owned by a scene 
 		and could be seen as a decomposition (or helper class)
 		of the Scene class.
 		In future this class may be merged into the
@@ -47,7 +47,7 @@ namespace GASS
 	{
 		friend class Scene;
 	public:
-		SceneObjectManager(ScenePtr scenario);
+		SceneObjectManager(ScenePtr scene);
 		virtual ~SceneObjectManager();
 
 		void LoadXML(const std::string &filename);

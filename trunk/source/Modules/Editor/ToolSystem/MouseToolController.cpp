@@ -7,10 +7,10 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
@@ -19,13 +19,13 @@
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 
 
 namespace GASS
 {
-	MouseToolController::MouseToolController(bool scenario_objects_selectable): m_ScenarioObjectsSelectable(scenario_objects_selectable),
+	MouseToolController::MouseToolController(bool scene_objects_selectable): m_SceneObjectsSelectable(scene_objects_selectable),
 		m_ActiveTool(NULL),
 		m_Active(false),
 		m_ColMeshHandle(0),
@@ -69,9 +69,9 @@ namespace GASS
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find EditorInputSettings in ControlSettingsManager","MouseToolController::Init()");
 
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnScenarioLoaded,ScenarioLoadedNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnNewScenario,ScenarioAboutToLoadNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnUnloadScenario,ScenarioUnloadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSceneLoaded,SceneLoadedNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnNewScene,SceneAboutToLoadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnUnloadScene,SceneUnloadNotifyMessage,0));
 	}
 
 
@@ -84,40 +84,40 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::OnScenarioLoaded(ScenarioLoadedNotifyMessagePtr message)
+	void MouseToolController::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
-		ScenarioPtr scenario = message->GetScenario();
-		IComponentContainer::ComponentContainerIterator iter = scenario->GetObjectManager()->GetSceneRoot()->GetChildren();
+		ScenePtr scene = message->GetScene();
+		IComponentContainer::ComponentContainerIterator iter = scene->GetObjectManager()->GetSceneRoot()->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			//Lock recursive?
 			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
 			//EditorManager::GetPtr()->GetMessageManager()->SendImmediate(MessagePtr(new ObjectLockMessage(obj,true)));
-			if(!m_ScenarioObjectsSelectable)
+			if(!m_SceneObjectsSelectable)
 				m_StaticObjects.insert(obj);
 		}
-		m_Scenario = scenario;
+		m_Scene = scene;
 		//load selection object
-		GASS::SceneObjectPtr scene_object = scenario->GetObjectManager()->LoadFromTemplate("SelectionObject");
+		GASS::SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("SelectionObject");
 	}
 
-	void MouseToolController::OnNewScenario(GASS::ScenarioAboutToLoadNotifyMessagePtr message)
+	void MouseToolController::OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
 	{
-		GASS::ScenarioPtr scenario = message->GetScenario();
-		scenario->RegisterForMessage(REG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage,0));
+		GASS::ScenePtr scene = message->GetScene();
+		scene->RegisterForMessage(REG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage,0));
 
 		m_ColMeshHandle = 0;
 		m_ColGizmoHandle = 0;
 		
 	}
 
-	void MouseToolController::OnUnloadScenario(GASS::ScenarioUnloadNotifyMessagePtr message)
+	void MouseToolController::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
 	{
 		m_LockedObjects.clear();
 		m_StaticObjects.clear();
 		m_InvisibleObjects.clear();
-		ScenarioPtr scenario = message->GetScenario();
-		scenario->UnregisterForMessage(UNREG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage));
+		ScenePtr scene = message->GetScene();
+		scene->UnregisterForMessage(UNREG_TMESS(MouseToolController::OnChangeCamera,ChangeCameraMessage));
 
 		m_ColMeshHandle = 0;
 		m_ColGizmoHandle = 0;
@@ -393,7 +393,7 @@ namespace GASS
 		CameraComponentPtr cam = GetActiveCamera();
 		if(cam_obj && cam)
 		{
-			ScenarioPtr scenario = cam_obj->GetSceneObjectManager()->GetScenario();
+			ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(norm_x,norm_y,ray_start,ray_direction);
@@ -406,7 +406,7 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_direction;
 			request.Type = COL_LINE;
-			request.Scenario = scenario;
+			request.Scene = scene;
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 2;
 
@@ -428,7 +428,7 @@ namespace GASS
 		if(cam && bsc)
 		{
 			
-			//ScenarioPtr scenario = cam_obj->GetSceneObjectManager()->GetScenario();
+			//ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
@@ -442,7 +442,7 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_direction;
 			request.Type = COL_LINE;
-			request.Scenario = bsc->GetSceneObject()->GetSceneObjectManager()->GetScenario();
+			request.Scene = bsc->GetSceneObject()->GetSceneObjectManager()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = col_bits;
 			col_sys->Force(request,result);
@@ -510,7 +510,7 @@ namespace GASS
 		CameraComponentPtr cam = GetActiveCamera();
 		if(cam_obj && cam)
 		{
-			ScenarioPtr scenario = cam_obj->GetSceneObjectManager()->GetScenario();
+			ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(norm_x,norm_y,ray_start,ray_direction);
@@ -526,7 +526,7 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_direction;
 			request.Type = COL_LINE;
-			request.Scenario = scenario;
+			request.Scene = scene;
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 2;
 			GASS::CollisionResult result;
@@ -697,9 +697,9 @@ namespace GASS
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
 		SceneObjectPtr pointer(m_PointerObject,boost::detail::sp_nothrow_tag());
-		if(!pointer &&  GetScenario())
+		if(!pointer &&  GetScene())
 		{
-			GASS::SceneObjectPtr scene_object = GetScenario()->GetObjectManager()->LoadFromTemplate("PointerObject");
+			GASS::SceneObjectPtr scene_object = GetScene()->GetObjectManager()->LoadFromTemplate("PointerObject");
 			m_PointerObject = scene_object;
 			pointer = scene_object;
 

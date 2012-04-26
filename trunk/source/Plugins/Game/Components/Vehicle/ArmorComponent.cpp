@@ -25,10 +25,10 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 
@@ -130,7 +130,7 @@ namespace GASS
 			Quaternion rot = Quaternion::IDENTITY;
 			Vec3 pos = location->GetWorldPosition();
 			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_DamageEffect1,pos,rot,vel));
-			GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(spawn_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScene()->PostMessage(spawn_msg);
 		}
 	}
 

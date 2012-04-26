@@ -192,7 +192,7 @@ namespace GASS
 		osg::Vec3d pos = OSGConvert::Get().ToOSG(lc->GetWorldPosition());
 		osg::Quat rot = OSGConvert::Get().ToOSG(lc->GetWorldRotation());
 
-		/*Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->GetSceneUp();
+		/*Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->GetSceneUp();
 		if(up.z ==1)
 		{
 			osg::Quat q = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
@@ -300,7 +300,7 @@ namespace GASS
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
-		//GetSceneObject()->GetSceneObjectManager()->GetScenarioScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		//GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 

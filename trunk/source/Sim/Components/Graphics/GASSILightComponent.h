@@ -40,7 +40,7 @@ namespace GASS
 		instead be done through messages.
 
 		At present this interface is only used for searching for all objects that 
-		has light components in a scenario scene. 
+		has light components in a scene. 
 	*/
 	class GASSExport ILightComponent
 	{

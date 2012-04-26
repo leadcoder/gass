@@ -31,8 +31,8 @@
 #include "TreeLoader3D.h"
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 
 
 
@@ -81,8 +81,8 @@ namespace GASS
 	void DensityMapComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		std::string scenario_path = scenario->GetPath();
+		ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		std::string scene_path = scene->GetPath();
 
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -91,7 +91,7 @@ namespace GASS
 		}
 		else
 			denmapname = "mesh_density_map_" + GetName() + ".tga";
-		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		const std::string fp_denmap = scene_path + "/" + denmapname;
 		std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
 		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
 		try
@@ -305,8 +305,8 @@ namespace GASS
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 
-		ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		std::string scenario_path = scenario->GetPath();
+		ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		std::string scene_path = scene->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
 		{
@@ -314,7 +314,7 @@ namespace GASS
 		}
 		else
 			denmapname = "mesh_density_map_" + GetName() + ".tga";
-		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		const std::string fp_denmap = scene_path + "/" + denmapname;
 		m_DensityImage.save(fp_denmap);
 	}
 }

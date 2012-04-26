@@ -4,12 +4,12 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 
 
 namespace GASS
@@ -34,7 +34,7 @@ namespace GASS
 			LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
 			if(comp)
 			{
-				ScenarioPtr scenario = selected->GetSceneObjectManager()->GetScenario();
+				ScenePtr scene = selected->GetSceneObjectManager()->GetScene();
 				Vec3 up(0,1,0);
 				Vec3 new_position = comp->GetPosition();
 
@@ -46,7 +46,7 @@ namespace GASS
 				MessagePtr pos_msg(new GASS::PositionMessage(new_position,from_id));
 				selected->SendImmediate(pos_msg);
 
-				GASS::MessagePtr change_msg(new ScenarioChangedMessage(from_id));
+				GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
 				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
 			}
 		}

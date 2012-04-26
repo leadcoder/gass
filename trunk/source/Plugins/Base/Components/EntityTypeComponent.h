@@ -20,7 +20,7 @@
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Plugins/Base/CoreMessages.h"
 
 

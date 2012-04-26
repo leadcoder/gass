@@ -52,9 +52,9 @@ namespace GASS
 		and initialized. The user is responsible to call the update function of this 
 		class each frame, this will ensure that all system get updated through the RTC scheduling
 		class. 
-		This class has no knowledge of scenarios and/or scenario scenes, this could be changed in the future
-		but for now scenario information is capsulated in the Scenario class. 
-
+		NOTE: This class has no knowledge of scenes, 
+		all scene information is capsulated by the Scene class and should 
+		be created by the application after SimEngine has been intialized. 
 	*/
 
 	class GASSExport SimEngine  : public Singleton<SimEngine>

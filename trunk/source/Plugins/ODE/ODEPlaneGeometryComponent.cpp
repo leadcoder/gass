@@ -32,10 +32,10 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
@@ -69,7 +69,7 @@ namespace GASS
 
 	dGeomID ODEPlaneGeometryComponent::CreateODEGeom()
 	{
-		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScenario()->GetSceneUp();
+		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScene()->GetSceneUp();
 		return dCreatePlane(GetSpace(), m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 	}
 

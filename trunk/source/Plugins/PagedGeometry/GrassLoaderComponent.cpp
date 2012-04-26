@@ -30,8 +30,8 @@
 #include "BatchPage.h"
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -113,7 +113,7 @@ namespace GASS
 		SaveDensityMap();
 		//reload
 		const std::string denmapname = "density_map_" + GetName() + ".tga";
-		//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScenario").first;
+		//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
 		m_DensityTexture->loadImage(m_DensityImage);
 		//reload all terrain grass
 		IComponentContainer::ComponentVector components;
@@ -249,11 +249,11 @@ namespace GASS
 			//create from in run time?
 			//try to load 
 
-			ScenarioPtr  scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-			std::string scenario_path = scenario->GetPath();
+			ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			std::string scene_path = scene->GetPath();
 
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
-			const std::string fp_denmap = scenario_path + "/" + denmapname;
+			const std::string fp_denmap = scene_path + "/" + denmapname;
 
 			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
 			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
@@ -271,7 +271,7 @@ namespace GASS
 				m_DensityImage.save(fp_denmap);
 			}
 			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScenario").first;
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
 		}
 	}
 
@@ -283,8 +283,8 @@ namespace GASS
 
 	void GrassLoaderComponent::SaveDensityMap()
 	{
-		ScenarioPtr scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
-		std::string scenario_path = scenario->GetPath();
+		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		std::string scene_path = scene->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
 		{
@@ -292,7 +292,7 @@ namespace GASS
 		}
 		else
 			denmapname = "density_map_" + GetName() + ".tga";
-		const std::string fp_denmap = scenario_path + "/" + denmapname;
+		const std::string fp_denmap = scene_path + "/" + denmapname;
 		m_DensityImage.save(fp_denmap);
 	}
 
@@ -304,7 +304,7 @@ namespace GASS
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scenario = GetSceneObject()->GetSceneObjectManager()->GetScenario();
+			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 			GASS::CollisionResult result;

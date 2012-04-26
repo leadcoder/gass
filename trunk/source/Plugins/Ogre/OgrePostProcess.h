@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
-#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"

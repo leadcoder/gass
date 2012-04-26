@@ -74,26 +74,26 @@ namespace GASS
 	void OSGGraphicsSceneManager::OnCreate()
 	{
 		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
-		ScenarioPtr scenario = GetScenario();
-		if(scenario)
+		ScenePtr scene = GetScene();
+		if(scene)
 		{
-			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scenario::GFX_COMPONENT_LOAD_PRIORITY));
-			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,Scenario::GFX_SYSTEM_LOAD_PRIORITY));
-			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-			scenario->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scene::GFX_COMPONENT_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 		}
 		else
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scenario not present", "OSGGraphicsSceneManager::OnCreate");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnCreate");
 		}
 	}
 
 
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
-		ScenarioPtr scenario = GetScenario();
-		assert(scenario);
-		//if(scenario->GetSceneUp().z > 0)
+		ScenePtr scene = GetScene();
+		assert(scene);
+		//if(scene->GetSceneUp().z > 0)
 		//OSGConvert::Get().m_FlipYZ = false;
 		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
 
@@ -168,7 +168,7 @@ namespace GASS
 		}*/
 
 		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
-		GetScenario()->PostMessage(cam_message);
+		GetScene()->PostMessage(cam_message);
 	}
 
 

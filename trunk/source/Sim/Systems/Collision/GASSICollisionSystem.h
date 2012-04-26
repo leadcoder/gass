@@ -27,10 +27,10 @@
 
 namespace GASS
 {
-	class Scenario;
+	class Scene;
 	class SceneObject;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
 	enum CollisionType
 	{
@@ -44,7 +44,7 @@ namespace GASS
 		Sphere ColSphere;
 		Vec3 LineStart;
 		Vec3 LineEnd;
-		ScenarioWeakPtr Scenario;
+		SceneWeakPtr Scene;
 		bool ReturnFirstCollisionPoint;
 		unsigned long CollisionBits;
 	};

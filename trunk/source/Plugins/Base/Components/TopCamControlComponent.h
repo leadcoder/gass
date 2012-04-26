@@ -25,7 +25,7 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
@@ -33,7 +33,7 @@ namespace GASS
 	class ControlSetting;
 	class ILocationComponent;
 	class ICameraComponent;
-	class Scenario;
+	class Scene;
 
 		/**
 			Basic motion modell that can be used to move a camera. 

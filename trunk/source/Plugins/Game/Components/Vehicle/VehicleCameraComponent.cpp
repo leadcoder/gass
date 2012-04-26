@@ -25,9 +25,9 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 
@@ -39,7 +39,7 @@
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
-#include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Plugins/Game/Components/Input/InputHandlerComponent.h"
 
 
@@ -84,7 +84,7 @@ namespace GASS
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),m_PreferredViewport));
-		//GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
+		//GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)
@@ -93,7 +93,7 @@ namespace GASS
 		{
 			SceneObjectPtr obj;
 			MessagePtr cam_msg(new ChangeCameraMessage(obj,m_PreferredViewport));
-			GetSceneObject()->GetSceneObjectManager()->GetScenario()->SendImmediate(cam_msg);
+			GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
 		}*/
 	}
 
@@ -108,7 +108,7 @@ namespace GASS
 			gfx_sys->CreateViewport(m_PreferredViewport, "MainWindow", 0.2, 0.2, 0.3, 0.5);
 		}*/
 
-		//message->GetSimSceneManager()->GetScenario()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(VehicleCameraComponent::OnEnter,AnyMessage));
+		//message->GetSimSceneManager()->GetScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(VehicleCameraComponent::OnEnter,AnyMessage));
 		//register on enter message
 	}
 

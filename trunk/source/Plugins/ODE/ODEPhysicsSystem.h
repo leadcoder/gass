@@ -23,7 +23,7 @@
 #include <ode/ode.h>
 #include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Systems/GASSSimSystem.h"
 
 namespace GASS
