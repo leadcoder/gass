@@ -79,6 +79,7 @@
 #include "Sim/Scenario/Scene/GASSSceneObject.h"
 #include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
 
+
 #include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
 #include "Sim/Scenario/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
@@ -92,6 +93,8 @@
 
 #include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
 #include "Sim/Scenario/Scene/Messages/GASSGraphicsScenarioSceneMessages.h"
+
+#include "Sim/Utils/GASSEnumBinder.h"
 
 
 

@@ -322,13 +322,15 @@ namespace GASS
 			MBID_RIGHT,
 			MBID_MIDDLE,
 		};
-		MouseButtonMessage(MouseButtonId button, bool down, SenderID sender_id = -1, double delay= 0) : 
-			BaseMessage(sender_id , delay), m_ID(button), m_Down(down){}
+		MouseButtonMessage(MouseButtonId button, bool down, const Vec2 &pos,SenderID sender_id = -1, double delay= 0) : 
+			BaseMessage(sender_id , delay), m_ID(button), m_Pos(pos),  m_Down(down){}
 			MouseButtonId GetButton() const {return m_ID;}
 			int IsDown() const {return m_Down;}
+			Vec2 GetScreenPosition() const {return m_Pos;}
 	private:
 		MouseButtonId m_ID;
 		bool m_Down;
+		Vec2 m_Pos;
 	};
 	typedef boost::shared_ptr<MouseButtonMessage> MouseButtonMessagePtr;
 

@@ -17,8 +17,10 @@
 #include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
 #include "Sim/Scenario/Scene/Messages/GASSGraphicsSceneObjectMessages.h"
+
 
 
 namespace GASS
@@ -93,13 +95,8 @@ namespace GASS
 			//EditorManager::GetPtr()->GetMessageManager()->SendImmediate(MessagePtr(new ObjectLockMessage(obj,true)));
 			if(!m_ScenarioObjectsSelectable)
 				m_StaticObjects.insert(obj);
-
-			
-	
 		}
 		m_Scenario = scenario;
-
-
 		//load selection object
 		GASS::SceneObjectPtr scene_object = scenario->GetObjectManager()->LoadFromTemplate("SelectionObject");
 	}
@@ -135,12 +132,14 @@ namespace GASS
 
 	void MouseToolController::OnCursorMoved(CursorMoved2DMessagePtr message)
 	{
-		m_CursorInfo.m_ScreenPos = message->GetScreenPosition();
+		//m_CursorInfo.m_ScreenPos = message->GetScreenPosition();
+		Vec2 c_pos = message->GetScreenPosition();
+		CursorInfo info = GetCursorInfo(c_pos,m_RayPickDistance);
+		MoveTo(info);
 
 		//if(CheckScenePosition())
 		//if(ForceScenePosition())
 		//	MoveTo(m_CursorInfo);
-
 	}
 
 	void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
@@ -158,10 +157,11 @@ namespace GASS
 			bool down = message->IsDown();
 			if(button == MouseButtonMessage::MBID_LEFT)
 			{
+				CursorInfo info = GetCursorInfo(message->GetScreenPosition(),m_RayPickDistance);
 				if(down)
-					MouseDown(m_CursorInfo);
+					MouseDown(info);
 				else 
-					MouseUp(m_CursorInfo);
+					MouseUp(info);
 			}
 		}
 	}
@@ -173,15 +173,15 @@ namespace GASS
 			std::string name = message->GetController();
 			float value = message->GetValue();
 			
-			if(name == "MouseX")
+			/*if(name == "MouseX")
 			{
 				m_CursorInfo.m_Delta.x = value;
 			}
 			else if(name == "MouseY")
 			{
 				m_CursorInfo.m_Delta.y = value;
-			}
-			else if(name == "ChangeTool")
+			}*/
+			if(name == "ChangeTool")
 			{
 				//std::cout << value << "\n";
 				if(value > 0.5) 
@@ -292,19 +292,19 @@ namespace GASS
 	void MouseToolController::MoveTo(const CursorInfo &info)
 	{
 		if(m_ActiveTool)
-			m_ActiveTool->MoveTo(m_CursorInfo);
+			m_ActiveTool->MoveTo(info);
 	}
 
 	void MouseToolController::MouseDown(const CursorInfo &info)
 	{
 		if(m_ActiveTool)
-			m_ActiveTool->MouseDown(m_CursorInfo);
+			m_ActiveTool->MouseDown(info);
 	}
 
 	void MouseToolController::MouseUp(const CursorInfo &info)
 	{
 		if(m_ActiveTool)
-			m_ActiveTool->MouseUp(m_CursorInfo);
+			m_ActiveTool->MouseUp(info);
 	}
 
 	bool MouseToolController::IsObjectLocked(SceneObjectWeakPtr obj)
@@ -385,7 +385,7 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::RequestScenePosition()
+	/*void MouseToolController::RequestScenePosition()
 	{
 		float norm_x = m_CursorInfo.m_ScreenPos.x;
 		float norm_y = m_CursorInfo.m_ScreenPos.y;
@@ -418,9 +418,89 @@ namespace GASS
 			if(m_ColMeshHandle == 0)
 				m_ColMeshHandle = col_sys->Request(request);
 		}
+	}*/
+
+	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits)
+	{
+		GASS::CollisionResult result;
+		result.Coll = false;
+		GASS::BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<GASS::BaseSceneComponent>(cam);
+		if(cam && bsc)
+		{
+			
+			//ScenarioPtr scenario = cam_obj->GetSceneObjectManager()->GetScenario();
+			Vec3 ray_start;
+			Vec3 ray_direction;
+			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
+			ray_direction = ray_direction*raycast_distance;
+			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+
+			if(!col_sys)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get CollisionSystem", "MouseToolController::CameraRaycast");
+			
+			GASS::CollisionRequest request;
+			request.LineStart = ray_start;
+			request.LineEnd = ray_start + ray_direction;
+			request.Type = COL_LINE;
+			request.Scenario = bsc->GetSceneObject()->GetSceneObjectManager()->GetScenario();
+			request.ReturnFirstCollisionPoint = false;
+			request.CollisionBits = col_bits;
+			col_sys->Force(request,result);
+		}
+		return result;
 	}
 
-	bool MouseToolController::ForceScenePosition()
+	CursorInfo MouseToolController::GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance)
+	{
+		CursorInfo info;
+		info.m_ScreenPos = cursor_pos;
+		CameraComponentPtr cam = GetActiveCamera();
+		
+		//save ray direction
+		if(cam)
+			cam->GetCameraToViewportRay(cursor_pos.x, cursor_pos.y,info.m_RayStart,info.m_RayDir);
+		
+		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, 2);
+
+		
+		int from_id = int(this);
+
+		if(gizmo_result.Coll)
+		{
+			SceneObjectPtr col_obj(gizmo_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+			if(col_obj)
+			{
+				//MessagePtr cursor_msg(new CursorMoved3DMessage(Vec2(cursor_pos_x,cursor_pos_y),gizmo_result.CollPosition, col_obj,from_id));
+				//EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+				info.m_3DPos = gizmo_result.CollPosition;
+				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
+				//std::cout << result.CollPosition << std::endl;
+			}
+		}
+		else
+		{
+			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, 1);
+			if(mesh_result.Coll)
+			{
+				SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+				if(col_obj)
+				{
+					//MessagePtr cursor_msg(new CursorMoved3DMessage(Vec2(viewport_pos_x,viewport_pos_y),mesh_result.CollPosition, col_obj,from_id));
+					//EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+					info.m_3DPos = mesh_result.CollPosition;
+					info.m_ObjectUnderCursor = mesh_result.CollSceneObject;
+					//std::cout << result.CollPosition << std::endl;
+					//if(!m_EnableGizmo)
+					//	MoveTo(m_CursorInfo);
+				}
+			}
+		}
+		return info;
+		//if(m_EnableGizmo)
+		//	MoveTo(m_CursorInfo);
+	}
+
+	/*bool MouseToolController::ForceScenePosition()
 	{
 		float norm_x = m_CursorInfo.m_ScreenPos.x;
 		float norm_y = m_CursorInfo.m_ScreenPos.y;
@@ -449,22 +529,12 @@ namespace GASS
 			request.Scenario = scenario;
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 2;
-
 			GASS::CollisionResult result;
 			result.Coll = false;
 			if(col_sys)
 				col_sys->Force(request,result);
 
-			/*if(result.Coll)
-			{
-			SceneObjectPtr hit_obj(result.CollSceneObject);
-			if(hit_obj)
-			{
-			GizmoComponentPtr gc = hit_obj->GetFirstComponentByClass<GizmoComponent>();
-			if(gc)
-			//					gc->HighLight();
-			}
-			}*/
+		
 
 			if(!result.Coll)
 			{
@@ -487,17 +557,15 @@ namespace GASS
 
 				new_pos= true;
 
-				/*SceneObjectPtr pointer = GetPointerObject();
-				if(pointer)
-				pointer->PostMessage(MessagePtr(new WorldPositionMessage(result.CollPosition)));*/
+		
 			}
 
 		}
 		return new_pos;
-	}
+	}*/
 
 
-	bool MouseToolController::CheckScenePosition()
+	/*bool MouseToolController::CheckScenePosition()
 	{
 		GASS::CollisionResult gizmo_result;
 		GASS::CollisionResult mesh_result;
@@ -561,7 +629,7 @@ namespace GASS
 		//	if(obj_under_cursor)
 		//		std::cout << obj_under_cursor->GetName() << std::endl;
 		return gizmo_result.Coll || mesh_result.Coll;
-	}
+	}*/
 
 
 	void MouseToolController::SetGridSpacing(Float value)
@@ -572,7 +640,7 @@ namespace GASS
 
 	void MouseToolController::SetGridSize(Float value)
 	{
-		m_GridSize= value;
+		m_GridSize = value;
 		EditorManager::Get().GetMessageManager()->PostMessage(MessagePtr(new GridMessage(m_GridSize,m_GridSpacing)));
 	}
 
@@ -677,18 +745,15 @@ namespace GASS
 	void MouseToolController::Update(double delta)
 	{
 		//fade mouse delta
-		m_CursorInfo.m_Delta.x *= 0.9;
-		m_CursorInfo.m_Delta.y *= 0.9;
+		//m_CursorInfo.m_Delta.x *= 0.9;
+		//m_CursorInfo.m_Delta.y *= 0.9;
 
-		CheckScenePosition();
-		RequestScenePosition();
-
-
-
+		//CheckScenePosition();
+		//RequestScenePosition();
+		//GetCursorInfo();
 		m_Delta = delta;
 		//debug message
-
-	/*	SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			std::stringstream ss;

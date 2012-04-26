@@ -39,8 +39,15 @@ namespace GASS
 		TODO: Move this to GASSCore
 	*/
 
+	class IEnumBinder
+	{
+	public:
+		virtual ~IEnumBinder(){}
+		virtual std::vector<std::string> GetAllOptions() = 0;
+	};
+
 	template< class ENUM,class CLASS>
-	class EnumBinder
+	class EnumBinder : public IEnumBinder
 	{
 	public:
 		EnumBinder(ENUM type) : m_Type(type)
@@ -82,7 +89,7 @@ namespace GASS
 			return m_Types[m_Type];	
 		}
 
-		static std::vector<std::string> GetAllNames() 
+		virtual std::vector<std::string> GetAllOptions() 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_Names.begin();

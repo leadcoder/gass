@@ -38,6 +38,8 @@ namespace GASS
 		void MoveTo(const CursorInfo &info);
 		void MouseDown(const CursorInfo &info);
 		void MouseUp(const CursorInfo &info);
+
+
 		bool IsObjectLocked(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectStatic(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectVisible(SceneObjectWeakPtr obj);
@@ -73,9 +75,13 @@ namespace GASS
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		void AddStaticObject(GASS::SceneObjectWeakPtr obj) {m_StaticObjects.insert(obj);}
 	private:
-		void RequestScenePosition();
-		bool CheckScenePosition();
-		bool ForceScenePosition();
+
+		CursorInfo GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
+		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits);
+
+		//void RequestScenePosition();
+		//bool CheckScenePosition();
+		//bool ForceScenePosition();
 		void OnFocusChanged(WindowFocusChangedMessagePtr message);
 		void OnCursorMoved(CursorMoved2DMessagePtr message);
 		void OnToolChanged(ToolChangedMessagePtr message);
@@ -98,7 +104,7 @@ namespace GASS
 		//GASS::SceneObjectPtr GetActiveCameraObject() const {return GASS::SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
 		std::vector<IMouseTool*> m_Tools;
 		IMouseTool* m_ActiveTool;
-		CursorInfo m_CursorInfo;
+		//CursorInfo m_CursorInfo;
 		GASS::ControlSetting* m_EditorControlSetting;
 		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;

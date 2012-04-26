@@ -39,6 +39,12 @@ namespace GASS
 		m_MouseTools->Init();
 	}
 
+	void EditorManager::Update(double delta_time)
+	{
+		EditorManager::Get().GetMessageManager()->Update(delta_time);
+		EditorManager::Get().GetMouseToolController()->Update(delta_time);
+	}
+
 	MessageManager* EditorManager::GetMessageManager(void)
 	{
 		return m_MessageManager;

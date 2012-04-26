@@ -33,16 +33,26 @@ class TiXmlDocument;
 
 namespace GASS
 {
+	enum ControlType
+	{
+		CT_EDIT,
+		CT_FILE_DIALOG,
+		CT_COLOR_DIALOG,
+	};
+
 	class EditorModuleExport PropertySettings
 	{
 	public:
-		PropertySettings() : Visible(true) ,Editable(true){}
+		PropertySettings() : Visible(true) ,Editable(true), GUIControlType(CT_EDIT){}
 		virtual ~PropertySettings() {}
 		bool Visible;
 		bool Editable;
 		std::string Documentation;
 		std::string Name;
 		std::string DisplayName;
+		std::string RestrictionProxyProperty;
+		ControlType  GUIControlType;
+		std::vector<std::string> Restrictions;
 	};
 
 	// Objects settings loaded from xsd file

@@ -127,6 +127,35 @@ namespace GASS
 			{
 				ps.Visible = LoadBoolAttribute(gui_elem,"visible");
 				ps.Editable = LoadBoolAttribute(gui_elem,"editable");
+				
+				if(gui_elem->Attribute("controlType"))
+				{
+					const std::string ct = gui_elem->Attribute("controlType");
+					if(ct == "FILE_DIALOG")
+					{
+						ps.GUIControlType = CT_FILE_DIALOG;
+					}
+				}
+
+				if(gui_elem->Attribute("RestrictionProxyProperty"))
+					ps.RestrictionProxyProperty = gui_elem->Attribute("RestrictionProxyProperty");
+
+				TiXmlElement *restriction_elem =  gui_elem->FirstChildElement("xs:restriction");
+				if(restriction_elem)
+				{
+					
+					TiXmlElement *enumeration_elem =  restriction_elem->FirstChildElement("xs:enumeration");
+					while(enumeration_elem)
+					{
+						if(enumeration_elem->Attribute("value"))
+						{
+							const std::string value = enumeration_elem->Attribute("value");
+							ps.Restrictions.push_back(value);
+						}
+
+						enumeration_elem = enumeration_elem->NextSiblingElement("xs:enumeration");
+					}
+				}
 			}
 			TiXmlElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
 			if(doc_elem)
@@ -134,6 +163,20 @@ namespace GASS
 				ps.Documentation = doc_elem->GetText();
 			}
 		}
+		/*TiXmlElement *complex_elem =  elem->FirstChildElement("xs:complexType");
+		if(complex_elem)
+		{
+			TiXmlElement * attrib_elem=  complex_elem->FirstChildElement("xs:attribute");
+			if(attrib_elem)
+			{
+				if(attrib_elem->Attribute("type"))
+				{
+					std::string attrib_type = attrib_elem->Attribute("type");
+					//Check if attrib type exist
+					GetDataTypeRestrictions(attrib_type);
+				}
+			}
+		}*/
 		return ps;
 	}
 

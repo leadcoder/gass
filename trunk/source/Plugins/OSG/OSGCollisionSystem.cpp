@@ -263,8 +263,6 @@ namespace GASS
 		}
 
 		node->accept(intersectVisitor);
-
-
 		
 
 		if ( intersector->containsIntersections() )
