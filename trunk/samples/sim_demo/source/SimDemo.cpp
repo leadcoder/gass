@@ -39,10 +39,10 @@
 #include "Core/PluginSystem/PluginManager.h"
 
 #include "Sim/SimEngine.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/ScenarioScene.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
+#include "Sim/Scene/Scene.h"
+#include "Sim/Scene/Scene/SceneScene.h"
+#include "Sim/Scene/Scene/SceneObjectManager.h"
+#include "Sim/Scene/Scene/SceneObject.h"
 
 #include "Sim/Systems/Collision/ICollisionSystem.h"
 #include "Sim/Systems/SimSystemManager.h"
@@ -89,7 +89,7 @@ void CreateManualObject()
 	GASS::SimEngine::Get().GetSimObjectManager()->AddTemplate(container);
 }
 
-void TestCollision(GASS::ScenarioPtr scenario)
+void TestCollision(GASS::ScenePtr scenario)
 {
 	GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 
@@ -103,7 +103,7 @@ void TestCollision(GASS::ScenarioPtr scenario)
 	request.LineStart = GASS::Vec3(100.49,1000, 100.78);
 	request.LineEnd = GASS::Vec3(100.49,-1000, 100.78);
 //	request.Type = GASS::CollisionType::COL_LINE;
-	request.Scenario = scenario;
+	request.Scene = scenario;
 	request.ReturnFirstCollisionPoint = 0;
 
 	handle = col_sys->Request(request);
@@ -117,7 +117,7 @@ void TestCollision(GASS::ScenarioPtr scenario)
 	//col_sys
 }
 
-GASS::ScenarioPtr scenario(new GASS::Scenario());
+GASS::ScenePtr scenario(new GASS::Scene());
 
 
 #ifndef WIN32
@@ -203,8 +203,8 @@ int main(int argc, char* argv[])
 	int index = 1;
 	bool is_server = false;
 	//check if arguments are provided
-	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scenario ../data/scenarios/osg_demo_scenario
-	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scenario ../data/scenarios/ogre_demo_scenario
+	//Example:  --Plugins configurations/osg/plugins.xml --SystemConfiguration configurations/osg/systems.xml --Scene ../data/scenarios/osg_demo_scenario
+	//Example:  --Plugins configurations/ogre/plugins.xml --SystemConfiguration configurations/ogre/systems.xml --Scene ../data/scenarios/ogre_demo_scenario
 	while(index < argc)
 	{
 		char* arg = argv[index];
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
 		{
 			sys_conf_file = argv[index+1];
 		}
-		else if(_strcmpi(arg, "--Scenario") == 0)
+		else if(_strcmpi(arg, "--Scene") == 0)
 		{
 			scenario_path = argv[index+1];
 		}
@@ -248,11 +248,11 @@ int main(int argc, char* argv[])
 
 		for(int i = 0; i < 1; i++)
 		{
-			GASS::SceneObjectPtr scene_object = scenario->GetScenarioScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
+			GASS::SceneObjectPtr scene_object = scenario->GetSceneScenes().at(0)->GetObjectManager()->LoadFromTemplate("JimTank");
 			if(scene_object)
 			{
 
-				GASS::Vec3 pos = scenario->GetScenarioScenes().front()->GetStartPos();
+				GASS::Vec3 pos = scenario->GetSceneScenes().front()->GetStartPos();
 				pos.x = pos.x + i*7;
 				pos.z = pos.z - 2;
 				//pos.x = 0;
@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
 	{
 		GASS::MessageFuncPtr resp_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnServerResponse, &client, _1 ),&client));
 		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ServerResponseMessage),resp_callback,0);
-		GASS::MessageFuncPtr load_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnLoadScenario, &client, _1 ),&client));
+		GASS::MessageFuncPtr load_callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimClient::OnLoadScene, &client, _1 ),&client));
 		engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::StartSceanrioRequestMessage),load_callback,0);
 		engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2002,2001)));
 
@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
 			GASS::SceneObjectPtr scene_object = scenario->GetScene(0)->GetObjectManager()->LoadFromTemplate("ContainerTemplate");
 
 			int from_id = i*40 + j;
-			GASS::MessagePtr pos_msg(new GASS::Message(GASS::ScenarioScene::OBJECT_RM_POSITION,from_id));
+			GASS::MessagePtr pos_msg(new GASS::Message(GASS::SceneScene::OBJECT_RM_POSITION,from_id));
 			GASS::Vec3 pos(1705.18 + i*10 ,100.3, 2808+10*j);
 			pos_msg->SetData("Position",pos);
 			scene_object->GetMessageManager()->SendImmediate(pos_msg);
@@ -343,7 +343,7 @@ int main(int argc, char* argv[])
 		}*/
 
 	/*	delete scenario;
-		scenario = new GASS::Scenario();
+		scenario = new GASS::Scene();
 
 		//CreateManualObject();
 

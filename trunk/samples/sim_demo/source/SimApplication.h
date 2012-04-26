@@ -19,12 +19,12 @@ protected:
 	std::string m_SystemConfig;
 	std::string m_ControlSettings;
 	std::string m_Plugins;
-	std::string m_ScenarioName;
+	std::string m_SceneName;
 	std::string m_Instances;
 	std::vector<std::string> m_Templates;
 	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
-	GASS::ScenarioPtr m_Scenario;
+	GASS::ScenePtr m_Scene;
 	GASS::Timer* m_Timer;
 	double m_UpdateFreq;
 public:
@@ -36,7 +36,7 @@ public:
 	}
 	virtual ~SimApplication()
 	{
-		m_Scenario.reset();
+		m_Scene.reset();
 		delete m_Engine;
 	}
 
@@ -48,34 +48,34 @@ public:
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
 
-		GASS::ScenarioPtr scenario (new GASS::Scenario());
+		GASS::ScenePtr scenario (new GASS::Scene());
 		scenario->Create();
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
 
-		m_Scenario = scenario;
+		m_Scene = scenario;
 		//scenario->Create();
-		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scenario:" <<  m_ScenarioName;
+		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scene:" <<  m_SceneName;
 
-		m_Scenario->Load(m_ScenarioName);
+		m_Scene->Load(m_SceneName);
 
-		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scenario Loaded:" << m_ScenarioName;
+		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		//create free camera and set start pos
-		GASS::SceneObjectPtr free_obj = m_Scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scenario->GetStartPos()));
+		GASS::SceneObjectPtr free_obj = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
 			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
-			m_Scenario->PostMessage(camera_msg);
+			m_Scene->PostMessage(camera_msg);
 		}
 
 		for(int i = 0; i <  m_Objects.size();i++)
 		{
-			GASS::SceneObjectPtr object = m_Scenario->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
-			GASS::Vec3 pos = m_Scenario->GetStartPos();
+			GASS::SceneObjectPtr object = m_Scene->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+			GASS::Vec3 pos = m_Scene->GetStartPos();
 			pos.x += 10*i;
 
 			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
@@ -105,10 +105,10 @@ public:
 			m_SystemConfig = app_settings->Attribute("SystemConfig");
 			m_Plugins = app_settings->Attribute("Plugins");
 			m_ControlSettings = app_settings->Attribute("ControlSettings");
-			m_ScenarioName = app_settings->Attribute("Scenario");
+			m_SceneName = app_settings->Attribute("Scenario");
 
-			GASS::FilePath full_path(m_ScenarioName);
-			m_ScenarioName = full_path.GetPath();
+			GASS::FilePath full_path(m_SceneName);
+			m_SceneName = full_path.GetPath();
 
 			m_UpdateFreq = atoi(app_settings->Attribute("UpdateFrequency"));
 
@@ -154,7 +154,7 @@ public:
 		if(time - prev > update_time)
 		{
 			m_Engine->Update(update_time);//time - prev);
-			m_Scenario->OnUpdate(update_time);//time - prev);
+			m_Scene->OnUpdate(update_time);//time - prev);
 			prev = time;
 			Sleep(0);
 		}

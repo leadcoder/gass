@@ -21,21 +21,21 @@ public:
 		m_IsConnected = true;
 	}
 
-	void OnLoadScenario(GASS::MessagePtr message)
+	void OnLoadScene(GASS::MessagePtr message)
 	{
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
-		printf("Client got scenario request message:%s\n",mess->GetScenarioName().c_str());
-		//m_Scenario->Load("../../../common/data/scenarios/" + mess->GetScenarioName());
-		m_Scenario->Load(m_ScenarioName);
+		printf("Client got scenario request message:%s\n",mess->GetSceneName().c_str());
+		//m_Scene->Load("../../../common/data/scenarios/" + mess->GetSceneName());
+		m_Scene->Load(m_SceneName);
 		
 
-		GASS::SceneObjectPtr free_obj = m_Scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scenario->GetStartPos()));
+		GASS::SceneObjectPtr free_obj = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
 			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
-			m_Scenario->PostMessage(camera_msg);
+			m_Scene->PostMessage(camera_msg);
 		}
 	}
 
@@ -54,11 +54,11 @@ public:
 		}
 
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseMessage,0));
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScenario,GASS::StartSceanrioRequestMessage,0));
+		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequestMessage,0));
 		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2006,2005)));
 
-		GASS::ScenarioPtr scenario (new GASS::Scenario());
-		m_Scenario = scenario;
+		GASS::ScenePtr scenario (new GASS::Scene());
+		m_Scene = scenario;
 
 		printf("\n\nWaiting for server");
 		float update_time = 0;

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Scenario>
+<Properties> 
   <StartPosition value= "1720.49 21.8169 2875.78"/>
   <StartRotation value= "0 0 0"/>
-  <SceneManagers>
+</Properties>
+  <SceneManagerSettings>
     <OgreGraphicsSceneManager>
       <AmbientColor value= "0.5 0.5 0.5"/>
       <FogMode value = "Linear"/>
@@ -24,5 +26,5 @@
     <PhysicsSceneManager>
       <Gravity value= "-9.81"/>
     </PhysicsSceneManager>
-  </SceneManagers>
+  </SceneManagerSettings >
 </Scenario>
