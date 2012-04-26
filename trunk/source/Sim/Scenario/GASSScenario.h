@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/GASSCoreScenarioSceneMessages.h"
 #include "Core/Utils/GASSIterators.h"
 
 class TiXmlElement;

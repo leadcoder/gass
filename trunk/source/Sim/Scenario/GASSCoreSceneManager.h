@@ -17,35 +17,39 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Sim/Scenario/Scene/GASSSceneObjectTemplate.h"
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
 
-#include "Core/Common.h"
-#include "Core/Serialize/GASSSerialize.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
+#ifndef CORE_SCENE_MANAGER_H
+#define CORE_SCENE_MANAGER_H
+
+#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Scenario/GASSBaseSceneManager.h"
+#include "Sim/Scheduling/GASSTaskGroups.h"
 
 namespace GASS
 {
-	SceneObjectTemplate::SceneObjectTemplate()
-	{
-		
-	}
 
-	SceneObjectTemplate::~SceneObjectTemplate(void)
-	{
-	}
 
-	void SceneObjectTemplate::RegisterReflection()
+	/**
+		Scene manager that owns all sim components.  This scene manager can 
+		also be used by plugins that only provid some new sim components but dont want to create
+		a brand new scene manager.
+	*/
+	class GASSExport CoreSceneManager : public Reflection<CoreSceneManager, BaseSceneManager>
 	{
-		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
-	}
-
+	public:
+		CoreSceneManager();
+		virtual ~CoreSceneManager();
+		static void RegisterReflection();
+		virtual void OnCreate();
+	protected:
+		void OnLoad(MessagePtr message);
+		void OnLoadSceneObject(MessagePtr message);
+	private:
+		bool m_Init;
+	};
+	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 
+	
+	
 }
-
-
-
-
+#endif

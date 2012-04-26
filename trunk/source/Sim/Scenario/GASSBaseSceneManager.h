@@ -22,7 +22,7 @@
 
 #include <string>
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/Scene/GASSISceneManager.h"
+#include "Sim/Scenario/GASSISceneManager.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"

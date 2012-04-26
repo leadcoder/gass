@@ -24,8 +24,8 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainer.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scenario/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scenario/GASSCoreSceneObjectMessages.h"
 
 
 

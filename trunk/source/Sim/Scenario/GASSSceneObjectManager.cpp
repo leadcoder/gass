@@ -20,10 +20,10 @@
 
 
 
-#include "Sim/Scenario/Scene/GASSSceneObjectManager.h"
-#include "Sim/Scenario/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/Scene/GASSISceneManager.h"
-#include "Sim/Scenario/Scene/GASSSceneObject.h"
+#include "Sim/Scenario/GASSSceneObjectManager.h"
+#include "Sim/Scenario/GASSSceneManagerFactory.h"
+#include "Sim/Scenario/GASSISceneManager.h"
+#include "Sim/Scenario/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 
