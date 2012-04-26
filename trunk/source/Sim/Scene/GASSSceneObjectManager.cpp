@@ -20,10 +20,10 @@
 
 
 
-#include "Sim/Scenario/GASSSceneObjectManager.h"
-#include "Sim/Scenario/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSISceneManager.h"
-#include "Sim/Scenario/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSISceneManager.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 
@@ -38,7 +38,7 @@
 
 namespace GASS
 {
-	SceneObjectManager::SceneObjectManager(ScenarioPtr scenario) : m_Scenario (scenario)
+	SceneObjectManager::SceneObjectManager(ScenePtr scenario) : m_Scene (scenario)
 	{
 		
 
@@ -144,7 +144,7 @@ namespace GASS
 		//Send load message so that all scene manager can initilze it's components
 
 		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(obj));
-		ScenarioPtr scenario = GetScenario();
+		ScenePtr scenario = GetScene();
 		scenario->SendImmediate(load_msg);
 
 		//Pump initial messages around
@@ -225,8 +225,8 @@ namespace GASS
 
 		//notify that this object is to be removed
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(obj));
-		if(GetScenario())
-			GetScenario()->SendImmediate(unload_msg);
+		if(GetScene())
+			GetScene()->SendImmediate(unload_msg);
 	}
 
 	void SceneObjectManager::DeleteObject(SceneObjectPtr obj)

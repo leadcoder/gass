@@ -24,8 +24,8 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainer.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 
 
 
@@ -50,9 +50,9 @@ namespace GASS
 	To communicate with components owned by the SceneObject a message manager is used.
 	Some basic object messages is found in SceneObjectNameMessage.h
 
-	As the name indicates a SceneObject is a object in a scenario scene.
+	As the name indicates a SceneObject is a object in a scene.
 	The SceneObject is owned by a SceneObjectManager which in turn is owned
-	by a ScenarioScene.
+	by a Scene.
 	By design the SceneObject class is not intended to be derived from,
 	Instead new functionality should be added through components
 	*/

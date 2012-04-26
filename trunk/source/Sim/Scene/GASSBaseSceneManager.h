@@ -22,7 +22,7 @@
 
 #include <string>
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/GASSISceneManager.h"
+#include "Sim/Scene/GASSISceneManager.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -53,8 +53,8 @@ namespace GASS
 		//ISceneManager
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual ScenarioPtr GetScenario() const {return ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}//allow null pointer}
-		virtual void SetScenario(ScenarioPtr owner){m_Scenario = owner;}
+		virtual ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual void SetScene(ScenePtr owner){m_Scene = owner;}
 		virtual void OnCreate();
 		virtual void SystemTick(double delta_time);
 		virtual void Register(SceneManagerListenerPtr listener);
@@ -68,7 +68,7 @@ namespace GASS
 		virtual void SaveXML(TiXmlElement *xml_elem);
 	protected:
 		std::string m_Name;
-		ScenarioWeakPtr m_Scenario;
+		SceneWeakPtr m_Scene;
 		std::vector<SceneManagerListenerPtr> m_Listeners;
 	};
 }

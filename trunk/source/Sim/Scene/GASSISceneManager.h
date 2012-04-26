@@ -24,9 +24,9 @@
 
 namespace GASS
 {
-	class Scenario;
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
-	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
+	class Scene;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
 	class GASSExport ISceneManagerListener
 	{
@@ -41,7 +41,7 @@ namespace GASS
 		A scene manager in GASS is responsible for handling 
 		a certain part of a scene, for example graphics, 
 		physics or sound. Therefore a scene manager is owned
-		by a scenario scene.
+		by a scene.
 	*/
 
 	class GASSExport ISceneManager
@@ -52,8 +52,8 @@ namespace GASS
 
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string &name) = 0;
-		virtual ScenarioPtr GetScenario() const = 0;
-		virtual void SetScenario(ScenarioPtr owner) = 0;
+		virtual ScenePtr GetScene() const = 0;
+		virtual void SetScene(ScenePtr owner) = 0;
 		virtual void Register(SceneManagerListenerPtr listener) = 0;
 		virtual void Unregister(SceneManagerListenerPtr listener) = 0;
 	};

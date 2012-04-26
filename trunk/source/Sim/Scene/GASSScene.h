@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Sim/Scenario/GASSCoreScenarioSceneMessages.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Core/Utils/GASSIterators.h"
 
 class TiXmlElement;
@@ -43,13 +43,13 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr; 
 
 	/**
-	A Scenario in gass can be loaded from disc or created in runtime.  
-	The scenario class will create instances of all registered scene managers and also create 
+	A Scene in gass can be loaded from disc or created in runtime.  
+	The scene class will create instances of all registered scene managers and also create 
 	a scene object manager used as a container for scene objects
 	*/
 
-	class GASSExport Scenario : public Reflection<Scenario, BaseReflectionObject>, 
-		public boost::enable_shared_from_this<Scenario> , 
+	class GASSExport Scene : public Reflection<Scene, BaseReflectionObject>, 
+		public boost::enable_shared_from_this<Scene> , 
 		public IMessageListener
 	{
 	public:
@@ -69,17 +69,17 @@ namespace GASS
 
 		};
 
-		Scenario();
-		virtual ~Scenario();
+		Scene();
+		virtual ~Scene();
 		static void RegisterReflection();
 
 		/**
 		This function must be called by creator before using this class.
 		This function allocate the scene object manager which take the
-		Scenario as constructor argument and therefore can not be
-		allocated in the Scenario contructor where shared_from_this()
+		Scene as constructor argument and therefore can not be
+		allocated in the Scene contructor where shared_from_this()
 		is not excepted. Further this function allocate all registred scene managers,
-		they also need a ScenarioScenePtr and therefore not possible to allocate
+		they also need a SceneScenePtr and therefore not possible to allocate
 		this stuff in the constructor
 		*/
 		void Create();
@@ -101,27 +101,27 @@ namespace GASS
 
 		/**
 		Set the start position for this scene,
-		this attribute should be specified by scenario.xml
+		this attribute should be specified by scene.xml
 		but can be replaced by using this method
 		*/
 		void SetStartPos(const Vec3 &value) {m_StartPos = value;}
 
 		/**
 		Set the start rotation for this scene,
-		this attribute should be specified by scenario.xml
+		this attribute should be specified by scene.xml
 		but can be replaced by using this method
 		*/
 		void SetStartRot(const Vec3 &value) {m_StartRot= value;}
 
 
 		/**
-		Register for scenario scene messages, see ScenarioSceneMessages.h for available messages
+		Register for scene scene messages, see SceneSceneMessages.h for available messages
 		*/
 
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 
 		/**
-		Unregister for scenario scene messages
+		Unregister for scene scene messages
 		*/
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		void PostMessage(MessagePtr message);
@@ -129,27 +129,27 @@ namespace GASS
 
 
 		/**
-		Load a new scenario from path
+		Load a new scene from path
 		*/
-		void Load(const std::string &scenario_parh);
+		void Load(const std::string &scene_parh);
 
 		/**
-		Save scenario to path
+		Save scene to path
 		*/
 		void Save(const std::string &name);
 
 			/**
-		Get scenario scene name
+		Get scene scene name
 		*/
 		std::string GetName() const {return m_Name;}
 
 		/**
-		Set scenario scene name
+		Set scene scene name
 		*/
 		void SetName(const std::string &name) {m_Name = name;}
 
 		/**
-		Register for scenario scene messages, see ScenarioSceneMessages.h for available messages
+		Register for scene scene messages, see SceneSceneMessages.h for available messages
 		*/
 
 
@@ -159,7 +159,7 @@ namespace GASS
 		SceneManagerIterator GetSceneManagers();
 
 		
-		std::string GetPath() const {return m_ScenarioPath;}
+		std::string GetPath() const {return m_ScenePath;}
 
 		void OnUpdate(double delta_time);
 
@@ -179,16 +179,16 @@ namespace GASS
 
 	protected:
 		/**
-		Load scenario  from xml,
-		this method is called by the scenario LoadXML method in the scenario class
-		scene_elem is the should point to the ScenarioScene tag
+		Load scene  from xml,
+		this method is called by the scene LoadXML method in the scene class
+		scene_elem is the should point to the SceneScene tag
 		*/
 		void LoadXML(TiXmlElement *scene_elem);
 
 		/**
-		Save scenario  from xml,
-		this method is called by the scenario SaveXML method in the scenario class
-		scene_elem is the should point to the ScenarioScene tag
+		Save scene  from xml,
+		this method is called by the scene SaveXML method in the scene class
+		scene_elem is the should point to the SceneScene tag
 		*/
 		void SaveXML(TiXmlElement *scene_elem);
 
@@ -203,7 +203,7 @@ namespace GASS
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
 
-		std::string m_ScenarioPath;
+		std::string m_ScenePath;
 
 		SceneManagerVector m_SceneManagers;
 
@@ -212,10 +212,10 @@ namespace GASS
 		SceneObjectManagerPtr m_ObjectManager;
 
 
-		MessageManagerPtr m_ScenarioMessageManager;
+		MessageManagerPtr m_SceneMessageManager;
 
 
-		bool m_ScenarioLoaded;
+		bool m_SceneLoaded;
 		bool m_CreateCalled;
 
 		//move this to GIS system?
@@ -223,7 +223,7 @@ namespace GASS
 		double m_OffsetNorth;
 		std::string m_Projection;
 	};
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
-	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 }
 

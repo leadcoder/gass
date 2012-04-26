@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/Scenario/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"

@@ -23,7 +23,7 @@
 
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/GASSBaseSceneManager.h"
+#include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scheduling/GASSTaskGroups.h"
 
 namespace GASS

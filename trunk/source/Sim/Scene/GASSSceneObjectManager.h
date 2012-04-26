@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Scenario/GASSScenario.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Core/Math/GASSVector.h"
 
 class TiXmlElement;
@@ -30,24 +30,24 @@ namespace GASS
 {
 	class MessageManager;
 	class SceneObject;
-	class Scenario;
+	class Scene;
 
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
-	typedef boost::weak_ptr<Scenario> ScenarioWeakPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/**
 		The Scene object manager is owned by a scenario 
 		and could be seen as a decomposition (or helper class)
-		of the Scenario class.
+		of the Scene class.
 		In future this class may be merged into the
-		scenario scene class.
+		scene class.
 	*/
 	class GASSExport SceneObjectManager : public boost::enable_shared_from_this<SceneObjectManager>
 	{
-		friend class Scenario;
+		friend class Scene;
 	public:
-		SceneObjectManager(ScenarioPtr scenario);
+		SceneObjectManager(ScenePtr scenario);
 		virtual ~SceneObjectManager();
 
 		void LoadXML(const std::string &filename);
@@ -55,7 +55,7 @@ namespace GASS
 
 		SceneObjectPtr LoadFromTemplate(const std::string &go_template_name, SceneObjectPtr parent = SceneObjectPtr());
 		void SyncMessages(double delta_time);
-		ScenarioPtr GetScenario() const {return ScenarioPtr(m_Scenario,boost::detail::sp_nothrow_tag());}
+		ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
 		void Clear();
 		void Init();
 		void DeleteObject(SceneObjectPtr obj);
@@ -69,7 +69,7 @@ namespace GASS
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *go_elem);
 		void Load(TiXmlElement *scene_elem);
 		//ISceneManager* LoadSceneManager(TiXmlElement *sm_elem);
-		ScenarioWeakPtr m_Scenario;
+		SceneWeakPtr m_Scene;
 		SceneObjectPtr m_Root;
 	};
 }

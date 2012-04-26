@@ -20,16 +20,16 @@
 
 
 
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSISceneManager.h"
-#include "Sim/Scenario/GASSSceneObjectManager.h"
-#include "Sim/Scenario/GASSCoreScenarioSceneMessages.h"
-#include "Sim/Scenario/GASSGraphicsScenarioSceneMessages.h"
-#include "Sim/Scenario/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/GASSSceneObject.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSISceneManager.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -47,44 +47,44 @@
 
 namespace GASS
 {
-	Scenario::Scenario() : m_StartPos(Vec3(0,0,0)),
+	Scene::Scene() : m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
-		m_ScenarioMessageManager(new MessageManager()),
-		m_ScenarioLoaded(false),
+		m_SceneMessageManager(new MessageManager()),
+		m_SceneLoaded(false),
 		m_CreateCalled(false)
 	{
 
 	}
 
-	Scenario::~Scenario()
+	Scene::~Scene()
 	{
 		//Unload();
 	}
 
-	void Scenario::RegisterReflection()
+	void Scene::RegisterReflection()
 	{
-		RegisterProperty<Vec3>("StartPosition", &Scenario::GetStartPos, &Scenario::SetStartPos);
-		RegisterProperty<Vec3>("StartRotation", &Scenario::GetStartRot, &Scenario::SetStartRot);
-		RegisterProperty<double>("OrigoOffsetEast", &Scenario::GetOrigoOffsetEast, &Scenario::SetOrigoOffsetEast);
-		RegisterProperty<double>("OrigoOffsetNorth", &Scenario::GetOrigoOffsetNorth, &Scenario::SetOrigoOffsetNorth);
-		RegisterProperty<std::string>("Projection", &Scenario::GetProjection, &Scenario::SetProjection);
+		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
+		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
+		RegisterProperty<double>("OrigoOffsetEast", &Scene::GetOrigoOffsetEast, &Scene::SetOrigoOffsetEast);
+		RegisterProperty<double>("OrigoOffsetNorth", &Scene::GetOrigoOffsetNorth, &Scene::SetOrigoOffsetNorth);
+		RegisterProperty<std::string>("Projection", &Scene::GetProjection, &Scene::SetProjection);
 	}
 
 
-	void Scenario::Create()
+	void Scene::Create()
 	{
-		m_ScenarioMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scenario::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
-		m_ScenarioMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scenario::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
+		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
+		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
 
 		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
 		m_ObjectManager->Init();
 
-		//Add all registered scene manangers to the scenario
+		//Add all registered scene manangers to the scene
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
 		for(size_t i = 0; i < managers.size();i++)
 		{
 			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-			sm->SetScenario(shared_from_this());
+			sm->SetScene(shared_from_this());
 			sm->SetName(managers[i]);
 			sm->OnCreate();
 			m_SceneManagers.push_back(sm);
@@ -94,91 +94,91 @@ namespace GASS
 
 
 
-	void Scenario::Load(const std::string &scenario_path)
+	void Scene::Load(const std::string &scene_path)
 	{
 		if(!m_CreateCalled)
 		{
 			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
-				"You must call Create before using the scenario class",
-				"Scenario::Load");
+				"You must call Create before using the scene class",
+				"Scene::Load");
 		}
 
-		if(m_ScenarioLoaded)
+		if(m_SceneLoaded)
 		{
 			Unload();
 		}
 
-		m_ScenarioPath = scenario_path;
+		m_ScenePath = scene_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scenario::Load");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 
-		rs->AddResourceLocation(scenario_path,"GASSScenario","FileSystem",true);
-		const std::string filename = scenario_path + "/scenario.xml";
+		rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
+		const std::string filename = scene_path + "/scene.xml";
 
-		//Load scenario specific templates, filename should probably be a scenario parameter
-		SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
+		//Load scene specific templates, filename should probably be a scene parameter
+		SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
 
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "Scenario::Load");
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "Scene::Load");
 		}
 
-		TiXmlElement *scenario = xmlDoc->FirstChildElement("Scenario");
-		if(scenario == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scenario tag", "Scenario::Load");
+		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
+		if(scene == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
 
-		LoadXML(scenario);
+		LoadXML(scene);
 
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
-		rs->LoadResourceGroup("GASSScenario");
+		rs->LoadResourceGroup("GASSScene");
 		Load();
 	}
 
-	void Scenario::Save(const std::string &scenario_path)
+	void Scene::Save(const std::string &scene_path)
 	{
-		m_ScenarioPath = scenario_path;
+		m_ScenePath = scene_path;
 		TiXmlDocument doc;  
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
 		doc.LinkEndChild( decl ); 
 
-		TiXmlElement * scenario_elem = new TiXmlElement("Scenario");  
-		doc.LinkEndChild( scenario_elem); 
+		TiXmlElement * scene_elem = new TiXmlElement("Scene");  
+		doc.LinkEndChild( scene_elem); 
 
-		BaseReflectionObject::SaveProperties(scenario_elem);
+		BaseReflectionObject::SaveProperties(scene_elem);
 
 		TiXmlElement * sms_elem = new TiXmlElement("SceneManagerSettings");  
-		scenario_elem->LinkEndChild(sms_elem);
+		scene_elem->LinkEndChild(sms_elem);
 
 		SaveXML(sms_elem);
 
-		std::string filename = scenario_path + "/scenario.xml";
+		std::string filename = scene_path + "/scene.xml";
 		doc.SaveFile(filename.c_str());
-		//Save scenario specific object templates, filename should probably be a scenario parameter
-		//SimEngine::Get().GetSimObjectManager()->Load(scenario_path + "/templates.xml");
+		//Save scene specific object templates, filename should probably be a scene parameter
+		//SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
 	}
 
 
-	void Scenario::OnUpdate(double delta_time)
+	void Scene::OnUpdate(double delta_time)
 	{
-		if(m_ScenarioLoaded)
+		if(m_SceneLoaded)
 		{
-			m_ScenarioMessageManager->Update(delta_time);
+			m_SceneMessageManager->Update(delta_time);
 			m_ObjectManager->SyncMessages(delta_time);
 		}
 	}
 
-	void Scenario::LoadXML(TiXmlElement *scenario)
+	void Scene::LoadXML(TiXmlElement *scene)
 	{
-		TiXmlElement *prop = scenario->FirstChildElement("Properties");
+		TiXmlElement *prop = scene->FirstChildElement("Properties");
 		if(prop)
 			BaseReflectionObject::LoadProperties(prop);
-		else // fallback for old scenarios
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scenario::LoadXML");
-		TiXmlElement *scene_manager = scenario->FirstChildElement("SceneManagerSettings");
+		else // fallback for old scenes
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scene::LoadXML");
+		TiXmlElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
 		if(scene_manager)
 		{
 			scene_manager = scene_manager->FirstChildElement();
@@ -190,22 +190,22 @@ namespace GASS
 			}
 		}
 		else
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scenario::LoadXML");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scene::LoadXML");
 	}
 
-	void Scenario::SaveXML(TiXmlElement *parent)
+	void Scene::SaveXML(TiXmlElement *parent)
 	{
 		//Create
-		TiXmlElement *scenario = new TiXmlElement("Scenario");
-		parent->LinkEndChild(scenario);
+		TiXmlElement *scene = new TiXmlElement("Scene");
+		parent->LinkEndChild(scene);
 
 		TiXmlElement *prop = new TiXmlElement("Properties");
-		scenario->LinkEndChild(prop);
+		scene->LinkEndChild(prop);
 
 		BaseReflectionObject::SaveProperties(prop);
 
 		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
-		scenario->LinkEndChild(sms_elem);
+		scene->LinkEndChild(sms_elem);
 
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
 		{
@@ -214,51 +214,51 @@ namespace GASS
 			if(serialize)
 				serialize->SaveXML(sms_elem);
 		}
-		//std::string scenario_path = GetPath();
+		//std::string scene_path = GetPath();
 		//save instances at same place
 		FilePath path (std::string(parent->GetDocument()->Value()));
 
 		m_ObjectManager->SaveXML(path.GetPathNoFile() + "/instances.xml");
 	}
 
-	void Scenario::Unload()
+	void Scene::Unload()
 	{
-		if(m_ScenarioLoaded)
+		if(m_SceneLoaded)
 		{
 			m_ObjectManager->Clear();
-			MessagePtr scenario_msg(new UnloadSceneManagersMessage(shared_from_this()));
-			m_ScenarioMessageManager->SendImmediate(scenario_msg);
-			MessagePtr unload_msg(new ScenarioUnloadNotifyMessage(shared_from_this()));
+			MessagePtr scene_msg(new UnloadSceneManagersMessage(shared_from_this()));
+			m_SceneMessageManager->SendImmediate(scene_msg);
+			MessagePtr unload_msg(new SceneUnloadNotifyMessage(shared_from_this()));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
-			m_ScenarioMessageManager->Clear();
+			m_SceneMessageManager->Clear();
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(rs == NULL)
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scenario::SaveXML");
-			rs->RemoveResourceGroup("GASSScenario");
-			m_ScenarioLoaded = false;
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
+			rs->RemoveResourceGroup("GASSScene");
+			m_SceneLoaded = false;
 		}
 	}
 
-	void Scenario::Load()
+	void Scene::Load()
 	{
-		MessagePtr enter_load_msg(new ScenarioAboutToLoadNotifyMessage(shared_from_this()));
+		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
 
-		MessagePtr scenario_msg(new LoadSceneManagersMessage(shared_from_this()));
+		MessagePtr scene_msg(new LoadSceneManagersMessage(shared_from_this()));
 		//send load message
-		SendImmediate(scenario_msg);
+		SendImmediate(scene_msg);
 
 		//Create scene object instances from templates
-		if(m_ScenarioPath != "")
-			m_ObjectManager->LoadXML(m_ScenarioPath + "/instances.xml");
+		if(m_ScenePath != "")
+			m_ObjectManager->LoadXML(m_ScenePath + "/instances.xml");
 
-		MessagePtr system_msg(new ScenarioLoadedNotifyMessage(shared_from_this()));
+		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 
-		m_ScenarioLoaded = true;
+		m_SceneLoaded = true;
 	}
 
-	SceneManagerPtr Scenario::LoadSceneManager(TiXmlElement *sm_elem)
+	SceneManagerPtr Scene::LoadSceneManager(TiXmlElement *sm_elem)
 	{
 		SceneManagerPtr sm;
 		std::string sm_name = sm_elem->Value();
@@ -277,7 +277,7 @@ namespace GASS
 	}
 
 
-	SceneManagerPtr Scenario::GetSceneManager(const std::string &name)
+	SceneManagerPtr Scene::GetSceneManager(const std::string &name)
 	{
 		for(int i = 0; i < m_SceneManagers.size(); i++)
 		{
@@ -288,7 +288,7 @@ namespace GASS
 		return empty;
 	}
 
-	void Scenario::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
+	void Scene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
 	{
 		std::string obj_template = message->GetTemplateName();
 		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template,message->GetParent());
@@ -309,65 +309,65 @@ namespace GASS
 		}
 	}
 
-	void Scenario::OnRemoveSceneObject(RemoveSceneObjectMessagePtr message)
+	void Scene::OnRemoveSceneObject(RemoveSceneObjectMessagePtr message)
 	{
 		SceneObjectPtr so = message->GetSceneObject();
 		if(so)
 			GetObjectManager()->DeleteObject(so);
 	}
 
-	SceneManagerIterator Scenario::GetSceneManagers()
+	SceneManagerIterator Scene::GetSceneManagers()
 	{
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
 	}
 
-	double Scenario::GetOrigoOffsetEast() const
+	double Scene::GetOrigoOffsetEast() const
 	{
 		return m_OffsetEast;
 	}
 
-	double Scenario::GetOrigoOffsetNorth() const
+	double Scene::GetOrigoOffsetNorth() const
 	{
 		return m_OffsetNorth;
 	}
 
-	void Scenario::SetOrigoOffsetEast(double value)
+	void Scene::SetOrigoOffsetEast(double value)
 	{
 		m_OffsetEast = value;
 	}
 
-	void Scenario::SetOrigoOffsetNorth(double value) 
+	void Scene::SetOrigoOffsetNorth(double value) 
 	{
 		m_OffsetNorth = value;
 	}
 
-	void Scenario::SetProjection(const std::string &proj)
+	void Scene::SetProjection(const std::string &proj)
 	{
 		m_Projection = proj;
 	}
 
-	std::string Scenario::GetProjection() const
+	std::string Scene::GetProjection() const
 	{
 		return m_Projection;
 	}
 
-	int Scenario::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
+	int Scene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{
-		return m_ScenarioMessageManager->RegisterForMessage(type, callback, priority);
+		return m_SceneMessageManager->RegisterForMessage(type, callback, priority);
 	}
 
-	void Scenario::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
+	void Scene::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
-		m_ScenarioMessageManager->UnregisterForMessage(type, callback);
+		m_SceneMessageManager->UnregisterForMessage(type, callback);
 	}
 
-	void Scenario::PostMessage( MessagePtr message )
+	void Scene::PostMessage( MessagePtr message )
 	{
-		m_ScenarioMessageManager->PostMessage(message);
+		m_SceneMessageManager->PostMessage(message);
 	}
 
-	void Scenario::SendImmediate( MessagePtr message )
+	void Scene::SendImmediate( MessagePtr message )
 	{
-		m_ScenarioMessageManager->SendImmediate(message);
+		m_SceneMessageManager->SendImmediate(message);
 	}
 }

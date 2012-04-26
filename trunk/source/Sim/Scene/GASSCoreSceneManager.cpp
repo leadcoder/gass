@@ -21,11 +21,11 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scenario/GASSSceneManagerFactory.h"
-#include "Sim/Scenario/GASSScenario.h"
-#include "Sim/Scenario/GASSSceneObject.h"
-#include "Sim/Scenario/GASSCoreSceneManager.h"
-#include "Sim/Scenario/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/Scene/GASSScene.h"
+#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSCoreSceneManager.h"
+#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Systems/GASSCoreSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
@@ -58,11 +58,11 @@ namespace GASS
 		
 			SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
-		ScenarioPtr scenario = GetScenario();
+		ScenePtr scenario = GetScene();
 		if(scenario)
 		{
 			scenario->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
-			scenario->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scenario::CORE_COMPONENT_LOAD_PRIORITY);
+			scenario->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
 

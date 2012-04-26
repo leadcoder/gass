@@ -29,8 +29,8 @@
 namespace GASS
 {
 	class SceneObject;
-	class Scenario;
-	typedef boost::shared_ptr<Scenario> ScenarioPtr;
+	class Scene;
+	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 

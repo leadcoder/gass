@@ -17,8 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Sim/Scenario/GASSSceneObjectLink.h"
-#include "Sim/Scenario/GASSSceneObject.h"
+#include "Sim/Scene/GASSSceneObjectLink.h"
+#include "Sim/Scene/GASSSceneObject.h"
 #include "Core/Common.h"
 
 namespace GASS
