@@ -48,15 +48,15 @@ public:
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
 
-		GASS::ScenePtr scenario (new GASS::Scene());
-		scenario->Create();
+		GASS::ScenePtr scene (new GASS::Scene());
+		scene->Create();
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
 
-		m_Scene = scenario;
-		//scenario->Create();
+		m_Scene = scene;
+		//scene->Create();
 		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scene:" <<  m_SceneName;
 
 		m_Scene->Load(m_SceneName);
@@ -105,7 +105,7 @@ public:
 			m_SystemConfig = app_settings->Attribute("SystemConfig");
 			m_Plugins = app_settings->Attribute("Plugins");
 			m_ControlSettings = app_settings->Attribute("ControlSettings");
-			m_SceneName = app_settings->Attribute("Scenario");
+			m_SceneName = app_settings->Attribute("Scene");
 
 			GASS::FilePath full_path(m_SceneName);
 			m_SceneName = full_path.GetPath();

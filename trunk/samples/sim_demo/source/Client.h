@@ -24,8 +24,8 @@ public:
 	void OnLoadScene(GASS::MessagePtr message)
 	{
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
-		printf("Client got scenario request message:%s\n",mess->GetSceneName().c_str());
-		//m_Scene->Load("../../../common/data/scenarios/" + mess->GetSceneName());
+		printf("Client got scene request message:%s\n",mess->GetSceneName().c_str());
+		//m_Scene->Load("../../../common/data/scenes/" + mess->GetSceneName());
 		m_Scene->Load(m_SceneName);
 		
 
@@ -57,8 +57,8 @@ public:
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequestMessage,0));
 		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2006,2005)));
 
-		GASS::ScenePtr scenario (new GASS::Scene());
-		m_Scene = scenario;
+		GASS::ScenePtr scene (new GASS::Scene());
+		m_Scene = scene;
 
 		printf("\n\nWaiting for server");
 		float update_time = 0;

@@ -38,8 +38,8 @@ public:
 			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
 		}
 
-		GASS::ScenePtr scenario (new GASS::Scene());
-		m_Scene = scenario;
+		GASS::ScenePtr scene (new GASS::Scene());
+		m_Scene = scene;
 		m_Scene->Load(m_SceneName);
 		//create free camera and set start pos
 		GASS::SceneObjectPtr free_obj = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
