@@ -439,7 +439,7 @@ namespace GASS
 				{
 					RakNet::BitStream out;
 					out.Reset();
-					out.Write((MessageID)ID_START_SCENARIO);
+					out.Write((MessageID)ID_START_SCENE);
 					SerializeServerData(out,m_ServerData);
 					m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,p->systemAddress,false);
 					std::cout << "send server data" << std::endl;
@@ -512,7 +512,7 @@ namespace GASS
 			//std::cout << "scene about to load" << std::endl;
 			RakNet::BitStream out;
 			out.Reset();
-			out.Write((unsigned char)ID_START_SCENARIO);
+			out.Write((unsigned char)ID_START_SCENE);
 			SerializeServerData(out,m_ServerData);
 			//Send server data to all clients
 			for (int index=0; index < MAX_PEERS; index++)
@@ -559,7 +559,7 @@ namespace GASS
 				SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg);
 				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
 			}
-			else if(packetIdentifier == ID_START_SCENARIO)
+			else if(packetIdentifier == ID_START_SCENE)
 			{
 				ServerData data;
 				RakNet::BitStream server_data(p->data+1,p->length-1,false);
@@ -567,7 +567,7 @@ namespace GASS
 				MessagePtr message(new StartSceanrioRequestMessage(data.MapName));
 				GetSimSystemManager()->PostMessage(message);
 				
-				std::cout << "ID_START_SCENARIO" << std::endl;
+				std::cout << "ID_START_SCENE" << std::endl;
 
 				//load scene
 

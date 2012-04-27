@@ -114,7 +114,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 
 		rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
-		const std::string filename = scene_path + "/scenario.xml";
+		const std::string filename = scene_path + "/scene.xml";
 
 		//Load scene specific templates, filename should probably be a scene parameter
 		SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
@@ -125,7 +125,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "Scene::Load");
 		}
 
-		TiXmlElement *scene = xmlDoc->FirstChildElement("Scenario");
+		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
 		if(scene == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
 
@@ -145,7 +145,7 @@ namespace GASS
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
 		doc.LinkEndChild( decl ); 
 
-		TiXmlElement * scene_elem = new TiXmlElement("Scenario");  
+		TiXmlElement * scene_elem = new TiXmlElement("Scene");  
 		doc.LinkEndChild( scene_elem); 
 
 		BaseReflectionObject::SaveProperties(scene_elem);
@@ -155,7 +155,7 @@ namespace GASS
 
 		SaveXML(sms_elem);
 
-		std::string filename = scene_path + "/scenario.xml";
+		std::string filename = scene_path + "/Scene.xml";
 		doc.SaveFile(filename.c_str());
 		//Save scene specific object templates, filename should probably be a scene parameter
 		//SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
@@ -196,7 +196,7 @@ namespace GASS
 	void Scene::SaveXML(TiXmlElement *parent)
 	{
 		//Create
-		TiXmlElement *scene = new TiXmlElement("Scenario");
+		TiXmlElement *scene = new TiXmlElement("Scene");
 		parent->LinkEndChild(scene);
 
 		TiXmlElement *prop = new TiXmlElement("Properties");

@@ -89,12 +89,7 @@ namespace GASS
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)
 	{
-		/*if(m_PreferredViewport != "ALL")
-		{
-			SceneObjectPtr obj;
-			MessagePtr cam_msg(new ChangeCameraMessage(obj,m_PreferredViewport));
-			GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
-		}*/
+
 	}
 
 	void VehicleCameraComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -103,13 +98,6 @@ namespace GASS
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
 		GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
-		/*if(gfx_sys && m_PreferredViewport != "ALL")
-		{
-			gfx_sys->CreateViewport(m_PreferredViewport, "MainWindow", 0.2, 0.2, 0.3, 0.5);
-		}*/
-
-		//message->GetSimSceneManager()->GetScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(VehicleCameraComponent::OnEnter,AnyMessage));
-		//register on enter message
 	}
 
 	void VehicleCameraComponent::OnUnload(UnloadComponentsMessagePtr message)

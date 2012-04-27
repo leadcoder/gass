@@ -46,7 +46,7 @@ namespace GASS
 
 	}
 
-	void EditorApplication::Init(const FilePath &working_folder, void* main_win_handle,void*render_win_handle)
+	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, void* main_win_handle,void*render_win_handle)
 	{	
 		const std::string config_path = working_folder.GetPath() + "../configuration/";
 		LoadSettings(config_path + "EditorApplication.xml");
@@ -60,7 +60,7 @@ namespace GASS
 		se->GetSimObjectManager()->SetObjectIDSuffix(m_IDSuffix);
 		//boot gass editor
 		
-		EditorManager::GetPtr()->Init(working_folder,working_folder,working_folder);
+		EditorManager::GetPtr()->Init(working_folder,appdata_folder_path,mydocuments_folder_path);
 		EditorManager::Get().GetMouseToolController()->SetUseTerrainNormalOnDrop(m_UseTerrainNormalOnDrop);
 		EditorManager::Get().GetMouseToolController()->SetRayPickDistance(m_RayPickDist);
 
@@ -151,16 +151,16 @@ namespace GASS
 	void EditorApplication::OnLoadScene(SceneLoadedNotifyMessagePtr message)
 	{
 		
-		ScenePtr scenario = message->GetScene();
+		ScenePtr scene = message->GetScene();
 
 		//load top camera
 		Vec3 vel(0,0,0);
-		Vec3 pos = scenario->GetStartPos();
-		Quaternion rot(scenario->GetStartRot());
+		Vec3 pos = scene->GetStartPos();
+		Quaternion rot(scene->GetStartRot());
 
 		//auto create free camera?
 		
-		SceneObjectPtr free_obj = scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		
 		if(!free_obj) //If no FreeCameraObject template found, create one
 		{
@@ -181,18 +181,18 @@ namespace GASS
 
 			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
 
-			free_obj = scenario->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+			free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
 		}
 
-		MessagePtr pos_msg(new PositionMessage(scenario->GetStartPos()));
+		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
 			MessagePtr camera_msg(new ChangeCameraMessage(free_obj,"RenderWindow"));
-			scenario->PostMessage(camera_msg);
+			scene->PostMessage(camera_msg);
 		}
 
-		SceneObjectPtr top_obj = scenario->GetObjectManager()->LoadFromTemplate("TopCameraObject");
+		SceneObjectPtr top_obj = scene->GetObjectManager()->LoadFromTemplate("TopCameraObject");
 		if(top_obj)
 			top_obj->SendImmediate(pos_msg);
 	}
@@ -207,13 +207,13 @@ namespace GASS
 		}
 		TiXmlElement *xSettings = 0;
 		xSettings = xmlDoc->FirstChildElement("EditorApplication");
-		TiXmlElement *xscenarios = xSettings->FirstChildElement("SceneList");
-		TiXmlElement *start_scenario = xSettings->FirstChildElement("SceneToLoadAtStart");
+		TiXmlElement *xscenes = xSettings->FirstChildElement("SceneList");
+		TiXmlElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
 		TiXmlElement *gui_state = xSettings->FirstChildElement("GUIState");
 		TiXmlElement *xTerrainNormal = xSettings->FirstChildElement("UseTerrainNormalOnDrop");
 		TiXmlElement *xRayPickDist = xSettings->FirstChildElement("MousePickDistance");
 		
-		TiXmlElement *xscenario_path = xSettings->FirstChildElement("ScenePath");
+		TiXmlElement *xscene_path = xSettings->FirstChildElement("ScenePath");
 		TiXmlElement *xtemplates = xSettings->FirstChildElement("TemplateFiles");
 		TiXmlElement *xobj_id = xSettings->FirstChildElement("ObjectID");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
@@ -258,10 +258,10 @@ namespace GASS
 			path.SetPath(m_GUIState);
 			m_GUIState = c_dir + path.GetPath();
 		}*/
-		if(start_scenario && start_scenario->Attribute("path"))
+		if(start_scene && start_scene->Attribute("path"))
 		{
 			GASS::FilePath path;
-			m_StartScene = start_scenario->Attribute("path");
+			m_StartScene = start_scene->Attribute("path");
 			path.SetPath(m_StartScene);
 			m_StartScene = path.GetPath();
 		}
@@ -282,9 +282,9 @@ namespace GASS
 			m_RayPickDist = value;
 		}
 
-		if(xscenarios)
+		if(xscenes)
 		{
-			TiXmlElement *xItem = xscenarios->FirstChildElement("Scene");
+			TiXmlElement *xItem = xscenes->FirstChildElement("Scene");
 			while(xItem)
 			{
 				std::string name = xItem->Attribute("name");
@@ -298,10 +298,10 @@ namespace GASS
 				xItem = xItem->NextSiblingElement("Scene");
 			}
 		}
-		if(xscenario_path)
+		if(xscene_path)
 		{
 			GASS::FilePath path;
-			m_ScenePath  = xscenario_path->Attribute("value");
+			m_ScenePath  = xscene_path->Attribute("value");
 			path.SetPath(m_ScenePath);
 			m_ScenePath = path.GetPath();
 
@@ -313,11 +313,11 @@ namespace GASS
 				{
 					if (boost::filesystem::is_directory( *iter ) )      
 					{   
-						if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scenario.xml")))
+						if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
 						{
 
-							std::string scenario_name =iter->path().filename().generic_string();
-							m_SceneNames.push_back(scenario_name);
+							std::string scene_name =iter->path().filename().generic_string();
+							m_SceneNames.push_back(scene_name);
 							m_ScenePaths.push_back(iter->path().string());
 						}
 					}
@@ -364,7 +364,7 @@ namespace GASS
 		//Clear selection!
 		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(selection_msg);
 		EditorManager::GetPtr()->GetMessageManager()->Clear();
-		//free scenario
+		//free scene
 		if(m_Scene)
 			m_Scene->Unload();
 		m_Scene.reset();
@@ -372,29 +372,29 @@ namespace GASS
 		EditorManager::GetPtr()->GetMessageManager()->Clear();
 	}
 
-	void  EditorApplication::LoadScene(const std::string &scenario_path)
+	void  EditorApplication::LoadScene(const std::string &scene_path)
 	{
 		UnloadScene();
 		m_Scene = ScenePtr(new Scene());
 		m_Scene->Create();
-		m_Scene->Load(scenario_path);
+		m_Scene->Load(scene_path);
 	}
 
-	void EditorApplication::NewScene(const std::string &scenario_path)
+	void EditorApplication::NewScene(const std::string &scene_path)
 	{
 		UnloadScene();
 		m_Scene = ScenePtr(new Scene());
 		m_Scene->Create();
 		//m_Scene->AddSceneScene(scene);
-		SaveScene(scenario_path);
-		LoadScene(scenario_path);
+		SaveScene(scene_path);
+		LoadScene(scene_path);
 	}
 
-	void  EditorApplication::SaveScene(const std::string &scenario_path)
+	void  EditorApplication::SaveScene(const std::string &scene_path)
 	{
 		if(m_Scene)
 		{
-			m_Scene->Save(scenario_path);
+			m_Scene->Save(scene_path);
 		}
 	}
 }

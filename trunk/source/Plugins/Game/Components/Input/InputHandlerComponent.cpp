@@ -109,12 +109,11 @@ namespace GASS
 
 	void InputHandlerComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
-	//	message->GetSimSceneManager()->GetScene()->RegisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(InputHandlerComponent::OnEnter,AnyMessage));
+	
 	}
 
 	void InputHandlerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-	//	message->GetSimSceneManager()->GetScene()->UnregisterForMessage(SCENARIO_RM_ENTER_VEHICLE,TYPED_MESSAGE_FUNC(PlayerInputComponent::OnEnter,AnyMessage));
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
 		if(cs)
 			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));

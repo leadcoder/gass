@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GRAPHICS_SCENARIO_SCENE_MESSAGES_H
-#define GRAPHICS_SCENARIO_SCENE_MESSAGES_H
+#ifndef GRAPHICS_SCENE_MESSAGES_H
+#define GRAPHICS_SCENE_MESSAGES_H
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
