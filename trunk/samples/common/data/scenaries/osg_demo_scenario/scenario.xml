@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Scenario>
+  <ScenarioSettings>
+  </ScenarioSettings>
+  <Scenes>
+    <MainScene>
+      <SceneSettings>
+        <StartPosition value= "0 10 0"/>
+        <StartRotation value= "0 0 0"/>
+        <SetRT90OrigoX value="1486593"/>
+        <!-- east-->
+        <SetRT90OrigoY value="6474431"/>
+        <!-- north-->
+        <ObjectFile value ="Objects.xml"/>
+        <SceneUp value="z"/>
+        <SceneNorth value="y"/>
+      </SceneSettings>
+      <SceneManagers>
+        <GraphicsSceneManager type="OSGGraphicsSceneManager">
+          <AmbientLight value= "0.5 0.5 0.5"/>
+          <FogMode value = "Linear"/>
+          <FogColor value= "0.69 0.698 0.7294"/>
+          <FogDensity value  = "0.1"/>
+          <FogStart value = "0"/>
+          <FogEnd value = "4000"/>
+          <SkyboxMaterial value="CampSkybox"/>
+        </GraphicsSceneManager>
+        <PhysicsSceneManager type="ODEPhysicsSceneManager">
+          <Gravity value= "-9.81"/>
+        </PhysicsSceneManager>
+      </SceneManagers>
+    </MainScene>
+  </Scenes>
+</Scenario>
