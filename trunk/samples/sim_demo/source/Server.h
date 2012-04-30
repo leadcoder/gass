@@ -35,14 +35,14 @@ public:
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
+			m_Engine->GetSceneObjectTemplateManager()->Load(m_Templates[i]);
 		}
 
 		GASS::ScenePtr scene (new GASS::Scene());
 		m_Scene = scene;
 		m_Scene->Load(m_SceneName);
 		//create free camera and set start pos
-		GASS::SceneObjectPtr free_obj = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::SceneObjectPtr free_obj = m_Scene->LoadObjectFromTemplate("FreeCameraObject",m_Scene->GetRootSceneObject());
 		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scene->GetStartPos()));
 		if(free_obj)
 		{
@@ -53,8 +53,7 @@ public:
 
 		for(int i = 0; i <  m_Objects.size();i++)
 		{
-
-			GASS::SceneObjectPtr object = m_Scene->GetObjectManager()->LoadFromTemplate(m_Objects[i]);
+			GASS::SceneObjectPtr object = m_Scene->LoadObjectFromTemplate(m_Objects[i],m_Scene->GetRootSceneObject());
 
 			GASS::Vec3 pos = m_Scene->GetStartPos();
 			pos.x += 10*i;

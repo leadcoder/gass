@@ -86,7 +86,7 @@ void CreateManualObject()
 	body_comp->SetName("ContainerPhysicsBody");
 	//body_comp->SetPropertyByValue("GeometryType","box");
 	container->AddComponent(body_comp);
-	GASS::SimEngine::Get().GetSimObjectManager()->AddTemplate(container);
+	GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(container);
 }
 
 void TestCollision(GASS::ScenePtr scene)
@@ -228,7 +228,7 @@ int main(int argc, char* argv[])
 	}
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(plugin_file,sys_conf_file,ctrl_conf_file);
-	engine->GetSimObjectManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
+	engine->GetSceneObjectTemplateManager()->Load("..\\data\\templates\\vehicles\\jim_tank.xml");
 
 
 	//network settings

@@ -29,7 +29,7 @@ public:
 		m_Scene->Load(m_SceneName);
 		
 
-		GASS::SceneObjectPtr free_obj = m_Scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		GASS::SceneObjectPtr free_obj = m_Scene->LoadObjectFromTemplate("FreeCameraObject",m_Scene->GetRootSceneObject());
 		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scene->GetStartPos()));
 		if(free_obj)
 		{
@@ -50,7 +50,7 @@ public:
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
-			m_Engine->GetSimObjectManager()->Load(m_Templates[i]);
+			m_Engine->GetSceneObjectTemplateManager()->Load(m_Templates[i]);
 		}
 
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseMessage,0));
