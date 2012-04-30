@@ -30,7 +30,7 @@
 
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
@@ -70,7 +70,7 @@ namespace GASS
 	void VehicleDebugComponent::OnLoad(LoadGameComponentsMessagePtr message)
 	{
 		//create waypoint text object
-		SceneObjectPtr scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("VehicleDebugWaypointTemplate");
+		SceneObjectPtr scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("VehicleDebugWaypointTemplate",GetSceneObject()->GetScene()->GetRootSceneObject());
 
 		if(!scene_object) //If no VehicleDebugWaypointTemplate template found, create one
 		{
@@ -93,14 +93,16 @@ namespace GASS
 			debug_template->AddComponent(text_comp);
 			debug_template->AddComponent(bb_comp);
 
-			SimEngine::Get().GetSimObjectManager()->AddTemplate(debug_template);
-			scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("VehicleDebugWaypointTemplate");
+			SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(debug_template);
+			scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("VehicleDebugWaypointTemplate",GetSceneObject()->GetScene()->GetRootSceneObject());
 		}
 		m_WaypointObj = scene_object;
 	}
 	void VehicleDebugComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->DeleteObject(m_WaypointObj);
+		m_WaypointObj->GetParent()->RemoveChild(m_WaypointObj);
+		m_WaypointObj.reset();
+		//GetSceneObject()->GetScene()->DeleteObject(m_WaypointObj);
 	}
 
 	void VehicleDebugComponent::OnGotoPosition(GotoPositionMessagePtr message)

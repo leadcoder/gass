@@ -8,7 +8,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Plugins/Game/Components/Sensor/SignatureComponent.h"
@@ -47,7 +47,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadGameComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
 	}
 
 	void SensorComponent::OnLoad(LoadGameComponentsMessagePtr message)
@@ -59,7 +59,7 @@ namespace GASS
 
 		// get all signature objects and add them
 		IComponentContainer::ComponentVector comps;
-		GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass<SignatureComponent>(comps,true);
+		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<SignatureComponent>(comps,true);
 		for(size_t i = 0; i < comps.size(); i++)
 		{
 			SignatureComponentPtr sig = boost::shared_dynamic_cast<SignatureComponent>(comps[i]);

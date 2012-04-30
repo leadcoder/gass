@@ -18,16 +18,19 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/Scene/GASSSceneObject.h"
-
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSIComponentContainer.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
 #include <tinyxml.h>
@@ -50,9 +53,48 @@ namespace GASS
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
 	}
 
-	void SceneObject::OnCreate()
+
+
+	//Override
+	void SceneObject::AddChild(ComponentContainerPtr child)
 	{
-		RegisterForMessage(typeid(SceneObjectNameMessage),TYPED_MESSAGE_FUNC(SceneObject::OnChangeName,SceneObjectNameMessage));
+		SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(child);
+		BaseComponentContainer::AddChild(child);
+		if(GetScene()) //if we have scene Initialize?
+			obj->Initialize(GetScene());
+
+	}
+
+	//Override
+	void SceneObject::RemoveChild(ComponentContainerPtr child)
+	{
+		SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(child);
+		//notify that this objects and its children will be removed
+		obj->OnDelete();
+		BaseComponentContainer::RemoveChild(child);
+	}
+
+	void SceneObject::OnDelete()
+	{
+		MessagePtr msg(new UnloadComponentsMessage());
+		SendImmediate(msg);
+		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
+		if(GetScene())
+			GetScene()->SendImmediate(unload_msg);
+		
+		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			child->OnDelete();
+		}
+	}
+
+	void SceneObject::Initialize(ScenePtr scene)
+	{
+		m_Scene = scene;
+		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
@@ -62,9 +104,24 @@ namespace GASS
 			bsc->OnCreate();
 			++iter;
 		}
+
+		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(this_obj));
+		scene->SendImmediate(load_msg);
+
+		//Pump initial messages
+		SyncMessages(0,false);
+		//send load message for all child game object also?
+
+		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			child->Initialize(scene);
+		}
 	}
 
-	void SceneObject::SetSceneObjectManager(SceneObjectManagerPtr manager)
+	/*void SceneObject::SetSceneObjectManager(SceneObjectManagerPtr manager)
 	{
 		m_Manager = manager;
 		IComponentContainer::ComponentContainerVector::iterator go_iter;
@@ -73,13 +130,13 @@ namespace GASS
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
 			child->SetSceneObjectManager(manager);
 		}
-	}
+	}*/
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()
 	{
 		ComponentContainerPtr container = shared_from_this();
 
-		SceneObjectPtr root = GetSceneObjectManager()->GetSceneRoot();
+		SceneObjectPtr root = GetScene()->GetRootSceneObject();
 
 		while(container->GetParent() && ComponentContainerPtr(container->GetParent()) != root)
 		{
@@ -294,6 +351,41 @@ namespace GASS
 	{
 		std::string name = message->GetName();
 		SetName(name);
+	}
+
+	void SceneObject::LoadFromFile(const std::string &filename)
+	{
+		if(filename =="") 
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadChildrenFromFile");
+		
+		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+		if(!xmlDoc->LoadFile())
+		{
+			//Fatal error, cannot load
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
+		}
+		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
+		LoadXML(so_elem);
+		xmlDoc->Clear();
+		//Delete our allocated document and return success ;)
+		delete xmlDoc;
+	}
+
+	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
+	{
+		
+		ComponentContainerPtr cc;
+		if(cc_elem->Attribute("from_template"))
+		{
+			std::string template_name = cc_elem->Attribute("from_template");
+			cc = boost::shared_static_cast<IComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+		}
+		else
+		{
+			const std::string cc_name = cc_elem->Value();
+			cc = boost::shared_static_cast<IComponentContainer>(ComponentContainerFactory::Get().Create(cc_name));
+		}
+		return cc;
 	}
 }
 

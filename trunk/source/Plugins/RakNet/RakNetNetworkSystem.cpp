@@ -44,7 +44,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"

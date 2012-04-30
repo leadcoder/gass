@@ -34,7 +34,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"

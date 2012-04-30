@@ -31,13 +31,14 @@ namespace GASS
 	class SimSystemManager;
 	class BaseComponentContainerTemplateManager;
 	class IRuntimeController;
+	class SceneObject;
 	
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
-
+	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -100,14 +101,14 @@ namespace GASS
 		certain system.
 		*/
 
-		SimSystemManagerPtr GetSimSystemManager() {return m_SystemManager;}
+		SimSystemManagerPtr GetSimSystemManager() const {return m_SystemManager;}
 		
 		/**
 		Get the object template manager. 
 		The oject template manager holds templates for sim objects that can be created.
 		See BaseComponentContainerTemplateManager inside the component system from more info.
 		*/
-		BaseComponentContainerTemplateManagerPtr GetSimObjectManager() {return m_SimObjectManager;}
+		BaseComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
 		
 		/**
 		Get the control settings manager. 
@@ -125,10 +126,17 @@ namespace GASS
 		Return elapsed time
 		*/
 		double GetTime() const {return m_CurrentTime;}
+		
+
+		
+		/**
+			Convience function to create new objects from templates
+		*/
+		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 	private:
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
-		BaseComponentContainerTemplateManagerPtr m_SimObjectManager;
+		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 		double m_CurrentTime;

@@ -55,9 +55,9 @@ namespace GASS
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
 
-		se->GetSimObjectManager()->SetAddObjectIDToName(m_UseObjectID);
-		se->GetSimObjectManager()->SetObjectIDPrefix(m_IDPrefix);
-		se->GetSimObjectManager()->SetObjectIDSuffix(m_IDSuffix);
+		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
+		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
+		se->GetSceneObjectTemplateManager()->SetObjectIDSuffix(m_IDSuffix);
 		//boot gass editor
 		
 		EditorManager::GetPtr()->Init(working_folder,appdata_folder_path,mydocuments_folder_path);
@@ -69,7 +69,7 @@ namespace GASS
 		while(iter != m_Templates.end())
 		{
 			std::string file_path = *iter;
-			se->GetSimObjectManager()->Load(file_path);
+			se->GetSceneObjectTemplateManager()->Load(file_path);
 			iter++;
 		}
 
@@ -160,7 +160,7 @@ namespace GASS
 
 		//auto create free camera?
 		
-		SceneObjectPtr free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
 		
 		if(!free_obj) //If no FreeCameraObject template found, create one
 		{
@@ -179,9 +179,9 @@ namespace GASS
 			fre_cam_template->AddComponent(camera_comp);
 			fre_cam_template->AddComponent(cc_comp);
 
-			SimEngine::Get().GetSimObjectManager()->AddTemplate(fre_cam_template);
+			SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(fre_cam_template);
 
-			free_obj = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
+			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
 		}
 
 		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
@@ -192,7 +192,7 @@ namespace GASS
 			scene->PostMessage(camera_msg);
 		}
 
-		SceneObjectPtr top_obj = scene->GetObjectManager()->LoadFromTemplate("TopCameraObject");
+		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
 		if(top_obj)
 			top_obj->SendImmediate(pos_msg);
 	}
@@ -365,8 +365,8 @@ namespace GASS
 		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(selection_msg);
 		EditorManager::GetPtr()->GetMessageManager()->Clear();
 		//free scene
-		if(m_Scene)
-			m_Scene->Unload();
+		//if(m_Scene)
+		//	m_Scene->Unload();
 		m_Scene.reset();
 		//clear editor manager messages
 		EditorManager::GetPtr()->GetMessageManager()->Clear();

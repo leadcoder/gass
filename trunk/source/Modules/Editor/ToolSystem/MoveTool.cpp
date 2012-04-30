@@ -12,7 +12,7 @@
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 namespace GASS
 {
@@ -269,7 +269,7 @@ namespace GASS
 
 			std::string gizmo_name = "GizmoMoveObject_YUp";
 		
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 

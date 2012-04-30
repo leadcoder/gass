@@ -34,7 +34,7 @@
 
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
 
 
 
@@ -148,7 +148,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			SceneObjectPtr root = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot();
+			SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
 			TerrainComponentPtr terrain = root->GetFirstComponentByClass<ITerrainComponent>(true);
 			if(terrain)
 			{

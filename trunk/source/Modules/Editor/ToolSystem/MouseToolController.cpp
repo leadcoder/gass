@@ -10,7 +10,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
@@ -87,7 +87,7 @@ namespace GASS
 	void MouseToolController::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
 		ScenePtr scene = message->GetScene();
-		IComponentContainer::ComponentContainerIterator iter = scene->GetObjectManager()->GetSceneRoot()->GetChildren();
+		IComponentContainer::ComponentContainerIterator iter = scene->GetRootSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			//Lock recursive?
@@ -98,7 +98,7 @@ namespace GASS
 		}
 		m_Scene = scene;
 		//load selection object
-		GASS::SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("SelectionObject");
+		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
 	void MouseToolController::OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
@@ -393,7 +393,7 @@ namespace GASS
 		CameraComponentPtr cam = GetActiveCamera();
 		if(cam_obj && cam)
 		{
-			ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
+			ScenePtr scene = cam_obj->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(norm_x,norm_y,ray_start,ray_direction);
@@ -428,7 +428,7 @@ namespace GASS
 		if(cam && bsc)
 		{
 			
-			//ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
+			//ScenePtr scene = cam_obj->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
@@ -442,7 +442,7 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_direction;
 			request.Type = COL_LINE;
-			request.Scene = bsc->GetSceneObject()->GetSceneObjectManager()->GetScene();
+			request.Scene = bsc->GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = col_bits;
 			col_sys->Force(request,result);
@@ -510,7 +510,7 @@ namespace GASS
 		CameraComponentPtr cam = GetActiveCamera();
 		if(cam_obj && cam)
 		{
-			ScenePtr scene = cam_obj->GetSceneObjectManager()->GetScene();
+			ScenePtr scene = cam_obj->GetScene();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(norm_x,norm_y,ray_start,ray_direction);
@@ -699,7 +699,7 @@ namespace GASS
 		SceneObjectPtr pointer(m_PointerObject,boost::detail::sp_nothrow_tag());
 		if(!pointer &&  GetScene())
 		{
-			GASS::SceneObjectPtr scene_object = GetScene()->GetObjectManager()->LoadFromTemplate("PointerObject");
+			GASS::SceneObjectPtr scene_object = GetScene()->LoadObjectFromTemplate("PointerObject",GetScene()->GetRootSceneObject());
 			m_PointerObject = scene_object;
 			pointer = scene_object;
 

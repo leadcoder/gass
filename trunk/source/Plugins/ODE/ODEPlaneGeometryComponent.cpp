@@ -34,7 +34,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
@@ -69,7 +69,7 @@ namespace GASS
 
 	dGeomID ODEPlaneGeometryComponent::CreateODEGeom()
 	{
-		//Vec3 plane_normal = GetSceneObject()->GetSceneObjectManager()->GetScene()->GetSceneUp();
+		//Vec3 plane_normal = GetSceneObject()->GetScene()->GetSceneUp();
 		return dCreatePlane(GetSpace(), m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 	}
 

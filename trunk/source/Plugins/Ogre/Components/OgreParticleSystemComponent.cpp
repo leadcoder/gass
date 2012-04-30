@@ -31,7 +31,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -95,7 +95,7 @@ namespace GASS
 			//Send remove message with delay
 			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
 			remove_msg->SetDeliverDelay(m_TimeToLive);
-			GetSceneObject()->GetSceneObjectManager()->GetScene()->PostMessage(remove_msg);
+			GetSceneObject()->GetScene()->PostMessage(remove_msg);
 		}
 		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}

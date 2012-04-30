@@ -32,9 +32,8 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
 
 #include <Ogre.h>
 
@@ -133,7 +132,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLoad,LoadGFXComponentsMessage,4));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
 
 	}
 
@@ -150,7 +149,7 @@ namespace GASS
 
 		m_SunLight = NULL;
 		Ogre::Root::getSingleton().removeFrameListener(this);
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
 	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
@@ -379,7 +378,7 @@ namespace GASS
 		SetAmbientGradient(m_AmbientGradientValues);
 		SetFogGradient(m_FogGradientValues);
 	
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 

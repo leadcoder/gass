@@ -32,7 +32,7 @@ namespace GASS
 	class IComponentContainerTemplate;
 	class IComponentContainerTemplateManager;
 	typedef boost::shared_ptr<IComponent> ComponentPtr;
-	typedef boost::shared_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
+	typedef boost::shared_ptr<IComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
 	typedef boost::shared_ptr<IComponentContainerTemplate> ComponentContainerTemplatePtr;
 	typedef boost::weak_ptr<IComponentContainerTemplate> ComponentContainerTemplateWeakPtr;
 	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
@@ -132,7 +132,7 @@ namespace GASS
 			Return a component container created from this template.
 		*/
 		//Manager argument needed if we want to used inheritance
-		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) const = 0;
+		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const = 0;
 
 		/**
 			Return a component container created from this template

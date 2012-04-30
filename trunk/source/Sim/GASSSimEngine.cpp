@@ -31,7 +31,6 @@
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSLogManager.h"
-
 //include to ensure interface export
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
@@ -45,6 +44,8 @@
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Scene/GASSSceneObject.h"
+
 
 namespace GASS
 {
@@ -53,7 +54,7 @@ namespace GASS
 		//m_SimulationUpdateInterval = 1.0f/30.0f; //30Hz
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
-		m_SimObjectManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
+		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
 	}
@@ -119,6 +120,14 @@ namespace GASS
 #ifdef PROFILER
 		ProfileSample::Output();
 #endif
+	}
+
+
+	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
+	{
+		ComponentContainerPtr cc  = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
+		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(cc);
+		return so;
 	}
 
 	bool SimEngine::Shutdown()

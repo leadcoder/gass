@@ -30,7 +30,7 @@
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include "RakNetChildReplica.h"
 #include "RakNetMasterReplica.h"

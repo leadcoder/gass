@@ -32,7 +32,7 @@
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 
@@ -158,7 +158,7 @@ namespace GASS
 
 		if(m_TargetObjectTemplate != "")
 		{
-			SceneObjectPtr so =  GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_TargetObjectTemplate);
+			SceneObjectPtr so =  GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_TargetObjectTemplate,GetSceneObject()->GetScene()->GetRootSceneObject());
 			m_TargetObject = so;
 		}
 	}
@@ -426,7 +426,7 @@ namespace GASS
 		//max distance is 20000m
 		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
 		request.Type = COL_LINE;
-		request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		request.Scene = GetSceneObject()->GetScene();
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 1;
 		col_sys->Force(request,result);

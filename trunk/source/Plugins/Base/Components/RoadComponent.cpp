@@ -28,7 +28,7 @@
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -136,7 +136,7 @@ namespace GASS
 				points[i] = points[i] + origo;
 
 
-			TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
@@ -146,8 +146,8 @@ namespace GASS
 
 			SceneObjectPtr last_obj;
 			IComponentContainer::ComponentVector components;
-			GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass(components, "GrassLayerComponent", true);
-			GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
 			for(int i = 0 ;  i < components.size(); i++)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
@@ -180,7 +180,7 @@ namespace GASS
 				points[i] = points[i] + origo;
 
 
-			TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
@@ -206,7 +206,7 @@ namespace GASS
 			return;
 
 
-		TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+		TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		const Vec3 origo = location->GetWorldPosition();
 	

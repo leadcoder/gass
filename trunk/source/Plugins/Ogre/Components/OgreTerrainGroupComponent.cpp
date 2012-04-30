@@ -31,7 +31,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
@@ -167,14 +167,13 @@ namespace GASS
 			{
 				for(int y = 0 ;y < size.y ;y++)
 				{
-					SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("OgreTerrainPageObject"));
+					SceneObjectPtr so = SimEngine::Get().CreateObjectFromTemplate("OgreTerrainPageObject");
 					if(so)
 					{
 						OgreTerrainPageComponentPtr comp = so->GetFirstComponentByClass<OgreTerrainPageComponent>();
 						comp->SetIndexX(x);
 						comp->SetIndexY(y);
 						GetSceneObject()->AddChild(so);
-						GetSceneObject()->GetSceneObjectManager()->LoadObject(so);
 						comp->SetPosition(Vec3(m_TerrainWorldSize*x,0,m_TerrainWorldSize*y));
 					}
 				}
@@ -381,7 +380,7 @@ namespace GASS
 			OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 			if(page)
 			{
-				GetSceneObject()->GetSceneObjectManager()->DeleteObject(child);
+				GetSceneObject()->RemoveChild(child);
 				children = GetSceneObject()->GetChildren();
 			}
 			//release pointers by reallocate children list

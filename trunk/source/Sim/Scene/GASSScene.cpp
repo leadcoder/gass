@@ -24,7 +24,6 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 #include "Sim/Scene/GASSISceneManager.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
@@ -51,9 +50,10 @@ namespace GASS
 		m_StartRot(Vec3(0,0,0)),
 		m_SceneMessageManager(new MessageManager()),
 		m_SceneLoaded(false),
-		m_CreateCalled(false)
+		m_CreateCalled(false),
+		m_Root( new SceneObject())
 	{
-
+		m_Root->SetName("Root");
 	}
 
 	Scene::~Scene()
@@ -65,9 +65,9 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
-		RegisterProperty<double>("OrigoOffsetEast", &Scene::GetOrigoOffsetEast, &Scene::SetOrigoOffsetEast);
-		RegisterProperty<double>("OrigoOffsetNorth", &Scene::GetOrigoOffsetNorth, &Scene::SetOrigoOffsetNorth);
-		RegisterProperty<std::string>("Projection", &Scene::GetProjection, &Scene::SetProjection);
+//		RegisterProperty<double>("OrigoOffsetEast", &Scene::GetOrigoOffsetEast, &Scene::SetOrigoOffsetEast);
+//		RegisterProperty<double>("OrigoOffsetNorth", &Scene::GetOrigoOffsetNorth, &Scene::SetOrigoOffsetNorth);
+//		RegisterProperty<std::string>("Projection", &Scene::GetProjection, &Scene::SetProjection);
 	}
 
 
@@ -76,8 +76,10 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
 
-		m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
-		m_ObjectManager->Init();
+		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
+		//m_ObjectManager->Init();
+		//m_Root->SetScene(shared_from_this());
+		m_Root->Initialize(shared_from_this());
 
 		//Add all registered scene manangers to the scene
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
@@ -91,8 +93,6 @@ namespace GASS
 		}
 		m_CreateCalled = true;
 	}
-
-
 
 	void Scene::Load(const std::string &scene_path)
 	{
@@ -117,7 +117,7 @@ namespace GASS
 		const std::string filename = scene_path + "/scene.xml";
 
 		//Load scene specific templates, filename should probably be a scene parameter
-		SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
+		SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
 
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
@@ -158,16 +158,15 @@ namespace GASS
 		std::string filename = scene_path + "/Scene.xml";
 		doc.SaveFile(filename.c_str());
 		//Save scene specific object templates, filename should probably be a scene parameter
-		//SimEngine::Get().GetSimObjectManager()->Load(scene_path + "/templates.xml");
+		//SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
 	}
-
 
 	void Scene::OnUpdate(double delta_time)
 	{
 		if(m_SceneLoaded)
 		{
 			m_SceneMessageManager->Update(delta_time);
-			m_ObjectManager->SyncMessages(delta_time);
+			m_Root->SyncMessages(delta_time);
 		}
 	}
 
@@ -218,14 +217,20 @@ namespace GASS
 		//save instances at same place
 		FilePath path (std::string(parent->GetDocument()->Value()));
 
-		m_ObjectManager->SaveXML(path.GetPathNoFile() + "/instances.xml");
+//		m_ObjectManager->SaveXML(path.GetPathNoFile() + "/instances.xml");
 	}
 
 	void Scene::Unload()
 	{
 		if(m_SceneLoaded)
 		{
-			m_ObjectManager->Clear();
+			m_Root->OnDelete();
+			m_Root.reset();
+			m_Root = SceneObjectPtr( new SceneObject());
+			m_Root->SetName("Root");
+			m_Root->Initialize(shared_from_this());
+			//m_ObjectManager->Clear();
+			
 			MessagePtr scene_msg(new UnloadSceneManagersMessage(shared_from_this()));
 			m_SceneMessageManager->SendImmediate(scene_msg);
 			MessagePtr unload_msg(new SceneUnloadNotifyMessage(shared_from_this()));
@@ -248,9 +253,20 @@ namespace GASS
 		//send load message
 		SendImmediate(scene_msg);
 
-		//Create scene object instances from templates
-		if(m_ScenePath != "")
-			m_ObjectManager->LoadXML(m_ScenePath + "/instances.xml");
+		//load scene terrain instances
+		SceneObjectPtr terrain_objects(new SceneObject());
+		m_TerrainObjects  = terrain_objects;
+
+		terrain_objects->LoadFromFile(m_ScenePath + "/instances.xml");
+		m_Root->AddChild(terrain_objects);
+		//terrain_objects->Initialize(shared_from_this());
+		//load!
+		//m_ObjectManager->LoadObject(static_object_root);
+		
+		
+
+	//	if(m_ScenePath != "")
+	//		m_ObjectManager->LoadXML(m_ScenePath + "/instances.xml");
 
 		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
@@ -291,7 +307,7 @@ namespace GASS
 	void Scene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
 	{
 		std::string obj_template = message->GetTemplateName();
-		SceneObjectPtr so = GetObjectManager()->LoadFromTemplate(obj_template,message->GetParent());
+		SceneObjectPtr so = LoadObjectFromTemplate(obj_template,message->GetParent());
 		if(so)
 		{
 			Vec3 pos = message->GetPosition();
@@ -309,11 +325,27 @@ namespace GASS
 		}
 	}
 
+	SceneObjectPtr Scene::LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent)
+	{
+		SceneObjectPtr so = SimEngine::Get().CreateObjectFromTemplate(template_name);
+		if(so)
+		{
+			if(parent)
+			{
+				parent->AddChild(so);
+			}
+			else
+				m_Root->AddChild(so);
+			//so->Initialize(shared_from_this());
+		}
+		return so;
+	}
+
 	void Scene::OnRemoveSceneObject(RemoveSceneObjectMessagePtr message)
 	{
 		SceneObjectPtr so = message->GetSceneObject();
 		if(so)
-			GetObjectManager()->DeleteObject(so);
+			so->GetParent()->RemoveChild(so);
 	}
 
 	SceneManagerIterator Scene::GetSceneManagers()
@@ -321,7 +353,7 @@ namespace GASS
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
 	}
 
-	double Scene::GetOrigoOffsetEast() const
+	/*double Scene::GetOrigoOffsetEast() const
 	{
 		return m_OffsetEast;
 	}
@@ -349,7 +381,7 @@ namespace GASS
 	std::string Scene::GetProjection() const
 	{
 		return m_Projection;
-	}
+	}*/
 
 	int Scene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{

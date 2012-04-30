@@ -30,7 +30,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
@@ -105,7 +105,7 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
 
-		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr scene = GetSceneObject()->GetScene();
 
 		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
@@ -126,7 +126,7 @@ namespace GASS
 			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 		}
 
-		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
 
@@ -276,7 +276,7 @@ namespace GASS
 		Vec3 tot_vel;
 		//Vec3 gravity;
 
-		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr scene = GetSceneObject()->GetScene();
 
 		Vec3 up(0,1,0);
 		Vec3 north (0,0,-1);

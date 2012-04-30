@@ -32,7 +32,7 @@
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
 
 
 
@@ -81,7 +81,7 @@ namespace GASS
 	void DensityMapComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
 
-		ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetPath();
 
 		std::string denmapname;
@@ -305,7 +305,7 @@ namespace GASS
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 
-		ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")

@@ -27,7 +27,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
@@ -90,7 +90,7 @@ namespace GASS
 			{
 				//const std::string vp_name = camera->GetPrefredViewport();
 				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject(),vp_name));
-				GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
+				GetSceneObject()->GetScene()->SendImmediate(cam_msg);
 			}
 		}*/
 

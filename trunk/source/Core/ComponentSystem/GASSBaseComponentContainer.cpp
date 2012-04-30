@@ -184,24 +184,6 @@ namespace GASS
 		}
 	}
 
-	void BaseComponentContainer::OnCreate()
-	{
-		ComponentVector::iterator iter = m_ComponentVector.begin();
-		while (iter != m_ComponentVector.end())
-		{
-			ComponentPtr comp = (*iter);
-			comp->OnCreate();
-			++iter;
-		}
-		BaseComponentContainer::ComponentContainerVector::iterator go_iter;
-		for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
-		{
-			ComponentContainerPtr child = *go_iter;
-			child->OnCreate();
-		}
-	}
-
-
 	void BaseComponentContainer::SaveXML(TiXmlElement *obj_elem)
 	{
 		if(!m_Serialize)
@@ -291,8 +273,8 @@ namespace GASS
 				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
-					const std::string type = cc_elem->Value();
-					ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+					//allow over loading
+					ComponentContainerPtr container = CreateComponentContainer(cc_elem);
 					AddChild(container);
 					XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
 					if(s_container)
@@ -308,6 +290,13 @@ namespace GASS
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
 		}
+	}
+
+	ComponentContainerPtr BaseComponentContainer::CreateComponentContainer(TiXmlElement *cc_elem) const
+	{
+		const std::string type = cc_elem->Value();
+		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
+		return container;
 	}
 
 	ComponentPtr BaseComponentContainer::LoadComponent(TiXmlElement *comp_template)

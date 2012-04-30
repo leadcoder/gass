@@ -26,7 +26,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSoundSceneObjectMessages.h"
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
@@ -245,7 +245,7 @@ namespace GASS
 		Vec3 final_pos = projectile_start_pos +  projectile_dir*m_ProjectileStartOffset;
 
 		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_ProjectileTemplateName,final_pos,projectile_rot,vel));
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->PostMessage(spawn_msg);
+		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 
 		//recoil
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,m_RecoilForce));
@@ -259,7 +259,7 @@ namespace GASS
 			//MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,projectile_start_pos,projectile_rot,vel));
 			
 			
-			GetSceneObject()->GetSceneObjectManager()->GetScene()->PostMessage(spawn_msg);
+			GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 		}
 
 
@@ -270,7 +270,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(particle_msg2);
 
 
-	/*	SceneObjectPtr projectile = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate(m_ProjectileTemplateName);
+	/*	SceneObjectPtr projectile = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
 		{
 			int id = (int) this;

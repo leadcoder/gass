@@ -28,7 +28,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
@@ -94,7 +94,7 @@ namespace GASS
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
-			IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetChildren();
+			IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildren();
 			while(objects.hasMoreElements())
 			{
 				ComponentContainerPtr cc = objects.getNext();
@@ -169,7 +169,7 @@ namespace GASS
 			if(camera)
 			{
 				MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),"Viewport0"));
-				GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
+				GetSceneObject()->GetScene()->SendImmediate(cam_msg);
 			}
 			m_CurrentVehicle.reset();
 			m_CurrentSeat.reset();

@@ -7,7 +7,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 
@@ -34,7 +34,7 @@ namespace GASS
 			LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
 			if(comp)
 			{
-				ScenePtr scene = selected->GetSceneObjectManager()->GetScene();
+				ScenePtr scene = selected->GetScene();
 				Vec3 up(0,1,0);
 				Vec3 new_position = comp->GetPosition();
 

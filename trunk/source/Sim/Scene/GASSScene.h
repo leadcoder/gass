@@ -40,7 +40,8 @@ namespace GASS
 	typedef std::vector<SceneManagerPtr> SceneManagerVector;
 	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 	typedef VectorIterator<SceneManagerVector> SceneManagerIterator;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr; 
+	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr; 
 
 	/**
 	A Scene in gass can be loaded from disc or created in runtime.  
@@ -127,7 +128,6 @@ namespace GASS
 		void PostMessage(MessagePtr message);
 		void SendImmediate(MessagePtr message);
 
-
 		/**
 		Load a new scene from path
 		*/
@@ -152,7 +152,6 @@ namespace GASS
 		Register for scene scene messages, see SceneSceneMessages.h for available messages
 		*/
 
-
 		/**
 		Get scene manager iterator
 		*/
@@ -163,21 +162,19 @@ namespace GASS
 
 		void OnUpdate(double delta_time);
 
-
-		double GetOrigoOffsetEast() const;
+	/*	double GetOrigoOffsetEast() const;
 		double GetOrigoOffsetNorth() const;
 		void SetOrigoOffsetEast(double value);
 		void SetOrigoOffsetNorth(double value);
 		std::string GetProjection() const;
 		void SetProjection(const std::string &proj);
-
-		SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
+		*/
+		//SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
 		SceneManagerPtr GetSceneManager(const std::string &type);
 
-		void Load();
-		void Unload();
-
-	protected:
+		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
+		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
+protected:
 		/**
 		Load scene  from xml,
 		this method is called by the scene LoadXML method in the scene class
@@ -196,6 +193,8 @@ namespace GASS
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 
+		void Load();
+		void Unload();
 		
 		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
@@ -209,11 +208,12 @@ namespace GASS
 
 		std::string m_Name;
 
-		SceneObjectManagerPtr m_ObjectManager;
-
-
+		//SceneObjectManagerPtr m_ObjectManager;
 		MessageManagerPtr m_SceneMessageManager;
 
+		//Scene root node
+		SceneObjectPtr m_Root;
+		SceneObjectWeakPtr m_TerrainObjects;
 
 		bool m_SceneLoaded;
 		bool m_CreateCalled;

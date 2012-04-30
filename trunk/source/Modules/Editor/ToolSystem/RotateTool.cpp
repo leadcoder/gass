@@ -8,7 +8,7 @@
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
@@ -180,7 +180,7 @@ namespace GASS
 			ScenePtr scene = m_Controller->GetScene();
 			std::string gizmo_name = "GizmoRotateObject_YUp";
 			
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 			//Send selection message to inform gizmo about current object

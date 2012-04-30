@@ -31,7 +31,7 @@
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -215,7 +215,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot()->GetFirstComponentByClass<ITerrainComponent>(true);
+			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 			
 			if(terrain)
 			{
@@ -249,7 +249,7 @@ namespace GASS
 			//create from in run time?
 			//try to load 
 
-			ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			ScenePtr  scene = GetSceneObject()->GetScene();
 			std::string scene_path = scene->GetPath();
 
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
@@ -283,7 +283,7 @@ namespace GASS
 
 	void GrassLoaderComponent::SaveDensityMap()
 	{
-		ScenePtr scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -304,7 +304,7 @@ namespace GASS
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			request.Scene = GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 			GASS::CollisionResult result;

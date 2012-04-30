@@ -69,10 +69,10 @@ namespace GASS
 			This function do not initialize the object,
 		@param name Template name
 		*/
-		ComponentContainerPtr CreateFromTemplate(const std::string &name);
+		ComponentContainerPtr CreateFromTemplate(const std::string &name) const;
 //		void SetNameCheck(bool value){m_NameCheck = value;}
 		void AddTemplate(ComponentContainerTemplatePtr obj);
-		ComponentContainerTemplatePtr GetTemplate(const std::string &name);
+		ComponentContainerTemplatePtr GetTemplate(const std::string &name) const;
 
 		/**
 			Load templates from xml-file
@@ -124,6 +124,7 @@ namespace GASS
 		TemplateMap m_TemplateMap;
 	};
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
+	typedef boost::shared_ptr<BaseComponentContainerTemplateManager const> BaseComponentContainerTemplateManagerConstPtr;
 }
 
 #endif // #ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH

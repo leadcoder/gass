@@ -3,7 +3,7 @@
 #include "../ToolSystem/MouseToolController.h"
 #include "PaintGizmoComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"

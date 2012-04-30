@@ -71,12 +71,7 @@ namespace GASS
 		*/
 		virtual void SetName(const std::string &name) = 0;
 
-		/**
-			This function is called when a
-			component conatiner is instantiated
-		*/
-		virtual void OnCreate() = 0;
-
+	
 		/**
 			Add a child component conatiner.
 		*/

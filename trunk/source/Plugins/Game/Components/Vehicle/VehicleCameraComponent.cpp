@@ -27,7 +27,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 
@@ -84,7 +84,7 @@ namespace GASS
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),m_PreferredViewport));
-		//GetSceneObject()->GetSceneObjectManager()->GetScene()->SendImmediate(cam_msg);
+		//GetSceneObject()->GetScene()->SendImmediate(cam_msg);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)

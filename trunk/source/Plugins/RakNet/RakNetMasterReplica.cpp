@@ -30,7 +30,7 @@
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include "RakNetMasterReplica.h"
 #include "RakNetNetworkMasterComponent.h"
@@ -223,7 +223,7 @@ namespace GASS
 		if(obj) //remove object	
 		{
 			MessagePtr remove_msg(new RemoveSceneObjectMessage(obj));
-			obj->GetSceneObjectManager()->GetScene()->PostMessage(remove_msg);
+			obj->GetScene()->PostMessage(remove_msg);
 			
 		}
 

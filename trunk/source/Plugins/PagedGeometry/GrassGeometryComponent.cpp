@@ -30,7 +30,7 @@
 #include "GrassLoader.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -118,7 +118,7 @@ namespace GASS
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 
-		ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -423,7 +423,7 @@ namespace GASS
 			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
 			if(!terrain)
 			{
-				SceneObjectPtr root = GetSceneObject()->GetSceneObjectManager()->GetSceneRoot();
+				SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
 				terrain = GetTerrainComponent(root);
 			}
 			if(terrain)
@@ -473,7 +473,7 @@ namespace GASS
 			//create from in run time?
 			//try to load 
 
-			ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			ScenePtr  scene = GetSceneObject()->GetScene();
 			std::string scene_path = scene->GetPath();
 
 
@@ -532,7 +532,7 @@ namespace GASS
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			request.Scene = GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = 1;
 			GASS::CollisionResult result;
@@ -663,7 +663,7 @@ namespace GASS
 			m_PagedGeometry->reloadGeometryPages(bounds);
 			
 
-			ScenePtr  scene = GetSceneObject()->GetSceneObjectManager()->GetScene();
+			ScenePtr  scene = GetSceneObject()->GetScene();
 			std::string scene_path = scene->GetPath();
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
 			const std::string fp_denmap = scene_path + "/" + denmapname;

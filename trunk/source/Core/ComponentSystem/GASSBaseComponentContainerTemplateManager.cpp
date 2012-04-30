@@ -56,14 +56,14 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr BaseComponentContainerTemplateManager::CreateFromTemplate(const std::string &name)
+	ComponentContainerPtr BaseComponentContainerTemplateManager::CreateFromTemplate(const std::string &name) const
 	{
 		ComponentContainerPtr new_cc;
 		ComponentContainerTemplatePtr temp =  GetTemplate(name);
 		int part_id = 0;
 		if(temp)
 		{
-			BaseComponentContainerTemplateManagerPtr manager = shared_from_this();
+			ComponentContainerTemplateManagerConstPtr manager = shared_from_this();
 			new_cc = temp->CreateComponentContainer(part_id,manager);
 		}
 		else
@@ -71,9 +71,9 @@ namespace GASS
 		return new_cc;
 	}
 
-	ComponentContainerTemplatePtr BaseComponentContainerTemplateManager::GetTemplate(const std::string &name)
+	ComponentContainerTemplatePtr BaseComponentContainerTemplateManager::GetTemplate(const std::string &name) const
 	{
-		TemplateMap::iterator pos;
+		TemplateMap::const_iterator pos;
 		//find the template
 		pos = m_TemplateMap.find(name);
 

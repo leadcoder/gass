@@ -33,11 +33,11 @@ namespace GASS
 {
 	typedef std::string SceneObjectID;
 	class MessageManager;
-	class SceneObjectManager;
+	class Scene;
 	class SceneObject;
 
-	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
-	typedef boost::weak_ptr<SceneObjectManager> SceneObjectManagerWeakPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
 	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
@@ -62,16 +62,22 @@ namespace GASS
 
 		SceneObject();
 		virtual ~SceneObject();
-		static	void RegisterReflection();
+		static void RegisterReflection();
 		void SyncMessages(double delta_time, bool recursive = true);
 
-		SceneObjectManagerPtr GetSceneObjectManager() {return SceneObjectManagerPtr(m_Manager,boost::detail::sp_nothrow_tag());}
+		ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+		//void SetScene(ScenePtr scene) {m_Scene = scene;}
+		void Initialize(ScenePtr scene);
 		//MessageManager* GetMessageManager(){return m_MessageManager;}
-		void OnCreate();
-
+		
+		//void OnCreate();
+		virtual void RemoveChild(ComponentContainerPtr child);
+		void AddChild(ComponentContainerPtr child);
+	
+		void OnDelete();
 
 		//public for now, not possible to get derived manager to get hold of this otherwise
-		void SetSceneObjectManager(SceneObjectManagerPtr manager);
+		//void SetSceneObjectManager(SceneObjectManagerPtr manager);
 
 		/**
 		Get owner object that is direct under scene root
@@ -212,8 +218,10 @@ namespace GASS
 
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
+		void LoadFromFile(const std::string &filename);
 	protected:
-		SceneObjectManagerWeakPtr m_Manager;
+		ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
+		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
 

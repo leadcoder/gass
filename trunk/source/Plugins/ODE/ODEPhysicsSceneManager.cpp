@@ -26,7 +26,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 

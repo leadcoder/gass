@@ -59,7 +59,6 @@ namespace GASS
 		static	void RegisterReflection();
 
 		//ComponentContainer interface
-		virtual void OnCreate();
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
 		virtual void AddChild(ComponentContainerPtr child);
@@ -101,7 +100,9 @@ namespace GASS
 		//Help functions for template creation
 		std::string CreateUniqueName();
 		void InheritComponentData(ComponentContainerPtr cc);
-
+		//Allow custom parsing for object creation
+		virtual ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
+		
 		ComponentPtr LoadComponent(TiXmlElement *comp_template);
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;

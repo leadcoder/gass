@@ -23,7 +23,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
 

@@ -326,7 +326,7 @@ namespace GASS
 		return comp;
 	}
 
-	std::string BaseComponentContainerTemplate::CreateUniqueName(ComponentContainerTemplateManagerPtr manager) const
+	std::string BaseComponentContainerTemplate::CreateUniqueName(ComponentContainerTemplateManagerConstPtr manager) const
 	{
 		static int object_counter = 0;
 		std::stringstream ss;
@@ -364,7 +364,7 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerPtr manager) const
+	ComponentContainerPtr BaseComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const
 	{
 		ComponentContainerPtr new_object;
 		if(m_Inheritance != "")
@@ -470,7 +470,7 @@ namespace GASS
 		return container;
 	}
 
-	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerPtr manager, bool keep_inheritance)
+	void BaseComponentContainerTemplate::CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance)
 	{
 		BaseComponentContainerTemplatePtr old_temp;
 		if(keep_inheritance)

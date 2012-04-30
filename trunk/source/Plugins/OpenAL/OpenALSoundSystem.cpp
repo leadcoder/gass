@@ -8,7 +8,7 @@
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObject.h"
 
 

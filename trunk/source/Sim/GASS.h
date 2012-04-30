@@ -80,7 +80,7 @@
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 
 
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 

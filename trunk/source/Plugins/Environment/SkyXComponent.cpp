@@ -27,9 +27,10 @@
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSScene.h"
 #include <Ogre.h>
 
 namespace GASS
@@ -184,7 +185,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadGFXComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
 	}
 
 	void SkyXComponent::UpdateOptions()
@@ -200,7 +201,7 @@ namespace GASS
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
 		m_SkyX = NULL;
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
 
 	}
 
@@ -221,7 +222,7 @@ namespace GASS
 		// Create SkyX object
 		Init(ocam);
 
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		
 	}
 

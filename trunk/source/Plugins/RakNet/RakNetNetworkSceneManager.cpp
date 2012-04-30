@@ -28,7 +28,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 
@@ -95,14 +95,12 @@ namespace GASS
 	{
 		RakNetMasterReplica* replica = message->GetReplica();
 		std::string template_name = replica->GetTemplateName();
-		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate(template_name));
+		SceneObjectPtr so = SimEngine::Get().CreateObjectFromTemplate(template_name);
 		if(so)
 		{
 			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
-
-
-			GetScene()->GetObjectManager()->LoadObject(so);
+			GetScene()->GetRootSceneObject()->AddChild(so);
 		}
 	}
 

@@ -28,7 +28,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+#include "Sim/Scene/GASSScene.h"
 
 #include <Ogre.h>
 
@@ -197,7 +197,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnLoad,LoadGFXComponentsMessage,3));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
 	}
 
 	void SkyXVolumeCloudComponent::OnWeatherMessage(WeatherMessagePtr message)

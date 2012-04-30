@@ -21,7 +21,7 @@
 #include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 #include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"

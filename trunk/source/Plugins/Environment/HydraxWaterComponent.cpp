@@ -28,8 +28,9 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 
 #include <Ogre.h>
 
@@ -611,7 +612,7 @@ namespace GASS
 		delete m_Hydrax;
 		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
 
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
 	void HydraxWaterComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
@@ -644,7 +645,7 @@ namespace GASS
 
 	void HydraxWaterComponent::OnLoad(LoadGFXComponentsMessagePtr message)
 	{
-		GetSceneObject()->GetSceneObjectManager()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();

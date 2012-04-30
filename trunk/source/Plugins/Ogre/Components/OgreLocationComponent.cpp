@@ -133,7 +133,6 @@ namespace GASS
 
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
-		
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 

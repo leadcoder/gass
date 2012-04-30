@@ -11,7 +11,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
@@ -115,7 +115,7 @@ namespace GASS
 		{
 			ScenePtr scene = m_Controller->GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate(gizmo_name);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 

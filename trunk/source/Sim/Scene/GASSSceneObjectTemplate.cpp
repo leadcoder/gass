@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 
 #include "Core/Common.h"

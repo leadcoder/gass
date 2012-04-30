@@ -34,7 +34,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
@@ -293,7 +293,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = GetDebugObject();
 				obj->UnregisterForMessage(UNREG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
-				GetSceneObject()->GetSceneObjectManager()->GetScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
+				GetSceneObject()->GetScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
 			}
 		}
 	}
@@ -320,8 +320,8 @@ namespace GASS
 
 		if(!scene_object)
 		{
-			//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-			scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+			//scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("DebugPhysics",GetSceneObject());
+			scene_object = SimEngine::Get().CreateObjectFromTemplate("DebugPhysics");
 			if(!scene_object)
 			{
 				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
@@ -338,9 +338,9 @@ namespace GASS
 
 				debug_template->AddComponent(location_comp);
 				debug_template->AddComponent(mesh_comp );
-				SimEngine::Get().GetSimObjectManager()->AddTemplate(debug_template);
-				//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-				scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+				SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(debug_template);
+				//scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("DebugPhysics",GetSceneObject());
+				scene_object = SimEngine::Get().CreateObjectFromTemplate("DebugPhysics");
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
 			scene_object->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));

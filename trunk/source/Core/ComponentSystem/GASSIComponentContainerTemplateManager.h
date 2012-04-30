@@ -60,7 +60,7 @@ namespace GASS
 		@remarks
 		@param name Template name
 		*/
-		virtual ComponentContainerPtr CreateFromTemplate(const std::string &name) = 0;
+		virtual ComponentContainerPtr CreateFromTemplate(const std::string &name) const = 0;
 		/**
 			Add a template the template archive.
 		@remarks
@@ -72,7 +72,7 @@ namespace GASS
 		@remarks
 		@param name Name of the template
 		*/
-		virtual ComponentContainerTemplatePtr GetTemplate(const std::string &name) = 0;
+		virtual ComponentContainerTemplatePtr GetTemplate(const std::string &name) const= 0;
 
 		/**
 			Should all objects returned by this manager have unique names?
@@ -105,6 +105,7 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
+	typedef boost::shared_ptr<IComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
 	typedef boost::weak_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerWeakPtr;
 }
 

@@ -237,11 +237,8 @@ namespace GASS
 				SceneObjectPtr so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create("SceneObject"));
 				so->SetName(child_group->getName());
 				so->SetID(child_group->getName());
-				parent->AddChild(so);
-
-
+		
 				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
-
 
 				OSGNodeData* data = new OSGNodeData(mesh_comp);
 				child_group->setUserData((osg::Referenced*)data);
@@ -249,9 +246,8 @@ namespace GASS
 				mesh_comp->SetMeshNode(child_group);
 				so->AddComponent(mesh_comp);
 				//load this object
-				if(load)
-					GetSceneObject()->GetSceneObjectManager()->LoadObject(so);
-
+				parent->AddChild(so);
+				
 				Expand(so,child_group, load);
 			}
 		}

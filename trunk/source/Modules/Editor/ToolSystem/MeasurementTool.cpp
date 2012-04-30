@@ -8,7 +8,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scene/GASSSceneObjectManager.h"
+
 #include "Sim/Components/Graphics/GASSMeshData.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
@@ -70,7 +70,7 @@ namespace GASS
 		Vec3 text_pos = start;//(start + end)* 0.5; 
 		if(!SceneObjectPtr(m_RulerObject,boost::detail::sp_nothrow_tag()))
 		{
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->GetObjectManager()->LoadFromTemplate("RulerObject");
+			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetScene()->GetRootSceneObject());
 			m_RulerObject = scene_object;
 			if(scene_object)
 			{
