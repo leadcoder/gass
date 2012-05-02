@@ -182,18 +182,14 @@ namespace GASS
 			@objects Return scene objects that match name
 			@name The object name to search for
 			@exact_math Should the name be a exact match or should we allow 
-				that the name argument is found in the scene object name string, this
-				can be usefull in case that every object has a unique id as part of 
-				the name wich is not known in compiletime.
+				that the name argument is found in the scene object name string.
 		*/
 		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true) const;
 
 		/** Get first child scene objects that match name. 
 			@name The object name to search for
 			@exact_math Should the name be a exact match or should we allow 
-				that the name argument is found in the scene object name string, this
-				can be usefull in case that every object has a unique id as part of 
-				the name wich is not known in compiletime.
+				that the name argument is found in the scene object name string.
 		*/
 		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true) const;
 

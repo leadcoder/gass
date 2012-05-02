@@ -227,37 +227,36 @@ namespace GASS
 	return objects;
 	}*/
 
-	/*void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
+	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
 	{
-		if(exact_math)
-		{
-			if(GetName()== name)
-			{
-				SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(shared_from_this());
-				objects.push_back(obj);
-			}
-		}
-		else
-		{
-			std::string::size_type pos = GetName().find(name);
-			if(pos != std::string::npos)
-			{
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-				objects.push_back(obj);
-			}
-		}
-
 		if(recursive)
 		{
 			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
 			while(iter != m_ComponentContainerVector.end())
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
-				child->GetChildrenByName(objects,name,exact_math,recursive);
+
+				if(exact_math)
+				{
+					if(child->GetName()== name)
+					{
+						objects.push_back(child);
+					}
+				}
+				else
+				{
+					std::string::size_type pos = child->GetName().find(name);
+					if(pos != std::string::npos)
+					{
+						objects.push_back(child);
+					}
+				}
+				if(recursive)
+					child->GetChildrenByName(objects,name,exact_math,recursive);
 				iter++;
 			}
 		}
-	}*/
+	}
 
 	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive) const
 	{

@@ -58,6 +58,8 @@ namespace GASS
 	protected:
 
 		//Message functions
+		void OnBodyLoaded(BodyLoadedMessagePtr message);
+		void OnLoadComponents(LoadComponentsMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);

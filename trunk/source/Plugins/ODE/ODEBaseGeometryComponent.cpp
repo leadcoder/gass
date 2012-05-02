@@ -78,12 +78,59 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
+
+		//Try to figure out when to load
+
+		m_Body = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
+		LocationComponentPtr location  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+		
+		if(m_Body)
+		{
+			if(m_SizeFromMesh)
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+			else
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
+		}
+		else
+		{
+			if(m_SizeFromMesh && geom)
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+			else
+			{
+				if(location)
+					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
+				else
+					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
+			}
+		}
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+	}
+
+
+	void ODEBaseGeometryComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	{
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
+		UpdateODEGeom();
+		if(m_Debug) 
+			SetDebug(true);
+	}
+
+
+	void ODEBaseGeometryComponent::OnLoadComponents(LoadComponentsMessagePtr message)
+	{
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
+		UpdateODEGeom();
+		if(m_Debug) 
+			SetDebug(true);
 	}
 
 	void ODEBaseGeometryComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -95,6 +142,16 @@ namespace GASS
 		if(m_Debug) 
 			SetDebug(true);
 	}
+
+	void ODEBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	{
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
+		UpdateODEGeom();
+		SetSizeFromMesh(true);
+	}
+
 
 	void ODEBaseGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
@@ -157,8 +214,10 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::Reset()
 	{
-		if(m_TransformGeomID) dGeomDestroy(m_TransformGeomID);
-		if(m_ODESpaceID) dSpaceDestroy(m_ODESpaceID);
+		if(m_TransformGeomID) 
+			dGeomDestroy(m_TransformGeomID);
+		if(m_ODESpaceID) 
+			dSpaceDestroy(m_ODESpaceID);
 		m_TransformGeomID = NULL;
 		m_ODESpaceID = NULL;
 	}
@@ -175,7 +234,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::SetPosition(const Vec3 &pos)
 	{
-		if(m_Body == NULL)
+		if(m_Body == NULL && m_TransformGeomID)
 		{
 			dGeomSetPosition(m_TransformGeomID, pos.x, pos.y, pos.z);
 		}
@@ -183,7 +242,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_Body == NULL)
+		if(m_Body == NULL && m_TransformGeomID)
 		{
 			dReal ode_rot_mat[12];
 			Mat4 rot_mat;
@@ -196,12 +255,14 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::Disable()
 	{
-		if(m_TransformGeomID) dGeomDisable(m_TransformGeomID);
+		if(m_TransformGeomID)
+			dGeomDisable(m_TransformGeomID);
 	}
 
 	void ODEBaseGeometryComponent::Enable()
 	{
-		if(m_TransformGeomID) dGeomEnable(m_TransformGeomID);
+		if(m_TransformGeomID)
+			dGeomEnable(m_TransformGeomID);
 	}
 
 	GeometryComponentPtr ODEBaseGeometryComponent::GetGeometry() const 
@@ -215,13 +276,7 @@ namespace GASS
 		return geom;
 	}
 
-	void ODEBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
-	{
-		if(m_SizeFromMesh)
-		{
-			SetSizeFromMesh(true);
-		}
-	}
+	
 
 	unsigned long ODEBaseGeometryComponent::GetCollisionBits() const 
 	{
@@ -231,7 +286,7 @@ namespace GASS
 	void ODEBaseGeometryComponent::SetCollisionBits(unsigned long value)
 	{
 		m_CollisionBits = value;
-		if(m_GeomID)
+		if(m_GeomID && m_TransformGeomID)
 		{
 			dGeomSetCollideBits (m_GeomID,m_CollisionBits);
 			dGeomSetCollideBits (m_TransformGeomID, m_CollisionBits);
@@ -251,7 +306,7 @@ namespace GASS
 	void ODEBaseGeometryComponent::SetCollisionCategory(unsigned long value)
 	{
 		m_CollisionCategory =value;
-		if(m_GeomID)
+		if(m_GeomID && m_TransformGeomID)
 		{
 			dGeomSetCategoryBits(m_GeomID, m_CollisionCategory );
 			dGeomSetCategoryBits(m_TransformGeomID, m_CollisionCategory );

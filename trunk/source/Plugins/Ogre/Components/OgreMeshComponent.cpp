@@ -234,6 +234,11 @@ namespace GASS
 		mesh_data->NumFaces = 0;
 		mesh_data->FaceVector = NULL;
 
+
+		if(m_OgreEntity == NULL)
+			return;
+
+
 		Ogre::MeshPtr mesh = m_OgreEntity->getMesh();
 
 		if(mesh->sharedVertexData)
