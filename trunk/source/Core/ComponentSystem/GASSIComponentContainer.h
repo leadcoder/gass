@@ -57,8 +57,11 @@ namespace GASS
 	public:
 		typedef std::vector<ComponentPtr> ComponentVector;
 		typedef VectorIterator<ComponentVector>  ComponentIterator;
+		typedef ConstVectorIterator<ComponentVector>  ConstComponentIterator;
 		typedef std::vector<ComponentContainerPtr> ComponentContainerVector;
 		typedef VectorIterator<ComponentContainerVector> ComponentContainerIterator;
+		typedef ConstVectorIterator<ComponentContainerVector> ConstComponentContainerIterator;
+	
 	public:
 		virtual ~IComponentContainer(){}
 		/**
@@ -93,6 +96,8 @@ namespace GASS
 			no grandchildren will be returned
 		*/
 		virtual ComponentContainerIterator GetChildren() = 0;
+
+		virtual ConstComponentContainerIterator GetChildren() const = 0;
 		/**
 			Get component by name,
 			only serach this containers components and first one is returned
@@ -103,6 +108,9 @@ namespace GASS
 			Get all components owned by this container
 		*/
 		virtual ComponentIterator GetComponents() = 0;
+
+		virtual ConstComponentIterator GetComponents() const = 0;
+		
 		/**
 			Get possible parent component container
 		*/

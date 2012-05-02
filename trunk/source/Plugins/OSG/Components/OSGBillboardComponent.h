@@ -33,7 +33,7 @@ namespace GASS
 		OSGBillboardComponent (void);
 		~OSGBillboardComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
@@ -48,7 +48,7 @@ namespace GASS
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnGeometryScale(GeometryScaleMessagePtr message);
 		void UpdateSize(float width,float height);
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);

@@ -77,9 +77,9 @@ namespace GASS
 		RegisterProperty<Vec3>("Anchor", &GASS::ODESuspensionComponent::GetAnchor, &GASS::ODESuspensionComponent::SetAnchor);
 	}
 
-	void ODESuspensionComponent::OnCreate()
+	void ODESuspensionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,BodyLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnParameterMessage,PhysicsJointMessage,0));
 	}
 
@@ -119,9 +119,10 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	
+	void ODESuspensionComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 

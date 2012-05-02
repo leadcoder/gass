@@ -48,7 +48,7 @@ namespace GASS
 		ODECylinderGeometryComponent();
 		virtual ~ODECylinderGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		dGeomID CreateODEGeom();
 		void SetRadius(Float radius);

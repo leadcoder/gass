@@ -62,11 +62,11 @@ namespace GASS
 		
 	}
 
-	void ArmorComponent::OnCreate()
+	void ArmorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LoadGameComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LoadComponentsMessage,1));
 	}
-	void ArmorComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void ArmorComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		NetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
 		if(nc && !nc->IsRemote())

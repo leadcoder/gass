@@ -63,6 +63,11 @@ namespace GASS
 		return ComponentIterator(m_ComponentVector.begin(), m_ComponentVector.end());
 	}
 
+	IComponentContainer::ConstComponentIterator BaseComponentContainer::GetComponents() const
+	{
+		return ConstComponentIterator(m_ComponentVector.begin(), m_ComponentVector.end());
+	}
+
 	ComponentPtr BaseComponentContainer::GetComponent(const std::string &name) const
 	{
 		ComponentPtr comp;
@@ -323,6 +328,12 @@ namespace GASS
 	{
 		return IComponentContainer::ComponentContainerIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
+
+	IComponentContainer::ConstComponentContainerIterator BaseComponentContainer::GetChildren() const
+	{
+		return IComponentContainer::ConstComponentContainerIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
+	}
+
 
 	
 	void BaseComponentContainer::SetTemplateName(const std::string &name) 

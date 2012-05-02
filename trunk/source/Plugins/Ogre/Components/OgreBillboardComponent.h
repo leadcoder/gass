@@ -42,7 +42,7 @@ namespace GASS
 		OgreBillboardComponent (void);
 		~OgreBillboardComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryCategory GetGeometryCategory() const;
@@ -60,7 +60,7 @@ namespace GASS
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		std::string m_RenderQueue;
 		std::string m_Material;

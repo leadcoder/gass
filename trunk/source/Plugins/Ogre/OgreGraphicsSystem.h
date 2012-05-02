@@ -81,7 +81,7 @@ namespace GASS
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnDrawLine(DrawLineMessagePtr message);
 		void OnDrawCircle(DrawCircleMessagePtr message);
-		void OnCreateTextBox(CreateTextBoxMessagePtr message);
+		void OnInitializeTextBox(CreateTextBoxMessagePtr message);
 
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
@@ -95,7 +95,7 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void OnInit(InitSystemMessagePtr message);
-		//void OnCreateRenderWindow(CreateRenderWindowMessagePtr message);
+		//void OnInitializeRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
 
 		std::string m_RenderSystem;

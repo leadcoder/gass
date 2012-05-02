@@ -99,9 +99,9 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnCreate()
+	void OSGMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
@@ -142,7 +142,7 @@ namespace GASS
 	}
 
 
-	void OSGMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		LoadMesh(m_Filename);
 		if(m_MeshNode.get())

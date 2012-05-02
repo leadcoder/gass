@@ -13,7 +13,7 @@ namespace GASS
 		PaintGizmoComponent();
 		virtual ~PaintGizmoComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SetSize(float value){m_Size =value;}
 		void SetInnerSize(float value){m_InnerSize =value;}
 		void SetActive(bool active)  {m_Active =active;}
@@ -23,7 +23,7 @@ namespace GASS
 	
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetSize() const{return m_Size;}
 		

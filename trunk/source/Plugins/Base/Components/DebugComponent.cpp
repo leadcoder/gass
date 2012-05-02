@@ -42,9 +42,9 @@ namespace GASS
 		RegisterProperty<bool>("ShowSceneObjectName", &GASS::DebugComponent::GetShowNodeName, &GASS::DebugComponent::SetShowNodeName);
 	}
 
-	void DebugComponent::OnCreate()
+	void DebugComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadCoreComponentsMessage),MESSAGE_FUNC(DebugComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(DebugComponent::OnLoad),0);
 		GetSceneObject()->RegisterForMessage(typeid(SceneObjectNameMessage),MESSAGE_FUNC(DebugComponent::OnChangeName),0);
 		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsMessage),MESSAGE_FUNC(DebugComponent::OnSettings),0);
 	}

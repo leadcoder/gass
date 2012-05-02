@@ -67,9 +67,9 @@ namespace GASS
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
 
-	void OgreMeshComponent::OnCreate()
+	void OgreMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
@@ -78,9 +78,9 @@ namespace GASS
 
 	}
 
-	void OgreMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_ReadyToLoadMesh = true;
 		SetFilename(m_Filename);

@@ -61,9 +61,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<ODEMeshGeometryComponent, IComponent>);
 	}
 
-	void ODEMeshGeometryComponent::OnCreate()
+	void ODEMeshGeometryComponent::OnInitialize()
 	{
-		ODEBaseGeometryComponent::OnCreate();
+		ODEBaseGeometryComponent::OnInitialize();
 	}
 
 	dGeomID ODEMeshGeometryComponent::CreateODEGeom()

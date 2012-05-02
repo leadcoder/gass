@@ -14,7 +14,7 @@ namespace GASS
 		GizmoComponent();
 		virtual ~GizmoComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		
 		Vec3 GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir);
 		Quaternion GetRotation(float detla);
@@ -29,7 +29,7 @@ namespace GASS
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetSize() const{return m_Size;}
 		void SetSize(float value){m_Size =value;}

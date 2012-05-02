@@ -79,7 +79,7 @@ namespace GASS
 			
 			if(scene)
 			{
-				ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+				ODEPhysicsSceneManagerPtr ode_scene = scene->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 				if(request.Type == COL_LINE)
 				{
 					CollisionResult result;
@@ -122,7 +122,7 @@ namespace GASS
 		ScenePtr scene(request.Scene);
 		if(scene)
 		{
-			ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+			ODEPhysicsSceneManagerPtr ode_scene = scene->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 			if(request.Type == COL_LINE)
 			{
 				ODELineCollision raycast(&request,&result,ode_scene,m_MaxRaySegment);
@@ -136,7 +136,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("ODECollisionSystem",new GASS::Creator<ODECollisionSystem, ISystem>);
 	}
 
-	void ODECollisionSystem::OnCreate()
+	void ODECollisionSystem::OnInitialize()
 	{
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
@@ -151,7 +151,7 @@ namespace GASS
 
 	Float ODECollisionSystem::GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute) const
 	{
-		ODEPhysicsSceneManagerPtr ode_scene = boost::shared_static_cast<ODEPhysicsSceneManager>(scene->GetSceneManager("PhysicsSceneManager"));
+		ODEPhysicsSceneManagerPtr ode_scene = scene->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		CollisionRequest request;
 		CollisionResult result;
 

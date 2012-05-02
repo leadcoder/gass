@@ -64,9 +64,9 @@ namespace GASS
 		RegisterProperty<Float>("Length", &GASS::ODECylinderGeometryComponent::GetLength, &GASS::ODECylinderGeometryComponent::SetLength);
 	}
 
-	void ODECylinderGeometryComponent::OnCreate()
+	void ODECylinderGeometryComponent::OnInitialize()
 	{
-		ODEBaseGeometryComponent::OnCreate();
+		ODEBaseGeometryComponent::OnInitialize();
 	}
 
 	void ODECylinderGeometryComponent::SetSizeFromMesh(bool value)

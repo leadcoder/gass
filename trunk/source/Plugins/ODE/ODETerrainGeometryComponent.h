@@ -51,9 +51,9 @@ namespace GASS
 		ODETerrainGeometryComponent();
 		virtual ~ODETerrainGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);

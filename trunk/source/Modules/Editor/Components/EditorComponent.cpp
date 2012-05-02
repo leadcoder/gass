@@ -52,16 +52,16 @@ namespace GASS
 		
 	}
 
-	void EditorComponent::OnCreate()
+	void EditorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnUnload,UnloadComponentsMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibleMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectedMessage,0));
 	}
 	
-	void EditorComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void EditorComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//update loaded settings
 		SetLock(m_Lock); 

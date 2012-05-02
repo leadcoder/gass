@@ -49,9 +49,9 @@ namespace GASS
 		RegisterProperty<std::string>("Texture", &GASS::PlaneGeometryComponent::GetTexture, &GASS::PlaneGeometryComponent::SetTexture);
 	}
 
-	void PlaneGeometryComponent::OnCreate()
+	void PlaneGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadCoreComponentsMessage),MESSAGE_FUNC(PlaneGeometryComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(PlaneGeometryComponent::OnLoad),0);
 	}
 
 	Vec2 PlaneGeometryComponent::GetSize() const

@@ -43,12 +43,13 @@ namespace GASS
 		OgreCameraComponent();
 		virtual ~OgreCameraComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 		inline Ogre::Camera* GetOgreCamera() const {return m_Camera;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 	protected:
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnParameter(CameraParameterMessagePtr message);
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);
@@ -63,7 +64,6 @@ namespace GASS
 		PolygonModeWrapper GetPolygonMode() const {return m_PolygonMode;}
 		void SetPolygonMode(PolygonModeWrapper value);
 		
-		void OnLoad(LoadGFXComponentsMessagePtr message);
 		Ogre::Camera* m_Camera;
 		float m_NearClip;
 		float m_FarClip;

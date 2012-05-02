@@ -71,10 +71,42 @@ namespace GASS
 		RegisterProperty<Vec3>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular);
 	}
 
-	void OgreLightComponent::OnCreate()
+	void OgreLightComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnUnload,UnloadComponentsMessage,1));
+	}
+
+	void OgreLightComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	{
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		assert(ogsm);
+		Ogre::SceneManager* sm = ogsm->GetSceneManger();
+
+		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
+		
+		static unsigned int obj_id = 0;
+		obj_id++;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << obj_id;
+		ss >> name;
+
+		m_OgreLight = sm->createLight(name);
+		lc->GetOgreNode()->attachObject(m_OgreLight);
+
+
+		SetLightType(m_LightType);
+		SetAttenuationParams(m_AttenuationParams);
+		SetCastShadow(m_CastShadow);
+		SetDiffuse(m_Diffuse);
+		SetSpecular(m_Specular);
+		SetSpotParams(m_SpotParams);
+
+		m_OgreLight->setVisible(true);
+		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
+		//m_OgreLight->setDirection(0,1,0);
+
 	}
 
 
@@ -132,37 +164,7 @@ namespace GASS
 			m_OgreLight->setCastShadows(m_CastShadow);
 	}
 
-	void OgreLightComponent::OnLoad(LoadGFXComponentsMessagePtr message)
-	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
-		assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
-		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
-		
-		static unsigned int obj_id = 0;
-		obj_id++;
-		std::stringstream ss;
-		std::string name;
-		ss << GetName() << obj_id;
-		ss >> name;
-
-		m_OgreLight = sm->createLight(name);
-		lc->GetOgreNode()->attachObject(m_OgreLight);
-
-
-		SetLightType(m_LightType);
-		SetAttenuationParams(m_AttenuationParams);
-		SetCastShadow(m_CastShadow);
-		SetDiffuse(m_Diffuse);
-		SetSpecular(m_Specular);
-		SetSpotParams(m_SpotParams);
-
-		m_OgreLight->setVisible(true);
-		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
-		//m_OgreLight->setDirection(0,1,0);
-
-	}
 
 	void OgreLightComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{

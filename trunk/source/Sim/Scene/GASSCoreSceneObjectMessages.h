@@ -50,16 +50,7 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 
 	
-	class LoadCoreComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadCoreComponentsMessage(CoreSceneManagerPtr core_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_CoreSceneManager(core_scene_manager){}
-		  CoreSceneManagerPtr GetCoreSceneManager() const {return m_CoreSceneManager;}
-	private:
-		CoreSceneManagerPtr m_CoreSceneManager;
-	};
-	typedef boost::shared_ptr<LoadCoreComponentsMessage> LoadCoreComponentsMessagePtr;
+	
 
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
@@ -122,6 +113,13 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
 
-	
+	class LoadComponentsMessage : public BaseMessage
+	{
+	public:
+		LoadComponentsMessage(SenderID sender_id = -1, double delay= 0) : 
+		 BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef boost::shared_ptr<LoadComponentsMessage> LoadComponentsMessagePtr;
 	
 }

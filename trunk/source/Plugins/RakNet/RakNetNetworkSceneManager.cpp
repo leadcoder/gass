@@ -77,19 +77,8 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
-		if(raknet && raknet->IsActive())
-		{
-			SceneObjectPtr obj = message->GetSceneObject();
-			assert(obj);
-			MessagePtr net_msg(new LoadNetworkComponentsMessage(shared_from_this(),(int) this));
-			obj->SendImmediate(net_msg);
-		}
+		
 	}
-
-	
-
-	
 
 	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedMessagePtr message)
 	{

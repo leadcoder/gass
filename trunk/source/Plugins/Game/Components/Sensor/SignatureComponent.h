@@ -16,7 +16,7 @@ namespace GASS
 		SignatureComponent(void);
 		~SignatureComponent(void);
 		static void RegisterReflection();
-		void OnCreate();
+		void OnInitialize();
 		
 		Vec3 GetPosition() const {return m_Pos;}
 		Quaternion GetRotation() const {return m_Rotation;}

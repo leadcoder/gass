@@ -68,18 +68,18 @@ namespace GASS
 		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
 	}
 
-	void ODETerrainGeometryComponent::OnCreate()
+	void ODETerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
-	void ODETerrainGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void ODETerrainGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 	}

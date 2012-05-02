@@ -43,9 +43,9 @@ namespace GASS
 		RegisterProperty<std::string>("Type",&PaintGizmoComponent::GetType, &PaintGizmoComponent::SetType);
 	}
 
-	void PaintGizmoComponent::OnCreate()
+	void PaintGizmoComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
@@ -61,7 +61,7 @@ namespace GASS
 		
 	}
 
-	void PaintGizmoComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void PaintGizmoComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		BuildMesh();
 	}

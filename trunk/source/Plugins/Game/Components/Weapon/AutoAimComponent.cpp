@@ -83,14 +83,14 @@ namespace GASS
 		
 	}
 
-	void AutoAimComponent::OnCreate()
+	void AutoAimComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnUnload,UnloadComponentsMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnAimAtPosition,AimAtPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnActivateAutoAim,ActivateAutoAimMessage,0));
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 	}
 
 	void AutoAimComponent::SetBarrelObject(const SceneObjectLink &value)
@@ -285,10 +285,10 @@ namespace GASS
 		
 	}
 
-	void AutoAimComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void AutoAimComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 
 
 		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));

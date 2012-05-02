@@ -51,9 +51,9 @@ namespace GASS
 		RegisterProperty<Vec4>("Color",&ArrowGeometryComponent::GetColor, &ArrowGeometryComponent::SetColor);
 	}
 
-	void ArrowGeometryComponent::OnCreate()
+	void ArrowGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadCoreComponentsMessage),MESSAGE_FUNC(ArrowGeometryComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(ArrowGeometryComponent::OnLoad),0);
 	}
 
 	Vec2 ArrowGeometryComponent::GetSize() const

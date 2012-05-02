@@ -38,7 +38,7 @@ namespace GASS
 		OgreParticleSystemComponent (void);
 		~OgreParticleSystemComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryCategory GetGeometryCategory() const;
@@ -50,7 +50,7 @@ namespace GASS
 		void SetTimeToLive(float value) {m_TimeToLive = value;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnParameterMessage(ParticleSystemParameterMessagePtr message);
 
 		std::string m_RenderQueue;

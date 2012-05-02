@@ -49,9 +49,9 @@ namespace GASS
 		RegisterProperty<std::string>("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
 	}
 
-	void OpenALSoundComponent::OnCreate()
+	void OpenALSoundComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
@@ -228,7 +228,7 @@ namespace GASS
 		m_Filename = file;
 	}
 
-	void OpenALSoundComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OpenALSoundComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		LoadWaveSound(m_Filename);//, 0);
 		//sound loaded, update sound settings

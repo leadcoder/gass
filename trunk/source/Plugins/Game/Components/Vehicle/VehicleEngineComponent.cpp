@@ -149,14 +149,14 @@ namespace GASS
 		
 	}
 
-	void VehicleEngineComponent::OnCreate()
+	void VehicleEngineComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,ControllerMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 		m_Initialized = true;
 	}
 
@@ -343,10 +343,10 @@ namespace GASS
 	}
 
 
-	void VehicleEngineComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void VehicleEngineComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 
 		//Get wheels from children
 		SetWheels(m_WheelObjects);

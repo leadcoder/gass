@@ -69,12 +69,6 @@ namespace GASS
 			Get the owner of the component
 		*/
 		virtual ComponentContainerPtr GetOwner() const = 0;
-
-		/**
-			This function is called when a
-			component is instantiated
-		*/
-		virtual void OnCreate() = 0;
 	};
 
 	typedef boost::shared_ptr<IComponent> ComponentPtr;

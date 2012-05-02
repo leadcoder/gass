@@ -57,10 +57,10 @@ namespace GASS
 		GrassLayerComponent(void);
 		~GrassLayerComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		GrassLayer *GetLayer() const {return m_GrassLayer;}
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadMessagePtr message);

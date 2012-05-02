@@ -43,11 +43,11 @@ namespace GASS
 		RakNetMessageTransferComponent();
 		virtual ~RakNetMessageTransferComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void Called(const std::string &message, const std::string &data);
 		virtual bool IsRemote() const;
 	private:
-		void OnLoad(LoadNetworkComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 		void OnInput(ControllerMessagePtr message);

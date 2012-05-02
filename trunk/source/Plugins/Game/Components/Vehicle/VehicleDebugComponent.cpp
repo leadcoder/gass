@@ -59,15 +59,15 @@ namespace GASS
 //		RegisterProperty<bool>("ShowWaypoint", &VehicleDebugComponent::GetShowWaypoint, &VehicleDebugComponent::SetShowWaypoint);
 	}
 
-	void VehicleDebugComponent::OnCreate()
+	void VehicleDebugComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnGotoPosition,GotoPositionMessage,0));
 		
 	}
 
-	void VehicleDebugComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void VehicleDebugComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//create waypoint text object
 		SceneObjectPtr scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("VehicleDebugWaypointTemplate",GetSceneObject()->GetScene()->GetRootSceneObject());

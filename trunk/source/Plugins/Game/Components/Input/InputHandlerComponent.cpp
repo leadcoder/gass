@@ -57,12 +57,12 @@ namespace GASS
 		//RegisterVectorProperty<std::string>("CameraList", &InputHandlerComponent::GetCameraMapping, &InputHandlerComponent::SetCameraMapping);
 	}
 
-	void InputHandlerComponent::OnCreate()
+	void InputHandlerComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadComponentsMessage,0));
 	}
 
 
@@ -107,7 +107,7 @@ namespace GASS
 		m_Empty = true;
 	}
 
-	void InputHandlerComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void InputHandlerComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 	
 	}

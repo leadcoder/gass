@@ -106,9 +106,9 @@ namespace GASS
 		RegisterProperty<FilePath>("ResourceLocation", &HydraxWaterComponent::GetResourceLocation, &HydraxWaterComponent::SetResourceLocation);
 	}
 
-	void HydraxWaterComponent::OnCreate()
+	void HydraxWaterComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnLoad,LoadGFXComponentsMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnLoad,LoadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnUnload,UnloadComponentsMessage,0));
 		
 	}
@@ -643,7 +643,7 @@ namespace GASS
 		}
 	}
 
-	void HydraxWaterComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void HydraxWaterComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		

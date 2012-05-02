@@ -66,13 +66,13 @@ namespace GASS
 		
 	}
 
-	void AdaptiveSteerComponent::OnCreate()
+	void AdaptiveSteerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 	}
 
-	void AdaptiveSteerComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void AdaptiveSteerComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());

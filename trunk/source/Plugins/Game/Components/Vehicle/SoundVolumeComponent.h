@@ -41,9 +41,9 @@ namespace GASS
 		SoundVolumeComponent();
 		virtual ~SoundVolumeComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
 		void OnHingeUpdated(HingeJointNotifyMessagePtr message);
 		ADD_ATTRIBUTE(Float,MaxVolumeAtSpeed)

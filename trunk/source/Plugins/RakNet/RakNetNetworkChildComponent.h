@@ -52,8 +52,8 @@ namespace GASS
 		RakNetNetworkChildComponent();
 		virtual ~RakNetNetworkChildComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
-		void OnLoad(LoadNetworkComponentsMessagePtr message);
+		virtual void OnInitialize();
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		RakNetChildReplica* GetReplica() const {return m_Replica;}
 		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}

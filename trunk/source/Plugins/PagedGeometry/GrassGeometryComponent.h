@@ -56,11 +56,11 @@ namespace GASS
 		GrassGeometryComponent(void);
 		~GrassGeometryComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		virtual void SaveXML(TiXmlElement *obj_elem);
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
 		std::string GetDensityMap() const;

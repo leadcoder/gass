@@ -66,9 +66,9 @@ namespace GASS
 	}
 
 
-	void OSGSkyboxComponent::OnCreate()
+	void OSGSkyboxComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGSkyboxComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGSkyboxComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGSkyboxComponent::OnUnload,UnloadComponentsMessage,1));
 	}
 	
@@ -83,11 +83,11 @@ namespace GASS
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
-	void OSGSkyboxComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGSkyboxComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 
-		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
+		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		root_node->addChild(CreateSkyBox());
 

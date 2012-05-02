@@ -37,7 +37,7 @@ namespace GASS
 		WaypointComponent();
 		virtual ~WaypointComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 
 		Float GetTangentWeight()const;
 		void SetTangentLength(Float value);
@@ -52,7 +52,7 @@ namespace GASS
 		void OnTangentMoved(MessagePtr message);
 		void OnPosition(PositionMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnRotate(WorldRotationMessagePtr message);
 		void UpdateTangentLine();
 		

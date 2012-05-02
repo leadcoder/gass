@@ -56,14 +56,14 @@ namespace GASS
 		RegisterProperty<SceneObjectLink>("InputHandlerObject", &InputProxyComponent::GetInputHandlerObject, &InputProxyComponent::SetInputHandlerObject);
 	}
 
-	void InputProxyComponent::OnCreate()
+	void InputProxyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputProxyComponent::OnUnload,UnloadComponentsMessage,0));
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 	}
 
-	void InputProxyComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void InputProxyComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage,0));
 	}

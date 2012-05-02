@@ -181,9 +181,9 @@ namespace GASS
 		UpdateOptions();
 	}
 
-	void SkyXComponent::OnCreate()
+	void SkyXComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadGFXComponentsMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLoad,LoadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
 	}
@@ -205,7 +205,7 @@ namespace GASS
 
 	}
 
-	void SkyXComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void SkyXComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();

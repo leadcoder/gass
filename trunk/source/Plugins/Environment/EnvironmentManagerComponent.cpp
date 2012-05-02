@@ -128,12 +128,49 @@ namespace GASS
 		RegisterProperty<float>("SpecularWeight", &EnvironmentManagerComponent::GetSpecularWeight, &EnvironmentManagerComponent::SetSpecularWeight);
 	}
 
-	void EnvironmentManagerComponent::OnCreate()
+	void EnvironmentManagerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLoad,LoadGFXComponentsMessage,4));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLoad,LoadComponentsMessage,4));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
 
+	}
+
+	void EnvironmentManagerComponent::OnLoad(LoadComponentsMessagePtr message)
+	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		
+		
+		Ogre::Root::getSingleton().addFrameListener(this);
+
+		
+		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
+		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
+
+		if(hydrax)
+			m_Hydrax = hydrax->GetHydrax();
+		
+		if(hydrax && skyx->GetSkyX())
+		{
+			
+			hydrax->GetHydrax()->getRttManager()->addRttListener(new HydraxRttListener(skyx->GetSkyX(), hydrax->GetHydrax()));
+		}
+
+		 // Light
+		m_SunLight = sm->createLight("EnvironmentManagerComponentSunLight");
+		m_SunLight->setType(Ogre::Light::LT_DIRECTIONAL);
+
+		// Color gradients
+		// Water
+		m_WaterGradient = SkyX::ColorGradient();
+
+		SetWaterGradient(m_WaterGradientValues);
+		SetSunGradient(m_SunGradientValues);
+		SetAmbientGradient(m_AmbientGradientValues);
+		SetFogGradient(m_FogGradientValues);
+	
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 	}
 
 	void EnvironmentManagerComponent::OnWeatherMessage(WeatherMessagePtr message)
@@ -344,42 +381,7 @@ namespace GASS
 		m_CurrentCamera = static_cast<Ogre::Camera*> (message->GetUserData());
 	}
 
-	void EnvironmentManagerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
-	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		
-		
-		Ogre::Root::getSingleton().addFrameListener(this);
-
-		
-		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
-		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
-
-		if(hydrax)
-			m_Hydrax = hydrax->GetHydrax();
-		
-		if(hydrax && skyx->GetSkyX())
-		{
-			
-			hydrax->GetHydrax()->getRttManager()->addRttListener(new HydraxRttListener(skyx->GetSkyX(), hydrax->GetHydrax()));
-		}
-
-		 // Light
-		m_SunLight = sm->createLight("EnvironmentManagerComponentSunLight");
-		m_SunLight->setType(Ogre::Light::LT_DIRECTIONAL);
-
-		// Color gradients
-		// Water
-		m_WaterGradient = SkyX::ColorGradient();
-
-		SetWaterGradient(m_WaterGradientValues);
-		SetSunGradient(m_SunGradientValues);
-		SetAmbientGradient(m_AmbientGradientValues);
-		SetFogGradient(m_FogGradientValues);
 	
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
-	}
 
 
 	bool  EnvironmentManagerComponent::frameStarted(const Ogre::FrameEvent& evt)

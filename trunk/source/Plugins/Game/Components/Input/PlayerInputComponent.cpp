@@ -59,7 +59,7 @@ namespace GASS
 		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 
-	void PlayerInputComponent::OnCreate()
+	void PlayerInputComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnUnload,UnloadComponentsMessage,0));
 
@@ -69,7 +69,7 @@ namespace GASS
 		if(cs)
 			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
 		else
-			LogManager::getSingleton().stream() << "WARNING:PlayerInputComponent::OnCreate -- Failed to find control settings: " << m_ControlSetting;
+			LogManager::getSingleton().stream() << "WARNING:PlayerInputComponent::OnInitialize -- Failed to find control settings: " << m_ControlSetting;
 
 	}
 

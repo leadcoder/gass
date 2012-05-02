@@ -167,16 +167,14 @@ namespace GASS
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 
-	class LoadPhysicsComponentsMessage : public BaseMessage
+	class BodyLoadedMessage : public BaseMessage
 	{
 	public:
-		LoadPhysicsComponentsMessage(SceneManagerPtr physics_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay), m_PhysicsSceneManager(physics_scene_manager){}
-		  SceneManagerPtr GetPhysicsSceneManager() const {return m_PhysicsSceneManager;}
+		BodyLoadedMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage( sender_id , delay){}
 	private:
-		SceneManagerPtr m_PhysicsSceneManager;
 	};
-	typedef boost::shared_ptr<LoadPhysicsComponentsMessage> LoadPhysicsComponentsMessagePtr;
+	typedef boost::shared_ptr<BodyLoadedMessage> BodyLoadedMessagePtr;
 
 
 	class VelocityNotifyMessage : public BaseMessage

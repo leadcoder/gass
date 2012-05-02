@@ -101,12 +101,6 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		//Initlize all physics components and send scene mananger as argument
-		SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(shared_from_this(),(int) this));
-		//phy_msg->SetData("PhysicsSceneManager",boost::any(this));
-		obj->SendImmediate(phy_msg);
 	}
 
 

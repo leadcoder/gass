@@ -67,14 +67,7 @@ namespace GASS
 
 	void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
-		//Initlize all sim components and send scene mananger as argument
-		SceneObjectCreatedNotifyMessagePtr socnm = boost::shared_static_cast<SceneObjectCreatedNotifyMessage>(message);
-		assert(socnm);
-		SceneObjectPtr obj = socnm->GetSceneObject();
-		assert(obj);
-		CoreSceneManagerPtr core_sm = boost::dynamic_pointer_cast<CoreSceneManager>(shared_from_this());
-		MessagePtr sim_msg(new LoadCoreComponentsMessage(core_sm,(int) this));
-		obj->SendImmediate(sim_msg);
+		
 	}
 
 	void CoreSceneManager::OnLoad(MessagePtr message)

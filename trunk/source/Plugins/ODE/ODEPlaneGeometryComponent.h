@@ -48,7 +48,7 @@ namespace GASS
 		ODEPlaneGeometryComponent();
 		virtual ~ODEPlaneGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		dGeomID CreateODEGeom();
 		void UpdateODEGeom();

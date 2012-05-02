@@ -49,12 +49,12 @@ namespace GASS
 		TopCamControlComponent();
 		virtual ~TopCamControlComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(MessagePtr message);
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 	

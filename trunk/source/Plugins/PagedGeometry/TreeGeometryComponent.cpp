@@ -118,7 +118,7 @@ namespace GASS
 		target->removeListener(this);
 	}
 
-	void TreeGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void TreeGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 		ImpostorPage::setImpostorResolution(m_ImposterResolution);
@@ -461,9 +461,9 @@ namespace GASS
 		}
 	}*/
 
-	void TreeGeometryComponent::OnCreate()
+	void TreeGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadGFXComponentsMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
 		

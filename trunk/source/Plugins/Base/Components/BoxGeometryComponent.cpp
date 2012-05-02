@@ -45,9 +45,9 @@ namespace GASS
 		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize);
 	}
 
-	void BoxGeometryComponent::OnCreate()
+	void BoxGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadCoreComponentsMessage),MESSAGE_FUNC(BoxGeometryComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(BoxGeometryComponent::OnLoad),0);
 	}
 
 	Vec3 BoxGeometryComponent::GetSize() const

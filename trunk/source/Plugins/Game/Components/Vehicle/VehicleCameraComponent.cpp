@@ -64,11 +64,11 @@ namespace GASS
 		RegisterProperty<SceneObjectLink>("InputHandlerObject", &VehicleCameraComponent::GetInputHandlerObject, &VehicleCameraComponent::SetInputHandlerObject);
 	}
 
-	void VehicleCameraComponent::OnCreate()
+	void VehicleCameraComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnLoad,LoadGameComponentsMessage,0));
-		BaseSceneComponent::OnCreate();
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnLoad,LoadComponentsMessage,0));
+		BaseSceneComponent::OnInitialize();
 	}
 
 	void VehicleCameraComponent::SetPreferredViewport(const std::string &viewport)
@@ -92,7 +92,7 @@ namespace GASS
 
 	}
 
-	void VehicleCameraComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void VehicleCameraComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));

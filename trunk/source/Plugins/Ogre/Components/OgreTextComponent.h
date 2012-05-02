@@ -34,12 +34,12 @@ namespace GASS
 		OgreTextComponent(void);
 		~OgreTextComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere() const;
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnGeomChanged(GeometryChangedMessagePtr message);
 		void OnCaptionMessage(TextCaptionMessagePtr message);
 		std::string GetText() const;
 		void SetText(const std::string  &text);

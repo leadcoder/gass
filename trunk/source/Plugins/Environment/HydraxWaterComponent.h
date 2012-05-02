@@ -59,12 +59,12 @@ namespace GASS
 		HydraxWaterComponent(void);
 		~HydraxWaterComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		Hydrax::Hydrax* GetHydrax() const {return m_Hydrax;}
 	protected:
 		void CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp);
 		bool frameStarted(const Ogre::FrameEvent& evt);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void SetConfigurationFile(const std::string &cfg_file);

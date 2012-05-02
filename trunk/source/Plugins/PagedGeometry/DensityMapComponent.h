@@ -54,7 +54,7 @@ namespace GASS
 		DensityMapComponent(void);
 		~DensityMapComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void SaveXML(TiXmlElement *obj_elem);
 		float GetDensityAt(float x, float z);
 
@@ -64,7 +64,7 @@ namespace GASS
 		void SetImport(const std::string &dm);
 		std::string GetImport() const {return std::string("");}
 		//void LoadDensityMap(const std::string &mapFile, int channel);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadMessagePtr message);

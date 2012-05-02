@@ -34,6 +34,7 @@ namespace GASS
 		virtual void SceneManagerTick(double delta) = 0;
 	};
 
+	typedef boost::weak_ptr<ISceneManagerListener> SceneManagerListenerWeakPtr;
 	typedef boost::shared_ptr<ISceneManagerListener> SceneManagerListenerPtr;
 
 	/**

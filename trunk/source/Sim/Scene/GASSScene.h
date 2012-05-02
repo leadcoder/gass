@@ -169,8 +169,22 @@ namespace GASS
 		std::string GetProjection() const;
 		void SetProjection(const std::string &proj);
 		*/
-		//SceneObjectManagerPtr GetObjectManager() {return m_ObjectManager;}
-		SceneManagerPtr GetSceneManager(const std::string &type);
+		SceneManagerPtr GetSceneManagerByName(const std::string &name) const;
+		
+		/**Get first SceneManager of certain class. This function allow you to pass the class as a template 
+		*/
+		template <class T>
+		boost::shared_ptr<T> GetFirstSceneManagerByClass() const
+		{
+			boost::shared_ptr<T> ret;
+			for(int i = 0 ; i < m_SceneManagers.size(); i++)
+			{
+				ret = boost::shared_dynamic_cast<T>(m_SceneManagers[i]);
+				if(ret)
+					return ret;
+			}
+			return ret;
+		}
 
 		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}

@@ -69,9 +69,9 @@ namespace GASS
 		RegisterProperty<std::string>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetFilename, &GASS::OgreSceneManagerTerrainComponent::SetFilename);
 	}
 
-	void OgreSceneManagerTerrainComponent::OnCreate()
+	void OgreSceneManagerTerrainComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
@@ -143,9 +143,9 @@ namespace GASS
 		}
 	}
 
-	void OgreSceneManagerTerrainComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreSceneManagerTerrainComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
 

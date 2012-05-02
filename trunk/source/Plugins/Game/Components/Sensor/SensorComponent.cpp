@@ -42,18 +42,18 @@ namespace GASS
 		
 	}
 
-	void SensorComponent::OnCreate()
+	void SensorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
 	}
 
-	void SensorComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void SensorComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 		
 		m_Initialized = true;
 

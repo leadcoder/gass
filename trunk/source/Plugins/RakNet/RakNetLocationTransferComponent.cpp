@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
+#include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 //#include "Plugins/RakNet/RakNetBase.h"
 #include "RakNetLocationTransferComponent.h"
 
@@ -86,18 +87,21 @@ namespace GASS
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
 	}
 
-	void RakNetLocationTransferComponent::OnCreate()
+	void RakNetLocationTransferComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadNetworkComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadComponentsMessage,1));
 
 	}
 
-	void RakNetLocationTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
+	void RakNetLocationTransferComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		message->GetNetworkSceneManager()->Register(shared_from_this());
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(!raknet->IsActive())
+			return;
+
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
+
 		
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)

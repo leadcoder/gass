@@ -43,9 +43,9 @@ namespace GASS
 		AdaptiveSteerComponent();
 		virtual ~AdaptiveSteerComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnVelocityMessage(VelocityNotifyMessagePtr message);

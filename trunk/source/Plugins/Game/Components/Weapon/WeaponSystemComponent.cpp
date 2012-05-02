@@ -86,9 +86,9 @@ namespace GASS
 		RegisterProperty<std::string>("ReloadController", &WeaponSystemComponent::GetReloadController, &WeaponSystemComponent::SetReloadController);
 	}
 
-	void WeaponSystemComponent::OnCreate()
+	void WeaponSystemComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnExecuteFire,FireMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReload,ReloadMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
@@ -98,7 +98,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 	}
 
 	void WeaponSystemComponent::OnLODChange(LODMessagePtr message)
@@ -114,7 +114,7 @@ namespace GASS
 		}
 	}
 
-	void WeaponSystemComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void WeaponSystemComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		/*m_FireSoundObject1F = GetSceneObject()->GetFirstChildByName("FireSound1P",false);
 		m_FireSoundObject3F = GetSceneObject()->GetFirstChildByName("FireSound3P",false);

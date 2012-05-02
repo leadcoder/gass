@@ -37,10 +37,10 @@ namespace GASS
 		SkyXCloudLayerComponent(void);
 		~SkyXCloudLayerComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void CreateLayer();
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void SetScale(const Float &value);
 		Float GetScale() const;

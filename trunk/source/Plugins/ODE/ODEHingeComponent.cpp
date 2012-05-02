@@ -63,9 +63,9 @@ namespace GASS
 		RegisterProperty<Vec3>("Anchor", &GASS::ODEHingeComponent::GetAnchor, &GASS::ODEHingeComponent::SetAnchor);
 	}
 	
-	void ODEHingeComponent::OnCreate()
+	void ODEHingeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
 	}
 
@@ -96,9 +96,9 @@ namespace GASS
 		}
 	}
 
-	void ODEHingeComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void ODEHingeComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		m_SceneManager = scene_manager;
 		assert(scene_manager);
 		CreateJoint();

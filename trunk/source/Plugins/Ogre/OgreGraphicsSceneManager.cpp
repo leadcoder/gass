@@ -188,10 +188,10 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
 		//Initlize all gfx components and send scene mananger as argument
-		SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),m_SceneMgr));
-		obj->SendImmediate(gfx_msg);
+		//SceneObjectPtr obj = message->GetSceneObject();
+		//assert(obj);
+		//MessagePtr gfx_msg(new LoadComponentsMessage(shared_from_this(),m_SceneMgr));
+		//obj->SendImmediate(gfx_msg);
 	}
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()

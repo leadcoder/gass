@@ -88,12 +88,12 @@ namespace GASS
 
 	}
 
-	void FreeCamControlComponent::OnCreate()
+	void FreeCamControlComponent::OnInitialize()
 	{
 		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
@@ -110,11 +110,11 @@ namespace GASS
 		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
-	void FreeCamControlComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void FreeCamControlComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetCoreSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
 	}
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)

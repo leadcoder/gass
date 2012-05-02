@@ -85,9 +85,9 @@ namespace GASS
 		RegisterProperty<float>("SwayDistribution", &GrassLayerComponent::GetSwayDistribution, &GrassLayerComponent::SetSwayDistribution);
 	}
 
-	void GrassLayerComponent::OnCreate()
+	void GrassLayerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,LoadGFXComponentsMessage,1000));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,LoadComponentsMessage,1000));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
@@ -292,7 +292,7 @@ namespace GASS
 		}*/
 	}
 
-	void GrassLayerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void GrassLayerComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//assert(ogsm);
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();

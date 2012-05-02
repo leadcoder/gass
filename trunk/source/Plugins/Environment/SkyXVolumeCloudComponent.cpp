@@ -193,9 +193,9 @@ namespace GASS
 		return m_Radius;
 	}
 
-	void SkyXVolumeCloudComponent::OnCreate()
+	void SkyXVolumeCloudComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnLoad,LoadGFXComponentsMessage,3));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnLoad,LoadComponentsMessage,3));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
 	}
@@ -216,7 +216,7 @@ namespace GASS
 
 	}
 
-	void SkyXVolumeCloudComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void SkyXVolumeCloudComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 
 	}

@@ -114,7 +114,7 @@ namespace GASS
 			@recursive Indicates if we should search for components in child scene objects
 		*/
 		template <class T>
-		void GetComponentsByClass(ComponentVector &components, bool recursive = true)
+		void GetComponentsByClass(ComponentVector &components, bool recursive = true) const
 		{
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
@@ -125,7 +125,7 @@ namespace GASS
 
 			if(recursive)
 			{
-				IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
@@ -138,7 +138,7 @@ namespace GASS
 			@recursive Indicates if we should search for component in child scene objects
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstComponentByClass(bool recursive = false)
+		boost::shared_ptr<T> GetFirstComponentByClass(bool recursive = false) const
 		{
 			boost::shared_ptr<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
@@ -150,7 +150,7 @@ namespace GASS
 
 			if(recursive)
 			{
-				IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
@@ -193,7 +193,7 @@ namespace GASS
 				can be usefull in case that every object has a unique id as part of 
 				the name wich is not known in compiletime.
 		*/
-		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true);
+		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true) const;
 
 		/** Get first child scene objects that match name. 
 			@name The object name to search for

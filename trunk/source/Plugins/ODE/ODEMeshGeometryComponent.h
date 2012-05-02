@@ -48,7 +48,7 @@ namespace GASS
 		ODEMeshGeometryComponent();
 		virtual ~ODEMeshGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		dGeomID CreateODEGeom();
 		void UpdateBodyMass();

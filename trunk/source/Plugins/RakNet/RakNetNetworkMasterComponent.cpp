@@ -60,16 +60,19 @@ namespace GASS
 		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkMasterComponent::GetAttributes, &RakNetNetworkMasterComponent::SetAttributes);
 	}
 
-	void RakNetNetworkMasterComponent::OnCreate()
+	void RakNetNetworkMasterComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnLoad,LoadNetworkComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeMessage,0));
 	}
 
-	void RakNetNetworkMasterComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
+	void RakNetNetworkMasterComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(!raknet->IsActive())
+			return;
+
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
 		int id = 0;
 		GeneratePartID(GetSceneObject(), id);

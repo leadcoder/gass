@@ -52,7 +52,7 @@ namespace GASS
 		RoadComponent();
 		virtual ~RoadComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;
@@ -98,7 +98,7 @@ namespace GASS
 
 		void UpdateRoadMesh();
 		void OnUnload(UnloadComponentsMessagePtr message);	
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUpdate(UpdateWaypointListMessagePtr message);
 
 		bool m_Initialized;

@@ -64,7 +64,7 @@ namespace GASS
 		virtual ~BaseComponent();
 		static void RegisterReflection();
 		//component interface
-		virtual void OnCreate();
+		//virtual void OnCreate();
 		virtual std::string GetName() const;
 		virtual void SetName(const std::string &name);
 		/**

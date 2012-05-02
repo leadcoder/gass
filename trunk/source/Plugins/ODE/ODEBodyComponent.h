@@ -49,7 +49,7 @@ namespace GASS
 		ODEBodyComponent();
 		virtual ~ODEBodyComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		dBodyID GetODEBodyComponent(){return m_ODEBodyID;}
 		dSpaceID GetSpace();
 		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
@@ -86,7 +86,7 @@ namespace GASS
 		Quaternion GetRotation();
 		void BodyMoved();
 		void static BodyMovedCallback(dBodyID id);
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);

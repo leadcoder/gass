@@ -48,7 +48,7 @@ namespace GASS
 		ODEBoxGeometryComponent();
 		virtual ~ODEBoxGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		dGeomID CreateODEGeom();
 		void SetSize(const Vec3 &size);

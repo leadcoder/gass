@@ -48,7 +48,7 @@ namespace GASS
 		ODESphereGeometryComponent();
 		virtual ~ODESphereGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SetRadius(Float value);
 		Float GetRadius() const;
 	protected:

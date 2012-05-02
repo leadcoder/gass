@@ -43,7 +43,7 @@ namespace GASS
 		TurretComponent();
 		virtual ~TurretComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SceneManagerTick(double delta_time);
 	private:
 		Vec3 GetDesiredAimDirection(double delta_time);
@@ -60,7 +60,7 @@ namespace GASS
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);

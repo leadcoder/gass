@@ -48,7 +48,7 @@ namespace GASS
 		FollowWaypointListComponent();
 		virtual ~FollowWaypointListComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SceneManagerTick(double delta);
 	private:
 		ADD_ATTRIBUTE(Float,WaypointRadius);
@@ -63,7 +63,7 @@ namespace GASS
 
 		int GetCloesetWaypoint();
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		

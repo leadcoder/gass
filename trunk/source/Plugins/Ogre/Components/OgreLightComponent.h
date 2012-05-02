@@ -41,7 +41,7 @@ namespace GASS
 		OgreLightComponent();
 		virtual ~OgreLightComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		inline Ogre::Light	* GetOgreLight(){return m_OgreLight;}
 		void SetLightType(LightType lt);
 		LightType GetLightType()const {return m_LightType;}
@@ -56,7 +56,7 @@ namespace GASS
 		void SetCastShadow(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		Ogre::Light* m_OgreLight;
 		LightType m_LightType;

@@ -45,9 +45,9 @@ namespace GASS
 		WeaponSystemComponent();
 		virtual ~WeaponSystemComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);

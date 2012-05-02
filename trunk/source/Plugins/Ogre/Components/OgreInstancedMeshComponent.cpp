@@ -70,9 +70,9 @@ namespace GASS
 		RegisterProperty<Vec3>("GlobalScale", &GASS::OgreInstancedMeshComponent::GetGlobalScale, &GASS::OgreInstancedMeshComponent::SetGlobalScale);
 	}
 
-	void OgreInstancedMeshComponent::OnCreate()
+	void OgreInstancedMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
@@ -128,9 +128,9 @@ namespace GASS
 		}
 	}
 
-	void OgreInstancedMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreInstancedMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		m_OgreSceneManager = ogsm;
 		assert(ogsm);
 

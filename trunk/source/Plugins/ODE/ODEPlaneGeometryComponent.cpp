@@ -62,9 +62,9 @@ namespace GASS
 		RegisterProperty<Float>("PlaneOffset",&ODEPlaneGeometryComponent::GetPlaneOffset, &ODEPlaneGeometryComponent::SetPlaneOffset);
 	}
 
-	void ODEPlaneGeometryComponent::OnCreate()
+	void ODEPlaneGeometryComponent::OnInitialize()
 	{
-		ODEBaseGeometryComponent::OnCreate();
+		ODEBaseGeometryComponent::OnInitialize();
 	}
 
 	dGeomID ODEPlaneGeometryComponent::CreateODEGeom()

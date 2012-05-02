@@ -42,11 +42,11 @@ namespace GASS
 		PlayerInputComponent();
 		virtual ~PlayerInputComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		//void OnEnter(AnyMessagePtr message);
 		//void OnExit(AnyMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
-		//void OnLoad(LoadGameComponentsMessagePtr message);
+		//void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 	
 	private:

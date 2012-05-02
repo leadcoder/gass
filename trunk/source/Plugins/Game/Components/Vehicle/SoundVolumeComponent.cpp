@@ -55,14 +55,14 @@ namespace GASS
 		
 	}
 
-	void SoundVolumeComponent::OnCreate()
+	void SoundVolumeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,VelocityNotifyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnHingeUpdated,HingeJointNotifyMessage,0));
 	}
 
-	void SoundVolumeComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void SoundVolumeComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 		GetSceneObject()->PostMessage(play_msg);

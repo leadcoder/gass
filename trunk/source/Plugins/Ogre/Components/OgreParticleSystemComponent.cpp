@@ -67,16 +67,16 @@ namespace GASS
 		RegisterProperty<float>("TimeToLive", &GASS::OgreParticleSystemComponent::GetTimeToLive, &GASS::OgreParticleSystemComponent::SetTimeToLive);
 	}
 
-	void OgreParticleSystemComponent::OnCreate()
+	void OgreParticleSystemComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnLoad,LoadGFXComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnLocationLoaded,LocationLoadedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage,0));
 	}
 
-	void OgreParticleSystemComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreParticleSystemComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 

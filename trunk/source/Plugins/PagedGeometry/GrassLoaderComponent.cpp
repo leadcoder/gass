@@ -72,9 +72,9 @@ namespace GASS
 		RegisterProperty<float>("ViewDistance", &GrassLoaderComponent::GetViewDistance, &GrassLoaderComponent::SetViewDistance);
 	}
 
-	void GrassLoaderComponent::OnCreate()
+	void GrassLoaderComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnLoad,LoadGFXComponentsMessage,99));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnLoad,LoadComponentsMessage,99));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
@@ -196,7 +196,7 @@ namespace GASS
 	}
 
 
-	void GrassLoaderComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void GrassLoaderComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();

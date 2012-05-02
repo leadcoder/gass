@@ -88,14 +88,14 @@ namespace GASS
 		return GeometryCategory(GT_REGULAR);
 	}
 
-	void OSGBillboardComponent::OnCreate()
+	void OSGBillboardComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
 
-	void OSGBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		
 		std::string full_path;

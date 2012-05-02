@@ -72,7 +72,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnCreateTextBox,CreateTextBoxMessage ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
 	}
 
 	void OgreGraphicsSystem::OnInit(InitSystemMessagePtr message)
@@ -368,7 +368,7 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::OnCreateTextBox(CreateTextBoxMessagePtr message)
+	void OgreGraphicsSystem::OnInitializeTextBox(CreateTextBoxMessagePtr message)
 	{
 		Vec4 color = message->m_Color;
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);

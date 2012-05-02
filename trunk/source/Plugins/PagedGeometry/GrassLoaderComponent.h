@@ -56,7 +56,7 @@ namespace GASS
 		GrassLoaderComponent(void);
 		~GrassLoaderComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		virtual void SaveXML(TiXmlElement *obj_elem);
 		GrassLoader* GetGrassLoader() const {return m_GrassLoader;}
@@ -67,7 +67,7 @@ namespace GASS
 	protected:
 		void SaveDensityMap();
 		void OnRoadMessage(RoadMessagePtr message);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);

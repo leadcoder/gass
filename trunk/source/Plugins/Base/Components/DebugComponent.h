@@ -27,7 +27,7 @@ namespace GASS
 		DebugComponent(void);
 		~DebugComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);

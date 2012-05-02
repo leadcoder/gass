@@ -101,9 +101,9 @@ namespace GASS
 
 	}
 
-	void OgreTerrainGroupComponent::OnCreate()
+	void OgreTerrainGroupComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintMessage,0));
@@ -387,9 +387,9 @@ namespace GASS
 		}
 	}
 
-	void OgreTerrainGroupComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreTerrainGroupComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
 		ConfigureTerrainDefaults();

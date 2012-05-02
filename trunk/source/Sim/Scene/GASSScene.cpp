@@ -293,7 +293,7 @@ namespace GASS
 	}
 
 
-	SceneManagerPtr Scene::GetSceneManager(const std::string &name)
+	SceneManagerPtr Scene::GetSceneManagerByName(const std::string &name) const
 	{
 		for(int i = 0; i < m_SceneManagers.size(); i++)
 		{

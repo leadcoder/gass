@@ -107,13 +107,85 @@ namespace GASS
 		return UTFString; 
 	}
 
-	void OgreTextComponent::OnCreate()
+	void OgreTextComponent::OnInitialize()
 	{
 		//this one should load after mesh entities
-		GetSceneObject()->RegisterForMessage(REG_TMESS( OgreTextComponent::OnLoad,LoadGFXComponentsMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnGeomChanged,GeometryChangedMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS( OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0));
+	
+	
+			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
+		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
+
+		
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+		{
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+			target->addListener(this);
+		}
+		
+		Ogre::ColourValue color;
+		color.r = m_Color.x;
+		color.g = m_Color.y;
+		color.b = m_Color.z;
+		color.a = m_Color.w;
+
+		m_Attribs = new MovableTextOverlayAttributes("Attrs1",ocam,"BlueHighway",m_Size,color,"RedTransparent");
+		
 	}
+
+	void OgreTextComponent::OnGeomChanged(GeometryChangedMessagePtr message)
+	{
+		//Ogre::String test = Ogre::String(new_text);
+		
+
+		//ocam->getViewport()->getTarget()->addListener(this);
+		//m_TextObject = new MovableText(m_Name + "Text", ConvertToUTF(m_TextToDisplay), "BlueHighway",m_Size,color);
+
+		Ogre::MovableObject* mobj = NULL;
+		OgreMeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<OgreMeshComponent>();
+		
+		if(mesh)
+		{
+			mobj = mesh->GetOgreEntity();
+
+		}
+		else
+		{
+			OgreBillboardComponentPtr billboard = GetSceneObject()->GetFirstComponentByClass<OgreBillboardComponent>();
+			if(billboard)
+				mobj = billboard->GetBillboardSet();
+			else
+			{
+				boost::shared_ptr<OgreManualMeshComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreManualMeshComponent>();
+				if(line)
+					mobj = line->GetManualObject();
+			}
+		}
+		if(mobj == NULL)
+			LogManager::getSingleton().stream() << "WARNING:Failed to find moveable object for text component: " << m_Name;
+
+		if(mobj)
+		{
+			static unsigned int obj_id = 0;
+			obj_id++;
+			std::stringstream ss;
+			std::string name;
+			ss << m_Name << obj_id;
+			ss >> name;
+
+			delete m_TextObject;
+			m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
+			m_TextObject->enable(true); 
+			m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
+		}
+	}
+
 
 	std::string OgreTextComponent::GetText() const
 	{
@@ -167,72 +239,7 @@ namespace GASS
 		SetText(caption);
 	}
 
-	void OgreTextComponent::OnLoad(LoadGFXComponentsMessagePtr message)
-	{
-		//Ogre::String test = Ogre::String(new_text);
-		Ogre::ColourValue color;
-		color.r = m_Color.x;
-		color.g = m_Color.y;
-		color.b = m_Color.z;
-		color.a = m_Color.w;
-
-		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
-		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
-
-		
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-		{
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-			target->addListener(this);
-		}
-
-		//ocam->getViewport()->getTarget()->addListener(this);
-		
-		m_Attribs = new MovableTextOverlayAttributes("Attrs1",ocam,"BlueHighway",m_Size,color,"RedTransparent");
-		//m_TextObject = new MovableText(m_Name + "Text", ConvertToUTF(m_TextToDisplay), "BlueHighway",m_Size,color);
-
-		Ogre::MovableObject* mobj = NULL;
-		OgreMeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<OgreMeshComponent>();
-		
-		if(mesh)
-		{
-			mobj = mesh->GetOgreEntity();
-
-		}
-		else
-		{
-			OgreBillboardComponentPtr billboard = GetSceneObject()->GetFirstComponentByClass<OgreBillboardComponent>();
-			if(billboard)
-				mobj = billboard->GetBillboardSet();
-			else
-			{
-				boost::shared_ptr<OgreManualMeshComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreManualMeshComponent>();
-				if(line)
-					mobj = line->GetManualObject();
-			}
-		}
-		if(mobj == NULL)
-			LogManager::getSingleton().stream() << "WARNING:Failed to find moveable object for text component: " << m_Name;
-
-		if(mobj)
-		{
-			static unsigned int obj_id = 0;
-			obj_id++;
-			std::stringstream ss;
-			std::string name;
-			ss << m_Name << obj_id;
-			ss >> name;
-
-			m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
-			m_TextObject->enable(true); 
-			m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
-		}
-	}
-
+	
 
 	void OgreTextComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{

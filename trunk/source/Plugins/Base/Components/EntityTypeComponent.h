@@ -34,7 +34,7 @@ namespace GASS
 		EntityTypeComponent();
 		virtual ~EntityTypeComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		
 		ADD_ATTRIBUTE(int,EntityKind)
 		ADD_ATTRIBUTE(int,Domain)

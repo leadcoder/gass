@@ -27,7 +27,7 @@ namespace GASS
 		PlaneGeometryComponent(void);
 		~PlaneGeometryComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SetTexture(const std::string &texture_name);
 		std::string GetTexture() const;
 	protected:

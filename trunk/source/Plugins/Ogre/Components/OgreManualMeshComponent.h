@@ -40,13 +40,13 @@ namespace GASS
 		OgreManualMeshComponent(void);
 		~OgreManualMeshComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryCategory GetGeometryCategory() const;
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);

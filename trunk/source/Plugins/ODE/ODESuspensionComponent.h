@@ -40,10 +40,10 @@ namespace GASS
 		ODESuspensionComponent();
 		virtual ~ODESuspensionComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnBodyLoaded(BodyLoadedMessagePtr message);
 
 		void SetAxis1Vel(float velocity);
 		void SetAxis2Vel(float value);

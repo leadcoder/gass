@@ -45,7 +45,7 @@ namespace GASS
 		OgreTerrainGroupComponent();
 		~OgreTerrainGroupComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -91,7 +91,7 @@ namespace GASS
 		void CreatePages(const Vec2i  &size);
 		void SetOrigin(const Vec3 &pos);
 		Vec3 GetOrigin() const;
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);

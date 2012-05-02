@@ -43,14 +43,14 @@ namespace GASS
 		BoneModifierComponent();
 		virtual ~BoneModifierComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
 		std::string GetBoneName() const;
 		void SetBoneName(const std::string &name);
 		std::string GetMeshObject() const;
 		void SetMeshObject(const std::string &name);
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLODChange(LODMessagePtr message);
 

@@ -44,10 +44,10 @@ namespace GASS
 		ProjectileComponent();
 		virtual ~ProjectileComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta);
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void StepPhysics(double time);
 		void OnPositionMessage(PositionMessagePtr message);

@@ -139,7 +139,7 @@ namespace GASS
 		ScenePtr scene(request.Scene);
 		if(scene)
 		{
-			OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+			OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 
 			OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 			osgViewer::ViewerBase::Views views;
@@ -205,7 +205,7 @@ namespace GASS
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = 2;
 
-		OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+		OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		if(gfx_sm)
 		{
 			ProcessRaycast(&request,&result,gfx_sm->GetOSGRootNode());
@@ -348,7 +348,7 @@ namespace GASS
 
 			if(scene)
 			{
-				OSGGraphicsSceneManagerPtr gfx_sm = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(scene->GetSceneManager("OSGGraphicsSceneManager"));
+				OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 				OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
 				osgViewer::ViewerBase::Views views;

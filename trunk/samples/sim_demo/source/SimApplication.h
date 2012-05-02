@@ -80,7 +80,7 @@ public:
 
 			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 			if(object)
-				object->PostMessage(pos_msg);
+				object->SendImmediate(pos_msg);
 		}
 		m_Timer->Reset();
 

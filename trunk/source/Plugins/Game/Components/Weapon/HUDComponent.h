@@ -44,9 +44,9 @@ namespace GASS
 		HUDComponent();
 		virtual ~HUDComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		void UpdateHUD();

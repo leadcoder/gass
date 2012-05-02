@@ -58,14 +58,14 @@ namespace GASS
 		RegisterProperty<float>("LowLODDistance", &LODComponent::GetLowLODDistance, &LODComponent::SetLowLODDistance);
 	}
 
-	void LODComponent::OnCreate()
+	void LODComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationNotifyMessage,0));
 	}
 
-	void LODComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void LODComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		//get active camera

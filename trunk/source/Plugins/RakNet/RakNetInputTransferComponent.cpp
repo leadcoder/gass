@@ -70,16 +70,18 @@ namespace GASS
 		RegisterProperty<std::string>("ControlSetting", &RakNetInputTransferComponent::GetControlSetting, &RakNetInputTransferComponent::SetControlSetting);
 	}
 
-	void RakNetInputTransferComponent::OnCreate()
+	void RakNetInputTransferComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnLoad,LoadNetworkComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnLoad,LoadComponentsMessage,1));
 
 	}
 
-	void RakNetInputTransferComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
+	void RakNetInputTransferComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(!raknet->IsActive())
+			return;
 
 		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
 		if(m_ControlSetting == NULL)

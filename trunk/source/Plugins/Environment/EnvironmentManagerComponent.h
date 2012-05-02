@@ -42,10 +42,10 @@ namespace GASS
 		EnvironmentManagerComponent(void);
 		~EnvironmentManagerComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void UpdateEnvironmentLighting();
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);

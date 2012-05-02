@@ -72,9 +72,9 @@ namespace GASS
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
 	}
 
-	void OgreBillboardComponent::OnCreate()
+	void OgreBillboardComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,MaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
@@ -104,11 +104,10 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
-		assert(ogsm);
-
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 
 		static unsigned int obj_id = 0;

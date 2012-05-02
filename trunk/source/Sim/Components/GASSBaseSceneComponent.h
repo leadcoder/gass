@@ -39,8 +39,7 @@ namespace GASS
 		BaseSceneComponent();
 		virtual ~BaseSceneComponent();
 		SceneObjectPtr GetSceneObject() const;
-		//called when component is created
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta) {};
 	protected:
 		void InitializePointers();

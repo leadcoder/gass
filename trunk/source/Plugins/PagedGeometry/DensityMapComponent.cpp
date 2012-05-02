@@ -53,9 +53,9 @@ namespace GASS
 		RegisterProperty<std::string>("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport);
 	}
 
-	void DensityMapComponent::OnCreate()
+	void DensityMapComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnRoadMessage,RoadMessage,0));
@@ -78,7 +78,7 @@ namespace GASS
 		
 	}
 
-	void DensityMapComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void DensityMapComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 
 		ScenePtr  scene = GetSceneObject()->GetScene();

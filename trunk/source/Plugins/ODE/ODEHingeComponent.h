@@ -39,10 +39,10 @@ namespace GASS
 		ODEHingeComponent();
 		virtual ~ODEHingeComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnBodyLoaded(BodyLoadedMessagePtr message);
 		void SetAxisVel(float velocity);
 		float GetAxisForce()const {return m_JointForce;}
 		void SetAxisForce(float value);

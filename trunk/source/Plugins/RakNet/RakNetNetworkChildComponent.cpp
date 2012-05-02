@@ -24,6 +24,7 @@
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetLocationTransferComponent.h"
+#include "Plugins/RakNet/RaknetNetworkSceneManager.h"
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -62,19 +63,22 @@ namespace GASS
 		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkChildComponent::GetAttributes, &RakNetNetworkChildComponent::SetAttributes);
 	}
 
-	void RakNetNetworkChildComponent::OnCreate()
+	void RakNetNetworkChildComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnLoad,LoadNetworkComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaMessage,0));
 		
 	}
 
-	void RakNetNetworkChildComponent::OnLoad(LoadNetworkComponentsMessagePtr message)
+	void RakNetNetworkChildComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		if(!raknet->IsActive())
+			return;
+
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
 		if(raknet->IsServer())
 		{
 			m_Replica = new RakNetChildReplica(raknet->GetReplicaManager());
@@ -83,7 +87,7 @@ namespace GASS
 
 			if(m_Attributes.size() > 0)
 			{
-				message->GetNetworkSceneManager()->Register(shared_from_this());
+				GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
 			}
 				//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}

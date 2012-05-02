@@ -38,9 +38,9 @@ namespace GASS
 		RegisterProperty<bool>("ScaleLocation",&DistanceScaleComponent::GetScaleLocation, &DistanceScaleComponent::SetScaleLocation);
 	}
 
-	void DistanceScaleComponent::OnCreate()
+	void DistanceScaleComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionMessage,0));
@@ -154,7 +154,7 @@ namespace GASS
 		}
 	}
 
-	void DistanceScaleComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void DistanceScaleComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
 		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();

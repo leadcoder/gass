@@ -52,9 +52,17 @@ namespace GASS
 
 	void BaseSceneManager::SystemTick(double delta_time) 
 	{
-		for(size_t i = 0; i < m_Listeners.size(); i++)
+		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
+		while(iter != m_Listeners.end())
 		{
-			m_Listeners[i]->SceneManagerTick(delta_time);
+			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+			if(listener)
+			{
+				listener->SceneManagerTick(delta_time);
+				iter++;
+			}
+			else 
+				iter = m_Listeners.erase(iter);
 		}
 	}
 
@@ -67,10 +75,11 @@ namespace GASS
 	void BaseSceneManager::Unregister(SceneManagerListenerPtr listener)
 	{
 		//tbb::spin_mutex::scoped_lock lock(m_Mutex);
-		std::vector<SceneManagerListenerPtr>::iterator iter = m_Listeners.begin();
+		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
-			if(*iter == listener)
+			
+			if(SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag()) == listener)
 				iter = m_Listeners.erase(iter);
 			else
 				iter++;

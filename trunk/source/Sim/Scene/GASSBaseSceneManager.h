@@ -69,6 +69,6 @@ namespace GASS
 	protected:
 		std::string m_Name;
 		SceneWeakPtr m_Scene;
-		std::vector<SceneManagerListenerPtr> m_Listeners;
+		std::vector<SceneManagerListenerWeakPtr> m_Listeners;
 	};
 }

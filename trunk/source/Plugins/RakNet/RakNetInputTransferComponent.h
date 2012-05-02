@@ -84,11 +84,11 @@ namespace GASS
 		RakNetInputTransferComponent();
 		virtual ~RakNetInputTransferComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
 		void ReceivedInput(int controller, float value);
 	private:
-		void OnLoad(LoadNetworkComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 		void OnInput(ControllerMessagePtr message);

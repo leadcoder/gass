@@ -71,9 +71,9 @@ namespace GASS
 		//RegisterProperty<int>("InitPriority", &LocationComponent::GetInitPriority, &LocationComponent::SetInitPriority);
 	}
 
-	void OgreLocationComponent::OnCreate()
+	void OgreLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnLoad,GASS::LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnLoad,GASS::LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::PositionMessage,GASS::PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnScaleMessage,GASS::ScaleMessage,0));
@@ -89,9 +89,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
 	}
 
-	void OgreLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OgreLocationComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 
@@ -131,8 +131,13 @@ namespace GASS
 		else //use 
 			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
 
+		LocationComponentPtr location = boost::shared_dynamic_cast<ILocationComponent>( shared_from_this());
+		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
+		
+		
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
+
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 

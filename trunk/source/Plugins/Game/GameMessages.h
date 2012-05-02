@@ -30,16 +30,7 @@ namespace GASS
 {
 	class GameSceneManager;
 	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr;
-	class LoadGameComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadGameComponentsMessage(GameSceneManagerPtr game_scene_manager, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_GameSceneManager(game_scene_manager){}
-		  GameSceneManagerPtr GetGameSceneManager() const {return m_GameSceneManager;}
-	private:
-		GameSceneManagerPtr m_GameSceneManager;
-	};
-	typedef boost::shared_ptr<LoadGameComponentsMessage> LoadGameComponentsMessagePtr;
+	
 
 	class EnterVehicleMessage : public BaseMessage
 	{

@@ -46,7 +46,7 @@ namespace GASS
 		OgreLocationComponent();
 		virtual ~OgreLocationComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	
 		virtual void SetPosition(const Vec3 &value);
 		virtual Vec3 GetPosition() const;
@@ -81,7 +81,7 @@ namespace GASS
 
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnScaleMessage(ScaleMessagePtr message);
 		void PositionMessage(PositionMessagePtr message);

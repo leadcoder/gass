@@ -39,11 +39,11 @@ namespace GASS
 		SkyXComponent(void);
 		~SkyXComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
 		bool frameStarted(const Ogre::FrameEvent& evt);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTimeOfDayMessage(TimeOfDayMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);

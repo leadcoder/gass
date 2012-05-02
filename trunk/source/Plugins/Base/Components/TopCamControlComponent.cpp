@@ -76,11 +76,11 @@ namespace GASS
 		RegisterProperty<float>("WindowSize", &GASS::TopCamControlComponent::GetWindowSize, &GASS::TopCamControlComponent::SetWindowSize);
 	}
 
-	void TopCamControlComponent::OnCreate()
+	void TopCamControlComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
 
@@ -93,11 +93,11 @@ namespace GASS
 		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
 
-	void TopCamControlComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void TopCamControlComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetCoreSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
 	}
 
 	void TopCamControlComponent::OnUnload(MessagePtr message)

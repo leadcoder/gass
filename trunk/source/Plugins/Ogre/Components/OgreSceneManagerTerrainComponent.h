@@ -41,7 +41,7 @@ namespace GASS
 		OgreSceneManagerTerrainComponent();
 		~OgreSceneManagerTerrainComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -64,7 +64,7 @@ namespace GASS
 	protected:
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
 		void LoadTerrain(const std::string &filename);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		bool m_PageListenerAdded;
 		Vec3 m_Scale;

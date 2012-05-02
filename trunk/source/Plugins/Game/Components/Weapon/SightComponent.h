@@ -45,7 +45,7 @@ namespace GASS
 		SightComponent();
 		virtual ~SightComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
 		void UpdateAimTransformation(double delta_time);
 		
@@ -70,7 +70,7 @@ namespace GASS
 		//Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		//Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 		void OnBaseTransformation(TransformationNotifyMessagePtr message);
 		void OnBarrelTransformation(BarrelTransformationMessagePtr message);

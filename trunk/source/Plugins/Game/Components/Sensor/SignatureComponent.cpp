@@ -38,9 +38,9 @@ namespace GASS
 		REG_ATTRIBUTE(PlatformTeamReflection,PlatformTeam,SignatureComponent)
 	}
 
-	void SignatureComponent::OnCreate()
+	void SignatureComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnTransChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnVelocity,VelocityNotifyMessage,0));

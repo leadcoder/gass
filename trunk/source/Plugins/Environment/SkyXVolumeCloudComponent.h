@@ -40,10 +40,10 @@ namespace GASS
 		SkyXVolumeCloudComponent(void);
 		~SkyXVolumeCloudComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void CreateVolume();
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 		void SetNoiseScale(const Float &value);

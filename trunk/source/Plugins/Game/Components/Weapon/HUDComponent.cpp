@@ -52,9 +52,9 @@ namespace GASS
 		RegisterProperty<std::string>("Material", &HUDComponent::GetMaterial, &HUDComponent::SetMaterial);
 	}
 
-	void HUDComponent::OnCreate()
+	void HUDComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HUDComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HUDComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HUDComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
@@ -78,7 +78,7 @@ namespace GASS
 	}
 	
 
-	void HUDComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void HUDComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
 		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));

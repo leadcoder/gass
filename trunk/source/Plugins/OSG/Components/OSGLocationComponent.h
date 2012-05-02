@@ -36,7 +36,7 @@ namespace GASS
 		OSGLocationComponent();
 		virtual ~OSGLocationComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	
 		virtual void SetScale(const Vec3 &value);
 		virtual void SetPosition(const Vec3 &value);
@@ -56,7 +56,7 @@ namespace GASS
 		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
 		void OnScaleMessage(ScaleMessagePtr message);

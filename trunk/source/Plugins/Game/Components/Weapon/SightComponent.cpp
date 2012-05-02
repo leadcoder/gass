@@ -110,24 +110,24 @@ namespace GASS
 		RegisterProperty<int>("TurnInputExp", &SightComponent::GetTurnInputExp, &SightComponent::SetTurnInputExp);
 	}
 
-	void SightComponent::OnCreate()
+	void SightComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,ControllerMessage,0));
 		//call this to ensure that scene object pointers get initlized
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 
 		//load target object
 		
 
 	}
 
-	void SightComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void SightComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 
 
 		NetworkComponentPtr net_comp = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();

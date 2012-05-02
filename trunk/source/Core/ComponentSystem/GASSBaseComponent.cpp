@@ -60,10 +60,6 @@ namespace GASS
 		m_Owner = owner;
 	}
 	
-	void BaseComponent::OnCreate()
-	{
-
-	}
 
 	bool BaseComponent::Serialize(ISerializer* serializer)
 	{

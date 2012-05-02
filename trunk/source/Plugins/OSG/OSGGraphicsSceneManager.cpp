@@ -84,7 +84,7 @@ namespace GASS
 		}
 		else
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnCreate");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnInitialize");
 		}
 	}
 
@@ -183,8 +183,8 @@ namespace GASS
 		assert(obj);
 		void* root = static_cast<void*>(m_RootNode.get());
 
-		MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),root));
-		obj->SendImmediate(gfx_msg);
+		//MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),root));
+		//obj->SendImmediate(gfx_msg);
 		
 		//update scene data
 		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());

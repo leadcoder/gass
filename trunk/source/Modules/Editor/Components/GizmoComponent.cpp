@@ -48,9 +48,9 @@ namespace GASS
 		RegisterProperty<std::string>("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
 	}
 
-	void GizmoComponent::OnCreate()
+	void GizmoComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
@@ -279,7 +279,7 @@ namespace GASS
 		}
 	}
 
-	void GizmoComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void GizmoComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		BuildMesh();
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage,1));
@@ -292,7 +292,7 @@ namespace GASS
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage,0));
 		}
 
-		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
 	}
 

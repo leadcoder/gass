@@ -56,13 +56,13 @@ namespace GASS
 		RegisterProperty<float>("SoundVolumeFactor", &TrackComponent::GetSoundVolumeFactor, &TrackComponent::SetSoundVolumeFactor);
 	}
 
-	void TrackComponent::OnCreate()
+	void TrackComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadGameComponentsMessage,0));
-		BaseSceneComponent::OnCreate();
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadComponentsMessage,0));
+		BaseSceneComponent::OnInitialize();
 	}
 
-	void TrackComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void TrackComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		
 		//SetDriveWheel(m_DriveWheelName);

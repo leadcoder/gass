@@ -52,9 +52,9 @@ namespace GASS
 		RegisterProperty<Float>("TangentWeight", &WaypointComponent::GetTangentWeight, &WaypointComponent::SetTangentWeight);
 	}
 
-	void WaypointComponent::OnCreate()
+	void WaypointComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnLoad,LoadCoreComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnUnload,UnloadComponentsMessage,1));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,TransformationNotifyMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionMessage,1));
@@ -98,7 +98,7 @@ namespace GASS
 		m_Initialized = false;
 	}
 
-	void WaypointComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void WaypointComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 		if(tangent)

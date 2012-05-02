@@ -56,9 +56,9 @@ namespace GASS
 		RegisterProperty<std::string>("Manipulator", &GASS::OSGCameraManipulatorComponent::GetManipulatorName, &GASS::OSGCameraManipulatorComponent::SetManipulatorName);
 	}
 
-	void OSGCameraManipulatorComponent::OnCreate()
+	void OSGCameraManipulatorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnUnload,UnloadComponentsMessage,1));
 	
 	}
@@ -69,9 +69,9 @@ namespace GASS
 			
 	}
 
-	void OSGCameraManipulatorComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGCameraManipulatorComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		message->GetGFXSceneManager()->Register(shared_from_this());
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>()->Register(shared_from_this());
 
 		//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
 		m_Manipulator = new osgGA::MyTrackballManipulator();

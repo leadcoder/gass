@@ -35,7 +35,7 @@ namespace GASS
 		WaypointListComponent();
 		virtual ~WaypointListComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const;
 		float GetRadius()const;
 	protected:
@@ -61,7 +61,7 @@ namespace GASS
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
 		
 		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnMoved(TransformationNotifyMessagePtr message);
 		void OnUpdate(UpdateWaypointListMessagePtr message);
 

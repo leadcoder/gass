@@ -157,7 +157,7 @@ namespace GASS
 		OSGMeshComponent (void);
 		~OSGMeshComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
@@ -182,7 +182,7 @@ namespace GASS
 		void SetReceiveShadow(bool value);
 		void Expand(SceneObjectPtr parent, osg::Group *group, bool load);
 		
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);

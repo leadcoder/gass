@@ -85,9 +85,9 @@ namespace GASS
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
 	}
 
-	void RoadComponent::OnCreate()
+	void RoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnLoad,LoadCoreComponentsMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnLoad,LoadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUnload,UnloadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,UpdateWaypointListMessage,1));
 	}
@@ -109,7 +109,7 @@ namespace GASS
 
 	}
 
-	void RoadComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void RoadComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		m_Initialized = true;
 		//get waypoint list

@@ -69,22 +69,22 @@ namespace GASS
 
 	}
 
-	void ProjectileComponent::OnCreate()
+	void ProjectileComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage,0));
 	}
 
-	void ProjectileComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void ProjectileComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		m_TimeLeft = m_TimeToLive;
 		//save for fast access
 		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 		//register fot ticks
-		message->GetGameSceneManager()->Register(shared_from_this());
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(shared_from_this());
 		
 	}
 

@@ -43,7 +43,7 @@ namespace GASS
 		TrackComponent();
 		virtual ~TrackComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		float GetParticleEmissionFactor() const{return m_ParticleEmissionFactor;}
@@ -51,7 +51,7 @@ namespace GASS
 		float GetSoundVolumeFactor() const{return m_SoundVolumeFactor;}
 		void SetSoundVolumeFactor(float value) {m_SoundVolumeFactor = value;}
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 
 		ADD_ATTRIBUTE(SceneObjectLink,DriveWheel)

@@ -10,7 +10,7 @@ namespace GASS
 		EditorComponent();
 		virtual ~EditorComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
 		std::string GetIconFile() const { return m_IconFile;}
 		bool GetShowInTree() const {return m_ShowInTree;}
@@ -25,7 +25,7 @@ namespace GASS
 		void OnObjectLock(ObjectLockMessagePtr message);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
-		void OnLoad(LoadCoreComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);

@@ -59,9 +59,9 @@ namespace GASS
 		//RegisterProperty<SceneNodeState>("State", &GetSceneNodeState, &SetSceneNodeState);
 	}
 
-	void OSGLocationComponent::OnCreate()
+	void OSGLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnLoad,LoadGFXComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage,0));
@@ -78,9 +78,9 @@ namespace GASS
 		SetAttachToParent(message->GetAttachToParent());
 	}
 
-	void OSGLocationComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGLocationComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
+		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		//assert(m_GFXSceneManager);
 		m_TransformNode = new osg::PositionAttitudeTransform();
 		std::string name = GetSceneObject()->GetName();

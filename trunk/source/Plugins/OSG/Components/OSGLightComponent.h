@@ -34,7 +34,7 @@ namespace GASS
 		OSGLightComponent();
 		virtual ~OSGLightComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void SetLightType(LightType lt);
 		LightType GetLightType()const {return m_LightType;}
 		void SetAttenuationParams(const Vec4 &params);
@@ -53,8 +53,7 @@ namespace GASS
 		int GetLightId()const {return m_LightId;}
 		
 	protected:
-		
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		LightType m_LightType;
 
 		Vec3 m_Diffuse;

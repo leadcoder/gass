@@ -72,9 +72,9 @@ namespace GASS
 		RegisterProperty<Vec2>("MaxMinAngle", &TurretComponent::GetMaxMinAngle, &TurretComponent::SetMaxMinAngle);
 	}
 
-	void TurretComponent::OnCreate()
+	void TurretComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
@@ -84,7 +84,7 @@ namespace GASS
 	}
 
 	
-	void TurretComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void TurretComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
@@ -98,7 +98,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(volume_msg);
 
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 	}
 
 	void TurretComponent::OnUnload(UnloadComponentsMessagePtr message)

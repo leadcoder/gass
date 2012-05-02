@@ -73,9 +73,9 @@ namespace GASS
 		RegisterProperty<std::string>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport);
 	}
 
-	void WaypointListComponent::OnCreate()
+	void WaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnLoad,LoadCoreComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUpdate,UpdateWaypointListMessage,1));
 
@@ -158,7 +158,7 @@ namespace GASS
 
 	}
 
-	void WaypointListComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void WaypointListComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		m_Initialized = true;
 		UpdatePath();

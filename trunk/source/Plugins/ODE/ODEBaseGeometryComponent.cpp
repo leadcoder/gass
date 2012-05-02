@@ -76,9 +76,9 @@ namespace GASS
 		RegisterProperty<bool>("Debug", &GASS::ODEBaseGeometryComponent::GetDebug, &GASS::ODEBaseGeometryComponent::SetDebug);
 	}
 
-	void ODEBaseGeometryComponent::OnCreate()
+	void ODEBaseGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
@@ -86,9 +86,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
-	void ODEBaseGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void ODEBaseGeometryComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		UpdateODEGeom();

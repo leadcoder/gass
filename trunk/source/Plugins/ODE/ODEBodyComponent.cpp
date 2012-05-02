@@ -66,9 +66,9 @@ namespace GASS
 
 	}
 
-	void ODEBodyComponent::OnCreate()
+	void ODEBodyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLoad,LoadPhysicsComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationMessage,0));
@@ -167,9 +167,9 @@ namespace GASS
 		SetMass(message->GetMass());
 	}
 
-	void ODEBodyComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void ODEBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<ODEPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 
@@ -225,15 +225,11 @@ namespace GASS
 		}
 		dBodySetData(m_ODEBodyID, (void*)this);
 
-		if(!scene_manager->IsActive())
-		{
-			//Check if parent has physics
-		}
-
 		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);
+		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)

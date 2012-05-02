@@ -18,12 +18,12 @@ namespace GASS
 		SensorComponent(void);
 		~SensorComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void AfterSMUpdate(double delta_time);
 		//ITaskListener interface
 		void Update(double delta);
 	protected:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);

@@ -70,15 +70,10 @@ namespace GASS
 		RegisterProperty<Float>("RegionSize", &GASS::OgreStaticMeshComponent::GetRegionSize, &GASS::OgreStaticMeshComponent::SetRegionSize);
 	}
 
-	void OgreStaticMeshComponent::OnCreate()
+	void OgreStaticMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnUnload,UnloadComponentsMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnMaterialMessage,MaterialMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
-
 	}
 
 	void OgreStaticMeshComponent::LoadXML(TiXmlElement *elem)
@@ -133,9 +128,9 @@ namespace GASS
 		}
 	}
 
-	void OgreStaticMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message) 
+	void OgreStaticMeshComponent::OnLoad(LoadComponentsMessagePtr message) 
 	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		m_OgreSceneManager = ogsm;
 		assert(ogsm);
 

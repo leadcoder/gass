@@ -63,9 +63,9 @@ namespace GASS
 		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho);
 	}
 
-	void OSGCameraComponent::OnCreate()
+	void OSGCameraComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnUnload,UnloadComponentsMessage,1));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnPositionChanged,PositionMessage,10));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnRotationChanged,RotationMessage,10));
@@ -287,7 +287,7 @@ namespace GASS
 
 	}
 
-	void OSGCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 
 

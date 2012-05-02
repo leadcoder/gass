@@ -75,17 +75,19 @@ namespace GASS
 		return m_InvertDirection;
 	}
 
-	void FollowWaypointListComponent::OnCreate()
+	void FollowWaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationNotifyMessage,0));
 	}
 
-	void FollowWaypointListComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void FollowWaypointListComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
-		message->GetGameSceneManager()->Register(listener);
+		
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
+		
 
 		SetWaypointList(m_WaypointListName);
 	}

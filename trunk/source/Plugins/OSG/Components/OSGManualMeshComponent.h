@@ -31,11 +31,11 @@ namespace GASS
 		OSGManualMeshComponent(void);
 		~OSGManualMeshComponent(void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);

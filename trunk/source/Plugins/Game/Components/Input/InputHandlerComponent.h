@@ -42,12 +42,12 @@ namespace GASS
 		InputHandlerComponent();
 		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		void OnEnter(EnterVehicleMessagePtr message);
 		void OnExit(ExitVehicleMessagePtr message);
 		void OnInput(ControllerMessagePtr message);
 
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 
 	private:

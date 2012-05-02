@@ -45,9 +45,9 @@ namespace GASS
 		RegisterProperty<std::string>("Type",&SelectionComponent::GetType, &SelectionComponent::SetType);
 	}
 
-	void SelectionComponent::OnCreate()
+	void SelectionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnLoad,LoadCoreComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnUnload,UnloadComponentsMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectedMessage,0));
@@ -131,7 +131,7 @@ namespace GASS
 		GetSceneObject()->SendImmediate(MessagePtr(new ScaleMessage(message->GetScale(),SELECTION_COMP_SENDER)));
 	}
 
-	void SelectionComponent::OnLoad(LoadCoreComponentsMessagePtr message)
+	void SelectionComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		
 	}

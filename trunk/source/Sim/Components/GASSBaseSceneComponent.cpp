@@ -48,9 +48,8 @@ namespace GASS
 	}
 
 
-	void BaseSceneComponent::OnCreate()
+	void BaseSceneComponent::OnInitialize()
 	{
-		BaseComponent::OnCreate();
 		InitializePointers();
 	}
 

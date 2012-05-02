@@ -40,11 +40,11 @@ namespace GASS
 		ArmorComponent();
 		virtual ~ArmorComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
 		void OnHit(HitMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		float GetArmor() const; 
 		void SetArmor(float value);
 		std::string GetDamageMesh() const;

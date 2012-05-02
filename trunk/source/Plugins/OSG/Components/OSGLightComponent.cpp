@@ -58,9 +58,9 @@ namespace GASS
 		RegisterProperty<Vec3>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient);
 	}
 
-	void OSGLightComponent::OnCreate()
+	void OSGLightComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLocationLoaded,LocationLoadedMessage,1));
 	}
 
 	void OSGLightComponent::SetLightType(LightType lt)
@@ -117,9 +117,8 @@ namespace GASS
 			m_OSGLight->setLightNum(m_LightId);
 	}
 
-	void OSGLightComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGLightComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-
 		m_OSGLight = new osg::Light;
 		m_OSGLightSource = new osg::LightSource;
 
@@ -137,7 +136,7 @@ namespace GASS
 		lc->GetOSGNode()->addChild(m_OSGLightSource);
 
 		//Always global light?
-		OSGGraphicsSceneManagerPtr  scene_man = boost::shared_dynamic_cast<OSGGraphicsSceneManager>(message->GetGFXSceneManager());
+		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		root_node->getOrCreateStateSet()->setAssociatedModes(m_OSGLight, osg::StateAttribute::ON);
 

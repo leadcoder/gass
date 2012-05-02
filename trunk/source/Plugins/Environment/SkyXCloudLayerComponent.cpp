@@ -174,9 +174,9 @@ namespace GASS
 		}
 	}
 
-	void SkyXCloudLayerComponent::OnCreate()
+	void SkyXCloudLayerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXCloudLayerComponent::OnLoad,LoadGFXComponentsMessage,3));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXCloudLayerComponent::OnLoad,LoadComponentsMessage,3));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXCloudLayerComponent::OnUnload,UnloadComponentsMessage,0));
 	}
 
@@ -185,7 +185,7 @@ namespace GASS
 
 	}
 
-	void SkyXCloudLayerComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void SkyXCloudLayerComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//Init();
 	}

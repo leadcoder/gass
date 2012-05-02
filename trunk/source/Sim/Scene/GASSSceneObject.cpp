@@ -101,13 +101,15 @@ namespace GASS
 		{
 			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
 			
-			bsc->OnCreate();
+			bsc->OnInitialize();
 			++iter;
 		}
 
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(this_obj));
 		scene->SendImmediate(load_msg);
+
+		SendImmediate(MessagePtr(new LoadComponentsMessage()));
 
 		//Pump initial messages
 		SyncMessages(0,false);
@@ -225,13 +227,13 @@ namespace GASS
 	return objects;
 	}*/
 
-	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive)
+	/*void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
 	{
 		if(exact_math)
 		{
 			if(GetName()== name)
 			{
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+				SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(shared_from_this());
 				objects.push_back(obj);
 			}
 		}
@@ -254,14 +256,8 @@ namespace GASS
 				child->GetChildrenByName(objects,name,exact_math,recursive);
 				iter++;
 			}
-			/*IComponentContainer::ComponentContainerIterator children = GetChildren();
-			while(children.hasMoreElements())
-			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-				child->GetChildrenByName(objects,name,exact_math,recursive);
-			}*/
 		}
-	}
+	}*/
 
 	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive) const
 	{

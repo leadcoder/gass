@@ -31,12 +31,12 @@ namespace GASS
 		OSGCameraManipulatorComponent();
 		virtual ~OSGCameraManipulatorComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta);
 		//IOSGCameraManipulator
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}

@@ -30,7 +30,7 @@ namespace GASS
 		OSGCameraComponent();
 		virtual ~OSGCameraComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		//ICameraComponent interface
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
 		osg::ref_ptr<osg::Camera> GetOSGCamera() const {return m_OSGCamera;}
@@ -39,7 +39,7 @@ namespace GASS
 	protected:
 		void OnParameter(CameraParameterMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 	

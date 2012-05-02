@@ -54,11 +54,11 @@ namespace GASS
 		//RegisterProperty<std::string>("MeshObject", &BoneModifierComponent::GetMeshObject, &BoneModifierComponent::SetMeshObject);
 	}
 
-	void BoneModifierComponent::OnCreate()
+	void BoneModifierComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLoad,LoadGameComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLODChange,LODMessage,0));
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 	}
 
 	void BoneModifierComponent::OnLODChange(LODMessagePtr message)
@@ -73,7 +73,7 @@ namespace GASS
 		}
 	}
 
-	void BoneModifierComponent::OnLoad(LoadGameComponentsMessagePtr message)
+	void BoneModifierComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//SetBoneName(m_BoneName);
 		//IMeshComponentPtr mesh = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IMeshComponent>();

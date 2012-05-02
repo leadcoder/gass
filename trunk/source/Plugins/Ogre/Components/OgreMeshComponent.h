@@ -46,7 +46,7 @@ namespace GASS
 		OgreMeshComponent (void);
 		~OgreMeshComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		//IGeometryComponent
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
@@ -67,7 +67,7 @@ namespace GASS
 
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const;
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);

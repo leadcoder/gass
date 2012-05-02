@@ -91,9 +91,9 @@ namespace GASS
 
 	}
 
-	void GrassGeometryComponent::OnCreate()
+	void GrassGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnLoad,LoadGFXComponentsMessage,999));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnLoad,LoadComponentsMessage,999));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnPaint,GrassPaintMessage,0));
 
@@ -400,7 +400,7 @@ namespace GASS
 	}
 
 
-	void GrassGeometryComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void GrassGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		//assert(ogsm);
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();

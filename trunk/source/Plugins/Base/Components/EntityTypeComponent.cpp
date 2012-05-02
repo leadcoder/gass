@@ -60,7 +60,7 @@ namespace GASS
 		REG_ATTRIBUTE(int,Extra,EntityTypeComponent)
 	}
 
-	void EntityTypeComponent::OnCreate()
+	void EntityTypeComponent::OnInitialize()
 	{
 
 	}

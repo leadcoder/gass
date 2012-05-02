@@ -35,12 +35,12 @@ namespace GASS
 		OSGTextComponent (void);
 		~OSGTextComponent (void);
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
-		void OnLoad(LoadGFXComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);
 
 

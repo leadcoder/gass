@@ -74,36 +74,16 @@ namespace GASS
 		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 	}
 
-	void OgreCameraComponent::OnCreate()
+	void OgreCameraComponent::OnInitialize()
 	{
 		//priorty = 1 -> load this one after nodes
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLoad,LoadGFXComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,0));
 	}
 
-	std::vector<std::string> OgreCameraComponent::GetPostFilters() const
+	void OgreCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		return m_PostFilters;
-	}
-
-	void OgreCameraComponent::SetPostFilters(const std::vector<std::string> &filters)
-	{
-		m_PostFilters = filters;
-	}
-
-	void OgreCameraComponent::SetPolygonMode(PolygonModeWrapper value) 
-	{
-		m_PolygonMode= value;
-		if(m_Camera)
-		{
-			m_Camera->setPolygonMode(m_PolygonMode.Get());
-		}
-	}
-
-
-	void OgreCameraComponent::OnLoad(LoadGFXComponentsMessagePtr message)
-	{
-		OgreGraphicsSceneManagerPtr ogsm = boost::shared_static_cast<OgreGraphicsSceneManager>(message->GetGFXSceneManager());
+		OgreGraphicsSceneManagerPtr ogsm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
@@ -134,6 +114,28 @@ namespace GASS
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 
+
+	std::vector<std::string> OgreCameraComponent::GetPostFilters() const
+	{
+		return m_PostFilters;
+	}
+
+	void OgreCameraComponent::SetPostFilters(const std::vector<std::string> &filters)
+	{
+		m_PostFilters = filters;
+	}
+
+	void OgreCameraComponent::SetPolygonMode(PolygonModeWrapper value) 
+	{
+		m_PolygonMode= value;
+		if(m_Camera)
+		{
+			m_Camera->setPolygonMode(m_PolygonMode.Get());
+		}
+	}
+
+
+	
 	void OgreCameraComponent::OnParameter(CameraParameterMessagePtr message)
 	{
 		CameraParameterMessage::CameraParameterType type = message->GetParameter();

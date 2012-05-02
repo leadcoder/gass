@@ -43,9 +43,9 @@ namespace GASS
 		LODComponent();
 		virtual ~LODComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadGameComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		

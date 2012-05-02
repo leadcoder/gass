@@ -43,10 +43,12 @@ namespace GASS
 	class SimSceneManager;
 	class ISceneManager;
 	class IGeometryComponent;
+	class ILocationComponent;
 	struct ManualMeshData;
 	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
 	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef boost::shared_ptr<ILocationComponent> LocationComponentPtr;
 
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
@@ -643,23 +645,16 @@ namespace GASS
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 	
-	/**
-		Message sent by graphics scene manager when new scene object is loaded. 
-		Graphics components should subscribe to this message and do its loading
-		on delivery.
-	*/
-	class LoadGFXComponentsMessage : public BaseMessage
+	class LocationLoadedMessage : public BaseMessage
 	{
 	public:
-		LoadGFXComponentsMessage(SceneManagerPtr gfx_scene_manager, void* user_data = NULL,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_GFXSceneManager(gfx_scene_manager),m_UserData(user_data){}
-		  SceneManagerPtr GetGFXSceneManager() const {return m_GFXSceneManager;}
-		  void* GetUserData() const {return m_UserData;}
+		LocationLoadedMessage(LocationComponentPtr location,SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Location(location){}
+		  LocationComponentPtr GetLocation() const {return m_Location;}
 	private:
-		SceneManagerPtr m_GFXSceneManager;
-		void *m_UserData;
+		LocationComponentPtr m_Location;
 	};
-	typedef boost::shared_ptr<LoadGFXComponentsMessage > LoadGFXComponentsMessagePtr;
+	typedef boost::shared_ptr<LocationLoadedMessage> LocationLoadedMessagePtr;
 
 
 	/** Message sent by scene node when scene node is moved

@@ -57,14 +57,14 @@ namespace GASS
 		RegisterProperty<GeometryCategory>("GeometryCategory", &OSGManualMeshComponent::GetGeometryCategory, &OSGManualMeshComponent::SetGeometryCategory);
 	}
 
-	void OSGManualMeshComponent::OnCreate()
+	void OSGManualMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLoad,LoadGFXComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		BaseSceneComponent::OnCreate();
+		BaseSceneComponent::OnInitialize();
 	}
 
 	void OSGManualMeshComponent::SetGeometryCategory(const GeometryCategory &value)
@@ -89,7 +89,7 @@ namespace GASS
 			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GeometryCategory(GT_UNKNOWN));
 	}
 
-	void OSGManualMeshComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 
 		m_OSGGeometry = new osg::Geometry();
