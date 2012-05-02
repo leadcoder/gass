@@ -53,16 +53,11 @@ namespace GASS
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
 	}
 
-
-
-	//Override
-	void SceneObject::AddChild(ComponentContainerPtr child)
+	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
-		SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(child);
 		BaseComponentContainer::AddChild(child);
-		if(GetScene()) //if we have scene Initialize?
-			obj->Initialize(GetScene());
-
+		if(load && GetScene()) //if we have scene Initialize?
+			child->Initialize(GetScene());
 	}
 
 	//Override
@@ -94,6 +89,11 @@ namespace GASS
 	void SceneObject::Initialize(ScenePtr scene)
 	{
 		m_Scene = scene;
+		if(m_Name == "Plane01")
+		{
+			bool breakp;
+			breakp = true;
+		}
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
@@ -352,7 +352,7 @@ namespace GASS
 	void SceneObject::LoadFromFile(const std::string &filename)
 	{
 		if(filename =="") 
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadChildrenFromFile");
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
 		
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())

@@ -344,7 +344,7 @@ namespace GASS
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
 			scene_object->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));
-			GetSceneObject()->AddChild(scene_object);
+			GetSceneObject()->AddChildSceneObject(scene_object,true);
 		}
 		return scene_object;
 	}

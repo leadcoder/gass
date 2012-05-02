@@ -246,7 +246,7 @@ namespace GASS
 				mesh_comp->SetMeshNode(child_group);
 				so->AddComponent(mesh_comp);
 				//load this object
-				parent->AddChild(so);
+				parent->AddChildSceneObject(so,load);
 				
 				Expand(so,child_group, load);
 			}

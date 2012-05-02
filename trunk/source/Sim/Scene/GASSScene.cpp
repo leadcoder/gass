@@ -257,8 +257,11 @@ namespace GASS
 		SceneObjectPtr terrain_objects(new SceneObject());
 		m_TerrainObjects  = terrain_objects;
 
+		terrain_objects->SetName("Scenery");
+		terrain_objects->SetID("Scenery");
 		terrain_objects->LoadFromFile(m_ScenePath + "/instances.xml");
-		m_Root->AddChild(terrain_objects);
+		
+		m_Root->AddChildSceneObject(terrain_objects,true);
 		//terrain_objects->Initialize(shared_from_this());
 		//load!
 		//m_ObjectManager->LoadObject(static_object_root);
@@ -332,11 +335,10 @@ namespace GASS
 		{
 			if(parent)
 			{
-				parent->AddChild(so);
+				parent->AddChildSceneObject(so,true);
 			}
 			else
-				m_Root->AddChild(so);
-			//so->Initialize(shared_from_this());
+				m_Root->AddChildSceneObject(so,true);
 		}
 		return so;
 	}

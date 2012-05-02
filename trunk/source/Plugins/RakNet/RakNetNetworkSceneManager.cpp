@@ -89,7 +89,7 @@ namespace GASS
 		{
 			RakNetNetworkMasterComponentPtr comp = so->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			comp->SetReplica(replica);
-			GetScene()->GetRootSceneObject()->AddChild(so);
+			GetScene()->GetRootSceneObject()->AddChildSceneObject(so,true);
 		}
 	}
 

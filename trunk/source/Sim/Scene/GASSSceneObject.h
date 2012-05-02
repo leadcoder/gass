@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Scene/GASSScene.h"
 
 
 
@@ -58,26 +59,18 @@ namespace GASS
 	*/
 	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer> 
 	{
+		friend class Scene;
 	public:
 
 		SceneObject();
 		virtual ~SceneObject();
 		static void RegisterReflection();
 		void SyncMessages(double delta_time, bool recursive = true);
-
 		ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
-		//void SetScene(ScenePtr scene) {m_Scene = scene;}
-		void Initialize(ScenePtr scene);
-		//MessageManager* GetMessageManager(){return m_MessageManager;}
-		
-		//void OnCreate();
-		virtual void RemoveChild(ComponentContainerPtr child);
-		void AddChild(ComponentContainerPtr child);
-	
-		void OnDelete();
 
-		//public for now, not possible to get derived manager to get hold of this otherwise
-		//void SetSceneObjectManager(SceneObjectManagerPtr manager);
+		virtual void RemoveChild(ComponentContainerPtr child);
+		
+		void AddChildSceneObject(SceneObjectPtr child , bool load);
 
 		/**
 		Get owner object that is direct under scene root
@@ -220,6 +213,10 @@ namespace GASS
 		SceneObjectID GetID() const {return m_ID;}
 		void LoadFromFile(const std::string &filename);
 	protected:
+
+		void Initialize(ScenePtr scene);
+		void OnDelete();
+
 		ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
 		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;

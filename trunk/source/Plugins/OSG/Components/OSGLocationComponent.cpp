@@ -104,6 +104,10 @@ namespace GASS
 			root_node->addChild(m_TransformNode.get());
 		}
 
+
+		LocationComponentPtr location = boost::shared_dynamic_cast<ILocationComponent>( shared_from_this());
+		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
+
 		MessagePtr pos_msg(new PositionMessage(m_Pos));
 		MessagePtr rot_msg(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 		GetSceneObject()->PostMessage(pos_msg);
