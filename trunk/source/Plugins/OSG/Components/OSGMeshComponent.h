@@ -169,7 +169,7 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		//set external mesh
-		void SetMeshNode(osg::ref_ptr<osg::Group> mesh) {m_MeshNode =mesh;}
+		void SetMeshNode(osg::ref_ptr<osg::Node> mesh) {m_MeshNode =mesh;}
 	protected:
 		void SetGeometryCategory(const GeometryCategory &value);
 		bool GetLighting() const;
@@ -180,7 +180,7 @@ namespace GASS
 		void SetCastShadow(bool value);
 		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
-		void Expand(SceneObjectPtr parent, osg::Group *group, bool load);
+		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
 		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
@@ -192,7 +192,7 @@ namespace GASS
 		std::string m_Filename;
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
-		osg::ref_ptr<osg::Group> m_MeshNode;
+		osg::ref_ptr<osg::Node> m_MeshNode;
 		AABox m_BBox;
 		bool m_Initlized;
 		GeometryCategory m_Category;

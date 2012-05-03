@@ -224,34 +224,37 @@ namespace GASS
 	}
 
 
-	void OSGMeshComponent::Expand(SceneObjectPtr parent, osg::Group* group, bool load) 
+	void OSGMeshComponent::Expand(SceneObjectPtr parent, osg::Node* node, bool load) 
 	{
-		
+
 		//create gass scene object
-		for(unsigned int i = 0 ; i < group->getNumChildren(); i++)
+		if(node->asGroup())
 		{
-			osg::Node* child_node = group->getChild(i);
-			osg::Group* child_group = dynamic_cast<osg::Group*>(child_node);
-			if(child_group)
+			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
 			{
+				osg::Node* child_node = node->asGroup()->getChild(i);
+				LogManager::getSingleton().stream() << "Try Expand OSG node:" << child_node->getName();	
+
 				SceneObjectPtr so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create("SceneObject"));
-				so->SetName(child_group->getName());
-				so->SetID(child_group->getName());
-		
+				so->SetName(child_node->getName());
+				so->SetID(child_node->getName());
+
+
 				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 
 				OSGNodeData* data = new OSGNodeData(mesh_comp);
-				child_group->setUserData((osg::Referenced*)data);
+				child_node->setUserData((osg::Referenced*)data);
 
-				mesh_comp->SetMeshNode(child_group);
+				mesh_comp->SetMeshNode(child_node);
 				so->AddComponent(mesh_comp);
 				//load this object
 				parent->AddChildSceneObject(so,load);
-				
-				Expand(so,child_group, load);
+
+				Expand(so,child_node, load);
 			}
 		}
 	}
+	
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
@@ -261,13 +264,7 @@ namespace GASS
 
 	AABox OSGMeshComponent::GetBoundingBox() const
 	{
-
-		/*	if(m_MeshNode.get())
-		{
-		CalulateBoundingbox(m_MeshNode.get());
-		}*/
-		return m_BBox;//Convert::ToGASS(m_OgreEntity->getBoundingBox());
-
+		return m_BBox;
 	}
 
 	bool OSGMeshComponent::GetLighting() const
@@ -298,11 +295,8 @@ namespace GASS
 			osg::BoundingSphere bsphere = m_MeshNode->getBound();
 			sphere.m_Radius = bsphere._radius;
 		}
-		//sphere.m_Radius = m_OgreEntity->getBoundingRadius();
 		return sphere;
 	}
-
-
 
 	void OSGMeshComponent::CalulateBoundingbox(osg::Node* node, const osg::Matrix& M) 
 	{
