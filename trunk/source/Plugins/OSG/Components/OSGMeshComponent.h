@@ -175,13 +175,13 @@ namespace GASS
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		void SetFilename(const std::string &filename);
-		
+		bool GetExpand() const;
+		void SetExpand(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool value);
 		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
-		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
@@ -197,6 +197,7 @@ namespace GASS
 		bool m_Initlized;
 		GeometryCategory m_Category;
 		bool m_Lighting;
+		bool m_Expand;
 	};
 }
 

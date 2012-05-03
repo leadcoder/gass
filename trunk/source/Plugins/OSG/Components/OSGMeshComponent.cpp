@@ -42,7 +42,8 @@ namespace GASS
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
 		m_Lighting(true),
-		m_Category(GT_REGULAR)
+		m_Category(GT_REGULAR),
+		m_Expand(true)
 	{
 		
 	}
@@ -60,6 +61,7 @@ namespace GASS
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
+		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
 		RegisterProperty<GeometryCategory>("GeometryCategory", &GetGeometryCategory, &SetGeometryCategory);
 	}
 
@@ -214,13 +216,25 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 
 			//expand children
-			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+			if(m_Expand)
+				Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
 		}
 		else 
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");
 
 	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
+	}
+
+
+	bool OSGMeshComponent::GetExpand() const
+	{
+		return m_Expand;
+	}
+	
+	void OSGMeshComponent::SetExpand(bool value)
+	{
+		m_Expand = value;
 	}
 
 
