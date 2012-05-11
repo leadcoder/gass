@@ -107,6 +107,7 @@ namespace GASS
 	{
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
+		m_Viewer->setKeyEventSetsDone(0);
 		std::string full_path;
 		
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
