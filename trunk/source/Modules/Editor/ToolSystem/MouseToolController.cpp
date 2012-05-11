@@ -137,6 +137,10 @@ namespace GASS
 		CursorInfo info = GetCursorInfo(c_pos,m_RayPickDistance);
 		MoveTo(info);
 
+		int mess_id = (int) this;
+		MessagePtr cursor_msg(new CursorMoved3DMessage(message->GetScreenPosition(),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
+		EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+
 		//if(CheckScenePosition())
 		//if(ForceScenePosition())
 		//	MoveTo(m_CursorInfo);

@@ -44,6 +44,7 @@
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Reflection/GASSIProperty.h"
+#include "Core/Reflection/GASSProperty.h"
 
 
 //#include "Core/PluginSystem/GASSPluginManager.h"
@@ -78,7 +79,7 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Scene/GASSSceneObjectTemplate.h"
-
+#include "Sim/Scene/GASSSceneObjectLink.h"
 
 
 #include "Sim/Scene/GASSBaseSceneManager.h"

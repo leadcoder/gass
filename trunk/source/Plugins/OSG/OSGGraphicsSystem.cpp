@@ -79,14 +79,17 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml"), m_DebugTextBox(new TextBox())
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
 	{
 
 	}
 
 	OSGGraphicsSystem::~OSGGraphicsSystem(void)
 	{
-
+		if(m_Viewer)
+			m_Viewer->stopThreading();
+		
+		delete m_Viewer;
 	}
 
 	void OSGGraphicsSystem::RegisterReflection()
@@ -289,7 +292,10 @@ namespace GASS
 			
 			osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 			stats->setKeyEventTogglesOnScreenStats('y');
+			stats->setKeyEventPrintsOutStats(0);
+
 			view->addEventHandler(stats);
+
 			view->addEventHandler(new osgViewer::WindowSizeHandler());
 			view->addEventHandler(new osgViewer::ThreadingHandler());
 			view->addEventHandler(new osgViewer::LODScaleHandler());

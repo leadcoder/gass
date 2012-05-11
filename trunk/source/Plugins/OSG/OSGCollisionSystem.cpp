@@ -165,7 +165,7 @@ namespace GASS
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,SceneAboutToLoadNotifyMessage,0));
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
 	void OSGCollisionSystem::OnUnloadScene(SceneUnloadNotifyMessagePtr message)
@@ -231,7 +231,7 @@ namespace GASS
 		osg::Vec3d end = OSGConvert::Get().ToOSG(request->LineEnd);
 
 		result->Coll = false;
-		
+
 		osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector = new osgUtil::LineSegmentIntersector(osgUtil::Intersector::MODEL, start, end);
 		//osgUtil::IntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
 		MyVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
@@ -239,7 +239,7 @@ namespace GASS
 		//OSGCameraComponentPtr camera (m_CurrentCamera);
 		//LocationComponentPtr location = camera->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		//Vec3 cam_pos = location->GetWorldPosition();
-		
+
 		//intersectVisitor.setReferenceEyePoint(OSGConvert::Get().ToOSG(cam_pos)); 
 		//intersectVisitor.setReferenceEyePointCoordinateFrame(osgUtil::Intersector::MODEL); 
 		//node = camera->GetOSGCamera();
@@ -263,7 +263,7 @@ namespace GASS
 		}
 
 		node->accept(intersectVisitor);
-		
+
 
 		if ( intersector->containsIntersections() )
 		{
@@ -279,48 +279,52 @@ namespace GASS
 				//reverse
 				if(intersection.nodePath.size() > 0)
 				{
-				for(int i = intersection.nodePath.size()-1; i >= 0  ;i--)
-				//for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
-				{
-					if(intersection.nodePath[i]->getUserData())
+					for(int i = intersection.nodePath.size()-1; i >= 0  ;i--)
+						//for(std::size_t i = 0; i < intersection.nodePath.size() ;i ++)
 					{
-						OSGNodeData* data = (OSGNodeData*)intersection.nodePath[i]->getUserData();
-						BaseSceneComponentPtr bo(data->m_Component,boost::detail::sp_nothrow_tag());
-						if(bo)
+						if(intersection.nodePath[i]->getUserData())
 						{
-							GeometryComponentPtr geom  = boost::shared_dynamic_cast<IGeometryComponent>(bo);
-							if(geom)
+							OSGNodeData* data = dynamic_cast<OSGNodeData*>(intersection.nodePath[i]->getUserData());
+							//OSGNodeData* data = (OSGNodeData*)intersection.nodePath[i]->getUserData();
+							if(data)
 							{
-								bool found = false;
-								if(request->CollisionBits == 1 && (geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN))
+								BaseSceneComponentPtr bo(data->m_Component,boost::detail::sp_nothrow_tag());
+								if(bo)
 								{
-									found = true;
-								}
-								else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
-								{
-									found = true;
-								}
-								else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
-								{
-									found = true;
-								}
+									GeometryComponentPtr geom  = boost::shared_dynamic_cast<IGeometryComponent>(bo);
+									if(geom)
+									{
+										bool found = false;
+										if(request->CollisionBits == 1 && (geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN))
+										{
+											found = true;
+										}
+										else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
+										{
+											found = true;
+										}
+										else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
+										{
+											found = true;
+										}
 
-								if(found)
-								{
-									Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
-									Float col_dist = (col_pos - request->LineStart).FastLength(); 
+										if(found)
+										{
+											Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
+											Float col_dist = (col_pos - request->LineStart).FastLength(); 
 
-									result->CollDist = col_dist;
-									result->Coll = true;
-									result->CollPosition = col_pos;
-									result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
-									result->CollSceneObject = bo->GetSceneObject();
-									return;
+											result->CollDist = col_dist;
+											result->Coll = true;
+											result->CollPosition = col_pos;
+											result->CollNormal =  OSGConvert::Get().ToGASS(intersection.getWorldIntersectNormal());
+											result->CollSceneObject = bo->GetSceneObject();
+											return;
+										}
+									}
 								}
 							}
 						}
 					}
-				}
 				}
 			}
 		}
@@ -356,15 +360,15 @@ namespace GASS
 				//set same scene in all viewports for the moment 
 				if(views.size() > 0)
 				{
-					
+
 					//if(gfx_sm)
 					//{
-						if(request.Type == COL_LINE)
-						{
-							CollisionResult result;
-							ProcessRaycast(&request,&result,views[0]->getCamera());//gfx_sm->GetOSGRootNode());
-							resultMap[handle] = result;
-						}
+					if(request.Type == COL_LINE)
+					{
+						CollisionResult result;
+						ProcessRaycast(&request,&result,views[0]->getCamera());//gfx_sm->GetOSGRootNode());
+						resultMap[handle] = result;
+					}
 					//}
 				}
 			}

@@ -120,20 +120,23 @@ namespace GASS
 			osgDB::readImageFile(full_path)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
-		OSGNodeData* data = new OSGNodeData(shared_from_this());
-		m_OSGBillboard->setUserData((osg::Referenced*)data);
-
+		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		m_OSGBillboard->setUserData(node_data);
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-
 		SetCastShadow(m_CastShadow);
-		
+
+		m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
+		m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
+
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
-		//m_OSGBillboard->setNodeMask();
+
+
+
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
@@ -272,6 +275,21 @@ namespace GASS
 			(*coords)[3] = corner+height;
 			geom->setVertexArray(coords);
 		}
+	}
 
+	void OSGBillboardComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	{
+		if(m_OSGBillboard.valid())
+		{
+			if(message->EnableCollision())
+			{
+				m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
+				m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
+			}
+			else
+			{
+				m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
+			}
+		}
 	}
 }

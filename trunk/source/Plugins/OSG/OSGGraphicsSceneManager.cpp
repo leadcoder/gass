@@ -218,7 +218,6 @@ namespace GASS
 	void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryCategory category)
 	{
 		//reset 
-		
 		node->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  node->getNodeMask());
 		switch(category.Get())
 		{

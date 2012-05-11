@@ -135,16 +135,19 @@ namespace GASS
 		if(delta_time > 1)
 			delta_time = 1;
 
-		double update_time = 1.0/m_UpdateFreq;
-		if(delta_time > update_time)
+		double target_update_time = 1.0/m_UpdateFreq;
+		if(delta_time > target_update_time)
 		{
+			double step_time = current_time-prev_time;
+			
 			prev_time = current_time;
 			if(m_Initilized)
 			{
-				SimEngine::Get().Update(delta_time);
-				m_Scene->OnUpdate(delta_time);
+				SimEngine::Get().Update(step_time);
+				m_Scene->OnUpdate(step_time);
 			}
-			EditorManager::Get().Update(delta_time);
+			EditorManager::Get().Update(step_time);
+			
 		}
 	}
 

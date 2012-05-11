@@ -23,7 +23,7 @@
 #include <osg/Referenced>
 namespace GASS
 {
-	class OSGNodeData : osg::Referenced
+	class OSGNodeData : public osg::Referenced
 	{
 	public:
 		OSGNodeData(BaseSceneComponentPtr  component):m_Component(component) {}

@@ -258,7 +258,7 @@ namespace GASS
 		m_TerrainObjects  = terrain_objects;
 
 		terrain_objects->SetName("Scenery");
-		terrain_objects->SetID("Scenery");
+		terrain_objects->SetID("SCENERY_ROOT");
 		terrain_objects->LoadFromFile(m_ScenePath + "/instances.xml");
 		
 		m_Root->AddChildSceneObject(terrain_objects,true);

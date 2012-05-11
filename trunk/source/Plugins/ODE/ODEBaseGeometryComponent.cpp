@@ -220,6 +220,7 @@ namespace GASS
 			dSpaceDestroy(m_ODESpaceID);
 		m_TransformGeomID = NULL;
 		m_ODESpaceID = NULL;
+		m_GeomID = NULL;
 	}
 
 	void ODEBaseGeometryComponent::SetOffset(const Vec3 &value)

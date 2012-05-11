@@ -65,6 +65,7 @@ namespace GASS
 		RegisterProperty<GeometryCategory>("GeometryCategory", &GetGeometryCategory, &SetGeometryCategory);
 	}
 
+	
 	void OSGMeshComponent::SetGeometryCategory(const GeometryCategory &value)
 	{
 		m_Category = value;
@@ -208,7 +209,7 @@ namespace GASS
 		    optimizer.optimize(m_MeshNode.get());
 
 			OSGNodeData* data = new OSGNodeData(shared_from_this());
-			m_MeshNode->setUserData((osg::Referenced*)data);
+			m_MeshNode->setUserData(data);
 			
 			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
@@ -256,8 +257,8 @@ namespace GASS
 
 				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 
-				OSGNodeData* data = new OSGNodeData(mesh_comp);
-				child_node->setUserData((osg::Referenced*)data);
+				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+				child_node->setUserData(node_data);
 
 				mesh_comp->SetMeshNode(child_node);
 				so->AddComponent(mesh_comp);

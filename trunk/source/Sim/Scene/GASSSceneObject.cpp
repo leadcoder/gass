@@ -71,6 +71,14 @@ namespace GASS
 
 	void SceneObject::OnDelete()
 	{
+
+		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			child->OnDelete();
+		}
+
 		MessagePtr msg(new UnloadComponentsMessage());
 		SendImmediate(msg);
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
@@ -78,22 +86,13 @@ namespace GASS
 		if(GetScene())
 			GetScene()->SendImmediate(unload_msg);
 		
-		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
-		while(children.hasMoreElements())
-		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
-			child->OnDelete();
-		}
+		
 	}
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
 		m_Scene = scene;
-		if(m_Name == "Plane01")
-		{
-			bool breakp;
-			breakp = true;
-		}
+		
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();

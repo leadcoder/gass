@@ -39,6 +39,7 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		virtual GeometryCategory GetGeometryCategory() const;
 	protected:
+		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		float GetWidth() const;
 		void SetWidth(float width);
@@ -51,11 +52,10 @@ namespace GASS
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnGeometryScale(GeometryScaleMessagePtr message);
 		void UpdateSize(float width,float height);
+		
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);
-
 		std::string m_Material;
 		bool m_CastShadow;
-
 		float m_Width;
 		float m_Height;
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;

@@ -131,8 +131,8 @@ namespace GASS
 		//m_OSGGeometry->setVertexArray(vertices.get());
 		//m_OSGGeometry->setColorArray(colors.get());
 
-		OSGNodeData* data = new OSGNodeData(shared_from_this());
-		m_GeoNode->setUserData((osg::Referenced*)data);
+		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		m_GeoNode->setUserData(node_data);
 
 		//m_GeoNode->setUserData((osg::Referenced*)this);
 
@@ -332,7 +332,6 @@ namespace GASS
 			mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
 		if( si.x >= 0)
 			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
-
 		
 		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
 		//Attaching the newly defined state set object to the node state set
