@@ -19,17 +19,6 @@
 *****************************************************************************/
 
 #include "LuaScriptManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/System/ISystemManager.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/Utils/Log.h"
-
-
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-
-
 
 extern "C" {
 #ifdef WIN32
@@ -44,10 +33,10 @@ extern "C" {
 #include "lua5.1/lualib.h"
 #include "lua5.1/lauxlib.h"
 #endif
-	namespace GASS
+	/*namespace GASS
 	{
 		void swig_new_message_ptr(lua_State* L, GASS::MessagePtr* message);
-	}
+	}*/
 }
 
 //#include "tolua++.h"
@@ -80,7 +69,7 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void LuaScriptManager::RegisterForSystemMessage(const std::string &lua_function,MessagePtr message_type)
+	/*void LuaScriptManager::RegisterForSystemMessage(const std::string &lua_function,MessagePtr message_type)
 	{
 		MessageType mtype = message_type->GetType();
 		m_MessageRegMap[mtype].push_back(lua_function);
@@ -95,14 +84,14 @@ namespace GASS
 			std::string lua_func = m_MessageRegMap[mtype].at(i);
 			ExecuteMessageFunction(lua_func ,message);
 		}
-	}
+	}*/
 
 	bool LuaScriptManager::ExecuteMessageFunction(const std::string& handler_name, MessagePtr message)
 	{
 		//CEGUI::LuaScriptModule* scriptmod = dynamic_cast<CEGUI::LuaScriptModule*>( CEGUI::System::getSingleton().getScriptingModule());
 		if(!m_State)
 		{
-			Log::Warning("No lua state present");
+			LogManager::getSingleton().stream() << "WARNING: No lua state present\n";
 			return false;
 		}
 		const int err_idx = 0;
@@ -123,7 +112,7 @@ namespace GASS
 		//if (!lua_isnil(d_state, -1))
 
 
-		swig_new_message_ptr(m_State, &message);
+		//swig_new_message_ptr(m_State, &message);
 		{
 			// the class wasn't found
 

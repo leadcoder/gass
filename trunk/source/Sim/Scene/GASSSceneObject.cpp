@@ -365,6 +365,26 @@ namespace GASS
 		delete xmlDoc;
 	}
 
+
+
+	void SceneObject::SaveToFile(const std::string &filename)
+	{
+		if(filename =="") 
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::SaveToFile");
+
+		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+		xmlDoc->LinkEndChild( decl ); 
+
+		//TiXmlElement * so_elem = new TiXmlElement("SceneObject");  
+		//doc.LinkEndChild( so_elem); 
+		SaveXML((TiXmlElement*) (xmlDoc));
+		xmlDoc->SaveFile(filename.c_str());
+		delete xmlDoc;
+	}
+
+
+
 	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
 	{
 		

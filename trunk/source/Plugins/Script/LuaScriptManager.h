@@ -20,14 +20,9 @@
 
 #pragma once
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Systems/SimSystemMessages.h"
-#include "Core/Utils/Singleton.h"
-#include <boost/shared_ptr.hpp>
+#include "Sim/GASS.h"
 
 struct lua_State;
-
 namespace GASS
 {
 	class LuaScriptManager  : public Singleton<LuaScriptManager>

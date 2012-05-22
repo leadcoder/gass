@@ -19,40 +19,24 @@
 *****************************************************************************/
 
 #include "LuaScriptSystem.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/System/ISystemManager.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/Utils/Log.h"
-#include "Core/System/SystemFactory.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/SimEngine.h"
-
-
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
 #include "LuaScriptManager.h"
-
-
 
 extern "C"
 {
 #ifdef WIN32
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 #else
 #include "lua5.1/lua.h"
 #include "lua5.1/lualib.h"
 #include "lua5.1/lauxlib.h"
-
 #endif
 	int luaopen_GASS(lua_State* L);
-	namespace GASS
+	/*namespace GASS
 	{
 		void swig_new_message_ptr(lua_State* L, GASS::MessagePtr* message);
-	}
+	}*/
 }
 
 
@@ -75,29 +59,27 @@ namespace GASS
 
 	void LuaScriptSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnInit,InitMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnLuaStateMessage,LuaScriptStateMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnInit,InitSystemMessage,0));
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnLuaStateMessage,LuaScriptStateMessage,0));
 	}
 
-	void LuaScriptSystem::OnInit(InitMessagePtr message)
+	void LuaScriptSystem::OnInit(InitSystemMessagePtr message)
 	{
-		LuaScriptManager* lsm = new LuaScriptManager();
-
-		 /*lua_State *L = lua_open();
-		 //lua_close(L);
-		 luaopen_GASS(L);
-		 PostMessage(MessagePtr(new LuaStateMessage(L));*/
+		//LuaScriptManager* lsm = new LuaScriptManager();
+		lua_State *L = lua_open();
+		
+		//luaopen_GASS(L);
 	}
 
-	void LuaScriptSystem::OnShutdown(MessagePtr message)
+	/*void LuaScriptSystem::OnShutdown(MessagePtr message)
 	{
 
-	}
+	}*/
 
-	void LuaScriptSystem::OnLuaStateMessage(LuaScriptStateMessagePtr message)
+	/*void LuaScriptSystem::OnLuaStateMessage(LuaScriptStateMessagePtr message)
 	{
 		lua_State *state =  static_cast<lua_State*>(message->GetState());
 		LuaScriptManager::Get().SetState(state);
 		luaopen_GASS(state);
-	}
+	}*/
 }

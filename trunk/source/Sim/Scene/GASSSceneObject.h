@@ -208,6 +208,8 @@ namespace GASS
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
 		void LoadFromFile(const std::string &filename);
+		void SaveToFile(const std::string &filename);
+	
 	protected:
 
 		void Initialize(ScenePtr scene);

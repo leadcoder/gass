@@ -20,15 +20,7 @@
 
 #pragma once
 
-#include "Sim/Common.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Systems/SimSystem.h"
-#include "Sim/Systems/SimSystemMessages.h"
-#include "Sim/Systems/Input/IInputSystem.h"
-#include "Sim/Systems/SimSystemMessages.h"
-#include "Core/Utils/Singleton.h"
-#include <boost/shared_ptr.hpp>
+#include "Sim/GASS.h"
 
 namespace GASS
 {
@@ -40,9 +32,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		void OnLuaStateMessage(LuaScriptStateMessagePtr message);
-		void OnInit(InitMessagePtr  message);
-		void OnShutdown(MessagePtr message);
+		void OnInit(InitSystemMessagePtr  message);
+		//void OnShutdown(MessagePtr message);
 	private:
 	};
 }

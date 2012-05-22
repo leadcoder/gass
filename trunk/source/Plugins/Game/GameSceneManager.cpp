@@ -60,9 +60,9 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( GameSceneManager::OnLoad ));
-			scene->RegisterForMessage(typeid(UnloadSceneManagersMessage), MESSAGE_FUNC( GameSceneManager::OnUnload ));
-			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( GameSceneManager::OnLoadSceneObject),Scene::CORE_COMPONENT_LOAD_PRIORITY);
+			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoad ,LoadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnUnload ,UnloadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
 		}
 	}
 
@@ -77,7 +77,6 @@ namespace GASS
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
 	}
-
 
 	void GameSceneManager::OnUnload(MessagePtr message)
 	{

@@ -10,6 +10,8 @@
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "Modules/Editor/ToolSystem/MeasurementTool.h"
 #include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
+#include "Modules/Editor/ToolSystem/GoToPositionTool.h"
+
 
 #include "tinyxml.h"
 #include <boost/filesystem.hpp>
@@ -113,6 +115,9 @@ namespace GASS
 		tools->AddTool(tool);
 
 		tool = new MeasurementTool(tools);
+		tools->AddTool(tool);
+
+		tool = new GoToPositionTool(tools);
 		tools->AddTool(tool);
 
 		//tool = new TerrainDeformTool(tools);
