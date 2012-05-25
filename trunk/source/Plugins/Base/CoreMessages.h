@@ -55,8 +55,9 @@ namespace GASS
 	public:
 		TriggerEnterMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
-		  SceneObjectPtr  m_Trigger;
+		  SceneObjectPtr GetTrigger() {return m_Trigger;}
 	private:
+		SceneObjectPtr  m_Trigger;
 	};
 	typedef boost::shared_ptr<TriggerEnterMessage> TriggerEnterMessagePtr;
 
@@ -66,8 +67,9 @@ namespace GASS
 	public:
 		TriggerExitMessage (SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
-		  SceneObjectPtr  m_Trigger;
+		  SceneObjectPtr GetTrigger() {return m_Trigger;}
 	private:
+		SceneObjectPtr  m_Trigger;
 		
 	};
 	typedef boost::shared_ptr<TriggerExitMessage > TriggerExitMessagePtr;

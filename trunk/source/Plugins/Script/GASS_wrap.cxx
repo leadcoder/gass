@@ -1638,9 +1638,11 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_LuaScriptSceneObject swig_types[0]
-static swig_type_info *swig_types[2];
-static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
+#define SWIGTYPE_p_GASS__Vec3 swig_types[0]
+#define SWIGTYPE_p_LuaScriptSceneObject swig_types[1]
+#define SWIGTYPE_p_std__string swig_types[2]
+static swig_type_info *swig_types[4];
+static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1657,6 +1659,17 @@ typedef struct{} LANGUAGE_OBJ;
 }
 
 
+	#include <string>
+
+
+SWIGINTERN int SWIG_lua_isnilstring(lua_State *L, int idx) {
+  int ret = lua_isstring(L, idx);
+  if (!ret)
+   ret = lua_isnil(L, idx);
+  return ret;
+}
+
+
 //#include "Sim/GASS.h"
 //typedef double Float;
 //using namespace GASS;
@@ -1667,19 +1680,13 @@ typedef struct{} LANGUAGE_OBJ;
 #ifdef __cplusplus
 extern "C" {
 #endif
-static int _wrap_LuaScriptSceneObject_start(lua_State* L) {
+static int _wrap_new_string__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *result = 0 ;
   
-  SWIG_check_num_args("LuaScriptSceneObject::start",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::start",1,"LuaScriptSceneObject *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_start",1,SWIGTYPE_p_LuaScriptSceneObject);
-  }
-  
-  (arg1)->start();
-  
+  SWIG_check_num_args("std::string::string",0,0)
+  result = (std::string *)new std::string();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__string,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -1690,19 +1697,16 @@ fail:
 }
 
 
-static int _wrap_LuaScriptSceneObject_stop(lua_State* L) {
+static int _wrap_new_string__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  char *arg1 = (char *) 0 ;
+  std::string *result = 0 ;
   
-  SWIG_check_num_args("LuaScriptSceneObject::stop",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::stop",1,"LuaScriptSceneObject *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_stop",1,SWIGTYPE_p_LuaScriptSceneObject);
-  }
-  
-  (arg1)->stop();
-  
+  SWIG_check_num_args("std::string::string",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("std::string::string",1,"char const *");
+  arg1 = (char *)lua_tostring(L, 1);
+  result = (std::string *)new std::string((char const *)arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__string,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -1713,97 +1717,47 @@ fail:
 }
 
 
-static int _wrap_LuaScriptSceneObject_accelerate(lua_State* L) {
-  int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
-  float arg2 ;
+static int _wrap_new_string(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
   
-  SWIG_check_num_args("LuaScriptSceneObject::accelerate",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::accelerate",1,"LuaScriptSceneObject *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("LuaScriptSceneObject::accelerate",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_accelerate",1,SWIGTYPE_p_LuaScriptSceneObject);
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_string__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      _v = SWIG_lua_isnilstring(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_string__SWIG_1(L);
+    }
   }
   
-  arg2 = (float)lua_tonumber(L, 2);
-  (arg1)->accelerate(arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_string'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    std::string::string()\n"
+    "    std::string::string(char const *)\n");
+  lua_error(L);return 0;
 }
 
 
-static int _wrap_LuaScriptSceneObject_decelerate(lua_State* L) {
+static int _wrap_string_size(lua_State* L) {
   int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
-  float arg2 ;
+  std::string *arg1 = (std::string *) 0 ;
+  unsigned int result;
   
-  SWIG_check_num_args("LuaScriptSceneObject::decelerate",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::decelerate",1,"LuaScriptSceneObject *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("LuaScriptSceneObject::decelerate",2,"float");
+  SWIG_check_num_args("std::string::size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::size",1,"std::string const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_decelerate",1,SWIGTYPE_p_LuaScriptSceneObject);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_size",1,SWIGTYPE_p_std__string);
   }
   
-  arg2 = (float)lua_tonumber(L, 2);
-  (arg1)->decelerate(arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_LuaScriptSceneObject_TEST_set(lua_State* L) {
-  int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
-  int arg2 ;
-  
-  SWIG_check_num_args("LuaScriptSceneObject::TEST",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::TEST",1,"LuaScriptSceneObject *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("LuaScriptSceneObject::TEST",2,"int");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_TEST_set",1,SWIGTYPE_p_LuaScriptSceneObject);
-  }
-  
-  arg2 = (int)lua_tonumber(L, 2);
-  if (arg1) (arg1)->TEST = arg2;
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_LuaScriptSceneObject_TEST_get(lua_State* L) {
-  int SWIG_arg = 0;
-  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
-  int result;
-  
-  SWIG_check_num_args("LuaScriptSceneObject::TEST",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::TEST",1,"LuaScriptSceneObject *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
-    SWIG_fail_ptr("LuaScriptSceneObject_TEST_get",1,SWIGTYPE_p_LuaScriptSceneObject);
-  }
-  
-  result = (int) ((arg1)->TEST);
+  result = (unsigned int)((std::string const *)arg1)->size();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -1814,6 +1768,148 @@ fail:
   return SWIG_arg;
 }
 
+
+static int _wrap_string_length(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = (std::string *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("std::string::length",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::length",1,"std::string const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_length",1,SWIGTYPE_p_std__string);
+  }
+  
+  result = (unsigned int)((std::string const *)arg1)->length();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_string_empty(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = (std::string *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("std::string::empty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::empty",1,"std::string const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_empty",1,SWIGTYPE_p_std__string);
+  }
+  
+  result = (bool)((std::string const *)arg1)->empty();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_string_c_str(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = (std::string *) 0 ;
+  char *result = 0 ;
+  
+  SWIG_check_num_args("std::string::c_str",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::c_str",1,"std::string const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_c_str",1,SWIGTYPE_p_std__string);
+  }
+  
+  result = (char *)((std::string const *)arg1)->c_str();
+  lua_pushstring(L,(const char *)result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_string_data(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = (std::string *) 0 ;
+  char *result = 0 ;
+  
+  SWIG_check_num_args("std::string::data",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::data",1,"std::string const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_data",1,SWIGTYPE_p_std__string);
+  }
+  
+  result = (char *)((std::string const *)arg1)->data();
+  lua_pushstring(L,(const char *)result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_string_assign(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = (std::string *) 0 ;
+  char *arg2 = (char *) 0 ;
+  
+  SWIG_check_num_args("std::string::assign",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("std::string::assign",1,"std::string *");
+  if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("std::string::assign",2,"char const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__string,0))){
+    SWIG_fail_ptr("string_assign",1,SWIGTYPE_p_std__string);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  (arg1)->assign((char const *)arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_string(void *obj) {
+std::string *arg1 = (std::string *) obj;
+delete arg1;
+}
+static swig_lua_method swig_std_string_methods[] = {
+    {"size", _wrap_string_size}, 
+    {"length", _wrap_string_length}, 
+    {"empty", _wrap_string_empty}, 
+    {"c_str", _wrap_string_c_str}, 
+    {"data", _wrap_string_data}, 
+    {"assign", _wrap_string_assign}, 
+    {0,0}
+};
+static swig_lua_attribute swig_std_string_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_std_string_bases[] = {0};
+static const char *swig_std_string_base_names[] = {0};
+static swig_lua_class _wrap_class_std_string = { "string", &SWIGTYPE_p_std__string,_wrap_new_string, swig_delete_string, swig_std_string_methods, swig_std_string_attributes, swig_std_string_bases, swig_std_string_base_names };
 
 static int _wrap_new_LuaScriptSceneObject(lua_State* L) {
   int SWIG_arg = 0;
@@ -1832,19 +1928,410 @@ fail:
 }
 
 
+static int _wrap_LuaScriptSceneObject_GetFloatAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  float result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetFloatAttribute",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetFloatAttribute",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetFloatAttribute",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetFloatAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = (float)((LuaScriptSceneObject const *)arg1)->GetFloatAttribute((std::string const &)*arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_SetFloatAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  float arg3 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::SetFloatAttribute",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::SetFloatAttribute",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::SetFloatAttribute",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("LuaScriptSceneObject::SetFloatAttribute",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetFloatAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  arg3 = (float)lua_tonumber(L, 3);
+  (arg1)->SetFloatAttribute((std::string const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_GetDoubleAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  double result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetDoubleAttribute",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetDoubleAttribute",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetDoubleAttribute",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetDoubleAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = (double)((LuaScriptSceneObject const *)arg1)->GetDoubleAttribute((std::string const &)*arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_SetDoubleAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  double arg3 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::SetDoubleAttribute",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::SetDoubleAttribute",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::SetDoubleAttribute",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("LuaScriptSceneObject::SetDoubleAttribute",3,"double");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetDoubleAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  arg3 = (double)lua_tonumber(L, 3);
+  (arg1)->SetDoubleAttribute((std::string const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_GetIntAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  int result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetIntAttribute",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetIntAttribute",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetIntAttribute",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetIntAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = (int)((LuaScriptSceneObject const *)arg1)->GetIntAttribute((std::string const &)*arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_SetIntAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  int arg3 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::SetIntAttribute",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::SetIntAttribute",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::SetIntAttribute",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("LuaScriptSceneObject::SetIntAttribute",3,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetIntAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  arg3 = (int)lua_tonumber(L, 3);
+  (arg1)->SetIntAttribute((std::string const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_GetStringAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  std::string result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetStringAttribute",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetStringAttribute",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetStringAttribute",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetStringAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = ((LuaScriptSceneObject const *)arg1)->GetStringAttribute((std::string const &)*arg2);
+  lua_pushlstring(L,(&result)->data(),(&result)->size()); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_SetStringAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string temp2 ;
+  std::string temp3 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::SetStringAttribute",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::SetStringAttribute",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::SetStringAttribute",2,"std::string const &");
+  if(!lua_isstring(L,3)) SWIG_fail_arg("LuaScriptSceneObject::SetStringAttribute",3,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetStringAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  temp3.assign(lua_tostring(L,3),lua_rawlen(L,3)); arg3=&temp3;
+  (arg1)->SetStringAttribute((std::string const &)*arg2,(std::string const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_GetVec3Attribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  GASS::Vec3 result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetVec3Attribute",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetVec3Attribute",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetVec3Attribute",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetVec3Attribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = ((LuaScriptSceneObject const *)arg1)->GetVec3Attribute((std::string const &)*arg2);
+  {
+    GASS::Vec3 * resultptr = new GASS::Vec3((const GASS::Vec3 &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_GASS__Vec3,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_SetVec3tAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  GASS::Vec3 arg3 ;
+  std::string temp2 ;
+  GASS::Vec3 *argp3 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::SetVec3tAttribute",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::SetVec3tAttribute",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::SetVec3tAttribute",2,"std::string const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("LuaScriptSceneObject::SetVec3tAttribute",3,"GASS::Vec3");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetVec3tAttribute",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_GASS__Vec3,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_SetVec3tAttribute",3,SWIGTYPE_p_GASS__Vec3);
+  }
+  arg3 = *argp3;
+  
+  (arg1)->SetVec3tAttribute((std::string const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_LogMessage(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::LogMessage",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::LogMessage",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::LogMessage",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_LogMessage",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  (arg1)->LogMessage((std::string const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_GetInsideTriggerObject(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::GetInsideTriggerObject",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::GetInsideTriggerObject",1,"LuaScriptSceneObject const *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::GetInsideTriggerObject",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_GetInsideTriggerObject",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = (bool)((LuaScriptSceneObject const *)arg1)->GetInsideTriggerObject((std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaScriptSceneObject_AddTriggerObjectByID(lua_State* L) {
+  int SWIG_arg = 0;
+  LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("LuaScriptSceneObject::AddTriggerObjectByID",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("LuaScriptSceneObject::AddTriggerObjectByID",1,"LuaScriptSceneObject *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("LuaScriptSceneObject::AddTriggerObjectByID",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_LuaScriptSceneObject,0))){
+    SWIG_fail_ptr("LuaScriptSceneObject_AddTriggerObjectByID",1,SWIGTYPE_p_LuaScriptSceneObject);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
+  result = (bool)(arg1)->AddTriggerObjectByID((std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static void swig_delete_LuaScriptSceneObject(void *obj) {
 LuaScriptSceneObject *arg1 = (LuaScriptSceneObject *) obj;
 delete arg1;
 }
 static swig_lua_method swig_LuaScriptSceneObject_methods[] = {
-    {"start", _wrap_LuaScriptSceneObject_start}, 
-    {"stop", _wrap_LuaScriptSceneObject_stop}, 
-    {"accelerate", _wrap_LuaScriptSceneObject_accelerate}, 
-    {"decelerate", _wrap_LuaScriptSceneObject_decelerate}, 
+    {"GetFloatAttribute", _wrap_LuaScriptSceneObject_GetFloatAttribute}, 
+    {"SetFloatAttribute", _wrap_LuaScriptSceneObject_SetFloatAttribute}, 
+    {"GetDoubleAttribute", _wrap_LuaScriptSceneObject_GetDoubleAttribute}, 
+    {"SetDoubleAttribute", _wrap_LuaScriptSceneObject_SetDoubleAttribute}, 
+    {"GetIntAttribute", _wrap_LuaScriptSceneObject_GetIntAttribute}, 
+    {"SetIntAttribute", _wrap_LuaScriptSceneObject_SetIntAttribute}, 
+    {"GetStringAttribute", _wrap_LuaScriptSceneObject_GetStringAttribute}, 
+    {"SetStringAttribute", _wrap_LuaScriptSceneObject_SetStringAttribute}, 
+    {"GetVec3Attribute", _wrap_LuaScriptSceneObject_GetVec3Attribute}, 
+    {"SetVec3tAttribute", _wrap_LuaScriptSceneObject_SetVec3tAttribute}, 
+    {"LogMessage", _wrap_LuaScriptSceneObject_LogMessage}, 
+    {"GetInsideTriggerObject", _wrap_LuaScriptSceneObject_GetInsideTriggerObject}, 
+    {"AddTriggerObjectByID", _wrap_LuaScriptSceneObject_AddTriggerObjectByID}, 
     {0,0}
 };
 static swig_lua_attribute swig_LuaScriptSceneObject_attributes[] = {
-    { "TEST", _wrap_LuaScriptSceneObject_TEST_get, _wrap_LuaScriptSceneObject_TEST_set},
     {0,0,0}
 };
 static swig_lua_class *swig_LuaScriptSceneObject_bases[] = {0};
@@ -1869,16 +2356,24 @@ static swig_lua_const_info swig_constants[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
+static swig_type_info _swigt__p_GASS__Vec3 = {"_p_GASS__Vec3", "GASS::Vec3 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_LuaScriptSceneObject = {"_p_LuaScriptSceneObject", "LuaScriptSceneObject *", 0, 0, (void*)&_wrap_class_LuaScriptSceneObject, 0};
+static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_std_string, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_GASS__Vec3,
   &_swigt__p_LuaScriptSceneObject,
+  &_swigt__p_std__string,
 };
 
+static swig_cast_info _swigc__p_GASS__Vec3[] = {  {&_swigt__p_GASS__Vec3, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LuaScriptSceneObject[] = {  {&_swigt__p_LuaScriptSceneObject, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_GASS__Vec3,
   _swigc__p_LuaScriptSceneObject,
+  _swigc__p_std__string,
 };
 
 

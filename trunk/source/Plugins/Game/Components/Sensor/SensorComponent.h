@@ -19,9 +19,9 @@ namespace GASS
 		~SensorComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void AfterSMUpdate(double delta_time);
+		virtual void SceneManagerTick(double delta_time);
 		//ITaskListener interface
-		void Update(double delta);
+		//void Update(double delta);
 	protected:
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);

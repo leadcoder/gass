@@ -47,6 +47,7 @@ namespace GASS
 		}
 	}
 
+
 	void GoToPositionTool::MouseUp(const CursorInfo &info)
 	{
 		m_MouseIsDown = false;

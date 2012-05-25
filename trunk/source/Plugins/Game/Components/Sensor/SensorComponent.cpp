@@ -88,7 +88,7 @@ namespace GASS
 		m_Position = message->GetPosition();
 	}
 
-	void SensorComponent::AfterSMUpdate(double delta_time)
+	void SensorComponent::SceneManagerTick(double delta_time)
 	{
 		//debug?
 		if(m_Debug)

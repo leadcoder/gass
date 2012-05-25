@@ -197,6 +197,16 @@ namespace GASS
 			@id The object id to search for
 		*/
 		SceneObjectPtr GetChildByID(const SceneObjectID &id) const;
+
+
+		/** Get children scene objects that match ID. 
+			@objects Return scene objects that match ID
+			@name The object ID to search for
+			@exact_math Should the ID be a exact match or should we allow 
+				that the name argument is found in the scene object name string.
+		*/
+		void GetChildrenByID(SceneObjectVector &objects, const SceneObjectID &id,bool exact_math = true, bool recursive = true) const;
+
 	
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);

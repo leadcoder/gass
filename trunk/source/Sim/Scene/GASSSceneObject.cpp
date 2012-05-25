@@ -219,13 +219,6 @@ namespace GASS
 		return ComponentPtr();
 	}
 
-	/*SceneObjectVector SceneObject::GetObjectsByName(const std::string &name, bool exact_math)
-	{
-	SceneObjectVector objects;
-	GetObjectsByName(objects, name,exact_math);
-	return objects;
-	}*/
-
 	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
 	{
 		if(recursive)
@@ -321,7 +314,39 @@ namespace GASS
 		return SceneObjectPtr();
 	}
 
-	int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
+
+	void SceneObject::GetChildrenByID(SceneObjectVector &objects, const SceneObjectID &id, bool exact_math, bool recursive) const
+	{
+		if(recursive)
+		{
+			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+			while(iter != m_ComponentContainerVector.end())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+
+				if(exact_math)
+				{
+					if(child->GetID()== id)
+					{
+						objects.push_back(child);
+					}
+				}
+				else
+				{
+					std::string::size_type pos = child->GetID().find(id);
+					if(pos != std::string::npos)
+					{
+						objects.push_back(child);
+					}
+				}
+				if(recursive)
+					child->GetChildrenByID(objects,id,exact_math,recursive);
+				iter++;
+			}
+		}
+	}
+
+int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
 	{
 		return m_MessageManager->RegisterForMessage(type, callback, priority);
 	}
