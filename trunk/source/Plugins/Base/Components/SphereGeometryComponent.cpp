@@ -12,7 +12,7 @@
 *                                                                           *
 *****************************************************************************/
 
-#include "BoxGeometryComponent.h"
+#include "SphereGeometryComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -30,43 +30,41 @@
 
 namespace GASS
 {
-	BoxGeometryComponent::BoxGeometryComponent(void) : m_Size(1,1,1)
+	SphereGeometryComponent::SphereGeometryComponent(void) : m_Radius(1)
 	{
 
 	}
 
-	BoxGeometryComponent::~BoxGeometryComponent(void)
+	SphereGeometryComponent::~SphereGeometryComponent(void)
 	{
 		
 	}
 
-	void BoxGeometryComponent::RegisterReflection()
+	void SphereGeometryComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("BoxGeometryComponent",new GASS::Creator<BoxGeometryComponent, IComponent>);
-		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize);
+		GASS::ComponentFactory::GetPtr()->Register("SphereGeometryComponent",new GASS::Creator<SphereGeometryComponent, IComponent>);
+		RegisterProperty<Float>("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
 	}
 
-	void BoxGeometryComponent::OnInitialize()
+	void SphereGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(BoxGeometryComponent::OnLoad),0);
+		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(SphereGeometryComponent::OnLoad),0);
 	}
 
-	Vec3 BoxGeometryComponent::GetSize() const
+	Float SphereGeometryComponent::GetRadius() const
 	{
-		return m_Size;
+		return m_Radius;
 	}
 
-	void BoxGeometryComponent::SetSize(const Vec3 &value)
+	void SphereGeometryComponent::SetRadius(Float value)
 	{
-		m_Size = value;
+		m_Radius = value;
 		if(GetSceneObject())
 			UpdateMesh();
 	}
 
-
-	void BoxGeometryComponent::UpdateMesh()
+	void SphereGeometryComponent::UpdateMesh()
 	{
-		Vec3 size= m_Size*0.5;
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
@@ -74,76 +72,74 @@ namespace GASS
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(0,0,1,1);
 		mesh_data->Type = LINE_LIST;
-		std::vector<Vec3> conrners;
+		
 
-		conrners.push_back(Vec3( size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,size.y ,-size.z));
+		//Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScene()->GetSceneUp();
+		float samples = 30;
+		float rad = 2*MY_PI/samples;
 
-		conrners.push_back(Vec3( size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
-
-		for(int i = 0; i < 4; i++)
+		float x,y,z;
+		for(float i = 0 ;i <= samples; i++)
 		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
-
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
+			x = cos(rad*i)*m_Radius;
+			y = sin(rad*i)*m_Radius;
+			vertex.Pos.Set(x,y,0);
 			mesh_data->VertexVector.push_back(vertex);
 		}
+		mesh_data->VertexVector.push_back(vertex);
 
-		for(int i = 0; i < 4; i++)
+		for(float i = 0 ;i <= samples; i++)
 		{
-			vertex.Pos = conrners[4 + i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
+			x = cos(rad*i)*m_Radius;
+			z = sin(rad*i)*m_Radius;
+			vertex.Pos.Set(x,0,z);
 			mesh_data->VertexVector.push_back(vertex);
 		}
+		mesh_data->VertexVector.push_back(vertex);
+
+		for(float i = 0 ;i <= samples; i++)
+		{
+			y = cos(rad*i)*m_Radius;
+			z = sin(rad*i)*m_Radius;
+			vertex.Pos.Set(0,y,z);
+			mesh_data->VertexVector.push_back(vertex);
+		}
+		mesh_data->VertexVector.push_back(vertex);
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
 	
-	
-	void BoxGeometryComponent::OnLoad(MessagePtr message)
+	void SphereGeometryComponent::OnLoad(MessagePtr message)
 	{
 		UpdateMesh();
 	}
 
 
-	bool BoxGeometryComponent::IsPointInside(const Vec3 &point) const
+	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const
 	{
 		return true;
 	}
 
-	Vec3 BoxGeometryComponent::GetRandomPoint() const
+	Vec3 SphereGeometryComponent::GetRandomPoint() const
 	{
 		Vec3 location;
 		LocationComponentPtr loc_comp = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 
 		assert(loc_comp);
 
-		Vec3 pos = loc_comp->GetWorldPosition();
-		Quaternion rot = loc_comp->GetWorldRotation();
+		Vec3 p1 = loc_comp->GetWorldPosition();
 
 		Float rand1 = rand() / Float(RAND_MAX);
 		Float rand2 = rand() / Float(RAND_MAX);
-		Float rand3 = rand() / Float(RAND_MAX);
 
-		location.x = (2*rand1-1) * m_Size.x*0.5;
-		location.y = (2*rand2-1) * m_Size.y*0.5;
-		location.z = (2*rand3-1) * m_Size.z*0.5;
-		
-		Mat4 trans;
-		trans.SetTransformation(pos,rot,Vec3(1,1,1));
-		location = trans*location;
+		Float theta = rand1 * MY_PI * 2;
+		Float l = sqrt(m_Radius * rand2);
+
+		location.x = p1.x + cos(theta) * l;
+		location.z = p1.z + sin(theta) * l;
+		location.y = p1.y;
 
 		return location;
 	}
+
 }

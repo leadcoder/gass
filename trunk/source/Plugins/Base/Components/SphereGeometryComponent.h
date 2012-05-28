@@ -12,34 +12,33 @@
 * contact author. Abuse against the HiFiEngine license is prohibited by law.*
 *                                                                           *
 *****************************************************************************/ 
-#ifndef BOX_GEOMETRY_COMPONENT_H
-#define BOX_GEOMETRY_COMPONENT_H
+#ifndef SPHERE_GEOMETRY_COMPONENT_H
+#define SPHERE_GEOMETRY_COMPONENT_H
 
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIShape.h"
-
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
-	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,BaseSceneComponent> , public IShape
+	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,BaseSceneComponent> , public IShape
 	{
 	public:
-		BoxGeometryComponent(void);
-		~BoxGeometryComponent(void);
+		SphereGeometryComponent(void);
+		~SphereGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual bool IsPointInside(const Vec3 &point) const;
-		Vec3 GetRandomPoint() const;
+		virtual Vec3 GetRandomPoint() const;
+		Float GetRadius() const;
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);
+		void SetRadius(Float value);
 		void UpdateMesh();
-		Vec3 GetSize() const;
-		void SetSize(const Vec3 &value);
-		Vec3 m_Size;
 	private:
+		Float m_Radius;
 	};
 }
 #endif
