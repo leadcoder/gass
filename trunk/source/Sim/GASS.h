@@ -55,12 +55,14 @@
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/Components/Graphics/GASSILightComponent.h"
+
 #include "Sim/Components/GASSBaseSceneComponent.h"
 
 
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIShape.h"
 
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"

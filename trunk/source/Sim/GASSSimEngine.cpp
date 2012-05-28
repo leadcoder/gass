@@ -38,6 +38,7 @@
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIShape.h"
 #include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 #include "Sim/Components/Common/GASSIWaypointListComponent.h"
