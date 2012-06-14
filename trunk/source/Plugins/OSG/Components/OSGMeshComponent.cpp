@@ -43,7 +43,7 @@ namespace GASS
 		m_Initlized(false),
 		m_Lighting(true),
 		m_Category(GT_REGULAR),
-		m_Expand(true)
+		m_Expand(false)
 	{
 		
 	}
@@ -158,7 +158,11 @@ namespace GASS
 	{
 		m_Filename = filename;
 		if(m_Initlized) //not loaded
+		{
 			LoadMesh(m_Filename);
+			if(m_MeshNode.get())
+				CalulateBoundingbox(m_MeshNode.get());
+		}
 			
 	}
 

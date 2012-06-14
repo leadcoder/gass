@@ -46,6 +46,7 @@ namespace GASS
 {
 	VehicleDebugComponent::VehicleDebugComponent() : m_ShowWaypoint(true)
 	{
+
 	}
 
 	VehicleDebugComponent::~VehicleDebugComponent()

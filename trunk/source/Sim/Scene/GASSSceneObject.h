@@ -222,6 +222,8 @@ namespace GASS
 	
 	protected:
 
+		void InitializePointers();
+
 		void Initialize(ScenePtr scene);
 		void OnDelete();
 

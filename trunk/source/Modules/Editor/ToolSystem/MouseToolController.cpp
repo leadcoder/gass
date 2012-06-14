@@ -38,7 +38,8 @@ namespace GASS
 		m_EnableAngleSnap(false),
 		m_RayPickDistance(3000),
 		m_EnableGizmo(true),
-		m_UseTerrainNormalOnDrop(false)
+		m_UseTerrainNormalOnDrop(false),
+		m_LastScreenPos(0,0)
 	{
 
 	}
@@ -136,6 +137,8 @@ namespace GASS
 		Vec2 c_pos = message->GetScreenPosition();
 		CursorInfo info = GetCursorInfo(c_pos,m_RayPickDistance);
 		MoveTo(info);
+
+		m_LastScreenPos = c_pos;
 
 		int mess_id = (int) this;
 		MessagePtr cursor_msg(new CursorMoved3DMessage(message->GetScreenPosition(),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
@@ -423,6 +426,8 @@ namespace GASS
 	{
 		CursorInfo info;
 		info.m_ScreenPos = cursor_pos;
+		info.m_Delta.x = info.m_ScreenPos.x - m_LastScreenPos.x;
+		info.m_Delta.y = info.m_ScreenPos.y - m_LastScreenPos.y;
 		CameraComponentPtr cam = GetActiveCamera();
 
 		//save ray direction

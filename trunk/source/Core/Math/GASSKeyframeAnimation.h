@@ -45,7 +45,19 @@ namespace GASS
 			m_UsePos = false;
 			m_UseRot = false;
 			m_Time = 0;
-		};
+		}
+
+		friend std::ostream& operator << (std::ostream& os, const Key& key)
+		{
+			os << key.m_Time << " " << key.m_Pos << " " << key.m_Rot << " " << key.m_Scale;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, Key& key)
+		{
+			os >> key.m_Time >> key.m_Pos >> key.m_Rot >> key.m_Scale;
+			return os;
+		}
 		Vec3 m_Pos;
 		Quaternion m_Rot;
 		Vec3 m_Scale;
@@ -66,8 +78,7 @@ namespace GASS
 		void BuildInterpolationSplines(void);
 		void AutoCalulateRotation() ;
 		Key GetBoneKeyFrame(Float weight,int index0, int index1) const;
-
-	private:
+	//private:
 		std::vector<Key> m_KeyVector;
 		int m_InterpolateMode;
 		int m_Loop;

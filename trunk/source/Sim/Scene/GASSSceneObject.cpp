@@ -55,9 +55,29 @@ namespace GASS
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
+		child->InitializePointers();
+
 		BaseComponentContainer::AddChild(child);
 		if(load && GetScene()) //if we have scene Initialize?
 			child->Initialize(GetScene());
+	}
+
+
+	void SceneObject::InitializePointers()
+	{
+		ComponentVector::iterator iter = m_ComponentVector.begin();
+		while (iter != m_ComponentVector.end())
+		{
+			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			bsc->InitializePointers();
+			++iter;
+		}
+		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			child->InitializePointers();
+		}
 	}
 
 	//Override

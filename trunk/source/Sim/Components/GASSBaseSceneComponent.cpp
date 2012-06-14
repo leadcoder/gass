@@ -50,7 +50,7 @@ namespace GASS
 
 	void BaseSceneComponent::OnInitialize()
 	{
-		InitializePointers();
+		//InitializePointers();
 	}
 
 	void BaseSceneComponent::InitializePointers()

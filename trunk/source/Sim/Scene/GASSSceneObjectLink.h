@@ -45,6 +45,7 @@ namespace GASS
 		SceneObjectID GetLinkObjectID() const {return m_LinkObjectID;}
 		SceneObjectPtr GetObjectPtr() const {return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());}
 	protected:
+		SceneObjectPtr GetRoot(SceneObjectPtr obj);
 		friend std::ostream& operator << (std::ostream& os, const SceneObjectLink& sol)
 		{
 			os << sol.m_LinkObjectID;

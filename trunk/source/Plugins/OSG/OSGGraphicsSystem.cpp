@@ -292,7 +292,7 @@ namespace GASS
 			
 			osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 			stats->setKeyEventTogglesOnScreenStats('y');
-			//stats->setKeyEventPrintsOutStats(0);
+			stats->setKeyEventPrintsOutStats(0);
 
 			view->addEventHandler(stats);
 

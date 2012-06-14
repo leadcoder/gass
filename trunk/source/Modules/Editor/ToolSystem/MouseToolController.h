@@ -130,6 +130,7 @@ namespace GASS
 		bool m_EnableGizmo;
 		bool m_UseTerrainNormalOnDrop;
 		double m_Delta;
+		Vec2 m_LastScreenPos;
 
 		GASS::SceneObjectWeakPtr m_PointerObject;
 	};

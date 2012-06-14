@@ -42,9 +42,9 @@ namespace GASS
 			if(owner && m_LinkObjectID != UNKOWN_LINK_ID)
 			{
 				SceneObjectPtr obj;
-				if(owner->GetObjectUnderRoot()->GetID()  == m_LinkObjectID)
-					obj = owner->GetObjectUnderRoot();
-				else obj = owner->GetObjectUnderRoot()->GetChildByID(m_LinkObjectID);
+				if(GetRoot(owner)->GetID()  == m_LinkObjectID)
+					obj = GetRoot(owner);
+				else obj = GetRoot(owner)->GetChildByID(m_LinkObjectID);
 
 				if(obj)
 					m_Link = obj;
@@ -60,6 +60,19 @@ namespace GASS
 		}
 		return true;
 	}
+
+
+	SceneObjectPtr SceneObjectLink::GetRoot(SceneObjectPtr obj)
+	{
+		ComponentContainerPtr container = obj;
+
+		while(container->GetParent())
+		{
+			container = ComponentContainerPtr(container->GetParent());
+		}
+		return  boost::shared_static_cast<SceneObject>(container);
+	}
+
 
 	bool SceneObjectLink::Initlize(SceneObjectPtr owner)
 	{
