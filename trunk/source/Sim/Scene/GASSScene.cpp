@@ -161,7 +161,7 @@ namespace GASS
 		//SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
 	}
 
-	void Scene::OnUpdate(double delta_time)
+	void Scene::SyncMessages(double delta_time)
 	{
 		if(m_SceneLoaded)
 		{

@@ -23,6 +23,7 @@
 
 
 
+
 namespace GASS
 {
 	MouseToolController::MouseToolController(bool scene_objects_selectable): m_SceneObjectsSelectable(scene_objects_selectable),
@@ -223,6 +224,12 @@ namespace GASS
 			{
 				int id = (int) this;
 				MessagePtr tool_msg(new ToolChangedMessage("GoToPositionTool",id));
+				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
+			}
+			else if(name == "EditPositionTool")
+			{
+				int id = (int) this;
+				MessagePtr tool_msg(new ToolChangedMessage("EditPositionTool",id));
 				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
 			}
 		}

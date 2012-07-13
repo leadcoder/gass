@@ -404,6 +404,13 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
 		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
+		
+		if(!so_elem)
+		{
+			//Fatal error, cannot load
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"cant find SceneObject tag in: " + filename , "SceneObject::LoadXML");
+		}
+
 		LoadXML(so_elem);
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)

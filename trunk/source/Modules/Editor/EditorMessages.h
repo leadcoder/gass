@@ -529,5 +529,20 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<TemplateSelectedMessage> TemplateSelectedMessagePtr;
 
+
+	class EditPositionMessage : public BaseMessage
+	{
+	public:
+		EditPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Position(pos)
+		  {
+
+		  }
+		  Vec3 GetPosition() const {return m_Position;}
+	private:
+		Vec3 m_Position;
+	};
+	typedef boost::shared_ptr<EditPositionMessage> EditPositionMessagePtr;
+
 }
 #endif 

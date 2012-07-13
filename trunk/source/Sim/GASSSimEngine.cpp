@@ -112,6 +112,9 @@ namespace GASS
 		PROFILE("SimEngine::Update")
 		m_RTC->Update(delta_time);
 
+		//update systems
+		GetSimSystemManager()->Update(delta_time);
+
 		m_CurrentTime += delta_time;
 
 		//TODO: this should not be done here

@@ -160,7 +160,7 @@ namespace GASS
 		
 		std::string GetPath() const {return m_ScenePath;}
 
-		void OnUpdate(double delta_time);
+		void SyncMessages(double delta_time);
 
 	/*	double GetOrigoOffsetEast() const;
 		double GetOrigoOffsetNorth() const;

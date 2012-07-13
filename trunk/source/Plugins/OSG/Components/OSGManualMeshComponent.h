@@ -49,8 +49,8 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 
 		std::vector<MeshData> m_MeshData;
-		osg::ref_ptr<osg::DrawArrays> m_DrawArrays;
-		osg::ref_ptr<osg::DrawElementsUInt> m_DrawElements;
+		//osg::ref_ptr<osg::DrawArrays> m_DrawArrays;
+		//osg::ref_ptr<osg::DrawElementsUInt> m_DrawElements;
 		GeometryCategory m_Category;
 	};
 }

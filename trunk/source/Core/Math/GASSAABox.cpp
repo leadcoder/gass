@@ -115,6 +115,23 @@ namespace GASS
 		Union(p8);
 	}
 
+
+	std::vector<Vec3> AABox::GetCorners() const
+	{
+		std::vector<Vec3> ret;
+		ret.push_back(m_Min);
+		ret.push_back(Vec3(m_Max.x,m_Min.y,m_Min.z));
+		ret.push_back(Vec3(m_Max.x,m_Min.y,m_Max.z));
+		ret.push_back(Vec3(m_Min.x,m_Min.y,m_Max.z));
+		
+		ret.push_back(Vec3(m_Min.x,m_Max.y,m_Min.z));
+		ret.push_back(Vec3(m_Max.x,m_Max.y,m_Min.z));
+		ret.push_back(Vec3(m_Max.x,m_Max.y,m_Max.z));
+		ret.push_back(Vec3(m_Min.x,m_Max.y,m_Max.z));
+		
+		return ret;
+	}
+
 	Sphere AABox::GetBoundingSphere() const
 	{
 		Sphere sphere;

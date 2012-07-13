@@ -165,7 +165,6 @@ namespace GASS
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,SceneAboutToLoadNotifyMessage,0));
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 	}
 
 	void OSGCollisionSystem::OnUnloadScene(SceneUnloadNotifyMessagePtr message)

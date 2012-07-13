@@ -60,6 +60,7 @@ namespace GASS
 		Vec3 GetSize() const;
 		static AABox GetAABox(std::vector<Polygon> &poly_vec);
 		static AABox GetAABox(const Polygon &poly);
+		std::vector<Vec3> GetCorners() const;
 		Vec3 m_Max;
 		Vec3 m_Min;
 	};

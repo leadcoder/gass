@@ -168,6 +168,13 @@ namespace GASS
 
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
+
+
+		if(m_OSGGeometry->getNumPrimitiveSets() > 0)
+			m_OSGGeometry->removePrimitiveSet(0);
+
+		m_OSGGeometry->dirtyBound();
+		
 	}
 
 	void OSGManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
@@ -230,12 +237,6 @@ namespace GASS
 				m_OSGGeometry->setPrimitiveSet(0,de);
 			else
 				m_OSGGeometry->addPrimitiveSet(de);
-
-			/*if(m_OSGGeometry->getNumPrimitiveSets() > 0)
-				m_OSGGeometry->setPrimitiveSet(0,new osg::DrawElementsUInt(op,data->IndexVector.size(),&data->IndexVector[0]));
-			else 
-				m_OSGGeometry->addPrimitiveSet(new osg::DrawElementsUInt(op,data->IndexVector.size(),&data->IndexVector[0]));*/
-			
 		}
 		else
 		{
@@ -248,8 +249,6 @@ namespace GASS
 		osg::Vec3Array::iterator vitr = vertices->begin();
 		osg::Vec4Array::iterator citr = colors->begin();
 
-		//m_MeshObject->begin(data->Material, op);
-		//bool flip = OSGConvert::Get().m_FlipYZ;
 		for(int i = 0; i < data->VertexVector.size(); i++)
 		{
 			Vec3 pos = data->VertexVector[i].Pos;
@@ -257,10 +256,6 @@ namespace GASS
 			Vec4 color  = data->VertexVector[i].Color;
 
 			osg::Vec3 opos = OSGConvert::Get().ToOSG(pos); 
-			//if(flip)
-			//	opos.set(pos.x,pos.z,pos.y);
-			//else
-			//	opos.set(pos.x,pos.y,pos.z);
 
 			(vitr++)->set(opos.x(), opos.y(), opos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
@@ -290,8 +285,6 @@ namespace GASS
 			box.m_Min = box.m_Min*scale;
 		}
 		return box;
-		//assert(m_MeshObject);
-		//return Convert::ToGASS(m_MeshObject->getBoundingBox());
 	}
 
 	Sphere OSGManualMeshComponent::GetBoundingSphere() const
@@ -321,7 +314,7 @@ namespace GASS
 		Vec3 si = message->GetSelfIllumination();
 
 		osg::ref_ptr<osg::Material> mat (new osg::Material);
-		//Specifying the yellow colour of the object
+		
 		if( diffuse.x >= 0)
 			mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
 		if( ambient.x >= 0)
@@ -333,8 +326,6 @@ namespace GASS
 		if( si.x >= 0)
 			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
 		
-		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
-		//Attaching the newly defined state set object to the node state set
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGGeometry->getOrCreateStateSet());
 		nodess->setAttribute(mat.get());
 
@@ -348,7 +339,7 @@ namespace GASS
         // Turn on blending
 		if(diffuse.w < 1.0)
 		{
-			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			nodess->setAttributeAndModes(bf);
 		}
 	}

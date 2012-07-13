@@ -243,7 +243,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreLocationComponent::RotationMessage(RotationMessagePtr message)
 	{
 		SetRotation(message->GetRotation());

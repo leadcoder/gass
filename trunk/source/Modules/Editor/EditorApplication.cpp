@@ -11,6 +11,7 @@
 #include "Modules/Editor/ToolSystem/MeasurementTool.h"
 #include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
+#include "Modules/Editor/ToolSystem/EditPositionTool.h"
 
 
 #include "tinyxml.h"
@@ -120,6 +121,12 @@ namespace GASS
 		tool = new GoToPositionTool(tools);
 		tools->AddTool(tool);
 
+		tool = new EditPositionTool(tools);
+		tools->AddTool(tool);
+
+
+
+
 		//tool = new TerrainDeformTool(tools);
 		//tools->AddTool(tool);
 
@@ -149,7 +156,7 @@ namespace GASS
 			if(m_Initilized)
 			{
 				SimEngine::Get().Update(step_time);
-				m_Scene->OnUpdate(step_time);
+				m_Scene->SyncMessages(step_time);
 			}
 			EditorManager::Get().Update(step_time);
 			
