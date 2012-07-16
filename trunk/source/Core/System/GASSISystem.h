@@ -73,7 +73,8 @@ namespace GASS
 		virtual void Register(SystemListenerPtr listener) = 0;
 		virtual void Unregister(SystemListenerPtr listener)= 0;
 		virtual void Update(double delta_time) = 0;
-
+		virtual int GetUpdatePriority() const = 0;
+		virtual void SetUpdatePriority(int priority) = 0;
 	};
 	typedef boost::shared_ptr<ISystem> SystemPtr;
 	typedef boost::weak_ptr<ISystem> SystemWeakPtr;

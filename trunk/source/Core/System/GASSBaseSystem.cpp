@@ -50,6 +50,12 @@ namespace GASS
 		xml_elem->LinkEndChild( this_elem );  
 		SaveProperties(this_elem);
 	}
+
+	int BaseSystem::GetUpdatePriorty() const
+	{
+		return 0;
+	}
+
 }
 
 

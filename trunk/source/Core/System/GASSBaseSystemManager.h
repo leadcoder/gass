@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BASESYSTEMMANAGER_HH
-#define BASESYSTEMMANAGER_HH
+#ifndef GASS_BASE_SYSTEM_MANAGER_H
+#define GASS_BASE_SYSTEM_MANAGER_H
 
 #include <list>
 #include <map>
@@ -103,4 +103,4 @@ namespace GASS
 		std::vector<SystemPtr> m_Systems;
 	};
 }
-#endif // #ifndef BASESYSTEMMANAGER_HH
+#endif 
