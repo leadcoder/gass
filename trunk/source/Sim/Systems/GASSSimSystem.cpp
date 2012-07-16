@@ -41,6 +41,7 @@ namespace GASS
 	void SimSystem::RegisterReflection()
 	{
 		RegisterProperty<std::string>( "Name", &GASS::SimSystem::GetName, &GASS::SimSystem::SetName);
+		RegisterProperty<int>( "UpdatePriority", &GASS::SimSystem::GetUpdatePriority, &GASS::SimSystem::SetUpdatePriority);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
@@ -80,7 +81,6 @@ namespace GASS
 				iter++;
 			}
 		}
-		//parallell update!
 	}
 
 	void SimSystem::LoadXML(TiXmlElement *xml_elem)
