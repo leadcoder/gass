@@ -211,6 +211,8 @@ namespace GASS
 				//m_JoyState[i] = m_Joys[i]->getJoyStickState();
 			}
 		}
+		//move this to new keymapping system
+		SimEngine::Get().GetControlSettingsManager()->Update(delta_time);
 	}
 
 	void OISInputSystem::AddKeyListener(IKeyListener* key_listener)

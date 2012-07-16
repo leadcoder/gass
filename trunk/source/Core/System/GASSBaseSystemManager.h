@@ -100,7 +100,10 @@ namespace GASS
 	private:
 		SystemPtr LoadSystem(TiXmlElement *system_elem);
 	protected:
-		std::vector<SystemPtr> m_Systems;
+		typedef std::vector<SystemPtr> SystemVector;
+		SystemVector m_Systems;
+		typedef std::map<int,SystemVector> UpdateMap;
+		UpdateMap m_UpdateBuckets;
 	};
 }
 #endif 

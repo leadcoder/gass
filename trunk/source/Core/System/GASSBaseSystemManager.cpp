@@ -37,6 +37,11 @@ namespace GASS
 	{
 
 	}
+
+	bool SystemBucketSortPredicate(const int &lhs, const int &rhs)
+	{
+		return lhs < rhs;
+	}
 	
 	void BaseSystemManager::Load(const std::string &filename)
 	{
@@ -63,7 +68,11 @@ namespace GASS
 					system->SetOwner(shared_from_this());
 					system->OnCreate();
 					LogManager::getSingleton().stream() << system->GetName() << " created";
+					
+					if(system->GetUpdatePriority() >= 0)
+						m_UpdateBuckets[system->GetUpdatePriority()].push_back(system);
 					m_Systems.push_back(system);
+					
 				}
 				systems  = systems->NextSiblingElement();
 			}

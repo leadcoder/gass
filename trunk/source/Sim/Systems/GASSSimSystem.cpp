@@ -23,12 +23,12 @@
 #include "tinyxml.h"
 namespace GASS
 {
-	SimSystem::SimSystem(void)
+	SimSystem::SimSystem(void) : m_UpdatePriority(0), m_Name("SimSystem")
 	{
 	
 	}
 
-	SimSystem::~SimSystem(void)
+	SimSystem::~SimSystem(void) 
 	{
 	
 	}
@@ -94,6 +94,16 @@ namespace GASS
 		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
 		SaveProperties(this_elem);
+	}
+
+	int SimSystem::GetUpdatePriority() const
+	{
+		return m_UpdatePriority;
+	}
+
+	void SimSystem::SetUpdatePriority(int priority)
+	{
+		m_UpdatePriority = priority;
 	}
 }
 

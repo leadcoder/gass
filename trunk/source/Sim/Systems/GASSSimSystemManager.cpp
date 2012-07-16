@@ -29,7 +29,7 @@
 #include "Sim/Systems/GASSSimSystemManager.h"
 
 #include "tinyxml.h"
-
+#include "tbb/parallel_for_each.h"
 
 namespace GASS
 {
@@ -45,19 +45,40 @@ namespace GASS
 	
 	void SimSystemManager::Init()
 	{
+		
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
 		MessagePtr init_msg(new InitSystemMessage());
 		m_SystemMessageManager->SendImmediate(init_msg);
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	
 
+	 struct SystemUpdateInvoker 
+	 {
+		SystemUpdateInvoker(double delta_time) :m_DeltaTime(delta_time)
+		{}
+		void operator()(SystemPtr& system) const {system->Update(m_DeltaTime);}
+		double m_DeltaTime;
+	 };
+
 	void SimSystemManager::Update(float delta_time)
 	{
-		for(size_t i = 0 ; i < m_Systems.size(); i++)
+		/*for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Update(delta_time);
 		}
-		m_SystemMessageManager->Update(delta_time);
+		m_SystemMessageManager->Update(delta_time);*/
+		UpdateMap::iterator iter = m_UpdateBuckets.begin();
+		for(;iter != m_UpdateBuckets.end(); iter++)
+		{
+			if(iter->second.size() == 1) //single system
+			{
+				iter->second.at(0)->Update(delta_time);
+			}
+			else //do parallel update
+			{
+				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
+			}
+		}
 	}
 
 	int SimSystemManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)

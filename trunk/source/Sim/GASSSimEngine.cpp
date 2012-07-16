@@ -44,6 +44,7 @@
 #include "Sim/Components/Common/GASSIWaypointListComponent.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"
 
@@ -112,14 +113,30 @@ namespace GASS
 		PROFILE("SimEngine::Update")
 		m_RTC->Update(delta_time);
 
+
 		//update systems
 		GetSimSystemManager()->Update(delta_time);
 
+
+		// hardcoded update loop
+		//InputSystemPtr is = GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		//is->Update(delta_time);
+
+		//sync
+
+		//update all other systems other systems in paralell mode
+
+		//sync
+
+		//PhysicsSystemPtr ps = GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
+		//ps->Update(delta_time);
+
+		
 		m_CurrentTime += delta_time;
-
 		//TODO: this should not be done here
+		//m_ControlSettingsManager->Update(delta_time);
 
-		m_ControlSettingsManager->Update(delta_time);
+		
 		}
 #ifdef PROFILER
 		ProfileSample::Output();

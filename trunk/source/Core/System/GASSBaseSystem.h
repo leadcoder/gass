@@ -69,7 +69,8 @@ namespace GASS
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);
-		virtual int GetUpdatePriorty() const;
+		virtual int GetUpdatePriority() const;
+		virtual void SetUpdatePriority(int priority);
 	protected:
 		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
