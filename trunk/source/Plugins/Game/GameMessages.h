@@ -324,6 +324,9 @@ namespace GASS
 		DetectionData m_DetectionData;
 	};
 	typedef boost::shared_ptr<SensorLostTargetMessage> SensorLostTargetMessagePtr;
+
+	
+
 	
 }
 #endif
