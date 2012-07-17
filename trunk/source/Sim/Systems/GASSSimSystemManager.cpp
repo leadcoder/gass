@@ -36,7 +36,7 @@
 namespace GASS
 {
 	SimSystemManager::SimSystemManager() : m_SimulationPaused(false), 
-		m_SimulationUpdateInterval(1.0/20.0),
+		m_SimulationUpdateInterval(1.0/60.0),
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(19),
 		m_SimulateRealTime(true)
@@ -155,7 +155,7 @@ namespace GASS
 		UpdateMap::iterator iter = m_UpdateBuckets.begin();
 		for(;iter != m_UpdateBuckets.end(); iter++)
 		{
-			if(iter->first != POST_SIM_BUCKET || iter->first != PRE_SIM_BUCKET)
+			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
 				if(iter->second.size() == 1) //single system
 				{

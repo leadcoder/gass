@@ -90,7 +90,6 @@ namespace GASS
 
 	void FreeCamControlComponent::OnInitialize()
 	{
-		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnLoad,LoadComponentsMessage,0));
