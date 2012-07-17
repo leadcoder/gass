@@ -51,7 +51,7 @@ namespace GASS
 
 	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, void* main_win_handle,void*render_win_handle)
 	{	
-		const std::string config_path = working_folder.GetPath() + "../configuration/";
+		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
 		LoadSettings(config_path + "EditorApplication.xml");
 		SimEngine *se = SimEngine::GetPtr();
 		se->Init(config_path +  "GASSPlugins.xml", config_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
@@ -271,14 +271,14 @@ namespace GASS
 			GASS::FilePath path;
 			m_GUIState = gui_state->Attribute("default");
 			path.SetPath(m_GUIState);
-			m_GUIState = c_dir + path.GetPath();
+			m_GUIState = c_dir + path.GetFullPath();
 		}*/
 		if(start_scene && start_scene->Attribute("path"))
 		{
 			GASS::FilePath path;
 			m_StartScene = start_scene->Attribute("path");
 			path.SetPath(m_StartScene);
-			m_StartScene = path.GetPath();
+			m_StartScene = path.GetFullPath();
 		}
 
 		if(xTerrainNormal && xTerrainNormal->Attribute("value"))
@@ -307,7 +307,7 @@ namespace GASS
 
 				GASS::FilePath fp;
 				fp.SetPath(path);
-				path = fp.GetPath();
+				path = fp.GetFullPath();
 				m_SceneNames.push_back(name);
 				m_ScenePaths.push_back(path);
 				xItem = xItem->NextSiblingElement("Scene");
@@ -318,7 +318,7 @@ namespace GASS
 			GASS::FilePath path;
 			m_ScenePath  = xscene_path->Attribute("value");
 			path.SetPath(m_ScenePath);
-			m_ScenePath = path.GetPath();
+			m_ScenePath = path.GetFullPath();
 
 			boost::filesystem::path boost_path(m_ScenePath); 
 			if( boost::filesystem::exists(boost_path))  
@@ -348,7 +348,7 @@ namespace GASS
 				std::string path = xItem->Attribute("path");
 				GASS::FilePath fp;
 				fp.SetPath(path);
-				path = fp.GetPath();
+				path = fp.GetFullPath();
 				m_Templates.push_back(path);
 				xItem = xItem->NextSiblingElement("Template");
 			}
