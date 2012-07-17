@@ -20,6 +20,7 @@
 #include <boost/bind.hpp>
 #include "GameSceneManager.h"
 #include "GameMessages.h"
+#include "GameSystem.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -27,9 +28,6 @@
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Systems/GASSCoreSystem.h"
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
@@ -73,7 +71,7 @@ namespace GASS
 
 	void GameSceneManager::OnLoad(MessagePtr message)
 	{
-		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<CoreSystem>();
+		GameSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GameSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
 	}

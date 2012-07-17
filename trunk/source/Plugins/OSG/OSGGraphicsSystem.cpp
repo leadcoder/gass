@@ -369,6 +369,8 @@ namespace GASS
 		}
 		m_Viewer->frame(delta_time);
 		m_DebugTextBox->setText("");
+		//update listeners
+		SimSystem::Update(delta_time);
 	}
 
 

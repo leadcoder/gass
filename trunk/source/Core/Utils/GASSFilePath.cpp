@@ -32,8 +32,8 @@ namespace GASS
 
 	FilePath::FilePath(const std::string &path)
 	{
-		m_EnvPath  = path;
-		m_ExpandPath = ExpandEnvVariables(path);
+		m_RawPath  = path;
+		m_ExpandedPath = ExpandEnvVariables(path);
 	}
 
 	FilePath::FilePath()
@@ -41,21 +41,25 @@ namespace GASS
 
 	}
 
-
 	FilePath::~FilePath()
 	{
 
 	}
 
-	std::string FilePath::GetPath() const
+	std::string FilePath::GetFullPath() const
 	{
-		return m_ExpandPath;
+		return m_ExpandedPath;
+	}
+
+	std::string FilePath::GetRawPath() const
+	{
+		return m_RawPath;
 	}
 
 	void FilePath::SetPath(const std::string &path)
 	{
-		m_EnvPath  = path;
-		m_ExpandPath = ExpandEnvVariables(path);
+		m_RawPath  = path;
+		m_ExpandedPath = ExpandEnvVariables(path);
 	}
 
 	std::string FilePath::ExpandEnvVariables(const std::string &inStr)
@@ -83,8 +87,7 @@ namespace GASS
 					if (temp_str)
 					{
 						curStr.replace( occurIndex1, replaceStr.length(), std::string(temp_str));
-						curStr = Misc::Replace(curStr, "\\", "/");
-						curStr = Misc::Replace(curStr, "//", "/");
+					
 					}
 					else
 					{
@@ -114,8 +117,6 @@ namespace GASS
 					if (temp_str)
 					{
 						curStr.replace( occurIndex2, replaceStr.length(), std::string(temp_str) );
-						curStr = Misc::Replace(curStr, "\\", "/");
-						curStr = Misc::Replace(curStr, "//", "/");
 					}
 					else
 					{
@@ -124,6 +125,9 @@ namespace GASS
 				}
 			}
 		}
+
+		curStr = Misc::Replace(curStr, "\\", "/");
+		curStr = Misc::Replace(curStr, "//", "/");
 
 		return curStr;
 	}
@@ -134,27 +138,27 @@ namespace GASS
 	std::string FilePath::GetPathNoExtension() const
 	{
 		std::string ret;
-		std::string::size_type pos = m_ExpandPath.find_last_of(".");
-		ret = m_ExpandPath.substr(0,pos);
+		std::string::size_type pos = m_ExpandedPath.find_last_of(".");
+		ret = m_ExpandedPath.substr(0,pos);
 		return ret;
 	}
 
 	std::string FilePath::GetExtension() const
 	{
 		std::string ret, reversed_string;
-		std::string::size_type pos = m_ExpandPath.find_last_of(".");
+		std::string::size_type pos = m_ExpandedPath.find_last_of(".");
 
-		if (pos == m_ExpandPath.npos)
+		if (pos == m_ExpandedPath.npos)
 			return "";
 
-		ret = m_ExpandPath.substr(pos+1);
+		ret = m_ExpandedPath.substr(pos+1);
 
 		return ret;
 	}
 
 	std::string FilePath::GetFilename() const
 	{
-		std::string ret = m_ExpandPath;
+		std::string ret = m_ExpandedPath;
 
 		std::string::size_type  pos = ret.find("/",0);
 		while(pos != std::string::npos)
@@ -175,7 +179,7 @@ namespace GASS
 	
 	std::string FilePath::GetPathNoFile() const
 	{
-		std::string ret = Misc::Replace(m_ExpandPath,"\\","/");
+		std::string ret = m_ExpandedPath;
 		std::string::size_type  pos = ret.find_last_of("/",ret.size());
 		if(pos != std::string::npos)
 		{

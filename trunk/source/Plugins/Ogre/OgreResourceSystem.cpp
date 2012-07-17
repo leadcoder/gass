@@ -92,7 +92,7 @@ namespace GASS
 
 	/*void OgreResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
 	{
-		boost::filesystem::path boost_path(rl.m_Path.GetPath()); 
+		boost::filesystem::path boost_path(rl.m_Path.GetFullPath()); 
 		if( boost::filesystem::exists(boost_path))  
 		{
 			m_ResourceLocations.push_back(rl);
@@ -118,7 +118,7 @@ namespace GASS
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
 		{
 			ResourceLocation rl = m_ResourceLocations[i];
-			AddResourceLocation(rl.m_Path.GetPath(),rl.m_Group,rl.m_Type, rl.m_Recursive);
+			AddResourceLocation(rl.m_Path.GetFullPath(),rl.m_Group,rl.m_Type, rl.m_Recursive);
 		}
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize All Resource Groups";
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -127,9 +127,9 @@ namespace GASS
 	}
 
 
-	void OgreResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
+	void OgreResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
-		boost::filesystem::path boost_path(path); 
+		boost::filesystem::path boost_path(path.GetFullPath()); 
 		if( boost::filesystem::exists(boost_path))  
 		{
 			Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
@@ -138,7 +138,7 @@ namespace GASS
 			{
 				rsm->createResourceGroup(resource_group);
 			}
-			rsm->addResourceLocation(path,type, resource_group,false);
+			rsm->addResourceLocation(path.GetFullPath(),type, resource_group,false);
 
 			if(recursive)
 			{
@@ -158,20 +158,20 @@ namespace GASS
 
 
 
-	void OgreResourceSystem::RemoveResourceLocation(const std::string &path,const std::string &resource_group)
+	void OgreResourceSystem::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 		Ogre::StringVector groups = rsm->getResourceGroups();
 		if (std::find(groups.begin(), groups.end(), resource_group) != groups.end())
 		{
-			rsm->removeResourceLocation(path,resource_group);
+			rsm->removeResourceLocation(path.GetFullPath(),resource_group);
 		}
 
 		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
 		while(iter != m_ResourceLocations.end())
 		{
-			std::string temp_file_path = iter->m_Path.GetPath();
-			if(temp_file_path  == path && resource_group == iter->m_Group)
+			std::string temp_file_path = iter->m_Path.GetFullPath();
+			if(temp_file_path  == path.GetFullPath() && resource_group == iter->m_Group)
 			{
 				iter = m_ResourceLocations.erase(iter);
 			}
@@ -252,7 +252,7 @@ namespace GASS
 			for(int i  = 0; i < m_ResourceLocations.size(); i++)
 			{
 
-				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
+				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetFullPath() + "/" +  file_name;
 				if(boost::filesystem::exists(temp_file_path))
 				{
 					file_path = temp_file_path;

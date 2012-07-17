@@ -76,9 +76,9 @@ namespace GASS
 		m_SystemMessageManager->Update(delta_time);*/
 
 		//update simulation systems
-		std::stringstream ss;
-		ss << "Delta time:" << delta_time;
-		DPRINT(ss.str())
+		//std::stringstream ss;
+		//ss << "Delta time:" << delta_time;
+		//DPRINT(ss.str())
 
 		//PRE_SIM_BUCKET
 		UpdateMap::iterator iter = m_UpdateBuckets.find(PRE_SIM_BUCKET);

@@ -228,7 +228,7 @@ namespace GASS
 		}
 	}
 
-	void FreeCamControlComponent::StepPhysics(double delta)
+	void FreeCamControlComponent::StepPhysics(double delta_time)
 	{
 		Float turn_speed_x = 0;
 		Float turn_speed_y = 0;
@@ -264,9 +264,10 @@ namespace GASS
 				speed_factor = m_WalkSpeed;
 		}
 
-		Float forward_speed = m_ThrottleInput*delta*speed_factor;
-		Float strafe_speed = m_StrafeInput*delta*speed_factor;
-		Float updown_speed = m_UpDownInput*delta*speed_factor;
+		Float forward_speed = m_ThrottleInput*delta_time*speed_factor;
+		//LogManager::Get().stream() << "speed:" << forward_speed << " T:" << m_ThrottleInput << " d:"<< delta_time <<   " f:" << speed_factor << "\n";
+		Float strafe_speed = m_StrafeInput*delta_time*speed_factor;
+		Float updown_speed = m_UpDownInput*delta_time*speed_factor;
 
 		Float teta = m_Rot.x; //heading
 		Float beta = m_Rot.y; //pitch

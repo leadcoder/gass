@@ -51,12 +51,12 @@ namespace GASS
 		SaveProperties(this_elem);
 	}
 
-	int BaseSystem::GetUpdatePriority() const
+	int BaseSystem::GetUpdateBucket() const
 	{
 		return 0;
 	}
 
-	void BaseSystem::SetUpdatePriority(int priority)
+	void BaseSystem::SetUpdateBucket(int priority)
 	{
 
 	}

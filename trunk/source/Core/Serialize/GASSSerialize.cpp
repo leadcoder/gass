@@ -60,7 +60,7 @@ namespace GASS
 	template <>
 	void SerialSaver::IO<FilePath>(FilePath &path)
 	{
-	    std::string value = path.GetPath();
+	    std::string value = path.GetRawPath();
 		IO(value);
 	}
 

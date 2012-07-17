@@ -501,7 +501,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		m_ServerData->MapName =	message->GetScene()->GetPath();
+		m_ServerData->MapName =	message->GetScene()->GetPath().GetFullPath();
 		//only keep scene foldern name, scene path is added in client
 		m_ServerData->MapName = Misc::GetFilename(m_ServerData->MapName);
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;

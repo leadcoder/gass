@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BASECOMPONENTCONTAINER_HH
-#define BASECOMPONENTCONTAINER_HH
+#ifndef GASS_BASE_COMPONENT_CONTAINER_H
+#define GASS_BASE_COMPONENT_CONTAINER_H
 
 #include "Core/Reflection/GASSReflection.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"

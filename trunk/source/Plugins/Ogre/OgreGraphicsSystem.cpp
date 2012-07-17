@@ -215,6 +215,8 @@ namespace GASS
 			std::string stats_text = sstream.str();
 			GetSimSystemManager()->SendImmediate(MessagePtr( new DebugPrintMessage(stats_text)));
 		}
+		//update listeners
+		SimSystem::Update(delta_time);
 	}
 
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)

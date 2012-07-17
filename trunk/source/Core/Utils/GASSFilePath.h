@@ -46,7 +46,8 @@ namespace GASS
 		FilePath(const std::string &path);
 		FilePath();
 		~FilePath();
-		std::string GetPath() const;
+		std::string GetFullPath() const;
+		std::string GetRawPath() const;
 		void SetPath(const std::string &path);
 		std::string GetPathNoExtension() const;
 		std::string GetPathNoFile() const;
@@ -56,7 +57,7 @@ namespace GASS
 		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
 		{
 			os.unsetf(std::ios::skipws);
-			os << path.GetPath();
+			os << path.GetRawPath();
 			return os;
 		}
 
@@ -73,8 +74,8 @@ namespace GASS
 		}
 	private:
 		std::string ExpandEnvVariables(const std::string &inStr);
-		std::string m_ExpandPath;
-		std::string m_EnvPath;
+		std::string m_ExpandedPath;
+		std::string m_RawPath;
 	};
 }
 

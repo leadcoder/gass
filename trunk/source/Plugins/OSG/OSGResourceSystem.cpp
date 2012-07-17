@@ -79,7 +79,7 @@ namespace GASS
 
 	void OSGResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
 	{
-		boost::filesystem::path boost_path(rl.m_Path.GetPath()); 
+		boost::filesystem::path boost_path(rl.m_Path.GetFullPath()); 
 		if( boost::filesystem::exists(boost_path))  
 		{
 			m_ResourceLocations.push_back(rl);
@@ -105,7 +105,7 @@ namespace GASS
 
 	}
 
-	void OSGResourceSystem::AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive)
+	void OSGResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
 		ResourceLocation rl;
 		rl.m_Path = path;
@@ -113,7 +113,6 @@ namespace GASS
 		rl.m_Group = resource_group;
 		rl.m_Recursive = recursive;
 		AddResourceLocationRecursive(rl);
-		//m_ResourceLocations.push_back(rl);
 	}
 
 	void OSGResourceSystem::LoadResourceGroup(const std::string &resource_group)
@@ -122,13 +121,13 @@ namespace GASS
 	}
 
 
-	void OSGResourceSystem::RemoveResourceLocation(const std::string &path,const std::string &resource_group)
+	void OSGResourceSystem::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
 	{
 		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
 		while(iter != m_ResourceLocations.end())
 		{
-			std::string temp_file_path = iter->m_Path.GetPath();
-			if(temp_file_path  == path && resource_group == iter->m_Group)
+			std::string temp_file_path = iter->m_Path.GetFullPath();
+			if(temp_file_path  == path.GetFullPath() && resource_group == iter->m_Group)
 			{
 				iter = m_ResourceLocations.erase(iter);
 			}
@@ -170,7 +169,7 @@ namespace GASS
 			for(int i  = 0; i < m_ResourceLocations.size(); i++)
 			{
 				
-				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetPath() + "/" +  file_name;
+				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetFullPath() + "/" +  file_name;
 				if(fp = fopen(temp_file_path.c_str(),"rb"))
 				{
 					fclose(fp);

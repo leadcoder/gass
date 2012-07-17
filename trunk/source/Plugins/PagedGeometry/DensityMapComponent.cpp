@@ -82,7 +82,7 @@ namespace GASS
 	{
 
 		ScenePtr  scene = GetSceneObject()->GetScene();
-		std::string scene_path = scene->GetPath();
+		std::string scene_path = scene->GetPath().GetFullPath();
 
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
@@ -306,7 +306,7 @@ namespace GASS
 		BaseSceneComponent::SaveXML(obj_elem);
 
 		ScenePtr  scene = GetSceneObject()->GetScene();
-		std::string scene_path = scene->GetPath();
+		std::string scene_path = scene->GetPath().GetFullPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
 		{

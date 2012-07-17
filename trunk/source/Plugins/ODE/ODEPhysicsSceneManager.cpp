@@ -103,15 +103,16 @@ namespace GASS
 	{
 	}
 
-
 	void ODEPhysicsSceneManager::SystemTick(double delta_time)
 	{
-
 		if (!m_Paused)
 		{
-
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
+			dWorldQuickStep(m_World, delta_time);
+			dJointGroupEmpty(m_ContactGroup);
 			//do some time slicing
-			m_TimeToProcess += delta_time;
+			/*m_TimeToProcess += delta_time;
 			int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
 			int clamp_num_steps = num_steps;
 
@@ -126,16 +127,14 @@ namespace GASS
 				dJointGroupEmpty(m_ContactGroup);
 			}
 			//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
-			m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
+			m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;*/
 		}
 
 		//Temp: move this to ODEPhysicsSystem
-		
 		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
 		if(col_sys)
 		{
 			col_sys->Process();
-
 		}
 	}
 

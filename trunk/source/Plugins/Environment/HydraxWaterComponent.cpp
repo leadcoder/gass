@@ -666,10 +666,10 @@ namespace GASS
 
 	void HydraxWaterComponent::CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp)
 	{
-		if(m_ResourceLocation.GetPath() != "")
+		if(m_ResourceLocation.GetFullPath() != "")
 		{
 			Ogre::ResourceGroupManager *mngr = Ogre::ResourceGroupManager::getSingletonPtr();
-			mngr->addResourceLocation(m_ResourceLocation.GetPath() ,"FileSystem","Hydrax");
+			mngr->addResourceLocation(m_ResourceLocation.GetFullPath() ,"FileSystem","Hydrax");
 		}
 
 		m_Hydrax = new Hydrax::Hydrax(sm, ocam, vp);
