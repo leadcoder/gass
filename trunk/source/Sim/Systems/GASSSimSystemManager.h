@@ -23,21 +23,25 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/System/GASSBaseSystemManager.h"
+
+#define PRE_SIM_BUCKET 9998 //magic number
+#define POST_SIM_BUCKET 9999 //magic number
 
 
 namespace GASS
 {
-	class MessageManager;
+
 
 	/**
-		System manager for all systems used in GASSSim.
-		The system manager load it's systems through xml-files
-		and then handle all SimSystemMessages in GASSSim.
-		To post a SimSystemMessages you simply call 
-		PostMessage in this class with your message as argument.
-		To handle the messages the SimSystemManager use the 
-		MessageManager class
+	System manager for all systems used in GASSSim.
+	The system manager load it's systems through xml-files
+	and then handle all SimSystemMessages in GASSSim.
+	To post a SimSystemMessages you simply call 
+	PostMessage in this class with your message as argument.
+	To handle the messages the SimSystemManager use the 
+	MessageManager class
 	*/
 	class GASSExport SimSystemManager : public BaseSystemManager
 	{
@@ -52,32 +56,46 @@ namespace GASS
 		Register for system messages
 		*/
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
-		
+
 		/**
 		Unregister for system messages
 		*/
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
-		
+
 		/**
 		Post system message
 		*/
 		void PostMessage(MessagePtr message);
-		
+
 		/**
 		Force send of system message
 		*/
 		void SendImmediate(MessagePtr message);
-		
+
 		/**
 		Update System
 		*/
 		void Update(float delta_time);
-		
+
 		/**
 		Clear all unproccessed messages
 		*/
 		void ClearMessages();
+
+		void SetPauseSimulation(bool value) {m_SimulationPaused = value;}
+		void SetSimulationUpdateInterval(bool value) {m_SimulationUpdateInterval = value;}
+		void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}
+
+		//can be called by user it simulation is paused
+		void StepSimulation(double delta_time);
 	private:
-		MessageManager* m_SystemMessageManager;
+		void UpdateSimulation(double delta_time);
+		void SyncMessages(double delta_time);
+		MessageManagerPtr m_SystemMessageManager;
+		bool m_SimulationPaused;
+		bool m_SimulateRealTime;
+		double m_SimulationUpdateInterval;
+		double m_SimulationTimeToProcess;
+		int m_MaxSimSteps;
 	};
 }

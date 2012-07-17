@@ -60,8 +60,8 @@ namespace GASS
 		virtual void Unregister(SystemListenerPtr listener);
 		virtual void Update(double delta);
 		virtual SystemType GetSystemType()  const {return "SimSystem";}
-		virtual int GetUpdatePriority() const;
-		virtual void SetUpdatePriority(int priority);
+		virtual int GetUpdateBucket() const;
+		virtual void SetUpdateBucket(int priority);
 	
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
@@ -76,6 +76,6 @@ namespace GASS
 		std::vector<SystemListenerPtr> m_Listeners;
 		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
-		int m_UpdatePriority;
+		int m_UpdateBucket;
 	};
 }

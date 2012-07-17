@@ -23,7 +23,7 @@
 #include "tinyxml.h"
 namespace GASS
 {
-	SimSystem::SimSystem(void) : m_UpdatePriority(0), m_Name("SimSystem")
+	SimSystem::SimSystem(void) : m_UpdateBucket(0), m_Name("SimSystem")
 	{
 	
 	}
@@ -41,7 +41,7 @@ namespace GASS
 	void SimSystem::RegisterReflection()
 	{
 		RegisterProperty<std::string>( "Name", &GASS::SimSystem::GetName, &GASS::SimSystem::SetName);
-		RegisterProperty<int>( "UpdatePriority", &GASS::SimSystem::GetUpdatePriority, &GASS::SimSystem::SetUpdatePriority);
+		RegisterProperty<int>( "UpdateBucket", &GASS::SimSystem::GetUpdateBucket, &GASS::SimSystem::SetUpdateBucket);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
@@ -96,14 +96,14 @@ namespace GASS
 		SaveProperties(this_elem);
 	}
 
-	int SimSystem::GetUpdatePriority() const
+	int SimSystem::GetUpdateBucket() const
 	{
-		return m_UpdatePriority;
+		return m_UpdateBucket;
 	}
 
-	void SimSystem::SetUpdatePriority(int priority)
+	void SimSystem::SetUpdateBucket(int priority)
 	{
-		m_UpdatePriority = priority;
+		m_UpdateBucket = priority;
 	}
 }
 

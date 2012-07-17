@@ -94,7 +94,7 @@ namespace GASS
 		m_CreateCalled = true;
 	}
 
-	void Scene::Load(const std::string &scene_path)
+	void Scene::Load(const FilePath &scene_path)
 	{
 		if(!m_CreateCalled)
 		{
@@ -114,15 +114,15 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 
 		rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
-		const std::string filename = scene_path + "/scene.xml";
+		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 		//Load scene specific templates, filename should probably be a scene parameter
-		SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
+		SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
 		if(!xmlDoc->LoadFile())
 		{
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "Scene::Load");
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
 		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
@@ -138,7 +138,7 @@ namespace GASS
 		Load();
 	}
 
-	void Scene::Save(const std::string &scene_path)
+	void Scene::Save(const FilePath &scene_path)
 	{
 		m_ScenePath = scene_path;
 		TiXmlDocument doc;  
@@ -155,13 +155,13 @@ namespace GASS
 
 		SaveXML(sms_elem);
 
-		std::string filename = scene_path + "/Scene.xml";
-		doc.SaveFile(filename.c_str());
+		const FilePath filename = FilePath(scene_path.GetFullPath() + "/Scene.xml");
+		doc.SaveFile(filename.GetFullPath().c_str());
 		//Save scene specific object templates, filename should probably be a scene parameter
 		//SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
 	}
 
-	void Scene::SyncMessages(double delta_time)
+	void Scene::SyncMessages(double delta_time) const
 	{
 		if(m_SceneLoaded)
 		{
@@ -259,18 +259,10 @@ namespace GASS
 
 		terrain_objects->SetName("Scenery");
 		terrain_objects->SetID("SCENERY_ROOT");
-		terrain_objects->LoadFromFile(m_ScenePath + "/instances.xml");
+		terrain_objects->LoadFromFile(m_ScenePath.GetFullPath() + "/instances.xml");
 		
 		m_Root->AddChildSceneObject(terrain_objects,true);
-		//terrain_objects->Initialize(shared_from_this());
-		//load!
-		//m_ObjectManager->LoadObject(static_object_root);
 		
-		
-
-	//	if(m_ScenePath != "")
-	//		m_ObjectManager->LoadXML(m_ScenePath + "/instances.xml");
-
 		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 

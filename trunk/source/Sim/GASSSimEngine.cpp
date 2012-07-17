@@ -111,14 +111,11 @@ namespace GASS
 		
 		{
 		PROFILE("SimEngine::Update")
-		m_RTC->Update(delta_time);
-
-
+		//m_RTC->Update(delta_time);
 		//update systems
 		GetSimSystemManager()->Update(delta_time);
 
-
-		// hardcoded update loop
+		//hardcoded update loop
 		//InputSystemPtr is = GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		//is->Update(delta_time);
 
@@ -144,6 +141,23 @@ namespace GASS
 	}
 
 
+	
+
+
+	SceneWeakPtr SimEngine::LoadScene(const FilePath &path)
+	{
+		ScenePtr scene = ScenePtr(new Scene());
+		scene->Create();
+		scene->Load(path);
+		m_Scenes.push_back(scene);
+		return scene;
+	}
+
+	void SimEngine::UnloadScene(SceneWeakPtr scene)
+	{
+
+	}
+
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
 		ComponentContainerPtr cc  = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
@@ -154,6 +168,16 @@ namespace GASS
 	bool SimEngine::Shutdown()
 	{
 		return true;
+	}
+
+	SimEngine::SceneIterator SimEngine::GetScenes()
+	{
+		return SceneIterator(m_Scenes.begin(),m_Scenes.end());
+	}
+
+	SimEngine::ConstSceneIterator SimEngine::GetScenes() const
+	{
+		return ConstSceneIterator(m_Scenes.begin(),m_Scenes.end());
 	}
 
 }

@@ -22,6 +22,8 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSSingleton.h"
+#include "Core/Utils/GASSFilePath.h"
+#include "Core/Utils/GASSIterators.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include <boost/shared_ptr.hpp>
 
@@ -32,6 +34,7 @@ namespace GASS
 	class BaseComponentContainerTemplateManager;
 	class IRuntimeController;
 	class SceneObject;
+	class Scene;
 	
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
@@ -39,6 +42,8 @@ namespace GASS
 	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef boost::shared_ptr<Scene> ScenePtr;
+	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -60,6 +65,11 @@ namespace GASS
 
 	class GASSExport SimEngine  : public Singleton<SimEngine>
 	{
+	public:
+		typedef std::vector<ScenePtr> SceneVector;
+		typedef VectorIterator<SceneVector> SceneIterator;
+		typedef ConstVectorIterator<SceneVector> ConstSceneIterator;
+
 	public:
 		SimEngine();
 		virtual ~SimEngine();
@@ -119,7 +129,7 @@ namespace GASS
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
 		*/
-		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
+		//RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
 
 
 		/**
@@ -127,18 +137,27 @@ namespace GASS
 		*/
 		double GetTime() const {return m_CurrentTime;}
 		
-
 		
 		/**
 			Convience function to create new objects from templates
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
+
+		/**
+			Load scene form file
+		*/
+		SceneWeakPtr LoadScene(const FilePath &path);
+		void  UnloadScene(SceneWeakPtr scene);
+
+		SceneIterator GetScenes();
+		ConstSceneIterator GetScenes() const;
 	private:
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
+		SceneVector m_Scenes;
 		double m_CurrentTime;
 	};
 }

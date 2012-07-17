@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Utils/GASSFilePath.h"
 #include <string>
 
 namespace GASS
@@ -54,14 +55,14 @@ namespace GASS
 			@type  resrouce type FileSystem or Zip
 			@recursive Search in subfolders or not
 		*/
-		virtual void AddResourceLocation(const std::string &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
+		virtual void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
 		
 		/**
 			Remove resource location from resource group
 			@path Full file path to the resource location
 			@resource_group The resource group that hold the location
 		*/
-		virtual void RemoveResourceLocation(const std::string &path,const std::string &resource_group) = 0;
+		virtual void RemoveResourceLocation(const FilePath &path,const std::string &resource_group) = 0;
 
 		/**
 			Remove resource group
