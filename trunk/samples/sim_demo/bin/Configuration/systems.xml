@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Systems>
-  <CoreSystem/>
+ <OISInputSystem>
+    <Name value = "InputSystem"/>
+	<UpdateBucket value="9998"/> <!-- PRE BUCKET UPDATE-->
+  </OISInputSystem>
+  <CoreSystem>
+	<UpdateBucket value="9998"/>
+  </CoreSystem>
+  <GameSystem>
+	<UpdateBucket value="1"/>
+  </GameSystem>
+  <RakNetNetworkSystem>
+    <Name value = "NetworkSystem"/>
+	<UpdateBucket value="1"/>
+  </RakNetNetworkSystem>
+  <OpenALSoundSystem>
+    <Name value = "SoundSystem"/>
+	<UpdateBucket value="1"/>
+  </OpenALSoundSystem>
+  <CEGUISystem>
+    <Name value = "GUISystem"/>
+	<UpdateBucket value="-1"/>
+  </CEGUISystem>
+  <LuaScriptSystem>
+    <Name value = "GUISystem"/>
+	<UpdateBucket value="-1"/>
+  </LuaScriptSystem>
+ <ODEPhysicsSystem>
+    <Name value = "PhysicsSystem"/>
+	<UpdateBucket value="2"/>
+  </ODEPhysicsSystem>
+  <ODECollisionSystem>
+    <Name value = "CollisionSystem"/>
+	<UpdateBucket value="-1"/>
+  </ODECollisionSystem>
   <OgreGraphicsSystem>
     <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
@@ -11,6 +44,7 @@
     <Plugin value="Plugin_ParticleFX"/>
     <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
+	<UpdateBucket value="9999"/>
   </OgreGraphicsSystem>
   <OgreResourceSystem>
     <Name value = "ResourceSystem"/>
@@ -36,26 +70,6 @@
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/schemes" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/xml_schemas" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
+	<UpdateBucket value="-1"/>
   </OgreResourceSystem>
-  <ODEPhysicsSystem>
-    <Name value = "PhysicsSystem"/>
-  </ODEPhysicsSystem>
-  <ODECollisionSystem>
-    <Name value = "CollisionSystem"/>
-  </ODECollisionSystem>
-  <OISInputSystem>
-    <Name value = "InputSystem"/>
-  </OISInputSystem>
-  <RakNetNetworkSystem>
-    <Name value = "NetworkSystem"/>
-  </RakNetNetworkSystem>
-  <OpenALSoundSystem>
-    <Name value = "SoundSystem"/>
-  </OpenALSoundSystem>
-  <CEGUISystem>
-    <Name value = "GUISystem"/>
-  </CEGUISystem>
-  <LuaScriptSystem>
-    <Name value = "GUISystem"/>
-  </LuaScriptSystem>
 </Systems>
