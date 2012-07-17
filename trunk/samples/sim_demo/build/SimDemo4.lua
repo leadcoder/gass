@@ -20,7 +20,7 @@ end
 	libdirs 
 	{ 
 		"../../../lib/",
-
+		"$(BOOST_HOME)/lib",
 		"../../../dependencies/lib/"
 	}
 

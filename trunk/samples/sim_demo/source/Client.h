@@ -26,16 +26,17 @@ public:
 		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
 		printf("Client got scene request message:%s\n",mess->GetSceneName().c_str());
 		//m_Scene->Load("../../../common/data/scenes/" + mess->GetSceneName());
-		m_Scene->Load(m_SceneName);
-		
 
-		GASS::SceneObjectPtr free_obj = m_Scene->LoadObjectFromTemplate("FreeCameraObject",m_Scene->GetRootSceneObject());
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(m_Scene->GetStartPos()));
+		m_Scene = GASS::SimEngine::Get().LoadScene(m_SceneName);
+		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
+
+		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
+		GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
 			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
-			m_Scene->PostMessage(camera_msg);
+			scene->PostMessage(camera_msg);
 		}
 	}
 
