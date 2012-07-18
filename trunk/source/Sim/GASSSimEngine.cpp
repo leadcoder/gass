@@ -99,7 +99,7 @@ namespace GASS
 		m_RTC->Init(num_rtc_threads);
 
 		//intilize profiler
-		ProfileSample::outputHandler = new ProfileRuntimeHandler();
+		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";

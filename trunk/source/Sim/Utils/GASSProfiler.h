@@ -23,13 +23,13 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSTimer.h"
-#define MAX_PROFILER_SAMPLES 50
+#define MAX_PROFILER_SAMPLES 100
 //enable profiler
 //#define PROFILER
 
 namespace GASS
 {
-	class IProfilerOutputHandler;
+	class IProfilerm_OutputHandler;
 
 	class ProfileSample;
 
@@ -41,48 +41,48 @@ namespace GASS
 		static void Output();
 		static void ResetSample(std::string sampleName);
 		static void ResetAll();
-		static IProfilerOutputHandler *outputHandler;
-		static bool bProfilerIsRunning;
+		static IProfilerm_OutputHandler *m_OutputHandler;
+		static bool m_ProfilerIsRunning;
 	protected:
 		//index into the array of samples
-		int iSampleIndex;
-		int iParentIndex;
+		int m_SampleIndex;
+		int m_ParentIndex;
 
 		float GetTime();
 
-		static struct profileSample
+		static struct ProfileSampleData
 		{
-			profileSample()
+			ProfileSampleData()
 			{
-				bIsValid=false; 
-				dataCount=0;
-				averagePc=minPc=maxPc=-1;
+				m_IsValid=false; 
+				m_DataCount=0;
+				m_AveragePc=m_MinPc=m_MaxPc=-1;
 			}
 
-			bool bIsValid;		//whether or not this sample is valid (for use with fixed-size arrays)
-			bool bIsOpen;		//is this sample currently being profiled?
-			unsigned int callCount;	//number of times this sample has been profiled this frame
-			std::string name;	//name of the sample
+			bool m_IsValid;		//whether or not this sample is valid (for use with fixed-size arrays)
+			bool m_IsOpen;		//is this sample currently being profiled?
+			unsigned int m_CallCount;	//number of times this sample has been profiled this frame
+			std::string m_Name;	//name of the sample
 
-			float startTime;	//starting time on the clock, in seconds
-			float totalTime;	//total time recorded across all profiles of this sample
-			float childTime;	//total time taken by children of this sample
+			float m_StartTime;	//starting time on the clock, in seconds
+			float m_TotalTime;	//total time recorded across all profiles of this sample
+			float m_ChildTime;	//total time taken by children of this sample
 
-			int parentCount;	//number of parents this sample has (useful for indenting)
+			int m_ParentCount;	//number of parents this sample has (useful for indenting)
 
-			float averagePc;	//average percentage of game loop time taken up
-			float minPc;		//minimum percentage of game loop time taken up
-			float maxPc;		//maximum percentage of game loop time taken up
-			unsigned long dataCount;//number of percentage values that have been stored
-		} samples[MAX_PROFILER_SAMPLES];
-		static int lastOpenedSample;
-		static int openSampleCount;
-		static float rootBegin;
-		static float rootEnd;
+			float m_AveragePc;	//average percentage of game loop time taken up
+			float m_MinPc;		//minimum percentage of game loop time taken up
+			float m_MaxPc;		//maximum percentage of game loop time taken up
+			unsigned long m_DataCount;//number of percentage values that have been stored
+		} m_Samples[MAX_PROFILER_SAMPLES];
+		static int m_LastOpenedSample;
+		static int m_OpenSampleCount;
+		static float m_RootBegin;
+		static float m_RootEnd;
 		static Timer* m_Timer;
 	};
 
-	class GASSExport IProfilerOutputHandler
+	class GASSExport IProfilerm_OutputHandler
 	{
 	public:
 		virtual void BeginOutput(float tTotal)=0;

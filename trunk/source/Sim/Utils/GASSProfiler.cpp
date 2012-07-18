@@ -24,44 +24,44 @@
 
 namespace GASS
 {
-	int ProfileSample::lastOpenedSample=-1;
-	int ProfileSample::openSampleCount=0;
-	ProfileSample::profileSample ProfileSample::samples[MAX_PROFILER_SAMPLES];
-	IProfilerOutputHandler *ProfileSample::outputHandler=0;
-	float ProfileSample::rootBegin=0.0f;
-	float ProfileSample::rootEnd=0.0f;
-	bool ProfileSample::bProfilerIsRunning=true;
+	int ProfileSample::m_LastOpenedSample=-1;
+	int ProfileSample::m_OpenSampleCount=0;
+	ProfileSample::ProfileSampleData ProfileSample::m_Samples[MAX_PROFILER_SAMPLES];
+	IProfilerm_OutputHandler *ProfileSample::m_OutputHandler=0;
+	float ProfileSample::m_RootBegin=0.0f;
+	float ProfileSample::m_RootEnd=0.0f;
+	bool ProfileSample::m_ProfilerIsRunning=true;
 	Timer* ProfileSample::m_Timer= new Timer();
 
 	ProfileSample::ProfileSample(std::string sampleName)
 	{
-		if(!bProfilerIsRunning)return;
+		if(!m_ProfilerIsRunning)return;
 		//find the sample
 		int i=0;
 		int storeIndex=-1;
 		for(i=0;i<MAX_PROFILER_SAMPLES;++i)
 		{
-			if(!samples[i].bIsValid)
+			if(!m_Samples[i].m_IsValid)
 			{
 				if(storeIndex<0)storeIndex=i;
 			}else{
-				if(samples[i].name==sampleName)
+				if(m_Samples[i].m_Name==sampleName)
 				{
 					//this is the sample we want
 					//check that it's not already open
-					assert(!samples[i].bIsOpen && "Tried to profile a sample which was already being profiled");
+					assert(!m_Samples[i].m_IsOpen && "Tried to profile a sample which was already being profiled");
 					//first, store it's index
-					iSampleIndex=i;
+					m_SampleIndex=i;
 					//the parent sample is the last opened sample
-					iParentIndex=lastOpenedSample;
-					lastOpenedSample=i;
-					samples[i].parentCount=openSampleCount;
-					++openSampleCount;
-					samples[i].bIsOpen=true;
-					++samples[i].callCount;
-					samples[i].startTime= GetTime();
+					m_ParentIndex=m_LastOpenedSample;
+					m_LastOpenedSample=i;
+					m_Samples[i].m_ParentCount=m_OpenSampleCount;
+					++m_OpenSampleCount;
+					m_Samples[i].m_IsOpen=true;
+					++m_Samples[i].m_CallCount;
+					m_Samples[i].m_StartTime= GetTime();
 					//if this has no parent, it must be the 'main loop' sample, so do the global timer
-					if(iParentIndex<0)rootBegin=samples[i].startTime;
+					if(m_ParentIndex<0)m_RootBegin=m_Samples[i].m_StartTime;
 					return;
 				}
 			}
@@ -69,41 +69,41 @@ namespace GASS
 		//we've not found it, so it must be a new sample
 		//use the storeIndex value to store the new sample
 		assert(storeIndex>=0 && "Profiler has run out of sample slots!");
-		samples[storeIndex].bIsValid=true;
-		samples[storeIndex].name=sampleName;
-		iSampleIndex=storeIndex;
-		iParentIndex=lastOpenedSample;
-		lastOpenedSample=storeIndex;
-		samples[i].parentCount=openSampleCount;
-		openSampleCount++;
-		samples[storeIndex].bIsOpen=true;
-		samples[storeIndex].callCount=1;
+		m_Samples[storeIndex].m_IsValid=true;
+		m_Samples[storeIndex].m_Name=sampleName;
+		m_SampleIndex=storeIndex;
+		m_ParentIndex=m_LastOpenedSample;
+		m_LastOpenedSample=storeIndex;
+		m_Samples[i].m_ParentCount=m_OpenSampleCount;
+		m_OpenSampleCount++;
+		m_Samples[storeIndex].m_IsOpen=true;
+		m_Samples[storeIndex].m_CallCount=1;
 
-		samples[storeIndex].totalTime=0.0f;
-		samples[storeIndex].childTime=0.0f;
-		samples[storeIndex].startTime=GetTime();
-		if(iParentIndex<0)rootBegin=samples[storeIndex].startTime;
+		m_Samples[storeIndex].m_TotalTime=0.0f;
+		m_Samples[storeIndex].m_ChildTime=0.0f;
+		m_Samples[storeIndex].m_StartTime=GetTime();
+		if(m_ParentIndex<0)m_RootBegin=m_Samples[storeIndex].m_StartTime;
 	}
 
 	ProfileSample::~ProfileSample()
 	{
-		if(!bProfilerIsRunning)return;
+		if(!m_ProfilerIsRunning)return;
 		float fEndTime= GetTime();
 		//phew... ok, we're done timing
-		samples[iSampleIndex].bIsOpen=false;
+		m_Samples[m_SampleIndex].m_IsOpen=false;
 		//calculate the time taken this profile, for ease of use later on
-		float fTimeTaken = fEndTime - samples[iSampleIndex].startTime;
+		float fTimeTaken = fEndTime - m_Samples[m_SampleIndex].m_StartTime;
 
-		if(iParentIndex>=0)
+		if(m_ParentIndex>=0)
 		{
-			samples[iParentIndex].childTime+=fTimeTaken;
+			m_Samples[m_ParentIndex].m_ChildTime+=fTimeTaken;
 		}else{
 			//no parent, so this is the end of the main loop sample
-			rootEnd=fEndTime;
+			m_RootEnd=fEndTime;
 		}
-		samples[iSampleIndex].totalTime+=fTimeTaken;
-		lastOpenedSample=iParentIndex;
-		--openSampleCount;
+		m_Samples[m_SampleIndex].m_TotalTime+=fTimeTaken;
+		m_LastOpenedSample=m_ParentIndex;
+		--m_OpenSampleCount;
 	}
 
 	float ProfileSample::GetTime()
@@ -114,57 +114,57 @@ namespace GASS
 	void ProfileSample::Output()
 	{
 		
-		if(!bProfilerIsRunning)return;
+		if(!m_ProfilerIsRunning)return;
 
-		assert(outputHandler && "Profiler has no output handler set");
+		assert(m_OutputHandler && "Profiler has no output handler set");
 
-		outputHandler->BeginOutput(rootEnd-rootBegin);
+		m_OutputHandler->BeginOutput(m_RootEnd-m_RootBegin);
 		for(int i=0;i<MAX_PROFILER_SAMPLES; ++i)
 		{
-			if(samples[i].bIsValid)
+			if(m_Samples[i].m_IsValid)
 			{
 				float sampleTime, percentage;
 				//calculate the time spend on the sample itself (excluding children)
-				sampleTime = samples[i].totalTime-samples[i].childTime;
-				percentage = ( sampleTime / ( rootEnd - rootBegin ) ) * 100.0f;
+				sampleTime = m_Samples[i].m_TotalTime-m_Samples[i].m_ChildTime;
+				percentage = ( sampleTime / ( m_RootEnd - m_RootBegin ) ) * 100.0f;
 
 				//add it to the sample's values
 				float totalPc;
-				totalPc=samples[i].averagePc*samples[i].dataCount;
-				totalPc+=percentage; samples[i].dataCount++;
-				samples[i].averagePc=totalPc/samples[i].dataCount;
-				if((samples[i].minPc==-1)||(percentage<samples[i].minPc))samples[i].minPc=percentage;
-				if((samples[i].maxPc==-1)||(percentage>samples[i].maxPc))samples[i].maxPc=percentage;
+				totalPc=m_Samples[i].m_AveragePc*m_Samples[i].m_DataCount;
+				totalPc+=percentage; m_Samples[i].m_DataCount++;
+				m_Samples[i].m_AveragePc=totalPc/m_Samples[i].m_DataCount;
+				if((m_Samples[i].m_MinPc==-1)||(percentage<m_Samples[i].m_MinPc))m_Samples[i].m_MinPc=percentage;
+				if((m_Samples[i].m_MaxPc==-1)||(percentage>m_Samples[i].m_MaxPc))m_Samples[i].m_MaxPc=percentage;
 
 				//output these values
-				outputHandler->Sample(percentage,samples[i].minPc,
-					samples[i].averagePc,
-					samples[i].maxPc,
+				m_OutputHandler->Sample(percentage,m_Samples[i].m_MinPc,
+					m_Samples[i].m_AveragePc,
+					m_Samples[i].m_MaxPc,
 					sampleTime,
-					samples[i].callCount,
-					samples[i].name,
-					samples[i].parentCount);
+					m_Samples[i].m_CallCount,
+					m_Samples[i].m_Name,
+					m_Samples[i].m_ParentCount);
 
 				//reset the sample for next time
-				samples[i].callCount=0;
-				samples[i].totalTime=0;
-				samples[i].childTime=0;
+				m_Samples[i].m_CallCount=0;
+				m_Samples[i].m_TotalTime=0;
+				m_Samples[i].m_ChildTime=0;
 			}
 		}
-		outputHandler->EndOutput();
+		m_OutputHandler->EndOutput();
 	}
 
 	void ProfileSample::ResetSample(std::string strName)
 	{
 		for(int i=0;i<MAX_PROFILER_SAMPLES; ++i)
 		{
-			if((samples[i].bIsValid)&&(samples[i].name==strName))
+			if((m_Samples[i].m_IsValid)&&(m_Samples[i].m_Name==strName))
 			{
 				//found it
 				//reset avg/min/max ONLY
 				//because the sample may be running
-				samples[i].maxPc=samples[i].minPc=-1;
-				samples[i].dataCount=0;
+				m_Samples[i].m_MaxPc=m_Samples[i].m_MinPc=-1;
+				m_Samples[i].m_DataCount=0;
 				return;
 			}
 		}
@@ -174,11 +174,11 @@ namespace GASS
 	{
 		for(int i=0;i<MAX_PROFILER_SAMPLES;++i)
 		{
-			if(samples[i].bIsValid)
+			if(m_Samples[i].m_IsValid)
 			{
-				samples[i].maxPc=samples[i].minPc=-1;
-				samples[i].dataCount=0;
-				if(!samples[i].bIsOpen)samples[i].bIsValid=false;
+				m_Samples[i].m_MaxPc=m_Samples[i].m_MinPc=-1;
+				m_Samples[i].m_DataCount=0;
+				if(!m_Samples[i].m_IsOpen)m_Samples[i].m_IsValid=false;
 			}
 		}
 	}

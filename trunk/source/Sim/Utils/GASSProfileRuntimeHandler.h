@@ -26,7 +26,7 @@ class Log;
 
 namespace GASS
 {
-	class ProfileRuntimeHandler : public IProfilerOutputHandler
+	class ProfileRuntimeHandler : public IProfilerm_OutputHandler
 	{
 	public:
 		ProfileRuntimeHandler();
