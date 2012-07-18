@@ -32,7 +32,7 @@
 
 #include "tinyxml.h"
 #include "tbb/parallel_for_each.h"
-#include <tbb/tick_count.h>
+
 
 namespace GASS
 {
@@ -74,16 +74,11 @@ namespace GASS
 
 	void SimSystemManager::Update(float delta_time)
 	{
-		//m_Stats.clear();
-		tbb::tick_count start_time = tbb::tick_count::now();
-
 
 		//PRE_SIM_BUCKET
 		UpdateMap::iterator iter = m_UpdateBuckets.find(PRE_SIM_BUCKET);
 		if(iter != m_UpdateBuckets.end())
 		{
-			tbb::tick_count bucket_start_time = tbb::tick_count::now();
-				
 			if(iter->second.size() == 1) //single system
 			{
 					iter->second.at(0)->Update(delta_time);
@@ -93,17 +88,8 @@ namespace GASS
 					tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
 			
-
-			tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
-
-			BucketProfileData profileData;
-			profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
 			//wait to advance time
 			SyncMessages(0);
-			tbb::tick_count bucket_end_time = tbb::tick_count::now();
-			profileData.SyncTime = (bucket_end_time- bucket_update_end_time).seconds();
-			m_Stats[PRE_SIM_BUCKET] = profileData;
-			
 		}
 
 		if (!m_SimulationPaused)
@@ -116,8 +102,7 @@ namespace GASS
 		iter = m_UpdateBuckets.find(POST_SIM_BUCKET);
 		if(iter != m_UpdateBuckets.end())
 		{
-			tbb::tick_count bucket_start_time = tbb::tick_count::now();
-
+			
 			if(iter->second.size() == 1) //single system
 			{
 				iter->second.at(0)->Update(delta_time);
@@ -126,24 +111,19 @@ namespace GASS
 			{
 				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
-
-			tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
-			BucketProfileData profileData;
-			profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
-			profileData.SyncTime = 0;
-			m_Stats[POST_SIM_BUCKET] = profileData;
-
 		}
-		tbb::tick_count end_time = tbb::tick_count::now();
-
 		//plot data
+		std::stringstream ss;
+		ss.precision(3);
+		SysProfileDataMap::iterator stat_iter = m_Stats.begin();
+		while(stat_iter  != m_Stats.end())
+		{
+			ss << stat_iter->first << " Time:" << stat_iter->second.Time << "\n";
+			stat_iter++;
+		}
+		DPRINT(ss.str());
 
-		double tot_time = 0;
-		double tot_sync_time =0;
-		double tot_update_time =0;
-
-
-		if(m_LastNumSimulationSteps > 0)
+	/*	if(m_LastNumSimulationSteps > 0)
 		{
 			std::stringstream ss;
 			ss.precision(3);
@@ -172,14 +152,8 @@ namespace GASS
 			}
 
 			DPRINT(ss.str());
-		}
-			
-		
+		}*/
 	}
-
-
-
-
 
 	void SimSystemManager::StepSimulation(double delta_time)
 	{
@@ -193,19 +167,12 @@ namespace GASS
 				if(num_steps > m_MaxSimSteps) 
 					clamp_num_steps = m_MaxSimSteps;
 
-				
-
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
 					UpdateSimulation(m_SimulationUpdateInterval);
-
-
 				}
 				m_SimulationTimeToProcess -= m_SimulationUpdateInterval * num_steps;
 				m_LastNumSimulationSteps = clamp_num_steps;
-				//std::stringstream ss;
-				//ss << "SimulationTimeToProcess:" << m_SimulationTimeToProcess;
-				//DPRINT(ss.str())
 			}
 			else
 				UpdateSimulation(m_SimulationUpdateInterval);
@@ -220,9 +187,12 @@ namespace GASS
 		UpdateMap::iterator iter = m_UpdateBuckets.begin();
 		for(;iter != m_UpdateBuckets.end(); iter++)
 		{
+			std::stringstream ss;
+			ss << "Bucket_" << iter->first;
+			
 			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
-				tbb::tick_count bucket_start_time = tbb::tick_count::now();
+				SysProfileSample(ss.str(),&m_Stats);
 
 				if(iter->second.size() == 1) //single system
 				{
@@ -233,28 +203,10 @@ namespace GASS
 					tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 				}
 
-
-				tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
-
-				BucketProfileData profileData;
-				profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
-
 				//sync
 				SyncMessages(message_delta_time);
 				//only step message time once
 				message_delta_time = 0;
-
-				tbb::tick_count bucket_end_time = tbb::tick_count::now();
-				profileData.SyncTime = (bucket_end_time- bucket_update_end_time).seconds();
-				m_Stats[iter->first].SyncTime = profileData.SyncTime;
-				m_Stats[iter->first].UpdateTime = profileData.UpdateTime;
-
-				m_Stats[iter->first].AvgSyncTime += profileData.SyncTime;
-				m_Stats[iter->first].AvgUpdateTime += profileData.UpdateTime;
-
-				m_Stats[iter->first].Count++;
-				
-
 			}
 		}
 	}

@@ -29,6 +29,8 @@
 #define PRE_SIM_BUCKET 9998 //magic number
 #define POST_SIM_BUCKET 9999 //magic number
 
+#include <tbb/tick_count.h>
+
 
 namespace GASS
 {
@@ -97,27 +99,56 @@ namespace GASS
 		double m_SimulationUpdateInterval;
 		double m_SimulationTimeToProcess;
 		int m_MaxSimSteps;
-
 		int m_LastNumSimulationSteps;
 
 
-		class BucketProfileData
+		class SysProfileData
 		{
 		public:
-			BucketProfileData() : UpdateTime(0),SyncTime(0),Count(0)
+			SysProfileData() : Count(0),
+				Time(0),
+				AccTime(0) 
 			{
 
 			}
-
 			int Count;
-			double UpdateTime;
-			double SyncTime;
-
-			double AvgUpdateTime;
-			double AvgSyncTime;
+			tbb::tick_count StartTick;
+			tbb::tick_count EndTick;
+			double Time;
+			double AccTime;
 		};
-
-		std::map<int,BucketProfileData> m_Stats; 
-
+		typedef std::map<std::string, SysProfileData> SysProfileDataMap;
+		SysProfileDataMap m_Stats;
+		
+		class SysProfileSample
+		{
+		public:
+			SysProfileSample(const std::string name,SysProfileDataMap *data ) 
+			{
+				SysProfileDataMap::iterator iter = data->find(name);
+				if(iter == data->end())
+				{
+					SysProfileData sample;
+					sample.StartTick = tbb::tick_count::now();
+					sample.Count = 1;
+					(*data)[name] = sample;
+					m_Data = &data->find(name)->second;
+				}
+				else
+				{
+					iter->second.StartTick = tbb::tick_count::now();
+					iter->second.Count++;
+					m_Data = &iter->second;
+				}
+				
+			}
+			virtual ~SysProfileSample()
+			{
+				m_Data->EndTick = tbb::tick_count::now();
+				m_Data->Time = (m_Data->EndTick - m_Data->StartTick).seconds();
+				m_Data->AccTime += m_Data->Time;
+			}
+			SysProfileData *m_Data;
+		};
 	};
 }
