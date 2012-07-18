@@ -37,7 +37,7 @@
 namespace GASS
 {
 	SimSystemManager::SimSystemManager() : m_SimulationPaused(false), 
-		m_SimulationUpdateInterval(1.0/60.0),
+		m_SimulationUpdateInterval(1.0/10.0),
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(19),
 		m_SimulateRealTime(true),
@@ -114,13 +114,21 @@ namespace GASS
 		}
 		//plot data
 		std::stringstream ss;
-		ss.precision(3);
+		double tot_time =0;
+		ss.precision(4);
 		SysProfileDataMap::iterator stat_iter = m_Stats.begin();
 		while(stat_iter  != m_Stats.end())
 		{
-			ss << stat_iter->first << " Time:" << stat_iter->second.Time << "\n";
+			tot_time += stat_iter->second.Time;
 			stat_iter++;
 		}
+		stat_iter = m_Stats.begin();
+		while(stat_iter  != m_Stats.end())
+		{
+			ss << stat_iter->first << " Percent:" << 100*stat_iter->second.Time/tot_time << "Time:" << stat_iter->second.Time << "\n";
+			stat_iter++;
+		}
+
 		DPRINT(ss.str());
 
 	/*	if(m_LastNumSimulationSteps > 0)
@@ -187,26 +195,34 @@ namespace GASS
 		UpdateMap::iterator iter = m_UpdateBuckets.begin();
 		for(;iter != m_UpdateBuckets.end(); iter++)
 		{
-			std::stringstream ss;
-			ss << "Bucket_" << iter->first;
 			
 			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
-				SysProfileSample(ss.str(),&m_Stats);
-
-				if(iter->second.size() == 1) //single system
 				{
-					iter->second.at(0)->Update(delta_time);
-				}
-				else //do parallel update
-				{
-					tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
+					std::stringstream ss;
+					ss << "Bucket_" << iter->first << "_Update";
+					SysProfileSample(ss.str(),&m_Stats);
+
+					if(iter->second.size() == 1) //single system
+					{
+						iter->second.at(0)->Update(delta_time);
+					}
+					else //do parallel update
+					{
+						tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
+					}
 				}
 
-				//sync
-				SyncMessages(message_delta_time);
-				//only step message time once
-				message_delta_time = 0;
+				{
+					std::stringstream ss;
+					ss << "Bucket_" << iter->first << "_Sync";
+					SysProfileSample(ss.str(),&m_Stats);
+
+					//sync
+					SyncMessages(message_delta_time);
+					//only step message time once
+					message_delta_time = 0;
+				}
 			}
 		}
 	}
