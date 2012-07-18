@@ -97,5 +97,27 @@ namespace GASS
 		double m_SimulationUpdateInterval;
 		double m_SimulationTimeToProcess;
 		int m_MaxSimSteps;
+
+		int m_LastNumSimulationSteps;
+
+
+		class BucketProfileData
+		{
+		public:
+			BucketProfileData() : UpdateTime(0),SyncTime(0),Count(0)
+			{
+
+			}
+
+			int Count;
+			double UpdateTime;
+			double SyncTime;
+
+			double AvgUpdateTime;
+			double AvgSyncTime;
+		};
+
+		std::map<int,BucketProfileData> m_Stats; 
+
 	};
 }

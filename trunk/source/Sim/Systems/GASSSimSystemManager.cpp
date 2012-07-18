@@ -32,6 +32,7 @@
 
 #include "tinyxml.h"
 #include "tbb/parallel_for_each.h"
+#include <tbb/tick_count.h>
 
 namespace GASS
 {
@@ -39,7 +40,8 @@ namespace GASS
 		m_SimulationUpdateInterval(1.0/60.0),
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(19),
-		m_SimulateRealTime(true)
+		m_SimulateRealTime(true),
+		m_LastNumSimulationSteps(0)
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
 	}
@@ -65,35 +67,43 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
+
+	
+
+#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
 
 	void SimSystemManager::Update(float delta_time)
 	{
-		/*for(size_t i = 0 ; i < m_Systems.size(); i++)
-		{
-		m_Systems[i]->Update(delta_time);
-		}
-		m_SystemMessageManager->Update(delta_time);*/
+		//m_Stats.clear();
+		tbb::tick_count start_time = tbb::tick_count::now();
 
-		//update simulation systems
-		//std::stringstream ss;
-		//ss << "Delta time:" << delta_time;
-		//DPRINT(ss.str())
 
 		//PRE_SIM_BUCKET
 		UpdateMap::iterator iter = m_UpdateBuckets.find(PRE_SIM_BUCKET);
 		if(iter != m_UpdateBuckets.end())
 		{
+			tbb::tick_count bucket_start_time = tbb::tick_count::now();
+				
 			if(iter->second.size() == 1) //single system
 			{
-				iter->second.at(0)->Update(delta_time);
+					iter->second.at(0)->Update(delta_time);
 			}
 			else //do parallel update
 			{
-				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
+					tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
+			
+
+			tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
+
+			BucketProfileData profileData;
+			profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
 			//wait to advance time
-			SyncMessages(delta_time);
+			SyncMessages(0);
+			tbb::tick_count bucket_end_time = tbb::tick_count::now();
+			profileData.SyncTime = (bucket_end_time- bucket_update_end_time).seconds();
+			m_Stats[PRE_SIM_BUCKET] = profileData;
+			
 		}
 
 		if (!m_SimulationPaused)
@@ -102,12 +112,12 @@ namespace GASS
 		}
 
 
-		
-
 		//POST_SIM_BUCKET
 		iter = m_UpdateBuckets.find(POST_SIM_BUCKET);
 		if(iter != m_UpdateBuckets.end())
 		{
+			tbb::tick_count bucket_start_time = tbb::tick_count::now();
+
 			if(iter->second.size() == 1) //single system
 			{
 				iter->second.at(0)->Update(delta_time);
@@ -116,12 +126,60 @@ namespace GASS
 			{
 				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
+
+			tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
+			BucketProfileData profileData;
+			profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
+			profileData.SyncTime = 0;
+			m_Stats[POST_SIM_BUCKET] = profileData;
+
 		}
+		tbb::tick_count end_time = tbb::tick_count::now();
+
+		//plot data
+
+		double tot_time = 0;
+		double tot_sync_time =0;
+		double tot_update_time =0;
+
+
+		if(m_LastNumSimulationSteps > 0)
+		{
+			std::stringstream ss;
+			ss.precision(3);
+			std::map<int,BucketProfileData>::iterator stat_iter = m_Stats.begin();
+			while(stat_iter  != m_Stats.end())
+			{
+				ss << "Bucket:" << stat_iter->first << " Update:" << stat_iter->second.UpdateTime << " Sync:" << stat_iter->second.SyncTime <<  " Update vs Sync:" << 100*stat_iter->second.UpdateTime / (stat_iter->second.UpdateTime + stat_iter->second.SyncTime) <<  "\n";
+
+				if(stat_iter->first != POST_SIM_BUCKET && stat_iter->first != PRE_SIM_BUCKET)
+				{
+					tot_time += stat_iter->second.SyncTime + stat_iter->second.UpdateTime;
+					tot_sync_time += stat_iter->second.SyncTime;
+					tot_update_time += stat_iter->second.UpdateTime+stat_iter->second.SyncTime;
+				}
+				stat_iter++;
+			}
+
+			stat_iter = m_Stats.begin();
+			while(stat_iter  != m_Stats.end())
+			{
+				if(stat_iter->first != POST_SIM_BUCKET && stat_iter->first != PRE_SIM_BUCKET)
+				{
+					ss << "Bucket:" << stat_iter->first << " Tot:" <<  100*(stat_iter->second.AvgUpdateTime/(double) stat_iter->second.Count  + stat_iter->second.SyncTime)/tot_update_time << " Update:" << 100*stat_iter->second.UpdateTime/tot_update_time << " Sync:" << 100*stat_iter->second.SyncTime/tot_sync_time << "\n";
+				}
+				stat_iter++;
+			}
+
+			DPRINT(ss.str());
+		}
+			
+		
 	}
 
 
-		
-	
+
+
 
 	void SimSystemManager::StepSimulation(double delta_time)
 	{
@@ -132,12 +190,19 @@ namespace GASS
 				m_SimulationTimeToProcess += delta_time;
 				int num_steps = (int) (m_SimulationTimeToProcess / m_SimulationUpdateInterval);
 				int clamp_num_steps = num_steps;
-				if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
+				if(num_steps > m_MaxSimSteps) 
+					clamp_num_steps = m_MaxSimSteps;
+
+				
+
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
 					UpdateSimulation(m_SimulationUpdateInterval);
+
+
 				}
 				m_SimulationTimeToProcess -= m_SimulationUpdateInterval * num_steps;
+				m_LastNumSimulationSteps = clamp_num_steps;
 				//std::stringstream ss;
 				//ss << "SimulationTimeToProcess:" << m_SimulationTimeToProcess;
 				//DPRINT(ss.str())
@@ -157,6 +222,8 @@ namespace GASS
 		{
 			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
+				tbb::tick_count bucket_start_time = tbb::tick_count::now();
+
 				if(iter->second.size() == 1) //single system
 				{
 					iter->second.at(0)->Update(delta_time);
@@ -165,13 +232,34 @@ namespace GASS
 				{
 					tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 				}
+
+
+				tbb::tick_count bucket_update_end_time = tbb::tick_count::now();
+
+				BucketProfileData profileData;
+				profileData.UpdateTime = (bucket_update_end_time- bucket_start_time).seconds();
+
 				//sync
 				SyncMessages(message_delta_time);
 				//only step message time once
 				message_delta_time = 0;
+
+				tbb::tick_count bucket_end_time = tbb::tick_count::now();
+				profileData.SyncTime = (bucket_end_time- bucket_update_end_time).seconds();
+				m_Stats[iter->first].SyncTime = profileData.SyncTime;
+				m_Stats[iter->first].UpdateTime = profileData.UpdateTime;
+
+				m_Stats[iter->first].AvgSyncTime += profileData.SyncTime;
+				m_Stats[iter->first].AvgUpdateTime += profileData.UpdateTime;
+
+				m_Stats[iter->first].Count++;
+				
+
 			}
 		}
 	}
+
+	
 
 	void SimSystemManager::SyncMessages(double delta_time)
 	{
