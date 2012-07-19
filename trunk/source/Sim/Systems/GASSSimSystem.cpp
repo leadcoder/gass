@@ -21,6 +21,8 @@
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "tinyxml.h"
+#include "tbb/blocked_range.h"
+#include "tbb/parallel_for.h"
 namespace GASS
 {
 	SimSystem::SimSystem(void) : m_UpdateBucket(0), m_Name("SimSystem")
@@ -66,12 +68,33 @@ namespace GASS
 		}
 	}
 
+	struct SystemListenerExecutor
+	{
+		SystemListenerExecutor(const std::vector<SystemListenerPtr>& sl_vector, double delta_time)
+			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
+		{}
+		SystemListenerExecutor(SystemListenerExecutor& e,tbb::split)
+			:m_SLVector(e.m_SLVector)
+		{}
+
+		void operator()(const tbb::blocked_range<size_t>& r) const {
+			for (size_t i=r.begin();i!=r.end();++i)
+			{
+				m_SLVector[i]->SystemTick(m_DeltaTime);
+			}
+		}
+		const std::vector<SystemListenerPtr>& m_SLVector;
+		double m_DeltaTime;
+	};
+
+
+
 	void SimSystem::Update(double delta)
 	{
 		std::vector<SystemListenerPtr>::iterator iter = m_Listeners.begin();
 		
 		//remove dead systems
-		while(iter != m_Listeners.end())
+		/*while(iter != m_Listeners.end())
 		{
 			if(!*iter)
 				iter = m_Listeners.erase(iter);
@@ -80,7 +103,20 @@ namespace GASS
 				(*iter)->SystemTick(delta);
 				iter++;
 			}
+		}*/
+
+		//remove dead systems
+		while(iter != m_Listeners.end())
+		{
+			if(!*iter)
+				iter = m_Listeners.erase(iter);
+			else
+			{
+				iter++;
+			}
 		}
+		SystemListenerExecutor exec(m_Listeners,delta);
+		tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 	}
 
 	void SimSystem::LoadXML(TiXmlElement *xml_elem)

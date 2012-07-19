@@ -330,7 +330,7 @@ namespace GASS
 			float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
 			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
 			if(joint_message)
-				GetSceneObject()->PostMessage(joint_message);
+				GetSceneObject()->SendImmediate(joint_message);
 		}
 	}
 

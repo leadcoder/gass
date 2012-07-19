@@ -34,6 +34,8 @@
 #include <iostream>
 #include <iomanip>
 #include <tinyxml.h>
+#include "tbb/blocked_range.h"
+#include "tbb/parallel_for.h"
 
 namespace GASS
 {
@@ -142,8 +144,6 @@ namespace GASS
 		}
 	}
 
-	
-
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()
 	{
 		 ComponentContainerPtr container = shared_from_this();
@@ -156,6 +156,26 @@ namespace GASS
 		}
 		return  boost::shared_static_cast<SceneObject>(container);
 	}
+
+	struct MessageSyncExecutor
+	{
+		MessageSyncExecutor(const BaseComponentContainer::ComponentContainerVector& cc_vector, double delta_time)
+			:m_CCVector(cc_vector),m_DeltaTime(delta_time)
+		{}
+		MessageSyncExecutor(MessageSyncExecutor& e,tbb::split)
+			:m_CCVector(e.m_CCVector)
+		{}
+
+		void operator()(const tbb::blocked_range<size_t>& r) const {
+			for (size_t i=r.begin();i!=r.end();++i)
+			{
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(m_CCVector[i]);
+				obj->SyncMessages(m_DeltaTime);
+			}
+		}
+		const BaseComponentContainer::ComponentContainerVector& m_CCVector;
+		double m_DeltaTime;
+	};
 
 	void SceneObject::SyncMessages(double delta_time, bool recursive) const
 	{
@@ -170,13 +190,32 @@ namespace GASS
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
 				child->SyncMessages(delta_time);
 			}*/
+			
+			
 			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
 				child->SyncMessages(delta_time);
 			}
+
+			//parallel update, problem with set world position that have to use parent transforms
+			//MessageSyncExecutor exec(m_ComponentContainerVector,delta_time);
+			//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_ComponentContainerVector.size()),exec);
 		}
+	}
+
+	int SceneObject::GetQueuedMessages() const
+	{
+		int num = m_MessageManager->GetQueuedMessages();
+		
+		IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+		while(cc_iter.hasMoreElements())
+		{
+			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			num += child->GetQueuedMessages();
+		}
+		return num;
 	}
 
 	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive)

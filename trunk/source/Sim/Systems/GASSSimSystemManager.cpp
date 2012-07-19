@@ -29,7 +29,8 @@
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSScene.h"
-
+#include "Sim/Utils/GASSSimpleProfile.h"
+#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
 #include "tinyxml.h"
 #include "tbb/parallel_for_each.h"
 
@@ -37,18 +38,19 @@
 namespace GASS
 {
 	SimSystemManager::SimSystemManager() : m_SimulationPaused(false), 
-		m_SimulationUpdateInterval(1.0/10.0),
+		m_SimulationUpdateInterval(1.0/50.0),
 		m_SimulationTimeToProcess(0),
-		m_MaxSimSteps(19),
+		m_MaxSimSteps(4),
 		m_SimulateRealTime(true),
 		m_LastNumSimulationSteps(0)
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
+		m_SimStats = new SimpleProfileDataMap;
 	}
 
 	SimSystemManager::~SimSystemManager()
 	{
-
+		delete m_SimStats;
 	}
 
 	void SimSystemManager::Init()
@@ -112,55 +114,7 @@ namespace GASS
 				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
 		}
-		//plot data
-		std::stringstream ss;
-		double tot_time =0;
-		ss.precision(4);
-		SysProfileDataMap::iterator stat_iter = m_Stats.begin();
-		while(stat_iter  != m_Stats.end())
-		{
-			tot_time += stat_iter->second.Time;
-			stat_iter++;
-		}
-		stat_iter = m_Stats.begin();
-		while(stat_iter  != m_Stats.end())
-		{
-			ss << stat_iter->first << " Percent:" << 100*stat_iter->second.Time/tot_time << "Time:" << stat_iter->second.Time << "\n";
-			stat_iter++;
-		}
-
-		DPRINT(ss.str());
-
-	/*	if(m_LastNumSimulationSteps > 0)
-		{
-			std::stringstream ss;
-			ss.precision(3);
-			std::map<int,BucketProfileData>::iterator stat_iter = m_Stats.begin();
-			while(stat_iter  != m_Stats.end())
-			{
-				ss << "Bucket:" << stat_iter->first << " Update:" << stat_iter->second.UpdateTime << " Sync:" << stat_iter->second.SyncTime <<  " Update vs Sync:" << 100*stat_iter->second.UpdateTime / (stat_iter->second.UpdateTime + stat_iter->second.SyncTime) <<  "\n";
-
-				if(stat_iter->first != POST_SIM_BUCKET && stat_iter->first != PRE_SIM_BUCKET)
-				{
-					tot_time += stat_iter->second.SyncTime + stat_iter->second.UpdateTime;
-					tot_sync_time += stat_iter->second.SyncTime;
-					tot_update_time += stat_iter->second.UpdateTime+stat_iter->second.SyncTime;
-				}
-				stat_iter++;
-			}
-
-			stat_iter = m_Stats.begin();
-			while(stat_iter  != m_Stats.end())
-			{
-				if(stat_iter->first != POST_SIM_BUCKET && stat_iter->first != PRE_SIM_BUCKET)
-				{
-					ss << "Bucket:" << stat_iter->first << " Tot:" <<  100*(stat_iter->second.AvgUpdateTime/(double) stat_iter->second.Count  + stat_iter->second.SyncTime)/tot_update_time << " Update:" << 100*stat_iter->second.UpdateTime/tot_update_time << " Sync:" << 100*stat_iter->second.SyncTime/tot_sync_time << "\n";
-				}
-				stat_iter++;
-			}
-
-			DPRINT(ss.str());
-		}*/
+	
 	}
 
 	void SimSystemManager::StepSimulation(double delta_time)
@@ -198,10 +152,11 @@ namespace GASS
 			
 			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
+				
 				{
 					std::stringstream ss;
 					ss << "Bucket_" << iter->first << "_Update";
-					SysProfileSample(ss.str(),&m_Stats);
+					SPROFILE(ss.str(),m_SimStats);
 
 					if(iter->second.size() == 1) //single system
 					{
@@ -212,19 +167,52 @@ namespace GASS
 						tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 					}
 				}
+				m_MessageStats[iter->first].Before = GetQueuedMessages();
 
 				{
 					std::stringstream ss;
 					ss << "Bucket_" << iter->first << "_Sync";
-					SysProfileSample(ss.str(),&m_Stats);
+					SPROFILE(ss.str(),m_SimStats);
 
 					//sync
 					SyncMessages(message_delta_time);
 					//only step message time once
 					message_delta_time = 0;
 				}
+
+				m_MessageStats[iter->first].After = GetQueuedMessages();
 			}
 		}
+
+
+		//update stats
+		std::stringstream ss;
+		double tot_time =0;
+		double acc_tot_time = 0;
+		ss.precision(4);
+		SimpleProfileDataMap::iterator stat_iter = m_SimStats->begin();
+		while(stat_iter  != m_SimStats->end())
+		{
+			acc_tot_time += stat_iter->second.AccTime;
+			tot_time += stat_iter->second.Time;
+			stat_iter++;
+		}
+		stat_iter = m_SimStats->begin();
+		while(stat_iter  != m_SimStats->end())
+		{
+			ss << stat_iter->first << " Average Percent:" << 100.0*(stat_iter->second.AccTime/acc_tot_time)  << " Percent:" << 100*stat_iter->second.Time/tot_time << "Time:" << stat_iter->second.Time << "\n";
+			stat_iter++;
+		}
+
+		MessageStatMap::iterator mess_stat_iter = m_MessageStats.begin();
+		while(mess_stat_iter  != m_MessageStats.end())
+		{
+			ss << "Bucket:"<< mess_stat_iter->first << " Messages:" <<   mess_stat_iter->second.Before << " Messages (after):" <<   mess_stat_iter->second.After << "\n";
+			mess_stat_iter++;
+		}
+		ss << " Simulation Updates:" << m_LastNumSimulationSteps << "\n";
+		GASS::MessagePtr stat_msg(new GASS::CreateTextBoxMessage("SimulationStats",ss.str(),GASS::Vec4(0.9,0.9,0.9,1),0.1,0.3,0.1,0.1));
+		GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
 	}
 
 	
@@ -239,6 +227,20 @@ namespace GASS
 			ScenePtr scene = iter.getNext();
 			scene->SyncMessages(delta_time);
 		}
+	}
+
+
+	int SimSystemManager::GetQueuedMessages() const
+	{
+		int num = m_SystemMessageManager->GetQueuedMessages();
+		//update all scene messages managers
+		SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
+		while(iter.hasMoreElements())
+		{
+			ScenePtr scene = iter.getNext();
+			num += scene->GetQueuedMessages();
+		}
+		return num;
 	}
 
 

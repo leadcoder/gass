@@ -26,6 +26,8 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "tinyxml.h"
+#include "tbb/blocked_range.h"
+#include "tbb/parallel_for.h"
 
 namespace GASS
 {
@@ -50,10 +52,32 @@ namespace GASS
 
 	}
 
+	struct SceneListenerExecutor
+	{
+		SceneListenerExecutor(const std::vector<SceneManagerListenerWeakPtr>& sl_vector, double delta_time)
+			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
+		{}
+		SceneListenerExecutor(SceneListenerExecutor& e,tbb::split)
+			:m_SLVector(e.m_SLVector)
+		{}
+
+		void operator()(const tbb::blocked_range<size_t>& r) const {
+			for (size_t i=r.begin();i!=r.end();++i)
+			{
+				SceneManagerListenerPtr listener = SceneManagerListenerPtr(m_SLVector[i],boost::detail::sp_nothrow_tag());
+				listener->SceneManagerTick(m_DeltaTime);
+			}
+		}
+		const std::vector<SceneManagerListenerWeakPtr>& m_SLVector;
+		double m_DeltaTime;
+	};
+
+
+
 	void BaseSceneManager::SystemTick(double delta_time) 
 	{
 		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
-		while(iter != m_Listeners.end())
+		/*while(iter != m_Listeners.end())
 		{
 			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag());
 			if(listener)
@@ -63,7 +87,22 @@ namespace GASS
 			}
 			else 
 				iter = m_Listeners.erase(iter);
+		}*/
+
+
+		while(iter != m_Listeners.end())
+		{
+			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+			if(listener)
+			{
+				iter++;
+			}
+			else 
+				iter = m_Listeners.erase(iter);
 		}
+
+		SceneListenerExecutor exec(m_Listeners,delta_time);
+		tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 	}
 
 	void BaseSceneManager::Register(SceneManagerListenerPtr listener)

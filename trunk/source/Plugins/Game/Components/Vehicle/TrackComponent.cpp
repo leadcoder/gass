@@ -89,14 +89,14 @@ namespace GASS
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
 		MessagePtr mesh_msg(new TextureCoordinateMessage(m_AnimationValue));
-		GetSceneObject()->PostMessage(mesh_msg);
+		GetSceneObject()->SendImmediate(mesh_msg);
 
 		float emission = fabs(ang_vel.x)*m_ParticleEmissionFactor;
 
 		if(emission >50)
 			emission =50;
 		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
-		GetSceneObject()->PostMessage(particle_msg);
+		GetSceneObject()->SendImmediate(particle_msg);
 
 		float duration = fabs(ang_vel.x)*0.05;
 
@@ -118,7 +118,7 @@ namespace GASS
 			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
 		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
-		GetSceneObject()->PostMessage(sound_msg);
+		GetSceneObject()->SendImmediate(sound_msg);
 
 		if(speed > 0)
 		{
@@ -129,7 +129,7 @@ namespace GASS
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
 			
 			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-			GetSceneObject()->PostMessage(sound_msg);
+			GetSceneObject()->SendImmediate(sound_msg);
 		}
 	}
 }

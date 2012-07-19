@@ -396,4 +396,12 @@ namespace GASS
 	{
 		m_SceneMessageManager->SendImmediate(message);
 	}
+
+
+	int Scene::GetQueuedMessages() const
+	{
+		int num = m_SceneMessageManager->GetQueuedMessages();
+		num += m_Root->GetQueuedMessages();
+		return num;
+	}
 }

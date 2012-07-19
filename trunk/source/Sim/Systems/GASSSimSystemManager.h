@@ -29,12 +29,11 @@
 #define PRE_SIM_BUCKET 9998 //magic number
 #define POST_SIM_BUCKET 9999 //magic number
 
-#include <tbb/tick_count.h>
-
-
 namespace GASS
 {
-
+	//forward decalare
+	class SimpleProfileData;
+	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
 
 	/**
 	System manager for all systems used in GASSSim.
@@ -91,6 +90,7 @@ namespace GASS
 		//can be called by user it simulation is paused
 		void StepSimulation(double delta_time);
 	private:
+		int GetQueuedMessages() const;
 		void UpdateSimulation(double delta_time);
 		void SyncMessages(double delta_time);
 		MessageManagerPtr m_SystemMessageManager;
@@ -102,53 +102,15 @@ namespace GASS
 		int m_LastNumSimulationSteps;
 
 
-		class SysProfileData
-		{
-		public:
-			SysProfileData() : Count(0),
-				Time(0),
-				AccTime(0) 
-			{
+		SimpleProfileDataMap* m_SimStats;
 
-			}
-			int Count;
-			tbb::tick_count StartTick;
-			tbb::tick_count EndTick;
-			double Time;
-			double AccTime;
-		};
-		typedef std::map<std::string, SysProfileData> SysProfileDataMap;
-		SysProfileDataMap m_Stats;
-		
-		class SysProfileSample
+		struct MessageData
 		{
-		public:
-			SysProfileSample(const std::string name,SysProfileDataMap *data ) 
-			{
-				SysProfileDataMap::iterator iter = data->find(name);
-				if(iter == data->end())
-				{
-					SysProfileData sample;
-					sample.StartTick = tbb::tick_count::now();
-					sample.Count = 1;
-					(*data)[name] = sample;
-					m_Data = &data->find(name)->second;
-				}
-				else
-				{
-					iter->second.StartTick = tbb::tick_count::now();
-					iter->second.Count++;
-					m_Data = &iter->second;
-				}
-				
-			}
-			virtual ~SysProfileSample()
-			{
-				m_Data->EndTick = tbb::tick_count::now();
-				m_Data->Time = (m_Data->EndTick - m_Data->StartTick).seconds();
-				m_Data->AccTime += m_Data->Time;
-			}
-			SysProfileData *m_Data;
+			int Before;
+			int After;
 		};
+
+		typedef std::map<int,MessageData> MessageStatMap;
+		MessageStatMap m_MessageStats;
 	};
 }

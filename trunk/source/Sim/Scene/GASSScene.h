@@ -188,6 +188,11 @@ namespace GASS
 
 		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
+
+		/**
+			Get how many messages that is unprocessed
+		*/
+		int GetQueuedMessages() const;
 protected:
 		/**
 		Load scene  from xml,
