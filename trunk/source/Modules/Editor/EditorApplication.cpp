@@ -31,7 +31,9 @@ namespace GASS
 		m_ClientName("GASS_CLIENT"),
 		m_ServerPort(2001),
 		m_ClientPort(2002),
-		m_UpdateFreq(160)
+		m_UpdateFreq(160),
+		m_StepSimulation(false),
+		m_SimStepDeltaTime(0)
 	{
 
 		m_Scene  = ScenePtr(new Scene());
@@ -57,6 +59,9 @@ namespace GASS
 		se->Init(config_path +  "GASSPlugins.xml", config_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
+		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnRequestSimulatiornStep,RequestTimeStepMessage,0));
+
+			
 
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
 		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
@@ -124,9 +129,6 @@ namespace GASS
 		tool = new EditPositionTool(tools);
 		tools->AddTool(tool);
 
-
-
-
 		//tool = new TerrainDeformTool(tools);
 		//tools->AddTool(tool);
 
@@ -150,17 +152,29 @@ namespace GASS
 		double target_update_time = 1.0/m_UpdateFreq;
 		if(delta_time > target_update_time)
 		{
-			double step_time = current_time-prev_time;
-			
 			prev_time = current_time;
 			if(m_Initilized)
 			{
-				SimEngine::Get().Update(step_time);
-				m_Scene->SyncMessages(step_time);
+				SimEngine::Get().Update(delta_time);
 			}
-			EditorManager::Get().Update(step_time);
-			
+			EditorManager::Get().Update(delta_time);
+
+			if(m_StepSimulation)
+			{
+				SimEngine::Get().GetSimSystemManager()->StepSimulation(m_SimStepDeltaTime);
+				//done
+				m_StepSimulation = false;
+				//send message that we are done
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
+			}
 		}
+	}
+
+
+	void EditorApplication::OnRequestSimulatiornStep(RequestTimeStepMessagePtr message)
+	{
+		m_StepSimulation = true;
+		m_SimStepDeltaTime = message->GetTimeStep();
 	}
 
 	void EditorApplication::OnLoadScene(SceneLoadedNotifyMessagePtr message)
@@ -372,7 +386,13 @@ namespace GASS
 		return true;
 	}
 
-	void EditorApplication::UnloadScene()
+
+	void  EditorApplication::LoadScene(const std::string &scene_path)
+	{
+		m_Scene = ScenePtr(SimEngine::Get().LoadScene(scene_path));
+	}
+
+	/*void EditorApplication::UnloadScene()
 	{
 		SceneObjectPtr obj;
 		MessagePtr selection_msg(new ObjectSelectedMessage(obj,0));
@@ -411,7 +431,7 @@ namespace GASS
 		{
 			m_Scene->Save(scene_path);
 		}
-	}
+	}*/
 }
 
 	

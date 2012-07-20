@@ -21,7 +21,6 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
-
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"

@@ -52,7 +52,7 @@ namespace GASS
 	}
 
 
-	void ODECollisionSystem::Process()
+	void ODECollisionSystem::Update(double delta_time)
 	{
 		RequestMap::iterator iter;
 		RequestMap requestMap;
@@ -102,7 +102,12 @@ namespace GASS
 				m_ResultMap[handle] = res_iter->second;
 			}
 		}
+
+		//update listeners
+		SimSystem::Update(delta_time);
 	}
+
+
 
 	bool ODECollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
 	{

@@ -37,8 +37,8 @@
 
 namespace GASS
 {
-	SimSystemManager::SimSystemManager() : m_SimulationPaused(false), 
-		m_SimulationUpdateInterval(1.0/50.0),
+	SimSystemManager::SimSystemManager() : m_SimulationPaused(true), 
+		m_SimulationUpdateInterval(1.0/30.0),
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(4),
 		m_SimulateRealTime(true),
@@ -152,7 +152,6 @@ namespace GASS
 			
 			if(!(iter->first == POST_SIM_BUCKET || iter->first == PRE_SIM_BUCKET))
 			{
-				
 				{
 					std::stringstream ss;
 					ss << "Bucket_" << iter->first << "_Update";

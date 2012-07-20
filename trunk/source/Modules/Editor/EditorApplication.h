@@ -16,12 +16,13 @@ namespace GASS
 		void Update();
 		GASS::ScenePtr GetScene(void) {return m_Scene;}
 		void LoadScene(const std::string &scene_path);
-		void NewScene(const std::string &scene_path);
-		void SaveScene(const std::string &scene_path);
+		//void NewScene(const std::string &scene_path);
+		//void SaveScene(const std::string &scene_path);
 		FilePath GetWorkingFolder() const;
 		std::string GetScenePath() const{ return m_ScenePath;}
 		
 	protected:
+		void OnRequestSimulatiornStep(RequestTimeStepMessagePtr message);
 		//helpers
 		void  UnloadScene();
 		void OnLoadScene(SceneLoadedNotifyMessagePtr message);
@@ -54,6 +55,10 @@ namespace GASS
 		int m_ClientPort;
 		FilePath m_WorkingFolder;
 		double m_UpdateFreq;
+
+
+		volatile bool m_StepSimulation;
+		double m_SimStepDeltaTime;
 	};
 }
 

@@ -103,41 +103,6 @@ namespace GASS
 	{
 	}
 
-	void ODEPhysicsSceneManager::SystemTick(double delta_time)
-	{
-		if (!m_Paused)
-		{
-			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-			dWorldQuickStep(m_World, delta_time);
-			dJointGroupEmpty(m_ContactGroup);
-			//do some time slicing
-			/*m_TimeToProcess += delta_time;
-			int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
-			int clamp_num_steps = num_steps;
-
-			//Take max 4 simulation step each frame
-			if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
-
-			for (int i = 0; i < clamp_num_steps; ++i)
-			{
-				dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-				dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-				dWorldQuickStep(m_World, m_SimulationUpdateInterval);
-				dJointGroupEmpty(m_ContactGroup);
-			}
-			//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
-			m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;*/
-		}
-
-		//Temp: move this to ODEPhysicsSystem
-		ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
-		if(col_sys)
-		{
-			col_sys->Process();
-		}
-	}
-
 
 	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
@@ -187,6 +152,47 @@ namespace GASS
 		
 	}
 
+
+
+	void ODEPhysicsSceneManager::SystemTick(double delta_time)
+	{
+		if (!m_Paused)
+		{
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
+			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
+			dWorldQuickStep(m_World, delta_time);
+			dJointGroupEmpty(m_ContactGroup);
+			//do some time slicing
+			/*m_TimeToProcess += delta_time;
+			int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
+			int clamp_num_steps = num_steps;
+
+			//Take max 4 simulation step each frame
+			if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
+
+			for (int i = 0; i < clamp_num_steps; ++i)
+			{
+				dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
+				dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
+				dWorldQuickStep(m_World, m_SimulationUpdateInterval);
+				dJointGroupEmpty(m_ContactGroup);
+			}
+			//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
+			m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;*/
+		}
+
+		//Temp: move this to ODEPhysicsSystem
+		/*ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
+		if(col_sys)
+		{
+			col_sys->Process();
+		}*/
+
+		
+	}
+
+
+	
 
 #define MAX_CONTACTS 25		// maximum number of contact points per body
 	void ODEPhysicsSceneManager::NearCallback(void *data, dGeomID o1, dGeomID o2)

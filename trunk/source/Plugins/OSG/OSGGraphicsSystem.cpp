@@ -367,6 +367,7 @@ namespace GASS
 		{
 			return;
 		}
+		//m_Viewer->setRunMaxFrameRate(100);
 		m_Viewer->frame(delta_time);
 		m_DebugTextBox->setText("");
 		//update listeners

@@ -45,13 +45,17 @@ namespace GASS
 		virtual ~ODECollisionSystem();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void Update(double delta_time);
+
 		SystemType GetSystemType() const {return "CollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
 		void Process();
 		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
+		
 	private:
+
 		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;

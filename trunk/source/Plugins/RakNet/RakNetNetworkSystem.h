@@ -131,7 +131,7 @@ namespace GASS
 		void OnWeatherMessage(WeatherMessagePtr message);
 		//ITaskListener
 		void Update(double delta);
-		TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
+		//TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
 		
 	private:
 		//Helpers
