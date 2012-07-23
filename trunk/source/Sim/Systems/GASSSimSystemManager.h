@@ -88,10 +88,10 @@ namespace GASS
 		void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}
 
 		//can be called by user it simulation is paused
-		void StepSimulation(double delta_time);
+		void UpdateSimulation(double delta_time);
 	private:
 		int GetQueuedMessages() const;
-		void UpdateSimulation(double delta_time);
+		void StepSimulation(double delta_time);		
 		void SyncMessages(double delta_time);
 		MessageManagerPtr m_SystemMessageManager;
 		bool m_SimulationPaused;
