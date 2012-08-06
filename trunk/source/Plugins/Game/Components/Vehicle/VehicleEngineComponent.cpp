@@ -81,7 +81,6 @@ namespace GASS
 		m_RPM(0),
 		m_AutoShiftStart(0),
 		m_ThrottleAccel(2),
-		m_TurnForce(10),
 		m_MaxTurnForce(200),
 		m_SmoothRPMOutput(true),
 		m_InputToThrottle("Throttle"),
@@ -105,9 +104,10 @@ namespace GASS
 		m_Power (0.2),
 		m_AngularVelocity(0,0,0),
 		m_EngineType(ET_TANK),
-		m_TurnRPMAmount(1.0)
+		m_TurnRPMAmount(1.0),
+		m_MaxTurnVel(1.0)
 	{
-		m_SteerCtrl = PIDControl(1,1,1);
+		m_SteerCtrl = PIDControl(100,1,1);
 		m_GearBoxRatio.resize(6);
 		m_GearBoxRatio[0] = -16.42;
 		m_GearBoxRatio[1] = 0;
@@ -141,11 +141,14 @@ namespace GASS
 		RegisterProperty<float>("RPMGearChangeUp", &VehicleEngineComponent::GetRPMGearChangeUp, &VehicleEngineComponent::SetRPMGearChangeUp);
 		RegisterProperty<float>("RPMGearChangeDown", &VehicleEngineComponent::GetRPMGearChangeDown, &VehicleEngineComponent::SetRPMGearChangeDown);
 		RegisterProperty<float>("Power", &VehicleEngineComponent::GetPower, &VehicleEngineComponent::SetPower);
-		RegisterProperty<float>("TurnForce", &VehicleEngineComponent::GetTurnForce, &VehicleEngineComponent::SetTurnForce);
+		//RegisterProperty<float>("TurnForce", &VehicleEngineComponent::GetTurnForce, &VehicleEngineComponent::SetTurnForce);
+		RegisterProperty<PIDControl>("SteerPID", &VehicleEngineComponent::GetSteerPID, &VehicleEngineComponent::SetSteerPID);
 		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio);
 		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput);
 		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug);
 		RegisterProperty<float>("TurnRPMAmount", &VehicleEngineComponent::GetTurnRPMAmount, &VehicleEngineComponent::SetTurnRPMAmount);
+		RegisterProperty<float>("MaxTurnVel", &VehicleEngineComponent::GetMaxTurnVel, &VehicleEngineComponent::SetMaxTurnVel);
+		
 		
 	}
 
@@ -160,6 +163,15 @@ namespace GASS
 		m_Initialized = true;
 	}
 
+	PIDControl VehicleEngineComponent::GetSteerPID() const
+	{
+		return m_SteerCtrl;
+	}
+
+	void VehicleEngineComponent::SetSteerPID(const PIDControl &pid) 
+	{
+		m_SteerCtrl = pid;
+	}
 
 	void VehicleEngineComponent::SetEngineType(const std::string &type)
 	{
@@ -280,16 +292,7 @@ namespace GASS
 		m_Power = value;
 	}
 
-	float VehicleEngineComponent::GetTurnForce() const
-	{
-		return m_TurnForce;
-	}
-
-	void VehicleEngineComponent::SetTurnForce(float value)
-	{
-		m_TurnForce = value;
-	}
-
+	
 	void VehicleEngineComponent::SetGearRatio(const std::vector<float> &gear_data)
 	{
 		m_GearBoxRatio = gear_data;
@@ -479,11 +482,10 @@ namespace GASS
 	void VehicleEngineComponent::UpdateSteering(double delta)
 	{
 		float norm_rpm = m_TurnRPMAmount*GetNormRPM() + (1-m_TurnRPMAmount);
-		
-
 		//if tank, try to keep angular velocity to steer factor
-		m_SteerCtrl.setGain(m_TurnForce*0.1,0.1,0);
-		m_SteerCtrl.set(-m_DesiredSteer);
+		//m_SteerCtrl.setGain(1000,1,1);
+		
+		m_SteerCtrl.set(-m_DesiredSteer*m_MaxTurnVel);
 		//limit pid to max turn force
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce*norm_rpm);
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
@@ -492,12 +494,16 @@ namespace GASS
 		if(fabs(m_DesiredSteer) < 0.1)
 			m_DesiredSteer = m_DesiredSteer*0.9;
 
-
-
-		
-
 		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
+
+
+		/*std::stringstream ss;
+		ss << "Speed(m/s): "<< m_VehicleSpeed << "Hull angle velocity:" << m_AngularVelocity.y << "\n Desired steer velocity" << m_DesiredSteer << "\n Torq" << turn_torque << " Norm rpm:" << norm_rpm << " MaxTorq:" << m_MaxTurnForce;
+		std::string engine_data = ss.str();
+		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+		*/
 		
 		/*if(m_Debug)
 		{

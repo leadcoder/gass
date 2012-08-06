@@ -32,6 +32,7 @@ namespace GASS
 		const FilePath GetWorkingFolder(void) {return m_ExecutionFolder;}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 	protected:
+	
 		MouseToolControllerPtr m_MouseTools;
 		MessageManager* m_MessageManager;
 		FilePath m_ExecutionFolder;

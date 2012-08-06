@@ -161,7 +161,7 @@ namespace GASS
 
 			if(m_StepSimulation)
 			{
-				SimEngine::Get().GetSimSystemManager()->StepSimulation(m_SimStepDeltaTime);
+				SimEngine::Get().GetSimSystemManager()->UpdateSimulation(m_SimStepDeltaTime);
 				//done
 				m_StepSimulation = false;
 				//send message that we are done
@@ -169,7 +169,6 @@ namespace GASS
 			}
 		}
 	}
-
 
 	void EditorApplication::OnRequestSimulatiornStep(RequestTimeStepMessagePtr message)
 	{

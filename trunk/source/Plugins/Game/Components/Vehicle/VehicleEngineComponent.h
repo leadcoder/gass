@@ -113,8 +113,11 @@ namespace GASS
 		void SetRPMGearChangeDown(float value);
 		float GetPower() const;
 		void SetPower(float value);
-		float GetTurnForce() const;
-		void SetTurnForce(float value);
+		//float GetTurnForce() const;
+		//void SetTurnForce(float value);
+		PIDControl GetSteerPID() const;
+		void SetSteerPID(const PIDControl &pid);
+
 		void SetGearRatio(const std::vector<float> &gear_data);
 		std::vector<float> GetGearRatio() const;
 		void SetSmoothRPMOutput(const bool &value);
@@ -147,6 +150,9 @@ namespace GASS
 
 		void SetInvert(bool value) {m_Invert = value;}
 		bool GetInvert() const {return m_Invert;}
+
+		float GetMaxTurnVel()const {return m_MaxTurnVel;}
+		void SetMaxTurnVel(float value){m_MaxTurnVel =value;}
 
 		//members attributes
 		std::string m_VehicleEngineComponentType;
@@ -193,8 +199,9 @@ namespace GASS
 		double m_CurrentTime;
 
 		//Steering vars
-		float m_TurnForce;
+		//float m_TurnForce;
 		float m_MaxTurnForce;
+		float m_MaxTurnVel;
 
 		std::vector<SceneObjectLink> m_WheelObjects;
 		std::vector<VehicleWheelPtr> m_VehicleWheels;

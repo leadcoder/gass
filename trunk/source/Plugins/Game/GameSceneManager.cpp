@@ -23,6 +23,7 @@
 #include "GameSystem.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
@@ -73,6 +74,8 @@ namespace GASS
 	{
 		GameSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GameSystem>();
 		SystemListenerPtr listener = shared_from_this();
+		if(!system)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find GameSystem", "GameSceneManager::OnLoad");
 		system->Register(listener);
 	}
 

@@ -38,7 +38,7 @@
 namespace GASS
 {
 	SimSystemManager::SimSystemManager() : m_SimulationPaused(true), 
-		m_SimulationUpdateInterval(1.0/30.0),
+		m_SimulationUpdateInterval(1.0/60.0),
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(4),
 		m_SimulateRealTime(true),
