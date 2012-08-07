@@ -42,7 +42,9 @@ namespace GASS
 		m_SimulationTimeToProcess(0),
 		m_MaxSimSteps(4),
 		m_SimulateRealTime(true),
-		m_LastNumSimulationSteps(0)
+		m_LastNumSimulationSteps(0),
+		m_StepSimulationRequest(false),
+		m_RequestDeltaTime(0)
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
 		m_SimStats = new SimpleProfileDataMap;
@@ -56,6 +58,12 @@ namespace GASS
 	void SimSystemManager::Init()
 	{
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
+
+		//support asyncron request
+		boost::shared_ptr<SimSystemManager> shared_this = boost::static_pointer_cast<SimSystemManager>(shared_from_this());
+		MessageFuncPtr func_ptr(new GASS::MessageFunc<RequestTimeStepMessage>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
+		RegisterForMessage(typeid(RequestTimeStepMessage),func_ptr,0);
+
 		MessagePtr init_msg(new InitSystemMessage());
 		m_SystemMessageManager->SendImmediate(init_msg);
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
@@ -98,6 +106,14 @@ namespace GASS
 		{
 			StepSimulation(delta_time);
 		}
+		else if(m_StepSimulationRequest) //if paused only step on request
+		{
+				SimEngine::Get().GetSimSystemManager()->UpdateSimulation(m_RequestDeltaTime);
+				//done
+				m_StepSimulationRequest = false;
+				//send message that we are done
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
+		}
 
 
 		//POST_SIM_BUCKET
@@ -114,6 +130,8 @@ namespace GASS
 				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
 		}
+
+		
 	
 	}
 
@@ -266,5 +284,12 @@ namespace GASS
 	void SimSystemManager::ClearMessages()
 	{
 		m_SystemMessageManager->Clear();
+	}
+
+	//use message to support asyncron request!
+	void SimSystemManager::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
+	{
+		m_StepSimulationRequest = true;
+		m_RequestDeltaTime = message->GetTimeStep();
 	}
 }

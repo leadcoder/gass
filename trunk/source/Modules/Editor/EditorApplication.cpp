@@ -59,8 +59,8 @@ namespace GASS
 		se->Init(config_path +  "GASSPlugins.xml", config_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
-		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnRequestSimulatiornStep,RequestTimeStepMessage,0));
-
+		//se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnRequestSimulatiornStep,RequestTimeStepMessage,0));
+		se->GetSimSystemManager()->SetPauseSimulation(true);
 			
 
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
@@ -159,14 +159,14 @@ namespace GASS
 			}
 			EditorManager::Get().Update(delta_time);
 
-			if(m_StepSimulation)
+			/*if(m_StepSimulation)
 			{
 				SimEngine::Get().GetSimSystemManager()->UpdateSimulation(m_SimStepDeltaTime);
 				//done
 				m_StepSimulation = false;
 				//send message that we are done
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
-			}
+			}*/
 		}
 	}
 
@@ -391,46 +391,7 @@ namespace GASS
 		m_Scene = ScenePtr(SimEngine::Get().LoadScene(scene_path));
 	}
 
-	/*void EditorApplication::UnloadScene()
-	{
-		SceneObjectPtr obj;
-		MessagePtr selection_msg(new ObjectSelectedMessage(obj,0));
-		//Clear selection!
-		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(selection_msg);
-		EditorManager::GetPtr()->GetMessageManager()->Clear();
-		//free scene
-		//if(m_Scene)
-		//	m_Scene->Unload();
-		m_Scene.reset();
-		//clear editor manager messages
-		EditorManager::GetPtr()->GetMessageManager()->Clear();
-	}
-
-	void  EditorApplication::LoadScene(const std::string &scene_path)
-	{
-		UnloadScene();
-		m_Scene = ScenePtr(new Scene());
-		m_Scene->Create();
-		m_Scene->Load(scene_path);
-	}
-
-	void EditorApplication::NewScene(const std::string &scene_path)
-	{
-		UnloadScene();
-		m_Scene = ScenePtr(new Scene());
-		m_Scene->Create();
-		//m_Scene->AddSceneScene(scene);
-		SaveScene(scene_path);
-		LoadScene(scene_path);
-	}
-
-	void  EditorApplication::SaveScene(const std::string &scene_path)
-	{
-		if(m_Scene)
-		{
-			m_Scene->Save(scene_path);
-		}
-	}*/
+	
 }
 
 	

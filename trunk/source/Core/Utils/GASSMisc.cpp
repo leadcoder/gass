@@ -116,6 +116,8 @@ namespace GASS
 		{
 			ret = ret.substr(0,pos2+1);
 		}
+		else
+			return "";
 		return ret;
 	}
 

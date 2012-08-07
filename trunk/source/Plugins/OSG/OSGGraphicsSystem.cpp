@@ -87,7 +87,13 @@ namespace GASS
 	OSGGraphicsSystem::~OSGGraphicsSystem(void)
 	{
 		if(m_Viewer)
+		{
+			m_Viewer->setDone(true);
+			Sleep(1000);
 			m_Viewer->stopThreading();
+			Sleep(1000);
+			
+		}
 		
 		delete m_Viewer;
 	}

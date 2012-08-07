@@ -44,7 +44,7 @@ namespace GASS
 	To handle the messages the SimSystemManager use the 
 	MessageManager class
 	*/
-	class GASSExport SimSystemManager : public BaseSystemManager
+	class GASSExport SimSystemManager : public BaseSystemManager,  public IMessageListener
 	{
 	public:
 		SimSystemManager();
@@ -90,6 +90,7 @@ namespace GASS
 		//can be called by user it simulation is paused
 		void UpdateSimulation(double delta_time);
 	private:
+		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
 		int GetQueuedMessages() const;
 		void StepSimulation(double delta_time);		
 		void SyncMessages(double delta_time);
@@ -101,6 +102,8 @@ namespace GASS
 		int m_MaxSimSteps;
 		int m_LastNumSimulationSteps;
 
+		bool m_StepSimulationRequest;
+		double m_RequestDeltaTime;
 
 		SimpleProfileDataMap* m_SimStats;
 
