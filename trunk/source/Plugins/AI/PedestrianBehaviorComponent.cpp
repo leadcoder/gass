@@ -2,13 +2,15 @@
 #include "TriggerComponent.h"
 #include "AITargetComponent.h"
 #include "DetourCrowdAgentComponent.h"
+#include "AISceneManager.h"
 
 
 namespace GASS
 {
 	PedestrianBehaviorComponent::PedestrianBehaviorComponent(void) : m_GoalRadius(1),
 		m_Initlized(false),
-		m_RandomSpeed(2,2)
+		m_RandomSpeed(2,2),
+		m_Position(0,0,0)
 	{
 
 	}	
@@ -39,11 +41,10 @@ namespace GASS
 	void PedestrianBehaviorComponent::OnLoad(LocationLoadedMessagePtr message)
 	{
 		GoToRandomTarget(1.0); //send intial target!
-
 		//set random speed!
 
 		//register within triggers
-		std::vector<SceneObjectPtr> triggers;
+		/*std::vector<SceneObjectPtr> triggers;
 
 		if(m_TriggerID != "")
 		{
@@ -54,10 +55,13 @@ namespace GASS
 				TriggerComponentPtr trigger = triggers[i]->GetFirstComponentByClass<TriggerComponent>();
 				trigger->RegisterListener(GetSceneObject());
 			}
-		}
+		}*/
 		m_Initlized = true;
 
 		SetRandomSpeed(m_RandomSpeed);
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 
 	}
 
@@ -147,16 +151,41 @@ namespace GASS
 		}
 		return location;
 	}
-	
-	void PedestrianBehaviorComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+
+	void PedestrianBehaviorComponent::SceneManagerTick(double delta_time)
 	{
 		SceneObjectPtr so = GetCurrentTarget();
 		if(so)
 		{
-			//distance to target
-			if((message->GetPosition() - m_CurrentTargetLocation).Length() < m_GoalRadius)
+			AITargetComponentPtr target_comp = so->GetFirstComponentByClass<AITargetComponent>();
+			Float distance = (m_Position - m_CurrentTargetLocation).Length();
+
+			m_State = "GotoTarget:" + so->GetName();
+			if(target_comp)
 			{
-				AITargetComponentPtr target_comp = so->GetFirstComponentByClass<AITargetComponent>();
+				switch(target_comp->GetTargetType())
+				{
+				case AITargetComponent::RANDOM_TARGET:
+					m_State += "\nTT:Proxy";
+					break;
+				case AITargetComponent::RANDOM_RESPAWN_TARGET:
+					m_State += "\nTT:Respawn";
+					break;
+				case AITargetComponent::PLATFORM_TARGET: //first child is target object
+					m_State += "\nTT:Platform";
+					break;
+				}
+			}
+
+			std::stringstream ss;
+			ss << "\nTarget distance:"<<  distance;
+			m_State += ss.str(); 
+
+
+			//distance to target
+			if(distance < m_GoalRadius)
+			{
+				
 				if(target_comp)
 				{
 					//Check the target behavior
@@ -176,31 +205,32 @@ namespace GASS
 							//wait for target to be active!
 							if(enabled)
 								GoToTarget(new_target,target_comp->GetDelay());
+							else
+								m_State += "\nPlatform Target disabled:";
+						}
+						else
+						{
+							m_State += "\nNo child nPlatform Target found:";
 						}
 						break;
 					}
 				}
+				else
+					m_State += "\nOutside Goal radius";
 			}
 		}
 		else
 		{
+			m_State = "No CurrentTarget";
 			//Try to find random target?
 		}
-		//check if inside trigger
-		/*TriggerVector::iterator iter = m_Triggers.begin();
-		while(iter < m_Triggers.end())
-		{
-			SceneObjectPtr so(*iter,boost::detail::sp_nothrow_tag());
-			if(so)
-			{
-				TriggerComponentPtr trigger = so->GetComponentsByClass<TriggerComponent>();
-				iter++;
-			}
-			else //erase
-			{
-				iter = m_Triggers.erase(iter);
-			}
-		}*/
+		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(m_State)));
+		//post state!
+	}
+	
+	void PedestrianBehaviorComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	{
+		m_Position = message->GetPosition();
 	}
 
 	void PedestrianBehaviorComponent::RandomRespawn(double delay)
@@ -216,6 +246,11 @@ namespace GASS
 				MessagePtr pos_msg(new WorldPositionMessage(spawn_location,(int) this,delay));
 				GetSceneObject()->PostMessage(pos_msg);
 				GoToRandomTarget(delay);
+			}
+			else
+			{
+				m_State += "\nFailed to find spawn location:";
+				m_State += std::string(m_SpawnLocationID);
 			}
 		}
 	}
@@ -243,7 +278,6 @@ namespace GASS
 		MessagePtr goto_msg(new GotoPositionMessage(target_location,(int) this,delay));
 		GetSceneObject()->PostMessage(goto_msg);
 	}
-	
 }
 
 

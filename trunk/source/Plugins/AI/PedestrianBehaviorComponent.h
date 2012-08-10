@@ -32,6 +32,7 @@ namespace GASS
 		SceneObjectID GetTargetID() const;
 		void SetSpawnLocationID(const SceneObjectID &id);
 		SceneObjectID GetSpawnLocationID() const;
+		virtual void SceneManagerTick(double delta_time);
 	protected:
 		
 		ADD_ATTRIBUTE(Float,GoalRadius)
@@ -53,12 +54,14 @@ namespace GASS
 
 		SceneObjectID m_TargetLocationID;
 		SceneObjectID m_SpawnLocationID;
-		SceneObjectID m_TriggerID;
+		//SceneObjectID m_TriggerID;
 		SceneObjectWeakPtr m_CurrentTarget;
 		
 		Vec3 m_CurrentTargetLocation;
 		Vec2 m_RandomSpeed;
 		bool m_Initlized;
+		Vec3 m_Position;
+		std::string m_State;
 		
 	};
 	typedef boost::shared_ptr<PedestrianBehaviorComponent> PedestrianBehaviorComponentPtr;

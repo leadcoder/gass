@@ -189,25 +189,27 @@ namespace GASS
 	void DetourCrowdAgentComponent::OnGoToPosisiton(GotoPositionMessagePtr message)
 	{
 		DetourCrowdComponentPtr crowd_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<DetourCrowdComponent>();
-
-		RecastNavigationMeshComponentPtr nav_mesh  =  crowd_comp->GetRecastNavigationMeshComponent();
-		if(m_Agent && nav_mesh)
+		if(crowd_comp)
 		{
-			dtNavMeshQuery* navquery = nav_mesh->GetNavMeshQuery();
-			dtCrowd* crowd = crowd_comp->GetCrowd();
-			const dtQueryFilter* filter = crowd->getFilter();
-			const float* ext = crowd->getQueryExtents();
-			dtPolyRef targetRef;
-			float targetPos[3];
-			float pos[3];
-			pos[0] = message->GetPosition().x;
-			pos[1] = message->GetPosition().y;
-			pos[2] = message->GetPosition().z;
-
-			navquery->findNearestPoly(pos, ext, filter, &targetRef, targetPos);
-			if(targetRef)
+			RecastNavigationMeshComponentPtr nav_mesh  =  crowd_comp->GetRecastNavigationMeshComponent();
+			if(m_Agent && nav_mesh)
 			{
-				crowd->requestMoveTarget(m_Index, targetRef, targetPos);
+				dtNavMeshQuery* navquery = nav_mesh->GetNavMeshQuery();
+				dtCrowd* crowd = crowd_comp->GetCrowd();
+				const dtQueryFilter* filter = crowd->getFilter();
+				const float* ext = crowd->getQueryExtents();
+				dtPolyRef targetRef;
+				float targetPos[3];
+				float pos[3];
+				pos[0] = message->GetPosition().x;
+				pos[1] = message->GetPosition().y;
+				pos[2] = message->GetPosition().z;
+
+				navquery->findNearestPoly(pos, ext, filter, &targetRef, targetPos);
+				if(targetRef)
+				{
+					crowd->requestMoveTarget(m_Index, targetRef, targetPos);
+				}
 			}
 		}
 	}

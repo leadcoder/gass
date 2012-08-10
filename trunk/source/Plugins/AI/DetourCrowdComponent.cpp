@@ -18,7 +18,7 @@
 
 namespace GASS
 {
-	static const int MAX_AGENTS = 512;
+	static const int MAX_AGENTS = 1024;
 
 	DetourCrowdComponent::DetourCrowdComponent() :	m_ScatteringRadius(10),
 		m_NumberOfScattringCharacters(2),

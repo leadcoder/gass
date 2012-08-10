@@ -48,6 +48,15 @@ namespace GASS
 		std::string GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;
 		void SetCharacterSize(float size);
+		void SetScaleByDistance(bool value) {m_ScaleByDistance = value;}
+		bool GetScaleByDistance() const {return m_ScaleByDistance;}
+		void SetOffset(const Vec3 &value) {m_Offset = value;}
+		Vec3 GetOffset() const {return m_Offset;}
+		void SetColor(const Vec4 &value) {m_Color = value;}
+		Vec4 GetColor() const {return m_Color;}
+		void SetDropShadow(bool value) {m_DropShadow = value;}
+		bool GetDropShadow() const {return m_DropShadow;}
+
 		
 		std::string m_Font;
 		float m_Width;
@@ -55,6 +64,10 @@ namespace GASS
 		osg::ref_ptr<osgText::Text> m_OSGText;
 		osg::ref_ptr<osg::Geode> m_OSGGeode;
 		float m_CharSize;
+		bool m_ScaleByDistance;
+		Vec3 m_Offset;
+		bool m_DropShadow;
+		Vec4 m_Color;
 	};
 }
 

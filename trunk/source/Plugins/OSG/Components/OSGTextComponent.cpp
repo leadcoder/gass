@@ -30,13 +30,18 @@
 #include "Plugins/OSG/Components/OSGTextComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGConvert.h"
 
 namespace GASS
 {
 
 	OSGTextComponent::OSGTextComponent() :	m_OSGText(NULL),
 		m_CharSize(32.0f),
-		m_Font("arial.ttf")
+		m_Font("arial.ttf"),
+		m_ScaleByDistance(false),
+		m_Offset(0,0,0),
+		m_DropShadow(true),
+		m_Color(1,1,1,1)
 	{
 
 	}	
@@ -51,6 +56,10 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, IComponent>);
 		RegisterProperty<std::string>("Font", &GetFont, &SetFont);
 		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
+		RegisterProperty<bool>("ScaleByDistance", &OSGTextComponent::GetScaleByDistance, &OSGTextComponent::SetScaleByDistance);
+		RegisterProperty<Vec3>("Offset", &OSGTextComponent::GetOffset, &OSGTextComponent::SetOffset);
+		RegisterProperty<Vec4>("Color", &OSGTextComponent::GetColor, &OSGTextComponent::SetColor);
+		RegisterProperty<bool>("DropShadow", &OSGTextComponent::GetDropShadow, &OSGTextComponent::SetDropShadow);
 	}
 
 	void OSGTextComponent::OnInitialize()
@@ -63,7 +72,6 @@ namespace GASS
 
 	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionMessagePtr message)
 	{
-		
 		std::string caption = message->GetCaption();
 		m_OSGText->setText(caption.c_str());
 	}
@@ -76,7 +84,26 @@ namespace GASS
 
 		m_OSGText->setCharacterSize(m_CharSize);
 		m_OSGText->setAxisAlignment(osgText::Text::SCREEN);
-		m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
+		
+		if(m_ScaleByDistance)
+			m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
+		else
+			m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
+		
+
+		osg::Vec3d offset = OSGConvert::Get().ToOSG(m_Offset);
+		m_OSGText->setPosition(offset);
+
+
+		m_OSGText->setColor(osg::Vec4d(m_Color.x,m_Color.y,m_Color.z,m_Color.w));
+
+		if(m_DropShadow)
+			m_OSGText->setBackdropType(osgText::Text::OUTLINE);
+
+		m_OSGText->setAlignment(osgText::Text::CENTER_BOTTOM);
+		//m_OSGText->setDrawMode(osgText::TextBase::DrawModeMask::TEXT | osgText::TextBase::DrawModeMask::FILLEDBOUNDINGBOX);
+		//m_OSGText->setBoundingBoxColor(osg::Vec4d(0.2,0.2,0.3,0.7));
+
 		
 		m_OSGGeode = new osg::Geode;
 		m_OSGGeode->addDrawable(m_OSGText.get());
@@ -86,7 +113,6 @@ namespace GASS
 
 		m_OSGGeode->setNodeMask(~NM_RECEIVE_SHADOWS & m_OSGGeode->getNodeMask());
 		m_OSGGeode->setNodeMask(~NM_CAST_SHADOWS & m_OSGGeode->getNodeMask());
-		
 	}
 
 	void OSGTextComponent::SetFont(const std::string &font) 
