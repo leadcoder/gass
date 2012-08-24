@@ -33,7 +33,8 @@ namespace GASS
 		m_ClientPort(2002),
 		m_UpdateFreq(160),
 		m_StepSimulation(false),
-		m_SimStepDeltaTime(0)
+		m_SimStepDeltaTime(0),
+		m_ExternalUpdate(0)
 	{
 
 		m_Scene  = ScenePtr(new Scene());
@@ -59,8 +60,7 @@ namespace GASS
 		se->Init(config_path +  "GASSPlugins.xml", config_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
-		//se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnRequestSimulatiornStep,RequestTimeStepMessage,0));
-		se->GetSimSystemManager()->SetPauseSimulation(true);
+		se->GetSimSystemManager()->SetPauseSimulation(m_ExternalUpdate);
 			
 
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
@@ -245,6 +245,10 @@ namespace GASS
 		TiXmlElement *xtemplates = xSettings->FirstChildElement("TemplateFiles");
 		TiXmlElement *xobj_id = xSettings->FirstChildElement("ObjectID");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
+		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
+		
+
+		
 		
 
 		TiXmlElement *xnum_threads = xSettings->FirstChildElement("NumRTCThreads");
@@ -253,6 +257,11 @@ namespace GASS
 		if(xupdate_freq)
 		{
 			m_UpdateFreq = atoi(xupdate_freq->Attribute("value"));
+		}
+
+		if(xexternal_update )
+		{
+			m_ExternalUpdate  = atoi(xexternal_update->Attribute("value"));
 		}
 
 		if(xnum_threads)

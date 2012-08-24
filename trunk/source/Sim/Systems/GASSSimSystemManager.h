@@ -83,6 +83,7 @@ namespace GASS
 		*/
 		void ClearMessages();
 
+		bool GetSimulationPasued() const {return m_SimulationPaused;}
 		void SetPauseSimulation(bool value) {m_SimulationPaused = value;}
 		void SetSimulationUpdateInterval(bool value) {m_SimulationUpdateInterval = value;}
 		void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}

@@ -1011,6 +1011,8 @@ void dtCrowd::checkPathValidity(dtCrowdAgent** agents, const int nagents, const 
 		}
 	}
 }
+
+#define OFF_MESH_TRIGGER_CONSTANT ag->params.radius*1.5f
 	
 void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 {
@@ -1114,7 +1116,7 @@ void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 			continue;
 		
 		// Check 
-		const float triggerRadius = ag->params.radius*2.25f;
+		const float triggerRadius = OFF_MESH_TRIGGER_CONSTANT;
 		if (overOffmeshConnection(ag, triggerRadius))
 		{
 			// Prepare to off-mesh connection.
@@ -1130,7 +1132,8 @@ void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 				anim->polyRef = refs[1];
 				anim->active = 1;
 				anim->t = 0.0f;
-				anim->tmax = (dtVdist2D(anim->startPos, anim->endPos) / ag->params.maxSpeed)*2;
+				//anim->tmax = (dtVdist2D(anim->startPos, anim->endPos) / ag->params.maxSpeed)*2;
+				anim->tmax = dtVdist2D(anim->startPos, anim->endPos) + (OFF_MESH_TRIGGER_CONSTANT/ ag->params.maxSpeed);
 				
 				ag->state = DT_CROWDAGENT_STATE_OFFMESH;
 				ag->ncorners = 0;
@@ -1393,7 +1396,11 @@ void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 		}
 		
 		// Update position
-		const float ta = anim->tmax*0.1f;
+		
+		//const float ta = anim->tmax*0.1f;
+		float dist  = dtVdist2D(anim->startPos, anim->endPos) + OFF_MESH_TRIGGER_CONSTANT;
+		const float ta = anim->tmax* OFF_MESH_TRIGGER_CONSTANT/ dist;
+
 		const float tb = anim->tmax;
 		if (anim->t < ta)
 		{

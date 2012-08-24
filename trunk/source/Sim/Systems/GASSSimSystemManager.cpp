@@ -229,7 +229,7 @@ namespace GASS
 		}
 		ss << " Simulation Updates:" << m_LastNumSimulationSteps << "\n";
 		GASS::MessagePtr stat_msg(new GASS::CreateTextBoxMessage("SimulationStats",ss.str(),GASS::Vec4(0.9,0.9,0.9,1),0.1,0.3,0.1,0.1));
-		GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
+		//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
 	}
 
 	

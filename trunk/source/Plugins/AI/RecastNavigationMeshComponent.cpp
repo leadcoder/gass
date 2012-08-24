@@ -308,7 +308,11 @@ static int convexhull(const float* pts, int npts, int* out)
 
 			p1[0] =pos1.x;p1[1] =pos1.y;p1[2] =pos1.z;
 			p2[0] =pos2.x;p2[1] =pos2.y;p2[2] =pos2.z;
-			m_Geom->addOffMeshConnection(p1, p2, m_AgentRadius, bidir, area, flags);
+			
+			//m_Geom->addOffMeshConnection(p1, p2, m_AgentRadius, bidir, area, flags);
+			m_Geom->addOffMeshConnection(p1, p2, comp->GetRadius(), bidir, area, flags);
+			
+			
 		}
 	}
 
@@ -1090,11 +1094,14 @@ static int convexhull(const float* pts, int npts, int* out)
 						if(lc)
 						{
 							Vec3 world_pos = lc->GetWorldPosition();
+							Vec3 scale = lc->GetScale();
 							Quaternion world_rot = lc->GetWorldRotation();
 							Mat4 trans_mat;
 							trans_mat.Identity();
-							world_rot.ToRotationMatrix(trans_mat);
-							trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+							//world_rot.ToRotationMatrix(trans_mat);
+							//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+							trans_mat.SetTransformation(world_pos,world_rot,scale);
+							
 
 							for(int j = 0 ; j < mesh_data->NumVertex; j++)
 							{
@@ -1384,6 +1391,53 @@ static int convexhull(const float* pts, int npts, int* out)
 		fclose(fp);
 
 		return mesh;
+	}
+
+
+	bool RecastNavigationMeshComponent::IsPointInside(const Vec3 &point) const
+	{
+		bool ret = false;
+		if(m_NavMesh)
+		{
+			float p1[3];
+			float p2[3];
+			float ext[3];
+			p1[0] =point.x; p1[1] =point.y; p1[2] =point.z;
+			ext[0] = 0.1; ext[1] = 0.1; ext[2] = 0.1;
+
+			dtPolyRef ref;
+			dtQueryFilter filter;
+			dtStatus status = m_NavQuery->findNearestPoly(p1, ext, &filter, &ref, p2);
+			if(ref)
+			{
+				ret = true;
+			}
+		}
+		return ret;
+	}
+
+
+	static float frand()
+	{
+		return (float)rand()/(float)RAND_MAX;
+	}
+
+
+	Vec3 RecastNavigationMeshComponent::GetRandomPoint() const
+	{
+		Vec3 ret(0,0,0);
+		if(m_NavMesh)
+		{
+			float pt[3];
+			dtPolyRef ref;
+			dtQueryFilter filter;
+			dtStatus status = m_NavQuery->findRandomPoint(&filter, frand, &ref, pt);
+			if (dtStatusSucceed(status))
+			{
+				ret.Set(pt[0],pt[1],pt[2]);
+			}
+		}
+		return ret;
 	}
 
 

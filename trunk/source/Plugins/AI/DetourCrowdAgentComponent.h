@@ -40,10 +40,13 @@ namespace GASS
 		float GetHeight() const;
 		void SetMaxSpeed(float radius);
 		float GetMaxSpeed() const;
+		bool GetRandomMeshPosition(Vec3 &pos);
+		void SetSeparationWeight(float value);
+		float GetSeparationWeight() const {return m_SeparationWeight;} 
 	protected:
 		dtCrowdAgentParams GetAgentParams() const;
 		void UpdateAgentParams();
-		void OnGoToPosisiton(GotoPositionMessagePtr message);
+		void OnGoToPosition(GotoPositionMessagePtr message);
 		void UpdateGeometry();
 		void OnWorldPosition(WorldPositionMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
@@ -58,6 +61,7 @@ namespace GASS
 		float m_MaxSpeed;
 		float m_MaxAcceleration;
 		float m_Height;
+		float m_SeparationWeight;
 
 		std::string m_Script;
 		std::string m_Group;

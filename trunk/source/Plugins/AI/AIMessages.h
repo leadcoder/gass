@@ -37,18 +37,5 @@ namespace GASS
 		bool m_Open;
 	};
 	typedef boost::shared_ptr<DoorMessage> DoorMessagePtr;
-
-	/*class NavigationMeshMaterialMessage : public BaseMessage
-	{
-	public:
-		NavigationMeshMaterialMessage(int material_flag, const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		BaseMessage(sender_id , delay) , m_Flag(material_flag), m_Pos(pos)
-		{
-
-		}
-		int m_Flag;
-		Vec3 m_Pos;
-	};
-	typedef boost::shared_ptr<NavigationMeshMaterialMessage> NavigationMeshMaterialMessagePtr;*/
 }
 #endif

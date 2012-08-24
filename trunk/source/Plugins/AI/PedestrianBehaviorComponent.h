@@ -34,8 +34,11 @@ namespace GASS
 		SceneObjectID GetSpawnLocationID() const;
 		virtual void SceneManagerTick(double delta_time);
 	protected:
-		
+		void SetHealth(Float health);
+		Float GetHealth() const;
+	
 		ADD_ATTRIBUTE(Float,GoalRadius)
+		ADD_ATTRIBUTE(SceneObjectID ,ExitLocationID)
 		void OnLoad(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
@@ -54,7 +57,6 @@ namespace GASS
 
 		SceneObjectID m_TargetLocationID;
 		SceneObjectID m_SpawnLocationID;
-		//SceneObjectID m_TriggerID;
 		SceneObjectWeakPtr m_CurrentTarget;
 		
 		Vec3 m_CurrentTargetLocation;
@@ -62,6 +64,8 @@ namespace GASS
 		bool m_Initlized;
 		Vec3 m_Position;
 		std::string m_State;
+		std::string m_DebugState;
+		Float m_Health;
 		
 	};
 	typedef boost::shared_ptr<PedestrianBehaviorComponent> PedestrianBehaviorComponentPtr;

@@ -15,7 +15,8 @@ namespace GASS
 		m_Height(2),
 		m_MaxAcceleration(8),
 		m_MaxSpeed(3.5),
-		m_AccTime(0)
+		m_AccTime(0),
+		m_SeparationWeight(1)
 	{
 
 	}	
@@ -34,6 +35,7 @@ namespace GASS
 		RegisterProperty<float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
 		RegisterProperty<float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
 		RegisterProperty<float>("MaxSpeed", &DetourCrowdAgentComponent::GetMaxSpeed, &DetourCrowdAgentComponent::SetMaxSpeed);
+		RegisterProperty<float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
 	}
 
 	void DetourCrowdAgentComponent::OnInitialize()
@@ -42,7 +44,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosisiton,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
 	}
 
 	void DetourCrowdAgentComponent::OnChangeName(GASS::MessagePtr message)
@@ -60,7 +62,6 @@ namespace GASS
 		m_MaxSpeed = value;
 		UpdateAgentParams();
 	}
-
 
 	float DetourCrowdAgentComponent::GetMaxAcceleration() const
 	{
@@ -103,6 +104,16 @@ namespace GASS
 		}
 	}
 
+
+	void DetourCrowdAgentComponent::SetSeparationWeight(float value)
+	{
+		m_SeparationWeight = value;
+		if(m_Agent)
+		{
+			UpdateAgentParams();
+		}
+	}
+
 	dtCrowdAgentParams DetourCrowdAgentComponent::GetAgentParams() const
 	{
 		dtCrowdAgentParams ap;
@@ -114,9 +125,13 @@ namespace GASS
 			ap.height = m_Height;
 			ap.maxAcceleration = m_MaxAcceleration;
 			ap.maxSpeed = m_MaxSpeed;
-			ap.collisionQueryRange = ap.radius * 12.0f;
-			ap.pathOptimizationRange = ap.radius * 30.0f;
+			//ap.collisionQueryRange = ap.radius * 12.0f;
+			//ap.pathOptimizationRange = ap.radius * 30.0f;
+			
+			ap.collisionQueryRange = 12.0f;
+			ap.pathOptimizationRange = 30.0f;
 			ap.updateFlags = 0; 
+
 			if (crowd_comp->GetAnticipateTurns())
 				ap.updateFlags |= DT_CROWD_ANTICIPATE_TURNS;
 			if (crowd_comp->GetOptimizeVis())
@@ -128,7 +143,7 @@ namespace GASS
 			if (crowd_comp->GetSeparation())
 				ap.updateFlags |= DT_CROWD_SEPARATION;
 			ap.obstacleAvoidanceType = 0;
-			ap.separationWeight = crowd_comp->GetSeparationWeight();
+			ap.separationWeight = m_SeparationWeight;
 		}
 		return ap;
 	}
@@ -186,7 +201,7 @@ namespace GASS
 		}
 	}
 
-	void DetourCrowdAgentComponent::OnGoToPosisiton(GotoPositionMessagePtr message)
+	void DetourCrowdAgentComponent::OnGoToPosition(GotoPositionMessagePtr message)
 	{
 		DetourCrowdComponentPtr crowd_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<DetourCrowdComponent>();
 		if(crowd_comp)
@@ -212,6 +227,24 @@ namespace GASS
 				}
 			}
 		}
+	}
+
+
+	static float frand()
+	{
+		return (float)rand()/(float)RAND_MAX;
+	}
+
+	bool DetourCrowdAgentComponent::GetRandomMeshPosition(Vec3 &pos)
+	{
+		DetourCrowdComponentPtr crowd_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<DetourCrowdComponent>();
+		if(crowd_comp)
+		{
+
+			Vec3 center = crowd_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			return crowd_comp->GetRandomPointInCircle(pos,center,500);
+		}
+		return false;
 	}
 
 	void DetourCrowdAgentComponent::OnUnload(UnloadComponentsMessagePtr message)

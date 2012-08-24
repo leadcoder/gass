@@ -29,6 +29,7 @@ namespace GASS
 		Vec3 GetStartPos() const {return m_StartPos;}
 		Vec3 GetEndPos() const {return m_EndPos;}
 		ADD_ATTRIBUTE(std::string,Mode)
+		float GetRadius() const;
 	protected:
 		void OnStartNodeTransformation(TransformationNotifyMessagePtr message);
 		void OnEndNodeTransformation(TransformationNotifyMessagePtr message);
@@ -36,7 +37,7 @@ namespace GASS
 		void SetVisible(bool value);
 		bool GetVisible() const;
 		void SetRadius(float value);
-		float GetRadius() const;
+		
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLoad(LoadComponentsMessagePtr message);
 

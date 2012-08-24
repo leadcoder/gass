@@ -63,6 +63,7 @@ namespace GASS
 		void InitCrowd(dtCrowd* crowd, dtNavMesh* nav);
 		RecastNavigationMeshComponentPtr FindNavMesh(const std::string &name) const;
 		void CircularScattering(const std::vector<std::string>   &selection, int num_vehicles, const GASS::Vec3 &start_pos, double radius);
+		void NavMeshScattering(const std::vector<std::string>   &selection, int num_vehicles);
 		bool GetShowDebug() const;
 		void SetShowDebug(bool value);
 		void ReleaseAllChildren();
@@ -73,11 +74,15 @@ namespace GASS
 		void OnMoved(PositionMessagePtr message);
 		bool GetCircularScattering() const;
 		void SetCircularScattering(bool value);
+		bool GetNavMeshScattering() const;
+		void SetNavMeshScattering(bool value);
 		void SetCircularScatteringRadius(float value);
 		float GetCircularScatteringRadius() const;
 
+		bool GetRandomPointInCircle(Vec3 &pos, const Vec3 &center, float radius);
 
-
+		void SetSeparationWeight(float value);
+		float GetSeparationWeight() const {return m_SeparationWeight;} 
 		
 		SceneObjectWeakPtr m_DebugLines;
 		std::vector<std::string> m_ScatteringSelection;
@@ -99,7 +104,8 @@ namespace GASS
 		ADD_ATTRIBUTE(bool,OptimizeTopo);
 		ADD_ATTRIBUTE(bool,Separation);
 		ADD_ATTRIBUTE(bool,ObstacleAvoidance);
-		ADD_ATTRIBUTE(float,SeparationWeight);
+
+		float m_SeparationWeight;
 
 		std::vector<DetourCrowdAgentComponentPtr> m_Agents;
 

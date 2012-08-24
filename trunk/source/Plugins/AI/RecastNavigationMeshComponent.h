@@ -98,7 +98,7 @@ namespace GASS
 	}
 
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape
 	{
 	public:
 		RecastNavigationMeshComponent();
@@ -108,7 +108,12 @@ namespace GASS
 		dtNavMesh* GetNavMesh() const {return m_NavMesh;}
 		dtNavMeshQuery* GetNavMeshQuery() const {return m_NavQuery;}
 
-		//temo public to allow debug updates from outside
+
+		virtual bool IsPointInside(const Vec3 &point) const;
+		virtual Vec3 GetRandomPoint() const;
+
+
+		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
 
 	protected:

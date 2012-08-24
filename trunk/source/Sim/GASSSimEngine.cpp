@@ -108,32 +108,12 @@ namespace GASS
 	void SimEngine::Update(double delta_time)
 	{
 		//ProfileSample::ResetAll();
-		
 		{
 		PROFILE("SimEngine::Update")
 		//m_RTC->Update(delta_time);
 		//update systems
 		GetSimSystemManager()->Update(delta_time);
-
-		//hardcoded update loop
-		//InputSystemPtr is = GetSimSystemManager()->GetFirstSystem<IInputSystem>();
-		//is->Update(delta_time);
-
-		//sync
-
-		//update all other systems other systems in paralell mode
-
-		//sync
-
-		//PhysicsSystemPtr ps = GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
-		//ps->Update(delta_time);
-
-		
 		m_CurrentTime += delta_time;
-		//TODO: this should not be done here
-		//m_ControlSettingsManager->Update(delta_time);
-
-		
 		}
 #ifdef PROFILER
 		ProfileSample::Output();

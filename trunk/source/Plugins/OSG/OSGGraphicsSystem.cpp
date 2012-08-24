@@ -88,6 +88,7 @@ namespace GASS
 	{
 		if(m_Viewer)
 		{
+			osgDB::Registry::instance()->closeAllLibraries();
 			m_Viewer->setDone(true);
 			Sleep(1000);
 			m_Viewer->stopThreading();

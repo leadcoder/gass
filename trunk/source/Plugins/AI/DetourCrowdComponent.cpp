@@ -49,6 +49,7 @@ namespace GASS
 		RegisterProperty<int>("NumberOfCharacters", &GetNumberOfCharacters, &SetNumberOfCharacters);
 		RegisterProperty<bool>("CircularScattering", &GetCircularScattering, &SetCircularScattering);
 		RegisterProperty<float>("CircularScatteringRadius", &GetCircularScatteringRadius, &SetCircularScatteringRadius);
+		RegisterProperty<bool>("NavMeshScattering", &GetNavMeshScattering, &SetNavMeshScattering);
 		RegisterProperty<std::string>("NavigationMesh", &GetNavigationMesh, &SetNavigationMesh);
 		RegisterProperty<std::string>("Script", &GetScript, &SetScript);
 		RegisterProperty<bool>("AnticipateTurns", &GetAnticipateTurns, &SetAnticipateTurns);
@@ -295,6 +296,20 @@ namespace GASS
 		}
 	}
 
+
+	bool DetourCrowdComponent::GetNavMeshScattering() const 
+	{
+		return false;
+	}
+
+	void DetourCrowdComponent::SetNavMeshScattering(bool value)
+	{
+		if(value)
+		{
+			NavMeshScattering(m_ScatteringSelection,m_NumberOfScattringCharacters);
+		}
+	}
+
 	void DetourCrowdComponent::ReleaseAllChildren()
 	{
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
@@ -323,6 +338,44 @@ namespace GASS
 			comp->GetSceneObject()->SendImmediate(message);
 		}
 	}
+
+
+	static float frand()
+	{
+		return (float)rand()/(float)RAND_MAX;
+	}
+
+
+	bool DetourCrowdComponent::GetRandomPointInCircle(Vec3 &pos, const Vec3 &center, float radius)
+	{
+		RecastNavigationMeshComponentPtr nav_mesh = FindNavMesh(m_NavMeshName);
+		dtNavMeshQuery* navquery = nav_mesh->GetNavMeshQuery();
+		dtCrowd* crowd = GetCrowd();
+		const dtQueryFilter* filter = crowd->getFilter();
+		const float* ext = crowd->getQueryExtents();
+		dtPolyRef start_ref;
+		float c_pos[3];
+		c_pos[0] = center.x;
+		c_pos[1] = center.y;
+		c_pos[2] = center.z;
+
+		float q_pos[3];
+		navquery->findNearestPoly(c_pos, ext, filter, &start_ref, q_pos);
+		if(start_ref)
+		{
+			dtStatus status = DT_FAILURE;
+			dtPolyRef end_ref;
+			float end_pos[3];
+			status = navquery->findRandomPointAroundCircle(start_ref, q_pos, radius, filter, frand, &end_ref, end_pos);
+			if (dtStatusSucceed(status))
+			{
+				pos.Set(end_pos[0],end_pos[1],end_pos[2]);
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	void DetourCrowdComponent::CircularScattering(const std::vector<std::string>   &selection, int num_vehicles, const GASS::Vec3 &start_pos, double radius)
 	{
@@ -396,6 +449,51 @@ namespace GASS
 	}
 
 
+	void DetourCrowdComponent::NavMeshScattering(const std::vector<std::string>   &selection, int num_vehicles)
+	{
+		//release all previous allocated characters
+		ReleaseAllChildren();
+		RecastNavigationMeshComponentPtr mesh = FindNavMesh(m_NavMeshName);
+
+		if(!mesh)
+			return;
+
+		//Load character
+		int vehicle_index= 0;
+		int vehicle_counter =0;
+		int crowd_terrain_id = 0;
+		
+		if(selection.size() > 0)
+		{
+			while(vehicle_counter < num_vehicles)
+			{
+				//Loop the character list
+				const std::string vehicle_name = selection[vehicle_index++];
+				if(vehicle_index > selection.size()-1)
+					vehicle_index = 0;
+
+
+				Vec3 center = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+				Vec3 pos;
+				GetRandomPointInCircle(pos,center,m_ScatteringRadius);
+				//Vec3 pos = mesh->GetRandomPoint();
+				//CreateFromTemplate
+				SceneObjectPtr vehicle = GetSceneObject()->GetScene()->LoadObjectFromTemplate(vehicle_name,GetSceneObject());
+				if(vehicle)
+				{
+					vehicle->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
+					vehicle_counter++;
+				}
+				
+			}
+		}
+		//initlize script and navmesh for all created new vehicles
+		SetNavigationMesh(m_NavMeshName);
+		SetScript(m_Script);
+	}
+
+
+
 	void DetourCrowdComponent::SetCircularScatteringRadius(float value)
 	{
 		m_ScatteringRadius = value;
@@ -419,19 +517,8 @@ namespace GASS
 	void DetourCrowdComponent::SetDefaultAgentRadius(float value)
 	{
 		m_DefaultAgentRadius = value;
-
 		if(m_Crowd)
 		{
-			/*RecastNavigationMeshComponentPtr nm_comp = GetRecastNavigationMeshComponent();
-			if(nm_comp)
-			{
-				dtNavMesh* nav_mesh = nm_comp->GetNavMesh();
-				if(nav_mesh)
-					InitCrowd(m_Crowd, nav_mesh);
-
-			}*/
-
-
 			IComponentContainer::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 			for(int i = 0; i < components.size(); i++)
@@ -442,6 +529,21 @@ namespace GASS
 		}
 	}
 
+
+	void DetourCrowdComponent::SetSeparationWeight(float value)
+	{
+		m_SeparationWeight = value;
+		if(m_Crowd)
+		{
+			IComponentContainer::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
+			for(int i = 0; i < components.size(); i++)
+			{
+				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				comp->SetSeparationWeight(m_SeparationWeight);
+			}
+		}
+	}
 
 	float DetourCrowdComponent::GetDefaultAgentRadius() const
 	{
@@ -468,9 +570,6 @@ namespace GASS
 	{
 		return m_DefaultAgentHeight;
 	}
-
-	
-
 }
 
 

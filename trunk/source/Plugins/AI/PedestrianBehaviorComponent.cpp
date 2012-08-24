@@ -2,6 +2,7 @@
 #include "TriggerComponent.h"
 #include "AITargetComponent.h"
 #include "DetourCrowdAgentComponent.h"
+#include "RecastNavigationMeshComponent.h"
 #include "AISceneManager.h"
 
 
@@ -10,7 +11,8 @@ namespace GASS
 	PedestrianBehaviorComponent::PedestrianBehaviorComponent(void) : m_GoalRadius(1),
 		m_Initlized(false),
 		m_RandomSpeed(2,2),
-		m_Position(0,0,0)
+		m_Position(0,0,0),
+		m_Health(1.0)
 	{
 
 	}	
@@ -25,8 +27,11 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PedestrianBehaviorComponent",new Creator<PedestrianBehaviorComponent, IComponent>);
 		RegisterProperty<SceneObjectID>("TargetID", &GetTargetID, &SetTargetID);
 		RegisterProperty<SceneObjectID>("SpawnLocationID", &GetSpawnLocationID, &SetSpawnLocationID);
+		RegisterProperty<SceneObjectID>("ExitLocationID", &GetExitLocationID, &SetExitLocationID);
+
 		RegisterProperty<Float>("GoalRadius", &GetGoalRadius, &SetGoalRadius);
 		RegisterProperty<Vec2>("RandomSpeed", &GetRandomSpeed, &SetRandomSpeed);
+		RegisterProperty<Float>("Health", &GetHealth, &SetHealth);
 	}
 
 	void PedestrianBehaviorComponent::OnInitialize()
@@ -38,31 +43,54 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerEnter,TriggerEnterMessage ,0));
 	}
 
+	void PedestrianBehaviorComponent::SetHealth(Float health)
+	{
+		m_Health = health;
+		if(m_Initlized)
+		{
+
+			DetourCrowdAgentComponentPtr agent = GetSceneObject()->GetFirstComponentByClass<DetourCrowdAgentComponent>();
+			if(m_Health < 0.9)
+			{
+				if(m_Health > 0)
+				{
+					SetTargetID(m_ExitLocationID);
+					m_State = "Flee";
+					double norm_rand = rand() / double(RAND_MAX);
+					double random_speed = m_Health*5 + norm_rand*2;
+					agent->SetMaxSpeed(random_speed);
+				}
+				else
+				{
+					m_State = "Dead";
+					agent->SetMaxSpeed(0);
+				}
+			}
+			else if(m_Health >= 1.0) //reset?
+			{
+				m_State = "Wander";
+				SetTargetID(m_TargetLocationID);
+				SetRandomSpeed(m_RandomSpeed);
+			}
+		}
+	}
+
+	Float PedestrianBehaviorComponent::GetHealth() const
+	{
+		return m_Health;
+	}
+
 	void PedestrianBehaviorComponent::OnLoad(LocationLoadedMessagePtr message)
 	{
 		GoToRandomTarget(1.0); //send intial target!
+		
 		//set random speed!
-
-		//register within triggers
-		/*std::vector<SceneObjectPtr> triggers;
-
-		if(m_TriggerID != "")
-		{
-			GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildrenByID(triggers,m_TriggerID,false,true);
-
-			for(size_t i = 0; i < triggers.size();i++)
-			{
-				TriggerComponentPtr trigger = triggers[i]->GetFirstComponentByClass<TriggerComponent>();
-				trigger->RegisterListener(GetSceneObject());
-			}
-		}*/
 		m_Initlized = true;
-
+		m_State = "Wander";
 		SetRandomSpeed(m_RandomSpeed);
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
-
 	}
 
 	void PedestrianBehaviorComponent::SetRandomSpeed(const Vec2 &value)
@@ -79,7 +107,6 @@ namespace GASS
 			}
 		}
 	}
-
 
 	void PedestrianBehaviorComponent::SetTargetID(const SceneObjectID &id)
 	{
@@ -109,13 +136,11 @@ namespace GASS
 	void PedestrianBehaviorComponent::OnTriggerExit(TriggerExitMessagePtr message)
 	{
 		SceneObjectPtr trigger = message->GetTrigger();
-	
 	}
 
 	void PedestrianBehaviorComponent::OnTriggerEnter(TriggerEnterMessagePtr message)
 	{
 		SceneObjectPtr trigger = message->GetTrigger();
-	
 	}
 	
 	void PedestrianBehaviorComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -142,9 +167,14 @@ namespace GASS
 	{
 		Vec3 location(0,0,0);
 		LocationComponentPtr loc_comp = so->GetFirstComponentByClass<ILocationComponent>();
-		//GeometryComponentPtr mesh_comp = so->GetFirstComponentByClass<IGeometryComponent>();
+		RecastNavigationMeshComponentPtr nm = so->GetFirstComponentByClass<RecastNavigationMeshComponent>();
 		ShapePtr shape = so->GetFirstComponentByClass<IShape>();
-		if(loc_comp && shape)
+		if(nm)
+		{
+			DetourCrowdAgentComponentPtr agent = GetSceneObject()->GetFirstComponentByClass<DetourCrowdAgentComponent>();
+			agent->GetRandomMeshPosition(location);
+		}
+		else if(loc_comp && shape)
 		{
 			location = shape->GetRandomPoint();
 			location.y = loc_comp->GetWorldPosition().y;
@@ -157,29 +187,28 @@ namespace GASS
 		SceneObjectPtr so = GetCurrentTarget();
 		if(so)
 		{
-			AITargetComponentPtr target_comp = so->GetFirstComponentByClass<AITargetComponent>();
 			Float distance = (m_Position - m_CurrentTargetLocation).Length();
-
-			m_State = "GotoTarget:" + so->GetName();
+			AITargetComponentPtr target_comp = so->GetFirstComponentByClass<AITargetComponent>();
+			m_DebugState = "GotoTarget:" + so->GetName();
 			if(target_comp)
 			{
 				switch(target_comp->GetTargetType())
 				{
 				case AITargetComponent::RANDOM_TARGET:
-					m_State += "\nTT:Proxy";
+					m_DebugState += "\nTT:Proxy";
 					break;
 				case AITargetComponent::RANDOM_RESPAWN_TARGET:
-					m_State += "\nTT:Respawn";
+					m_DebugState += "\nTT:Respawn";
 					break;
 				case AITargetComponent::PLATFORM_TARGET: //first child is target object
-					m_State += "\nTT:Platform";
+					m_DebugState += "\nTT:Platform";
 					break;
 				}
 			}
 
 			std::stringstream ss;
 			ss << "\nTarget distance:"<<  distance;
-			m_State += ss.str(); 
+			m_DebugState += ss.str(); 
 
 
 			//distance to target
@@ -206,25 +235,30 @@ namespace GASS
 							if(enabled)
 								GoToTarget(new_target,target_comp->GetDelay());
 							else
-								m_State += "\nPlatform Target disabled:";
+								m_DebugState += "\nPlatform Target disabled:";
 						}
 						else
 						{
-							m_State += "\nNo child nPlatform Target found:";
+							m_DebugState += "\nNo child nPlatform Target found:";
 						}
 						break;
 					}
 				}
 				else
-					m_State += "\nOutside Goal radius";
+					m_DebugState += "\nOutside Goal radius";
 			}
 		}
 		else
 		{
-			m_State = "No CurrentTarget";
+			m_DebugState = "No CurrentTarget";
 			//Try to find random target?
 		}
-		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(m_State)));
+		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(m_State)));
+		std::stringstream ss;
+		ss  <<  GetSceneObject()->GetName();
+		ss  <<  "\nHealth:" << (int) (m_Health*100) << "%";
+		ss  <<  "\nState:" << m_State;
+		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
 		//post state!
 	}
 	
@@ -238,7 +272,7 @@ namespace GASS
 		if(m_SpawnLocationID != "")
 		{
 			//get random locations
-			SceneObjectPtr so = GetRandomLocationObject(m_SpawnLocationID );
+			SceneObjectPtr so = GetRandomLocationObject(m_SpawnLocationID);
 			if(so)
 			{
 				Vec3 spawn_location =  GetRandomLocation(so);
@@ -249,8 +283,8 @@ namespace GASS
 			}
 			else
 			{
-				m_State += "\nFailed to find spawn location:";
-				m_State += std::string(m_SpawnLocationID);
+				m_DebugState += "\nFailed to find spawn location:";
+				m_DebugState += std::string(m_SpawnLocationID);
 			}
 		}
 	}
@@ -278,6 +312,7 @@ namespace GASS
 		MessagePtr goto_msg(new GotoPositionMessage(target_location,(int) this,delay));
 		GetSceneObject()->PostMessage(goto_msg);
 	}
+	
 }
 
 
