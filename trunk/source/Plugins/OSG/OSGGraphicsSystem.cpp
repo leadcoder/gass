@@ -213,8 +213,8 @@ namespace GASS
 	{
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 			
-		traits->x = 0;
-		traits->y = 0;
+		traits->x = 100;
+		traits->y = 100;
 		traits->width = width;
 		traits->height = height;
 		traits->doubleBuffer = true;

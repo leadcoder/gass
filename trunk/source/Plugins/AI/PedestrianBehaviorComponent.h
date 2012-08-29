@@ -17,6 +17,7 @@
 #include "Plugins/Game/GameMessages.h"
 #include "DetourCrowd/DetourCrowd.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Plugins/AI/AIMessages.h"
 struct dtCrowdAgent;
 
 namespace GASS
@@ -44,6 +45,7 @@ namespace GASS
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnTriggerEnter(TriggerEnterMessagePtr);
 		void OnTriggerExit(TriggerExitMessagePtr);
+		void OnHealthChanged(HealthChangedMessagePtr message);
 		SceneObjectPtr GetCurrentTarget() const {return SceneObjectPtr(m_CurrentTarget,boost::detail::sp_nothrow_tag());}
 
 		SceneObjectPtr GetRandomLocationObject(const SceneObjectID &id) const;

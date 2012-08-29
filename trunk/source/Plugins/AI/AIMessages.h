@@ -37,5 +37,20 @@ namespace GASS
 		bool m_Open;
 	};
 	typedef boost::shared_ptr<DoorMessage> DoorMessagePtr;
+
+
+	class HealthChangedMessage : public BaseMessage
+	{
+	public:
+		HealthChangedMessage(float value, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Health(value)
+		  {
+
+		  }
+		  bool GetHealth() const {return m_Health;}
+	private:
+		bool m_Health;
+	};
+	typedef boost::shared_ptr<HealthChangedMessage> HealthChangedMessagePtr;
 }
 #endif

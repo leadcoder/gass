@@ -116,7 +116,7 @@ namespace GASS
 				}
 				else
 				{
-					LogManager::getSingleton().stream() << "WARNING:Failed to create component: " << comp_type;
+					LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
 				}
 			}
 
@@ -319,7 +319,7 @@ namespace GASS
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING:Failed to create component" << comp_type;
+			LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
 		}
 		return comp;
 	}

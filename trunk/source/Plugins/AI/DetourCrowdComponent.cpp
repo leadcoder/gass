@@ -349,6 +349,8 @@ namespace GASS
 	bool DetourCrowdComponent::GetRandomPointInCircle(Vec3 &pos, const Vec3 &center, float radius)
 	{
 		RecastNavigationMeshComponentPtr nav_mesh = FindNavMesh(m_NavMeshName);
+		if(!nav_mesh)
+			return false;
 		dtNavMeshQuery* navquery = nav_mesh->GetNavMeshQuery();
 		dtCrowd* crowd = GetCrowd();
 		const dtQueryFilter* filter = crowd->getFilter();
@@ -445,6 +447,10 @@ namespace GASS
 		SetNavigationMesh(m_NavMeshName);
 		//SetWaypointList(m_WaypointListName);
 		SetScript(m_Script);
+		SetSeparationWeight(m_SeparationWeight);
+		SetDefaultAgentRadius(m_DefaultAgentRadius);
+		SetDefaultAgentHeight(m_DefaultAgentHeight);
+	
 		//std::cout << "Number of characters:" << m_Characters.size() << std::endl;
 	}
 
@@ -490,6 +496,9 @@ namespace GASS
 		//initlize script and navmesh for all created new vehicles
 		SetNavigationMesh(m_NavMeshName);
 		SetScript(m_Script);
+		SetSeparationWeight(m_SeparationWeight);
+		SetDefaultAgentRadius(m_DefaultAgentRadius);
+		SetDefaultAgentHeight(m_DefaultAgentHeight);
 	}
 
 

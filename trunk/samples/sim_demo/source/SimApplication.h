@@ -130,8 +130,6 @@ public:
 					temp_elem = temp_elem->NextSiblingElement();
 				}
 			}
-
-
 			TiXmlElement *object_elem = app_settings->FirstChildElement("Objects");
 			if(object_elem)
 			{

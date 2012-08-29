@@ -41,6 +41,13 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerExit,TriggerExitMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerEnter,TriggerEnterMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnHealthChanged,HealthChangedMessage,0));
+		
+	}
+
+	void PedestrianBehaviorComponent::OnHealthChanged(HealthChangedMessagePtr message)
+	{
+		SetHealth(message->GetHealth());
 	}
 
 	void PedestrianBehaviorComponent::SetHealth(Float health)
@@ -259,7 +266,6 @@ namespace GASS
 		ss  <<  "\nHealth:" << (int) (m_Health*100) << "%";
 		ss  <<  "\nState:" << m_State;
 		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
-		//post state!
 	}
 	
 	void PedestrianBehaviorComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
