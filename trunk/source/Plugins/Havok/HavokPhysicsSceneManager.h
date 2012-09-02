@@ -21,15 +21,7 @@
 #pragma once
 
 #include <map>
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreScenarioSceneMessages.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsScenarioSceneMessages.h"
-#include "Sim/Scheduling/TaskGroups.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/GASS.h"
 
 // Math and base include
 #include <Common/Base/hkBase.h>
@@ -73,21 +65,17 @@ namespace GASS
 	struct MeshData;
 
 	
-	class HavokPhysicsSceneManager  : public Reflection<HavokPhysicsSceneManager, BaseSceneManager> , public ITaskListener
+	class HavokPhysicsSceneManager  : public Reflection<HavokPhysicsSceneManager, BaseSceneManager> 
 	{
 	public:
 		HavokPhysicsSceneManager();
 		virtual ~HavokPhysicsSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		
-		//ITaskListener interface
-		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
-
 		bool IsActive()const {return !m_Paused;}
 		hkpWorld* GetWorld() const {return m_pPhysicsWorld;}
 		double GetSimulationUpdateInterval() const {return m_SimulationUpdateInterval;}
+		void SystemTick(double delta_time);
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
@@ -95,11 +83,9 @@ namespace GASS
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
-		void SetTaskGroup(TaskGroup value);
 	private:
 		float m_Gravity;
 		bool m_Paused;
-		TaskGroup m_TaskGroup;
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;

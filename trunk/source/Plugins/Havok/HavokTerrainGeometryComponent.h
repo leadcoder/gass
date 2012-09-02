@@ -20,14 +20,8 @@
 
 #pragma once 
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Quaternion.h"
+#include "Sim/GASS.h"
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 #include "HavokPhysicsSceneManager.h"
 
 // Need some shapes
@@ -59,10 +53,10 @@ namespace GASS
 		HavokTerrainGeometryComponent();
 		virtual ~HavokTerrainGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);

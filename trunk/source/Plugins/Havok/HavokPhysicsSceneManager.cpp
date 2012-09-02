@@ -47,31 +47,17 @@
 struct hkTestEntry* hkUnitTestDatabase = HK_NULL; 
 hkBool HK_CALL hkTestReport(hkBool32 cond, const char* desc, const char* file, int line) {return false;}
 
-
-#include <boost/bind.hpp>
-#include "Core/Utils/Log.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Systems/SimSystemManager.h"
+#include "Sim/GASS.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
-#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
+#include "Plugins/Havok/HavokPhysicsSystem.h"
 
 
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 
 namespace GASS
 {
 
 	HavokPhysicsSceneManager::HavokPhysicsSceneManager() :	m_Paused(false),
-		m_TaskGroup(MAIN_TASK_GROUP),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the 
 		//behavior of simulation is effected and values for 
@@ -90,7 +76,6 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<HavokPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>("Gravity", &GASS::HavokPhysicsSceneManager::GetGravity, &GASS::HavokPhysicsSceneManager::SetGravity);
-		RegisterProperty<TaskGroup>("TaskGroup", &GASS::HavokPhysicsSceneManager::GetTaskGroup, &GASS::HavokPhysicsSceneManager::SetTaskGroup);
 	}
 
 	void HavokPhysicsSceneManager::SetGravity(float gravity)
@@ -105,11 +90,10 @@ namespace GASS
 
 	void HavokPhysicsSceneManager::OnCreate()
 	{
-
-		GetScenario()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScenario()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-		GetScenario()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scenario::PHYSICS_COMPONENT_LOAD_PRIORITY));
-		GetScenario()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		GetScene()->RegisterForMessage(REG_TMESS(HavokPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
 
 
@@ -123,14 +107,10 @@ namespace GASS
 
 	void HavokPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-		//Initlize all physics components and send scene mananger as argument
-		SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-		MessagePtr phy_msg(new LoadPhysicsComponentsMessage(shared_from_this(),(int) this));
-		obj->SendImmediate(phy_msg);
+
 	}
 
-	void HavokPhysicsSceneManager::Update(double delta_time)
+	void HavokPhysicsSceneManager::SystemTick(double delta_time)
 	{
 
 		if (!m_Paused)
@@ -166,12 +146,16 @@ namespace GASS
 
 	void HavokPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
-		ScenarioPtr scenario = message->GetScenario();
+		ScenePtr scene = message->GetScene();
 
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
+		HavokPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<HavokPhysicsSystem>();
+		if(system == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find HavokPhysicsSystem", "HavokPhysicsSceneManager::OnLoad");
+		SystemListenerPtr listener = shared_from_this();
+
+		system->Register(listener);
 
 		Vec3 gravity_vec(0,m_Gravity,0);
-
 
 		{//initialize Havok Memory
 			// Allocate 0.5MB of physics solver buffer.
@@ -279,17 +263,6 @@ namespace GASS
 
 	void HavokPhysicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-	}
-
-
-	void HavokPhysicsSceneManager::SetTaskGroup(TaskGroup value)
-	{
-		m_TaskGroup = value;
-	}
-
-	TaskGroup HavokPhysicsSceneManager::GetTaskGroup() const
-	{
-		return m_TaskGroup;
+		
 	}
 }

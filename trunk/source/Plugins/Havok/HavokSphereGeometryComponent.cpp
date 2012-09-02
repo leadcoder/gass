@@ -23,25 +23,11 @@
 #include <algorithm>
 #endif
 
+#include "Sim/GASS.h"
+
 #include "Plugins/Havok/HavokSphereGeometryComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/Math/AABox.h"
-#include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
-#include <boost/bind.hpp>
 
 namespace GASS
 {
@@ -62,9 +48,9 @@ namespace GASS
 		RegisterProperty<Float>("Radius", &GASS::HavokSphereGeometryComponent::GetRadius, &GASS::HavokSphereGeometryComponent::SetRadius);
 	}
 
-	void HavokSphereGeometryComponent::OnCreate()
+	void HavokSphereGeometryComponent::OnInitialize()
 	{
-		HavokBaseGeometryComponent::OnCreate();
+		HavokBaseGeometryComponent::OnInitialize();
 	}
 	
 	void HavokSphereGeometryComponent::SetSizeFromMesh(bool value)

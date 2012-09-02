@@ -26,21 +26,7 @@
 #include "Plugins/Havok/HavokBaseGeometryComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/Math/AABox.h"
-#include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
+#include "Sim/GASS.h"
 #include <boost/bind.hpp>
 #include <Physics/Collide/Shape/Misc/Transform/hkpTransformShape.h>
 
@@ -73,18 +59,18 @@ namespace GASS
 		RegisterProperty<bool>("Debug", &GASS::HavokBaseGeometryComponent::GetDebug, &GASS::HavokBaseGeometryComponent::SetDebug);
 	}
 
-	void HavokBaseGeometryComponent::OnCreate()
+	void HavokBaseGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
-	void HavokBaseGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void HavokBaseGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		HavokPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<HavokPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		m_Shape = CreateHavokShape();
@@ -245,7 +231,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = GetDebugObject();
 				obj->UnregisterForMessage(UNREG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
-				GetSceneObject()->GetSceneObjectManager()->GetScenario()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
+				GetSceneObject()->GetScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
 			}
 		}
 	}
@@ -273,7 +259,7 @@ namespace GASS
 		if(!scene_object)
 		{
 			//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-			scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+			scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("DebugPhysics"));
 			if(!scene_object)
 			{
 				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
@@ -290,9 +276,9 @@ namespace GASS
 
 				debug_template->AddComponent(location_comp);
 				debug_template->AddComponent(mesh_comp );
-				SimEngine::Get().GetSimObjectManager()->AddTemplate(debug_template);
+				SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(debug_template);
 				//scene_object = GetSceneObject()->GetSceneObjectManager()->LoadFromTemplate("DebugPhysics",GetSceneObject());
-				scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSimObjectManager()->CreateFromTemplate("DebugPhysics"));
+				scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("DebugPhysics"));
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
 			scene_object->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));

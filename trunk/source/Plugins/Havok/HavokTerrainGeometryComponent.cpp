@@ -25,21 +25,7 @@
 
 #include "Plugins/Havok/HavokTerrainGeometryComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/Math/AABox.h"
-#include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
+#include "Sim/GASS.h"
 #include <boost/bind.hpp>
 
 namespace GASS
@@ -103,17 +89,17 @@ namespace GASS
 		RegisterProperty<long int>("CollisionCategory", &GASS::HavokTerrainGeometryComponent::GetCollisionCategory, &GASS::HavokTerrainGeometryComponent::SetCollisionCategory);
 	}
 
-	void HavokTerrainGeometryComponent::OnCreate()
+	void HavokTerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnLoad,LoadPhysicsComponentsMessage ,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
-	void HavokTerrainGeometryComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void HavokTerrainGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		HavokPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<HavokPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 	}

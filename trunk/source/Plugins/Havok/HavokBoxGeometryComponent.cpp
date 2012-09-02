@@ -26,22 +26,8 @@
 #include "Plugins/Havok/HavokBoxGeometryComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
+#include "Sim/GASS.h"
 
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/Math/AABox.h"
-#include "Core/Utils/Log.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Scenario/Scene/SceneObjectTemplate.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/ITerrainComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
-#include <boost/bind.hpp>
 
 namespace GASS
 {
@@ -63,9 +49,9 @@ namespace GASS
 		RegisterProperty<Vec3>("Size", &GASS::HavokBoxGeometryComponent::GetSize, &GASS::HavokBoxGeometryComponent::SetSize);
 	}
 
-	void HavokBoxGeometryComponent::OnCreate()
+	void HavokBoxGeometryComponent::OnInitialize()
 	{
-		HavokBaseGeometryComponent::OnCreate();
+		HavokBaseGeometryComponent::OnInitialize();
 	}
 
 	hkpShape*  HavokBoxGeometryComponent::CreateHavokShape()

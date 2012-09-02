@@ -17,22 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <boost/bind.hpp>
-#include "Core/Utils/Log.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/System/SystemFactory.h"
-#include "Sim/Scenario/Scene/SceneManagerFactory.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/SimSystemManager.h"
-
-
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
+#include "Sim/GASS.h"
+//#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
 #include "Plugins/Havok/HavokPhysicsSystem.h"
 
 
@@ -55,10 +41,10 @@ namespace GASS
 
 	void HavokPhysicsSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(HavokPhysicsSystem::OnInit,InitMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(HavokPhysicsSystem::OnInit,InitSystemMessage,0));
 	}
 
-	void HavokPhysicsSystem::OnInit(MessagePtr message)
+	void HavokPhysicsSystem::OnInit(InitSystemMessagePtr message)
 	{
 	
 	}

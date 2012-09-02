@@ -21,14 +21,8 @@
 #pragma once
 
 
-#include <map>
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Systems/SimSystem.h"
-
-	
-
-
+//#include <map>
+#include "Sim/GASS.h"
 
 namespace GASS
 {
@@ -42,10 +36,12 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 	protected:
-		void OnInit(MessagePtr message);
+		void OnInit(InitSystemMessagePtr message);
 		void OnShutdown(MessagePtr message);
 	private:
 		bool m_Init;
 	};
+
+	typedef boost::shared_ptr<HavokPhysicsSystem> HavokPhysicsSystemPtr;
 }
 

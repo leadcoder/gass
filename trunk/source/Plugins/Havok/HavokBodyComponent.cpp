@@ -17,24 +17,11 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+#include "Sim/GASS.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
 #include "HavokSphereGeometryComponent.h"
-#include "Core/Math/AABox.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Systems/Messages/GraphicsSystemMessages.h"
-#include "Sim/Systems/Messages/CoreSystemMessages.h"
 #include "HavokBaseGeometryComponent.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Scheduling/IRuntimeController.h"
-#include <boost/bind.hpp>
 #include <Physics/Collide/Filter/Group/hkpGroupFilter.h>
 #include <Physics/Collide/Filter/Group/hkpGroupFilterSetup.h>
 
@@ -74,9 +61,9 @@ namespace GASS
 
 	}
 
-	void HavokBodyComponent::OnCreate()
+	void HavokBodyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnLoad,LoadPhysicsComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnRotationChanged,RotationMessage,0));
@@ -175,11 +162,13 @@ namespace GASS
 		SetMass(message->GetMass());
 	}
 
-	void HavokBodyComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void HavokBodyComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
-		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<HavokPhysicsSceneManager>()->Register(listener);
+		
+		HavokPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<HavokPhysicsSceneManager>();
 		m_DeltaTime = scene_manager->GetSimulationUpdateInterval();
 		assert(scene_manager);
 

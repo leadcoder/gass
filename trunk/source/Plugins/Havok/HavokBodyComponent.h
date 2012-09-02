@@ -20,13 +20,7 @@
 
 #pragma once
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Core/Math/Vector.h"
-#include "Sim/Scheduling/TaskGroups.h"
-#include "Sim/Scheduling/ITaskListener.h"
+#include "Sim/GASS.h"
 
 
 class hkpRigidBody;
@@ -48,7 +42,7 @@ namespace GASS
 		HavokBodyComponent();
 		virtual ~HavokBodyComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 
 		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
 		float GetMass() const {return m_Mass;}
@@ -102,7 +96,7 @@ namespace GASS
 		Quaternion GetRotation();
 
 		void BodyMoved();
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);

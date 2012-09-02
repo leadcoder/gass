@@ -19,11 +19,6 @@
 *****************************************************************************/ 
 
 #pragma once 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
 
 class hkpWheelConstraintData;
 class hkpMotorAction;
@@ -40,10 +35,10 @@ namespace GASS
 		HavokSuspensionComponent();
 		virtual ~HavokSuspensionComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 
 		void SetAxis1Vel(float velocity);
 		void SetAxis2Vel(float value);

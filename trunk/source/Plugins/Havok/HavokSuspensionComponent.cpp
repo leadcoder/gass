@@ -18,24 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/Common.h"
+#include "Sim/GASS.h"
 #include "Plugins/Havok/HavokSuspensionComponent.h"
 #include "Plugins/Havok/HavokBodyComponent.h"
 #include "Plugins/Havok/HavokPhysicsSceneManager.h"
-//#include "Plugins/Havok/HavokCollisionSystem.h"
-//#include "Plugins/Havok/HavokSphereGeometryComponent.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/ComponentSystem/IComponentContainer.h"
-#include "Sim/Scenario/Scenario.h"
-#include "Sim/Scenario/Scene/SceneObject.h"
-#include "Sim/Scenario/Scene/SceneObjectManager.h"
-#include "Sim/Components/Graphics/Geometry/IGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/IMeshComponent.h"
-#include "Sim/Components/Graphics/ILocationComponent.h"
-#include "Sim/SimEngine.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include <boost/bind.hpp>
 #include <Physics/Dynamics/Constraint/Bilateral/Wheel/hkpWheelConstraintData.h>
 #include <Physics/Utilities/Actions/Motor/hkpMotorAction.h>
 
@@ -79,9 +65,9 @@ namespace GASS
 		RegisterProperty<Vec3>("Anchor", &GASS::HavokSuspensionComponent::GetAnchor, &GASS::HavokSuspensionComponent::SetAnchor);
 	}
 
-	void HavokSuspensionComponent::OnCreate()
+	void HavokSuspensionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokSuspensionComponent::OnLoad,LoadPhysicsComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokSuspensionComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokSuspensionComponent::OnParameterMessage,PhysicsJointMessage,0));
 	}
 
@@ -121,9 +107,9 @@ namespace GASS
 		}
 	}
 
-	void HavokSuspensionComponent::OnLoad(LoadPhysicsComponentsMessagePtr message)
+	void HavokSuspensionComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		HavokPhysicsSceneManagerPtr scene_manager = boost::shared_static_cast<HavokPhysicsSceneManager> (message->GetPhysicsSceneManager());
+		HavokPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<HavokPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 

@@ -20,13 +20,7 @@
 
 #pragma once 
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Quaternion.h"
+#include "Sim/GASS.h"
 #include "HavokPhysicsSceneManager.h"
 #include "HavokBaseGeometryComponent.h"
 
@@ -44,7 +38,7 @@ namespace GASS
 		HavokSphereGeometryComponent();
 		virtual ~HavokSphereGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	
 	protected:
 		virtual hkpShape*  CreateHavokShape();

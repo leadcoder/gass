@@ -20,15 +20,10 @@
 
 #pragma once 
 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Quaternion.h"
 #include "HavokPhysicsSceneManager.h"
-#include "Sim/Components/Physics/IPhysicsGeometryComponent.h"
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
+#include "Sim/GASS.h"
+
 
 class hkpTransformShape;
 
@@ -55,12 +50,12 @@ namespace GASS
 		HavokBaseGeometryComponent();
 		virtual ~HavokBaseGeometryComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 		virtual hkpShape* GetShape() const {return (hkpShape*) m_TransformShape;}
 	protected:
 
 		//Message functions
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);

@@ -19,12 +19,7 @@
 *****************************************************************************/ 
 
 #pragma once 
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Sim/Scenario/Scene/Messages/PhysicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/GraphicsSceneObjectMessages.h"
-#include "Sim/Scenario/Scene/Messages/CoreSceneObjectMessages.h"
-#include "Core/MessageSystem/IMessage.h"
-
+#include "Sim/GASS.h"
 class hkpHingeConstraintData;
 class hkpMotorAction;
 
@@ -41,10 +36,10 @@ namespace GASS
 		HavokHingeComponent();
 		virtual ~HavokHingeComponent();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnInitialize();
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
-		void OnLoad(LoadPhysicsComponentsMessagePtr message);
+		void OnLoad(LoadComponentsMessagePtr message);
 
 		void SetAxisVel(float velocity);
 		float GetAxisForce()const;
