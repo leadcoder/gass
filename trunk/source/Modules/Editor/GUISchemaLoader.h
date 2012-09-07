@@ -52,6 +52,7 @@ namespace GASS
 		std::string DisplayName;
 		std::string RestrictionProxyProperty;
 		ControlType  GUIControlType;
+		std::string FileControlSettings;
 		std::vector<std::string> Restrictions;
 	};
 

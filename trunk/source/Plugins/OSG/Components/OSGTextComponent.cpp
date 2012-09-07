@@ -96,7 +96,7 @@ namespace GASS
 
 
 		m_OSGText->setColor(osg::Vec4d(m_Color.x,m_Color.y,m_Color.z,m_Color.w));
-
+	
 		if(m_DropShadow)
 			m_OSGText->setBackdropType(osgText::Text::OUTLINE);
 
@@ -113,6 +113,12 @@ namespace GASS
 
 		m_OSGGeode->setNodeMask(~NM_RECEIVE_SHADOWS & m_OSGGeode->getNodeMask());
 		m_OSGGeode->setNodeMask(~NM_CAST_SHADOWS & m_OSGGeode->getNodeMask());
+
+		osg::ref_ptr<osg::StateSet> nodess = m_OSGGeode->getOrCreateStateSet();
+		nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+
+		osg::Program* program = new osg::Program;
+        nodess->setAttribute(program);
 	}
 
 	void OSGTextComponent::SetFont(const std::string &font) 

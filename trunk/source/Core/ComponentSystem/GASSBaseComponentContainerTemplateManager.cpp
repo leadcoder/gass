@@ -26,6 +26,7 @@
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "tinyxml.h"
 
 #include <iostream>
@@ -97,11 +98,12 @@ namespace GASS
 		return templates;
 	}
 
+
 	void BaseComponentContainerTemplateManager::Load(const std::string &filename)
 	{
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "BaseComponentContainerTemplateManager::Load");
-		
+
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
@@ -135,5 +137,16 @@ namespace GASS
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
 		
+	}
+
+	void BaseComponentContainerTemplateManager::LoadFromPath(const std::string &path, bool recursive)
+	{
+		std::vector<std::string> files;
+		Misc::GetFilesFromPath(files, path, recursive, true);
+		for(size_t i = 0; i< files.size(); i++)
+		{
+			if(Misc::GetExtension(files[i]) == "xml")
+				Load(files[i]);
+		}
 	}
 }

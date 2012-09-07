@@ -79,11 +79,18 @@ namespace GASS
 		*/
 		void Load(const std::string &filename);
 
+
+		/**
+			Load all templates from path
+		*/
+		void LoadFromPath(const std::string &path, bool recursive = true);
+
 		/**
 			Check if each new component container instance returned
 			from the CreateFromTemplate function should have a
 			unique name.
 		*/
+
 		bool GetAddObjectIDToName() const{return m_AddObjectIDToName;}
 		/**
 			Set whether each new component container instance returned

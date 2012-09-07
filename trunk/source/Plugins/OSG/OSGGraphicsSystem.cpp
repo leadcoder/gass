@@ -79,7 +79,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("systems.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASSSystems.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
 	{
 
 	}
@@ -93,9 +93,9 @@ namespace GASS
 			Sleep(1000);
 			m_Viewer->stopThreading();
 			Sleep(1000);
-			
+
 		}
-		
+
 		delete m_Viewer;
 	}
 
@@ -119,18 +119,18 @@ namespace GASS
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
 		std::string full_path;
-		
+
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(!rs->GetFullPath("arial.ttf",full_path))
 		{
 			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture" + full_path,"OSGGraphicsSystem::OnInit");
 		}
-		
+
 		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
 		m_DebugTextBox->setFont(full_path);
 		m_DebugTextBox->setTextSize(12);
-		
-		
+
+
 		if(m_CreateMainWindowOnInit)
 		{
 			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
@@ -145,7 +145,7 @@ namespace GASS
 			CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
 		}
 
-		
+
 		//Load shadow settings
 		if(m_ShadowSettingsFile != "")
 		{
@@ -168,15 +168,14 @@ namespace GASS
 				LoadShadowSettings(ss);
 			}
 		}
-
 		//osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options; 
-		
+
 		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions(); 
 		if (opt == NULL) 
 		{ 
 			opt = new osgDB::ReaderWriter::Options(); 
 		} 
-		
+
 		const std::string options = opt->getOptionString();
 		opt->setOptionString("dds_flip"); 
 		osgDB::Registry::instance()->setOptions(opt); 
@@ -188,7 +187,7 @@ namespace GASS
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
 	{
 		std::string debug_text = message->GetText();
-		
+
 		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
 
 	}
@@ -212,7 +211,7 @@ namespace GASS
 	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
 	{
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-			
+
 		traits->x = 100;
 		traits->y = 100;
 		traits->width = width;
@@ -221,7 +220,7 @@ namespace GASS
 		traits->sharedContext = 0;
 		if(m_Windows.size() > 0)
 			traits->sharedContext = m_Windows.begin()->second;
-		
+
 
 		if(handle) //external window
 		{
@@ -229,14 +228,14 @@ namespace GASS
 			traits->windowDecoration = false;
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
-			
+
 		}
 		else //create window here
 		{
 			traits->windowDecoration = true;
 			traits->windowName = name;
 		}
-		
+
 		osg::ref_ptr<osg::GraphicsContext> graphics_context = osg::GraphicsContext::createGraphicsContext(traits.get());
 		if (graphics_context.valid())
 		{
@@ -252,33 +251,33 @@ namespace GASS
 		}
 		m_Windows[name] = graphics_context;
 
-		
+
 
 		if(m_Windows.size() == 1) //first window created?
 		{
 			if(handle == 0) //internal window
 			{
-				#if defined(WIN32) && !defined(__CYGWIN__) 	
+#if defined(WIN32) && !defined(__CYGWIN__) 	
 				osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
 				main_handle = (void*) win32_window->getHWND();
 				handle = main_handle;
-				#endif
+#endif
 			}
 			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
-			
+
 		}
 	}
 
 	void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height)
-	//void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, int pos_x, int pos_y, int width, int height)
+		//void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, int pos_x, int pos_y, int width, int height)
 	{
 		if(m_Windows.find(render_window) != m_Windows.end())
 		{
 			//
 			osgViewer::View* view = new osgViewer::View;
 			view->setName(name);
-		
+
 			int win_w = m_Windows[render_window]->getTraits()->width;
 			int win_h = m_Windows[render_window]->getTraits()->height;
 
@@ -295,8 +294,8 @@ namespace GASS
 			view->setLightingMode(osg::View::SKY_LIGHT); 
 			view->getDatabasePager()->setDoPreCompile( true );
 			view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
-    		// add some stock OSG handlers:
-			
+			// add some stock OSG handlers:
+
 			osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 			stats->setKeyEventTogglesOnScreenStats('y');
 			stats->setKeyEventPrintsOutStats(0);
@@ -320,7 +319,7 @@ namespace GASS
 	{
 		osgViewer::ViewerBase::Views views;
 		GetViewer()->getViews(views);
-		
+
 		for(int i = 0; i < views.size(); i++)
 		{
 			if(views[i]->getName() == viewport || viewport == "ALL")
@@ -354,7 +353,7 @@ namespace GASS
 	{
 		//m_Window->windowMovedOrResized();
 		osgViewer::ViewerBase::Views views;
-		
+
 		m_Viewer->getViews(views);
 		//set same size in all viewports for the moment
 		for(int i = 0; i < views.size(); i++)
@@ -369,7 +368,7 @@ namespace GASS
 	void OSGGraphicsSystem::Update(double delta_time)
 	{
 		static int tick = 0;
-		
+
 		if(m_Viewer->done())
 		{
 			return;
@@ -390,7 +389,7 @@ namespace GASS
 		if(shadow_elem)
 		{
 			std::string type = shadow_elem->Attribute("type");
-			
+
 			if(type == "ShadowVolume")
 			{
 				//GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
@@ -426,15 +425,15 @@ namespace GASS
 				float maxFarPlane = 200;
 				float minNearDistanceForSplits = 10;
 				float moveVCamBehindRCamFactor = 1;
-				
+
 				shadow_elem->QueryFloatAttribute("MaxFarDistance",&maxFarPlane);
 				shadow_elem->QueryIntAttribute("TextureSize",&mapres);
 				shadow_elem->QueryIntAttribute("NumCount",&mapcount);
 				shadow_elem->QueryFloatAttribute("MinNearDistanceForSplits",&minNearDistanceForSplits);
 				shadow_elem->QueryFloatAttribute("MoveVCamBehindRCamFactor",&moveVCamBehindRCamFactor);
-				
+
 				osg::ref_ptr<osgShadow::ParallelSplitShadowMap> pssm = new osgShadow::ParallelSplitShadowMap(NULL,mapcount);
-			
+
 				pssm->setTextureResolution(mapres);
 				pssm->setMaxFarDistance(maxFarPlane);
 				pssm->setMoveVCamBehindRCamFactor(moveVCamBehindRCamFactor);
@@ -442,35 +441,35 @@ namespace GASS
 
 				double polyoffsetfactor = pssm->getPolygonOffset().x();
 				double polyoffsetunit   = pssm->getPolygonOffset().y();
-	
+
 				shadow_elem->QueryDoubleAttribute("PolyOffsetFactor",&polyoffsetfactor);
 				shadow_elem->QueryDoubleAttribute("PolyOffsetUnit",&polyoffsetunit);
-				
+
 				pssm->setPolygonOffset(osg::Vec2(polyoffsetfactor ,polyoffsetunit )); 
+
+
 				m_ShadowTechnique = pssm;
 			}
 			else if(type == "LightSpacePerspectiveShadowMap")
 			{
 				osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
-				
+
 				std::string sub_type = shadow_elem->Attribute("SubType");
 				if(sub_type == "Draw")
-				{
 					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
-					
-				}
 				else if(sub_type == "Cull")
 					sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
 				else if(sub_type == "Frustum")
 					sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
 				else
 					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
-				
+
+
+
 				if( sm.valid() ) 
 				{
-					//sm->setMainVertexShader( NULL ); 
-					//sm->setShadowVertexShader(NULL);
-					
+
+
 					float minLightMargin = 20.f;
 					float maxFarPlane = 500;
 					int texSize = 1024;
@@ -482,7 +481,7 @@ namespace GASS
 					shadow_elem->QueryIntAttribute("TextureSize",&texSize);
 					shadow_elem->QueryIntAttribute("BaseTextureUnit",&baseTexUnit);
 					shadow_elem->QueryIntAttribute("ShadowTextureUnit",&shadowTexUnit);
-					
+
 					sm->setMinLightMargin( minLightMargin );
 					sm->setMaxFarPlane( maxFarPlane );
 					sm->setTextureSize( osg::Vec2s( texSize, texSize ) );
@@ -490,7 +489,52 @@ namespace GASS
 					sm->setShadowTextureUnit( shadowTexUnit );
 					sm->setBaseTextureCoordIndex( baseTexUnit );
 					sm->setBaseTextureUnit( baseTexUnit );
+
+					sm->setMainVertexShader( NULL ); 
+					sm->setShadowVertexShader(NULL);
+
+
+					osg::Shader* mainFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
+						" // following expressions are auto modified - do not change them:       \n"
+						" // gl_TexCoord[0]  0 - can be subsituted with other index              \n"
+						"                                                                        \n"
+						"float DynamicShadow( );                                                 \n"
+						"                                                                        \n"
+						"uniform sampler2D baseTexture;                                          \n"
+						"                                                                        \n"
+						"void main(void)                                                         \n"
+						"{                                                                       \n"
+						"  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;     \n"
+						"  // Add ambient from Light of index = 0                                \n"
+						"  colorAmbientEmissive += gl_FrontLightProduct[0].ambient;              \n"
+						"  vec4 color = texture2D( baseTexture, gl_TexCoord[0].xy );             \n"
+						"  color *= mix( colorAmbientEmissive, gl_Color, DynamicShadow() );      \n"
+						//"  const float LOG2E = 1.442692;	// = 1/log(2)                        \n"
+						//"  float fog = exp2(-gl_Fog.density * abs(gl_FogFragCoord) * LOG2E);     \n"
+						//"  fog = clamp(fog, 0.0, 1.0);                                            \n"
+						"  float fog = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+						"  color.rgb = mix( gl_Fog.color.rgb, color.rgb, fog );                  \n"
+						"  gl_FragColor = color;                                                 \n"
+						"} \n" );  
+
+					sm->setMainFragmentShader(mainFragmentShader);
+
+					/*osg::Shader* shadowFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
+						" // following expressions are auto modified - do not change them:      \n"
+						" // gl_TexCoord[1]  1 - can be subsituted with other index             \n"
+						"                                                                       \n"
+						"uniform sampler2DShadow shadowTexture;                                 \n"
+						"                                                                       \n"
+						"float DynamicShadow( )                                                 \n"
+						"{                                                                      \n"
+						"    return shadow2DProj( shadowTexture, gl_TexCoord[1] ).r;            \n"
+						"} \n" );*/
+
+
 					m_ShadowTechnique = sm;
+
+
+
 				} 
 			}
 		}

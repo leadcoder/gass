@@ -12,7 +12,7 @@ namespace GASS
 	public:
 		EditorApplication();
 		~EditorApplication();
-		void Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, void* main_win_handle,void*  render_win_handle);
+		void Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle,void*  render_win_handle);
 		void Update();
 		GASS::ScenePtr GetScene(void) {return m_Scene;}
 		void LoadScene(const std::string &scene_path);

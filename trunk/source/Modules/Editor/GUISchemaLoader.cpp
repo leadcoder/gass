@@ -137,8 +137,13 @@ namespace GASS
 					}
 				}
 
-				if(gui_elem->Attribute("RestrictionProxyProperty"))
-					ps.RestrictionProxyProperty = gui_elem->Attribute("RestrictionProxyProperty");
+				if(gui_elem->Attribute("fileControlSettings"))
+				{
+					ps.FileControlSettings = gui_elem->Attribute("fileControlSettings");
+				}
+
+				if(gui_elem->Attribute("restrictionProxyProperty"))
+					ps.RestrictionProxyProperty = gui_elem->Attribute("restrictionProxyProperty");
 
 				TiXmlElement *restriction_elem =  gui_elem->FirstChildElement("xs:restriction");
 				if(restriction_elem)
@@ -160,7 +165,8 @@ namespace GASS
 			TiXmlElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
 			if(doc_elem)
 			{
-				ps.Documentation = doc_elem->GetText();
+				if(doc_elem->GetText())
+					ps.Documentation = doc_elem->GetText();
 			}
 		}
 		/*TiXmlElement *complex_elem =  elem->FirstChildElement("xs:complexType");

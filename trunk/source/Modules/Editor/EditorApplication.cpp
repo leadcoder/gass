@@ -52,17 +52,15 @@ namespace GASS
 
 	}
 
-	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, void* main_win_handle,void*render_win_handle)
+	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle, void *render_win_handle)
 	{	
 		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
 		LoadSettings(config_path + "EditorApplication.xml");
 		SimEngine *se = SimEngine::GetPtr();
-		se->Init(config_path +  "GASSPlugins.xml", config_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
-
+		const std::string render_system_path = config_path + render_system + "/";
+		se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
 		se->GetSimSystemManager()->SetPauseSimulation(m_ExternalUpdate);
-			
-
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
 		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
 		se->GetSceneObjectTemplateManager()->SetObjectIDSuffix(m_IDSuffix);
@@ -77,7 +75,11 @@ namespace GASS
 		while(iter != m_Templates.end())
 		{
 			std::string file_path = *iter;
-			se->GetSceneObjectTemplateManager()->Load(file_path);
+			if(Misc::GetExtension(file_path) == "xml")
+				se->GetSceneObjectTemplateManager()->Load(file_path);
+			else
+				se->GetSceneObjectTemplateManager()->LoadFromPath(file_path);
+
 			iter++;
 		}
 

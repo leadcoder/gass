@@ -24,7 +24,6 @@ namespace GASS
 	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
 	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
 
-
 	class EditorModuleExport MouseToolController : public boost::enable_shared_from_this<MouseToolController>, public IMessageListener
 	{
 		friend class IMouseTool;
@@ -38,8 +37,6 @@ namespace GASS
 		void MoveTo(const CursorInfo &info);
 		void MouseDown(const CursorInfo &info);
 		void MouseUp(const CursorInfo &info);
-
-
 		bool IsObjectLocked(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectStatic(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectVisible(SceneObjectWeakPtr obj);
@@ -49,12 +46,10 @@ namespace GASS
 		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
 		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
 		GASS::SceneObjectPtr GetActiveCameraObject() const {return GASS::SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
-
 		void SetGridSpacing(Float value); 
 		void SetGridSize(Float value); 
 		void SetSnapMovment(Float value);
 		void SetSnapAngle(Float value);
-
 		Float GetGridSpacing() const {return m_GridSpacing;}
 		Float GetGridSize() const {return m_GridSize;}
 		Float GetSnapMovment() const {return m_SnapMovment;}
@@ -64,24 +59,17 @@ namespace GASS
 		Float SnapPosition(Float value);
 		Float SnapAngle(Float value);
 		void Update(double delta);
-		
 		void NextTool();
 		void PrevTool();
 		void SetActive(bool value) {m_Active = value;}
 		double GetDeltaTime() const {return m_Delta;}
-
 		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		void AddStaticObject(GASS::SceneObjectWeakPtr obj) {m_StaticObjects.insert(obj);}
-	private:
-
 		CursorInfo GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
+	private:
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits);
-
-		//void RequestScenePosition();
-		//bool CheckScenePosition();
-		//bool ForceScenePosition();
 		void OnFocusChanged(WindowFocusChangedMessagePtr message);
 		void OnCursorMoved(CursorMoved2DMessagePtr message);
 		void OnToolChanged(ToolChangedMessagePtr message);
@@ -97,14 +85,10 @@ namespace GASS
 		void OnSnapModeMessage(SnapModeMessagePtr message);
 		
 		SceneObjectPtr GetPointerObject();
-
-
 		void OnInput(GASS::ControllerMessagePtr message);
 		GASS::CameraComponentPtr GetActiveCamera() const {return GASS::CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
-		//GASS::SceneObjectPtr GetActiveCameraObject() const {return GASS::SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
 		std::vector<IMouseTool*> m_Tools;
 		IMouseTool* m_ActiveTool;
-		//CursorInfo m_CursorInfo;
 		GASS::ControlSetting* m_EditorControlSetting;
 		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;

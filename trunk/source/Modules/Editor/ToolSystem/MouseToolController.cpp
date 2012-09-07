@@ -134,7 +134,6 @@ namespace GASS
 
 	void MouseToolController::OnCursorMoved(CursorMoved2DMessagePtr message)
 	{
-		//m_CursorInfo.m_ScreenPos = message->GetScreenPosition();
 		Vec2 c_pos = message->GetScreenPosition();
 		CursorInfo info = GetCursorInfo(c_pos,m_RayPickDistance);
 		MoveTo(info);
@@ -144,10 +143,6 @@ namespace GASS
 		int mess_id = (int) this;
 		MessagePtr cursor_msg(new CursorMoved3DMessage(message->GetScreenPosition(),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
 		EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
-
-		//if(CheckScenePosition())
-		//if(ForceScenePosition())
-		//	MoveTo(m_CursorInfo);
 	}
 
 	void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
@@ -437,12 +432,11 @@ namespace GASS
 		info.m_Delta.y = info.m_ScreenPos.y - m_LastScreenPos.y;
 		CameraComponentPtr cam = GetActiveCamera();
 
-		//save ray direction
+		//get ray direction
 		if(cam)
 			cam->GetCameraToViewportRay(cursor_pos.x, cursor_pos.y,info.m_RayStart,info.m_RayDir);
 
 		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, 2);
-
 
 		int from_id = int(this);
 
@@ -451,8 +445,6 @@ namespace GASS
 			SceneObjectPtr col_obj(gizmo_result.CollSceneObject,boost::detail::sp_nothrow_tag());
 			if(col_obj)
 			{
-				//MessagePtr cursor_msg(new CursorMoved3DMessage(Vec2(cursor_pos_x,cursor_pos_y),gizmo_result.CollPosition, col_obj,from_id));
-				//EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
 				info.m_3DPos = gizmo_result.CollPosition;
 				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
 				//std::cout << result.CollPosition << std::endl;
@@ -466,23 +458,13 @@ namespace GASS
 				SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
 				if(col_obj)
 				{
-					//MessagePtr cursor_msg(new CursorMoved3DMessage(Vec2(viewport_pos_x,viewport_pos_y),mesh_result.CollPosition, col_obj,from_id));
-					//EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
 					info.m_3DPos = mesh_result.CollPosition;
 					info.m_ObjectUnderCursor = mesh_result.CollSceneObject;
-					//std::cout << result.CollPosition << std::endl;
-					//if(!m_EnableGizmo)
-					//	MoveTo(m_CursorInfo);
 				}
 			}
 		}
 		return info;
-		//if(m_EnableGizmo)
-		//	MoveTo(m_CursorInfo);
 	}
-
-	
-
 
 	void MouseToolController::SetGridSpacing(Float value)
 	{
@@ -505,7 +487,6 @@ namespace GASS
 	{
 		m_SnapAngle = value;
 	}
-
 
 	Float MouseToolController::SnapPosition(Float value)
 	{
@@ -531,12 +512,10 @@ namespace GASS
 			return value;
 	}
 
-
 	void MouseToolController::OnSnapSettingsMessage(SnapSettingsMessagePtr message)
 	{
 		m_SnapMovment = message->GetMovementSnap();
 		m_SnapAngle = message->GetRotationSnap();
-
 	}
 
 	void MouseToolController::OnSnapModeMessage(SnapModeMessagePtr message)
@@ -544,7 +523,6 @@ namespace GASS
 		m_EnableMovmentSnap = message->MovementSnapEnabled();
 		m_EnableAngleSnap = message->RotationSnapEnabled();
 	}
-
 
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
@@ -596,13 +574,6 @@ namespace GASS
 
 	void MouseToolController::Update(double delta)
 	{
-		//fade mouse delta
-		//m_CursorInfo.m_Delta.x *= 0.9;
-		//m_CursorInfo.m_Delta.y *= 0.9;
-
-		//CheckScenePosition();
-		//RequestScenePosition();
-		//GetCursorInfo();
 		m_Delta = delta;
 		//debug message
 		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
