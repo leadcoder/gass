@@ -68,8 +68,7 @@ namespace GASS
 		void SyncMessages(double delta_time, bool recursive = true) const;
 		ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
 
-		virtual void RemoveChild(ComponentContainerPtr child);
-		
+		void RemoveChildSceneObject(SceneObjectPtr child);
 		void AddChildSceneObject(SceneObjectPtr child , bool load);
 
 		/**

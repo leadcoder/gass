@@ -339,7 +339,7 @@ namespace GASS
 	{
 		SceneObjectPtr so = message->GetSceneObject();
 		if(so)
-			so->GetParent()->RemoveChild(so);
+			so->GetParentSceneObject()->RemoveChildSceneObject(so);
 	}
 
 	SceneManagerIterator Scene::GetSceneManagers()

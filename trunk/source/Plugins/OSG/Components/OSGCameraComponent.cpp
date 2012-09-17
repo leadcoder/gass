@@ -160,15 +160,13 @@ namespace GASS
 			}
 			else
 			{
-				//double fovy, aspectRatio, zNear, zFar;
-				//m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
-				m_OSGCamera->setProjectionResizePolicy(osg::Camera::FIXED);
+				//m_OSGCamera->setProjectionResizePolicy(osg::Camera::FIXED);
+				m_OSGCamera->setProjectionResizePolicy(osg::Camera::HORIZONTAL);
 				double aspectRatio = 4.0/3.0;
+
 				if(m_OSGCamera->getViewport())
 					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
 				m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
-
-				
 			}
 		}
 	}
@@ -289,13 +287,9 @@ namespace GASS
 
 	void OSGCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-
-
 		OSGCameraManipulatorPtr camera_man = GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
 		if(camera_man)
 			m_UpdateCameraFromLocation = false;
-
-
 		return;
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();

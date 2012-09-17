@@ -67,7 +67,7 @@ namespace GASS
 	void MeasurementTool::UpdateLine(const Vec3 &start, const Vec3 &end)
 	{
 
-		Vec3 text_pos = start;//(start + end)* 0.5; 
+		Vec3 text_pos = end;//(start + end)* 0.5; 
 		if(!SceneObjectPtr(m_RulerObject,boost::detail::sp_nothrow_tag()))
 		{
 			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetScene()->GetRootSceneObject());

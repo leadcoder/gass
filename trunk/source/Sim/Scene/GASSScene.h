@@ -190,6 +190,11 @@ namespace GASS
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
 
 		/**
+			Check if scene has been loaded
+		*/
+		bool IsSceneLoaded() const {return m_SceneLoaded;}
+
+		/**
 			Get how many messages that is unprocessed
 		*/
 		int GetQueuedMessages() const;

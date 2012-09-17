@@ -82,11 +82,10 @@ namespace GASS
 	}
 
 	//Override
-	void SceneObject::RemoveChild(ComponentContainerPtr child)
+	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
-		SceneObjectPtr obj = boost::shared_dynamic_cast<SceneObject>(child);
 		//notify that this objects and its children will be removed
-		obj->OnDelete();
+		child->OnDelete();
 		BaseComponentContainer::RemoveChild(child);
 	}
 

@@ -41,7 +41,8 @@ namespace GASS
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				Float rotation_rad_step = (info.m_Delta.x + info.m_Delta.y);
+				Float rotation_rad_step = (info.m_Delta.x);
+				rotation_rad_step = rotation_rad_step*10;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;
 				GASS::MessagePtr rot_msg(new GASS::WorldRotationMessage(new_rot,from_id));

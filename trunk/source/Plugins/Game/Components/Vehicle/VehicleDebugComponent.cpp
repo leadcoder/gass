@@ -101,7 +101,7 @@ namespace GASS
 	}
 	void VehicleDebugComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		m_WaypointObj->GetParent()->RemoveChild(m_WaypointObj);
+		m_WaypointObj->GetParentSceneObject()->RemoveChildSceneObject(m_WaypointObj);
 		m_WaypointObj.reset();
 		//GetSceneObject()->GetScene()->DeleteObject(m_WaypointObj);
 	}
