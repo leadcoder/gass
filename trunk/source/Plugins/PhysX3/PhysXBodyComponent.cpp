@@ -132,10 +132,7 @@ namespace GASS
 		physx::PxVec3 dimensions(0.5,0.5,0.5);
 		physx::PxBoxGeometry geometry(dimensions);
 
-		//m_ActorDesc.globalPose.t= NxVec3(pos.x,pos.y,pos.z);
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
-		//physx::PxMaterial* aterial = system->GetPxSDK()->createMaterial(0.5,0.5,0.5);
-		//m_Actor = PxCreateDynamic(*system->GetPxSDK(), transform, geometry, *mMaterial, density);
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
@@ -164,11 +161,6 @@ namespace GASS
 		m_CGPosition = CGPosition;
 		m_SymmetricInertia = symmetricInertia;
 		m_AssymetricInertia = assymmetricInertia;
-/*		dMassSetParameters(&m_ODEMass,mass,
-			CGPosition.x,CGPosition.y,CGPosition.z,
-			symmetricInertia.x,symmetricInertia.y,symmetricInertia.z,
-			assymmetricInertia.x,assymmetricInertia.y,assymmetricInertia.z);
-		dBodySetMass(m_PhysXBodyComponent, &m_ODEMass);*/
 	}
 	
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool rel)
@@ -187,15 +179,9 @@ namespace GASS
 		if(m_Actor)
 		{
 			if (rel) 
-			{
-				//dVector3 vec;
-				//dBodyVectorToWorld(m_PhysXBodyComponent,vel.x,vel.y,vel.z,vec);
-				//dBodySetLinearVel(m_PhysXBodyComponent,vec[0],vec[1],vec[2]);
-			} 
-			else
-			{
 				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-			}
+			else
+				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
 		}
 	}
 
@@ -204,8 +190,7 @@ namespace GASS
 		if(m_Actor)
 		{
 			if (rel) 
-			{
-			} 
+				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
 			else
 				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
 		}
