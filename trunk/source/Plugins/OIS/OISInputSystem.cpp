@@ -177,8 +177,6 @@ namespace GASS
 
 	void OISInputSystem::Update(double delta_time)
 	{
-
-
 		if(m_Window == 0)
 			return;
 
@@ -300,13 +298,21 @@ namespace GASS
 	}
 	bool OISInputSystem::mouseMoved( const OIS::MouseEvent &arg )
 	{
+		MouseData data;
+		data.XRel = NormalizeMouse(arg.state.X.rel);
+		data.YRel = NormalizeMouse(arg.state.Y.rel);
+		data.ZRel = NormalizeMouse(arg.state.Z.rel);
+
+		data.XAbs = arg.state.X.abs;
+		data.YAbs = arg.state.Y.abs;
+		data.ZAbs = arg.state.Z.abs;
+
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
-
 			//Normalize values
-			ml->MouseMoved(NormalizeMouse(arg.state.X.rel),NormalizeMouse(arg.state.Y.rel),NormalizeMouse(arg.state.Z.rel));
+			ml->MouseMoved(data);
 			++iter;
 		}
 		return true;
@@ -314,11 +320,20 @@ namespace GASS
 
 	bool OISInputSystem::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 	{
+		MouseData data;
+		data.XRel = NormalizeMouse(arg.state.X.rel);
+		data.YRel = NormalizeMouse(arg.state.Y.rel);
+		data.ZRel = NormalizeMouse(arg.state.Z.rel);
+
+		data.XAbs = arg.state.X.abs;
+		data.YAbs = arg.state.Y.abs;
+		data.ZAbs = arg.state.Z.abs;
+
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
-			ml->MousePressed(id);
+			ml->MousePressed(data,id);
 			++iter;
 		}
 		return true;
@@ -326,11 +341,21 @@ namespace GASS
 
 	bool OISInputSystem::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 	{
+
+		MouseData data;
+		data.XRel = NormalizeMouse(arg.state.X.rel);
+		data.YRel = NormalizeMouse(arg.state.Y.rel);
+		data.ZRel = NormalizeMouse(arg.state.Z.rel);
+
+		data.XAbs = arg.state.X.abs;
+		data.YAbs = arg.state.Y.abs;
+		data.ZAbs = arg.state.Z.abs;
+
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
-			ml->MouseReleased(id);
+			ml->MouseReleased(data,id);
 			++iter;
 		}
 		return true;

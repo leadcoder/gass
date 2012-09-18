@@ -16,7 +16,10 @@ namespace GASS
 		MainMenu(MyGUI::Widget* _parent = nullptr);
 		virtual ~MainMenu();
 		void Init();
+		void notifyMenuCtrlAccept(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
+		void notifyFileMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
 	private:
+		MyGUI::MenuBar* m_MenuBar;
 		
 	};
 } 
