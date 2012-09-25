@@ -91,8 +91,8 @@ namespace GASS
 		//can be called by user it simulation is paused
 		void UpdateSimulation(double delta_time);
 	private:
+		size_t GetQueuedMessages() const;
 		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
-		int GetQueuedMessages() const;
 		void StepSimulation(double delta_time);		
 		void SyncMessages(double delta_time);
 		MessageManagerPtr m_SystemMessageManager;
