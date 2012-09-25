@@ -22,20 +22,8 @@ end
 		"../dependencies/tinyxml",
 		"$(BOOST_HOME)",
 		"../dependencies/tbb/include",
-		"$(PHYSX_HOME)/SDKs/PxTask/include",
-		"$(PHYSX_HOME)/SDKs/PxFoundation",
-		"$(PHYSX_HOME)/SDKs/PxFoundation/internal/include",
-		"$(PHYSX_HOME)/SDKs/PhysXProfileSDK/sdk/include",
-		"$(PHYSX_HOME)/SDKs/PhysXVisualDebuggerSDK/PVDCommLayer/Public",
-		"$(PHYSX_HOME)/SDKs/PhysXAPI",
-		"$(PHYSX_HOME)/SDKs/GeomUtils/headers",
-		"$(PHYSX_HOME)/SDKs/RepX/include",
-		"$(PHYSX_HOME)/SDKs/PhysXAPI/characterkinematic"
-
+		"$(PHYSX_HOME)/include"
 	}
-
-	
- 
 
 	configuration "Debug"
 		targetname "GASSPluginPhysX_d"
@@ -69,7 +57,7 @@ end
 		"../lib/",
 		"../dependencies/lib",
 		"$(BOOST_HOME)/lib",
-		"$(PHYSX_HOME)/SDKs/lib/win64"
+		"$(PHYSX_HOME)/Lib/win32"
 	}
 
 	configuration "Release"
