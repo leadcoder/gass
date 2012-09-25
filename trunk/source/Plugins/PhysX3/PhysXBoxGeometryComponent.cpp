@@ -68,14 +68,14 @@ namespace GASS
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(size.x/2.0,size.y/2.0,size.z/2.0), *material);
+		
+		physx::PxFilterData collFilterData;
+		collFilterData.word0=COLLISION_FLAG_CHASSIS;
+		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
+		shape->setSimulationFilterData(collFilterData);
+		
 		return shape;
 	}
-
-	void PhysXBoxGeometryComponent::SetSizeFromMesh(bool value)
-	{
-		m_SizeFromMesh = value;
-	}
-
 	
 	void PhysXBoxGeometryComponent::SetSize(const Vec3 &size)
 	{

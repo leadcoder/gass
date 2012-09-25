@@ -16,10 +16,8 @@
 #define PHYS_X_PHYSICS_MANAGER
 
 #include <map>
-#include "NxPhysics.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/BaseSceneManager.h"
-#include "Sim/Systems/SimSystem.h"
+#include "PxPhysics.h"
+#include "Sim/GASS.h"
 
 class NxPhysicsSDK;
 

@@ -252,13 +252,24 @@ namespace GASS
 		virtual bool KeyReleased( int key, unsigned int text) = 0;		
 	};
 
+	struct MouseData
+	{
+		float XRel;
+		float YRel;
+		float ZRel;
+
+		int XAbs;
+		int YAbs;
+		int ZAbs;
+	};
+
 	class GASSExport IMouseListener
 	{
 	public:
 		virtual ~IMouseListener() {}
-		virtual bool MouseMoved(float x,float y, float z) =0;
-		virtual bool MousePressed( int id ) = 0;
-		virtual bool MouseReleased( int id ) = 0;
+		virtual bool MouseMoved(const MouseData &data) =0;
+		virtual bool MousePressed(const MouseData &data, int id ) = 0;
+		virtual bool MouseReleased(const MouseData &data, int id ) = 0;
 	};
 
 	class GASSExport IGameControllerListener

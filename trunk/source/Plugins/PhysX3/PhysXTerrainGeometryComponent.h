@@ -20,17 +20,9 @@
 
 #pragma once 
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "PhysXPhysicsSceneManager.h"
 #include "PhysXBaseGeometryComponent.h"
-
+#include "PhysXCommon.h"
 
 namespace GASS
 {

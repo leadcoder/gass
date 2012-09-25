@@ -218,7 +218,7 @@ namespace GASS
 		SceneObjectID GetID() const {return m_ID;}
 		void LoadFromFile(const std::string &filename);
 		void SaveToFile(const std::string &filename);
-		int GetQueuedMessages() const;
+		size_t GetQueuedMessages() const;
 	protected:
 
 		void InitializePointers();

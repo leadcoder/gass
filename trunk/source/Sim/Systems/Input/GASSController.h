@@ -125,12 +125,12 @@ namespace GASS
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(float x,float y, float z)
+		virtual bool MouseMoved(const MouseData &data)
 		{
 			return true;
 		}
 
-		virtual bool MousePressed( int id )
+		virtual bool MousePressed(const MouseData &data, int id )
 		{
 			if(m_Button == id)
 			{
@@ -145,7 +145,7 @@ namespace GASS
 			}
 			return true;
 		}
-		virtual bool MouseReleased( int id )
+		virtual bool MouseReleased(const MouseData &data,int id )
 		{
 			if(m_Button == id)
 			{
@@ -263,7 +263,7 @@ namespace GASS
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(float x,float y, float z)
+		virtual bool MouseMoved(const MouseData &data)
 		{
 			float value = 0;
 			switch(m_Device)
@@ -272,13 +272,13 @@ namespace GASS
 				switch(m_Axis)
 				{
 				case INPUT_AXIS_0:
-					value  = m_Invert* x;
+					value  = m_Invert* data.XRel;
 					break;
 				case INPUT_AXIS_1:
-					value  = m_Invert* y;
+					value  = m_Invert* data.YRel;
 					break;
 				case INPUT_AXIS_2:
-					value  = m_Invert* z;
+					value  = m_Invert* data.ZRel;
 					break;
 				default:
 					value  = 0;
@@ -291,12 +291,12 @@ namespace GASS
 			return true;
 
 		}
-		virtual bool MousePressed( int id )
+		virtual bool MousePressed(const MouseData &data, int id )
 		{
 			return true;
 
 		}
-		virtual bool MouseReleased( int id )
+		virtual bool MouseReleased(const MouseData &data, int id )
 		{
 			return true;
 

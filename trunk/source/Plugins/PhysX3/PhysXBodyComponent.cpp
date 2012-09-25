@@ -122,16 +122,14 @@ namespace GASS
 	{
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
+		Quaternion rot = location->GetRotation();
 		
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
 		
 		physx::PxReal density = 1.0f;
-		physx::PxTransform transform(physx::PxVec3(pos.x, pos.y, pos.z), physx::PxQuat::createIdentity());
+		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
 		
-		physx::PxVec3 dimensions(0.5,0.5,0.5);
-		physx::PxBoxGeometry geometry(dimensions);
-
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
 		//m_Actor->setAngularDamping(0.75);
@@ -238,7 +236,7 @@ namespace GASS
 		if(m_Actor)
 		{
 			if(rel)
-				physx::PxRigidBodyExt::addLocalForceAtPos(m_Actor, physx::PxVec3(force_vec.x,force_vec.y,force_vec.z));
+				physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor, physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(0,0,0));
 			else
 				m_Actor->addForce(physx::PxVec3(force_vec.x,force_vec.y,force_vec.z));
 		}
@@ -291,7 +289,7 @@ namespace GASS
 		if(m_Actor)
 		{
 			Vec3 trans_vec = value - GetPosition();
-			m_Actor->setGlobalPose(physx::PxTransform(physx::PxVec3(value.x, value.y, value.z),m_Actor->getGlobalPose().q));
+			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
 
 			if(m_EffectJoints)
 			{

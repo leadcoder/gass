@@ -94,7 +94,7 @@ namespace GASS
 		}
 	}
 
-	static physx::PxFilterFlags filter(physx::PxFilterObjectAttributes attributes0,
+/*	static physx::PxFilterFlags filter(physx::PxFilterObjectAttributes attributes0,
 							physx::PxFilterData filterData0, 
 							physx::PxFilterObjectAttributes attributes1,
 							physx::PxFilterData filterData1,
@@ -105,7 +105,49 @@ namespace GASS
 	pairFlags |= physx::PxPairFlag::eCONTACT_DEFAULT;
 	return physx::PxFilterFlags();
 }
+*/
 
+
+	physx::PxFilterFlags SampleVehicleFilterShader(	
+		physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0, 
+		physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
+		physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
+	{
+		PX_FORCE_PARAMETER_REFERENCE(constantBlock);
+		PX_FORCE_PARAMETER_REFERENCE(constantBlockSize);
+
+		// let triggers through
+		if(physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1))
+		{
+			pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
+			return physx::PxFilterFlags();
+		}
+
+
+
+		// use a group-based mechanism for all other pairs:
+		// - Objects within the default group (mask 0) always collide
+		// - By default, objects of the default group do not collide
+		//   with any other group. If they should collide with another
+		//   group then this can only be specified through the filter
+		//   data of the default group objects (objects of a different
+		//   group can not choose to do so)
+		// - For objects that are not in the default group, a bitmask
+		//   is used to define the groups they should collide with
+		if ((filterData0.word0 != 0 || filterData1.word0 != 0) &&
+			!(filterData0.word0&filterData1.word1 || filterData1.word0&filterData0.word1))
+			return physx::PxFilterFlag::eSUPPRESS;
+
+		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
+
+		//enable CCD stuff -- for now just for everything or nothing.
+		//if((filterData0.word3|filterData1.word3) & SWEPT_INTEGRATION_LINEAR)
+		//	pairFlags |= physx::PxPairFlag::eSWEPT_INTEGRATION_LINEAR;
+
+		// The pairFlags for each object are stored in word2 of the filter data. Combine them.
+		pairFlags |= physx::PxPairFlags(physx::PxU16(filterData0.word2 | filterData1.word2));
+		return physx::PxFilterFlags();
+	}
 
 	void PhysXPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
 	{
@@ -125,7 +167,7 @@ namespace GASS
 			sceneDesc.cpuDispatcher = m_CpuDispatcher;
 		} 
 		if(!sceneDesc.filterShader)
-			sceneDesc.filterShader  = physx::PxDefaultSimulationFilterShader;
+			sceneDesc.filterShader  = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
 		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");

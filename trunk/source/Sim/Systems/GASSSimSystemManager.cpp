@@ -247,7 +247,7 @@ namespace GASS
 	}
 
 
-	int SimSystemManager::GetQueuedMessages() const
+	size_t SimSystemManager::GetQueuedMessages() const
 	{
 		int num = m_SystemMessageManager->GetQueuedMessages();
 		//update all scene messages managers

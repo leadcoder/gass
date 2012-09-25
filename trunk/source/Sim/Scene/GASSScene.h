@@ -197,7 +197,7 @@ namespace GASS
 		/**
 			Get how many messages that is unprocessed
 		*/
-		int GetQueuedMessages() const;
+		size_t GetQueuedMessages() const;
 protected:
 		/**
 		Load scene  from xml,

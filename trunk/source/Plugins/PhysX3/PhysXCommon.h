@@ -33,6 +33,10 @@
 #include <extensions/PxShapeExt.h>
 #include <extensions/PxSimpleFactory.h>
 #include <extensions/PxDefaultSimulationFilterShader.h>
+#include <extensions/PxJoint.h>
+#include <extensions/PxDistanceJoint.h>
+#include <extensions/PxSphericalJoint.h>
+
 #include <geometry/PxPlaneGeometry.h>
 #include <geometry/PxSphereGeometry.h>
 #include <geometry/PxBoxGeometry.h>
@@ -46,7 +50,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
-
 #include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
@@ -61,6 +64,7 @@
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIShape.h"
+#include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 #include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"

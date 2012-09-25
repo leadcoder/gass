@@ -398,9 +398,9 @@ namespace GASS
 	}
 
 
-	int Scene::GetQueuedMessages() const
+	size_t Scene::GetQueuedMessages() const
 	{
-		int num = m_SceneMessageManager->GetQueuedMessages();
+		size_t num = m_SceneMessageManager->GetQueuedMessages();
 		num += m_Root->GetQueuedMessages();
 		return num;
 	}

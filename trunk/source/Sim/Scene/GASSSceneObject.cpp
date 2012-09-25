@@ -203,9 +203,9 @@ namespace GASS
 		}
 	}
 
-	int SceneObject::GetQueuedMessages() const
+	size_t  SceneObject::GetQueuedMessages() const
 	{
-		int num = m_MessageManager->GetQueuedMessages();
+		size_t num = m_MessageManager->GetQueuedMessages();
 		
 		IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 		while(cc_iter.hasMoreElements())

@@ -115,8 +115,15 @@ namespace GASS
 				iter++;
 			}
 		}
-		SystemListenerExecutor exec(m_Listeners,delta);
-		tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+		if(m_Listeners.size() > 0)
+		{
+			(*m_Listeners.begin())->SystemTick(delta);
+		}
+		else
+		{
+			SystemListenerExecutor exec(m_Listeners,delta);
+			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+		}
 	}
 
 	void SimSystem::LoadXML(TiXmlElement *xml_elem)

@@ -15,14 +15,8 @@
 #if !defined PHYSX_GEOMETRY_H
 #define PHYSX_GEOMETRY_H
 
-#include "NxPhysics.h"
-#include "Sim/Components/BaseSceneComponent.h"
-#include "Core/MessageSystem/IMessage.h"
-#include "Sim/Scenario/Scene/SceneObjectMessages.h"
-#include "Core/Math/AABox.h"
-#include "Core/Math/Quaternion.h"
-
-class NxActor;
+#include "PxPhysX.h"
+#include "Sim/GASS.h"
 
 namespace GASS
 {
@@ -32,7 +26,7 @@ namespace GASS
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
 	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	class PhysXGeometryComponent : public Reflection<PhysXGeometryComponent,BaseSceneComponent>
+	class PhysXBaseGeometryComponent : public Reflection<PhysXBaseGeometryComponent,BaseSceneComponent>
 	{
 	public:
 		enum PhysicsGeometryType
@@ -44,8 +38,8 @@ namespace GASS
 			PGT_SPHERE
 		};
 
-		PhysXGeometryComponent();
-		virtual ~PhysXGeometryComponent();
+		PhysXBaseGeometryComponent();
+		virtual ~PhysXBaseGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnCreate();
 
@@ -87,6 +81,6 @@ namespace GASS
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 
-	typedef boost::shared_ptr<PhysXGeometryComponent> PhysXGeometryComponentPtr;
+	typedef boost::shared_ptr<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
 }
 #endif 
