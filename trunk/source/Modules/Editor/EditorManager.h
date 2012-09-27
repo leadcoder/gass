@@ -15,7 +15,7 @@ namespace GASS
 	class MessageManager;
 	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
 
-	class EditorModuleExport EditorManager : public Singleton<EditorManager>
+	class EditorModuleExport EditorManager : public Singleton<EditorManager> 
 	{
 	public:
 		EditorManager();

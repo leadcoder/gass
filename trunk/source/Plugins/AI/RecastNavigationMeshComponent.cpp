@@ -358,7 +358,10 @@ static int convexhull(const float* pts, int npts, int* out)
 		if(rnm_data.NumVerts == 0)
 			return false;
 		m_Geom->createMesh(rnm_data.Verts, rnm_data.TriNorm, rnm_data.Tris, rnm_data.NumVerts,rnm_data.NumTris);
-
+		m_Geom->setMeshBoundsMax(rnm_data.BMax);
+		m_Geom->setMeshBoundsMin(rnm_data.BMin);
+		
+		
 
 		UpdateConvexVolumes();
 		UpdateOffmeshConnections();
@@ -374,10 +377,8 @@ static int convexhull(const float* pts, int npts, int* out)
 			return false;
 		}
 
-		const float* bmin = rnm_data.BMin;
-		const float* bmax = rnm_data.BMax;
 		int gw = 0, gh = 0;
-		rcCalcGridSize(bmin, bmax, m_CellSize, &gw, &gh);
+		rcCalcGridSize(rnm_data.BMin, rnm_data.BMax, m_CellSize, &gw, &gh);
 		const int ts = (int)m_TileSize;
 		const int tw = (gw + ts-1) / ts;
 		const int th = (gh + ts-1) / ts;

@@ -40,6 +40,10 @@ namespace GASS
 	
 		ADD_ATTRIBUTE(Float,GoalRadius)
 		ADD_ATTRIBUTE(SceneObjectID ,ExitLocationID)
+		ADD_ATTRIBUTE(Float,FleeThreshold)
+		ADD_ATTRIBUTE(Float,FleeSpeed)
+		
+
 		void OnLoad(LocationLoadedMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
@@ -58,6 +62,7 @@ namespace GASS
 		void GoToRandomTarget(double delay);
 
 		SceneObjectID m_TargetLocationID;
+		SceneObjectID m_InitialTargetLocationID;
 		SceneObjectID m_SpawnLocationID;
 		SceneObjectWeakPtr m_CurrentTarget;
 		

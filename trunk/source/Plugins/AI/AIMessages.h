@@ -42,14 +42,14 @@ namespace GASS
 	class HealthChangedMessage : public BaseMessage
 	{
 	public:
-		HealthChangedMessage(float value, SenderID sender_id = -1, double delay= 0) : 
+		HealthChangedMessage(double value, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay) , m_Health(value)
 		  {
 
 		  }
-		  bool GetHealth() const {return m_Health;}
+		  double GetHealth() const {return m_Health;}
 	private:
-		bool m_Health;
+		double m_Health;
 	};
 	typedef boost::shared_ptr<HealthChangedMessage> HealthChangedMessagePtr;
 }

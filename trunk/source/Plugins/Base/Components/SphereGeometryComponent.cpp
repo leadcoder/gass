@@ -148,7 +148,7 @@ namespace GASS
 		Float rand2 = rand() / Float(RAND_MAX);
 
 		Float theta = rand1 * MY_PI * 2;
-		Float l = sqrt(m_Radius * rand2);
+		Float l = sqrt(rand2) * m_Radius;
 
 		location.x = p1.x + cos(theta) * l;
 		location.z = p1.z + sin(theta) * l;

@@ -176,12 +176,12 @@ namespace GASS
 			}
 			else
 			{
-				LogManager::getSingleton().stream() << "WARNING: DetourCrowdComponent not initialized, forgott to assign navigation mesh to DetourCrowdComponent?\n";
+				LogManager::getSingleton().stream() << "WARNING: DetourCrowdComponent not initialized, forgott to assign navigation mesh to DetourCrowdComponent?";
 			}
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING: DetourCrowdAgentComponent need DetourCrowdComponent as parent\n";
+			LogManager::getSingleton().stream() << "WARNING: DetourCrowdAgentComponent need DetourCrowdComponent as parent";
 		}
 	}
 

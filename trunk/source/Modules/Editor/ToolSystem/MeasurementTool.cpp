@@ -5,10 +5,10 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-
 #include "Sim/Components/Graphics/GASSMeshData.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
@@ -47,19 +47,16 @@ namespace GASS
 	void MeasurementTool::MouseUp(const CursorInfo &info)
 	{
 		m_MouseIsDown = false;
-
-		SceneObjectPtr(m_RulerObject)->PostMessage(MessagePtr(new ClearManualMeshMessage()));
-
+		SceneObjectPtr ruler = GetOrCreateRulerObject();
+		ruler->PostMessage(MessagePtr(new ClearManualMeshMessage()));
 
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
 			BaseReflectionObjectPtr props = boost::shared_dynamic_cast<BaseReflectionObject>(text);
 			std::string measurement_value = "";
-			//props->SetPropertyByType("Text",measurement_value);
-
 			MessagePtr text_mess(new TextCaptionMessage(measurement_value));
-			SceneObjectPtr(m_RulerObject)->PostMessage(text_mess);
+			ruler->PostMessage(text_mess);
 		}
 	}
 
@@ -68,15 +65,7 @@ namespace GASS
 	{
 
 		Vec3 text_pos = end;//(start + end)* 0.5; 
-		if(!SceneObjectPtr(m_RulerObject,boost::detail::sp_nothrow_tag()))
-		{
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetScene()->GetRootSceneObject());
-			m_RulerObject = scene_object;
-			if(scene_object)
-			{
-				m_TextComp = scene_object->GetComponent("TextComponent");
-			}
-		}
+		SceneObjectPtr ruler = GetOrCreateRulerObject();
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
@@ -92,7 +81,7 @@ namespace GASS
 		mesh_data->IndexVector.push_back(1);
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		SceneObjectPtr(m_RulerObject)->PostMessage(mesh_message);
+		ruler->PostMessage(mesh_message);
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -105,12 +94,31 @@ namespace GASS
 			MessagePtr text_mess(new TextCaptionMessage(measurement_value));
 			//text_mess->SetData("Parameter",SceneObject::CAPTION);
 			//text_mess->SetData("Caption",measurement_value);
-			SceneObjectPtr(m_RulerObject)->PostMessage(text_mess);
+			ruler->PostMessage(text_mess);
 
 			GASS::MessagePtr pos_msg(new PositionMessage(text_pos));
-			SceneObjectPtr(m_RulerObject)->PostMessage(pos_msg);
+			ruler->PostMessage(pos_msg);
 		}
 	}
 
+	SceneObjectPtr MeasurementTool::GetOrCreateRulerObject() 
+	{
+		GASS::SceneObjectPtr ruler(m_RulerObject,boost::detail::sp_nothrow_tag());
+
+		if(!ruler)
+		{
+			ruler = m_Controller->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetScene()->GetRootSceneObject());
+			if(!ruler)
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create in RulerObject","MeasurementTool::GetOrCreateRulerObject");
+			}
+			m_RulerObject = ruler;
+			if(ruler)
+			{
+				m_TextComp = ruler->GetComponent("TextComponent");
+			}
+		}
+		return ruler;
+	}
 
 }

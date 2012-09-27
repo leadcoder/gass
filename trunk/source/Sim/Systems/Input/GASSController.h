@@ -130,7 +130,7 @@ namespace GASS
 			return true;
 		}
 
-		virtual bool MousePressed(const MouseData &data, int id )
+		virtual bool MousePressed(const MouseData &data, MouseButtonId id )
 		{
 			if(m_Button == id)
 			{
@@ -145,7 +145,7 @@ namespace GASS
 			}
 			return true;
 		}
-		virtual bool MouseReleased(const MouseData &data,int id )
+		virtual bool MouseReleased(const MouseData &data,MouseButtonId id )
 		{
 			if(m_Button == id)
 			{
@@ -291,12 +291,12 @@ namespace GASS
 			return true;
 
 		}
-		virtual bool MousePressed(const MouseData &data, int id )
+		virtual bool MousePressed(const MouseData &data, MouseButtonId id )
 		{
 			return true;
 
 		}
-		virtual bool MouseReleased(const MouseData &data, int id )
+		virtual bool MouseReleased(const MouseData &data, MouseButtonId id )
 		{
 			return true;
 

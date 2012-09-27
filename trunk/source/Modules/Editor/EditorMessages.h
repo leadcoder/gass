@@ -313,7 +313,7 @@ namespace GASS
 	typedef boost::shared_ptr<MenuCommandMessage> MenuCommandMessagePtr;
 
 
-	class MouseButtonMessage : public BaseMessage
+	/*class MouseButtonMessage : public BaseMessage
 	{
 	public:
 		enum MouseButtonId
@@ -332,7 +332,7 @@ namespace GASS
 		bool m_Down;
 		Vec2 m_Pos;
 	};
-	typedef boost::shared_ptr<MouseButtonMessage> MouseButtonMessagePtr;
+	typedef boost::shared_ptr<MouseButtonMessage> MouseButtonMessagePtr;*/
 
 	class ObjectChangedMessage : public BaseMessage
 	{

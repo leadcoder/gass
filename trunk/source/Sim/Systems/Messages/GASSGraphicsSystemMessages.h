@@ -119,6 +119,25 @@ namespace GASS
 	typedef boost::shared_ptr<ViewportMovedOrResizedNotifyMessage> ViewportMovedOrResizedNotifyMessagePtr;
 
 
+	class RenderWindowResizedNotifyMessage : public BaseMessage
+	{
+	public:
+		RenderWindowResizedNotifyMessage(const std::string &window_name, int width,int height,SenderID sender_id = -1, double delay= 0) :
+		  m_Width(width),
+		  m_Height(height),
+		  m_WinName(window_name),
+		  BaseMessage(sender_id , delay)  {}
+		  int GetWidth()const {return m_Width;}
+		  int GetHeight()const {return m_Height;}
+		  std::string GetWindowName() const {return m_WinName;}
+	private:
+		int m_Width,m_Height;
+		std::string m_WinName;
+	};
+	typedef boost::shared_ptr<RenderWindowResizedNotifyMessage> RenderWindowResizedNotifyMessagePtr;
+
+
+
 	//debug messages
 	class DrawLineMessage : public BaseMessage
 	{

@@ -45,16 +45,17 @@ namespace GASS
 
 		void SetScript(const std::string &value);
 		std::string GetScript() const;
-		
-		//void SetMaxSpeed(float value);
-		//float GetMaxSpeed() const;
-		//void SetMaxForce(float value);
-		//float GetMaxForce() const; 
+
 		void SetDefaultAgentRadius(float value);
 		float GetDefaultAgentRadius() const; 
 
 		void SetDefaultAgentHeight(float value);
 		float GetDefaultAgentHeight() const; 
+
+		void SetUpdateHealth(Float value);
+		Float GetUpdateHealth() const;
+	
+
 	
 
 

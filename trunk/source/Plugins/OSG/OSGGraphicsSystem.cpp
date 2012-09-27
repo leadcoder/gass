@@ -230,7 +230,7 @@ namespace GASS
 			traits->inheritedWindowData = windata;
 
 		}
-		else //create window here
+		else 
 		{
 			traits->windowDecoration = true;
 			traits->windowName = name;
@@ -351,7 +351,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
 	{
-		//m_Window->windowMovedOrResized();
+		
 		osgViewer::ViewerBase::Views views;
 
 		m_Viewer->getViews(views);

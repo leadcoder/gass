@@ -15,6 +15,7 @@
 #include "DetourCrowdComponent.h"
 #include "DetourCrowd/DetourCrowd.h"
 #include "AISceneManager.h"
+#include "AIMessages.h"
 
 namespace GASS
 {
@@ -60,6 +61,10 @@ namespace GASS
 		RegisterProperty<float>("SeparationWeight", &GetSeparationWeight, &SetSeparationWeight);
 		RegisterProperty<float>("DefaultAgentRadius", &GetDefaultAgentRadius, &SetDefaultAgentRadius);
 		RegisterProperty<float>("DefaultAgentHeight", &GetDefaultAgentHeight, &SetDefaultAgentHeight);
+
+
+		//temp
+		RegisterProperty<Float>("UpdateHealth", &GetUpdateHealth, &SetUpdateHealth);
 	}
 
 	void DetourCrowdComponent::OnInitialize()
@@ -319,7 +324,7 @@ namespace GASS
 			DetourCrowdAgentComponentPtr agent = child_obj->GetFirstComponentByClass<DetourCrowdAgentComponent>();
 			if(agent)
 			{
-				GetSceneObject()->RemoveChild(child_obj);
+				GetSceneObject()->RemoveChildSceneObject(child_obj);
 				children = GetSceneObject()->GetChildren();
 			}
 		}
@@ -578,6 +583,25 @@ namespace GASS
 	float DetourCrowdComponent::GetDefaultAgentHeight() const
 	{
 		return m_DefaultAgentHeight;
+	}
+
+	void DetourCrowdComponent::SetUpdateHealth(Float value)
+	{
+		if(m_Crowd)
+		{
+			IComponentContainer::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
+			for(int i = 0; i < components.size(); i++)
+			{
+				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				comp->GetSceneObject()->PostMessage(MessagePtr(new HealthChangedMessage(value)));
+			}
+		}
+	}
+
+	Float DetourCrowdComponent::GetUpdateHealth() const
+	{
+		return 0.0;
 	}
 }
 

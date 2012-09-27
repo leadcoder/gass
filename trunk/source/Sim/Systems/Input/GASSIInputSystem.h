@@ -244,6 +244,18 @@ namespace GASS
 		POV_SOUTHWEST = 0x1010,
 	};
 
+	enum MouseButtonId
+	{
+		MBID_LEFT,
+		MBID_RIGHT,
+		MBID_MIDDLE,
+		MBID_3,
+		MBID_4,
+		MBID_5,
+		MBID_6,
+		MBID_7
+	};
+
 	class GASSExport IKeyListener
 	{
 	public:
@@ -261,6 +273,9 @@ namespace GASS
 		int XAbs;
 		int YAbs;
 		int ZAbs;
+
+		float XAbsNorm;
+		float YAbsNorm;
 	};
 
 	class GASSExport IMouseListener
@@ -268,8 +283,8 @@ namespace GASS
 	public:
 		virtual ~IMouseListener() {}
 		virtual bool MouseMoved(const MouseData &data) =0;
-		virtual bool MousePressed(const MouseData &data, int id ) = 0;
-		virtual bool MouseReleased(const MouseData &data, int id ) = 0;
+		virtual bool MousePressed(const MouseData &data, MouseButtonId id ) = 0;
+		virtual bool MouseReleased(const MouseData &data, MouseButtonId id ) = 0;
 	};
 
 	class GASSExport IGameControllerListener
@@ -288,9 +303,9 @@ namespace GASS
 	/**
 		Input interface that all input systems must be derived from
 
-		Note that interaction with this interface during RTC update is undefined 
+		Note that interaction with this interface during update is undefined 
 		if running GASS in multi-threaded mode. Interaction with systems should 
-		instead be done through messages.
+		instead be done through messages or at syncpoints.
 	*/
 	class GASSExport IInputSystem  
 	{
@@ -302,7 +317,21 @@ namespace GASS
 		virtual void RemoveMouseListener(IMouseListener* mouse_listener)=0;
 		virtual void AddGameControllerListener(IGameControllerListener* mouse_listener)=0;
 		virtual void RemoveGameControllerListener(IGameControllerListener* mouse_listener)=0;
-		virtual void SetWindow(void* window) = 0;
+		virtual void SetEnableKey(bool value)=0;
+		virtual void SetEnableJoystick(bool value)=0;
+		virtual void SetEnableMouse(bool value)=0;
+		virtual bool GetEnableKey() const = 0;
+		virtual bool GetEnableJoystick() const= 0;
+		virtual bool GetEnableMouse() const= 0;
+		virtual void ClipInputWindow(int left,int top,int right,int bottom) = 0;
+
+		//Possible to overide mouse and key input,  
+		virtual void InjectMouseMoved(const MouseData &data) =0;
+		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id ) = 0;
+		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id ) = 0;
+
+		virtual void InjectKeyPressed( int key, unsigned int text) = 0;
+		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		
 		
 	};
 	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;

@@ -250,9 +250,6 @@ namespace GASS
 		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
 		
 
-		
-		
-
 		TiXmlElement *xnum_threads = xSettings->FirstChildElement("NumRTCThreads");
 		TiXmlElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
 

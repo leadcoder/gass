@@ -11,6 +11,7 @@ namespace GASS
 	class SceneObject;
 	class IComponent;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
 
 
@@ -28,6 +29,7 @@ namespace GASS
 		virtual void Stop() {};
 		virtual void Start() {};
 	private:
+		SceneObjectPtr GetOrCreateRulerObject();
 		void UpdateLine(const GASS::Vec3 &start, const GASS::Vec3 &end);
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_RulerObject;

@@ -41,72 +41,66 @@ namespace GASS
 	public:
 		OISInputSystem();
 		virtual ~OISInputSystem();
-
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual SystemType GetSystemType() const {return "InputSystem";}
+		virtual void Update(double delta_time);
 
-		void Shutdown();
-
+		//IInputSystem
 		virtual void AddKeyListener(IKeyListener* key_listener);
 		virtual void RemoveKeyListener(IKeyListener* key_listener);
-
 		virtual void AddMouseListener(IMouseListener* mouse_listener);
 		virtual void RemoveMouseListener(IMouseListener* mouse_listener);
-
 		virtual void AddGameControllerListener(IGameControllerListener* );
 		virtual void RemoveGameControllerListener(IGameControllerListener* );
-
-		OIS::Mouse*    GetMouse(){return m_Mouse;}
-		OIS::Keyboard* GetKeyboard(){return m_Keyboard;}
-
+		virtual void ClipInputWindow(int left,int top,int right,int bottom);
+		virtual void SetEnableKey(bool value);
+		virtual void SetEnableJoystick(bool value);
+		virtual void SetEnableMouse(bool value);
+		virtual bool GetEnableKey() const;
+		virtual bool GetEnableJoystick() const;
+		virtual bool GetEnableMouse() const;
+	
+		virtual void InjectMouseMoved(const MouseData &data);
+		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id );
+		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id );
+		virtual void InjectKeyPressed( int key, unsigned int text);
+		virtual void InjectKeyReleased( int key, unsigned int text);	
+		
+		//OIS::KeyListener
 		virtual bool keyPressed( const OIS::KeyEvent &arg );
 		virtual bool keyReleased( const OIS::KeyEvent &arg );
 
+		//OIS::MouseListener
 		virtual bool mouseMoved( const OIS::MouseEvent &arg );
 		virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
 		virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
 
-
+		//OIS::JoyStickListener
 		virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
 		virtual bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
-
 		virtual bool axisMoved( const OIS::JoyStickEvent &arg, int axis ) ;
-
-		//Joystick Event, amd sliderID
-		virtual bool sliderMoved( const OIS::JoyStickEvent &, int );
-		//Joystick Event, amd povID
-		virtual bool povMoved( const OIS::JoyStickEvent &, int );
-
-
-		void OnlyUpdateWhenFocued(bool value){m_OnlyUpdateWhenFocued = value;}
-		void SetActive(bool value){m_Active = value;}
+		virtual bool sliderMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd sliderID
+		virtual bool povMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd povID
+	private:
+		//ADD_ATTRIBUTE(double,UpdateFrequency);
+		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);
 
 		int	 GetJoystickIndex() { return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }
-
-		void SetWindow(void* window)
-        {
-            m_Window = window;
-        }
-
-		SystemType GetSystemType() const {return "InputSystem";}
-		void Update(double delta_time);
-	private:
-		ADD_ATTRIBUTE(double,UpdateFrequency);
-		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);
-
-		float NormalizeMouse(float value);
+		
+		void Shutdown();
+		OIS::Mouse*    GetMouse(){return m_Mouse;}
+		OIS::Keyboard* GetKeyboard(){return m_Keyboard;}
+		float NormalizeMouseDelta(float value);
+		MouseButtonId ToGASS(OIS::MouseButtonID ois_id) const;
+		MouseData ToGASS(const OIS::MouseEvent &arg);
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);
-
-
+		void OnViewportMovedOrResized(RenderWindowResizedNotifyMessagePtr message);
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}
 		void SetExclusiveMode(bool value) {m_ExclusiveMode = value;}
-
-
 		int inline OldKey(int index) { return (m_OldKeyBuffer[index]); }
-
 		int OldButton(int index);
-
 		int inline OldJoystickButton(int device, int index)
 		{
 			if (device >= m_Joys.size())
@@ -133,14 +127,15 @@ namespace GASS
 
 		int m_JoystickDeviceCount;
 		bool m_Inverted;
-		bool m_OnlyUpdateWhenFocued;
-		bool m_Active;
+		bool m_KeyActive;
+		bool m_JoyActive;
+		bool m_MouseActive;
 		float m_MouseSpeed;
 		void* m_Window;
 		bool m_ExclusiveMode;
-		
-		double m_TimeSinceLastUpdate;
-		
-
+		int m_MouseWinOffsetX;
+		int m_MouseWinOffsetY;
+		int m_MouseWinWidth;
+		int m_MouseWinHeight;
 	};
 }

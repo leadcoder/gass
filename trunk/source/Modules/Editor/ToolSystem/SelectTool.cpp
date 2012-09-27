@@ -64,12 +64,8 @@ namespace GASS
 			int from_id = (int) this;
 			MessagePtr col_msg(new GASS::CollisionSettingsMessage(true,from_id));
 			selected->PostMessage(col_msg);
-
 		}
 		m_SelectedObject.reset();;
 	}
-
-
-	
 }
 

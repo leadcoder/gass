@@ -68,6 +68,8 @@ public:
 	inline const rcMeshLoaderObj* getMesh() const { return m_mesh; }
 	inline const float* getMeshBoundsMin() const { return m_meshBMin; }
 	inline const float* getMeshBoundsMax() const { return m_meshBMax; }
+	void setMeshBoundsMin(float* value) { m_meshBMin[0] = value[0];m_meshBMin[1] = value[1];m_meshBMin[2] = value[2]; }
+	void setMeshBoundsMax(float* value) { m_meshBMax[0] = value[0];m_meshBMax[1] = value[1];m_meshBMax[2] = value[2]; }
 	inline const rcChunkyTriMesh* getChunkyMesh() const { return m_chunkyMesh; }
 	bool raycastMesh(float* src, float* dst, float& tmin);
 

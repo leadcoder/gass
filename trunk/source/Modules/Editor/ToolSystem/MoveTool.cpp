@@ -171,9 +171,6 @@ namespace GASS
 			}
 			m_MoveUpdateCount = 0;
 		}
-
-		
-
 	}
 
 	void MoveTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)

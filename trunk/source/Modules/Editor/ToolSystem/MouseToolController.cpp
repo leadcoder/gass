@@ -20,9 +20,9 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-
-
-
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 
 namespace GASS
 {
@@ -48,19 +48,19 @@ namespace GASS
 	MouseToolController::~MouseToolController(void)
 	{
 
-
 	}
 
 	void MouseToolController::Init()
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnCursorMoved,CursorMoved2DMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnMouseButton,MouseButtonMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnToolChanged,ToolChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnObjectLock,ObjectLockMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnObjectVisible,ObjectVisibleMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapSettingsMessage,SnapSettingsMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapModeMessage,SnapModeMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSelectSite, ObjectSiteSelectMessage, 0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnZoomObject, ZoomObjectMessage, 0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSceneObjectSelected, ObjectSelectedMessage, 0));
 
 		//register for input
 		m_EditorControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("EditorInputSettings");
@@ -74,6 +74,26 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnNewScene,SceneAboutToLoadNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnUnloadScene,SceneUnloadNotifyMessage,0));
+
+		
+		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		input_system->AddMouseListener(this);
+	}
+
+
+	Vec2 MouseToolController::GetNormalizedCoords(int x,int y) const
+	{
+		Vec2 n_pos(0,0);
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
+		if(gfx_system)
+		{
+			unsigned int width, height;
+			int left, top;
+			gfx_system->GetMainWindowInfo(width, height, left, top);
+			n_pos.x = Float(x) / Float(width);
+			n_pos.y = Float(y) / Float(height);
+		}
+		return n_pos;
 	}
 
 
@@ -94,7 +114,6 @@ namespace GASS
 		{
 			//Lock recursive?
 			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
-			//EditorManager::GetPtr()->GetMessageManager()->SendImmediate(MessagePtr(new ObjectLockMessage(obj,true)));
 			if(!m_SceneObjectsSelectable)
 				m_StaticObjects.insert(obj);
 		}
@@ -110,7 +129,6 @@ namespace GASS
 
 		m_ColMeshHandle = 0;
 		m_ColGizmoHandle = 0;
-
 	}
 
 	void MouseToolController::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
@@ -131,42 +149,12 @@ namespace GASS
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = cam_obj->GetFirstComponentByClass<ICameraComponent>();
 	}
-
-	void MouseToolController::OnCursorMoved(CursorMoved2DMessagePtr message)
-	{
-		Vec2 c_pos = message->GetScreenPosition();
-		CursorInfo info = GetCursorInfo(c_pos,m_RayPickDistance);
-		MoveTo(info);
-
-		m_LastScreenPos = c_pos;
-
-		int mess_id = (int) this;
-		MessagePtr cursor_msg(new CursorMoved3DMessage(message->GetScreenPosition(),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
-		EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
-	}
+	
 
 	void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
 	{
 		std::string new_tool = message->GetTool();
 		SelectTool(new_tool);
-
-	}
-
-	void MouseToolController::OnMouseButton(MouseButtonMessagePtr message)
-	{
-		if(m_Active)
-		{
-			MouseButtonMessage::MouseButtonId button = message->GetButton();
-			bool down = message->IsDown();
-			if(button == MouseButtonMessage::MBID_LEFT)
-			{
-				CursorInfo info = GetCursorInfo(message->GetScreenPosition(),m_RayPickDistance);
-				if(down)
-					MouseDown(info);
-				else 
-					MouseUp(info);
-			}
-		}
 	}
 
 	void MouseToolController::OnInput(ControllerMessagePtr message)
@@ -229,7 +217,6 @@ namespace GASS
 			}
 		}
 	}
-
 
 	void MouseToolController::AddTool(IMouseTool* tool)
 	{
@@ -391,8 +378,6 @@ namespace GASS
 			UnlockObject(message->GetSceneObject());
 		}
 	}
-
-	
 
 	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits)
 	{
@@ -576,13 +561,20 @@ namespace GASS
 	{
 		m_Delta = delta;
 		//debug message
-		/*SceneObjectPtr obj_under_cursor(m_CursorInfo.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+
+		std::stringstream ss;
+		ss << " Cursor pos:" << m_LastScreenPos << "\n";
+		const std::string message = ss.str();
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+
+		//CursorInfo info = GetCursorInfo(m_LastScreenPos,m_RayPickDistance);
+		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
-		std::stringstream ss;
-		ss << " Cursor pos:" << m_CursorInfo.m_3DPos << " 2d:" << m_CursorInfo.m_ScreenPos << "\n";
-		const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+			std::stringstream ss;
+			ss << " Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos << "\n";
+			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
+			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
 		}*/
 	}
 
@@ -595,5 +587,187 @@ namespace GASS
 			m_ActiveTool->Start();
 		}
 	}
-}
+
+	bool MouseToolController::MouseMoved(const MouseData &data)
+	{
+		Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
+		CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
+		MoveTo(info);
+		//saved for delta calculation, remove this?
+		m_LastScreenPos = mouse_pos;
+		int mess_id = (int) this;
+		MessagePtr cursor_msg(new CursorMoved3DMessage(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
+		EditorManager::GetPtr()->GetMessageManager()->PostMessage(cursor_msg);
+		return true;
+	}
+
+	bool MouseToolController::MousePressed(const MouseData &data, MouseButtonId button )
+	{
+		if(m_Active)
+		{
+			if(button == MBID_LEFT)
+			{
+				Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
+				CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
+				MouseDown(info);
+				return true;
+			}
+			else if(button == MBID_RIGHT)
+			{
+				m_MBRScreenPos = Vec2(data.XAbsNorm,data.YAbsNorm);	
+			}
+		}
+		return false;
+	}
+
+	bool MouseToolController::MouseReleased(const MouseData &data, MouseButtonId button )
+	{
+		if(button == MBID_LEFT)
+		{
+				Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
+				CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
+				MouseUp(info);
+				return true;
+		}
+
+		else if(button == MBID_RIGHT)
+		{
+			Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);	
+			CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
+			
+			//check if cursor at rest
+			Vec2 delta;
+			delta.x	= m_MBRScreenPos.x - mouse_pos.x;
+			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
+			if(abs(delta.x) + abs(delta.y) < 0.001)
+			{
+				SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+				if(SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()) == selected)
+				{
+					//show Immediate!
+					//Disable OIS input to avoid background selection
+					GASS::MessagePtr message(new ShowObjectMenuMessage(selected,Vec2(data.XAbs,data.YAbs)));
+					GASS::EditorManager::GetPtr()->GetMessageManager()->SendImmediate(message);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	void MouseToolController::OnZoomObject(ZoomObjectMessagePtr message)	
+	{
+		LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		SceneObjectPtr cam_obj (m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		CameraComponentPtr cam(m_ActiveCamera,boost::detail::sp_nothrow_tag());
+		if(cam_obj && cam && lc)
+		{
+			BaseReflectionObjectPtr cam_props = boost::shared_dynamic_cast<BaseReflectionObject>(cam);
+			bool ortho_mode = false;
+
+			float object_size = 10;
+			GeometryComponentPtr gc = message->GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+			if(gc)
+			{
+				object_size = gc->GetBoundingSphere().m_Radius*4;
+			}
+
+			if(cam_props)
+			{
+				boost::any temp;
+				cam_props->GetPropertyByType("Ortho",temp);
+				ortho_mode = boost::any_cast<bool>(temp);
+			}
+
+			if(ortho_mode)
+			{
+				Vec3 pos = lc->GetWorldPosition();
+				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+				pos.y = cam_pos.y;
+				cam_obj->PostMessage(MessagePtr(new PositionMessage(pos)));
+
+				MessagePtr zoom_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,object_size));
+				cam_obj->PostMessage(zoom_msg);
+			}
+			else
+			{
+
+				Vec3 pos = lc->GetWorldPosition();
+				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+				Quaternion cam_rot;
+
+				Vec3 dir = pos - cam_pos;
+				
+				dir.Normalize(); 
+				dir.y = -0.7;
+				dir.Normalize();
+
+				pos = pos - dir*object_size;
+				dir = -dir;
+				Mat4 rot_mat;
+				rot_mat.Identity();
+				rot_mat.SetViewDirVector(dir);
+				Vec3 rvec = Vec3(dir.z,0,-dir.x);
+				rvec.Normalize();
+				rot_mat.SetRightVector(rvec);
+				Vec3 up = Math::Cross(dir,rvec);
+				up.Normalize();
+				rot_mat.SetUpVector(up);
+				cam_rot.FromRotationMatrix(rot_mat);
+
+				cam_obj->PostMessage(MessagePtr(new RotationMessage(cam_rot)));
+				cam_obj->PostMessage(MessagePtr(new PositionMessage(pos)));
+			}
+		}
+	}
+
+	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
+	{
+		CursorInfo cursorInfo = GetCursorInfo(mouse_pos, 1000000);
+		GASS::Vec3 drop_pos = cursorInfo.m_3DPos;
+		drop_pos.x = EditorManager::Get().GetMouseToolController()->SnapPosition(drop_pos.x);
+		drop_pos.y = EditorManager::Get().GetMouseToolController()->SnapPosition(drop_pos.y);
+		drop_pos.z = EditorManager::Get().GetMouseToolController()->SnapPosition(drop_pos.z);
+		//create rotation?
+		GASS::Quaternion rot;
+		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
+	}
+
+	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
+	{
+		GASS::ScenePtr cur_scene(m_Scene,boost::detail::sp_nothrow_tag());;
+		SceneObjectPtr site (m_CurrentSite,boost::detail::sp_nothrow_tag());
+		if(site && cur_scene)
+		{
+			GASS::SceneObjectPtr so = GASS::SimEngine::Get().CreateObjectFromTemplate(obj_name);
+			if(so)
+			{
+				site->AddChildSceneObject(so, true);
+
+				int from_id = (int) this;
+
+				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos,from_id));
+				so->SendImmediate(pos_msg);
+
+				GASS::MessagePtr rot_msg(new GASS::WorldRotationMessage(rot,from_id));
+				so->SendImmediate(rot_msg);
+			}
+			else
+			{
+				//failed to create object
+			}
+		}
+	}
+
+	void MouseToolController::OnSelectSite(ObjectSiteSelectMessagePtr message)
+	{
+		m_CurrentSite = message->GetSceneObject();
+	}
+
+
+	void MouseToolController::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	{
+		m_SelectedObject = message->GetSceneObject();
+	}
+}				
 

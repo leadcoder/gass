@@ -12,7 +12,9 @@ namespace GASS
 		m_Initlized(false),
 		m_RandomSpeed(2,2),
 		m_Position(0,0,0),
-		m_Health(1.0)
+		m_Health(1.0),
+		m_FleeThreshold(0.9),
+		m_FleeSpeed(2)
 	{
 
 	}	
@@ -32,6 +34,8 @@ namespace GASS
 		RegisterProperty<Float>("GoalRadius", &GetGoalRadius, &SetGoalRadius);
 		RegisterProperty<Vec2>("RandomSpeed", &GetRandomSpeed, &SetRandomSpeed);
 		RegisterProperty<Float>("Health", &GetHealth, &SetHealth);
+		RegisterProperty<Float>("FleeThreshold", &GetFleeThreshold, &SetFleeThreshold);
+		RegisterProperty<Float>("FleeSpeed", &GetFleeSpeed, &SetFleeSpeed);
 	}
 
 	void PedestrianBehaviorComponent::OnInitialize()
@@ -57,15 +61,16 @@ namespace GASS
 		{
 
 			DetourCrowdAgentComponentPtr agent = GetSceneObject()->GetFirstComponentByClass<DetourCrowdAgentComponent>();
-			if(m_Health < 0.9)
+			if(m_Health < m_FleeThreshold)
 			{
 				if(m_Health > 0)
 				{
-					SetTargetID(m_ExitLocationID);
+					if(m_TargetLocationID != m_ExitLocationID)
+						SetTargetID(m_ExitLocationID);
 					m_State = "Flee";
-					double norm_rand = rand() / double(RAND_MAX);
-					double random_speed = m_Health*5 + norm_rand*2;
-					agent->SetMaxSpeed(random_speed);
+					//double norm_rand = rand() / double(RAND_MAX);
+					double flee_speed = m_Health*2 + m_FleeSpeed;
+					agent->SetMaxSpeed(flee_speed);
 				}
 				else
 				{
@@ -76,7 +81,7 @@ namespace GASS
 			else if(m_Health >= 1.0) //reset?
 			{
 				m_State = "Wander";
-				SetTargetID(m_TargetLocationID);
+				SetTargetID(m_InitialTargetLocationID);
 				SetRandomSpeed(m_RandomSpeed);
 			}
 		}
@@ -94,6 +99,7 @@ namespace GASS
 		//set random speed!
 		m_Initlized = true;
 		m_State = "Wander";
+		m_InitialTargetLocationID = m_TargetLocationID;
 		SetRandomSpeed(m_RandomSpeed);
 
 		SceneManagerListenerPtr listener = shared_from_this();

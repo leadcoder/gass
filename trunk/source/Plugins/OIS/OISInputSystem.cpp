@@ -37,13 +37,14 @@ namespace GASS
 	OISInputSystem::OISInputSystem() :
 		m_Window(0),
 		m_Inverted (false),
-		m_Active (true),
-		m_OnlyUpdateWhenFocued (true),
+		m_KeyActive(true),
+		m_JoyActive(true),
+		m_MouseActive(true),
 		m_MouseSpeed(20),
 		m_ExclusiveMode(true),
-		m_UpdateFrequency(0),
-		m_TimeSinceLastUpdate(0),
-		m_GameControllerAxisMinValue(0)
+		m_GameControllerAxisMinValue(0),
+		m_MouseWinOffsetX(0),
+		m_MouseWinOffsetY(0)
 	{
 		m_KeyBuffer =  new char[256];
 		m_OldKeyBuffer =  new char[256];
@@ -53,6 +54,7 @@ namespace GASS
 
 	OISInputSystem::~OISInputSystem()
 	{
+		Shutdown();
 		delete[] m_KeyBuffer;
 		delete[] m_OldKeyBuffer;
 	}
@@ -61,14 +63,17 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OISInputSystem",new GASS::Creator<OISInputSystem, ISystem>);
 		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
-		RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
+		//RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
 		RegisterProperty<float>("GameControllerAxisMinValue", &GASS::OISInputSystem::GetGameControllerAxisMinValue, &GASS::OISInputSystem::SetGameControllerAxisMinValue);
-		
+		RegisterProperty<bool>("EnableKey", &GASS::OISInputSystem::GetEnableKey, &GASS::OISInputSystem::SetEnableKey);
+		RegisterProperty<bool>("EnableMouse", &GASS::OISInputSystem::GetEnableMouse, &GASS::OISInputSystem::SetEnableMouse);
+		RegisterProperty<bool>("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
 	}
 
 	void OISInputSystem::OnCreate()
 	{
-		GetSimSystemManager()->RegisterForMessage(typeid(MainWindowCreatedNotifyMessage),TYPED_MESSAGE_FUNC(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage),1);
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage,1));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnViewportMovedOrResized,RenderWindowResizedNotifyMessage,1));
 	}
 
 	void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
@@ -159,6 +164,8 @@ namespace GASS
 			const OIS::MouseState &ms = m_Mouse->getMouseState();
 			ms.width = width;
 			ms.height = height;
+			m_MouseWinWidth = width;
+			m_MouseWinHeight =height;
 		}
 	}
 
@@ -175,33 +182,48 @@ namespace GASS
 		m_InputManager = 0;
 	}
 
+	void OISInputSystem::OnViewportMovedOrResized(RenderWindowResizedNotifyMessagePtr message)
+	{
+		if(m_Mouse)
+		{
+			if(message->GetWindowName() == "MainWindow")
+			{
+				const OIS::MouseState &ms = m_Mouse->getMouseState();
+				ms.width = message->GetWidth();
+				ms.height = message->GetHeight();
+			}
+		}
+	}
+
+	void OISInputSystem::ClipInputWindow(int left,int top,int right,int bottom)
+	{
+			m_MouseWinOffsetX = left;
+			m_MouseWinOffsetY = top;
+			m_MouseWinWidth = right-left;
+			m_MouseWinHeight = bottom-top;
+	}
+
 	void OISInputSystem::Update(double delta_time)
 	{
 		if(m_Window == 0)
 			return;
 
-		//capture input at max freq
-		m_TimeSinceLastUpdate += delta_time;
-		if(m_UpdateFrequency == 0 || m_TimeSinceLastUpdate > 1.0/m_UpdateFrequency)
+		if(m_KeyActive) 
 		{
-			//reset
-			m_TimeSinceLastUpdate = 0;
-			if(!m_Active) //check if we are out of focus
-			{
-				//feed console and gui?
-				m_Keyboard->capture();
-				memset(m_KeyBuffer,0,256);
-				memset(m_OldKeyBuffer,0,256);
-				return;
-			}
 			m_Keyboard->capture();
 			memcpy(m_OldKeyBuffer,m_KeyBuffer,256);
 			m_Keyboard->copyKeyStates(m_KeyBuffer);
-
+		}
+		if(m_MouseActive) 
+		{
 			m_Mouse->capture();
 
 			m_OldMouseState = m_MouseState;
 			m_MouseState = m_Mouse->getMouseState();
+		}
+
+		if(m_JoyActive) 
+		{
 			for (int i = 0; i < m_Joys.size(); i++) 
 			{
 				m_Joys[i]->capture();
@@ -270,7 +292,6 @@ namespace GASS
 		}
 	}
 
-
 	bool OISInputSystem::keyPressed( const OIS::KeyEvent &arg )
 	{
 
@@ -296,16 +317,30 @@ namespace GASS
 		}
 		return true;
 	}
-	bool OISInputSystem::mouseMoved( const OIS::MouseEvent &arg )
+
+	MouseData OISInputSystem::ToGASS(const OIS::MouseEvent &arg)
 	{
 		MouseData data;
-		data.XRel = NormalizeMouse(arg.state.X.rel);
-		data.YRel = NormalizeMouse(arg.state.Y.rel);
-		data.ZRel = NormalizeMouse(arg.state.Z.rel);
+		data.XRel = NormalizeMouseDelta(arg.state.X.rel);
+		data.YRel = NormalizeMouseDelta(arg.state.Y.rel);
+		data.ZRel = NormalizeMouseDelta(arg.state.Z.rel);
 
-		data.XAbs = arg.state.X.abs;
-		data.YAbs = arg.state.Y.abs;
+		data.XAbs = arg.state.X.abs - m_MouseWinOffsetX;
+		data.YAbs = arg.state.Y.abs - m_MouseWinOffsetY;
+
+		data.XAbsNorm = float(data.XAbs)/float(m_MouseWinWidth);
+		data.YAbsNorm = float(data.YAbs)/float(m_MouseWinHeight);
 		data.ZAbs = arg.state.Z.abs;
+		return data;
+	}
+
+	bool OISInputSystem::mouseMoved( const OIS::MouseEvent &arg )
+	{
+		MouseData data = ToGASS(arg);
+
+		//dont send if mouse outside window
+		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
+			return false;
 
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
@@ -318,50 +353,78 @@ namespace GASS
 		return true;
 	}
 
+	MouseButtonId OISInputSystem::ToGASS(OIS::MouseButtonID ois_id) const
+	{
+		MouseButtonId ret;
+		switch(ois_id)
+		{
+		case OIS::MB_Left:
+			ret = MBID_LEFT;
+			break;
+		case OIS::MB_Right:
+			ret = MBID_RIGHT;
+			break;
+		case OIS::MB_Middle:
+			ret = MBID_MIDDLE;
+			break;
+		case OIS::MB_Button3:
+			ret = MBID_3;
+			break;
+		case OIS::MB_Button4:
+			ret = MBID_4;
+			break;
+		case OIS::MB_Button5:
+			ret = MBID_5;
+			break;
+		case OIS::MB_Button6:
+			ret = MBID_6;
+			break;
+		case OIS::MB_Button7:
+			ret = MBID_7;
+			break;
+		}
+		return ret;
+	}
+
 	bool OISInputSystem::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 	{
-		MouseData data;
-		data.XRel = NormalizeMouse(arg.state.X.rel);
-		data.YRel = NormalizeMouse(arg.state.Y.rel);
-		data.ZRel = NormalizeMouse(arg.state.Z.rel);
+		MouseData data = ToGASS(arg);
 
-		data.XAbs = arg.state.X.abs;
-		data.YAbs = arg.state.Y.abs;
-		data.ZAbs = arg.state.Z.abs;
+		//dont send if mouse outside window
+		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
+			return false;
 
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
-			ml->MousePressed(data,id);
+			ml->MousePressed(data,ToGASS(id));
 			++iter;
 		}
 		return true;
 	}
+
+
 
 	bool OISInputSystem::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 	{
 
-		MouseData data;
-		data.XRel = NormalizeMouse(arg.state.X.rel);
-		data.YRel = NormalizeMouse(arg.state.Y.rel);
-		data.ZRel = NormalizeMouse(arg.state.Z.rel);
-
-		data.XAbs = arg.state.X.abs;
-		data.YAbs = arg.state.Y.abs;
-		data.ZAbs = arg.state.Z.abs;
+		MouseData data = ToGASS(arg);
+		//dont send if mouse outside window
+		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
+			return false;
 
 		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
-			ml->MouseReleased(data,id);
+			ml->MouseReleased(data,ToGASS(id));
 			++iter;
 		}
 		return true;
 	}
 
-	float OISInputSystem::NormalizeMouse(float value)
+	float OISInputSystem::NormalizeMouseDelta(float value)
 	{
 		float ret = 0;
 		if (value > m_MouseSpeed)
@@ -427,6 +490,90 @@ namespace GASS
 	bool OISInputSystem::povMoved( const OIS::JoyStickEvent &, int )
 	{
 		return true;
+	}
+
+
+	void OISInputSystem::SetEnableKey(bool value)
+	{
+		m_KeyActive = value;
+	}
+	void OISInputSystem::SetEnableJoystick(bool value)
+	{
+		m_JoyActive = value;
+	}
+	void OISInputSystem::SetEnableMouse(bool value)
+	{
+		m_MouseActive = value;
+	}
+
+	bool OISInputSystem::GetEnableKey() const
+	{
+		return m_KeyActive;
+	}
+
+	bool OISInputSystem::GetEnableJoystick() const
+	{
+		return m_JoyActive;
+	}
+
+	bool OISInputSystem::GetEnableMouse() const
+	{
+		return m_MouseActive;
+	}
+
+	void OISInputSystem::InjectMouseMoved(const MouseData &data)
+	{
+		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		while(iter != m_MouseListeners.end())
+		{
+			IMouseListener* ml = *iter;
+			//Normalize values
+			ml->MouseMoved(data);
+			++iter;
+		}
+	}
+
+	void OISInputSystem::InjectMousePressed(const MouseData &data, MouseButtonId id )
+	{
+		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		while(iter != m_MouseListeners.end())
+		{
+			IMouseListener* ml = *iter;
+			ml->MousePressed(data,id);
+			++iter;
+		}
+	}
+
+	void OISInputSystem::InjectMouseReleased(const MouseData &data, MouseButtonId id )
+	{
+		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		while(iter != m_MouseListeners.end())
+		{
+			IMouseListener* ml = *iter;
+			ml->MouseReleased(data,id);
+			++iter;
+		}
+	}
+
+	void OISInputSystem::InjectKeyPressed( int key, unsigned int text)
+	{
+		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		while(iter != m_KeyListeners.end())
+		{
+			IKeyListener* kl = *iter;
+			kl->KeyPressed(key,text);
+			++iter;
+		}
+	}
+	void OISInputSystem::InjectKeyReleased( int key, unsigned int text)
+	{
+		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		while(iter != m_KeyListeners.end())
+		{
+			IKeyListener* kl = *iter;
+			kl->KeyReleased(key,text);
+			++iter;
+		}
 	}
 }
 
