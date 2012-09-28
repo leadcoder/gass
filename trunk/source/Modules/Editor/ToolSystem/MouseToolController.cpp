@@ -54,7 +54,6 @@ namespace GASS
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnToolChanged,ToolChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnObjectLock,ObjectLockMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnObjectVisible,ObjectVisibleMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapSettingsMessage,SnapSettingsMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapModeMessage,SnapModeMessage,0));
@@ -74,28 +73,10 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnNewScene,SceneAboutToLoadNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnUnloadScene,SceneUnloadNotifyMessage,0));
-
 		
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddMouseListener(this);
 	}
-
-
-	Vec2 MouseToolController::GetNormalizedCoords(int x,int y) const
-	{
-		Vec2 n_pos(0,0);
-		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
-		if(gfx_system)
-		{
-			unsigned int width, height;
-			int left, top;
-			gfx_system->GetMainWindowInfo(width, height, left, top);
-			n_pos.x = Float(x) / Float(width);
-			n_pos.y = Float(y) / Float(height);
-		}
-		return n_pos;
-	}
-
 
 	void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
 	{
@@ -133,7 +114,7 @@ namespace GASS
 
 	void MouseToolController::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
 	{
-		m_LockedObjects.clear();
+		
 		m_StaticObjects.clear();
 		m_InvisibleObjects.clear();
 		ScenePtr scene = message->GetScene();
@@ -150,7 +131,6 @@ namespace GASS
 		m_ActiveCamera = cam_obj->GetFirstComponentByClass<ICameraComponent>();
 	}
 	
-
 	void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
 	{
 		std::string new_tool = message->GetTool();
@@ -301,14 +281,7 @@ namespace GASS
 			m_ActiveTool->MouseUp(info);
 	}
 
-	bool MouseToolController::IsObjectLocked(SceneObjectWeakPtr obj)
-	{
-		if(m_LockedObjects.end() != m_LockedObjects.find(obj))
-		{
-			return true;
-		}
-		return false;
-	}
+
 
 	bool MouseToolController::IsObjectVisible(SceneObjectWeakPtr obj)
 	{
@@ -329,24 +302,7 @@ namespace GASS
 		return false;
 	}
 
-	void MouseToolController::UnlockObject(SceneObjectWeakPtr obj)
-	{
-		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
-		if(m_LockedObjects.end() != iter)
-		{
-			m_LockedObjects.erase(iter);
-		}
-	}
 
-
-	void MouseToolController::LockObject(SceneObjectWeakPtr obj)
-	{
-		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
-		if(m_LockedObjects.end() == iter)
-		{
-			m_LockedObjects.insert(obj);
-		}
-	}
 	void MouseToolController::OnObjectVisible(ObjectVisibleMessagePtr message)
 	{
 		if(message->GetVisible())
@@ -364,18 +320,6 @@ namespace GASS
 			{
 				m_InvisibleObjects.insert(message->GetSceneObject());
 			}
-		}
-	}
-
-	void MouseToolController::OnObjectLock(ObjectLockMessagePtr message)
-	{
-		if(message->GetLock())
-		{
-			LockObject(message->GetSceneObject());
-		}
-		else
-		{
-			UnlockObject(message->GetSceneObject());
 		}
 	}
 

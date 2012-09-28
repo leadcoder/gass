@@ -81,7 +81,11 @@ namespace GASS
 		SceneObjectPtr obj = GetSceneObject();
 		if(obj)
 		{
-			EditorManager::GetPtr()->GetMessageManager()->PostMessage(MessagePtr(new ObjectLockMessage(obj,m_Lock)));
+			if(m_Lock)
+				EditorManager::GetPtr()->LockObject(obj);
+			else
+				EditorManager::GetPtr()->UnlockObject(obj);
+
 		}
 	}
 

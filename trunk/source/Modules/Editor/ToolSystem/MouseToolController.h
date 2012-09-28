@@ -38,11 +38,8 @@ namespace GASS
 		bool SelectTool(const std::string &tool_name);
 
 		//move to application class?
-		bool IsObjectLocked(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectStatic(GASS::SceneObjectWeakPtr obj);
 		bool IsObjectVisible(SceneObjectWeakPtr obj);
-		void UnlockObject(SceneObjectWeakPtr obj);
-		void LockObject(SceneObjectWeakPtr obj);
 		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
 		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
 		void AddStaticObject(GASS::SceneObjectWeakPtr obj) {m_StaticObjects.insert(obj);}
@@ -79,7 +76,6 @@ namespace GASS
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
 	private:
-		Vec2 GetNormalizedCoords(int x,int y) const;
 		void NextTool();
 		void PrevTool();
 
@@ -95,8 +91,6 @@ namespace GASS
 		void OnFocusChanged(WindowFocusChangedMessagePtr message);
 		void OnCursorMoved(CursorMoved2DMessagePtr message);
 		void OnToolChanged(ToolChangedMessagePtr message);
-		//void OnMouseButton(MouseButtonMessagePtr message);
-		void OnObjectLock(ObjectLockMessagePtr message);
 		void OnObjectVisible(ObjectVisibleMessagePtr message);
 
 		void OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message);
@@ -124,7 +118,7 @@ namespace GASS
 		std::vector<IMouseTool*> m_Tools;
 		IMouseTool* m_ActiveTool;
 		GASS::ControlSetting* m_EditorControlSetting;
-		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
+		
 		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_StaticObjects;
 

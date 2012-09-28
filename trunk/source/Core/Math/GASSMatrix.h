@@ -62,6 +62,8 @@ namespace GASS
 			Float m_Data2[16];
 		};
 
+		//Mat4(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
+
 		inline Float* operator [] ( unsigned iRow )
 		{
 			assert( iRow < 4 );

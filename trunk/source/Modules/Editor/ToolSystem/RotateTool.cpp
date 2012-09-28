@@ -70,7 +70,7 @@ namespace GASS
 
 	bool RotateTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!m_Controller->IsObjectStatic(obj) && !m_Controller->IsObjectLocked(obj) && m_Controller->IsObjectVisible(obj));
+		return (!m_Controller->IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && m_Controller->IsObjectVisible(obj));
 	}
 
 	void RotateTool::MouseDown(const CursorInfo &info)
@@ -134,15 +134,13 @@ namespace GASS
 			{
 				if(!m_Controller->IsObjectStatic(obj_under_cursor))
 				{
-					if(!m_Controller->IsObjectLocked(obj_under_cursor))
+					if(!EditorManager::Get().IsObjectLocked(obj_under_cursor))
 					{
 						GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 						//Send selection message
 						if(!gc) //don't select gizmo objects
 						{
-							int from_id = (int) this;
-							MessagePtr selection_msg(new ObjectSelectedMessage(obj_under_cursor,from_id));
-							EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
+							EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
 						}
 					}
 				}
@@ -191,8 +189,7 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
 				{
-					MessagePtr selection_msg(new ObjectSelectedMessage(current,(int) this));
-					EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
+					EditorManager::GetPtr()->SelectSceneObject(current);
 				}
 			}
 		}

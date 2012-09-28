@@ -97,8 +97,7 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
 				{
-					MessagePtr selection_msg(new ObjectSelectedMessage(current,(int) this));
-					EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
+					EditorManager::GetPtr()->SelectSceneObject(current);
 				}
 			}
 		}

@@ -38,16 +38,11 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)// && !m_Controller->IsObjectStatic(obj_under_cursor))
 		{
-
-			//Send selection message
-			int from_id = (int) this;
-			MessagePtr selection_msg(new ObjectSelectedMessage(obj_under_cursor,from_id));
-			EditorManager::GetPtr()->GetMessageManager()->PostMessage(selection_msg);
-
-			if(!m_Controller->IsObjectLocked(obj_under_cursor))
+			EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
+			if(EditorManager::Get().IsObjectLocked(obj_under_cursor))
 			{
 				m_SelectedObject = obj_under_cursor;
-				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
+				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,(int) this));
 				//bool value = false;
 				//col_msg->SetData("Enable",value);
 				obj_under_cursor->PostMessage(col_msg);

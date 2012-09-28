@@ -31,7 +31,11 @@ namespace GASS
 {
 
 	const Float Mat4::EPSILON = 0.0001;
-		
+	
+	/*Mat4::Mat4(const Vec3 &pos, const Quaternion &rot, const Vec3 &scale)
+	{
+
+	}*/
 
 	Mat4 Mat4::operator* (const Mat4 &mat) const
 	{

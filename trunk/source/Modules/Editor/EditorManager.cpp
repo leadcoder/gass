@@ -1,6 +1,7 @@
 #include "EditorManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
+
 #include "ToolSystem/MouseToolController.h"
 namespace GASS
 {
@@ -13,6 +14,7 @@ namespace GASS
 	{
 		delete m_MessageManager;
 		delete m_GUISettings;
+		m_LockedObjects.clear();
 	}
 
 	template<> EditorManager* Singleton<EditorManager>::m_Instance = 0;
@@ -50,6 +52,49 @@ namespace GASS
 		return m_MessageManager;
 	}
 
+	SceneObjectPtr EditorManager::GetSelectedObject() const
+	{
+		return SceneObjectPtr(m_SelectedObject,boost::detail::sp_nothrow_tag());
+	}
 
-	
+	void EditorManager::SelectSceneObject(SceneObjectPtr obj)
+	{
+		if(obj != GetSelectedObject())
+		{
+			m_SelectedObject = obj;
+			//notify listeners
+			int from_id = (int) this;
+			MessagePtr selection_msg(new ObjectSelectedMessage(obj,from_id));
+			GetMessageManager()->PostMessage(selection_msg);
+		}
+	}
+
+	void EditorManager::UnlockObject(SceneObjectWeakPtr obj)
+	{
+		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
+		if(m_LockedObjects.end() != iter)
+		{
+			m_LockedObjects.erase(iter);
+			EditorManager::GetPtr()->GetMessageManager()->PostMessage(MessagePtr(new ObjectLockMessage(SceneObjectPtr(obj),false)));
+		}
+	}
+
+	void EditorManager::LockObject(SceneObjectWeakPtr obj)
+	{
+		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
+		if(m_LockedObjects.end() == iter)
+		{
+			m_LockedObjects.insert(obj);
+			EditorManager::GetPtr()->GetMessageManager()->PostMessage(MessagePtr(new ObjectLockMessage(SceneObjectPtr(obj),true)));
+		}
+	}
+
+	bool EditorManager::IsObjectLocked(SceneObjectWeakPtr obj)
+	{
+		if(m_LockedObjects.end() != m_LockedObjects.find(obj))
+		{
+			return true;
+		}
+		return false;
+	}
 }
