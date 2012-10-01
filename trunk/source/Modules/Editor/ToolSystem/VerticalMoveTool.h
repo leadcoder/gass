@@ -21,7 +21,7 @@ namespace GASS
 		virtual void MoveTo(const CursorInfo &info);
 		virtual void MouseDown(const CursorInfo &info);
 		virtual void MouseUp(const CursorInfo &info);
-		virtual std::string GetName() {return "VerticalMoveTool";}
+		virtual std::string GetName() {return TID_VERTICAL_MOVE;}
 		virtual void Stop() {};
 		virtual void Start() {};
 	private:

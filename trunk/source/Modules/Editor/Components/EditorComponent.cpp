@@ -105,9 +105,9 @@ namespace GASS
 		if(obj)
 		{
 			if(m_Visible)
-				EditorManager::GetPtr()->HideObject(obj);
-			else
 				EditorManager::GetPtr()->UnhideObject(obj);
+			else
+				EditorManager::GetPtr()->HideObject(obj);
 		}
 	}
 

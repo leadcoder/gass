@@ -37,7 +37,7 @@ namespace GASS
 		virtual void MoveTo(const CursorInfo &info);
 		virtual void MouseDown(const CursorInfo &info);
 		virtual void MouseUp(const CursorInfo &info);
-		virtual std::string GetName() {return "TerrainDeformTool";}
+		virtual std::string GetName() {return TID_TERRAIN_DEFORM;}
 		virtual void Stop();
 		virtual void Start();
 		void SetBrushSize(float value);

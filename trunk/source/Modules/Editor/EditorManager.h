@@ -2,11 +2,13 @@
 
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
+#include "Core/MessageSystem/GASSStaticMessageListener.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
+
 #include "EditorCommon.h"
 #include "GUISchemaLoader.h"
 #include <list>
@@ -20,7 +22,7 @@ namespace GASS
 	class MessageManager;
 	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
 
-	class EditorModuleExport EditorManager : public Singleton<EditorManager> , public boost::enable_shared_from_this<EditorManager>, public IMessageListener
+	class EditorModuleExport EditorManager : public Singleton<EditorManager> , public StaticMessageListener
 	{
 	public:
 		EditorManager();
@@ -48,6 +50,7 @@ namespace GASS
 		void UnhideObject(SceneObjectWeakPtr obj);
 		void HideObject(SceneObjectWeakPtr obj);
 		bool IsObjectStatic(SceneObjectWeakPtr obj);
+		void AddStaticObject(SceneObjectPtr obj, bool rec);
 	
 
 		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}

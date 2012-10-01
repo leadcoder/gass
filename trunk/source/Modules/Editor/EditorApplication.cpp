@@ -134,7 +134,7 @@ namespace GASS
 		//tool = new TerrainDeformTool(tools);
 		//tools->AddTool(tool);
 
-		tools->SelectTool("SelectTool");
+		tools->SelectTool(TID_SELECT);
 		tools->SetActive(true);
 
 		m_Initilized  = true;

@@ -189,7 +189,7 @@ namespace GASS
 		m_MouseIsDown = false;
 		bool slection_mode = false;
 
-		if(info.m_ScreenPos == m_MouseDownPos)
+		if(fabs(info.m_ScreenPos.x - m_MouseDownPos.x) + abs(info.m_ScreenPos.y - m_MouseDownPos.y) < 0.05)
 		{
 			slection_mode = true;
 		}
@@ -273,7 +273,8 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
 				{
-					EditorManager::GetPtr()->SelectSceneObject(current);
+					//gizmo->PostMessage();
+					//EditorManager::GetPtr()->SelectSceneObject(current);
 				}
 			}
 		}

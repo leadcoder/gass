@@ -101,45 +101,16 @@ namespace GASS
 					PrevTool();
 			}
 			//temp solution, implement this in custom tool selection class
-			else if(name == "MoveTool")
+			else if(name == TID_MOVE || 
+					name == TID_VERTICAL_MOVE ||
+					name == TID_ROTATE ||
+					name == TID_PAINT ||
+					name == TID_TERRAIN_DEFORM ||
+					name == TID_GOTO_POS ||
+					name == TID_EDIT_POS
+					)
 			{
-				SelectTool("MoveTool");
-			}
-			else if(name == "VerticalMoveTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("VerticalMoveTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}
-			else if(name == "RotateTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("RotateTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}
-			else if(name == "PaintTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("TerrainDeformTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}
-			else if(name == "TerrainDeformTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("TerrainDeformTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}
-			else if(name == "GoToPositionTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("GoToPositionTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
-			}
-			else if(name == "EditPositionTool")
-			{
-				int id = (int) this;
-				MessagePtr tool_msg(new ToolChangedMessage("EditPositionTool",id));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(tool_msg);
+				SelectTool(name);
 			}
 		}
 	}

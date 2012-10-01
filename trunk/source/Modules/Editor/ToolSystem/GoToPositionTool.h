@@ -22,7 +22,7 @@ namespace GASS
 		virtual void MoveTo(const CursorInfo &info);
 		virtual void MouseDown(const CursorInfo &info);
 		virtual void MouseUp(const CursorInfo &info);
-		virtual std::string GetName() {return "GoToPositionTool";}
+		virtual std::string GetName() {return TID_GOTO_POS;}
 		virtual void Stop() {};
 		virtual void Start() {};
 	private:

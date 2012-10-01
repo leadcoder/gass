@@ -152,6 +152,11 @@ namespace GASS
 
 	void GizmoComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
+		SetSelection(message->GetSceneObject());
+	}
+
+	void GizmoComponent::SetSelection(SceneObjectPtr  object)
+	{
 		if(m_Type == "fixed_grid")
 			return;
 		//Unregister form previous
@@ -161,11 +166,10 @@ namespace GASS
 			previous_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage));
 		}
 
-		SceneObjectPtr  new_selected = message->GetSceneObject();
-		if(new_selected)
+		if(object)
 		{
 			//move gismo to position
-			LocationComponentPtr lc = new_selected->GetFirstComponentByClass<ILocationComponent>();
+			LocationComponentPtr lc = object->GetFirstComponentByClass<ILocationComponent>();
 			if(lc)
 			{
 				//move to selecetd location
@@ -181,8 +185,8 @@ namespace GASS
 					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
 				}
 			}
-			new_selected->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
-			m_SelectedObject = new_selected;
+			object->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
+			m_SelectedObject = object;
 		}
 		else
 		{
@@ -207,8 +211,6 @@ namespace GASS
 		{
 			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*message->GetRotation(),GIZMO_SENDER)));
 		}
-
-		
 	}
 
 	void GizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
@@ -294,6 +296,8 @@ namespace GASS
 
 		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
+
+		SetSelection(EditorManager::Get().GetSelectedObject());
 	}
 
 

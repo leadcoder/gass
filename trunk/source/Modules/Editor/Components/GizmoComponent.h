@@ -22,8 +22,8 @@ namespace GASS
 		bool GetActive() const {return m_Active;}
 		std::string GetSpaceMode() const {return m_Mode;}
 	private:
+		void SetSelection(SceneObjectPtr  object);
 		void BuildMesh();
-		//void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnGridMessage(GridMessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		std::string GetType() const {return m_Type;}

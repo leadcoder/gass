@@ -130,9 +130,6 @@ namespace GASS
 				tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 			}
 		}
-
-		
-	
 	}
 
 	void SimSystemManager::StepSimulation(double delta_time)

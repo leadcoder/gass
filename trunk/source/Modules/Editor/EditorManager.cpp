@@ -13,7 +13,8 @@
 namespace GASS
 {
 	EditorManager::EditorManager()	: m_MessageManager(new MessageManager()),
-		m_GUISettings(new GUISchemaLoader)
+		m_GUISettings(new GUISchemaLoader),
+		m_SceneObjectsSelectable(false)
 	{
 	}
 
@@ -60,18 +61,39 @@ namespace GASS
 		GetMouseToolController()->Update(delta_time);
 	}
 
+
+
+	void EditorManager::AddStaticObject(SceneObjectPtr obj, bool rec)
+	{
+		m_StaticObjects.insert(obj);
+		if(rec)
+		{
+			IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+			while(iter.hasMoreElements())
+			{
+				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+				AddStaticObject(child,rec);
+
+			}
+		}
+	}
+
+
 	void EditorManager::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
 		ScenePtr scene = message->GetScene();
-		IComponentContainer::ComponentContainerIterator iter = scene->GetRootSceneObject()->GetChildren();
-		while(iter.hasMoreElements())
+		if(!m_SceneObjectsSelectable) //add static objects
 		{
-			//Lock recursive?
-			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
-			if(!m_SceneObjectsSelectable)
-				m_StaticObjects.insert(obj);
+			IComponentContainer::ComponentContainerIterator iter = scene->GetRootSceneObject()->GetChildren();
+			while(iter.hasMoreElements())
+			{
+				//Lock recursive?
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
+				AddStaticObject(obj, true);
+			}
 		}
 		m_Scene = scene;
+
 		//load selection object
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}

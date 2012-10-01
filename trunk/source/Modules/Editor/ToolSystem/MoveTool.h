@@ -6,6 +6,8 @@
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
+
+
 namespace GASS
 {
 	class MouseToolController;
@@ -13,11 +15,12 @@ namespace GASS
 	class IMessage;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::shared_ptr<IMessage> MessagePtr;
-
+	
 
 	class EditorModuleExport MoveTool : public IMouseTool 
 	{
 	public:
+		
 		MoveTool(MouseToolController* controller);
 		virtual ~MoveTool(void);
 
@@ -25,10 +28,9 @@ namespace GASS
 		virtual void MoveTo(const CursorInfo &info);
 		virtual void MouseDown(const CursorInfo &info);
 		virtual void MouseUp(const CursorInfo &info);
-		virtual std::string GetName() {return "MoveTool";}
+		virtual std::string GetName() {return TID_MOVE;}
 		virtual void Stop();
 		virtual void Start();
-
 	private:
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
