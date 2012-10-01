@@ -55,7 +55,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnGridMessage,GridMessage,0));
 	}
@@ -63,7 +63,7 @@ namespace GASS
 	void GizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectedMessage));
+		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnGridMessage,GridMessage));
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage));
@@ -150,7 +150,7 @@ namespace GASS
 		}
 	}
 
-	void GizmoComponent::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void GizmoComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 		if(m_Type == "fixed_grid")
 			return;
@@ -284,7 +284,7 @@ namespace GASS
 		BuildMesh();
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage,1));
 
-		m_ActiveCameraObject = EditorManager::GetPtr()->GetMouseToolController()->GetActiveCameraObject();
+		m_ActiveCameraObject = EditorManager::GetPtr()->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
 		{
@@ -703,15 +703,7 @@ namespace GASS
 		return Quaternion::IDENTITY;
 	}
 
-	void GizmoComponent::OnSnapModeMessage(SnapModeMessagePtr message)
-	{
-		if(message->MovementSnapEnabled())
-		{
-			//snap 
-		}
-
-	}
-
+	
 	Vec3 GizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p)
 	{
 		Vec3 c = p-axis_origin;

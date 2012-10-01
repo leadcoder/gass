@@ -172,6 +172,16 @@ namespace GASS
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
+		/*physx::PxVisualDebuggerConnectionFlags theConnectionFlags( physx::PxVisualDebuggerExt::getAllConnectionFlags() );
+		PVD::PvdConnection* theConnection = physx::PxVisualDebuggerExt::createConnection(system->GetPxSDK()->getPvdConnectionManager(), "127.0.0.1", 5425, 10, theConnectionFlags);
+		if (theConnection)
+		{
+			theConnection->release();
+		}*/
+		//system->GetPxSDK()->getVisualDebugger()->setVisualizeConstraints(true);
+		//system->GetPxSDK()->getVisualDebugger()->setVisualDebuggerFlag(physx::PxVisualDebuggerFlags::eTRANSMIT_CONTACTS, true);
+
+
 		//m_PxScene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE,				 1.0);
 		//m_PxScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES,	1.0f);
 		//PxMaterial* mMaterial = system->GetPxSDK()->createMaterial(0.5,0.5,0.5);

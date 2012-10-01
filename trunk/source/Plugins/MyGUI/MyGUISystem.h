@@ -36,8 +36,8 @@ namespace GASS
 		void OnShutdown(MessagePtr message);
 		void OnLoadGUIScript(GUIScriptMessagePtr message);
 		bool MouseMoved(const MouseData &data);
-		bool MousePressed(const MouseData &data, int id );
-		bool MouseReleased(const MouseData &data, int id );
+		bool MousePressed(const MouseData &data, MouseButtonId id );
+		bool MouseReleased(const MouseData &data, MouseButtonId id );
 		bool KeyPressed(int key, unsigned int text);
 		bool KeyReleased( int key, unsigned int text);
 

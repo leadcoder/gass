@@ -25,7 +25,7 @@ namespace GASS
 	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1),m_Noise(0), m_TEM(TEM_DEFORM),m_InvertBrush(1),m_ActiveLayer(TL_1)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 
 		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("EditorInputSettings");
 		if(cs)
@@ -111,11 +111,11 @@ namespace GASS
 	SceneObjectPtr TerrainDeformTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetScene())
+		if(!gizmo &&  EditorManager::Get().GetScene())
 		{
-			ScenePtr scene = m_Controller->GetScene();
+			ScenePtr scene = EditorManager::Get().GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 
@@ -149,7 +149,7 @@ namespace GASS
 		}
 	}
 
-	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 		if(m_Active)
 		{

@@ -132,6 +132,7 @@ namespace GASS
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
+		SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
@@ -143,10 +144,10 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 
-		MessagePtr pos_msg(new PositionMessage(GetPosition(),from_id));
+		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new RotationMessage(GetRotation(),from_id));
+		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 		
 		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));

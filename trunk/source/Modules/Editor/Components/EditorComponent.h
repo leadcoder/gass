@@ -21,15 +21,15 @@ namespace GASS
 
 		bool GetVisible() const{return m_Visible;}
 		void SetVisible(bool value) ;
-		void OnObjectVisible(ObjectVisibleMessagePtr message);
-		void OnObjectLock(ObjectLockMessagePtr message);
+		void OnObjectVisible(ObjectVisibilityChangedMessagePtr message);
+		void OnObjectLock(ObjectLockChangedMessagePtr message);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
-		void OnSceneObjectSelected(ObjectSelectedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
 		

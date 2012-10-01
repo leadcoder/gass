@@ -31,7 +31,7 @@ namespace GASS
 	private:
 		GASS::SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(GASS::ObjectSelectedMessagePtr message);
+		void OnSceneObjectSelected(GASS::ObjectSelectionChangedMessagePtr message);
 		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
 	
 

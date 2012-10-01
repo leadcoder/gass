@@ -6,23 +6,21 @@
 
 namespace GASS
 {
-	class ObjectSelectedMessage : public BaseMessage
+	class ObjectSelectionChangedMessage : public BaseMessage
 	{
 	public:
-		ObjectSelectedMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		ObjectSelectionChangedMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj){}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectSelectedMessage> ObjectSelectedMessagePtr;
+	typedef boost::shared_ptr<ObjectSelectionChangedMessage> ObjectSelectionChangedMessagePtr;
 
-
-
-	class ObjectLockMessage : public BaseMessage
+	class ObjectLockChangedMessage : public BaseMessage
 	{
 	public:
-		ObjectLockMessage(SceneObjectPtr obj, bool lock, SenderID sender_id = -1, double delay= 0) : 
+		ObjectLockChangedMessage(SceneObjectPtr obj, bool lock, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj), m_Lock(lock){}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 		  bool GetLock() const {return m_Lock;}
@@ -30,13 +28,12 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		bool m_Lock;
 	};
-	typedef boost::shared_ptr<ObjectLockMessage> ObjectLockMessagePtr;
+	typedef boost::shared_ptr<ObjectLockChangedMessage> ObjectLockChangedMessagePtr;
 
-
-	class ObjectVisibleMessage : public BaseMessage
+	class ObjectVisibilityChangedMessage : public BaseMessage
 	{
 	public:
-		ObjectVisibleMessage(SceneObjectPtr obj, bool visible, SenderID sender_id = -1, double delay= 0) : 
+		ObjectVisibilityChangedMessage(SceneObjectPtr obj, bool visible, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj), m_Visible(visible){}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 		  bool GetVisible() const {return m_Visible;}
@@ -44,37 +41,35 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		bool m_Visible;
 	};
-	typedef boost::shared_ptr<ObjectVisibleMessage > ObjectVisibleMessagePtr;
+	typedef boost::shared_ptr<ObjectVisibilityChangedMessage > ObjectVisibilityChangedMessagePtr;
 
-	class ObjectSiteSelectMessage : public BaseMessage
+	class ObjectSiteChangedMessage : public BaseMessage
 	{
 	public:
-		ObjectSiteSelectMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		ObjectSiteChangedMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj) {}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectSiteSelectMessage> ObjectSiteSelectMessagePtr;
+	typedef boost::shared_ptr<ObjectSiteChangedMessage> ObjectSiteChangedMessagePtr;
 
 
-	class ZoomObjectMessage : public BaseMessage
+	class ObjectZoomedMessage : public BaseMessage
 	{
 	public:
-		ZoomObjectMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		ObjectZoomedMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj){}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ZoomObjectMessage> ZoomObjectMessagePtr;
+	typedef boost::shared_ptr<ObjectZoomedMessage> ObjectZoomedMessagePtr;
 
-
-
-	class ShowObjectMenuMessage : public BaseMessage
+	class RequestShowObjectMenuMessage : public BaseMessage
 	{
 	public:
-		ShowObjectMenuMessage(SceneObjectPtr obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
+		RequestShowObjectMenuMessage(SceneObjectPtr obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(obj), m_Pos (screen_pos){}
 		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 		  Vec2 GetScreenPosition() const {return m_Pos;}
@@ -82,7 +77,7 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		Vec2 m_Pos;
 	};
-	typedef boost::shared_ptr<ShowObjectMenuMessage> ShowObjectMenuMessagePtr;
+	typedef boost::shared_ptr<RequestShowObjectMenuMessage> RequestShowObjectMenuMessagePtr;
 
 	class ObjectDroppedMessage : public BaseMessage
 	{
@@ -98,18 +93,7 @@ namespace GASS
 	typedef boost::shared_ptr<ObjectDroppedMessage> ObjectDroppedMessagePtr;
 
 
-	class CursorMoved2DMessage : public BaseMessage
-	{
-	public:
-		CursorMoved2DMessage(const Vec2 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_ScreenPosition(pos){}
-		  Vec2 GetScreenPosition() const {return m_ScreenPosition;}
-	private:
-		Vec2 m_ScreenPosition;
-	};
-	typedef boost::shared_ptr<CursorMoved2DMessage> CursorMoved2DMessagePtr;
-
-
+	
 	class CursorMoved3DMessage : public BaseMessage
 	{
 	public:
@@ -176,7 +160,6 @@ namespace GASS
 	typedef boost::shared_ptr<ToolChangedMessage> ToolChangedMessagePtr;
 
 
-
 	class WindowFocusChangedMessage : public BaseMessage
 	{
 	public:
@@ -190,7 +173,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;
 
-	class FileSaveMessage : public BaseMessage
+/*	class FileSaveMessage : public BaseMessage
 	{
 	public:
 		FileSaveMessage(SenderID sender_id = -1, double delay= 0) : 
@@ -198,13 +181,13 @@ namespace GASS
 	private:
 	};
 	typedef boost::shared_ptr<FileSaveMessage> FileSaveMessagePtr;
-
+	*/
 
 	/**
 	Notify that file is saved, sent by application/plugin that listen to FileSaveMessage messages
 	*/
 
-	class FileSavedMessage : public BaseMessage
+	/*class FileSavedMessage : public BaseMessage
 	{
 	public:
 		FileSavedMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
@@ -247,7 +230,7 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<FileNewMessage> FileNewMessagePtr;
 
-
+	*/
 
 	class SceneChangedMessage : public BaseMessage
 	{
@@ -260,7 +243,7 @@ namespace GASS
 
 
 
-	class NewWindowMessage : public BaseMessage
+	/*class NewWindowMessage : public BaseMessage
 	{
 	public:
 		NewWindowMessage(const std::string &window_name, int id,SenderID sender_id = -1, double delay= 0) : 
@@ -272,8 +255,9 @@ namespace GASS
 		int m_ID;
 	};
 	typedef boost::shared_ptr<NewWindowMessage> NewWindowMessagePtr;
+	*/
 
-	class RemoveWindowMessage : public BaseMessage
+	/*class RemoveWindowMessage : public BaseMessage
 	{
 	public:
 		RemoveWindowMessage(const std::string &window_name, int id,SenderID sender_id = -1, double delay= 0) : 
@@ -298,9 +282,9 @@ namespace GASS
 		std::string  m_Filename;
 	};
 	typedef boost::shared_ptr<LoadLayoutMessage> LoadLayoutMessagePtr;
+	*/
 
-
-
+	/*
 	class MenuCommandMessage : public BaseMessage
 	{
 	public:
@@ -311,7 +295,7 @@ namespace GASS
 		int m_ID;
 	};
 	typedef boost::shared_ptr<MenuCommandMessage> MenuCommandMessagePtr;
-
+	*/
 
 	/*class MouseButtonMessage : public BaseMessage
 	{
@@ -475,7 +459,7 @@ namespace GASS
 	typedef boost::shared_ptr<EditModeMessage> EditModeMessagePtr;
 
 
-	class SnapSettingsMessage : public BaseMessage
+	/*class SnapSettingsMessage : public BaseMessage
 	{
 	public:
 		SnapSettingsMessage(Float movment_snap, Float angle_snap, SenderID sender_id = -1, double delay= 0) : 
@@ -500,14 +484,14 @@ namespace GASS
 		bool m_RSnap;
 	};
 	typedef boost::shared_ptr<SnapModeMessage> SnapModeMessagePtr;
-
+	*/
 
 
 	class GridMessage : public BaseMessage
 	{
 	public:
 		GridMessage(Float size, Float spacing, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Size(spacing), m_Spacing(spacing){}
+		  BaseMessage(sender_id , delay), m_Size(size), m_Spacing(spacing){}
 		  Float GetSpacing() const {return m_Spacing;}
 		  Float GetSize() const {return m_Size;}
 	private:
@@ -515,7 +499,7 @@ namespace GASS
 		Float m_Size;
 	};
 	typedef boost::shared_ptr<GridMessage> GridMessagePtr;
-
+	
 
 	class TemplateSelectedMessage : public BaseMessage
 	{

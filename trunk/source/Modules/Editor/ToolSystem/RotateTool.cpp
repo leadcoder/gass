@@ -23,7 +23,7 @@ namespace GASS
 		m_Controller(controller),
 		m_Active(false)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 	}
 
 	RotateTool::~RotateTool()
@@ -70,7 +70,7 @@ namespace GASS
 
 	bool RotateTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!m_Controller->IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && m_Controller->IsObjectVisible(obj));
+		return (!EditorManager::Get().IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && EditorManager::Get().IsObjectVisible(obj));
 	}
 
 	void RotateTool::MouseDown(const CursorInfo &info)
@@ -132,7 +132,7 @@ namespace GASS
 			SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 			if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 			{
-				if(!m_Controller->IsObjectStatic(obj_under_cursor))
+				if(!EditorManager::Get().IsObjectStatic(obj_under_cursor))
 				{
 					if(!EditorManager::Get().IsObjectLocked(obj_under_cursor))
 					{
@@ -174,12 +174,12 @@ namespace GASS
 	SceneObjectPtr RotateTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetScene())
+		if(!gizmo &&  EditorManager::Get().GetScene())
 		{
-			ScenePtr scene = m_Controller->GetScene();
+			ScenePtr scene = EditorManager::Get().GetScene();
 			std::string gizmo_name = "GizmoRotateObject_YUp";
 			
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 			//Send selection message to inform gizmo about current object
@@ -203,7 +203,7 @@ namespace GASS
 	}
 
 
-	void RotateTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void RotateTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 		if(m_Active)
 		{

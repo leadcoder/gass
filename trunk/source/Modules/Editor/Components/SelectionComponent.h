@@ -27,7 +27,7 @@ namespace GASS
 		void SetSize(float value){m_Size =value;}
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
-		void OnSceneObjectSelected(ObjectSelectedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		

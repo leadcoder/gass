@@ -52,8 +52,7 @@ namespace GASS
 		SceneObjectPtr parent_obj(m_ParentObject,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
-
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
+			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				int from_id = (int) this;

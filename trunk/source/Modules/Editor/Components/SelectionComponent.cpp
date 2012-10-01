@@ -50,14 +50,14 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnUnload,UnloadComponentsMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 		
 	}
 
 	void SelectionComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectedMessage));
+		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
 		
 		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)
@@ -67,7 +67,7 @@ namespace GASS
 	}
 
 
-	void SelectionComponent::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 		//Unregister form previous selection
 		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());

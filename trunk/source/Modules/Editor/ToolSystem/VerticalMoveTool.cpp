@@ -57,7 +57,7 @@ namespace GASS
 		m_MouseIsDown = true;
 
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
-		if(obj_under_cursor && !m_Controller->IsObjectStatic(obj_under_cursor))
+		if(obj_under_cursor && !EditorManager::Get().IsObjectStatic(obj_under_cursor))
 		{
 			EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
 

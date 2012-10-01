@@ -56,9 +56,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnUnload,UnloadComponentsMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibleMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 	}
 	
 	void EditorComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -70,9 +70,9 @@ namespace GASS
 
 	void EditorComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibleMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectedMessage));
+		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage));
+		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage));
+		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
 	}
 
 	void EditorComponent::SetLock(bool value) 
@@ -89,7 +89,7 @@ namespace GASS
 		}
 	}
 
-	void EditorComponent::OnObjectLock(ObjectLockMessagePtr message)
+	void EditorComponent::OnObjectLock(ObjectLockChangedMessagePtr message)
 	{
 		if(message->GetSceneObject() == GetSceneObject())
 		{
@@ -104,7 +104,10 @@ namespace GASS
 		SceneObjectPtr obj = GetSceneObject();
 		if(obj)
 		{
-			EditorManager::GetPtr()->GetMessageManager()->PostMessage(MessagePtr(new ObjectVisibleMessage(obj,m_Visible)));
+			if(m_Visible)
+				EditorManager::GetPtr()->HideObject(obj);
+			else
+				EditorManager::GetPtr()->UnhideObject(obj);
 		}
 	}
 
@@ -113,7 +116,7 @@ namespace GASS
 		m_VisibilityTransparency = value;
 	}
 
-	void EditorComponent::OnObjectVisible(ObjectVisibleMessagePtr message)
+	void EditorComponent::OnObjectVisible(ObjectVisibilityChangedMessagePtr message)
 	{
 		if(message->GetSceneObject() == GetSceneObject())
 		{
@@ -139,7 +142,7 @@ namespace GASS
 		}
 	}
 
-	void EditorComponent::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void EditorComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 		if(!m_ChangeMaterialWhenSelected)
 			return;

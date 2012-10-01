@@ -246,7 +246,7 @@ namespace GASS
 	{
 	public:
 		AttachToParentMessage(bool value,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay)
+		  BaseMessage( sender_id , delay), m_AttachToParent(value)
 		  {
 
 		  }

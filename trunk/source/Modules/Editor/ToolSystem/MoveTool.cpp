@@ -24,7 +24,7 @@ namespace GASS
 		m_Active(false),
 		m_SnapToMouse(false)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectedMessage,0));
+		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 	}
 
 	MoveTool::~MoveTool()
@@ -245,7 +245,7 @@ namespace GASS
 
 	bool MoveTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!m_Controller->IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && m_Controller->IsObjectVisible(obj));
+		return (!EditorManager::Get().IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && EditorManager::Get().IsObjectVisible(obj));
 	}
 
 	void MoveTool::Stop()
@@ -257,13 +257,13 @@ namespace GASS
 	SceneObjectPtr MoveTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetScene())
+		if(!gizmo &&  EditorManager::Get().GetScene())
 		{
-			ScenePtr scene = m_Controller->GetScene();
+			ScenePtr scene = EditorManager::Get().GetScene();
 
 			std::string gizmo_name = "GizmoMoveObject_YUp";
 		
-			GASS::SceneObjectPtr scene_object = m_Controller->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 
@@ -299,7 +299,7 @@ namespace GASS
 		}
 	}
 
-	void MoveTool::OnSceneObjectSelected(ObjectSelectedMessagePtr message)
+	void MoveTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
 	{
 
 		//Move gizmo to new object

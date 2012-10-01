@@ -118,7 +118,7 @@ namespace GASS
 		}
 		return true;
 	}
-	bool MyGUISystem::MousePressed(const MouseData &data,int id )
+	bool MyGUISystem::MousePressed(const MouseData &data,MouseButtonId id )
 	{
 		if(mGUI)
 		{
@@ -128,7 +128,7 @@ namespace GASS
 		//CEGUI::System::getSingleton().injectMouseButtonDown(ConvertOISButtonToCegui(id));
 		return true;
 	}
-	bool MyGUISystem::MouseReleased(const MouseData &data,int id )
+	bool MyGUISystem::MouseReleased(const MouseData &data,MouseButtonId id )
 	{
 		if(mGUI)
 		{

@@ -23,8 +23,7 @@ namespace GASS
 		std::string GetSpaceMode() const {return m_Mode;}
 	private:
 		void BuildMesh();
-		void OnSnapModeMessage(SnapModeMessagePtr message);
-		void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
+		//void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
 		void OnGridMessage(GridMessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		std::string GetType() const {return m_Type;}
@@ -35,7 +34,7 @@ namespace GASS
 		void SetSize(float value){m_Size =value;}
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
-		void OnSceneObjectSelected(ObjectSelectedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);

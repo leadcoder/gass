@@ -3,6 +3,10 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Scene/GASSGraphicsSceneMessages.h"
+#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "EditorCommon.h"
 #include "GUISchemaLoader.h"
 #include <list>
@@ -16,7 +20,7 @@ namespace GASS
 	class MessageManager;
 	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
 
-	class EditorModuleExport EditorManager : public Singleton<EditorManager> 
+	class EditorModuleExport EditorManager : public Singleton<EditorManager> , public boost::enable_shared_from_this<EditorManager>, public IMessageListener
 	{
 	public:
 		EditorManager();
@@ -36,11 +40,32 @@ namespace GASS
 		SceneObjectPtr GetSelectedObject() const;
 		void SelectSceneObject(SceneObjectPtr obj);
 
-		bool IsObjectLocked(GASS::SceneObjectWeakPtr obj);
+		bool IsObjectLocked(SceneObjectWeakPtr obj);
 		void UnlockObject(SceneObjectWeakPtr obj);
 		void LockObject(SceneObjectWeakPtr obj);
-	protected:
+
+		bool IsObjectVisible(SceneObjectWeakPtr obj);
+		void UnhideObject(SceneObjectWeakPtr obj);
+		void HideObject(SceneObjectWeakPtr obj);
+		bool IsObjectStatic(SceneObjectWeakPtr obj);
 	
+
+		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
+		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
+	
+		ScenePtr GetScene(){return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+		void SetObjectSite(SceneObjectPtr obj);
+		SceneObjectPtr GetObjectSite() const;
+		void MoveCameraToObject(SceneObjectPtr obj);
+		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
+		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
+	protected:
+		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
+		void OnNewScene(SceneAboutToLoadNotifyMessagePtr message);
+		void OnChangeCamera(ChangeCameraMessagePtr message);
+		
+		CameraComponentWeakPtr m_ActiveCamera;
+		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;
 		MessageManager* m_MessageManager;
 		FilePath m_ExecutionFolder;
@@ -49,7 +74,12 @@ namespace GASS
 		GUISchemaLoader* m_GUISettings;
 
 		SceneObjectWeakPtr m_SelectedObject;
+		SceneWeakPtr m_Scene;
 
 		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
+		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;
+		std::set<GASS::SceneObjectWeakPtr> m_StaticObjects;
+		bool m_SceneObjectsSelectable;
+		SceneObjectWeakPtr m_CurrentSite;
 	};
 }

@@ -31,7 +31,7 @@ namespace GASS
 		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)
 		{
-			ScenePtr scene = m_Controller->GetScene();
+			ScenePtr scene = EditorManager::Get().GetScene();
 			Vec3 offset = Vec3(0,0.1f,0);
 			UpdateLine(m_StartPos+offset, info.m_3DPos+offset);
 		}
@@ -107,7 +107,7 @@ namespace GASS
 
 		if(!ruler)
 		{
-			ruler = m_Controller->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetScene()->GetRootSceneObject());
+			ruler = EditorManager::Get().GetScene()->LoadObjectFromTemplate("RulerObject",EditorManager::Get().GetScene()->GetRootSceneObject());
 			if(!ruler)
 			{
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create in RulerObject","MeasurementTool::GetOrCreateRulerObject");
