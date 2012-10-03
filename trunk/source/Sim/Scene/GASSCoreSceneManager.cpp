@@ -61,14 +61,14 @@ namespace GASS
 		if(scene)
 		{
 			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
-			scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scene::CORE_COMPONENT_LOAD_PRIORITY);
+			//scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
 
-	void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
+	/*void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		
-	}
+	}*/
 
 	void CoreSceneManager::OnLoad(MessagePtr message)
 	{

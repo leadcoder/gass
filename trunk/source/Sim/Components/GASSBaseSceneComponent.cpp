@@ -47,7 +47,6 @@ namespace GASS
 		return boost::shared_static_cast<SceneObject>(GetOwner());
 	}
 
-
 	void BaseSceneComponent::OnInitialize()
 	{
 		//InitializePointers();

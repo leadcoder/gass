@@ -153,18 +153,17 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
 
-
 	/**
-		Message sent by SceneObjectManager after scene object is created and added to the scene 
+		Message sent by SceneObject before scene object is Initialized 
 	*/
-	class SceneObjectCreatedNotifyMessage : public BaseMessage
+	class PreSceneObjectInitialized : public BaseMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object Pointer to the new object
 		*/
-		SceneObjectCreatedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		PreSceneObjectInitialized(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay), m_Object(object)
 		  {
 
@@ -173,7 +172,50 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<SceneObjectCreatedNotifyMessage> SceneObjectCreatedNotifyMessagePtr;
+	typedef boost::shared_ptr<PreSceneObjectInitialized> PreSceneObjectInitializedPtr;
+
+
+	/**
+		Message sent by SceneObject after scene object components are initlized but before they are loaded
+	*/
+	class PostComponentsInitializedMessage : public BaseMessage
+	{
+	public:
+		/**
+		Constructor
+		@param object Pointer to the new object
+		*/
+		PostComponentsInitializedMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Object(object)
+		  {
+
+		  }
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+	private:
+		SceneObjectPtr m_Object;
+	};
+	typedef boost::shared_ptr<PostComponentsInitializedMessage> PostComponentsInitializedMessagePtr;
+
+	/**
+		Message sent after SceneObject is Initialized
+	*/
+	class PostSceneObjectInitialized : public BaseMessage
+	{
+	public:
+		/**
+		Constructor
+		@param object Pointer to the new object
+		*/
+		PostSceneObjectInitialized(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Object(object)
+		  {
+
+		  }
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+	private:
+		SceneObjectPtr m_Object;
+	};
+	typedef boost::shared_ptr<PostSceneObjectInitialized> PostSceneObjectInitializedPtr;
 
 
 	/**

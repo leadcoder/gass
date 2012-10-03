@@ -111,8 +111,13 @@ namespace GASS
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
-		m_Scene = scene;
+
+		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+		MessagePtr pre_load_msg(new PreSceneObjectInitialized(this_obj));
+		scene->SendImmediate(pre_load_msg);
 		
+		m_Scene = scene;
+
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
 		//only initilize components, let each child be initilize manually
 		ComponentVector::iterator iter = m_ComponentVector.begin();
@@ -123,16 +128,12 @@ namespace GASS
 			bsc->OnInitialize();
 			++iter;
 		}
-
-		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-		MessagePtr load_msg(new SceneObjectCreatedNotifyMessage(this_obj));
+		MessagePtr load_msg(new PostComponentsInitializedMessage(this_obj));
 		scene->SendImmediate(load_msg);
 
 		SendImmediate(MessagePtr(new LoadComponentsMessage()));
-
 		//Pump initial messages
 		SyncMessages(0,false);
-		//send load message for all child game object also?
 
 		IComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
@@ -140,6 +141,9 @@ namespace GASS
 			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
 			child->Initialize(scene);
 		}
+
+		MessagePtr post_load_msg(new PostSceneObjectInitialized(this_obj));
+		scene->SendImmediate(post_load_msg);
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()
