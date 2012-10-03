@@ -30,7 +30,7 @@ namespace GASS
 	class ODELineCollision
 	{
 	public:
-		ODELineCollision(CollisionRequest *request,CollisionResult *result, ODEPhysicsSceneManagerPtr ode_scene, float segment_length = 0);
+		ODELineCollision(CollisionRequest *request,CollisionResult *result, dGeomID space, float segment_length = 0);
 		virtual ~ODELineCollision();
 		void Process();
 	private:
@@ -42,7 +42,7 @@ namespace GASS
 		double m_RayLength;
 		CollisionRequest* m_Request;
 		CollisionResult* m_Result;
-		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
+		dGeomID m_Space;
 		float m_SegmentLength;
 	};
 	

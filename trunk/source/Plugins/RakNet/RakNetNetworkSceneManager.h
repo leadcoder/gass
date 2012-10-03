@@ -47,7 +47,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnNewMasterReplica(MasterReplicaCreatedMessagePtr message);
 		void SetTaskGroup(TaskGroup value);
 		void GeneratePartID(SceneObjectPtr obj, int &id);

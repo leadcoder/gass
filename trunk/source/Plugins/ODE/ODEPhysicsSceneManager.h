@@ -63,7 +63,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
@@ -72,7 +72,7 @@ namespace GASS
 	private:
 		dWorldID m_World;
 		dSpaceID m_Space;
-		dSpaceID m_StaticSpace;
+		//dSpaceID m_StaticSpace;
 		dSpaceID m_CollisionSpace;
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;

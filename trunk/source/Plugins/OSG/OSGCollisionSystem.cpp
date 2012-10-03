@@ -119,8 +119,6 @@ namespace GASS
 		return handle;
 	}
 
-
-
 	bool OSGCollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);

@@ -117,7 +117,7 @@ namespace GASS
 
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
+		//scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
 
@@ -185,14 +185,14 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
-	{
+	//void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
+	//{
 		//Initlize all gfx components and send scene mananger as argument
 		//SceneObjectPtr obj = message->GetSceneObject();
 		//assert(obj);
 		//MessagePtr gfx_msg(new LoadComponentsMessage(shared_from_this(),m_SceneMgr));
 		//obj->SendImmediate(gfx_msg);
-	}
+	//}
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{

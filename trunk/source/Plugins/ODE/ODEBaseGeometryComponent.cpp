@@ -72,7 +72,6 @@ namespace GASS
 		RegisterProperty<bool>("SizeFromMesh", &GASS::ODEBaseGeometryComponent::GetSizeFromMesh, &GASS::ODEBaseGeometryComponent::SetSizeFromMesh);
 		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODEBaseGeometryComponent::GetCollisionBits, &GASS::ODEBaseGeometryComponent::SetCollisionBits);
 		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODEBaseGeometryComponent::GetCollisionCategory, &GASS::ODEBaseGeometryComponent::SetCollisionCategory);
-
 		RegisterProperty<bool>("Debug", &GASS::ODEBaseGeometryComponent::GetDebug, &GASS::ODEBaseGeometryComponent::SetDebug);
 	}
 
@@ -162,12 +161,14 @@ namespace GASS
 	{
 		if(m_Body == 0) //only update position for static geometry 
 		{
+			
+			//Reflect scaling			
+			SetSizeFromMesh(m_SizeFromMesh);
+
 			Vec3 pos = message->GetPosition();
 			SetPosition(pos);
 			Quaternion rot = message->GetRotation();
 			SetRotation(rot);
-			//Reflect scaling			
-			SetSizeFromMesh(m_SizeFromMesh);
 		}
 	}
 
@@ -329,7 +330,6 @@ namespace GASS
 			return m_ODESpaceID;
 		}
 	}
-
 
 	void ODEBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
 	{

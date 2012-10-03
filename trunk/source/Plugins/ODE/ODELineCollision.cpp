@@ -28,9 +28,9 @@ namespace GASS
 {
 
 
-	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,ODEPhysicsSceneManagerPtr ode_scene, float segment_length) :	m_Request(request),
+	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,dGeomID space_id, float segment_length) :	m_Request(request),
 		m_Result(result),
-		m_SceneManager(ode_scene),
+		m_Space(space_id),
 		m_RayGeom(0),
 		m_SegmentLength(segment_length)
 	{
@@ -49,10 +49,8 @@ namespace GASS
 	void ODELineCollision::Process()
 	{
 		//split ray into segments
-		
 		if(m_SegmentLength > 0)
 		{
-			dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
 			dGeomID ray = dCreateRay (0, m_SegmentLength);
 			dGeomSetCollideBits (ray,m_Request->CollisionBits);
 			dGeomSetCategoryBits(ray,m_Request->CollisionBits);
@@ -68,7 +66,7 @@ namespace GASS
 				m_Result->CollDist = 0;
 				const Vec3 rayStart = m_RayStart + m_RayDir*(i*m_SegmentLength);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
-				dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
+				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 				if(m_Result->Coll == true)
 				{
 					dGeomDestroy(ray);
@@ -84,7 +82,7 @@ namespace GASS
 				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*m_SegmentLength);
 				dGeomRaySetLength(ray,last_ray_length);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
-				dSpaceCollide2(geom_space,ray,(void*) this,&ODELineCollision::Callback);
+				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 				if(m_Result->Coll == true)
 				{
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
@@ -102,7 +100,7 @@ namespace GASS
 			assert(m_Result);
 			m_Result->Coll = false;
 			m_Result->CollDist = 0;
-			dGeomID geom_space = (dGeomID) ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace();
+			dGeomID geom_space = (dGeomID) m_Space;
 			dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
 			if(m_Result->Coll == true)
 			{
@@ -182,7 +180,6 @@ namespace GASS
 		{
 			//pos - This is the point at which the ray intersects the surface of the other geom, regardless of whether the ray starts from inside or outside the geom.
 			//normal - This is the surface normal of the other geom at the contact point. if dCollide is passed the ray as its first geom then the normal will be oriented correctly for ray reflection from that surface (otherwise it will have the opposite sign).
-			//depth
 			if(m_Result->Coll == false || contact[i].geom.depth < m_Result->CollDist)
 			{
 				m_Result->CollDist = contact[i].geom.depth;

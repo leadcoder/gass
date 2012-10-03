@@ -91,7 +91,6 @@ namespace GASS
 		{
 			dGeomPlaneSetParams(m_GeomID, m_Normal.x, m_Normal.y, m_Normal.z, m_PlaneOffset);
 		}
-		
 	}
 
 	Vec3 ODEPlaneGeometryComponent::GetNormal() const

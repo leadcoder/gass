@@ -55,10 +55,12 @@ namespace GASS
 		Vec3 GetSize() const;
 		void UpdateBodyMass();
 		void SetSizeFromMesh(bool value);
+		void OnGeometryScale(GeometryScaleMessagePtr message);
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		void UpdateDebug();
 	protected:
-		Vec3 m_Size; 
+		Vec3 m_Size;
+		Vec3 m_Scale;
 	};
 }

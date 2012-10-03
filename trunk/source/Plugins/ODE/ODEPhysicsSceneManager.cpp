@@ -46,7 +46,7 @@ namespace GASS
 	bool ODEPhysicsSceneManager::m_ZUp = true;
 
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager() :m_Space(0),
-		m_StaticSpace(0),
+		//m_StaticSpace(0),
 		m_World(0),
 		m_CollisionSpace(0),
 		m_ContactGroup (0),
@@ -83,10 +83,9 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		
 		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
 		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+		//GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
 
@@ -99,9 +98,10 @@ namespace GASS
 			m_Paused = true;
 	}
 
-	void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
+	/*void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
 	{
-	}
+
+	}*/
 
 
 	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
@@ -117,10 +117,8 @@ namespace GASS
 
 		//dInitODE2(0);
 		m_Space = 0;
-		m_StaticSpace = 0;
 		m_World = dWorldCreate();
 		m_Space = dHashSpaceCreate(m_Space);
-		m_StaticSpace = dHashSpaceCreate(m_StaticSpace);
 
 		m_CollisionSpace = dHashSpaceCreate(m_CollisionSpace);
 		m_ContactGroup = dJointGroupCreate(0);
@@ -142,24 +140,21 @@ namespace GASS
 	{
 		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
 		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);
-		if(m_StaticSpace) dSpaceDestroy (m_StaticSpace);
+		//if(m_StaticSpace) dSpaceDestroy (m_StaticSpace);
 		if(m_World) dWorldDestroy (m_World);
 		//dCloseODE();
 		int address = (int) this;
 		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Unregister(listener);
-		
 	}
-
-
 
 	void ODEPhysicsSceneManager::SystemTick(double delta_time)
 	{
 		if (!m_Paused)
 		{
 			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
-			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
+			//dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
 			dWorldQuickStep(m_World, delta_time);
 			dJointGroupEmpty(m_ContactGroup);
 			//do some time slicing
@@ -338,8 +333,6 @@ namespace GASS
 
 	}
 
-
-	//TODO: move this to physics system instead of scenatio manager, mesh data should be same between scenes and therefore shareable
 	ODECollisionMesh ODEPhysicsSceneManager::CreateCollisionMesh(IMeshComponent* mesh)
 	{
 		std::string col_mesh_name = mesh->GetFilename();

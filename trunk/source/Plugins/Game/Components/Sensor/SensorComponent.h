@@ -27,7 +27,7 @@ namespace GASS
 		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);
-		void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
+		void OnSceneObjectCreated(PostSceneObjectInitializedPtr message);
 		bool IsNewTarget(SignatureComponentWeakPtr sig) const;
 		bool RemoveTarget(SignatureComponentWeakPtr sig);
 	private:

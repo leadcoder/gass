@@ -77,7 +77,7 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scene::GFX_COMPONENT_LOAD_PRIORITY));
+			//scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scene::GFX_COMPONENT_LOAD_PRIORITY));
 			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
 			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
 			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
@@ -176,7 +176,7 @@ namespace GASS
 
 	
 
-	void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
+	/*void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
 	{
 		//Initlize all gfx components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
@@ -188,7 +188,7 @@ namespace GASS
 		
 		//update scene data
 		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
-	}
+	}*/
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{

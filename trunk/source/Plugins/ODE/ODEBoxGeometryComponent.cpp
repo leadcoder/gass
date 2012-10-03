@@ -46,7 +46,8 @@
 namespace GASS
 {
 	ODEBoxGeometryComponent::ODEBoxGeometryComponent():
-		m_Size(1,1,1)
+		m_Size(1,1,1),
+		m_Scale(1,1,1)
 		
 	{
 
@@ -65,6 +66,7 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::OnInitialize()
 	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBoxGeometryComponent::OnGeometryScale,GeometryScaleMessage,0));
 		ODEBaseGeometryComponent::OnInitialize();
 	}
 
@@ -78,7 +80,7 @@ namespace GASS
 			{
 				AABox box = geom->GetBoundingBox();
 				SetSize((box.m_Max - box.m_Min));
-				SetOffset((box.m_Max + box.m_Min)*0.5);
+				SetOffset(((box.m_Max + box.m_Min)*0.5));
 			}
 		}
 	}
@@ -95,7 +97,7 @@ namespace GASS
 			m_Size = size;
 			if(m_GeomID)
 			{
-				dGeomBoxSetLengths(m_GeomID, m_Size.x, m_Size.y, m_Size.z);
+				dGeomBoxSetLengths(m_GeomID, m_Size.x*m_Scale.x, m_Size.y*m_Scale.y, m_Size.z*m_Scale.z);
 				UpdateBodyMass();
 				UpdateDebug();
 			}
@@ -166,6 +168,17 @@ namespace GASS
 		//Vec3 pos  = m_Offset + offset;
 		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));
+	}
+
+
+	void ODEBoxGeometryComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	{
+		//rescale box geom
+		m_Scale = message->GetScale();
+		if(m_GeomID)
+		{
+			SetSizeFromMesh(m_SizeFromMesh);
+		}
 	}
 
 	void ODEBoxGeometryComponent::UpdateDebug()

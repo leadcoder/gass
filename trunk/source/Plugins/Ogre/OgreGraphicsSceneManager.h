@@ -66,7 +66,7 @@ namespace GASS
 		void OnLoad(MessagePtr message);		
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 
 		

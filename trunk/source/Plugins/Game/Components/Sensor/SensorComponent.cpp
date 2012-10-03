@@ -47,7 +47,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitialized,0));
 	}
 
 	void SensorComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -73,7 +73,7 @@ namespace GASS
 		m_Initialized = false;
 	}
 
-	void SensorComponent::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
+	void SensorComponent::OnSceneObjectCreated(PostSceneObjectInitializedPtr message)
 	{
 		SignatureComponentPtr signature = message->GetSceneObject()->GetFirstComponentByClass<SignatureComponent>();
 		if(signature)

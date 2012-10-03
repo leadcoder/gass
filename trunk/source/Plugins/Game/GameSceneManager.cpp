@@ -61,14 +61,14 @@ namespace GASS
 		{
 			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoad ,LoadSceneManagersMessage,0));
 			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnUnload ,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
+			//scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
 		}
 	}
 
-	void GameSceneManager::OnLoadSceneObject(MessagePtr message)
+	/*void GameSceneManager::OnLoadSceneObject(MessagePtr message)
 	{
 		//Initlize all sim components and send scene mananger as argument
-	}
+	}*/
 
 	void GameSceneManager::OnLoad(MessagePtr message)
 	{

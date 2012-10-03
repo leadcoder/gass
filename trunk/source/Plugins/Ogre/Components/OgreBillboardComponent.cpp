@@ -174,7 +174,7 @@ namespace GASS
 		float offset = 0;
 		if(m_Billboard)
 		{
-			max_size = Math::Max(m_Billboard->getOwnHeight(),m_Billboard->getOwnWidth());
+			//max_size = Math::Max(m_Billboard->getOwnHeight(),m_Billboard->getOwnWidth());
 			Ogre::Vector3 pos = m_Billboard->getPosition();
 			offset = pos.y;
 		}
@@ -209,7 +209,7 @@ namespace GASS
 		{
 			m_Billboard->setPosition(Ogre::Vector3(0,scale.y*m_Height/2.0,0));
 			m_Billboard->setDimensions(m_Width*scale.x,m_Height*scale.y);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+			//GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

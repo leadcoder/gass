@@ -51,7 +51,7 @@ namespace GASS
 	protected:
 		void OnLoad(MessagePtr message);		
 		void OnUnload(MessagePtr message);
-		void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
+		//void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 
 	private:

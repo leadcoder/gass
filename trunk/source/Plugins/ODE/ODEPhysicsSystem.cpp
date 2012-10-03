@@ -48,6 +48,7 @@ namespace GASS
 
 	ODEPhysicsSystem::~ODEPhysicsSystem()
 	{
+
 	}
 
 	void ODEPhysicsSystem::RegisterReflection()
@@ -63,7 +64,6 @@ namespace GASS
 	void ODEPhysicsSystem::OnInit(MessagePtr message)
 	{
 		dInitODE2(0);
-		//Load scenes
 		dAllocateODEDataForThread(dAllocateMaskAll);
 	}
 
@@ -71,11 +71,4 @@ namespace GASS
 	{
 		dCloseODE();
 	}
-
-
-
-
-
-
-
 }
