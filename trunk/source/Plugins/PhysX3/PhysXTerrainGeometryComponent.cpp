@@ -144,10 +144,10 @@ namespace GASS
 					Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 					Float height = m_TerrainGeom->GetHeight(world_x,world_z);
 
-					samples[x+z*samples_x].height = (physx::PxI16)(height/heightScale);
+					samples[z+x*samples_x].height = (physx::PxI16)(height/heightScale);
 					//samples[x+z*samples_x].setTessFlag();
-					samples[x+z*samples_x].materialIndex0=0;
-					samples[x+z*samples_x].materialIndex1=0;
+					samples[z+x*samples_x].materialIndex0=0;
+					samples[z+x*samples_x].materialIndex1=0;
 				}
 			}
 
@@ -169,6 +169,9 @@ namespace GASS
 			Vec3 center_position;
 			center_position.x = m_TerrainBounds.m_Min.x;
 			center_position.z = m_TerrainBounds.m_Min.z;
+		//	center_position.x = m_TerrainBounds.m_Min.x + (m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x)*0.5;
+		//	center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
+			
 			center_position.y = 0;
 
 			pose.p = physx::PxVec3(center_position.x,center_position.y,center_position.z);
