@@ -20,14 +20,12 @@
 #include <boost/bind.hpp>
 
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
-//#include "Plugins/RakNet/RakNetReplicaMember.h"
-//#include "Plugins/RakNet/RakNetBase.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 #include "Plugins/RakNet/RakNetChildReplica.h"
 #include "Plugins/RakNet/RakNetInputTransferComponent.h"
-
-
+#include "Plugins/RakNet/RaknetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+
 #include "RakNetworkFactory.h"
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
@@ -89,16 +87,19 @@ namespace GASS
 	void RakNetNetworkSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, ISystem>);
+		
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
 		RegisterProperty<double>("SleepTime", &RakNetNetworkSystem::GetSleepTime, &RakNetNetworkSystem::SetSleepTime);
 		RegisterProperty<bool>("Debug", &RakNetNetworkSystem::GetDebug, &RakNetNetworkSystem::SetDebug);
 		RegisterProperty<bool>("RelayInputOnServer", &RakNetNetworkSystem::GetRelayInputOnServer,&RakNetNetworkSystem::SetRelayInputOnServer);
-		
 	}
 
 	void RakNetNetworkSystem::OnCreate()
 	{
+		//Only register scene manager if system is created
+		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
+		
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));

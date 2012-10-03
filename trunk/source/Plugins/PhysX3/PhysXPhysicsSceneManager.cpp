@@ -60,13 +60,12 @@ namespace GASS
 		{
 			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnLoad ,LoadSceneManagersMessage,0));
 			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnUnload ,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedMessage,0));
 		}
 	}
 	
-	void PhysXPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
+	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedMessagePtr message)
 	{
-		//Initlize all physics components and send scene mananger as argument
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
 		

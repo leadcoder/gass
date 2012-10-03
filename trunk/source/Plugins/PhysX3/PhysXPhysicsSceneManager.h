@@ -42,7 +42,7 @@ namespace GASS
 		void SystemTick(double delta);
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
+		void OnSceneObjectLoaded(PostComponentsInitializedMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 	private:

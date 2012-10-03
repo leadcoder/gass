@@ -62,7 +62,6 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 

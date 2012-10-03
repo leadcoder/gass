@@ -91,7 +91,6 @@ namespace GASS
 
 	void SceneObject::OnDelete()
 	{
-
 		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
@@ -105,17 +104,14 @@ namespace GASS
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
 		if(GetScene())
 			GetScene()->SendImmediate(unload_msg);
-		
-		
 	}
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
-
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitialized(this_obj));
 		scene->SendImmediate(pre_load_msg);
-		
+	
 		m_Scene = scene;
 
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
