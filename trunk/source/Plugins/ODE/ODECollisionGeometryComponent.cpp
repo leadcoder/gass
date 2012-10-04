@@ -50,6 +50,7 @@ namespace GASS
 		m_CollisionCategory(1),
 		m_CollisionBits(1),
 		m_GeomID(0),
+		m_OffsetGeomID(0),
 		m_Type(CGT_NONE),
 		m_Offset(0,0,0)
 	{
@@ -58,7 +59,7 @@ namespace GASS
 
 	ODECollisionGeometryComponent::~ODECollisionGeometryComponent()
 	{
-		
+
 	}
 
 	void ODECollisionGeometryComponent::RegisterReflection()
@@ -69,13 +70,11 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnInitialize()
 	{
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleMessage ,0));
-		
-		
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 	}
 	
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -91,7 +90,7 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		if(m_Type == CGT_TERRAIN)
+		if(m_Type == CGT_TERRAIN || m_Type == CGT_PLANE)
 			return;
 
 		Vec3 pos = message->GetPosition();
@@ -120,6 +119,8 @@ namespace GASS
 		case CGT_TERRAIN:
 			m_GeomID = CreateTerrainGeometry();
 			break;
+		case CGT_PLANE:
+			m_GeomID = CreatePlaneGeometry();
 		}
 		dGeomSetBody(m_GeomID , NULL);
 		dGeomSetData(m_GeomID , (void*)this);
@@ -175,7 +176,6 @@ namespace GASS
 			dGeomEnable(m_GeomID);
 	}
 
-
 	ODECollisionSystemPtr ODECollisionGeometryComponent::GetCollisionSystem() const
 	{
 		ODECollisionSystemPtr system =  SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ODECollisionSystem>();
@@ -184,7 +184,6 @@ namespace GASS
 		return system;
 	}
 
-
 	dGeomID ODECollisionGeometryComponent::CreateBoxGeometry()
 	{
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
@@ -192,9 +191,36 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found while collision shape type is CST_BOX", "ODECollisionGeometryComponent::CreateBoxGeometry");
 		}
+		
 		AABox box = geom->GetBoundingBox();
 		Vec3 size = box.m_Max - box.m_Min;
-		return dCreateBox(GetCollisionSystem()->GetSpace(), size.x, size.y, size.z); 
+		
+		m_OffsetGeomID = dCreateBox(0, size.x, size.y, size.z);
+
+		Vec3 offset = (box.m_Max + box.m_Min)*0.5;
+		dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
+		
+		dGeomID gid = dCreateGeomTransform(GetCollisionSystem()->GetSpace());
+		dGeomTransformSetCleanup(gid, 1 );
+		dGeomTransformSetGeom(gid,m_OffsetGeomID);
+		return gid;
+	}
+
+	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry()
+	{
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		if(!location)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No LocationComponent found while collision shape type is CST_PLANE", "ODECollisionGeometryComponent::CreatePlaneGeometry");
+		}
+		Mat4 rot_mat;
+		rot_mat.Identity();
+		location->GetWorldRotation().ToRotationMatrix(rot_mat);
+		Vec3 pos = location->GetWorldPosition();
+		Vec3 normal = rot_mat.GetUpVector();
+		dGeomID geom_id = dCreatePlane(GetCollisionSystem()->GetSpace(), normal.x, normal.y, normal.z, pos.x+pos.y+pos.z);
+		return geom_id;
+		//dGeomPlaneSetParams(m_GeomID, normal.x, normal.y, normal.z, pos - );
 	}
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
@@ -215,9 +241,13 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleMessagePtr message)
 	{
+		//update scale
 		SetScale(message->GetScale());
 	}
 
+
+	
+	
 	void ODECollisionGeometryComponent::SetScale(const Vec3 &scale)
 	{
 		if(m_GeomID)
@@ -229,21 +259,15 @@ namespace GASS
 				{
 					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found while collision shape type is CST_BOX", "ODECollisionGeometryComponent::OnGeometryScale");
 				}
-				//Get bounding box
+				//Get bounding box,  note that scale already applied in bounding box!
 				AABox box = geom->GetBoundingBox();
-				Vec3 size = (box.m_Max - box.m_Min)*scale;
-				dGeomBoxSetLengths(m_GeomID, size.x, size.y, size.z);
-				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(location)
-				{
-					Vec3 offset = (box.m_Max + box.m_Min)*scale*0.5;
-					Vec3 new_pos = location->GetWorldPosition() + offset;
-					SetPosition(new_pos);
-				}
+				Vec3 size = box.m_Max - box.m_Min;
+				dGeomBoxSetLengths(m_OffsetGeomID, size.x, size.y, size.z);
+				Vec3 offset = (box.m_Max + box.m_Min)*0.5;
+				dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
 			}
 		}
 	}
-
 
 	unsigned long ODECollisionGeometryComponent::GetCollisionBits() const 
 	{

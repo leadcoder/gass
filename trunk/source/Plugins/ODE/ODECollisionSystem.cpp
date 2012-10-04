@@ -85,28 +85,27 @@ namespace GASS
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
 				object->AddComponent(comp);
 			}
+
 			else if(object->GetFirstComponentByClass<IMeshComponent>())
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_MESH);
 				object->AddComponent(comp);
 			}
-			else if(object->GetFirstComponentByClass<IGeometryComponent>())
+
+			else if(object->GetFirstComponentByClass("OgreBillboardComponent",false) || object->GetFirstComponentByClass("GizmoComponent",false))
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_BOX);
 				object->AddComponent(comp);
 			}
-
 		}
 	}
 
 	dSpaceID ODECollisionSystem::GetSpace() const 
 	{
-		
 		return m_Space;
 	}
-
 
 	void ODECollisionSystem::OnSceneUnloaded(SceneUnloadNotifyMessagePtr message)
 	{

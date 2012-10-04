@@ -50,6 +50,7 @@ namespace GASS
 			CGT_MESH,
 			CGT_TERRAIN,
 			CGT_BOX,
+			CGT_PLANE,
 			CGT_NONE
 		};
 
@@ -75,7 +76,7 @@ namespace GASS
 		dGeomID CreateMeshGeometry();
 		dGeomID CreateTerrainGeometry();
 		dGeomID CreateBoxGeometry();
-	
+		dGeomID CreatePlaneGeometry();
 		void Reset();
 		void Disable();
 		void Enable();
@@ -91,9 +92,8 @@ namespace GASS
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-
-
 		dGeomID m_GeomID;
+		dGeomID m_OffsetGeomID;
 		unsigned long m_CollisionCategory;
 		unsigned long m_CollisionBits;
 		CollisionGeomType m_Type;
