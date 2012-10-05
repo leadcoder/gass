@@ -265,6 +265,11 @@ namespace GASS
 				dGeomBoxSetLengths(m_OffsetGeomID, size.x, size.y, size.z);
 				Vec3 offset = (box.m_Max + box.m_Min)*0.5;
 				dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
+
+				//also reset position, know why but offset change is not reflected otherwise
+				const dReal* pos = dGeomGetPosition(m_GeomID);
+				dGeomSetPosition(m_GeomID, pos[0], pos[1], pos[2]);
+				
 			}
 		}
 	}
