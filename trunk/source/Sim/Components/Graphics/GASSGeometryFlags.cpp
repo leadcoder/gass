@@ -17,33 +17,19 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "GASSGeometryCategory.h"
+#include "GASSGeometryFlags.h"
 #include "Core/Math/GASSVector.h"
 
 namespace GASS
 {
-	template<> std::map<std::string ,GeometryType> EnumBinder<GeometryType,GeometryCategory>::m_Names;
-	template<> std::map<GeometryType,std::string> EnumBinder<GeometryType,GeometryCategory>::m_Types;
-
-	GeometryCategory::GeometryCategory() : EnumBinder<GeometryType,GeometryCategory>()
+	GeometryFlagHelper::GeometryFlagHelper() 
 	{
 		
 	}	
-	GeometryCategory::GeometryCategory(GeometryType type) : EnumBinder<GeometryType,GeometryCategory>(type)
+	
+	GeometryFlagHelper::~GeometryFlagHelper()
 	{
 
 	}
-
-	GeometryCategory::~GeometryCategory()
-	{
-
-	}
-
-	void GeometryCategory::Register()
-	{
-		Bind("GT_REGULAR", GT_REGULAR);
-		Bind("GT_TERRAIN", GT_TERRAIN);
-		Bind("GT_GIZMO", GT_GIZMO);
-		Bind("GT_UNKNOWN", GT_UNKNOWN);
-	}
+	
 }
