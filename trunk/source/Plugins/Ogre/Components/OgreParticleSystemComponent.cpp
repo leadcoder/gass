@@ -142,10 +142,8 @@ namespace GASS
 
 	}
 
-	GeometryCategory OgreParticleSystemComponent::GetGeometryCategory() const
+	GeometryFlags OgreParticleSystemComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_REGULAR);
+		return GEOMETRY_FLAG_TRANSPARENT_OBJECT;
 	}
-
-
 }

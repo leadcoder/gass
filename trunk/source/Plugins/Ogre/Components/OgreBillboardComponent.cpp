@@ -212,8 +212,8 @@ namespace GASS
 		}
 	}
 
-	GeometryCategory OgreBillboardComponent::GetGeometryCategory() const
+	GeometryFlags OgreBillboardComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_REGULAR);
+		return GEOMETRY_FLAG_UNKOWN;
 	}
 }

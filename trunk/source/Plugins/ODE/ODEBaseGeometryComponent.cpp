@@ -189,6 +189,7 @@ namespace GASS
 		dGeomTransformSetCleanup(m_TransformGeomID, 1 );
 		dGeomTransformSetGeom(m_TransformGeomID,m_GeomID);
 		dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+
 		if(m_Body)
 		{
 			dGeomSetBody(m_TransformGeomID, m_Body->GetODEBodyComponent());
@@ -230,6 +231,11 @@ namespace GASS
 		if(m_GeomID)
 		{
 			dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+
+			//also reset position, know why but offset change is not reflected otherwise
+			const dReal* pos = dGeomGetPosition(m_TransformGeomID);
+			dGeomSetPosition(m_TransformGeomID, pos[0], pos[1], pos[2]);
+
 			UpdateDebug();
 		}
 	}
@@ -416,6 +422,11 @@ namespace GASS
 			if(m_GeomID)
 			{
 				dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+
+				//also reset position, know why but offset change is not reflected otherwise
+				const dReal* pos = dGeomGetPosition(m_TransformGeomID);
+				dGeomSetPosition(m_TransformGeomID, pos[0], pos[1], pos[2]);
+
 			}
 		}
 	}

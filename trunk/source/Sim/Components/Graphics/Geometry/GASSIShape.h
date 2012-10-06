@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Components/Graphics/GASSGeometryCategory.h"
+#include "Sim/Components/Graphics/GASSGeometryFlags.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 

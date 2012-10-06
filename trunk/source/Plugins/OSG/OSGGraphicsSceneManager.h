@@ -46,7 +46,7 @@ namespace GASS
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
 
-		static void UpdateNodeMask(osg::Node *node, GeometryCategory category);
+		static void UpdateNodeMask(osg::Node *node, GeometryFlags category);
 		//osg::ref_ptr<osg::PositionAttitudeTransform> GetSceneTransformatation() {return m_SceneTransform;}
 	protected:
 		void OnLoad(MessagePtr message);		

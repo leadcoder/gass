@@ -489,9 +489,8 @@ namespace GASS
 	}
 
 
-	GeometryCategory OgreInstancedMeshComponent::GetGeometryCategory() const
+	GeometryFlags OgreInstancedMeshComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_REGULAR);
+		return GEOMETRY_FLAG_UNKOWN;
 	}
-
 }

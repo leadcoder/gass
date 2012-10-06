@@ -59,7 +59,7 @@ namespace GASS
 		virtual float* GetHeightData() const {return NULL;}
 
 		//IGeometryComponent
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		

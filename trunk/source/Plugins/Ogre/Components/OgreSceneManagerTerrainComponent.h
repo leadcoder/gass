@@ -59,7 +59,7 @@ namespace GASS
 		//IGeometryComponent
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 		Vec3 GetScale() const {return m_Scale;}
 	protected:
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);

@@ -162,7 +162,7 @@ namespace GASS
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 
 		//IMeshComponent
 		virtual std::string GetFilename() const {return m_Filename;}
@@ -171,7 +171,7 @@ namespace GASS
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh) {m_MeshNode =mesh;}
 	protected:
-		void SetGeometryCategory(const GeometryCategory &value);
+		void SetGeometryFlags(const GeometryFlags &value);
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		void SetFilename(const std::string &filename);
@@ -195,7 +195,7 @@ namespace GASS
 		osg::ref_ptr<osg::Node> m_MeshNode;
 		AABox m_BBox;
 		bool m_Initlized;
-		GeometryCategory m_Category;
+		GeometryFlags m_Category;
 		bool m_Lighting;
 		bool m_Expand;
 	};

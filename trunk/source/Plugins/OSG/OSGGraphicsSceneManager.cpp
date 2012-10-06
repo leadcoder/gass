@@ -215,11 +215,11 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryCategory category)
+	void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryFlags category)
 	{
 		//reset 
-		node->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  node->getNodeMask());
-		switch(category.Get())
+		/*node->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  node->getNodeMask());
+		switch(category)
 		{
 		case GT_REGULAR:
 			node->setNodeMask(NM_REGULAR_GEOMETRY | node->getNodeMask());
@@ -230,7 +230,7 @@ namespace GASS
 		case GT_GIZMO:
 			node->setNodeMask(NM_GIZMO_GEOMETRY | node->getNodeMask());
 			break;
-		}
+		}*/
 	}
 
 }

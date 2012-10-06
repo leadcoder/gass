@@ -43,7 +43,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);

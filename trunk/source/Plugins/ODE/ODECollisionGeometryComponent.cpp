@@ -47,8 +47,6 @@
 namespace GASS
 {
 	ODECollisionGeometryComponent::ODECollisionGeometryComponent():
-		m_CollisionCategory(1),
-		m_CollisionBits(1),
 		m_GeomID(0),
 		m_OffsetGeomID(0),
 		m_Type(CGT_NONE),
@@ -64,8 +62,8 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::RegisterReflection()
 	{
-		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODECollisionGeometryComponent::GetCollisionBits, &GASS::ODECollisionGeometryComponent::SetCollisionBits);
-		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODECollisionGeometryComponent::GetCollisionCategory, &GASS::ODECollisionGeometryComponent::SetCollisionCategory);
+		//RegisterProperty<unsigned long>("CollisionBits", &GASS::ODECollisionGeometryComponent::GetCollisionBits, &GASS::ODECollisionGeometryComponent::SetCollisionBits);
+		//RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODECollisionGeometryComponent::GetCollisionCategory, &GASS::ODECollisionGeometryComponent::SetCollisionCategory);
 	}
 
 	void ODECollisionGeometryComponent::OnInitialize()
@@ -124,8 +122,6 @@ namespace GASS
 		}
 		dGeomSetBody(m_GeomID , NULL);
 		dGeomSetData(m_GeomID , (void*)this);
-		SetCollisionBits(m_CollisionBits);
-		SetCollisionCategory(m_CollisionCategory);
 	}
 	
 	void ODECollisionGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -244,9 +240,6 @@ namespace GASS
 		//update scale
 		SetScale(message->GetScale());
 	}
-
-
-	
 	
 	void ODECollisionGeometryComponent::SetScale(const Vec3 &scale)
 	{
@@ -274,36 +267,26 @@ namespace GASS
 		}
 	}
 
-	unsigned long ODECollisionGeometryComponent::GetCollisionBits() const 
-	{
-		return m_CollisionBits;
-	}
-
-	void ODECollisionGeometryComponent::SetCollisionBits(unsigned long value)
-	{
-		m_CollisionBits = value;
-		if(m_GeomID)
-		{
-			dGeomSetCollideBits (m_GeomID,m_CollisionBits);
-		}
-	}
-
 	bool ODECollisionGeometryComponent::IsInitialized() const
 	{
 		return (m_GeomID == 0) ? false:true;
 	}
 
-	unsigned long  ODECollisionGeometryComponent::GetCollisionCategory() const 
+	unsigned long  ODECollisionGeometryComponent::GetMaterialFlag() const 
 	{
-		return m_CollisionCategory;
-	}
-
-	void ODECollisionGeometryComponent::SetCollisionCategory(unsigned long value)
-	{
-		m_CollisionCategory =value;
 		if(m_GeomID)
 		{
-			dGeomSetCategoryBits(m_GeomID, m_CollisionCategory );
+			return  dGeomGetCategoryBits(m_GeomID);
+		}
+		return 0;
+	}
+
+	void ODECollisionGeometryComponent::SetMaterialFlag(unsigned long value)
+	{
+		if(m_GeomID)
+		{
+			//dGeomSetCollideBits(m_GeomID,value);
+			dGeomSetCategoryBits(m_GeomID, value);
 		}
 	}
 

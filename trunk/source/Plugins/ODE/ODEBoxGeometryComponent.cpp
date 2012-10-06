@@ -100,6 +100,8 @@ namespace GASS
 				dGeomBoxSetLengths(m_GeomID, m_Size.x*m_Scale.x, m_Size.y*m_Scale.y, m_Size.z*m_Scale.z);
 				UpdateBodyMass();
 				UpdateDebug();
+
+				
 			}
 		}
 	}

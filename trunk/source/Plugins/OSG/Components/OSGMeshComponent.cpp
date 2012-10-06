@@ -42,7 +42,7 @@ namespace GASS
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
 		m_Lighting(true),
-		m_Category(GT_REGULAR),
+		m_Category(GEOMETRY_FLAG_UNKOWN),
 		m_Expand(false)
 	{
 		
@@ -62,11 +62,11 @@ namespace GASS
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
 		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
-		RegisterProperty<GeometryCategory>("GeometryCategory", &GetGeometryCategory, &SetGeometryCategory);
+		//RegisterProperty<GeometryFlags>("GeometryFlags", &GetGeometryFlags, &SetGeometryFlags);
 	}
 
 	
-	void OSGMeshComponent::SetGeometryCategory(const GeometryCategory &value)
+	void OSGMeshComponent::SetGeometryFlags(const GeometryFlags &value)
 	{
 		m_Category = value;
 		if(m_MeshNode.valid())
@@ -75,7 +75,7 @@ namespace GASS
 		}
 	}
 
-	GeometryCategory OSGMeshComponent::GetGeometryCategory() const
+	GeometryFlags OSGMeshComponent::GetGeometryFlags() const
 	{
 		return m_Category;
 	}
@@ -417,9 +417,9 @@ namespace GASS
 		if(m_MeshNode.valid())
 		{
 			if(message->EnableCollision())
-				SetGeometryCategory(m_Category);
+				SetGeometryFlags(m_Category);
 			else
-				OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),GeometryCategory(GT_UNKNOWN));
+				OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),GEOMETRY_FLAG_UNKOWN);
 		}
 	}
 }

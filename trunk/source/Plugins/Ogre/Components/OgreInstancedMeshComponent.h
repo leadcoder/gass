@@ -56,7 +56,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 
 		virtual std::string GetFilename()const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;

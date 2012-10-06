@@ -37,7 +37,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 	protected:
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);

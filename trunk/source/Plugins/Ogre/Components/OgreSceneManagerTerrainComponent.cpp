@@ -318,9 +318,9 @@ namespace GASS
 		return m_HeightData;
 	}
 
-	GeometryCategory OgreSceneManagerTerrainComponent::GetGeometryCategory() const
+	GeometryFlags OgreSceneManagerTerrainComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_TERRAIN);
+		return GEOMETRY_FLAG_GROUND;
 	}
 
 }

@@ -83,6 +83,7 @@ namespace GASS
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
+				//comp->SetMaterialFlag(MATERIAL_FLAG_UNKONWN_GROUND);
 				object->AddComponent(comp);
 			}
 
@@ -173,7 +174,6 @@ namespace GASS
 				m_ResultMap[handle] = res_iter->second;
 			}
 		}
-
 		//update listeners
 		SimSystem::Update(delta_time);
 	}

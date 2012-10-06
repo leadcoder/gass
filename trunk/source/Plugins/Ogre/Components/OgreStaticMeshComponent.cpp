@@ -372,10 +372,8 @@ void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,
 		}
 	}
 
-
-	GeometryCategory OgreStaticMeshComponent::GetGeometryCategory() const
+	GeometryFlags OgreStaticMeshComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_REGULAR);
+		return GEOMETRY_FLAG_UNKOWN;
 	}
-
 }

@@ -83,9 +83,9 @@ namespace GASS
 
 
 
-	GeometryCategory OSGBillboardComponent::GetGeometryCategory() const
+	GeometryFlags OSGBillboardComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_REGULAR);
+		return GEOMETRY_FLAG_UNKOWN;
 	}
 
 	void OSGBillboardComponent::OnInitialize()

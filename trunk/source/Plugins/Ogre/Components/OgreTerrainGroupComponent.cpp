@@ -892,9 +892,9 @@ namespace GASS
 		}
 	}
 
-	GeometryCategory OgreTerrainGroupComponent::GetGeometryCategory() const
+	GeometryFlags OgreTerrainGroupComponent::GetGeometryFlags() const
 	{
-		return GeometryCategory(GT_TERRAIN);
+		return GEOMETRY_FLAG_GROUND;
 	}
 
 	void OgreTerrainGroupComponent::SetFadeDetail(bool value) 

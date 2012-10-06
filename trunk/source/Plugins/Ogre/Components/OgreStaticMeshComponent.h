@@ -57,7 +57,7 @@ namespace GASS
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 
 		//IMeshComponent
 		virtual std::string GetFilename()const {return m_Filename;}

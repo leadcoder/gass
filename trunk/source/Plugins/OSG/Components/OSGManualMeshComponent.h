@@ -40,8 +40,8 @@ namespace GASS
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void SetGeometryCategory(const GeometryCategory &value);
-		GeometryCategory GetGeometryCategory() const;
+		void SetGeometryFlags(const GeometryFlags &value);
+		GeometryFlags GetGeometryFlags() const;
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
 		
@@ -49,9 +49,7 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 
 		std::vector<MeshData> m_MeshData;
-		//osg::ref_ptr<osg::DrawArrays> m_DrawArrays;
-		//osg::ref_ptr<osg::DrawElementsUInt> m_DrawElements;
-		GeometryCategory m_Category;
+		GeometryFlags m_GeometryFlags;
 	};
 }
 

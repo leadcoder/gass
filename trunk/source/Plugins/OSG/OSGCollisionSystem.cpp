@@ -236,14 +236,10 @@ namespace GASS
 		//OSGCameraComponentPtr camera (m_CurrentCamera);
 		//LocationComponentPtr location = camera->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		//Vec3 cam_pos = location->GetWorldPosition();
-
 		//intersectVisitor.setReferenceEyePoint(OSGConvert::Get().ToOSG(cam_pos)); 
 		//intersectVisitor.setReferenceEyePointCoordinateFrame(osgUtil::Intersector::MODEL); 
 		//node = camera->GetOSGCamera();
-
-
-		GeometryCategory cat(GT_REGULAR);
-
+	//	GeometryFlags cat(GT_REGULAR);
 		if(request->CollisionBits == 1)
 		{
 			intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY);
@@ -251,12 +247,12 @@ namespace GASS
 		else if(request->CollisionBits == 2)
 		{
 			intersectVisitor.setTraversalMask(NM_GIZMO_GEOMETRY);
-			cat.Set(GT_GIZMO);
+	//		cat.Set(GT_GIZMO);
 		}
 		else if(request->CollisionBits == 4)
 		{
 			intersectVisitor.setTraversalMask(NM_TERRAIN_GEOMETRY);
-			cat.Set(GT_TERRAIN);
+		//	cat.Set(GT_TERRAIN);
 		}
 
 		node->accept(intersectVisitor);
@@ -291,21 +287,21 @@ namespace GASS
 									GeometryComponentPtr geom  = boost::shared_dynamic_cast<IGeometryComponent>(bo);
 									if(geom)
 									{
-										bool found = false;
-										if(request->CollisionBits == 1 && (geom->GetGeometryCategory() == GT_REGULAR || geom->GetGeometryCategory() == GT_TERRAIN))
+										/*bool found = false;
+										if(request->CollisionBits == 1 && (geom->GetGeometryFlags() == GT_REGULAR || geom->GetGeometryFlags() == GT_TERRAIN))
 										{
 											found = true;
 										}
-										else if(request->CollisionBits == 2 && geom->GetGeometryCategory() == GT_GIZMO )
+										else if(request->CollisionBits == 2 && geom->GetGeometryFlags() == GT_GIZMO )
 										{
 											found = true;
 										}
-										else if(request->CollisionBits == 4 && geom->GetGeometryCategory() == GT_TERRAIN)
+										else if(request->CollisionBits == 4 && geom->GetGeometryFlags() == GT_TERRAIN)
 										{
 											found = true;
 										}
 
-										if(found)
+										if(found)*/
 										{
 											Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
 											Float col_dist = (col_pos - request->LineStart).FastLength(); 

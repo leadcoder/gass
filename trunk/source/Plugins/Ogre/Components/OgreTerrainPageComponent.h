@@ -61,7 +61,7 @@ namespace GASS
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryCategory GetGeometryCategory() const;
+		virtual GeometryFlags GetGeometryFlags() const;
 	protected:
 		void LoadFromFile();
 		std::string GetHeightMap()const {return m_HeightMapFile;}

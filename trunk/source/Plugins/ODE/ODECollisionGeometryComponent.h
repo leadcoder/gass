@@ -77,13 +77,14 @@ namespace GASS
 		dGeomID CreateTerrainGeometry();
 		dGeomID CreateBoxGeometry();
 		dGeomID CreatePlaneGeometry();
+
 		void Reset();
 		void Disable();
 		void Enable();
-		unsigned long GetCollisionBits() const;
-		void SetCollisionBits(unsigned long value);
-		unsigned long GetCollisionCategory() const;
-		void SetCollisionCategory(unsigned long value);
+
+		unsigned long GetMaterialFlag() const;
+		void SetMaterialFlag(unsigned long value);
+		
 		void SetType(CollisionGeomType type) {m_Type= type;}
 		CollisionGeomType GetType() const {return m_Type;}
 
@@ -94,11 +95,8 @@ namespace GASS
 	protected:
 		dGeomID m_GeomID;
 		dGeomID m_OffsetGeomID;
-		unsigned long m_CollisionCategory;
-		unsigned long m_CollisionBits;
 		CollisionGeomType m_Type;
 		Vec3 m_Offset;
-
 		//Static Terrrain data, only support one terrain loaded at the same time
 		struct TerrainData
 		{

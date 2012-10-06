@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Components/Graphics/GASSGeometryCategory.h"
+#include "Sim/Components/Graphics/GASSGeometryFlags.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 
@@ -57,7 +57,7 @@ namespace GASS
 			Should return the geometry category, for instance
 			a terrain geometry should return GT_TERRAIN
 		*/
-		virtual GeometryCategory GetGeometryCategory() const = 0;
+		virtual GeometryFlags GetGeometryFlags() const = 0;
 	protected:
 	};
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;

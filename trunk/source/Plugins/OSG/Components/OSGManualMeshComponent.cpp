@@ -41,7 +41,7 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_Category(GT_REGULAR)
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -54,7 +54,7 @@ namespace GASS
 	void OSGManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, IComponent>);
-		RegisterProperty<GeometryCategory>("GeometryCategory", &OSGManualMeshComponent::GetGeometryCategory, &OSGManualMeshComponent::SetGeometryCategory);
+		//RegisterProperty<GeometryFlags>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlags, &OSGManualMeshComponent::SetGeometryFlags);
 	}
 
 	void OSGManualMeshComponent::OnInitialize()
@@ -67,26 +67,26 @@ namespace GASS
 		BaseSceneComponent::OnInitialize();
 	}
 
-	void OSGManualMeshComponent::SetGeometryCategory(const GeometryCategory &value)
+	void OSGManualMeshComponent::SetGeometryFlags(const GeometryFlags &value)
 	{
-		m_Category = value;
+		m_GeometryFlags = value;
 		if(m_OSGGeometry.valid())
 		{
 			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),value);
 		}
 	}
 
-	GeometryCategory OSGManualMeshComponent::GetGeometryCategory() const
+	GeometryFlags OSGManualMeshComponent::GetGeometryFlags() const
 	{
-		return m_Category;
+		return m_GeometryFlags;
 	}
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
 		if(message->EnableCollision())
-			SetGeometryCategory(m_Category);
+			SetGeometryFlags(m_GeometryFlags);
 		else
-			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GeometryCategory(GT_UNKNOWN));
+			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GEOMETRY_FLAG_UNKOWN);
 	}
 
 	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
