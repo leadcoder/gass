@@ -42,12 +42,12 @@
 #include "Sim/Components/Physics/GASSIPhysicsGeometryComponent.h"
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 #include "Sim/Components/Common/GASSIWaypointListComponent.h"
+#include "Sim/Systems/GASSIPhysicsSystem.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"
-
 
 namespace GASS
 {

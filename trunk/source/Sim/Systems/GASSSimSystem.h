@@ -59,7 +59,7 @@ namespace GASS
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
 		virtual void Update(double delta);
-		virtual SystemType GetSystemType()  const {return "SimSystem";}
+		virtual SystemType GetSystemType() const = 0;// const {return "SimSystem";}
 		virtual int GetUpdateBucket() const;
 		virtual void SetUpdateBucket(int priority);
 	
@@ -78,4 +78,5 @@ namespace GASS
 		SystemManagerWeakPtr m_Owner;
 		int m_UpdateBucket;
 	};
+	typedef boost::shared_ptr<SimSystem> SimSystemPtr;
 }

@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainer.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -79,7 +80,6 @@ namespace GASS
 		return comp;
 	}
 
-
 	void BaseComponentContainer::AddComponent(ComponentPtr comp)
 	{
 		comp->SetOwner(shared_from_this());
@@ -126,7 +126,14 @@ namespace GASS
 			{
 
 				//TODO: need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
-				ComponentContainerPtr child  = boost::shared_dynamic_cast<IComponentContainer> (CreateInstance());
+				const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+				ComponentContainerPtr child = boost::shared_dynamic_cast<IComponentContainer>(ComponentContainerFactory::Get().Create(factory_class_name));
+				if(!child)
+				{
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_class_name,"BaseComponentContainer::Serialize");
+				}
+
+				//ComponentContainerPtr child  = boost::shared_dynamic_cast<IComponentContainer> (CreateInstance());
 				if(child)
 				{
 					SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
@@ -333,14 +340,11 @@ namespace GASS
 	{
 		return IComponentContainer::ConstComponentContainerIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
-
-
 	
 	void BaseComponentContainer::SetTemplateName(const std::string &name) 
 	{
 		m_TemplateName = name;
 	}
-
 
 	std::string BaseComponentContainer::GetTemplateName()  const 
 	{

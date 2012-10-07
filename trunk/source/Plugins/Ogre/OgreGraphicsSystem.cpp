@@ -186,7 +186,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		if(m_CreateMainWindowOnInit) //take care of window events
+		//if(m_CreateMainWindowOnInit) //take care of window events
 			Ogre::WindowEventUtilities::messagePump();
 
 		if(DebugDrawer::getSingletonPtr())

@@ -68,31 +68,23 @@ namespace GASS
 	template <class T, class TInClass>
 	class Reflection : public TInClass
 	{
-
 	public :
 		typedef boost::shared_ptr<T> TPtr;
 		Reflection()
 		{
 		}
 
-		/**
-            Creates an instance of T. Called by the system to dynamically create
-		    class instances from class IDs.
-        */
-		/*static boost::shared_ptr<T> Create()
+		//This function make abtract functions in classes, use objectfactory instead!
+		/*virtual boost::shared_ptr<BaseReflectionObject> CreateInstance()
 		{
-            return boost::shared_ptr<T> (new T());
+			boost::shared_ptr<T>  instance (new T());
+			return instance;
         }*/
-
-		virtual boost::shared_ptr<BaseReflectionObject> CreateInstance()
-		{
-		boost::shared_ptr<T>  instance (new T());
-		return instance;
-        }
 
 		// Default reflection registration function. Does nothing by default.
 		static void	RegisterReflection()
 		{
+
         }
 
 		//----------------------------------------------------------------------------------------------
@@ -150,6 +142,9 @@ namespace GASS
 		static RTTI	m_RTTI;
 
 	};
+
+
+
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
 		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/

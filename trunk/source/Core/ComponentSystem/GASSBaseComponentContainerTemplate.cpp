@@ -123,9 +123,13 @@ namespace GASS
 			loader->IO<int>(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
-
-				//need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
-				ComponentContainerTemplatePtr child  = boost::shared_dynamic_cast<IComponentContainerTemplate> (CreateInstance());
+				const std::string class_name = GetRTTI()->GetClassName();
+				ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(ComponentContainerFactory::Get().Create(class_name));
+				if(!child)
+				{
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + class_name,"BaseComponentContainerTemplate::Serialize");
+				}
+				//ComponentContainerTemplatePtr child  = boost::shared_dynamic_cast<IComponentContainerTemplate> (CreateInstance());
 				if(child)
 				{
 					SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
@@ -452,7 +456,7 @@ namespace GASS
 
 		if(!container)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
-				"Failed to create instance" + type,"BaseComponentContainerTemplate::CreateComponentContainer");
+				"Failed to create instance " + type,"BaseComponentContainerTemplate::CreateComponentContainer");
 		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
 
@@ -518,8 +522,13 @@ namespace GASS
 					}
 				}
 			}
-			
-			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
+			const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(ComponentContainerFactory::Get().Create(factory_class_name));
+			if(!new_child)
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + factory_class_name,"BaseComponentContainerTemplate::Serialize");
+			}
+			//BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
 			if(!found && new_child)
 			{
 				new_child->CreateFromComponentContainer(child,manager,keep_inheritance);

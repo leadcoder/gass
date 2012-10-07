@@ -38,7 +38,7 @@ namespace GASS
 		virtual ~OSGGraphicsSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		virtual SystemType GetSystemType() {return "GraphicsSystem";}
+		virtual SystemType GetSystemType() const {return "GraphicsSystem";}
 		virtual void Update(double delta);
 
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;

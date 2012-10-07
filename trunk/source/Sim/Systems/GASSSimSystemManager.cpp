@@ -289,4 +289,16 @@ namespace GASS
 		m_StepSimulationRequest = true;
 		m_RequestDeltaTime = message->GetTimeStep();
 	}
+
+	SimSystemPtr SimSystemManager::GetSystemByName(const std::string &system_name) const
+	{
+		for(size_t i = 0 ; i < m_Systems.size(); i++)
+		{
+			if(system_name ==  m_Systems[i]->GetName())
+			{
+				return boost::shared_dynamic_cast<SimSystem>(m_Systems[i]);
+			}
+		}
+		return SimSystemPtr();
+	}
 }

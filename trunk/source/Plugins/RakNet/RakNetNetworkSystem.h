@@ -112,6 +112,7 @@ namespace GASS
 		// get time to step back when values need to be interpolated
 		double GetInterpolationLag() const {return m_InterpolationLag;}
 		void SetInterpolationLag(double  value) {m_InterpolationLag = value;}
+		virtual SystemType GetSystemType() const {return "NetworkSystem";}
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}

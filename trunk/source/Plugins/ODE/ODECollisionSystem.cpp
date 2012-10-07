@@ -60,12 +60,13 @@ namespace GASS
 
 	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		PhysicsSystemPtr ps = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
-		if(!(ps && ps->GetName() == "ODEPhsyicsSystem")) //check if ode physics system present, if not initialize ode
+		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsystem");
+		//PhysicsSystemPtr ps = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
+		/*if(!(ps && ps->GetName() == "ODEPhsyicsSystem")) //check if ode physics system present, if not initialize ode
 		{
 			dInitODE2(0);
 			dAllocateODEDataForThread(dAllocateMaskAll);
-		}
+		}*/
 
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();

@@ -58,8 +58,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
+		virtual SystemType GetSystemType() const {return "CollisionSystem";}
 
-		SystemType GetSystemType() const {return "CollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;

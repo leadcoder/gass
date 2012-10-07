@@ -25,11 +25,12 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scene/GASSBaseSceneManager.h"
 #include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/GASSIPhysicsSystem.h"
 
 namespace GASS
 {
 	
-	class ODEPhysicsSystem  : public Reflection<ODEPhysicsSystem, SimSystem>
+	class ODEPhysicsSystem  : public Reflection<ODEPhysicsSystem, SimSystem>, public IPhysicsSystem
 	{
 
 	public:
@@ -37,6 +38,7 @@ namespace GASS
 		virtual ~ODEPhysicsSystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual SystemType GetSystemType() const {return "PhysicsSystem";}
 	protected:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);

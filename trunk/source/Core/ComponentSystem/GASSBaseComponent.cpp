@@ -20,6 +20,7 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/Utils/GASSException.h"
 #include "tinyxml.h"
 
 #include "Core/Reflection/GASSPropertyTypes.h"
@@ -96,7 +97,13 @@ namespace GASS
 
 	ComponentPtr BaseComponent::CreateCopy()
 	{
-		BaseComponentPtr new_comp = boost::shared_static_cast<BaseComponent>(CreateInstance());
+		const std::string factory_class_name = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+		BaseComponentPtr new_comp = boost::shared_static_cast<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
+		if(!new_comp)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"BaseComponent::CreateCopy");
+		}
+		//BaseComponentPtr new_comp = boost::shared_static_cast<BaseComponent>(CreateInstance());
 		BaseReflectionObject::SetProperties(new_comp);
 		return new_comp;
 	}

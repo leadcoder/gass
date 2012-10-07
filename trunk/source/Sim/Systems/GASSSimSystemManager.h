@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/System/GASSBaseSystemManager.h"
+#include "Sim/Systems/GASSSimSystem.h"
 
 #define PRE_SIM_BUCKET 9998 //magic number
 #define POST_SIM_BUCKET 9999 //magic number
@@ -90,6 +91,7 @@ namespace GASS
 
 		//can be called by user it simulation is paused
 		void UpdateSimulation(double delta_time);
+		SimSystemPtr GetSystemByName(const std::string &system_name) const;
 	private:
 		size_t GetQueuedMessages() const;
 		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);

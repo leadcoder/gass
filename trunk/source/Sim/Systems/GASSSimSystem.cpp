@@ -87,25 +87,10 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-
-
 	void SimSystem::Update(double delta)
 	{
 		std::vector<SystemListenerPtr>::iterator iter = m_Listeners.begin();
-		
-		//remove dead systems
-		/*while(iter != m_Listeners.end())
-		{
-			if(!*iter)
-				iter = m_Listeners.erase(iter);
-			else
-			{
-				(*iter)->SystemTick(delta);
-				iter++;
-			}
-		}*/
-
-		//remove dead systems
+		//remove dead listeners
 		while(iter != m_Listeners.end())
 		{
 			if(!*iter)
