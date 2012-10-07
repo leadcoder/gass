@@ -65,9 +65,8 @@ namespace GASS
 				SystemPtr system = LoadSystem(systems);
 				if(system)
 				{
-					system->SetOwner(shared_from_this());
-					system->OnCreate();
-					LogManager::getSingleton().stream() << system->GetName() << " created";
+					system->OnCreate(shared_from_this());
+					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
 					
 					if(system->GetUpdateBucket() >= 0)
 						m_UpdateBuckets[system->GetUpdateBucket()].push_back(system);
@@ -88,7 +87,6 @@ namespace GASS
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
-			system->SetName(system_type);
 			XMLSerializePtr  serialize = boost::shared_dynamic_cast<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);

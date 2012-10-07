@@ -29,10 +29,12 @@ namespace GASS
 		MyGUISystem();
 		virtual ~MyGUISystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
 		virtual void Update(double delta_time);
+		virtual void Init();
+		virtual void OnCreate(SystemManagerPtr owner);
+		virtual std::string GetSystemName() const {return "MyGUISystem";}
 	protected:
-		void OnInit(InitSystemMessagePtr  message);
+		void OnInputSystemLoaded(InputSystemLoadedMessagePtr message);
 		void OnShutdown(MessagePtr message);
 		void OnLoadGUIScript(GUIScriptMessagePtr message);
 		bool MouseMoved(const MouseData &data);

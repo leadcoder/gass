@@ -24,7 +24,7 @@
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/System/GASSBaseSystemManager.h"
+#include "Core/System/GASSISystemManager.h"
 #include "Sim/Systems/GASSSimSystem.h"
 
 #define PRE_SIM_BUCKET 9998 //magic number
@@ -45,7 +45,7 @@ namespace GASS
 	To handle the messages the SimSystemManager use the 
 	MessageManager class
 	*/
-	class GASSExport SimSystemManager : public BaseSystemManager,  public IMessageListener
+	class GASSExport SimSystemManager : public ISystemManager, public boost::enable_shared_from_this<SimSystemManager>,  public IMessageListener
 	{
 	public:
 		SimSystemManager();
@@ -92,7 +92,43 @@ namespace GASS
 		//can be called by user it simulation is paused
 		void UpdateSimulation(double delta_time);
 		SimSystemPtr GetSystemByName(const std::string &system_name) const;
+		
+		/**
+			Get hold of system by class type. If more then one system
+			of the class type exist tbe first one loaded will be returned
+		*/
+		template <class T>
+		boost::shared_ptr<T> GetFirstSystem()
+		{
+			boost::shared_ptr<T> sys;
+			for(size_t i = 0 ; i < m_Systems.size(); i++)
+			{
+				sys = boost::shared_dynamic_cast<T>(m_Systems[i]);
+				if(sys)
+					break;
+			}
+			return sys;
+		}
+
+		/**
+			Loading systems from xml-file, syntax example:
+
+			<?xml version="1.0" encoding="utf-8"?>
+			<Systems>
+				<GraphicsSystem type="OgreGraphicsSystem">
+					... gfx system params
+	  		    </GraphicsSystem>
+				<InputSystem type="OISInputSystem">
+					... input system params
+				</InputSystem>
+				...
+			<System>
+			A system is specified by a name tag and att type attribute that 
+			specify the class implementing the system.
+		*/
+		void Load(const std::string &filename);
 	private:
+		SystemPtr LoadSystem(TiXmlElement *system_elem);
 		size_t GetQueuedMessages() const;
 		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
 		void StepSimulation(double delta_time);		
@@ -118,5 +154,10 @@ namespace GASS
 
 		typedef std::map<int,MessageData> MessageStatMap;
 		MessageStatMap m_MessageStats;
+	
+		typedef std::vector<SystemPtr> SystemVector;
+		SystemVector m_Systems;
+		typedef std::map<int,SystemVector> UpdateMap;
+		UpdateMap m_UpdateBuckets;
 	};
 }

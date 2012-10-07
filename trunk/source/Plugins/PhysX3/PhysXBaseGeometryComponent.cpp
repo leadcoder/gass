@@ -43,7 +43,6 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsGeometryComponent",new Creator<PhysXBaseGeometryComponent, IComponent>);
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
 		RegisterProperty<float>("Friction", &GASS::PhysXBaseGeometryComponent::GetFriction, &GASS::PhysXBaseGeometryComponent::SetFriction);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);

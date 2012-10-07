@@ -51,7 +51,6 @@ namespace GASS
 
 	void GameSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
 	}
 
 	void GameSceneManager::OnCreate()

@@ -27,8 +27,6 @@
 
 namespace GASS
 {
-	
-
 	class UpdateWaypointListMessage : public BaseMessage
 	{
 	public:

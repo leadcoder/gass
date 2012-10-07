@@ -80,17 +80,10 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, ISystem>);
 	}
 
-	void PhysXPhysicsSystem::OnCreate()
-	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(PhysXPhysicsSystem::OnInit,InitSystemMessage,0));
-	}
 	PxGASSErrorCallback myErrorCallback;
-	    
-
-	void PhysXPhysicsSystem::OnInit(InitSystemMessagePtr message)
+	void PhysXPhysicsSystem::Init()
 	{
 		bool recordMemoryAllocations = false;
-		
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), recordMemoryAllocations );
 		PxInitExtensions(*m_PhysicsSDK );

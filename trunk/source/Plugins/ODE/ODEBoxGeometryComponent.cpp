@@ -60,7 +60,6 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, IComponent>);
 		RegisterProperty<Vec3>("Size", &GASS::ODEBoxGeometryComponent::GetSize, &GASS::ODEBoxGeometryComponent::SetSize);
 	}
 

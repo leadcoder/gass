@@ -93,9 +93,7 @@ namespace GASS
 			Sleep(1000);
 			m_Viewer->stopThreading();
 			Sleep(1000);
-
 		}
-
 		delete m_Viewer;
 	}
 
@@ -106,15 +104,11 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 	}
 
-	void OSGGraphicsSystem::OnCreate()
+	void OSGGraphicsSystem::Init()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
-	}
-
-	void OSGGraphicsSystem::OnInit(InitSystemMessagePtr message)
-	{
+	
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);

@@ -35,7 +35,6 @@ namespace GASS
 
 	void BaseSystem::RegisterReflection()
 	{
-		RegisterProperty<std::string>( "Name", &GASS::BaseSystem::GetName, &GASS::BaseSystem::SetName);
 	}
 
 	void BaseSystem::LoadXML(TiXmlElement *xml_elem)

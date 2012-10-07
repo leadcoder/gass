@@ -17,12 +17,13 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"
-#include "GameSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
-
+#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "GameSceneManager.h"
+#include "GameSystem.h"
 
 namespace GASS
 {
@@ -39,6 +40,11 @@ namespace GASS
 	void GameSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("GameSystem",new GASS::Creator<GameSystem, ISystem>);
+	}
+
+	void GameSystem::Init()
+	{
+		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
 	}
 }
 

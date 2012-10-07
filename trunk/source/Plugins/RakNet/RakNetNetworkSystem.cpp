@@ -95,19 +95,34 @@ namespace GASS
 		RegisterProperty<bool>("RelayInputOnServer", &RakNetNetworkSystem::GetRelayInputOnServer,&RakNetNetworkSystem::SetRelayInputOnServer);
 	}
 
-	void RakNetNetworkSystem::OnCreate()
+	void RakNetNetworkSystem::Init()
 	{
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,SceneAboutToLoadNotifyMessage,0));
-		//		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnClientEnter,ClientEnterVehicleMessage,0));
+	
+		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
+		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
+		m_RakPeer->AttachPlugin(m_ReplicaManager);
+		m_RakPeer->AttachPlugin(&m_AutoRPC);
+		//m_RakPeer->AttachPlugin(&m_Logger);
+
+		//RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
+		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false); 
+
+		//register RPC
+		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
+		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, SystemAddress input_source, int controller, float value,RakNet::AutoRPC* networkCaller);
+		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessageWithData", int, RakNetBaseReplica, RemoteMessageWithData, const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 	}
 
 	void RakNetNetworkSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
@@ -148,25 +163,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkSystem::OnInit(MessagePtr message)
-	{
-		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
-		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
-		m_RakPeer->AttachPlugin(m_ReplicaManager);
-		m_RakPeer->AttachPlugin(&m_AutoRPC);
-		//m_RakPeer->AttachPlugin(&m_Logger);
-
-		//RakNet::StringTable::Instance()->AddString("RakNetBase", false); // 2nd parameter of false means a static string so it's not necessary to copy it
-		RakNet::StringTable::Instance()->AddString("RakNetMasterReplica", false); // 2nd parameter of false means a static string so it's not necessary to copy it
-		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false); 
-
-		//register RPC
-		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
-		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
-		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
-		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, SystemAddress input_source, int controller, float value,RakNet::AutoRPC* networkCaller);
-		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessageWithData", int, RakNetBaseReplica, RemoteMessageWithData, const char *message, const char *data, RakNet::AutoRPC* networkCaller);
-	}
+	
 
 
 	void RakNetNetworkSystem::OnStartServer(StartServerMessagePtr message)

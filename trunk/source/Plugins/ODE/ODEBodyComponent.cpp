@@ -56,7 +56,6 @@ namespace GASS
 
 	void ODEBodyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<ODEBodyComponent, IComponent>);
 		RegisterProperty<float>("Mass", &ODEBodyComponent::GetMass, &ODEBodyComponent::SetMass);
 		RegisterProperty<Vec3>("CGPosition",&ODEBodyComponent::GetCGPosition, &ODEBodyComponent::SetCGPosition);
 		RegisterProperty<Vec3>("SymmetricInertia",&ODEBodyComponent::GetSymmetricInertia, &ODEBodyComponent::SetSymmetricInertia);

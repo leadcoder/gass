@@ -94,7 +94,7 @@ namespace GASS
 		RakNetNetworkSystem();
 		virtual ~RakNetNetworkSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void Init();
 
 		bool IsServer() {return  m_IsServer;}
 		bool IsActive() {return  m_Active;}
@@ -112,7 +112,7 @@ namespace GASS
 		// get time to step back when values need to be interpolated
 		double GetInterpolationLag() const {return m_InterpolationLag;}
 		void SetInterpolationLag(double  value) {m_InterpolationLag = value;}
-		virtual SystemType GetSystemType() const {return "NetworkSystem";}
+		virtual std::string GetSystemName() const {return "NetworkSystem";}
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}

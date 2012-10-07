@@ -56,9 +56,9 @@ namespace GASS
 		ODECollisionSystem();
 		virtual ~ODECollisionSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void Init();
 		virtual void Update(double delta_time);
-		virtual SystemType GetSystemType() const {return "CollisionSystem";}
+		virtual std::string GetSystemName() const {return "CollisionSystem";}
 
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);

@@ -57,7 +57,6 @@ namespace GASS
 
 	void ODEMeshGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<ODEMeshGeometryComponent, IComponent>);
 	}
 
 	void ODEMeshGeometryComponent::OnInitialize()

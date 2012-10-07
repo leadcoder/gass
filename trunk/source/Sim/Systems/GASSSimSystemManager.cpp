@@ -22,6 +22,7 @@
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -60,12 +61,14 @@ namespace GASS
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
 
 		//support asyncron request
-		boost::shared_ptr<SimSystemManager> shared_this = boost::static_pointer_cast<SimSystemManager>(shared_from_this());
+		boost::shared_ptr<SimSystemManager> shared_this = shared_from_this();
 		MessageFuncPtr func_ptr(new GASS::MessageFunc<RequestTimeStepMessage>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
 		RegisterForMessage(typeid(RequestTimeStepMessage),func_ptr,0);
 
-		MessagePtr init_msg(new InitSystemMessage());
-		m_SystemMessageManager->SendImmediate(init_msg);
+		for(size_t i = 0 ; i < m_Systems.size(); i++)
+		{
+			m_Systems[i]->Init();
+		}
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	
 
@@ -77,10 +80,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-
-	
-
-#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
+	#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
 
 	void SimSystemManager::Update(float delta_time)
 	{
@@ -181,7 +181,7 @@ namespace GASS
 						tbb::parallel_for_each(iter->second.begin(),iter->second.end(),SystemUpdateInvoker(delta_time));
 					}
 				}
-				m_MessageStats[iter->first].Before = GetQueuedMessages();
+				m_MessageStats[iter->first].Before = (int) GetQueuedMessages();
 
 				{
 					std::stringstream ss;
@@ -194,7 +194,7 @@ namespace GASS
 					message_delta_time = 0;
 				}
 
-				m_MessageStats[iter->first].After = GetQueuedMessages();
+				m_MessageStats[iter->first].After = (int) GetQueuedMessages();
 			}
 		}
 
@@ -246,15 +246,15 @@ namespace GASS
 
 	size_t SimSystemManager::GetQueuedMessages() const
 	{
-		int num = m_SystemMessageManager->GetQueuedMessages();
+		int num = (int) m_SystemMessageManager->GetQueuedMessages();
 		//update all scene messages managers
 		SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
 		while(iter.hasMoreElements())
 		{
 			ScenePtr scene = iter.getNext();
-			num += scene->GetQueuedMessages();
+			num += (int) scene->GetQueuedMessages();
 		}
-		return num;
+		return (size_t) num;
 	}
 
 
@@ -294,11 +294,63 @@ namespace GASS
 	{
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
-			if(system_name ==  m_Systems[i]->GetName())
+			if(system_name ==  m_Systems[i]->GetSystemName())
 			{
 				return boost::shared_dynamic_cast<SimSystem>(m_Systems[i]);
 			}
 		}
 		return SimSystemPtr();
+	}
+
+
+	void SimSystemManager::Load(const std::string &filename)
+	{
+		if(filename =="")
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "SimSystemManager::Load");
+		
+		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+		if (!xmlDoc->LoadFile())
+		{
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SimSystemManager::Load");
+		}
+		
+		TiXmlElement *systems = xmlDoc->FirstChildElement("Systems");
+
+		if(systems)
+		{
+			systems= systems->FirstChildElement();
+			//Loop through each template
+			while(systems)
+			{
+				SystemPtr system = LoadSystem(systems);
+				if(system)
+				{
+					system->OnCreate(shared_from_this());
+					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
+					
+					if(system->GetUpdateBucket() >= 0)
+						m_UpdateBuckets[system->GetUpdateBucket()].push_back(system);
+					m_Systems.push_back(system);
+					
+				}
+				systems  = systems->NextSiblingElement();
+			}
+		}
+		xmlDoc->Clear();
+		// Delete our allocated document and return success ;)
+		delete xmlDoc;
+	}
+
+	SystemPtr SimSystemManager::LoadSystem(TiXmlElement *system_elem)
+	{
+		const std::string system_type = system_elem->Value();
+		SystemPtr system = SystemFactory::Get().Create(system_type);
+		if(system)
+		{
+			XMLSerializePtr  serialize = boost::shared_dynamic_cast<IXMLSerialize> (system);
+			if(serialize)
+				serialize->LoadXML(system_elem);
+		}
+		return system;
 	}
 }

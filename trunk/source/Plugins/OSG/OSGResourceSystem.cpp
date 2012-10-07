@@ -41,11 +41,7 @@ namespace GASS
 	}
 	
 
-	void OSGResourceSystem::OnCreate()
-	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGResourceSystem::OnInit,InitSystemMessage,0));
-	}
-
+	
 	//Create custom load
 	void OSGResourceSystem::LoadXML(TiXmlElement *elem)
 	{
@@ -97,12 +93,6 @@ namespace GASS
 				}
 			}
 		}
-	}
-
-
-	void OSGResourceSystem::OnInit(InitSystemMessagePtr message)
-	{
-
 	}
 
 	void OSGResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)

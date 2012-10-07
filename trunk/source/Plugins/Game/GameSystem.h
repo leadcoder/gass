@@ -34,7 +34,8 @@ namespace GASS
 		GameSystem();
 		virtual ~GameSystem();
 		static void RegisterReflection();
-		virtual SystemType GetSystemType() const {return "GameSystem";}
+		virtual std::string GetSystemName() const {return "GameSystem";}
+		virtual void Init();
 	protected:
 	};
 	typedef boost::shared_ptr<GameSystem> GameSystemPtr;

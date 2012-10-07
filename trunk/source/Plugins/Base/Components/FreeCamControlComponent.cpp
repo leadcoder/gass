@@ -21,6 +21,7 @@
 #include <boost/bind.hpp>
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
@@ -43,7 +44,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Math/GASSQuaternion.h"
 
-#include "Sim/Scene/GASSCoreSceneManager.h"
+
 
 namespace GASS
 {

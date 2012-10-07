@@ -20,7 +20,7 @@
 
 #include <boost/bind.hpp>
 #include "Plugins/Base/Components/TopCamControlComponent.h"
-#include "Sim/Scene/GASSCoreSceneManager.h"
+#include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/GASSSimEngine.h"
@@ -29,10 +29,8 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 

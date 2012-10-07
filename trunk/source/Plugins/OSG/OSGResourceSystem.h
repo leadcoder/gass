@@ -39,9 +39,9 @@ namespace GASS
 		OSGResourceSystem();
 		virtual ~OSGResourceSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void Init() {};
 		virtual void LoadXML(TiXmlElement *elem);
-		SystemType GetSystemType() const {return "ResourceSystem";}
+		std::string GetSystemName() const {return "ResourceSystem";}
 		bool GetFullPath(const std::string &file_name,std::string &file_path);
 		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void LoadResourceGroup(const std::string &resource_group);
@@ -49,8 +49,7 @@ namespace GASS
 		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceLocationRecursive(const ResourceLocation &rl);
-		void OnInit(InitSystemMessagePtr message);		
-		void OnUpdate(MessagePtr message);
+		//void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;
 		std::vector<ResourceLocation> m_ResourceLocations;
 

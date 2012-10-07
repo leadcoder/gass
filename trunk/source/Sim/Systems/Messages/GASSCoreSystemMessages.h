@@ -35,30 +35,6 @@ namespace GASS
 	
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	
-
-	/**
-	Default message used by the SimSystemManager
-	Sim system messages are used to communicate with systems and
-	used by systems to notify listeners about critcal system events
-	To send a SimSystemMessage you have to get hold of the
-	SimSystemManager and then post a message, ex:
-	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage("Testing")))
-	*/
-
-	class InitSystemMessage : public BaseMessage
-	{
-	public:
-		InitSystemMessage (SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay)
-			{ }
-	private:
-
-	};
-	typedef boost::shared_ptr<InitSystemMessage> InitSystemMessagePtr;
-
-
-
 	/**
 	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
 	*/
@@ -75,9 +51,6 @@ namespace GASS
 
 	};
 	typedef boost::shared_ptr<DebugPrintMessage> DebugPrintMessagePtr;
-
-	
-
 
 	/**
 		This message is posted by the Scene class before the scenes are loaded.
@@ -97,8 +70,6 @@ namespace GASS
 
 	typedef boost::shared_ptr<SceneAboutToLoadNotifyMessage> SceneAboutToLoadNotifyMessagePtr;
 
-	
-	
 	/**
 		This message is posted by the Scene class after a scene is loaded.
 	*/
@@ -153,6 +124,38 @@ namespace GASS
 	private:
 	};
 	typedef boost::shared_ptr<TimeStepDoneMessage > TimeStepDoneMessagePtr;
+
+	class InputSystemLoadedMessage : public BaseMessage
+	{
+	public:
+		InputSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<InputSystemLoadedMessage> InputSystemLoadedMessagePtr;
+
+
+	class GraphicsSystemLoadedMessage : public BaseMessage
+	{
+	public:
+		GraphicsSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<GraphicsSystemLoadedMessage> GraphicsSystemLoadedMessagePtr;
+	
+	class PhysicsSystemLoadedMessage : public BaseMessage
+	{
+	public:
+		PhysicsSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<PhysicsSystemLoadedMessage> PhysicsSystemLoadedMessagePtr;
+
 
 }
 #endif

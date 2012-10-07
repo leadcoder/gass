@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/OgreResourceSystem.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -36,7 +37,6 @@ namespace GASS
 {
 	OgreResourceSystem::OgreResourceSystem(void)
 	{
-
 	}
 
 	OgreResourceSystem::~OgreResourceSystem(void)
@@ -50,9 +50,15 @@ namespace GASS
 	}
 
 
-	void OgreResourceSystem::OnCreate()
+	void OgreResourceSystem::OnCreate(SystemManagerPtr owner)
 	{
+		SimSystem::OnCreate(owner);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,MainWindowCreatedNotifyMessage,0));
+	}
+
+	void OgreResourceSystem::Init()
+	{
+
 	}
 
 	void OgreResourceSystem::Update()

@@ -21,6 +21,8 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 #include "Sim/Scene/GASSScene.h"
@@ -32,6 +34,14 @@
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
+#include "Plugins/ODE/ODEBoxGeometryComponent.h"
+#include "Plugins/ODE/ODECylinderGeometryComponent.h"
+#include "Plugins/ODE/ODEHingeComponent.h"
+#include "Plugins/ODE/ODEPlaneGeometryComponent.h"
+#include "Plugins/ODE/ODESphereGeometryComponent.h"
+#include "Plugins/ODE/ODESuspensionComponent.h"
+#include "Plugins/ODE/ODETerrainGeometryComponent.h"
+#include "Plugins/ODE/ODEMeshGeometryComponent.h"
 
 
 namespace GASS
@@ -52,14 +62,20 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("ODEPhysicsSystem",new GASS::Creator<ODEPhysicsSystem, ISystem>);
 	}
 
-	void ODEPhysicsSystem::OnCreate()
+	void ODEPhysicsSystem::Init()
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODEPhysicsSystem::OnInit,InitSystemMessage,0));
-	}
-
-	void ODEPhysicsSystem::OnInit(MessagePtr message)
-	{
+		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<ODEBodyComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsCylinderGeometryComponent",new Creator<ODECylinderGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsHingeComponent",new Creator<ODEHingeComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<ODEMeshGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<ODEPlaneGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<ODESphereGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsSuspensionComponent",new Creator<ODESuspensionComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, IComponent>);
+		
+	
 		dInitODE2(0);
 		dAllocateODEDataForThread(dAllocateMaskAll);
 	}

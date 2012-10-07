@@ -47,43 +47,11 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("OpenALSoundSystem",new GASS::Creator<OpenALSoundSystem, ISystem>);
 	}
 
-	void OpenALSoundSystem::OnCreate()
+	void OpenALSoundSystem::Init()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnInit,InitSystemMessage,0));
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,SceneAboutToLoadNotifyMessage,0));
-	}
 
-	void OpenALSoundSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
-	{
-		m_Scene = message->GetScene();
-		if(message->GetScene())
-			message->GetScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
-	}
-
-
-	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)
-	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
-		if(current_cam_obj)
-		{
-			current_cam_obj->UnregisterForMessage(typeid(TransformationNotifyMessage), TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage));
-		}
-		cam_obj->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage,0));
-		m_CurrentCamera = cam_obj;
-	}
-
-	void OpenALSoundSystem::OnCameraMoved(TransformationNotifyMessagePtr message)
-	{
-		Vec3 pos = message->GetPosition();
-		Quaternion rot = message->GetRotation();
-		Vec3 vel = Vec3(0,0,0);
-		UpdateListener(pos,rot,vel);
-	}
-
-	void OpenALSoundSystem::OnInit(MessagePtr message)
-	{
 		if ( m_IsInitialised ) return;
 
 		// Open an audio device
@@ -153,6 +121,36 @@ namespace GASS
 		// Ok
 		m_IsInitialised = true;
 		LogManager::getSingleton().stream() << "GASSSoundOpenOpenAL initialised";
+	}
+
+
+
+	void OpenALSoundSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
+	{
+		m_Scene = message->GetScene();
+		if(message->GetScene())
+			message->GetScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
+	}
+
+
+	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	{
+		SceneObjectPtr cam_obj = message->GetCamera();
+		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
+		if(current_cam_obj)
+		{
+			current_cam_obj->UnregisterForMessage(typeid(TransformationNotifyMessage), TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage));
+		}
+		cam_obj->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage,0));
+		m_CurrentCamera = cam_obj;
+	}
+
+	void OpenALSoundSystem::OnCameraMoved(TransformationNotifyMessagePtr message)
+	{
+		Vec3 pos = message->GetPosition();
+		Quaternion rot = message->GetRotation();
+		Vec3 vel = Vec3(0,0,0);
+		UpdateListener(pos,rot,vel);
 	}
 
 

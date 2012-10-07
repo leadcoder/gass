@@ -47,13 +47,13 @@ namespace GASS
 		OpenALSoundSystem();
 		virtual ~OpenALSoundSystem();
 		static void RegisterReflection();
-		void OnCreate();
+		virtual void Init();
 
 		// OpenAL-specific functions
 		void LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
 		bool CheckAlError( void );
 		bool CheckAlError( std::string pMsg );
-		SystemType GetSystemType() const {return "SoundSystem";}
+		std::string GetSystemName() const {return "SoundSystem";}
 	protected:
 		/** See http://www.openal.org/windows_enumeration.html for installing other
 		*   devices. You should at least have "Generic Hardware".

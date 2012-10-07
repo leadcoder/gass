@@ -50,16 +50,15 @@ namespace GASS
 		SimSystem();
 		virtual ~SimSystem();
 		static void RegisterReflection();
-
-		virtual void OnCreate();
+		
+		//ISystem interface
+		virtual void OnCreate(SystemManagerPtr owner) {m_Owner=owner;}
+		virtual void Init() = 0;
+		virtual void Update(double delta);
 		virtual std::string GetName() const {return m_Name;}
-		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
-		virtual void SetOwner(SystemManagerPtr owner){m_Owner = owner;}
+		//virtual SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
-		virtual void Update(double delta);
-		virtual SystemType GetSystemType() const = 0;// const {return "SimSystem";}
 		virtual int GetUpdateBucket() const;
 		virtual void SetUpdateBucket(int priority);
 	

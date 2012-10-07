@@ -63,7 +63,6 @@ namespace GASS
 
 	void ODETerrainGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, IComponent>);
 		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
 		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
 	}

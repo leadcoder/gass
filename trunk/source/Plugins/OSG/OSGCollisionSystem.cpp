@@ -109,6 +109,31 @@ namespace GASS
 
 	}
 
+	void OSGCollisionSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, ISystem>);
+	}
+
+	void OSGCollisionSystem::Init()
+	{
+		int address = (int) this;
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,SceneAboutToLoadNotifyMessage,0));
+	}
+
+	void OSGCollisionSystem::OnUnloadScene(SceneUnloadNotifyMessagePtr message)
+	{
+		m_RequestMap.clear();
+		m_ResultMap.clear();
+		message->GetScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
+	}
+
+
+	void OSGCollisionSystem::OnLoadScene(SceneAboutToLoadNotifyMessagePtr message)
+	{
+		message->GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
+	}
+
 	CollisionHandle OSGCollisionSystem::Request(const CollisionRequest &request)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
@@ -153,30 +178,7 @@ namespace GASS
 		}
 	}
 
-	void OSGCollisionSystem::RegisterReflection()
-	{
-		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, ISystem>);
-	}
-
-	void OSGCollisionSystem::OnCreate()
-	{
-		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,SceneAboutToLoadNotifyMessage,0));
-	}
-
-	void OSGCollisionSystem::OnUnloadScene(SceneUnloadNotifyMessagePtr message)
-	{
-		m_RequestMap.clear();
-		m_ResultMap.clear();
-		message->GetScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
-	}
-
-
-	void OSGCollisionSystem::OnLoadScene(SceneAboutToLoadNotifyMessagePtr message)
-	{
-		message->GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
-	}
+	
 
 	void OSGCollisionSystem::OnChangeCamera(ChangeCameraMessagePtr message)
 	{

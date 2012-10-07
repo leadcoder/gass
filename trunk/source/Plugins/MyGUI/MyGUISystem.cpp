@@ -27,7 +27,6 @@ namespace GASS
 {
 	MyGUISystem::MyGUISystem() : mGUI(NULL)
 	{
-
 	}
 
 	MyGUISystem::~MyGUISystem()
@@ -40,18 +39,23 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("MyGUISystem",new GASS::Creator<MyGUISystem, ISystem>);
 	}
 
-	void MyGUISystem::OnCreate()
+	void MyGUISystem::OnCreate(SystemManagerPtr owner)
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInit,InitSystemMessage,1));
+		SimSystem::OnCreate(owner);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedMessage,0));
 	}
 
-	void MyGUISystem::OnInit(InitSystemMessagePtr message)
+	void MyGUISystem::Init()
+	{
+
+	}
+
+	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedMessagePtr message)
 	{
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddKeyListener(this);
 		input_system->AddMouseListener(this);
-		
 	}
 
 	diagnostic::StatisticInfo* mInfo =NULL;

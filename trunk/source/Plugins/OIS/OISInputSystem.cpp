@@ -70,12 +70,15 @@ namespace GASS
 		RegisterProperty<bool>("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
 	}
 
-	void OISInputSystem::OnCreate()
+	void OISInputSystem::OnCreate(SystemManagerPtr owner)
 	{
+		SimSystem::OnCreate(owner);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage,1));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnViewportMovedOrResized,RenderWindowResizedNotifyMessage,1));
 	}
 
+	void OISInputSystem::Init()
+	{
+	}
 	void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
 		m_Window = message->GetMainHandle();
@@ -155,7 +158,7 @@ namespace GASS
 		}
 		#endif
 
-		GraphicsSystemPtr gs = boost::shared_dynamic_cast<SimSystemManager>(GetOwner())->GetFirstSystem<IGraphicsSystem>();
+		GraphicsSystemPtr gs = GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
 		if(gs)
 		{
 			unsigned int width, height;

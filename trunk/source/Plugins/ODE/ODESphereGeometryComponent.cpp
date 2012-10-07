@@ -58,7 +58,6 @@ namespace GASS
 
 	void ODESphereGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<ODESphereGeometryComponent, IComponent>);
 		RegisterProperty<Float>("Radius", &GASS::ODESphereGeometryComponent::GetRadius, &GASS::ODESphereGeometryComponent::SetRadius);
 	}
 

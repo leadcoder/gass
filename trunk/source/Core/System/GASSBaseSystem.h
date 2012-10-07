@@ -57,22 +57,20 @@ namespace GASS
 		static void RegisterReflection();
 
 		//ISystem interface
-		virtual void OnCreate(){};
-		std::string GetName() const {return m_Name;}
-		void SetName(const std::string &name) {m_Name = name;}
-		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
-		void SetOwner(SystemManagerPtr owner){m_Owner = owner;}
-		virtual SystemType GetSystemType() const {return "BaseSystem";}
+		virtual void Init(){};
+		virtual std::string GetSystemName() const {return "BaseSystem";}
+		virtual void OnCreate(SystemManagerPtr owner){m_Owner = owner;}
 		virtual void Register(SystemListenerPtr listener){};
 		virtual void Unregister(SystemListenerPtr listener){};
 		virtual void Update(double delta_time) {};
+		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
+		
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);
 		virtual int GetUpdateBucket() const;
 		virtual void SetUpdateBucket(int priority);
 	protected:
-		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
 	};
 }

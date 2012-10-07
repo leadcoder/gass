@@ -131,7 +131,7 @@ namespace GASS
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
 
 		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root,shadow_node));
-		SimSystemManagerPtr sim_sm = boost::shared_dynamic_cast<SimSystemManager>(OSGGraphicsSystemPtr(m_GFXSystem)->GetOwner());
+		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 

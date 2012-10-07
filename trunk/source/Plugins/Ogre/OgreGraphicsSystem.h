@@ -69,8 +69,8 @@ namespace GASS
 		OgreGraphicsSystem();
 		virtual ~OgreGraphicsSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual SystemType GetSystemType() const {return "GraphicsSystem";}
+		virtual void Init();
+		virtual std::string GetSystemName() const {return "GraphicsSystem";}
 		virtual void Update(double time);
 		//IGraphicsSystem
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
@@ -94,8 +94,6 @@ namespace GASS
 		void ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp);
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
-		void OnInit(InitSystemMessagePtr message);
-		//void OnInitializeRenderWindow(CreateRenderWindowMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
 
 		std::string m_RenderSystem;

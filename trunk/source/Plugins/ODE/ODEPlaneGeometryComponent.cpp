@@ -57,7 +57,6 @@ namespace GASS
 
 	void ODEPlaneGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<ODEPlaneGeometryComponent, IComponent>);
 		RegisterProperty<Vec3>("Normal",&ODEPlaneGeometryComponent::GetNormal, &ODEPlaneGeometryComponent::SetNormal);
 		RegisterProperty<Float>("PlaneOffset",&ODEPlaneGeometryComponent::GetPlaneOffset, &ODEPlaneGeometryComponent::SetPlaneOffset);
 	}

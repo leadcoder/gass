@@ -59,7 +59,6 @@ namespace GASS
 
 	void ODECylinderGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsCylinderGeometryComponent",new Creator<ODECylinderGeometryComponent, IComponent>);
 		RegisterProperty<Float>("Radius", &GASS::ODECylinderGeometryComponent::GetRadius, &GASS::ODECylinderGeometryComponent::SetRadius);
 		RegisterProperty<Float>("Length", &GASS::ODECylinderGeometryComponent::GetLength, &GASS::ODECylinderGeometryComponent::SetLength);
 	}

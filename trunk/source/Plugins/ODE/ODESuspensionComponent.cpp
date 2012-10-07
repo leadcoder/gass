@@ -64,7 +64,6 @@ namespace GASS
 
 	void ODESuspensionComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsSuspensionComponent",new Creator<ODESuspensionComponent, IComponent>);
 		RegisterProperty<float>("Axis1Force", &GASS::ODESuspensionComponent::GetAxis1Force, &GASS::ODESuspensionComponent::SetAxis1Force);
 		RegisterProperty<float>("Axis2Force", &GASS::ODESuspensionComponent::GetAxis2Force, &GASS::ODESuspensionComponent::SetAxis2Force);
 		RegisterProperty<float>("Damping", &GASS::ODESuspensionComponent::GetDamping, &GASS::ODESuspensionComponent::SetDamping);

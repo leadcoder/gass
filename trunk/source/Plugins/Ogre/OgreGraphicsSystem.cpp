@@ -65,18 +65,14 @@ namespace GASS
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
 	}
 
-	void OgreGraphicsSystem::OnCreate()
+	void OgreGraphicsSystem::Init()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInit,InitSystemMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
-	}
-
-	void OgreGraphicsSystem::OnInit(InitSystemMessagePtr message)
-	{
+	
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
@@ -103,8 +99,6 @@ namespace GASS
 		//if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
 		//	m_TaskGroup = MAIN_TASK_GROUP;
 
-		
-
 		if(m_CreateMainWindowOnInit)
 		{
 			//CreateRenderWindow("MainWindow", 800, 600, 0, 0);
@@ -124,10 +118,6 @@ namespace GASS
 		{
 			m_Root->initialise(false);
 		}
-
-		//new TextRenderer();
-
-		
 	}
 
 
@@ -182,11 +172,9 @@ namespace GASS
 			m_Windows.begin()->second->getMetrics(width, height, depth, left, top);
 	}
 
-
-
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		//if(m_CreateMainWindowOnInit) //take care of window events
+		if(m_CreateMainWindowOnInit) //take care of window events
 			Ogre::WindowEventUtilities::messagePump();
 
 		if(DebugDrawer::getSingletonPtr())

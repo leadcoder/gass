@@ -37,8 +37,8 @@ namespace GASS
 		OSGGraphicsSystem();
 		virtual ~OSGGraphicsSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual SystemType GetSystemType() const {return "GraphicsSystem";}
+		virtual void Init();
+		virtual std::string GetSystemName() const {return "GraphicsSystem";}
 		virtual void Update(double delta);
 
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
@@ -53,7 +53,6 @@ namespace GASS
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		
 		void SetActiveData(osg::Group* root);
-		void OnInit(InitSystemMessagePtr message);		
 		void LoadShadowSettings(TiXmlElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}

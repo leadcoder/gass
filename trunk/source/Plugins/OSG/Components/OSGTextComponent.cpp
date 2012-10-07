@@ -65,9 +65,7 @@ namespace GASS
 	void OSGTextComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		//GetSceneObject()->RegisterForMessage(OBJECT_RM_TEXT_PARAMETER, TYPED_MESSAGE_FUNC(OSGTextComponent::OnParameterMessage));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionMessage,0));
-		//mm.RegisterForMessage(MESSAGE_UPDATE, address,  boost::bind( &LocationComponent::OnUpdate, this, _1 ),m_InitPriority);
 	}
 
 	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionMessagePtr message)

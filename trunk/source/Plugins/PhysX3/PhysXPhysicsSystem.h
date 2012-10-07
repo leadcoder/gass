@@ -41,12 +41,12 @@ namespace GASS
 		PhysXPhysicsSystem();
 		virtual ~PhysXPhysicsSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void Init();
 		physx::PxPhysics* GetPxSDK() const {return m_PhysicsSDK;}
 		physx::PxMaterial* GetDefaultMaterial() const {return m_DefaultMaterial;}
 		physx::PxDefaultAllocator* GetAllocator() {return &m_DefaultAllocator;}
+		virtual std::string GetSystemName() const {return "PhysXPhysicsSystem";}
 	protected:
-		void OnInit(InitSystemMessagePtr message);
 		void OnShutdown(MessagePtr message);
 	private:
 		// Physics

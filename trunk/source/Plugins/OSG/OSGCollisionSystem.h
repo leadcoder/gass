@@ -39,14 +39,13 @@ namespace GASS
 		OSGCollisionSystem();
 		virtual ~OSGCollisionSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
-		SystemType GetSystemType() const {return "CollisionSystem";}
+		virtual void Init();
+		std::string GetSystemName() const {return "CollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
 		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
-		//void Process();
-
+		
 		//ITaskListener interface
 		void Update(double delta);
 		TaskGroup GetTaskGroup() const;

@@ -64,15 +64,12 @@ namespace GASS
 	{
 	public:
 		virtual ~ISystem(){}
-		virtual std::string GetName() const = 0;
-		virtual void SetName(const std::string &name) = 0;
-		virtual SystemManagerPtr GetOwner() const = 0;
-		virtual void SetOwner(SystemManagerPtr owner)= 0;
-		virtual void OnCreate() = 0;
-		virtual SystemType GetSystemType() const = 0;
+		virtual std::string GetSystemName() const = 0;
+		virtual void OnCreate(SystemManagerPtr owner)= 0;
+		virtual void Init() = 0;
+		virtual void Update(double delta_time) = 0;
 		virtual void Register(SystemListenerPtr listener) = 0;
 		virtual void Unregister(SystemListenerPtr listener)= 0;
-		virtual void Update(double delta_time) = 0;
 		virtual int GetUpdateBucket() const = 0;
 		virtual void SetUpdateBucket(int priority) = 0;
 	};

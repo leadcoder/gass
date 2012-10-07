@@ -77,9 +77,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::OnInitialize()
 	{
-
 		//Try to figure out when to load
-
 		m_Body = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 		LocationComponentPtr location  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();

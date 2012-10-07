@@ -25,7 +25,7 @@
 #include "tbb/parallel_for.h"
 namespace GASS
 {
-	SimSystem::SimSystem(void) : m_UpdateBucket(0), m_Name("SimSystem")
+	SimSystem::SimSystem(void) : m_UpdateBucket(0)
 	{
 	
 	}
@@ -35,15 +35,9 @@ namespace GASS
 	
 	}
 
-	void SimSystem::OnCreate()
-	{
-
-	}
-
 	void SimSystem::RegisterReflection()
 	{
-		RegisterProperty<std::string>( "Name", &GASS::SimSystem::GetName, &GASS::SimSystem::SetName);
-		RegisterProperty<int>( "UpdateBucket", &GASS::SimSystem::GetUpdateBucket, &GASS::SimSystem::SetUpdateBucket);
+		RegisterProperty<int>("UpdateBucket", &GASS::SimSystem::GetUpdateBucket, &GASS::SimSystem::SetUpdateBucket);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const

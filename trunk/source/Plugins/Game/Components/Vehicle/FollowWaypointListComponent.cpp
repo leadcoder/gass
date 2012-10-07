@@ -135,7 +135,7 @@ namespace GASS
 			Vec3 pos = m_CurrentPos;
 			pos.y = 0;
 
-			int num_waypoints = m_Waypoints.size();
+			int num_waypoints = (int) m_Waypoints.size();
 			
 			if((wp_pos - pos).Length() < m_WaypointRadius)
 			{
