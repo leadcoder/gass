@@ -56,6 +56,7 @@ namespace GASS
 	{	
 		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
 		LoadSettings(config_path + "EditorApplication.xml");
+
 		SimEngine *se = SimEngine::GetPtr();
 		const std::string render_system_path = config_path + render_system + "/";
 		se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);

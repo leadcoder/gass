@@ -125,7 +125,7 @@ namespace GASS
 			m_Root->initialise(false);
 		}
 
-		new TextRenderer();
+		//new TextRenderer();
 
 		
 	}
@@ -186,8 +186,8 @@ namespace GASS
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		//set thread priority to highest!!
-		Ogre::WindowEventUtilities::messagePump();
+		if(m_CreateMainWindowOnInit) //take care of window events
+			Ogre::WindowEventUtilities::messagePump();
 
 		if(DebugDrawer::getSingletonPtr())
 			DebugDrawer::getSingleton().build();
@@ -372,13 +372,13 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnInitializeTextBox(CreateTextBoxMessagePtr message)
 	{
-		Vec4 color = message->m_Color;
+		/*Vec4 color = message->m_Color;
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 
 		if(!TextRenderer::getSingleton().hasTextBox(message->m_BoxID))
 			TextRenderer::getSingleton().addTextBox(message->m_BoxID, message->m_Text, message->m_PosX, message->m_PosY, message->m_Width, message->m_Width, ogre_color);
 		else
-			TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);
+			TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
 	}
 }
 

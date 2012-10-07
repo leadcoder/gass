@@ -60,6 +60,7 @@ namespace GASS
 		AABox GetBoundingBox() const;
 		Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 		Vec3 GetScale() const {return m_Scale;}
 	protected:
 		void CreateHeightData(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
@@ -83,6 +84,7 @@ namespace GASS
 		//Heightmap dimensions
 		int m_HMDim;
 		float m_MaxHeight;
+		GeometryFlags m_GeomFlags;
 	};
 }
 

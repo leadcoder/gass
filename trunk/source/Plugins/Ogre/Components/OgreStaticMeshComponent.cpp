@@ -50,7 +50,8 @@ namespace GASS
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_RegionSize(300.0)
+		m_RegionSize(300.0),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -374,6 +375,11 @@ void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,
 
 	GeometryFlags OgreStaticMeshComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OgreStaticMeshComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

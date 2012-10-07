@@ -53,7 +53,7 @@ namespace GASS
 		{
 			dGeomID ray = dCreateRay (0, m_SegmentLength);
 			dGeomSetCollideBits (ray,m_Request->CollisionBits);
-			dGeomSetCategoryBits(ray,m_Request->CollisionBits);
+			dGeomSetCategoryBits(ray,0);
 			const int segments = int (m_RayLength/m_SegmentLength);
 			double last_ray_length =  m_RayLength - segments * m_SegmentLength;
 
@@ -135,8 +135,6 @@ namespace GASS
 
 	void ODELineCollision::ProcessCallback(dGeomID o1, dGeomID o2)
 	{
-
-
 		dGeomID ray_geom =0;
 		dGeomID other_geom =0;
 

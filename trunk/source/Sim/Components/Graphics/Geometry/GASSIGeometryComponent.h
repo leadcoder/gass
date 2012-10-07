@@ -54,10 +54,14 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const = 0;
 
 		/**
-			Should return the geometry category, for instance
-			a terrain geometry should return GT_TERRAIN
+			Should return the geometry flags
 		*/
 		virtual GeometryFlags GetGeometryFlags() const = 0;
+		
+		/**
+			Set object geometry flags
+		*/
+		virtual void SetGeometryFlags(GeometryFlags flags) = 0;
 	protected:
 	};
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;

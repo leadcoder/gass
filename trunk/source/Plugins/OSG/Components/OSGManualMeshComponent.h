@@ -34,22 +34,21 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
+		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void SetGeometryFlags(const GeometryFlags &value);
-		GeometryFlags GetGeometryFlags() const;
 		void CreateMesh(ManualMeshDataPtr data);
 		void Clear();
 		
 		osg::ref_ptr<osg::Geometry> m_OSGGeometry;
 		osg::ref_ptr<osg::Geode> m_GeoNode;
-
 		std::vector<MeshData> m_MeshData;
-		GeometryFlags m_GeometryFlags;
+		GeometryFlags m_GeomFlags;
 	};
 }
 

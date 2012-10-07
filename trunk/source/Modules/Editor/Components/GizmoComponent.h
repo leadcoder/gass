@@ -6,6 +6,14 @@
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
+#define GT_AXIS "GT_AXIS"
+#define GT_PLANE "GT_PLANE"
+#define GT_GRID "GT_GRID"
+#define GT_FIXED_GRID "GT_FIXED_GRID"
+
+#define GM_WORLD "GM_WORLD"
+#define GM_LOCAL "GM_LOCAL"
+
 namespace GASS
 {
 	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,BaseSceneComponent>

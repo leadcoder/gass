@@ -26,15 +26,11 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-
 #include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
-//#include "Main/Root.h"
+#include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 
 
@@ -58,6 +54,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::OnCreate()
 	{
+		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODEPhysicsSystem::OnInit,InitSystemMessage,0));
 	}
 

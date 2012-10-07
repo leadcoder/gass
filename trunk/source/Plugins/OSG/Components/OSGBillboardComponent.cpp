@@ -40,7 +40,8 @@ namespace GASS
 	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(false),
 		m_OSGBillboard (NULL),
 		m_Width(1.0f),
-		m_Height(1.0f)
+		m_Height(1.0f),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}	
@@ -81,11 +82,14 @@ namespace GASS
 		UpdateSize(m_Width,m_Height);
 	}
 
-
-
 	GeometryFlags OSGBillboardComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OSGBillboardComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 
 	void OSGBillboardComponent::OnInitialize()

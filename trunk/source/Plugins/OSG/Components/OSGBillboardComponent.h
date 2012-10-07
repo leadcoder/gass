@@ -38,6 +38,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
@@ -59,7 +60,7 @@ namespace GASS
 		float m_Width;
 		float m_Height;
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
-
+		GeometryFlags m_GeomFlags;
 	};
 }
 

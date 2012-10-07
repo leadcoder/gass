@@ -42,6 +42,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
@@ -58,6 +59,7 @@ namespace GASS
 		bool m_CastShadow;
 		float m_TimeToLive;
 		Ogre::ParticleSystem* m_ParticleSystem;
+		GeometryFlags m_GeomFlags;
 	};
 
 	typedef boost::shared_ptr<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;

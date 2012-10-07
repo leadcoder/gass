@@ -52,7 +52,8 @@ namespace GASS
 		m_BillboardSet (NULL),
 		m_Billboard(NULL),
 		m_Width(1.0f),
-		m_Height(1.0f)
+		m_Height(1.0f),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -214,6 +215,11 @@ namespace GASS
 
 	GeometryFlags OgreBillboardComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OgreBillboardComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

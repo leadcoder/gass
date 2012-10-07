@@ -53,7 +53,8 @@ namespace GASS
 		m_TilingLayer1(5),
 		m_TilingLayer2(5),
 		m_TilingLayer3(5),
-		m_TilingLayer4(5)
+		m_TilingLayer4(5),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -842,7 +843,12 @@ namespace GASS
 
 	GeometryFlags OgreTerrainPageComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_GROUND;
+		return m_GeomFlags;
+	}
+
+	void OgreTerrainPageComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 
 }

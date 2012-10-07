@@ -37,6 +37,8 @@ namespace GASS
 		// dlopen() does not add .so to the filename, like windows does for .dll
 		if (m_ModuleName.substr(m_ModuleName.length() - 3, 3) != ".so")
 			m_ModuleName += ".so";
+#else
+	SetErrorMode(0);
 #endif
 
 		m_ModuleHandle = (DYNLIB_HANDLE)DYNLIB_LOAD(m_ModuleName.c_str());

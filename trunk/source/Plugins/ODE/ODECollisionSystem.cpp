@@ -38,9 +38,11 @@
 
 namespace GASS
 {
-	ODECollisionSystem::ODECollisionSystem() : m_MaxRaySegment(300),m_Space(0)
+	ODECollisionSystem::ODECollisionSystem() : m_MaxRaySegment(300)
+		,m_Space(0)
+		,m_HandleCount(5)
 	{
-		m_HandleCount = 5;
+		
 	}
 
 	ODECollisionSystem::~ODECollisionSystem()
@@ -51,15 +53,20 @@ namespace GASS
 
 	void ODECollisionSystem::OnCreate()
 	{
-		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneUnloaded,SceneUnloadNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
-		//m_Owner->GetMessageManager()->RegisterForMessage(SystemManager::SYSTEM_RM_UPDATE, address,  boost::bind( &ODECollisionSystem::OnUpdate, this, _1 ),0);
 	}
 
 	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
+		PhysicsSystemPtr ps = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
+		if(!(ps && ps->GetName() == "ODEPhsyicsSystem")) //check if ode physics system present, if not initialize ode
+		{
+			dInitODE2(0);
+			dAllocateODEDataForThread(dAllocateMaskAll);
+		}
+
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();
 		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitialized,0));
@@ -67,9 +74,6 @@ namespace GASS
 
 	void ODECollisionSystem::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
-		//ODEPhysicsSceneManagerPtr ode_scene = message->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
-		//if(ode_scene)
-		//	m_Space = ode_scene->GetPhysicsSpace();
 	}
 
 	void ODECollisionSystem::OnSceneObjectInitialize(PreSceneObjectInitializedPtr message)
@@ -77,13 +81,12 @@ namespace GASS
 		//auto create collision component
 		SceneObjectPtr object = message->GetSceneObject();
 		ODECollisionGeometryComponentPtr comp = object->GetFirstComponentByClass<ODECollisionGeometryComponent>();
-		if(!comp) //add if not present
+		if(!comp) //only add if not already present
 		{
 			if(object->GetFirstComponentByClass<ITerrainComponent>())
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
-				//comp->SetMaterialFlag(MATERIAL_FLAG_UNKONWN_GROUND);
 				object->AddComponent(comp);
 			}
 
@@ -93,8 +96,9 @@ namespace GASS
 				comp->SetType(ODECollisionGeometryComponent::CGT_MESH);
 				object->AddComponent(comp);
 			}
-
-			else if(object->GetFirstComponentByClass("OgreBillboardComponent",false) || object->GetFirstComponentByClass("GizmoComponent",false))
+			else if(object->GetFirstComponentByClass("OgreBillboardComponent",false) || 
+				object->GetFirstComponentByClass("OSGBillboardComponent",false) || 
+				object->GetFirstComponentByClass("GizmoComponent",false))
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_BOX);

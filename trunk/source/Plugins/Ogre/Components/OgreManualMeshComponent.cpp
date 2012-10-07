@@ -51,7 +51,7 @@
 
 namespace GASS
 {
-	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),m_UniqueMaterialCreated(false)
+	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),m_UniqueMaterialCreated(false),m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -329,6 +329,11 @@ namespace GASS
 
 	GeometryFlags OgreManualMeshComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OgreManualMeshComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

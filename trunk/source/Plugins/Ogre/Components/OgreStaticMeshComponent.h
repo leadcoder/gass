@@ -58,6 +58,7 @@ namespace GASS
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 
 		//IMeshComponent
 		virtual std::string GetFilename()const {return m_Filename;}
@@ -79,13 +80,10 @@ namespace GASS
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 	
-
-		
 		std::string m_RenderQueue;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;
-
 		typedef std::vector<MeshInstance> MeshInstanceVector;
 		typedef std::map<std::string, MeshInstanceVector> MeshMap;
 		MeshMap m_MeshInstances;
@@ -93,6 +91,7 @@ namespace GASS
 		OgreGraphicsSceneManagerWeakPtr m_OgreSceneManager;
 		std::string m_Filename;
 		Float m_RegionSize;
+		GeometryFlags m_GeomFlags;
 	};
 
 	typedef boost::shared_ptr<OgreStaticMeshComponent> OgreStaticMeshComponentPtr;

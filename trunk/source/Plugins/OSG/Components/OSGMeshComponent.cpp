@@ -42,7 +42,7 @@ namespace GASS
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
 		m_Lighting(true),
-		m_Category(GEOMETRY_FLAG_UNKOWN),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
 		m_Expand(false)
 	{
 		
@@ -66,9 +66,9 @@ namespace GASS
 	}
 
 	
-	void OSGMeshComponent::SetGeometryFlags(const GeometryFlags &value)
+	void OSGMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
-		m_Category = value;
+		m_GeomFlags = value;
 		if(m_MeshNode.valid())
 		{
 			OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),value);
@@ -77,8 +77,9 @@ namespace GASS
 
 	GeometryFlags OSGMeshComponent::GetGeometryFlags() const
 	{
-		return m_Category;
+		return m_GeomFlags;
 	}
+
 
 	void OSGMeshComponent::SetCastShadow(bool value)
 	{
@@ -417,7 +418,7 @@ namespace GASS
 		if(m_MeshNode.valid())
 		{
 			if(message->EnableCollision())
-				SetGeometryFlags(m_Category);
+				SetGeometryFlags(m_GeomFlags);
 			else
 				OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),GEOMETRY_FLAG_UNKOWN);
 		}

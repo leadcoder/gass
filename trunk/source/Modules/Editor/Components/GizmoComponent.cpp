@@ -11,9 +11,8 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Core/Utils/GASSLogManager.h"
-
-
 
 #define MOVMENT_EPSILON 0.0000001
 #define MAX_SCALE_DISTANCE 300.0 //meters
@@ -22,13 +21,12 @@
 
 namespace GASS
 {
-
 	GizmoComponent::GizmoComponent() : m_MeshData(new ManualMeshData), m_Color(1,0,0,1),
 		m_Size(5),
-		m_Type("arrow"),
+		m_Type(GT_AXIS),
 		m_Highlight(true),
 		m_LastDist(0), 
-		m_Mode("World"),
+		m_Mode(GM_WORLD),
 		m_GridDist(1.0),
 		m_Active(false)
 	{
@@ -58,6 +56,14 @@ namespace GASS
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnGridMessage,GridMessage,0));
+		
+		//Change geomtry flags
+		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+		if(m_Type == GT_AXIS || m_Type == GT_PLANE)
+			gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
+		else
+			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
+	
 	}
 
 	void GizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
@@ -83,7 +89,7 @@ namespace GASS
 	void GizmoComponent::OnEditMode(EditModeMessagePtr message)
 	{
 		m_Mode = message->GetEditMode();
-		if(m_Mode == "Local")
+		if(m_Mode == GM_LOCAL)
 		{
 			SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 			if(selected)
@@ -93,7 +99,7 @@ namespace GASS
 					GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
 			}
 		}
-		else if(m_Mode == "World")
+		else if(m_Mode == GM_WORLD)
 		{
 			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
 		}
@@ -103,7 +109,7 @@ namespace GASS
 
 	void GizmoComponent::OnGridMessage(GridMessagePtr message)
 	{
-		if(m_Type == "grid" || m_Type == "fixed_grid")
+		if(m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 			BuildMesh();
 	}
 
@@ -124,7 +130,7 @@ namespace GASS
 
 	void GizmoComponent::OnCameraParameter(CameraParameterMessagePtr message)
 	{
-		if(m_Type == "grid" || m_Type == "fixed_grid")
+		if(m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 			return;
 		CameraParameterMessage::CameraParameterType type = message->GetParameter();
 		switch(type)
@@ -157,7 +163,7 @@ namespace GASS
 
 	void GizmoComponent::SetSelection(SceneObjectPtr  object)
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 		//Unregister form previous
 		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -176,7 +182,7 @@ namespace GASS
 				GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(lc->GetWorldPosition(),GIZMO_SENDER)));
 
 				//rotate to selecetd rotation
-				if(m_Mode == "Local")
+				if(m_Mode == GM_LOCAL)
 				{
 					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_BaseRot*lc->GetWorldRotation(),GIZMO_SENDER)));
 				}
@@ -196,7 +202,7 @@ namespace GASS
 
 	void GizmoComponent::OnSelectedTransformation(TransformationNotifyMessagePtr message)
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 
 		//move gizmo
@@ -207,7 +213,7 @@ namespace GASS
 			GetSceneObject()->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
 		}
 
-		if(m_Mode == "Local")
+		if(m_Mode == GM_LOCAL)
 		{
 			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*message->GetRotation(),GIZMO_SENDER)));
 		}
@@ -215,7 +221,7 @@ namespace GASS
 
 	void GizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 		UpdateScale();
 	}
@@ -240,17 +246,17 @@ namespace GASS
 
 	void GizmoComponent::OnCameraMoved(TransformationNotifyMessagePtr message)
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 		UpdateScale();
 	}
 
 	void GizmoComponent::UpdateScale()
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 
-		if(m_Type == "grid")
+		if(m_Type == GT_GRID)
 			return;
 		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(camera)
@@ -298,6 +304,8 @@ namespace GASS
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
 
 		SetSelection(EditorManager::Get().GetSelectedObject());
+
+		
 	}
 
 
@@ -309,7 +317,7 @@ namespace GASS
 		m_MeshData->IndexVector.clear();
 
 		//Arrow
-		if(m_Type == "arrow")
+		if(m_Type == GT_AXIS)
 		{
 
 			MeshVertex vertex;
@@ -452,7 +460,7 @@ namespace GASS
 			m_MeshData->Material = "WhiteTransparentNoLighting";
 			m_MeshData->Type = LINE_LIST;*/
 		}
-		else if(m_Type == "plane")
+		else if(m_Type == GT_PLANE)
 		{
 			float thickness = 0.01;
 			MeshVertex vertex;
@@ -523,7 +531,7 @@ namespace GASS
 		}
 
 		
-		else if (m_Type == "grid" || m_Type == "fixed_grid")
+		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 		{
 			MeshVertex vertex;
 			
@@ -532,7 +540,7 @@ namespace GASS
 			vertex.Color  = m_Color;
 
 			float grid_size = 0;
-			if(m_Type == "fixed_grid")
+			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
 			else
 				grid_size = EditorManager::Get().GetMouseToolController()->GetGridSize();
@@ -567,11 +575,11 @@ namespace GASS
 
 	void GizmoComponent::OnNewCursorInfo(CursorMoved3DMessagePtr message)
 	{
-		if(m_Type == "fixed_grid")
+		if(m_Type == GT_FIXED_GRID)
 			return;
 		
 		bool grid = false;
-		if(m_Type == "grid")
+		if(m_Type == GT_GRID)
 			grid = true;
 		SceneObjectPtr obj_under_cursor = message->GetSceneObjectUnderCursor();
 		if(m_Active || obj_under_cursor == GetSceneObject())
@@ -632,7 +640,7 @@ namespace GASS
 
 
 		//select projection plane
-		if(m_Type == "arrow")
+		if(m_Type == GT_AXIS)
 		{
 			float v1 = fabs(Math::Dot(ray_dir,up_vec));
 			float v2 = fabs(Math::Dot(ray_dir,v_vec));
@@ -712,7 +720,7 @@ namespace GASS
 	{
 		Vec3 c = p-axis_origin;
 		Float t = Math::Dot(axis_dir,c);
-		if(m_Mode == "Local")
+		if(m_Mode == GM_LOCAL)
 		{
 			t = EditorManager::Get().GetMouseToolController()->SnapPosition(t);
 		}
@@ -721,7 +729,7 @@ namespace GASS
 
 		Vec3 res = (axis_origin + point_on_axis);
 
-		if(m_Mode == "World")
+		if(m_Mode == GM_WORLD)
 		{
 			res.x = EditorManager::Get().GetMouseToolController()->SnapPosition(res.x);
 			res.z = EditorManager::Get().GetMouseToolController()->SnapPosition(res.z);

@@ -177,7 +177,7 @@ namespace GASS
 		if(!gizmo &&  EditorManager::Get().GetScene())
 		{
 			ScenePtr scene = EditorManager::Get().GetScene();
-			std::string gizmo_name = "GizmoRotateObject_YUp";
+			std::string gizmo_name = "GizmoRotateObject";
 			
 			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;

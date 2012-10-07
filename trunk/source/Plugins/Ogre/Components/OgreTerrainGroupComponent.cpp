@@ -68,6 +68,7 @@ namespace GASS
 		,m_EnableLayerSpecular(true)
 		,m_EnableLayerNormal(true)
 		,m_TerrainScale(10)
+		,m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 
@@ -894,7 +895,12 @@ namespace GASS
 
 	GeometryFlags OgreTerrainGroupComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_GROUND;
+		return m_GeomFlags;
+	}
+
+	void OgreTerrainGroupComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 
 	void OgreTerrainGroupComponent::SetFadeDetail(bool value) 

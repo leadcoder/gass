@@ -47,9 +47,8 @@ namespace GASS
 	OgreParticleSystemComponent::OgreParticleSystemComponent() :
 		m_CastShadow(true),
 		m_ParticleSystem(NULL),
-		m_TimeToLive(-1)
-		
-		
+		m_TimeToLive(-1),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -144,6 +143,11 @@ namespace GASS
 
 	GeometryFlags OgreParticleSystemComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_TRANSPARENT_OBJECT;
+		return m_GeomFlags;
+	}
+
+	void OgreParticleSystemComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

@@ -50,7 +50,8 @@ namespace GASS
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
 		m_RegionSize(300.0),
-		m_GlobalScale(1,1,1)
+		m_GlobalScale(1,1,1),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -488,9 +489,13 @@ namespace GASS
 		}
 	}
 
-
 	GeometryFlags OgreInstancedMeshComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OgreInstancedMeshComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

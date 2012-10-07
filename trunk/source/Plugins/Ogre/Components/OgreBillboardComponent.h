@@ -46,6 +46,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
@@ -70,6 +71,7 @@ namespace GASS
 		Ogre::Billboard* m_Billboard;
 		float m_Width;
 		float m_Height;
+		GeometryFlags m_GeomFlags;
 	};
 
 	typedef boost::shared_ptr<OgreBillboardComponent> OgreBillboardComponentPtr;

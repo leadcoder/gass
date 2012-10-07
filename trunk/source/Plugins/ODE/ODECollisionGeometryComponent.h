@@ -82,8 +82,8 @@ namespace GASS
 		void Disable();
 		void Enable();
 
-		unsigned long GetMaterialFlag() const;
-		void SetMaterialFlag(unsigned long value);
+		unsigned long GetFlags() const;
+		void SetFlags(unsigned long value);
 		
 		void SetType(CollisionGeomType type) {m_Type= type;}
 		CollisionGeomType GetType() const {return m_Type;}

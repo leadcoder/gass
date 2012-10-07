@@ -41,7 +41,7 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlags(GEOMETRY_FLAG_UNKOWN)
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -67,9 +67,9 @@ namespace GASS
 		BaseSceneComponent::OnInitialize();
 	}
 
-	void OSGManualMeshComponent::SetGeometryFlags(const GeometryFlags &value)
+	void OSGManualMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
-		m_GeometryFlags = value;
+		m_GeomFlags = value;
 		if(m_OSGGeometry.valid())
 		{
 			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),value);
@@ -78,13 +78,13 @@ namespace GASS
 
 	GeometryFlags OSGManualMeshComponent::GetGeometryFlags() const
 	{
-		return m_GeometryFlags;
+		return m_GeomFlags;
 	}
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
 		if(message->EnableCollision())
-			SetGeometryFlags(m_GeometryFlags);
+			SetGeometryFlags(m_GeomFlags);
 		else
 			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GEOMETRY_FLAG_UNKOWN);
 	}

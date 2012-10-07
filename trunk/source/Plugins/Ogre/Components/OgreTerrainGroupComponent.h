@@ -60,6 +60,7 @@ namespace GASS
 
 		//IGeometryComponent
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		
@@ -69,9 +70,6 @@ namespace GASS
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;
 		Vec3 GetScale() const {return m_Scale;}
-
-		
-		
 	protected:
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
@@ -82,7 +80,6 @@ namespace GASS
 		std::string GetLoadTerrain() const;
 		float GetImportScale() const;
 		void SetImportScale(const float &value);
-
 		void SetImportTerrainSize(const int &value);
 		Float GetImportTerrainWorldSize() const;
 		void SetImportTerrainWorldSize(const Float &value);
@@ -126,7 +123,6 @@ namespace GASS
 		bool m_EnableLayerParallax;
 		bool m_EnableLayerSpecular;
 		bool m_EnableLayerNormal;
-
 		Vec3 m_Scale;
 		bool m_Center;
 		Float m_WorldWidth;
@@ -135,7 +131,6 @@ namespace GASS
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;
 		float m_TerrainScale;
-
 		Ogre::SceneManager* m_OgreSceneManager;
 
 		//Helpers to access terrain height very fast
@@ -150,19 +145,17 @@ namespace GASS
 		bool m_Paging;
 		Ogre::TerrainPaging* m_TerrainPaging;
 		Ogre::PageManager* m_PageManager;
-
 		int m_TerrainSize;
 		float m_TerrainWorldSize;
 		std::string m_TerrainName;
 		std::string m_CustomMaterial;
 		Vec3 m_Origin;
-
 		bool m_FadeDetail;
 		float m_DetailFadeDist;
 		bool m_FadeOutColor;
 		float m_NearColorWeight;
 		Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
-
+		GeometryFlags m_GeomFlags;
 	};
 	typedef boost::shared_ptr<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 }

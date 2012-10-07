@@ -52,7 +52,8 @@ namespace GASS
 		m_WorldHeight(0),
 		m_NodesPerSideAllPagesW(0),
 		m_NodesPerSideAllPagesH(0),
-		m_OgreSceneManager(NULL)
+		m_OgreSceneManager(NULL),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 
@@ -320,7 +321,11 @@ namespace GASS
 
 	GeometryFlags OgreSceneManagerTerrainComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_GROUND;
+		return m_GeomFlags;
 	}
 
+	void OgreSceneManagerTerrainComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
+	}
 }

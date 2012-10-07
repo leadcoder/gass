@@ -94,7 +94,6 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Lock = message->GetLock();
-			
 		}
 	}
 

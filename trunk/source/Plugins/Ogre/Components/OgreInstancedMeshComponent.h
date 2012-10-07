@@ -57,6 +57,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 
 		virtual std::string GetFilename()const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -97,6 +98,7 @@ namespace GASS
 		std::string m_Filename;
 		Float m_RegionSize;
 		Vec3 m_GlobalScale;
+		GeometryFlags m_GeomFlags;
 	};
 
 	typedef boost::shared_ptr<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;

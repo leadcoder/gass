@@ -62,8 +62,7 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::RegisterReflection()
 	{
-		//RegisterProperty<unsigned long>("CollisionBits", &GASS::ODECollisionGeometryComponent::GetCollisionBits, &GASS::ODECollisionGeometryComponent::SetCollisionBits);
-		//RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODECollisionGeometryComponent::GetCollisionCategory, &GASS::ODECollisionGeometryComponent::SetCollisionCategory);
+		//RegisterProperty<Float>("Type", &GASS::ODECylinderGeometryComponent::GetType, &GASS::ODECylinderGeometryComponent::SetType);
 	}
 
 	void ODECollisionGeometryComponent::OnInitialize()
@@ -79,7 +78,6 @@ namespace GASS
 	{
 		CreateGeometry();
 	}
-
 
 	void ODECollisionGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
@@ -104,8 +102,7 @@ namespace GASS
 	void ODECollisionGeometryComponent::CreateGeometry()
 	{
 		Reset();
-		//dSpaceID space = GetCollisionSystem()->GetSpace();
-		//Check if we have mesh data????
+		
 		switch(m_Type)
 		{
 		case CGT_MESH:
@@ -122,6 +119,12 @@ namespace GASS
 		}
 		dGeomSetBody(m_GeomID , NULL);
 		dGeomSetData(m_GeomID , (void*)this);
+
+		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+		if(geom)
+		{
+			SetFlags(geom->GetGeometryFlags());
+		}
 	}
 	
 	void ODECollisionGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -272,7 +275,7 @@ namespace GASS
 		return (m_GeomID == 0) ? false:true;
 	}
 
-	unsigned long  ODECollisionGeometryComponent::GetMaterialFlag() const 
+	unsigned long  ODECollisionGeometryComponent::GetFlags() const 
 	{
 		if(m_GeomID)
 		{
@@ -281,11 +284,11 @@ namespace GASS
 		return 0;
 	}
 
-	void ODECollisionGeometryComponent::SetMaterialFlag(unsigned long value)
+	void ODECollisionGeometryComponent::SetFlags(unsigned long value)
 	{
 		if(m_GeomID)
 		{
-			//dGeomSetCollideBits(m_GeomID,value);
+			dGeomSetCollideBits(m_GeomID,0);
 			dGeomSetCategoryBits(m_GeomID, value);
 		}
 	}

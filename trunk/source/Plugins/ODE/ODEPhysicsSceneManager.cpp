@@ -67,7 +67,6 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 	}
 

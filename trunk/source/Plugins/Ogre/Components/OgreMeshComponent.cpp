@@ -48,7 +48,8 @@ namespace GASS
 	OgreMeshComponent::OgreMeshComponent() : m_OgreEntity(NULL),
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
-		m_UniqueMaterialCreated(false)
+		m_UniqueMaterialCreated(false),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
 
 	}
@@ -602,9 +603,13 @@ namespace GASS
 		}
 	}
 
-
 	GeometryFlags OgreMeshComponent::GetGeometryFlags() const
 	{
-		return GEOMETRY_FLAG_UNKOWN;
+		return m_GeomFlags;
+	}
+
+	void OgreMeshComponent::SetGeometryFlags(GeometryFlags flags)
+	{
+		m_GeomFlags = flags;
 	}
 }

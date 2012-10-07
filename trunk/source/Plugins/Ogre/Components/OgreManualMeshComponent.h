@@ -44,6 +44,7 @@ namespace GASS
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
+		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
@@ -57,6 +58,7 @@ namespace GASS
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<MeshData> m_MeshData;
 		bool m_UniqueMaterialCreated;
+		GeometryFlags m_GeomFlags;
 	};
 }
 

@@ -243,7 +243,8 @@ namespace GASS
 		if(cam)
 			cam->GetCameraToViewportRay(cursor_pos.x, cursor_pos.y,info.m_RayStart,info.m_RayDir);
 
-		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, 2);
+		int flags = GEOMETRY_FLAG_GIZMO;
+		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, flags);
 
 		int from_id = int(this);
 
@@ -259,7 +260,9 @@ namespace GASS
 		}
 		else
 		{
-			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, 1);
+			flags = GEOMETRY_FLAG_UNKOWN | GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT | GEOMETRY_FLAG_DYNAMIC_OBJECT;
+		
+			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, flags);
 			if(mesh_result.Coll)
 			{
 				SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
