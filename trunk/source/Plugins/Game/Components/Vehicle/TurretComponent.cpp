@@ -34,8 +34,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scene/GASSSoundSceneObjectMessages.h"
 
 
@@ -76,7 +76,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,ControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
@@ -452,7 +452,7 @@ namespace GASS
 
 
 
-	void TurretComponent::OnInput(ControllerMessagePtr message)
+	void TurretComponent::OnInput(InputControllerMessagePtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();

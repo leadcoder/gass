@@ -29,7 +29,6 @@
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 

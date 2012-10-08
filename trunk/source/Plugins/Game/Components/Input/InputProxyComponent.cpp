@@ -33,8 +33,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 
@@ -65,15 +64,15 @@ namespace GASS
 
 	void InputProxyComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputControllerMessage,0));
 	}
 
 	void InputProxyComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent())->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,ControllerMessage));
+		m_InputHandlerObject->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputControllerMessage));
 	}
 
-	void InputProxyComponent::OnPlayerInput(ControllerMessagePtr message)
+	void InputProxyComponent::OnPlayerInput(InputControllerMessagePtr message)
 	{
 		GetSceneObject()->SendImmediate(message);
 	}

@@ -29,7 +29,7 @@
 #include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 
 #include "Sim/GASSCommon.h"

@@ -39,8 +39,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scene/GASSSoundSceneObjectMessages.h"
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 
@@ -114,7 +114,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,ControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,InputControllerMessage,0));
 		//call this to ensure that scene object pointers get initlized
 		BaseSceneComponent::OnInitialize();
 
@@ -315,7 +315,7 @@ namespace GASS
 
 	
 
-	void SightComponent::OnInput(ControllerMessagePtr message)
+	void SightComponent::OnInput(InputControllerMessagePtr message)
 	{
 		int id = (int) this; 
 		std::string name = message->GetController();

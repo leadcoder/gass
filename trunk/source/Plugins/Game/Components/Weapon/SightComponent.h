@@ -26,7 +26,7 @@
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSSceneObjectLink.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Plugins/Game/GameMessages.h"
@@ -71,7 +71,7 @@ namespace GASS
 		//Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 		
 		void OnLoad(LoadComponentsMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(InputControllerMessagePtr message);
 		void OnBaseTransformation(TransformationNotifyMessagePtr message);
 		void OnBarrelTransformation(BarrelTransformationMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

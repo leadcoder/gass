@@ -25,8 +25,8 @@
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scene/GASSSceneObjectLink.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Plugins/Game/GameMessages.h"
@@ -48,7 +48,7 @@ namespace GASS
 		virtual void OnInitialize();
 	private:
 		void OnLoad(LoadComponentsMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(InputControllerMessagePtr message);
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);
 		void OnReadyToFire(ReadyToFireMessagePtr message);

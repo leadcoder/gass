@@ -27,20 +27,16 @@
 namespace GASS
 {
 
-	ControlSetting::ControlSetting(IInputSystem* input)
+	ControlSetting::ControlSetting(const std::string &name, ControlSettingsSystem* owner, IInputSystem* input) : m_Name(name),
+		m_Owner(owner),
+		m_Input(input)
 	{
-		m_Input = input;
-		m_MM =  new MessageManager();
+		
 	}
 
 	ControlSetting::~ControlSetting(void)
 	{
 
-	}
-
-	void ControlSetting::Update(double delta_time)
-	{
-		m_MM->Update(delta_time);
 	}
 
 	void ControlSetting::AddController(Controller *controller, const std::string &name,int action)
@@ -51,7 +47,6 @@ namespace GASS
 		m_IndexToName[index] = name;
 		controller->m_Owner = this;
 	}
-
 
 	Controller*  ControlSetting::GetController(const std::string &input) const
 	{

@@ -11,12 +11,11 @@
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-
 #include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Plugins/PagedGeometry/PGMessages.h"
 
 namespace GASS
@@ -26,13 +25,7 @@ namespace GASS
 		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1),m_Noise(0), m_TEM(TEM_DEFORM),m_InvertBrush(1),m_ActiveLayer(TL_1)
 	{
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
-
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("EditorInputSettings");
-		if(cs)
-		{
-			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllerMessage,0));
-		}
-
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllSettingsMessage,0));
 	}
 
 	TerrainDeformTool::~TerrainDeformTool()
@@ -236,8 +229,12 @@ namespace GASS
 	}
 
 
-	void TerrainDeformTool::OnInput(ControllerMessagePtr message)
+	void TerrainDeformTool::OnInput(ControllSettingsMessagePtr message)
 	{
+		//Check settings
+		if("EditorInputSettings" != message->GetSettings())
+			return;
+	
 		if(m_Active)
 		{
 			std::string name = message->GetController();

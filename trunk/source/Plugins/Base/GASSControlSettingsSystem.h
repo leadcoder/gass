@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-# pragma warning (disable : 4530)
+/*# pragma warning (disable : 4530)
 # pragma warning (disable : 4786)
 # pragma warning (disable : 4244)
 # pragma warning (disable : 4305)
@@ -27,8 +27,13 @@
 # pragma warning (disable : 4275)
 # pragma warning( disable : 4290 )
 # pragma warning( disable: 4661)
+*/
 
 #include "Sim/GASSCommon.h"
+#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+
 #include <map>
 #include <string>
 
@@ -38,17 +43,21 @@ namespace GASS
 	class EnumLookup;
 	struct IntConstant;
 
-	class ControlSettingsSystem 
+	class ControlSettingsSystem : public Reflection<ControlSettingsSystem, SimSystem>, public IControlSettingsSystem
 	{
 	public:
 		ControlSettingsSystem();
 		virtual ~ControlSettingsSystem();
+		virtual void Load(const std::string &filename);
+		virtual void Update(double delta_time);
+		virtual std::string GetSystemName() const {return "CoreSystem";}
+		virtual std::string GetNameFromIndex(const std::string &settings, int index);
+		virtual int GetIndexFromName(const std::string &settings, const std::string &name);
+		virtual void Init() {};
+		static void RegisterReflection();
+	private:
 		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
-		void Load(const std::string &filename);
-		void Update(double delta_time);
-		void Clear();
-	private:
 		int GetDevice(std::string device) const;
 		void Add(const std::string &name,ControlSetting* cs);
 		typedef std::map<std::string,ControlSetting*> ControlSettingMap;

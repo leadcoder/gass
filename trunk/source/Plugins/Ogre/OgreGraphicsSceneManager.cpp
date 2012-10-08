@@ -105,7 +105,6 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowProjType",&GASS::OgreGraphicsSceneManager::GetShadowProjType,&GASS::OgreGraphicsSceneManager::SetShadowProjType);
 		RegisterProperty<std::string>("ShadowType",&GASS::OgreGraphicsSceneManager::GetShadowType,&GASS::OgreGraphicsSceneManager::SetShadowType);
 		RegisterProperty<std::string>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
-
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()
@@ -120,7 +119,6 @@ namespace GASS
 		//scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
-
 	}
 
 	void OgreGraphicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
@@ -131,7 +129,6 @@ namespace GASS
 			m_SceneMgr->clearScene();
 			Root::getSingleton().destroySceneManager(m_SceneMgr);
 			m_SceneMgr = NULL;
-			
 		}
 	}
 

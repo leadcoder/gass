@@ -25,7 +25,7 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 
@@ -91,16 +91,13 @@ namespace GASS
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(InputControllerMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
 		std::string GetControlSetting() const {return m_ControlSettingName;}
-		//void OnClientEnterVehicle(ClientEnterVehicleMessagePtr message);
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		
-
-
 		std::string m_ControlSettingName;
-		ControlSetting* m_ControlSetting;
+		//ControlSetting* m_ControlSetting;
 		typedef std::map<int,float> InputHistoryMap;
 		InputHistoryMap m_InputHistory;
 	};

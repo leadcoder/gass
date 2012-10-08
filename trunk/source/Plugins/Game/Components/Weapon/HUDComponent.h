@@ -27,7 +27,6 @@
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Plugins/Game/GameMessages.h"

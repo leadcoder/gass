@@ -36,8 +36,7 @@
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 
@@ -52,7 +51,6 @@ namespace GASS
 	{
 	}
 
-
 	void PlayerInputComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, IComponent>);
@@ -62,30 +60,21 @@ namespace GASS
 	void PlayerInputComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnUnload,UnloadComponentsMessage,0));
-
-	//	GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE, TYPED_MESSAGE_FUNC(GASS::PlayerInputComponent::OnEnter,AnyMessage));
-	//	GetSceneObject()->RegisterForMessage((SceneObjectMessage)OBJECT_RM_EXIT_VEHICLE, TYPED_MESSAGE_FUNC(PlayerInputComponent::OnExit,AnyMessage));
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllerMessage,0));
-		else
-			LogManager::getSingleton().stream() << "WARNING:PlayerInputComponent::OnInitialize -- Failed to find control settings: " << m_ControlSetting;
-
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllSettingsMessage,0));
 	}
 
 	void PlayerInputComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllerMessage));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllSettingsMessage));
 	}
 
-	void PlayerInputComponent::OnInput(ControllerMessagePtr message)
+	void PlayerInputComponent::OnInput(ControllSettingsMessagePtr message)
 	{
+		if(m_ControlSetting != message->GetSettings())
+			return;
 		//relay message
 		std::string name = message->GetController();
 		float value = message->GetValue();
-
 		static int seat = 0;
 
 		//check if enter message

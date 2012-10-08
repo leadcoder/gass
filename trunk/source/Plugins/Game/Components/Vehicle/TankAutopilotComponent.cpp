@@ -33,8 +33,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 
 
 namespace GASS
@@ -75,7 +75,7 @@ namespace GASS
 
 	void TankAutopilotComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,ControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		
@@ -125,7 +125,7 @@ namespace GASS
 		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void TankAutopilotComponent::OnInput(ControllerMessagePtr message)
+	void TankAutopilotComponent::OnInput(InputControllerMessagePtr message)
 	{
 
 		std::string name = message->GetController();
@@ -251,10 +251,10 @@ namespace GASS
 
 			//Send input message
 
-			MessagePtr throttle_message(new ControllerMessage(m_ThrottleInput,throttle,CT_AXIS));
+			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
 			GetSceneObject()->SendImmediate(throttle_message);
 
-			MessagePtr steering_message(new ControllerMessage(m_SteerInput,turn,CT_AXIS));
+			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,turn,CT_AXIS));
 			GetSceneObject()->SendImmediate(steering_message);
 
 		}

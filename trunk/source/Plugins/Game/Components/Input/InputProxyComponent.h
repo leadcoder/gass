@@ -26,7 +26,7 @@
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSSceneObjectLink.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
@@ -44,7 +44,7 @@ namespace GASS
 		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnPlayerInput(ControllerMessagePtr  message);
+		void OnPlayerInput(InputControllerMessagePtr  message);
 
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);

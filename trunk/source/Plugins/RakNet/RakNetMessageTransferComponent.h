@@ -26,7 +26,7 @@
 #include "Sim/Components/Network/GASSINetworkComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 
 #include "Sim/GASSCommon.h"
@@ -50,7 +50,7 @@ namespace GASS
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(InputControllerMessagePtr message);
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		void Call(const std::string &message, const std::string &data);

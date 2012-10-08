@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "GASSControlSetting.h"
+#include "GASSControlSettingsSystem.h"
 #include <map>
 #include <string>
 #include "Sim/Systems/Input/GASSIInputSystem.h"
@@ -42,6 +43,13 @@ namespace GASS
 
 		}
 		virtual ~Controller(){}
+
+		void FireInput(float value,ControllerType ctype)
+		{
+			MessagePtr system_msg(new ControllSettingsMessage(m_Owner->m_Name, m_Name,value,ctype));
+			m_Owner->m_Owner->GetSimSystemManager()->PostMessage(system_msg);
+		}
+
 		int m_Device;
 		bool m_NonRepeating;
 		ControlSetting* m_Owner;
@@ -53,7 +61,6 @@ namespace GASS
 	public:
 		RemoteController(const std::string &name,ControlSetting* owner):Controller(name,owner){}
 		virtual ~RemoteController(){}
-
 	};
 
 
@@ -95,8 +102,8 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+				FireInput(1.0,CT_TRIGGER);
+				
 			}
 			return true;
 		}
@@ -105,8 +112,8 @@ namespace GASS
 		{
 			if(key == m_Key)
 			{
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+				FireInput(0.0,CT_TRIGGER);
+				
 			}
 			return true;
 		}		
@@ -140,9 +147,7 @@ namespace GASS
 				switch(m_Device)
 				{
 				case DEVICE_MOUSE:
-				
-					MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
-					m_Owner->GetMessageManager()->PostMessage(system_msg);
+					FireInput(1.0,CT_TRIGGER);
 					break;
 				}
 			}
@@ -155,23 +160,18 @@ namespace GASS
 				switch(m_Device)
 				{
 				case DEVICE_MOUSE:
-				
-					MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
-					m_Owner->GetMessageManager()->PostMessage(system_msg);
+					FireInput(0.0,CT_TRIGGER);
 					break;
 				}
 			}
 			return true;
-
 		}
 
 		virtual bool ButtonPressed(int device, int button)
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
-				
-				MessagePtr system_msg(new ControllerMessage(m_Name,1.0,CT_TRIGGER));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+				FireInput(1.0,CT_TRIGGER);
 			}
 			return true;	
 		}
@@ -179,9 +179,7 @@ namespace GASS
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
-				
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_TRIGGER));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+				FireInput(0.0,CT_TRIGGER);
 			}
 			return true;	
 		}
@@ -229,9 +227,8 @@ namespace GASS
 				{
 					value = -1.0f;
 				}
+				FireInput(value,CT_AXIS);
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
 			}
 			return true;
 		}
@@ -240,9 +237,9 @@ namespace GASS
 		{
 			if(key == m_PosKey || key == m_NegKey)
 			{
-			
-				MessagePtr system_msg(new ControllerMessage(m_Name,0.0,CT_AXIS));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+
+				FireInput(0.0,CT_AXIS);
+				
 			}
 			return true;
 		}
@@ -286,9 +283,8 @@ namespace GASS
 				default:
 					value  = 0;
 				}
+				FireInput(value,CT_AXIS);
 				
-				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
 				break;
 			}
 			return true;
@@ -320,8 +316,8 @@ namespace GASS
 			if(device == m_Device-DEVICE_GAME_CONTROLLER_0 && axis == m_Axis-INPUT_AXIS_0)
 			{
 				value = value*m_Invert;
-				MessagePtr system_msg(new ControllerMessage(m_Name,value,CT_AXIS));
-				m_Owner->GetMessageManager()->PostMessage(system_msg);
+				FireInput(value,CT_AXIS);
+				
 			}
 			return true;
 		}

@@ -31,8 +31,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 
 
 namespace GASS
@@ -68,10 +68,10 @@ namespace GASS
 	{
 		//get input from parent?
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
-		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,ControllerMessage,0));
+		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputControllerMessage,0));
 	}
 
-	void SteerComponent::OnInput(ControllerMessagePtr message)
+	void SteerComponent::OnInput(InputControllerMessagePtr message)
 	{
 
 		std::string name = message->GetController();

@@ -25,16 +25,72 @@
 
 namespace GASS
 {
-	class IControlSetting;
+	enum ControllerType
+	{
+		CT_TRIGGER,
+		CT_AXIS
+	};
+
+	class ControllSettingsMessage : public BaseMessage
+	{
+	public:
+		ControllSettingsMessage(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Controller(controller), 
+			  m_Value(value),
+			  m_ControllerType(ct),
+			  m_Settings(settings)
+		  {
+
+		  }
+		  std::string GetSettings()const {return m_Settings;}
+		  std::string GetController()const {return m_Controller;}
+		  float GetValue() const {return m_Value;} 
+		  ControllerType GetControllerType() const {return m_ControllerType;}
+	private:
+		std::string m_Settings;
+		std::string m_Controller;
+		float m_Value;
+		ControllerType m_ControllerType;
+	};
+	typedef boost::shared_ptr<ControllSettingsMessage> ControllSettingsMessagePtr;
+
+	class InputControllerMessage : public BaseMessage
+	{
+	public:
+		InputControllerMessage(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay), m_Controller(controller), 
+			  m_Value(value),
+			  m_ControllerType(ct),
+			  m_Settings(settings)
+		  {
+
+		  }
+		  std::string GetSettings()const {return m_Settings;}
+		  std::string GetController()const {return m_Controller;}
+		  float GetValue() const {return m_Value;} 
+		  ControllerType GetControllerType() const {return m_ControllerType;}
+	private:
+		std::string m_Settings;
+		std::string m_Controller;
+		float m_Value;
+		ControllerType m_ControllerType;
+	};
+	typedef boost::shared_ptr<InputControllerMessage> InputControllerMessagePtr;
+
+	
+	
+
 
 	class GASSExport IControlSettingsSystem 
 	{
 	public:
-		IControlSettingsSystem() = 0;
 		virtual ~IControlSettingsSystem(){};
-		IControlSetting* GetControlSetting(const std::string &name) const = 0;
-		IControlSetting* NewRemoteControlSetting(const std::string &name) = 0;
-		void Load(const std::string &filename) = 0;
+		//virtual IControlSetting* GetControlSetting(const std::string &name) const = 0;
+		//virtual IControlSetting* NewRemoteControlSetting(const std::string &name) = 0;
+		virtual void Load(const std::string &filename) = 0;
+		virtual std::string GetNameFromIndex(const std::string &settings, int index) = 0;
+		virtual int GetIndexFromName(const std::string &settings, const std::string &name) = 0;
 	private:
 	};
+	typedef boost::shared_ptr<IControlSettingsSystem> ControlSettingsSystemPtr;
 }

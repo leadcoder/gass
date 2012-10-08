@@ -27,6 +27,7 @@
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 
 namespace GASS
 {
@@ -53,49 +54,36 @@ namespace GASS
 		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnChangeCamera(MessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnInput(ControllSettingsMessagePtr message);
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
-	
-
 		float GetMaxWindowSize() const {return m_MaxWindowSize;}
 		void SetMaxWindowSize(float value) {m_MaxWindowSize = value;}
-
 		float GetMinWindowSize() const {return m_MinWindowSize;}
 		void SetMinWindowSize(float value) {m_MinWindowSize = value;}
-
 		float GetWindowSize() const {return m_CurrentWindowSize;}
 		void SetWindowSize(float value) {m_CurrentWindowSize = value;}
-
-
 		float GetFixedHeight() const {return m_FixedHeight;}
 		void SetFixedHeight(float value) {m_FixedHeight = value;}
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
-		
 		void UpdateTopCam(double delta);
-
-		ControlSetting* m_ControlSetting;
+		
+		std::string m_ControlSettingName;
 		float m_ZoomSpeed;
 		float m_FixedHeight;
-
 		Vec3 m_Pos;
 		Vec3 m_Rot;
-
 		bool m_Active;
 		bool m_EnablePanInput;
 		float m_ScrollBoostInput;
 		float m_ScrollUpInput;
 		float m_ScrollDownInput;
 		float m_ZoomInput;
-		
-	
 		float m_CurrentWindowSize;
 		float m_MaxWindowSize;
 		float m_MinWindowSize;
-		
-
 	};
 }
 

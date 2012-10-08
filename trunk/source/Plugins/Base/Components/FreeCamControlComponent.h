@@ -24,6 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
@@ -35,13 +36,13 @@ namespace GASS
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
-		/**
-			Basic motion modell that can be used to move a camera. 
-			By listen to a ControlSetting the motion model takes input and
-			then calculate a new postion and rotation and send a request message
-			with this new data. Its the location components jobb to listen to 
-			this kind of messages and actually implement the transformations
-		*/
+	/**
+	Basic motion model that can be used to move a camera. 
+	By listen to a ControlSettings the motion model takes input and
+	then calculate a new postion and rotation and then send a  
+	transformation request messages. Its the location components job to listen to 
+	this kind of messages and actually implement the transformation change
+	*/
 
 	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>
 	{
@@ -52,40 +53,33 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
-		
 		void OnChangeCamera(MessagePtr message);
-		void OnInput(MessagePtr message);
+		void OnInput(ControllSettingsMessagePtr message);
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(MessagePtr message);
-
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
 		void SetMode(const std::string &value) {m_Mode= value;}
 		std::string GetMode()const  {return m_Mode;}
-
 		void SetDebug(bool debug) {m_Debug= debug;}
 		bool GetDebug()const  {return m_Debug;}
-		
 		void SetRunSpeed(Float speed){ m_RunSpeed = speed;}
 		Float GetRunSpeed()const { return m_RunSpeed;}
 		void SetWalkSpeed(Float speed){ m_WalkSpeed = speed;}
 		Float GetWalkSpeed()const { return m_WalkSpeed;}
 		void SetTurnSpeed(Float speed){ m_TurnSpeed = speed;}
 		Float GetTurnSpeed()const { return m_TurnSpeed;}
-
 		void StepPhysics(double delta);
 		
 		std::string m_Mode;
-		ControlSetting* m_ControlSetting;
-		ControlSetting* m_AltControlSetting;
+		std::string m_ControlSettingName;
+		std::string m_AltControlSettingName;
 		Float m_FovChangeSpeed;
 		Float m_RunSpeed;
 		Float m_TurnSpeed;
 		Float m_WalkSpeed;
-		
 		Vec3 m_Pos;
 		Vec3 m_Rot;
-
 		bool m_Active;
 		bool m_EnableRotInput;
 		bool m_SpeedBoostInput;

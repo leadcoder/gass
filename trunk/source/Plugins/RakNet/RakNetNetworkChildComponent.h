@@ -32,7 +32,7 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "Sim/Scheduling/GASSITaskListener.h"

@@ -5,8 +5,9 @@
 #include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+
 
 namespace GASS
 {
@@ -53,9 +54,8 @@ namespace GASS
 		void SetGizmoVisiblity(bool value);
 		void OnSceneObjectSelected(GASS::ObjectSelectionChangedMessagePtr message);
 		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(GASS::ControllSettingsMessagePtr message);
 	
-
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;

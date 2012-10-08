@@ -26,8 +26,7 @@
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-//#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
@@ -54,7 +53,8 @@ namespace GASS
 		m_RunSpeed(1000),
 		m_WalkSpeed(20),
 		m_TurnSpeed(10),
-		m_ControlSetting (NULL),
+		m_ControlSettingName("FreeCameraInputSettings"),
+		m_AltControlSettingName("FreeCameraInputAltSettings"),
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
 		m_EnableRotInput(false),
@@ -67,8 +67,8 @@ namespace GASS
 		m_CurrentFov(45),
 		m_UpDownInput(0),
 		m_Mode("Aircraft"),
-		m_Debug(false),
-		m_AltControlSetting(NULL)
+		m_Debug(false)
+		
 	{
 
 	}
@@ -96,18 +96,20 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 
-		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
+
+		ScenePtr scene = GetSceneObject()->GetScene();
+		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+
+		
+		/*m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
 		assert(m_ControlSetting);
 		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
 
 		m_AltControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraAltInputSettings");
 		if(m_AltControlSetting)
 			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
-
-
-		ScenePtr scene = GetSceneObject()->GetScene();
-
-		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+*/
 	}
 
 	void FreeCamControlComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -119,13 +121,6 @@ namespace GASS
 
 	void FreeCamControlComponent::OnUnload(MessagePtr message)
 	{
-		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
-
-		if(m_AltControlSetting)
-		{
-			m_AltControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
-		}
-
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
@@ -169,13 +164,16 @@ namespace GASS
 		}
 	}
 
-	void FreeCamControlComponent::OnInput(MessagePtr message)
+	void FreeCamControlComponent::OnInput(ControllSettingsMessagePtr message)
 	{
 		if(!m_Active) 
 			return;
-		ControllerMessagePtr control_mess = boost::shared_static_cast<ControllerMessage>(message);
-		std::string name = control_mess->GetController();
-		float value = control_mess->GetValue();
+		if(message->GetSettings() != m_ControlSettingName && 
+		   message->GetSettings() != m_AltControlSettingName) // only hog our settings
+			return;
+		
+		std::string name = message->GetController();
+		float value = message->GetValue();
 
 		if(name == "FreeCameraSpeedBoost")
 		{
@@ -214,14 +212,11 @@ namespace GASS
 			m_UpDownInput = value;
 			//FileLog::Print("Scroll wheel input %f",value );
 		}
-
-
 	}
 
 
 	void FreeCamControlComponent::SceneManagerTick(double delta_time)
 	{
-		if(!m_ControlSetting) return;
 		if(m_Active)
 		{
 			StepPhysics(delta_time);

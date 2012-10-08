@@ -46,6 +46,7 @@
 #include "Sim/Systems/Collision/GASSICollisionSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"
 

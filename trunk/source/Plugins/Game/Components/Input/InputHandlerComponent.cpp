@@ -33,10 +33,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
-
 
 namespace GASS
 {
@@ -68,19 +65,10 @@ namespace GASS
 
 	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs && m_Empty)
-		{
-			cs->GetMessageManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllerMessage,0));
-			m_Empty = false;
-		}
-		else if(cs == NULL)
-			LogManager::getSingleton().stream() << "WARNING:InputHandlerComponent::OnEnter -Failed to find control settings: " << m_ControlSetting;
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage,0));
 
-
-		IComponentContainerTemplate::ComponentVector components;
-
-		/*GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
+		/*IComponentContainerTemplate::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
 		
 		//configure all cameras
 		if(components.size() > 0)
@@ -101,9 +89,7 @@ namespace GASS
 	
 	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
 	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 		m_Empty = true;
 	}
 
@@ -114,13 +100,13 @@ namespace GASS
 
 	void InputHandlerComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		ControlSetting* cs = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSetting);
-		if(cs)
-			cs->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllerMessage));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
 
-	void InputHandlerComponent::OnInput(ControllerMessagePtr message)
+	void InputHandlerComponent::OnInput(ControllSettingsMessagePtr message)
 	{
+		if(m_ControlSetting != message->GetSettings())
+			return;
 		//relay message
 		std::string name = message->GetController();
 		float value = message->GetValue();
@@ -133,7 +119,7 @@ namespace GASS
 		}
 		else
 		{
-			MessagePtr input_message(new ControllerMessage(name,value,message->GetControllerType()));
+			MessagePtr input_message(new InputControllerMessage(message->GetSettings(),name,value,message->GetControllerType()));
 			GetSceneObject()->SendImmediate(input_message);
 		}
 	}

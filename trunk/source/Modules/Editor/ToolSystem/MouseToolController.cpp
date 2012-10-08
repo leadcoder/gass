@@ -13,8 +13,7 @@
 
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
@@ -28,8 +27,6 @@ namespace GASS
 {
 	MouseToolController::MouseToolController(): m_ActiveTool(NULL),
 		m_Active(false),
-		m_ColMeshHandle(0),
-		m_ColGizmoHandle(0),
 		m_GridSpacing(1),
 		m_GridSize(10),
 		m_SnapMovment(1),
@@ -39,7 +36,8 @@ namespace GASS
 		m_RayPickDistance(3000),
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
-		m_LastScreenPos(0,0)
+		m_LastScreenPos(0,0),
+		m_ControlSettingName("EditorInputSettings")
 	{
 
 	}
@@ -51,21 +49,8 @@ namespace GASS
 
 	void MouseToolController::Init()
 	{
-		//EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnToolChanged,ToolChangedMessage,0));
 		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
-		//EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapSettingsMessage,SnapSettingsMessage,0));
-		//EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSnapModeMessage,SnapModeMessage,0));
-//		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnSceneObjectSelected, ObjectSelectionChangedMessage, 0));
-
-		//register for input
-		m_EditorControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("EditorInputSettings");
-		if(m_EditorControlSetting)
-		{
-			m_EditorControlSetting->GetMessageManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllerMessage,0));
-		}
-		else
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find EditorInputSettings in ControlSettingsManager","MouseToolController::Init()");
-		
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddMouseListener(this);
 	}
@@ -78,15 +63,12 @@ namespace GASS
 			m_Active = message->GetFocus();
 		}
 	}
-	
-	/*void MouseToolController::OnToolChanged(ToolChangedMessagePtr message)
-	{
-		std::string new_tool = message->GetTool();
-		SelectTool(new_tool);
-	}*/
 
-	void MouseToolController::OnInput(ControllerMessagePtr message)
+	void MouseToolController::OnInput(ControllSettingsMessagePtr message)
 	{
+		//Check settings
+		if(m_ControlSettingName != message->GetSettings())
+			return;
 		if(m_Active)
 		{
 			std::string name = message->GetController();

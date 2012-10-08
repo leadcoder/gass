@@ -27,8 +27,8 @@
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSSceneObjectLink.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
@@ -85,7 +85,7 @@ namespace GASS
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
+		void OnInput(InputControllerMessagePtr message);
 
 
 		//set/get attributes

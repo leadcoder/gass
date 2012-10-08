@@ -25,7 +25,8 @@
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
@@ -43,17 +44,14 @@ namespace GASS
 		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+	private:
 		void OnEnter(EnterVehicleMessagePtr message);
 		void OnExit(ExitVehicleMessagePtr message);
-		void OnInput(ControllerMessagePtr message);
-
+		void OnInput(ControllSettingsMessagePtr message);
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
-
-	private:
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;
-
 		std::string m_ControlSetting;
 		bool m_Empty;
 	};

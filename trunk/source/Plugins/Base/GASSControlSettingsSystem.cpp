@@ -18,15 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-
 #include "GASSControlSettingsSystem.h"
 #include "GASSControlSetting.h"
 #include "GASSController.h"
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSMisc.h"
 #include "Core/Utils/GASSEnumLookup.h"
@@ -255,6 +252,12 @@ namespace GASS
 		delete m_InputStringTable;
 	}
 	
+
+	void ControlSettingsSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register("ControlSettingsSystem",new GASS::Creator<ControlSettingsSystem, ISystem>);
+	}
+
 	ControlSetting* ControlSettingsSystem::GetControlSetting(const std::string &name) const
 	{
 		ControlSettingMap::const_iterator pos;
@@ -274,27 +277,14 @@ namespace GASS
 
 	void ControlSettingsSystem::Update(double delta_time)
 	{
-		ControlSettingMap::iterator iter;
+		/*ControlSettingMap::iterator iter;
 		iter = m_ControlSettingMap.begin();
 		while(iter != m_ControlSettingMap.end())
 		{
 			iter->second->Update(delta_time);
 			++iter;
-		}
+		}*/
 	}
-
-
-	void ControlSettingsSystem::Clear()
-	{
-		ControlSettingMap::iterator iter;
-		iter = m_ControlSettingMap.begin();
-		while(iter != m_ControlSettingMap.end())
-		{
-			iter->second->GetMessageManager()->Clear();
-			++iter;
-		}
-	}
-
 
 	void ControlSettingsSystem::Load(const std::string &filename)
 	{
@@ -319,8 +309,8 @@ namespace GASS
 		// Loop through each template
 		while(control_settings)
 		{
-			ControlSetting* cs = new ControlSetting(input_system.get());
 			const std::string name = control_settings->Value();
+			ControlSetting* cs = new ControlSetting(name,this,input_system.get());
 			Add(name,cs);
 			TiXmlElement *control_map = control_settings->FirstChildElement();
 			while(control_map)
@@ -427,7 +417,7 @@ namespace GASS
 	ControlSetting* ControlSettingsSystem::NewRemoteControlSetting(const std::string &name)
 	{
 		ControlSetting* local = GetControlSetting(name);
-		ControlSetting* remote = new ControlSetting(NULL);
+		ControlSetting* remote = new ControlSetting(name,this,NULL);
 		if(local)
 		{
 			remote->m_IndexToName = local->m_IndexToName;
@@ -459,4 +449,22 @@ namespace GASS
 		assert(cs); 
 		m_ControlSettingMap[name]=cs;
 	}
+
+	std::string ControlSettingsSystem::GetNameFromIndex(const std::string &settings, int index)
+	{
+		ControlSetting* cs = GetControlSetting(settings);
+		if(cs)
+			return cs->m_IndexToName[index];
+		return "";
+	}
+
+	int ControlSettingsSystem::GetIndexFromName(const std::string &settings, const std::string &name)
+	{
+		ControlSetting* cs = GetControlSetting(settings);
+		if(cs)
+			return cs->m_NameToIndex[name];
+		return -1;
+	}
+	
+
 }

@@ -39,11 +39,12 @@
 
 
 #include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 #include "GetTime.h"
@@ -52,7 +53,7 @@
 
 namespace GASS
 {
-	RakNetInputTransferComponent::RakNetInputTransferComponent() : m_ControlSetting(NULL)
+	RakNetInputTransferComponent::RakNetInputTransferComponent() 
 	{
 
 	}
@@ -83,13 +84,13 @@ namespace GASS
 		if(!raknet->IsActive())
 			return;
 
-		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
-		if(m_ControlSetting == NULL)
-			LogManager::getSingleton().stream() << "WARNING: Could not find control settings:" << m_ControlSettingName << " in RakNetInputTransferComponent";
+		//m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
+		//if(m_ControlSetting == NULL)
+		//	LogManager::getSingleton().stream() << "WARNING: Could not find control settings:" << m_ControlSettingName << " in RakNetInputTransferComponent";
 
 		if(!raknet->IsServer())
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
 
 			//test input chain
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
@@ -98,11 +99,11 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientRemoteMessage,ClientRemoteMessage,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,ControllerMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
 		}
 	}
 
-	void RakNetInputTransferComponent::OnInput(ControllerMessagePtr message)
+	void RakNetInputTransferComponent::OnInput(InputControllerMessagePtr message)
 	{
 		if(message->GetSenderID() == 8888)
 			return;
@@ -110,12 +111,14 @@ namespace GASS
 		std::string controller = message->GetController();
 
 		float value = message->GetValue();
-
-		if(m_ControlSetting->GetController(controller))
+		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		int controller_index = css->GetIndexFromName(m_ControlSettingName,controller);
+		if(controller_index >= 0)
 		{
 			//Check history
 			bool new_value = false;
-			int controller_index = m_ControlSetting->m_NameToIndex[controller];
+			
+			//int controller_index = m_ControlSetting->m_NameToIndex[controller];
 			if(m_InputHistory.find(controller_index) == m_InputHistory.end())
 			{
 				new_value = true;
@@ -178,8 +181,10 @@ namespace GASS
 	void RakNetInputTransferComponent::ReceivedInput(int controller, float value)
 	{
 		int id = 8888;
-		std::string c_name = m_ControlSetting->m_IndexToName[controller];
-		MessagePtr message(new ControllerMessage(c_name,value,CT_TRIGGER,id));
+		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		std::string c_name = css->GetNameFromIndex(m_ControlSettingName,controller);
+		//std::string c_name = m_ControlSetting->m_IndexToName[controller];
+		MessagePtr message(new InputControllerMessage(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
 		GetSceneObject()->PostMessage(message);
 	}
 
@@ -197,8 +202,10 @@ namespace GASS
 				return;
 			
 
-			std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
-			MessagePtr ctrl_message(new ControllerMessage(controller,input_package->Value,CT_AXIS,id));
+			ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+			//std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
+			std::string controller = css->GetNameFromIndex(m_ControlSettingName,input_package->Index);
+			MessagePtr ctrl_message(new InputControllerMessage(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));
 			GetSceneObject()->PostMessage(ctrl_message);
 
 			/*if(controller == "Fire")
@@ -207,9 +214,6 @@ namespace GASS
 			}*/
 
 			//if server, relay this to all clients except sender
-			
-
-			
 			if(raknet->GetDebug())
 				std::cout << "Got " << controller << " Input from:" <<   message->GetAddress().m_Address <<  " On port:" << message->GetAddress().m_Port << " With value value:" << input_package->Value << std::endl;
 			

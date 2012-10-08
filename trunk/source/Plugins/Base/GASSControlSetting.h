@@ -22,67 +22,34 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
-
 #include <map>
 #include <string>
 
-
 namespace GASS
 {
-
 	class IInputSystem;
-	
-	
 	class MessageManager;
 	class Controller;
-
-
-	enum ControllerType
-	{
-		CT_TRIGGER,
-		CT_AXIS
-	};
-
-
-	class ControllerMessage : public BaseMessage
-	{
-	public:
-		ControllerMessage(const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Controller(controller), m_Value(value),m_ControllerType(ct)
-		  {
-
-		  }
-		  std::string GetController()const {return m_Controller;}
-		  float GetValue() const {return m_Value;} 
-		  ControllerType GetControllerType() const {return m_ControllerType;}
-	private:
-		std::string m_Controller;
-		float m_Value;
-		ControllerType m_ControllerType;
-	};
-
-	typedef boost::shared_ptr<ControllerMessage> ControllerMessagePtr;
-	
-
+	class ControlSettingsSystem;
 
 	class ControlSetting
 	{
 	public:
-		ControlSetting(IInputSystem* input);
+		ControlSetting(const std::string &name, ControlSettingsSystem* owner, IInputSystem* input);
 		~ControlSetting(void);
-		void Update(double delta_time);
 		void AddController(Controller *controller, const std::string &name,int action);
 		virtual Controller* GetController(const std::string &input) const;
 		IInputSystem* GetInputSystem() const {return m_Input;}
-		MessageManager* GetMessageManager() const {return m_MM;}
+		//MessageManager* GetMessageManager() const {return m_MM;}
 
+		//public for fast acess
 		typedef std::map<std::string,Controller*> ControllerMap;
-		
 		std::map<std::string,int> m_NameToIndex;
 		std::map<int,std::string> m_IndexToName;
 		ControllerMap m_ControllerMap;
 		IInputSystem *m_Input;
-		MessageManager* m_MM;
+		ControlSettingsSystem* m_Owner;
+		std::string m_Name;
 	};
 }
 

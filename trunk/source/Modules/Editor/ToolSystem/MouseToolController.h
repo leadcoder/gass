@@ -6,7 +6,7 @@
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
@@ -64,38 +64,25 @@ namespace GASS
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
 	private:
+		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-
 		CursorInfo GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
-		
-
 		void MoveTo(const CursorInfo &info);
 		void MouseDown(const CursorInfo &info);
 		void MouseUp(const CursorInfo &info);
-		
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits);
 		void OnFocusChanged(WindowFocusChangedMessagePtr message);
-		//void OnCursorMoved(CursorMoved2DMessagePtr message);
-		//void OnSnapSettingsMessage(SnapSettingsMessagePtr message);
-		//void OnSnapModeMessage(SnapModeMessagePtr message);
 
 		//helper
 		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
+		GASS::SceneObjectPtr GetPointerObject();
 
-		
-		SceneObjectPtr GetPointerObject();
-		void OnInput(GASS::ControllerMessagePtr message);
-		
 		std::vector<IMouseTool*> m_Tools;
 		IMouseTool* m_ActiveTool;
-		GASS::ControlSetting* m_EditorControlSetting;
-		
+		std::string m_ControlSettingName;
 		bool m_Active;
 		
-		GASS::CollisionHandle m_ColMeshHandle;
-		GASS::CollisionHandle m_ColGizmoHandle;
-
 		//Global settings
 		Float m_GridSpacing;
 		Float m_GridSize;

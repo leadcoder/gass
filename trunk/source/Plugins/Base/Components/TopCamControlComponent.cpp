@@ -24,8 +24,6 @@
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
@@ -33,8 +31,7 @@
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-
-
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -46,7 +43,6 @@ namespace GASS
 	TopCamControlComponent::TopCamControlComponent() : m_ZoomSpeed(5),
 		m_MaxWindowSize(520),
 		m_MinWindowSize(10),
-		m_ControlSetting (NULL),
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
 		m_EnablePanInput(false),
@@ -55,7 +51,8 @@ namespace GASS
 		m_ScrollUpInput(0),
 		m_ScrollDownInput(0),
 		m_Active(false),
-		m_CurrentWindowSize(45)
+		m_CurrentWindowSize(45),
+		m_ControlSettingName("FreeCameraInputSettings")
 	{
 
 	}
@@ -81,12 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
-
-
-		m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
-		assert(m_ControlSetting);
-		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
-
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
 	}
@@ -100,7 +92,6 @@ namespace GASS
 
 	void TopCamControlComponent::OnUnload(MessagePtr message)
 	{
-		m_ControlSetting->GetMessageManager()->UnregisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( TopCamControlComponent::OnInput));
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
 	}
@@ -135,13 +126,15 @@ namespace GASS
 		}
 	}
 
-	void TopCamControlComponent::OnInput(MessagePtr message)
+	void TopCamControlComponent::OnInput(ControllSettingsMessagePtr message)
 	{
 		if(!m_Active) 
 			return;
-		ControllerMessagePtr control_mess = boost::shared_static_cast<ControllerMessage>(message);
-		std::string name = control_mess->GetController();
-		float value = control_mess->GetValue();
+		if(message->GetSettings() != m_ControlSettingName) // only hog our settings
+			return;
+		
+		std::string name = message->GetController();
+		float value = message->GetValue();
 
 		if(name == "FreeCameraSpeedBoost")
 		{
@@ -188,7 +181,6 @@ namespace GASS
 
 	void TopCamControlComponent::SceneManagerTick(double delta_time)
 	{
-		if(!m_ControlSetting) return;
 		if(m_Active)
 		{
 			UpdateTopCam(delta_time);
