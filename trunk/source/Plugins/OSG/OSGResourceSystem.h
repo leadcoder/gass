@@ -41,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init() {};
 		virtual void LoadXML(TiXmlElement *elem);
-		std::string GetSystemName() const {return "ResourceSystem";}
+		std::string GetSystemName() const {return "OSGResourceSystem";}
 		bool GetFullPath(const std::string &file_name,std::string &file_path);
 		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void LoadResourceGroup(const std::string &resource_group);

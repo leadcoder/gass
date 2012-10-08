@@ -40,7 +40,7 @@ namespace GASS
 		virtual ~OSGCollisionSystem();
 		static void RegisterReflection();
 		virtual void Init();
-		std::string GetSystemName() const {return "CollisionSystem";}
+		std::string GetSystemName() const {return "OSGCollisionSystem";}
 		CollisionHandle Request(const CollisionRequest &request);
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;

@@ -60,9 +60,9 @@ namespace GASS
 
 	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsystem");
+		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
 		//PhysicsSystemPtr ps = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
-		if(!(system && system->GetSystemName() == "ODEPhsyicsSystem")) //check if ode physics system present, if not initialize ode
+		if(!(system)) //check if ode physics system present, if not initialize ode
 		{
 			dInitODE2(0);
 			dAllocateODEDataForThread(dAllocateMaskAll);

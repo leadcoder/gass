@@ -70,7 +70,7 @@ namespace GASS
 		virtual ~OgreGraphicsSystem();
 		static void RegisterReflection();
 		virtual void Init();
-		virtual std::string GetSystemName() const {return "GraphicsSystem";}
+		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
 		virtual void Update(double time);
 		//IGraphicsSystem
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;

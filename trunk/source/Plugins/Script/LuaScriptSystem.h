@@ -30,11 +30,9 @@ namespace GASS
 		LuaScriptSystem();
 		virtual ~LuaScriptSystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
-		SystemType GetSystemType() const {return "LuaScriptSystem";}
+		virtual void Init();
+		virtual SystemType GetSystemName() const {return "LuaScriptSystem";}
 	protected:
-		void OnInit(InitSystemMessagePtr  message);
-		//void OnShutdown(MessagePtr message);
 	private:
 	};
 }

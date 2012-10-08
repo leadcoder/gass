@@ -38,7 +38,7 @@ namespace GASS
 		virtual ~ODEPhysicsSystem();
 		static void RegisterReflection();
 		virtual void Init();
-		virtual std::string GetSystemName() const {return "PhysicsSystem";}
+		virtual std::string GetSystemName() const {return "ODEPhysicsSystem";}
 	protected:
 		void OnShutdown(MessagePtr message);
 	private:

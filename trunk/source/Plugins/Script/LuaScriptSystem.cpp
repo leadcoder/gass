@@ -57,13 +57,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("LuaScriptSystem",new GASS::Creator<LuaScriptSystem, ISystem>);
 	}
 
-	void LuaScriptSystem::OnCreate()
-	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnInit,InitSystemMessage,0));
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(LuaScriptSystem::OnLuaStateMessage,LuaScriptStateMessage,0));
-	}
-
-	void LuaScriptSystem::OnInit(InitSystemMessagePtr message)
+	void LuaScriptSystem::Init()
 	{
 		//LuaScriptManager* lsm = new LuaScriptManager();
 		lua_State *L = lua_open();
