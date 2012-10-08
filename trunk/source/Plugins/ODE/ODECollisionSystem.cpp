@@ -75,6 +75,7 @@ namespace GASS
 
 	void ODECollisionSystem::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
+
 	}
 
 	void ODECollisionSystem::OnSceneObjectInitialize(PreSceneObjectInitializedPtr message)

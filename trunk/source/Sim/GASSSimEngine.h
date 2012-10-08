@@ -24,7 +24,7 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
-#include "Sim/Systems/Input/GASSControlSettingsManager.h"
+//#include "Sim/Systems/Input/GASSControlSettingsManager.h"
 #include <boost/shared_ptr.hpp>
 
 namespace GASS
@@ -39,7 +39,7 @@ namespace GASS
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
+	//typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::shared_ptr<Scene> ScenePtr;
@@ -124,7 +124,7 @@ namespace GASS
 		Get the control settings manager. 
 		*/
 		//TODO: This should be moved to it's own system
-		ControlSettingsManagerPtr GetControlSettingsManager() {return m_ControlSettingsManager;}
+		//ControlSettingsManagerPtr GetControlSettingsManager() {return m_ControlSettingsManager;}
 
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
@@ -155,7 +155,7 @@ namespace GASS
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		ControlSettingsManagerPtr m_ControlSettingsManager;
+		//ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 		SceneVector m_Scenes;
 		double m_CurrentTime;

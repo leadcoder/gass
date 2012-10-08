@@ -27,7 +27,7 @@
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Systems/Input/GASSControlSettingsManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+//#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"

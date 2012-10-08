@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Systems/Input/GASSControlSetting.h"
+//#include "Sim/Systems/Input/GASSControlSetting.h"
 #include "Core/System/GASSISystem.h"
 
 namespace GASS

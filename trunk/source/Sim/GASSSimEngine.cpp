@@ -57,7 +57,7 @@ namespace GASS
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
-		m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
+		//m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
 	}
 
@@ -91,7 +91,7 @@ namespace GASS
 		
 		m_SystemManager->Load(system_file);
 		
-		m_ControlSettingsManager->Load(control_settings);
+		//m_ControlSettingsManager->Load(control_settings);
 		
 		//Initialize systems
 		m_SystemManager->Init();
