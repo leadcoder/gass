@@ -56,7 +56,10 @@ namespace GASS
 
 		SimEngine *se = SimEngine::GetPtr();
 		const std::string render_system_path = config_path + render_system + "/";
-		se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", m_NumRTCThreads);
+		//se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", m_NumRTCThreads);
+		
+		se->Init(render_system_path + "GASS.xml");
+		
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
 		if(css)
 		{
@@ -68,7 +71,7 @@ namespace GASS
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
 		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
 		se->GetSceneObjectTemplateManager()->SetObjectIDSuffix(m_IDSuffix);
-		//boot gass editor
+		
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
@@ -99,7 +102,6 @@ namespace GASS
 		else if (Misc::ToLower(m_Mode) == "client")
 		{
 			se->GetSimSystemManager()->SendImmediate(MessagePtr(new StartClientMessage(m_ClientName, m_ClientPort,m_ServerPort)));
-
 			MessagePtr connect_message(new ConnectToServerMessage(m_ServerName, m_ServerPort,8888, 2));
 			se->GetSimSystemManager()->PostMessage(connect_message);
 		}
@@ -113,37 +115,24 @@ namespace GASS
 			gfx_system->CreateViewport(render_win_name,render_win_name, 0, 0, 1, 1);
 		}
 
-		//add some test tools
-
+		//add some tools
 		GASS::MouseToolController* tools = es->GetMouseToolController().get();
-
 		IMouseTool* tool = new MoveTool(tools);
 		tools->AddTool(tool);
-
 		tool = new SelectTool(tools);
 		tools->AddTool(tool);
-
 		tool = new RotateTool(tools);
 		tools->AddTool(tool);
-
 		tool = new CreateTool(tools);
 		tools->AddTool(tool);
-
 		tool = new MeasurementTool(tools);
 		tools->AddTool(tool);
-
 		tool = new GoToPositionTool(tools);
 		tools->AddTool(tool);
-
 		tool = new EditPositionTool(tools);
 		tools->AddTool(tool);
-
-		//tool = new TerrainDeformTool(tools);
-		//tools->AddTool(tool);
-
 		tools->SelectTool(TID_SELECT);
 		tools->SetActive(true);
-
 		m_Initilized  = true;
 	}
 
@@ -166,37 +155,16 @@ namespace GASS
 			{
 				SimEngine::Get().Update(delta_time);
 			}
-			//m_Controller->GetEditorSystem()->Update(delta_time);
-
-			/*if(m_StepSimulation)
-			{
-				SimEngine::Get().GetSimSystemManager()->UpdateSimulation(m_SimStepDeltaTime);
-				//done
-				m_StepSimulation = false;
-				//send message that we are done
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
-			}*/
 		}
-	}
-
-	void EditorApplication::OnRequestSimulatiornStep(RequestTimeStepMessagePtr message)
-	{
-		m_StepSimulation = true;
-		m_SimStepDeltaTime = message->GetTimeStep();
 	}
 
 	void EditorApplication::OnLoadScene(SceneLoadedNotifyMessagePtr message)
 	{
-		
 		ScenePtr scene = message->GetScene();
-
 		//load top camera
 		Vec3 vel(0,0,0);
 		Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
-
-		//auto create free camera?
-		
 		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
 		
 		if(!free_obj) //If no FreeCameraObject template found, create one
@@ -239,7 +207,7 @@ namespace GASS
 		TiXmlDocument     *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
-			// Fatal error, cannot load
+			//Fatal error, cannot load
 			return false;
 		}
 		TiXmlElement *xSettings = 0;
@@ -249,14 +217,11 @@ namespace GASS
 		TiXmlElement *gui_state = xSettings->FirstChildElement("GUIState");
 		TiXmlElement *xTerrainNormal = xSettings->FirstChildElement("UseTerrainNormalOnDrop");
 		TiXmlElement *xRayPickDist = xSettings->FirstChildElement("MousePickDistance");
-		
 		TiXmlElement *xscene_path = xSettings->FirstChildElement("ScenePath");
 		TiXmlElement *xtemplates = xSettings->FirstChildElement("TemplateFiles");
 		TiXmlElement *xobj_id = xSettings->FirstChildElement("ObjectID");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
 		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
-		
-
 		TiXmlElement *xnum_threads = xSettings->FirstChildElement("NumRTCThreads");
 		TiXmlElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
 
@@ -272,7 +237,6 @@ namespace GASS
 
 		if(xnum_threads)
 			m_NumRTCThreads = atoi(xnum_threads->Attribute("value"));
-		
 		if(xnetwork)
 		{
 			if(xnetwork->Attribute("Mode"))
@@ -290,17 +254,6 @@ namespace GASS
 			if(xnetwork->Attribute("ClientPort"))
 				m_ClientPort = atoi(xnetwork->Attribute("ClientPort"));
 		}
-
-
-
-		/*if(gui_state && gui_state->Attribute("default"))
-		{
-			const std::string c_dir = MFCManager::Get().GetConfigurationDirPath();
-			GASS::FilePath path;
-			m_GUIState = gui_state->Attribute("default");
-			path.SetPath(m_GUIState);
-			m_GUIState = c_dir + path.GetFullPath();
-		}*/
 		if(start_scene && start_scene->Attribute("path"))
 		{
 			GASS::FilePath path;
@@ -405,8 +358,6 @@ namespace GASS
 	{
 		m_Scene = ScenePtr(SimEngine::Get().LoadScene(scene_path));
 	}
-
-	
 }
 
 	

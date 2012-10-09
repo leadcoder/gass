@@ -22,8 +22,10 @@
 #include "Core/Common.h"
 #include "GASSMisc.h"
 #include "GASSLogManager.h"
+#include "GASSException.h"
 #include <algorithm>
 #include <string.h>
+#include <tinyxml.h>
 #include <boost/filesystem.hpp>
 
 #ifndef WIN32
@@ -341,6 +343,7 @@ namespace GASS
 		return ret;
 	}
 
+	
 
 	void Misc::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
@@ -366,5 +369,74 @@ namespace GASS
 				}
 			}
 		}
+	}
+
+	std::string Misc::ReadString(TiXmlElement *xml_elem, const std::string &tag)
+	{
+		std::string ret;
+		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		if(xml_value)
+		{
+			 ret = xml_value->Attribute("value");
+		}
+		else
+		{
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find tag:" + tag, "Misc::ReadString");
+		}
+		return ret;
+	}
+
+	bool Misc::ReadBool(TiXmlElement *xml_elem, const std::string &tag)
+	{
+		bool ret;
+		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		if(xml_value && xml_value->Attribute("value"))
+		{
+			 std::string value = xml_value->Attribute("value");
+			 if(Misc::ToLower(value) == "true")
+				 ret = true;
+			 else if(Misc::ToLower(value) == "false")
+				 ret = false;
+			 else
+			 {
+				 ret = atoi(value.c_str());
+			 }
+		}
+		else
+		{
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to read tag:" + tag, "Misc::ReadString");
+		}
+		return ret;
+	}
+
+	int Misc::ReadInt(TiXmlElement *xml_elem, const std::string &tag)
+	{
+		int ret;
+		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		if(xml_value && xml_value->Attribute("value"))
+		{
+			 std::string value = xml_value->Attribute("value");
+			 ret = atoi(value.c_str());
+		}
+		else
+		{
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to read tag:" + tag, "Misc::ReadString");
+		}
+		return ret;
+	}
+
+	Float Misc::ReadFloat(TiXmlElement *xml_elem, const std::string &tag)
+	{
+		Float ret = 0;
+		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		if(xml_value)
+		{
+			 xml_value->QueryDoubleAttribute("value",&ret);
+		}
+		else
+		{
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to read tag:" + tag, "Misc::ReadString");
+		}
+		return ret;
 	}
 }

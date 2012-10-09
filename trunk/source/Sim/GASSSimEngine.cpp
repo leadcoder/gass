@@ -20,17 +20,15 @@
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSTBBRuntimeController.h"
-
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
-
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/System/GASSISystemManager.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 //include to ensure interface export
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
@@ -49,6 +47,7 @@
 #include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"
+#include <tinyxml.h>
 
 namespace GASS
 {
@@ -77,7 +76,7 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void SimEngine::Init(const FilePath &plugin_file, const FilePath &system_file, int num_rtc_threads)
+	void SimEngine::Init(const FilePath &configuration)
 	{
 		// Create log manager
 		if(LogManager::getSingletonPtr() == 0)
@@ -86,21 +85,70 @@ namespace GASS
 			log_man->createLog("GASS.log", true, true);
 		}
 	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
-		m_PluginManager->LoadFromFile(plugin_file.GetFullPath());
+		m_PluginManager->LoadFromFile(configuration.GetFullPath());
 		
-		m_SystemManager->Load(system_file.GetFullPath());
+		m_SystemManager->Load(configuration.GetFullPath());
 		
+		LoadSettings(configuration);
 		
 		//Initialize systems
 		m_SystemManager->Init();
 
-		m_RTC->Init(num_rtc_threads);
+//		
 
 		//intilize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
+	}
+
+	void SimEngine::LoadSettings(const FilePath &configuration_file)
+	{
+		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
+		TiXmlDocument *xmlDoc = new TiXmlDocument(configuration_file.GetFullPath().c_str());
+		if (!xmlDoc->LoadFile())
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
+		
+		//add top tag!
+		TiXmlDocument *xml_settings = xmlDoc;
+
+		//read SceneObjectTemplateManager settings
+		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
+		if(xml_sotm)
+		{
+			bool add_object_id = Misc::ReadBool(xml_sotm,"AddObjectIDToName");
+			GetSceneObjectTemplateManager()->SetAddObjectIDToName(add_object_id);
+
+			std::string prefix = Misc::ReadString(xml_sotm,"ObjectIDPrefix");
+			GetSceneObjectTemplateManager()->SetObjectIDPrefix(prefix);
+			
+			std::string sufix = Misc::ReadString(xml_sotm,"ObjectIDSufix");
+			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
+
+			TiXmlElement *xml_load = xml_sotm->FirstChildElement("Load");
+			if(xml_load)
+			{
+				TiXmlElement *xml_temp = xml_load->FirstChildElement("Template");
+				while(xml_temp)
+				{
+					std::string path = xml_temp->Attribute("value");
+					GASS::FilePath fp;
+					fp.SetPath(path);
+					path = fp.GetFullPath();
+				}
+			}
+		}
+
+		TiXmlElement *xml_rtc = xml_settings->FirstChildElement("RTC");
+		if(xml_rtc)
+		{
+			int num_threads = Misc::ReadInt(xml_rtc,"NumberOfThreads");
+			m_RTC->Init(num_threads);
+			int update_freq = Misc::ReadInt(xml_rtc,"UpdateFreqency");
+			bool external_update = Misc::ReadBool(xml_rtc,"ExternalUpdate");
+		}
+		delete xmlDoc;
 	}
 
 	void SimEngine::Update(double delta_time)

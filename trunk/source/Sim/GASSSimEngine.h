@@ -85,9 +85,7 @@ namespace GASS
 			@param system_file xml-file listing all systems to load.
 			@param num_rtc_threads Threads to use in the RTC, see RTCcontroller for more information.
 		*/
-		void Init(const FilePath &plugin_file = FilePath("plugins.xml"), 
-				  const FilePath &system_file = FilePath("systems.xml"),
-				  int num_rtc_threads = -1);
+		void Init(const FilePath &plugin_file = FilePath("gass.xml"));
 
 		/**
 		Main update for GASS.
@@ -151,6 +149,7 @@ namespace GASS
 		SceneIterator GetScenes();
 		ConstSceneIterator GetScenes() const;
 	private:
+		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;

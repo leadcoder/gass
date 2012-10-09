@@ -25,10 +25,7 @@
 #include <algorithm>
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
-
-namespace GASS
-{
-
+class TiXmlElement;
 #define READ_ULONG *(unsigned long*)ptr;	ptr += 4
 #define READ_LONG *(long*)ptr;	ptr += 4
 #define READ_FLOAT *(float*)ptr;	ptr += 4
@@ -37,11 +34,15 @@ namespace GASS
 #define READ_CHAR *(char*)ptr;	ptr++
 #define READ_UCHAR *(unsigned char*)ptr;	ptr++
 
-	// Constants replacing windows specific _MAX_DRIVE, _MAX_DIR etc
-	const int GASS_MAX_DRIVE = 3;
-	const int GASS_MAX_DIR	= 256;
-	const int GASS_MAX_FNAME	= 256;
-	const int GASS_MAX_EXT	= 256;
+// Constants replacing windows specific _MAX_DRIVE, _MAX_DIR etc
+const int GASS_MAX_DRIVE = 3;
+const int GASS_MAX_DIR	= 256;
+const int GASS_MAX_FNAME	= 256;
+const int GASS_MAX_EXT	= 256;
+
+namespace GASS
+{
+
 
 
 
@@ -53,7 +54,7 @@ namespace GASS
 	*/
 
 	/**
-		Class used for string operations
+	Class used for string operations
 	*/
 
 	class GASSCoreExport Misc
@@ -61,6 +62,12 @@ namespace GASS
 	public:
 		Misc();
 		virtual ~Misc();
+		//xml helpers
+		static std::string ReadString(TiXmlElement *xml_elem, const std::string &tag);
+		static bool ReadBool(TiXmlElement *xml_elem, const std::string &tag);
+		static Float ReadFloat(TiXmlElement *xml_elem, const std::string &tag);
+		static int ReadInt(TiXmlElement *xml_elem, const std::string &tag);
+
 		static std::string LoadTextFile(const std::string &file_name);
 		static std::string RemoveExtension(const std::string &file_name);
 		static std::string RemoveQuotation(char* str);
