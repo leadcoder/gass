@@ -54,11 +54,9 @@ namespace GASS
 {
 	SimEngine::SimEngine(): m_CurrentTime(0)
 	{
-		//m_SimulationUpdateInterval = 1.0f/30.0f; //30Hz
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
-		//m_ControlSettingsManager = ControlSettingsManagerPtr(new ControlSettingsManager());
 		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
 	}
 
@@ -79,7 +77,7 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void SimEngine::Init(const std::string &plugin_file, const std::string &system_file, const std::string &control_settings, int num_rtc_threads)
+	void SimEngine::Init(const FilePath &plugin_file, const FilePath &system_file, int num_rtc_threads)
 	{
 		// Create log manager
 		if(LogManager::getSingletonPtr() == 0)
@@ -88,11 +86,10 @@ namespace GASS
 			log_man->createLog("GASS.log", true, true);
 		}
 	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
-		m_PluginManager->LoadFromFile(plugin_file);
+		m_PluginManager->LoadFromFile(plugin_file.GetFullPath());
 		
-		m_SystemManager->Load(system_file);
+		m_SystemManager->Load(system_file.GetFullPath());
 		
-		//m_ControlSettingsManager->Load(control_settings);
 		
 		//Initialize systems
 		m_SystemManager->Init();

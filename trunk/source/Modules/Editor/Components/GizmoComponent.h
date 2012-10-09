@@ -1,4 +1,5 @@
 #pragma once
+#include "Modules/Editor/EditorSystem.h"
 #include "Sim/Components/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Components/Graphics/GASSMeshData.h"
@@ -69,6 +70,7 @@ namespace GASS
 		std::string m_Mode;
 		Float m_GridDist;
 		bool m_Active;
+		EditorSystemPtr m_EditorSystem;
 	};
 
 	typedef boost::shared_ptr<GizmoComponent> GizmoComponentPtr;

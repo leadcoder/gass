@@ -1,15 +1,12 @@
-#include "../EditorMessages.h"
-#include "../EditorManager.h"
-#include "../ToolSystem/MouseToolController.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorMessages.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "SelectionComponent.h"
 #include "EditorComponent.h"
-
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-
-
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
+#include "Sim/GASSSimEngine.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -49,15 +46,15 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnUnload,UnloadComponentsMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 		
 	}
 
 	void SelectionComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
 		
 		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)

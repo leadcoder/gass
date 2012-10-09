@@ -52,6 +52,7 @@ namespace GASS
 		bool m_ShowInTree;
 		bool m_AllowRemove;
 		bool m_AllowDragAndDrop;
+		EditorSystemPtr m_EditorSystem;
 	};
 	typedef boost::shared_ptr<EditorComponent> EditorComponentPtr;
 }

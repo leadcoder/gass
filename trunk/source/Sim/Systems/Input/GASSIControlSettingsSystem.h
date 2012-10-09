@@ -77,16 +77,10 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<InputControllerMessage> InputControllerMessagePtr;
 
-	
-	
-
-
 	class GASSExport IControlSettingsSystem 
 	{
 	public:
 		virtual ~IControlSettingsSystem(){};
-		//virtual IControlSetting* GetControlSetting(const std::string &name) const = 0;
-		//virtual IControlSetting* NewRemoteControlSetting(const std::string &name) = 0;
 		virtual void Load(const std::string &filename) = 0;
 		virtual std::string GetNameFromIndex(const std::string &settings, int index) = 0;
 		virtual int GetIndexFromName(const std::string &settings, const std::string &name) = 0;

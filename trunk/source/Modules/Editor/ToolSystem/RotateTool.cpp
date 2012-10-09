@@ -2,13 +2,13 @@
 #include "../Components/GizmoComponent.h"
 
 #include "MouseToolController.h"
-#include "../EditorManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
-
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
@@ -23,7 +23,7 @@ namespace GASS
 		m_Controller(controller),
 		m_Active(false)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 	}
 
 	RotateTool::~RotateTool()
@@ -61,7 +61,7 @@ namespace GASS
 					attribs.push_back("Rotation");
 					attribs.push_back("Quaternion");
 					GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
-					EditorManager::GetPtr()->GetMessageManager()->SendImmediate(attrib_change_msg);
+					SimEngine::Get().GetSimSystemManager()->SendImmediate(attrib_change_msg);
 				}
 
 			}
@@ -70,7 +70,7 @@ namespace GASS
 
 	bool RotateTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!EditorManager::Get().IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && EditorManager::Get().IsObjectVisible(obj));
+		return (!m_Controller->GetEditorSystem()->IsObjectStatic(obj) && !m_Controller->GetEditorSystem()->IsObjectLocked(obj) && m_Controller->GetEditorSystem()->IsObjectVisible(obj));
 	}
 
 	void RotateTool::MouseDown(const CursorInfo &info)
@@ -132,15 +132,15 @@ namespace GASS
 			SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 			if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 			{
-				if(!EditorManager::Get().IsObjectStatic(obj_under_cursor))
+				if(!m_Controller->GetEditorSystem()->IsObjectStatic(obj_under_cursor))
 				{
-					if(!EditorManager::Get().IsObjectLocked(obj_under_cursor))
+					if(!m_Controller->GetEditorSystem()->IsObjectLocked(obj_under_cursor))
 					{
 						GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
 						//Send selection message
 						if(!gc) //don't select gizmo objects
 						{
-							EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
+							m_Controller->GetEditorSystem()->SelectSceneObject(obj_under_cursor);
 						}
 					}
 				}
@@ -149,7 +149,7 @@ namespace GASS
 
 		int from_id = (int) this;
 		GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
-		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
 
@@ -174,12 +174,12 @@ namespace GASS
 	SceneObjectPtr RotateTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  EditorManager::Get().GetScene())
+		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
 		{
-			ScenePtr scene = EditorManager::Get().GetScene();
+			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
 			std::string gizmo_name = "GizmoRotateObject";
 			
-			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 			//Send selection message to inform gizmo about current object
@@ -189,7 +189,7 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
 				{
-					EditorManager::GetPtr()->SelectSceneObject(current);
+					m_Controller->GetEditorSystem()->SelectSceneObject(current);
 				}
 			}
 		}

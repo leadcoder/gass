@@ -1,5 +1,5 @@
 #include "EditorApplication.h"
-#include "Modules/Editor/EditorManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASS.h"
 #include "Modules/Editor/ToolSystem/MoveTool.h"
@@ -39,7 +39,6 @@ namespace GASS
 
 		m_Scene  = ScenePtr(new Scene());
 		new SimEngine();
-		new EditorManager();
 		LogManager* log_man = new LogManager();
 		log_man->createLog("GASS.log", true, true);
 	}
@@ -47,9 +46,7 @@ namespace GASS
 	EditorApplication::~EditorApplication(void)
 	{
 		m_Scene.reset();
-		delete EditorManager::GetPtr();
 		delete SimEngine::GetPtr();
-
 	}
 
 	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle, void *render_win_handle)
@@ -59,17 +56,26 @@ namespace GASS
 
 		SimEngine *se = SimEngine::GetPtr();
 		const std::string render_system_path = config_path + render_system + "/";
-		se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", config_path +  "GASSControlSettings.xml",m_NumRTCThreads);
+		se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", m_NumRTCThreads);
+		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		if(css)
+		{
+			css->Load(config_path +  "GASSControlSettings.xml");
+		}
+
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
 		se->GetSimSystemManager()->SetPauseSimulation(m_ExternalUpdate);
 		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
 		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
 		se->GetSceneObjectTemplateManager()->SetObjectIDSuffix(m_IDSuffix);
 		//boot gass editor
-		
-		EditorManager::GetPtr()->Init(working_folder,appdata_folder_path,mydocuments_folder_path);
-		EditorManager::Get().GetMouseToolController()->SetUseTerrainNormalOnDrop(m_UseTerrainNormalOnDrop);
-		EditorManager::Get().GetMouseToolController()->SetRayPickDistance(m_RayPickDist);
+		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		if(!es)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
+
+		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);
+		es->GetMouseToolController()->SetUseTerrainNormalOnDrop(m_UseTerrainNormalOnDrop);
+		es->GetMouseToolController()->SetRayPickDistance(m_RayPickDist);
 
 		//Load templates
 		std::vector<std::string>::iterator iter = m_Templates.begin();
@@ -109,7 +115,7 @@ namespace GASS
 
 		//add some test tools
 
-		GASS::MouseToolController* tools = EditorManager::Get().GetMouseToolController().get();
+		GASS::MouseToolController* tools = es->GetMouseToolController().get();
 
 		IMouseTool* tool = new MoveTool(tools);
 		tools->AddTool(tool);
@@ -160,7 +166,7 @@ namespace GASS
 			{
 				SimEngine::Get().Update(delta_time);
 			}
-			EditorManager::Get().Update(delta_time);
+			//m_Controller->GetEditorSystem()->Update(delta_time);
 
 			/*if(m_StepSimulation)
 			{

@@ -26,13 +26,14 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
 	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
+	class EditorSystem; 
 
 	class EditorModuleExport MouseToolController : public boost::enable_shared_from_this<MouseToolController>, public IMessageListener, public IMouseListener
 	{
 		friend class IMouseTool;
 	public:
 		
-		MouseToolController();
+		MouseToolController(EditorSystem* system);
 		virtual ~MouseToolController(void);
 
 		void Init();
@@ -63,6 +64,7 @@ namespace GASS
 		bool MouseMoved(const MouseData &data);
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
+		EditorSystem* GetEditorSystem() const {return m_EditorSystem;}
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
@@ -98,6 +100,7 @@ namespace GASS
 		Vec2 m_LastScreenPos;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;
+		EditorSystem* m_EditorSystem;
 	};
 }
 

@@ -1,13 +1,11 @@
-#include "../EditorMessages.h"
-#include "../EditorManager.h"
-#include "../ToolSystem/MouseToolController.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorMessages.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "PaintGizmoComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-
-
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
+#include "Sim/GASSSimEngine.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -48,12 +46,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnTransformation,TransformationNotifyMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
 	}
 
 	void PaintGizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
 	}
 
 	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)

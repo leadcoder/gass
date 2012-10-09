@@ -1,17 +1,19 @@
 //#include <stdafx.h>
-#include "../EditorManager.h"
-#include "../EditorMessages.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorMessages.h"
 #include "EditorComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 
 	
 namespace GASS
@@ -56,9 +58,12 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnUnload,UnloadComponentsMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		if(!m_EditorSystem)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " EditorComponent::OnInitialize");
 	}
 	
 	void EditorComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -70,9 +75,9 @@ namespace GASS
 
 	void EditorComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
 	}
 
 	void EditorComponent::SetLock(bool value) 
@@ -81,10 +86,11 @@ namespace GASS
 		SceneObjectPtr obj = GetSceneObject();
 		if(obj)
 		{
+			
 			if(m_Lock)
-				EditorManager::GetPtr()->LockObject(obj);
+				m_EditorSystem->LockObject(obj);
 			else
-				EditorManager::GetPtr()->UnlockObject(obj);
+				m_EditorSystem->UnlockObject(obj);
 
 		}
 	}
@@ -104,9 +110,9 @@ namespace GASS
 		if(obj)
 		{
 			if(m_Visible)
-				EditorManager::GetPtr()->UnhideObject(obj);
+				m_EditorSystem->UnhideObject(obj);
 			else
-				EditorManager::GetPtr()->HideObject(obj);
+				m_EditorSystem->HideObject(obj);
 		}
 	}
 

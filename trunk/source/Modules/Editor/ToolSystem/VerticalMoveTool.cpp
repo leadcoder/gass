@@ -1,13 +1,14 @@
 #include "VerticalMoveTool.h"
 #include "MouseToolController.h"
-#include "../EditorManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
-
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
 
@@ -47,7 +48,7 @@ namespace GASS
 				selected->SendImmediate(pos_msg);
 
 				GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
-				EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 			}
 		}
 	}
@@ -57,11 +58,11 @@ namespace GASS
 		m_MouseIsDown = true;
 
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
-		if(obj_under_cursor && !EditorManager::Get().IsObjectStatic(obj_under_cursor))
+		if(obj_under_cursor && !m_Controller->GetEditorSystem()->IsObjectStatic(obj_under_cursor))
 		{
-			EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
+			m_Controller->GetEditorSystem()->SelectSceneObject(obj_under_cursor);
 
-			if(!EditorManager::Get().IsObjectLocked(obj_under_cursor))
+			if(!m_Controller->GetEditorSystem()->IsObjectLocked(obj_under_cursor))
 			{
 				int from_id = (int) this;
 				m_SelectedObject = obj_under_cursor;

@@ -1,13 +1,13 @@
 #include <boost/bind.hpp>
 #include "CreateTool.h"
 #include "MouseToolController.h"
-#include "../EditorManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
-
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Sim/Scene/GASSScene.h"
-
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
 
@@ -20,7 +20,7 @@ namespace GASS
 		m_Controller(controller),
 		m_FirstMoveUpdate(true)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedMessage,0));	
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedMessage,0));	
 	}
 
 	CreateTool::~CreateTool()
@@ -52,7 +52,7 @@ namespace GASS
 		SceneObjectPtr parent_obj(m_ParentObject,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
-			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				int from_id = (int) this;

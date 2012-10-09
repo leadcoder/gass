@@ -1,18 +1,19 @@
-#include "../EditorMessages.h"
-#include "../EditorManager.h"
-#include "../ToolSystem/MouseToolController.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorMessages.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "GizmoComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
-
+#include "Sim/GASSSimEngine.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 
 #define MOVMENT_EPSILON 0.0000001
 #define MAX_SCALE_DISTANCE 300.0 //meters
@@ -52,10 +53,16 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnGridMessage,GridMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnGridMessage,GridMessage,0));
+
+
+		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		if(!m_EditorSystem)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " GizmoComponent::OnInitialize");
+
 		
 		//Change geomtry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
@@ -68,10 +75,10 @@ namespace GASS
 
 	void GizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
-		EditorManager::GetPtr()->GetMessageManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnGridMessage,GridMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnGridMessage,GridMessage));
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
@@ -292,7 +299,7 @@ namespace GASS
 		BuildMesh();
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraMessage,1));
 
-		m_ActiveCameraObject = EditorManager::GetPtr()->GetActiveCameraObject();
+		m_ActiveCameraObject = m_EditorSystem->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
 		{
@@ -303,7 +310,7 @@ namespace GASS
 		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
 
-		SetSelection(EditorManager::Get().GetSelectedObject());
+		SetSelection(m_EditorSystem->GetSelectedObject());
 
 		
 	}
@@ -543,9 +550,9 @@ namespace GASS
 			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
 			else
-				grid_size = EditorManager::Get().GetMouseToolController()->GetGridSize();
+				grid_size = m_EditorSystem->GetMouseToolController()->GetGridSize();
 			float half_grid_size = grid_size/2.0;
-			float grid_spacing = EditorManager::Get().GetMouseToolController()->GetGridSpacing();
+			float grid_spacing = m_EditorSystem->GetMouseToolController()->GetGridSpacing();
 			int n = (grid_size / grid_spacing)/2;
 			int index = 0;
 			for(int i = -n ;  i <= n; i++)
@@ -699,7 +706,7 @@ namespace GASS
 			static float rest_angle = 0;
 			Quaternion final_rot;
 			float angle = delta;
-			angle = EditorManager::Get().GetMouseToolController()->SnapAngle(angle+rest_angle);
+			angle = m_EditorSystem->GetMouseToolController()->SnapAngle(angle+rest_angle);
 			if(angle == 0)
 			{
 				rest_angle += delta;
@@ -722,7 +729,7 @@ namespace GASS
 		Float t = Math::Dot(axis_dir,c);
 		if(m_Mode == GM_LOCAL)
 		{
-			t = EditorManager::Get().GetMouseToolController()->SnapPosition(t);
+			t = m_EditorSystem->GetMouseToolController()->SnapPosition(t);
 		}
 			//t = SnapValue(t,m_MovmentSnap);
 		Vec3 point_on_axis = axis_dir*t;
@@ -731,9 +738,9 @@ namespace GASS
 
 		if(m_Mode == GM_WORLD)
 		{
-			res.x = EditorManager::Get().GetMouseToolController()->SnapPosition(res.x);
-			res.z = EditorManager::Get().GetMouseToolController()->SnapPosition(res.z);
-			res.y = EditorManager::Get().GetMouseToolController()->SnapPosition(res.y);
+			res.x = m_EditorSystem->GetMouseToolController()->SnapPosition(res.x);
+			res.z = m_EditorSystem->GetMouseToolController()->SnapPosition(res.z);
+			res.y = m_EditorSystem->GetMouseToolController()->SnapPosition(res.y);
 		}
 
 		return res;

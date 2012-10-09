@@ -1,17 +1,19 @@
-#include "../EditorMessages.h"
-#include "../EditorManager.h"
-#include "../ToolSystem/MouseToolController.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorMessages.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "DistanceScaleComponent.h"
 #include "Sim/Scene/GASSCoreSceneObjectMessages.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Core/Utils/GASSLogManager.h"
 
+#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSException.h"
 
 
 #define MOVMENT_EPSILON 0.0000001
@@ -156,7 +158,12 @@ namespace GASS
 	void DistanceScaleComponent::OnLoad(LoadComponentsMessagePtr message)
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
-		m_ActiveCameraObject = EditorManager::GetPtr()->GetActiveCameraObject();
+
+		EditorSystemPtr es = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		if(!es)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "DistanceScaleComponent::OnLoad");
+
+		m_ActiveCameraObject = es->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
 		{

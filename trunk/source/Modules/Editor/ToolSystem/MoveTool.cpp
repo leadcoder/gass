@@ -1,13 +1,14 @@
 #include "MoveTool.h"
 #include "MouseToolController.h"
 #include "../Components/GizmoComponent.h"
-#include "../EditorManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Sim/Scene/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Systems/GASSSimSystemManager.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
@@ -24,7 +25,7 @@ namespace GASS
 		m_Active(false),
 		m_SnapToMouse(false)
 	{
-		EditorManager::GetPtr()->GetMessageManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 	}
 
 	MoveTool::~MoveTool()
@@ -110,9 +111,9 @@ namespace GASS
 						Vec3 new_position = info.m_3DPos - m_Offset;
 						
 
-						new_position.x = EditorManager::Get().GetMouseToolController()->SnapPosition(new_position.x);
-						new_position.y = EditorManager::Get().GetMouseToolController()->SnapPosition(new_position.y);
-						new_position.z = EditorManager::Get().GetMouseToolController()->SnapPosition(new_position.z);
+						new_position.x = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.x);
+						new_position.y = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.y);
+						new_position.z = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.z);
 
 
 						GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
@@ -134,7 +135,7 @@ namespace GASS
 				attribs.push_back("Longitude");
 				attribs.push_back("Projected");
 				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
-				EditorManager::GetPtr()->GetMessageManager()->PostMessage(attrib_change_msg);
+				SimEngine::Get().GetSimSystemManager()->PostMessage(attrib_change_msg);
 			}
 
 			m_MoveUpdateCount++;
@@ -231,7 +232,7 @@ namespace GASS
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
-						EditorManager::GetPtr()->SelectSceneObject(obj_under_cursor);
+						m_Controller->GetEditorSystem()->SelectSceneObject(obj_under_cursor);
 					}
 				}
 
@@ -239,13 +240,13 @@ namespace GASS
 		}
 		int from_id = (int) this;
 		GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
-		EditorManager::GetPtr()->GetMessageManager()->SendImmediate(change_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
 
 	bool MoveTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!EditorManager::Get().IsObjectStatic(obj) && !EditorManager::Get().IsObjectLocked(obj) && EditorManager::Get().IsObjectVisible(obj));
+		return (!m_Controller->GetEditorSystem()->IsObjectStatic(obj) && !m_Controller->GetEditorSystem()->IsObjectLocked(obj) && m_Controller->GetEditorSystem()->IsObjectVisible(obj));
 	}
 
 	void MoveTool::Stop()
@@ -257,13 +258,13 @@ namespace GASS
 	SceneObjectPtr MoveTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  EditorManager::Get().GetScene())
+		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
 		{
-			ScenePtr scene = EditorManager::Get().GetScene();
+			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
 
 			std::string gizmo_name = "GizmoMoveObject";
 		
-			GASS::SceneObjectPtr scene_object = EditorManager::Get().GetScene()->LoadObjectFromTemplate(gizmo_name,EditorManager::Get().GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 
@@ -274,7 +275,7 @@ namespace GASS
 				if(current)
 				{
 					//gizmo->PostMessage();
-					//EditorManager::GetPtr()->SelectSceneObject(current);
+					//m_Controller->GetEditorSystem()->SelectSceneObject(current);
 				}
 			}
 		}
