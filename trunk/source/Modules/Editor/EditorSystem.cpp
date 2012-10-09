@@ -1,4 +1,4 @@
-#include "EditorManager.h"
+#include "EditorSystem.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSimEngine.h"
@@ -12,58 +12,47 @@
 #include "ToolSystem/MouseToolController.h"
 namespace GASS
 {
-	EditorManager::EditorManager()	: m_MessageManager(new MessageManager()),
-		m_GUISettings(new GUISchemaLoader),
+	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader),
 		m_SceneObjectsSelectable(false)
 	{
 	}
 
-	EditorManager::~EditorManager(void)
+	EditorSystem::~EditorSystem(void)
 	{
-		delete m_MessageManager;
 		delete m_GUISettings;
 		m_LockedObjects.clear();
 		m_StaticObjects.clear();
 		m_InvisibleObjects.clear();
 	}
 
-	template<> EditorManager* Singleton<EditorManager>::m_Instance = 0;
-	EditorManager* EditorManager::GetPtr(void)
+	void EditorSystem::RegisterReflection()
 	{
-		assert(m_Instance);
-		return m_Instance;
+		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, ISystem>);
 	}
 
-	EditorManager& EditorManager::Get(void)
+	void EditorSystem::Init()
 	{
-		assert(m_Instance);
-		return *m_Instance;
+		m_MouseTools =  MouseToolControllerPtr(new MouseToolController(this));
+		m_MouseTools->Init();
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,SceneAboutToLoadNotifyMessage,0));
 	}
 
-	void EditorManager::Init(const FilePath &execution_folder,
+	void EditorSystem::Update(double delta_time)
+	{
+		GetMouseToolController()->Update(delta_time);
+	}
+
+	void EditorSystem::SetPaths(const FilePath &execution_folder,
 							 const FilePath &appdata_folder,
 							 const FilePath &mydocuments_folder)
 	{
 		m_ExecutionFolder = execution_folder;
 		m_AppDataFolder = appdata_folder;
 		m_MyDocumentsFolder = m_MyDocumentsFolder;
-		m_MouseTools =  MouseToolControllerPtr(new MouseToolController());
-		m_MouseTools->Init();
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorManager::OnSceneLoaded,SceneLoadedNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorManager::OnNewScene,SceneAboutToLoadNotifyMessage,0));
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorManager::OnUnloadScene,SceneUnloadNotifyMessage,0));
-
 	}
 
-	void EditorManager::Update(double delta_time)
-	{
-		GetMessageManager()->Update(delta_time);
-		GetMouseToolController()->Update(delta_time);
-	}
-
-
-
-	void EditorManager::AddStaticObject(SceneObjectPtr obj, bool rec)
+	void EditorSystem::AddStaticObject(SceneObjectPtr obj, bool rec)
 	{
 		m_StaticObjects.insert(obj);
 		if(rec)
@@ -73,13 +62,11 @@ namespace GASS
 			{
 				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
 				AddStaticObject(child,rec);
-
 			}
 		}
 	}
 
-
-	void EditorManager::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
+	void EditorSystem::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
 	{
 		ScenePtr scene = message->GetScene();
 		if(!m_SceneObjectsSelectable) //add static objects
@@ -98,30 +85,25 @@ namespace GASS
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
-	void EditorManager::OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
+	void EditorSystem::OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
 	{
 		GASS::ScenePtr scene = message->GetScene();
-		scene->RegisterForMessage(REG_TMESS(EditorManager::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraMessage,0));
 	}
 
-	void EditorManager::OnChangeCamera(ChangeCameraMessagePtr message)
+	void EditorSystem::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
 		SceneObjectPtr cam_obj =  message->GetCamera();
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = cam_obj->GetFirstComponentByClass<ICameraComponent>();
 	}
 
-	MessageManager* EditorManager::GetMessageManager(void)
-	{
-		return m_MessageManager;
-	}
-
-	SceneObjectPtr EditorManager::GetSelectedObject() const
+	SceneObjectPtr EditorSystem::GetSelectedObject() const
 	{
 		return SceneObjectPtr(m_SelectedObject,boost::detail::sp_nothrow_tag());
 	}
 
-	void EditorManager::SelectSceneObject(SceneObjectPtr obj)
+	void EditorSystem::SelectSceneObject(SceneObjectPtr obj)
 	{
 		if(obj != GetSelectedObject())
 		{
@@ -129,31 +111,31 @@ namespace GASS
 			//notify listeners
 			int from_id = (int) this;
 			MessagePtr selection_msg(new ObjectSelectionChangedMessage(obj,from_id));
-			GetMessageManager()->PostMessage(selection_msg);
+			GetSimSystemManager()->PostMessage(selection_msg);
 		}
 	}
 
-	void EditorManager::UnlockObject(SceneObjectWeakPtr obj)
+	void EditorSystem::UnlockObject(SceneObjectWeakPtr obj)
 	{
 		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
 		if(m_LockedObjects.end() != iter)
 		{
 			m_LockedObjects.erase(iter);
-			GetMessageManager()->PostMessage(MessagePtr(new ObjectLockChangedMessage(SceneObjectPtr(obj),false)));
+			GetSimSystemManager()->PostMessage(MessagePtr(new ObjectLockChangedMessage(SceneObjectPtr(obj),false)));
 		}
 	}
 
-	void EditorManager::LockObject(SceneObjectWeakPtr obj)
+	void EditorSystem::LockObject(SceneObjectWeakPtr obj)
 	{
 		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_LockedObjects.find(obj);
 		if(m_LockedObjects.end() == iter)
 		{
 			m_LockedObjects.insert(obj);
-			GetMessageManager()->PostMessage(MessagePtr(new ObjectLockChangedMessage(SceneObjectPtr(obj),true)));
+			GetSimSystemManager()->PostMessage(MessagePtr(new ObjectLockChangedMessage(SceneObjectPtr(obj),true)));
 		}
 	}
 
-	bool EditorManager::IsObjectLocked(SceneObjectWeakPtr obj)
+	bool EditorSystem::IsObjectLocked(SceneObjectWeakPtr obj)
 	{
 		if(m_LockedObjects.end() != m_LockedObjects.find(obj))
 		{
@@ -162,7 +144,7 @@ namespace GASS
 		return false;
 	}
 
-	bool EditorManager::IsObjectVisible(SceneObjectWeakPtr obj)
+	bool EditorSystem::IsObjectVisible(SceneObjectWeakPtr obj)
 	{
 		if(m_InvisibleObjects.end() != m_InvisibleObjects.find(obj))
 		{
@@ -171,27 +153,27 @@ namespace GASS
 		return true;
 	}
 
-	void EditorManager::UnhideObject(SceneObjectWeakPtr obj)
+	void EditorSystem::UnhideObject(SceneObjectWeakPtr obj)
 	{
 		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_InvisibleObjects.find(obj);
 		if(m_InvisibleObjects.end() != iter)
 		{
 			m_InvisibleObjects.erase(iter);
-			GetMessageManager()->PostMessage(MessagePtr(new ObjectVisibilityChangedMessage(SceneObjectPtr(obj),true)));
+			GetSimSystemManager()->PostMessage(MessagePtr(new ObjectVisibilityChangedMessage(SceneObjectPtr(obj),true)));
 		}
 	}
 
-	void EditorManager::HideObject(SceneObjectWeakPtr obj)
+	void EditorSystem::HideObject(SceneObjectWeakPtr obj)
 	{
 		std::set<GASS::SceneObjectWeakPtr>::iterator iter = m_InvisibleObjects.find(obj);
 		if(m_InvisibleObjects.end() == iter)
 		{
 			m_InvisibleObjects.insert(obj);
-			GetMessageManager()->PostMessage(MessagePtr(new ObjectVisibilityChangedMessage(SceneObjectPtr(obj),false)));
+			GetSimSystemManager()->PostMessage(MessagePtr(new ObjectVisibilityChangedMessage(SceneObjectPtr(obj),false)));
 		}
 	}
 
-	bool EditorManager::IsObjectStatic(SceneObjectWeakPtr obj)
+	bool EditorSystem::IsObjectStatic(SceneObjectWeakPtr obj)
 	{
 		if(m_StaticObjects.end() != m_StaticObjects.find(obj))
 		{
@@ -200,18 +182,18 @@ namespace GASS
 		return false;
 	}
 
-	void EditorManager::SetObjectSite(SceneObjectPtr obj)
+	void EditorSystem::SetObjectSite(SceneObjectPtr obj)
 	{
 		m_CurrentSite = obj;
-		GetMessageManager()->PostMessage(MessagePtr(new ObjectSiteChangedMessage(obj)));
+		GetSimSystemManager()->PostMessage(MessagePtr(new ObjectSiteChangedMessage(obj)));
 	}
 
-	SceneObjectPtr EditorManager::GetObjectSite() const
+	SceneObjectPtr EditorSystem::GetObjectSite() const
 	{
 		return SceneObjectPtr(m_CurrentSite,boost::detail::sp_nothrow_tag());
 	}
 
-	void EditorManager::MoveCameraToObject(SceneObjectPtr obj)	
+	void EditorSystem::MoveCameraToObject(SceneObjectPtr obj)	
 	{
 		LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 		SceneObjectPtr cam_obj (m_ActiveCameraObject,boost::detail::sp_nothrow_tag());

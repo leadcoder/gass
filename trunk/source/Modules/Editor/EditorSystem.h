@@ -3,10 +3,13 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
+#include "Core/System/GASSSystemFactory.h"
+
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Scene/GASSCoreSceneMessages.h"
 #include "Sim/Scene/GASSGraphicsSceneMessages.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Systems/GASSSimSystem.h"
 #include "Sim/Components/Graphics/GASSICameraComponent.h"
 
 #include "EditorCommon.h"
@@ -22,20 +25,22 @@ namespace GASS
 	class MessageManager;
 	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
 
-	class EditorModuleExport EditorManager : public Singleton<EditorManager> , public StaticMessageListener
+	class EditorModuleExport EditorSystem :  public Reflection<EditorSystem, SimSystem>
 	{
 	public:
-		EditorManager();
-		virtual ~EditorManager(void);
-		static EditorManager* GetPtr();
-		static EditorManager& Get();
+		EditorSystem();
+		virtual ~EditorSystem(void);
+		static  void RegisterReflection();
+		virtual void Update(double delta_time);
+		virtual void Init();
+		virtual std::string GetSystemName() const {return "EditorSystem";}
 
-		void Init(const FilePath &execution_folder,
-					const FilePath &appdata_folder,
-					const FilePath &mydocuments_folder);
-		void Update(double delta_time);
-		GASS::MessageManager* GetMessageManager(void);
+		void SetPaths(const FilePath &execution_folder,
+		const FilePath &appdata_folder,
+		const FilePath &mydocuments_folder);
+
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
+		
 		const FilePath GetWorkingFolder(void) {return m_ExecutionFolder;}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 
@@ -85,4 +90,5 @@ namespace GASS
 		bool m_SceneObjectsSelectable;
 		SceneObjectWeakPtr m_CurrentSite;
 	};
+	typedef boost::shared_ptr<EditorSystem> EditorSystemPtr;
 }
