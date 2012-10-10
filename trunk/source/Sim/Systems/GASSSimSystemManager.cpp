@@ -198,7 +198,6 @@ namespace GASS
 			}
 		}
 
-
 		//update stats
 		std::stringstream ss;
 		double tot_time =0;

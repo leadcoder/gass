@@ -91,14 +91,20 @@ namespace GASS
 		Main update for GASS.
 		@remarks
 			The application is responsible for calling this function each frame
-		@param delta is the frame time.
+			SimEngine will take care of delta time calulations if you use this function
+		@ note This cunction will call void Tick(double delta_time) 
 		*/
-		void Update(double delta_time);
+		void Update();
+
+		/**
+		The application can call this function instead of Update() to feed custom delta_time
+		@param delta_time is the time step.
+		*/
+		void Tick(double delta_time);
 		
 		/**
 		Shutdown GASS.
 		*/
-		
 		bool Shutdown();
 
 		/**
@@ -156,7 +162,9 @@ namespace GASS
 		//ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 		SceneVector m_Scenes;
+		
 		double m_CurrentTime;
+		double m_MaxUpdateFreq;
 	};
 }
 

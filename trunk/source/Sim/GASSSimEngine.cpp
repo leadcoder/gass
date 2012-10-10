@@ -51,7 +51,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine(): m_CurrentTime(0)
+	SimEngine::SimEngine(): m_CurrentTime(0), m_MaxUpdateFreq(0)
 	{
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
@@ -132,10 +132,16 @@ namespace GASS
 				TiXmlElement *xml_temp = xml_load->FirstChildElement("Template");
 				while(xml_temp)
 				{
-					std::string path = xml_temp->Attribute("value");
+					std::string file_path = xml_temp->Attribute("value");
 					GASS::FilePath fp;
-					fp.SetPath(path);
-					path = fp.GetFullPath();
+					fp.SetPath(file_path);
+					file_path = fp.GetFullPath();
+					if(Misc::GetExtension(file_path) == "xml")
+						GetSceneObjectTemplateManager()->Load(file_path);
+					else
+						GetSceneObjectTemplateManager()->LoadFromPath(file_path);
+
+					xml_temp = xml_temp->NextSiblingElement("Template");
 				}
 			}
 		}
@@ -145,18 +151,54 @@ namespace GASS
 		{
 			int num_threads = Misc::ReadInt(xml_rtc,"NumberOfThreads");
 			m_RTC->Init(num_threads);
-			int update_freq = Misc::ReadInt(xml_rtc,"UpdateFreqency");
-			bool external_update = Misc::ReadBool(xml_rtc,"ExternalUpdate");
+			int update_freq = Misc::ReadInt(xml_rtc,"MaxUpdateFreqency");
+			m_MaxUpdateFreq = static_cast<double>(update_freq);
+			bool external_update = Misc::ReadBool(xml_rtc,"ExternalSimulationUpdate");
+			GetSimSystemManager()->SetPauseSimulation(external_update);
 		}
 		delete xmlDoc;
 	}
 
-	void SimEngine::Update(double delta_time)
+	
+
+	void SimEngine::Update()
 	{
+		static GASS::Timer  timer;
+		static double prev_time = 0;
+		double current_time = timer.GetTime();
+		double delta_time = current_time - prev_time;
+
+		//clamp delta time
+		delta_time = std::max<double>(delta_time,0.00001); 
+		delta_time = std::min<double>(delta_time,10.0); 
+	
+		if(m_MaxUpdateFreq > 0)
+		{
+			const double target_update_time = 1.0/m_MaxUpdateFreq;
+			if(delta_time > target_update_time)
+			{
+				prev_time = current_time;
+				Tick(delta_time);
+			}
+			else
+			{
+				//return and give application more idel time 
+			}
+		}
+		else
+		{
+			//just tick engine with delta time
+			Tick(delta_time);
+			prev_time = current_time;
+		}
+	}
+
+	void SimEngine::Tick(double delta_time)
+	{
+
 		//ProfileSample::ResetAll();
 		{
 		PROFILE("SimEngine::Update")
-		//m_RTC->Update(delta_time);
 		//update systems
 		GetSimSystemManager()->Update(delta_time);
 		m_CurrentTime += delta_time;
@@ -165,10 +207,6 @@ namespace GASS
 		ProfileSample::Output();
 #endif
 	}
-
-
-	
-
 
 	SceneWeakPtr SimEngine::LoadScene(const FilePath &path)
 	{
