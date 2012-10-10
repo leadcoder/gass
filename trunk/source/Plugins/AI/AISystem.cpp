@@ -43,6 +43,11 @@ namespace GASS
 
 	}
 
+	void AISystem::Init()
+	{
+
+	}
+
 	void AISystem::Update(double delta_time)
 	{
 		SimSystem::Update(delta_time);

@@ -41,7 +41,6 @@ namespace GASS
 	protected:
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnLoadSceneObject(MessagePtr message);
 		ADD_ATTRIBUTE(bool,Paused)
 	};
 	typedef boost::shared_ptr<AISceneManager> AISceneManagerPtr; 

@@ -68,7 +68,6 @@ namespace GASS
 		m_UpDownInput(0),
 		m_Mode("Aircraft"),
 		m_Debug(false)
-		
 	{
 
 	}
@@ -100,16 +99,6 @@ namespace GASS
 
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
-
-		
-		/*m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraInputSettings");
-		assert(m_ControlSetting);
-		m_ControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
-
-		m_AltControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting("FreeCameraAltInputSettings");
-		if(m_AltControlSetting)
-			m_AltControlSetting->GetMessageManager()->RegisterForMessage(typeid(ControllerMessage), MESSAGE_FUNC( FreeCamControlComponent::OnInput));
-*/
 	}
 
 	void FreeCamControlComponent::OnLoad(LoadComponentsMessagePtr message)

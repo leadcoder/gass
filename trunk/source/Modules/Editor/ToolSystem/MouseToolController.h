@@ -58,6 +58,7 @@ namespace GASS
 		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
+		float GetRayPickDistance() const {return m_RayPickDistance;}
 		double GetDeltaTime() const {return m_Delta;}
 
 		//IMouseListener

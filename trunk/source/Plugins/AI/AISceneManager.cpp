@@ -48,7 +48,6 @@ namespace GASS
 		{
 			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnLoad ,LoadSceneManagersMessage,0));
 			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnUnload ,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
 		}
 
 		AISystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<AISystem>();
@@ -61,11 +60,7 @@ namespace GASS
 		system->Register(listener);
 	}
 
-	void AISceneManager::OnLoadSceneObject(MessagePtr message)
-	{
-		//Initlize all sim components and send scene mananger as argument
-	}
-
+	
 	void AISceneManager::OnLoad(MessagePtr message)
 	{
 		

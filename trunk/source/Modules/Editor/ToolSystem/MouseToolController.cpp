@@ -23,6 +23,18 @@
 #include "Sim/Components/Graphics/GASSILocationComponent.h"
 #include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
 
+#include "Modules/Editor/ToolSystem/MoveTool.h"
+#include "Modules/Editor/ToolSystem/SelectTool.h"
+#include "Modules/Editor/ToolSystem/PaintTool.h"
+#include "Modules/Editor/ToolSystem/VerticalMoveTool.h"
+#include "Modules/Editor/ToolSystem/RotateTool.h"
+#include "Modules/Editor/ToolSystem/CreateTool.h"
+#include "Modules/Editor/ToolSystem/MeasurementTool.h"
+#include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
+#include "Modules/Editor/ToolSystem/GoToPositionTool.h"
+#include "Modules/Editor/ToolSystem/EditPositionTool.h"
+
+
 
 namespace GASS
 {
@@ -55,6 +67,26 @@ namespace GASS
 		m_EditorSystem->GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddMouseListener(this);
+
+		//add default tools (based on config?)
+		IMouseTool* tool = new MoveTool(this);
+		AddTool(tool);
+		
+		tool = new GASS::SelectTool(this);
+		AddTool(tool);
+		tool = new RotateTool(this);
+		AddTool(tool);
+		tool = new CreateTool(this);
+		AddTool(tool);
+		tool = new MeasurementTool(this);
+		AddTool(tool);
+		tool = new GoToPositionTool(this);
+		AddTool(tool);
+		tool = new EditPositionTool(this);
+		AddTool(tool);
+		SelectTool(TID_SELECT);
+		SetActive(true);
+
 	}
 
 	void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)

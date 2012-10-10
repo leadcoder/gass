@@ -45,10 +45,11 @@
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), m_SceneMgr(NULL)
+	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), 
+		m_SceneMgr(NULL),
+		m_UpdateMessagePump(true),
+		m_DebugTextBox (new OgreDebugTextOutput())
 	{
-		m_DebugTextBox = new OgreDebugTextOutput();
-
 	}
 
 	OgreGraphicsSystem::~OgreGraphicsSystem(void)
@@ -62,6 +63,7 @@ namespace GASS
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
 		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
+		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
 	}
 
@@ -72,7 +74,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
-	
+
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
@@ -101,7 +103,6 @@ namespace GASS
 
 		if(m_CreateMainWindowOnInit)
 		{
-			//CreateRenderWindow("MainWindow", 800, 600, 0, 0);
 			std::string name = "MainWindow";
 			Ogre::RenderWindow *window = m_Root->initialise(true,name);
 			window->setDeactivateOnFocusChange(false);
@@ -120,7 +121,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
 	{
 		std::string debug_text = message->GetText();
@@ -131,16 +131,11 @@ namespace GASS
 	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
 	{
 		std::map<std::string, Ogre::RenderWindow*>::iterator iter = m_Windows.begin();
+		//resize all 
 		while(iter != m_Windows.end())
 		{
-			//resize all temporary
 			iter->second->windowMovedOrResized();
-			/*for(int i = 0; i < iter->second->getNumViewports();i++)
-			{
-
-			}*/
 			++iter;
-
 		}
 	}
 
@@ -154,15 +149,13 @@ namespace GASS
 			++win_iter;
 		}
 
-		//readd all viewports?
+		//re-add all viewports?
 		std::map<std::string, Viewport>::iterator vp_iter = m_Viewports.begin();
 		while(vp_iter != m_Viewports.end())
 		{
 			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue(),vp_iter->second.m_ZDepth);
 			++vp_iter;
 		}
-		
-		
 	}
 
 	void OgreGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
@@ -174,7 +167,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
-		if(m_CreateMainWindowOnInit) //take care of window events
+		if(m_UpdateMessagePump) //take care of window events?
 			Ogre::WindowEventUtilities::messagePump();
 
 		if(DebugDrawer::getSingletonPtr())
@@ -187,8 +180,6 @@ namespace GASS
 
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
-
-		
 
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
@@ -210,9 +201,8 @@ namespace GASS
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
 	{
 		Ogre::RenderWindow* win = m_Windows[win_name];
-		
 		int num_viewports = win->getNumViewports();
-		
+
 		//we need a camera before we can create the viewport!
 		std::stringstream ss;
 		ss << "DefaultViewportCamera" << num_viewports;
@@ -266,29 +256,26 @@ namespace GASS
 
 		if(m_Windows.find(name) != m_Windows.end())
 			return;
-		
-			if(handle)
-			{
-				Ogre::NameValuePairList miscParams;
-				miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handle);
-				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
-			}
-			else
-			{
-				window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
-				if(main_handle == 0)
-				{
-					void* window_hnd = 0;
-					window->getCustomAttribute("WINDOW", &window_hnd);
-					handle = window_hnd;
-					main_handle = window_hnd;
-				}
-			}
-		
-		
-		m_Windows[name] = window;
 
-		if(m_Windows.size() == 1) // first window
+		if(handle)
+		{
+			Ogre::NameValuePairList miscParams;
+			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handle);
+			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
+		}
+		else
+		{
+			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+			if(main_handle == 0)
+			{
+				void* window_hnd = 0;
+				window->getCustomAttribute("WINDOW", &window_hnd);
+				handle = window_hnd;
+				main_handle = window_hnd;
+			}
+		}
+		m_Windows[name] = window;
+		if(m_Windows.size() == 1) // first window?
 		{
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
 			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
@@ -302,7 +289,9 @@ namespace GASS
 		Ogre::RenderWindow* window = m_Windows[render_window];
 		if(window)
 		{
-			if(m_SceneMgr == NULL) //we need a scene mananger before we can create viewports
+			//we need a scene mananger before we can create viewports, 
+			//"TerrainSceneManager" will do for now, this will change when scene is loaded by OgreSceneManager class
+			if(m_SceneMgr == NULL) 
 				m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
 
 			if(m_Viewports.find(name) != m_Viewports.end())
@@ -353,7 +342,7 @@ namespace GASS
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(DebugDrawer::getSingletonPtr())
 		{
-			
+
 			DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
 		}
 	}
@@ -364,9 +353,9 @@ namespace GASS
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 
 		if(!TextRenderer::getSingleton().hasTextBox(message->m_BoxID))
-			TextRenderer::getSingleton().addTextBox(message->m_BoxID, message->m_Text, message->m_PosX, message->m_PosY, message->m_Width, message->m_Width, ogre_color);
+		TextRenderer::getSingleton().addTextBox(message->m_BoxID, message->m_Text, message->m_PosX, message->m_PosY, message->m_Width, message->m_Width, ogre_color);
 		else
-			TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
+		TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
 	}
 }
 

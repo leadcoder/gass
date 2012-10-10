@@ -30,8 +30,9 @@ namespace GASS
 		virtual ~AISystem();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		SystemType GetSystemType() const {return "AISystem";}
-		void Update(double delta_time);
+		virtual std::string GetSystemName() const {return "AISystem";}
+		virtual void Init();
+		virtual void Update(double delta_time);
 	private:
 		
 	};

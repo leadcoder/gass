@@ -68,10 +68,13 @@ namespace GASS
 		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
 	protected:
+		void SetRayPickDistance(float value);
+		float GetRayPickDistance() const;
+		bool GetUseTerrainNormalOnDrop() const;
+		void SetUseTerrainNormalOnDrop(bool value);
 		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
 		void OnNewScene(SceneAboutToLoadNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
-		
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;
@@ -80,10 +83,8 @@ namespace GASS
 		FilePath m_AppDataFolder;
 		FilePath m_MyDocumentsFolder;
 		GUISchemaLoader* m_GUISettings;
-
 		SceneObjectWeakPtr m_SelectedObject;
 		SceneWeakPtr m_Scene;
-
 		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_StaticObjects;

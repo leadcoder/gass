@@ -22,21 +22,12 @@ namespace GASS
 	EditorApplication::EditorApplication() : m_Initilized(false), 
 		m_NewScene(false), 
 		m_LoadScene(false),
-		m_UseObjectID(true),
-		m_UseTerrainNormalOnDrop(false),
-		m_RayPickDist(3000),
-		m_NumRTCThreads(-1),
 		m_Mode("StandAlone"),
 		m_ServerName("GASS_SERVER"),
 		m_ClientName("GASS_CLIENT"),
 		m_ServerPort(2001),
-		m_ClientPort(2002),
-		m_UpdateFreq(160),
-		m_StepSimulation(false),
-		m_SimStepDeltaTime(0),
-		m_ExternalUpdate(0)
+		m_ClientPort(2002)
 	{
-
 		m_Scene  = ScenePtr(new Scene());
 		new SimEngine();
 		LogManager* log_man = new LogManager();
@@ -52,14 +43,14 @@ namespace GASS
 	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle, void *render_win_handle)
 	{	
 		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
+		//app settings
 		LoadSettings(config_path + "EditorApplication.xml");
-
 		SimEngine *se = SimEngine::GetPtr();
-		const std::string render_system_path = config_path + render_system + "/";
-		//se->Init(render_system_path + "GASSPlugins.xml", render_system_path +  "GASSSystems.xml", m_NumRTCThreads);
 		
-		se->Init(render_system_path + "GASS.xml");
-		
+		const std::string gass_config_file = config_path + "GASS" + render_system + ".xml";
+		se->Init(gass_config_file);
+
+		//load keyboard config!
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
 		if(css)
 		{
@@ -67,31 +58,12 @@ namespace GASS
 		}
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
-		se->GetSimSystemManager()->SetPauseSimulation(m_ExternalUpdate);
-		se->GetSceneObjectTemplateManager()->SetAddObjectIDToName(m_UseObjectID);
-		se->GetSceneObjectTemplateManager()->SetObjectIDPrefix(m_IDPrefix);
-		se->GetSceneObjectTemplateManager()->SetObjectIDSuffix(m_IDSuffix);
+		
 		
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
-
 		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);
-		es->GetMouseToolController()->SetUseTerrainNormalOnDrop(m_UseTerrainNormalOnDrop);
-		es->GetMouseToolController()->SetRayPickDistance(m_RayPickDist);
-
-		//Load templates
-		std::vector<std::string>::iterator iter = m_Templates.begin();
-		while(iter != m_Templates.end())
-		{
-			std::string file_path = *iter;
-			if(Misc::GetExtension(file_path) == "xml")
-				se->GetSceneObjectTemplateManager()->Load(file_path);
-			else
-				se->GetSceneObjectTemplateManager()->LoadFromPath(file_path);
-
-			iter++;
-		}
 
 		//Start client or server?
 		if(Misc::ToLower(m_Mode) == "server")
@@ -106,7 +78,7 @@ namespace GASS
 			se->GetSimSystemManager()->PostMessage(connect_message);
 		}
 
-		//main render window
+		//Create main render window, this will trigger
 		const std::string render_win_name = "RenderWindow";
 		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		if(gfx_system)
@@ -114,48 +86,12 @@ namespace GASS
 			gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle,main_win_handle);
 			gfx_system->CreateViewport(render_win_name,render_win_name, 0, 0, 1, 1);
 		}
-
-		//add some tools
-		GASS::MouseToolController* tools = es->GetMouseToolController().get();
-		IMouseTool* tool = new MoveTool(tools);
-		tools->AddTool(tool);
-		tool = new SelectTool(tools);
-		tools->AddTool(tool);
-		tool = new RotateTool(tools);
-		tools->AddTool(tool);
-		tool = new CreateTool(tools);
-		tools->AddTool(tool);
-		tool = new MeasurementTool(tools);
-		tools->AddTool(tool);
-		tool = new GoToPositionTool(tools);
-		tools->AddTool(tool);
-		tool = new EditPositionTool(tools);
-		tools->AddTool(tool);
-		tools->SelectTool(TID_SELECT);
-		tools->SetActive(true);
 		m_Initilized  = true;
 	}
 
 	void EditorApplication::Update()
 	{
-		static GASS::Timer  timer;
-		static double prev_time = 0;
-		double current_time = timer.GetTime();
-		double delta_time = current_time - prev_time;
-		if(delta_time < 0.00001)
-			delta_time = 0.001;
-		if(delta_time > 1)
-			delta_time = 1;
-
-		double target_update_time = 1.0/m_UpdateFreq;
-		if(delta_time > target_update_time)
-		{
-			prev_time = current_time;
-			if(m_Initilized)
-			{
-				SimEngine::Get().Update(delta_time);
-			}
-		}
+		SimEngine::Get().Update();
 	}
 
 	void EditorApplication::OnLoadScene(SceneLoadedNotifyMessagePtr message)
@@ -215,11 +151,7 @@ namespace GASS
 		TiXmlElement *xscenes = xSettings->FirstChildElement("SceneList");
 		TiXmlElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
 		TiXmlElement *gui_state = xSettings->FirstChildElement("GUIState");
-		TiXmlElement *xTerrainNormal = xSettings->FirstChildElement("UseTerrainNormalOnDrop");
-		TiXmlElement *xRayPickDist = xSettings->FirstChildElement("MousePickDistance");
 		TiXmlElement *xscene_path = xSettings->FirstChildElement("ScenePath");
-		TiXmlElement *xtemplates = xSettings->FirstChildElement("TemplateFiles");
-		TiXmlElement *xobj_id = xSettings->FirstChildElement("ObjectID");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
 		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
 		TiXmlElement *xnum_threads = xSettings->FirstChildElement("NumRTCThreads");
@@ -262,7 +194,7 @@ namespace GASS
 			m_StartScene = path.GetFullPath();
 		}
 
-		if(xTerrainNormal && xTerrainNormal->Attribute("value"))
+	/*	if(xTerrainNormal && xTerrainNormal->Attribute("value"))
 		{
 			std::string value = xTerrainNormal->Attribute("value");
 			m_UseTerrainNormalOnDrop = false;
@@ -276,7 +208,7 @@ namespace GASS
 		{
 			int value = atoi(xRayPickDist->Attribute("value"));
 			m_RayPickDist = value;
-		}
+		}*/
 
 		if(xscenes)
 		{
@@ -321,7 +253,7 @@ namespace GASS
 			}
 		}
 
-		if(xtemplates)
+/*		if(xtemplates)
 		{
 			TiXmlElement *xItem = xtemplates->FirstChildElement("Template");
 			while(xItem)
@@ -345,7 +277,7 @@ namespace GASS
 
 			m_IDSuffix = xobj_id->Attribute("id_suffix");
 			m_IDPrefix = xobj_id->Attribute("id_prefix");
-		}
+		}*/
 
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)

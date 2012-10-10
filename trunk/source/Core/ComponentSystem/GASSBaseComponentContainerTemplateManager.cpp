@@ -68,7 +68,11 @@ namespace GASS
 			new_cc = temp->CreateComponentContainer(part_id,manager);
 		}
 		else
-			std::cout << "Failed to load template:" << name  << std::endl;
+		{
+			LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer:" << name;
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create ComponentContainer:" + name, "BaseComponentContainerTemplateManager::CreateFromTemplate");
+			//std::cout << "Failed to load template:" << name  << std::endl;
+		}
 		return new_cc;
 	}
 

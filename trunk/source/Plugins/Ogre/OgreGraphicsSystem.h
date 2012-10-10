@@ -96,6 +96,8 @@ namespace GASS
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
 
+		ADD_ATTRIBUTE(bool,UpdateMessagePump);
+
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		std::map<std::string, Ogre::RenderWindow*>	m_Windows;

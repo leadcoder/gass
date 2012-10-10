@@ -15,6 +15,7 @@ namespace GASS
 	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader),
 		m_SceneObjectsSelectable(false)
 	{
+		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
 	}
 
 	EditorSystem::~EditorSystem(void)
@@ -28,14 +29,37 @@ namespace GASS
 	void EditorSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, ISystem>);
+		RegisterProperty<float>("MouseRayPickDistance", &GASS::EditorSystem::GetRayPickDistance, &GASS::EditorSystem::SetRayPickDistance);
+		RegisterProperty<bool>("AutoRotateObjectOnDrop", &GASS::EditorSystem::GetUseTerrainNormalOnDrop, &GASS::EditorSystem::SetUseTerrainNormalOnDrop);
 	}
 
 	void EditorSystem::Init()
 	{
-		m_MouseTools =  MouseToolControllerPtr(new MouseToolController(this));
 		m_MouseTools->Init();
+
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,SceneAboutToLoadNotifyMessage,0));
+	}
+
+
+	void EditorSystem::SetRayPickDistance(float value) 
+	{
+		m_MouseTools->SetRayPickDistance(value);
+	}
+
+	float EditorSystem::GetRayPickDistance() const 
+	{
+		return m_MouseTools->GetRayPickDistance();
+	}
+
+	void EditorSystem::SetUseTerrainNormalOnDrop(bool value) 
+	{
+		m_MouseTools->SetUseTerrainNormalOnDrop(value);
+	}
+
+	bool EditorSystem::GetUseTerrainNormalOnDrop() const 
+	{
+		return m_MouseTools->GetUseTerrainNormalOnDrop();
 	}
 
 	void EditorSystem::Update(double delta_time)
