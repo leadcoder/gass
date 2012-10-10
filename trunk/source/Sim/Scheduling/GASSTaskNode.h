@@ -63,7 +63,7 @@ namespace GASS
 		
 		//public for now, dont call!
 		void UpdateChildren(double delta_time,tbb::task *parent);
-		void UpdateListeners(double delta_time);
+		void UpdateListeners(double delta_time,tbb::task *parent);
 	private:
 	
 		TaskNodeVector m_Children;
