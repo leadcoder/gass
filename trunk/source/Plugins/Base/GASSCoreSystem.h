@@ -35,7 +35,7 @@ namespace GASS
 		virtual ~CoreSystem();
 		static void RegisterReflection();
 		virtual std::string GetSystemName() const {return "CoreSystem";}
-		virtual void Init() {};
+		virtual void Init();
 	protected:
 	};
 	typedef boost::shared_ptr<CoreSystem> CoreSystemPtr;

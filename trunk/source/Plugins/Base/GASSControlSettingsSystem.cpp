@@ -258,6 +258,12 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("ControlSettingsSystem",new GASS::Creator<ControlSettingsSystem, ISystem>);
 	}
 
+	void ControlSettingsSystem::Init() 
+	{
+		//Register at rtc
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+	}
+
 	ControlSetting* ControlSettingsSystem::GetControlSetting(const std::string &name) const
 	{
 		ControlSettingMap::const_iterator pos;

@@ -99,6 +99,7 @@ namespace GASS
 
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<CoreSystem>()->GetTaskNode();
 	}
 
 	void FreeCamControlComponent::OnLoad(LoadComponentsMessagePtr message)

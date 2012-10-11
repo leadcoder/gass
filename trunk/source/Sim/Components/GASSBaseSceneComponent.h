@@ -24,6 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Scene/GASSSceneObject.h"
 #include "Sim/Scene/GASSISceneManager.h"
+#include "Sim/Scheduling/GASSTaskNode.h"
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 namespace GASS
@@ -32,7 +33,7 @@ namespace GASS
 	
 	//typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public boost::enable_shared_from_this<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener
+	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public boost::enable_shared_from_this<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
 	{
 		friend class SceneObject;
 	public:
@@ -41,6 +42,7 @@ namespace GASS
 		SceneObjectPtr GetSceneObject() const;
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta) {};
+		virtual void Update(double delta) {};
 	protected:
 		void InitializePointers();
 

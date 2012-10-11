@@ -20,6 +20,7 @@
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 #include "GASSCoreSystem.h"
 
 namespace GASS
@@ -38,6 +39,12 @@ namespace GASS
 	void CoreSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("CoreSystem",new GASS::Creator<CoreSystem, ISystem>);
+	}
+
+	void CoreSystem::Init()
+	{
+		//Register at rtc
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
 	

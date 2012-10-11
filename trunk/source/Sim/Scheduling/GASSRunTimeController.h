@@ -29,8 +29,8 @@
 #include "tbb/task.h"
 #include "tbb/task_scheduler_init.h"
 #include "tbb/spin_mutex.h"*/
-#include <tinyxml.h>
 
+class TiXmlElement;
 namespace tbb
 {
 	class task_scheduler_init;
