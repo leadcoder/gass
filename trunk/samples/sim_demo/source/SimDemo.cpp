@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/										*
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
@@ -20,33 +20,6 @@
 
 
 #include "Sim/GASS.h"
-/*#include <boost/bind.hpp>
-
-#include "Core/ComponentSystem/IComponent.h"
-#include "Core/Math/Vector.h"
-#include "Core/Utils/Factory.h"
-#include "Core/Utils/Log.h"
-#include "Core/Serialize/Serialize.h"
-#include "Core/Utils/Timer.h"
-#include "Core/Utils/Log.h"
-#include "Core/ComponentSystem/ComponentContainerFactory.h"
-#include "Core/ComponentSystem/ComponentFactory.h"
-#include "Core/ComponentSystem/BaseComponent.h"
-#include "Core/ComponentSystem/BaseComponentContainer.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplate.h"
-#include "Core/ComponentSystem/BaseComponentContainerTemplateManager.h"
-#include "Core/MessageSystem/MessageManager.h"
-#include "Core/PluginSystem/PluginManager.h"
-
-#include "Sim/SimEngine.h"
-#include "Sim/Scene/Scene.h"
-#include "Sim/Scene/Scene/SceneScene.h"
-#include "Sim/Scene/Scene/SceneObjectManager.h"
-#include "Sim/Scene/Scene/SceneObject.h"
-
-#include "Sim/Systems/Collision/ICollisionSystem.h"
-#include "Sim/Systems/SimSystemManager.h"
-#include "Sim/Components/Graphics/Geometry/ILineComponent.h"*/
 #include "Plugins/Game/GameMessages.h"
 
 #include "Client.h"

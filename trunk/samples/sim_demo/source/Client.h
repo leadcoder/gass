@@ -43,7 +43,7 @@ public:
 	bool Init()
 	{
 		m_Engine = new GASS::SimEngine();
-		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
+		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
 
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
@@ -66,7 +66,7 @@ public:
 		while(!IsConnected())
 		{
 			//update engine (need to process messages)
-			m_Engine->Update(update_time);
+			m_Engine->Update();
 
 			//send ping request
 			m_Engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));

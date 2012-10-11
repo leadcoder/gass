@@ -23,7 +23,7 @@ public:
 	bool Init()
 	{
 		m_Engine = new GASS::SimEngine();
-		m_Engine->Init(m_Plugins,m_SystemConfig,m_ControlSettings);
+		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
 
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
