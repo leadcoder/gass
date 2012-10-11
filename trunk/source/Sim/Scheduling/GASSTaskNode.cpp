@@ -86,7 +86,7 @@ namespace GASS
 
 	void TaskNode::Register(TaskNodeListenerPtr listener)
 	{
-
+		m_Listeners.push_back(listener);
 	}
 
 	void TaskNode::Unregister(TaskNodeListenerPtr listener)

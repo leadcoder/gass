@@ -79,7 +79,7 @@ namespace GASS
 	void RunTimeController::Update(double delta_time)
 	{
 		m_SimulationTaskNode->Update(delta_time,NULL);
-		SimEngine::Get().GetSimSystemManager()->Update(delta_time);
+		SimEngine::Get().GetSimSystemManager()->SyncMessages(delta_time);
 	}
 
 	void RunTimeController::Log()
