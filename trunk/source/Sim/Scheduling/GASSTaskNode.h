@@ -64,12 +64,12 @@ namespace GASS
 		//public for now, dont call!
 		void UpdateChildren(double delta_time,tbb::task *parent);
 		void UpdateListeners(double delta_time,tbb::task *parent);
-	private:
+	//private:
 	
 		TaskNodeVector m_Children;
 		std::string m_Name;
-		UpdateMode m_ListenerMode;
-		UpdateMode m_ChildrenMode;
+		//UpdateMode m_ListenerMode;
+		//UpdateMode m_ChildrenMode;
 		UpdateMode m_NodeMode;
 		Listeners m_Listeners;
 	};

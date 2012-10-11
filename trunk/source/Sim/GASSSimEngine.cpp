@@ -46,6 +46,8 @@
 #include "Sim/Systems/Input/GASSIInputSystem.h"
 #include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
 #include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Scheduling/GASSTaskNode.h"
+
 #include "Sim/Scene/GASSSceneObject.h"
 #include <tinyxml.h>
 
@@ -155,6 +157,13 @@ namespace GASS
 			m_MaxUpdateFreq = static_cast<double>(update_freq);
 			bool external_update = Misc::ReadBool(xml_rtc,"ExternalSimulationUpdate");
 			GetSimSystemManager()->SetPauseSimulation(external_update);
+
+			TiXmlElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
+			if(xml_tn)
+			{
+				m_SimulationTaskNode = new TaskNode();
+				m_SimulationTaskNode->LoadXML(xml_tn);
+			}
 		}
 		delete xmlDoc;
 	}
@@ -201,6 +210,10 @@ namespace GASS
 		PROFILE("SimEngine::Update")
 		//update systems
 		GetSimSystemManager()->Update(delta_time);
+
+		//test, update rtc
+		m_SimulationTaskNode->Update(delta_time,NULL);
+
 		m_CurrentTime += delta_time;
 		}
 #ifdef PROFILER

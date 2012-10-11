@@ -35,6 +35,7 @@ namespace GASS
 	class IRuntimeController;
 	class SceneObject;
 	class Scene;
+	class TaskNode;
 	
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
@@ -162,6 +163,8 @@ namespace GASS
 		//ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 		SceneVector m_Scenes;
+
+		TaskNode* m_SimulationTaskNode;
 		
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
