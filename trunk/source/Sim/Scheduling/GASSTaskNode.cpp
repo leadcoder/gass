@@ -66,7 +66,7 @@ namespace GASS
 		}
 		else
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get task node type", "TaskNode::LoadXML");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get task mode", "TaskNode::LoadXML");
 		}
 
 		/*if(xml_elem->Attribute("custom_freqency"))
@@ -84,6 +84,16 @@ namespace GASS
 		}
 	}
 
+	void TaskNode::Register(TaskNodeListenerPtr listener)
+	{
+
+	}
+
+	void TaskNode::Unregister(TaskNodeListenerPtr listener)
+	{
+
+	}
+
 	TaskNode* TaskNode::GetNodeByName(const std::string &name) 
 	{
 		if(m_Name == name)
@@ -98,7 +108,7 @@ namespace GASS
 		return NULL;
 	}
 
-	/*struct TaskNodeListenerExecutor
+	struct TaskNodeListenerExecutor
 	{
 		TaskNodeListenerExecutor(const TaskNode::Listeners& listeners, double delta_time)
 			:m_Listeners(listeners),m_DeltaTime(delta_time)
@@ -132,12 +142,12 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				m_Children[i]->Update(m_DeltaTime);
+				m_Children[i]->Update(m_DeltaTime,NULL);
 			}
 		}
 		const TaskNode::TaskNodeVector& m_Children;
 		double m_DeltaTime;
-	};*/
+	};
 
 	/*class GASSExport UpdateListenersTask : public tbb::task
 	{
@@ -173,7 +183,7 @@ namespace GASS
 		double m_DeltaTime;
 	};*/
 
-	class GASSExport UpdateTaskNode : public tbb::task
+/*	class GASSExport UpdateTaskNode : public tbb::task
 	{
 	public:
 		UpdateTaskNode (double delta_time, TaskNode* node) : m_DeltaTime(delta_time),m_TaskNode(node)
@@ -208,10 +218,30 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
+
+	class GASSExport Dummy : public tbb::task
+	{
+	public:
+		Dummy() 
+		{
+
+		}
+		tbb::task*  execute()
+		{
+			return NULL;
+		}
+	private:
+	};
+
+
+	void TaskNode::Invoke(double delta_time, TaskNode* node)
+	{
+		UpdateTaskNode * parent = new( tbb::task::allocate_root() ) UpdateTaskNode(delta_time,node);
+		tbb::task::spawn_root_and_wait(*parent);
+	}*/
+
 	void TaskNode::Update(double delta_time,tbb::task *parent) 
 	{
-		if(parent == NULL)
-			parent = new( tbb::task::allocate_root() ) tbb::empty_task;
 		UpdateListeners(delta_time,parent);
 		UpdateChildren(delta_time,parent);
 	}
@@ -236,10 +266,10 @@ namespace GASS
 			}
 			break;
 		case PARALLEL:
-			//TaskNodeListenerExecutor exec(m_Listeners,delta_time);
-			//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+			TaskNodeListenerExecutor exec(m_Listeners,delta_time);
+			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 			
-			while(iter != m_Listeners.end())
+			/*while(iter != m_Listeners.end())
 			{
 				tbb::task_list task_list;
 			
@@ -254,7 +284,7 @@ namespace GASS
 					iter = m_Listeners.erase(iter);
 				parent->spawn(task_list);
 			}
-			break;
+			break;*/
 		}
 	}
 
@@ -265,24 +295,27 @@ namespace GASS
 		case SEQUENCE:
 			for(size_t i=0; i < m_Children.size();i++)
 			{
+				//parent->wait_for_all();
 				m_Children[i]->Update(delta_time,parent);
-				parent->increment_ref_count();
-				parent->wait_for_all();
+				//parent->increment_ref_count();
+				
 			}
 			break;
 		case PARALLEL:
-			//TaskNodeChildrenExecutor exec(m_Children,delta_time);
-			//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Children.size()),exec);
-			tbb::task_list task_list;
+			TaskNodeChildrenExecutor exec(m_Children,delta_time);
+			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Children.size()),exec);
+			/*tbb::task_list task_list;
+			Dummy& c = *new( parent->allocate_continuation() ) Dummy();
 			for(size_t i=0; i < m_Children.size();i++)
 			{
+				
 				task_list.push_back(*new(parent->allocate_child()) UpdateTaskNode(delta_time,m_Children[i].get()));
 				parent->increment_ref_count();
 			}
 			if(m_Children.size() > 0)
 			{
 				parent->spawn(task_list);
-			}
+			}*/
 			break;
 		}
 	}

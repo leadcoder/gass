@@ -275,17 +275,6 @@ namespace GASS
 		}
 	}
 
-	void ControlSettingsSystem::Update(double delta_time)
-	{
-		/*ControlSettingMap::iterator iter;
-		iter = m_ControlSettingMap.begin();
-		while(iter != m_ControlSettingMap.end())
-		{
-			iter->second->Update(delta_time);
-			++iter;
-		}*/
-	}
-
 	void ControlSettingsSystem::Load(const std::string &filename)
 	{
 		if(filename =="") 

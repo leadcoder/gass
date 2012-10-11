@@ -22,6 +22,8 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/System/GASSISystem.h"
+#include "Sim/Scheduling/GASSTaskNode.h"
+#include "Sim/Scheduling/GASSRunTimeController.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <string>
@@ -44,7 +46,7 @@ namespace GASS
 	/**
 		Base class that GASSSim systems should be derived from 
 	*/
-	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public ISystem, public boost::enable_shared_from_this<SimSystem>,  public IMessageListener, public IXMLSerialize
+	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public ISystem, public boost::enable_shared_from_this<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
 	{
 	public:
 		SimSystem();
@@ -61,6 +63,9 @@ namespace GASS
 		virtual void Unregister(SystemListenerPtr listener);
 		virtual int GetUpdateBucket() const;
 		virtual void SetUpdateBucket(int priority);
+
+		std::string GetTaskNode() const {return m_TaskNodeName;}
+		void SetTaskNode(const std::string name) {m_TaskNodeName = name;}
 	
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
@@ -76,6 +81,7 @@ namespace GASS
 		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
 		int m_UpdateBucket;
+		std::string m_TaskNodeName;
 	};
 	typedef boost::shared_ptr<SimSystem> SimSystemPtr;
 }

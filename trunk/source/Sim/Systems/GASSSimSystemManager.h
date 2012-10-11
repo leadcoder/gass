@@ -127,12 +127,16 @@ namespace GASS
 			specify the class implementing the system.
 		*/
 		void Load(const std::string &filename);
+
+
+		//Move this to private
+		void SyncMessages(double delta_time);
 	private:
 		SystemPtr LoadSystem(TiXmlElement *system_elem);
 		size_t GetQueuedMessages() const;
 		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
 		void StepSimulation(double delta_time);		
-		void SyncMessages(double delta_time);
+		
 		MessageManagerPtr m_SystemMessageManager;
 		bool m_SimulationPaused;
 		bool m_SimulateRealTime;

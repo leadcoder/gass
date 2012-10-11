@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSTBBRuntimeController.h"
+#include "Sim/Scheduling/GASSRunTimeController.h"
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
@@ -58,7 +58,7 @@ namespace GASS
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
-		m_RTC = RuntimeControllerPtr(new TBBRuntimeController());
+		m_RTC = RunTimeControllerPtr(new RunTimeController());
 	}
 
 	SimEngine::~SimEngine()
@@ -161,8 +161,7 @@ namespace GASS
 			TiXmlElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
 			if(xml_tn)
 			{
-				m_SimulationTaskNode = new TaskNode();
-				m_SimulationTaskNode->LoadXML(xml_tn);
+				m_RTC->LoadXML(xml_tn);
 			}
 		}
 		delete xmlDoc;
@@ -209,10 +208,10 @@ namespace GASS
 		{
 		PROFILE("SimEngine::Update")
 		//update systems
-		GetSimSystemManager()->Update(delta_time);
 
-		//test, update rtc
-		m_SimulationTaskNode->Update(delta_time,NULL);
+		//GetSimSystemManager()->Update(delta_time);
+		m_RTC->Update(delta_time);
+		
 
 		m_CurrentTime += delta_time;
 		}

@@ -45,7 +45,7 @@ namespace GASS
 
 	void AISystem::Init()
 	{
-
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
 	void AISystem::Update(double delta_time)

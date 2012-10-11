@@ -32,7 +32,7 @@ namespace GASS
 	class PluginManager;
 	class SimSystemManager;
 	class BaseComponentContainerTemplateManager;
-	class IRuntimeController;
+	class RunTimeController;
 	class SceneObject;
 	class Scene;
 	class TaskNode;
@@ -41,7 +41,7 @@ namespace GASS
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
 	//typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
-	typedef boost::shared_ptr<IRuntimeController> RuntimeControllerPtr;
+	typedef boost::shared_ptr<RunTimeController> RuntimeControllerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::weak_ptr<Scene> SceneWeakPtr;
@@ -133,7 +133,7 @@ namespace GASS
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
 		*/
-		//RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
+		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
 
 
 		/**
@@ -163,9 +163,6 @@ namespace GASS
 		//ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
 		SceneVector m_Scenes;
-
-		TaskNode* m_SimulationTaskNode;
-		
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
 	};

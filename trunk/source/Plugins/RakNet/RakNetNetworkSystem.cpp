@@ -97,6 +97,8 @@ namespace GASS
 
 	void RakNetNetworkSystem::Init()
 	{
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		

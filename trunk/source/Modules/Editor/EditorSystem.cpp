@@ -36,11 +36,11 @@ namespace GASS
 	void EditorSystem::Init()
 	{
 		m_MouseTools->Init();
-
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,SceneAboutToLoadNotifyMessage,0));
+		//Register at rtc
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
-
 
 	void EditorSystem::SetRayPickDistance(float value) 
 	{

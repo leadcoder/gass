@@ -38,6 +38,7 @@ namespace GASS
 	void SimSystem::RegisterReflection()
 	{
 		RegisterProperty<int>("UpdateBucket", &GASS::SimSystem::GetUpdateBucket, &GASS::SimSystem::SetUpdateBucket);
+		RegisterProperty<std::string>("TaskNode", &GASS::SimSystem::GetTaskNode, &GASS::SimSystem::SetTaskNode);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const

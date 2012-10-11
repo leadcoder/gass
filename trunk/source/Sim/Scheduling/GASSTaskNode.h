@@ -20,8 +20,12 @@
 #ifndef TASK_NODE_H
 #define TASK_NODE_H
 #include "Sim/GASSCommon.h"
-#include "tbb/task.h"
+//#include "tbb/task.h"
 class TiXmlElement;
+namespace tbb
+{
+	class task;
+}
 namespace GASS
 {
 
@@ -64,8 +68,11 @@ namespace GASS
 		//public for now, dont call!
 		void UpdateChildren(double delta_time,tbb::task *parent);
 		void UpdateListeners(double delta_time,tbb::task *parent);
-	//private:
-	
+		
+		void Register(TaskNodeListenerPtr listener);
+		void Unregister(TaskNodeListenerPtr listener);
+		//static void Invoke(double delta_time, TaskNode* node);
+	private:
 		TaskNodeVector m_Children;
 		std::string m_Name;
 		//UpdateMode m_ListenerMode;

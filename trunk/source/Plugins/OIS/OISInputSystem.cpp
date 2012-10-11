@@ -78,9 +78,12 @@ namespace GASS
 
 	void OISInputSystem::Init()
 	{
+		
 	}
 	void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+
 		m_Window = message->GetMainHandle();
 		OIS::ParamList pl;
 		size_t windowHnd = (size_t) m_Window;
