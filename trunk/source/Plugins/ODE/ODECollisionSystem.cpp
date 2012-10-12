@@ -24,6 +24,7 @@
 #include "Plugins/ODE/ODECollisionGeometryComponent.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/Scene/GASSScene.h"
@@ -59,16 +60,22 @@ namespace GASS
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
+	void ODECollisionSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register("ODECollisionSystem",new GASS::Creator<ODECollisionSystem, ISystem>);
+		ComponentFactory::GetPtr()->Register("ODECollisionGeometryComponent",new Creator<ODECollisionGeometryComponent, IComponent>);
+	}
+
+
 	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
 		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
-		//PhysicsSystemPtr ps = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IPhysicsSystem>();
+
 		if(!(system)) //check if ode physics system present, if not initialize ode
 		{
 			dInitODE2(0);
 			dAllocateODEDataForThread(dAllocateMaskAll);
 		}
-
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();
 		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitialized,0));
@@ -211,11 +218,6 @@ namespace GASS
 				raycast.Process();
 			}
 		}
-	}
-
-	void ODECollisionSystem::RegisterReflection()
-	{
-		SystemFactory::GetPtr()->Register("ODECollisionSystem",new GASS::Creator<ODECollisionSystem, ISystem>);
 	}
 
 	

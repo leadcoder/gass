@@ -62,7 +62,7 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::RegisterReflection()
 	{
-		//RegisterProperty<Float>("Type", &GASS::ODECylinderGeometryComponent::GetType, &GASS::ODECylinderGeometryComponent::SetType);
+		RegisterProperty<std::string>("Type", &GASS::ODECollisionGeometryComponent::GetTypeByName, &GASS::ODECollisionGeometryComponent::SetTypeByName);
 	}
 
 	void ODECollisionGeometryComponent::OnInitialize()
@@ -72,6 +72,43 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
+	}
+
+	std::string ODECollisionGeometryComponent::GetTypeByName() const
+	{
+		switch(m_Type)
+		{
+			case CGT_MESH:
+				return "MESH";
+			case CGT_TERRAIN:
+				return "TERRAIN";
+			case CGT_BOX:
+				return "BOX";
+			case CGT_PLANE:
+				return "PLANE";
+			case CGT_NONE:
+				return "NONE";
+			default:
+				return "NONE";
+		}
+		return "";
+	}
+
+	void ODECollisionGeometryComponent::SetTypeByName(const std::string &type)
+	{
+		if(type == "MESH")
+			m_Type =  CGT_MESH;
+		else if(type == "TERRAIN")
+			m_Type = CGT_TERRAIN;
+		else if(type == "BOX")
+			m_Type = CGT_BOX;
+		else if(type == "PLANE")
+			m_Type = CGT_PLANE;
+		else if(type == "NONE")
+			m_Type = CGT_NONE;
+		else
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unkown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
+			
 	}
 	
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -86,8 +123,18 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
-		if(m_Type == CGT_TERRAIN || m_Type == CGT_PLANE)
+		if(m_Type == CGT_TERRAIN)
 			return;
+
+		if(m_Type == CGT_PLANE)
+		{
+			if(m_GeomID == NULL)
+			{
+				CreateGeometry();
+				SetFlags(GEOMETRY_FLAG_UNKOWN);
+			}
+			return;
+		}
 
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);

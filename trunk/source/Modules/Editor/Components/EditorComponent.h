@@ -13,18 +13,20 @@ namespace GASS
 		virtual void OnInitialize();
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
 		std::string GetIconFile() const { return m_IconFile;}
+		void SetShowInTree(bool value) {m_ShowInTree = value;}
 		bool GetShowInTree() const {return m_ShowInTree;}
 		bool GetAllowRemove() const {return m_AllowRemove;}
+		void SetAllowRemove(bool value) {m_AllowRemove = value;}
 		bool GetAllowDragAndDrop() const {return m_AllowDragAndDrop;}
-	private:
-		ADD_ATTRIBUTE(Vec4,SelectedColor)
-
 		bool GetVisible() const{return m_Visible;}
-		void SetVisible(bool value) ;
-		void OnObjectVisible(ObjectVisibilityChangedMessagePtr message);
-		void OnObjectLock(ObjectLockChangedMessagePtr message);
+		void SetVisible(bool value);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
+	private:
+		ADD_ATTRIBUTE(Vec4,SelectedColor)
+		
+		void OnObjectVisible(ObjectVisibilityChangedMessagePtr message);
+		void OnObjectLock(ObjectLockChangedMessagePtr message);
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
@@ -32,14 +34,10 @@ namespace GASS
 		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
-		
 		void SetIconFile(const std::string &value) { m_IconFile = value;}
-
-		
 		void SetShowBBWhenSelected(bool value) {m_ShowBBWhenSelected = value;}
-		void SetAllowRemove(bool value) {m_AllowRemove = value;}
 		void SetAllowDragAndDrop(bool value) {m_AllowDragAndDrop = value;}
-		void SetShowInTree(bool value) {m_ShowInTree = value;}
+		
 		
 		bool m_Lock;
 		bool m_Visible;

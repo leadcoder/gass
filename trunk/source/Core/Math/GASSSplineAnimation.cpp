@@ -48,8 +48,7 @@ namespace GASS
 	{
 		m_Spline.Clear();
 		m_Spline.SetAutoCalc(true);
-		int i = 0;
-		for (; i < m_NodeVector.size(); i++)
+		for (size_t i = 0; i < m_NodeVector.size(); i++)
 		{
 			SplineNode* splineNode = &m_NodeVector[i];
 			m_Spline.AddPoint(m_NodeVector[i].m_Pos);
@@ -62,7 +61,7 @@ namespace GASS
 		Float seg_dist = 0;
 		Float tot_dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
-		for(int  i = 0; i < m_NodeVector.size(); i++)
+		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
 		{
 			for(Float t = 0; t <= (1 + step_size); t += step_size)
 			{
@@ -217,7 +216,7 @@ namespace GASS
 		Float dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
 		
-		for(int  i = 0; i < m_NodeVector.size(); i++)
+		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
 		{
 			if(desired_distance <= m_NodeVector[i].m_SegmentDistance + dist)
 			{

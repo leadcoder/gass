@@ -36,19 +36,10 @@ namespace GASS
 	class GASSCoreExport SchemaObject
 	{
 	public:
-		SchemaObject() : m_Document(NULL),m_Object(NULL)
-		{
-
-		}
-		virtual ~SchemaObject() 
-		{
-			delete m_Document;
-		}
-		
-		
+		SchemaObject();
+		virtual ~SchemaObject();
 		TiXmlElement* GetObjectAnnotation(const std::string &annotation_tag_name) const;
 		TiXmlElement* GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const;
-	
 		TiXmlDocument* m_Document;
 		TiXmlElement* m_Object;
 		std::string m_Name;

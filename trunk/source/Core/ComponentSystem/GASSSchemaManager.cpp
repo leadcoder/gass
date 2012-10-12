@@ -29,9 +29,62 @@
 
 namespace GASS
 {
+
+	SchemaObject::SchemaObject() : m_Document(NULL),m_Object(NULL)
+	{
+
+	}
+
+	SchemaObject::~SchemaObject() 
+	{
+		delete m_Document;
+	}
+
+
+	TiXmlElement* SchemaObject::GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const
+	{
+		TiXmlElement *elem =  m_Object->FirstChildElement("xs:complexType");
+		if(!elem)
+			return NULL;
+		elem =  elem->FirstChildElement("xs:sequence");
+		if(!elem)
+			return NULL;
+
+		while(elem)
+		{
+			if(elem->Attribute("name"))
+			{
+				const std::string pname = elem->Attribute("name");
+				if(pname == prop_name)
+				{
+					TiXmlElement *anno_elem =  elem->FirstChildElement("xs:annotation");
+					if(!anno_elem)
+						return NULL;
+					TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
+					return user_elem;
+				}
+			}
+			elem = elem->NextSiblingElement();
+		}
+		return NULL;
+
+	}
+
+	TiXmlElement* SchemaObject::GetObjectAnnotation(const std::string &annotation_tag_name) const
+	{
+		TiXmlElement *anno_elem =  m_Object->FirstChildElement("xs:annotation");
+		if(!anno_elem)
+			return NULL;
+
+		TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
+		return user_elem;
+
+
+	}
+
 	SchemaManager::SchemaManager() 
 	{
-	
+
 	}
 
 	SchemaManager::~SchemaManager(void)
@@ -90,7 +143,7 @@ namespace GASS
 		doc_elem->SetAttribute("xml:lang","en");
 		TiXmlText * text = new TiXmlText( "Documentation goes here!" );
 		doc_elem->LinkEndChild( text );
-		
+
 
 		TiXmlElement * complex_elem = new TiXmlElement("xs:complexType");  
 		obj_elem->LinkEndChild( complex_elem);
@@ -197,45 +250,6 @@ namespace GASS
 		if(iter != m_Objects.end())
 			return &iter->second;
 		return NULL;
-	}
-
-	TiXmlElement* SchemaObject::GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const
-	{
-		TiXmlElement *elem =  m_Object->FirstChildElement("xs:complexType");
-		if(!elem)
-			return NULL;
-		elem =  elem->FirstChildElement("xs:sequence");
-		if(!elem)
-			return NULL;
-
-		while(elem)
-		{
-			if(elem->Attribute("name"))
-			{
-				const std::string pname = elem->Attribute("name");
-				if(pname == prop_name)
-				{
-					TiXmlElement *anno_elem =  elem->FirstChildElement("xs:annotation");
-					if(!anno_elem)
-						return NULL;
-					TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
-						return user_elem;
-				}
-			}
-			elem = elem->NextSiblingElement();
-		}
-		return NULL;
-		
-	}
-
-	TiXmlElement* SchemaObject::GetObjectAnnotation(const std::string &annotation_tag_name) const
-	{
-		TiXmlElement *anno_elem =  m_Object->FirstChildElement("xs:annotation");
-		if(!anno_elem)
-			return NULL;
-
-		TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
-		return user_elem;
 	}
 }
 

@@ -49,7 +49,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 
 	if(m_KeyVector[m_KeyVector.size()-1].m_Pos == m_KeyVector[0].m_Pos) closed = true;
 
-	for(int  i = 0; i < m_KeyVector.size(); i++)
+	for(int  i = 0; i < (int) m_KeyVector.size(); i++)
 	{
 		
 		Quaternion q;
@@ -106,7 +106,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 
 	// Find last keyframe before or on current time
 	i = 0;
-	while (i < m_KeyVector.size() && m_KeyVector[i].m_Time <= timePos)
+	while (i < (int) m_KeyVector.size() && m_KeyVector[i].m_Time <= timePos)
 	{
 		key1 = &m_KeyVector[i];
 		++i;
@@ -164,8 +164,8 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 
 Key KeyframeAnimation::GetBoneKeyFrame(Float weight,int index0, int index1) const
 {
-	assert(!(index0 < 0 || index0 >=  m_KeyVector.size()));
-	assert(!(index1 < 0 || index1 >=  m_KeyVector.size()));
+	assert(!(index0 < 0 || index0 >=  (int)m_KeyVector.size()));
+	assert(!(index1 < 0 || index1 >=  (int)m_KeyVector.size()));
 	Key kret;// = Key();
 	const Key *k1 = &m_KeyVector[index0];
 	const Key *k2 = &m_KeyVector[index1];
@@ -292,8 +292,8 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
         m_RotationSpline.Clear();
         m_ScaleSpline.Clear();
 
-		int i = 0;
-        for (; i < m_KeyVector.size(); i++)
+	
+        for (size_t i = 0; i < m_KeyVector.size(); i++)
         {
 			Key* key = &m_KeyVector[i];
             m_PositionSpline.AddPoint(m_KeyVector[i].m_Pos);
@@ -304,7 +304,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
         m_ScaleSpline.RecalcTangents();
 
 		//AutoCalulateRotation();
-		for (i = 0; i < m_KeyVector.size(); i++)
+		for (size_t i = 0; i < m_KeyVector.size(); i++)
         {
 			m_RotationSpline.AddPoint(m_KeyVector[i].m_Rot);
 		}

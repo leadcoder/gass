@@ -44,7 +44,7 @@ namespace GASS
 	{
 		Vec3 ret;
 		ret.Set(0,0,0);
-		for(int i = 0; i < m_VertexVector.size(); i++)
+		for(size_t i = 0; i < m_VertexVector.size(); i++)
 		{
 			const Vec3* pos = &m_VertexVector[i];
 			ret.x += pos->x;

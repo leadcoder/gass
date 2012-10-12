@@ -66,7 +66,14 @@ namespace GASS
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryScale(GeometryScaleMessagePtr message);
 
+
+		//Get set section
+		
+		std::string GetTypeByName() const;
+		void SetTypeByName(const std::string &type);
+
 		//helpers
+		
 		void CreateGeometry();
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
