@@ -125,6 +125,8 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		m_Shape = CreateShape();
+		if(m_Body)
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), m_Body->GetMass()); 
 	}
 
 	GeometryComponentPtr PhysXBaseGeometryComponent::GetGeometry() const 
@@ -155,6 +157,8 @@ namespace GASS
 		m_SceneManager = scene_manager;
 		SetSizeFromMesh(m_SizeFromMesh);
 		m_Shape = CreateShape();
+				if(m_Body)
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), m_Body->GetMass()); 
 	}
 
 	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)

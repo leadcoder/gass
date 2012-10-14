@@ -80,8 +80,11 @@ namespace GASS
 		if(m_Paused)
 			return;
 
-		
-		m_PxScene->simulate(delta_time);
+		if(delta_time > 0.1)
+			m_PxScene->simulate(0.1);
+		else
+			m_PxScene->simulate(delta_time);
+
 		while(!m_PxScene->fetchResults())
 		{
 

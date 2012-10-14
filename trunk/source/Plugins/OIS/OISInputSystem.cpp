@@ -173,6 +173,7 @@ namespace GASS
 			m_MouseWinWidth = width;
 			m_MouseWinHeight =height;
 		}
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new InputSystemLoadedMessage()));
 	}
 
 	void OISInputSystem::Shutdown()

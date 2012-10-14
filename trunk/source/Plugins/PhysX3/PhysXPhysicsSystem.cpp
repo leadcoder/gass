@@ -83,6 +83,8 @@ namespace GASS
 	PxGASSErrorCallback myErrorCallback;
 	void PhysXPhysicsSystem::Init()
 	{
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+
 		bool recordMemoryAllocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), recordMemoryAllocations );

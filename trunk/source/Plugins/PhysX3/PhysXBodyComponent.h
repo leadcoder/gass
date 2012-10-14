@@ -44,6 +44,9 @@ namespace GASS
 		//void AddShape(physx::PxShapeDesc* shape);
 		void SendTransformation();
 		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
+		float GetMass() const {return m_Mass;}
+		void SetMass(float mass);
+
 	protected:
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
@@ -61,8 +64,6 @@ namespace GASS
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
 		
 		//reflection functions
-		float GetMass() const {return m_Mass;}
-		void SetMass(float mass);
 
 		Vec3 GetCGPosition() const {return m_CGPosition;}
 		void SetCGPosition(const Vec3 value) {m_CGPosition = value;}

@@ -1,17 +1,22 @@
 /****************************************************************************
+* This file is part of GASS.                                                *
+* See http://code.google.com/p/gass/                                 *
 *                                                                           *
-* HiFiEngine                                                                *
-* Copyright (C)2003 - 2005 Johan Hedstrom                                   *
-* Email: hifiengine@gmail.com                                               *
-* Web page: http://n00b.dyndns.org/HiFiEngine                               *
+* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
-* HiFiEngine is only used with knowledge from the author. This software     *
-* is not allowed to redistribute without permission from the author.        *
-* For further license information, please turn to the product home page or  *
-* contact author. Abuse against the HiFiEngine license is prohibited by law.*
+* GASS is free software: you can redistribute it and/or modify              *
+* it under the terms of the GNU Lesser General Public License as published  *
+* by the Free Software Foundation, either version 3 of the License, or      *
+* (at your option) any later version.                                       *
 *                                                                           *
-*****************************************************************************/ 
-
+* GASS is distributed in the hope that it will be useful,                   *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+* GNU Lesser General Public License for more details.                       *
+*                                                                           *
+* You should have received a copy of the GNU Lesser General Public License  *
+* along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
+*****************************************************************************/
 
 #include <stdio.h>
 #include "Sim/Systems/Messages/GASSScriptSystemMessages.h"
@@ -21,7 +26,6 @@
 #include <MyGUI_OgrePlatform.h>
 #include "StatisticInfo.h"
 #include "MainMenu.h"
-
 
 namespace GASS
 {
@@ -48,7 +52,7 @@ namespace GASS
 
 	void MyGUISystem::Init()
 	{
-
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
 	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedMessagePtr message)

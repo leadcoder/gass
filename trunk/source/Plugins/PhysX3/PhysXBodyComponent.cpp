@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX3/PhysXSuspensionComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 
@@ -327,7 +328,7 @@ namespace GASS
 				components.clear();
 				GetSceneObject()->GetComponentsByClass(components,"PhysXSuspensionComponent");
 				
-				/*for(int i = 0 ; i < components.size(); i++)
+				for(int i = 0 ; i < components.size(); i++)
 				{
 					PhysXSuspensionComponentPtr joint = boost::shared_static_cast<PhysXSuspensionComponent>(components[i]);
 					//if(joint.get() != this)
@@ -337,7 +338,7 @@ namespace GASS
 						pos = pos + trans_vec;
 						joint->SetPosition(pos);
 					}
-				}*/
+				}
 
 
 				/*int num_joints = dBodyGetNumJoints(m_PhysXBodyComponent);

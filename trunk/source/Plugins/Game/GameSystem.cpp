@@ -21,6 +21,7 @@
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
 #include "Sim/Scene/GASSSceneManagerFactory.h"
 #include "GameSceneManager.h"
 #include "GameSystem.h"
@@ -45,6 +46,7 @@ namespace GASS
 	void GameSystem::Init()
 	{
 		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 }
 
