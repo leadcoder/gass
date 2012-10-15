@@ -25,39 +25,35 @@ end
 		"$(PHYSX_HOME)/include"
 	}
 
+	if (_OPTIONS["platform"] == "x64") then
 	configuration "Debug"
 		targetname "GASSPluginPhysX_d"
 		defines { "DEBUG" }
 		flags { "Symbols" }
---		debugPrefix = "_d"
 		links 
 		{
 			"GASSCore_d",
 			"GASSSim_d",
 			"tinyxml_d",
-			"tbb_debug"  ,
-			"Foundation",
-			"PhysX3Common",
-"PhysX3CharacterDynamic",
-"PhysX3CharacterKinematic",
-"PhysX3Vehicle",
-"PhysX3Cooking",
-"PhysX3",
-"PhysX3Extensions",
-"LowLevel",
-"GeomUtils",
-"SceneQuery",
-"SimulationController",
-"PvdRuntime",
-"RepX3"
-
+			"tbb_debug",
+			"PhysX3CommonCHECKED_x64",
+			"PhysX3CHECKED_x64",
+			"PhysX3CookingCHECKED_x64",
+			"PhysX3CharacterKinematicCHECKED_x64",
+			"PhysX3ExtensionsCHECKED",
+			"PhysX3VehicleCHECKED",
+			"RepX3CHECKED",
+			"RepXUpgrader3CHECKED",
+			"PhysXProfileSDKCHECKED",
+			"PhysXVisualDebuggerSDKCHECKED",
+			"PxTaskCHECKED"
 		}
 	libdirs 
 	{
 		"../lib/",
 		"../dependencies/lib",
 		"$(BOOST_HOME)/lib",
-		"$(PHYSX_HOME)/Lib/win32"
+		"$(PHYSX_HOME)/Lib/win64"
 	}
 
 	configuration "Release"
@@ -68,27 +64,28 @@ end
 		{
 			"GASSCore",
 			"GASSSim",
-			"ODE",
 			"tinyxml",
 			"tbb",
-			"PhysX3CharacterDynamic",
-"PhysX3CharacterKinematic",
-"PhysX3Vehicle",
-"PhysX3Cooking",
-"PhysX3",
-"PhysX3Extensions",
-"LowLevel",
-"GeomUtils",
-"SceneQuery",
-"SimulationController",
-"PvdRuntime",
-"RepX3"
-
+			"PhysX3Common_x64",
+			"PhysX3_x64",
+			"PhysX3Cooking_x64",
+			"PhysX3CharacterKinematic_x64",
+			"PhysX3Extensions",
+			"PhysX3Vehicle",
+			"RepX3",
+			"RepXUpgrader3",
+			"PhysXProfileSDK",
+			"PhysXVisualDebuggerSDK",
+			"PxTask"
 		}
-libdirs 
+	libdirs 
 	{
 		"../lib/",
-		"$(PHYSX_HOME)/SDKs/lib/win64",
+		"../dependencies/lib",
+		"$(PHYSX_HOME)/lib/win64",
 		"$(BOOST_HOME)/lib"
 	}
+	else 
+end
+
 	
