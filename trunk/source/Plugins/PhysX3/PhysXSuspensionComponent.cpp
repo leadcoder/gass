@@ -109,7 +109,6 @@ namespace GASS
 	void PhysXSuspensionComponent::OnLoad(BodyLoadedMessagePtr message)
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-//		assert(m_SceneManager);
 		CreateJoint();
 	}
 
@@ -146,23 +145,15 @@ namespace GASS
 		//sm->GetPxScene()->addActor(*m_RollAxisActor);
 
 		physx::PxVec3 pos(pos_b1.x,pos_b1.y,pos_b1.z);
-		
-		
-
 		physx::PxQuat trot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
 		
-		m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
+		/*m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
 		m_RollAxisActor->setMass(a2->getMass());
 		sm->GetPxScene()->addActor(*m_RollAxisActor);
 		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
 			 m_RollAxisActor, physx::PxTransform(physx::PxVec3(0,0,0),trot));
 		
-
-		/*physx::PxFixedJoint* joint = PxFixedJointCreate(*system->GetPxSDK(),
-			 a1,physx::PxTransform(pos,trot), //parent
-			 m_RollAxisActor, physx::PxTransform(physx::PxVec3(0,0,0),trot));
-		*/
 		physx::PxD6Joint* joint2 = PxD6JointCreate(*system->GetPxSDK(),
 			 m_RollAxisActor,physx::PxTransform(physx::PxVec3(0,0,0),trot), //parent
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
@@ -176,8 +167,8 @@ namespace GASS
 		joint2->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint2;
 		m_WheelActor = a2;
-
-		/*physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
+		*/
+		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
 		
@@ -185,12 +176,14 @@ namespace GASS
 		joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
 		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
 		//joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
-		physx::PxD6JointDrive drive1(3000.0f, -6000.0f, PX_MAX_F32, true);
-		physx::PxD6JointDrive drive2(0.0f, 1.0f, 0.1, true);
+		physx::PxD6JointDrive drive1(600.0f, 60.0f, PX_MAX_F32, true);
+		physx::PxD6JointDrive drive2(10.0f, 100, 1, false);
 		joint->setDrive(physx::PxD6Drive::eY, drive1);
 		joint->setDrive(physx::PxD6Drive::eTWIST, drive2);
 		joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
-		m_Joint = joint;*/
+		m_Joint = joint;
+		m_WheelActor = a2;
+		m_RollAxisActor = NULL;
 		//physx::PxTransform trans(physx::PxVec3(0,0,0), trot);
 		/*physx::PxQuat trot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
 		
@@ -413,7 +406,7 @@ namespace GASS
 		void PhysXSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 		{
 			MessagePtr joint_message;
-			if(m_Joint)
+			/*if(m_Joint)
 			{
 					physx::PxTransform  t1  = m_RollAxisActor->getGlobalPose();
 					physx::PxTransform  t2 = m_WheelActor->getGlobalPose();
@@ -422,10 +415,11 @@ namespace GASS
 					//if(GetSceneObject()->GetName()=="JimTankWheelL1[8]")
 					//std::cout << "diff:" << angle2 << " Rad:" << angle << " Axis:" << axis.x << " " << axis.y << " " << axis.z << "\n";
 					//	float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
-					joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+					
+					joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,0));
 					if	(joint_message)
 						GetSceneObject()->SendImmediate(joint_message);
-			}
+			}*/
 		}
 
 	}

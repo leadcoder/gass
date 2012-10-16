@@ -41,9 +41,9 @@ namespace GASS
 		virtual ~PhysXTerrainGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);

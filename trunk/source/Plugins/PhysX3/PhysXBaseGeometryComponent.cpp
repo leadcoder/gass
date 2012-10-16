@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
- 
+
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
@@ -57,7 +57,7 @@ namespace GASS
 		m_Body = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
 		LocationComponentPtr location  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
-		
+
 		if(m_Body)
 		{
 			if(m_SizeFromMesh)
@@ -73,19 +73,13 @@ namespace GASS
 			{
 				if(location)
 					GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
-				else
-					GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
+				//else
+				//	GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
 			}
 		}
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-	}
-
-	void PhysXBaseGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
 	}
 
 	bool  PhysXBaseGeometryComponent::GetSizeFromMesh() const
@@ -106,7 +100,7 @@ namespace GASS
 	void PhysXBaseGeometryComponent::SetCollisionBits(unsigned long value)
 	{
 		m_CollisionBits = value;
-		
+
 	}
 
 	unsigned long  PhysXBaseGeometryComponent::GetCollisionCategory() const 
@@ -125,8 +119,12 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		m_Shape = CreateShape();
+		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 		if(m_Body)
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), m_Body->GetMass()); 
+		{
+			physx::PxReal mass = m_Body->GetMass();
+			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), &mass,1);
+		}
 	}
 
 	GeometryComponentPtr PhysXBaseGeometryComponent::GetGeometry() const 
@@ -140,14 +138,9 @@ namespace GASS
 		return geom;
 	}
 
-	void PhysXBaseGeometryComponent::OnLoadComponents(LoadComponentsMessagePtr message)
-	{
-		
-	}
-
 	void PhysXBaseGeometryComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		
+
 	}
 
 	void PhysXBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -157,8 +150,15 @@ namespace GASS
 		m_SceneManager = scene_manager;
 		SetSizeFromMesh(m_SizeFromMesh);
 		m_Shape = CreateShape();
-				if(m_Body)
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), m_Body->GetMass()); 
+		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+
+		if(m_Body)
+		{
+			physx::PxReal mass = m_Body->GetMass();
+			//physx::PxReal density = 0.001;
+			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), &mass,1);
+			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), &density,1);
+		}
 	}
 
 	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
@@ -183,7 +183,7 @@ namespace GASS
 	{
 		if(m_Body == NULL)
 		{
-			
+
 		}
 	}
 
@@ -191,7 +191,7 @@ namespace GASS
 	{
 		if(m_Body == NULL)
 		{
-			
+
 		}
 	}
 

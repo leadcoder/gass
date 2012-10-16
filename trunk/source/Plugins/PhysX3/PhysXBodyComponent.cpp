@@ -72,6 +72,7 @@ namespace GASS
 			SetPosition(pos);
 		}
 	}
+
 	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
@@ -81,6 +82,7 @@ namespace GASS
 			SetPosition(pos);
 		}
 	}
+
 	void PhysXBodyComponent::OnRotationChanged(RotationMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
@@ -93,10 +95,9 @@ namespace GASS
 
 	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
-
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
 		Vec3 value = message->GetValue();
-
+		
 		//wake body!!
 		Enable();
 		switch(type)

@@ -68,21 +68,16 @@ namespace GASS
 
 	void PhysXTerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
-	}
-
-	void PhysXTerrainGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 	}
 
-	void PhysXTerrainGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void PhysXTerrainGeometryComponent::OnDelete()
 	{
 		Reset();
 	}

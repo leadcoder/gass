@@ -71,12 +71,10 @@ namespace GASS
 
 		//messages functions
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
-		void OnLoadComponents(LoadComponentsMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		virtual physx::PxShape* CreateShape(){return NULL;}
 		
 		void SetPosition(const Vec3 &pos);

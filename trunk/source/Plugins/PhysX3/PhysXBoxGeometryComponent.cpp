@@ -67,7 +67,10 @@ namespace GASS
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(size.x/2.0,size.y/2.0,size.z/2.0), *material);
+		
+		physx::PxTransform offset = physx::PxTransform::createIdentity();
+		offset.p = PxConvert::ToPx(GetOffset());
+		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(size.x/2.0,size.y/2.0,size.z/2.0), *material,offset);
 		
 		physx::PxFilterData collFilterData;
 		collFilterData.word0=COLLISION_FLAG_CHASSIS;
