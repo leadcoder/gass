@@ -57,18 +57,13 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SaveXML(TiXmlElement *obj_elem);
 		float GetDensityAt(float x, float z);
-
 		void SetMapBounds(TBounds bounds) {m_MapBounds = bounds;}
 	protected:
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 		void SetImport(const std::string &dm);
 		std::string GetImport() const {return std::string("");}
-		//void LoadDensityMap(const std::string &mapFile, int channel);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadMessagePtr message);
-
 		std::string GetDensityMap() const
 		{
 			return m_DensityMapFilename;
@@ -77,7 +72,6 @@ namespace GASS
 		{
 			m_DensityMapFilename = colormap;
 		}
-		//Ogre::PixelBox *m_DensityMap;
 		std::string m_DensityMapFilename;
 		TBounds m_MapBounds;
 		Ogre::Image m_DensityImage;

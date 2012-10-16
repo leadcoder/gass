@@ -64,9 +64,10 @@ namespace GASS
 
 	void ArmorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LoadComponentsMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LocationLoadedMessage,1));
 	}
-	void ArmorComponent::OnLoad(LoadComponentsMessagePtr message)
+
+	void ArmorComponent::OnLoad(LocationLoadedMessagePtr message)
 	{
 		NetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
 		if(nc && !nc->IsRemote())

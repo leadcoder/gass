@@ -68,23 +68,6 @@ namespace GASS
 
 	void OSGSkyboxComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGSkyboxComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGSkyboxComponent::OnUnload,UnloadComponentsMessage,1));
-	}
-	
-	void OSGSkyboxComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
-	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		m_ActiveCameraObject = cam_obj;
-	}
-
-	void OSGSkyboxComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
-	}
-
-	void OSGSkyboxComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
@@ -109,6 +92,16 @@ namespace GASS
 
 	}
 
+	void OSGSkyboxComponent::OnDelete()
+	{
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
+	}
+	
+	void OSGSkyboxComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	{
+		SceneObjectPtr cam_obj = message->GetCamera();
+		m_ActiveCameraObject = cam_obj;
+	}
 
 	std::string OSGSkyboxComponent::GetTexturePath(const std::string &side) const
 	{

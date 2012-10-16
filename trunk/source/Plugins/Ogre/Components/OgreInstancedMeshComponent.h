@@ -77,7 +77,7 @@ namespace GASS
 		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
 	
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnDelete();
 
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 	

@@ -58,10 +58,10 @@ namespace GASS
 		virtual ~ODECollisionGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	protected:
 		//Message functions
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryScale(GeometryScaleMessagePtr message);

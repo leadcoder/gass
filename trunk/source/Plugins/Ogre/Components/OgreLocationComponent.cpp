@@ -73,8 +73,6 @@ namespace GASS
 
 	void OgreLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnLoad,GASS::LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::PositionMessage,GASS::PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnScaleMessage,GASS::ScaleMessage,0));
 		
@@ -87,10 +85,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoMessage, GASS::BoundingInfoMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
-	}
-
-	void OgreLocationComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetSceneManger();
@@ -141,7 +136,7 @@ namespace GASS
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 	}
 
-	void OgreLocationComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void OgreLocationComponent::OnDelete()
 	{
 		if(m_OgreNode)
 		{

@@ -46,39 +46,26 @@ namespace GASS
 		virtual ~SightComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
+		void OnInput(InputControllerMessagePtr message);
+		void OnBaseTransformation(TransformationNotifyMessagePtr message);
+		void OnBarrelTransformation(BarrelTransformationMessagePtr message);
+		void OnAimAtPosition(AimAtPositionMessagePtr message);
+
 		void UpdateAimTransformation(double delta_time);
-		
 		void SetMaxPitchVelocity(float value) {m_MaxPitchVelocity = value;}
 		float GetMaxPitchVelocity() const {return m_MaxPitchVelocity;}
-
 		void SetMaxYawVelocity(float value) {m_MaxYawVelocity = value;}
 		float GetMaxYawVelocity() const {return m_MaxYawVelocity;}
-		
-		//void SetSteerForce(float value) {m_SteerForce = value;}
-		//float GetSteerForce() const {return m_SteerForce;}
-
 		void SetYawMaxMinAngle(const Vec2 &value) {m_YawMaxAngle = value.x;m_YawMinAngle= value.y;}
 		Vec2 GetYawMaxMinAngle() const {return Vec2(m_YawMaxAngle,m_YawMinAngle);}
 		void SetPitchMaxMinAngle(const Vec2 &value) {m_PitchMaxAngle = value.x;m_PitchMinAngle= value.y;}
 		Vec2 GetPitchMaxMinAngle() const {return Vec2(m_PitchMaxAngle,m_PitchMinAngle);}
 		SceneObjectLink  GetAutoAimObject() const {return m_AutoAimObject;}
 		void SetAutoAimObject(const SceneObjectLink  &value) {m_AutoAimObject = value;}
-		
-		
-		//Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);
-		//Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
-		//Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
-		
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnInput(InputControllerMessagePtr message);
-		void OnBaseTransformation(TransformationNotifyMessagePtr message);
-		void OnBarrelTransformation(BarrelTransformationMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnAimAtPosition(AimAtPositionMessagePtr message);
 		void SceneManagerTick(double delta_time);
 		void UpdateTargetDistance();
-
 		
 		float m_MaxYawVelocity;
 		float m_MaxPitchVelocity;
@@ -86,33 +73,23 @@ namespace GASS
 		float m_YawMaxAngle;
 		float m_PitchMinAngle;
 		float m_PitchMaxAngle;
-
 		int m_CurrentZoom;
-		
-
 		Mat4 m_BaseTransformation;
 		Mat4 m_BarrelTransformation;
 		Mat4 m_StartRotation;
 		Mat4 m_AimRotation;
-		
 		bool m_Active;
 		bool m_RemoteSim;
 		bool m_AimAtPos;
 		std::string m_TargetName;
-		//Float m_AngularVelocity;
-
 		Float m_YawValue;
 		Float m_PitchValue;
 		Float m_TargetDistance;
-
 		Float m_YawInput;
 		Float m_PitchInput;
-
 		Float m_CurrentYawAngle;
 		Float m_CurrentPitchAngle;
-
 		SceneObjectWeakPtr m_TargetObject;
-		
 		SceneObjectLink m_AutoAimObject;
 
 		ADD_ATTRIBUTE(int,AutoAimPriority);
@@ -128,8 +105,6 @@ namespace GASS
 		ADD_ATTRIBUTE(bool,Debug);
 		ADD_ATTRIBUTE(bool,ResetToBarrelWhileInactive);
 		ADD_ATTRIBUTE(int,TurnInputExp);
-		
-		
 	};
 	typedef boost::shared_ptr<SightComponent> SightComponentPtr;
 }

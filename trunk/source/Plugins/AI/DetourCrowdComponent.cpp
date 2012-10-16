@@ -69,18 +69,13 @@ namespace GASS
 
 	void DetourCrowdComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnLoad,LoadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnMoved,PositionMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnGoToPosisiton,GotoPositionMessage,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
-	}
 
-	void DetourCrowdComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		
 		//Get nav mesh by name?
 		RecastNavigationMeshComponentPtr nm_comp = FindNavMesh(m_NavMeshName);
@@ -242,7 +237,7 @@ namespace GASS
 
 	}
 
-	void DetourCrowdComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void DetourCrowdComponent::OnDelete()
 	{
 		m_DebugLines.reset();
 	}

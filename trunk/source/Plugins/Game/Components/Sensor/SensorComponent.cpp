@@ -44,14 +44,9 @@ namespace GASS
 
 	void SensorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitialized,0));
-	}
-
-	void SensorComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 		
@@ -65,13 +60,8 @@ namespace GASS
 			SignatureComponentPtr sig = boost::shared_dynamic_cast<SignatureComponent>(comps[i]);
 			m_AllObjects.push_back(sig);
 		}
-		
 	}
 
-	void SensorComponent::OnUnload(MessagePtr message)
-	{
-		m_Initialized = false;
-	}
 
 	void SensorComponent::OnSceneObjectCreated(PostSceneObjectInitializedPtr message)
 	{

@@ -154,13 +154,27 @@ namespace GASS
 
 	void VehicleEngineComponent::OnInitialize()
 	{
+		BaseSceneComponent::OnInitialize();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,InputControllerMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 
-		BaseSceneComponent::OnInitialize();
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
+		
 		m_Initialized = true;
+		
+		//Get wheels from children
+		SetWheels(m_WheelObjects);
+
+		//Play engine sound
+		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(sound_msg);
+	}
+
+
+	void VehicleEngineComponent::OnDelete()
+	{
+
 	}
 
 	PIDControl VehicleEngineComponent::GetSteerPID() const
@@ -346,25 +360,7 @@ namespace GASS
 	}
 
 
-	void VehicleEngineComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-
-		//Get wheels from children
-		SetWheels(m_WheelObjects);
-
-		//Play engine sound
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(sound_msg);
-		
-	}
-
-
-	void VehicleEngineComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
+	
 
 	void VehicleEngineComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
 	{

@@ -44,22 +44,19 @@ namespace GASS
 		virtual ~BoneModifierComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
+		void OnLODChange(LODMessagePtr message);
+		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+		
 		std::string GetBoneName() const;
 		void SetBoneName(const std::string &name);
 		std::string GetMeshObject() const;
 		void SetMeshObject(const std::string &name);
-
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLODChange(LODMessagePtr message);
-
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 		
 		std::string m_BoneName;
 		bool m_Active;
-
 		ADD_ATTRIBUTE(SceneObjectLink, SourceObject);
 	};
 }

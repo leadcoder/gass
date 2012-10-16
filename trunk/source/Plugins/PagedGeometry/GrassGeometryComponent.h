@@ -57,11 +57,10 @@ namespace GASS
 		~GrassGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		virtual void SaveXML(TiXmlElement *obj_elem);
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPaint(GrassPaintMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
@@ -97,18 +96,16 @@ namespace GASS
 		void SetSwayDistribution(float distribution);
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
-		
-protected:
 		float GetCollisionSystemHeight(float x, float z);
 		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
+
 		std::string m_ColorMapFilename;
 		std::string m_Material;
 		GrassLoader* m_GrassLoader;
 		Vec2 m_MaxSize;
 		Vec2 m_MinSize;
-
 		bool m_EnableSway;
 		float m_SwaySpeed;
 		float m_SwayLength;
@@ -117,7 +114,6 @@ protected:
 		float m_ViewDist;
 		bool m_Blend;
 		std::string m_RenderTechnique;
-
 		PagedGeometry *m_PagedGeometry;
 		GrassLayer *m_GrassLayer;
 		TBounds m_MapBounds;
@@ -128,14 +124,10 @@ protected:
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
 		static ICollisionSystem* m_CollisionSystem;
-
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;
-
 		GeometryPageManager* m_LOD0;
-
 		void update();
-
 	};
 }
 

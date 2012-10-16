@@ -99,41 +99,19 @@ namespace GASS
 	}
 
 
-	void TreeGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void TreeGeometryComponent::OnInitialize()
 	{
-		if(m_PagedGeometry)
-		{
-			if(m_PagedGeometry->getPageLoader())
-				delete m_PagedGeometry->getPageLoader();
-			delete m_PagedGeometry;
-		}
-
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-
-		sm->destroyEntity(m_TreeEntity);
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->removeListener(this);
-	}
-
-	void TreeGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
+		
 		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 		ImpostorPage::setImpostorResolution(m_ImposterResolution);
-		//ImpostorPage::setImpostorColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
-
-		//OgreGraphicsSceneManager* ogsm = boost::any_cast<OgreGraphicsSceneManager*>(message->GetData("GraphicsSceneManager"));
-		//assert(ogsm);
-		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
+		
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-
 
 		target->addListener(this);
 
@@ -143,8 +121,6 @@ namespace GASS
 			user_bounds = false;
 			m_MapBounds = TBounds(m_CustomBounds.x, m_CustomBounds.y, m_CustomBounds.z, m_CustomBounds.w);
 		}
-
-		
 
 		if(!user_bounds)
 		{
@@ -159,13 +135,9 @@ namespace GASS
 				m_Terrain = terrain.get();
 				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
 			}
-			
 		}
-	
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
-
-
 		m_DensityMap = GetSceneObject()->GetFirstComponentByClass<DensityMapComponent>();
 		if(m_DensityMap)
 			m_DensityMap->SetMapBounds(m_MapBounds);
@@ -311,6 +283,26 @@ namespace GASS
 		//}
 	}
 
+	void TreeGeometryComponent::OnDelete()
+	{
+		if(m_PagedGeometry)
+		{
+			if(m_PagedGeometry->getPageLoader())
+				delete m_PagedGeometry->getPageLoader();
+			delete m_PagedGeometry;
+		}
+
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+
+		sm->destroyEntity(m_TreeEntity);
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->removeListener(this);
+	}
+
+	
 
 	void TreeGeometryComponent::OnPaint(GrassPaintMessagePtr message)
 	{
@@ -461,13 +453,7 @@ namespace GASS
 		}
 	}*/
 
-	void TreeGeometryComponent::OnInitialize()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnLoad,LoadComponentsMessage,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
-		
-	}
+	
 
 	/*void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
 	{

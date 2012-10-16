@@ -55,8 +55,11 @@ namespace GASS
 	public:
 		GrassLoaderComponent(void);
 		~GrassLoaderComponent(void);
+		
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
+
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		virtual void SaveXML(TiXmlElement *obj_elem);
 		GrassLoader* GetGrassLoader() const {return m_GrassLoader;}
@@ -67,8 +70,6 @@ namespace GASS
 	protected:
 		void SaveDensityMap();
 		void OnRoadMessage(RoadMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetPageSize() const;
@@ -80,7 +81,6 @@ namespace GASS
 		void SetViewDistance(float distance);
 		void SetImportDensityMap(const std::string &dm);
 		std::string GetImportDensityMap() const;
-	
 protected:
 		float GetCollisionSystemHeight(float x, float z);
 		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
@@ -88,7 +88,6 @@ protected:
 		void UpdateSway();
 		void OnPaint(GrassPaintMessagePtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
-	
 		
 		std::string m_ColorMapFilename;
 		GrassLoader* m_GrassLoader;

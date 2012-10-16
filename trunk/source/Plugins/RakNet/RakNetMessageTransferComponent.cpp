@@ -70,12 +70,6 @@ namespace GASS
 
 	void RakNetMessageTransferComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetMessageTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetMessageTransferComponent::OnLoad,LoadComponentsMessage,1));
-	}
-
-	void RakNetMessageTransferComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -136,7 +130,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetMessageTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RakNetMessageTransferComponent::OnDelete()
 	{
 
 	}

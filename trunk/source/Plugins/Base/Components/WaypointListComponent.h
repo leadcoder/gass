@@ -60,8 +60,6 @@ namespace GASS
 		
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
 		
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnMoved(TransformationNotifyMessagePtr message);
 		void OnUpdate(UpdateWaypointListMessagePtr message);
 

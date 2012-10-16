@@ -59,13 +59,7 @@ namespace GASS
 
 	void LODComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationNotifyMessage,0));
-	}
-
-	void LODComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		//get active camera
 		
@@ -82,7 +76,7 @@ namespace GASS
 		}
 	}
 
-	void LODComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void LODComponent::OnDelete()
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage));
 

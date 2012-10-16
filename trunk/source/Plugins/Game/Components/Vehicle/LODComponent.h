@@ -43,25 +43,21 @@ namespace GASS
 		virtual ~LODComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnCameraMoved(TransformationNotifyMessagePtr message);
+		void OnObjectMoved(TransformationNotifyMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
-		
+
 		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}
 		void SetLowLODDistance(float value) {m_LowLODDistance = value;}
 		float GetMediumLODDistance() const {return m_MediumLODDistance;}
 		float GetLowLODDistance() const {return m_LowLODDistance;}
-
-		void OnCameraMoved(TransformationNotifyMessagePtr message);
-		void OnObjectMoved(TransformationNotifyMessagePtr message);
-
 		void UpdateLOD();
 		
 		float m_MediumLODDistance;
 		float m_LowLODDistance;
 		SceneObjectWeakPtr m_ActiveCameraObject;
-
 		Vec3 m_ObjectPosition;
 		Vec3 m_CameraPosition;
 		LODMessage::LODLevel m_CurrentLevel;

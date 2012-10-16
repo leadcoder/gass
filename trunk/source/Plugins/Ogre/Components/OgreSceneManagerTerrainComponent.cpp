@@ -72,8 +72,25 @@ namespace GASS
 
 	void OgreSceneManagerTerrainComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreSceneManagerTerrainComponent::OnUnload,UnloadComponentsMessage,0));
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		assert(ogsm);
+		m_OgreSceneManager = ogsm->GetSceneManger();
+
+		if(m_CreateCollisionMesh)
+		{
+			Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(this);
+			m_PageListenerAdded = true;
+		}
+		LoadTerrain(m_TerrainConfigFile);
+	}
+
+	void OgreSceneManagerTerrainComponent::OnDelete()
+	{
+		delete[] m_HeightData;
+		if(m_PageListenerAdded)
+		{
+			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
+		}
 	}
 
 	void OgreSceneManagerTerrainComponent::SetFilename(const std::string &filename) 
@@ -144,29 +161,7 @@ namespace GASS
 		}
 	}
 
-	void OgreSceneManagerTerrainComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
-		assert(ogsm);
-		m_OgreSceneManager = ogsm->GetSceneManger();
-
-		if(m_CreateCollisionMesh)
-		{
-			Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(this);
-			m_PageListenerAdded = true;
-		}
-		LoadTerrain(m_TerrainConfigFile);
-
-	}
-
-	void OgreSceneManagerTerrainComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		delete[] m_HeightData;
-		if(m_PageListenerAdded)
-		{
-			Ogre::TerrainPageSourceListenerManager::getSingleton().removeListener(this);
-		}
-	}
+	
 
 	AABox OgreSceneManagerTerrainComponent::GetBoundingBox() const
 	{

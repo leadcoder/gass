@@ -34,9 +34,8 @@ namespace GASS
 		void UpdateAnimation();
 	protected:
 		void OnLoad(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		bool m_Initlized;
+		bool m_Initialized;
 		KeyframeAnimation m_Animation;
 		double m_CurrentTime;
 		Quaternion m_Rotation;

@@ -46,6 +46,7 @@ namespace GASS
 		~OgreTerrainGroupComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -88,8 +89,8 @@ namespace GASS
 		void CreatePages(const Vec2i  &size);
 		void SetOrigin(const Vec3 &pos);
 		Vec3 GetOrigin() const;
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
+		
 
 		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
 		void OnTerrainLayerPaint(TerrainPaintMessagePtr message);

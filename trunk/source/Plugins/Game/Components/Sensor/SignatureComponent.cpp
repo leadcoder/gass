@@ -40,20 +40,9 @@ namespace GASS
 
 	void SignatureComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnTransChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnVelocity,VelocityNotifyMessage,0));
-	}
-
-	void SignatureComponent::OnLoad(MessagePtr message)
-	{
 		m_Initialized = true;
-	}
-
-	void SignatureComponent::OnUnload(MessagePtr message)
-	{
-		m_Initialized = false;
 	}
 
 	void SignatureComponent::OnTransChanged(TransformationNotifyMessagePtr message)

@@ -28,6 +28,16 @@
 
 namespace GASS
 {
+	class GrassLoaderComponentLoaded : public BaseMessage
+	{
+		public:
+		GrassLoaderComponentLoaded (SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay)
+		{
+		}
+	};
+	typedef boost::shared_ptr<GrassLoaderComponentLoaded> GrassLoaderComponentLoadedPtr;
+
+	
 	class GrassPaintMessage : public BaseMessage
 	{
 	public:

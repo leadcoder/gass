@@ -20,8 +20,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		void OnTriggerEnter(TriggerEnterMessagePtr message);
 	private:
 		double GetDelay() const;

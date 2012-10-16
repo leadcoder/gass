@@ -31,25 +31,21 @@ namespace GASS
 
 	void AIMovingPlatformComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnLocationLoaded,LocationLoadedMessage,1)); //load after agent
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnSpeedMessage,DesiredSpeedMessage,0));
-
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 	}
 
-	void AIMovingPlatformComponent::OnLoad(LocationLoadedMessagePtr message)
+
+	void AIMovingPlatformComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		m_Initialized = true;
 		SetWaypointList(m_WaypointListName);
 	}
-	
-	void AIMovingPlatformComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
 
+	
+	
 	void AIMovingPlatformComponent::SceneManagerTick(double delta_time)
 	{
 	

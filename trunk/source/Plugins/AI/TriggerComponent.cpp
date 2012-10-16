@@ -24,10 +24,10 @@ namespace GASS
 
 	void TriggerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TriggerComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TriggerComponent::OnUnload,UnloadComponentsMessage,1));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
+		SetListenerID(m_ListenerID);
+		m_Initialized = true;
 	}
 
 	SceneObjectID  TriggerComponent::GetListenerID() const
@@ -53,18 +53,7 @@ namespace GASS
 			}
 		}
 	}
-
-	void TriggerComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		m_Initialized = true;
-		SetListenerID(m_ListenerID);
-	}
-
-	void TriggerComponent::OnUnload(MessagePtr message)
-	{
-		m_Initialized = false;
-	}
-
+	
 	void TriggerComponent::RegisterListener(SceneObjectPtr object)
 	{
 		TriggerListener listener;

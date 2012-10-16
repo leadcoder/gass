@@ -85,13 +85,47 @@ namespace GASS
 
 	void AutoAimComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnUnload,UnloadComponentsMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnInput,InputControllerMessage,0));
+		BaseSceneComponent::OnInitialize();
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnAimAtPosition,AimAtPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnActivateAutoAim,ActivateAutoAimMessage,0));
-		BaseSceneComponent::OnInitialize();
+		
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
+
+		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(play_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
+		GetSceneObject()->PostMessage(volume_msg);
+
+		//GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnParentTransformation,TransformationNotifyMessage,0));
+		if(m_TurretObject->GetParentSceneObject())
+			m_TurretObject->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+
+
+		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
+		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
+		
+		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationNotifyMessage,0));
+		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretHingeUpdate,HingeJointNotifyMessage,0));
+	
+		m_TurretObject->PostMessage(force_msg);
+		m_TurretObject->PostMessage(vel_msg);
+
+		
+		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationNotifyMessage,0));
+		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelHingeUpdate,HingeJointNotifyMessage,0));
+		m_BarrelObject->PostMessage(force_msg);
+		m_BarrelObject->PostMessage(vel_msg);
+		
 	}
+
+	void AutoAimComponent::OnDelete()
+	{
+
+	}
+
 
 	void AutoAimComponent::SetBarrelObject(const SceneObjectLink &value)
 	{
@@ -285,45 +319,7 @@ namespace GASS
 		
 	}
 
-	void AutoAimComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-
-
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
-
-		//GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnParentTransformation,TransformationNotifyMessage,0));
-		if(m_TurretObject->GetParentSceneObject())
-			m_TurretObject->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBaseTransformation,TransformationNotifyMessage,0));
-
-
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
-		
-		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationNotifyMessage,0));
-		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretHingeUpdate,HingeJointNotifyMessage,0));
 	
-		m_TurretObject->PostMessage(force_msg);
-		m_TurretObject->PostMessage(vel_msg);
-
-		
-		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationNotifyMessage,0));
-		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelHingeUpdate,HingeJointNotifyMessage,0));
-		m_BarrelObject->PostMessage(force_msg);
-		m_BarrelObject->PostMessage(vel_msg);
-		
-	}
-
-	void AutoAimComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
-
 	void AutoAimComponent::OnTurretHingeUpdate(HingeJointNotifyMessagePtr message)
 	{
 		m_TurretAngle = -message->GetAngle();

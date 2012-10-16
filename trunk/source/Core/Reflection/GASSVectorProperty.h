@@ -86,6 +86,40 @@ namespace GASS
 			}
 		}
 
+		virtual PropertyType GetTypeID() const
+		{
+			if(typeid(T) == typeid(int))
+			{
+				return PROP_INT;
+			}
+			else if(typeid(T) == typeid(float))
+			{
+				return PROP_FLOAT;
+			}
+			else if(typeid(T) == typeid(std::string))
+			{
+				return PROP_STRING;
+			}
+			else if(typeid(T) == typeid(Vec2))
+			{
+				return PROP_VEC2;
+			}
+			else if(typeid(T) == typeid(Vec3))
+			{
+				return PROP_VEC3;
+			}
+			else if(typeid(T) == typeid(Vec4))
+			{
+				return PROP_VEC4;
+			}
+			else if(typeid(T) == typeid(bool))
+			{
+				return PROP_BOOL;
+			}
+			else
+				return PROP_UNKNOWN;
+		}
+
 
 		void Serialize(BaseReflectionObject* object,ISerializer* serializer)
 		{
@@ -114,7 +148,7 @@ namespace GASS
 				int num_val = static_cast<int>( val.size());
 				saver->IO<int>(num_val);
 
-				for(int i = 0 ; i < val.size(); i++)
+				for(size_t i = 0 ; i < val.size(); i++)
 				{
 					saver->IO<T>(val[i]);
 				}
@@ -140,7 +174,7 @@ namespace GASS
 			std::vector<T> val = GetValue(object);
 			std::string res;
 
-			for(int i = 0 ; i < val.size(); i++)
+			for(size_t i = 0 ; i < val.size(); i++)
 			{
 				std::string str_val;
 				if(i > 0 )
@@ -178,7 +212,7 @@ namespace GASS
 		void SetValueByStringVector(BaseReflectionObject* object, const std::vector<std::string> &value)
 		{
 			std::vector<T> res;
-			for(int i = 0 ; i < value.size(); i++)
+			for(size_t i = 0 ; i < value.size(); i++)
 			{
 				T out_value;
 				std::stringstream ss(value[i]);
@@ -193,7 +227,7 @@ namespace GASS
 			std::vector<T> val = GetValue(object);
 			std::vector<std::string> res;
 
-			for(int i = 0 ; i < val.size(); i++)
+			for(size_t i = 0 ; i < val.size(); i++)
 			{
 				std::string str_val;
 				std::stringstream sstream;
@@ -209,6 +243,43 @@ namespace GASS
 		SetterType		m_Setter;
 		SetterTypeConst	m_SetterConst;
 	};
+
+
+	/*template <class T>
+	VectorProperty VectorProperty<T>::GetTypeID() const
+	{
+
+	if(typeid(T) == typeid(int))
+	{
+	return PROP_INT;
+	}
+	else if(typeid(T) == typeid(float))
+	{
+	return PROP_FLOAT;
+	}
+	else if(typeid(T) == typeid(std::string))
+	{
+	return PROP_STRING;
+	}
+	else if(typeid(T) == typeid(Vec2))
+	{
+	return PROP_VEC2;
+	}
+	else if(typeid(T) == typeid(Vec3))
+	{
+	return PROP_VEC3;
+	}
+	else if(typeid(T) == typeid(Vec4))
+	{
+	return PROP_VEC4;
+	}
+	else if(typeid(T) == typeid(bool))
+	{
+	return PROP_BOOL;
+	}
+	else
+	return PROP_UNKNOWN;
+	}*/
 }
 #endif
 

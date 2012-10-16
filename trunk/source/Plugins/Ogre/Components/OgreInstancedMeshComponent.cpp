@@ -74,7 +74,7 @@ namespace GASS
 	void OgreInstancedMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnUnload,UnloadComponentsMessage,0));
+		
 	}
 
 	void OgreInstancedMeshComponent::LoadXML(TiXmlElement *elem)
@@ -292,7 +292,7 @@ namespace GASS
 	}
 
 
-	void OgreInstancedMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void OgreInstancedMeshComponent::OnDelete()
 	{
 
 		OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );

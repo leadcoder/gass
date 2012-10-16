@@ -60,6 +60,14 @@ namespace GASS
 		RegisterProperty<float>("Width", &GASS::OSGBillboardComponent::GetWidth, &GASS::OSGBillboardComponent::SetWidth);
 	}
 
+	void OSGBillboardComponent::OnInitialize()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
+	}
+
+
 	float OSGBillboardComponent::GetWidth() const 
 	{
 		return m_Width;
@@ -92,12 +100,7 @@ namespace GASS
 		m_GeomFlags = flags;
 	}
 
-	void OSGBillboardComponent::OnInitialize()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
-	}
+	
 
 	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{

@@ -54,8 +54,16 @@ namespace GASS
 
 	void HUDComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HUDComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HUDComponent::OnUnload,UnloadComponentsMessage,0));
+		
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
+		UpdateHUD();
+		m_Initialized = true;
+	}
+
+	void HUDComponent::OnDelete()
+	{
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage));
 	}
 
 	void HUDComponent::OnChangeCamera(ChangeCameraMessagePtr message)
@@ -71,20 +79,7 @@ namespace GASS
 		}
 	}
 
-
-	void HUDComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage));
-	}
 	
-
-	void HUDComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
-		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
-		UpdateHUD();
-		m_Initialized = true;
-	}
 
 	void HUDComponent::SetMaterial(const std::string &material) 
 	{

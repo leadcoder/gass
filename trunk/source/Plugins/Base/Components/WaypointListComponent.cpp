@@ -75,10 +75,12 @@ namespace GASS
 
 	void WaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUpdate,UpdateWaypointListMessage,1));
 
+		m_Initialized = true;
+		
+		UpdatePath();
+		SetShowWaypoints(m_ShowWaypoints);
 	}
 
 	int WaypointListComponent::GetSplineSteps()const
@@ -151,18 +153,6 @@ namespace GASS
 				}
 			}
 		}
-	}
-
-	void WaypointListComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
-
-	void WaypointListComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		m_Initialized = true;
-		UpdatePath();
-		SetShowWaypoints(m_ShowWaypoints);
 	}
 
 	void WaypointListComponent::OnUpdate(UpdateWaypointListMessagePtr message)

@@ -44,11 +44,8 @@ namespace GASS
 		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void OnPlayerInput(InputControllerMessagePtr  message);
-
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-
 	private:
 		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};

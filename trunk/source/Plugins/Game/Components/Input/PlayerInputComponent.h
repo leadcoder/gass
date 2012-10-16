@@ -45,7 +45,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		void OnInput(ControllSettingsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnDelete();
 	private:
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;

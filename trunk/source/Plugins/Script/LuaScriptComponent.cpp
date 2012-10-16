@@ -77,12 +77,6 @@ namespace GASS
 
 	void LuaScriptComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LuaScriptComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LuaScriptComponent::OnUnload,UnloadComponentsMessage,0));
-	}
-
-	void LuaScriptComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		m_ScriptWrapper->SetSceneObject(GetSceneObject());
 		m_State = lua_open();
 		luaopen_base(m_State);
@@ -115,10 +109,6 @@ namespace GASS
 		return m_Script;
 	}
 
-	void LuaScriptComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
 
 	// this code pushes a C++ pointer as well as the SWIG type onto the Lua stack
 	bool push_pointer(lua_State*L, void* ptr, const char* type_name, int owned = 0) 

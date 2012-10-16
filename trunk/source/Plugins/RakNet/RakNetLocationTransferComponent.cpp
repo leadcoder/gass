@@ -89,13 +89,7 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnLoad,LoadComponentsMessage,1));
-
-	}
-
-	void RakNetLocationTransferComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -193,7 +187,7 @@ namespace GASS
 		m_LocationHistory[0].Time = current_time;
 	}
 
-	void RakNetLocationTransferComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RakNetLocationTransferComponent::OnDelete()
 	{
 
 		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());

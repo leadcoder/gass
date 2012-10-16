@@ -34,9 +34,7 @@ namespace GASS
 		
 	protected:
 		void UpdateAnimation();
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-
+		
 		Float GetTime() const {return m_Key.m_Time;}
 		void SetTime(Float value){m_Key.m_Time = value;UpdateAnimation();}
 		Vec3 GetPosition() const{ return m_Key.m_Pos;}
@@ -50,7 +48,7 @@ namespace GASS
 		bool GetUseRotation() const {return m_Key.m_UseRot;}
 		void SetUseRotation(bool value) {m_Key.m_UseRot= value;UpdateAnimation();}
 
-		bool m_Initlized;
+		bool m_Initialized;
 		Key m_Key;
 	};
 	typedef boost::shared_ptr<AnimationKeyComponent> AnimationKeyComponentPtr;

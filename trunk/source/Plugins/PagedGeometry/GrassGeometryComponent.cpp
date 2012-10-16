@@ -93,11 +93,127 @@ namespace GASS
 
 	void GrassGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnLoad,LoadComponentsMessage,999));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnPaint,GrassPaintMessage,0));
+		//assert(ogsm);
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->addListener(this);
+
+		bool user_bounds = true;
+		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
+		{
+			user_bounds = false;
+		}
+
+		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
+
+		if(!user_bounds)
+		{
+			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
+			if(!terrain)
+			{
+				SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
+				terrain = GetTerrainComponent(root);
+			}
+			if(terrain)
+			{
+				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				AABox aabox = geom->GetBoundingBox();
+
+				m_Bounds.x = aabox.m_Min.x;
+				m_Bounds.y = aabox.m_Min.z;
+
+				m_Bounds.z = aabox.m_Max.x;
+				m_Bounds.w = aabox.m_Max.z;
+				//for speed we save the raw pointer , we will access this for each height callback
+				m_Terrain = terrain.get();
+			}
+			else
+			{
+				m_Bounds.Set(0,0,2000,2000);
+			}
+			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+		}
+		else
+		{
+			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
+
+		}
+		//What camera should be used?
+
+		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
+
+		m_GrassLoader = new GrassLoader(m_PagedGeometry);
+		m_GrassLoader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
+		m_LOD0 = m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
+		
+		m_PagedGeometry->setPageLoader(m_GrassLoader);
+		
+		m_GrassLoader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
+		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
+		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
+		m_GrassLayer->setDensity(m_DensityFactor);
+		m_GrassLayer->setMapBounds(m_MapBounds);
+		//if(m_DensityMapFilename != "")
+		//	m_GrassLayer->setDensityMap(m_DensityMapFilename);
+		//else
+		{
+			//create from in run time?
+			//try to load 
+
+			ScenePtr  scene = GetSceneObject()->GetScene();
+			std::string scene_path = scene->GetPath().GetFullPath();
 
 
+			std::string denmapname;
+			if(m_DensityMapFilename != "")
+			{
+				denmapname = m_DensityMapFilename;
+			}
+			else
+				denmapname = "density_map_" + GetName() + ".tga";
+
+			const std::string fp_denmap = scene_path + "/" + denmapname;
+			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+			try
+			{
+				m_DensityImage.load(stream);
+			}
+			catch(...)
+			{
+				int densize = 1024;
+				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
+				memset(data, 0, densize * densize * 4);
+
+				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
+				m_DensityImage.save(fp_denmap);
+			}
+			stream.setNull();
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
+			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			m_GrassLayer->setDensityMap(m_DensityTexture);
+		}
+		if(m_ColorMapFilename != "")
+			m_GrassLayer->setColorMap(m_ColorMapFilename);
+
+		//loader->setRenderQueueGroup();
+
+
+		//m_GrassLoader = loader;
+
+		SetFadeTech(m_FadeTech);
+		SetRenderTechnique(m_RenderTechnique );
+		if(m_GrassLayer)
+		{
+			UpdateSway();
+			m_GrassLayer->setLightingEnabled(false);
+		}
+		//		Root::Get().AddRenderListener(this);
 	}
 
 	std::string GrassGeometryComponent::GetDensityMap() const
@@ -361,7 +477,7 @@ namespace GASS
 	}
 
 
-	void GrassGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void GrassGeometryComponent::OnDelete()
 	{
 		if(m_PagedGeometry)
 		{
@@ -400,129 +516,7 @@ namespace GASS
 	}
 
 
-	void GrassGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//assert(ogsm);
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->addListener(this);
-
-		bool user_bounds = true;
-		if(m_Bounds.x == 0 && m_Bounds.y == 0 && m_Bounds.z == 0 && m_Bounds.w == 0)
-		{
-			user_bounds = false;
-		}
-
-		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
-
-		if(!user_bounds)
-		{
-			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
-			if(!terrain)
-			{
-				SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
-				terrain = GetTerrainComponent(root);
-			}
-			if(terrain)
-			{
-				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
-				AABox aabox = geom->GetBoundingBox();
-
-				m_Bounds.x = aabox.m_Min.x;
-				m_Bounds.y = aabox.m_Min.z;
-
-				m_Bounds.z = aabox.m_Max.x;
-				m_Bounds.w = aabox.m_Max.z;
-				//for speed we save the raw pointer , we will access this for each height callback
-				m_Terrain = terrain.get();
-			}
-			else
-			{
-				m_Bounds.Set(0,0,2000,2000);
-			}
-			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
-		}
-		else
-		{
-			m_MapBounds = TBounds(m_Bounds.x, m_Bounds.y, m_Bounds.z, m_Bounds.w);
-
-		}
-		//What camera should be used?
-
-		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
-
-		m_GrassLoader = new GrassLoader(m_PagedGeometry);
-		m_GrassLoader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
-		m_LOD0 = m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
-		
-		m_PagedGeometry->setPageLoader(m_GrassLoader);
-		
-		m_GrassLoader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
-		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
-		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
-		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
-		m_GrassLayer->setDensity(m_DensityFactor);
-		m_GrassLayer->setMapBounds(m_MapBounds);
-		//if(m_DensityMapFilename != "")
-		//	m_GrassLayer->setDensityMap(m_DensityMapFilename);
-		//else
-		{
-			//create from in run time?
-			//try to load 
-
-			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetPath().GetFullPath();
-
-
-			std::string denmapname;
-			if(m_DensityMapFilename != "")
-			{
-				denmapname = m_DensityMapFilename;
-			}
-			else
-				denmapname = "density_map_" + GetName() + ".tga";
-
-			const std::string fp_denmap = scene_path + "/" + denmapname;
-			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-			try
-			{
-				m_DensityImage.load(stream);
-			}
-			catch(...)
-			{
-				int densize = 1024;
-				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
-				memset(data, 0, densize * densize * 4);
-
-				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
-				m_DensityImage.save(fp_denmap);
-			}
-			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
-			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-			m_GrassLayer->setDensityMap(m_DensityTexture);
-		}
-		if(m_ColorMapFilename != "")
-			m_GrassLayer->setColorMap(m_ColorMapFilename);
-
-		//loader->setRenderQueueGroup();
-
-
-		//m_GrassLoader = loader;
-
-		SetFadeTech(m_FadeTech);
-		SetRenderTechnique(m_RenderTechnique );
-		if(m_GrassLayer)
-		{
-			UpdateSway();
-			m_GrassLayer->setLightingEnabled(false);
-		}
-		//		Root::Get().AddRenderListener(this);
-	}
+	
 
 	float GrassGeometryComponent::GetCollisionSystemHeight(float x, float z)
 	{

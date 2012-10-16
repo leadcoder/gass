@@ -59,13 +59,12 @@ namespace GASS
 
 	void PlayerInputComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnUnload,UnloadComponentsMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PlayerInputComponent::OnInput,ControllSettingsMessage,0));
 	}
 
-	void PlayerInputComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void PlayerInputComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllSettingsMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(PlayerInputComponent::OnInput,ControllSettingsMessage));
 	}
 
 	void PlayerInputComponent::OnInput(ControllSettingsMessagePtr message)

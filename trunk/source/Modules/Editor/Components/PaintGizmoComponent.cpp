@@ -43,13 +43,13 @@ namespace GASS
 
 	void PaintGizmoComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
+
+		BuildMesh();
 	}
 
-	void PaintGizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void PaintGizmoComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(PaintGizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
 	}
@@ -57,11 +57,6 @@ namespace GASS
 	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
 		
-	}
-
-	void PaintGizmoComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		BuildMesh();
 	}
 
 	void PaintGizmoComponent::BuildMesh()

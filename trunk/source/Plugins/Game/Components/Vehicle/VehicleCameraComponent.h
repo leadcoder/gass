@@ -43,13 +43,14 @@ namespace GASS
 		virtual ~VehicleCameraComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		virtual void OnDelete();
+
 		void SetPreferredViewport(const std::string &viewport);
 		std::string GetPreferredViewport() const;
 	private:
+		void OnEnter(EnterVehicleMessagePtr message);
+		void OnExit(ExitVehicleMessagePtr message);
+
 		std::string m_PreferredViewport;
 		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};

@@ -60,8 +60,8 @@ namespace GASS
 		virtual void OnInitialize();
 		GrassLayer *GetLayer() const {return m_GrassLayer;}
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnLoad(GrassLoaderComponentLoadedPtr message);
+		void OnDelete();
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadMessagePtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);

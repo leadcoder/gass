@@ -58,15 +58,11 @@ namespace GASS
 		~TreeGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		//void LoadDensityMap(const std::string &mapFile, int channel);
-		//float GetDensityAt(float x, float z);
-
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		std::string GetMesh() const
 		{

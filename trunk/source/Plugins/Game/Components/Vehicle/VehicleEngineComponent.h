@@ -70,20 +70,19 @@ namespace GASS
 		virtual ~VehicleEngineComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 		float GetTorque(float throttle);
 		float GetRPM(){return m_RPM;}
 		int GetGear(){return m_Gear;}
 		float GetNormRPM();
-		
 	private:
 
 		ADD_ATTRIBUTE(float,TurnRPMAmount)
 		std::vector<SceneObjectLink> GetWheels() const;
 		void SetWheels(const std::vector<SceneObjectLink> &wheels);
 
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);
 

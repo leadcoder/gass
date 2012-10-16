@@ -99,101 +99,10 @@ namespace GASS
 
 	}
 
-
-	int OgreTerrainPageComponent::GetIndexX() const
-	{
-		return m_IndexX;
-	}
-
-	void OgreTerrainPageComponent::SetIndexX(int index) 
-	{
-		m_IndexX=index;
-	}
-
-
-	int OgreTerrainPageComponent::GetIndexY() const
-	{
-		return m_IndexY;
-	}
-
-
-	void OgreTerrainPageComponent::SetIndexY(int index) 
-	{
-		m_IndexY=index;
-	}
-
 	void OgreTerrainPageComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerMessage,0));
-	}
-
-	void OgreTerrainPageComponent::SetHeightMap(const std::string &filename) 
-	{
-		m_HeightMapFile = filename;
-	}
-
-	void OgreTerrainPageComponent::OnTerrainLayerMessage(TerrainLayerMessagePtr message)
-	{
-		switch(	message->GetLayer())
-		{
-		case TL_1:
-			SetDiffuseLayer1(message->GetTexture());
-			SetTilingLayer1(message->GetTiling());
-			break;
-		case TL_2:
-			SetDiffuseLayer2(message->GetTexture());
-			SetTilingLayer2(message->GetTiling());
-			break;
-		case TL_3:
-			SetDiffuseLayer3(message->GetTexture());
-			SetTilingLayer3(message->GetTiling());
-			break;
-		case TL_4:
-			SetDiffuseLayer4(message->GetTexture());
-			SetTilingLayer4(message->GetTiling());
-			break;
-		}
-	}
-
-	std::string OgreTerrainPageComponent::GetFromResourceSystem(const std::string &filename)
-	{
-		boost::filesystem::path boost_path(filename);
-		if(!boost::filesystem::exists(filename))
-		{
-			//try get resource from ResourceSystem
-			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
-			std::string full_path;
-			if(!rs->GetFullPath(filename,full_path))
-			{
-				return std::string("");
-			}
-			return full_path;
-		}
-		return std::string("");
-	}
-
-	void OgreTerrainPageComponent::ImportHeightMap(const std::string &filename)
-	{
-		if(m_OgreSceneManager && filename != "")
-		{
-			std::fstream fstr(filename.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-
-			Ogre::Image img;
-			img.load(stream);
-
-			m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &img);
-
-			// sync load since we want everything in place when we start
-			m_TerrainGroup->loadAllTerrains(true);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
-		}
-	}
-
-	void OgreTerrainPageComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetSceneManger();
@@ -286,6 +195,102 @@ namespace GASS
 			}
 		}
 	}
+
+	void OgreTerrainPageComponent::OnDelete()
+	{
+		if(m_TerrainGroup)
+		{
+			m_TerrainGroup->removeTerrain(m_IndexX, m_IndexY);
+		}
+	}
+
+
+	int OgreTerrainPageComponent::GetIndexX() const
+	{
+		return m_IndexX;
+	}
+
+	void OgreTerrainPageComponent::SetIndexX(int index) 
+	{
+		m_IndexX=index;
+	}
+
+
+	int OgreTerrainPageComponent::GetIndexY() const
+	{
+		return m_IndexY;
+	}
+
+
+	void OgreTerrainPageComponent::SetIndexY(int index) 
+	{
+		m_IndexY=index;
+	}
+
+	void OgreTerrainPageComponent::SetHeightMap(const std::string &filename) 
+	{
+		m_HeightMapFile = filename;
+	}
+
+	void OgreTerrainPageComponent::OnTerrainLayerMessage(TerrainLayerMessagePtr message)
+	{
+		switch(	message->GetLayer())
+		{
+		case TL_1:
+			SetDiffuseLayer1(message->GetTexture());
+			SetTilingLayer1(message->GetTiling());
+			break;
+		case TL_2:
+			SetDiffuseLayer2(message->GetTexture());
+			SetTilingLayer2(message->GetTiling());
+			break;
+		case TL_3:
+			SetDiffuseLayer3(message->GetTexture());
+			SetTilingLayer3(message->GetTiling());
+			break;
+		case TL_4:
+			SetDiffuseLayer4(message->GetTexture());
+			SetTilingLayer4(message->GetTiling());
+			break;
+		}
+	}
+
+	std::string OgreTerrainPageComponent::GetFromResourceSystem(const std::string &filename)
+	{
+		boost::filesystem::path boost_path(filename);
+		if(!boost::filesystem::exists(filename))
+		{
+			//try get resource from ResourceSystem
+			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
+			std::string full_path;
+			if(!rs->GetFullPath(filename,full_path))
+			{
+				return std::string("");
+			}
+			return full_path;
+		}
+		return std::string("");
+	}
+
+	void OgreTerrainPageComponent::ImportHeightMap(const std::string &filename)
+	{
+		if(m_OgreSceneManager && filename != "")
+		{
+			std::fstream fstr(filename.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+
+			Ogre::Image img;
+			img.load(stream);
+
+			m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &img);
+
+			// sync load since we want everything in place when we start
+			m_TerrainGroup->loadAllTerrains(true);
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+		}
+	}
+
+	
 
 	std::string OgreTerrainPageComponent::GetFilename() const
 	{
@@ -692,13 +697,6 @@ namespace GASS
 		return m_TilingLayer4;
 	}
 
-	void OgreTerrainPageComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		if(m_TerrainGroup)
-		{
-			m_TerrainGroup->removeTerrain(m_IndexX, m_IndexY);
-		}
-	}
 
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
 	{

@@ -20,11 +20,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
-		//ITaskListener interface
-		//void Update(double delta);
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);
 		void OnSceneObjectCreated(PostSceneObjectInitializedPtr message);

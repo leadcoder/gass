@@ -34,7 +34,6 @@ namespace GASS
 		void SetAreaType(const std::string value);
 		std::string GetAreaType() const;
 		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
 		SamplePolyAreas m_Area;
 		bool m_Initialized;

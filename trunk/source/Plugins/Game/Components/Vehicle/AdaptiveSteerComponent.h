@@ -45,7 +45,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);
 		void OnVelocityMessage(VelocityNotifyMessagePtr message);

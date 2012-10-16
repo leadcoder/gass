@@ -65,15 +65,9 @@ namespace GASS
 
 	void RakNetNetworkChildComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaMessage,0));
 		
-	}
-
-	void RakNetNetworkChildComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -135,7 +129,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
 	}
 
-	void RakNetNetworkChildComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RakNetNetworkChildComponent::OnDelete()
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())

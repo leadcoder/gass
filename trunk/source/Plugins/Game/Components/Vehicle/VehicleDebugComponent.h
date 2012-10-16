@@ -41,10 +41,9 @@ namespace GASS
 		virtual ~VehicleDebugComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnGotoPosition(GotoPositionMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		virtual void OnDelete();
 	private:
+		void OnGotoPosition(GotoPositionMessagePtr message);
 		bool m_ShowWaypoint;
 		SceneObjectPtr m_WaypointObj;
 	};

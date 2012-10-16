@@ -55,13 +55,12 @@ namespace GASS
 		virtual ~ODEBaseGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	protected:
 
 		//Message functions
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
-		void OnLoadComponents(LoadComponentsMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);

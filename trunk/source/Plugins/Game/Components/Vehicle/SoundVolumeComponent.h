@@ -42,9 +42,9 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
 		void OnHingeUpdated(HingeJointNotifyMessagePtr message);
+
 		ADD_ATTRIBUTE(Float,MaxVolumeAtSpeed)
 
 		Float m_HingeAngle;

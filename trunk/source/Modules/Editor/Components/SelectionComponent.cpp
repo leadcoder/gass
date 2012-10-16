@@ -44,14 +44,11 @@ namespace GASS
 
 	void SelectionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SelectionComponent::OnUnload,UnloadComponentsMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
-		
 	}
 
-	void SelectionComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void SelectionComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
@@ -127,12 +124,7 @@ namespace GASS
 		GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(message->GetRotation(),SELECTION_COMP_SENDER)));
 		GetSceneObject()->SendImmediate(MessagePtr(new ScaleMessage(message->GetScale(),SELECTION_COMP_SENDER)));
 	}
-
-	void SelectionComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		
-	}
-
+	
 	void SelectionComponent::BuildMesh()
 	{
 		const Vec3 size= m_BBox.GetSize()*0.5;

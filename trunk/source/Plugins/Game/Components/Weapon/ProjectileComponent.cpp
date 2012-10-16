@@ -63,31 +63,22 @@ namespace GASS
 		RegisterProperty<std::string>("EndEffectTemplate", &ProjectileComponent::GetEndEffectTemplateName, &ProjectileComponent::SetEndEffectTemplateName);
 		RegisterProperty<Vec3>("ImpactForce", &ProjectileComponent::GetImpactForce, &ProjectileComponent::SetImpactForce);
 		RegisterProperty<float>("MaxDamage", &ProjectileComponent::GetMaxDamage, &ProjectileComponent::SetMaxDamage);
-
-
 	}
 
 	void ProjectileComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage,0));
-	}
 
-	void ProjectileComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		m_TimeLeft = m_TimeToLive;
 		//save for fast access
 		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
 		//register fot ticks
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(shared_from_this());
-		
 	}
 
-
-	void ProjectileComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void ProjectileComponent::OnDelete()
 	{
 		
 	}

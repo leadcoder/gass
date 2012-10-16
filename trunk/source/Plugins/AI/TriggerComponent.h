@@ -26,8 +26,6 @@ namespace GASS
 		void RegisterListener(SceneObjectPtr object);
 		void UnregisterListener(SceneObjectPtr object);
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		bool IsInside(SceneObjectWeakPtr obj) const;
 		bool RemoveInside(SceneObjectWeakPtr obj);
 

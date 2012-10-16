@@ -51,8 +51,7 @@ namespace GASS
 		virtual ~RakNetNetworkMasterComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		virtual void OnDelete();
 		RakNetMasterReplica* GetReplica() const {return m_Replica;}
 		void SetReplica(RakNetMasterReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}

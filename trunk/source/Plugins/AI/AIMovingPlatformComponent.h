@@ -34,6 +34,9 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
+		void OnSpeedMessage(DesiredSpeedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
+
 		ADD_ATTRIBUTE(Float,Acceleration);
 		std::string GetWaypointList() const;
 		void SetWaypointList(const std::string &value);
@@ -42,9 +45,7 @@ namespace GASS
 		void SetDesiredVelocity(Float value);
 		void SetVelocityTargetID(const SceneObjectID &id);
 		SceneObjectID GetVelocityTargetID() const;
-		void OnSpeedMessage(DesiredSpeedMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
 		bool m_Initialized;
 		double m_CurrentTime;
 		std::string m_WaypointListName;

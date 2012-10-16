@@ -6,7 +6,7 @@
 
 namespace GASS
 {
-	KeyframeAnimationComponent::KeyframeAnimationComponent(void) : m_Initlized(false), m_CurrentTime(0)
+	KeyframeAnimationComponent::KeyframeAnimationComponent(void) : m_Initialized(false), m_CurrentTime(0)
 	{
 
 	}	
@@ -24,7 +24,6 @@ namespace GASS
 	void KeyframeAnimationComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -33,15 +32,9 @@ namespace GASS
 
 	void KeyframeAnimationComponent::OnLoad(LocationLoadedMessagePtr message)
 	{
-		m_Initlized = true;
+		m_Initialized = true;
 		UpdateAnimation();
 	}
-	
-	void KeyframeAnimationComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
-
 	void KeyframeAnimationComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		m_Rotation = message->GetRotation();

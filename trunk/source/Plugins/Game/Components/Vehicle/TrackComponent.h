@@ -45,14 +45,15 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
+		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		float GetParticleEmissionFactor() const{return m_ParticleEmissionFactor;}
 		void SetParticleEmissionFactor(float value) {m_ParticleEmissionFactor = value;}
 		float GetSoundVolumeFactor() const{return m_SoundVolumeFactor;}
 		void SetSoundVolumeFactor(float value) {m_SoundVolumeFactor = value;}
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+		
 
 		ADD_ATTRIBUTE(SceneObjectLink,DriveWheel)
 		

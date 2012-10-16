@@ -26,7 +26,9 @@ namespace GASS
 		DetourCrowdAgentComponent(void);
 		virtual ~DetourCrowdAgentComponent(void);
 		static void RegisterReflection();
-		void OnInitialize();
+		virtual void OnInitialize();
+		virtual void OnDelete();
+
 		std::string GetScript() const;
 		void SetScript(const std::string &name);
 		std::string GetGroup() const;
@@ -50,7 +52,7 @@ namespace GASS
 		void UpdateGeometry();
 		void OnWorldPosition(WorldPositionMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
 		void OnChangeName(GASS::MessagePtr message);
 		
 		

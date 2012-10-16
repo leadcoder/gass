@@ -57,7 +57,7 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnDelete();
 		Ogre::Light* m_OgreLight;
 		LightType m_LightType;
 

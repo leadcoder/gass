@@ -69,21 +69,16 @@ namespace GASS
 
 	void ODETerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
-	}
-
-	void ODETerrainGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 	}
 
-	void ODETerrainGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void ODETerrainGeometryComponent::OnDelete()
 	{
 		Reset();
 	}

@@ -50,9 +50,15 @@ namespace GASS
 
 	void DebugComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(DebugComponent::OnLoad),0);
 		GetSceneObject()->RegisterForMessage(typeid(SceneObjectNameMessage),MESSAGE_FUNC(DebugComponent::OnChangeName),0);
 		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsMessage),MESSAGE_FUNC(DebugComponent::OnSettings),0);
+
+		if(m_ShowNodeName)
+		{
+			std::string name = GetSceneObject()->GetName();
+			MessagePtr text_mess(new TextCaptionMessage(name));
+			GetSceneObject()->PostMessage(text_mess);
+		}
 	}
 
 	bool DebugComponent::GetShowNodeName() const
@@ -101,16 +107,6 @@ namespace GASS
 		if(settings_mess)
 		{
 			SetShowNodeName(settings_mess->GetShowObjectName());
-		}
-	}
-	
-	void DebugComponent::OnLoad(MessagePtr message)
-	{
-		if(m_ShowNodeName)
-		{
-			std::string name = GetSceneObject()->GetName();
-			MessagePtr text_mess(new TextCaptionMessage(name));
-			GetSceneObject()->PostMessage(text_mess);
 		}
 	}
 }

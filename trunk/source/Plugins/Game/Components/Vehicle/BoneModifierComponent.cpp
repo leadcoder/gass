@@ -54,9 +54,13 @@ namespace GASS
 
 	void BoneModifierComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLODChange,LODMessage,0));
 		BaseSceneComponent::OnInitialize();
+		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnLODChange,LODMessage,0));
+	}
+
+	void BoneModifierComponent::OnDelete()
+	{
+		GetSceneObject()->UnregisterForMessage(UNREG_TMESS(BoneModifierComponent::OnTransformation,TransformationNotifyMessage));
 	}
 
 	void BoneModifierComponent::OnLODChange(LODMessagePtr message)
@@ -71,26 +75,7 @@ namespace GASS
 		}
 	}
 
-	void BoneModifierComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//SetBoneName(m_BoneName);
-		//IMeshComponentPtr mesh = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IMeshComponent>();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(BoneModifierComponent::OnTransformation,TransformationNotifyMessage,0));
-
-		/*if(m_SourceObjectName != "")
-		{
-			m_SourceObject = GetSceneObject()->GetObjectUnderRoot()->GetFirstChildByName(m_SourceObjectName,false);
-			if(!SceneObjectPtr(m_SourceObject))
-				LogManager::getSingleton().stream() << "WARNING:Failed to find source %s for bone modifier %s",m_SourceObjectName.c_str(),m_BoneName.c_str());
-		}
-		else
-			m_SourceObject  = GetSceneObject();*/
-	}
-
-	void BoneModifierComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		GetSceneObject()->UnregisterForMessage(UNREG_TMESS(BoneModifierComponent::OnTransformation,TransformationNotifyMessage));
-	}
+	
 
 	void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{

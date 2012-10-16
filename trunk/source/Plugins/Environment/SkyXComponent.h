@@ -40,13 +40,14 @@ namespace GASS
 		~SkyXComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
-		bool frameStarted(const Ogre::FrameEvent& evt);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnTimeOfDayMessage(TimeOfDayMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+
+		bool frameStarted(const Ogre::FrameEvent& evt);
 		void SetInnerRadius(const Float &value);
 		Float GetInnerRadius() const;
 		void SetOuterRadius(const Float &value);

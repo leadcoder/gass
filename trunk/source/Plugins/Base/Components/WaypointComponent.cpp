@@ -54,13 +54,30 @@ namespace GASS
 
 	void WaypointComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnUnload,UnloadComponentsMessage,1));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,TransformationNotifyMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnChangeName,SceneObjectNameMessage,0));
+
+
+		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
+		if(tangent)
+		{
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionMessage,1));
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionMessage,1));
+		}
+		else
+			std::cout << "Failed to find tangent in waypoint compoenent\n";
+		//notify parent
+		m_Initialized = true;
+		NotifyUpdate();
+	}
+
+	void WaypointComponent::OnDelete()
+	{
+		//notify parent
+		NotifyUpdate();
+		m_Initialized = false;
 	}
 
 	void WaypointComponent::OnMoved(MessagePtr message)
@@ -89,28 +106,6 @@ namespace GASS
 	{
 		//notify parent
 		//NotifyUpdate();
-	}
-
-	void WaypointComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		//notify parent
-		NotifyUpdate();
-		m_Initialized = false;
-	}
-
-	void WaypointComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
-		if(tangent)
-		{
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionMessage,1));
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionMessage,1));
-		}
-		else
-			std::cout << "Failed to find tangent in waypoint compoenent\n";
-		//notify parent
-		m_Initialized = true;
-		NotifyUpdate();
 	}
 
 	void WaypointComponent::OnRotate(WorldRotationMessagePtr message)

@@ -56,24 +56,18 @@ namespace GASS
 
 	void EditorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EditorComponent::OnUnload,UnloadComponentsMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
 		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!m_EditorSystem)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " EditorComponent::OnInitialize");
-	}
-	
-	void EditorComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//update loaded settings
+
 		SetLock(m_Lock); 
 		SetVisible(m_Visible);
 	}
 
-	void EditorComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void EditorComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage));

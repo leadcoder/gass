@@ -30,20 +30,8 @@ namespace GASS
 
 	void VelocityTriggerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VelocityTriggerComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VelocityTriggerComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VelocityTriggerComponent::OnTriggerEnter,TriggerEnterMessage,0));
-		
-	}
-
-	void VelocityTriggerComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		m_Initialized = true;
-	}
-
-	void VelocityTriggerComponent::OnUnload(MessagePtr message)
-	{
-		m_Initialized = false;
 	}
 
 	double VelocityTriggerComponent::GetDelay() const

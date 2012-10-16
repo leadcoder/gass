@@ -105,17 +105,14 @@ namespace GASS
 		virtual ~RecastNavigationMeshComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
+		
 		dtNavMesh* GetNavMesh() const {return m_NavMesh;}
 		dtNavMeshQuery* GetNavMeshQuery() const {return m_NavQuery;}
-
-
 		virtual bool IsPointInside(const Vec3 &point) const;
 		virtual Vec3 GetRandomPoint() const;
-
-
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
-
 	protected:
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
@@ -184,8 +181,6 @@ namespace GASS
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
 		
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
 		ManualMeshDataPtr m_NavVisTriMesh;

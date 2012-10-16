@@ -43,10 +43,11 @@ namespace GASS
 		~EnvironmentManagerComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	protected:
 		void UpdateEnvironmentLighting();
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);

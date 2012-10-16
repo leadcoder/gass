@@ -87,8 +87,43 @@ namespace GASS
 
 	void GrassLayerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,LoadComponentsMessage,1000));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,GrassLoaderComponentLoaded,0));
+		//wait for grass loader
+	}
+
+	void GrassLayerComponent::OnDelete()
+	{
+
+	}
+
+
+	void GrassLayerComponent::OnLoad(GrassLoaderComponentLoadedPtr message)
+	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		
+		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
+		m_GrassLoader = gl_component->GetGrassLoader();
+		
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
+		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
+		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
+		m_GrassLayer->setDensity(m_DensityFactor);
+		m_GrassLayer->setMapBounds(gl_component->GetMapBounds());
+		if(m_DensityMapFilename != "")
+			m_GrassLayer->setDensityMap(m_DensityMapFilename);
+		m_GrassLayer->setDensityMap(gl_component->GetDensityTexture(),CHANNEL_BLUE);
+		
+		if(gl_component->GetColorMap() != "")
+			m_GrassLayer->setColorMap(gl_component->GetColorMap());
+
+		SetFadeTech(m_FadeTech);
+		SetRenderTechnique(m_RenderTechnique );
+		if(m_GrassLayer)
+		{
+			UpdateSway();
+			m_GrassLayer->setLightingEnabled(false); //do lit in fp
+		}
 	}
 
 	void GrassLayerComponent::SetDensityFactor(float factor)
@@ -278,52 +313,7 @@ namespace GASS
 			m_GrassLayer->setSwayDistribution(m_SwayDistribution);
 		}
 	}
-
-	void GrassLayerComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-/*		if(m_PagedGeometry)
-		{
-			m_PagedGeometry->removeDetailLevels();
-			m_PagedGeometry->reloadGeometry();
-
-			if(m_PagedGeometry->getPageLoader())
-				delete m_PagedGeometry->getPageLoader();
-			delete m_PagedGeometry;
-		}*/
-	}
-
-	void GrassLayerComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//assert(ogsm);
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		
-		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
-		m_GrassLoader = gl_component->GetGrassLoader();
-		
-		
-		
-		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
-		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
-		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
-		m_GrassLayer->setDensity(m_DensityFactor);
-		m_GrassLayer->setMapBounds(gl_component->GetMapBounds());
-		if(m_DensityMapFilename != "")
-			m_GrassLayer->setDensityMap(m_DensityMapFilename);
-		m_GrassLayer->setDensityMap(gl_component->GetDensityTexture(),CHANNEL_BLUE);
-		
-		if(gl_component->GetColorMap() != "")
-			m_GrassLayer->setColorMap(gl_component->GetColorMap());
-
-		SetFadeTech(m_FadeTech);
-		SetRenderTechnique(m_RenderTechnique );
-		if(m_GrassLayer)
-		{
-			UpdateSway();
-			m_GrassLayer->setLightingEnabled(false); //do lit in fp
-		}
-	}
-
+	
 	void GrassLayerComponent::UpdateSway()
 	{
 		if(m_GrassLayer)

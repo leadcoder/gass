@@ -48,34 +48,27 @@ namespace GASS
 		virtual ~FollowWaypointListComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 	private:
+		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
+		void OnTransMessage(TransformationNotifyMessagePtr message);
+
+
 		ADD_ATTRIBUTE(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
-		
-		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void SetWaypointList(const std::string &waypointlist);
 		std::string GetWaypointList() const;
 		std::string GetMode() const;
 		void SetMode(const std::string &mode);
-
 		int GetCloesetWaypoint();
-
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnTransMessage(TransformationNotifyMessagePtr message);
 		
 		Vec3  m_CurrentPos;
-
 		std::vector<Vec3> m_Waypoints;
 		std::string m_WaypointListName;
-		
 		float m_Direction;
 		bool m_InvertDirection;
-		
-	
-	
 		bool m_HasWaypoints;
 		int m_CurrentWaypoint;
 		PathFollowMode m_Mode;

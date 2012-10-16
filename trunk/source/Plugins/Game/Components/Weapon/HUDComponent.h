@@ -44,9 +44,8 @@ namespace GASS
 		virtual ~HUDComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 		void UpdateHUD();
 		std::string GetMaterial() const {return m_Material;}

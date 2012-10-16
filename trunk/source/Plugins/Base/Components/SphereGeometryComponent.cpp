@@ -54,7 +54,12 @@ namespace GASS
 
 	void SphereGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(SphereGeometryComponent::OnLoad),0);
+		UpdateMesh();
+	}
+
+	void SphereGeometryComponent::OnDelete()
+	{
+		UpdateMesh();
 	}
 
 	Float SphereGeometryComponent::GetRadius() const
@@ -114,13 +119,6 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
-	
-	void SphereGeometryComponent::OnLoad(MessagePtr message)
-	{
-		UpdateMesh();
-	}
-
-
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const
 	{
 

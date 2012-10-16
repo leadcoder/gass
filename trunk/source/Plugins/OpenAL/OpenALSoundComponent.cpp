@@ -27,8 +27,7 @@ namespace GASS
 
 	OpenALSoundComponent::~OpenALSoundComponent(void)
 	{
-		if(m_Source)
-			alDeleteSources(1, &m_Source);
+		
 	}
 
 	ALvoid OpenALSoundComponent::DisplayALError(ALchar *szText, ALint errorcode)
@@ -51,10 +50,25 @@ namespace GASS
 
 	void OpenALSoundComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnLoad,LoadComponentsMessage,1));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
+
+		LoadWaveSound(m_Filename);//, 0);
+		//sound loaded, update sound settings
+		SetLoop(m_Loop);
+		SetMaxDistance(m_MaxDistance);
+		SetMinDistance(m_MinDistance);
+		SetRolloff(m_Rolloff);
+		//Play();
+	
+	}
+
+	void OpenALSoundComponent::OnDelete()
+	{
+		if(m_Source)
+			alDeleteSources(1, &m_Source);
 	}
 
 	void OpenALSoundComponent::OnPositionChanged(TransformationNotifyMessagePtr message)
@@ -228,16 +242,7 @@ namespace GASS
 		m_Filename = file;
 	}
 
-	void OpenALSoundComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		LoadWaveSound(m_Filename);//, 0);
-		//sound loaded, update sound settings
-		SetLoop(m_Loop);
-		SetMaxDistance(m_MaxDistance);
-		SetMinDistance(m_MinDistance);
-		SetRolloff(m_Rolloff);
-		//Play();
-	}
+	
 
 
 	void OpenALSoundComponent::Play()

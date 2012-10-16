@@ -45,7 +45,6 @@ namespace GASS
 		
 
 		void OnLoad(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnTriggerEnter(TriggerEnterMessagePtr);
 		void OnTriggerExit(TriggerExitMessagePtr);
@@ -68,7 +67,7 @@ namespace GASS
 		
 		Vec3 m_CurrentTargetLocation;
 		Vec2 m_RandomSpeed;
-		bool m_Initlized;
+		bool m_Initialized;
 		Vec3 m_Position;
 		std::string m_State;
 		std::string m_DebugState;

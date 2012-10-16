@@ -75,22 +75,17 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
-	}
-
-	void TopCamControlComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
 	}
 
-	void TopCamControlComponent::OnUnload(MessagePtr message)
+	void TopCamControlComponent::OnDelete()
 	{
 		ScenePtr scene = GetSceneObject()->GetScene();
 		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));

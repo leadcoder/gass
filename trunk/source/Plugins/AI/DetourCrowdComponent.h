@@ -29,6 +29,7 @@ namespace GASS
 		virtual ~DetourCrowdComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta_time);
 		dtCrowd* GetCrowd() const {return m_Crowd;}
 		void RegisterAgent(DetourCrowdAgentComponentPtr agent);
@@ -69,9 +70,8 @@ namespace GASS
 		void SetShowDebug(bool value);
 		void ReleaseAllChildren();
 		void UpdateDebugData();
-		void OnUnload(UnloadComponentsMessagePtr message);
+		
 		void OnChangeName(GASS::MessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnMoved(PositionMessagePtr message);
 		bool GetCircularScattering() const;
 		void SetCircularScattering(bool value);

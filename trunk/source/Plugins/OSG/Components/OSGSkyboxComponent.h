@@ -39,13 +39,12 @@ namespace GASS
 		~OSGSkyboxComponent (void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		Vec3 GetEyePosition();
 	protected:
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetTexturePath(const std::string &side) const;
 
 		osg::TextureCubeMap* ReadCubeMap();

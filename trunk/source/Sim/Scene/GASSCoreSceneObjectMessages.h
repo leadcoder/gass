@@ -101,7 +101,7 @@ namespace GASS
 	/**
 	Messaged sent by SceneObjectManager to inform component that the scene object unloaded
 	*/
-	class UnloadComponentsMessage : public BaseMessage
+	/*class UnloadComponentsMessage : public BaseMessage
 	{
 	public:
 		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
@@ -120,6 +120,6 @@ namespace GASS
 		 BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<LoadComponentsMessage> LoadComponentsMessagePtr;
+	typedef boost::shared_ptr<LoadComponentsMessage> LoadComponentsMessagePtr;*/
 	
 }

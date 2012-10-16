@@ -36,15 +36,12 @@ namespace GASS
 
 	void AITargetComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnTransChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnActivate,DoorMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
+		m_Initialized = true;
 	}
-
-
 
 	std::string AITargetComponent::GetType() const
 	{
@@ -89,15 +86,7 @@ namespace GASS
 		SetEnable(message->GetOpen());
 	}
 
-	void AITargetComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		m_Initialized = true;
-	}
-
-	void AITargetComponent::OnUnload(MessagePtr message)
-	{
-		m_Initialized = false;
-	}
+	
 
 
 	double AITargetComponent::GetDelay() const

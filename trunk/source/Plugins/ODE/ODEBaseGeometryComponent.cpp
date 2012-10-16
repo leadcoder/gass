@@ -98,29 +98,28 @@ namespace GASS
 				if(location)
 					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
 				else
-					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
+				{
+					ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
+					assert(scene_manager);
+					m_SceneManager = scene_manager;
+					UpdateODEGeom();
+					if(m_Debug) 
+						SetDebug(true);
+				}
 			}
 		}
-
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
-
-	void ODEBaseGeometryComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	void ODEBaseGeometryComponent::OnDelete()
 	{
-		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
-		assert(scene_manager);
-		m_SceneManager = scene_manager;
-		UpdateODEGeom();
-		if(m_Debug) 
-			SetDebug(true);
+		Reset();
 	}
 
 
-	void ODEBaseGeometryComponent::OnLoadComponents(LoadComponentsMessagePtr message)
+	void ODEBaseGeometryComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -150,10 +149,7 @@ namespace GASS
 	}
 
 
-	void ODEBaseGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		Reset();
-	}
+	
 
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{

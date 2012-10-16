@@ -38,9 +38,6 @@ namespace GASS
 		bool GetVisible() const;
 		void SetRadius(float value);
 		
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-
 		ManualMeshDataPtr m_ConnectionLine;
 		bool m_Visible;
 		bool m_Initialized;

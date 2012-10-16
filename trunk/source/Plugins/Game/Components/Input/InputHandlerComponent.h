@@ -44,12 +44,11 @@ namespace GASS
 		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
 		void OnEnter(EnterVehicleMessagePtr message);
 		void OnExit(ExitVehicleMessagePtr message);
 		void OnInput(ControllSettingsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;
 		std::string m_ControlSetting;

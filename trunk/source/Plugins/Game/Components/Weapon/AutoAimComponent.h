@@ -45,6 +45,7 @@ namespace GASS
 		virtual ~AutoAimComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
 		void SetBarrelObject(const SceneObjectLink &value);
 		SceneObjectLink GetBarrelObject() const;
@@ -67,9 +68,6 @@ namespace GASS
 
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
-		
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 
 		void OnTurretHingeUpdate(HingeJointNotifyMessagePtr message);	
 		void OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message);

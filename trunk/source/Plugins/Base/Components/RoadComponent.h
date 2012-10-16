@@ -89,16 +89,10 @@ namespace GASS
 
 		Vec2 GetTileScale() const {return m_TileScale;}
 		void SetTileScale(const Vec2 &value) {m_TileScale = value;}
-
 		
 		void SetTerrainPaintLayer(TerrainLayerBinder value) {m_TerrainPaintLayer = value;}
 		TerrainLayerBinder GetTerrainPaintLayer() const {return m_TerrainPaintLayer;}
-
-		
-
 		void UpdateRoadMesh();
-		void OnUnload(UnloadComponentsMessagePtr message);	
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnUpdate(UpdateWaypointListMessagePtr message);
 
 		bool m_Initialized;

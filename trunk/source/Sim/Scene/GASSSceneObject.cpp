@@ -98,8 +98,18 @@ namespace GASS
 			child->OnDelete();
 		}
 
-		MessagePtr msg(new UnloadComponentsMessage());
-		SendImmediate(msg);
+		ComponentVector::iterator iter = m_ComponentVector.begin();
+		while (iter != m_ComponentVector.end())
+		{
+			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			
+			bsc->OnDelete();
+			++iter;
+		}
+
+		//MessagePtr msg(new UnloadComponentsMessage());
+		//SendImmediate(msg);
+
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
 		if(GetScene())
@@ -120,14 +130,13 @@ namespace GASS
 		while (iter != m_ComponentVector.end())
 		{
 			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
-			
 			bsc->OnInitialize();
 			++iter;
 		}
 		MessagePtr load_msg(new PostComponentsInitializedMessage(this_obj));
 		scene->SendImmediate(load_msg);
 
-		SendImmediate(MessagePtr(new LoadComponentsMessage()));
+		//SendImmediate(MessagePtr(new LoadComponentsMessage()));
 		//Pump initial messages
 		SyncMessages(0,false);
 

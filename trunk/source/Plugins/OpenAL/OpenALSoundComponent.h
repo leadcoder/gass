@@ -31,6 +31,7 @@ namespace GASS
 		static void RegisterReflection();
 
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		//create sound interface for this?
 		virtual void Play();
 		virtual void Stop();
@@ -64,7 +65,6 @@ namespace GASS
 		//Message functions
 		void OnPositionChanged(TransformationNotifyMessagePtr message);
 		void OnPhysicsUpdate(VelocityNotifyMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnParameterMessage(SoundParameterMessagePtr message);
 
 		ALvoid DisplayALError(ALchar *szText, ALint errorcode);

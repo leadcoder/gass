@@ -56,15 +56,8 @@ namespace GASS
 
 	void TrackComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TrackComponent::OnLoad,LoadComponentsMessage,0));
 		BaseSceneComponent::OnInitialize();
-	}
-
-	void TrackComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		
-		//SetDriveWheel(m_DriveWheelName);
-
 		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 		GetSceneObject()->PostMessage(play_msg);
 
@@ -76,7 +69,6 @@ namespace GASS
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find drive wheel","TrackComponent::OnLoad");
 		m_Initialized = true;
-		
 	}
 
 	void TrackComponent::OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message)

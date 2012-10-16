@@ -74,10 +74,106 @@ namespace GASS
 
 	void GrassLoaderComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnLoad,LoadComponentsMessage,99));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnUnload,UnloadComponentsMessage,0));
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
+	
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->addListener(this);
+
+		bool user_bounds = true;
+		if(m_CustomBounds.x == 0 && m_CustomBounds.y == 0 && m_CustomBounds.z == 0 && m_CustomBounds.w == 0)
+		{
+			user_bounds = false;
+		}
+
+		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
+
+		if(!user_bounds)
+		{
+			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
+			
+			if(terrain)
+			{
+				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				AABox aabox = geom->GetBoundingBox();
+				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
+				//for speed we save the raw pointer , we will access this for each height callback
+				m_Terrain = terrain.get();
+			}
+			else
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No terrain found , you need to specify custom bounds if no terrain present","GrassLoaderComponent::OnLoad");
+			}
+		}
+		else
+		{
+			m_MapBounds = TBounds(m_CustomBounds.x, m_CustomBounds.y, m_CustomBounds.z, m_CustomBounds.w);
+		}
+		//What camera should be used?
+
+		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
+
+		m_GrassLoader = new GrassLoader(m_PagedGeometry);
+		m_GrassLoader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
+		m_LOD0 = m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
+
+		m_PagedGeometry->setPageLoader(m_GrassLoader);
+		m_GrassLoader->setHeightFunction(GrassLoaderComponent::GetTerrainHeight,this);
+		if(m_DensityMapFilename == "")
+		{
+			//create from in run time?
+			//try to load 
+
+			ScenePtr  scene = GetSceneObject()->GetScene();
+			std::string scene_path = scene->GetPath().GetFullPath();
+
+			const std::string denmapname = "density_map_" + GetName() + ".tga";
+			const std::string fp_denmap = scene_path + "/" + denmapname;
+
+			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+			try
+			{
+				m_DensityImage.load(stream);
+			}
+			catch(...)
+			{
+				int densize = 1024;
+				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
+				memset(data, 0, densize * densize * 4);
+
+				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
+				m_DensityImage.save(fp_denmap);
+			}
+			stream.setNull();
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
+		}
+		GetSceneObject()->SendImmediate(MessagePtr(new GrassLoaderComponentLoaded()));
+	}
+
+	void GrassLoaderComponent::OnDelete()
+	{
+		if(m_PagedGeometry)
+		{
+			m_PagedGeometry->removeDetailLevels();
+			m_PagedGeometry->reloadGeometry();
+
+			if(m_PagedGeometry->getPageLoader())
+				delete m_PagedGeometry->getPageLoader();
+			delete m_PagedGeometry;
+		}
+
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		target->removeListener(this);
 	}
 
 	std::string GrassLoaderComponent::GetDensityMap() const
@@ -175,105 +271,7 @@ namespace GASS
 		}
 	}
 
-	void GrassLoaderComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		if(m_PagedGeometry)
-		{
-			m_PagedGeometry->removeDetailLevels();
-			m_PagedGeometry->reloadGeometry();
-
-			if(m_PagedGeometry->getPageLoader())
-				delete m_PagedGeometry->getPageLoader();
-			delete m_PagedGeometry;
-		}
-
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->removeListener(this);
-	}
-
-
-	void GrassLoaderComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->addListener(this);
-
-		bool user_bounds = true;
-		if(m_CustomBounds.x == 0 && m_CustomBounds.y == 0 && m_CustomBounds.z == 0 && m_CustomBounds.w == 0)
-		{
-			user_bounds = false;
-		}
-
-		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
-
-		if(!user_bounds)
-		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
-			
-			if(terrain)
-			{
-				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
-				AABox aabox = geom->GetBoundingBox();
-				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
-				//for speed we save the raw pointer , we will access this for each height callback
-				m_Terrain = terrain.get();
-			}
-			else
-			{
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No terrain found , you need to specify custom bounds if no terrain present","GrassLoaderComponent::OnLoad");
-			}
-		}
-		else
-		{
-			m_MapBounds = TBounds(m_CustomBounds.x, m_CustomBounds.y, m_CustomBounds.z, m_CustomBounds.w);
-		}
-		//What camera should be used?
-
-		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
-
-		m_GrassLoader = new GrassLoader(m_PagedGeometry);
-		m_GrassLoader->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
-		m_LOD0 = m_PagedGeometry->addDetailLevel<GrassPage>(m_ViewDist);
-
-		m_PagedGeometry->setPageLoader(m_GrassLoader);
-		m_GrassLoader->setHeightFunction(GrassLoaderComponent::GetTerrainHeight,this);
-		if(m_DensityMapFilename == "")
-		{
-			//create from in run time?
-			//try to load 
-
-			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetPath().GetFullPath();
-
-			const std::string denmapname = "density_map_" + GetName() + ".tga";
-			const std::string fp_denmap = scene_path + "/" + denmapname;
-
-			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-			try
-			{
-				m_DensityImage.load(stream);
-			}
-			catch(...)
-			{
-				int densize = 1024;
-				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
-				memset(data, 0, densize * densize * 4);
-
-				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
-				m_DensityImage.save(fp_denmap);
-			}
-			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
-		}
-	}
+	
 
 	void GrassLoaderComponent::SaveXML(TiXmlElement *obj_elem)
 	{

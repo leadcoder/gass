@@ -66,9 +66,21 @@ namespace GASS
 
 	void VehicleCameraComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnLoad,LoadComponentsMessage,0));
 		BaseSceneComponent::OnInitialize();
+		
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
+		//GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
+	}
+
+	void VehicleCameraComponent::OnDelete()
+	{
+		InputHandlerComponentPtr vehicle = GetSceneObject()->GetFirstParentComponentByClass<InputHandlerComponent>();
+		if(vehicle)
+		{
+			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage));
+			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage));
+		}
 	}
 
 	void VehicleCameraComponent::SetPreferredViewport(const std::string &viewport)
@@ -92,22 +104,8 @@ namespace GASS
 
 	}
 
-	void VehicleCameraComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
-		GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
-	}
+	
 
-	void VehicleCameraComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		InputHandlerComponentPtr vehicle = GetSceneObject()->GetFirstParentComponentByClass<InputHandlerComponent>();
-		if(vehicle)
-		{
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage));
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage));
-		}
-	}
+	
 
 }

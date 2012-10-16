@@ -130,21 +130,15 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLoad,LoadComponentsMessage,4));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnUnload,UnloadComponentsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLocationLoaded,LocationLoadedMessage,4));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
-
 	}
 
-	void EnvironmentManagerComponent::OnLoad(LoadComponentsMessagePtr message)
+	void EnvironmentManagerComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		
-		
 		Ogre::Root::getSingleton().addFrameListener(this);
-
-		
 		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
 		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
 
@@ -178,7 +172,7 @@ namespace GASS
 		m_CloudFactor = message->GetClouds();
 	}
 
-	void EnvironmentManagerComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void EnvironmentManagerComponent::OnDelete()
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		if(sm && m_SunLight)

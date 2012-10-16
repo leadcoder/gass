@@ -53,6 +53,7 @@ namespace GASS
 		~OgreStaticMeshComponent (void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
@@ -66,19 +67,16 @@ namespace GASS
 
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
+		void OnMeshFileNameMessage(MeshFileMessagePtr message);
+
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void SetRegionSize(Float size) {m_RegionSize = size;}
 		Float GetRegionSize() const {return m_RegionSize;}
-
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset) const;
 		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
-	
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 	
 		std::string m_RenderQueue;
 		bool m_CastShadow;

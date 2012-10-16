@@ -34,8 +34,6 @@ namespace GASS
 		virtual ~LuaScriptComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 	private:
 		void InitScript();
 		void UpdateScript();

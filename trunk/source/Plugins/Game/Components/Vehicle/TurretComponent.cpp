@@ -74,18 +74,12 @@ namespace GASS
 
 	void TurretComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
-	}
-
 	
-	void TurretComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
 		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
 		GetSceneObject()->PostMessage(force_msg);
@@ -101,7 +95,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 	}
 
-	void TurretComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void TurretComponent::OnDelete()
 	{
 
 	}

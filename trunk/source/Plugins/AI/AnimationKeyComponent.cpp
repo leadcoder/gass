@@ -4,7 +4,7 @@
 
 namespace GASS
 {
-	AnimationKeyComponent::AnimationKeyComponent(void) : m_Initlized(false)
+	AnimationKeyComponent::AnimationKeyComponent(void) : m_Initialized(false)
 	{
 		m_Key.m_Rot = Quaternion::IDENTITY;
 	}	
@@ -27,23 +27,12 @@ namespace GASS
 
 	void AnimationKeyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AnimationKeyComponent::OnLoad,LoadComponentsMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AnimationKeyComponent::OnUnload,UnloadComponentsMessage,0));
-	}
-
-	void AnimationKeyComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		m_Initlized = true;
-	}
-	
-	void AnimationKeyComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
+		m_Initialized = false;
 	}
 
 	void AnimationKeyComponent::UpdateAnimation()
 	{
-		if(!m_Initlized)
+		if(!m_Initialized)
 			return;
 
 		KeyframeAnimationComponentPtr animation_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<KeyframeAnimationComponent>();

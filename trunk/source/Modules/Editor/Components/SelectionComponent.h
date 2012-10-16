@@ -15,14 +15,13 @@ namespace GASS
 		virtual ~SelectionComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 	private:
 		void BuildMesh();
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetSize() const{return m_Size;}
 		void SetSize(float value){m_Size =value;}
 		Vec4 GetColor() const{return m_Color;}

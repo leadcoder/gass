@@ -51,12 +51,11 @@ namespace GASS
 		virtual ~FreeCamControlComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(ControllSettingsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
 		void SetMode(const std::string &value) {m_Mode= value;}

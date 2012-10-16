@@ -49,19 +49,5 @@ namespace GASS
 
 	void RecastConvexVolumeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastConvexVolumeComponent::OnLoad,LocationLoadedMessage,3));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastConvexVolumeComponent::OnUnload,UnloadComponentsMessage,0));
 	}
-
-	void RecastConvexVolumeComponent::OnLoad(LocationLoadedMessagePtr message)
-	{
-		//assume only onw nav mesh
-		m_Initialized = true;
-	}
-
-	void RecastConvexVolumeComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
-	
 }

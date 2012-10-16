@@ -57,8 +57,10 @@ namespace GASS
 
 	void PlaneGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(PlaneGeometryComponent::OnLoad),0);
+		GenerateMesh();
+		SetTexture(m_Texture);
 	}
+
 
 	Vec2 PlaneGeometryComponent::GetSize() const
 	{
@@ -136,11 +138,7 @@ namespace GASS
 
 	}
 	
-	void PlaneGeometryComponent::OnLoad(MessagePtr message)
-	{
-		GenerateMesh();
-		SetTexture(m_Texture);
-	}
+	
 
 	void PlaneGeometryComponent::SetTexture(const std::string &texture_name)
 	{

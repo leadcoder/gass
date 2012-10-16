@@ -24,40 +24,39 @@ namespace GASS
 		virtual ~GizmoComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		
+		virtual void OnDelete();		
 		Vec3 GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir);
 		Quaternion GetRotation(float detla);
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		std::string GetSpaceMode() const {return m_Mode;}
 	private:
-		void SetSelection(SceneObjectPtr  object);
-		void BuildMesh();
 		void OnGridMessage(GridMessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
-		std::string GetType() const {return m_Type;}
-		void SetType(const std::string &value) {m_Type = value;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		float GetSize() const{return m_Size;}
-		void SetSize(float value){m_Size =value;}
-		Vec4 GetColor() const{return m_Color;}
-		void SetColor(const Vec4 &value){m_Color =value;}
-		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
-		void UpdateScale();
+		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);
-		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
 		void OnEditMode(EditModeMessagePtr message);
+
+		void SetSelection(SceneObjectPtr  object);
+		void BuildMesh();
+		std::string GetType() const {return m_Type;}
+		void SetType(const std::string &value) {m_Type = value;}
+		float GetSize() const{return m_Size;}
+		void SetSize(float value){m_Size =value;}
+		Vec4 GetColor() const{return m_Color;}
+		void SetColor(const Vec4 &value){m_Color =value;}
+		void UpdateScale();
+		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
 		Float GizmoComponent::SnapValue(Float value, Float snap);
 	
 		Quaternion m_BaseRot;
 		ManualMeshDataPtr m_MeshData;	
-
 		Vec4 m_Color;
 		float m_Size;
 		std::string m_Type;

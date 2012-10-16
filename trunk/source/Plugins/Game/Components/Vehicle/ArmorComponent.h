@@ -42,9 +42,9 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
+		void OnLoad(LocationLoadedMessagePtr message);
 		void OnHit(HitMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
 		float GetArmor() const; 
 		void SetArmor(float value);
 		std::string GetDamageMesh() const;

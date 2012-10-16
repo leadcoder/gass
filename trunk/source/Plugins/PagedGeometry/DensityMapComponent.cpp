@@ -55,31 +55,8 @@ namespace GASS
 
 	void DensityMapComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnRoadMessage,RoadMessage,0));
-		
-	}
-
-
-	DensityMapComponent::DensityMapComponent(void)// : m_DensityMap(NULL)
-	{
-		
-	}
-
-	DensityMapComponent::~DensityMapComponent(void)
-	{
-	
-	}
-
-	void DensityMapComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
-
-	void DensityMapComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 
 		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetPath().GetFullPath();
@@ -112,6 +89,21 @@ namespace GASS
 		//	LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 	}
 
+		
+	
+
+
+	DensityMapComponent::DensityMapComponent(void)// : m_DensityMap(NULL)
+	{
+		
+	}
+
+	DensityMapComponent::~DensityMapComponent(void)
+	{
+	
+	}
+
+	
 	void DensityMapComponent::SetImport(const std::string &dm)
 	{
 		std::fstream fstr(dm.c_str(), std::ios::in|std::ios::binary);

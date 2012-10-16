@@ -108,9 +108,29 @@ namespace GASS
 
 	void HydraxWaterComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnLoad,LoadComponentsMessage,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnUnload,UnloadComponentsMessage,0));
-		
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget* target = NULL;
+
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		Ogre::Viewport* vp = target->getViewport(0);
+		Ogre::Root::getSingleton().addFrameListener(this);
+		CreateHydrax(sm, ocam, vp);
+	}
+
+	void HydraxWaterComponent::OnDelete()
+	{
+		Ogre::Root::getSingleton().removeFrameListener(this);
+		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
+		compMgr.removeCompositor(m_Hydrax->getViewport(),"_Hydrax_Underwater_Compositor_Name");
+
+		m_Hydrax->remove();
+		delete m_Hydrax;
+		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
+
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage));
 	}
 
 	void HydraxWaterComponent::SetSave(const std::string &value)
@@ -602,18 +622,7 @@ namespace GASS
 		return 0;
 	}
 
-	void HydraxWaterComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		Ogre::Root::getSingleton().removeFrameListener(this);
-		Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
-		compMgr.removeCompositor(m_Hydrax->getViewport(),"_Hydrax_Underwater_Compositor_Name");
-
-		m_Hydrax->remove();
-		delete m_Hydrax;
-		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
-
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage));
-	}
+	
 
 	void HydraxWaterComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
 	{
@@ -643,27 +652,6 @@ namespace GASS
 		}
 	}
 
-	void HydraxWaterComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
-		
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-
-		Ogre::RenderTarget* target = NULL;
-
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		Ogre::Viewport* vp = target->getViewport(0);
-			
-
-		
-		
-		Ogre::Root::getSingleton().addFrameListener(this);
-
-		CreateHydrax(sm, ocam, vp);
-	}
-
 	void HydraxWaterComponent::CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp)
 	{
 		if(m_ResourceLocation.GetFullPath() != "")
@@ -685,8 +673,6 @@ namespace GASS
 		terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainPageMaterial"));
 		if(terrain_mat.get())
 			m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
-		
-
 
 		// Add perlin noise module to our manager
 		m_Perlin = new Hydrax::Noise::Perlin();

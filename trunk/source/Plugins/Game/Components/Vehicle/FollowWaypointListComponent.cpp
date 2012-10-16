@@ -77,22 +77,13 @@ namespace GASS
 
 	void FollowWaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationNotifyMessage,0));
-	}
-
-	void FollowWaypointListComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		SceneManagerListenerPtr listener = shared_from_this();
-		
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-		
-
 		SetWaypointList(m_WaypointListName);
 	}
 
-	void FollowWaypointListComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void FollowWaypointListComponent::OnDelete()
 	{
 		
 	}

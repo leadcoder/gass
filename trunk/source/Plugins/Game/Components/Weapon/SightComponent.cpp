@@ -112,29 +112,16 @@ namespace GASS
 
 	void SightComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,InputControllerMessage,0));
 		//call this to ensure that scene object pointers get initlized
 		BaseSceneComponent::OnInitialize();
 
-		//load target object
-		
-
-	}
-
-	void SightComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,InputControllerMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-
 
 		NetworkComponentPtr net_comp = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
 		if(net_comp)
 			m_RemoteSim = net_comp->IsRemote();
-
-
 
 		if(!m_RemoteSim)
 		{
@@ -163,7 +150,7 @@ namespace GASS
 		}
 	}
 
-	void SightComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void SightComponent::OnDelete()
 	{
 		
 	}

@@ -127,14 +127,13 @@ namespace GASS
 		virtual ~RakNetLocationTransferComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		//INetworkComponent
 		virtual bool IsRemote() const;
 		virtual void SceneManagerTick(double delta);
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnParentTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnVelocityNotify(VelocityNotifyMessagePtr message);

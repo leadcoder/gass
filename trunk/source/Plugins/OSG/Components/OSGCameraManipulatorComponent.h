@@ -36,8 +36,6 @@ namespace GASS
 		//IOSGCameraManipulator
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
 

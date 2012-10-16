@@ -88,7 +88,6 @@ namespace GASS
 
 	void WeaponSystemComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnExecuteFire,FireMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReload,ReloadMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
@@ -99,23 +98,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
 		BaseSceneComponent::OnInitialize();
-	}
-
-	void WeaponSystemComponent::OnLODChange(LODMessagePtr message)
-	{
-		if(message->GetLevel() == LODMessage::LOD_HIGH)
-		{
-			m_1FP = true;
-			//std::cout << "fP1" << std::endl;
-		}
-		else
-		{
-			m_1FP = false; 
-		}
-	}
-
-	void WeaponSystemComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		/*m_FireSoundObject1F = GetSceneObject()->GetFirstChildByName("FireSound1P",false);
 		m_FireSoundObject3F = GetSceneObject()->GetFirstChildByName("FireSound3P",false);
 		
@@ -155,6 +138,21 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
+
+	void WeaponSystemComponent::OnLODChange(LODMessagePtr message)
+	{
+		if(message->GetLevel() == LODMessage::LOD_HIGH)
+		{
+			m_1FP = true;
+			//std::cout << "fP1" << std::endl;
+		}
+		else
+		{
+			m_1FP = false; 
+		}
+	}
+
+	
 
 	void WeaponSystemComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
 	{

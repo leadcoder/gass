@@ -14,11 +14,9 @@ namespace GASS
 		virtual ~DistanceScaleComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 	private:
 		void OnCameraParameter(CameraParameterMessagePtr message);
-		
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetMaxDistance() const{return m_MaxDistance;}
 		void SetMaxDistance(float value){m_MaxDistance =value;}
 		float GetMinDistance() const{return m_MinDistance;}

@@ -97,13 +97,8 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnUnload,UnloadComponentsMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnEditPosition,EditPositionMessage,1));
-	}
 
-	void RecastNavigationMeshComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		const std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
 		if(FILE*fp = fopen(filename.c_str(),"rt"))
 		{
@@ -118,7 +113,7 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void RecastNavigationMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RecastNavigationMeshComponent::OnDelete()
 	{
 		delete m_Geom;
 		m_Geom = NULL;

@@ -51,12 +51,11 @@ namespace GASS
 		virtual ~TopCamControlComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnChangeCamera(MessagePtr message);
 		void OnInput(ControllSettingsMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		float GetMaxWindowSize() const {return m_MaxWindowSize;}
 		void SetMaxWindowSize(float value) {m_MaxWindowSize = value;}

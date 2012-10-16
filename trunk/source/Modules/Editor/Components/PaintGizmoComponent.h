@@ -14,17 +14,15 @@ namespace GASS
 		virtual ~PaintGizmoComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void SetSize(float value){m_Size =value;}
 		void SetInnerSize(float value){m_InnerSize =value;}
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		void BuildMesh();
 	private:
-	
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetSize() const{return m_Size;}
 		
 		Vec4 GetColor() const{return m_Color;}

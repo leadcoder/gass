@@ -43,8 +43,6 @@ namespace GASS
 		virtual void OnInitialize();
 		void CreateVolume();
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 		void SetNoiseScale(const Float &value);
 		Float GetNoiseScale() const;

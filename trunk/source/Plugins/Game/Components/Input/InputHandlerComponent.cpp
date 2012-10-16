@@ -58,9 +58,13 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnLoad,LoadComponentsMessage,0));
+	}void InputHandlerComponent::OnDelete()
+
+	
+	{
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
+
 
 
 	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
@@ -89,20 +93,13 @@ namespace GASS
 	
 	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 		m_Empty = true;
 	}
 
-	void InputHandlerComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 	
-	}
 
-	void InputHandlerComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
-	}
-
+	
 	void InputHandlerComponent::OnInput(ControllSettingsMessagePtr message)
 	{
 		if(m_ControlSetting != message->GetSettings())

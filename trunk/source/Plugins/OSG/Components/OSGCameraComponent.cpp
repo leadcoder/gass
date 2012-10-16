@@ -66,13 +66,9 @@ namespace GASS
 	void OSGCameraComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnUnload,UnloadComponentsMessage,1));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnPositionChanged,PositionMessage,10));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnRotationChanged,RotationMessage,10));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
 	}
-
 
 	void OSGCameraComponent::OnChangeCamera(ChangeCameraMessagePtr message)
 	{
@@ -278,11 +274,6 @@ namespace GASS
 		}
 		else 
 			return false;
-	}
-
-	void OSGCameraComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
 	}
 
 	void OSGCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)

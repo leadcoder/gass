@@ -46,14 +46,13 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta);
+		virtual void OnDelete();
 	private:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
-		void StepPhysics(double time);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr message);
 		void OnPhysicsParameterMessage(PhysicsBodyMessagePtr message);
-		
+
+		void StepPhysics(double time);
 		void SpawnEffect(const std::string &effect);
 		void SetEndEffectTemplateName(const std::string &effect);
 		std::string GetEndEffectTemplateName() const;
@@ -61,9 +60,6 @@ namespace GASS
 		void SetImpactForce(const Vec3 &value);
 		float GetMaxDamage() const; 
 		void SetMaxDamage(float value);
-		
-	
-
 		
 		Vec3 m_Velocity;
 		float m_TimeToLive;

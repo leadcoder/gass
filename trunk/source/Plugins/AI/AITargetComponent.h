@@ -36,8 +36,6 @@ namespace GASS
 		AITargetComponent::TargetType GetTargetType() {return m_Type;}
 		ADD_ATTRIBUTE(bool,Enable)
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		void OnActivate(DoorMessagePtr message);
 		bool IsInside(SceneObjectWeakPtr obj) const;

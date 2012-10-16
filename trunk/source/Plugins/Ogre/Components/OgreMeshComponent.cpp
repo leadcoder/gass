@@ -71,7 +71,7 @@ namespace GASS
 	void OgreMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnUnload,UnloadComponentsMessage,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
@@ -88,7 +88,7 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void OgreMeshComponent::OnDelete()
 	{
 		if(m_OgreEntity && m_UniqueMaterialCreated)
 		{

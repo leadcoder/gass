@@ -78,22 +78,16 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
-		
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
-	}
 
-	void TankAutopilotComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-		
 	}
 
-	void TankAutopilotComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void TankAutopilotComponent::OnDelete()
 	{
+
 	}
 
 	void TankAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)

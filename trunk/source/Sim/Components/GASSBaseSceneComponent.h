@@ -41,6 +41,7 @@ namespace GASS
 		virtual ~BaseSceneComponent();
 		SceneObjectPtr GetSceneObject() const;
 		virtual void OnInitialize();
+		virtual void OnDelete(){};
 		virtual void SceneManagerTick(double delta) {};
 		virtual void Update(double delta) {};
 	protected:

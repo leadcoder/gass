@@ -74,7 +74,13 @@ namespace GASS
 	void OgreLightComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLightComponent::OnUnload,UnloadComponentsMessage,1));
+	}
+
+	void OgreLightComponent::OnDelete()
+	{
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		if(sm && m_OgreLight)
+			sm->destroyLight(m_OgreLight);
 	}
 
 	void OgreLightComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -106,7 +112,6 @@ namespace GASS
 		m_OgreLight->setVisible(true);
 		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
 		//m_OgreLight->setDirection(0,1,0);
-
 	}
 
 
@@ -166,11 +171,6 @@ namespace GASS
 
 
 
-	void OgreLightComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		if(sm && m_OgreLight)
-			sm->destroyLight(m_OgreLight);
-	}
+
 
 }

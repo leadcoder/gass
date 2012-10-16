@@ -54,7 +54,7 @@ namespace GASS
 
 	void BoxGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(BoxGeometryComponent::OnLoad),0);
+		UpdateMesh();
 	}
 
 	Vec3 BoxGeometryComponent::GetSize() const
@@ -115,13 +115,6 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
-	
-	
-	void BoxGeometryComponent::OnLoad(MessagePtr message)
-	{
-		UpdateMesh();
-	}
-
 
 	bool BoxGeometryComponent::IsPointInside(const Vec3 &point) const
 	{

@@ -50,7 +50,6 @@ namespace GASS
 	void GizmoComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
@@ -73,7 +72,7 @@ namespace GASS
 	
 	}
 
-	void GizmoComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void GizmoComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
@@ -306,13 +305,9 @@ namespace GASS
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage,0));
 		}
-
 		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
-
 		SetSelection(m_EditorSystem->GetSelectedObject());
-
-		
 	}
 
 

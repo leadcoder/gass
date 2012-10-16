@@ -61,7 +61,6 @@ namespace GASS
 
 	void OSGLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage,0));
@@ -70,16 +69,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
-	}
 
-
-	void OSGLocationComponent::OnAttachToParent(AttachToParentMessagePtr message)
-	{
-		SetAttachToParent(message->GetAttachToParent());
-	}
-
-	void OSGLocationComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		//assert(m_GFXSceneManager);
 		m_TransformNode = new osg::PositionAttitudeTransform();
@@ -117,6 +107,13 @@ namespace GASS
 		
 	}
 
+
+	void OSGLocationComponent::OnAttachToParent(AttachToParentMessagePtr message)
+	{
+		SetAttachToParent(message->GetAttachToParent());
+	}
+
+	
 	void OSGLocationComponent::OnPositionMessage(PositionMessagePtr message)
 	{
 		Vec3 value = message->GetPosition();

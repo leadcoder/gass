@@ -31,7 +31,6 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
 		void OnDoorMessage(DoorMessagePtr message);
 		void UpdatePolyState(bool value);

@@ -34,11 +34,12 @@ namespace GASS
 		~SphereGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
+
 		virtual bool IsPointInside(const Vec3 &point) const;
 		virtual Vec3 GetRandomPoint() const;
 		Float GetRadius() const;
 	protected:
-		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();

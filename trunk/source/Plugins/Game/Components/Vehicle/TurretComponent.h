@@ -44,6 +44,7 @@ namespace GASS
 		virtual ~TurretComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		void SceneManagerTick(double delta_time);
 	private:
 		Vec3 GetDesiredAimDirection(double delta_time);
@@ -59,13 +60,11 @@ namespace GASS
 		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
-		
-		void OnLoad(LoadComponentsMessagePtr message);
+
 		void OnInput(InputControllerMessagePtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnParentTransformation(TransformationNotifyMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		
 		std::string m_Controller;

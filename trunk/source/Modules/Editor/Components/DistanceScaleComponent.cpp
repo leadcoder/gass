@@ -42,13 +42,25 @@ namespace GASS
 
 	void DistanceScaleComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionMessage,0));
+
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
+
+		EditorSystemPtr es = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		if(!es)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "DistanceScaleComponent::OnLoad");
+
+		m_ActiveCameraObject = es->GetActiveCameraObject();
+		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		if(cam_obj)
+		{
+			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
+			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage,1));
+		}
 	}
 
-	void DistanceScaleComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void DistanceScaleComponent::OnDelete()
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
@@ -153,23 +165,5 @@ namespace GASS
 					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
 			}
 		}
-	}
-
-	void DistanceScaleComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
-
-		EditorSystemPtr es = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
-		if(!es)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "DistanceScaleComponent::OnLoad");
-
-		m_ActiveCameraObject = es->GetActiveCameraObject();
-		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
-		if(cam_obj)
-		{
-			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
-			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage,1));
-		}
-
 	}
 }

@@ -71,7 +71,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnUnload,UnloadComponentsMessage ,0));
 	}
 
 	std::string ODECollisionGeometryComponent::GetTypeByName() const
@@ -116,7 +115,7 @@ namespace GASS
 		CreateGeometry();
 	}
 
-	void ODECollisionGeometryComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void ODECollisionGeometryComponent::OnDelete()
 	{
 		Reset();
 	}

@@ -46,6 +46,7 @@ namespace GASS
 		~OgreTerrainPageComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 
 		//IMeshComponent interface
 		virtual std::string GetFilename() const;
@@ -123,9 +124,6 @@ namespace GASS
 		std::string GetImportColorMap() const {return "";}
 		void ImportDetailMask(const std::string &mask);
 		std::string GetImportDetailMask() const {return "";}
-
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
 		
 		bool m_CreateCollisionMesh;

@@ -11,6 +11,7 @@ namespace GASS
 		virtual ~EditorComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
 		std::string GetIconFile() const { return m_IconFile;}
 		void SetShowInTree(bool value) {m_ShowInTree = value;}
@@ -27,8 +28,6 @@ namespace GASS
 		
 		void OnObjectVisible(ObjectVisibilityChangedMessagePtr message);
 		void OnObjectLock(ObjectLockChangedMessagePtr message);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
 		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);

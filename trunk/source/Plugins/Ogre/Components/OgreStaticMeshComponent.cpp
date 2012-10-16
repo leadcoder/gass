@@ -73,9 +73,64 @@ namespace GASS
 
 	void OgreStaticMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreStaticMeshComponent::OnUnload,UnloadComponentsMessage,0));
+		
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		m_OgreSceneManager = ogsm;
+		assert(ogsm);
+		
+		
+		static unsigned int obj_id = 0;
+		obj_id++;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << obj_id;
+		ss >> name;
+
+		//Use this name to generate unique filename, used by geometry interface. 
+		m_Filename = name;
+			
+		m_StaticGeometry  = ogsm->GetSceneManger()->createStaticGeometry(name);
+		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
+        m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
+		
+
+		if(m_RenderQueue == "SkiesLate")
+		{
+				m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
+		}
+		else if(m_RenderQueue == "SkiesEarly")
+		{
+			m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
+		}
+		MeshMap::iterator iter = m_MeshInstances.begin();
+		while(iter != m_MeshInstances.end())
+		{
+			Ogre::Entity* entity = ogsm->GetSceneManger()->createEntity(iter->first,iter->first);
+			for(size_t i = 0;  i < iter->second.size(); i++)
+			{
+				Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);
+				Ogre::Quaternion orientation = Convert::ToOgre(iter->second.at(i).m_Rotation);
+				Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(i).m_Scale);
+				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
+			}
+			++iter;
+		}
+		m_StaticGeometry->build();
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 	}
+
+
+	void OgreStaticMeshComponent::OnDelete()
+	{
+		
+		if(m_StaticGeometry)
+		{
+			OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );
+			if(ogsm)
+				ogsm->GetSceneManger()->destroyStaticGeometry(m_StaticGeometry);
+		}
+	}
+
 
 	void OgreStaticMeshComponent::LoadXML(TiXmlElement *elem)
 	{
@@ -129,66 +184,7 @@ namespace GASS
 		}
 	}
 
-	void OgreStaticMeshComponent::OnLoad(LoadComponentsMessagePtr message) 
-	{
-		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
-		m_OgreSceneManager = ogsm;
-		assert(ogsm);
-
-		
-		
-		static unsigned int obj_id = 0;
-		obj_id++;
-		std::stringstream ss;
-		std::string name;
-		ss << GetName() << obj_id;
-		ss >> name;
-
-		//Use this name to generate unique filename, used by geometry interface. 
-		m_Filename = name;
-			
-		m_StaticGeometry  = ogsm->GetSceneManger()->createStaticGeometry(name);
-		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
-        m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
-		
-
-		if(m_RenderQueue == "SkiesLate")
-		{
-				m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-		}
-		else if(m_RenderQueue == "SkiesEarly")
-		{
-			m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-		}
-		MeshMap::iterator iter = m_MeshInstances.begin();
-		while(iter != m_MeshInstances.end())
-		{
-			Ogre::Entity* entity = ogsm->GetSceneManger()->createEntity(iter->first,iter->first);
-			for(size_t i = 0;  i < iter->second.size(); i++)
-			{
-				Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);
-				Ogre::Quaternion orientation = Convert::ToOgre(iter->second.at(i).m_Rotation);
-				Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(i).m_Scale);
-				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
-			}
-			++iter;
-		}
-		m_StaticGeometry->build();
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
-	}
-
-
-	void OgreStaticMeshComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-		if(m_StaticGeometry)
-		{
-			OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );
-			if(ogsm)
-				ogsm->GetSceneManger()->destroyStaticGeometry(m_StaticGeometry);
-		}
-	}
-
+	
 	
 	AABox OgreStaticMeshComponent::GetBoundingBox() const
 	{

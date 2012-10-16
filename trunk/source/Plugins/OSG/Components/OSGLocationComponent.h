@@ -56,7 +56,6 @@ namespace GASS
 		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
 		void OnScaleMessage(ScaleMessagePtr message);

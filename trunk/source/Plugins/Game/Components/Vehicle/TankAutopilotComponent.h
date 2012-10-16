@@ -41,6 +41,7 @@ namespace GASS
 		virtual ~TankAutopilotComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta);
 	private:
 		ADD_ATTRIBUTE(bool,Enable);
@@ -59,8 +60,6 @@ namespace GASS
 		
 
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);

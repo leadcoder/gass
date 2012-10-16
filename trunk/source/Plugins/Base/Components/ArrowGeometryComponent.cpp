@@ -59,7 +59,7 @@ namespace GASS
 
 	void ArrowGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(LoadComponentsMessage),MESSAGE_FUNC(ArrowGeometryComponent::OnLoad),0);
+		GenerateMesh();
 	}
 
 	Vec2 ArrowGeometryComponent::GetSize() const
@@ -76,21 +76,6 @@ namespace GASS
 			//SetTexture(m_Texture);
 		}
 	}
-
-/*	float ArrowGeometryComponent::GetTransparency() const
-	{
-		return m_Transparency;
-	}
-
-	void ArrowGeometryComponent::SetTransparency(float value)
-	{
-		m_Transparency = value;
-		if(GetSceneObject()) //initlized
-		{
-			GenerateMesh();
-			//SetTexture(m_Texture);
-		}
-	}*/
 
 	void ArrowGeometryComponent::GenerateMesh()
 	{
@@ -225,7 +210,7 @@ namespace GASS
 	
 	void ArrowGeometryComponent::OnLoad(MessagePtr message)
 	{
-		GenerateMesh();
+		
 		//SetTexture(m_Texture);
 	}
 

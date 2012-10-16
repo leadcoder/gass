@@ -9,7 +9,7 @@
 namespace GASS
 {
 	PedestrianBehaviorComponent::PedestrianBehaviorComponent(void) : m_GoalRadius(1),
-		m_Initlized(false),
+		m_Initialized(false),
 		m_RandomSpeed(2,2),
 		m_Position(0,0,0),
 		m_Health(1.0),
@@ -41,7 +41,6 @@ namespace GASS
 	void PedestrianBehaviorComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerExit,TriggerExitMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerEnter,TriggerEnterMessage ,0));
@@ -57,7 +56,7 @@ namespace GASS
 	void PedestrianBehaviorComponent::SetHealth(Float health)
 	{
 		m_Health = health;
-		if(m_Initlized)
+		if(m_Initialized)
 		{
 
 			DetourCrowdAgentComponentPtr agent = GetSceneObject()->GetFirstComponentByClass<DetourCrowdAgentComponent>();
@@ -97,7 +96,7 @@ namespace GASS
 		GoToRandomTarget(1.0); //send intial target!
 		
 		//set random speed!
-		m_Initlized = true;
+		m_Initialized = true;
 		m_State = "Wander";
 		m_InitialTargetLocationID = m_TargetLocationID;
 		SetRandomSpeed(m_RandomSpeed);
@@ -109,7 +108,7 @@ namespace GASS
 	void PedestrianBehaviorComponent::SetRandomSpeed(const Vec2 &value)
 	{
 		m_RandomSpeed = value;
-		if(m_Initlized)
+		if(m_Initialized)
 		{
 			DetourCrowdAgentComponentPtr agent = GetSceneObject()->GetFirstComponentByClass<DetourCrowdAgentComponent>();
 			if(agent)
@@ -125,7 +124,7 @@ namespace GASS
 	{
 		m_TargetLocationID = id;
 
-		if(m_Initlized)
+		if(m_Initialized)
 		{
 			GoToRandomTarget(0.0);
 		}
@@ -156,11 +155,6 @@ namespace GASS
 		SceneObjectPtr trigger = message->GetTrigger();
 	}
 	
-	void PedestrianBehaviorComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
-
 	SceneObjectPtr PedestrianBehaviorComponent::GetRandomLocationObject(const SceneObjectID &id) const
 	{
 		SceneObjectPtr ret;

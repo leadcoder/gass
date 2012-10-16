@@ -50,15 +50,17 @@ namespace GASS
 
 	void RecastOffmeshMeshConnectionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnUnload,UnloadComponentsMessage,1));
-		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation,TransformationNotifyMessage,0));
 		SceneObjectPtr end_node = GetSceneObject()->GetChildByID("AI_OFF_MESH_CHILD_OBJECT");
 		if(!end_node)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get child by ID, no child with AI_OFF_MESH_CHILD_OBJECT found", "RecastOffmeshMeshConnectionComponent::OnInitialize");
 		end_node->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnEndNodeTransformation,TransformationNotifyMessage,0));
 		m_EndNode = end_node;
+
+		//initlize visibility
+		SetVisible(m_Visible);
+		m_Initialized = true;
+
 	}
 
 	void RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation(TransformationNotifyMessagePtr message)
@@ -73,13 +75,6 @@ namespace GASS
 		UpdateConnectionLine();
 	}
 
-	void RecastOffmeshMeshConnectionComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//initlize visibility
-		SetVisible(m_Visible);
-		m_Initialized = true;
-	}
-
 	void RecastOffmeshMeshConnectionComponent::SetRadius(float value)
 	{
 		m_Radius = value;
@@ -90,11 +85,6 @@ namespace GASS
 	float RecastOffmeshMeshConnectionComponent::GetRadius() const
 	{
 		return m_Radius;
-	}
-
-	void RecastOffmeshMeshConnectionComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
 	}
 
 	bool RecastOffmeshMeshConnectionComponent::GetVisible()  const

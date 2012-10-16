@@ -104,11 +104,19 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnLoad,LoadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnRoadMessage,RoadMessage,0));
+
+		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		assert(ogsm);
+		m_OgreSceneManager = ogsm->GetSceneManger();
+		ConfigureTerrainDefaults();
+	}
+
+	void OgreTerrainGroupComponent::OnDelete()
+	{
+		delete m_TerrainGroup;
 	}
 
 	void OgreTerrainGroupComponent::SaveXML(TiXmlElement *obj_elem)
@@ -388,14 +396,6 @@ namespace GASS
 		}
 	}
 
-	void OgreTerrainGroupComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
-		assert(ogsm);
-		m_OgreSceneManager = ogsm->GetSceneManger();
-		ConfigureTerrainDefaults();
-	}
-
 	void OgreTerrainGroupComponent::SetSaveTerrain(const std::string &filename)
 	{
 		m_TerrainName = Misc::GetFilename(filename);
@@ -412,11 +412,7 @@ namespace GASS
 		return m_TerrainName;
 	}
 
-	void OgreTerrainGroupComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		delete m_TerrainGroup;
-
-	}
+	
 
 	AABox OgreTerrainGroupComponent::GetBoundingBox() const
 	{

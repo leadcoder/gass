@@ -40,8 +40,6 @@ namespace GASS
 		virtual void OnInitialize();
 		void CreateLayer();
 	protected:
-		void OnLoad(LoadComponentsMessagePtr message);
-		void OnUnload(UnloadComponentsMessagePtr message);
 		void SetScale(const Float &value);
 		Float GetScale() const;
 		void SetVolumetricDisplacement(const Float &value);

@@ -133,8 +133,6 @@ namespace GASS
 			m_Camera->setPolygonMode(m_PolygonMode.Get());
 		}
 	}
-
-
 	
 	void OgreCameraComponent::OnParameter(CameraParameterMessagePtr message)
 	{
@@ -145,7 +143,6 @@ namespace GASS
 			{
 				float value = message->GetValue1();
 				SetFov(value);
-				
 			}
 			break;
 		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:

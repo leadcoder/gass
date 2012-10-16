@@ -55,9 +55,15 @@ namespace GASS
 		RegisterProperty<Float>("NormalMultiplier", &SkyXCloudLayerComponent::GetNormalMultiplier, &SkyXCloudLayerComponent::SetNormalMultiplier);
 		RegisterProperty<Float>("HeightVolume", &SkyXCloudLayerComponent::GetHeightVolume, &SkyXCloudLayerComponent::SetHeightVolume);
 		RegisterProperty<Float>("VolumetricDisplacement", &SkyXCloudLayerComponent::GetVolumetricDisplacement, &SkyXCloudLayerComponent::SetVolumetricDisplacement);
+	}
+
+
+	void SkyXCloudLayerComponent::OnInitialize()
+	{
 		
 	}
 
+	
 	void SkyXCloudLayerComponent::SetScale(const Float &value)
 	{
 		m_Options.Scale = value;
@@ -91,7 +97,6 @@ namespace GASS
 		return m_Options.HeightVolume;
 	}
 
-
 	void SkyXCloudLayerComponent::SetNormalMultiplier(const Float &value)
 	{
 		m_Options.NormalMultiplier = value;
@@ -102,7 +107,6 @@ namespace GASS
 	{
 		return m_Options.NormalMultiplier;
 	}
-
 	
 	void SkyXCloudLayerComponent::SetDetailAttenuation(const Float &value)
 	{
@@ -126,7 +130,6 @@ namespace GASS
 	{
 		return m_Options.DistanceAttenuation;
 	}
-
 
 	void SkyXCloudLayerComponent::SetTimeMultiplier(const Float &value)
 	{
@@ -172,22 +175,6 @@ namespace GASS
 			m_CloudLayer->setOptions(m_Options);
 			
 		}
-	}
-
-	void SkyXCloudLayerComponent::OnInitialize()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXCloudLayerComponent::OnLoad,LoadComponentsMessage,3));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXCloudLayerComponent::OnUnload,UnloadComponentsMessage,0));
-	}
-
-	void SkyXCloudLayerComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
-
-	void SkyXCloudLayerComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		//Init();
 	}
 
 	void SkyXCloudLayerComponent::CreateLayer()

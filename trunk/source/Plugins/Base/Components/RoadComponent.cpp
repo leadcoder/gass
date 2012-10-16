@@ -87,9 +87,14 @@ namespace GASS
 
 	void RoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnLoad,LoadComponentsMessage,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUnload,UnloadComponentsMessage,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,UpdateWaypointListMessage,1));
+		
+		//get waypoint list
+		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		if(!wpl)
+			LogManager::getSingleton().stream() << "WARNING:RoadComponent depends on WaypointListComponent";
+
+		m_Initialized = true;
 	}
 
 	void RoadComponent::SetMaterial(const std::string &value)
@@ -101,21 +106,6 @@ namespace GASS
 	std::string RoadComponent::GetMaterial() const 
 	{
 		return m_Material;
-	}
-
-
-	void RoadComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-
-	}
-
-	void RoadComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
-		m_Initialized = true;
-		//get waypoint list
-		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
-		if(!wpl)
-			LogManager::getSingleton().stream() << "WARNING:RoadComponent depends on WaypointListComponent";
 	}
 
 	void RoadComponent::SetPaintTerrain(bool value)

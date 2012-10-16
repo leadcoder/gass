@@ -48,7 +48,6 @@ namespace GASS
 	void AITrainComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnUnload,UnloadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnSpeedMessage,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 
@@ -73,10 +72,7 @@ namespace GASS
 			SetWaypointList(m_WaypointListName);
 	}
 	
-	void AITrainComponent::OnUnload(UnloadComponentsMessagePtr message)
-	{
-		
-	}
+	
 
 	void AITrainComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{

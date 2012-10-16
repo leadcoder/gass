@@ -62,13 +62,8 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnUnload,UnloadComponentsMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnLoad,LoadComponentsMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeMessage,0));
-	}
-
-	void RakNetNetworkMasterComponent::OnLoad(LoadComponentsMessagePtr message)
-	{
+	
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -109,7 +104,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkMasterComponent::OnUnload(UnloadComponentsMessagePtr message)
+	void RakNetNetworkMasterComponent::OnDelete()
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(raknet->IsServer())
