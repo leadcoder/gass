@@ -35,7 +35,13 @@
 
 namespace GASS
 {
-	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), m_MoonSize(1),m_SkyX(NULL), m_Radius(5000),m_Target(NULL), m_SkyDomeFog(false)
+	SkyXComponent::SkyXComponent(void) : m_TimeMultiplier(1), 
+		m_MoonSize(1),
+		m_SkyX(NULL), 
+		m_Radius(5000),
+		m_Target(NULL), 
+		m_SkyDomeFog(false),
+		m_Initialized (false)
 	{
 				
 	}
@@ -61,30 +67,25 @@ namespace GASS
 		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog);
 	}
 
-
 	void SkyXComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SkyXComponent::OnLocationLoaded,LocationLoadedMessage,2));
+		if(m_Initialized)
+			return;
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
-	}
-
-	void SkyXComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
-	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::Root::getSingleton().addFrameListener(this);
 		float save_clip  = ocam->getFarClipDistance();
-		//ocam->setFarClipDistance(m_Radius);
 		
-		// Create our projected grid module  
-		Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
-
+		//ocam->setFarClipDistance(m_Radius);
+		//Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
 		//if(terrain_mat.get())
-		//m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
+			//m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
 
 		// Create SkyX object
 		Init(ocam);
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		m_Initialized = true;
 	}
 
 

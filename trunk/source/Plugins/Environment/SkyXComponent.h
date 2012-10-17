@@ -43,7 +43,6 @@ namespace GASS
 		virtual void OnDelete();
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnTimeOfDayMessage(TimeOfDayMessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 
@@ -83,8 +82,17 @@ namespace GASS
 		SkyX::AtmosphereManager::Options m_SkyXOptions;
 		Float m_Radius;
 		bool m_SkyDomeFog;
+		bool m_Initialized;
 	};
 	typedef boost::shared_ptr<SkyXComponent> SkyXComponentPtr;
+
+
+	class SkyXComponentLoadedMessage : public BaseMessage
+	{
+	public:
+		SkyXComponentLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay){}
+	};
+	typedef boost::shared_ptr<SkyXComponentLoadedMessage> SkyXComponentLoadedMessagePtr;
 }
 
 #endif

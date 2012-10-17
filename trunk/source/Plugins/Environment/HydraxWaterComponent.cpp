@@ -57,7 +57,8 @@ namespace GASS
 		m_RadialGridGeometryModuleRtt(NULL),
 		m_Target(NULL),
 		m_ResourceLocation("%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax"),
-		m_ActiveModule("ProjectedGridRtt")
+		m_ActiveModule("ProjectedGridRtt"),
+		m_Initialized(false)
 	{
 
 	}
@@ -108,6 +109,9 @@ namespace GASS
 
 	void HydraxWaterComponent::OnInitialize()
 	{
+		if(m_Initialized)
+			return;
+
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
@@ -118,6 +122,7 @@ namespace GASS
 		Ogre::Viewport* vp = target->getViewport(0);
 		Ogre::Root::getSingleton().addFrameListener(this);
 		CreateHydrax(sm, ocam, vp);
+		m_Initialized = true;
 	}
 
 	void HydraxWaterComponent::OnDelete()

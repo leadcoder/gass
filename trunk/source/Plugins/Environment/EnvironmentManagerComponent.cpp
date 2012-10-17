@@ -130,24 +130,24 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnLocationLoaded,LocationLoadedMessage,4));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
-	}
-
-	void EnvironmentManagerComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
-	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::Root::getSingleton().addFrameListener(this);
 		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
 		HydraxWaterComponentPtr hydrax = GetSceneObject()->GetFirstComponentByClass<HydraxWaterComponent>();
-
 		if(hydrax)
+		{
+			hydrax->OnInitialize(); 
 			m_Hydrax = hydrax->GetHydrax();
+		}
+		if(skyx)
+		{
+			skyx->OnInitialize(); 
+		}
 		
 		if(hydrax && skyx->GetSkyX())
 		{
-			
 			hydrax->GetHydrax()->getRttManager()->addRttListener(new HydraxRttListener(skyx->GetSkyX(), hydrax->GetHydrax()));
 		}
 
@@ -163,8 +163,8 @@ namespace GASS
 		SetSunGradient(m_SunGradientValues);
 		SetAmbientGradient(m_AmbientGradientValues);
 		SetFogGradient(m_FogGradientValues);
-	
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		
 	}
 
 	void EnvironmentManagerComponent::OnWeatherMessage(WeatherMessagePtr message)

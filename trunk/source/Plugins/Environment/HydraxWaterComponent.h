@@ -311,9 +311,9 @@ namespace GASS
 		FilePath m_ResourceLocation;
 		std::string m_ActiveModule;
 		std::string m_ActiveNoise;
+		bool m_Initialized;
 
 	};
-
 	typedef boost::shared_ptr<HydraxWaterComponent> HydraxWaterComponentPtr;
 }
 

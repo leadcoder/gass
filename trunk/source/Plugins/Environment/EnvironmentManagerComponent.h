@@ -46,8 +46,7 @@ namespace GASS
 		virtual void OnDelete();
 	protected:
 		void UpdateEnvironmentLighting();
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		
+		void OnLoad(MessagePtr message);
 		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);

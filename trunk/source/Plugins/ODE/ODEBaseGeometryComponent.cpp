@@ -148,9 +148,6 @@ namespace GASS
 		SetSizeFromMesh(true);
 	}
 
-
-	
-
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		if(m_Body == 0) //only update position for static geometry 

@@ -153,7 +153,7 @@ namespace GASS
 			stream.setNull();
 			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
 		}
-		GetSceneObject()->SendImmediate(MessagePtr(new GrassLoaderComponentLoaded()));
+		GetSceneObject()->PostMessage(MessagePtr(new GrassLoaderComponentLoaded()));
 	}
 
 	void GrassLoaderComponent::OnDelete()

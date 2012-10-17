@@ -96,7 +96,6 @@ namespace GASS
 
 	}
 
-
 	void GrassLayerComponent::OnLoad(GrassLoaderComponentLoadedPtr message)
 	{
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
