@@ -253,24 +253,33 @@ namespace GASS
 			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
 			{
 				osg::Node* child_node = node->asGroup()->getChild(i);
-				LogManager::getSingleton().stream() << "Try Expand OSG node:" << child_node->getName();	
+				LogManager::getSingleton().stream() << "Try to expand OSG node:" << child_node->getName();	
 
-				SceneObjectPtr so = boost::shared_static_cast<SceneObject>(ComponentContainerFactory::Get().Create("SceneObject"));
-				so->SetName(child_node->getName());
-				so->SetID(child_node->getName());
-
-
-				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
-
-				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
-				child_node->setUserData(node_data);
-
-				mesh_comp->SetMeshNode(child_node);
-				so->AddComponent(mesh_comp);
-				//load this object
-				parent->AddChildSceneObject(so,load);
-
-				Expand(so,child_node, load);
+				//use template if present!
+				const std::string template_name = "OSGExpandedMeshObject";
+				SceneObjectPtr so;
+				try
+				{
+					so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+				}
+				catch(std::exception& e)
+				{
+					so = SceneObjectPtr(new SceneObject());
+				}
+				if(so)
+				{
+					so->SetName(child_node->getName());
+					so->SetID(child_node->getName());
+					boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+					OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+					child_node->setUserData(node_data);
+					mesh_comp->SetMeshNode(child_node);
+					so->AddComponent(mesh_comp);
+					//load this object
+					parent->AddChildSceneObject(so,load);
+					//epxand recursive
+					Expand(so,child_node, load);
+				}
 			}
 		}
 	}

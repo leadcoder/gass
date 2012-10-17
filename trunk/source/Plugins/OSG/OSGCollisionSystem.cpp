@@ -177,7 +177,6 @@ namespace GASS
 			}
 		}
 	}
-
 	
 
 	void OSGCollisionSystem::OnChangeCamera(ChangeCameraMessagePtr message)
@@ -242,7 +241,7 @@ namespace GASS
 		//intersectVisitor.setReferenceEyePointCoordinateFrame(osgUtil::Intersector::MODEL); 
 		//node = camera->GetOSGCamera();
 	//	GeometryFlags cat(GT_REGULAR);
-		if(request->CollisionBits == 1)
+		/*if(request->CollisionBits == 1)
 		{
 			intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY);
 		}
@@ -255,7 +254,8 @@ namespace GASS
 		{
 			intersectVisitor.setTraversalMask(NM_TERRAIN_GEOMETRY);
 		//	cat.Set(GT_TERRAIN);
-		}
+		}*/
+		//intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY);
 
 		node->accept(intersectVisitor);
 
@@ -304,6 +304,8 @@ namespace GASS
 										}
 
 										if(found)*/
+
+										if(request->CollisionBits && geom->GetGeometryFlags())
 										{
 											Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
 											Float col_dist = (col_pos - request->LineStart).FastLength(); 

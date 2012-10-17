@@ -136,11 +136,9 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 		SetCastShadow(m_CastShadow);
-
 		m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
 		m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
-
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
