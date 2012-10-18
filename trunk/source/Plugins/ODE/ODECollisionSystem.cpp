@@ -239,7 +239,7 @@ namespace GASS
 		request.Type = COL_LINE;
 		request.Scene = scene;
 		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = 2;
+		request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
 		ODELineCollision raycast(&request,&result,(dGeomID)GetSpace());
 		raycast.Process();
 

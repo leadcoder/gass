@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "OSGConvert.h"
+#include "OSGNodeMasks.h"
 
 namespace GASS
 {
@@ -177,6 +178,21 @@ namespace GASS
 
 		return rot;
 
+	}
+
+	int OSGConvert::ToOSGNodeMask(GeometryFlags flag) const
+	{
+		return flag << NM_USER_OFFSET;
+	}
+
+	void OSGConvert::SetOSGNodeMask(GeometryFlags flags, osg::Node* node) const
+	{
+		int mask = ToOSGNodeMask(flags);
+		int all_mask = ToOSGNodeMask(GEOMETRY_FLAG_ALL);
+		//set geom bits to zero
+		node->setNodeMask(~all_mask & node->getNodeMask());
+		//set geom bitss
+		node->setNodeMask(mask | node->getNodeMask());
 	}
 }
 

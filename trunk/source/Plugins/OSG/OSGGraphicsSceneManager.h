@@ -45,13 +45,10 @@ namespace GASS
 		virtual void OnCreate();
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
-
-		static void UpdateNodeMask(osg::Node *node, GeometryFlags category);
-		//osg::ref_ptr<osg::PositionAttitudeTransform> GetSceneTransformatation() {return m_SceneTransform;}
+		//static void UpdateNodeMask(osg::Node *node, GeometryFlags category);
 	protected:
 		void OnLoad(MessagePtr message);		
 		void OnUnload(MessagePtr message);
-		//void OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraMessagePtr message);
 
 	private:

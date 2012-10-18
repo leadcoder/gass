@@ -65,13 +65,13 @@ namespace GASS
 		//RegisterProperty<GeometryFlags>("GeometryFlags", &GetGeometryFlags, &SetGeometryFlags);
 	}
 
-	
 	void OSGMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
 		m_GeomFlags = value;
 		if(m_MeshNode.valid())
 		{
-			OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),value);
+			OSGConvert::Get().SetOSGNodeMask(value,m_MeshNode.get());
+			//OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),value);
 		}
 	}
 
@@ -79,7 +79,6 @@ namespace GASS
 	{
 		return m_GeomFlags;
 	}
-
 
 	void OSGMeshComponent::SetCastShadow(bool value)
 	{
@@ -230,6 +229,8 @@ namespace GASS
 
 	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
+		//update mask!
+		SetGeometryFlags(m_GeomFlags);
 	}
 
 
@@ -427,9 +428,9 @@ namespace GASS
 		if(m_MeshNode.valid())
 		{
 			if(message->EnableCollision())
-				SetGeometryFlags(m_GeomFlags);
+				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_MeshNode.get());
 			else
-				OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),GEOMETRY_FLAG_UNKOWN);
+				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_MeshNode.get());
 		}
 	}
 }

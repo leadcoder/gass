@@ -24,16 +24,15 @@ namespace GASS
 {
 	enum OSGNodeMasks
 	{
-		NM_VISIBLE = 1,
+		NM_VISIBLE = 1 << 0,
 		NM_RECEIVE_SHADOWS = 1 << 1,
 		NM_CAST_SHADOWS = 1 << 2,
-
+		NM_USER_OFFSET  = 3,
 		//Collision masks
-		NM_REGULAR_GEOMETRY = 1 << 3,
-		NM_TERRAIN_GEOMETRY  = 1 << 4,
-		NM_GIZMO_GEOMETRY = 1 << 5,
-
+		//NM_REGULAR_GEOMETRY = 1 << 3,
+		//NM_TERRAIN_GEOMETRY  = 1 << 4,
+		//NM_GIZMO_GEOMETRY = 1 << 5,
 		//user defined start here
-		NM_USER  = 1 << 6
+		//NM_USER  = 1 << 6
 	};
 }

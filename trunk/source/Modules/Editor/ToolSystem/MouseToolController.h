@@ -74,7 +74,7 @@ namespace GASS
 		void MoveTo(const CursorInfo &info);
 		void MouseDown(const CursorInfo &info);
 		void MouseUp(const CursorInfo &info);
-		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits);
+		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
 		void OnFocusChanged(WindowFocusChangedMessagePtr message);
 
 		//helper

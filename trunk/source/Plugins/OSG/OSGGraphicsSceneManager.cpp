@@ -215,7 +215,7 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryFlags category)
+	/*void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryFlags category)
 	{
 		//reset 
 		/*node->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  node->getNodeMask());
@@ -230,8 +230,8 @@ namespace GASS
 		case GT_GIZMO:
 			node->setNodeMask(NM_GIZMO_GEOMETRY | node->getNodeMask());
 			break;
-		}*/
-	}
+		}
+	}*/
 
 }
 

@@ -142,7 +142,6 @@ namespace GASS
 
 		if(m_Type ==CGT_BOX)
 			SetScale(message->GetScale());
-		
 	}
 
 	void ODECollisionGeometryComponent::CreateGeometry()

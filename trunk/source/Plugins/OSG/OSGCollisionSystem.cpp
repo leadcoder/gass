@@ -201,7 +201,7 @@ namespace GASS
 		request.Type = COL_LINE;
 		request.Scene = scene;
 		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = 2;
+		request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
 
 		OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		if(gfx_sm)
@@ -255,7 +255,9 @@ namespace GASS
 			intersectVisitor.setTraversalMask(NM_TERRAIN_GEOMETRY);
 		//	cat.Set(GT_TERRAIN);
 		}*/
-		//intersectVisitor.setTraversalMask(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY);
+		
+		int mask = OSGConvert::Get().ToOSGNodeMask(request->CollisionBits);
+		intersectVisitor.setTraversalMask(mask);
 
 		node->accept(intersectVisitor);
 

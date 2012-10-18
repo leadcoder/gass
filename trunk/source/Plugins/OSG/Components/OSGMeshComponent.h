@@ -23,6 +23,8 @@
 //mesh fetch
 #include <osg/TriangleFunctor>
 #include <osg/NodeVisitor>
+#include "Plugins/OSG/OSGConvert.h"
+
 
 namespace osg
 {
@@ -171,6 +173,7 @@ namespace GASS
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh) {m_MeshNode =mesh;}
+		osg::ref_ptr<osg::Node> GetMeshNode() const {return m_MeshNode ;}
 	protected:
 		
 		bool GetLighting() const;
@@ -200,5 +203,7 @@ namespace GASS
 		bool m_Lighting;
 		bool m_Expand;
 	};
+
+	typedef boost::shared_ptr<OSGMeshComponent> OSGMeshComponentPtr;
 }
 

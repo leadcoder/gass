@@ -72,7 +72,7 @@ namespace GASS
 		m_GeomFlags = value;
 		if(m_OSGGeometry.valid())
 		{
-			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),value);
+			OSGConvert::Get().SetOSGNodeMask(value,m_GeoNode.get());
 		}
 	}
 
@@ -84,9 +84,9 @@ namespace GASS
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
 		if(message->EnableCollision())
-			SetGeometryFlags(m_GeomFlags);
+			OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_GeoNode.get());
 		else
-			OSGGraphicsSceneManager::UpdateNodeMask(m_GeoNode.get(),GEOMETRY_FLAG_UNKOWN);
+			OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_GeoNode.get());
 	}
 
 	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -125,20 +125,10 @@ namespace GASS
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
 
-		//osg::ref_ptr<osg::Vec3dArray> vertices = new osg::Vec3dArray();
-		//osg::ref_ptr<osg::Vec4Array> colors= new osg::Vec4Array;
-
-		//m_OSGGeometry->setVertexArray(vertices.get());
-		//m_OSGGeometry->setColorArray(colors.get());
 
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
-
-		//m_GeoNode->setUserData((osg::Referenced*)this);
-
-		//m_DrawArrays = new osg::DrawArrays();
-		//m_DrawElements = new osg::DrawElementsUInt():
-		//m_OSGGeometry->addPrimitiveSet(m_DrawArrays);
+		SetGeometryFlags(m_GeomFlags);
 
 	}
 
@@ -267,6 +257,8 @@ namespace GASS
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+
+		
 	}
 
 

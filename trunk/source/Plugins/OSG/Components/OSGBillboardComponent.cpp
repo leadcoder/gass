@@ -98,6 +98,8 @@ namespace GASS
 	void OSGBillboardComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+		if(m_OSGBillboard)
+			OSGConvert::Get().SetOSGNodeMask(flags, m_OSGBillboard);
 	}
 
 	
@@ -136,8 +138,10 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 		SetCastShadow(m_CastShadow);
-		m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
-		m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
+		SetGeometryFlags(m_GeomFlags);
+
+		//m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
+		//m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 	}
 
@@ -285,12 +289,11 @@ namespace GASS
 		{
 			if(message->EnableCollision())
 			{
-				m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
-				m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
+				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags, m_OSGBillboard);
 			}
 			else
 			{
-				m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
+				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT, m_OSGBillboard);
 			}
 		}
 	}

@@ -39,6 +39,8 @@ namespace GASS
 		Vec3 ToGASS(const osg::Vec3d &v) const; 
 		osg::Quat ToOSG(const Quaternion &value) const;
 		Quaternion ToGASS(const osg::Quat &value) const;
+		int ToOSGNodeMask(GeometryFlags flag) const;
+		void SetOSGNodeMask(GeometryFlags flags, osg::Node* node) const;
 		Mat4 m_Tranform;
 		Mat4 m_InvTranform;
 		bool m_FlipYZ;

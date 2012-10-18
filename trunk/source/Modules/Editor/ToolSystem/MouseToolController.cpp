@@ -217,7 +217,7 @@ namespace GASS
 
 
 
-	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, int col_bits)
+	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
 	{
 		GASS::CollisionResult result;
 		result.Coll = false;
@@ -259,8 +259,7 @@ namespace GASS
 		if(cam)
 			cam->GetCameraToViewportRay(cursor_pos.x, cursor_pos.y,info.m_RayStart,info.m_RayDir);
 
-		int flags = GEOMETRY_FLAG_GIZMO;
-		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, flags);
+		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
 
 		int from_id = int(this);
 
@@ -276,9 +275,7 @@ namespace GASS
 		}
 		else
 		{
-			flags = GEOMETRY_FLAG_UNKOWN | GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT | GEOMETRY_FLAG_DYNAMIC_OBJECT;
-		
-			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, flags);
+			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_SCENE_OBJECTS);
 			if(mesh_result.Coll)
 			{
 				SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
