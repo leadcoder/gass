@@ -29,12 +29,12 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
 
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"

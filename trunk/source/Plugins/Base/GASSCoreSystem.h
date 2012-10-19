@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Systems/GASSSimSystem.h"
+#include "Sim/GASSSimSystem.h"
 #include <string>
 
 namespace GASS

@@ -22,7 +22,7 @@
 #include "GASSControlSetting.h"
 #include "GASSController.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSMisc.h"

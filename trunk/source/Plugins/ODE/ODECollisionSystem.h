@@ -23,14 +23,14 @@
 
 #include <ode/ode.h>
 #include <map>
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/System/GASSBaseSystem.h"
 #include "tbb/spin_mutex.h"
 

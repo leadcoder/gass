@@ -22,9 +22,9 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS

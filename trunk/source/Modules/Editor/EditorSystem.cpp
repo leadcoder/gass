@@ -2,10 +2,10 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 
 

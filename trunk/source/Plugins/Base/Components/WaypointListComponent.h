@@ -17,12 +17,12 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Components/Graphics/GASSICameraComponent.h"
-#include "Sim/Components/Common/GASSIWaypointListComponent.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS

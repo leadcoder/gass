@@ -2,12 +2,12 @@
 
 #include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
-#include "Sim/Systems/Input/GASSIInputSystem.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIInputSystem.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
 #include <string>

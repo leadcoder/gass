@@ -34,8 +34,8 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"

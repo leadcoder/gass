@@ -38,14 +38,14 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
 
 
 

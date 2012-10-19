@@ -20,11 +20,11 @@
 #ifndef HYDRAX_WATER_COMPONENT_H
 #define HYDRAX_WATER_COMPONENT_H
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreFrameListener.h>
 

@@ -22,7 +22,7 @@
 #define ODE_LINE_COLLISION
 
 #include <ode/ode.h>
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
 
 namespace GASS
 {

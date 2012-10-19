@@ -4,9 +4,9 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 #include "Framework/Framework.h"
 
 namespace GASS

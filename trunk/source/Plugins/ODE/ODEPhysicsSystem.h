@@ -23,9 +23,9 @@
 #include <ode/ode.h>
 #include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scene/GASSBaseSceneManager.h"
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/GASSIPhysicsSystem.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Interface/GASSIPhysicsSystem.h"
 
 namespace GASS
 {

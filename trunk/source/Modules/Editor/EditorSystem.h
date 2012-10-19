@@ -5,12 +5,12 @@
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
 #include "Core/System/GASSSystemFactory.h"
 
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 
 #include "EditorCommon.h"
 #include "GUISchemaLoader.h"

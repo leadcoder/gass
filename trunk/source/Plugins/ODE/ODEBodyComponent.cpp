@@ -23,11 +23,11 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/GASSSceneObject.h"
 #include <boost/bind.hpp>
 
 

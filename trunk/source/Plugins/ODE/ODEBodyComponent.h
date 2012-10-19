@@ -23,10 +23,10 @@
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Core/Math/GASSVector.h"
 
 #include <ode/ode.h>

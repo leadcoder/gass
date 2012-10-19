@@ -26,18 +26,18 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
-#include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 
 
 namespace GASS

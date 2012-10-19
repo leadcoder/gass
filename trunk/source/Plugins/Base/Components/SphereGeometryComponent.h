@@ -20,8 +20,8 @@
 #ifndef SPHERE_GEOMETRY_COMPONENT_H
 #define SPHERE_GEOMETRY_COMPONENT_H
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIShape.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 

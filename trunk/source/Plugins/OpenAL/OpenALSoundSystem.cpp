@@ -5,14 +5,14 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSScene.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSScene.h"
 
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSSceneObject.h"
 
 
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Framework/Framework.h"
 

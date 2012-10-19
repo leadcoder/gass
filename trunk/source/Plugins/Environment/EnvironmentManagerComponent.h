@@ -21,12 +21,12 @@
 #define ENVIRONMENT_MANAGER_COMPONENT_H
 
 #include "Core/Common.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 #include <OgreLight.h>

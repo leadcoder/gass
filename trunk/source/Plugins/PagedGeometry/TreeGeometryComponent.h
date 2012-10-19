@@ -21,10 +21,10 @@
 #define TREE_GEOMETRY_COMPONENT_H
 
 #include "PagedGeometry.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "PGMessages.h"
 #include <OgreRenderTargetListener.h>

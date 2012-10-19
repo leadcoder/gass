@@ -20,9 +20,9 @@
 
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scene/GASSSceneManagerFactory.h"
+#include "Sim/GASSSceneManagerFactory.h"
 #include "GameSceneManager.h"
 #include "GameSystem.h"
 

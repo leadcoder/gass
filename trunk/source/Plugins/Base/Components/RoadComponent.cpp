@@ -26,18 +26,18 @@
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSMeshData.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
 #include "WaypointComponent.h"
 #include "WaypointListComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
 
 namespace GASS
 {

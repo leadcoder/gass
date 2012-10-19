@@ -19,13 +19,13 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
-#include "Sim/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scene/GASSScene.h"
+#include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/GASSScene.h"
 
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSSceneObject.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"

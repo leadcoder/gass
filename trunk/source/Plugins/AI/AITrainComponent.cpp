@@ -2,7 +2,7 @@
 #include "TriggerComponent.h"
 #include "AITargetComponent.h"
 #include "AIMessages.h"
-#include "Sim/Components/Common/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 
 
 namespace GASS

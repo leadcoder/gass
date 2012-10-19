@@ -20,13 +20,13 @@
 
 #pragma once
 
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include <tinyxml.h>
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
 #include <OgreTerrainPageSource.h>
 #include <OgreTerrainSceneManager.h>

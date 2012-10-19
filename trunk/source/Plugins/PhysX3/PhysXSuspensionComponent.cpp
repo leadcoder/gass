@@ -136,7 +136,7 @@ namespace GASS
 		Quaternion rot_b1 = location2->GetRotation();
 
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		
+			
 		//physx::PxReal density = 1.0f;
 		physx::PxTransform transform(a2->getGlobalPose());//(PxConvert::ToPx(pos_b1), PxConvert::ToPx(rot_b1));
 		
@@ -149,6 +149,7 @@ namespace GASS
 		
 		/*m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
 		m_RollAxisActor->setMass(a2->getMass());
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_RollAxisActor, a2->getMass());
 		sm->GetPxScene()->addActor(*m_RollAxisActor);
 		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
@@ -159,26 +160,26 @@ namespace GASS
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
 		
 		joint2->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
-		joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
-		physx::PxD6JointDrive drive1(600.0f, 1600.0f, PX_MAX_F32, true);
+		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLOCKED);
+		joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLOCKED);
+		physx::PxD6JointDrive drive1(-6000.0f, -100.0f, PX_MAX_F32, true);
 		joint->setDrive(physx::PxD6Drive::eY, drive1);
 		physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
 		joint2->setDrive(physx::PxD6Drive::eTWIST, drive2);
 		joint2->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint2;
-		m_WheelActor = a2;
-		*/
+		m_WheelActor = a2;*/
+		
 		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
-			 a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
+		a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
 		
-		
-		joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
+		//joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
 		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
 		//joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
-		physx::PxD6JointDrive drive1(600.0f, 60.0f, PX_MAX_F32, true);
-		physx::PxD6JointDrive drive2(10.0f, 100, 1, false);
-		joint->setDrive(physx::PxD6Drive::eY, drive1);
+		physx::PxD6JointDrive drive1(6000.0f, 1000.0f, PX_MAX_F32, true);
+		physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
+		//joint->setDrive(physx::PxD6Drive::eY, drive1);
 		joint->setDrive(physx::PxD6Drive::eTWIST, drive2);
 		joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint;

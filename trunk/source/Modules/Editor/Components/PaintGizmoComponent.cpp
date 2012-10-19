@@ -2,14 +2,14 @@
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "PaintGizmoComponent.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Core/Utils/GASSLogManager.h"
 
 

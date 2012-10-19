@@ -6,12 +6,12 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSimEngine.h"
 
 

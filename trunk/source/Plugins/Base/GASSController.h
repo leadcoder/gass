@@ -25,7 +25,7 @@
 #include "GASSControlSettingsSystem.h"
 #include <map>
 #include <string>
-#include "Sim/Systems/Input/GASSIInputSystem.h"
+#include "Sim/Interface/GASSIInputSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 

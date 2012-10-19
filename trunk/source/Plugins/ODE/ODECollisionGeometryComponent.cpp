@@ -33,15 +33,15 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectTemplate.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSceneObjectTemplate.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include <boost/bind.hpp>
 
 namespace GASS

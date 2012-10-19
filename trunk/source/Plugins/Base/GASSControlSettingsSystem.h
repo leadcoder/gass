@@ -30,9 +30,9 @@
 */
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 
 #include <map>
 #include <string>

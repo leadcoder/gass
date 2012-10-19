@@ -21,10 +21,10 @@
 #ifndef ARMOR_COMPONENT_H
 #define ARMOR_COMPONENT_H
 
-#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Plugins/Game/GameMessages.h"
 
 namespace GASS

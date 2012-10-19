@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include <stdio.h>
-#include "Sim/Systems/Messages/GASSScriptSystemMessages.h"
+#include "Sim/Messages/GASSScriptSystemMessages.h"
 #include "MyGUISystem.h"
 #include <MyGUI.h>
 #include "MyGUI_LastHeader.h"

@@ -33,13 +33,13 @@
 
 //GASS includes
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Messages/GASSNetworkSystemMessages.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSNetworkSystemMessages.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 
 

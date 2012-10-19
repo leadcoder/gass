@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/OgreResourceSystem.h"
 #include "Core/System/GASSSystemFactory.h"

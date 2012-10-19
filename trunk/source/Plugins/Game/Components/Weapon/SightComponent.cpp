@@ -29,20 +29,20 @@
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 
-#include "Sim/Components/Network/GASSINetworkComponent.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/Interface/GASSINetworkComponent.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
-#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
-#include "Sim/Scene/GASSSoundSceneObjectMessages.h"
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
 
 namespace GASS
 {

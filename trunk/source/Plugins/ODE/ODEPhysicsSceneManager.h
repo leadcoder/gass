@@ -23,12 +23,12 @@
 #include <ode/ode.h>
 #include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneMessages.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneMessages.h"
 
 
 namespace GASS

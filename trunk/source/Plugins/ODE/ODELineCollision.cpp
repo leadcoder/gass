@@ -20,8 +20,8 @@
 
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODELineCollision.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSBaseSceneComponent.h"
 
 
 namespace GASS

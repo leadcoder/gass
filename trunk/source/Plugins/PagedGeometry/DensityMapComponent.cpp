@@ -30,9 +30,9 @@
 #include "TreeLoader2D.h"
 #include "TreeLoader3D.h"
 #include "GrassLoader.h"
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSScene.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
 
 
 

@@ -27,10 +27,10 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageType.h"
-#include "Sim/Systems/Input/GASSIInputSystem.h"
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Interface/GASSIInputSystem.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 
 namespace GASS

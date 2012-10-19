@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
-#include "Sim/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
 

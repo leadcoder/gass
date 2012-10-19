@@ -29,8 +29,8 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
-#include "Sim/Systems/Input/GASSIInputSystem.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIInputSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include <boost/bind.hpp>
 

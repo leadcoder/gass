@@ -24,16 +24,16 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Sim/Scene/GASSSceneManagerFactory.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"

@@ -21,15 +21,15 @@
 #ifndef RAK_NET_LOCATION_TRANSFER_COMPONENT_H
 #define RAK_NET_LOCATION_TRANSFER_COMPONENT_H
 
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Components/Network/GASSINetworkComponent.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSINetworkComponent.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 
 #include "Sim/GASSCommon.h"

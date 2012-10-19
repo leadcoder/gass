@@ -1,11 +1,11 @@
 #pragma once
 #include "Modules/Editor/EditorSystem.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/Components/Graphics/GASSMeshData.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSMeshData.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #define GT_AXIS "GT_AXIS"
 #define GT_PLANE "GT_PLANE"

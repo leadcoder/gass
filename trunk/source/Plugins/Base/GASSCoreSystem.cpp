@@ -19,7 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Core/System/GASSSystemFactory.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "GASSCoreSystem.h"
 

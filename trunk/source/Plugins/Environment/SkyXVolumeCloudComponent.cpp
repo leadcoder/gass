@@ -27,8 +27,8 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
 
 #include <Ogre.h>
 

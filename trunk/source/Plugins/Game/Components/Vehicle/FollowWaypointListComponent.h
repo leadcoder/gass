@@ -21,12 +21,12 @@
 #ifndef FOLLOW_WAYPOINT_LIST_H
 #define FOLLOW_WAYPOINT_LIST_H
 
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/GASSBaseSceneComponent.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Scheduling/GASSITaskListener.h"
 #include "Plugins/Game/GameMessages.h"

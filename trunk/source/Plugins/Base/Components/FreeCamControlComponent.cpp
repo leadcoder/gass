@@ -22,17 +22,17 @@
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Components/Graphics/GASSICameraComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
@@ -185,7 +185,6 @@ namespace GASS
 		else if(name == "FreeCameraPitch")
 		{
 			m_PitchInput = value;
-
 		}
 		else if(name == "FreeCameraHeading")
 		{
@@ -244,7 +243,6 @@ namespace GASS
 		}
 
 		Float forward_speed = m_ThrottleInput*delta_time*speed_factor;
-		//LogManager::Get().stream() << "speed:" << forward_speed << " T:" << m_ThrottleInput << " d:"<< delta_time <<   " f:" << speed_factor << "\n";
 		Float strafe_speed = m_StrafeInput*delta_time*speed_factor;
 		Float updown_speed = m_UpDownInput*delta_time*speed_factor;
 

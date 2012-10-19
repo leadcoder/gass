@@ -28,14 +28,14 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Sim/Scene/GASSSceneObjectTemplate.h"
+#include "Sim/GASSSceneObjectTemplate.h"
 
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Scheduling/GASSIRuntimeController.h"
 
 
