@@ -39,7 +39,7 @@ namespace GASS
 
 		/**
 		Should if possible return the filename of the mesh if available.
-		If the mesh is prodecural created just return empty string
+		If the mesh is procedural created just return empty string
 		*/
 		virtual std::string GetFilename() const=0;
 
