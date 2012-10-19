@@ -45,7 +45,7 @@ namespace GASS
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
 		m_Expand(false)
 	{
-		
+
 	}
 
 
@@ -107,6 +107,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 	}
 
@@ -134,9 +135,9 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> nodess (m_MeshNode->getOrCreateStateSet());
 		nodess->setAttribute(mat.get());
 
-		
+
 		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-        // Turn on blending
+		// Turn on blending
 		if(diffuse.w < 1.0)
 		{
 			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
@@ -163,7 +164,24 @@ namespace GASS
 			if(m_MeshNode.get())
 				CalulateBoundingbox(m_MeshNode.get());
 		}
-			
+	}
+
+	void OSGMeshComponent::OnVisibilityMessage(VisibilityMessagePtr message)
+	{
+		bool visibility = message->GetValue();
+		if(visibility)
+		{
+			//restore flags
+			SetCastShadow(m_CastShadow);
+			SetReceiveShadow(m_ReceiveShadow);
+			SetGeometryFlags(m_GeomFlags);
+		}
+		else
+		{
+			//m_MeshNode->setNodeMask(~NM_VISIBLE & m_MeshNode->getNodeMask());
+			m_MeshNode->setNodeMask(0);
+
+		}
 	}
 
 	void OSGMeshComponent::LoadMesh(const std::string &filename)
@@ -176,20 +194,18 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
 		}
-		
+
 		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		//check if extension exist?
 		std::string extesion =  Misc::GetExtension(filename);
-
-
 		std::string mod_filename =  filename;
 		//hack to convert ogre meshes
 		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
 		{
 			mod_filename = Misc::Replace(mod_filename,".mesh",".3ds");
 		}
-		
+
 		if(m_MeshNode.valid())
 		{
 			lc->GetOSGNode()->removeChild(m_MeshNode.get());
@@ -203,18 +219,18 @@ namespace GASS
 			//osgUtil::Optimizer optimizer;
 			//optimizer.optimize(loadedModel.get());
 			m_MeshNode = (osg::Group*) osgDB::readNodeFile((full_path));
-			
+
 			if( ! m_MeshNode)
 			{
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + full_path,"OSGMeshComponent::SetFilename");
 			}
 
 			osgUtil::Optimizer optimizer;
-		    optimizer.optimize(m_MeshNode.get());
+			optimizer.optimize(m_MeshNode.get());
 
 			OSGNodeData* data = new OSGNodeData(shared_from_this());
 			m_MeshNode->setUserData(data);
-			
+
 			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
@@ -227,7 +243,7 @@ namespace GASS
 		else 
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");
 
-	
+
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
 		//update mask!
 		SetGeometryFlags(m_GeomFlags);
@@ -238,7 +254,7 @@ namespace GASS
 	{
 		return m_Expand;
 	}
-	
+
 	void OSGMeshComponent::SetExpand(bool value)
 	{
 		m_Expand = value;
@@ -254,7 +270,7 @@ namespace GASS
 			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
 			{
 				osg::Node* child_node = node->asGroup()->getChild(i);
-				LogManager::getSingleton().stream() << "Try to expand OSG node:" << child_node->getName();	
+				//LogManager::getSingleton().stream() << "Try to expand OSG node:" << child_node->getName();	
 
 				//use template if present!
 				const std::string template_name = "OSGExpandedMeshObject";
@@ -271,20 +287,61 @@ namespace GASS
 				{
 					so->SetName(child_node->getName());
 					so->SetID(child_node->getName());
-					boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
-					OSGNodeData* node_data = new OSGNodeData(mesh_comp);
-					child_node->setUserData(node_data);
-					mesh_comp->SetMeshNode(child_node);
-					so->AddComponent(mesh_comp);
-					//load this object
-					parent->AddChildSceneObject(so,load);
-					//epxand recursive
-					Expand(so,child_node, load);
+
+					if (child_node->asTransform()) 
+					{
+						LogManager::getSingleton().stream() << "found child Transform";	
+						Expand(so,child_node, load);
+					}
+					else if (child_node->asGroup())
+					{
+						LogManager::getSingleton().stream() << "found child  gorup";	
+						Expand(so,child_node, load);
+					} 
+					else 
+					{
+						osg::Geode* geode = dynamic_cast<osg::Geode*> (child_node);
+						if (geode) 
+						{
+
+							//osg::PositionAttitudeTransform* trans = dynamic_cast<osg::PositionAttitudeTransform*> (child_node);
+							/*if(child_node->asTransform())
+							{
+							osg::Vec3d pos = child_node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
+							LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();	
+
+							}*/
+
+
+							boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+							OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+							child_node->setUserData(node_data);
+							mesh_comp->SetMeshNode(child_node);
+							so->AddComponent(mesh_comp);
+							//load this object
+							parent->AddChildSceneObject(so,load);
+							//epxand recursive
+							Expand(so,child_node, load);
+						}
+					}
 				}
 			}
 		}
+		else if (node->asTransform()) 
+		{
+			LogManager::getSingleton().stream() << "found Transform";	
+		}
+		else
+		{
+			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+			if (geode) 
+			{
+				LogManager::getSingleton().stream() << "found Geode";	
+			}
+		}
+
 	}
-	
+
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
@@ -318,7 +375,7 @@ namespace GASS
 	{
 		Sphere sphere;
 		sphere.m_Pos = Vec3(0,0,0);
-		
+
 
 		if(m_MeshNode.get())
 		{
@@ -352,13 +409,13 @@ namespace GASS
 			{
 				//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 				//lc->GetOSGNode()->addChild(geode);
-		
+
 				osg::BoundingBox bbox = geode->getBoundingBox();
 
 				/*osg::Matrix trans;
 				trans.set(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
-					Math::Deg2Rad(180),osg::Vec3(0,1,0),
-					Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
+				Math::Deg2Rad(180),osg::Vec3(0,1,0),
+				Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
 				//osg::Vec3 t_max = bbox._max*trans;
 				//osg::Vec3 t_min = bbox._min*trans;
 

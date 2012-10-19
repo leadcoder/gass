@@ -72,26 +72,31 @@ namespace GASS
 
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		//assert(m_GFXSceneManager);
-		m_TransformNode = new osg::PositionAttitudeTransform();
-		std::string name = GetSceneObject()->GetName();
-		m_TransformNode->setName(name);
-		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
-		m_GFXSceneManager = scene_man;
-
-		if(m_AttachToParent)
+		if(!m_TransformNode.valid())
 		{
-			OSGLocationComponentPtr parent = GetParentLocation();
-			if(parent)
+			m_TransformNode = new osg::PositionAttitudeTransform();
+			osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
+			m_GFXSceneManager = scene_man;
+
+			if(m_AttachToParent)
 			{
-				parent->GetOSGNode()->addChild(m_TransformNode.get());
+				OSGLocationComponentPtr parent = GetParentLocation();
+				if(parent)
+				{
+					parent->GetOSGNode()->addChild(m_TransformNode.get());
+				}
+				else
+					root_node->addChild(m_TransformNode.get());
 			}
 			else
+			{
 				root_node->addChild(m_TransformNode.get());
+			}
 		}
-
 		else
 		{
-			root_node->addChild(m_TransformNode.get());
+			std::string name = GetSceneObject()->GetName();
+			m_TransformNode->setName(name);
 		}
 
 

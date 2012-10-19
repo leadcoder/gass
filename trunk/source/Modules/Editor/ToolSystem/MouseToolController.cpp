@@ -413,7 +413,7 @@ namespace GASS
 			std::stringstream ss;
 			ss << " Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos << "\n";
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
-			SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+			//SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
 		}
 	}
 

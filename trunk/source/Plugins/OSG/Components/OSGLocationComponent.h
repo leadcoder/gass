@@ -52,9 +52,9 @@ namespace GASS
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale() const {return m_Scale;}
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
+		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 
-		 virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
-
+		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 	protected:
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
