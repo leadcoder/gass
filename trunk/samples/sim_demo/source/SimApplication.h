@@ -7,9 +7,6 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
-#include "Sim/Systems/Messages/GASSScriptSystemMessages.h"
-#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
-
 #include "tinyxml.h"
 
 
