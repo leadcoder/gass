@@ -525,7 +525,7 @@ namespace GASS
 			request.Type = COL_LINE;
 			request.Scene = GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
-			request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;;
+			request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
 			GASS::CollisionResult result;
 			result.Coll = false;
 			m_CollisionSystem->Force(request,result);

@@ -23,6 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/System/GASSISystem.h"
 #include "Core/Math/GASSSphere.h"
+#include "Sim/GASSGeometryFlags.h"
 #include <string>
 
 namespace GASS
@@ -46,7 +47,7 @@ namespace GASS
 		Vec3 LineEnd;
 		SceneWeakPtr Scene;
 		bool ReturnFirstCollisionPoint;
-		unsigned long CollisionBits;
+		GeometryFlags CollisionBits;
 	};
 	
 	struct CollisionResult

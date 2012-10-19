@@ -20,7 +20,7 @@
 
 #include "OSGConvert.h"
 #include "OSGNodeMasks.h"
-
+#include "Sim/GASSGeometryFlags.h"
 namespace GASS
 {
 	

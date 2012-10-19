@@ -8,6 +8,7 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIInputSystem.h"
+#include "Sim/GASSGeometryFlags.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
 #include <string>
