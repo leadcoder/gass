@@ -24,7 +24,7 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
-//#include "Sim/Systems/Input/GASSIControlSettingsSystem.h"
+//#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include <boost/shared_ptr.hpp>
 
 namespace GASS

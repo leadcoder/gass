@@ -46,56 +46,44 @@
 #include "Core/Reflection/GASSIProperty.h"
 #include "Core/Reflection/GASSProperty.h"
 
-
 //#include "Core/PluginSystem/GASSPluginManager.h"
 
 //common Sim includes
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSILightComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIShape.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
+#include "Sim/Interface/GASSIInputSystem.h"
+#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/Interface/GASSIPhysicsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 
-#include "Sim/Components/Graphics/GASSILocationComponent.h"
-#include "Sim/Components/Graphics/GASSICameraComponent.h"
-#include "Sim/Components/Graphics/GASSILightComponent.h"
-
-#include "Sim/Components/GASSBaseSceneComponent.h"
-
-
-#include "Sim/Components/Graphics/Geometry/GASSIGeometryComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIMeshComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSITerrainComponent.h"
-#include "Sim/Components/Graphics/Geometry/GASSIShape.h"
-
-#include "Sim/Systems/GASSSimSystem.h"
-#include "Sim/Systems/Graphics/GASSIGraphicsSystem.h"
-#include "Sim/Systems/Input/GASSIInputSystem.h"
-#include "Sim/Systems/Collision/GASSICollisionSystem.h"
-#include "Sim/Systems/Resource/GASSIResourceSystem.h"
-#include "Sim/Systems/GASSIPhysicsSystem.h"
-
-#include "Sim/Systems/GASSSimSystemManager.h"
-#include "Sim/Systems/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Systems/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/Systems/Messages/GASSNetworkSystemMessages.h"
-
-
-#include "Sim/Scheduling/GASSIRuntimeController.h"
-
-#include "Sim/Scene/GASSScene.h"
-#include "Sim/Scene/GASSSceneObject.h"
-#include "Sim/Scene/GASSSceneObjectTemplate.h"
-#include "Sim/Scene/GASSSceneObjectLink.h"
-
-
-#include "Sim/Scene/GASSBaseSceneManager.h"
-#include "Sim/Scene/GASSSceneManagerFactory.h"
-
-#include "Sim/Scene/GASSCoreSceneObjectMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Scene/GASSPhysicsSceneMessages.h"
-#include "Sim/Scene/GASSCoreSceneMessages.h"
-#include "Sim/Scene/GASSGraphicsSceneMessages.h"
-
+#include "Sim/Messages/GASSScriptSystemMessages.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSNetworkSystemMessages.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSceneObjectTemplate.h"
+#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneMessages.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Utils/GASSEnumBinder.h"
 
 

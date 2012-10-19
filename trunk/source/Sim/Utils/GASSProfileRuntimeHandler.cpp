@@ -1,5 +1,5 @@
 #include "GASSProfileRuntimeHandler.h"
-#include "Sim/Systems/GASSSimSystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 
 namespace GASS
