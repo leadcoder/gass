@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 

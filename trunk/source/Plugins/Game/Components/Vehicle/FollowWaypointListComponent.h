@@ -28,7 +28,7 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 

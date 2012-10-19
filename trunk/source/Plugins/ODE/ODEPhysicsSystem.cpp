@@ -29,7 +29,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"

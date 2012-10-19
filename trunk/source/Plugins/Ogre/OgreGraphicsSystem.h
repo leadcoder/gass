@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Sim/Scheduling/GASSTaskGroups.h"
+
 #include <string>
 
 namespace Ogre

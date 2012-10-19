@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 #include "Sim/Interface/GASSINetworkComponent.h"
 
 #include "Sim/GASSCommon.h"

@@ -40,7 +40,7 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSNetworkSystemMessages.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 
 
 
@@ -130,10 +130,7 @@ namespace GASS
 		void OnStopClient(StopClientMessagePtr message);
 		void OnTimeOfDay(TimeOfDayMessagePtr message);
 		void OnWeatherMessage(WeatherMessagePtr message);
-		//ITaskListener
 		void Update(double delta);
-		//TaskGroup GetTaskGroup() const {return MAIN_TASK_GROUP;}
-		
 	private:
 		//Helpers
 		void Stop();

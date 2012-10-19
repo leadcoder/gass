@@ -36,7 +36,7 @@
 #include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"

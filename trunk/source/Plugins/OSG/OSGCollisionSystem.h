@@ -30,7 +30,7 @@
 
 namespace GASS
 {
-	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem, public ITaskListener
+	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
 		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
@@ -45,9 +45,7 @@ namespace GASS
 		bool Check(CollisionHandle handle, CollisionResult &result);
 		void Force(CollisionRequest &request, CollisionResult &result) const;
 		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
-		//ITaskListener interface
 		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
 	private:
 		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
 		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);

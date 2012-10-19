@@ -26,8 +26,8 @@
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Scheduling/GASSTaskGroups.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
+
 #include "Plugins/RakNet/RakNetMessages.h"
 
 
@@ -41,19 +41,14 @@ namespace GASS
 		virtual ~RaknetNetworkSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		//ITaskListener interface
 		void Update(double delta);
-		TaskGroup GetTaskGroup() const;
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnNewMasterReplica(MasterReplicaCreatedMessagePtr message);
-		void SetTaskGroup(TaskGroup value);
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 	private:
 		bool m_Paused;
-		TaskGroup m_TaskGroup;
 		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;

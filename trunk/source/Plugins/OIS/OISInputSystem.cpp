@@ -21,7 +21,7 @@
 
 #include "Plugins/OIS/OISInputSystem.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/System/GASSSystemFactory.h"

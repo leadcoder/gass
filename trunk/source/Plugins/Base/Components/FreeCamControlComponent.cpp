@@ -35,7 +35,7 @@
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"

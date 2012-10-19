@@ -44,7 +44,7 @@
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/Interface/GASSIMeshComponent.h"
 
 

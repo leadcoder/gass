@@ -28,7 +28,7 @@
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"

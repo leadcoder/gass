@@ -30,7 +30,7 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"

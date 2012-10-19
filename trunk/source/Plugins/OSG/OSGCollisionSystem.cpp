@@ -382,9 +382,4 @@ namespace GASS
 			}
 		}
 	}
-
-	TaskGroup OSGCollisionSystem::GetTaskGroup() const
-	{
-		return MAIN_TASK_GROUP;
-	}
 }

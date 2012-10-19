@@ -29,7 +29,7 @@
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"

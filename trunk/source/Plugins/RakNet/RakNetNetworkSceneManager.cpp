@@ -30,7 +30,7 @@
 
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -48,7 +48,6 @@ namespace GASS
 
 	RaknetNetworkSceneManager::RaknetNetworkSceneManager() :
 		m_Paused(false),
-		m_TaskGroup(NETWORK_TASK_GROUP),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
 		m_MaxSimSteps(4)
@@ -62,7 +61,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
-		RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
+		//RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 
 	void RaknetNetworkSceneManager::OnCreate()
@@ -150,16 +149,5 @@ namespace GASS
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
-	}
-
-
-	void RaknetNetworkSceneManager::SetTaskGroup(TaskGroup value)
-	{
-		m_TaskGroup = value;
-	}
-
-	TaskGroup RaknetNetworkSceneManager::GetTaskGroup() const
-	{
-		return m_TaskGroup;
 	}
 }

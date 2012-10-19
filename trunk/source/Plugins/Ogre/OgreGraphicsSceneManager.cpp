@@ -24,7 +24,7 @@
 
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectTemplate.h"
-#include "Sim/Scheduling/GASSIRuntimeController.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"

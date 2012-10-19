@@ -28,7 +28,7 @@
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 

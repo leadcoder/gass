@@ -30,7 +30,7 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
-#include "Sim/Scheduling/GASSITaskListener.h"
+
 
 namespace GASS
 {
