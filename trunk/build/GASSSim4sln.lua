@@ -17,10 +17,10 @@ dofile "GASSEditorModule4.lua"
 
 -- Optional Plugins
 dofile "GASSPluginOSG4.lua"
-dofile "GASSPluginScript4.lua"
+--dofile "GASSPluginScript4.lua"
 --dofile "GASSPluginApplication4.lua" 
 --dofile "GASSPluginPhysX4.lua"
-dofile "GASSEditorModule4.lua"
+
 
 --[[newoption {
    trigger     = "gfxapi",
