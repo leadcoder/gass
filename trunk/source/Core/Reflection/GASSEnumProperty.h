@@ -17,11 +17,51 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "GASSGeometryFlags.h"
-#include "Core/Math/GASSVector.h"
+
+#ifndef GASS_ENUM_PROPERTY_H
+#define GASS_ENUM_PROPERTY_H
+
+#include "Core/Common.h"
+#include "Core/Reflection/GASSProperty.h"
 
 namespace GASS
 {
-	
-	
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+
+	class IEnumProperty
+	{
+	public:
+		virtual ~IEnumProperty(){}
+		virtual std::vector<std::string> GetEnumList() const = 0;
+	};
+
+	/**
+	Template class used to define a enum properties.
+	@param OwnerType class that has the getter and setter functions
+	@param T Enum Poperty Class
+	*/
+	template <class OwnerType, class T>
+	class EnumProperty : public Property<OwnerType,T>, public IEnumProperty
+	{
+	public:
+		EnumProperty(const std::string &name, GetterType getter, SetterType setter ): Property<OwnerType,T>(name,getter,setter)
+		{
+		}
+		EnumProperty( const std::string &name, GetterType getter, SetterTypeConst setter ): Property<OwnerType,T>(name,getter,setter)
+		{
+
+		}
+		virtual std::vector<std::string> GetEnumList() const
+		{
+			return T::GetAllOptions();
+		}
+	};
 }
+
+#endif

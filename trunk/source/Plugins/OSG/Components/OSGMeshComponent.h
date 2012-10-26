@@ -172,7 +172,7 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		//set external mesh
-		void SetMeshNode(osg::ref_ptr<osg::Node> mesh) {m_MeshNode =mesh;}
+		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
 		osg::ref_ptr<osg::Node> GetMeshNode() const {return m_MeshNode ;}
 	protected:
 		
@@ -186,6 +186,7 @@ namespace GASS
 		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
+		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
@@ -193,6 +194,8 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const std::string &filename);
+		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
+		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
 		std::string m_Filename;
 		bool m_CastShadow;

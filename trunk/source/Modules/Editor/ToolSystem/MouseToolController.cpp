@@ -196,7 +196,6 @@ namespace GASS
 		}
 	}
 
-
 	void MouseToolController::MoveTo(const CursorInfo &info)
 	{
 		if(m_ActiveTool)

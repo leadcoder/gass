@@ -29,6 +29,7 @@ This class is based on the Game Programming Gems 5 article
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSEnumBinder.h"
 
 namespace GASS
 {
@@ -41,6 +42,7 @@ namespace GASS
 		PROP_VEC2,
 		PROP_VEC3,
 		PROP_VEC4,
+		PROP_ENUM,
 		PROP_UNKNOWN,
 		PROP_MAX_PROPERTY_TYPES
 	};

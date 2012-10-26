@@ -23,7 +23,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSEnumBinder.h"
 
 namespace GASS
 {

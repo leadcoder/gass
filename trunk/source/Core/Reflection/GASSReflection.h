@@ -30,6 +30,7 @@ This code is based on the Game Programming Gems 5 article
 #include "Core/Reflection/GASSRTTI.h"
 #include "Core/Reflection/GASSProperty.h"
 #include "Core/Reflection/GASSVectorProperty.h"
+#include "Core/Reflection/GASSEnumProperty.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSMisc.h"
 class TiXmlElement;
@@ -91,7 +92,8 @@ namespace GASS
 		// Registers a property. Takes in the property name, its getter and setter functions, and the property
 		// type as a template parameter. Should be called from within a user-defined RegisterReflection function.
 		template <class PropertyType>
-		static void RegisterProperty(const std::string &name, typename Property<T, PropertyType>::GetterType getter,
+		static void RegisterProperty(const std::string &name, 
+			typename Property<T, PropertyType>::GetterType getter,
 			typename Property<T, PropertyType>::SetterType setter )
 		{
 			Property<T, PropertyType>* property = new Property<T, PropertyType>(name, getter, setter);
@@ -99,7 +101,8 @@ namespace GASS
 		}
 
 		template <class PropertyType>
-		static void RegisterProperty(const std::string &name, typename Property<T, PropertyType>::GetterType getter,
+		static void RegisterProperty(const std::string &name, 
+			typename Property<T, PropertyType>::GetterType getter,
 			typename Property<T, PropertyType>::SetterTypeConst setter)
 		{
 			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter );
@@ -107,7 +110,8 @@ namespace GASS
 		}
 
 		template <class PropertyType>
-		static void RegisterVectorProperty(const std::string &name, typename VectorProperty<T, PropertyType>::GetterType getter,
+		static void RegisterVectorProperty(const std::string &name, 
+			typename VectorProperty<T, PropertyType>::GetterType getter,
 			typename VectorProperty<T, PropertyType>::SetterType setter)
 		{
 			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter);
@@ -115,10 +119,31 @@ namespace GASS
 		}
 
 		template <class PropertyType>
-		static void RegisterVectorProperty(const std::string &name, typename VectorProperty<T, PropertyType>::GetterType getter,
+		static void RegisterVectorProperty(const std::string &name, 
+			typename VectorProperty<T, PropertyType>::GetterType getter,
 			typename VectorProperty<T, PropertyType>::SetterTypeConst setter)
 		{
 			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter);
+			T::GetClassRTTI()->GetProperties()->push_back(property);
+		}
+
+
+		template <class PropertyType>
+		static void RegisterEnumProperty(const std::string &name, 
+			typename EnumProperty<T, PropertyType>::GetterType getter,
+			typename EnumProperty<T, PropertyType>::SetterType setter )
+		{
+			EnumProperty<T, PropertyType>* property = new EnumProperty<T, PropertyType>(name, getter, setter);
+			T::GetClassRTTI()->GetProperties()->push_back(property);
+		}
+
+
+		template <class PropertyType>
+		static void RegisterEnumProperty(const std::string &name, 
+			typename EnumProperty<T, PropertyType>::GetterType getter,
+			typename EnumProperty<T, PropertyType>::SetterTypeConst setter)
+		{
+			EnumProperty<T, PropertyType>* property = new EnumProperty<T, PropertyType>( name, getter, setter );
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 

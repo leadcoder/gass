@@ -84,7 +84,7 @@
 #include "Sim/Messages/GASSPhysicsSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSEnumBinder.h"
 
 
 

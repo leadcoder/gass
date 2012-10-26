@@ -26,7 +26,7 @@
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Plugins/Ogre/OgrePolygonMode.h"
 

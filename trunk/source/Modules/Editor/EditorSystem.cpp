@@ -219,19 +219,34 @@ namespace GASS
 
 	void EditorSystem::MoveCameraToObject(SceneObjectPtr obj)	
 	{
-		LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+		
 		SceneObjectPtr cam_obj (m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		CameraComponentPtr cam(m_ActiveCamera,boost::detail::sp_nothrow_tag());
-		if(cam_obj && cam && lc)
+		if(cam_obj && cam)
 		{
 			BaseReflectionObjectPtr cam_props = boost::shared_dynamic_cast<BaseReflectionObject>(cam);
 			bool ortho_mode = false;
 
 			float object_size = 10;
-			GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>();
+			Vec3 object_pos(0,0,0);
+			GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>(true);
+			
 			if(gc)
 			{
 				object_size = gc->GetBoundingSphere().m_Radius*4;
+				object_pos = (gc->GetBoundingBox().m_Min + gc->GetBoundingBox().m_Max)*0.5;
+
+				//LogManager::getSingleton().stream() << "zoom box min" << gc->GetBoundingBox().m_Min;	
+				//LogManager::getSingleton().stream() << "zoom box max" << gc->GetBoundingBox().m_Max;	
+
+			}
+			else
+			{
+				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+				if(lc)
+					object_pos = lc->GetWorldPosition();
+				else 
+					return;
 			}
 
 			if(cam_props)
@@ -243,24 +258,24 @@ namespace GASS
 
 			if(ortho_mode)
 			{
-				Vec3 pos = lc->GetWorldPosition();
+				//Vec3 pos = lc->GetWorldPosition();
 				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-				pos.y = cam_pos.y;
-				cam_obj->PostMessage(MessagePtr(new PositionMessage(pos)));
+				object_pos.y = cam_pos.y;
+				cam_obj->PostMessage(MessagePtr(new PositionMessage(object_pos)));
 				MessagePtr zoom_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,object_size));
 				cam_obj->PostMessage(zoom_msg);
 			}
 			else
 			{
-				Vec3 pos = lc->GetWorldPosition();
+				
 				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 				Quaternion cam_rot;
-				Vec3 dir = pos - cam_pos;
+				Vec3 dir = object_pos - cam_pos;
 				dir.Normalize(); 
 				dir.y = -0.7;
 				dir.Normalize();
 
-				pos = pos - dir*object_size;
+				object_pos = object_pos - dir*object_size;
 				dir = -dir;
 				Mat4 rot_mat;
 				rot_mat.Identity();
@@ -274,7 +289,7 @@ namespace GASS
 				cam_rot.FromRotationMatrix(rot_mat);
 
 				cam_obj->PostMessage(MessagePtr(new RotationMessage(cam_rot)));
-				cam_obj->PostMessage(MessagePtr(new PositionMessage(pos)));
+				cam_obj->PostMessage(MessagePtr(new PositionMessage(object_pos)));
 			}
 		}
 	}

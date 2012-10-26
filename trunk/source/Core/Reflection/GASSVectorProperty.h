@@ -243,43 +243,6 @@ namespace GASS
 		SetterType		m_Setter;
 		SetterTypeConst	m_SetterConst;
 	};
-
-
-	/*template <class T>
-	VectorProperty VectorProperty<T>::GetTypeID() const
-	{
-
-	if(typeid(T) == typeid(int))
-	{
-	return PROP_INT;
-	}
-	else if(typeid(T) == typeid(float))
-	{
-	return PROP_FLOAT;
-	}
-	else if(typeid(T) == typeid(std::string))
-	{
-	return PROP_STRING;
-	}
-	else if(typeid(T) == typeid(Vec2))
-	{
-	return PROP_VEC2;
-	}
-	else if(typeid(T) == typeid(Vec3))
-	{
-	return PROP_VEC3;
-	}
-	else if(typeid(T) == typeid(Vec4))
-	{
-	return PROP_VEC4;
-	}
-	else if(typeid(T) == typeid(bool))
-	{
-	return PROP_BOOL;
-	}
-	else
-	return PROP_UNKNOWN;
-	}*/
 }
 #endif
 

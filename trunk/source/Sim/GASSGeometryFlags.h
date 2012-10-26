@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "Core/Math/GASSVector.h"
 
 namespace GASS
@@ -87,14 +87,17 @@ namespace GASS
 
 	
 	/**
-		Class used to make GeometryType reflection possible
+		Class used to make GeometryFlags reflection possible
 	*/
-	class GASSExport GeometryFlagHelper //: public EnumBinder<GeometryType,GeometryFlags>
-	{
-	public:
-		GeometryFlagHelper();
-		virtual ~GeometryFlagHelper();
-	};
-	
-
+	START_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
+		BIND(GEOMETRY_FLAG_UNKOWN)
+		BIND(GEOMETRY_FLAG_GROUND)
+		BIND(GEOMETRY_FLAG_STATIC_OBJECT)
+		BIND(GEOMETRY_FLAG_DYNAMIC_OBJECT)
+		BIND(GEOMETRY_FLAG_TRANSPARENT_OBJECT)
+		BIND(GEOMETRY_FLAG_EDITOR)
+		BIND(GEOMETRY_FLAG_GIZMO)
+		BIND(GEOMETRY_FLAG_ALL)
+		BIND(GEOMETRY_FLAG_SCENE_OBJECTS)
+	END_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
 }

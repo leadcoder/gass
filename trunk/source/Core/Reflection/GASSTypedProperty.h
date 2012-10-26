@@ -118,8 +118,7 @@ namespace GASS
         {
 		   return PROP_BOOL;
 		}
-		else
-			return PROP_UNKNOWN;
+		return PROP_UNKNOWN;
 	}
 
 	template <class T>

@@ -4,7 +4,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSEnumBinder.h"
 
 namespace GASS
 {

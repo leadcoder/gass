@@ -62,8 +62,20 @@ namespace GASS
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
 		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
-		//RegisterProperty<GeometryFlags>("GeometryFlags", &GetGeometryFlags, &SetGeometryFlags);
+		RegisterEnumProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder);
+		//RegisterProperty<Enum>("MaterialFlags", &GetMaterialFlagsProxy, &SetMaterialFlagsProxy);
 	}
+
+	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
+	{
+		SetGeometryFlags(value.Get());
+	}
+
+	GeometryFlagsBinder OSGMeshComponent::GetGeometryFlagsBinder() const
+	{
+		return GeometryFlagsBinder(GetGeometryFlags());
+	}
+
 
 	void OSGMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
@@ -260,12 +272,86 @@ namespace GASS
 		m_Expand = value;
 	}
 
-
 	void OSGMeshComponent::Expand(SceneObjectPtr parent, osg::Node* node, bool load) 
 	{
 
-		//create gass scene object
+		if(node->asTransform())
+		{
+			//add top transform or replace current location?
+			//move top transform to location!
+			//node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
+			//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
+			//GetOSGNode()->setPosition();
+			//osg::Matrix mat = node->asTransform()->asMatrixTransform()->getMatrix();
+			//HACK: reset top transform to get zoom function to work on nodes that dont have location!
+			osg::Matrix mat;
+			mat.setTrans(osg::Vec3(0,0,0));
+			node->asTransform()->asMatrixTransform()->setMatrix(mat);
+		}
+
 		if(node->asGroup())
+		{
+			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
+			{
+				osg::Node* child_node = node->asGroup()->getChild(i);
+				ExpandRec(parent,child_node, load);
+			}
+		}
+	}
+
+
+	void OSGMeshComponent::ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load) 
+	{
+		const std::string template_name = "OSGExpandedMeshObject";
+		SceneObjectPtr so;
+		try
+		{
+			so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+		}
+		catch(std::exception& e)
+		{
+			so = SceneObjectPtr(new SceneObject());
+		}
+		
+		if (so) 
+		{
+			so->SetName(node->getName());
+			so->SetID(node->getName());
+			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+			if(geode)
+			{
+				
+				//osg::PositionAttitudeTransform* trans = dynamic_cast<osg::PositionAttitudeTransform*> (child_node);
+				/*if(child_node->asTransform())
+				{
+				osg::Vec3d pos = child_node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
+				LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();	
+
+				}*/
+				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+				node->setUserData(node_data);
+				mesh_comp->SetMeshNode(node);
+				so->AddComponent(mesh_comp);
+				//load this object
+			}
+			
+			
+			parent->AddChildSceneObject(so,load);
+			//epxand recursive
+			if(node->asGroup())
+			{
+				for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
+				{
+					osg::Node* child_node = node->asGroup()->getChild(i);
+					Expand(so,child_node, load);
+				}
+			}
+		}
+
+
+		//create gass scene object
+		/*if(node->asGroup())
 		{
 			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
 			{
@@ -291,14 +377,14 @@ namespace GASS
 					if (child_node->asTransform()) 
 					{
 						LogManager::getSingleton().stream() << "found child Transform";	
-						Expand(so,child_node, load);
+						//Expand(parent,child_node, load);
 					}
 					else if (child_node->asGroup())
 					{
 						LogManager::getSingleton().stream() << "found child  gorup";	
-						Expand(so,child_node, load);
+						//Expand(parent,child_node, load);
 					} 
-					else 
+					//else 
 					{
 						osg::Geode* geode = dynamic_cast<osg::Geode*> (child_node);
 						if (geode) 
@@ -313,7 +399,7 @@ namespace GASS
 							}*/
 
 
-							boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+				/*			boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 							OSGNodeData* node_data = new OSGNodeData(mesh_comp);
 							child_node->setUserData(node_data);
 							mesh_comp->SetMeshNode(child_node);
@@ -333,13 +419,44 @@ namespace GASS
 		}
 		else
 		{
-			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
-			if (geode) 
+			//use template if present!
+			const std::string template_name = "OSGExpandedMeshObject";
+			SceneObjectPtr so;
+			try
 			{
-				LogManager::getSingleton().stream() << "found Geode";	
+				so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 			}
-		}
+			catch(std::exception& e)
+			{
+				so = SceneObjectPtr(new SceneObject());
+			}
+			so->SetName(node->getName());
+			so->SetID(node->getName());
+			if(so)
+			{
 
+				osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+				if (geode) 
+				{
+					LogManager::getSingleton().stream() << "found Geode";	
+
+					boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+					OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+					node->setUserData(node_data);
+					mesh_comp->SetMeshNode(node);
+					so->AddComponent(mesh_comp);
+					//load this object
+					parent->AddChildSceneObject(so,load);
+				}
+			}
+		}*/
+
+	}
+
+	void OSGMeshComponent::SetMeshNode(osg::ref_ptr<osg::Node> mesh)
+	{
+		m_MeshNode =mesh;
+		CalulateBoundingbox(mesh.get());
 	}
 
 

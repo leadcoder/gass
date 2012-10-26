@@ -31,6 +31,7 @@ namespace GASS
 		Vec3 *VertexVector;
 		unsigned int NumFaces;
 		unsigned int *FaceVector;
+		unsigned int *FaceMaterialIDVector;
 	};
 	typedef MeshData* MeshDataPtr;
 
