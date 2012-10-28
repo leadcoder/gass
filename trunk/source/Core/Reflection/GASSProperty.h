@@ -37,9 +37,6 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-
-
-
 	template <class type>
 	bool GetValueFromString(type &res,const std::string &s)
 	{

@@ -34,16 +34,14 @@ namespace GASS
 	*/
 
 	/**
-		Helper class enable enums to be 
-		used in reflection attribute registration
-		TODO: Move this to GASSCore
+	Helper class enable enums to be 
+	used in reflection attribute registration
 	*/
 
 	class IEnumBinder
 	{
 	public:
 		virtual ~IEnumBinder(){}
-		//virtual std::vector<std::string> GetAllOptions() = 0;
 	};
 
 	class IntEnumBinder : public IEnumBinder
@@ -87,8 +85,7 @@ namespace GASS
 			}
 			return types;
 		}
-
-		//virtual void Register() = 0;
+		static bool IsMultiValue() {return false;}
 	protected:
 		void SetTypeFromName(const std::string &name) 
 		{
@@ -99,8 +96,6 @@ namespace GASS
 		{
 			return m_Enums[m_Enum];	
 		}
-
-		
 
 		friend std::ostream& operator << (std::ostream& os, const IntEnumBinder& value)
 		{
@@ -135,105 +130,231 @@ namespace GASS
 
 
 	template< class ENUM,class CLASS>
-	class EnumBinder : public IEnumBinder
+	class MultiEnumBinder : public IEnumBinder
 	{
 	public:
-		EnumBinder(ENUM type) : m_Type(type)
+		MultiEnumBinder(ENUM value) : m_Value(value)
 		{
 			CLASS::Register();
 		}
 
-		EnumBinder() 
+		MultiEnumBinder() 
 		{
 			CLASS::Register();
 		}
 
-		virtual ~EnumBinder(){}
+		virtual ~MultiEnumBinder(){}
 
-		void Set(ENUM value) 
+		void SetValue(ENUM value) 
 		{
-			m_Type = value;
+			m_Value = value;
 		}
 
-		ENUM Get() const 
+		ENUM GetValue() const 
 		{
-			return m_Type;
+			return m_Value;
 		}
 
 		bool operator== (const CLASS &v) const
 		{
-			return (m_Type == v.Get());
+			return (m_Value == v.GetValue());
 		}
 
 		static std::vector<std::string> GetAllOptions() 
 		{
 			std::vector<std::string> types;
-			std::map<std::string ,ENUM>::iterator iter =  m_Names.begin();
-			while(iter != m_Names.end())
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
 			{
 				types.push_back(iter->first);
 				++iter;
 			}
 			return types;
 		}
+		static bool IsMultiValue() {return true;}
 
 		//virtual void Register() = 0;
 	protected:
-		void SetTypeFromName(const std::string &name) 
+		void SetValueFromNames(const std::vector<std::string> &names) 
 		{
-			m_Type = m_Names[name];
+			m_Value = static_cast<ENUM>(0);
+			for(size_t i=0; i< names.size() ; i++)
+			{
+				m_Value = static_cast<ENUM>(static_cast<int>(m_Value) | static_cast<int>(m_NameToEnumMap[names[i]]));
+			}
 		}
 
-		std::string GetName() const
+		std::vector<std::string> GetNamesFromValue() const
 		{
-			return m_Types[m_Type];	
+			std::vector<std::string> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
+			{
+				if(iter->second & m_Value)
+					types.push_back(iter->first);
+				++iter;
+			}
+			return types;
 		}
 
-		
 
-		friend std::ostream& operator << (std::ostream& os, const CLASS& cat)
+
+		friend std::ostream& operator << (std::ostream& os, const CLASS& enum_binder)
 		{
-			std::string name (cat.GetName());
-			os << name;
+			std::vector<std::string> names = enum_binder.GetNamesFromValue();
+			for(size_t i = 0; i < names.size();i++)
+			{
+				if(i != 0)
+					os << " ";
+				os << names[i];
+			}
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, CLASS& cat)
+		friend std::istream& operator >> (std::istream& os, CLASS& enum_binder)
 		{
 			std::string name;
-			os >> name;
-			cat.SetTypeFromName(name);
+			std::vector<std::string> values;
+			while(os >> name)
+			{
+				values.push_back(name);
+			}
+			enum_binder.SetValueFromNames(values);
 			return os;
 		}
 
 		static void Bind(const std::string &name, ENUM type)
 		{
-			m_Names[name] = type;
-			m_Types[type] = name;
+			m_NameToEnumMap[name] = type;
+			m_EnumToNameMap[type] = name;
 		}
 
-		ENUM m_Type;
-		static std::map<std::string ,ENUM> m_Names;
-		static std::map<ENUM,std::string > m_Types;
+		ENUM m_Value;
+		static std::map<std::string ,ENUM> m_NameToEnumMap;
+		static std::map<ENUM,std::string > m_EnumToNameMap;
 	};
 
-#define START_ENUM_BINDER(ENUM,ENUM_BINDER) \
-	class ENUM_BINDER : public EnumBinder<ENUM,ENUM_BINDER>  \
+
+	template< class ENUM,class CLASS>
+	class SingleEnumBinder : public IEnumBinder
+	{
+	public:
+		SingleEnumBinder(ENUM value) : m_Value(value)
+		{
+			CLASS::Register();
+		}
+
+		SingleEnumBinder() 
+		{
+			CLASS::Register();
+		}
+
+		virtual ~SingleEnumBinder(){}
+
+		void SetValue(ENUM value) 
+		{
+			m_Value = value;
+		}
+
+		ENUM GetValue() const 
+		{
+			return m_Value;
+		}
+
+		bool operator== (const CLASS &v) const
+		{
+			return (m_Value == v.GetValue());
+		}
+
+		static std::vector<std::string> GetAllOptions() 
+		{
+			std::vector<std::string> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
+			{
+				types.push_back(iter->first);
+				++iter;
+			}
+			return types;
+		}
+		static bool IsMultiValue() {return false;}
+	protected:
+		void SetValue(const std::string &names) 
+		{
+			m_Value = m_NameToEnumMap[name];
+		}
+
+		std::string GetNameFromValue() const
+		{
+			return m_EnumToNameMap[m_value];
+		}
+
+		friend std::ostream& operator << (std::ostream& os, const CLASS& enum_binder)
+		{
+			std::string name = enum_binder.GetNameFromValue();
+			os << name;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& os, CLASS& enum_binder)
+		{
+			std::string name;
+			if(os >> name)
+				enum_binder.SetValueFromName(name);	
+			return os;
+		}
+
+		static void Bind(const std::string &name, ENUM type)
+		{
+			m_NameToEnumMap[name] = type;
+			m_EnumToNameMap[type] = name;
+		}
+
+		ENUM m_Value;
+		static std::map<std::string ,ENUM> m_NameToEnumMap;
+		static std::map<ENUM,std::string > m_EnumToNameMap;
+	};
+
+}
+
+#define START_MULTI_ENUM_BINDER(ENUM,ENUM_BINDER) \
+	class ENUM_BINDER : public MultiEnumBinder<ENUM,ENUM_BINDER>  \
 	{								\
 	public:							\
-		ENUM_BINDER():EnumBinder(){};			\
-		ENUM_BINDER(ENUM type):EnumBinder(type){};			\
-		virtual ~ENUM_BINDER(){};	\
-		static void Register()		\
-		{							\
+	ENUM_BINDER():MultiEnumBinder(){};			\
+	ENUM_BINDER(ENUM value):MultiEnumBinder(value){};			\
+	virtual ~ENUM_BINDER(){};	\
+	static void Register()		\
+	{							\
+
+#define BIND_FLAG(ENUM) Bind(#ENUM, ENUM);
+
+
+#define END_MULTI_ENUM_BINDER(ENUM,ENUM_BINDER) \
+	}							\
+	};								\
+	template<> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
+	template<> std::map<ENUM,std::string> MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
+
+
+
+
+#define START_ENUM_BINDER(ENUM,ENUM_BINDER) \
+	class ENUM_BINDER : public SingleEnumBinder<ENUM,ENUM_BINDER>  \
+	{								\
+	public:							\
+	ENUM_BINDER():SingleEnumBinder(){};			\
+	ENUM_BINDER(ENUM value):SingleEnumBinder(value){};			\
+	virtual ~ENUM_BINDER(){};	\
+	static void Register()		\
+	{							\
 
 #define BIND(ENUM) Bind(#ENUM, ENUM);
 
 
 #define END_ENUM_BINDER(ENUM,ENUM_BINDER) \
-		}							\
+	}							\
 	};								\
-	template<> std::map<std::string ,ENUM>  EnumBinder<ENUM,ENUM_BINDER>::m_Names;\
-	template<> std::map<ENUM,std::string> EnumBinder<ENUM,ENUM_BINDER>::m_Types;\
+	template<> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
+	template<> std::map<ENUM,std::string> SingleEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
 
-}

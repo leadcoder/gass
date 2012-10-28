@@ -48,7 +48,6 @@ namespace GASS
 
 	}
 
-
 	OSGMeshComponent::~OSGMeshComponent()
 	{
 
@@ -68,14 +67,13 @@ namespace GASS
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
 	{
-		SetGeometryFlags(value.Get());
+		SetGeometryFlags(value.GetValue());
 	}
 
 	GeometryFlagsBinder OSGMeshComponent::GetGeometryFlagsBinder() const
 	{
 		return GeometryFlagsBinder(GetGeometryFlags());
 	}
-
 
 	void OSGMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
@@ -308,7 +306,7 @@ namespace GASS
 		{
 			so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 		}
-		catch(std::exception& e)
+		catch(...)
 		{
 			so = SceneObjectPtr(new SceneObject());
 		}

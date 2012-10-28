@@ -19,7 +19,7 @@ namespace GASS
 		PT_WEAPON_SYSTEM,
 	};
 
-	class PlatformTypeReflection : public EnumBinder<PlatformType,PlatformTypeReflection>
+	class PlatformTypeReflection : public SingleEnumBinder<PlatformType,PlatformTypeReflection>
 	{
 	public:
 		PlatformTypeReflection();
