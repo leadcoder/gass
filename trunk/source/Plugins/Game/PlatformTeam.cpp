@@ -4,15 +4,15 @@
 namespace GASS
 {
 	
-	template<> std::map<std::string ,PlatformTeam> EnumBinder<PlatformTeam,PlatformTeamReflection>::m_Names;
-	template<> std::map<PlatformTeam, std::string> EnumBinder<PlatformTeam,PlatformTeamReflection>::m_Types;
+	template<> std::map<std::string ,PlatformTeam> SingleEnumBinder<PlatformTeam,PlatformTeamReflection>::m_NameToEnumMap;
+	template<> std::map<PlatformTeam, std::string> SingleEnumBinder<PlatformTeam,PlatformTeamReflection>::m_EnumToNameMap;
 
-	PlatformTeamReflection::PlatformTeamReflection() : EnumBinder<PlatformTeam,PlatformTeamReflection>()
+	PlatformTeamReflection::PlatformTeamReflection() : SingleEnumBinder<PlatformTeam,PlatformTeamReflection>()
 	{
 
 	}
 
-	PlatformTeamReflection::PlatformTeamReflection(PlatformTeam type) : EnumBinder<PlatformTeam,PlatformTeamReflection>(type)
+	PlatformTeamReflection::PlatformTeamReflection(PlatformTeam type) : SingleEnumBinder<PlatformTeam,PlatformTeamReflection>(type)
 	{
 
 	}

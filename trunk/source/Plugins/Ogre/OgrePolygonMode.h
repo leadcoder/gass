@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	class PolygonModeWrapper : public EnumBinder<Ogre::PolygonMode,PolygonModeWrapper>
+	class PolygonModeWrapper : public SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>
 	{
 	public:
 		PolygonModeWrapper();

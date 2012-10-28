@@ -28,11 +28,11 @@
 namespace GASS
 {
 
-	class TerrainLayerBinder : public EnumBinder<TerrainLayer,TerrainLayerBinder>
+	class TerrainLayerBinder : public SingleEnumBinder<TerrainLayer,TerrainLayerBinder>
 	{
 	public:
 		TerrainLayerBinder(){}
-		TerrainLayerBinder(TerrainLayer type) : EnumBinder<TerrainLayer,TerrainLayerBinder>(type)
+		TerrainLayerBinder(TerrainLayer type) : SingleEnumBinder<TerrainLayer,TerrainLayerBinder>(type)
 		{
 		}
 		virtual ~TerrainLayerBinder(){}

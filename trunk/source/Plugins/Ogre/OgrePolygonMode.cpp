@@ -26,15 +26,15 @@
 namespace GASS
 {
 	
-	template<> std::map<std::string ,Ogre::PolygonMode> EnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_Names;
-	template<> std::map<Ogre::PolygonMode,std::string> EnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_Types;
+	template<> std::map<std::string ,Ogre::PolygonMode> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_NameToEnumMap;
+	template<> std::map<Ogre::PolygonMode,std::string> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_EnumToNameMap;
 
-	PolygonModeWrapper::PolygonModeWrapper() : EnumBinder<Ogre::PolygonMode,PolygonModeWrapper>()
+	PolygonModeWrapper::PolygonModeWrapper() : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>()
 	{
 
 	}
 
-	PolygonModeWrapper::PolygonModeWrapper(Ogre::PolygonMode type) : EnumBinder<Ogre::PolygonMode,PolygonModeWrapper>(type)
+	PolygonModeWrapper::PolygonModeWrapper(Ogre::PolygonMode type) : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>(type)
 	{
 
 	}

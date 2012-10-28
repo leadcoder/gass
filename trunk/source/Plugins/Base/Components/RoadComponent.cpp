@@ -42,8 +42,8 @@
 namespace GASS
 {
 
-	template<> std::map<std::string ,TerrainLayer> EnumBinder<TerrainLayer,TerrainLayerBinder>::m_Names;
-	template<> std::map<TerrainLayer,std::string> EnumBinder<TerrainLayer,TerrainLayerBinder>::m_Types;
+	template<> std::map<std::string ,TerrainLayer> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_NameToEnumMap;
+	template<> std::map<TerrainLayer,std::string> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_EnumToNameMap;
 
 	RoadComponent::RoadComponent() : m_Initialized(false), 
 		m_TerrainPaintIntensity(0.01), 
@@ -130,7 +130,7 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.Get())));
+				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 			}
 
 
@@ -142,7 +142,7 @@ namespace GASS
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
 				if(last_obj != bsc->GetSceneObject())
-					bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.Get())));
+					bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 				last_obj = bsc->GetSceneObject();
 			}
 		}
@@ -174,7 +174,7 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.Get())));
+				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
 			}
 		}
 	}

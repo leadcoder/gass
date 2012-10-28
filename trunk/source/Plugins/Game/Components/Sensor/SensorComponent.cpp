@@ -103,7 +103,7 @@ namespace GASS
 					const Vec3 pos = signature->GetPosition();
 					
 					const Float dist = (m_Position - pos).Length();
-					const Float detection_distance = GetDetectionDistance(signature->GetPlatformType().Get(), signature->GetRadarCrossSection());
+					const Float detection_distance = GetDetectionDistance(signature->GetPlatformType().GetValue(), signature->GetRadarCrossSection());
 					if(dist < detection_distance)
 					{
 						//check line of sight?
@@ -111,7 +111,7 @@ namespace GASS
 						data.Pos = pos;
 						data.Rotation = signature->GetRotation();
 						data.Velocity = signature->GetVelocity();
-						data.Type = signature->GetPlatformType().Get();
+						data.Type = signature->GetPlatformType().GetValue();
 						data.ID = signature->GetSceneObject()->GetName();
 						if(IsNewTarget(signature))
 						{

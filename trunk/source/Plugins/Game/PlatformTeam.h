@@ -15,7 +15,7 @@ namespace GASS
 		YELLOW_TEAM
 	};
 
-	class PlatformTeamReflection : public EnumBinder<PlatformTeam,PlatformTeamReflection>
+	class PlatformTeamReflection : public SingleEnumBinder<PlatformTeam,PlatformTeamReflection>
 	{
 	public:
 		PlatformTeamReflection();

@@ -279,14 +279,14 @@ namespace GASS
 		}
 		static bool IsMultiValue() {return false;}
 	protected:
-		void SetValue(const std::string &names) 
+		void SetValueFromName(const std::string &name) 
 		{
 			m_Value = m_NameToEnumMap[name];
 		}
 
 		std::string GetNameFromValue() const
 		{
-			return m_EnumToNameMap[m_value];
+			return m_EnumToNameMap[m_Value];
 		}
 
 		friend std::ostream& operator << (std::ostream& os, const CLASS& enum_binder)

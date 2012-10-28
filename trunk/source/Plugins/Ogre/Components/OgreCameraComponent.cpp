@@ -130,7 +130,7 @@ namespace GASS
 		m_PolygonMode= value;
 		if(m_Camera)
 		{
-			m_Camera->setPolygonMode(m_PolygonMode.Get());
+			m_Camera->setPolygonMode(m_PolygonMode.GetValue());
 		}
 	}
 	
