@@ -71,7 +71,6 @@ namespace GASS
 		{
 			LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer:" << name;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create ComponentContainer:" + name, "BaseComponentContainerTemplateManager::CreateFromTemplate");
-			
 		}
 		return new_cc;
 	}
