@@ -135,11 +135,48 @@ namespace GASS
 					{
 						ps.GUIControlType = CT_FILE_DIALOG;
 					}
+					else if(ct == "OBJECT_REFERENCE")
+					{
+						ps.GUIControlType = CT_OBJECT_REFERENCE;
+					}
 				}
 
 				if(gui_elem->Attribute("fileControlSettings"))
 				{
 					ps.FileControlSettings = gui_elem->Attribute("fileControlSettings");
+				}
+
+				if(gui_elem->Attribute("referenceComponentFilters"))
+				{
+					std::string filters = gui_elem->Attribute("referenceComponentFilters");
+					std::stringstream ss(filters);
+					std::string filter;
+					while(ss >> filter)
+					{
+						ps.ReferenceComponentFilters.push_back(filter);
+					}
+				}
+
+				if(gui_elem->Attribute("referenceNameFilters"))
+				{
+					std::string filters = gui_elem->Attribute("referenceNameFilters");
+					std::stringstream ss(filters);
+					std::string filter;
+					while(ss >> filter)
+					{
+						ps.ReferenceNameFilters.push_back(filter);
+					}
+				}
+
+				if(gui_elem->Attribute("referenceIDFilters"))
+				{
+					std::string filters = gui_elem->Attribute("referenceIDFilters");
+					std::stringstream ss(filters);
+					std::string filter;
+					while(ss >> filter)
+					{
+						ps.ReferenceIDFilters.push_back(filter);
+					}
 				}
 
 				if(gui_elem->Attribute("restrictionProxyProperty"))

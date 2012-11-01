@@ -290,8 +290,6 @@ namespace GASS
 		}
 	}
 
-	
-
 	std::string OgreTerrainPageComponent::GetFilename() const
 	{
 		std::stringstream ss;

@@ -38,6 +38,7 @@ namespace GASS
 		CT_EDIT,
 		CT_FILE_DIALOG,
 		CT_COLOR_DIALOG,
+		CT_OBJECT_REFERENCE,
 	};
 
 	class EditorModuleExport PropertySettings
@@ -54,6 +55,9 @@ namespace GASS
 		ControlType  GUIControlType;
 		std::string FileControlSettings;
 		std::vector<std::string> Restrictions;
+		std::vector<std::string> ReferenceComponentFilters;
+		std::vector<std::string> ReferenceNameFilters;
+		std::vector<std::string> ReferenceIDFilters;
 	};
 
 	// Objects settings loaded from xsd file

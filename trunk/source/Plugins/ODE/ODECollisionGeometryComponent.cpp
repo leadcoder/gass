@@ -310,7 +310,6 @@ namespace GASS
 				//also reset position, know why but offset change is not reflected otherwise
 				const dReal* pos = dGeomGetPosition(m_GeomID);
 				dGeomSetPosition(m_GeomID, pos[0], pos[1], pos[2]);
-				
 			}
 		}
 	}
@@ -412,7 +411,5 @@ namespace GASS
 		return h;
 	}
 	ODECollisionGeometryComponent::TerrainData ODECollisionGeometryComponent::m_TerrainData = ODECollisionGeometryComponent::TerrainData();
-
-
 
 }

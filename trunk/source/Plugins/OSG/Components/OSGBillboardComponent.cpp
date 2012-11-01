@@ -102,8 +102,6 @@ namespace GASS
 			OSGConvert::Get().SetOSGNodeMask(flags, m_OSGBillboard);
 	}
 
-	
-
 	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		
@@ -147,13 +145,17 @@ namespace GASS
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
 	{
-		
-		Vec3 up = OSGConvert::Get().ToGASS(osg::Vec3(0,0,m_Height));
-		Vec3 east = OSGConvert::Get().ToGASS(osg::Vec3(m_Width,0,0));
-		Vec3 north = OSGConvert::Get().ToGASS(osg::Vec3(0,m_Width,0));
-		Vec3 corner = -east*0.5 - north*0.5;
-		AABox box(corner,corner+east+up+north);
+		Float max_size = Math::Max(m_Width,m_Height);
+		Float offset = m_Height/2.0;
+		max_size *= 0.5f;
+		AABox box(Vec3(-max_size,-max_size+offset,-max_size),Vec3(max_size,max_size+offset,max_size));
 		return box;
+		//Vec3 up = OSGConvert::Get().ToGASS(osg::Vec3(0,0,m_Height));
+		//Vec3 east = OSGConvert::Get().ToGASS(osg::Vec3(m_Width,0,0));
+		//Vec3 north = OSGConvert::Get().ToGASS(osg::Vec3(0,m_Width,0));
+		//Vec3 corner = -east*0.5 - north*0.5;
+		//AABox box(corner,corner+east+up+north);
+		//return box;
 
 	}
 	Sphere OSGBillboardComponent::GetBoundingSphere() const
