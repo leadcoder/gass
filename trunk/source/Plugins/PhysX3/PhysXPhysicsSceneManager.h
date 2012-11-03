@@ -20,6 +20,8 @@
 
 #pragma once
 #include "PhysXCommon.h"
+
+#define MAX_NUM_WHEELS 256
 namespace physx
 {
 	class PxScene;
@@ -27,17 +29,33 @@ namespace physx
 
 namespace GASS
 {
+	class VehicleSceneQueryData;
+
+	struct PhysXConvexMesh
+	{
+		physx::PxConvexMesh* m_ConvexMesh;
+	};
+
+	struct PhysXTriangleMesh
+	{
+		
+	};
+	
+
 	class PhysXBodyComponent;
 	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>
 	{
 	public:
+		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
+		typedef std::map<std::string,PhysXTriangleMesh> TriangleMeshMap;
 		PhysXPhysicsSceneManager();
 		virtual ~PhysXPhysicsSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
 		physx::PxScene* GetPxScene() {return m_PxScene;}
+		PhysXConvexMesh CreateConvexMesh(MeshComponentPtr mesh);
 	protected:
 		void SystemTick(double delta);
 		void OnLoad(LoadSceneManagersMessagePtr message);
@@ -45,15 +63,21 @@ namespace GASS
 		void OnSceneObjectLoaded(PostComponentsInitializedMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
+		bool HasConvexMesh(const std::string &name) const;
+		bool HasTriangleMesh(const std::string &name) const;
+		physx::PxConvexMesh* CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
 	private:
 		float m_Gravity;
 		bool m_Paused;
 		bool m_Init;
 		physx::PxScene *m_PxScene;
 		physx::PxDefaultCpuDispatcher* m_CpuDispatcher;
+		ConvexMeshMap m_ConvexMeshMap;
+		TriangleMeshMap m_TriangleMeshMap;
 		//physx::PxSimulationFilterShader m_DefaultFilterShader;
 		//physx::PxDefaultSimulationFilterShader m_DefaultFilterShader;
 		std::vector<PhysXBodyComponentPtr> m_Bodies;
+		VehicleSceneQueryData* m_VehicleSceneQueryData;
 	};
 	typedef boost::shared_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
 }

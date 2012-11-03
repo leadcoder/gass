@@ -2,6 +2,7 @@
 
 #include "../EditorCommon.h"
 #include "../EditorMessages.h"
+#include "Sim/GASSGeometryFlags.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"

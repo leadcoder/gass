@@ -21,6 +21,10 @@
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include <PxPhysicsAPI.h>
+#include "PxTkStream.h"
+
 
 namespace GASS
 {
@@ -28,7 +32,8 @@ namespace GASS
 		m_Paused(false),
 		m_Init(false),
 		m_Gravity(-9.81f),
-		m_CpuDispatcher(NULL)
+		m_CpuDispatcher(NULL),
+		m_VehicleSceneQueryData(NULL)
 	{
 
 	}
@@ -94,6 +99,7 @@ namespace GASS
 		{
 			m_Bodies[i]->SendTransformation();
 		}
+		BaseSceneManager::SystemTick(delta_time);
 	}
 
 /*	static physx::PxFilterFlags filter(physx::PxFilterObjectAttributes attributes0,
@@ -108,7 +114,10 @@ namespace GASS
 	return physx::PxFilterFlags();
 }
 */
-
+	enum Word3
+{
+	SWEPT_INTEGRATION_LINEAR = 1,
+};
 
 	physx::PxFilterFlags SampleVehicleFilterShader(	
 		physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0, 
@@ -124,8 +133,6 @@ namespace GASS
 			pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
 			return physx::PxFilterFlags();
 		}
-
-
 
 		// use a group-based mechanism for all other pairs:
 		// - Objects within the default group (mask 0) always collide
@@ -143,12 +150,71 @@ namespace GASS
 		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
 
 		//enable CCD stuff -- for now just for everything or nothing.
-		//if((filterData0.word3|filterData1.word3) & SWEPT_INTEGRATION_LINEAR)
-		//	pairFlags |= physx::PxPairFlag::eSWEPT_INTEGRATION_LINEAR;
+		if((filterData0.word3|filterData1.word3) & SWEPT_INTEGRATION_LINEAR)
+			pairFlags |= physx::PxPairFlag::eSWEPT_INTEGRATION_LINEAR;
 
 		// The pairFlags for each object are stored in word2 of the filter data. Combine them.
 		pairFlags |= physx::PxPairFlags(physx::PxU16(filterData0.word2 | filterData1.word2));
 		return physx::PxFilterFlags();
+	}
+
+	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
+	{
+		// Create descriptor for convex mesh
+		physx::PxConvexMeshDesc convexDesc;
+		convexDesc.points.count			= numVerts;
+		convexDesc.points.stride		= sizeof(physx::PxVec3);
+		convexDesc.points.data			= verts;
+		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX | physx::PxConvexFlag::eINFLATE_CONVEX;
+
+		physx::PxConvexMesh* convexMesh = NULL;
+		PxToolkit::MemoryOutputStream buf;
+		if(cooking.cookConvexMesh(convexDesc, buf))
+		{
+			PxToolkit::MemoryInputData id(buf.getData(), buf.getSize());
+			convexMesh = physics.createConvexMesh(id);
+		}
+		return convexMesh;
+	}
+
+	bool PhysXPhysicsSceneManager::HasConvexMesh(const std::string &name) const
+	{
+		ConvexMeshMap::const_iterator iter = m_ConvexMeshMap.find(name);
+		return (iter!= m_ConvexMeshMap.end());
+	}
+
+	bool PhysXPhysicsSceneManager::HasTriangleMesh(const std::string &name) const
+	{
+		TriangleMeshMap::const_iterator iter = m_TriangleMeshMap.find(name);
+		return (iter!= m_TriangleMeshMap.end()); 
+	}
+
+
+	PhysXConvexMesh PhysXPhysicsSceneManager::CreateConvexMesh(MeshComponentPtr mesh)
+	{
+		//use file name as id!
+		std::string col_mesh_name = mesh->GetFilename();
+		if(HasConvexMesh(col_mesh_name))
+		{
+			return m_ConvexMeshMap[col_mesh_name];
+		}
+		//not loaded, load it!
+		MeshDataPtr mesh_data = new MeshData;
+		mesh->GetMeshData(mesh_data);
+		int float_size = sizeof(Float);
+		if(float_size == 8) //double precision
+		{
+			std::vector<physx::PxVec3> verts;
+			for(int i =0 ;i < mesh_data->NumVertex;i++)
+			{
+				physx::PxVec3 pos(mesh_data->VertexVector[i].x,mesh_data->VertexVector[i].y,mesh_data->VertexVector[i].z);
+				verts.push_back(pos);
+			}
+			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+			GASSAssert(system,"PhysXConvexGeometryComponent::OnGeometryChanged");
+			m_ConvexMeshMap[col_mesh_name].m_ConvexMesh = CreateConvexMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
+			return m_ConvexMeshMap[col_mesh_name];
+		}
 	}
 
 	void PhysXPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
@@ -174,6 +240,7 @@ namespace GASS
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
+		m_VehicleSceneQueryData = VehicleSceneQueryData::Allocate(MAX_NUM_WHEELS);
 		/*physx::PxVisualDebuggerConnectionFlags theConnectionFlags( physx::PxVisualDebuggerExt::getAllConnectionFlags() );
 		PVD::PvdConnection* theConnection = physx::PxVisualDebuggerExt::createConnection(system->GetPxSDK()->getPvdConnectionManager(), "127.0.0.1", 5425, 10, theConnectionFlags);
 		if (theConnection)

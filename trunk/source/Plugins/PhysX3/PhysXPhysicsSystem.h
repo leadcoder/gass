@@ -46,6 +46,7 @@ namespace GASS
 		physx::PxMaterial* GetDefaultMaterial() const {return m_DefaultMaterial;}
 		physx::PxDefaultAllocator* GetAllocator() {return &m_DefaultAllocator;}
 		virtual std::string GetSystemName() const {return "PhysXPhysicsSystem";}
+		physx::PxCooking* GetPxCooking() const {return m_Cooking;}
 	protected:
 		void OnShutdown(MessagePtr message);
 	private:
@@ -54,6 +55,7 @@ namespace GASS
 		physx::PxFoundation* m_Foundation;
 		physx::PxMaterial* m_DefaultMaterial;
 		physx::PxDefaultAllocator m_DefaultAllocator;
+		physx::PxCooking* m_Cooking;
 		//CollisionMeshMap m_ColMeshMap;
 		//NxScene* m_Scene;
 	};
