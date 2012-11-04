@@ -40,7 +40,6 @@ namespace GASS
 	{
 		
 	};
-	
 
 	class PhysXBodyComponent;
 	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
@@ -56,6 +55,8 @@ namespace GASS
 		virtual void OnCreate();
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(MeshComponentPtr mesh);
+		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
+		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:
 		void SystemTick(double delta);
 		void OnLoad(LoadSceneManagersMessagePtr message);
@@ -74,10 +75,12 @@ namespace GASS
 		physx::PxDefaultCpuDispatcher* m_CpuDispatcher;
 		ConvexMeshMap m_ConvexMeshMap;
 		TriangleMeshMap m_TriangleMeshMap;
-		//physx::PxSimulationFilterShader m_DefaultFilterShader;
-		//physx::PxDefaultSimulationFilterShader m_DefaultFilterShader;
 		std::vector<PhysXBodyComponentPtr> m_Bodies;
+		
+		//raycast vehicle data
 		VehicleSceneQueryData* m_VehicleSceneQueryData;
+		physx::PxBatchQuery* m_WheelRaycastBatchQuery;
+		std::vector<physx::PxVehicleWheels*> m_Vehicles;
 	};
 	typedef boost::shared_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
 }

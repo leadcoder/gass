@@ -33,7 +33,9 @@ namespace GASS
 		m_Init(false),
 		m_Gravity(-9.81f),
 		m_CpuDispatcher(NULL),
-		m_VehicleSceneQueryData(NULL)
+		m_VehicleSceneQueryData(NULL),
+		m_WheelRaycastBatchQuery(NULL)
+
 	{
 
 	}
@@ -80,6 +82,25 @@ namespace GASS
 			m_Bodies.push_back(body);
 	}
 
+	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
+	{
+		m_Vehicles.push_back(vehicle);
+	}
+	
+	void PhysXPhysicsSceneManager::UnregisterVehicle(physx::PxVehicleWheels* vehicle)
+	{
+		std::vector<physx::PxVehicleWheels*>::iterator iter  = m_Vehicles.begin();
+		while(iter != m_Vehicles.end())
+		{
+			if(*iter == vehicle)
+			{
+				m_Vehicles.erase(iter);
+				return;
+			}
+			iter++;
+		}
+	}
+
 	void PhysXPhysicsSceneManager::SystemTick(double delta_time)
 	{
 		if(m_Paused)
@@ -94,11 +115,21 @@ namespace GASS
 		{
 
 		}
+
+		//Process vehicles
+		if(m_Vehicles.size()  > 0)
+		{
+			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+			PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
+			PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),1,&m_Vehicles[0]);
+		}
 		
 		for(int i = 0 ; i < m_Bodies.size();i++)
 		{
 			m_Bodies[i]->SendTransformation();
 		}
+
+
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
@@ -240,7 +271,11 @@ namespace GASS
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
+		//Vehicle related setup
 		m_VehicleSceneQueryData = VehicleSceneQueryData::Allocate(MAX_NUM_WHEELS);
+		m_WheelRaycastBatchQuery = m_VehicleSceneQueryData->SetUpBatchedSceneQuery(GetPxScene());
+
+		
 		/*physx::PxVisualDebuggerConnectionFlags theConnectionFlags( physx::PxVisualDebuggerExt::getAllConnectionFlags() );
 		PVD::PvdConnection* theConnection = physx::PxVisualDebuggerExt::createConnection(system->GetPxSDK()->getPvdConnectionManager(), "127.0.0.1", 5425, 10, theConnectionFlags);
 		if (theConnection)
@@ -274,166 +309,6 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
 	{
+		//TODO: Free data
 	}
-
-	//TODO: move this to physics system instead of scenatio manager, mesh data should be same between scenes and therefore shareable
-/*	ODECollisionMesh PhysXPhysicsSceneManager::CreateCollisionMesh(IMeshComponent* mesh)
-	{
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasCollisionMesh(col_mesh_name))
-		{
-			return m_ColMeshMap[col_mesh_name];
-		}
-		//not loaded, load it!
-
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-
-		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
-		{
-			//Log::Error("No verticies found for this mesh")
-		}
-		// This should equal above code, but without Opcode dependency and no duplicating data
-		dTriMeshDataID id = dGeomTriMeshDataCreate();
-		dGeomTriMeshDataBuildSingle(id,
-			&(mesh_data->VertexVector[0]),
-			sizeof(float)*3,
-			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0],
-			mesh_data->NumFaces*3,
-			3 * sizeof(unsigned int));
-		//Save id for this collision mesh
-		ODECollisionMesh col_mesh;
-		col_mesh.ID = id;
-		col_mesh.Mesh = mesh_data;
-		m_ColMeshMap[col_mesh_name] = col_mesh;
-		return col_mesh;
-	}
-
-	PhysXCollisionMesh PhysXPhysicsSceneManager::CreateCollisionMesh(IMeshComponent* mesh)
-	{
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasCollisionMesh(col_mesh_name))
-		{
-			return m_ColMeshMap[col_mesh_name];
-		}
-		//not loaded, load it!
-
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-
-		unsigned int mVertexCount = mesh_data->NumVertex, mIndexCount  = mesh_data->NumFaces;
-		NxVec3* mMeshVertices = new NxVec3[mVertexCount];
-		NxU32* mMeshFaces = new NxU32[mIndexCount];
-		NxMaterialIndex* mMaterials = new NxMaterialIndex[mIndexCount];
-
-		NxMaterialIndex currentMaterialIndex = 0;
-//		bool use32bitindexes;
-
-		for(unsigned int  i = 0;  i < mesh->NumVertex;i++)
-		{
-			Vec3 pos = mesh->VertexVector[i];
-			mMeshVertices[i] = NxVec3(pos.x,pos.y,pos.z); 
-		}
-
-		for(unsigned int  i = 0;  i < mesh->NumFaces;i++)
-		{
-			mMaterials[i] = mesh->MatIDVector[i];
-			mMeshFaces[i] = mesh->FaceVector[i]; 
-		}
-
-		NxTriangleMeshDesc mTriangleMeshDescription;
-
-		// Vertices
-		mTriangleMeshDescription.numVertices				= mVertexCount;
-		mTriangleMeshDescription.points						= mMeshVertices;							
-		mTriangleMeshDescription.pointStrideBytes			= sizeof(NxVec3);
-		// Triangles
-		mTriangleMeshDescription.numTriangles				= mIndexCount / 3;
-		mTriangleMeshDescription.triangles					= mMeshFaces;
-		mTriangleMeshDescription.triangleStrideBytes		= 3 * sizeof(NxU32);
-		// Materials
-		//#if 0
-		mTriangleMeshDescription.materialIndexStride		= sizeof(NxMaterialIndex);
-
-		mTriangleMeshDescription.materialIndices			= mMaterials;
-		//#endif
-		//mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;
-
-		NxTriangleMesh* trimesh;
-
-#ifndef NX_DEBUG
-
-		MemoryWriteBuffer buf;
-		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) {
-			std::stringstream s;
-			s	<< "Mesh '" << "' failed to cook"
-				<< "V(" << mMeshVertices << ") F(" << mMeshFaces << ")";
-
-			Log::Error("%s",s.str());//NxThrow_Error(s.str());
-		}
-		trimesh = m_Scene->getPhysicsSDK().createTriangleMesh(MemoryReadBuffer(buf.data));
-
-#else
-
-		NxString filename;
-		if (Ogre::StringUtil::endsWith(meshName, ".mesh")) {
-			filename = meshName.substr(0, meshName.length() - 5) + ".TriangleMeshShape.nxs";	
-		}
-		else {
-			filename = meshName + ".TriangleMeshShape.nxs";
-		}
-
-		UserStream buf(filename.c_str(),false);
-
-		if (!NxCookTriangleMesh(mTriangleMeshDescription, buf)) {
-			std::stringstream s;
-			s	<< "Mesh '" << meshName << "' failed to cook"
-				<< "V(" << mMeshVertices << ") F(" << mMeshFaces << ")";
-
-			NxThrow_Error(s.str());
-		}
-
-		fclose(buf.fp);
-
-		UserStream rbuf(filename.c_str(), true);
-
-		trimesh = scene->getPhysicsSDK().createTriangleMesh(rbuf);
-
-		fclose(rbuf.fp);
-
-
-
-#endif
-
-	
-
-//		delete []vertices;
-//		delete []indices;
-
-		delete []mMeshVertices;
-		delete []mMeshFaces;
-		delete []mMaterials;
-
-		PhysXCollisionMesh col_mesh;
-		col_mesh.NxMesh = trimesh;
-		col_mesh.Mesh = mesh_data;
-		m_ColMeshMap[col_mesh_name] = col_mesh;
-		return col_mesh;
-
-//		return trimesh;
-
-	}
-
-	bool PhysXPhysicsSceneManager::HasCollisionMesh(const std::string &name)
-	{
-		CollisionMeshMap::iterator iter;
-		iter = m_ColMeshMap.find(name);
-		if (iter!= m_ColMeshMap.end()) //in map.
-		{
-			return true;
-		}
-		return false;
-	}*/
-
 }

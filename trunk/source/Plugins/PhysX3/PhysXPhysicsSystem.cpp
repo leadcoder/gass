@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "PhysXPhysicsSystem.h"
+#include "Sim/Interface/GASSIMaterialSystem.h"
+#include <tinyxml.h>
 
 using namespace physx;
 namespace GASS
@@ -66,7 +68,7 @@ namespace GASS
 		m_PhysicsSDK(NULL),
 		m_Foundation(NULL)
 	{
-		
+
 	}
 
 	PhysXPhysicsSystem::~PhysXPhysicsSystem()
@@ -95,128 +97,112 @@ namespace GASS
 		}
 		if(!PxInitExtensions(*m_PhysicsSDK))
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxInitExtensions failed!", "PhysXPhysicsSystem::OnInit");
-		
+
 		m_DefaultMaterial = m_PhysicsSDK->createMaterial(0.5,0.5,0.5);
 
 		m_Cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxCookingParams());
 		if(!m_Cooking)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxCreateCooking failed!", "PhysXPhysicsSystem::OnInit");
 
-
+		
+		//load vehicle settings
+		FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
+		
+		LoadTires(path.GetFullPath());
+		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IMaterialSystem>();
+		for(size_t i=0; i< m_DrivableMaterialNames.size() ; i++) 
+		{
+			//Create a new material.
+			MaterialData mat_data = mat_system->GetMaterial(m_DrivableMaterialNames[i]);
+			//TODO: load alla materials from start
+			m_DrivableMaterials.push_back(GetPxSDK()->createMaterial(mat_data.StaticFriction, mat_data.DynamicFriction, mat_data.Restitution));
+			//Set up the drivable surface type that will be used for the new material.
+			physx::PxVehicleDrivableSurfaceType vdst;
+			vdst.mType = static_cast<int>(i);
+			m_VehicleDrivableSurfaceTypes.push_back(vdst);
+		}
+		
+		m_SurfaceTirePairs = PxVehicleDrivableSurfaceToTireFrictionPairs::create((int)m_Tires.size(),(int)m_DrivableMaterials.size(),(const PxMaterial**)&m_DrivableMaterials[0],&m_VehicleDrivableSurfaceTypes[0]);
+		for(PxU32 i=0; i < m_DrivableMaterials.size(); i++)
+		{
+			for(PxU32 j=0;j<m_Tires.size();j++)
+			{
+				if(m_Tires[j].FrictionMultipliers.end() != m_Tires[j].FrictionMultipliers.find(m_DrivableMaterialNames[i]))
+					m_SurfaceTirePairs->setTypePairFriction(i,j,m_Tires[j].FrictionMultipliers[m_DrivableMaterialNames[i]]);
+				else
+				{
+					//exception?
+					m_SurfaceTirePairs->setTypePairFriction(i,j,1.0);
+				}
+			}
+		}
 
 		//physx::PxExtensionVisualDebugger::connect(mSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 10, true,physx::PxGetDefaultDebuggerFlags());
 	}
 
-/*
-	NxCollisionMesh PhysXPhysicsSystem::CreateCollisionMesh(IMeshComponent* mesh)
+	int PhysXPhysicsSystem::GetTireIDFromName(const std::string &name) const
 	{
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasCollisionMesh(col_mesh_name))
+		for(PxU32 i=0;i < m_Tires.size();i++)
 		{
-			return m_ColMeshMap[col_mesh_name];
+			if(m_Tires[i].Name == name)
+				return i;
 		}
-		//not loaded, load it!
-
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-
-		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
-		{
-			//Log::Error("No verticies found for this mesh")
-		}
-
-		unsigned int vertexCount = mesh_data->NumVertex;
-		unsigned int indexCount  = mesh_data->NumFaces*3;
-		NxVec3* meshVertices = new NxVec3[vertexCount];
-		NxU32* meshFaces = new NxU32[indexCount];
-		NxMaterialIndex* materials = new NxMaterialIndex[indexCount];
-
-		NxMaterialIndex currentMaterialIndex = 0;
-		//		bool use32bitindexes;
-
-		for(unsigned int  i = 0;  i < mesh_data->NumVertex;i++)
-		{
-			Vec3 pos = mesh_data->VertexVector[i];
-			//if(i > 10)
-			//	meshVertices[i] = NxVec3(pos.x, 10, pos.z); 
-			meshVertices[i] = NxVec3(pos.x, pos.y, pos.z); 
-		}
-
-		for(unsigned int  i = 0;  i < indexCount;i++)
-		{
-			materials[i] = 0;
-			meshFaces[i] = mesh_data->FaceVector[i]; 
-		}
-
-		NxTriangleMeshDesc mTriangleMeshDescription;
-
-		// Vertices
-		//mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;
-
-			mTriangleMeshDescription.numVertices			= vertexCount;
-	mTriangleMeshDescription.pointStrideBytes		= sizeof(NxVec3);
-	mTriangleMeshDescription.points				= meshVertices;
-	mTriangleMeshDescription.numTriangles			= indexCount/3;
-	mTriangleMeshDescription.flags					= NX_MF_HARDWARE_MESH;//NX_MF_FLIPNORMALS;
-	mTriangleMeshDescription.triangles				= meshFaces;
-	mTriangleMeshDescription.triangleStrideBytes	= 3 * sizeof(NxU32);
-	
-
-
-		NxTriangleMesh* trimesh;
-
-
-
-
-	
-	
-	//Alternative:	see NxMeshFlags
-	//triangleMeshDesc->flags				= NX_MF_16_BIT_INDICES
-	//triangleMeshDesc->triangles			= indices16;
-	//triangleMeshDesc->triangleStrideBytes	= 3 * sizeof(NxU16);
-
-	// The actor has one shape, a triangle mesh
-	NxInitCooking();
-	MemoryWriteBuffer buf;
-
-    bool status = NxCookTriangleMesh(mTriangleMeshDescription, UserStream("c:/temp/text.bin", false));
-	if (status)
-	{
-		
-		trimesh = m_PhysicsSDK->createTriangleMesh(UserStream("c:/temp/text.bin", true));
-	}
-	else
-	{
-		assert(false);
-		trimesh = NULL;
+		GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Tire named:" + name + " not found", "PhysXPhysicsSystem::GetTyreIDFromName");
 	}
 
-	NxCloseCooking();
-
-
-	
-
-
-
-		NxCollisionMesh col_mesh;
-		col_mesh.NxMesh = trimesh;
-		col_mesh.Mesh = mesh_data;
-		m_ColMeshMap[col_mesh_name] = col_mesh;
-
-		//delete []meshVertices;
-		//delete []meshFaces;
-		//delete []materials;
-		return col_mesh;
-	}
-
-	bool PhysXPhysicsSystem::HasCollisionMesh(const std::string &name)
+	void PhysXPhysicsSystem::LoadTires(const std::string &file)
 	{
-		CollisionMeshMap::iterator iter;
-		iter = m_ColMeshMap.find(name);
-		if (iter!= m_ColMeshMap.end()) //in map.
+		LogManager::getSingleton().stream() << "Start loading tire settings file " << file;
+		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
+		if (!xmlDoc->LoadFile())
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
+
+		TiXmlElement *xml_vs = xmlDoc->FirstChildElement("VehicleSettings");
+		if(xml_vs)
 		{
-			return true;
+			TiXmlElement *xml_sl = xml_vs->FirstChildElement("SurfaceList");
+			if(xml_sl )
+			{
+				TiXmlElement *xml_ds = xml_sl->FirstChildElement("DriveableSurface");
+				while(xml_ds)
+				{
+					if(xml_ds->Attribute("MaterialName"))
+						m_DrivableMaterialNames.push_back(xml_ds->Attribute("MaterialName"));
+					else
+						GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find MaterialName attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
+					xml_ds = xml_ds->NextSiblingElement("DriveableSurface");
+				}
+			}
+			TiXmlElement *xml_ml = xml_vs->FirstChildElement("TireList");
+			if(xml_ml)
+			{
+				TiXmlElement *xml_td = xml_ml->FirstChildElement("Tire");
+				while(xml_td)
+				{
+					TireData data;
+					if(xml_td->Attribute("Name"))
+						data.Name = xml_td->Attribute("Name");
+					else
+						GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
+
+					TiXmlElement *xml_fm = xml_td->FirstChildElement("FrictionMultiplier");
+					while(xml_fm)
+					{
+						std::string mat_name;
+						double fm = 1;
+						if(xml_fm->Attribute("MaterialName"))
+							mat_name = xml_fm->Attribute("MaterialName");
+						else
+							GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find MaterialName attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
+						xml_fm->QueryDoubleAttribute("Multiplier",&fm);
+						data.FrictionMultipliers[mat_name] = fm;
+						xml_fm = xml_fm->NextSiblingElement("FrictionMultiplier");
+					}
+					m_Tires.push_back(data);
+					xml_td = xml_td->NextSiblingElement("Tire");
+				}
+			}
 		}
-		return false;
-	}*/
+		delete xmlDoc;
+	}
 }

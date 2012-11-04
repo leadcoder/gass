@@ -33,6 +33,12 @@ namespace GASS
 	class IMeshComponent;
 	struct MeshData;
 
+	struct TireData
+	{
+		std::string Name;
+		std::map<std::string,double> FrictionMultipliers;
+	};
+
 	class PhysXPhysicsSystem : public Reflection<PhysXPhysicsSystem, SimSystem>
 	{
 	public:
@@ -47,8 +53,10 @@ namespace GASS
 		physx::PxDefaultAllocator* GetAllocator() {return &m_DefaultAllocator;}
 		virtual std::string GetSystemName() const {return "PhysXPhysicsSystem";}
 		physx::PxCooking* GetPxCooking() const {return m_Cooking;}
+		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* GetSurfaceTirePairs()const {return m_SurfaceTirePairs;}
+		int GetTireIDFromName(const std::string &name) const;
 	protected:
-		void OnShutdown(MessagePtr message);
+		void LoadTires(const std::string &file);
 	private:
 		// Physics
 		physx::PxPhysics* m_PhysicsSDK;
@@ -56,8 +64,14 @@ namespace GASS
 		physx::PxMaterial* m_DefaultMaterial;
 		physx::PxDefaultAllocator m_DefaultAllocator;
 		physx::PxCooking* m_Cooking;
-		//CollisionMeshMap m_ColMeshMap;
-		//NxScene* m_Scene;
+
+		//vehicle data
+		std::vector<TireData> m_Tires;
+		std::vector<std::string> m_DrivableMaterialNames;
+
+		std::vector<physx::PxVehicleDrivableSurfaceType> m_VehicleDrivableSurfaceTypes;;
+		std::vector<physx::PxMaterial*> m_DrivableMaterials;
+		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
 	};
 
 	typedef boost::shared_ptr<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;
