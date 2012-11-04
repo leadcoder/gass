@@ -22,8 +22,9 @@
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX3/PhysXStream.h"
 #include <PxPhysicsAPI.h>
-#include "PxTkStream.h"
+
 
 
 namespace GASS
@@ -120,7 +121,7 @@ namespace GASS
 		if(m_Vehicles.size()  > 0)
 		{
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
-			PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
+			PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
 			PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),1,&m_Vehicles[0]);
 		}
 		
@@ -199,10 +200,10 @@ namespace GASS
 		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX | physx::PxConvexFlag::eINFLATE_CONVEX;
 
 		physx::PxConvexMesh* convexMesh = NULL;
-		PxToolkit::MemoryOutputStream buf;
+		MemoryOutputStream buf;
 		if(cooking.cookConvexMesh(convexDesc, buf))
 		{
-			PxToolkit::MemoryInputData id(buf.getData(), buf.getSize());
+			MemoryInputData id(buf.getData(), buf.getSize());
 			convexMesh = physics.createConvexMesh(id);
 		}
 		return convexMesh;

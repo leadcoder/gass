@@ -63,7 +63,6 @@ namespace GASS
 		TiXmlElement *xml_ml = xmlDoc->FirstChildElement("MaterialList");
 		if(xml_ml)
 		{
-			
 			TiXmlElement *xml_mat = xml_ml->FirstChildElement("Material");
 			while(xml_mat)
 			{
