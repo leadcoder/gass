@@ -19,6 +19,9 @@
 *****************************************************************************/
 
 #include "Sim/GASSTaskNode.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSRuntimeController.h"
+
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSMisc.h"
 #include <tinyxml.h>
@@ -27,7 +30,7 @@
 
 namespace GASS
 {
-	TaskNode::TaskNode() : m_NodeMode(SEQUENCE)
+	TaskNode::TaskNode() : m_NodeMode(SEQUENCE), m_OnlyUpdateOnRequest(false)
 	{
 
 	}
@@ -69,10 +72,13 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get task mode", "TaskNode::LoadXML");
 		}
 
-		/*if(xml_elem->Attribute("custom_freqency"))
-		{
 
-		}*/
+		if(xml_elem->Attribute("externalUpdate"))
+		{
+			int value = m_OnlyUpdateOnRequest;
+			xml_elem->QueryIntAttribute("externalUpdate",&value);
+			m_OnlyUpdateOnRequest = value;
+		}
 
 		TiXmlElement *xml_child_elem = xml_elem->FirstChildElement("TaskNode");
 		while(xml_child_elem)
@@ -242,8 +248,23 @@ namespace GASS
 
 	void TaskNode::Update(double delta_time,tbb::task *parent) 
 	{
-		UpdateListeners(delta_time,parent);
-		UpdateChildren(delta_time,parent);
+
+		//update on request
+		if(m_OnlyUpdateOnRequest)
+		{
+			//Check if we should update this frame?
+			if(SimEngine::Get().GetRuntimeController()->HasUpdateRequest())
+			{
+				double request_time = SimEngine::Get().GetRuntimeController()->GetUpdateRequestTimeStep();
+				UpdateListeners(request_time,parent);
+				UpdateChildren(request_time,parent);
+			}
+		}
+		else //just update
+		{
+			UpdateListeners(delta_time,parent);
+			UpdateChildren(delta_time,parent);
+		}
 	}
 
 	void TaskNode::UpdateListeners(double delta_time,tbb::task *parent) 

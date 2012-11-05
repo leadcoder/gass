@@ -65,9 +65,6 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
-//		RegisterProperty<double>("OrigoOffsetEast", &Scene::GetOrigoOffsetEast, &Scene::SetOrigoOffsetEast);
-//		RegisterProperty<double>("OrigoOffsetNorth", &Scene::GetOrigoOffsetNorth, &Scene::SetOrigoOffsetNorth);
-//		RegisterProperty<std::string>("Projection", &Scene::GetProjection, &Scene::SetProjection);
 	}
 
 
@@ -76,9 +73,6 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
 
-		//m_ObjectManager = SceneObjectManagerPtr(new SceneObjectManager(shared_from_this()));
-		//m_ObjectManager->Init();
-		//m_Root->SetScene(shared_from_this());
 		m_Root->Initialize(shared_from_this());
 
 		//Add all registered scene manangers to the scene

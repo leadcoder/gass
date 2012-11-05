@@ -30,7 +30,10 @@
 
 namespace GASS
 {
-	RunTimeController::RunTimeController()
+	RunTimeController::RunTimeController() : m_SimulationPaused(false),
+		m_SimulateRealTime(false),
+		m_StepSimulationRequest(false),
+		m_RequestDeltaTime(0)
 	{
 
 	}
@@ -53,7 +56,9 @@ namespace GASS
 
 		m_SimulationTaskNode = TaskNodePtr(new TaskNode());
 
-		//tbb::tick_count ts = tbb::tick_count::now();
+		//Hack to support asyncron request
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest,RequestTimeStepMessage,0));
+		
 	}
 
 	void RunTimeController::Register(TaskNodeListenerPtr listener, const std::string task_node_name)
@@ -79,15 +84,30 @@ namespace GASS
 	void RunTimeController::Update(double delta_time)
 	{
 		m_SimulationTaskNode->Update(delta_time,NULL);
+
+		if(m_StepSimulationRequest) 
+		{
+			m_StepSimulationRequest = false;
+			//send message that we are done
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
+		}
 		SimEngine::Get().GetSimSystemManager()->SyncMessages(delta_time);
+		
 	}
 
 	void RunTimeController::Log()
 	{
+
 	}
 
 	void RunTimeController::LoadXML(TiXmlElement *xml_elem)
 	{
 		m_SimulationTaskNode->LoadXML(xml_elem);
+	}
+
+	void RunTimeController::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
+	{
+		m_StepSimulationRequest = true;
+		m_RequestDeltaTime = message->GetTimeStep();
 	}
 }

@@ -77,11 +77,6 @@ namespace GASS
 		virtual void Init();
 
 		/**
-			Update all systems
-		*/
-		virtual void Update(double delta_time);
-
-		/**
 			Get hold of system by class type. If more then one system
 			of the class type exist tbe first one loaded will be returned
 		*/

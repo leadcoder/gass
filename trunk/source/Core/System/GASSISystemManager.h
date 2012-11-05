@@ -44,7 +44,6 @@ namespace GASS
 	public:
 		virtual ~ISystemManager(){}
 		virtual void Init() = 0;
-		virtual void Update(float delta_time) = 0;
 	private:
 	};
 	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;

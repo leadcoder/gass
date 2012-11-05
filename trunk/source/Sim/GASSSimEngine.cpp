@@ -155,8 +155,8 @@ namespace GASS
 			m_RTC->Init(num_threads);
 			int update_freq = Misc::ReadInt(xml_rtc,"MaxUpdateFreqency");
 			m_MaxUpdateFreq = static_cast<double>(update_freq);
-			bool external_update = Misc::ReadBool(xml_rtc,"ExternalSimulationUpdate");
-			GetSimSystemManager()->SetPauseSimulation(external_update);
+			//bool external_update = Misc::ReadBool(xml_rtc,"ExternalSimulationUpdate");
+			//GetSimSystemManager()->SetPauseSimulation(external_update);
 
 			TiXmlElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
 			if(xml_tn)

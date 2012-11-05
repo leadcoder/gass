@@ -67,11 +67,8 @@ namespace GASS
 		virtual std::string GetSystemName() const = 0;
 		virtual void OnCreate(SystemManagerPtr owner)= 0;
 		virtual void Init() = 0;
-		virtual void Update(double delta_time) = 0;
 		virtual void Register(SystemListenerPtr listener) = 0;
 		virtual void Unregister(SystemListenerPtr listener)= 0;
-		virtual int GetUpdateBucket() const = 0;
-		virtual void SetUpdateBucket(int priority) = 0;
 	};
 	typedef boost::shared_ptr<ISystem> SystemPtr;
 	typedef boost::weak_ptr<ISystem> SystemWeakPtr;

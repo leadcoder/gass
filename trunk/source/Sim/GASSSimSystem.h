@@ -61,9 +61,7 @@ namespace GASS
 		//virtual SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
-		virtual int GetUpdateBucket() const;
-		virtual void SetUpdateBucket(int priority);
-
+		
 		std::string GetTaskNode() const {return m_TaskNodeName;}
 		void SetTaskNode(const std::string name) {m_TaskNodeName = name;}
 	
@@ -80,7 +78,6 @@ namespace GASS
 		std::vector<SystemListenerPtr> m_Listeners;
 		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
-		int m_UpdateBucket;
 		std::string m_TaskNodeName;
 	};
 	typedef boost::shared_ptr<SimSystem> SimSystemPtr;

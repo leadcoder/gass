@@ -25,7 +25,7 @@
 #include "tbb/parallel_for.h"
 namespace GASS
 {
-	SimSystem::SimSystem(void) : m_UpdateBucket(0)
+	SimSystem::SimSystem(void) 
 	{
 	
 	}
@@ -37,7 +37,6 @@ namespace GASS
 
 	void SimSystem::RegisterReflection()
 	{
-		RegisterProperty<int>("UpdateBucket", &GASS::SimSystem::GetUpdateBucket, &GASS::SimSystem::SetUpdateBucket);
 		RegisterProperty<std::string>("TaskNode", &GASS::SimSystem::GetTaskNode, &GASS::SimSystem::SetTaskNode);
 	}
 
@@ -117,16 +116,6 @@ namespace GASS
 		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
 		SaveProperties(this_elem);
-	}
-
-	int SimSystem::GetUpdateBucket() const
-	{
-		return m_UpdateBucket;
-	}
-
-	void SimSystem::SetUpdateBucket(int priority)
-	{
-		m_UpdateBucket = priority;
 	}
 }
 

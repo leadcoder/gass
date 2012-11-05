@@ -22,6 +22,7 @@
 #define RUN_TIME_CONTROLLER_HH
 
 #include "Sim/GASSCommon.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <vector>
 
 
@@ -42,7 +43,7 @@ namespace GASS
 	typedef boost::shared_ptr<ITaskNodeListener> TaskNodeListenerPtr;
 	typedef boost::shared_ptr<TaskNode> TaskNodePtr;
 
-	class GASSExport RunTimeController 
+	class GASSExport RunTimeController : public boost::enable_shared_from_this<RunTimeController>,  public IMessageListener
 	{
 	public:
 		RunTimeController();
@@ -58,10 +59,19 @@ namespace GASS
 		void Log();
 		void LoadXML(TiXmlElement *xml_elem);
 		TaskNodePtr  GetTaskNode() const {return m_SimulationTaskNode;}
+		bool HasUpdateRequest() const{return m_StepSimulationRequest;}
+		double GetUpdateRequestTimeStep() const {return m_RequestDeltaTime;}
 	private:
+		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
 		//tbb::spin_mutex m_Mutex;
 		tbb::task_scheduler_init* m_Scheduler;
 		TaskNodePtr m_SimulationTaskNode;
+
+		bool m_SimulationPaused;
+		bool m_SimulateRealTime;
+		bool m_StepSimulationRequest;
+		double m_RequestDeltaTime;
+
 	};
 	typedef boost::shared_ptr<RunTimeController> RunTimeControllerPtr;
 }

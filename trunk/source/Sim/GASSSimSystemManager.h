@@ -75,22 +75,18 @@ namespace GASS
 		void SendImmediate(MessagePtr message);
 
 		/**
-		Update System
-		*/
-		void Update(float delta_time);
-
-		/**
 		Clear all unproccessed messages
 		*/
 		void ClearMessages();
 
-		bool GetSimulationPasued() const {return m_SimulationPaused;}
-		void SetPauseSimulation(bool value) {m_SimulationPaused = value;}
-		void SetSimulationUpdateInterval(bool value) {m_SimulationUpdateInterval = value;}
-		void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}
+		//bool GetSimulationPasued() const {return m_SimulationPaused;}
+		//void SetPauseSimulation(bool value) {m_SimulationPaused = value;}
+		//void SetSimulationUpdateInterval(bool value) {m_SimulationUpdateInterval = value;}
+		//void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}
 
 		//can be called by user it simulation is paused
-		void UpdateSimulation(double delta_time);
+		//void UpdateSimulation(double delta_time);
+
 		SimSystemPtr GetSystemByName(const std::string &system_name) const;
 		
 		/**
@@ -134,21 +130,24 @@ namespace GASS
 	private:
 		SystemPtr LoadSystem(TiXmlElement *system_elem);
 		size_t GetQueuedMessages() const;
-		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
-		void StepSimulation(double delta_time);		
-		
+
 		MessageManagerPtr m_SystemMessageManager;
-		bool m_SimulationPaused;
-		bool m_SimulateRealTime;
-		double m_SimulationUpdateInterval;
-		double m_SimulationTimeToProcess;
-		int m_MaxSimSteps;
-		int m_LastNumSimulationSteps;
+		typedef std::vector<SystemPtr> SystemVector;
+		SystemVector m_Systems;
+		//void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
+		//void StepSimulation(double delta_time);		
+		
+		
+		//bool m_SimulationPaused;
+		//bool m_SimulateRealTime;
+		//double m_SimulationUpdateInterval;
+		//double m_SimulationTimeToProcess;
+		//int m_MaxSimSteps;
+		//int m_LastNumSimulationSteps;
+		//bool m_StepSimulationRequest;
+		//double m_RequestDeltaTime;
 
-		bool m_StepSimulationRequest;
-		double m_RequestDeltaTime;
-
-		SimpleProfileDataMap* m_SimStats;
+		/*SimpleProfileDataMap* m_SimStats;
 
 		struct MessageData
 		{
@@ -159,9 +158,9 @@ namespace GASS
 		typedef std::map<int,MessageData> MessageStatMap;
 		MessageStatMap m_MessageStats;
 	
-		typedef std::vector<SystemPtr> SystemVector;
-		SystemVector m_Systems;
+		
+		
 		typedef std::map<int,SystemVector> UpdateMap;
-		UpdateMap m_UpdateBuckets;
+		UpdateMap m_UpdateBuckets;*/
 	};
 }

@@ -68,8 +68,7 @@ namespace GASS
 					system->OnCreate(shared_from_this());
 					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
 					
-					if(system->GetUpdateBucket() >= 0)
-						m_UpdateBuckets[system->GetUpdateBucket()].push_back(system);
+					
 					m_Systems.push_back(system);
 					
 				}
@@ -99,8 +98,5 @@ namespace GASS
 	
 	}	
 
-	void BaseSystemManager::Update(double delta_time)
-	{
-
-	}
+	
 }

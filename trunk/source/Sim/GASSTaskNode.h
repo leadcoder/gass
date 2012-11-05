@@ -79,6 +79,7 @@ namespace GASS
 		//UpdateMode m_ChildrenMode;
 		UpdateMode m_NodeMode;
 		Listeners m_Listeners;
+		bool m_OnlyUpdateOnRequest;
 	};
 }
 

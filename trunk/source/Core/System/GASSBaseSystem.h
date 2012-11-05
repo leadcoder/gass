@@ -62,7 +62,6 @@ namespace GASS
 		virtual void OnCreate(SystemManagerPtr owner){m_Owner = owner;}
 		virtual void Register(SystemListenerPtr listener){};
 		virtual void Unregister(SystemListenerPtr listener){};
-		virtual void Update(double delta_time) {};
 		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		
 		//IXMLSerialize interface

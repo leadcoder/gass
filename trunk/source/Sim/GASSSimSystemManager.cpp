@@ -38,22 +38,22 @@
 
 namespace GASS
 {
-	SimSystemManager::SimSystemManager() : m_SimulationPaused(true), 
-		m_SimulationUpdateInterval(1.0/60.0),
-		m_SimulationTimeToProcess(0),
-		m_MaxSimSteps(4),
-		m_SimulateRealTime(true),
-		m_LastNumSimulationSteps(0),
-		m_StepSimulationRequest(false),
-		m_RequestDeltaTime(0)
+	SimSystemManager::SimSystemManager() // :m_SimulationPaused(true), 
+		//m_SimulationUpdateInterval(1.0/60.0),
+		//m_SimulationTimeToProcess(0),
+		//m_MaxSimSteps(4),
+		//m_SimulateRealTime(true),
+		//m_LastNumSimulationSteps(0),
+		//m_StepSimulationRequest(false),
+		//m_RequestDeltaTime(0)
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
-		m_SimStats = new SimpleProfileDataMap;
+		//m_SimStats = new SimpleProfileDataMap;
 	}
 
 	SimSystemManager::~SimSystemManager()
 	{
-		delete m_SimStats;
+		//delete m_SimStats;
 	}
 
 	void SimSystemManager::Init()
@@ -61,9 +61,9 @@ namespace GASS
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
 
 		//support asyncron request
-		boost::shared_ptr<SimSystemManager> shared_this = shared_from_this();
-		MessageFuncPtr func_ptr(new GASS::MessageFunc<RequestTimeStepMessage>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
-		RegisterForMessage(typeid(RequestTimeStepMessage),func_ptr,0);
+		//boost::shared_ptr<SimSystemManager> shared_this = shared_from_this();
+		//MessageFuncPtr func_ptr(new GASS::MessageFunc<RequestTimeStepMessage>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
+		//RegisterForMessage(typeid(RequestTimeStepMessage),func_ptr,0);
 
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
@@ -72,17 +72,17 @@ namespace GASS
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	
 
-	struct SystemUpdateInvoker 
+	/*struct SystemUpdateInvoker 
 	{
 		SystemUpdateInvoker(double delta_time) :m_DeltaTime(delta_time)
 		{}
 		void operator()(SystemPtr& system) const {system->Update(m_DeltaTime);}
 		double m_DeltaTime;
 	};
+	*/
+	//#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
 
-	#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
-
-	void SimSystemManager::Update(float delta_time)
+/*	void SimSystemManager::Update(float delta_time)
 	{
 
 		//PRE_SIM_BUCKET
@@ -226,7 +226,7 @@ namespace GASS
 		ss << " Simulation Updates:" << m_LastNumSimulationSteps << "\n";
 		GASS::MessagePtr stat_msg(new GASS::CreateTextBoxMessage("SimulationStats",ss.str(),GASS::Vec4(0.9,0.9,0.9,1),0.1,0.3,0.1,0.1));
 		//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
-	}
+	}*/
 
 	
 
@@ -283,11 +283,11 @@ namespace GASS
 	}
 
 	//use message to support asyncron request!
-	void SimSystemManager::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
+	/*void SimSystemManager::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
 	{
 		m_StepSimulationRequest = true;
 		m_RequestDeltaTime = message->GetTimeStep();
-	}
+	}*/
 
 	SimSystemPtr SimSystemManager::GetSystemByName(const std::string &system_name) const
 	{
@@ -327,8 +327,6 @@ namespace GASS
 					system->OnCreate(shared_from_this());
 					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
 					
-					if(system->GetUpdateBucket() >= 0)
-						m_UpdateBuckets[system->GetUpdateBucket()].push_back(system);
 					m_Systems.push_back(system);
 					
 				}
