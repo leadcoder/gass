@@ -31,7 +31,7 @@ namespace GASS
 
 	Float Math::Deg2Rad(Float deg)
 	{
-		return Float(2*MY_PI * deg/360.f);
+		return Float(2*MY_PI * deg/360.0);
 	}
 
 	Vec3 Math::Deg2Rad(const Vec3 &vec)
