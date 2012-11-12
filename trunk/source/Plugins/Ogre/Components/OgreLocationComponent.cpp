@@ -56,8 +56,6 @@ namespace GASS
 	OgreLocationComponent::~OgreLocationComponent()
 	{
 
-		
-
 	}
 
 	void OgreLocationComponent::RegisterReflection()

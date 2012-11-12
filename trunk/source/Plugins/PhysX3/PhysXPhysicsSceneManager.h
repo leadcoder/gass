@@ -38,7 +38,7 @@ namespace GASS
 
 	struct PhysXTriangleMesh
 	{
-		
+		physx::PxTriangleMesh* m_TriangleMesh;	
 	};
 
 	class PhysXBodyComponent;
@@ -55,6 +55,8 @@ namespace GASS
 		virtual void OnCreate();
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(MeshComponentPtr mesh);
+		PhysXTriangleMesh CreateTriangleMesh(MeshComponentPtr mesh);
+	
 		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:
@@ -67,6 +69,7 @@ namespace GASS
 		bool HasConvexMesh(const std::string &name) const;
 		bool HasTriangleMesh(const std::string &name) const;
 		physx::PxConvexMesh* CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
+		physx::PxTriangleMesh* CreateTriangleMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
 	private:
 		float m_Gravity;
 		bool m_Paused;

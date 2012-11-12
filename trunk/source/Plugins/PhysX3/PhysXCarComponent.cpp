@@ -140,8 +140,8 @@ namespace GASS
 
 			PhysXWheelComponentPtr wheel_comp = child->GetFirstComponentByClass<PhysXWheelComponent>();
 			wheels[i] = wheel_comp->GetWheelData();
-			susps[i] = wheel_comp->GetSuspensionData();
-			tires[i] =  wheel_comp->GetTireData();
+			susps[i]  = wheel_comp->GetSuspensionData();
+			tires[i]  = wheel_comp->GetTireData();
 		}
 
 		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(4);
