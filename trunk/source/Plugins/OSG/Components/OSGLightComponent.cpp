@@ -129,6 +129,15 @@ namespace GASS
 		SetAmbient(m_Ambient);
 		SetSpecular(m_Specular);
 
+
+		if(m_LightType == LT_POINT)
+		{
+			 m_OSGLight->setConstantAttenuation(1.0f);
+			 m_OSGLight->setLinearAttenuation(2.0f/1000);
+			 m_OSGLight->setQuadraticAttenuation(2.0f/osg::square(1000));
+			 m_OSGLight->setPosition(osg::Vec4(0.0,0.0,0.0,1.0f));
+		}
+
 		m_OSGLightSource->setLight(m_OSGLight);
 		m_OSGLightSource->setLocalStateSetModes(osg::StateAttribute::ON); 
 

@@ -47,6 +47,7 @@ namespace GASS
 
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 	protected:
+		void OnInitializeTextBox(CreateTextBoxMessagePtr message);
 		void OnDebugPrint(DebugPrintMessagePtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
@@ -67,6 +68,8 @@ namespace GASS
 		std::string m_ShadowSettingsFile;
 
 		TextBox* m_DebugTextBox;
+
+		std::map<std::string,TextBox*>  m_TextBoxes;
 		
 	};
 	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;

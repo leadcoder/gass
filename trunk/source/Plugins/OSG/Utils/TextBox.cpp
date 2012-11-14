@@ -1,4 +1,5 @@
 #include "TextBox.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
 
 TextBox::TextBox():
     matrixTransform(new osg::MatrixTransform()),
@@ -30,6 +31,17 @@ TextBox::TextBox():
     // Now add the text geometry to this new projection matrix surface
     projectionMatrix->addChild(textGeode);
 
+	textGeode->setNodeMask(~GASS::NM_RECEIVE_SHADOWS & textGeode->getNodeMask());
+	textGeode->setNodeMask(~GASS::NM_CAST_SHADOWS & textGeode->getNodeMask());
+
+	osg::ref_ptr<osg::StateSet> nodess = textGeode->getOrCreateStateSet();
+	nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+
+	osg::Program* program = new osg::Program;
+	nodess->setAttribute(program);
+
+
+
 // Geode - Since osgText::Text is a derived class from drawable, we 
 // must add it to an osg::Geode before we can add it to our ScenGraph.
     textGeode->addDrawable(text);
@@ -39,6 +51,10 @@ TextBox::TextBox():
     
     //Set the text to our default text string
     text->setText("Default Text");
+	text->setBackdropType(osgText::Text::OUTLINE);
+
+
+	
 }
 
 void TextBox::

@@ -29,7 +29,7 @@ namespace GASS
 		AISystem();
 		virtual ~AISystem();
 		static void RegisterReflection();
-		virtual void OnCreate();
+		virtual void OnCreate(SystemManagerPtr owner);
 		virtual std::string GetSystemName() const {return "AISystem";}
 		virtual void Init();
 		virtual void Update(double delta_time);

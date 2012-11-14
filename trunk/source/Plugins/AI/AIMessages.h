@@ -52,5 +52,19 @@ namespace GASS
 		double m_Health;
 	};
 	typedef boost::shared_ptr<HealthChangedMessage> HealthChangedMessagePtr;
+
+	class StanceChangedMessage : public BaseMessage
+	{
+	public:
+		StanceChangedMessage(int stance, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Stance(stance)
+		  {
+
+		  }
+		  int  GetStance() const {return m_Stance;}
+	private:
+		int m_Stance;
+	};
+	typedef boost::shared_ptr<StanceChangedMessage> StanceChangedMessagePtr;
 }
 #endif

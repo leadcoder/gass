@@ -110,6 +110,7 @@ namespace GASS
 
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
 	
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
@@ -122,7 +123,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture" + full_path,"OSGGraphicsSystem::OnInit");
 		}
 
-		m_DebugTextBox->setPosition(osg::Vec3d(0, 400, 0));
+		m_DebugTextBox->setPosition(osg::Vec3d(0, 5, 0));
 		m_DebugTextBox->setFont(full_path);
 		m_DebugTextBox->setTextSize(12);
 
@@ -303,7 +304,8 @@ namespace GASS
 			view->addEventHandler(new osgViewer::LODScaleHandler());
 
 			osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
-			ssm->setKeyEventCyclePolygonMode('u');
+			ssm->setKeyEventCyclePolygonMode('p');
+			ssm->setKeyEventToggleTexturing('o');
 			view->addEventHandler(ssm);
 			//    view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
 			view->getCamera()->setGraphicsContext(m_Windows[render_window]);
@@ -375,6 +377,38 @@ namespace GASS
 		//update listeners
 		SimSystem::Update(delta_time);
 	}
+
+
+	void OSGGraphicsSystem::OnInitializeTextBox(CreateTextBoxMessagePtr message)
+	{
+		if(m_TextBoxes.end() == m_TextBoxes.find(message->m_BoxID))
+		{
+			TextBox* text_box = new TextBox();
+
+			std::string full_path;
+			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+			if(!rs->GetFullPath("arial.ttf",full_path))
+			{
+				GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find font" + full_path,"OSGGraphicsSystem::OnInitializeTextBox");
+			}
+
+			text_box->setPosition(osg::Vec3d(0, 0, 0));
+			text_box->setFont(full_path);
+			text_box->setTextSize(10);
+			
+			m_Viewer->getView(0)->getSceneData()->asGroup()->addChild(&text_box->getGroup());
+
+			m_TextBoxes[message->m_BoxID] = text_box;
+		}
+
+		TextBox* text_box = m_TextBoxes[message->m_BoxID];
+
+		text_box->setText(message->m_Text);
+		text_box->setPosition(osg::Vec3d(message->m_PosX, message->m_PosY, 0));
+		Vec4 color = message->m_Color;
+		text_box->setColor(osg::Vec4(color.x,color.y,color.z,color.w));
+	}
+
 
 
 	void OSGGraphicsSystem::LoadShadowSettings(TiXmlElement *shadow_elem)

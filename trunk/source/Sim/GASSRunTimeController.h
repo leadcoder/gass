@@ -61,6 +61,8 @@ namespace GASS
 		TaskNodePtr  GetTaskNode() const {return m_SimulationTaskNode;}
 		bool HasUpdateRequest() const{return m_StepSimulationRequest;}
 		double GetUpdateRequestTimeStep() const {return m_RequestDeltaTime;}
+		bool GetSimulationPaused() const {return m_SimulationPaused;}
+		void SetSimulationPaused(bool value) {m_SimulationPaused = value;}
 	private:
 		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
 		//tbb::spin_mutex m_Mutex;

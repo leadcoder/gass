@@ -30,7 +30,7 @@
 
 namespace GASS
 {
-	TaskNode::TaskNode() : m_NodeMode(SEQUENCE), m_OnlyUpdateOnRequest(false)
+	TaskNode::TaskNode() : m_NodeMode(SEQUENCE), m_OnlyUpdateOnRequest(false), m_RespondToPause(true)
 	{
 
 	}
@@ -78,6 +78,14 @@ namespace GASS
 			int value = m_OnlyUpdateOnRequest;
 			xml_elem->QueryIntAttribute("externalUpdate",&value);
 			m_OnlyUpdateOnRequest = value;
+		}
+
+
+		if(xml_elem->Attribute("respondToPause"))
+		{
+			int value = m_RespondToPause;
+			xml_elem->QueryIntAttribute("respondToPause",&value);
+			m_RespondToPause = value;
 		}
 
 		TiXmlElement *xml_child_elem = xml_elem->FirstChildElement("TaskNode");
@@ -260,10 +268,14 @@ namespace GASS
 				UpdateChildren(request_time,parent);
 			}
 		}
-		else //just update
+		else 
 		{
-			UpdateListeners(delta_time,parent);
-			UpdateChildren(delta_time,parent);
+			//only check if we should reflect paused flag and if so if we the sim ulation is paused.
+			if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused())) 
+			{
+				UpdateListeners(delta_time,parent);
+				UpdateChildren(delta_time,parent);
+			}
 		}
 	}
 

@@ -73,12 +73,25 @@ namespace GASS
 				}
 				else
 				{
+					if(m_State != "Dead")
+					{
+						MessagePtr message(new StanceChangedMessage(6));
+						GetSceneObject()->PostMessage(message);
+					}
+
 					m_State = "Dead";
 					agent->SetMaxSpeed(0);
 				}
 			}
 			else if(m_Health >= 1.0) //reset?
 			{
+
+				if(m_State != "Wander")
+				{
+					MessagePtr message(new StanceChangedMessage(1));
+					GetSceneObject()->PostMessage(message);
+				}
+
 				m_State = "Wander";
 				SetTargetID(m_InitialTargetLocationID);
 				SetRandomSpeed(m_RandomSpeed);

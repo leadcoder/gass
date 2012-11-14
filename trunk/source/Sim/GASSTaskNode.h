@@ -80,6 +80,7 @@ namespace GASS
 		UpdateMode m_NodeMode;
 		Listeners m_Listeners;
 		bool m_OnlyUpdateOnRequest;
+		bool m_RespondToPause;
 	};
 }
 

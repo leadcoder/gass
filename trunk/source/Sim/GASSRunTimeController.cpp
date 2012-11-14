@@ -77,6 +77,11 @@ namespace GASS
 	{
 		{
 			//tbb::spin_mutex::scoped_lock lock(m_Mutex);
+			TaskNode* node = m_SimulationTaskNode->GetNodeByName(task_node_name);
+			if(node)
+				node->Unregister(listener);
+			else
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get TaskNode:" +task_node_name , " RunTimeController::Register");
 		}
 	}
 

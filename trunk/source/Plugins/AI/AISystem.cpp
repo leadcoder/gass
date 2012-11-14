@@ -38,8 +38,9 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("AISystem",new GASS::Creator<AISystem, ISystem>);
 	}
 
-	void AISystem::OnCreate()
+	void AISystem::OnCreate(SystemManagerPtr owner)
 	{
+		SimSystem::OnCreate(owner);
 
 	}
 

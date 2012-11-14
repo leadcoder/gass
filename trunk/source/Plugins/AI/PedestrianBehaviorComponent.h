@@ -34,6 +34,7 @@ namespace GASS
 		void SetSpawnLocationID(const SceneObjectID &id);
 		SceneObjectID GetSpawnLocationID() const;
 		virtual void SceneManagerTick(double delta_time);
+		std::string GetState() {return m_State;}
 	protected:
 		void SetHealth(Float health);
 		Float GetHealth() const;
