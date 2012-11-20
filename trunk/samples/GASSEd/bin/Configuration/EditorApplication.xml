@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EditorApplication>
+  <ScenarioPath value= "%GASS_DATA_HOME%/scenaries/ogre"/>
+  <UseTerrainNormalOnDrop value= "false"/>
+  <MousePickDistance value="1000"/>
+  <ObjectID unique="true" id_prefix="[" id_suffix="]"/>
+<!--<ScenarioToLoadAtStart path= "empty"/>-->
+   <TemplateFiles>
+       <Template path="%GASS_DATA_HOME%/templates/editor/prerequisite.xml"/>
+       <Template path="%GASS_DATA_HOME%/templates/editor/gassed.xml"/>
+   </TemplateFiles>
+</EditorApplication>
+
+
+		
