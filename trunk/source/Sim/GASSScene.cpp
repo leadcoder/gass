@@ -242,7 +242,6 @@ namespace GASS
 	{
 		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
-
 		MessagePtr scene_msg(new LoadSceneManagersMessage(shared_from_this()));
 		//send load message
 		SendImmediate(scene_msg);
@@ -253,13 +252,12 @@ namespace GASS
 
 		terrain_objects->SetName("Scenery");
 		terrain_objects->SetID("SCENERY_ROOT");
-		terrain_objects->LoadFromFile(m_ScenePath.GetFullPath() + "/instances.xml");
+		if(m_ScenePath.GetFullPath() != "")
+			terrain_objects->LoadFromFile(m_ScenePath.GetFullPath() + "/instances.xml");
 		
 		m_Root->AddChildSceneObject(terrain_objects,true);
-		
 		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
-
 		m_SceneLoaded = true;
 	}
 
@@ -397,5 +395,29 @@ namespace GASS
 		size_t num = m_SceneMessageManager->GetQueuedMessages();
 		num += m_Root->GetQueuedMessages();
 		return num;
+	}
+
+	std::vector<std::string> Scene::GetScenes(const FilePath &path)
+	{
+		boost::filesystem::path boost_path(path.GetFullPath()); 
+
+		std::vector<std::string> scene_names;
+		if(boost::filesystem::exists(boost_path))  
+		{
+			boost::filesystem::directory_iterator end ;    
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			{
+				if (boost::filesystem::is_directory( *iter ) )      
+				{   
+					if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
+					{
+						std::string scene_name = iter->path().filename().generic_string();
+						scene_names.push_back(scene_name);
+						//m_Scenes.push_back(iter->path().string());
+					}
+				}
+			}
+		}
+		return scene_names;
 	}
 }

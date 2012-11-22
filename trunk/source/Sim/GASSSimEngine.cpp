@@ -185,8 +185,11 @@ namespace GASS
 			const double target_update_time = 1.0/m_MaxUpdateFreq;
 			if(delta_time > target_update_time)
 			{
-				prev_time = current_time;
-				Tick(delta_time);
+				if(delta_time > 1.0/60.0)
+				{
+					prev_time = current_time;
+					Tick(1.0/60.0);
+				}
 			}
 			else
 			{
@@ -222,16 +225,15 @@ namespace GASS
 
 	SceneWeakPtr SimEngine::LoadScene(const FilePath &path)
 	{
-		ScenePtr scene = ScenePtr(new Scene());
-		scene->Create();
-		scene->Load(path);
-		m_Scenes.push_back(scene);
-		return scene;
+		m_Scene = ScenePtr(new Scene());
+		m_Scene->Create();
+		m_Scene->Load(path);
+		return m_Scene;
 	}
 
-	void SimEngine::UnloadScene(SceneWeakPtr scene)
+	void SimEngine::UnloadScene()
 	{
-
+		//m_Scene.release();
 	}
 
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
@@ -246,7 +248,7 @@ namespace GASS
 		return true;
 	}
 
-	SimEngine::SceneIterator SimEngine::GetScenes()
+/*	SimEngine::SceneIterator SimEngine::GetScenes()
 	{
 		return SceneIterator(m_Scenes.begin(),m_Scenes.end());
 	}
@@ -254,6 +256,6 @@ namespace GASS
 	SimEngine::ConstSceneIterator SimEngine::GetScenes() const
 	{
 		return ConstSceneIterator(m_Scenes.begin(),m_Scenes.end());
-	}
+	}*/
 
 }

@@ -151,20 +151,22 @@ namespace GASS
 			Load scene form file
 		*/
 		SceneWeakPtr LoadScene(const FilePath &path);
-		void  UnloadScene(SceneWeakPtr scene);
+		SceneWeakPtr NewScene();
+		void UnloadScene();
 
-		SceneIterator GetScenes();
-		ConstSceneIterator GetScenes() const;
+		//SceneIterator GetScenes();
+		//ConstSceneIterator GetScenes() const;
+		ScenePtr GetScene() const {return m_Scene;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		//ControlSettingsManagerPtr m_ControlSettingsManager;
 		RuntimeControllerPtr m_RTC;
-		SceneVector m_Scenes;
+		//SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
+		ScenePtr m_Scene;
 	};
 }
 

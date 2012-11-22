@@ -131,7 +131,7 @@ namespace GASS
 		/**
 		Load a new scene from path
 		*/
-		void Load(const FilePath &scene_parh);
+		void Load(const FilePath &scene_path);
 
 		/**
 		Save scene to path
@@ -162,13 +162,6 @@ namespace GASS
 
 		void SyncMessages(double delta_time) const;
 
-	/*	double GetOrigoOffsetEast() const;
-		double GetOrigoOffsetNorth() const;
-		void SetOrigoOffsetEast(double value);
-		void SetOrigoOffsetNorth(double value);
-		std::string GetProjection() const;
-		void SetProjection(const std::string &proj);
-		*/
 		SceneManagerPtr GetSceneManagerByName(const std::string &name) const;
 		
 		/**Get first SceneManager of certain class. This function allow you to pass the class as a template 
@@ -198,6 +191,14 @@ namespace GASS
 			Get how many messages that is unprocessed
 		*/
 		size_t GetQueuedMessages() const;
+
+
+		/**
+		Get all scenes from path. This function recursively search for scene.xml 
+		files and push that path to the return vector
+		*/
+		static std::vector<std::string> GetScenes(const FilePath &path);
+	
 protected:
 		/**
 		Load scene  from xml,

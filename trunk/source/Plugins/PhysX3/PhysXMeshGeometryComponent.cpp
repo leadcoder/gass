@@ -72,6 +72,7 @@ namespace GASS
 
 	void PhysXMeshGeometryComponent::OnDelete()
 	{
+
 	}
 
 	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -103,8 +104,6 @@ namespace GASS
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
 		shape->setQueryFilterData(queryFilterData);
-	
-
 		scene_manager->GetPxScene()->addActor(*pxActor);
 	}
 }

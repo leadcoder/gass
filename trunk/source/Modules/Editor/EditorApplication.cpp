@@ -290,6 +290,12 @@ namespace GASS
 	{
 		m_Scene = ScenePtr(SimEngine::Get().LoadScene(scene_path));
 	}
+
+/*	void EditorApplication::NewScene()
+	{
+		m_Scene = ScenePtr(SimEngine::Get().NewScene());
+	}*/
+
 }
 
 	

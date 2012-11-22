@@ -234,24 +234,25 @@ namespace GASS
 	{
 		m_SystemMessageManager->Update(delta_time);
 		//update all scene messages managers
-		SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
+		if(SimEngine::Get().GetScene())
+		{
+			SimEngine::Get().GetScene()->SyncMessages(delta_time);
+		}
+		/*SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
 		while(iter.hasMoreElements())
 		{
 			ScenePtr scene = iter.getNext();
 			scene->SyncMessages(delta_time);
-		}
+		}*/
 	}
 
 
 	size_t SimSystemManager::GetQueuedMessages() const
 	{
 		int num = (int) m_SystemMessageManager->GetQueuedMessages();
-		//update all scene messages managers
-		SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
-		while(iter.hasMoreElements())
+		while(SimEngine::Get().GetScene())
 		{
-			ScenePtr scene = iter.getNext();
-			num += (int) scene->GetQueuedMessages();
+			num = (int) SimEngine::Get().GetScene()->GetQueuedMessages();
 		}
 		return (size_t) num;
 	}
