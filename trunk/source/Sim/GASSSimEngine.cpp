@@ -59,6 +59,7 @@ namespace GASS
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_RTC = RunTimeControllerPtr(new RunTimeController());
+		m_ScenePath.SetPath("%GASS_DATA_PATH%/sceneries/ogre/");
 	}
 
 	SimEngine::~SimEngine()
@@ -115,6 +116,10 @@ namespace GASS
 		//add top tag!
 		TiXmlDocument *xml_settings = xmlDoc;
 
+		TiXmlElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
+		if(xml_scene_path)
+			m_ScenePath.SetPath(Misc::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
+
 		//read SceneObjectTemplateManager settings
 		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
 		if(xml_sotm)
@@ -166,8 +171,6 @@ namespace GASS
 		}
 		delete xmlDoc;
 	}
-
-	
 
 	void SimEngine::Update()
 	{
@@ -223,12 +226,70 @@ namespace GASS
 #endif
 	}
 
-	SceneWeakPtr SimEngine::LoadScene(const FilePath &path)
+	SceneWeakPtr SimEngine::LoadScene(const std::string &name)
 	{
+		if(m_Scene)
+			m_Scene->Unload();
+		m_Scene.reset();
 		m_Scene = ScenePtr(new Scene());
 		m_Scene->Create();
+		FilePath path(m_ScenePath.GetFullPath() + "/"  + name);
 		m_Scene->Load(path);
 		return m_Scene;
+	}
+
+	void SimEngine::SaveScene(const std::string &name)
+	{
+		FilePath path(m_ScenePath.GetFullPath() + "/"  +  name);
+
+		boost::filesystem::path boost_path(path.GetFullPath()); 
+		if(!boost::filesystem::exists(boost_path))  
+		{
+			//try
+			boost::filesystem::create_directory(boost_path);
+		}
+		else if (!boost::filesystem::is_directory( boost_path) )
+		{
+			return;
+		}
+
+		if(m_Scene)
+			m_Scene->Save(path);
+	}
+
+	SceneWeakPtr SimEngine::NewScene()
+	{
+		if(m_Scene)
+			m_Scene->Unload();
+		m_Scene.reset();
+		m_Scene = ScenePtr(new Scene());
+		m_Scene->Create();
+		m_Scene->Load();
+		return m_Scene;
+	}
+
+	std::vector<std::string> SimEngine::GetSavedScenes() const
+	{
+		boost::filesystem::path boost_path(m_ScenePath.GetFullPath()); 
+
+		std::vector<std::string> scene_names;
+		if(boost::filesystem::exists(boost_path))  
+		{
+			boost::filesystem::directory_iterator end ;    
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			{
+				if (boost::filesystem::is_directory( *iter ) )      
+				{   
+					if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
+					{
+						std::string scene_name = iter->path().filename().generic_string();
+						scene_names.push_back(scene_name);
+						//m_Scenes.push_back(iter->path().string());
+					}
+				}
+			}
+		}
+		return scene_names;
 	}
 
 	void SimEngine::UnloadScene()

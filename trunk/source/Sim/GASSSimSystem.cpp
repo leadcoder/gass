@@ -52,10 +52,11 @@ namespace GASS
 
 	void SimSystem::Unregister(SystemListenerPtr listener)
 	{
-		std::vector<SystemListenerPtr>::iterator iter = m_Listeners.begin();
+		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
-			if(listener == *iter)
+			SystemListenerPtr c_list(*iter,boost::detail::sp_nothrow_tag());
+			if(listener == c_list)
 				iter = m_Listeners.erase(iter);
 			else
 				iter++;
@@ -64,7 +65,7 @@ namespace GASS
 
 	struct SystemListenerExecutor
 	{
-		SystemListenerExecutor(const std::vector<SystemListenerPtr>& sl_vector, double delta_time)
+		SystemListenerExecutor(const std::vector<SystemListenerWeakPtr>& sl_vector, double delta_time)
 			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
 		{}
 		SystemListenerExecutor(SystemListenerExecutor& e,tbb::split)
@@ -74,29 +75,33 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				m_SLVector[i]->SystemTick(m_DeltaTime);
+				SystemListenerPtr listener(m_SLVector[i],boost::detail::sp_nothrow_tag());
+				listener->SystemTick(m_DeltaTime);
 			}
 		}
-		const std::vector<SystemListenerPtr>& m_SLVector;
+		const std::vector<SystemListenerWeakPtr>& m_SLVector;
 		double m_DeltaTime;
 	};
 
 	void SimSystem::Update(double delta)
 	{
-		std::vector<SystemListenerPtr>::iterator iter = m_Listeners.begin();
+		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners
 		while(iter != m_Listeners.end())
 		{
-			if(!*iter)
+			SystemListenerPtr listener(*iter,boost::detail::sp_nothrow_tag());
+			
+			if(!listener)
 				iter = m_Listeners.erase(iter);
 			else
 			{
 				iter++;
 			}
 		}
-		if(m_Listeners.size() > 0)
+		if(m_Listeners.size() == 1)
 		{
-			(*m_Listeners.begin())->SystemTick(delta);
+			SystemListenerPtr listener(*m_Listeners.begin(),boost::detail::sp_nothrow_tag());
+			listener->SystemTick(delta);
 		}
 		else
 		{

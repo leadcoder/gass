@@ -58,6 +58,13 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+	
+		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
+		if(!(system)) //check if ode physics system present, if not initialize ode
+		{
+			dInitODE2(0);
+			dAllocateODEDataForThread(dAllocateMaskAll);
+		}
 	}
 
 	void ODECollisionSystem::RegisterReflection()
@@ -69,13 +76,7 @@ namespace GASS
 
 	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
-
-		if(!(system)) //check if ode physics system present, if not initialize ode
-		{
-			dInitODE2(0);
-			dAllocateODEDataForThread(dAllocateMaskAll);
-		}
+		
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();
 		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitialized,0));
@@ -125,6 +126,7 @@ namespace GASS
 	void ODECollisionSystem::OnSceneUnloaded(SceneUnloadNotifyMessagePtr message)
 	{
 		dSpaceDestroy(m_Space);
+		m_Space = 0;
 		m_RequestMap.clear();
 		m_ResultMap.clear();
 	}

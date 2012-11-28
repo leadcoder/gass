@@ -75,7 +75,7 @@ namespace GASS
 		SimSystemManagerPtr GetSimSystemManager() const;
 		
 	protected:
-		std::vector<SystemListenerPtr> m_Listeners;
+		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SystemManagerWeakPtr m_Owner;
 		std::string m_TaskNodeName;

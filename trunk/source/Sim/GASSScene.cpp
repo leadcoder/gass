@@ -67,7 +67,6 @@ namespace GASS
 		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
 	}
 
-
 	void Scene::Create()
 	{
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
@@ -151,6 +150,9 @@ namespace GASS
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/Scene.xml");
 		doc.SaveFile(filename.GetFullPath().c_str());
+		
+		if(SceneObjectPtr(m_TerrainObjects))
+			SceneObjectPtr(m_TerrainObjects)->SaveToFile(scene_path.GetFullPath() + "/instances.xml");
 		//Save scene specific object templates, filename should probably be a scene parameter
 		//SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
 	}
@@ -209,9 +211,6 @@ namespace GASS
 		}
 		//std::string scene_path = GetPath();
 		//save instances at same place
-		FilePath path (std::string(parent->GetDocument()->Value()));
-
-//		m_ObjectManager->SaveXML(path.GetPathNoFile() + "/instances.xml");
 	}
 
 	void Scene::Unload()

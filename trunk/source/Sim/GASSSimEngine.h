@@ -150,13 +150,17 @@ namespace GASS
 		/**
 			Load scene form file
 		*/
-		SceneWeakPtr LoadScene(const FilePath &path);
+		SceneWeakPtr LoadScene(const std::string &name);
 		SceneWeakPtr NewScene();
+		void SaveScene(const std::string &name);
 		void UnloadScene();
 
 		//SceneIterator GetScenes();
 		//ConstSceneIterator GetScenes() const;
 		ScenePtr GetScene() const {return m_Scene;}
+		FilePath GetScenePath() const {return m_ScenePath;}
+		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
+		std::vector<std::string> GetSavedScenes() const;
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
@@ -167,6 +171,7 @@ namespace GASS
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
 		ScenePtr m_Scene;
+		FilePath m_ScenePath;
 	};
 }
 

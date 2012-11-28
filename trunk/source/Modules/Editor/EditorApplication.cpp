@@ -20,15 +20,12 @@
 namespace GASS
 {
 	EditorApplication::EditorApplication() : m_Initilized(false), 
-		m_NewScene(false), 
-		m_LoadScene(false),
 		m_Mode("StandAlone"),
 		m_ServerName("GASS_SERVER"),
 		m_ClientName("GASS_CLIENT"),
 		m_ServerPort(2001),
 		m_ClientPort(2002)
 	{
-		m_Scene  = ScenePtr(new Scene());
 		new SimEngine();
 		LogManager* log_man = new LogManager();
 		log_man->createLog("GASS.log", true, true);
@@ -36,7 +33,6 @@ namespace GASS
 
 	EditorApplication::~EditorApplication(void)
 	{
-		m_Scene.reset();
 		delete SimEngine::GetPtr();
 	}
 
@@ -58,8 +54,6 @@ namespace GASS
 		}
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
-		
-		
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
@@ -148,13 +142,10 @@ namespace GASS
 		}
 		TiXmlElement *xSettings = 0;
 		xSettings = xmlDoc->FirstChildElement("EditorApplication");
-		TiXmlElement *xscenes = xSettings->FirstChildElement("SceneList");
 		TiXmlElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
 		TiXmlElement *gui_state = xSettings->FirstChildElement("GUIState");
-		TiXmlElement *xscene_path = xSettings->FirstChildElement("ScenePath");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
 		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
-		TiXmlElement *xnum_threads = xSettings->FirstChildElement("NumRTCThreads");
 		TiXmlElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
 
 		if(xupdate_freq)
@@ -162,13 +153,6 @@ namespace GASS
 			m_UpdateFreq = atoi(xupdate_freq->Attribute("value"));
 		}
 
-		if(xexternal_update )
-		{
-			m_ExternalUpdate  = atoi(xexternal_update->Attribute("value"));
-		}
-
-		if(xnum_threads)
-			m_NumRTCThreads = atoi(xnum_threads->Attribute("value"));
 		if(xnetwork)
 		{
 			if(xnetwork->Attribute("Mode"))
@@ -186,114 +170,27 @@ namespace GASS
 			if(xnetwork->Attribute("ClientPort"))
 				m_ClientPort = atoi(xnetwork->Attribute("ClientPort"));
 		}
-		if(start_scene && start_scene->Attribute("path"))
+		if(start_scene && start_scene->Attribute("value"))
 		{
-			GASS::FilePath path;
-			m_StartScene = start_scene->Attribute("path");
-			path.SetPath(m_StartScene);
-			m_StartScene = path.GetFullPath();
+			m_StartScene = start_scene->Attribute("value");
 		}
 
-	/*	if(xTerrainNormal && xTerrainNormal->Attribute("value"))
-		{
-			std::string value = xTerrainNormal->Attribute("value");
-			m_UseTerrainNormalOnDrop = false;
-			if(Misc::ToLower(value) == "true")
-			{
-				m_UseTerrainNormalOnDrop = true;
-			}
-		}
-
-		if(xRayPickDist && xRayPickDist->Attribute("value"))
-		{
-			int value = atoi(xRayPickDist->Attribute("value"));
-			m_RayPickDist = value;
-		}*/
-
-		if(xscenes)
-		{
-			TiXmlElement *xItem = xscenes->FirstChildElement("Scene");
-			while(xItem)
-			{
-				std::string name = xItem->Attribute("name");
-				std::string path = xItem->Attribute("path");
-
-				GASS::FilePath fp;
-				fp.SetPath(path);
-				path = fp.GetFullPath();
-				m_SceneNames.push_back(name);
-				m_ScenePaths.push_back(path);
-				xItem = xItem->NextSiblingElement("Scene");
-			}
-		}
-		if(xscene_path)
-		{
-			GASS::FilePath path;
-			m_ScenePath  = xscene_path->Attribute("value");
-			path.SetPath(m_ScenePath);
-			m_ScenePath = path.GetFullPath();
-
-			boost::filesystem::path boost_path(m_ScenePath); 
-			if( boost::filesystem::exists(boost_path))  
-			{
-				boost::filesystem::directory_iterator end ;    
-				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
-				{
-					if (boost::filesystem::is_directory( *iter ) )      
-					{   
-						if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
-						{
-
-							std::string scene_name =iter->path().filename().generic_string();
-							m_SceneNames.push_back(scene_name);
-							m_ScenePaths.push_back(iter->path().string());
-						}
-					}
-				}     
-			}
-		}
-
-/*		if(xtemplates)
-		{
-			TiXmlElement *xItem = xtemplates->FirstChildElement("Template");
-			while(xItem)
-			{
-				std::string path = xItem->Attribute("path");
-				GASS::FilePath fp;
-				fp.SetPath(path);
-				path = fp.GetFullPath();
-				m_Templates.push_back(path);
-				xItem = xItem->NextSiblingElement("Template");
-			}
-		}
-
-		if(xobj_id)
-		{
-			std::string value = xobj_id->Attribute("unique");
-			if(Misc::ToLower(value) == "true")
-				m_UseObjectID = true;
-			else
-				m_UseObjectID = false;
-
-			m_IDSuffix = xobj_id->Attribute("id_suffix");
-			m_IDPrefix = xobj_id->Attribute("id_prefix");
-		}*/
 
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
 		return true;
 	}
-
-
-	void  EditorApplication::LoadScene(const std::string &scene_path)
-	{
-		m_Scene = ScenePtr(SimEngine::Get().LoadScene(scene_path));
-	}
+	
 
 /*	void EditorApplication::NewScene()
 	{
 		m_Scene = ScenePtr(SimEngine::Get().NewScene());
+	}*/
+
+	/*void EditorApplication::SaveScene(const FilePath &path)
+	{
+		SimEngine::Get().SaveScene(path);
 	}*/
 
 }

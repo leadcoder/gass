@@ -192,13 +192,13 @@ namespace GASS
 		*/
 		size_t GetQueuedMessages() const;
 
-
+		void Load();
 		/**
 		Get all scenes from path. This function recursively search for scene.xml 
 		files and push that path to the return vector
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);
-	
+		void Unload();
 protected:
 		/**
 		Load scene  from xml,
@@ -218,8 +218,8 @@ protected:
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
 
-		void Load();
-		void Unload();
+		
+		
 		
 		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
