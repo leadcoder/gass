@@ -5,7 +5,7 @@
  GASSSceneSelectionWidget::GASSSceneSelectionWidget()
  {
  	 m_ComoBox = new QComboBox();
-	 std::vector<std::string> scene_paths = GASS::Scene::GetScenes(GASS::FilePath("%GASS_DATA_HOME%/sceneries/ogre"));
+	 std::vector<std::string> scene_paths = GASS::SimEngine::Get().GetSavedScenes();
 	 for(size_t i = 0; i < scene_paths.size(); i++)
 	 {
 		 m_ComoBox->addItem(scene_paths[i].c_str());
@@ -25,8 +25,7 @@
 
  std::string GASSSceneSelectionWidget::GetSelected()
  {
-	 GASS::FilePath path("%GASS_DATA_HOME%/sceneries/ogre/" + m_ComoBox->currentText().toStdString());
-	 return path.GetFullPath();
+	 return m_ComoBox->currentText().toStdString();
  }
 
 

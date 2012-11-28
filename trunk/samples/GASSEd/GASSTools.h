@@ -56,10 +56,18 @@ class StandardToolBar : public QToolBar
 public:
     StandardToolBar(const QString &title, QWidget *parent);
 protected:
+	QAction* m_OpenAct;
+	QAction* m_NewAct;
+	QAction* m_SaveAct;
+
 	QAction* m_SelectAct;
 	QAction* m_MoveAct;
 	QAction* m_RotateAct;
 private slots:
+	void OnNew();
+	void OnSave();
+	void OnOpen();
+
     void OnSelect();
 	void OnRotate();
 	void OnMove();

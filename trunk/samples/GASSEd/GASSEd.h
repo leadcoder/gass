@@ -39,13 +39,13 @@ public slots:
     void switchLayoutDirection();
     void createDockWidget();
     void destroyDockWidget(QAction *action);
-	
+	void OnNew();
+	void OnSave();
+	void OnOpen();
 private:
     void setupToolBar();
     void setupMenuBar();
     void setupDockWidgets(const QMap<QString, QSize> &customSizeHints);
-
-	
 };
 
 

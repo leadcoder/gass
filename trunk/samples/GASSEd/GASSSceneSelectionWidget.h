@@ -1,5 +1,5 @@
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef GASS_SCENE_SELECTION_WIDGET_H
+#define GASS_SCENE_SELECTION_WIDGET_H
 #include <QDialog>
 
 class QComboBox;

@@ -45,7 +45,7 @@ void GASSResourceTreeWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr 
 
 void GASSResourceTreeWidget::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
 {
-
+	clear();
 }
 
 void GASSResourceTreeWidget::selectionChanged()

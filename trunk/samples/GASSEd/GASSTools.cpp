@@ -57,6 +57,23 @@
 StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
     : QToolBar(parent)
 {
+
+	m_NewAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
+    m_NewAct->setStatusTip(tr("New"));
+    connect(m_NewAct, SIGNAL(triggered()), this, SLOT(OnNew()));
+	addAction(m_NewAct);
+
+	m_OpenAct = new QAction(QIcon(":/images/open.png"), tr("&Open"), this);
+    m_OpenAct->setStatusTip(tr("Open"));
+    connect(m_OpenAct, SIGNAL(triggered()), this, SLOT(OnOpen()));
+	addAction(m_OpenAct);
+
+	m_SaveAct = new QAction(QIcon(":/images/save.png"), tr("&Save"), this);
+    m_OpenAct->setStatusTip(tr("Save"));
+    connect(m_SaveAct, SIGNAL(triggered()), this, SLOT(OnSave()));
+	addAction(m_SaveAct);
+
+
 	m_SelectAct = new QAction(QIcon(":/images/select.png"), tr("&Select Tool"), this);
     //m_SelectAct->setShortcuts(QKeySequence::Open);
     m_SelectAct->setStatusTip(tr("Select"));
@@ -91,3 +108,18 @@ void StandardToolBar::OnRotate()
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->SelectTool(TID_ROTATE);
 }
 
+void StandardToolBar::OnNew()
+{
+
+}
+
+void StandardToolBar::OnSave()
+{
+
+}
+
+
+void StandardToolBar::OnOpen()
+{
+
+}

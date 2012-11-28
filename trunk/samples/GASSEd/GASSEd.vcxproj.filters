@@ -119,6 +119,15 @@
     <ClCompile Include="Release\moc_GASSResourceTreeWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GASSSSaveSceneWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_GASSSSaveSceneWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_GASSSSaveSceneWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="toolbar.h">
@@ -146,6 +155,9 @@
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="GASSResourceTreeWidget.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GASSSSaveSceneWidget.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>

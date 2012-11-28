@@ -6,7 +6,8 @@
 
 #include "Sim/GASS.h" 
 
-GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent)
+GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent),
+	m_Root(NULL)
 {
 	setHeaderHidden(true);
 	setMinimumSize(200,200);
@@ -29,16 +30,19 @@ void GASSSceneTreeWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr mes
 	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedMessage, 0));
 	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedNotifyMessage,0));
 
-	QTreeWidgetItem *root= new  QTreeWidgetItem();
-	root->setText(0,"Root");
-	m_ItemMap[scene->GetRootSceneObject().get()] = root;
-	m_ObjectMap[root]=scene->GetRootSceneObject();
-	addTopLevelItem(root);
+	m_Root= new  QTreeWidgetItem();
+	m_Root->setText(0,"Root");
+	m_ItemMap[scene->GetRootSceneObject().get()] = m_Root;
+	m_ObjectMap[m_Root]=scene->GetRootSceneObject();
+	addTopLevelItem(m_Root);
 }
 
 void GASSSceneTreeWidget::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
 {
-
+	clear();
+	m_ItemMap.clear();
+	m_ObjectMap.clear();
+	
 }
 
 void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessagePtr message)

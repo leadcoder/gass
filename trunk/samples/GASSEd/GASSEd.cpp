@@ -25,7 +25,8 @@
 #include "GASSSceneTreeWidget.h"
 #include "GASSResourceTreeWidget.h"
 #include "GASSPropertyWidget.h"
-#include "GASSSceneSelectionWidget.h" 
+#include "GASSSceneSelectionWidget.h"
+#include "GASSSSaveSceneWidget.h"
 
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
@@ -54,9 +55,6 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
     statusBar()->showMessage(tr("Status Bar"));
 	setDockNestingEnabled(true);
 
-
-	
-
 	QDockWidget* res_dock = new QDockWidget("Res");
 	res_dock->setWidget(new  GASSResourceTreeWidget());
 	res_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -84,15 +82,13 @@ void GASSEd::Initialize(void* render_win_handle)
 	GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
 	
-	
-	GASSSceneSelectionWidget dialog;
-    dialog.exec();
-	std::string selected_scene = dialog.GetSelected();
-	m_GASSApp->LoadScene(selected_scene);//gass_data_path.GetFullPath() + "/sceneries/ogre/camp_genesis");
+	//GASSSceneSelectionWidget dialog;
+    //dialog.exec();
+	//std::string selected_scene = dialog.GetSelected();
+	//m_GASSApp->LoadScene(selected_scene);//gass_data_path.GetFullPath() + "/sceneries/ogre/camp_genesis");
 	//m_GASSApp->LoadScene("C:/dev/GASSData/sceneries/ogre/camp_genesis");
-
-	GASS::ScenePtr scene = m_GASSApp->GetScene();
-
+	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
+	
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetRootSceneObject());
 	GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("CustomMeshObject",scene->GetRootSceneObject());
 	GASS::Vec3 pos = scene->GetStartPos();
@@ -122,7 +118,16 @@ void GASSEd::setupMenuBar()
 {
     QMenu *menu = menuBar()->addMenu(tr("&File"));
 
-    QAction *action = menu->addAction(tr("Save layout..."));
+	QAction *action = menu->addAction(tr("New"));
+    connect(action, SIGNAL(triggered()), this, SLOT(OnNew()));
+
+	action = menu->addAction(tr("Save..."));
+    connect(action, SIGNAL(triggered()), this, SLOT(OnSave()));
+
+	action = menu->addAction(tr("Load..."));
+    connect(action, SIGNAL(triggered()), this, SLOT(OnOpen()));
+
+    action = menu->addAction(tr("Save layout..."));
     connect(action, SIGNAL(triggered()), this, SLOT(saveLayout()));
 
     action = menu->addAction(tr("Load layout..."));
@@ -399,3 +404,26 @@ void GASSEd::destroyDockWidget(QAction *action)
     if (destroyDockWidgetMenu->isEmpty())
         destroyDockWidgetMenu->setEnabled(false);
 }
+
+void GASSEd::OnNew()
+{
+	GASS::SimEngine::Get().NewScene();
+	//m_GASSApp->NewScene();
+}
+
+void GASSEd::OnSave()
+{
+	GASSSSaveSceneWidget dialog;
+    dialog.exec();
+	std::string selected_scene_name = dialog.GetSelected();
+	GASS::SimEngine::Get().SaveScene(selected_scene_name);
+}
+
+void GASSEd::OnOpen()
+{
+	GASSSceneSelectionWidget dialog;
+    dialog.exec();
+	std::string selected_scene = dialog.GetSelected();
+	GASS::SimEngine::Get().LoadScene(selected_scene);
+}
+

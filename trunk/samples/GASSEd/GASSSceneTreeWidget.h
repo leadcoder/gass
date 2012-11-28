@@ -21,6 +21,7 @@ public:
 
 protected:
 	GASS::SceneWeakPtr m_Scene;
+	QTreeWidgetItem *m_Root;
 	std::map<GASS::SceneObject*,QTreeWidgetItem*> m_ItemMap;
 	std::map<QTreeWidgetItem*,GASS::SceneObjectWeakPtr> m_ObjectMap;
  public slots:
