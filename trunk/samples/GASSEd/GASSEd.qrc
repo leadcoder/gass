@@ -1,0 +1,13 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
+    <file>images/new.png</file>
+    <file>images/open.png</file>
+    <file>images/save.png</file>
+
+    <file>images/select.png</file>
+    <file>images/move.png</file>
+    <file>images/rotate.png</file>
+    <file>images/qt.png</file>
+  </qresource>
+</RCC>
