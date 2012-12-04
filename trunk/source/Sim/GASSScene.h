@@ -158,7 +158,7 @@ namespace GASS
 		SceneManagerIterator GetSceneManagers();
 
 		
-		FilePath GetSceneFolder() const {return m_ScenePath;}
+		FilePath GetSceneFolder() const;
 
 		void SyncMessages(double delta_time) const;
 
@@ -226,8 +226,6 @@ protected:
 
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
-
-		FilePath m_ScenePath;
 
 		SceneManagerVector m_SceneManagers;
 

@@ -113,16 +113,18 @@ namespace GASS
 
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
+		GetScene()->SendImmediate(unload_msg);
 	}
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
+		m_Scene = scene;
+
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitialized(this_obj));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(pre_load_msg);
+		GetScene()->SendImmediate(pre_load_msg);
 	
-		m_Scene = scene;
+		
 
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
 		//only initilize components, let each child be initilize manually
@@ -134,7 +136,7 @@ namespace GASS
 			++iter;
 		}
 		MessagePtr load_msg(new PostComponentsInitializedMessage(this_obj));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(load_msg);
+		GetScene()->SendImmediate(load_msg);
 
 		//SendImmediate(MessagePtr(new LoadComponentsMessage()));
 		//Pump initial messages
@@ -148,7 +150,7 @@ namespace GASS
 		}
 
 		MessagePtr post_load_msg(new PostSceneObjectInitialized(this_obj));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(post_load_msg);
+		GetScene()->SendImmediate(post_load_msg);
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()

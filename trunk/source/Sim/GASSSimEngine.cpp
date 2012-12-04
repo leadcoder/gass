@@ -59,7 +59,7 @@ namespace GASS
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
 		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
 		m_RTC = RunTimeControllerPtr(new RunTimeController());
-		m_ScenePath.SetPath("%GASS_DATA_PATH%/sceneries/ogre/");
+		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 	}
 
 	SimEngine::~SimEngine()

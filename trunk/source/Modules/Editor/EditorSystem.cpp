@@ -105,6 +105,8 @@ namespace GASS
 		}
 		m_Scene = scene;
 
+		SetObjectSite(scene->GetRootSceneObject());
+
 		//load selection object
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}

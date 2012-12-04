@@ -42,6 +42,8 @@ namespace GASS
 		//app settings
 		LoadSettings(config_path + "EditorApplication.xml");
 		SimEngine *se = SimEngine::GetPtr();
+
+		se->SetScenePath(FilePath(se->GetScenePath().GetFullPath() + render_system + "/" ));
 		
 		const std::string gass_config_file = config_path + "GASS" + render_system + ".xml";
 		se->Init(gass_config_file);
