@@ -26,12 +26,8 @@ GASSSceneTreeWidget::~GASSSceneTreeWidget()
 void GASSSceneTreeWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
-	if(!GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag()))
-	{
-		scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedMessage, 0));
-		scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedNotifyMessage,0));
-	}
-	
+	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedMessage, 0));
+	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedNotifyMessage,0));
 	
 	m_Scene = scene;
 

@@ -89,12 +89,12 @@ void GASSEd::Initialize(void* render_win_handle)
 	//m_GASSApp->LoadScene("C:/dev/GASSData/sceneries/ogre/camp_genesis");
 	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
 	
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetRootSceneObject());
+	/*GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetRootSceneObject());
 	GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("CustomMeshObject",scene->GetRootSceneObject());
 	GASS::Vec3 pos = scene->GetStartPos();
 	GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 	if(object)
-		object->SendImmediate(pos_msg);
+		object->SendImmediate(pos_msg);*/
 }
 
 void GASSEd::actionTriggered(QAction *action)

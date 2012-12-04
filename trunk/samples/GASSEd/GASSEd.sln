@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSSim", "..\..\build\GASS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginBase", "..\..\build\GASSPluginBase.vcxproj", "{222AD2D2-5F6E-7040-AF31-D5A156A18575}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginODE", "..\..\build\GASSPluginODE.vcxproj", "{0D8995BF-93CC-A34A-884E-72A48048B7CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -59,6 +61,12 @@ Global
 		{222AD2D2-5F6E-7040-AF31-D5A156A18575}.Release|Win32.Build.0 = Release|Win32
 		{222AD2D2-5F6E-7040-AF31-D5A156A18575}.Release|x64.ActiveCfg = Release|x64
 		{222AD2D2-5F6E-7040-AF31-D5A156A18575}.Release|x64.Build.0 = Release|x64
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Debug|Win32.Build.0 = Debug|Win32
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Debug|x64.ActiveCfg = Debug|Win32
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Release|Win32.ActiveCfg = Release|Win32
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Release|Win32.Build.0 = Release|Win32
+		{0D8995BF-93CC-A34A-884E-72A48048B7CC}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
