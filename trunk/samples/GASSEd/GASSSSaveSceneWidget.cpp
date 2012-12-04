@@ -6,7 +6,7 @@
  {
 	 std::string scene_name;
 	 if(GASS::SimEngine::Get().GetScene())
-		 scene_name = GASS::Misc::GetFilename(GASS::SimEngine::Get().GetScene()->GetPath().GetFullPath());
+		 scene_name = GASS::SimEngine::Get().GetScene()->GetName();
 	 int pre_select = -1;
  	 m_ComoBox = new QComboBox();
 	 m_ComoBox->setEditable(true);
