@@ -166,7 +166,7 @@ namespace GASS
 			//try to load 
 
 			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetPath().GetFullPath();
+			std::string scene_path = scene->GetSceneFolder().GetFullPath();
 
 
 			std::string denmapname;
@@ -235,7 +235,7 @@ namespace GASS
 		BaseSceneComponent::SaveXML(obj_elem);
 
 		ScenePtr  scene = GetSceneObject()->GetScene();
-		std::string scene_path = scene->GetPath().GetFullPath();
+		std::string scene_path = scene->GetSceneFolder().GetFullPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
 		{
@@ -655,7 +655,7 @@ namespace GASS
 			
 
 			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetPath().GetFullPath();
+			std::string scene_path = scene->GetSceneFolder().GetFullPath();
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
 			const std::string fp_denmap = scene_path + "/" + denmapname;
 			//m_DensityImage.save(fp_denmap);

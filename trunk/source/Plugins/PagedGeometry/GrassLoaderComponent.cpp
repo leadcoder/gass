@@ -130,7 +130,7 @@ namespace GASS
 			//try to load 
 
 			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetPath().GetFullPath();
+			std::string scene_path = scene->GetSceneFolder().GetFullPath();
 
 			const std::string denmapname = "density_map_" + GetName() + ".tga";
 			const std::string fp_denmap = scene_path + "/" + denmapname;
@@ -282,7 +282,7 @@ namespace GASS
 	void GrassLoaderComponent::SaveDensityMap()
 	{
 		ScenePtr scene = GetSceneObject()->GetScene();
-		std::string scene_path = scene->GetPath().GetFullPath();
+		std::string scene_path = scene->GetSceneFolder().GetFullPath();
 		std::string denmapname;
 		if(m_DensityMapFilename != "")
 		{
