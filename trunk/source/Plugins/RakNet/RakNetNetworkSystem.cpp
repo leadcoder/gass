@@ -501,9 +501,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		m_ServerData->MapName =	message->GetScene()->GetPath().GetFullPath();
-		//only keep scene foldern name, scene path is added in client
-		m_ServerData->MapName = Misc::GetFilename(m_ServerData->MapName);
+		m_ServerData->MapName =	message->GetScene()->GetName();
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
 
 		m_SceneIsRunning = true;
@@ -611,7 +609,7 @@ namespace GASS
 				ScenePtr scene = GetScene();
 				if(scene)
 				{
-					scene->PostMessage(message);
+					SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 				}
 			}
 			else if (p->data[0]==ID_WEATHER)
@@ -627,7 +625,7 @@ namespace GASS
 				ScenePtr scene = GetScene();
 				if(scene)
 				{
-					scene->PostMessage(message);
+					SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 				}
 			}
 			else if(p->data[0]==ID_RPC_REMOTE_ERROR)
