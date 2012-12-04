@@ -21,6 +21,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -112,15 +113,14 @@ namespace GASS
 
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
-		if(GetScene())
-			GetScene()->SendImmediate(unload_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 	}
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitialized(this_obj));
-		scene->SendImmediate(pre_load_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(pre_load_msg);
 	
 		m_Scene = scene;
 
@@ -134,7 +134,7 @@ namespace GASS
 			++iter;
 		}
 		MessagePtr load_msg(new PostComponentsInitializedMessage(this_obj));
-		scene->SendImmediate(load_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(load_msg);
 
 		//SendImmediate(MessagePtr(new LoadComponentsMessage()));
 		//Pump initial messages
@@ -148,7 +148,7 @@ namespace GASS
 		}
 
 		MessagePtr post_load_msg(new PostSceneObjectInitialized(this_obj));
-		scene->SendImmediate(post_load_msg);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(post_load_msg);
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()

@@ -131,7 +131,7 @@ namespace GASS
 		/**
 		Load a new scene from path
 		*/
-		void Load(const FilePath &scene_path);
+		void Load(const std::string &name);
 
 		/**
 		Save scene to path
@@ -158,7 +158,7 @@ namespace GASS
 		SceneManagerIterator GetSceneManagers();
 
 		
-		FilePath GetPath() const {return m_ScenePath;}
+		FilePath GetSceneFolder() const {return m_ScenePath;}
 
 		void SyncMessages(double delta_time) const;
 
@@ -233,7 +233,6 @@ protected:
 
 		std::string m_Name;
 
-		//SceneObjectManagerPtr m_ObjectManager;
 		MessageManagerPtr m_SceneMessageManager;
 
 		//Scene root node
@@ -242,11 +241,6 @@ protected:
 
 		bool m_SceneLoaded;
 		bool m_CreateCalled;
-
-		//move this to GIS system?
-		//double m_OffsetEast;
-		//double m_OffsetNorth;
-		//std::string m_Projection;
 	};
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::weak_ptr<Scene> SceneWeakPtr;

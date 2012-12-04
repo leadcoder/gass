@@ -97,7 +97,9 @@ namespace GASS
 		//Initialize systems
 		m_SystemManager->Init();
 
-//		
+		//Create scene object		
+		m_Scene = ScenePtr(new Scene());
+		m_Scene->Create();
 
 		//intilize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
@@ -228,13 +230,17 @@ namespace GASS
 
 	SceneWeakPtr SimEngine::LoadScene(const std::string &name)
 	{
-		if(m_Scene)
+		/*if(m_Scene)
 			m_Scene->Unload();
 		m_Scene.reset();
 		m_Scene = ScenePtr(new Scene());
 		m_Scene->Create();
 		FilePath path(m_ScenePath.GetFullPath() + "/"  + name);
-		m_Scene->Load(path);
+		m_Scene->Load(path);*/
+
+		m_Scene->Unload();
+		//FilePath path(m_ScenePath.GetFullPath() + "/"  + name);
+		m_Scene->Load(name);
 		return m_Scene;
 	}
 
@@ -252,19 +258,13 @@ namespace GASS
 		{
 			return;
 		}
-
-		if(m_Scene)
-			m_Scene->Save(path);
+		m_Scene->Save(path);
 	}
 
 	SceneWeakPtr SimEngine::NewScene()
 	{
-		if(m_Scene)
-			m_Scene->Unload();
-		m_Scene.reset();
-		m_Scene = ScenePtr(new Scene());
-		m_Scene->Create();
-		m_Scene->Load();
+		m_Scene->Unload();
+		m_Scene->Load("");
 		return m_Scene;
 	}
 

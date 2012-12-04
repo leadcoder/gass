@@ -50,10 +50,10 @@ namespace GASS
 		m_StartRot(Vec3(0,0,0)),
 		m_SceneMessageManager(new MessageManager()),
 		m_SceneLoaded(false),
-		m_CreateCalled(false),
-		m_Root( new SceneObject())
+		m_CreateCalled(false)
+		
 	{
-		m_Root->SetName("Root");
+		
 	}
 
 	Scene::~Scene()
@@ -71,24 +71,12 @@ namespace GASS
 	{
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
-
-		m_Root->Initialize(shared_from_this());
-
-		//Add all registered scene manangers to the scene
-		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
-		for(size_t i = 0; i < managers.size();i++)
-		{
-			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-			sm->SetScene(shared_from_this());
-			sm->SetName(managers[i]);
-			sm->OnCreate();
-			m_SceneManagers.push_back(sm);
-		}
 		m_CreateCalled = true;
 	}
 
-	void Scene::Load(const FilePath &scene_path)
+	void Scene::Load(const std::string &name)
 	{
+		m_Name = name;
 		if(!m_CreateCalled)
 		{
 			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
@@ -101,34 +89,71 @@ namespace GASS
 			Unload();
 		}
 
-		m_ScenePath = scene_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
-
-		rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
-		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
-
-		//Load scene specific templates, filename should probably be a scene parameter
-		SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
-
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
-		if(!xmlDoc->LoadFile())
+		//Add all registered scene manangers to the scene
+		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
+		for(size_t i = 0; i < managers.size();i++)
 		{
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
+			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
+			sm->SetScene(shared_from_this());
+			sm->SetName(managers[i]);
+			sm->OnCreate();
+			m_SceneManagers.push_back(sm);
 		}
 
-		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
-		if(scene == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
+		m_Root = SceneObjectPtr(new SceneObject());
+		m_Root->SetName("Root");
+		m_Root->Initialize(shared_from_this());
 
-		LoadXML(scene);
+		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		scenery->SetName("Scenery");
+		scenery->SetID("SCENERY_ROOT");
+		m_TerrainObjects = scenery;
+		if(name != "")
+		{
+			FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
 
-		xmlDoc->Clear();
-		//Delete our allocated document
-		delete xmlDoc;
-		rs->LoadResourceGroup("GASSScene");
-		Load();
+			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+			if(rs == NULL)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
+
+			rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
+			const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
+
+			//Load scene specific templates, filename should probably be a scene parameter
+			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
+
+			TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
+			if(!xmlDoc->LoadFile())
+			{
+				GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
+			}
+
+			TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
+			if(scene == NULL)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
+
+
+			LoadXML(scene);
+			xmlDoc->Clear();
+			//Delete our allocated document
+			delete xmlDoc;
+			rs->LoadResourceGroup("GASSScene");
+		}
+	
+		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
+		MessagePtr scene_msg(new LoadSceneManagersMessage(shared_from_this()));
+		//send load message
+		SendImmediate(scene_msg);
+
+		//load scene terrain instances
+		if(name != "")
+			scenery->LoadFromFile(m_ScenePath.GetFullPath() + "/instances.xml");
+		
+		m_Root->AddChildSceneObject(scenery,true);
+		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
+		m_SceneLoaded = true;
 	}
 
 	void Scene::Save(const FilePath &scene_path)
@@ -219,9 +244,9 @@ namespace GASS
 		{
 			m_Root->OnDelete();
 			m_Root.reset();
-			m_Root = SceneObjectPtr( new SceneObject());
-			m_Root->SetName("Root");
-			m_Root->Initialize(shared_from_this());
+			//m_Root = SceneObjectPtr( new SceneObject());
+			//m_Root->SetName("Root");
+			//m_Root->Initialize(shared_from_this());
 			//m_ObjectManager->Clear();
 			
 			MessagePtr scene_msg(new UnloadSceneManagersMessage(shared_from_this()));
@@ -234,30 +259,13 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
 			rs->RemoveResourceGroup("GASSScene");
 			m_SceneLoaded = false;
+			m_SceneManagers.clear();
 		}
 	}
 
 	void Scene::Load()
 	{
-		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
-		MessagePtr scene_msg(new LoadSceneManagersMessage(shared_from_this()));
-		//send load message
-		SendImmediate(scene_msg);
-
-		//load scene terrain instances
-		SceneObjectPtr terrain_objects(new SceneObject());
-		m_TerrainObjects  = terrain_objects;
-
-		terrain_objects->SetName("Scenery");
-		terrain_objects->SetID("SCENERY_ROOT");
-		if(m_ScenePath.GetFullPath() != "")
-			terrain_objects->LoadFromFile(m_ScenePath.GetFullPath() + "/instances.xml");
 		
-		m_Root->AddChildSceneObject(terrain_objects,true);
-		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
-		m_SceneLoaded = true;
 	}
 
 	SceneManagerPtr Scene::LoadSceneManager(TiXmlElement *sm_elem)
@@ -277,7 +285,6 @@ namespace GASS
 		}
 		return sm;
 	}
-
 
 	SceneManagerPtr Scene::GetSceneManagerByName(const std::string &name) const
 	{
@@ -338,36 +345,6 @@ namespace GASS
 		return SceneManagerIterator(m_SceneManagers.begin(),m_SceneManagers.end());
 	}
 
-	/*double Scene::GetOrigoOffsetEast() const
-	{
-		return m_OffsetEast;
-	}
-
-	double Scene::GetOrigoOffsetNorth() const
-	{
-		return m_OffsetNorth;
-	}
-
-	void Scene::SetOrigoOffsetEast(double value)
-	{
-		m_OffsetEast = value;
-	}
-
-	void Scene::SetOrigoOffsetNorth(double value) 
-	{
-		m_OffsetNorth = value;
-	}
-
-	void Scene::SetProjection(const std::string &proj)
-	{
-		m_Projection = proj;
-	}
-
-	std::string Scene::GetProjection() const
-	{
-		return m_Projection;
-	}*/
-
 	int Scene::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority )
 	{
 		return m_SceneMessageManager->RegisterForMessage(type, callback, priority);
@@ -388,14 +365,13 @@ namespace GASS
 		m_SceneMessageManager->SendImmediate(message);
 	}
 
-
 	size_t Scene::GetQueuedMessages() const
 	{
 		size_t num = m_SceneMessageManager->GetQueuedMessages();
 		num += m_Root->GetQueuedMessages();
 		return num;
 	}
-
+	
 	std::vector<std::string> Scene::GetScenes(const FilePath &path)
 	{
 		boost::filesystem::path boost_path(path.GetFullPath()); 
