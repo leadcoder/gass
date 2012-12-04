@@ -50,15 +50,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="toolbar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug\moc_toolbar.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Release\moc_toolbar.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\moc_GASSEd.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -130,9 +121,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="toolbar.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="GASSEd.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>

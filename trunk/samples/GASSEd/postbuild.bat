@@ -60,9 +60,15 @@ copy "%GASS_HOME%\Dependencies\OpenAL1.1\libs\Win32\OpenAL32.dll" bin\\Release
 copy "%GASS_HOME%\Dependencies\OpenAL1.1\libs\Win32\wrap_oal.dll" bin\\Release
 
 
-copy "%QTDIR%\Dependencies\OpenAL1.1\libs\Win32\OpenAL32.dll" bin\\Release
+copy "%QT_HOME%\bin\QtCore4.dll" bin\\Release
+copy "%QT_HOME%\bin\QtGui4.dll" bin\\Release
+
+copy "%QT_HOME%\bin\QtCored4.dll" bin\\Debug
+copy "%QT_HOME%\bin\QtGuid4.dll" bin\\Debug
 
 
+copy  qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\\Release
+copy  qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5d.dll bin\\Debug
 
 pause
 
