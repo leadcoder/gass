@@ -30,9 +30,6 @@ void GASSSceneTreeWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr mes
 	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedNotifyMessage,0));
 	
 	m_Scene = scene;
-
-	
-	
 	m_Root= new  QTreeWidgetItem();
 	m_Root->setText(0,"Root");
 	m_ItemMap[scene->GetRootSceneObject().get()] = m_Root;
@@ -45,7 +42,6 @@ void GASSSceneTreeWidget::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr messag
 	clear();
 	m_ItemMap.clear();
 	m_ObjectMap.clear();
-	
 }
 
 void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessagePtr message)
@@ -57,18 +53,21 @@ void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessa
 		GASS::EditorComponentPtr editor_comp = obj->GetFirstComponentByClass<GASS::EditorComponent>();
 		if(editor_comp)
 		{
-			QTreeWidgetItem *parent_item = GetTreeItem(parent);
-			if(parent_item)
-			{
-				QTreeWidgetItem *item= new  QTreeWidgetItem();
-				QString name = obj->GetName().c_str();
-				item->setText(0,name);
-				//QVariant data(obj);
-				//item->setData ( 0, 0, data);
-				m_ItemMap[obj.get()] = item;
-				m_ObjectMap[item]=obj;
-				parent_item->addChild(item);
-			}
+			if(!editor_comp->GetShowInTree()) 
+				return;
+		}
+
+		QTreeWidgetItem *parent_item = GetTreeItem(parent);
+		if(parent_item)
+		{
+			QTreeWidgetItem *item= new  QTreeWidgetItem();
+			QString name = obj->GetName().c_str();
+			item->setText(0,name);
+			//QVariant data(obj);
+			//item->setData ( 0, 0, data);
+			m_ItemMap[obj.get()] = item;
+			m_ObjectMap[item]=obj;
+			parent_item->addChild(item);
 		}
 	}
 }

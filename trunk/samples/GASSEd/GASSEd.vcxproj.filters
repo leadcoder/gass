@@ -68,9 +68,6 @@
     <ClCompile Include="Release\moc_GASSSceneTreeWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GASSPropertyWidget .cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Release\moc_GASSEd.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
@@ -118,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="Release\moc_GASSSSaveSceneWidget.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_GASSPropertyWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_GASSPropertyWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GASSPropertyWidget.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

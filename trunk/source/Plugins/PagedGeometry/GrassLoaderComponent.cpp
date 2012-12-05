@@ -151,7 +151,7 @@ namespace GASS
 				m_DensityImage.save(fp_denmap);
 			}
 			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSSceneResGroup").first;
 		}
 		GetSceneObject()->PostMessage(MessagePtr(new GrassLoaderComponentLoaded()));
 	}
@@ -209,7 +209,7 @@ namespace GASS
 		SaveDensityMap();
 		//reload
 		const std::string denmapname = "density_map_" + GetName() + ".tga";
-		//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
+		//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSSceneResGroup").first;
 		m_DensityTexture->loadImage(m_DensityImage);
 		//reload all terrain grass
 		IComponentContainer::ComponentVector components;

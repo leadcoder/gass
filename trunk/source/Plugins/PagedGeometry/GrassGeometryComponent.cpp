@@ -194,7 +194,7 @@ namespace GASS
 				m_DensityImage.save(fp_denmap);
 			}
 			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSScene").first;
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSSceneResGroup").first;
 			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_GrassLayer->setDensityMap(m_DensityTexture);
 		}

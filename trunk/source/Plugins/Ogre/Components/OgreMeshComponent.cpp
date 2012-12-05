@@ -71,7 +71,6 @@ namespace GASS
 	void OgreMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
@@ -86,7 +85,6 @@ namespace GASS
 		m_ReadyToLoadMesh = true;
 		SetFilename(m_Filename);
 	}
-
 
 	void OgreMeshComponent::OnDelete()
 	{
@@ -561,7 +559,6 @@ namespace GASS
 			}
 		}
 	}
-
 
 	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
 	{

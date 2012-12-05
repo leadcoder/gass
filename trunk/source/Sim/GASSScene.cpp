@@ -116,7 +116,7 @@ namespace GASS
 			if(rs == NULL)
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 
-			rs->AddResourceLocation(scene_path,"GASSScene","FileSystem",true);
+			rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
 			const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 			//Load scene specific templates, filename should probably be a scene parameter
@@ -136,7 +136,7 @@ namespace GASS
 			xmlDoc->Clear();
 			//Delete our allocated document
 			delete xmlDoc;
-			rs->LoadResourceGroup("GASSScene");
+			rs->LoadResourceGroup("GASSSceneResGroup");
 		}
 	
 		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
@@ -266,7 +266,7 @@ namespace GASS
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(rs == NULL)
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
-			rs->RemoveResourceGroup("GASSScene");
+			rs->RemoveResourceGroup("GASSSceneResGroup");
 			m_SceneLoaded = false;
 			m_SceneManagers.clear();
 

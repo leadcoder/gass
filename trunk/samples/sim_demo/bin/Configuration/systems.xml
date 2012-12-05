@@ -2,21 +2,22 @@
 <Systems>
  <OISInputSystem>
     <Name value = "InputSystem"/>
-	<UpdateBucket value="9998"/> <!-- PRE BUCKET UPDATE-->
+	<!--<UpdateBucket value="9998"/> --><!-- PRE BUCKET UPDATE-->
+	<UpdateBucket value="0"/> 
   </OISInputSystem>
   <CoreSystem>
-	<UpdateBucket value="9998"/>
+	<UpdateBucket value="0"/>
   </CoreSystem>
   <GameSystem>
-	<UpdateBucket value="1"/>
+	<UpdateBucket value="0"/>
   </GameSystem>
   <RakNetNetworkSystem>
     <Name value = "NetworkSystem"/>
-	<UpdateBucket value="1"/>
+	<UpdateBucket value="0"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
     <Name value = "SoundSystem"/>
-	<UpdateBucket value="1"/>
+	<UpdateBucket value="0"/>
   </OpenALSoundSystem>
   <CEGUISystem>
     <Name value = "GUISystem"/>
@@ -28,11 +29,11 @@
   </LuaScriptSystem>
  <ODEPhysicsSystem>
     <Name value = "PhysicsSystem"/>
-	<UpdateBucket value="2"/>
+	<UpdateBucket value="0"/>
   </ODEPhysicsSystem>
   <ODECollisionSystem>
     <Name value = "CollisionSystem"/>
-	<UpdateBucket value="-1"/>
+	<UpdateBucket value="1"/>
   </ODECollisionSystem>
   <OgreGraphicsSystem>
     <Name value = "GraphicsSystem"/>
@@ -44,7 +45,8 @@
     <Plugin value="Plugin_ParticleFX"/>
     <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
-	<UpdateBucket value="9999"/>
+	<!--<UpdateBucket value="9999"/>-->
+	<UpdateBucket value="2"/> 
   </OgreGraphicsSystem>
   <OgreResourceSystem>
     <Name value = "ResourceSystem"/>

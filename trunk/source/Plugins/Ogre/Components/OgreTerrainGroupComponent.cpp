@@ -242,7 +242,7 @@ namespace GASS
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
 		SetOrigin(m_Origin);
 		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
-		m_TerrainGroup->setResourceGroup("GASSScene");
+		m_TerrainGroup->setResourceGroup("GASSSceneResGroup");
 
 		if(m_CustomMaterial != "")
 		{

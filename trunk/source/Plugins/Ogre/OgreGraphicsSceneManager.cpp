@@ -129,6 +129,7 @@ namespace GASS
 			m_SceneMgr->clearScene();
 			Root::getSingleton().destroySceneManager(m_SceneMgr);
 			m_SceneMgr = NULL;
+			OgreGraphicsSystemPtr(m_GFXSystem)->Update(0);
 		}
 	}
 
