@@ -49,6 +49,8 @@ namespace GASS
 		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceLocationRecursive(const ResourceLocation &rl);
+		void AddResourceGroup(const std::string &resource_group){};
+		
 		//void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;
 		std::vector<ResourceLocation> m_ResourceLocations;

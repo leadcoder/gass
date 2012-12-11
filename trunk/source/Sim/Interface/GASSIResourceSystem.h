@@ -71,6 +71,11 @@ namespace GASS
 		virtual void RemoveResourceGroup(const std::string &resource_group) = 0;
 		
 		/**
+			Add resource group
+			@resource_group The resources group
+		*/
+		virtual void AddResourceGroup(const std::string &resource_group) = 0;
+		/**
 			Force load of resource group
 			@resource_group The resources group
 		*/

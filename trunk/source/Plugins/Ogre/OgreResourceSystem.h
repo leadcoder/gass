@@ -61,6 +61,7 @@ namespace GASS
 		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
+		void AddResourceGroup(const std::string &resource_group);
 		void LoadResourceGroup(const std::string &resource_group);
 
 	protected:

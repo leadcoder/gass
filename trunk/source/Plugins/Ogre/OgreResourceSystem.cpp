@@ -132,6 +132,13 @@ namespace GASS
 		
 	}
 
+	void OgreResourceSystem::AddResourceGroup(const std::string &resource_group)
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		rsm->createResourceGroup(resource_group);
+	}		
+
+
 
 	void OgreResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{

@@ -108,14 +108,17 @@ namespace GASS
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENERY_ROOT");
 		m_TerrainObjects = scenery;
+
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(rs == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
+
+		
 		if(name != "")
 		{
 			FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
 
-			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
-			if(rs == NULL)
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
-
+			
 			rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
 			const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
@@ -138,6 +141,8 @@ namespace GASS
 			delete xmlDoc;
 			rs->LoadResourceGroup("GASSSceneResGroup");
 		}
+		else
+			rs->AddResourceGroup("GASSSceneResGroup");
 	
 		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
