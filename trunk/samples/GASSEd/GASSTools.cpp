@@ -75,22 +75,24 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
 
 
 	m_SelectAct = new QAction(QIcon(":/images/select.png"), tr("&Select Tool"), this);
-    //m_SelectAct->setShortcuts(QKeySequence::Open);
     m_SelectAct->setStatusTip(tr("Select"));
     connect(m_SelectAct, SIGNAL(triggered()), this, SLOT(OnSelect()));
 	addAction(m_SelectAct);
 
 	m_MoveAct = new QAction(QIcon(":/images/move.png"), tr("&Move Tool"), this);
-    //m_SelectAct->setShortcuts(QKeySequence::Open);
     m_MoveAct->setStatusTip(tr("Move Tool"));
     connect(m_MoveAct, SIGNAL(triggered()), this, SLOT(OnMove()));
 	addAction(m_MoveAct);
 
 	m_RotateAct = new QAction(QIcon(":/images/rotate.png"), tr("&Rotate Tool"), this);
-    //m_SelectAct->setShortcuts(QKeySequence::Open);
     m_RotateAct->setStatusTip(tr("Rotate Tool"));
     connect(m_RotateAct, SIGNAL(triggered()), this, SLOT(OnRotate()));
 	addAction(m_RotateAct);
+
+	m_TerrainDeformAct = new QAction(QIcon(":/images/rotate.png"), tr("&Terrain Deform Tool"), this);
+    m_TerrainDeformAct->setStatusTip(tr("Rotate Tool"));
+    connect(m_TerrainDeformAct, SIGNAL(triggered()), this, SLOT(OnTerrainDeform()));
+	addAction(m_TerrainDeformAct);
 }
 
 void StandardToolBar::OnSelect()
@@ -107,6 +109,12 @@ void StandardToolBar::OnRotate()
 {
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->SelectTool(TID_ROTATE);
 }
+
+void StandardToolBar::OnTerrainDeform()
+{
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->SelectTool(TID_TERRAIN_DEFORM);
+}
+
 
 void StandardToolBar::OnNew()
 {

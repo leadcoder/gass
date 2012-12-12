@@ -63,6 +63,8 @@ protected:
 	QAction* m_SelectAct;
 	QAction* m_MoveAct;
 	QAction* m_RotateAct;
+
+	QAction* m_TerrainDeformAct;
 private slots:
 	void OnNew();
 	void OnSave();
@@ -71,6 +73,7 @@ private slots:
     void OnSelect();
 	void OnRotate();
 	void OnMove();
+	void OnTerrainDeform();
 };
 
 #endif
