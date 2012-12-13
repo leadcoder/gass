@@ -84,6 +84,13 @@ namespace GASS
 		AddTool(tool);
 		tool = new EditPositionTool(this);
 		AddTool(tool);
+
+		tool = new TerrainDeformTool(this);
+		AddTool(tool);
+
+		tool = new PaintTool(this);
+		AddTool(tool);
+
 		SelectTool(TID_SELECT);
 		SetActive(true);
 

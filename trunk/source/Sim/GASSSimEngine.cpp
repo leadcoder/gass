@@ -230,35 +230,14 @@ namespace GASS
 
 	SceneWeakPtr SimEngine::LoadScene(const std::string &name)
 	{
-		/*if(m_Scene)
-			m_Scene->Unload();
-		m_Scene.reset();
-		m_Scene = ScenePtr(new Scene());
-		m_Scene->Create();
-		FilePath path(m_ScenePath.GetFullPath() + "/"  + name);
-		m_Scene->Load(path);*/
-
 		m_Scene->Unload();
-		//FilePath path(m_ScenePath.GetFullPath() + "/"  + name);
 		m_Scene->Load(name);
 		return m_Scene;
 	}
 
 	void SimEngine::SaveScene(const std::string &name)
 	{
-		FilePath path(m_ScenePath.GetFullPath() + "/"  +  name);
-
-		boost::filesystem::path boost_path(path.GetFullPath()); 
-		if(!boost::filesystem::exists(boost_path))  
-		{
-			//try
-			boost::filesystem::create_directory(boost_path);
-		}
-		else if (!boost::filesystem::is_directory( boost_path) )
-		{
-			return;
-		}
-		m_Scene->Save(path);
+		m_Scene->Save(name);
 	}
 
 	SceneWeakPtr SimEngine::NewScene()

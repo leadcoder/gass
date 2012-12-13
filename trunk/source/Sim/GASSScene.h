@@ -85,8 +85,6 @@ namespace GASS
 		*/
 		void Create();
 
-
-
 		/**
 		Get the start position for this scene,
 		can be used to give cameras or players a initial position
@@ -136,7 +134,7 @@ namespace GASS
 		/**
 		Save scene to path
 		*/
-		void Save(const FilePath &name);
+		void Save(const std::string &name);
 
 			/**
 		Get scene scene name
@@ -181,7 +179,8 @@ namespace GASS
 
 		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
-
+		SceneObjectPtr GetSceneryRoot() const {return SceneObjectPtr(m_TerrainObjects);}
+		
 		/**
 			Check if scene has been loaded
 		*/

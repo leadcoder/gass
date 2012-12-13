@@ -166,30 +166,46 @@ namespace GASS
 		return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_Name);
 	}
 
-	void Scene::Save(const FilePath &scene_path)
+	void Scene::Save(const std::string &name)
 	{
-		
+		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
+		boost::filesystem::path boost_path(scene_path.GetFullPath()); 
+		if(!boost::filesystem::exists(boost_path))  
+		{
+			//try
+			boost::filesystem::create_directory(boost_path);
+		}
+		else if (!boost::filesystem::is_directory( boost_path) )
+		{
+			return;
+		}
+
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(rs == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Save");
+		rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
+
 		TiXmlDocument doc;  
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
 		doc.LinkEndChild( decl ); 
 
 		TiXmlElement * scene_elem = new TiXmlElement("Scene");  
 		doc.LinkEndChild( scene_elem); 
-
-		BaseReflectionObject::SaveProperties(scene_elem);
-
-		TiXmlElement * sms_elem = new TiXmlElement("SceneManagerSettings");  
-		scene_elem->LinkEndChild(sms_elem);
-
-		SaveXML(sms_elem);
+		SaveXML(scene_elem);
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/Scene.xml");
 		doc.SaveFile(filename.GetFullPath().c_str());
 		
 		if(SceneObjectPtr(m_TerrainObjects))
 			SceneObjectPtr(m_TerrainObjects)->SaveToFile(scene_path.GetFullPath() + "/instances.xml");
-		//Save scene specific object templates, filename should probably be a scene parameter
-		//SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path + "/templates.xml");
+		
+		TiXmlDocument template_doc;  
+		TiXmlDeclaration* template_decl = new TiXmlDeclaration( "1.0", "", "" );  
+		template_doc.LinkEndChild( template_decl); 
+		TiXmlElement * template_elem = new TiXmlElement("Templates");  
+		template_doc.LinkEndChild( template_elem); 
+		const FilePath template_filename = FilePath(scene_path.GetFullPath() + "/Templates.xml");
+		template_doc.SaveFile(template_filename.GetFullPath().c_str());
 	}
 
 	void Scene::SyncMessages(double delta_time) const
@@ -226,16 +242,13 @@ namespace GASS
 	void Scene::SaveXML(TiXmlElement *parent)
 	{
 		//Create
-		TiXmlElement *scene = new TiXmlElement("Scene");
-		parent->LinkEndChild(scene);
-
 		TiXmlElement *prop = new TiXmlElement("Properties");
-		scene->LinkEndChild(prop);
+		parent->LinkEndChild(prop);
 
 		BaseReflectionObject::SaveProperties(prop);
 
 		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
-		scene->LinkEndChild(sms_elem);
+		parent->LinkEndChild(sms_elem);
 
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
 		{
@@ -244,8 +257,6 @@ namespace GASS
 			if(serialize)
 				serialize->SaveXML(sms_elem);
 		}
-		//std::string scene_path = GetPath();
-		//save instances at same place
 	}
 
 	void Scene::Unload()
