@@ -82,15 +82,10 @@ void GASSEd::Initialize(void* render_win_handle)
 	GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
 	
-	//GASSSceneSelectionWidget dialog;
-    //dialog.exec();
-	//std::string selected_scene = dialog.GetSelected();
-	//m_GASSApp->LoadScene(selected_scene);//gass_data_path.GetFullPath() + "/sceneries/ogre/camp_genesis");
-	//m_GASSApp->LoadScene("C:/dev/GASSData/sceneries/ogre/camp_genesis");
 	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
 	
-	/*GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetRootSceneObject());
-	GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("CustomMeshObject",scene->GetRootSceneObject());
+	/*GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("CustomMeshObject",scene->GetRootSceneObject());
 	GASS::Vec3 pos = scene->GetStartPos();
 	GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 	if(object)
@@ -106,12 +101,6 @@ void GASSEd::setupToolBar()
 {
 	StandardToolBar *tb = new StandardToolBar("Object Tools", this);
     addToolBar(tb);
-
-   /* for (int i = 0; i < 3; ++i) {
-        ToolBar *tb = new ToolBar(QString::fromLatin1("Tool Bar %1").arg(i + 1), this);
-        toolBars.append(tb);
-        addToolBar(tb);
-    }*/
 }
 
 void GASSEd::setupMenuBar()
@@ -140,38 +129,7 @@ void GASSEd::setupMenuBar()
 
     menu->addAction(tr("&Quit"), this, SLOT(close()));
 
-    /*GASSEdMenu = menuBar()->addMenu(tr("Main window"));
-
-    action = GASSEdMenu->addAction(tr("Animated docks"));
-    action->setCheckable(true);
-    action->setChecked(dockOptions() & AnimatedDocks);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-
-    action = GASSEdMenu->addAction(tr("Allow nested docks"));
-    action->setCheckable(true);
-    action->setChecked(dockOptions() & AllowNestedDocks);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-
-    action = GASSEdMenu->addAction(tr("Allow tabbed docks"));
-    action->setCheckable(true);
-    action->setChecked(dockOptions() & AllowTabbedDocks);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-
-    action = GASSEdMenu->addAction(tr("Force tabbed docks"));
-    action->setCheckable(true);
-    action->setChecked(dockOptions() & ForceTabbedDocks);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-
-    action = GASSEdMenu->addAction(tr("Vertical tabs"));
-    action->setCheckable(true);
-    action->setChecked(dockOptions() & VerticalTabs);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-
-    QMenu *toolBarMenu = menuBar()->addMenu(tr("Tool bars"));
-    for (int i = 0; i < toolBars.count(); ++i)
-        toolBarMenu->addMenu(toolBars.at(i)->menu);
-
-    dockWidgetMenu = menuBar()->addMenu(tr("&Dock Widgets"));*/
+ 
 }
 
 /*void GASSEd::setDockOptions()
@@ -407,8 +365,9 @@ void GASSEd::destroyDockWidget(QAction *action)
 
 void GASSEd::OnNew()
 {
-	GASS::SimEngine::Get().NewScene();
-	//m_GASSApp->NewScene();
+	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+	
 }
 
 void GASSEd::OnSave()
@@ -424,6 +383,8 @@ void GASSEd::OnOpen()
 	GASSSceneSelectionWidget dialog;
     dialog.exec();
 	std::string selected_scene = dialog.GetSelected();
-	GASS::SimEngine::Get().LoadScene(selected_scene);
+	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().LoadScene(selected_scene));
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+	
 }
 

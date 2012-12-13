@@ -145,6 +145,7 @@ GASS::MouseData GASSRenderWidget::GetMouseData(QMouseEvent *e) const
 GASS::MouseButtonId GASSRenderWidget::GetMouseButton(QMouseEvent *e) const
 {
 	GASS::MouseButtonId mb;
+	
 	switch(e->button())
 	{
 	case Qt::LeftButton:
