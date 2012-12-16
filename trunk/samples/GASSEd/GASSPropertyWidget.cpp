@@ -33,14 +33,25 @@ void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &valu
 	//check if we just populate
 	if(!m_Polulating)
 	{
-		const QString value_as_sstring = qVariantValue<QString>(value);
+		QVariant v = value;
+		
+		const QString value_as_sstring = qVariantValue<QString>(v);
 		const std::string value_as_std_string = value_as_sstring.toStdString();
 		std::map<QtProperty*,GASSVariantProperty>::iterator iter = m_PropMap.find(property);
 		if(iter != m_PropMap.end())
 		{
-
 			GASSVariantProperty gp = iter->second;
-			gp.UpdateValue(value_as_std_string);
+			QtVariantProperty *varProp = m_VariantManager->variantProperty(property);
+			if (varProp && varProp->propertyType() == QtVariantPropertyManager::enumTypeId()) 
+			{
+				const std::string str_name = gp.m_Options[value.toInt()];
+				gp.UpdateValue(str_name);
+			}
+			else
+			{
+				
+				gp.UpdateValue(value_as_std_string);
+			}
 		}
 	}
 }
@@ -128,7 +139,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	const std::string prop_name = prop->GetName();
 	const std::string prop_value = prop->GetValueAsString(obj.get());
 	QtVariantProperty* item = NULL;
-
+	GASSVariantProperty gp;
 	GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
 
 
@@ -159,6 +170,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			int select = 0;
 			for(size_t i = 0 ; i < options.size() ; i++)
 			{
+				gp.m_Options.push_back(options[i]);
 				enumNames << options[i].c_str();
 				if(prop_value == options[i])
 					select = i;
@@ -182,6 +194,30 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				//item = new CGASSFileProperty(obj,prop, filename.c_str(), ps->FileControlSettings.c_str(),_T(ps->Documentation.c_str()));
 			}
 			break;
+		case GASS::CT_RESOURCE_COMBO:
+			{
+				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+				if(rs == NULL)
+					GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
+				std::vector<std::string> values = rs->GetResourceNames(ps->ResourceGroup);
+				
+				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+				QStringList enumNames;
+				int select = -1;
+				for(size_t i = 0 ; i < values.size() ; i++)
+				{
+					gp.m_Options.push_back(values[i]);
+					enumNames << values[i].c_str();
+					if(prop_value == values[i])
+						select = i;
+				}
+
+				item->setAttribute(QLatin1String("enumNames"), enumNames);
+				if(select > -1)
+					item->setValue(prop_value.c_str());
+			}
+			break;
+	
 		case GASS::CT_OBJECT_REFERENCE:
 			{
 				//grid_prop = new CGASSBaseProperty(obj,prop, _T(ps->Documentation.c_str()));
@@ -203,7 +239,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 
 
 
-	GASSVariantProperty gp;
+	
 	gp.SetGASSData(obj,prop);
 	m_PropMap[item] = gp;
 

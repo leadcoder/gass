@@ -1,4 +1,5 @@
  #include <QtGui>
+
 #include "Sim/GASS.h"
  #include "GASSSceneSelectionWidget.h"
 
