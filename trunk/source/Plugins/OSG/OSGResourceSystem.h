@@ -45,6 +45,7 @@ namespace GASS
 		bool GetFullPath(const std::string &file_name,std::string &file_path);
 		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void LoadResourceGroup(const std::string &resource_group);
+		std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
 	protected:
 		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);

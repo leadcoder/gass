@@ -96,6 +96,18 @@ namespace GASS
 
 	}
 
+	IMouseTool* MouseToolController::GetTool(const std::string &tool_name)
+	{
+		for(int i = 0; i < m_Tools.size(); i++)
+		{
+			if(tool_name == m_Tools[i]->GetName())
+			{
+				return m_Tools[i];
+			}
+		}
+		return NULL;
+	}
+
 	void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
 	{
 		std::string window = message->GetWindow();
@@ -128,7 +140,7 @@ namespace GASS
 					name == TID_VERTICAL_MOVE ||
 					name == TID_ROTATE ||
 					name == TID_PAINT ||
-					name == TID_TERRAIN_DEFORM ||
+					name == TID_TERRAIN ||
 					name == TID_GOTO_POS ||
 					name == TID_EDIT_POS
 					)

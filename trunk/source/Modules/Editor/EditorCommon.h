@@ -12,7 +12,7 @@
 #define TID_MOVE "MoveTool"
 #define TID_ROTATE "RotateTool"
 #define TID_SELECT "SelectTool"
-#define TID_TERRAIN_DEFORM "TerrainDeformTool"
+#define TID_TERRAIN "TerrainTool"
 #define TID_VERTICAL_MOVE "VerticalMoveTool"
 #define TID_PAINT "PaintTool"
 #define TID_GOTO_POS "GoToPositionTool"

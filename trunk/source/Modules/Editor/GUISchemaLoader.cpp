@@ -135,16 +135,23 @@ namespace GASS
 					{
 						ps.GUIControlType = CT_FILE_DIALOG;
 					}
-					else if(ct == "OBJECT_REFERENCE")
+					else if(ct == "RESOURCE_COMBO")
 					{
-						ps.GUIControlType = CT_OBJECT_REFERENCE;
+						ps.GUIControlType = CT_RESOURCE_COMBO;
 					}
+				}
+
+				if(gui_elem->Attribute("resourceGroup"))
+				{
+					ps.ResourceGroup = gui_elem->Attribute("resourceGroup");
 				}
 
 				if(gui_elem->Attribute("fileControlSettings"))
 				{
 					ps.FileControlSettings = gui_elem->Attribute("fileControlSettings");
 				}
+
+
 
 				if(gui_elem->Attribute("referenceComponentFilters"))
 				{

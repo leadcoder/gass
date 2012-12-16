@@ -80,6 +80,12 @@ namespace GASS
 			@resource_group The resources group
 		*/
 		virtual void LoadResourceGroup(const std::string &resource_group) = 0;
+
+		/**
+			Get all resource names from resource group
+			@resource_group The resources group
+		*/
+		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const = 0;
 	protected:
 	};
 

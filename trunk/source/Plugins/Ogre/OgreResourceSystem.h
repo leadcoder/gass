@@ -63,7 +63,7 @@ namespace GASS
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceGroup(const std::string &resource_group);
 		void LoadResourceGroup(const std::string &resource_group);
-
+		std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
 	protected:
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		std::string m_RenderSystem;

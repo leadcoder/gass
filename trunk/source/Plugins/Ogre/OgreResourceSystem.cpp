@@ -96,28 +96,6 @@ namespace GASS
 		}
 	}
 
-	/*void OgreResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
-	{
-		boost::filesystem::path boost_path(rl.m_Path.GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
-		{
-			m_ResourceLocations.push_back(rl);
-			if(rl.m_Recursive)
-			{
-				boost::filesystem::directory_iterator end ;    
-				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
-				{
-					if (boost::filesystem::is_directory( *iter ) )      
-					{   
-						ResourceLocation rec_rl = rl;
-						rec_rl.m_Path = iter->path().string();
-						AddResourceLocationRecursive(rec_rl);
-					}     
-				}
-			}
-		}
-	}*/
-
 	void OgreResourceSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 	{
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize Started";
@@ -138,7 +116,17 @@ namespace GASS
 		rsm->createResourceGroup(resource_group);
 	}		
 
-
+	std::vector<std::string> OgreResourceSystem::GetResourceNames(const std::string &resource_group) const
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		Ogre::StringVectorPtr res_vec = rsm->listResourceNames(resource_group);
+		std::vector<std::string> ret;
+		for(size_t i = 0; i < res_vec->size(); i++)
+		{
+			ret.push_back(res_vec->at(i));
+		}
+		return ret;
+	}
 
 	void OgreResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{

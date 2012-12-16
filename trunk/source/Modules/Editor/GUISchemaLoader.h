@@ -39,6 +39,7 @@ namespace GASS
 		CT_FILE_DIALOG,
 		CT_COLOR_DIALOG,
 		CT_OBJECT_REFERENCE,
+		CT_RESOURCE_COMBO,
 	};
 
 	class EditorModuleExport PropertySettings
@@ -54,6 +55,7 @@ namespace GASS
 		std::string RestrictionProxyProperty;
 		ControlType  GUIControlType;
 		std::string FileControlSettings;
+		std::string ResourceGroup;
 		std::vector<std::string> Restrictions;
 		std::vector<std::string> ReferenceComponentFilters;
 		std::vector<std::string> ReferenceNameFilters;

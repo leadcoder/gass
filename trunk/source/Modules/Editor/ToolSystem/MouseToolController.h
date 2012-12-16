@@ -41,6 +41,7 @@ namespace GASS
 		void Init();
 		void AddTool(IMouseTool* tool);
 		bool SelectTool(const std::string &tool_name);
+		IMouseTool* GetTool(const std::string &tool_name);
 		void SetActive(bool value) {m_Active = value;}
 		void CreateSceneObject(const std::string name, const Vec2 &mouse_pos);
 		void SetGridSpacing(Float value); 

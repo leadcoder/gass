@@ -140,6 +140,22 @@ namespace GASS
 		}
 	}
 
+	std::vector<std::string> OSGResourceSystem::GetResourceNames(const std::string &resource_group) const
+	{
+		std::vector<ResourceLocation>::const_iterator iter = m_ResourceLocations.begin();
+		std::vector<std::string> ret;
+	
+		while(iter != m_ResourceLocations.end())
+		{
+			if(resource_group == iter->m_Group)
+			{
+				ret.push_back(iter->m_Path.GetFullPath());
+			}
+			++iter;
+		}
+		return ret;
+	}
+
 	bool OSGResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
 	{
 		FILE*fp;
