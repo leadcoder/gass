@@ -29,7 +29,7 @@ namespace GASS
 
 	}
 
-	void PaintTool::MoveTo(const CursorInfo &info)
+	void PaintTool::MouseMoved(const CursorInfo &info)
 	{
 		int from_id = (int) this;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());

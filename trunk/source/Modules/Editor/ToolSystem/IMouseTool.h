@@ -25,9 +25,10 @@ namespace GASS
 			m_SharedFromThis = boost::shared_ptr<IMouseTool>(this,message_null_deleter());
 		}
 		virtual ~IMouseTool(void){}
-		virtual void MoveTo(const CursorInfo &info) = 0;
+		virtual void MouseMoved(const CursorInfo &info) = 0;
 		virtual void MouseDown(const CursorInfo &info) = 0;
 		virtual void MouseUp(const CursorInfo &info) = 0;
+		//virtual void Update(double delta_time) = 0;
 		virtual std::string GetName() = 0;
 		virtual void Stop() = 0;
 		virtual void Start() = 0;

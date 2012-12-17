@@ -32,7 +32,7 @@ namespace GASS
 	}
 
 
-	void RotateTool::MoveTo(const CursorInfo &info)
+	void RotateTool::MouseMoved(const CursorInfo &info)
 	{
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected && CheckIfEditable(selected))

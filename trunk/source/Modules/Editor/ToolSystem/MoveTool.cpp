@@ -33,7 +33,7 @@ namespace GASS
 
 	}
 
-	void MoveTool::MoveTo(const CursorInfo &info)
+	void MoveTool::MouseMoved(const CursorInfo &info)
 	{
 		int from_id = (int) this;
 

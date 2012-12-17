@@ -28,7 +28,7 @@ namespace GASS
 
 	}
 
-	void CreateTool::MoveTo(const CursorInfo &info)
+	void CreateTool::MouseMoved(const CursorInfo &info)
 	{
 
 	}

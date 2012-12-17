@@ -33,7 +33,7 @@ namespace GASS
 
 	}
 
-	void TerrainDeformTool::MoveTo(const CursorInfo &info)
+	void TerrainDeformTool::MouseMoved(const CursorInfo &info)
 	{
 		int from_id = (int) this;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -146,23 +146,7 @@ namespace GASS
 	{
 		if(m_Active)
 		{
-			//hide gizmo
-			/*if(message->GetSceneObject())
-			{
-			LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-			if(lc) //only support gizmo for objects with location component
-			{
-			SetGizmoVisiblity(true);
-			}
-			else
-			{
-			SetGizmoVisiblity(false);
-			}
-			}
-			else
-			{
-			SetGizmoVisiblity(false);
-			}*/
+			
 		}
 		m_SelectedObject = message->GetSceneObject();
 	}

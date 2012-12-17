@@ -28,7 +28,7 @@ namespace GASS
 
 	}
 
-	void EditPositionTool::MoveTo(const CursorInfo &info)
+	void EditPositionTool::MouseMoved(const CursorInfo &info)
 	{
 
 	}

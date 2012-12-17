@@ -26,7 +26,7 @@ namespace GASS
 
 	}
 
-	void SelectTool::MoveTo(const CursorInfo &info)
+	void SelectTool::MouseMoved(const CursorInfo &info)
 	{
 
 	}

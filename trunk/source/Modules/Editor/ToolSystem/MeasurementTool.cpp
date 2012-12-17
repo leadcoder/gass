@@ -28,7 +28,7 @@ namespace GASS
 
 	}
 
-	void MeasurementTool::MoveTo(const CursorInfo &info)
+	void MeasurementTool::MouseMoved(const CursorInfo &info)
 	{
 		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)

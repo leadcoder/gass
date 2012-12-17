@@ -215,10 +215,10 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::MoveTo(const CursorInfo &info)
+	void MouseToolController::MouseMoved(const CursorInfo &info)
 	{
 		if(m_ActiveTool)
-			m_ActiveTool->MoveTo(info);
+			m_ActiveTool->MouseMoved(info);
 	}
 
 	void MouseToolController::MouseDown(const CursorInfo &info)
@@ -425,6 +425,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));*/
 
 		CursorInfo info = GetCursorInfo(m_LastScreenPos,m_RayPickDistance);
+		MouseMoved(info);
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
@@ -449,7 +450,7 @@ namespace GASS
 	{
 		Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
 		CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
-		MoveTo(info);
+		//MoveTo(info);
 		//saved for delta calculation, remove this?
 		m_LastScreenPos = mouse_pos;
 		int mess_id = (int) this;

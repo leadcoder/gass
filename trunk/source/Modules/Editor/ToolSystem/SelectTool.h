@@ -18,7 +18,7 @@ namespace GASS
 		virtual ~SelectTool(void);
 
 		//IMouseTool interface
-		virtual void MoveTo(const CursorInfo &info);
+		virtual void MouseMoved(const CursorInfo &info);
 		virtual void MouseDown(const CursorInfo &info);
 		virtual void MouseUp(const CursorInfo &info);
 		virtual std::string GetName() {return TID_SELECT;}

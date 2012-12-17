@@ -27,7 +27,7 @@ namespace GASS
 
 	}
 
-	void VerticalMoveTool::MoveTo(const CursorInfo &info)
+	void VerticalMoveTool::MouseMoved(const CursorInfo &info)
 	{
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected)
