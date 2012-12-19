@@ -20,7 +20,7 @@ copy "%GASS_HOME%\\lib\\GASSPluginODE_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginGame_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginBase_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginEnvironment_d.dll" bin\\debug\\GASSPlugins
-rem copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginRaknet_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginOpenAL_d.dll" bin\\debug\\GASSPlugins
 
@@ -36,7 +36,7 @@ copy "%GASS_HOME%\\lib\\GASSPluginODE.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginGame.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginBase.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginEnvironment.dll" bin\\release\\GASSPlugins
-rem copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginRaknet.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginOpenAL.dll" bin\\release\\GASSPlugins
 

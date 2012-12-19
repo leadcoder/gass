@@ -33,6 +33,7 @@ protected:
 	QAction* m_TerrainSmoothAct;
 	QAction* m_TerrainFlattenAct;
 	QAction* m_TerrainPaintAct;
+	QAction* m_VegetationPaintAct;
 
 	double m_BrushSize;
 	double m_BrushFade;
@@ -48,6 +49,7 @@ private slots:
 	void OnTerrainSmooth();
 	void OnTerrainFlatten();
 	void OnTerrainPaint();
+	void OnVegetationPaint();
 	void OnBrushSizeChanged(int value);
 	void OnBrushFadeChanged(int value);
 	void OnBrushIntChanged(int value);

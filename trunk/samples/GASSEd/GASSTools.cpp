@@ -89,6 +89,14 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
 	connect(como_box, SIGNAL(currentIndexChanged(int)), this, SLOT(OnPaintLayerChanged(int)));
 	addWidget(como_box);
 
+
+	m_VegetationPaintAct = new QAction(QIcon(":/images/rotate.png"), tr("&Veg.Paint"), this);
+    m_VegetationPaintAct->setStatusTip(tr("Vegetation Paint Tool"));
+	m_VegetationPaintAct->setCheckable(true);
+    connect(m_VegetationPaintAct, SIGNAL(triggered()), this, SLOT(OnVegetationPaint()));
+	addAction(m_VegetationPaintAct);
+
+
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(StandardToolBar::OnToolChanged,GASS::ToolChangedMessage,0));	
 
 	QLabel*  size_label = new QLabel(tr("Size:"));
@@ -197,6 +205,7 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedMessagePtr message)
 	m_TerrainSmoothAct->setChecked(false);
 	m_TerrainFlattenAct->setChecked(false);
 	m_TerrainPaintAct->setChecked(false);
+	m_VegetationPaintAct->setChecked(false);
 
 	if(message->GetTool() == TID_SELECT)
 		m_SelectAct->setChecked(true);
@@ -221,9 +230,11 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedMessagePtr message)
 			case GASS::TerrainDeformTool::TEM_LAYER_PAINT:
 				m_TerrainPaintAct->setChecked(true);
 				break;
+			case GASS::TerrainDeformTool::TEM_VEGETATION_PAINT:
+				m_VegetationPaintAct->setChecked(true);
+				break;
 		}
 	}
-	
 }
 
 
@@ -270,6 +281,12 @@ void StandardToolBar::OnTerrainPaint()
 	tool->SetModMode(GASS::TerrainDeformTool::TEM_LAYER_PAINT);
 }
 
+void StandardToolBar::OnVegetationPaint()
+{
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->SelectTool(TID_TERRAIN);
+	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
+	tool->SetModMode(GASS::TerrainDeformTool::TEM_VEGETATION_PAINT);
+}
 
 void StandardToolBar::OnNew()
 {

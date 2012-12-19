@@ -7,7 +7,7 @@
   <!--<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX"/>-->
   <Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
-  <!--<Plugin PluginFile = "GASSPluginPagedGeometry"/>-->
+  <Plugin PluginFile = "GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
@@ -108,7 +108,6 @@
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS" Group="GASS" Type="FileSystem" Recursive="true"/>
     <!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" Group="GASS" Type="FileSystem" Recursive="true"/>-->
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="false"/>
-	
   </OgreResourceSystem>
 </Systems>
 
