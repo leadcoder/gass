@@ -63,6 +63,8 @@ namespace GASS
 		*/
 
 		virtual void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height) = 0;
+
+		
 	protected:
 	};
 	typedef boost::shared_ptr<IGraphicsSystem> GraphicsSystemPtr;

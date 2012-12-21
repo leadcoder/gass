@@ -28,6 +28,8 @@
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
+#include <OgreMaterialManager.h>
+#include <OgreMeshManager.h>
 #include "tinyxml.h"
 #include <boost/filesystem.hpp>
 
@@ -107,7 +109,7 @@ namespace GASS
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize All Resource Groups";
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 		LogManager::getSingleton().stream() << "OgreResourceSystem Completed";
-		
+
 	}
 
 	void OgreResourceSystem::AddResourceGroup(const std::string &resource_group)
@@ -148,7 +150,7 @@ namespace GASS
 				{
 					if (boost::filesystem::is_directory( *iter ) )      
 					{   
-						
+
 						const std::string sub_dir_path  = iter->path().string();
 						AddResourceLocation(sub_dir_path,resource_group,type,recursive);
 					}     
@@ -263,6 +265,58 @@ namespace GASS
 		}
 		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
 		return false;
+	}
+
+
+	std::vector<std::string> OgreResourceSystem::GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const
+	{
+		std::vector<std::string> content;
+		switch(ct)
+		{
+		case CT_MATERIAL:
+			{
+				Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
+				while(iter.hasMoreElements())
+				{
+					Ogre::MaterialPtr ptr = iter.getNext();
+					if(ptr->getGroup() == resource_group)
+					{
+						content.push_back(ptr->getName());
+					}
+				}
+			}
+			break;
+		case CT_TEXTURE:
+			{
+				Ogre::TextureManager::ResourceMapIterator iter = Ogre::TextureManager::getSingleton().getResourceIterator();
+				while(iter.hasMoreElements())
+				{
+					Ogre::TexturePtr ptr = iter.getNext();
+					if(ptr->getGroup() == resource_group)
+					{
+						content.push_back(ptr->getName());
+					}
+				}
+			}
+			break;
+
+		case CT_MESH:
+			{
+				/*Ogre::MeshManager::ResourceMapIterator iter = Ogre::MeshManager::getSingleton().getResourceIterator();
+				while(iter.hasMoreElements())
+				{
+					Ogre::MeshPtr ptr = iter.getNext();
+					if(ptr->getGroup() == resource_group)
+					{
+						content.push_back(ptr->getName());
+					}
+				}*/
+				//content = GetResourceNames(resource_group);
+				
+			}
+			break;
+		}
+		return content;
 	}
 }
 

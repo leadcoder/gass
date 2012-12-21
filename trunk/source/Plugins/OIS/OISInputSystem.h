@@ -86,6 +86,7 @@ namespace GASS
 	private:
 		//ADD_ATTRIBUTE(double,UpdateFrequency);
 		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);
+		ADD_ATTRIBUTE(bool,OnlyProxy);
 
 		int	 GetJoystickIndex() { return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }
@@ -138,5 +139,6 @@ namespace GASS
 		int m_MouseWinOffsetY;
 		int m_MouseWinWidth;
 		int m_MouseWinHeight;
+		
 	};
 }

@@ -28,6 +28,7 @@
 #include "Core/Serialize/GASSISerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSIComponentTemplate.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
 
 class TiXmlDocument;
 
@@ -40,6 +41,7 @@ namespace GASS
 		CT_COLOR_DIALOG,
 		CT_OBJECT_REFERENCE,
 		CT_RESOURCE_COMBO,
+		CT_CONTENT_COMBO,
 	};
 
 	class EditorModuleExport PropertySettings
@@ -54,6 +56,7 @@ namespace GASS
 		std::string DisplayName;
 		std::string RestrictionProxyProperty;
 		ControlType  GUIControlType;
+		ContentType  ComboContentType;
 		std::string FileControlSettings;
 		std::string ResourceGroup;
 		std::vector<std::string> Restrictions;

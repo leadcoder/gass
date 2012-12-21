@@ -26,6 +26,16 @@
 
 namespace GASS
 {
+	enum ContentType
+	{
+		CT_MESH,
+		CT_MATERIAL,
+		CT_TEXTURE,
+		CT_SCRIPT,
+		CT_TEMPLATE,
+		CT_SOUND,
+		CT_USER,
+	};
 
 	/**
 		Interface that all resource systems must be derived from
@@ -86,6 +96,12 @@ namespace GASS
 			@resource_group The resources group
 		*/
 		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const = 0;
+
+		/**
+			Get all content names inside resources of resource group
+			@resource_group The resources group
+		*/
+		virtual std::vector<std::string> GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const = 0;
 	protected:
 	};
 

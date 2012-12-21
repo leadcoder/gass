@@ -187,6 +187,13 @@ namespace GASS
 		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
 		return false;
 	}
+
+
+	std::vector<std::string> OSGResourceSystem::GetContentNamesFromGroup(ContentType ct,const std::string &resource_group) const
+	{
+		std::vector<std::string> content;
+		return content;
+	}
 }
 
 

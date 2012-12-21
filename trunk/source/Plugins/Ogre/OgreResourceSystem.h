@@ -56,14 +56,15 @@ namespace GASS
 		virtual void Init();
 		virtual void Update();
 		virtual void LoadXML(TiXmlElement *elem);
-		std::string GetSystemName() const {return "OgreResourceSystem";}
-		bool GetFullPath(const std::string &file_name,std::string &file_path);
-		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
-		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
-		void RemoveResourceGroup(const std::string &resource_group);
-		void AddResourceGroup(const std::string &resource_group);
-		void LoadResourceGroup(const std::string &resource_group);
-		std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
+		virtual std::string GetSystemName() const {return "OgreResourceSystem";}
+		virtual bool GetFullPath(const std::string &file_name,std::string &file_path);
+		virtual void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
+		virtual void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
+		virtual void RemoveResourceGroup(const std::string &resource_group);
+		virtual void AddResourceGroup(const std::string &resource_group);
+		virtual void LoadResourceGroup(const std::string &resource_group);
+		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
+		virtual std::vector<std::string> GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const;
 	protected:
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		std::string m_RenderSystem;

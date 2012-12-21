@@ -25,6 +25,9 @@
 
 namespace GASS
 {
+
+	
+
 	struct ResourceLocation
 	{
 		FilePath m_Path;
@@ -46,15 +49,13 @@ namespace GASS
 		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type,bool recursive = false);
 		void LoadResourceGroup(const std::string &resource_group);
 		std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
+		std::vector<std::string> GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const;
 	protected:
 		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceLocationRecursive(const ResourceLocation &rl);
 		void AddResourceGroup(const std::string &resource_group){};
-		
-		//void OnUpdate(MessagePtr message);
 		std::string m_RenderSystem;
 		std::vector<ResourceLocation> m_ResourceLocations;
-
 	};
 }
