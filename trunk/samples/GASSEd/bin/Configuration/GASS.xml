@@ -7,7 +7,7 @@
   <!--<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX"/>-->
   <Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
-  <Plugin PluginFile = "GASSPluginPagedGeometry"/>
+  <Plugin PluginFile = "GASSPlugins/GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
@@ -104,7 +104,8 @@
 	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/editor/icons/" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain" Group="GASS" Type="FileSystem" Recursive="false"/>
 	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/detail" Group="GASS_DETAIL_TEXTURES" Type="FileSystem" Recursive="false"/>
-    <!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" Group="GASS" Type="FileSystem" Recursive="true"/>-->
+	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" Group="GASS_VEGETATION_TEXTURES" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS" Group="GASS" Type="FileSystem" Recursive="true"/>
     <!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" Group="GASS" Type="FileSystem" Recursive="true"/>-->
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="false"/>

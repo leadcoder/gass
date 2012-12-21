@@ -217,7 +217,28 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					item->setValue(prop_value.c_str());
 			}
 			break;
-	
+		case GASS::CT_CONTENT_COMBO:
+			{
+				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+				if(rs == NULL)
+					GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
+				std::vector<std::string> values = rs->GetContentNamesFromGroup(ps->ComboContentType,ps->ResourceGroup);
+				
+				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+				QStringList enumNames;
+				int select = -1;
+				for(size_t i = 0 ; i < values.size() ; i++)
+				{
+					gp.m_Options.push_back(values[i]);
+					enumNames << values[i].c_str();
+					if(prop_value == values[i])
+						select = i;
+				}
+				item->setAttribute(QLatin1String("enumNames"), enumNames);
+				if(select > -1)
+					item->setValue(prop_value.c_str());
+			}
+			break;
 		case GASS::CT_OBJECT_REFERENCE:
 			{
 				//grid_prop = new CGASSBaseProperty(obj,prop, _T(ps->Documentation.c_str()));

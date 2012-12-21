@@ -6,6 +6,8 @@
 #include "qtpropertymanager.h"
 #include "qtvariantproperty.h"
 #include "qttreepropertybrowser.h"
+#include "VariantManager.h"
+#include "VariantFactory.h"
 #include <QtGui>
 
 #include "Sim/GASS.h"
@@ -51,6 +53,9 @@ protected:
 	QtProperty *m_Root;
 	QtVariantPropertyManager *m_VariantManager;
 	QtVariantEditorFactory *m_VariantFactory;
+	//VariantManager *m_VariantManager;
+	//VariantFactory *m_VariantFactory;
+	
 
 	bool m_Polulating;
 	std::map<QtProperty*,GASSVariantProperty> m_PropMap;
