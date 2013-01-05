@@ -227,13 +227,11 @@ namespace GASS
 	}
 
 
-	PhysXConvexMesh PhysXPhysicsSceneManager::CreateConvexMesh(MeshComponentPtr mesh)
+	PhysXConvexMesh PhysXPhysicsSceneManager::CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{
-		//use file name as id!
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasConvexMesh(col_mesh_name))
+		if(HasConvexMesh(col_mesh_id))
 		{
-			return m_ConvexMeshMap[col_mesh_name];
+			return m_ConvexMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
 		MeshDataPtr mesh_data = new MeshData;
@@ -249,19 +247,17 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateConvexMesh");
-			m_ConvexMeshMap[col_mesh_name].m_ConvexMesh = CreateConvexMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
-			return m_ConvexMeshMap[col_mesh_name];
+			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
+			return m_ConvexMeshMap[col_mesh_id];
 		}
 	}
 
 
-	PhysXTriangleMesh PhysXPhysicsSceneManager::CreateTriangleMesh(MeshComponentPtr mesh)
+	PhysXTriangleMesh PhysXPhysicsSceneManager::CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{
-		//use file name as id!
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasTriangleMesh(col_mesh_name))
+		if(HasTriangleMesh(col_mesh_id))
 		{
-			return m_TriangleMeshMap[col_mesh_name];
+			return m_TriangleMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
 		MeshDataPtr mesh_data = new MeshData;
@@ -277,8 +273,8 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateTriangleMesh");
-			m_TriangleMeshMap[col_mesh_name].m_TriangleMesh = CreateTriangleMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
-			return m_TriangleMeshMap[col_mesh_name];
+			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
+			return m_TriangleMeshMap[col_mesh_id];
 		}
 	}
 

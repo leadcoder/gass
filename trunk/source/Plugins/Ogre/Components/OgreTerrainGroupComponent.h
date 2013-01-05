@@ -50,7 +50,7 @@ namespace GASS
 		
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
-		virtual std::string GetFilename()const {return m_TerrainName;}
+		virtual Resource GetTerrainResource()const {return m_TerrainResource;}
 
 		//ITerrainComponent
 		virtual Float GetHeight(Float x, Float z) const;
@@ -148,7 +148,7 @@ namespace GASS
 		Ogre::PageManager* m_PageManager;
 		int m_TerrainSize;
 		float m_TerrainWorldSize;
-		std::string m_TerrainName;
+		Resource m_TerrainResource;
 		std::string m_CustomMaterial;
 		Vec3 m_Origin;
 		bool m_FadeDetail;

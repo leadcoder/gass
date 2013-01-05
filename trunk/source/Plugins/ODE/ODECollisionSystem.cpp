@@ -259,12 +259,11 @@ namespace GASS
 		return 0;
 	}
 
-	ODECollisionMeshInfo ODECollisionSystem::CreateCollisionMesh(MeshComponentPtr mesh)
+	ODECollisionMeshInfo ODECollisionSystem::CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{
-		std::string col_mesh_name = mesh->GetFilename();
-		if(HasCollisionMesh(col_mesh_name))
+		if(HasCollisionMesh(col_mesh_id))
 		{
-			return m_ColMeshMap[col_mesh_name];
+			return m_ColMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
 
@@ -306,7 +305,7 @@ namespace GASS
 		ODECollisionMeshInfo col_mesh;
 		col_mesh.ID = id;
 		col_mesh.Mesh = mesh_data;
-		m_ColMeshMap[col_mesh_name] = col_mesh;
+		m_ColMeshMap[col_mesh_id] = col_mesh;
 		return col_mesh;
 	}
 

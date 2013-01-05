@@ -56,13 +56,12 @@ namespace GASS
 	void OSGMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
-		RegisterProperty<std::string>("Filename", &GetFilename, &SetFilename);
+		RegisterProperty<Resource>("Filename", &GetMeshResource, &SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
 		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
 		RegisterEnumProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder);
-		//RegisterProperty<Enum>("MaterialFlags", &GetMaterialFlagsProxy, &SetMaterialFlagsProxy);
 	}
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
@@ -81,7 +80,6 @@ namespace GASS
 		if(m_MeshNode.valid())
 		{
 			OSGConvert::Get().SetOSGNodeMask(value,m_MeshNode.get());
-			//OSGGraphicsSceneManager::UpdateNodeMask(m_MeshNode.get(),value);
 		}
 	}
 
@@ -158,19 +156,19 @@ namespace GASS
 
 	void OSGMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		LoadMesh(m_Filename);
+		LoadMesh(m_MeshResource.Name());
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 		m_Initlized = true;
 	}
 
 
-	void OSGMeshComponent::SetFilename(const std::string &filename)
+	void OSGMeshComponent::SetMeshResource(const Resource &res)
 	{
-		m_Filename = filename;
+		m_MeshResource = res;
 		if(m_Initlized) //not loaded
 		{
-			LoadMesh(m_Filename);
+			LoadMesh(m_MeshResource.Name());
 			if(m_MeshNode.get())
 				CalulateBoundingbox(m_MeshNode.get());
 		}
@@ -272,7 +270,6 @@ namespace GASS
 
 	void OSGMeshComponent::Expand(SceneObjectPtr parent, osg::Node* node, bool load) 
 	{
-
 		if(node->asTransform())
 		{
 			//add top transform or replace current location?
@@ -333,7 +330,6 @@ namespace GASS
 				so->AddComponent(mesh_comp);
 				//load this object
 			}
-			
 			
 			parent->AddChildSceneObject(so,load);
 			//epxand recursive
@@ -460,8 +456,9 @@ namespace GASS
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		std::string name = message->GetFileName();
-		SetFilename(name);
+		Resource res;
+		res.SetName (message->GetFileName());
+		SetMeshResource(res);
 	}
 
 	AABox OSGMeshComponent::GetBoundingBox() const

@@ -22,7 +22,6 @@
 
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include <tinyxml.h>
 
 #include "Sim/GASSBaseSceneComponent.h"

@@ -62,7 +62,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
 		//IMeshComponent
-		virtual std::string GetFilename()const {return m_Filename;}
+		virtual Resource GetMeshResource()const {return m_MeshResource;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		virtual void LoadXML(TiXmlElement *elem);
@@ -87,7 +87,7 @@ namespace GASS
 		MeshMap m_MeshInstances;
 		Ogre::StaticGeometry *m_StaticGeometry;
 		OgreGraphicsSceneManagerWeakPtr m_OgreSceneManager;
-		std::string m_Filename;
+		Resource m_MeshResource;
 		Float m_RegionSize;
 		GeometryFlags m_GeomFlags;
 	};

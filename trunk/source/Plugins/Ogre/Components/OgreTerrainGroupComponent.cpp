@@ -39,15 +39,10 @@
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
 #include "Plugins/Ogre/Components/OgreTerrainPageComponent.h"
-
-
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreGASSTerrainMaterialGenerator.h"
 #include "Plugins/Ogre/OgreConvert.h"
-
-
-
 
 namespace GASS
 {
@@ -57,7 +52,6 @@ namespace GASS
 		m_TerrainGroup(NULL),
 		m_TerrainWorldSize(5000),
 		m_TerrainSize(513),
-		m_TerrainName("OgrePagedTerrain"),
 		m_Origin(0,0,0)
 		,m_FadeDetail(true)
 		,m_DetailFadeDist(20.0f)
@@ -70,7 +64,7 @@ namespace GASS
 		,m_TerrainScale(10)
 		,m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
-
+		m_TerrainResource.SetName("OgrePagedTerrain");
 
 	}
 
@@ -125,7 +119,7 @@ namespace GASS
 
 		if(m_TerrainGroup)
 		{
-			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 			m_TerrainGroup->saveAllTerrains(false);
 		}
 		//also save terrain to data file?
@@ -202,15 +196,15 @@ namespace GASS
 
 	std::string OgreTerrainGroupComponent::GetLoadTerrain() const
 	{
-		return m_TerrainName;
+		return m_TerrainResource.Name();
 	}
 
 	void OgreTerrainGroupComponent::SetLoadTerrain(const std::string &filename) 
 	{
-		m_TerrainName = filename;
+		m_TerrainResource.SetName(filename);
 		if(m_TerrainGroup)
 		{
-			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 
 			//Get all components
 			IComponentContainer::ComponentVector comps;
@@ -315,7 +309,7 @@ namespace GASS
 		defaultimp.layerList[4].worldSize = 10;
 		defaultimp.layerList[4].textureNames.push_back("default.dds");
 
-		m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+		m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 
 
 
@@ -398,21 +392,19 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetSaveTerrain(const std::string &filename)
 	{
-		m_TerrainName = Misc::GetFilename(filename);
+		m_TerrainResource.SetName(Misc::GetFilename(filename));
 
 		if(m_TerrainGroup)
 		{
-			m_TerrainGroup->setFilenameConvention(m_TerrainName, "dat");
+			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 			m_TerrainGroup->saveAllTerrains(false);
 		}
 	}
 
 	std::string OgreTerrainGroupComponent::GetSaveTerrain() const
 	{
-		return m_TerrainName;
+		return m_TerrainResource.Name();
 	}
-
-	
 
 	AABox OgreTerrainGroupComponent::GetBoundingBox() const
 	{

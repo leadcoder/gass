@@ -37,6 +37,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
@@ -273,7 +274,13 @@ namespace GASS
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
 		{
-			ODECollisionMeshInfo col_mesh = GetCollisionSystem()->CreateCollisionMesh(mesh);
+			std::string col_mesh_id = GetSceneObject()->GetName();
+			ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
+			if(res)
+			{
+				col_mesh_id = res->GetResource().Name();
+			}
+			ODECollisionMeshInfo col_mesh = GetCollisionSystem()->CreateCollisionMesh(col_mesh_id,mesh);
 			geom_id = dCreateTriMesh(GetCollisionSystem()->GetSpace(), col_mesh.ID, 0, 0, 0);
 		}
 		else

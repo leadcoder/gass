@@ -21,6 +21,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSMeshData.h"
+#include "Sim/GASSResource.h"
 
 namespace GASS
 {
@@ -36,12 +37,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IMeshComponent(){}
-
-		/**
-		Should if possible return the filename of the mesh if available.
-		If the mesh is procedural created just return empty string
-		*/
-		virtual std::string GetFilename() const=0;
 
 		/**
 		Should return actual mesh data (polygons), see MeshData for more info

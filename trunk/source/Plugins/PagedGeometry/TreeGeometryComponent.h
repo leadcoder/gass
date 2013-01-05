@@ -84,16 +84,6 @@ namespace GASS
 			m_ColorMapFilename = colormap;
 		}
 
-		std::string GetDensityMap() const
-		{
-			return m_DensityMapFilename;
-		}
-
-		void SetDensityMap(const std::string &colormap)
-		{
-			m_DensityMapFilename = colormap;
-		}
-
 		float GetDensityFactor() const
 		{
 			return m_DensityFactor;

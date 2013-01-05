@@ -40,6 +40,7 @@
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
@@ -81,7 +82,14 @@ namespace GASS
 		GASSAssert(geom,"PhysXMeshGeometryComponent::OnGeometryChanged");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		GASSAssert(scene_manager,"PhysXMeshGeometryComponent::OnGeometryChanged");
-		m_TriangleMesh = scene_manager->CreateTriangleMesh(geom);
+
+		std::string col_mesh_id = GetSceneObject()->GetName();
+		ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
+		if(res)
+		{
+			col_mesh_id = res->GetResource().Name();
+		}
+		m_TriangleMesh = scene_manager->CreateTriangleMesh(col_mesh_id,geom);
 
 		Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		physx::PxTransform pose = physx::PxTransform::createIdentity();

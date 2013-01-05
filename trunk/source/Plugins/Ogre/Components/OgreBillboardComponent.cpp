@@ -191,10 +191,6 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreBillboardComponent::GetMeshData(MeshDataPtr mesh_data) const
-	{
-
-	}
 
 	void OgreBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{

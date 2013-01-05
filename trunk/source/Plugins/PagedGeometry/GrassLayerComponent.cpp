@@ -73,7 +73,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
-		RegisterProperty<std::string>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
+		RegisterProperty<Resource>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
 		RegisterProperty<std::string>("FadeTech", &GrassLayerComponent::GetFadeTech, &GrassLayerComponent::SetFadeTech);
 		RegisterProperty<std::string>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
@@ -104,7 +104,7 @@ namespace GASS
 		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
 		m_GrassLoader = gl_component->GetGrassLoader();
 		
-		m_GrassLayer = m_GrassLoader->addLayer(m_Material);
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material.Name());
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 		m_GrassLayer->setDensity(m_DensityFactor);
@@ -144,17 +144,17 @@ namespace GASS
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
-	std::string GrassLayerComponent::GetMaterial() const
+	Resource GrassLayerComponent::GetMaterial() const
 	{
 		return m_Material;
 	}
 
-	void GrassLayerComponent::SetMaterial(const std::string &name)
+	void GrassLayerComponent::SetMaterial(const Resource &material)
 	{
-		m_Material = name;
+		m_Material = material;
 		if(m_GrassLayer)
 		{
-			m_GrassLayer->setMaterialName(name);
+			m_GrassLayer->setMaterialName(material.Name());
 			GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
 			{
 				gl_component->ReloadGeometry();
@@ -355,7 +355,7 @@ namespace GASS
 
 	void GrassLayerComponent::OnPaint(GrassPaintMessagePtr message)
 	{
-			Paint(message->GetPosition(), message->GetBrushSize(), message->GetBrushInnerSize(), message->GetIntensity());
+		Paint(message->GetPosition(), message->GetBrushSize(), message->GetBrushInnerSize(), message->GetIntensity());
 	}
 
 	void GrassLayerComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)

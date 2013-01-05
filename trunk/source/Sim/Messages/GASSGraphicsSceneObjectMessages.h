@@ -21,10 +21,12 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSResource.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+
 
 /**
 This file hold messages that can be posted to
@@ -606,10 +608,10 @@ namespace GASS
 		}
 		TerrainLayer  GetLayer() const { return m_Layer;}
 		float GetTiling() const {return m_Tiling;}
-		std::string GetTexture() const {return m_Texture;}
+		Resource GetTexture() const {return m_Texture;}
 	private:
 		TerrainLayer m_Layer;
-		std::string m_Texture;
+		Resource m_Texture;
 		float m_Tiling;
 	};
 	typedef boost::shared_ptr<TerrainLayerMessage> TerrainLayerMessagePtr;

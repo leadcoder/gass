@@ -67,7 +67,7 @@ namespace GASS
 	void OgreSceneManagerTerrainComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainComponent",new Creator<OgreSceneManagerTerrainComponent, IComponent>);
-		RegisterProperty<std::string>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetFilename, &GASS::OgreSceneManagerTerrainComponent::SetFilename);
+		RegisterProperty<Resource>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetTerrainResource, &GASS::OgreSceneManagerTerrainComponent::SetTerrainResource);
 	}
 
 	void OgreSceneManagerTerrainComponent::OnInitialize()
@@ -81,7 +81,7 @@ namespace GASS
 			Ogre::TerrainPageSourceListenerManager::getSingleton().addListener(this);
 			m_PageListenerAdded = true;
 		}
-		LoadTerrain(m_TerrainConfigFile);
+		LoadTerrain(m_TerrainConfigFile.Name());
 	}
 
 	void OgreSceneManagerTerrainComponent::OnDelete()
@@ -93,10 +93,10 @@ namespace GASS
 		}
 	}
 
-	void OgreSceneManagerTerrainComponent::SetFilename(const std::string &filename) 
+	void OgreSceneManagerTerrainComponent::SetTerrainResource(const Resource &res) 
 	{
-		m_TerrainConfigFile = filename;
-		LoadTerrain(m_TerrainConfigFile);
+		m_TerrainConfigFile = res;
+		LoadTerrain(m_TerrainConfigFile.Name());
 	}
 
 	void OgreSceneManagerTerrainComponent::LoadTerrain(const std::string &filename)

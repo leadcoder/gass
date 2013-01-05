@@ -55,7 +55,6 @@ namespace GASS
 
 		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh);
 		RegisterProperty<std::string>("ColorMap", &TreeGeometryComponent::GetColorMap, &TreeGeometryComponent::SetColorMap);
-		RegisterProperty<std::string>("DensityMap", &TreeGeometryComponent::GetDensityMap, &TreeGeometryComponent::SetDensityMap);
 		RegisterProperty<float>("DensityFactor", &TreeGeometryComponent::GetDensityFactor, &TreeGeometryComponent::SetDensityFactor);
 		RegisterProperty<float>("MeshDistance", &TreeGeometryComponent::GetMeshDistance, &TreeGeometryComponent::SetMeshDistance);
 		RegisterProperty<float>("MeshFadeDistance", &TreeGeometryComponent::GetMeshFadeDistance, &TreeGeometryComponent::SetMeshFadeDistance);
@@ -179,8 +178,6 @@ namespace GASS
 		}
 		float volume = m_MapBounds.width() * m_MapBounds.height();
 		unsigned int treeCount = m_DensityFactor * volume;
-//		if(m_DensityMapFilename != "")
-//			LoadDensityMap(m_DensityMapFilename,CHANNEL_COLOR);
 
 		//TerrainComponentPtr terrain = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
 		//m_Terrain = terrain.get();
@@ -214,73 +211,7 @@ namespace GASS
 		//m_RandomTable->resetRandomIndex();
 		UpdateArea(m_MapBounds.left, m_MapBounds.top,m_MapBounds.right, m_MapBounds.bottom);
 		m_PagedGeometry->update();
-		/*if (m_DensityMap != NULL)
-		{
-			for (int i = 0; i < treeCount; i++)
-			{
-
-				//Determine whether this grass will be added based on the local density.
-				//For example, if localDensity is .32, grasses will be added 32% of the time.
-				float x, z, yaw, scale;
-				x = Ogre::Math::RangeRandom(m_MapBounds.left, m_MapBounds.right);
-				z = Ogre::Math::RangeRandom(m_MapBounds.top, m_MapBounds.bottom);
-				float density = GetDensityAt(x, z);
-				if (density > 0  && Ogre::Math::UnitRandom() <= density)
-				{
-					yaw = Ogre::Math::RangeRandom(0, 360);
-					scale = Ogre::Math::RangeRandom(m_MaxMinScale.x, m_MaxMinScale.y);
-					if(m_TreeLoader3d && m_Terrain)
-					{
-						float y = m_Terrain->GetHeight(x,z);//HiFi::Root::Get().GetLevel()->GetTerrainHeight(x,z);
-						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
-					}
-					if(m_TreeLoader2d)
-						m_TreeLoader2d->addTree(m_TreeEntity,  Ogre::Vector3(x,0, z) ,Ogre::Degree(yaw), scale);
-					//treeLoader->addTree(myTree, x, z,yaw, scale);
-				/*	if(m_CreateShadowMap)
-					{
-						float u = (x -  m_MapBounds.left) / fabs(m_MapBounds.left - m_MapBounds.right);
-						float v = (z - m_MapBounds.top) / fabs(m_MapBounds.top - m_MapBounds.bottom);
-						float pixel_x = u*shadow_size;
-						float pixel_y = v*shadow_size;
-						int c_pix_x = ((int)pixel_x);
-						int c_pix_y = ((int)pixel_y);
-						float delta_x = pixel_x - c_pix_x;
-						float delta_y = pixel_y - c_pix_y;
-
-
-						if(delta_x > 0.5)
-						{
-							c_pix_x++;
-						}
-						if(delta_y > 0.5)
-						{
-							c_pix_y++;
-						}
-						if(c_pix_x > 1 && c_pix_x < shadow_size-1 && c_pix_y > 1 && c_pix_y < shadow_size-1)
-						{
-						    Vec3 tmpVec = Vec3(1,1,1);
-							shadowMap.SetPixel(c_pix_x,c_pix_y, tmpVec);
-							tmpVec.Set(0.5,0.5,0.5);
-							shadowMap.SetPixel(c_pix_x+1,c_pix_y, tmpVec);
-							shadowMap.SetPixel(c_pix_x,c_pix_y+1, tmpVec);
-							shadowMap.SetPixel(c_pix_x-1,c_pix_y, tmpVec);
-							shadowMap.SetPixel(c_pix_x,c_pix_y-1, tmpVec);
-						}
-					}*/
-			//	}
-			//}
-
-			/*if(m_CreateShadowMap)
-			{
-				shadowMap.SaveTGA("ShadowMap" + m_FileName + ".tga");
-			}*/
-			//delete[] m_DensityMap->data;
-			//delete m_DensityMap;
-			//m_DensityMap = NULL;
-			//make update to create imposters
-		//m_PagedGeometry->update();	
-		//}
+	
 	}
 
 	void TreeGeometryComponent::OnDelete()
@@ -337,177 +268,6 @@ namespace GASS
 		}
 	}
 
-/*	void TreeGeometryComponent::CreateMeshData(MeshDataPtr mesh_data, Ogre::MeshPtr mesh)
-	{
-		mesh_data->NumVertex = 0;
-		mesh_data->VertexVector = NULL;
-		mesh_data->NumFaces = 0;
-		mesh_data->FaceVector = NULL;
-
-		if(mesh->sharedVertexData)
-		{
-			AddVertexData(mesh->sharedVertexData,mesh_data);
-		}
-
-		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
-		{
-			SubMesh *sub_mesh = mesh->getSubMesh(i);
-
-			if (!sub_mesh->useSharedVertices)
-			{
-				AddIndexData(sub_mesh->indexData,mesh_data->NumVertex,mesh_data);
-				AddVertexData(sub_mesh->vertexData,mesh_data);
-			}
-			else
-			{
-				AddIndexData(sub_mesh->indexData,0,mesh_data);
-			}
-		}
-		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
-	}
-
-	void TreeGeometryComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh)
-	{
-		if (!vertex_data)
-			return;
-
-		const VertexData *data = vertex_data;
-
-		const unsigned int prev_size = mesh->NumVertex;
-		mesh->NumVertex += (unsigned int)data->vertexCount;
-
-		Vec3* tmp_vert = new Vec3[mesh->NumVertex];
-		if (mesh->VertexVector)
-		{
-			memcpy(tmp_vert,mesh->VertexVector,sizeof(Vec3) * prev_size);
-			delete[] mesh->VertexVector;
-		}
-		mesh->VertexVector = tmp_vert;
-
-		// Get the positional buffer element
-		{
-			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
-			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
-			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
-
-			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-			float* pReal;
-			Vec3 * curVertices = &mesh->VertexVector[prev_size];
-			const unsigned int vertexCount = (unsigned int)data->vertexCount;
-			for(unsigned int j = 0; j < vertexCount; ++j)
-			{
-				posElem->baseVertexPointerToElement(vertex, &pReal);
-				vertex += vSize;
-
-				curVertices->x = (*pReal++);
-				curVertices->y = (*pReal++);
-				curVertices->z = (*pReal++);
-
-				//*curVertices = _transform * (*curVertices);
-
-				curVertices++;
-			}
-			vbuf->unlock();
-		}
-	}
-
-	void TreeGeometryComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh)
-	{
-		const unsigned int prev_size = mesh->NumFaces;
-		mesh->NumFaces += (unsigned int)data->indexCount;
-
-		unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
-		if (mesh->FaceVector)
-		{
-			memcpy (tmp_ind, mesh->FaceVector, sizeof(unsigned int) * prev_size);
-			delete[] mesh->FaceVector;
-		}
-		mesh->FaceVector = tmp_ind;
-
-		const unsigned int numTris = (unsigned int) data->indexCount / 3;
-		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
-		const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
-		unsigned int index_offset = prev_size;
-
-		if (use32bitindexes)
-		{
-			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < numTris; ++k)
-			{
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
-			}
-			ibuf->unlock();
-		}
-		else
-		{
-			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < numTris; ++k)
-			{
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-			}
-			ibuf->unlock();
-		}
-	}*/
-
-	
-
-	/*void TreeGeometryComponent::LoadDensityMap(const std::string &mapFile, int channel)
-	{
-		//Load image
-		Ogre::TexturePtr map = Ogre::TextureManager::getSingleton().load(mapFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-		//Copy image to pixelbox
-		if (!map.isNull())
-		{
-			//Get the texture buffer
-			Ogre::HardwarePixelBufferSharedPtr buff = map->getBuffer();
-
-			//Prepare a PixelBox (8-bit greyscale) to receive the density values
-			m_DensityMap = new Ogre::PixelBox(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_BYTE_L);
-			m_DensityMap->data = new Ogre::uint8[m_DensityMap->getConsecutiveSize()];
-
-			if (channel == CHANNEL_COLOR)
-			{
-				//Copy to the greyscale density map directly if no channel extraction is necessary
-				buff->blitToMemory(*m_DensityMap);
-			}
-			else
-			{
-				//If channel extraction is necessary, first convert to a PF_R8G8B8A8 format PixelBox
-				//This is necessary for the code below to properly extract the desired channel
-				Ogre::PixelBox pixels(Ogre::Box(0, 0, buff->getWidth(), buff->getHeight()), Ogre::PF_R8G8B8A8);
-				pixels.data = new Ogre::uint8[pixels.getConsecutiveSize()];
-				buff->blitToMemory(pixels);
-
-				//Pick out a channel from the pixel buffer
-				size_t channelOffset;
-				switch (channel){
-				case CHANNEL_RED: channelOffset = 3; break;
-				case CHANNEL_GREEN: channelOffset = 2; break;
-				case CHANNEL_BLUE: channelOffset = 1; break;
-				case CHANNEL_ALPHA: channelOffset = 0; break;
-				default: OGRE_EXCEPT(0, "Invalid channel", "GrassLayer::setDensityMap()"); break;
-				}
-
-				//And copy that channel into the density map
-				Ogre::uint8 *inputPtr = (Ogre::uint8*)pixels.data + channelOffset;
-				Ogre::uint8 *outputPtr = (Ogre::uint8*)m_DensityMap->data;
-				Ogre::uint8 *outputEndPtr = outputPtr + m_DensityMap->getConsecutiveSize();
-				while (outputPtr != outputEndPtr){
-					*outputPtr++ = *inputPtr;
-					inputPtr += 4;
-				}
-
-				//Finally, delete the temporary PF_R8G8B8A8 pixel buffer
-				delete[] pixels.data;
-			}
-		}
-	}*/
-
-
 	void TreeGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{
 		Ogre::Viewport *vp = evt.source;
@@ -515,25 +275,6 @@ namespace GASS
 		if(vp)
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
-
-	/*float TreeGeometryComponent::GetDensityAt(float x, float z)
-	{
-		assert(m_DensityMap);
-
-		unsigned int mapWidth = (unsigned int)m_DensityMap->getWidth();
-		unsigned int mapHeight = (unsigned int)m_DensityMap->getHeight();
-		float boundsWidth = m_MapBounds.width();
-		float boundsHeight = m_MapBounds.height();
-
-		unsigned int xindex = mapWidth * (x - m_MapBounds.left) / boundsWidth;
-		unsigned int zindex = mapHeight * (z - m_MapBounds.top) / boundsHeight;
-		if (xindex < 0 || zindex < 0 || xindex >= mapWidth || zindex >= mapHeight)
-			return 0.0f;
-
-		Ogre::uint8 *data = (Ogre::uint8*)m_DensityMap->data;
-		float val = data[mapWidth * zindex + xindex] / 255.0f;
-		return val;
-	}*/
 
 	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{

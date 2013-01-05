@@ -135,30 +135,32 @@ namespace GASS
 					{
 						ps.GUIControlType = CT_FILE_DIALOG;
 					}
-					else if(ct == "RESOURCE_COMBO")
+					else if(ct == "COMBO_BOX")
 					{
-						ps.GUIControlType = CT_RESOURCE_COMBO;
-					}
-					else if(ct == "MATERIAL_COMBO")
-					{
-						ps.GUIControlType = CT_CONTENT_COMBO;
-						ps.ComboContentType = CT_MATERIAL;
-					}
-					else if(ct == "TEXTURE_COMBO")
-					{
-						ps.GUIControlType = CT_CONTENT_COMBO;
-						ps.ComboContentType = CT_TEXTURE;
-					}
-					else if(ct == "MESH_COMBO")
-					{
-						ps.GUIControlType = CT_CONTENT_COMBO;
-						ps.ComboContentType = CT_MESH;
+						ps.GUIControlType = CT_COMBO_BOX;
 					}
 				}
 
 				if(gui_elem->Attribute("resourceGroup"))
 				{
 					ps.ResourceGroup = gui_elem->Attribute("resourceGroup");
+				}
+
+				if(gui_elem->Attribute("resourceType"))
+				{
+					std::string  rt = gui_elem->Attribute("resourceType");
+					if(rt == "MATERIAL")
+					{
+						ps.ResourceType = RT_MATERIAL;
+					}
+					else if(rt == "TEXTURE")
+					{
+						ps.ResourceType = RT_TEXTURE;
+					}
+					else if(rt == "MESH")
+					{
+						ps.ResourceType = RT_MESH;
+					}
 				}
 
 				if(gui_elem->Attribute("fileControlSettings"))

@@ -64,7 +64,7 @@ namespace GASS
 		virtual void AddResourceGroup(const std::string &resource_group);
 		virtual void LoadResourceGroup(const std::string &resource_group);
 		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
-		virtual std::vector<std::string> GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const;
+		virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const;
 	protected:
 		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
 		std::string m_RenderSystem;

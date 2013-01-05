@@ -87,7 +87,7 @@ namespace GASS
 		ss >> name;
 
 		//Use this name to generate unique filename, used by geometry interface. 
-		m_Filename = name;
+		//m_Filename = name;
 			
 		m_StaticGeometry  = ogsm->GetSceneManger()->createStaticGeometry(name);
 		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));

@@ -49,7 +49,7 @@ namespace GASS
 		virtual void OnDelete();
 
 		//IMeshComponent interface
-		virtual std::string GetFilename() const;
+		virtual Resource GetTerrainResource() const;
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		//ITerrainComponent
@@ -66,8 +66,8 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
 		void LoadFromFile();
-		std::string GetHeightMap()const {return m_HeightMapFile;}
-		void SetHeightMap(const std::string &filename);
+		Resource GetHeightMap()const {return m_HeightMapFile;}
+		void SetHeightMap(const Resource &filename);
 		std::string GetFromResourceSystem(const std::string &filename);
 		void UpdatePosition();
 		int GetIndexX() const;
@@ -76,28 +76,28 @@ namespace GASS
 		void SetIndexY(int index);
 		void SetPosition(const Vec3 &pos);
 		Vec3 GetPosition() const; 
-		void SetColorMap(const std::string &colormap);
-		std::string GetColorMap() const; 
-		void SetDiffuseLayer0(const std::string &diffuse);
-		std::string GetDiffuseLayer0() const;
-		void SetNormalLayer0(const std::string &diffuse);
-		std::string GetNormalLayer0() const;
-		void SetDiffuseLayer1(const std::string &diffuse);
-		std::string GetDiffuseLayer1() const;
-		void SetNormalLayer1(const std::string &diffuse);
-		std::string GetNormalLayer1() const;
-		void SetDiffuseLayer2(const std::string &diffuse);
-		std::string GetDiffuseLayer2() const;
-		void SetNormalLayer2(const std::string &diffuse);
-		std::string GetNormalLayer2() const;
-		void SetDiffuseLayer3(const std::string &diffuse);
-		std::string GetDiffuseLayer3() const;
-		void SetNormalLayer3(const std::string &diffuse);
-		std::string GetNormalLayer3() const;
-		void SetDiffuseLayer4(const std::string &diffuse);
-		std::string GetDiffuseLayer4() const;
-		void SetNormalLayer4(const std::string &diffuse);
-		std::string GetNormalLayer4() const;
+		void SetColorMap(const Resource &colormap);
+		Resource GetColorMap() const; 
+		void SetDiffuseLayer0(const Resource &diffuse);
+		Resource GetDiffuseLayer0() const;
+		void SetNormalLayer0(const Resource &diffuse);
+		Resource GetNormalLayer0() const;
+		void SetDiffuseLayer1(const Resource &diffuse);
+		Resource GetDiffuseLayer1() const;
+		void SetNormalLayer1(const Resource &diffuse);
+		Resource GetNormalLayer1() const;
+		void SetDiffuseLayer2(const Resource &diffuse);
+		Resource GetDiffuseLayer2() const;
+		void SetNormalLayer2(const Resource &diffuse);
+		Resource GetNormalLayer2() const;
+		void SetDiffuseLayer3(const Resource &diffuse);
+		Resource GetDiffuseLayer3() const;
+		void SetNormalLayer3(const Resource &diffuse);
+		Resource GetNormalLayer3() const;
+		void SetDiffuseLayer4(const Resource &diffuse);
+		Resource GetDiffuseLayer4() const;
+		void SetNormalLayer4(const Resource &diffuse);
+		Resource GetNormalLayer4() const;
 		void SetTilingLayer0(float value);
 		float GetTilingLayer0() const;
 		void SetTilingLayer1(float value);
@@ -108,40 +108,40 @@ namespace GASS
 		float GetTilingLayer3() const;
 		void SetTilingLayer4(float value);
 		float GetTilingLayer4() const;
-		void SetMask(const std::string &mask);
-		std::string GetMask() const;
-		void SetMaskLayer1(const std::string &mask);
-		std::string GetMaskLayer1() const;
-		void SetMaskLayer2(const std::string &mask);
-		std::string GetMaskLayer2() const;
+		void SetMask(const Resource &mask);
+		Resource GetMask() const;
+		//void SetMaskLayer1(const std::string &mask);
+		//std::string GetMaskLayer1() const;
+		//void SetMaskLayer2(const std::string &mask);
+		//std::string GetMaskLayer2() const;
 
 		//import functions that take full path to data, functions will only import data, 
-		//file path is not saved, ues SetHeightMap etc instead if ypu want to ,
+		//file path is not saved, ues SetHeightMap etc instead if you want to ,
 		//reimport data every load
-		void ImportHeightMap(const std::string &filename);
-		std::string GetImportHeightMap() const {return "";}
-		void ImportColorMap(const std::string &filename);
-		std::string GetImportColorMap() const {return "";}
-		void ImportDetailMask(const std::string &mask);
-		std::string GetImportDetailMask() const {return "";}
+		void ImportHeightMap(const FilePath &filename);
+		FilePath GetImportHeightMap() const {return "";}
+		void ImportColorMap(const FilePath &filename);
+		FilePath GetImportColorMap() const {return "";}
+		void ImportDetailMask(const FilePath &mask);
+		FilePath GetImportDetailMask() const {return FilePath("");}
 		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
 		
 		bool m_CreateCollisionMesh;
-		std::string m_HeightMapFile;
-		std::string m_ColorMap;
-		std::string m_Mask;
-		std::string m_MaskLayer1;
-		std::string m_MaskLayer2;
-		std::string m_DiffuseLayer0;
-		std::string m_NormalLayer0;
-		std::string m_DiffuseLayer1;
-		std::string m_NormalLayer1;
-		std::string m_DiffuseLayer2;
-		std::string m_NormalLayer2;
-		std::string m_DiffuseLayer3;
-		std::string m_NormalLayer3;
-		std::string m_DiffuseLayer4;
-		std::string m_NormalLayer4;
+		Resource m_HeightMapFile;
+		Resource m_ColorMap;
+		Resource m_Mask;
+		//Resource m_MaskLayer1;
+		//Resource m_MaskLayer2;
+		Resource m_DiffuseLayer0;
+		Resource m_NormalLayer0;
+		Resource m_DiffuseLayer1;
+		Resource m_NormalLayer1;
+		Resource m_DiffuseLayer2;
+		Resource m_NormalLayer2;
+		Resource m_DiffuseLayer3;
+		Resource m_NormalLayer3;
+		Resource m_DiffuseLayer4;
+		Resource m_NormalLayer4;
 		Ogre::SceneManager* m_OgreSceneManager;
 		Ogre::TerrainGroup* m_TerrainGroup;
 		Ogre::Terrain* m_Terrain;

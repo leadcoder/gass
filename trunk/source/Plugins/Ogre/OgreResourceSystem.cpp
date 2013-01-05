@@ -268,12 +268,12 @@ namespace GASS
 	}
 
 
-	std::vector<std::string> OgreResourceSystem::GetContentNamesFromGroup(ContentType ct, const std::string &resource_group) const
+	std::vector<std::string> OgreResourceSystem::GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const
 	{
 		std::vector<std::string> content;
-		switch(ct)
+		switch(rt)
 		{
-		case CT_MATERIAL:
+		case RT_MATERIAL:
 			{
 				Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
 				while(iter.hasMoreElements())
@@ -286,9 +286,25 @@ namespace GASS
 				}
 			}
 			break;
-		case CT_TEXTURE:
+		case RT_TEXTURE:
 			{
-				Ogre::TextureManager::ResourceMapIterator iter = Ogre::TextureManager::getSingleton().getResourceIterator();
+				std::vector<std::string> files = GetResourceNames(resource_group);
+
+				for(size_t i = 0; i < files.size(); i++)
+				{
+					const std::string ext = Misc::GetExtension(files[i]);
+					if(ext == "bmp"||
+						ext == "jpg"||
+						ext == "gif"||
+						ext == "dds"||
+						ext == "tga"||
+						ext == "png"
+						)
+						content.push_back(files[i]);
+				}
+
+
+		/*		Ogre::TextureManager::ResourceMapIterator iter = Ogre::TextureManager::getSingleton().getResourceIterator();
 				while(iter.hasMoreElements())
 				{
 					Ogre::TexturePtr ptr = iter.getNext();
@@ -296,22 +312,31 @@ namespace GASS
 					{
 						content.push_back(ptr->getName());
 					}
-				}
+				}*/
 			}
 			break;
 
-		case CT_MESH:
+		case RT_MESH:
 			{
-				/*Ogre::MeshManager::ResourceMapIterator iter = Ogre::MeshManager::getSingleton().getResourceIterator();
-				while(iter.hasMoreElements())
+				std::vector<std::string> meshes = GetResourceNames(resource_group);
+		
+				for(size_t i = 0; i < meshes.size(); i++)
 				{
-					Ogre::MeshPtr ptr = iter.getNext();
-					if(ptr->getGroup() == resource_group)
-					{
-						content.push_back(ptr->getName());
-					}
-				}*/
-				//content = GetResourceNames(resource_group);
+					if(Misc::GetExtension(meshes[i]) == "mesh")
+						content.push_back(meshes[i]);
+				}
+				
+			}
+			break;
+		case RT_SOUND:
+			{
+				std::vector<std::string> sounds = GetResourceNames(resource_group);
+		
+				for(size_t i = 0; i < sounds.size(); i++)
+				{
+					if(Misc::GetExtension(sounds[i]) == "wav")
+						content.push_back(sounds[i]);
+				}
 				
 			}
 			break;

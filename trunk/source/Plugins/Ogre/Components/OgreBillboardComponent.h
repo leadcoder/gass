@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -47,7 +46,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		//virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
 		void OnGeometryScale(GeometryScaleMessagePtr message);

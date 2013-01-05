@@ -71,8 +71,8 @@ namespace GASS
 		void SetDensityFactor(float factor);
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
-		std::string GetMaterial() const;
-		void SetMaterial(const std::string &name);
+		Resource GetMaterial() const;
+		void SetMaterial(const Resource &name);
 		std::string GetFadeTech() const;
 		void SetFadeTech(const std::string &tech);
 		std::string GetRenderTechnique() const;
@@ -101,9 +101,8 @@ protected:
 		void UpdateSway();
 		void update();
 		
-		
 		std::string m_ColorMapFilename;
-		std::string m_Material;
+		Resource m_Material;
 		GrassLoader* m_GrassLoader;
 		Vec2 m_MaxSize;
 		Vec2 m_MinSize;

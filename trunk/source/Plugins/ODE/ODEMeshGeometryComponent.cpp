@@ -38,6 +38,7 @@
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
@@ -67,10 +68,16 @@ namespace GASS
 	dGeomID ODEMeshGeometryComponent::CreateODEGeom()
 	{
 		dGeomID geom_id = 0;
-		IMeshComponent* mesh  = dynamic_cast<IMeshComponent*>(GetGeometry().get());
+		MeshComponentPtr mesh  = boost::shared_dynamic_cast<IMeshComponent>(GetGeometry());
 		if(mesh)
 		{
-			ODECollisionMesh col_mesh = ODEPhysicsSceneManagerPtr(m_SceneManager)->CreateCollisionMesh(mesh);
+			std::string col_mesh_id = GetSceneObject()->GetName();
+			ResourceComponentPtr res  = boost::shared_dynamic_cast<IResourceComponent>(GetGeometry());
+			if(res)
+			{
+				col_mesh_id = res->GetResource().Name();
+			}
+			ODECollisionMesh col_mesh = ODEPhysicsSceneManagerPtr(m_SceneManager)->CreateCollisionMesh(col_mesh_id,mesh);
 			geom_id = dCreateTriMesh(0, col_mesh.ID, 0, 0, 0);
 		}
 		return geom_id; 

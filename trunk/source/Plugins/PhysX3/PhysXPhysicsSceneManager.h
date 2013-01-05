@@ -54,8 +54,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		physx::PxScene* GetPxScene() {return m_PxScene;}
-		PhysXConvexMesh CreateConvexMesh(MeshComponentPtr mesh);
-		PhysXTriangleMesh CreateTriangleMesh(MeshComponentPtr mesh);
+		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
+		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 	
 		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);

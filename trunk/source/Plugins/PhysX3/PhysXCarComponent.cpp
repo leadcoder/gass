@@ -106,11 +106,18 @@ namespace GASS
 			return;
 
 		//Get chassis mesh
+		std::string col_mesh_id = GetSceneObject()->GetName();
+		ResourceComponentPtr res = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
+		if(res)
+		{
+			col_mesh_id = res->GetResource().Name();
+		}
+
 		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(geom,"PhysXCarComponent::OnInitialize");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		GASSAssert(scene_manager,"PhysXCarComponent::OnInitialize");
-		PhysXConvexMesh chassisMesh = scene_manager->CreateConvexMesh(geom);
+		PhysXConvexMesh chassisMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
 
 		std::vector<PxConvexMesh*> wheelConvexMeshes4;
 		std::vector<PxVec3 > wheelCentreOffsets4;
@@ -131,9 +138,16 @@ namespace GASS
 			SceneObjectPtr child = wheel_objects[i];
 			//we need to force geometry changed message to be fired before we can get data from wheel
 			child->SyncMessages(0);
+
+			std::string col_mesh_id = child->GetName();
+			ResourceComponentPtr res  = child->GetFirstComponentByClass<IResourceComponent>();
+			if(res)
+			{
+				col_mesh_id = res->GetResource().Name();
+			}
 			MeshComponentPtr geom = child->GetFirstComponentByClass<IMeshComponent>();
 			LocationComponentPtr location = child->GetFirstComponentByClass<ILocationComponent>();
-			PhysXConvexMesh wheelMesh = scene_manager->CreateConvexMesh(geom);
+			PhysXConvexMesh wheelMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
 			wheelConvexMeshes4.push_back(wheelMesh.m_ConvexMesh);
 			Vec3 pos = location->GetPosition();
 			wheelCentreOffsets4.push_back(PxVec3(pos.x,pos.y,pos.z));

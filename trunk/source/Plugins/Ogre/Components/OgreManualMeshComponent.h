@@ -34,7 +34,7 @@ namespace Ogre
 namespace GASS
 {
 	
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent ,BaseSceneComponent> , public IGeometryComponent
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IGeometryComponent
 	{
 	public:
 		OgreManualMeshComponent(void);

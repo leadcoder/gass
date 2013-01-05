@@ -136,10 +136,6 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreParticleSystemComponent::GetMeshData(MeshDataPtr mesh_data)
-	{
-
-	}
 
 	GeometryFlags OgreParticleSystemComponent::GetGeometryFlags() const
 	{

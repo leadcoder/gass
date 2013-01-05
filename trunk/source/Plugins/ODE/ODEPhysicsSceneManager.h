@@ -35,7 +35,7 @@ namespace GASS
 {
 	class IMeshComponent;
 	struct MeshData;
-
+	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
 	struct ODECollisionMesh
 	{
 		MeshData* Mesh;
@@ -53,7 +53,7 @@ namespace GASS
 		virtual void OnCreate();
 		dSpaceID GetPhysicsSpace(){return m_Space;}
 		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
-		ODECollisionMesh CreateCollisionMesh(IMeshComponent* mesh);
+		ODECollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
 		bool HasCollisionMesh(const std::string &name);
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
 		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
@@ -63,7 +63,6 @@ namespace GASS
 	protected:
 		void OnLoad(LoadSceneManagersMessagePtr message);
 		void OnUnload(UnloadSceneManagersMessagePtr message);
-		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;

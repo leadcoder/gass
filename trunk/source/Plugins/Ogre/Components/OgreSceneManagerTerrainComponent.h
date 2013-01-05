@@ -46,8 +46,8 @@ namespace GASS
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		virtual void pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData);
-		virtual std::string GetFilename()const {return m_TerrainConfigFile;}
-		virtual void SetFilename(const std::string &filename);
+		virtual Resource GetTerrainResource()const {return m_TerrainConfigFile;}
+		virtual void SetTerrainResource(const Resource &filename);
 
 		//ITerrainComponent
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal)const {}
@@ -74,7 +74,7 @@ namespace GASS
 		int m_NodesPerSideAllPagesW;
 		int m_NodesPerSideAllPagesH;
 		bool m_CreateCollisionMesh;
-		std::string m_TerrainConfigFile;
+		Resource m_TerrainConfigFile;
 		Ogre::SceneManager* m_OgreSceneManager;
 
 		//Helpers to access terrain height very fast

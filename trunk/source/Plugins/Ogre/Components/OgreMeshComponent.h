@@ -20,7 +20,10 @@
 #pragma once
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
+
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSResource.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
@@ -40,7 +43,7 @@ namespace GASS
 
 
 
-	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent
+	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
 	public:
 		OgreMeshComponent (void);
@@ -53,16 +56,18 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
-		//IMeshComponent
-		virtual std::string GetFilename()const {return m_Filename;}
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		//IResourceComponent
+		Resource GetResource() const {return m_MeshResource;}
 
+		//IMeshComponent
+		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq);
-		void SetFilename(const std::string &filename);
+		Resource GetMeshResource() const {return m_MeshResource;}
+		void SetMeshResource(const Resource &res);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
 
@@ -74,16 +79,14 @@ namespace GASS
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
-
 		void SetTexCoordSpeed(const Vec2 &speed);
-
 
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
 
 		Ogre::Entity* m_OgreEntity;
 		std::string m_RenderQueue;
-		std::string m_Filename;
+		Resource m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;

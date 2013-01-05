@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
@@ -43,7 +42,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+	//	virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
 		std::string GetParticleTemplate()const {return m_ParticleTemplate;}

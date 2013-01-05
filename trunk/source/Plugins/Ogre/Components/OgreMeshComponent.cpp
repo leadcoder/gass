@@ -64,7 +64,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
-		RegisterProperty<std::string>("Filename", &GASS::OgreMeshComponent::GetFilename, &GASS::OgreMeshComponent::SetFilename);
+		RegisterProperty<Resource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
 
@@ -83,7 +83,7 @@ namespace GASS
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_ReadyToLoadMesh = true;
-		SetFilename(m_Filename);
+		SetMeshResource(m_MeshResource);
 	}
 
 	void OgreMeshComponent::OnDelete()
@@ -100,13 +100,11 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::SetFilename(const std::string &filename) 
+	void OgreMeshComponent::SetMeshResource(const Resource &res) 
 	{
-		//remove path
-		m_Filename = FilePath(filename).GetFilename();
+		m_MeshResource = res;
 
-
-		if(m_Filename != "" && m_ReadyToLoadMesh)
+		if(m_MeshResource.Valid() && m_ReadyToLoadMesh)
 		{
 			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 			if(m_OgreEntity) //release previous mesh
@@ -121,7 +119,7 @@ namespace GASS
 			ss << GetName() << obj_id;
 			ss >> name;
 
-			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_Filename);
+			m_OgreEntity = lc->GetOgreNode()->getCreator()->createEntity(name,m_MeshResource.Name());
 			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_OgreEntity);
 			//m_OgreEntity->setQueryFlags(1);
 			//LoadLightmap();
@@ -131,41 +129,6 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
-
-	/*	void OgreMeshComponent::TryLoadLightmap()
-	{
-	std::string lightmap = Root::GetPtr()->GetLevel()->GetPath() + "/3dmodels/";
-	char temp[255];
-	Vec3 pos = m_SceneNode->GetAbsoluteTransformation().GetTranslation();
-	std::string base_name = Misc::RemoveExtension(m_Mesh->m_Name);
-	sprintf(temp,"%s_%d-%d-%d.tga",base_name.c_str(),(int) pos.x,(int) pos.y,(int) -pos.z);
-	lightmap += temp;
-	FILE* fp = fopen(lightmap.c_str(),"rb");
-	if(fp)
-	{
-	fclose(fp);
-	//Change material of enity
-	for(unsigned int i = 0;i < m_OgreEntity->getNumSubEntities();i++)
-	{
-	Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-	Ogre::MaterialPtr mat = se->getMaterial();
-	if(!mat.isNull())
-	{
-	std::string new_name = mat->getName() + lightmap;
-	Ogre::MaterialPtr new_mat = mat->clone(new_name);
-	Ogre::Technique * technique = new_mat->getTechnique(0);
-	Ogre::Pass* pass = technique->getPass(0);
-	pass->setLightingEnabled(false);
-	Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(lightmap,1);
-	textureUnit->setColourOperationEx(Ogre::LBX_MODULATE_X2);
-	se->setMaterialName(new_name);
-	//Ogre::MaterialManager::getSingleton().
-	}
-	}
-	}
-	}*/
-
-
 
 	Ogre::Bone* OgreMeshComponent::GetClosestBone(const Vec3 &pos)
 	{
@@ -402,8 +365,8 @@ namespace GASS
 
 	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		std::string name = message->GetFileName();
-		SetFilename(name);
+		Resource resource(message->GetFileName());
+		SetMeshResource(resource);
 	}
 
 	void OgreMeshComponent::OnTexCoordMessage(TextureCoordinateMessagePtr message)

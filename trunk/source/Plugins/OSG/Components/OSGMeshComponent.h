@@ -153,7 +153,7 @@ namespace GASS
 	};
 	
 
-	class OSGMeshComponent :	public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent
+	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
 	public:
 		OSGMeshComponent (void);
@@ -167,8 +167,10 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
+		//IResourceComponent
+		Resource GetResource() const {return m_MeshResource;}
+
 		//IMeshComponent
-		virtual std::string GetFilename() const {return m_Filename;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		//set external mesh
@@ -178,7 +180,8 @@ namespace GASS
 		
 		bool GetLighting() const;
 		void SetLighting(bool value);
-		void SetFilename(const std::string &filename);
+		Resource GetMeshResource() const {return m_MeshResource;}
+		void SetMeshResource(const Resource &res);
 		bool GetExpand() const;
 		void SetExpand(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
@@ -197,7 +200,7 @@ namespace GASS
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
-		std::string m_Filename;
+		Resource m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
 		osg::ref_ptr<osg::Node> m_MeshNode;

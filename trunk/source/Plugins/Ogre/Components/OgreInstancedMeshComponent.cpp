@@ -145,7 +145,7 @@ namespace GASS
 		ss >> name;
 
 		//Use this name to generate unique filename, used by geometry interface. 
-		m_Filename = name;
+		//m_Filename = name;
 
 		/*m_InstancedGeometry = new InstancedGeometry(mSceneMgr,m_Filename);
 

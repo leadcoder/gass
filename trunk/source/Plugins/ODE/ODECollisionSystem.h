@@ -67,7 +67,7 @@ namespace GASS
 		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
 	
 		//used by collision geometry
-		ODECollisionMeshInfo CreateCollisionMesh(MeshComponentPtr mesh);
+		ODECollisionMeshInfo CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		dSpaceID GetSpace() const;
 	private:
 		bool HasCollisionMesh(const std::string &name);

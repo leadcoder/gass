@@ -189,7 +189,7 @@ namespace GASS
 	}
 
 
-	std::vector<std::string> OSGResourceSystem::GetContentNamesFromGroup(ContentType ct,const std::string &resource_group) const
+	std::vector<std::string> OSGResourceSystem::GetResourcesFromGroup(ResourceType rt,const std::string &resource_group) const
 	{
 		std::vector<std::string> content;
 		return content;
