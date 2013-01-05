@@ -167,7 +167,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		{
 			item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
 			QStringList enumNames;
-			int select = 0;
+			int select = -1;
 			for(size_t i = 0 ; i < options.size() ; i++)
 			{
 				gp.m_Options.push_back(options[i]);
@@ -177,9 +177,58 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			}
 
 			item->setAttribute(QLatin1String("enumNames"), enumNames);
-			item->setValue(prop_value.c_str());
+			if(select > -1)
+				item->setValue(select);
 		}
 	}
+	else
+	{
+		boost::any any_value;
+		prop->GetValue(obj.get(), any_value);
+		try
+		{
+			GASS::Resource resource = boost::any_cast<GASS::Resource>(any_value);
+			GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+			if(rs == NULL)
+				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "GASSPropertyWidget::CreateProp");
+			std::vector<std::string> values = rs->GetResourcesFromGroup(ps->ResourceType,ps->ResourceGroup);
+				
+			item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+			QStringList enumNames;
+			int select = -1;
+			for(size_t i = 0 ; i < values.size() ; i++)
+			{
+				gp.m_Options.push_back(values[i]);
+				enumNames << values[i].c_str();
+				if(prop_value == values[i])
+						select = i;
+			}
+			item->setAttribute(QLatin1String("enumNames"), enumNames);
+			if(select > -1)
+				item->setValue(select);
+				
+		}
+		catch(...)
+		{
+
+		}
+
+		try
+		{
+			GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
+			std::string filename = file_path.GetFullPath();
+			filename = GASS::Misc::Replace(filename,"/","\\");
+			item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
+			item->setValue(filename.c_str());
+		}
+		catch(...)
+		{
+			
+				
+		}
+	}
+	
+
 	if(item == NULL)
 	{
 		//first check if specific control type is present
@@ -194,7 +243,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				//item = new CGASSFileProperty(obj,prop, filename.c_str(), ps->FileControlSettings.c_str(),_T(ps->Documentation.c_str()));
 			}
 			break;
-		case GASS::CT_RESOURCE_COMBO:
+		/*case GASS::CT_RESOURCE_COMBO:
 			{
 				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
 				if(rs == NULL)
@@ -249,7 +298,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				//	grid_prop->AddOption(options[i].c_str());
 				//}
 			}
-			break;
+			break;*/
 		}
 	}
 	if(item == NULL)
@@ -266,6 +315,9 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 
 	return item;
 }
+
+
+	
 
 /*
 QtVariantProperty * GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr obj, GASS::IProperty* prop,const GASS::PropertySettings *ps)

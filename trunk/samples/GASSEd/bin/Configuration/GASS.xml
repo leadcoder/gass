@@ -98,16 +98,17 @@
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/textures" Group="Ogre" Type="FileSystem" Recursive="true"/>!-->
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/materials/" Group="GASS" Type="FileSystem" Recursive="false"/>
+	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" Group="GASS_VEGETATION_MATERIALS" Type="FileSystem" Recursive="false"/>
+
 	<!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/particles/" Group="GASS" Type="FileSystem" Recursive="false"/>-->
     
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/misc" Group="GASS" Type="FileSystem" Recursive="false"/>
 	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/editor/icons/" Group="GASS" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain" Group="GASS" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" Group="GASS_VEGETATION_TEXTURES" Type="FileSystem" Recursive="false"/>
 	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/detail" Group="GASS_DETAIL_TEXTURES" Type="FileSystem" Recursive="false"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" Group="GASS_VEGETATION_TEXTURES" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" Group="GASS" Type="FileSystem" Recursive="true"/>-->
+	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS" Group="GASS" Type="FileSystem" Recursive="true"/>
+	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" Group="GASS_VEGETATION" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="false"/>
   </OgreResourceSystem>
 </Systems>
