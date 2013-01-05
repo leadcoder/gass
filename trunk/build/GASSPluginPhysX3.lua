@@ -86,6 +86,65 @@ end
 		"$(BOOST_HOME)/lib"
 	}
 	else 
+		configuration "Debug"
+		targetname "GASSPluginPhysX_d"
+		defines { "DEBUG" }
+		flags { "Symbols" }
+		links 
+		{
+			"GASSCore_d",
+			"GASSSim_d",
+			"tinyxml_d",
+			"tbb_debug",
+			"PhysX3CommonCHECKED_x86",
+			"PhysX3CHECKED_x86",
+			"PhysX3CookingCHECKED_x86",
+			"PhysX3CharacterKinematicCHECKED_x86",
+			"PhysX3ExtensionsCHECKED",
+			"PhysX3VehicleCHECKED",
+			"RepX3CHECKED",
+			"RepXUpgrader3CHECKED",
+			"PhysXProfileSDKCHECKED",
+			"PhysXVisualDebuggerSDKCHECKED",
+			"PxTaskCHECKED"
+		}
+	libdirs 
+	{
+		"../lib/",
+		"../dependencies/lib",
+		"$(BOOST_HOME)/lib",
+		"$(PHYSX_HOME)/Lib/win32"
+	}
+
+	configuration "Release"
+		targetname "GASSPluginPhysX"
+		defines { "NDEBUG" }
+		flags { "Optimize" }
+		links 
+		{
+			"GASSCore",
+			"GASSSim",
+			"tinyxml",
+			"tbb",
+			"PhysX3Common_x86",
+			"PhysX3_x86",
+			"PhysX3Cooking_x86",
+			"PhysX3CharacterKinematic_x86",
+			"PhysX3Extensions",
+			"PhysX3Vehicle",
+			"RepX3",
+			"RepXUpgrader3",
+			"PhysXProfileSDK",
+			"PhysXVisualDebuggerSDK",
+			"PxTask"
+		}
+	libdirs 
+	{
+		"../lib/",
+		"../dependencies/lib",
+		"$(PHYSX_HOME)/lib/win32",
+		"$(BOOST_HOME)/lib"
+	}
 end
 
 	
