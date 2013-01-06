@@ -54,15 +54,11 @@ namespace GASS
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
 
-		void SetExport(const std::string &filename);
-		std::string GetExport() const;
-
-		
+		void SetExport(const FilePath &filename);
+		FilePath GetExport() const;
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
-		
 		void OnMoved(TransformationNotifyMessagePtr message);
 		void OnUpdate(UpdateWaypointListMessagePtr message);
-
 		//Helpers
 		
 		void UpdatePath();

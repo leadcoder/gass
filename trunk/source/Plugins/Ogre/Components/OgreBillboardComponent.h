@@ -46,7 +46,6 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-		//virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
 		void OnGeometryScale(GeometryScaleMessagePtr message);
@@ -56,14 +55,14 @@ namespace GASS
 		void SetHeight(float height);
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
-		void SetMaterial(const std::string &mat) {m_Material = mat;}
-		std::string GetMaterial()const {return m_Material;}
+		void SetMaterial(const Resource &mat) {m_Material = mat;}
+		Resource GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		std::string m_RenderQueue;
-		std::string m_Material;
+		Resource m_Material;
 		bool m_CastShadow;
 
 		Ogre::BillboardSet* m_BillboardSet;

@@ -22,6 +22,7 @@
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSResource.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -33,8 +34,8 @@ namespace GASS
 		~ArrowGeometryComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void SetTexture(const std::string &texture_name);
-		std::string GetTexture() const;
+		void SetTexture(const Resource &texture_name);
+		Resource GetTexture() const;
 	protected:
 		void GenerateMesh();
 		void OnLoad(MessagePtr message);
@@ -45,7 +46,7 @@ namespace GASS
 		void SetColor(const Vec4 &value){m_Color =value;}
 
 		Vec2 m_Size;
-		std::string  m_Texture;
+		Resource  m_Texture;
 		Vec4 m_Color;
 	private:
 	};

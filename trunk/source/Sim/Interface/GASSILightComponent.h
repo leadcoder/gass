@@ -21,16 +21,23 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-
+#include "Core/Utils/GASSEnumBinder.h"
 namespace GASS
 {
-	enum
+	enum LightType
 	{
 		LT_DIRECTIONAL,
 		LT_SPOT,
 		LT_POINT
 	};
-	typedef int LightType;
+
+	START_ENUM_BINDER(LightType,LightTypeBinder)
+		BIND(LT_DIRECTIONAL)
+		BIND(LT_SPOT)
+		BIND(LT_POINT)
+	END_ENUM_BINDER(LightType,LightTypeBinder)
+	
+	
 
 	/**
 		Light source interface that all light components should be derived from.

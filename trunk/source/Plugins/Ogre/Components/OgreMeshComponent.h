@@ -66,8 +66,8 @@ namespace GASS
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq);
-		Resource GetMeshResource() const {return m_MeshResource;}
-		void SetMeshResource(const Resource &res);
+		MeshResource GetMeshResource() const {return m_MeshResource;}
+		void SetMeshResource(const MeshResource &res);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
 
@@ -86,7 +86,7 @@ namespace GASS
 
 		Ogre::Entity* m_OgreEntity;
 		std::string m_RenderQueue;
-		Resource m_MeshResource;
+		MeshResource m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;

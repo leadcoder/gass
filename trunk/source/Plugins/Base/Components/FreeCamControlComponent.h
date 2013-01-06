@@ -36,6 +36,17 @@ namespace GASS
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::weak_ptr<Scene> SceneWeakPtr;
 
+	enum MotionMode
+	{
+		MM_AIRCRAFT,
+		MM_RTS,
+	};
+
+	START_ENUM_BINDER(MotionMode,MotionModeBinder)
+		BIND(MM_AIRCRAFT)
+		BIND(MM_RTS)
+	END_ENUM_BINDER(MotionMode,MotionModeBinder)
+
 	/**
 	Basic motion model that can be used to move a camera. 
 	By listen to a ControlSettings the motion model takes input and
@@ -58,8 +69,8 @@ namespace GASS
 		void OnInput(ControllSettingsMessagePtr message);
 		void PositionChange(MessagePtr message);
 		void RotationChange(MessagePtr message);
-		void SetMode(const std::string &value) {m_Mode= value;}
-		std::string GetMode()const  {return m_Mode;}
+		void SetMode(const MotionModeBinder &value) {m_Mode = value;}
+		MotionModeBinder GetMode()const  {return m_Mode;}
 		void SetDebug(bool debug) {m_Debug= debug;}
 		bool GetDebug()const  {return m_Debug;}
 		void SetRunSpeed(Float speed){ m_RunSpeed = speed;}
@@ -70,7 +81,7 @@ namespace GASS
 		Float GetTurnSpeed()const { return m_TurnSpeed;}
 		void StepPhysics(double delta);
 		
-		std::string m_Mode;
+		MotionModeBinder m_Mode;
 		std::string m_ControlSettingName;
 		std::string m_AltControlSettingName;
 		Float m_FovChangeSpeed;

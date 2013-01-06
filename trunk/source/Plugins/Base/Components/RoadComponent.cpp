@@ -82,7 +82,7 @@ namespace GASS
 		
 		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts);
 		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain);
-		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
+		RegisterProperty<Resource>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
 	}
 
 	void RoadComponent::OnInitialize()
@@ -97,13 +97,13 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void RoadComponent::SetMaterial(const std::string &value)
+	void RoadComponent::SetMaterial(const Resource &value)
 	{
 		m_Material = value;
 		UpdateRoadMesh();
 	}
 
-	std::string RoadComponent::GetMaterial() const 
+	Resource RoadComponent::GetMaterial() const 
 	{
 		return m_Material;
 	}
@@ -204,7 +204,7 @@ namespace GASS
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 
-		mesh_data->Material = m_Material;
+		mesh_data->Material = m_Material.Name();
 		mesh_data->Type = TRIANGLE_LIST;
 
 		std::vector<Vec3> points = wpl->GetWaypoints();

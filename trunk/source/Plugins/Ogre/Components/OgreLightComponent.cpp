@@ -61,7 +61,7 @@ namespace GASS
 	void OgreLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OgreLightComponent, IComponent>);
-		RegisterProperty<LightType>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType);
+		RegisterEnumProperty<LightTypeBinder>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType);
 
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams);
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams);
@@ -115,7 +115,7 @@ namespace GASS
 	}
 
 
-	void OgreLightComponent::SetLightType(LightType lt)
+	void OgreLightComponent::SetLightType(LightTypeBinder lt)
 	{
 		m_LightType = lt;
 		if(m_OgreLight)

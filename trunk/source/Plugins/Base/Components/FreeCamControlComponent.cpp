@@ -66,7 +66,7 @@ namespace GASS
 		m_Active(false),
 		m_CurrentFov(45),
 		m_UpDownInput(0),
-		m_Mode("Aircraft"),
+		m_Mode(MM_AIRCRAFT),
 		m_Debug(false)
 	{
 
@@ -83,7 +83,7 @@ namespace GASS
 		RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
 		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
 		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
-		RegisterProperty<std::string>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
+		RegisterEnumProperty<MotionModeBinder>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
 		RegisterProperty<bool>("Debug", &GASS::FreeCamControlComponent::GetDebug, &GASS::FreeCamControlComponent::SetDebug);
 
 	}
@@ -261,7 +261,7 @@ namespace GASS
 		Vec3 east (1,0,0);
 
 
-		if(m_Mode == "Aircraft")
+		if(m_Mode == MM_AIRCRAFT)
 		{
 			//gravity.Set(0,0,0);
 			Vec3 cam_east = east * (-cos(beta) * sin(teta));
@@ -285,7 +285,7 @@ namespace GASS
 			forward_vel.Normalize();
 
 		}
-		else if(m_Mode == "RTS")
+		else if(m_Mode == MM_RTS)
 		{
 			Vec3 cam_east = east * -sin(teta);
 			Vec3 cam_north = north* cos(teta);

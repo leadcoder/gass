@@ -84,8 +84,8 @@ namespace GASS
 		void SetDitchWidth(float value) {m_DitchWidth = value;UpdateRoadMesh();}
 		float GetDitchWidth() const {return m_DitchWidth;}
 
-		void SetMaterial(const std::string &value);
-		std::string GetMaterial() const;
+		void SetMaterial(const Resource &value);
+		Resource GetMaterial() const;
 
 		Vec2 GetTileScale() const {return m_TileScale;}
 		void SetTileScale(const Vec2 &value) {m_TileScale = value;}
@@ -104,7 +104,7 @@ namespace GASS
 		float m_RoadWidth;
 		float m_RoadOffset;
 		float m_DitchWidth;
-		std::string m_Material;
+		Resource m_Material;
 		Vec2 m_TileScale;
 
 		TerrainLayerBinder m_TerrainPaintLayer;

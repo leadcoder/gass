@@ -70,7 +70,7 @@ namespace GASS
 		RegisterProperty<bool>("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints);
 		RegisterProperty<bool>("ShowPathLine", &WaypointListComponent::GetShowPathLine, &WaypointListComponent::SetShowPathLine);
 		RegisterProperty<int>("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps);
-		RegisterProperty<std::string>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport);
+		RegisterProperty<FilePath>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport);
 	}
 
 	void WaypointListComponent::OnInitialize()
@@ -311,7 +311,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
 	}
 
-	void WaypointListComponent::SetExport(const std::string &filename)
+	void WaypointListComponent::SetExport(const FilePath &filename)
 	{
 		if(!m_Initialized)
 			return;
@@ -326,7 +326,7 @@ namespace GASS
 
 			std::stringstream ss;
 			std::ofstream file_ptr;   
-			file_ptr.open(filename.c_str());      
+			file_ptr.open(filename.GetFullPath().c_str());      
 
 			for(size_t i = 0; i < wps.size(); i++)
 			{
@@ -337,8 +337,8 @@ namespace GASS
 		}
 	}
 
-	std::string WaypointListComponent::GetExport() const
+	FilePath WaypointListComponent::GetExport() const
 	{
-		return "";
+		return FilePath("");
 	}
 }

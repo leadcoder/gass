@@ -53,5 +53,15 @@ namespace GASS
 	private:
 		std::string m_ResourceName;
 	};
+
+	class GASSExport MeshResource: public Resource
+	{
+	public:
+		MeshResource(){}
+		MeshResource(const std::string &name) : Resource(name) {}
+		virtual ~MeshResource() {}
+		static std::vector<std::string> GetAllOptions(); 
+		static bool IsMultiValue() {return false;}
+	};
 }
 #endif 

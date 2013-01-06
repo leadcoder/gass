@@ -67,7 +67,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, IComponent>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
-		RegisterProperty<std::string>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
+		RegisterProperty<Resource>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
@@ -118,9 +118,9 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-		if(m_Material != "")
+		if(m_Material.Valid())
 		{
-			std::string material_name = m_Material;
+			std::string material_name = m_Material.Name();
 			Ogre::MaterialPtr material;
 			if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
 			else
@@ -137,11 +137,10 @@ namespace GASS
 				std::string fullpath;
 				IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
 
-				if(rs->GetFullPath(m_Material,fullpath))
+				//check if material is texture?
+				if(rs->GetFullPath(m_Material.Name(),fullpath))
 				{
-					Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material,0);
-					//pass->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
-					//pass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+					Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material.Name(),0);
 					pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
 				}
 			}

@@ -23,6 +23,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIResourceSystem.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -57,4 +58,15 @@ namespace GASS
 		}
 		return path;
 	}
+
+
+	std::vector<std::string> MeshResource::GetAllOptions()
+	{
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		if(rs == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
+		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_MESH,"GASS");
+		return options;
+	}
+		
 }

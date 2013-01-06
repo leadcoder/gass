@@ -76,6 +76,9 @@ namespace GASS
 	};
 
 	typedef boost::shared_ptr<OgreCameraComponent> OgreCameraComponentPtr;
+
+
+
 	
 }
 

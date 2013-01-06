@@ -64,7 +64,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
-		RegisterProperty<Resource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
+		RegisterEnumProperty<MeshResource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
 
@@ -100,7 +100,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::SetMeshResource(const Resource &res) 
+	void OgreMeshComponent::SetMeshResource(const MeshResource &res) 
 	{
 		m_MeshResource = res;
 
@@ -365,7 +365,7 @@ namespace GASS
 
 	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		Resource resource(message->GetFileName());
+		MeshResource resource(message->GetFileName());
 		SetMeshResource(resource);
 	}
 
