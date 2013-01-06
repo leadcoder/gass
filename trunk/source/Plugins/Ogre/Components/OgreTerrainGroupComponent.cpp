@@ -240,7 +240,6 @@ namespace GASS
 
 		if(m_CustomMaterial != "")
 		{
-
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW GASSTerrainMaterialGenerator(m_CustomMaterial)));
 			GASSTerrainMaterialGenerator::CustomMaterialProfile *profile = static_cast<GASSTerrainMaterialGenerator::CustomMaterialProfile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
 			profile->setCompositeMapEnabled(false);
@@ -318,12 +317,6 @@ namespace GASS
 	float OgreTerrainGroupComponent::GetImportScale() const
 	{
 		return m_TerrainScale;
-		/*if(m_TerrainGroup)
-		{
-			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-			return defaultimp.inputScale;
-		}
-		return 1;*/
 	}
 
 	void OgreTerrainGroupComponent::SetImportScale(const float &value)
@@ -393,7 +386,6 @@ namespace GASS
 	void OgreTerrainGroupComponent::SetSaveTerrain(const std::string &filename)
 	{
 		m_TerrainResource.SetName(Misc::GetFilename(filename));
-
 		if(m_TerrainGroup)
 		{
 			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");

@@ -34,9 +34,10 @@ namespace GASS
 		virtual ~Resource();
 		std::string Name() const { return m_ResourceName;}
 		void SetName(const std::string &name)  { m_ResourceName=name;}
+		std::string GetGroup() const { return m_ResourceGroup;}
+		void SetGroup(const std::string &group)  { m_ResourceGroup=group;}
 		FilePath GetFilePath() const;
 		bool Valid() const;
-		//std::string operator () {return ResourceName;}
 		friend std::ostream& operator << (std::ostream& os, const Resource& res)
 		{
 			os << res.Name();
@@ -52,6 +53,7 @@ namespace GASS
 		}
 	private:
 		std::string m_ResourceName;
+		std::string m_ResourceGroup;
 	};
 
 	class GASSExport MeshResource: public Resource
@@ -60,6 +62,27 @@ namespace GASS
 		MeshResource(){}
 		MeshResource(const std::string &name) : Resource(name) {}
 		virtual ~MeshResource() {}
+		static std::vector<std::string> GetAllOptions(); 
+		static bool IsMultiValue() {return false;}
+	};
+
+	class GASSExport TextureResource: public Resource
+	{
+	public:
+		TextureResource(){}
+		TextureResource(const std::string &name) : Resource(name) {}
+		virtual ~TextureResource() {}
+		static std::vector<std::string> GetAllOptions(); 
+		static bool IsMultiValue() {return false;}
+	};
+
+
+	class GASSExport MaterialResource : public Resource
+	{
+	public:
+		MaterialResource(){}
+		MaterialResource(const std::string &name) : Resource(name) {}
+		virtual ~MaterialResource() {}
 		static std::vector<std::string> GetAllOptions(); 
 		static bool IsMultiValue() {return false;}
 	};

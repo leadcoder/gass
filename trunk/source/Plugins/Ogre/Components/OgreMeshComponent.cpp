@@ -49,7 +49,8 @@ namespace GASS
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
 	{
 
 	}
@@ -63,7 +64,7 @@ namespace GASS
 	void OgreMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
-		RegisterProperty<std::string>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
+		RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
 		RegisterEnumProperty<MeshResource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
@@ -436,7 +437,7 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::SetRenderQueue(const std::string &rq) 
+	void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
 	{
 
 		/*RENDER_QUEUE_BACKGROUND = 0,
@@ -460,66 +461,10 @@ namespace GASS
 		RENDER_QUEUE_OVERLAY = 100, 
 		/// Final possible render queue, don't exceed this
 		RENDER_QUEUE_MAX = 105*/
-
 		m_RenderQueue = rq;
 		if(m_OgreEntity)
 		{
-			if(m_RenderQueue == "RENDER_QUEUE_BACKGROUND")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_SKIES_EARLY")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_1")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_1);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_WORLD_GEOMETRY_1")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_3")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_3);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_4")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_4);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_MAIN")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAIN);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_6")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_6);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_7")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_7);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_WORLD_GEOMETRY_2")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_2);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_8")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_8);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_9")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_9);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_SKIES_LATE")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-			}
-			else if(m_RenderQueue == "RENDER_QUEUE_OVERLAY")
-			{
-				m_OgreEntity->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY);
-			}
+			m_OgreEntity->setRenderQueueGroup(m_RenderQueue.GetValue());
 		}
 	}
 

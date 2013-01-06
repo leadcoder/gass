@@ -93,7 +93,6 @@ namespace GASS
 		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
         m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
 		
-
 		if(m_RenderQueue == "SkiesLate")
 		{
 				m_StaticGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);

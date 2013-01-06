@@ -29,6 +29,7 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Plugins/Ogre/OgreRenderQueueBinder.h"
 
 namespace Ogre
 {
@@ -40,9 +41,6 @@ namespace Ogre
 
 namespace GASS
 {
-
-
-
 	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
 	public:
@@ -64,8 +62,8 @@ namespace GASS
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 	protected:
-		std::string GetRenderQueue()const {return m_RenderQueue;}
-		void SetRenderQueue(const std::string &rq);
+		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
+		void SetRenderQueue(const RenderQueueBinder &rq);
 		MeshResource GetMeshResource() const {return m_MeshResource;}
 		void SetMeshResource(const MeshResource &res);
 		bool GetCastShadow()const {return m_CastShadow;}
@@ -85,7 +83,7 @@ namespace GASS
 		bool HasSkeleton() const;
 
 		Ogre::Entity* m_OgreEntity;
-		std::string m_RenderQueue;
+		RenderQueueBinder m_RenderQueue;
 		MeshResource m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;

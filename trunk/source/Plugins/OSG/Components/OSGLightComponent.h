@@ -35,8 +35,8 @@ namespace GASS
 		virtual ~OSGLightComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void SetLightType(LightType lt);
-		LightType GetLightType()const {return m_LightType;}
+		void SetLightType(LightTypeBinder lt);
+		LightTypeBinder GetLightType()const {return m_LightType;}
 		void SetAttenuationParams(const Vec4 &params);
 		Vec4 GetAttenuationParams()const {return m_AttenuationParams;}
 		void SetSpotParams(const Vec3 &params);
@@ -54,7 +54,7 @@ namespace GASS
 		
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		LightType m_LightType;
+		LightTypeBinder m_LightType;
 
 		Vec3 m_Diffuse;
 		Vec3 m_Specular;

@@ -45,7 +45,7 @@ namespace GASS
 	void OSGLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, IComponent>);
-		RegisterProperty<LightType>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType);
+		RegisterEnumProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType);
 
 
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams);
@@ -63,7 +63,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLocationLoaded,LocationLoadedMessage,1));
 	}
 
-	void OSGLightComponent::SetLightType(LightType lt)
+	void OSGLightComponent::SetLightType(LightTypeBinder lt)
 	{
 		m_LightType = lt;
 	}
