@@ -45,7 +45,7 @@ namespace GASS
 	void SensorComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitialized,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
 	
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -63,7 +63,7 @@ namespace GASS
 	}
 
 
-	void SensorComponent::OnSceneObjectCreated(PostSceneObjectInitializedPtr message)
+	void SensorComponent::OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message)
 	{
 		SignatureComponentPtr signature = message->GetSceneObject()->GetFirstComponentByClass<SignatureComponent>();
 		if(signature)

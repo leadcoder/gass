@@ -275,8 +275,6 @@ namespace GASS
 		return geom;
 	}
 
-	
-
 	unsigned long ODEBaseGeometryComponent::GetCollisionBits() const 
 	{
 		return m_CollisionBits;
@@ -346,7 +344,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = GetDebugObject();
 				obj->UnregisterForMessage(UNREG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
-				GetSceneObject()->GetScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
+				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new RemoveSceneObjectRequest(obj)));
 			}
 		}
 	}

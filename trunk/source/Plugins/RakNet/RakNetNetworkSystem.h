@@ -128,8 +128,8 @@ namespace GASS
 		void OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message);
 		void OnStopServer(StopServerMessagePtr message);
 		void OnStopClient(StopClientMessagePtr message);
-		void OnTimeOfDay(TimeOfDayMessagePtr message);
-		void OnWeatherMessage(WeatherMessagePtr message);
+		void OnTimeOfDay(TimeOfDayRequestPtr message);
+		void OnWeatherRequest(WeatherRequestPtr message);
 		void Update(double delta);
 	private:
 		//Helpers

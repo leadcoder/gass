@@ -49,7 +49,7 @@ namespace GASS
 	protected:
 		void OnLoad(MessagePtr message);		
 		void OnUnload(MessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 
 	private:
 		void UpdateFogSettings();

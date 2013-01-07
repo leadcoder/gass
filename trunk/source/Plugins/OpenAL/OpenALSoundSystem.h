@@ -62,7 +62,7 @@ namespace GASS
 
 		void OnInit(MessagePtr message);
 		void OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message);
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
 

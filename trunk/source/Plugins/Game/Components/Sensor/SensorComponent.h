@@ -23,7 +23,7 @@ namespace GASS
 	protected:
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);
-		void OnSceneObjectCreated(PostSceneObjectInitializedPtr message);
+		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 		bool IsNewTarget(SignatureComponentWeakPtr sig) const;
 		bool RemoveTarget(SignatureComponentWeakPtr sig);
 	private:

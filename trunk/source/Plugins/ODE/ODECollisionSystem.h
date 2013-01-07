@@ -75,7 +75,7 @@ namespace GASS
 		void OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message);
 		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
 		void OnSceneUnloaded(SceneUnloadNotifyMessagePtr message);
-		void OnSceneObjectInitialize(PreSceneObjectInitializedPtr message);
+		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

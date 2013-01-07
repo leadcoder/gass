@@ -42,7 +42,7 @@ namespace GASS
 		virtual void OnDelete();
 		Vec3 GetEyePosition();
 	protected:
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
 		std::string GetTexturePath(const std::string &side) const;

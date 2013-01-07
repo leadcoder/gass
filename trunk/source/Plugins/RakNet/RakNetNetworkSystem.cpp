@@ -130,11 +130,11 @@ namespace GASS
 	void RakNetNetworkSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
 	{
 		m_Scene = message->GetScene();
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayMessage,0));
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherMessage,WeatherMessage,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
 	}
 
-	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayMessagePtr message)
+	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayRequestPtr message)
 	{
 		if(m_IsServer && m_RakPeer)
 		{
@@ -150,7 +150,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnWeatherMessage(WeatherMessagePtr message)
+	void RakNetNetworkSystem::OnWeatherRequest(WeatherRequestPtr message)
 	{
 		if(m_IsServer && m_RakPeer)
 		{
@@ -604,7 +604,7 @@ namespace GASS
 				bs.Read(speed);
 				bs.Read(rise);
 				bs.Read(set);
-				MessagePtr message(new TimeOfDayMessage(time,set,rise,speed));
+				MessagePtr message(new TimeOfDayRequest(time,set,rise,speed));
 				
 				ScenePtr scene = GetScene();
 				if(scene)
@@ -620,7 +620,7 @@ namespace GASS
 				bs.Read(fog_dist);
 				bs.Read(fog_density);
 				bs.Read(cloud_factor);
-				MessagePtr message(new WeatherMessage(fog_dist,fog_density,cloud_factor));
+				MessagePtr message(new WeatherRequest(fog_dist,fog_density,cloud_factor));
 				
 				ScenePtr scene = GetScene();
 				if(scene)

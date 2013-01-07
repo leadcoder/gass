@@ -66,8 +66,8 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersRequest,0));
+		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
 		//GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage,0));
@@ -133,7 +133,7 @@ namespace GASS
 	}
 
 
-	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
+	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
 	{
 		ScenePtr scene = message->GetScene();
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
@@ -143,7 +143,7 @@ namespace GASS
 		system->Register(shared_from_this());
 	}
 
-	void RaknetNetworkSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
+	void RaknetNetworkSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
 	{
 
 		int address = (int) this;

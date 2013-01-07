@@ -205,7 +205,7 @@ namespace GASS
 			}
 			else
 			{
-				MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
+				SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
 				GetSceneObject()->GetScene()->PostMessage(remove_msg);
 
 				return;
@@ -262,7 +262,7 @@ namespace GASS
 			}
 
 			//GetSceneObject()->GetScene()->DeleteObject(GetSceneObject());
-			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
+			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
 			GetSceneObject()->GetScene()->PostMessage(remove_msg);
 
 			if(m_EndEffectTemplateName != "")
@@ -279,7 +279,7 @@ namespace GASS
 	void ProjectileComponent::SpawnEffect(const std::string &effect)
 	{
 		Vec3 vel(0,0,0);
-		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(effect,m_Pos,m_Rot,vel));
+		SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(effect,m_Pos,m_Rot,vel));
 		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 	}
 

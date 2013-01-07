@@ -69,8 +69,8 @@ namespace GASS
 
 	void Scene::Create()
 	{
-		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
-		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
+		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
+		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
 		m_CreateCalled = true;
 	}
 
@@ -146,9 +146,9 @@ namespace GASS
 	
 		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
-		MessagePtr scene_msg(new LoadSceneManagersMessage(shared_from_this()));
+		
 		//send load message
-		SendImmediate(scene_msg);
+		m_SceneMessageManager->SendImmediate(MessagePtr(new LoadSceneManagersRequest(shared_from_this())));
 
 		//load scene terrain instances
 		if(name != "")
@@ -265,12 +265,9 @@ namespace GASS
 		{
 			m_Root->OnDelete();
 			m_Root.reset();
-			//m_Root = SceneObjectPtr( new SceneObject());
-			//m_Root->SetName("Root");
-			//m_Root->Initialize(shared_from_this());
-			//m_ObjectManager->Clear();
 			
-			MessagePtr scene_msg(new UnloadSceneManagersMessage(shared_from_this()));
+			
+			MessagePtr scene_msg(new UnLoadSceneManagersRequest(shared_from_this()));
 			m_SceneMessageManager->SendImmediate(scene_msg);
 			MessagePtr unload_msg(new SceneUnloadNotifyMessage(shared_from_this()));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
@@ -287,8 +284,10 @@ namespace GASS
 			m_SceneManagers.clear();
 
 			m_SceneMessageManager = MessageManagerPtr(new MessageManager());
-			m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectMessage), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectMessage),0);
-			m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateMessage),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateMessage),0);
+			m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
+			m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
+
+			SimEngine::GetPtr()->GetSimSystemManager()->ClearMessages();
 		}
 	}
 
@@ -326,7 +325,7 @@ namespace GASS
 		return empty;
 	}
 
-	void Scene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message)
+	void Scene::OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message)
 	{
 		std::string obj_template = message->GetTemplateName();
 		SceneObjectPtr so = LoadObjectFromTemplate(obj_template,message->GetParent());
@@ -362,7 +361,7 @@ namespace GASS
 		return so;
 	}
 
-	void Scene::OnRemoveSceneObject(RemoveSceneObjectMessagePtr message)
+	void Scene::OnRemoveSceneObject(RemoveSceneObjectRequestPtr message)
 	{
 		SceneObjectPtr so = message->GetSceneObject();
 		if(so)
@@ -384,12 +383,12 @@ namespace GASS
 		m_SceneMessageManager->UnregisterForMessage(type, callback);
 	}
 
-	void Scene::PostMessage( MessagePtr message )
+	void Scene::PostMessage( SceneMessagePtr message )
 	{
 		m_SceneMessageManager->PostMessage(message);
 	}
 
-	void Scene::SendImmediate( MessagePtr message )
+	void Scene::SendImmediate( SceneMessagePtr message )
 	{
 		m_SceneMessageManager->SendImmediate(message);
 	}

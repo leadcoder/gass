@@ -130,11 +130,11 @@ namespace GASS
 	{
 		m_Scene = message->GetScene();
 		if(message->GetScene())
-			message->GetScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedNotifyMessage,0));
+			message->GetScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedEvent,0));
 	}
 
 
-	void OpenALSoundSystem::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	void OpenALSoundSystem::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());

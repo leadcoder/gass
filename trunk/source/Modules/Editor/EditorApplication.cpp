@@ -125,7 +125,7 @@ namespace GASS
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			MessagePtr camera_msg(new ChangeCameraMessage(free_obj,"RenderWindow"));
+			SceneMessagePtr camera_msg(new ChangeCameraRequest(free_obj,"RenderWindow"));
 			scene->PostMessage(camera_msg);
 		}
 

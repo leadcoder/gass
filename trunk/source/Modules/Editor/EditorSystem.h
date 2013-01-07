@@ -74,7 +74,7 @@ namespace GASS
 		void SetUseTerrainNormalOnDrop(bool value);
 		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
 		void OnNewScene(SceneAboutToLoadNotifyMessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;

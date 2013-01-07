@@ -61,8 +61,8 @@ namespace GASS
 		void SystemTick(double delta);
 		bool IsActive()const {return !m_Paused;}
 	protected:
-		void OnLoad(LoadSceneManagersMessagePtr message);
-		void OnUnload(UnloadSceneManagersMessagePtr message);
+		void OnLoad(LoadSceneManagersRequestPtr message);
+		void OnUnload(UnLoadSceneManagersRequestPtr message);
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;

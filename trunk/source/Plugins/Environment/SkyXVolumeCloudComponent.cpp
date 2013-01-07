@@ -72,10 +72,10 @@ namespace GASS
 
 	void SkyXVolumeCloudComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherMessage,WeatherMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXVolumeCloudComponent::OnWeatherRequest,WeatherRequest,0));
 	}
 
-	void SkyXVolumeCloudComponent::OnWeatherMessage(WeatherMessagePtr message)
+	void SkyXVolumeCloudComponent::OnWeatherRequest(WeatherRequestPtr message)
 	{
 		float cloud_factor = message->GetClouds();
 		SetGlobalOpacity(cloud_factor);

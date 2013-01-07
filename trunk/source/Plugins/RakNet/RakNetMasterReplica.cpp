@@ -222,7 +222,7 @@ namespace GASS
 		SceneObjectPtr obj(m_Owner);
 		if(obj) //remove object	
 		{
-			MessagePtr remove_msg(new RemoveSceneObjectMessage(obj));
+			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(obj));
 			obj->GetScene()->PostMessage(remove_msg);
 			
 		}

@@ -37,7 +37,7 @@ namespace GASS
 		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);

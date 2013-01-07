@@ -58,8 +58,8 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoad ,LoadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnUnload ,UnloadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoad ,LoadSceneManagersRequest,0));
+			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnUnload ,UnLoadSceneManagersRequest,0));
 			//scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
 		}
 	}

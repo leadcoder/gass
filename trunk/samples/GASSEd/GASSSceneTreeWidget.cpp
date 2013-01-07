@@ -30,8 +30,8 @@ GASSSceneTreeWidget::~GASSSceneTreeWidget()
 void GASSSceneTreeWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
-	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedMessage, 0));
-	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedNotifyMessage,0));
+	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
+	scene->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));
 	
 	m_Scene = scene;
 	m_Root= new  QTreeWidgetItem();
@@ -48,7 +48,7 @@ void GASSSceneTreeWidget::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr messag
 	m_ObjectMap.clear();
 }
 
-void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessagePtr message)
+void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedEventPtr message)
 {
 	GASS::SceneObjectPtr obj = message->GetSceneObject();
 	GASS::SceneObjectPtr parent = boost::shared_dynamic_cast<GASS::SceneObject>(obj->GetParent());
@@ -77,14 +77,15 @@ void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessa
 }
 
 
-void GASSSceneTreeWidget::OnUnloadSceneObject(GASS::SceneObjectRemovedNotifyMessagePtr message)
+void GASSSceneTreeWidget::OnUnloadSceneObject(GASS::SceneObjectRemovedEventPtr message)
 {
 	QTreeWidgetItem *item = GetTreeItem(message->GetSceneObject());
 	if(item)
 	{
 		m_ItemMap.erase(m_ItemMap.find(message->GetSceneObject().get()));
 		m_ObjectMap.erase(m_ObjectMap.find(item));
-		item->parent()->removeChild(item);
+		if(item->parent())
+			item->parent()->removeChild(item);
 	}
 }
 

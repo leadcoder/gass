@@ -413,8 +413,13 @@ namespace GASS
 					physx::PxTransform  t2 = m_WheelActor->getGlobalPose();
 					//t2.q.toRadiansAndUnitAxis(angle, axis);
 					physx::PxReal angle = t1.q.getAngle(t2.q);
-					//if(GetSceneObject()->GetName()=="JimTankWheelL1[8]")
-					//std::cout << "diff:" << angle2 << " Rad:" << angle << " Axis:" << axis.x << " " << axis.y << " " << axis.z << "\n";
+
+					float angle_rate =  m_WheelActor->getAngularVelocity().x;
+					
+					if(GetSceneObject()->GetName()=="JimTankWheelL1[8]")
+						std::cout << "Vel:" << m_WheelActor->getAngularVelocity().x << " " << m_WheelActor->getAngularVelocity().y << " " << m_WheelActor->getAngularVelocity().z << "\n";
+					
+						//std::cout << "diff:" << angle2 << " Rad:" << angle << " Axis:" << axis.x << " " << axis.y << " " << axis.z << "\n";
 					//	float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
 					
 					joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,0));

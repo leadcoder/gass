@@ -70,7 +70,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
 	}
 
-	void OSGCameraComponent::OnChangeCamera(ChangeCameraMessagePtr message)
+	void OSGCameraComponent::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		
@@ -285,7 +285,7 @@ namespace GASS
 
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 
-		//GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+		//GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 

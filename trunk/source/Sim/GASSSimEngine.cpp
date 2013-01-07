@@ -272,10 +272,7 @@ namespace GASS
 		return scene_names;
 	}
 
-	void SimEngine::UnloadScene()
-	{
-		//m_Scene.release();
-	}
+	
 
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{

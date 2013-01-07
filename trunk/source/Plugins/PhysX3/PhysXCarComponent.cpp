@@ -84,7 +84,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnInput,InputControllerMessage,0));
 
 
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnPostSceneObjectInitialized,PostSceneObjectInitialized,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->Register(shared_from_this());
 
@@ -100,7 +100,7 @@ namespace GASS
 		m_Vehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	void PhysXCarComponent::OnPostSceneObjectInitialized(PostSceneObjectInitializedPtr message)
+	void PhysXCarComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;

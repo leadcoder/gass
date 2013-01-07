@@ -130,7 +130,7 @@ namespace GASS
 			Vec3 vel(0,0,0);
 			Quaternion rot = Quaternion::IDENTITY;
 			Vec3 pos = location->GetWorldPosition();
-			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_DamageEffect1,pos,rot,vel));
+			SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(m_DamageEffect1,pos,rot,vel));
 			GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 		}
 	}

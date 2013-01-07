@@ -78,9 +78,9 @@ namespace GASS
 		if(scene)
 		{
 			//scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scene::GFX_COMPONENT_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
+			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 		}
 		else
 		{
@@ -122,7 +122,7 @@ namespace GASS
 		// Load default camera ect
 		//std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
 		/*SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		MessagePtr camera_msg(new ChangeCameraMessage(scene_object,));
+		MessagePtr camera_msg(new ChangeCameraRequest(scene_object,));
 		scene->SendImmediate(camera_msg);
 		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
 		scene_object->SendImmediate(pos_msg);*/
@@ -147,48 +147,13 @@ namespace GASS
 
 	}
 
-	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
+	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
-
 		OSGGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(message->GetViewport(), cam_comp);
-		/*osgViewer::ViewerBase::Views views;
-		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->getViews(views);
-		for(int i = 0; i < views.size(); i++)
-		{
-			if(views[i]->getCamera() != cam_comp->GetOSGCamera().get())
-			{
-				cam_comp->GetOSGCamera()->setGraphicsContext(views[i]->getCamera()->getGraphicsContext());
-				cam_comp->GetOSGCamera()->setViewport(views[i]->getCamera()->getViewport());
-				views[i]->getCamera()->setViewport(NULL);
-				views[i]->getCamera()->setGraphicsContext(NULL);
-				views[i]->setCamera(cam_comp->GetOSGCamera());
-			}
-		}*/
-
-		MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOSGCamera()));
-		GetScene()->PostMessage(cam_message);
+		GetScene()->PostMessage(SceneMessagePtr(new CameraChangedEvent(cam_obj,cam_comp->GetOSGCamera())));
 	}
-
-
-	
-
-	
-
-	/*void OSGGraphicsSceneManager::OnSceneObjectCreated(SceneObjectCreatedNotifyMessagePtr message)
-	{
-		//Initlize all gfx components and send scene mananger as argument
-		SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-		void* root = static_cast<void*>(m_RootNode.get());
-
-		//MessagePtr gfx_msg(new LoadGFXComponentsMessage(shared_from_this(),root));
-		//obj->SendImmediate(gfx_msg);
-		
-		//update scene data
-		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
-	}*/
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{

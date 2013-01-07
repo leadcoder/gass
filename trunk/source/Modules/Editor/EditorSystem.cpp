@@ -114,10 +114,10 @@ namespace GASS
 	void EditorSystem::OnNewScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
 	{
 		GASS::ScenePtr scene = message->GetScene();
-		scene->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraMessage,0));
+		scene->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraRequest,0));
 	}
 
-	void EditorSystem::OnChangeCamera(ChangeCameraMessagePtr message)
+	void EditorSystem::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		SceneObjectPtr cam_obj =  message->GetCamera();
 		m_ActiveCameraObject = cam_obj;

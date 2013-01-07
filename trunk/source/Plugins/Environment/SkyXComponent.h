@@ -43,8 +43,8 @@ namespace GASS
 		virtual void OnDelete();
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
-		void OnTimeOfDayMessage(TimeOfDayMessagePtr message);
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnTimeOfDayRequest(TimeOfDayRequestPtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
 
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void SetInnerRadius(const Float &value);

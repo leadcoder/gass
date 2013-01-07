@@ -45,7 +45,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionMessage,0));
 
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraRequest,1));
 
 		EditorSystemPtr es = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!es)
@@ -62,7 +62,7 @@ namespace GASS
 
 	void DistanceScaleComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnChangeCamera,ChangeCameraRequest));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -71,7 +71,7 @@ namespace GASS
 	}
 
 
-	void DistanceScaleComponent::OnChangeCamera(ChangeCameraMessagePtr message)
+	void DistanceScaleComponent::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		//Unregister from previous camera
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))

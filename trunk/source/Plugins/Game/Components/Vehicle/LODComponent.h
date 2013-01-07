@@ -47,7 +47,7 @@ namespace GASS
 	private:
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void OnObjectMoved(TransformationNotifyMessagePtr message);
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
 
 		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}
 		void SetLowLODDistance(float value) {m_LowLODDistance = value;}

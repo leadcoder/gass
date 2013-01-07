@@ -60,7 +60,7 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(typeid(LoadSceneManagersMessage), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
+			scene->RegisterForMessage(typeid(LoadSceneManagersRequest), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
 			//scene->RegisterForMessage(typeid(SceneObjectCreatedNotifyMessage), MESSAGE_FUNC( CoreSceneManager::OnLoadSceneObject),Scene::CORE_COMPONENT_LOAD_PRIORITY);
 		}
 	}
@@ -72,7 +72,7 @@ namespace GASS
 
 	void CoreSceneManager::OnLoad(MessagePtr message)
 	{
-		//LoadSceneManagersMessagePtr lsmm = boost::shared_static_cast<LoadSceneManagersMessagePtr>(message);
+		//LoadSceneManagersRequestPtr lsmm = boost::shared_static_cast<LoadSceneManagersRequestPtr>(message);
 		m_Init = true;
  	}
 }

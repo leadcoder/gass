@@ -27,7 +27,7 @@ namespace GASS
 	
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		void UpdateScale();
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);

@@ -129,9 +129,9 @@ namespace GASS
 			 a1,physx::PxTransform(physx::PxVec3(a2_pos.x,a2_pos.y,a2_pos.z),rot), //parent
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),rot));
 		
-		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
 		physx::PxD6JointDrive drive(10.0f, 100, 1000, false);
-		joint->setDrive(physx::PxD6Drive::eTWIST, drive);
+		joint->setDrive(physx::PxD6Drive::eSWING, drive);
 		joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint;
 	}

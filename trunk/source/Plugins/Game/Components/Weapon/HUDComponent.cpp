@@ -55,7 +55,7 @@ namespace GASS
 	void HUDComponent::OnInitialize()
 	{
 		
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage,1));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraRequest,1));
 		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
 		UpdateHUD();
 		m_Initialized = true;
@@ -63,10 +63,10 @@ namespace GASS
 
 	void HUDComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraRequest));
 	}
 
-	void HUDComponent::OnChangeCamera(ChangeCameraMessagePtr message)
+	void HUDComponent::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		if(message->GetCamera() == 	GetSceneObject()->GetParentSceneObject())
 		{

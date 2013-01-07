@@ -64,10 +64,10 @@ namespace GASS
 		
 	protected:
 		void OnLoad(MessagePtr message);		
-		void OnChangeCamera(ChangeCameraMessagePtr message);
-		void OnUnload(UnloadSceneManagersMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
+		void OnUnload(UnLoadSceneManagersRequestPtr message);
 		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
-		void OnWeatherMessage(WeatherMessagePtr message);
+		void OnWeatherRequest(WeatherRequestPtr message);
 
 		
 		

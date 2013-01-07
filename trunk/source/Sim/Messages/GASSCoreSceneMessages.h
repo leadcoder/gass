@@ -34,6 +34,17 @@ namespace GASS
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 
 
+
+	class SceneMessage : public BaseMessage
+	{
+	protected:
+		SceneMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef boost::shared_ptr<SceneMessage> SceneMessagePtr;
+
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
 	//*********************************************************
@@ -41,15 +52,15 @@ namespace GASS
 	/**
 	Message used to remove a scene object from the scene
 	*/
-	class RemoveSceneObjectMessage : public BaseMessage
+	class RemoveSceneObjectRequest : public SceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object The object to remove
 		*/
-		RemoveSceneObjectMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(object)
+		RemoveSceneObjectRequest(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  SceneMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -57,13 +68,13 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<RemoveSceneObjectMessage> RemoveSceneObjectMessagePtr;
+	typedef boost::shared_ptr<RemoveSceneObjectRequest> RemoveSceneObjectRequestPtr;
 
 
 	/**
 	Message used to spawn a scene object from from template in the scene
 	*/
-	class SpawnObjectFromTemplateMessage : public BaseMessage
+	class SpawnObjectFromTemplateRequest : public SceneMessage
 	{
 	public:
 		/**
@@ -74,14 +85,14 @@ namespace GASS
 		@param veclocity Veclocity of the new object
 		@param parent Optional parent object, otherwise this object is attached to the scene root
 		*/
-		SpawnObjectFromTemplateMessage(const std::string &template_name, 
+		SpawnObjectFromTemplateRequest(const std::string &template_name, 
 			const Vec3 &position,
 			const Quaternion &rotation,
 			const Vec3 &velocity,
 			SceneObjectPtr parent = SceneObjectPtr(),
 			SenderID sender_id = -1, 
 			double delay= 0) : 
-		BaseMessage(sender_id , delay), 
+		SceneMessage(sender_id , delay), 
 			m_Tempalate(template_name),
 			m_Position(position),
 			m_Rotation(rotation),
@@ -103,7 +114,7 @@ namespace GASS
 		SceneObjectPtr m_Parent;
 	};
 
-	typedef boost::shared_ptr<SpawnObjectFromTemplateMessage> SpawnObjectFromTemplateMessagePtr;
+	typedef boost::shared_ptr<SpawnObjectFromTemplateRequest> SpawnObjectFromTemplateRequestPtr;
 
 	
 	//*********************************************************
@@ -111,17 +122,27 @@ namespace GASS
 	//*********************************************************
 
 
+	class InternalSceneMessage : public BaseMessage
+	{
+	protected:
+		InternalSceneMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef boost::shared_ptr<InternalSceneMessage> InternalSceneMessagePtr;
+
 	/**
-	Message sent by the scene class while loading a 
+	Event sent by the scene class while loading a 
 	new scene.
 	It's up to each scene manager to catch this and load it's 
 	dependencies
 	*/
-	class LoadSceneManagersMessage : public BaseMessage
+	class LoadSceneManagersRequest: public InternalSceneMessage
 	{
 	public:
-		LoadSceneManagersMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Scene(scene)
+		LoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Scene(scene)
 		  {
 
 		  }
@@ -129,21 +150,21 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<LoadSceneManagersMessage> LoadSceneManagersMessagePtr;
+	typedef boost::shared_ptr<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;
 
 
 	/**
-	Message sent by the scene class 
+	Event sent by the scene class 
 	while unloading a scene.
 	It's up to each scene manager to catch this free 
 	it's resources.
 	
 	*/
-	class UnloadSceneManagersMessage : public BaseMessage
+	class UnLoadSceneManagersRequest : public InternalSceneMessage
 	{
 	public:
-		UnloadSceneManagersMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Scene(scene)
+		UnLoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Scene(scene)
 		  {
 
 		  }
@@ -151,20 +172,20 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<UnloadSceneManagersMessage> UnloadSceneManagersMessagePtr;
+	typedef boost::shared_ptr<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;
 
 	/**
 		Message sent by SceneObject before scene object is Initialized 
 	*/
-	class PreSceneObjectInitialized : public BaseMessage
+	class PreSceneObjectInitializedEvent : public InternalSceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object Pointer to the new object
 		*/
-		PreSceneObjectInitialized(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(object)
+		PreSceneObjectInitializedEvent(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -172,21 +193,21 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PreSceneObjectInitialized> PreSceneObjectInitializedPtr;
+	typedef boost::shared_ptr<PreSceneObjectInitializedEvent> PreSceneObjectInitializedEventPtr;
 
 
 	/**
 		Message sent by SceneObject after scene object components are initlized but before they are loaded
 	*/
-	class PostComponentsInitializedMessage : public BaseMessage
+	class PostComponentsInitializedEvent : public InternalSceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object Pointer to the new object
 		*/
-		PostComponentsInitializedMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(object)
+		PostComponentsInitializedEvent(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -194,20 +215,20 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PostComponentsInitializedMessage> PostComponentsInitializedMessagePtr;
+	typedef boost::shared_ptr<PostComponentsInitializedEvent> PostComponentsInitializedEventPtr;
 
 	/**
 		Message sent after SceneObject is Initialized
 	*/
-	class PostSceneObjectInitialized : public BaseMessage
+	class PostSceneObjectInitializedEvent : public InternalSceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object Pointer to the new object
 		*/
-		PostSceneObjectInitialized(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(object)
+		PostSceneObjectInitializedEvent(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -215,21 +236,21 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PostSceneObjectInitialized> PostSceneObjectInitializedPtr;
+	typedef boost::shared_ptr<PostSceneObjectInitializedEvent> PostSceneObjectInitializedEventPtr;
 
 
 	/**
 		Message sent by SceneObjectManager after scene object is removed from the scene 
 	*/
-	class SceneObjectRemovedNotifyMessage : public BaseMessage
+	class SceneObjectRemovedEvent : public InternalSceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param object Pointer to the object that has been removed
 		*/
-		SceneObjectRemovedNotifyMessage(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(object)
+		SceneObjectRemovedEvent(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  InternalSceneMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -237,8 +258,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<SceneObjectRemovedNotifyMessage> SceneObjectRemovedNotifyMessagePtr;
-	
+	typedef boost::shared_ptr<SceneObjectRemovedEvent> SceneObjectRemovedEventPtr;
 }
 
 #endif

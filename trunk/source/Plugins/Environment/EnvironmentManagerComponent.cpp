@@ -130,7 +130,7 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherMessage,WeatherMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherRequest,WeatherRequest,0));
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::Root::getSingleton().addFrameListener(this);
@@ -163,11 +163,11 @@ namespace GASS
 		SetSunGradient(m_SunGradientValues);
 		SetAmbientGradient(m_AmbientGradientValues);
 		SetFogGradient(m_FogGradientValues);
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent,0));
 		
 	}
 
-	void EnvironmentManagerComponent::OnWeatherMessage(WeatherMessagePtr message)
+	void EnvironmentManagerComponent::OnWeatherRequest(WeatherRequestPtr message)
 	{
 		m_CloudFactor = message->GetClouds();
 	}
@@ -180,7 +180,7 @@ namespace GASS
 
 		m_SunLight = NULL;
 		Ogre::Root::getSingleton().removeFrameListener(this);
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
@@ -370,7 +370,7 @@ namespace GASS
 
 
 
-	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		m_CurrentCamera = static_cast<Ogre::Camera*> (message->GetUserData());
 	}

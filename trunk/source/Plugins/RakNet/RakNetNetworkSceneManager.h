@@ -43,8 +43,8 @@ namespace GASS
 		virtual void OnCreate();
 		void Update(double delta);
 	protected:
-		void OnLoad(LoadSceneManagersMessagePtr message);
-		void OnUnload(UnloadSceneManagersMessagePtr message);
+		void OnLoad(LoadSceneManagersRequestPtr message);
+		void OnUnload(UnLoadSceneManagersRequestPtr message);
 		void OnNewMasterReplica(MasterReplicaCreatedMessagePtr message);
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 	private:

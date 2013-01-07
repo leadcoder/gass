@@ -367,9 +367,11 @@ void GASSEd::OnOpen()
 	GASSSceneSelectionWidget dialog;
     dialog.exec();
 	std::string selected_scene = dialog.GetSelected();
-	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().LoadScene(selected_scene));
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
-	
+	if(selected_scene != "")
+	{
+		GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().LoadScene(selected_scene));
+		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+	}
 }
 
 void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)

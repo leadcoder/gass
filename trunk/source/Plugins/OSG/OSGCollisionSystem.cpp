@@ -125,13 +125,13 @@ namespace GASS
 	{
 		m_RequestMap.clear();
 		m_ResultMap.clear();
-		message->GetScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage));	
+		message->GetScene()->UnregisterForMessage(UNREG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraRequest));	
 	}
 
 
 	void OSGCollisionSystem::OnLoadScene(SceneAboutToLoadNotifyMessagePtr message)
 	{
-		message->GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraMessage,0));	
+		message->GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraRequest,0));	
 	}
 
 	CollisionHandle OSGCollisionSystem::Request(const CollisionRequest &request)
@@ -179,7 +179,7 @@ namespace GASS
 	}
 	
 
-	void OSGCollisionSystem::OnChangeCamera(ChangeCameraMessagePtr message)
+	void OSGCollisionSystem::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 
 	}

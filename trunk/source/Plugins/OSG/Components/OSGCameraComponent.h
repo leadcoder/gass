@@ -40,7 +40,7 @@ namespace GASS
 		void OnParameter(CameraParameterMessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);
 		float GetNearClipDistance() const;

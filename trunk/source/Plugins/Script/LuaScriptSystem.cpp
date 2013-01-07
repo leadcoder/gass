@@ -61,7 +61,7 @@ namespace GASS
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		//LuaScriptManager* lsm = new LuaScriptManager();
-		lua_State *L = lua_open();
+	//	lua_State *L = lua_open();
 		
 		//luaopen_GASS(L);
 	}

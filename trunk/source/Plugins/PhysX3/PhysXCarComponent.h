@@ -41,7 +41,7 @@ namespace GASS
 		void SetMass(float mass);
 		void SceneManagerTick(double delta);
 	protected:
-		void OnPostSceneObjectInitialized(PostSceneObjectInitializedPtr message);
+		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);

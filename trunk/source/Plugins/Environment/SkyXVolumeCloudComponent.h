@@ -43,7 +43,7 @@ namespace GASS
 		virtual void OnInitialize();
 		void CreateVolume();
 	protected:
-		void OnWeatherMessage(WeatherMessagePtr message);
+		void OnWeatherRequest(WeatherRequestPtr message);
 		void SetNoiseScale(const Float &value);
 		Float GetNoiseScale() const;
 		void SetCloudFieldScale(const Float &value);

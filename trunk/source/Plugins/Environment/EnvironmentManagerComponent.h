@@ -47,8 +47,8 @@ namespace GASS
 	protected:
 		void UpdateEnvironmentLighting();
 		void OnLoad(MessagePtr message);
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
-		void OnWeatherMessage(WeatherMessagePtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
+		void OnWeatherRequest(WeatherRequestPtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void SetWaterGradient(const std::vector<Vec3> &value);
 		std::vector<Vec3>  GetWaterGradient() const ;

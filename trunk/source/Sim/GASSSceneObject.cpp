@@ -112,8 +112,8 @@ namespace GASS
 		//SendImmediate(msg);
 
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-		MessagePtr unload_msg(new SceneObjectRemovedNotifyMessage(this_obj));
-		GetScene()->SendImmediate(unload_msg);
+		MessagePtr unload_msg(new SceneObjectRemovedEvent(this_obj));
+		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
 	}
 
 	void SceneObject::Initialize(ScenePtr scene)
@@ -121,8 +121,8 @@ namespace GASS
 		m_Scene = scene;
 
 		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
-		MessagePtr pre_load_msg(new PreSceneObjectInitialized(this_obj));
-		GetScene()->SendImmediate(pre_load_msg);
+		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
+		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
 	
 		
 
@@ -135,8 +135,8 @@ namespace GASS
 			bsc->OnInitialize();
 			++iter;
 		}
-		MessagePtr load_msg(new PostComponentsInitializedMessage(this_obj));
-		GetScene()->SendImmediate(load_msg);
+		MessagePtr load_msg(new PostComponentsInitializedEvent(this_obj));
+		GetScene()->m_SceneMessageManager->SendImmediate(load_msg);
 
 		//SendImmediate(MessagePtr(new LoadComponentsMessage()));
 		//Pump initial messages
@@ -149,8 +149,8 @@ namespace GASS
 			child->Initialize(scene);
 		}
 
-		MessagePtr post_load_msg(new PostSceneObjectInitialized(this_obj));
-		GetScene()->SendImmediate(post_load_msg);
+		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
+		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()

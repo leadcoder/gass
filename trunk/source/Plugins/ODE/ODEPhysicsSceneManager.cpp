@@ -82,8 +82,8 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersMessage,0));
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnloadSceneManagersMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersRequest,0));
+		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
 		//GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
@@ -103,7 +103,7 @@ namespace GASS
 	}*/
 
 
-	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
+	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
 	{
 		ScenePtr scene = message->GetScene();
 
@@ -135,7 +135,7 @@ namespace GASS
 		m_Init = true;
 	}
 
-	void ODEPhysicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
+	void ODEPhysicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
 	{
 		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
 		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);

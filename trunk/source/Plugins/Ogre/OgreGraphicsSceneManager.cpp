@@ -114,14 +114,14 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		assert(scene);
 
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersMessage,Scene::GFX_SYSTEM_LOAD_PRIORITY));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnloadSceneManagersMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnLoadSceneManagersRequest,0));
 		//scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraMessage,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherMessage,WeatherMessage,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 	}
 
-	void OgreGraphicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
+	void OgreGraphicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
 	{
 		if(m_SceneMgr)
 		{
@@ -156,14 +156,14 @@ namespace GASS
 		new DebugDrawer(m_SceneMgr, 0.5f);
 	}
 
-	void OgreGraphicsSceneManager::OnWeatherMessage(WeatherMessagePtr message)
+	void OgreGraphicsSceneManager::OnWeatherRequest(WeatherRequestPtr message)
 	{
 		//float fog_end = 100 + (1.0-(message->GetFog()))*2000;
 		SetFogEnd(message->GetFogDistance());
 		SetFogDensity(message->GetFogDensity());
 	}
 
-	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraMessagePtr message)
+	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		const std::string vp_name = message->GetViewport();
@@ -174,7 +174,7 @@ namespace GASS
 			OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
 			OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 
-			MessagePtr cam_message(new CameraChangedNotifyMessage(cam_obj,cam_comp->GetOgreCamera()));
+			SceneMessagePtr cam_message(new CameraChangedEvent(cam_obj,cam_comp->GetOgreCamera()));
 			GetScene()->PostMessage(cam_message);
 		}
 		else

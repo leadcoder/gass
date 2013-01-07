@@ -68,7 +68,7 @@ namespace GASS
 
 	void OSGSkyboxComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedEvent,0));
 
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
@@ -94,10 +94,10 @@ namespace GASS
 
 	void OSGSkyboxComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedEvent));
 	}
 	
-	void OSGSkyboxComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	void OSGSkyboxComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		m_ActiveCameraObject = cam_obj;

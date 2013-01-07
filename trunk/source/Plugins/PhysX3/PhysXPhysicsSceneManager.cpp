@@ -65,13 +65,13 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnLoad ,LoadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnUnload ,UnloadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedMessage,0));
+			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnLoad ,LoadSceneManagersRequest,0));
+			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnUnload ,UnLoadSceneManagersRequest,0));
+			scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
 		}
 	}
 
-	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedMessagePtr message)
+	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
 	{
 		SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
@@ -278,7 +278,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXPhysicsSceneManager::OnLoad(LoadSceneManagersMessagePtr message)
+	void PhysXPhysicsSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
 		if(system == NULL)
@@ -337,7 +337,7 @@ namespace GASS
 		m_Init = true;
 	}
 
-	void PhysXPhysicsSceneManager::OnUnload(UnloadSceneManagersMessagePtr message)
+	void PhysXPhysicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
 	{
 		//TODO: Free data
 	}

@@ -79,7 +79,7 @@ namespace GASS
 		
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();
-		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitialized,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitializedEvent,0));
 	}
 
 	void ODECollisionSystem::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
@@ -87,7 +87,7 @@ namespace GASS
 
 	}
 
-	void ODECollisionSystem::OnSceneObjectInitialize(PreSceneObjectInitializedPtr message)
+	void ODECollisionSystem::OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message)
 	{
 		//auto create collision component
 		SceneObjectPtr object = message->GetSceneObject();

@@ -46,7 +46,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		void UpdateHUD();
 		std::string GetMaterial() const {return m_Material;}
 		void SetMaterial(const std::string &material);

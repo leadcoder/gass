@@ -92,7 +92,7 @@ namespace GASS
 		if(m_TimeToLive > -1)
 		{
 			//Send remove message with delay
-			MessagePtr remove_msg(new RemoveSceneObjectMessage(GetSceneObject()));
+			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
 			remove_msg->SetDeliverDelay(m_TimeToLive);
 			GetSceneObject()->GetScene()->PostMessage(remove_msg);
 		}

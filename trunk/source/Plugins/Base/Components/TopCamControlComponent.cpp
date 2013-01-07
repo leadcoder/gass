@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
 		ScenePtr scene = GetSceneObject()->GetScene();
-		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage, 0 ));
+		scene->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraRequest, 0 ));
 	
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -88,12 +88,12 @@ namespace GASS
 	void TopCamControlComponent::OnDelete()
 	{
 		ScenePtr scene = GetSceneObject()->GetScene();
-		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraMessage));
+		scene->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraRequest));
 	}
 
 	void TopCamControlComponent::OnChangeCamera(MessagePtr message)
 	{
-		ChangeCameraMessagePtr cc_mess = boost::shared_static_cast<ChangeCameraMessage>(message);
+		ChangeCameraRequestPtr cc_mess = boost::shared_static_cast<ChangeCameraRequest>(message);
 		SceneObjectPtr cam_obj = cc_mess->GetCamera();
 
 		if(GetSceneObject() == cam_obj)

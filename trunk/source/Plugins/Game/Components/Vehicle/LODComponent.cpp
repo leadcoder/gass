@@ -60,7 +60,7 @@ namespace GASS
 	void LODComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationNotifyMessage,0));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedEvent,0));
 		//get active camera
 		
 		SceneObjectPtr camera = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstChildByName("FreeCamera",false);
@@ -78,7 +78,7 @@ namespace GASS
 
 	void LODComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedEvent));
 
 		SceneObjectPtr cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam)
@@ -88,7 +88,7 @@ namespace GASS
 	}
 	
 	
-	void LODComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	void LODComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		

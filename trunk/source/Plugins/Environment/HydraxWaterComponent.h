@@ -63,7 +63,7 @@ namespace GASS
 		virtual void OnDelete();
 		Hydrax::Hydrax* GetHydrax() const {return m_Hydrax;}
 	protected:
-		void OnChangeCamera(CameraChangedNotifyMessagePtr message);
+		void OnChangeCamera(CameraChangedEventPtr message);
 		void CreateHydrax(Ogre::SceneManager* sm, Ogre::Camera* ocam, Ogre::Viewport* vp);
 		bool frameStarted(const Ogre::FrameEvent& evt);
 		void SetConfigurationFile(const std::string &cfg_file);

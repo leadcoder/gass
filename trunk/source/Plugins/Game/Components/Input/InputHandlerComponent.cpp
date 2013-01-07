@@ -81,7 +81,7 @@ namespace GASS
 			if(camera)
 			{
 				//const std::string vp_name = camera->GetPrefredViewport();
-				MessagePtr cam_msg(new ChangeCameraMessage(camera->GetSceneObject(),vp_name));
+				MessagePtr cam_msg(new ChangeCameraRequest(camera->GetSceneObject(),vp_name));
 				GetSceneObject()->GetScene()->SendImmediate(cam_msg);
 			}
 		}*/

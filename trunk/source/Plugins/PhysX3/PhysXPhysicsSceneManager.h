@@ -61,9 +61,9 @@ namespace GASS
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:
 		void SystemTick(double delta);
-		void OnLoad(LoadSceneManagersMessagePtr message);
-		void OnUnload(UnloadSceneManagersMessagePtr message);
-		void OnSceneObjectLoaded(PostComponentsInitializedMessagePtr message);
+		void OnLoad(LoadSceneManagersRequestPtr message);
+		void OnUnload(UnLoadSceneManagersRequestPtr message);
+		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		bool HasConvexMesh(const std::string &name) const;

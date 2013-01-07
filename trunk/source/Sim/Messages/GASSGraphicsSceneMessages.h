@@ -22,6 +22,7 @@
 #define GRAPHICS_SCENE_MESSAGES_H
 
 #include "Sim/GASSCommon.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
@@ -42,7 +43,7 @@ namespace GASS
 	Message used for changing camera un viewport. 
 	This message can be sent by user.
 	*/
-	class ChangeCameraMessage : public BaseMessage
+	class ChangeCameraRequest : public SceneMessage
 	{
 	public:
 		/**
@@ -50,8 +51,8 @@ namespace GASS
 			@param camera The camera to activate
 			@param viewport The name of the viewport target
 		*/
-		ChangeCameraMessage(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
+		ChangeCameraRequest(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
+		  SceneMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
 		  {
 
 		  }
@@ -61,7 +62,7 @@ namespace GASS
 		SceneObjectPtr m_Camera;
 		std::string m_Viewport;
 	};
-	typedef boost::shared_ptr<ChangeCameraMessage> ChangeCameraMessagePtr;
+	typedef boost::shared_ptr<ChangeCameraRequest> ChangeCameraRequestPtr;
 
 
 
@@ -71,7 +72,7 @@ namespace GASS
 	scenes that support dynamic lighting
 	*/
 
-	class TimeOfDayMessage : public BaseMessage
+	class TimeOfDayRequest : public BaseMessage
 	{
 	public:
 		/**
@@ -81,7 +82,7 @@ namespace GASS
 		@param sun_rise Sun set rise in hours
 		@param speed Time speed multiplier.
 		*/
-		TimeOfDayMessage(double time, double sun_set,double sun_rise, double speed, SenderID sender_id = -1, double delay= 0) :
+		TimeOfDayRequest(double time, double sun_set,double sun_rise, double speed, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay),
 			  m_Time(time),
 			  m_Speed(speed),
@@ -100,7 +101,7 @@ namespace GASS
 		double m_SunRise;
 		double m_SunSet;
 	};
-	typedef boost::shared_ptr<TimeOfDayMessage> TimeOfDayMessagePtr;
+	typedef boost::shared_ptr<TimeOfDayRequest> TimeOfDayRequestPtr;
 
 	/**
 	Change scene weather. 
@@ -108,7 +109,7 @@ namespace GASS
 	a sky system for the actual clouds and also maybee 
 	water/sea system for changing waves, gfxsystem for the fog etc. 
 	*/
-	class WeatherMessage : public BaseMessage
+	class WeatherRequest : public BaseMessage
 	{
 	public:
 		/**
@@ -116,7 +117,7 @@ namespace GASS
 		@param fog_dist Distance where fog starts
 		@param clouds Value between 0-1 to indicate cloud factor
 		*/
-		WeatherMessage(float fog_dist, float fog_density, float clouds, SenderID sender_id = -1, double delay= 0) :
+		WeatherRequest(float fog_dist, float fog_density, float clouds, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage( sender_id , delay),
 			  m_FogDensity(fog_density),
 			  m_FogDistance(fog_dist),
@@ -134,25 +135,21 @@ namespace GASS
 		float m_Clouds;
 		Vec3 m_FogColor;
 	};
-	typedef boost::shared_ptr<WeatherMessage> WeatherMessagePtr;
+	typedef boost::shared_ptr<WeatherRequest> WeatherRequestPtr;
 
-
-	//*********************************************************
-	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
-	//*********************************************************
 
 	/**
 		Message sent by graphics system when viewport camera is changed 
 	*/
-	class CameraChangedNotifyMessage : public BaseMessage
+	class CameraChangedEvent : public SceneMessage
 	{
 	public:
 		/**
 		Constructor
 		@param camera Pointer to the new camera
 		*/
-		CameraChangedNotifyMessage(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
+		CameraChangedEvent(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
+		  SceneMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
 		  {
 
 		  }
@@ -162,7 +159,7 @@ namespace GASS
 		SceneObjectPtr m_Camera;
 		void *m_UserData;
 	};
-	typedef boost::shared_ptr<CameraChangedNotifyMessage> CameraChangedNotifyMessagePtr;
+	typedef boost::shared_ptr<CameraChangedEvent> CameraChangedEventPtr;
 }
 
 #endif

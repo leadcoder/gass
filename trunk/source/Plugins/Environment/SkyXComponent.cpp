@@ -71,7 +71,7 @@ namespace GASS
 	{
 		if(m_Initialized)
 			return;
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayMessage,TimeOfDayMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayRequest,TimeOfDayRequest,0));
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::Root::getSingleton().addFrameListener(this);
@@ -84,7 +84,7 @@ namespace GASS
 
 		// Create SkyX object
 		Init(ocam);
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
 		m_Initialized = true;
 	}
 
@@ -94,7 +94,7 @@ namespace GASS
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
 		m_SkyX = NULL;
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedNotifyMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void SkyXComponent::SetMoonSize(const Float &value)
@@ -230,7 +230,7 @@ namespace GASS
 
 	
 
-	void SkyXComponent::OnChangeCamera(CameraChangedNotifyMessagePtr message)
+	void SkyXComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		if(m_SkyX)
 		{
@@ -315,7 +315,7 @@ namespace GASS
 		return true;
 	}
 
-	void SkyXComponent::OnTimeOfDayMessage(TimeOfDayMessagePtr message)
+	void SkyXComponent::OnTimeOfDayRequest(TimeOfDayRequestPtr message)
 	{
 		SetTimeMultiplier(message->GetSpeed());
 		SetTime(Vec3(message->GetTime(),message->GetSunRise(),message->GetSunSet()));

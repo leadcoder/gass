@@ -50,7 +50,7 @@ namespace GASS
 		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
 		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);
 		void OnLoadScene(SceneAboutToLoadNotifyMessagePtr message);
-		void OnChangeCamera(ChangeCameraMessagePtr message);
+		void OnChangeCamera(ChangeCameraRequestPtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;
 		unsigned int m_HandleCount;

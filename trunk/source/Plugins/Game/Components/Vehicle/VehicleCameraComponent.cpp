@@ -95,7 +95,7 @@ namespace GASS
 
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
-		MessagePtr cam_msg(new ChangeCameraMessage(GetSceneObject(),m_PreferredViewport));
+		MessagePtr cam_msg(new ChangeCameraRequest(GetSceneObject(),m_PreferredViewport));
 		//GetSceneObject()->GetScene()->SendImmediate(cam_msg);
 	}
 

@@ -242,7 +242,7 @@ namespace GASS
 		Vec3 vel = projectile_dir*m_ProjectileStartVelocity;
 		Vec3 final_pos = projectile_start_pos +  projectile_dir*m_ProjectileStartOffset;
 
-		MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_ProjectileTemplateName,final_pos,projectile_rot,vel));
+		SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(m_ProjectileTemplateName,final_pos,projectile_rot,vel));
 		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 
 		//recoil
@@ -253,10 +253,8 @@ namespace GASS
 		//effect
 		if(m_FireEffectTemplate != "")
 		{
-			MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,Vec3(0,0,0),Quaternion::IDENTITY,vel,GetSceneObject()));
-			//MessagePtr spawn_msg(new SpawnObjectFromTemplateMessage(m_FireEffectTemplate,projectile_start_pos,projectile_rot,vel));
-			
-			
+			SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(m_FireEffectTemplate,Vec3(0,0,0),Quaternion::IDENTITY,vel,GetSceneObject()));
+			//MessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(m_FireEffectTemplate,projectile_start_pos,projectile_rot,vel));
 			GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 		}
 

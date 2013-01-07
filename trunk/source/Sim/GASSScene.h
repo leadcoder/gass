@@ -53,6 +53,7 @@ namespace GASS
 		public boost::enable_shared_from_this<Scene> , 
 		public IMessageListener
 	{
+		friend class SceneObject;
 	public:
 		enum
 		{
@@ -123,8 +124,8 @@ namespace GASS
 		Unregister for scene scene messages
 		*/
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
+		void PostMessage(SceneMessagePtr message);
+		void SendImmediate(SceneMessagePtr message);
 
 		/**
 		Load a new scene from path
@@ -214,8 +215,8 @@ protected:
 		void SaveXML(TiXmlElement *scene_elem);
 
 		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *so_elem);
-		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateMessagePtr message);
-		void OnRemoveSceneObject(RemoveSceneObjectMessagePtr message);
+		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message);
+		void OnRemoveSceneObject(RemoveSceneObjectRequestPtr message);
 
 		
 		
