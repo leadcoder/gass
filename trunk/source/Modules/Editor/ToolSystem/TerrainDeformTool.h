@@ -53,7 +53,7 @@ namespace GASS
 		void SetLayerTexture(const std::string &texture, float tiling);
 		void SetActiveLayer(TerrainLayer layer) {m_ActiveLayer = layer;}
 	private:
-		GASS::SceneObjectPtr GetMasterGizmo();
+		GASS::SceneObjectPtr GetOrCreateGizmo();
 		void SetGizmoVisiblity(bool value);
 		void OnSceneObjectSelected(GASS::ObjectSelectionChangedMessagePtr message);
 		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);

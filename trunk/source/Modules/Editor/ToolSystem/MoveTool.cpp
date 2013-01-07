@@ -163,9 +163,11 @@ namespace GASS
 			{
 				m_GroundSnapMove = true;
 				int from_id = (int) this;
+
+				//Disable object collision
 				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
 				SendMessageRec(obj_under_cursor,col_msg);
-				SceneObjectPtr gizmo = GetMasterGizmo();
+				SceneObjectPtr gizmo = GetOrCreateGizmo();
 				if(gizmo)
 					SendMessageRec(gizmo,col_msg);
 
@@ -216,7 +218,7 @@ namespace GASS
 			//selected->SendImmediate(col_msg);
 			SendMessageRec(selected,col_msg);
 
-			SceneObjectPtr gizmo = GetMasterGizmo();
+			SceneObjectPtr gizmo = GetOrCreateGizmo();
 			if(gizmo && m_Controller->GetEnableGizmo())
 				SendMessageRec(gizmo,col_msg);
 		}
@@ -255,21 +257,18 @@ namespace GASS
 		m_Active = false;
 	}
 
-	SceneObjectPtr MoveTool::GetMasterGizmo()
+	SceneObjectPtr MoveTool::GetOrCreateGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
 		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
 		{
 			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
-
 			std::string gizmo_name = "GizmoMoveObject";
-		
 			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
-
 			//Send selection message to inform gizmo about current object
-			if(gizmo)
+			/*if(gizmo)
 			{
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
@@ -277,7 +276,7 @@ namespace GASS
 					//gizmo->PostMessage();
 					//m_Controller->GetEditorSystem()->SelectSceneObject(current);
 				}
-			}
+			}*/
 		}
 		return gizmo;
 	}
@@ -290,7 +289,7 @@ namespace GASS
 
 	void MoveTool::SetGizmoVisiblity(bool value)
 	{
-		SceneObjectPtr gizmo = GetMasterGizmo();
+		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
 			int from_id = (int) this;

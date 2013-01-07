@@ -121,11 +121,29 @@ namespace GASS
 	std::vector<std::string> OgreResourceSystem::GetResourceNames(const std::string &resource_group) const
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		Ogre::StringVectorPtr res_vec = rsm->listResourceNames(resource_group);
 		std::vector<std::string> ret;
-		for(size_t i = 0; i < res_vec->size(); i++)
+		if(resource_group != "")
 		{
-			ret.push_back(res_vec->at(i));
+			Ogre::StringVectorPtr res_vec = rsm->listResourceNames(resource_group);
+			for(size_t i = 0; i < res_vec->size(); i++)
+			{
+				ret.push_back(res_vec->at(i));
+			}
+		}
+		else //get all resources
+		{
+			Ogre::StringVector groups = rsm->getResourceGroups();
+			Ogre::StringVector::iterator iter;
+
+			for(iter = groups.begin(); iter != groups.end();++iter)
+			{
+				const std::string gname = *iter;
+				Ogre::StringVectorPtr res_vec = rsm->listResourceNames(gname);
+				for(size_t i = 0; i < res_vec->size(); i++)
+				{
+					ret.push_back(res_vec->at(i));
+				}
+			}
 		}
 		return ret;
 	}
@@ -204,7 +222,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreResourceSystem::LoadResourceGroup(const std::string &resource_group)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
@@ -252,7 +269,7 @@ namespace GASS
 				}
 			}
 
-			for(int i  = 0; i < m_ResourceLocations.size(); i++)
+			/*for(int i  = 0; i < m_ResourceLocations.size(); i++)
 			{
 
 				std::string temp_file_path = m_ResourceLocations[i].m_Path.GetFullPath() + "/" +  file_name;
@@ -261,12 +278,11 @@ namespace GASS
 					file_path = temp_file_path;
 					return true;
 				}
-			}
+			}*/
 		}
 		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
 		return false;
 	}
-
 
 	std::vector<std::string> OgreResourceSystem::GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const
 	{

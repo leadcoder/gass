@@ -59,7 +59,6 @@ namespace GASS
 		return path;
 	}
 
-
 	std::vector<std::string> MeshResource::GetAllOptions()
 	{
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
