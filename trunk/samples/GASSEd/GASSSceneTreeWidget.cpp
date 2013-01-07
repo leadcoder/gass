@@ -80,14 +80,11 @@ void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessa
 void GASSSceneTreeWidget::OnUnloadSceneObject(GASS::SceneObjectRemovedNotifyMessagePtr message)
 {
 	QTreeWidgetItem *item = GetTreeItem(message->GetSceneObject());
-
 	if(item)
 	{
 		m_ItemMap.erase(m_ItemMap.find(message->GetSceneObject().get()));
 		m_ObjectMap.erase(m_ObjectMap.find(item));
-		
-
-		removeItemWidget(item,0);
+		item->parent()->removeChild(item);
 	}
 }
 
