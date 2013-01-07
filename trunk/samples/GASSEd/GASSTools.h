@@ -20,7 +20,6 @@ public:
 protected:
 	void OnToolChanged(GASS::ToolChangedMessagePtr message);
 
-
 	QAction* m_OpenAct;
 	QAction* m_NewAct;
 	QAction* m_SaveAct;
@@ -34,9 +33,6 @@ protected:
 	QAction* m_TerrainFlattenAct;
 	QAction* m_TerrainPaintAct;
 	QAction* m_VegetationPaintAct;
-
-	double m_BrushSize;
-	double m_BrushFade;
 private slots:
 	void OnNew();
 	void OnSave();
@@ -50,10 +46,6 @@ private slots:
 	void OnTerrainFlatten();
 	void OnTerrainPaint();
 	void OnVegetationPaint();
-	void OnBrushSizeChanged(int value);
-	void OnBrushFadeChanged(int value);
-	void OnBrushIntChanged(int value);
-	void OnBrushNoiseChanged(int value);
 	void OnPaintLayerChanged(int value);
 
 };

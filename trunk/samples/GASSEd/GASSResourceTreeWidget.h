@@ -22,6 +22,7 @@ protected:
 	GASS::SceneWeakPtr m_Scene;
  public slots:
 	void selectionChanged();
+	
 };
 
 #endif

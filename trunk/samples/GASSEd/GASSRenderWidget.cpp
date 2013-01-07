@@ -9,12 +9,8 @@
 GASSRenderWidget::GASSRenderWidget( QWidget *parent): QWidget(parent),
 	m_Initialized(false)
 {
-	//setDragDropMode(QAbstractItemView::DropOnly);
-	//setAttribute(Qt::WA_OpaquePaintEvent);
-	//setMinimumSize(600,600);
-	//setMaximumSize(1024,768);
 	setAttribute(Qt::WA_PaintOnScreen);
-	//setFocusPolicy(Qt::ClickFocus);
+	setFocusPolicy(Qt::ClickFocus);
 	setMouseTracking(true);
 	setAcceptDrops(true);
 }

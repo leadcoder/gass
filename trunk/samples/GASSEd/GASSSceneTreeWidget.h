@@ -4,7 +4,6 @@
 #include "Sim/GASS.h"
 #include "Modules/Editor/EditorMessages.h"
 #include <QtGui>
-class GASSEd;
 class GASSSceneTreeWidget : public QTreeWidget, public GASS::StaticMessageListener
 {
 	Q_OBJECT;
@@ -26,6 +25,7 @@ protected:
 	std::map<QTreeWidgetItem*,GASS::SceneObjectWeakPtr> m_ObjectMap;
  public slots:
 	void selectionChanged();
+	void showContextMenu(const QPoint& pos);
 };
 
 #endif

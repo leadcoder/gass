@@ -1,4 +1,5 @@
 #include "GASSTools.h"
+#include "GASSEd.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Sim/GASS.h"
 #include "Modules/Editor/EditorMessages.h"
@@ -18,11 +19,10 @@
 #include <stdlib.h>
 
 StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
-    : QToolBar(parent),
-	m_BrushFade(100),
-	m_BrushSize(10)
+    : QToolBar(parent)
 {
 
+	
 	setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	m_NewAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
     m_NewAct->setStatusTip(tr("New"));
@@ -38,6 +38,8 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
     m_OpenAct->setStatusTip(tr("Save"));
     connect(m_SaveAct, SIGNAL(triggered()), this, SLOT(OnSave()));
 	addAction(m_SaveAct);
+
+	addSeparator ();
 
 	m_SelectAct = new QAction(QIcon(":/images/select.png"), tr("&Select Tool"), this);
     m_SelectAct->setStatusTip(tr("Select"));
@@ -57,25 +59,25 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
     connect(m_RotateAct, SIGNAL(triggered()), this, SLOT(OnRotate()));
 	addAction(m_RotateAct);
 
-	m_TerrainDeformAct = new QAction(QIcon(":/images/rotate.png"), tr("&Deform"), this);
+	m_TerrainDeformAct = new QAction(QIcon(":/images/deform.png"), tr("&Deform"), this);
     m_TerrainDeformAct->setStatusTip(tr("Terrain Deform Tool"));
 	m_TerrainDeformAct->setCheckable(true);
     connect(m_TerrainDeformAct, SIGNAL(triggered()), this, SLOT(OnTerrainDeform()));
 	addAction(m_TerrainDeformAct);
 
-	m_TerrainSmoothAct = new QAction(QIcon(":/images/rotate.png"), tr("&Smooth"), this);
+	m_TerrainSmoothAct = new QAction(QIcon(":/images/smooth.png"), tr("&Smooth"), this);
     m_TerrainSmoothAct->setStatusTip(tr("Terrain Smooth Tool"));
 	m_TerrainSmoothAct->setCheckable(true);
     connect(m_TerrainSmoothAct, SIGNAL(triggered()), this, SLOT(OnTerrainSmooth()));
 	addAction(m_TerrainSmoothAct);
 
-	m_TerrainFlattenAct = new QAction(QIcon(":/images/rotate.png"), tr("&Flatten"), this);
+	m_TerrainFlattenAct = new QAction(QIcon(":/images/smooth.png"), tr("&Flatten"), this);
     m_TerrainFlattenAct->setStatusTip(tr("Terrain Flatten Tool"));
 	m_TerrainFlattenAct->setCheckable(true);
     connect(m_TerrainFlattenAct, SIGNAL(triggered()), this, SLOT(OnTerrainFlatten()));
 	addAction(m_TerrainFlattenAct);
 	
-	m_TerrainPaintAct = new QAction(QIcon(":/images/rotate.png"), tr("&Paint"), this);
+	m_TerrainPaintAct = new QAction(QIcon(":/images/paint.png"), tr("&Paint"), this);
     m_TerrainPaintAct->setStatusTip(tr("Terrain Paint Tool"));
 	m_TerrainPaintAct->setCheckable(true);
     connect(m_TerrainPaintAct, SIGNAL(triggered()), this, SLOT(OnTerrainPaint()));
@@ -90,7 +92,7 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
 	addWidget(como_box);
 
 
-	m_VegetationPaintAct = new QAction(QIcon(":/images/rotate.png"), tr("&Veg.Paint"), this);
+	m_VegetationPaintAct = new QAction(QIcon(":/images/paint.png"), tr("&Veg.Paint"), this);
     m_VegetationPaintAct->setStatusTip(tr("Vegetation Paint Tool"));
 	m_VegetationPaintAct->setCheckable(true);
     connect(m_VegetationPaintAct, SIGNAL(triggered()), this, SLOT(OnVegetationPaint()));
@@ -98,80 +100,9 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
 
 
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(StandardToolBar::OnToolChanged,GASS::ToolChangedMessage,0));	
-
-	QLabel*  size_label = new QLabel(tr("Size:"));
-	addWidget(size_label);
-	QSlider* m_BrushSizeSlider = new QSlider(Qt::Horizontal,this);
-	m_BrushSizeSlider->setMinimum(0);
-    m_BrushSizeSlider->setMaximum(1000);
-    m_BrushSizeSlider->setValue(500);
-	m_BrushSizeSlider->setMinimumWidth(30);
-	addWidget(m_BrushSizeSlider);
-	connect(m_BrushSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(OnBrushSizeChanged(int)));
-
-	QLabel*  fade_label = new QLabel(tr("Fade:"));
-	addWidget(fade_label);
-	QSlider* m_BrushFadeSlider = new QSlider(Qt::Horizontal,this);
-	m_BrushFadeSlider->setMinimum(0);
-    m_BrushFadeSlider->setMaximum(100);
-    m_BrushFadeSlider->setValue(m_BrushFade);
-	m_BrushFadeSlider->setMinimumWidth(30);
-	addWidget(m_BrushFadeSlider);
-	connect(m_BrushFadeSlider, SIGNAL(valueChanged(int)), this, SLOT(OnBrushFadeChanged(int)));
-
-	QLabel*  int_label = new QLabel(tr("Intensity:"));
-	addWidget(int_label);
-	
-	QSlider* m_BrushIntSlider = new QSlider(Qt::Horizontal,this);
-	m_BrushIntSlider->setMinimum(0);
-    m_BrushIntSlider->setMaximum(1000);
-    m_BrushIntSlider->setValue(500);
-	m_BrushIntSlider->setMinimumWidth(30);
-	addWidget(m_BrushIntSlider);
-	connect(m_BrushIntSlider, SIGNAL(valueChanged(int)), this, SLOT(OnBrushIntChanged(int)));
-
-	
-	QLabel*  noise_label = new QLabel(tr("Noise:"));
-	addWidget(noise_label);
-	
-
-	QSlider* m_BrushNoiseSlider = new QSlider(Qt::Horizontal,this);
-	m_BrushNoiseSlider->setMinimum(0);
-    m_BrushNoiseSlider->setMaximum(1000);
-    m_BrushNoiseSlider->setValue(0);
-	m_BrushNoiseSlider->setMinimumWidth(30);
-	addWidget(m_BrushNoiseSlider);
-	connect(m_BrushNoiseSlider, SIGNAL(valueChanged(int)), this, SLOT(OnBrushNoiseChanged(int)));
 }
 
-void StandardToolBar::OnBrushSizeChanged(int value)
-{
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    m_BrushSize = value/10.0;
-	tool->SetBrushSize(m_BrushSize);
-	tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
-}
 
-void StandardToolBar::OnBrushFadeChanged(int value)
-{
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    m_BrushFade = value;
-	tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
-}
-
-void StandardToolBar::OnBrushIntChanged(int value)
-{
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    float intensity = value/100.0;
-	tool->SetIntensity(intensity);
-}
-
-void StandardToolBar::OnBrushNoiseChanged(int value)
-{
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    float intensity = value/100.0;
-	tool->SetNoise(intensity);
-}
 
 void StandardToolBar::OnPaintLayerChanged(int value)
 {
@@ -193,7 +124,6 @@ void StandardToolBar::OnPaintLayerChanged(int value)
 		break;
 	}
 }
-
 
 void StandardToolBar::OnToolChanged(GASS::ToolChangedMessagePtr message)
 {
@@ -236,7 +166,6 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedMessagePtr message)
 		}
 	}
 }
-
 
 void StandardToolBar::OnSelect()
 {
@@ -290,15 +219,18 @@ void StandardToolBar::OnVegetationPaint()
 
 void StandardToolBar::OnNew()
 {
-
+	GASSEd* gassed = (GASSEd*)parentWidget();
+	gassed->OnNew();
 }
 
 void StandardToolBar::OnSave()
 {
-
+	GASSEd* gassed = (GASSEd*)parentWidget();
+	gassed->OnSave();
 }
 
 void StandardToolBar::OnOpen()
 {
-
+	GASSEd* gassed = (GASSEd*)parentWidget();
+	gassed->OnOpen();
 }

@@ -1,14 +1,18 @@
-#ifndef GASSEd_H
-#define GASSEd_H
+#ifndef GASSED_H
+#define GASSED_H
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include "Sim/GASSSceneObject.h"
+
 
 namespace GASS
 {
 	class EditorApplication;
-};
+}
+	
 
+	
 class ToolBar;
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSignalMapper)
@@ -16,7 +20,7 @@ QT_FORWARD_DECLARE_CLASS(QSignalMapper)
 class GASSEd : public QMainWindow
 {
     Q_OBJECT
-
+private:
     QTextEdit *center;
     QList<ToolBar*> toolBars;
     QMenu *dockWidgetMenu;
@@ -30,6 +34,7 @@ public:
     GASSEd(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	GASS::EditorApplication* m_GASSApp;
 	void Initialize(void* render_win_handle);
+	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
 protected:
     void showEvent(QShowEvent *event);
 public slots:

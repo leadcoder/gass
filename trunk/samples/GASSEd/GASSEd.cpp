@@ -27,10 +27,11 @@
 #include "GASSPropertyWidget.h"
 #include "GASSSceneSelectionWidget.h"
 #include "GASSSSaveSceneWidget.h"
-
+#include "GASSBrushSettingsWidget.h"
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Sim/GASSScene.h"
+
 
 Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 
@@ -100,7 +101,9 @@ void GASSEd::actionTriggered(QAction *action)
 void GASSEd::setupToolBar()
 {
 	StandardToolBar *tb = new StandardToolBar("Object Tools", this);
-    addToolBar(tb);
+	addToolBar(tb);
+	BrushSettingsWidget* bsw = new BrushSettingsWidget("Brush Settings", this);
+    addToolBar(bsw);
 }
 
 void GASSEd::setupMenuBar()
@@ -131,25 +134,6 @@ void GASSEd::setupMenuBar()
 
  
 }
-
-/*void GASSEd::setDockOptions()
-{
-    DockOptions opts;
-    QList<QAction*> actions = GASSEdMenu->actions();
-
-    if (actions.at(0)->isChecked())
-        opts |= AnimatedDocks;
-    if (actions.at(1)->isChecked())
-        opts |= AllowNestedDocks;
-    if (actions.at(2)->isChecked())
-        opts |= AllowTabbedDocks;
-    if (actions.at(3)->isChecked())
-        opts |= ForceTabbedDocks;
-    if (actions.at(4)->isChecked())
-        opts |= VerticalTabs;
-
-    QMainWindow::setDockOptions(opts);
-}*/
 
 void GASSEd::saveLayout()
 {
@@ -388,3 +372,18 @@ void GASSEd::OnOpen()
 	
 }
 
+void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
+{
+	QMenu myMenu;
+    QAction*  delete_action = myMenu.addAction("Delete");
+
+    QAction* selectedItem = myMenu.exec(pos);
+    if (selectedItem == delete_action)
+    {
+		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
+    }
+    else
+    {
+        // nothing was chosen
+    }
+}

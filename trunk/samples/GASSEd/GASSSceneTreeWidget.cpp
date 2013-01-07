@@ -11,7 +11,11 @@ GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent),
 {
 	setHeaderHidden(true);
 	setMinimumSize(200,200);
+	setSelectionMode(QAbstractItemView::SingleSelection);
 	QObject::connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(selectionChanged()));
+
+	setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 	
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnLoadScene,GASS::SceneAboutToLoadNotifyMessage,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnUnloadScene,GASS::SceneUnloadNotifyMessage,0));
@@ -75,7 +79,16 @@ void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedMessa
 
 void GASSSceneTreeWidget::OnUnloadSceneObject(GASS::SceneObjectRemovedNotifyMessagePtr message)
 {
+	QTreeWidgetItem *item = GetTreeItem(message->GetSceneObject());
 
+	if(item)
+	{
+		m_ItemMap.erase(m_ItemMap.find(message->GetSceneObject().get()));
+		m_ObjectMap.erase(m_ObjectMap.find(item));
+		
+
+		removeItemWidget(item,0);
+	}
 }
 
 
@@ -100,6 +113,7 @@ GASS::SceneObjectPtr GASSSceneTreeWidget::GetSceneObject(QTreeWidgetItem*  item)
 	return GASS::SceneObjectPtr();
 }
 
+static bool internal_select = false;
 void GASSSceneTreeWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedMessagePtr message)
 {
 	if(message->GetSenderID() != (int) this)
@@ -108,6 +122,10 @@ void GASSSceneTreeWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedMess
 		if(selected)
 		{
 			QTreeWidgetItem *item = GetTreeItem(selected);
+			internal_select = true;
+			//setSelected(true);
+			setCurrentItem(item);
+			internal_select = false;
 		}
 	}
 }
@@ -115,11 +133,22 @@ void GASSSceneTreeWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedMess
 void GASSSceneTreeWidget::selectionChanged()
 {
 	QList<QTreeWidgetItem*> items = selectedItems();
-	if(items.size() > 0)
+	if(!internal_select && items.size() > 0)
 	{
 		GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
 		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SelectSceneObject(obj);
 	}
+}
+
+void GASSSceneTreeWidget::showContextMenu(const QPoint& pos) 
+{
+    // for most widgets
+    QPoint globalPos = mapToGlobal(pos);
+    // for QAbstractScrollArea and derived classes you would use:
+    // QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); 
+	GASSEd* gassed = (GASSEd*)parentWidget();
+	GASS::SceneObjectPtr obj = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetSelectedObject();
+	gassed->ShowObjectContextMenu(obj,globalPos);
 }
 
 
