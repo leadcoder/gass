@@ -336,7 +336,6 @@ namespace GASS
 			DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
 	}
 
-
 	void OgreGraphicsSystem::OnDrawCircle(DrawCircleRequestPtr message)
 	{
 		Vec4 color = message->GetColor();

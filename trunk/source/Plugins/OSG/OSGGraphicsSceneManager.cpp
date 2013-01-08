@@ -93,10 +93,7 @@ namespace GASS
 	{
 		ScenePtr scene = GetScene();
 		assert(scene);
-		//if(scene->GetSceneUp().z > 0)
-		//OSGConvert::Get().m_FlipYZ = false;
-		//std::cout << "OSGGraphicsSceneManager::OnLoad Entered" << std::endl;
-
+	
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
 
@@ -119,14 +116,6 @@ namespace GASS
 		state->setMode(GL_FOG, attr);
 		GetOSGShadowRootNode()->setStateSet(state);
 
-		// Load default camera ect
-		//std::cout << "OSGGraphicsSceneManager::OnLoad Create freecamera" << std::endl;
-		/*SceneObjectPtr scene_object = scene->GetObjectManager()->LoadFromTemplate("FreeCameraObject");
-		MessagePtr camera_msg(new ChangeCameraRequest(scene_object,));
-		scene->SendImmediate(camera_msg);
-		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
-		scene_object->SendImmediate(pos_msg);*/
-
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
 
@@ -134,7 +123,6 @@ namespace GASS
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
-
 
 		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
 		if(system == NULL)

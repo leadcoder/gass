@@ -113,10 +113,8 @@ namespace GASS
 		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
 		ScenePtr scene = GetScene();
 		assert(scene);
-
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnLoadSceneManagersRequest,0));
-		//scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage ,Scene::GFX_COMPONENT_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 	}
@@ -183,15 +181,6 @@ namespace GASS
 		}
 	}
 
-	//void OgreGraphicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
-	//{
-		//Initlize all gfx components and send scene mananger as argument
-		//SceneObjectPtr obj = message->GetSceneObject();
-		//assert(obj);
-		//MessagePtr gfx_msg(new LoadComponentsMessage(shared_from_this(),m_SceneMgr));
-		//obj->SendImmediate(gfx_msg);
-	//}
-
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{
 		if(m_SceneMgr == NULL) return;
@@ -204,7 +193,6 @@ namespace GASS
 			m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "None")
 			m_SceneMgr->setFog(Ogre::FOG_NONE, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		
 	}
 
 	void OgreGraphicsSceneManager::UpdateSkySettings()

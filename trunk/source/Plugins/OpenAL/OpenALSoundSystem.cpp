@@ -132,7 +132,6 @@ namespace GASS
 		m_Scene = message->GetScene();
 	}
 
-
 	void OpenALSoundSystem::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
@@ -152,7 +151,6 @@ namespace GASS
 		Vec3 vel = Vec3(0,0,0);
 		UpdateListener(pos,rot,vel);
 	}
-
 
 	bool OpenALSoundSystem::CheckAlError( void )
 	{
