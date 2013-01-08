@@ -11,8 +11,8 @@ class GASSResourceTreeWidget : public QTreeWidget, public GASS::StaticMessageLis
 public:
 	GASSResourceTreeWidget( QWidget *parent=0 );
 	virtual ~GASSResourceTreeWidget();
-	void OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr message);
-	void OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message);
+	void OnLoadScene(GASS::PreSceneLoadEventPtr message);
+	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
 
 	void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);

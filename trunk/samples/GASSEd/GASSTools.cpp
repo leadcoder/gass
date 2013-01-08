@@ -99,7 +99,7 @@ StandardToolBar::StandardToolBar(const QString &title, QWidget *parent)
 	addAction(m_VegetationPaintAct);
 
 
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(StandardToolBar::OnToolChanged,GASS::ToolChangedMessage,0));	
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(StandardToolBar::OnToolChanged,GASS::ToolChangedEvent,0));	
 }
 
 
@@ -125,7 +125,7 @@ void StandardToolBar::OnPaintLayerChanged(int value)
 	}
 }
 
-void StandardToolBar::OnToolChanged(GASS::ToolChangedMessagePtr message)
+void StandardToolBar::OnToolChanged(GASS::ToolChangedEventPtr message)
 {
 	//reset all
 	m_SelectAct->setChecked(false);

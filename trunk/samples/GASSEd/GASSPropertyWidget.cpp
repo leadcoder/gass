@@ -10,9 +10,9 @@ GASSPropertyWidget::GASSPropertyWidget( QWidget *parent): QtTreePropertyBrowser(
 {
 	registerCustomTypes();
 
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnLoadScene,GASS::SceneAboutToLoadNotifyMessage,0));
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnUnloadScene,GASS::SceneUnloadNotifyMessage,0));
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedMessage,0));
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
+	GASS::SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
 
 	m_VariantManager = new VariantManager(this);
 	connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(valueChanged(QtProperty *, const QVariant &)));
@@ -56,19 +56,19 @@ void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &valu
 	}
 }
 
-void GASSPropertyWidget::OnLoadScene(GASS::SceneAboutToLoadNotifyMessagePtr message)
+void GASSPropertyWidget::OnLoadScene(GASS::PreSceneLoadEventPtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
 	m_Scene = scene;
 }
 
-void GASSPropertyWidget::OnUnloadScene(GASS::SceneUnloadNotifyMessagePtr message)
+void GASSPropertyWidget::OnUnloadScene(GASS::SceneUnloadedEventPtr message)
 {
 
 }
 
 
-void GASSPropertyWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedMessagePtr message)
+void GASSPropertyWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 {
 	Show(message->GetSceneObject());
 }

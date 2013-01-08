@@ -18,7 +18,7 @@ class StandardToolBar : public QToolBar, public GASS::StaticMessageListener
 public:
     StandardToolBar(const QString &title, QWidget *parent);
 protected:
-	void OnToolChanged(GASS::ToolChangedMessagePtr message);
+	void OnToolChanged(GASS::ToolChangedEventPtr message);
 
 	QAction* m_OpenAct;
 	QAction* m_NewAct;

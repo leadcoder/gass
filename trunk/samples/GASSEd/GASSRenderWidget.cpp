@@ -89,8 +89,8 @@ void GASSRenderWidget::resizeEvent(QResizeEvent *e)
 		m_Size = newSize;
 		if(m_MainWin->m_GASSApp)
 		{
-			GASS::MessagePtr resize_message = GASS::MessagePtr(new GASS::ViewportMovedOrResizedNotifyMessage("RenderWindow",0,0,newSize.width(), newSize.height()));
-			GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();//PostMessage(resize_message);
+			GASS::SystemMessagePtr resize_message(new GASS::ViewportMovedOrResizedEvent("RenderWindow",0,0,newSize.width(), newSize.height()));
+			GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();
 			ssm->SendImmediate(resize_message);
 		}
 	}
