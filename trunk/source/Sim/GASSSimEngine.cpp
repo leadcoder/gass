@@ -54,7 +54,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine(): m_CurrentTime(0), m_MaxUpdateFreq(0)
+	SimEngine::SimEngine() : m_CurrentTime(0), m_MaxUpdateFreq(0), m_Scene(new Scene())
 	{
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
@@ -99,7 +99,6 @@ namespace GASS
 		m_SystemManager->Init();
 
 		//Create scene object		
-		m_Scene = ScenePtr(new Scene());
 		m_Scene->Create();
 
 		//intilize profiler

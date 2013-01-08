@@ -47,9 +47,9 @@ namespace GASS
 
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 	protected:
-		void OnInitializeTextBox(CreateTextBoxMessagePtr message);
-		void OnDebugPrint(DebugPrintMessagePtr message);
-		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
+		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
+		void OnDebugPrint(DebugPrintRequestPtr message);
+		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		

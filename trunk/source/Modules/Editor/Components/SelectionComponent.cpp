@@ -44,14 +44,12 @@ namespace GASS
 
 	void SelectionComponent::OnInitialize()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	void SelectionComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		
 		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)
@@ -61,7 +59,7 @@ namespace GASS
 	}
 
 
-	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		//Unregister form previous selection
 		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -173,8 +171,5 @@ namespace GASS
 
 	}
 
-	void SelectionComponent::OnNewCursorInfo(CursorMoved3DMessagePtr message)
-	{
 	
-	}
 }

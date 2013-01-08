@@ -64,7 +64,7 @@ namespace GASS
 		bool GetSimulationPaused() const {return m_SimulationPaused;}
 		void SetSimulationPaused(bool value) {m_SimulationPaused = value;}
 	private:
-		void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
+		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		//tbb::spin_mutex m_Mutex;
 		tbb::task_scheduler_init* m_Scheduler;
 		TaskNodePtr m_SimulationTaskNode;

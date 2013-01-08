@@ -72,9 +72,9 @@ namespace GASS
 	private:
 		bool HasCollisionMesh(const std::string &name);
 
-		void OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message);
-		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
-		void OnSceneUnloaded(SceneUnloadNotifyMessagePtr message);
+		void OnSceneAboutToLoad(PreSceneLoadEventPtr message);
+		void OnSceneLoaded(PostSceneLoadEventPtr message);
+		void OnSceneUnloaded(SceneUnloadedEventPtr message);
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;

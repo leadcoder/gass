@@ -55,7 +55,7 @@ namespace GASS
 	void OgreResourceSystem::OnCreate(SystemManagerPtr owner)
 	{
 		SimSystem::OnCreate(owner);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,MainWindowCreatedNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,MainWindowCreatedEvent,0));
 	}
 
 	void OgreResourceSystem::Init()
@@ -98,7 +98,7 @@ namespace GASS
 		}
 	}
 
-	void OgreResourceSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
+	void OgreResourceSystem::OnInit(MainWindowCreatedEventPtr message)
 	{
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize Started";
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
@@ -151,7 +151,7 @@ namespace GASS
 	void OgreResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
 	{
 		boost::filesystem::path boost_path(path.GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
+		if( boost::filesystem::exists(boost_path)) 
 		{
 			Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 			Ogre::StringVector groups = rsm->getResourceGroups();

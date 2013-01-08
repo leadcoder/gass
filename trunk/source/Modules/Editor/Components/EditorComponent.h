@@ -26,11 +26,11 @@ namespace GASS
 	private:
 		ADD_ATTRIBUTE(Vec4,SelectedColor)
 		
-		void OnObjectVisible(ObjectVisibilityChangedMessagePtr message);
-		void OnObjectLock(ObjectLockChangedMessagePtr message);
+		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
+		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
-		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
 		void SetIconFile(const std::string &value) { m_IconFile = value;}

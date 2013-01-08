@@ -38,53 +38,53 @@ namespace GASS
 	typedef boost::shared_ptr<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
 
 	class RakNetMasterReplica;
-	class MasterReplicaCreatedMessage : public BaseMessage
+	class MasterReplicaCreatedEvent : public SystemEventMessage
 	{
 	public:
-		MasterReplicaCreatedMessage(RakNetMasterReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
+		MasterReplicaCreatedEvent(RakNetMasterReplica* replica, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_Replica(replica){}
 		  RakNetMasterReplica* GetReplica() const {return m_Replica;}
 	private:
 		RakNetMasterReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<MasterReplicaCreatedMessage> MasterReplicaCreatedMessagePtr;
+	typedef boost::shared_ptr<MasterReplicaCreatedEvent> MasterReplicaCreatedEventPtr;
 
 
 	class RakNetChildReplica;
-	class ChildReplicaCreatedMessage : public BaseMessage
+	class ChildReplicaCreatedEvent : public SystemEventMessage
 	{
 	public:
-		ChildReplicaCreatedMessage (RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
+		ChildReplicaCreatedEvent (RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_Replica(replica){}
 		  RakNetChildReplica* GetReplica() const {return m_Replica;}
 	private:
 		RakNetChildReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<ChildReplicaCreatedMessage > ChildReplicaCreatedMessagePtr;
+	typedef boost::shared_ptr<ChildReplicaCreatedEvent > ChildReplicaCreatedEventPtr;
 
-	class ComponentGotReplicaMessage : public BaseMessage
+	class ComponentGotReplicaEvent : public SystemEventMessage
 	{
 	public:
-		ComponentGotReplicaMessage(RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
+		ComponentGotReplicaEvent(RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_Replica(replica){}
 		  RakNetChildReplica* GetReplica() const {return m_Replica;}
 	private:
 		RakNetChildReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<ComponentGotReplicaMessage> ComponentGotReplicaMessagePtr;
+	typedef boost::shared_ptr<ComponentGotReplicaEvent> ComponentGotReplicaEventPtr;
 
 
-	class NetworkPostUpdateMessage : public BaseMessage
+	class NetworkPostUpdateEvent : public SystemEventMessage
 	{
 	public:
-		NetworkPostUpdateMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		NetworkPostUpdateEvent(SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay)
 		  {
 
 		  }
 		
 	};
-	typedef boost::shared_ptr<NetworkPostUpdateMessage> NetworkPostUpdateMessagePtr;
+	typedef boost::shared_ptr<NetworkPostUpdateEvent> NetworkPostUpdateEventPtr;
 
 
 	

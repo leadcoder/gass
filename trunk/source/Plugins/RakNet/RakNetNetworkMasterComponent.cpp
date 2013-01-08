@@ -68,7 +68,7 @@ namespace GASS
 		if(!raknet->IsActive())
 			return;
 
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnNetworkPostUpdate,NetworkPostUpdateEvent,0));
 		int id = 0;
 		GeneratePartID(GetSceneObject(), id);
 		
@@ -206,7 +206,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkMasterComponent::OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message)
+	void RakNetNetworkMasterComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr message)
 	{
 		//everything is sent!
 		m_SerializePackages.clear();

@@ -121,12 +121,12 @@ namespace GASS
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
-		void OnStartServer(StartServerMessagePtr message);
-		void OnStartClient(StartClientMessagePtr message);
-		void OnConnectToServer(ConnectToServerMessagePtr message);
+		void OnStartServer(StartServerRequestPtr message);
+		void OnStartClient(StartClientRequestPtr message);
+		void OnConnectToServer(ConnectToServerRequestPtr message);
 		void OnPingRequest(PingRequestMessagePtr message);
-		void OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message);
-		void OnStopServer(StopServerMessagePtr message);
+		void OnSceneAboutToLoad(PreSceneLoadEventPtr message);
+		void OnStopServer(StopServerRequestPtr message);
 		void OnStopClient(StopClientMessagePtr message);
 		void OnTimeOfDay(TimeOfDayRequestPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
@@ -142,7 +142,7 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
-		void OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(PreSceneLoadEventPtr message);
 		ADD_ATTRIBUTE(double,SleepTime);
 
 		

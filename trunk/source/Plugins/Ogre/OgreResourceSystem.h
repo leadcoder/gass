@@ -66,7 +66,7 @@ namespace GASS
 		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const;
 		virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const;
 	protected:
-		void OnInit(MainWindowCreatedNotifyMessagePtr message);		
+		void OnInit(MainWindowCreatedEventPtr message);		
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		Ogre::RenderWindow* m_Window;

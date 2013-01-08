@@ -45,7 +45,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadSceneManagersRequestPtr message);
 		void OnUnload(UnLoadSceneManagersRequestPtr message);
-		void OnNewMasterReplica(MasterReplicaCreatedMessagePtr message);
+		void OnNewMasterReplica(MasterReplicaCreatedEventPtr message);
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 	private:
 		bool m_Paused;

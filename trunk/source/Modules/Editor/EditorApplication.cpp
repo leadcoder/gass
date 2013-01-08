@@ -55,7 +55,7 @@ namespace GASS
 			css->Load(config_path +  "GASSControlSettings.xml");
 		}
 
-		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,SceneLoadedNotifyMessage,0));
+		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,PostSceneLoadEvent,0));
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
@@ -64,13 +64,13 @@ namespace GASS
 		//Start client or server?
 		if(Misc::ToLower(m_Mode) == "server")
 		{
-			MessagePtr server_mess(new StartServerMessage(m_ServerName, m_ServerPort));
+			SystemMessagePtr server_mess(new StartServerRequest(m_ServerName, m_ServerPort));
 			se->GetSimSystemManager()->PostMessage(server_mess);
 		}
 		else if (Misc::ToLower(m_Mode) == "client")
 		{
-			se->GetSimSystemManager()->SendImmediate(MessagePtr(new StartClientMessage(m_ClientName, m_ClientPort,m_ServerPort)));
-			MessagePtr connect_message(new ConnectToServerMessage(m_ServerName, m_ServerPort,8888, 2));
+			se->GetSimSystemManager()->SendImmediate(SystemMessagePtr(new StartClientRequest(m_ClientName, m_ClientPort,m_ServerPort)));
+			SystemMessagePtr connect_message(new ConnectToServerRequest(m_ServerName, m_ServerPort,8888, 2));
 			se->GetSimSystemManager()->PostMessage(connect_message);
 		}
 
@@ -90,7 +90,7 @@ namespace GASS
 		SimEngine::Get().Update();
 	}
 
-	void EditorApplication::OnLoadScene(SceneLoadedNotifyMessagePtr message)
+	void EditorApplication::OnLoadScene(PostSceneLoadEventPtr message)
 	{
 		ScenePtr scene = message->GetScene();
 		//load top camera

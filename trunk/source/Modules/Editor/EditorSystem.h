@@ -72,8 +72,8 @@ namespace GASS
 		float GetRayPickDistance() const;
 		bool GetUseTerrainNormalOnDrop() const;
 		void SetUseTerrainNormalOnDrop(bool value);
-		void OnSceneLoaded(SceneLoadedNotifyMessagePtr message);
-		void OnNewScene(SceneAboutToLoadNotifyMessagePtr message);
+		void OnSceneLoaded(PostSceneLoadEventPtr message);
+		void OnNewScene(PreSceneLoadEventPtr message);
 		void OnChangeCamera(ChangeCameraRequestPtr message);
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;

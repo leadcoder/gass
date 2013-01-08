@@ -27,7 +27,7 @@ namespace GASS
 		
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
-		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
+		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 
 		ManualMeshDataPtr m_MeshData;	

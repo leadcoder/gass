@@ -47,7 +47,7 @@ namespace GASS
 				MessagePtr pos_msg(new GASS::PositionMessage(new_position,from_id));
 				selected->SendImmediate(pos_msg);
 
-				GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
+				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 			}
 		}

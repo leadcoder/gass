@@ -165,7 +165,7 @@ namespace GASS
 					m_ActiveTool->Stop();
 				m_ActiveTool = m_Tools[i];
 				m_ActiveTool->Start();
-				m_EditorSystem->GetSimSystemManager()->PostMessage(MessagePtr(new ToolChangedMessage(tool_name)));
+				m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ToolChangedEvent(tool_name)));
 				return true;
 			}
 		}
@@ -185,7 +185,7 @@ namespace GASS
 					if(new_tool > m_Tools.size()-1)
 						new_tool = 0;
 					int id = (int) this;
-					MessagePtr tool_msg(new ToolChangedMessage(m_Tools[new_tool]->GetName(),id));
+					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
 					m_EditorSystem->GetSimSystemManager()->PostMessage(tool_msg);
 					return;
 				}
@@ -206,7 +206,7 @@ namespace GASS
 						new_tool = static_cast<int>(m_Tools.size()-1);
 
 					int id = (int) this;
-					MessagePtr tool_msg(new ToolChangedMessage(m_Tools[new_tool]->GetName(),id));
+					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
 					m_EditorSystem->GetSimSystemManager()->PostMessage(tool_msg);
 
 					return;
@@ -310,13 +310,13 @@ namespace GASS
 	void MouseToolController::SetGridSpacing(Float value)
 	{
 		m_GridSpacing = value;
-		m_EditorSystem->GetSimSystemManager()->PostMessage(MessagePtr(new GridMessage(m_GridSize,m_GridSpacing)));
+		m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetGridSize(Float value)
 	{
 		m_GridSize = value;
-		m_EditorSystem->GetSimSystemManager()->PostMessage(MessagePtr(new GridMessage(m_GridSize,m_GridSpacing)));
+		m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetSnapMovment(Float value)
@@ -422,7 +422,7 @@ namespace GASS
 		/*std::stringstream ss;
 		ss << " Cursor pos:" << m_LastScreenPos << "\n";
 		const std::string message = ss.str();
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));*/
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));*/
 
 		CursorInfo info = GetCursorInfo(m_LastScreenPos,m_RayPickDistance);
 		MouseMoved(info);
@@ -432,7 +432,7 @@ namespace GASS
 			std::stringstream ss;
 			ss << " Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos << "\n";
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
-			//SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(message)));
+			//SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));
 		}
 	}
 
@@ -454,8 +454,8 @@ namespace GASS
 		//saved for delta calculation, remove this?
 		m_LastScreenPos = mouse_pos;
 		int mess_id = (int) this;
-		MessagePtr cursor_msg(new CursorMoved3DMessage(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
-		m_EditorSystem->GetSimSystemManager()->PostMessage(cursor_msg);
+		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
+		SimEngine::Get().GetScene()->PostMessage(cursor_msg);
 		return true;
 	}
 
@@ -504,8 +504,8 @@ namespace GASS
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
-					GASS::MessagePtr message(new RequestShowObjectMenuMessage(selected,Vec2(data.XAbs,data.YAbs)));
-					m_EditorSystem->GetSimSystemManager()->SendImmediate(message);
+					GASS::SceneMessagePtr message(new ShowObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
+					SimEngine::Get().GetScene()->SendImmediate(message);
 				}
 			}
 			return true;

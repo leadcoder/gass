@@ -80,7 +80,7 @@ namespace GASS
 			/*std::stringstream ss;
 			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
 			std::string soundinfo = ss.str();
-			MessagePtr debug_msg(new DebugPrintMessage(soundinfo));
+			MessagePtr debug_msg(new DebugPrintRequest(soundinfo));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 			*/
 			//std::cout << speed << std::endl;
@@ -102,7 +102,7 @@ namespace GASS
 			/*std::stringstream ss;
 			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
 			std::string soundinfo = ss.str();
-			MessagePtr debug_msg(new DebugPrintMessage(soundinfo));
+			MessagePtr debug_msg(new DebugPrintRequest(soundinfo));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 			*/
 			//std::cout << speed << std::endl;

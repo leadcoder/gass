@@ -25,7 +25,7 @@ namespace GASS
 		virtual void Stop() {};
 		virtual void Start() {};
 	private:
-		void OnToolChanged(ToolChangedMessagePtr message);
+		void OnToolChanged(ToolChangedEventPtr message);
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_SelectedObject;
 		GASS::Vec3 m_Offset;

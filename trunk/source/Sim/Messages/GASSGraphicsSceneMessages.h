@@ -43,7 +43,7 @@ namespace GASS
 	Message used for changing camera un viewport. 
 	This message can be sent by user.
 	*/
-	class ChangeCameraRequest : public SceneMessage
+	class ChangeCameraRequest : public SceneRequestMessage
 	{
 	public:
 		/**
@@ -52,7 +52,7 @@ namespace GASS
 			@param viewport The name of the viewport target
 		*/
 		ChangeCameraRequest(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
-		  SceneMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
+		  SceneRequestMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
 		  {
 
 		  }
@@ -72,7 +72,7 @@ namespace GASS
 	scenes that support dynamic lighting
 	*/
 
-	class TimeOfDayRequest : public BaseMessage
+	class TimeOfDayRequest : public SceneRequestMessage
 	{
 	public:
 		/**
@@ -83,7 +83,7 @@ namespace GASS
 		@param speed Time speed multiplier.
 		*/
 		TimeOfDayRequest(double time, double sun_set,double sun_rise, double speed, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
+		  SceneRequestMessage( sender_id , delay),
 			  m_Time(time),
 			  m_Speed(speed),
 			  m_SunRise(sun_rise),
@@ -109,7 +109,7 @@ namespace GASS
 	a sky system for the actual clouds and also maybee 
 	water/sea system for changing waves, gfxsystem for the fog etc. 
 	*/
-	class WeatherRequest : public BaseMessage
+	class WeatherRequest : public SceneRequestMessage
 	{
 	public:
 		/**
@@ -118,7 +118,7 @@ namespace GASS
 		@param clouds Value between 0-1 to indicate cloud factor
 		*/
 		WeatherRequest(float fog_dist, float fog_density, float clouds, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
+		  SceneRequestMessage( sender_id , delay),
 			  m_FogDensity(fog_density),
 			  m_FogDistance(fog_dist),
 			  m_Clouds(clouds)
@@ -141,7 +141,7 @@ namespace GASS
 	/**
 		Message sent by graphics system when viewport camera is changed 
 	*/
-	class CameraChangedEvent : public SceneMessage
+	class CameraChangedEvent : public SceneEventMessage
 	{
 	public:
 		/**
@@ -149,7 +149,7 @@ namespace GASS
 		@param camera Pointer to the new camera
 		*/
 		CameraChangedEvent(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  SceneMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
+		  SceneEventMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
 		  {
 
 		  }

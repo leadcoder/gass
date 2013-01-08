@@ -78,10 +78,10 @@ namespace GASS
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:
-		void OnDebugPrint(DebugPrintMessagePtr message);
-		void OnDrawLine(DrawLineMessagePtr message);
-		void OnDrawCircle(DrawCircleMessagePtr message);
-		void OnInitializeTextBox(CreateTextBoxMessagePtr message);
+		void OnDebugPrint(DebugPrintRequestPtr message);
+		void OnDrawLine(DrawLineRequestPtr message);
+		void OnDrawCircle(DrawCircleRequestPtr message);
+		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
@@ -94,7 +94,7 @@ namespace GASS
 		void ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp);
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
-		void OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message);
+		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 

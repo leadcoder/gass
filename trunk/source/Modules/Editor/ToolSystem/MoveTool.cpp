@@ -25,7 +25,7 @@ namespace GASS
 		m_Active(false),
 		m_SnapToMouse(false)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	MoveTool::~MoveTool()
@@ -134,8 +134,8 @@ namespace GASS
 				attribs.push_back("Latitude");
 				attribs.push_back("Longitude");
 				attribs.push_back("Projected");
-				GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
-				SimEngine::Get().GetSimSystemManager()->PostMessage(attrib_change_msg);
+				GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
+				SimEngine::Get().GetScene()->PostMessage(attrib_change_msg);
 			}
 
 			m_MoveUpdateCount++;
@@ -241,7 +241,7 @@ namespace GASS
 			}
 		}
 		int from_id = (int) this;
-		GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
+		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
@@ -300,7 +300,7 @@ namespace GASS
 		}
 	}
 
-	void MoveTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void MoveTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 
 		//Move gizmo to new object

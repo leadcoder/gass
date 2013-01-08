@@ -45,14 +45,39 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<SceneMessage> SceneMessagePtr;
 
+
+	class SceneEventMessage : public SceneMessage
+	{
+	protected:
+		SceneEventMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SceneMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef boost::shared_ptr<SceneEventMessage> SceneEventMessagePtr;
+
+	class SceneRequestMessage : public SceneMessage
+	{
+	protected:
+		SceneRequestMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SceneMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef boost::shared_ptr<SceneRequestMessage> SceneRequestMessagePtr;
+
+
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
 	//*********************************************************
 	
+
+
+
 	/**
 	Message used to remove a scene object from the scene
 	*/
-	class RemoveSceneObjectRequest : public SceneMessage
+	class RemoveSceneObjectRequest : public SceneRequestMessage
 	{
 	public:
 		/**
@@ -60,7 +85,7 @@ namespace GASS
 		@param object The object to remove
 		*/
 		RemoveSceneObjectRequest(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
-		  SceneMessage(sender_id , delay), m_Object(object)
+		  SceneRequestMessage(sender_id , delay), m_Object(object)
 		  {
 
 		  }
@@ -74,7 +99,7 @@ namespace GASS
 	/**
 	Message used to spawn a scene object from from template in the scene
 	*/
-	class SpawnObjectFromTemplateRequest : public SceneMessage
+	class SpawnObjectFromTemplateRequest : public SceneRequestMessage
 	{
 	public:
 		/**
@@ -92,7 +117,7 @@ namespace GASS
 			SceneObjectPtr parent = SceneObjectPtr(),
 			SenderID sender_id = -1, 
 			double delay= 0) : 
-		SceneMessage(sender_id , delay), 
+		SceneRequestMessage(sender_id , delay), 
 			m_Tempalate(template_name),
 			m_Position(position),
 			m_Rotation(rotation),
@@ -120,6 +145,8 @@ namespace GASS
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
+
+
 
 
 	class InternalSceneMessage : public BaseMessage

@@ -56,9 +56,9 @@ namespace GASS
 
 	void EditorComponent::OnInitialize()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedEvent,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		if(!m_EditorSystem)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " EditorComponent::OnInitialize");
@@ -69,9 +69,9 @@ namespace GASS
 
 	void EditorComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedMessage));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedMessage));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedEvent));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 	}
 
 	void EditorComponent::SetLock(bool value) 
@@ -89,7 +89,7 @@ namespace GASS
 		}
 	}
 
-	void EditorComponent::OnObjectLock(ObjectLockChangedMessagePtr message)
+	void EditorComponent::OnObjectLock(ObjectLockChangedEventPtr message)
 	{
 		if(message->GetSceneObject() == GetSceneObject())
 		{
@@ -115,7 +115,7 @@ namespace GASS
 		m_VisibilityTransparency = value;
 	}
 
-	void EditorComponent::OnObjectVisible(ObjectVisibilityChangedMessagePtr message)
+	void EditorComponent::OnObjectVisible(ObjectVisibilityChangedEventPtr message)
 	{
 		if(message->GetSceneObject() == GetSceneObject())
 		{
@@ -141,7 +141,7 @@ namespace GASS
 		}
 	}
 
-	void EditorComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void EditorComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		if(!m_ChangeMaterialWhenSelected)
 			return;

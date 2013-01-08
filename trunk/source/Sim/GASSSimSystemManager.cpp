@@ -62,8 +62,8 @@ namespace GASS
 
 		//support asyncron request
 		//boost::shared_ptr<SimSystemManager> shared_this = shared_from_this();
-		//MessageFuncPtr func_ptr(new GASS::MessageFunc<RequestTimeStepMessage>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
-		//RegisterForMessage(typeid(RequestTimeStepMessage),func_ptr,0);
+		//MessageFuncPtr func_ptr(new GASS::MessageFunc<TimeStepRequest>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
+		//RegisterForMessage(typeid(TimeStepRequest),func_ptr,0);
 
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
@@ -80,7 +80,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 	*/
-	//#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintMessage(mess)));
+	//#define DPRINT(mess) SendImmediate(MessagePtr( new DebugPrintRequest(mess)));
 
 /*	void SimSystemManager::Update(float delta_time)
 	{
@@ -112,7 +112,7 @@ namespace GASS
 				//done
 				m_StepSimulationRequest = false;
 				//send message that we are done
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneEvent()));
 		}
 
 
@@ -224,7 +224,7 @@ namespace GASS
 			mess_stat_iter++;
 		}
 		ss << " Simulation Updates:" << m_LastNumSimulationSteps << "\n";
-		GASS::MessagePtr stat_msg(new GASS::CreateTextBoxMessage("SimulationStats",ss.str(),GASS::Vec4(0.9,0.9,0.9,1),0.1,0.3,0.1,0.1));
+		GASS::MessagePtr stat_msg(new GASS::CreateTextBoxRequest("SimulationStats",ss.str(),GASS::Vec4(0.9,0.9,0.9,1),0.1,0.3,0.1,0.1));
 		//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
 	}*/
 
@@ -268,12 +268,12 @@ namespace GASS
 		m_SystemMessageManager->UnregisterForMessage(type,  callback);
 	}
 
-	void SimSystemManager::PostMessage( MessagePtr message )
+	void SimSystemManager::PostMessage( SystemMessagePtr message )
 	{
 		m_SystemMessageManager->PostMessage(message);
 	}
 
-	void SimSystemManager::SendImmediate( MessagePtr message )
+	void SimSystemManager::SendImmediate( SystemMessagePtr message )
 	{
 		m_SystemMessageManager->SendImmediate(message);
 	}
@@ -284,7 +284,7 @@ namespace GASS
 	}
 
 	//use message to support asyncron request!
-	/*void SimSystemManager::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
+	/*void SimSystemManager::OnSimulationStepRequest(TimeStepRequestPtr message)
 	{
 		m_StepSimulationRequest = true;
 		m_RequestDeltaTime = message->GetTimeStep();

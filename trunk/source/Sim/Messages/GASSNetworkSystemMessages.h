@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <string>
 
 namespace GASS
@@ -42,11 +43,11 @@ namespace GASS
 	Start network server
 	*/
 
-	class StartServerMessage : public BaseMessage
+	class StartServerRequest : public SystemRequestMessage
 	{
 	public:
-		StartServerMessage(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		StartServerRequest(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
 
 		  std::string GetServerName() const {return m_Name;}
@@ -55,31 +56,31 @@ namespace GASS
 		std::string m_Name;
 		int m_Port;
 	};
-	typedef boost::shared_ptr<StartServerMessage> StartServerMessagePtr;
+	typedef boost::shared_ptr<StartServerRequest> StartServerRequestPtr;
 
 
 	/**
 	Stop network server
 	*/
-	class StopServerMessage : public BaseMessage
+	class StopServerRequest : public BaseMessage
 	{
 	public:
-		StopServerMessage(SenderID sender_id = -1, double delay= 0) :
+		StopServerRequest(SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<StopServerMessage> StopServerMessagePtr;
+	typedef boost::shared_ptr<StopServerRequest> StopServerRequestPtr;
 
 
 
 	/**
 	Client connected to network server
 	*/
-	class ClientConnectedMessage : public BaseMessage
+	class ClientConnectedEvent : public SystemEventMessage
 	{
 	public:
-		ClientConnectedMessage(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		ClientConnectedEvent(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port){}
 
 		 std::string GetClientName() const {return m_Name;}
@@ -87,17 +88,17 @@ namespace GASS
 		std::string m_Name;
 		int m_ClientPort;
 	};
-	typedef boost::shared_ptr<ClientConnectedMessage> ClientConnectedMessagePtr;
+	typedef boost::shared_ptr<ClientConnectedEvent> ClientConnectedEventPtr;
 
 
 	/**
 	Client disconnected from network server
 	*/
-	class ClientDisconnectedMessage : public BaseMessage
+	class ClientDisconnectedEvent : public SystemEventMessage
 	{
 	public:
-		ClientDisconnectedMessage(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		ClientDisconnectedEvent(const std::string &name, int client_port, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port){}
 
 		 std::string GetClientName() const {return m_Name;}
@@ -105,18 +106,18 @@ namespace GASS
 		std::string m_Name;
 		int m_ClientPort;
 	};
-	typedef boost::shared_ptr<ClientDisconnectedMessage> ClientDisconnectedMessagePtr;
+	typedef boost::shared_ptr<ClientDisconnectedEvent> ClientDisconnectedEventPtr;
 
 
 	/////////NETWORK CLIENT MESSAGES////////////////
 	/**
 	Start network client
 	*/
-	class StartClientMessage : public BaseMessage
+	class StartClientRequest : public SystemRequestMessage
 	{
 	public:
-		StartClientMessage(const std::string &name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		StartClientRequest(const std::string &name, int client_port, int server_port, SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(name), m_ClientPort(client_port), m_ServerPort(server_port){}
 
 		 std::string GetClientName() const {return m_Name;}
@@ -127,24 +128,24 @@ namespace GASS
 		int m_ClientPort;
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<StartClientMessage> StartClientMessagePtr;
+	typedef boost::shared_ptr<StartClientRequest> StartClientRequestPtr;
 
 
 	/**
 	Server disconnected
 	*/
-	class ServerDisconnectedMessage : public BaseMessage
+	class ServerDisconnectedEvent : public SystemEventMessage
 	{
 	public:
-		ServerDisconnectedMessage(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		ServerDisconnectedEvent(const std::string &name, int port, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
 			  m_Name(name), m_Port(port){}
 		 std::string GetServerName() const {return m_Name;}
 	private:
 		std::string m_Name;
 		int m_Port;
 	};
-	typedef boost::shared_ptr<ServerDisconnectedMessage> ServerDisconnectedMessagePtr;
+	typedef boost::shared_ptr<ServerDisconnectedEvent> ServerDisconnectedEventPtr;
 
 	/**
 	Stop network client
@@ -162,11 +163,11 @@ namespace GASS
 	/**
 	Server response to network client
 	*/
-	class ServerResponseMessage : public BaseMessage
+	class ServerResponseEvent : public SystemEventMessage
 	{
 	public:
-		ServerResponseMessage(const std::string &server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		ServerResponseEvent(const std::string &server_name, int server_port, float ping_time,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port), m_PingTime(ping_time){}
 
 		 std::string GetServerName() const {return m_Name;}
@@ -177,17 +178,17 @@ namespace GASS
 		int m_ServerPort;
 		float m_PingTime;
 	};
-	typedef boost::shared_ptr<ServerResponseMessage> ServerResponseMessagePtr;
+	typedef boost::shared_ptr<ServerResponseEvent> ServerResponseEventPtr;
 
 
 	/**
 	Connect to server
 	*/
-	class ConnectToServerMessage : public BaseMessage
+	class ConnectToServerRequest : public SystemRequestMessage
 	{
 	public:
-		ConnectToServerMessage(const std::string &server_name, int server_port,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		ConnectToServerRequest(const std::string &server_name, int server_port,SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(server_name), m_ServerPort(server_port){}
 
 		 std::string GetServerName() const {return m_Name;}
@@ -196,7 +197,7 @@ namespace GASS
 		std::string m_Name;
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<ConnectToServerMessage> ConnectToServerMessagePtr;
+	typedef boost::shared_ptr<ConnectToServerRequest> ConnectToServerRequestPtr;
 
 	/**
 	Ping for servers
@@ -217,18 +218,18 @@ namespace GASS
 	/**
 	Server inform client about scene
 	*/
-	class StartSceanrioRequestMessage : public BaseMessage
+	class StartSceanrioRequest : public SystemRequestMessage
 	{
 	public:
-		StartSceanrioRequestMessage(const std::string &scene_name, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		StartSceanrioRequest(const std::string &scene_name, SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(scene_name){}
 
 		 std::string GetSceneName() const {return m_Name;}
 	private:
 		std::string m_Name;
 	};
-	typedef boost::shared_ptr<StartSceanrioRequestMessage> StartSceanrioRequestMessagePtr;
+	typedef boost::shared_ptr<StartSceanrioRequest> StartSceanrioRequestPtr;
 
 	class ShutdownSceanrioRequestMessage : public BaseMessage
 	{

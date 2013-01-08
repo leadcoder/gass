@@ -450,7 +450,7 @@ namespace GASS
 		ss << "Sun color:" << sunCol.x << " " << sunCol.y << " " << sunCol.z << "\n";
 		ss << "Ambient color:" << ambientCol.x << " " << ambientCol.y << " " << ambientCol.z << "\n";
 		//ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintMessage(ss.str())));*/
+		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(ss.str())));*/
 	}
 
 }

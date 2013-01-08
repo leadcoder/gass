@@ -64,17 +64,17 @@ namespace GASS
 
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {return m_PartId;}
-		void OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message);
+		void OnNetworkPostUpdate(NetworkPostUpdateEventPtr message);
 
 		
 
 	private:
 		void SceneManagerTick(double delta);
 
-		void OnGotReplica(ComponentGotReplicaMessagePtr message);
+		void OnGotReplica(ComponentGotReplicaEventPtr message);
 		void OnSerialize(NetworkSerializeMessagePtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
-		void OnNewChildReplica(ChildReplicaCreatedMessagePtr message);
+		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
 		RakNetChildReplica* m_Replica;
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;

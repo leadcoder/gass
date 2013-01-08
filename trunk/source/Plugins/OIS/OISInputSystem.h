@@ -97,8 +97,8 @@ namespace GASS
 		float NormalizeMouseDelta(float value);
 		MouseButtonId ToGASS(OIS::MouseButtonID ois_id) const;
 		MouseData ToGASS(const OIS::MouseEvent &arg);
-		void OnInit(MainWindowCreatedNotifyMessagePtr message);
-		void OnViewportMovedOrResized(RenderWindowResizedNotifyMessagePtr message);
+		void OnInit(MainWindowCreatedEventPtr message);
+		void OnViewportMovedOrResized(RenderWindowResizedEventPtr message);
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}
 		void SetExclusiveMode(bool value) {m_ExclusiveMode = value;}
 		int inline OldKey(int index) { return (m_OldKeyBuffer[index]); }

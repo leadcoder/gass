@@ -144,7 +144,7 @@ namespace GASS
 		else
 			rs->AddResourceGroup("GASSSceneResGroup");
 	
-		MessagePtr enter_load_msg(new SceneAboutToLoadNotifyMessage(shared_from_this()));
+		SystemMessagePtr enter_load_msg(new PreSceneLoadEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
 		
 		//send load message
@@ -155,7 +155,7 @@ namespace GASS
 			scenery->LoadFromFile(GetSceneFolder().GetFullPath() + "/instances.xml");
 		
 		m_Root->AddChildSceneObject(scenery,true);
-		MessagePtr system_msg(new SceneLoadedNotifyMessage(shared_from_this()));
+		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 		m_SceneLoaded = true;
 	}
@@ -269,25 +269,22 @@ namespace GASS
 			
 			MessagePtr scene_msg(new UnLoadSceneManagersRequest(shared_from_this()));
 			m_SceneMessageManager->SendImmediate(scene_msg);
-			MessagePtr unload_msg(new SceneUnloadNotifyMessage(shared_from_this()));
+			SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
-			m_SceneMessageManager->Clear(); 
-
-			//recreate?
 			
-
+			
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(rs == NULL)
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
 			rs->RemoveResourceGroup("GASSSceneResGroup");
 			m_SceneLoaded = false;
 			m_SceneManagers.clear();
-
-			m_SceneMessageManager = MessageManagerPtr(new MessageManager());
-			m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
-			m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
-
-			SimEngine::GetPtr()->GetSimSystemManager()->ClearMessages();
+			m_SceneMessageManager->Clear();
+			//m_SceneMessageManager->Clear();
+			//m_SceneMessageManager = MessageManagerPtr(new MessageManager());
+			//m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
+			//m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
+			//SimEngine::GetPtr()->GetSimSystemManager()->ClearMessages();
 		}
 	}
 

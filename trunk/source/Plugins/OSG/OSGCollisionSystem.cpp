@@ -117,11 +117,12 @@ namespace GASS
 	void OSGCollisionSystem::Init()
 	{
 		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,SceneAboutToLoadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnUnloadScene,SceneUnloadedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnLoadScene,PreSceneLoadEvent,0));
+		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraRequest,0));	
 	}
 
-	void OSGCollisionSystem::OnUnloadScene(SceneUnloadNotifyMessagePtr message)
+	void OSGCollisionSystem::OnUnloadScene(SceneUnloadedEventPtr message)
 	{
 		m_RequestMap.clear();
 		m_ResultMap.clear();
@@ -129,9 +130,9 @@ namespace GASS
 	}
 
 
-	void OSGCollisionSystem::OnLoadScene(SceneAboutToLoadNotifyMessagePtr message)
+	void OSGCollisionSystem::OnLoadScene(PreSceneLoadEventPtr message)
 	{
-		message->GetScene()->RegisterForMessage(REG_TMESS(OSGCollisionSystem::OnChangeCamera,ChangeCameraRequest,0));	
+		
 	}
 
 	CollisionHandle OSGCollisionSystem::Request(const CollisionRequest &request)

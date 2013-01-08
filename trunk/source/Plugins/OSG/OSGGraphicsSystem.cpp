@@ -108,9 +108,9 @@ namespace GASS
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 	
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
@@ -181,7 +181,7 @@ namespace GASS
 		//osgDB::Registry::instance()->setOptions(opt); 
 	}
 
-	void OSGGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
+	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
 		std::string debug_text = message->GetText();
 
@@ -260,7 +260,7 @@ namespace GASS
 				handle = main_handle;
 #endif
 			}
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
+			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
 
 		}
@@ -347,7 +347,7 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
+	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
 		
 		osgViewer::ViewerBase::Views views;
@@ -379,7 +379,7 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSystem::OnInitializeTextBox(CreateTextBoxMessagePtr message)
+	void OSGGraphicsSystem::OnInitializeTextBox(CreateTextBoxRequestPtr message)
 	{
 		if(m_TextBoxes.end() == m_TextBoxes.find(message->m_BoxID))
 		{

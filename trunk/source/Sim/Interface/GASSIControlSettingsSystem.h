@@ -21,7 +21,7 @@
 #pragma once
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSCommon.h"
-
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <map>
 #include <string>
 
@@ -33,11 +33,11 @@ namespace GASS
 		CT_AXIS
 	};
 
-	class ControllSettingsMessage : public BaseMessage
+	class ControllSettingsMessage : public SystemEventMessage
 	{
 	public:
 		ControllSettingsMessage(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Controller(controller), 
+		  SystemEventMessage(sender_id , delay), m_Controller(controller), 
 			  m_Value(value),
 			  m_ControllerType(ct),
 			  m_Settings(settings)

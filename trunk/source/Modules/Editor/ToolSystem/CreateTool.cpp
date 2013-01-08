@@ -20,7 +20,7 @@ namespace GASS
 		m_Controller(controller),
 		m_FirstMoveUpdate(true)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedMessage,0));	
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedEvent,0));	
 	}
 
 	CreateTool::~CreateTool()
@@ -33,7 +33,7 @@ namespace GASS
 
 	}
 
-	void CreateTool::OnToolChanged(ToolChangedMessagePtr message)
+	void CreateTool::OnToolChanged(ToolChangedEventPtr message)
 	{
 		std::string new_tool = message->GetTool();
 		if(new_tool == "CreateTool")

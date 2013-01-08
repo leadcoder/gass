@@ -434,13 +434,13 @@ namespace GASS
 			ss << "RPM: "<< m_VehicleEngineRPM << "\n";
 			ss << "Clutch: "<< m_Clutch << "\n";
 			std::string engine_data = ss.str();
-			MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+			SystemMessagePtr debug_msg(new DebugPrintRequest(engine_data));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 		}
 		/*char dtxt[256];
 		sprintf(dtxt,"Gear: %d Throttle %f RPM:%f Clutch:%f",m_Gear,throttle,m_VehicleEngineRPM,m_Clutch);
 		std::string engine_data = dtxt;
-		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+		MessagePtr debug_msg(new DebugPrintRequest(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 	}
 	void VehicleEngineComponent::UpdateSound(double delta)
@@ -497,7 +497,7 @@ namespace GASS
 		/*std::stringstream ss;
 		ss << "Speed(m/s): "<< m_VehicleSpeed << "Hull angle velocity:" << m_AngularVelocity.y << "\n Desired steer velocity" << m_DesiredSteer << "\n Torq" << turn_torque << " Norm rpm:" << norm_rpm << " MaxTorq:" << m_MaxTurnForce;
 		std::string engine_data = ss.str();
-		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+		MessagePtr debug_msg(new DebugPrintRequest(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 		*/
 		
@@ -509,7 +509,7 @@ namespace GASS
 			//sprintf(dtxt,"Speed(km/h): %f\n Hull ang vel:%f %f %f\n Q:%f \n DesiredSteer vel %f",m_VehicleSpeed*3.6f, m_AngularVelocity.x,m_AngularVelocity.y,m_AngularVelocity.z,turn_torque,-m_DesiredSteer);
 			//std::string engine_data = dtxt;
 			std::string engine_data = ss.str();
-			MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+			MessagePtr debug_msg(new DebugPrintRequest(engine_data));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
 		}*/
 	}
@@ -617,7 +617,7 @@ namespace GASS
 		sprintf(dtxt,"Wheel q: %f v:%f",wheel_torque,wheel_vel);
 
 		std::string engine_data = dtxt;
-		MessagePtr debug_msg(new DebugPrintMessage(engine_data));
+		MessagePtr debug_msg(new DebugPrintRequest(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
 
 		//send physics data to wheels and update mean wheel rpm
@@ -660,7 +660,7 @@ namespace GASS
 
 		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
 		engine_data = dtxt;
-		MessagePtr debug_msg2(new DebugPrintMessage(engine_data));
+		MessagePtr debug_msg2(new DebugPrintRequest(engine_data));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg2);*/
 
 		//what rpm should we expose to other components?

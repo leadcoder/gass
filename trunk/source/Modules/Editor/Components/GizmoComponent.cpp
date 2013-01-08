@@ -52,10 +52,10 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage, 1000));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent, 1000));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnGridMessage,GridMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest,0));
 
 
 		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
@@ -74,10 +74,10 @@ namespace GASS
 
 	void GizmoComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMoved3DMessage));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedMessage));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnGridMessage,GridMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest));
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
@@ -113,7 +113,7 @@ namespace GASS
 
 	
 
-	void GizmoComponent::OnGridMessage(GridMessagePtr message)
+	void GizmoComponent::OnChangeGridRequest(ChangeGridRequestPtr message)
 	{
 		if(m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 			BuildMesh();
@@ -162,7 +162,7 @@ namespace GASS
 		}
 	}
 
-	void GizmoComponent::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void GizmoComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		SetSelection(message->GetSceneObject());
 	}
@@ -575,7 +575,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(mesh_message);
 	}
 
-	void GizmoComponent::OnNewCursorInfo(CursorMoved3DMessagePtr message)
+	void GizmoComponent::OnNewCursorInfo(CursorMovedOverSceneEventPtr message)
 	{
 		if(m_Type == GT_FIXED_GRID)
 			return;
@@ -611,7 +611,6 @@ namespace GASS
 					0,
 					grid));
 				GetSceneObject()->PostMessage(mat_mess);
-				//GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(Vec4(0,0,0,m_Color.w),Vec3(0,0,0),Vec3(0,0,0),color)));
 			}
 			m_Highlight = false;
 		}

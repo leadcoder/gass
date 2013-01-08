@@ -49,8 +49,8 @@ namespace GASS
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
-		m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		//,m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
 	{
 
 	}
@@ -64,7 +64,7 @@ namespace GASS
 	void OgreMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
-		RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
+		//RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
 		RegisterEnumProperty<MeshResource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
@@ -125,7 +125,7 @@ namespace GASS
 			//m_OgreEntity->setQueryFlags(1);
 			//LoadLightmap();
 			SetCastShadow(m_CastShadow);
-			SetRenderQueue(m_RenderQueue);
+			//SetRenderQueue(m_RenderQueue);
 
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
@@ -437,36 +437,14 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
+	/*void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
 	{
-
-		/*RENDER_QUEUE_BACKGROUND = 0,
-		/// First queue (after backgrounds), used for skyboxes if rendered first
-		RENDER_QUEUE_SKIES_EARLY = 5,
-		RENDER_QUEUE_1 = 10,
-		RENDER_QUEUE_2 = 20,
-		RENDER_QUEUE_WORLD_GEOMETRY_1 = 25,
-		RENDER_QUEUE_3 = 30,
-		RENDER_QUEUE_4 = 40,
-		/// The default render queue
-		RENDER_QUEUE_MAIN = 50,
-		RENDER_QUEUE_6 = 60,
-		RENDER_QUEUE_7 = 70,
-		RENDER_QUEUE_WORLD_GEOMETRY_2 = 75,
-		RENDER_QUEUE_8 = 80,
-		RENDER_QUEUE_9 = 90,
-		/// Penultimate queue(before overlays), used for skyboxes if rendered last
-		RENDER_QUEUE_SKIES_LATE = 95,
-		/// Use this queue for objects which must be rendered last e.g. overlays
-		RENDER_QUEUE_OVERLAY = 100, 
-		/// Final possible render queue, don't exceed this
-		RENDER_QUEUE_MAX = 105*/
 		m_RenderQueue = rq;
 		if(m_OgreEntity)
 		{
 			m_OgreEntity->setRenderQueueGroup(m_RenderQueue.GetValue());
 		}
-	}
+	}*/
 
 	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
 	{

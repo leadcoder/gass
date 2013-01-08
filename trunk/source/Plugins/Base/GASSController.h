@@ -46,7 +46,7 @@ namespace GASS
 
 		void FireInput(float value,ControllerType ctype)
 		{
-			MessagePtr system_msg(new ControllSettingsMessage(m_Owner->m_Name, m_Name,value,ctype));
+			SystemMessagePtr system_msg(new ControllSettingsMessage(m_Owner->m_Name, m_Name,value,ctype));
 			m_Owner->m_Owner->GetSimSystemManager()->PostMessage(system_msg);
 		}
 

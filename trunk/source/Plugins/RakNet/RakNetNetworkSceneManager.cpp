@@ -70,7 +70,7 @@ namespace GASS
 		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
 		//GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent,0));
 	}
 
 	/*void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
@@ -78,7 +78,7 @@ namespace GASS
 		
 	}*/
 
-	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedMessagePtr message)
+	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedEventPtr message)
 	{
 		RakNetMasterReplica* replica = message->GetReplica();
 		std::string template_name = replica->GetTemplateName();
@@ -147,7 +147,7 @@ namespace GASS
 	{
 
 		int address = (int) this;
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 }

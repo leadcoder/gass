@@ -166,8 +166,8 @@ namespace GASS
 		m_BarrelTransformation = message->GetTransformation();
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DrawLineMessage(start,end,color)))
-#define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(text)))
+#define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DrawLineRequest(start,end,color)))
+#define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(text)))
 
 	void SightComponent::UpdateAimTransformation(double delta_time)
 	{

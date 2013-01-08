@@ -35,7 +35,7 @@ namespace GASS
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
-		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
 		bool m_MouseIsDown;
 		SceneObjectWeakPtr m_SelectedObject;

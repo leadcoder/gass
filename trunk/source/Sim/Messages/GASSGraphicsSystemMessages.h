@@ -50,11 +50,11 @@ namespace GASS
 	implementation.
 	*/
 
-	class GFXSceneManagerLoadedNotifyMessage : public BaseMessage
+	class GFXSceneManagerLoadedEvent : public SystemEventMessage
 	{
 	public:
-		GFXSceneManagerLoadedNotifyMessage(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay),
+		GFXSceneManagerLoadedEvent(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
 			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) ,m_ShadowNode(scene_graph_shadow_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
@@ -66,18 +66,18 @@ namespace GASS
 		void* m_ShadowNode;
 		std::string m_RenderSystem;
 	};
-	typedef boost::shared_ptr<GFXSceneManagerLoadedNotifyMessage> GFXSceneManagerLoadedNotifyMessagePtr;
+	typedef boost::shared_ptr<GFXSceneManagerLoadedEvent> GFXSceneManagerLoadedEventPtr;
 
 	/**
 		Message posted by the graphic system to notify that a new render window has been created.
 		Suscribe to this message if you need to get hold of the render window handle,
 	*/
 
-	class MainWindowCreatedNotifyMessage : public BaseMessage
+	class MainWindowCreatedEvent : public SystemEventMessage
 	{
 	public:
-		MainWindowCreatedNotifyMessage(void* render_window_handle, void* main_window_handle,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay),
+		MainWindowCreatedEvent(void* render_window_handle, void* main_window_handle,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
 			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
 		  void* GetRenderWindowHandle() const {return m_Handle;}
 		  void* GetMainHandle() const {return m_MainHandle;}
@@ -87,7 +87,7 @@ namespace GASS
 		void* m_MainHandle;
 
 	};
-	typedef boost::shared_ptr<MainWindowCreatedNotifyMessage> MainWindowCreatedNotifyMessagePtr;
+	typedef boost::shared_ptr<MainWindowCreatedEvent> MainWindowCreatedEventPtr;
 
 
 	/**
@@ -97,16 +97,16 @@ namespace GASS
 		it's internal window system about the change
 	*/
 
-	class ViewportMovedOrResizedNotifyMessage : public BaseMessage
+	class ViewportMovedOrResizedEvent : public SystemEventMessage
 	{
 	public:
-		ViewportMovedOrResizedNotifyMessage (const std::string &viewport_name, int pos_x, int pos_y, int width,int height,SenderID sender_id = -1, double delay= 0) :
+		ViewportMovedOrResizedEvent (const std::string &viewport_name, int pos_x, int pos_y, int width,int height,SenderID sender_id = -1, double delay= 0) :
 		  m_PosX(pos_x),
 		  m_PosY(pos_y),
 		  m_Width(width),
 		  m_Height(height),
 		  m_VPName(viewport_name),
-		  BaseMessage(sender_id , delay)  {}
+		  SystemEventMessage(sender_id , delay)  {}
 		  int GetPositionX()const {return m_PosX;}
 		  int GetPositionY()const {return m_PosY;}
 		  int GetWidth()const {return m_Width;}
@@ -116,17 +116,17 @@ namespace GASS
 		int m_Width,m_Height,m_PosX,m_PosY;
 		std::string m_VPName;
 	};
-	typedef boost::shared_ptr<ViewportMovedOrResizedNotifyMessage> ViewportMovedOrResizedNotifyMessagePtr;
+	typedef boost::shared_ptr<ViewportMovedOrResizedEvent> ViewportMovedOrResizedEventPtr;
 
 
-	class RenderWindowResizedNotifyMessage : public BaseMessage
+	class RenderWindowResizedEvent : public SystemEventMessage
 	{
 	public:
-		RenderWindowResizedNotifyMessage(const std::string &window_name, int width,int height,SenderID sender_id = -1, double delay= 0) :
+		RenderWindowResizedEvent(const std::string &window_name, int width,int height,SenderID sender_id = -1, double delay= 0) :
 		  m_Width(width),
 		  m_Height(height),
 		  m_WinName(window_name),
-		  BaseMessage(sender_id , delay)  {}
+		  SystemEventMessage(sender_id , delay)  {}
 		  int GetWidth()const {return m_Width;}
 		  int GetHeight()const {return m_Height;}
 		  std::string GetWindowName() const {return m_WinName;}
@@ -134,19 +134,21 @@ namespace GASS
 		int m_Width,m_Height;
 		std::string m_WinName;
 	};
-	typedef boost::shared_ptr<RenderWindowResizedNotifyMessage> RenderWindowResizedNotifyMessagePtr;
+	typedef boost::shared_ptr<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
 
 
 
 	//debug messages
-	class DrawLineMessage : public BaseMessage
+	class DrawLineRequest : public SystemRequestMessage
 	{
 	public:
-		DrawLineMessage(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) :
+		DrawLineRequest(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) : SystemRequestMessage(sender_id , delay) ,
 		  m_Start(start),
 		  m_End(end),
-		  m_Color(color),
-		  BaseMessage(sender_id , delay)  {}
+		  m_Color(color)
+		  {
+		}
+		  
 		  Vec3 GetStart()const {return m_Start;}
 		  Vec3 GetEnd()const {return m_End;}
 		  Vec4 GetColor()const {return m_Color;}
@@ -154,19 +156,19 @@ namespace GASS
 		Vec3 m_Start,m_End;
 		Vec4 m_Color;
 	};
-	typedef boost::shared_ptr<DrawLineMessage> DrawLineMessagePtr;
+	typedef boost::shared_ptr<DrawLineRequest> DrawLineRequestPtr;
 
 
-	class DrawCircleMessage : public BaseMessage
+	class DrawCircleRequest : public SystemRequestMessage
 	{
 	public:
-		DrawCircleMessage(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
+		DrawCircleRequest(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
 		  m_Center(center),
 		  m_Radius(radius),
 		  m_Color(color),
 		  m_Segments(segments),
 		  m_Filled(filled),
-		  BaseMessage(sender_id , delay)  
+		  SystemRequestMessage(sender_id , delay)  
 		  {
 
 		  }
@@ -182,12 +184,12 @@ namespace GASS
 		int m_Segments;
 		bool m_Filled;
 	};
-	typedef boost::shared_ptr<DrawCircleMessage> DrawCircleMessagePtr;
+	typedef boost::shared_ptr<DrawCircleRequest> DrawCircleRequestPtr;
 
-	class CreateTextBoxMessage : public BaseMessage
+	class CreateTextBoxRequest : public SystemRequestMessage
 	{
 	public:
-		CreateTextBoxMessage(const std::string &text_area_id, const std::string &text ,const Vec4 &color, float pos_x,float pos_y, float width, float height, SenderID sender_id = -1, double delay= 0) :
+		CreateTextBoxRequest(const std::string &text_area_id, const std::string &text ,const Vec4 &color, float pos_x,float pos_y, float width, float height, SenderID sender_id = -1, double delay= 0) :
 		  m_BoxID(text_area_id),
 		  m_Text(text),
 		  m_Color(color),
@@ -196,7 +198,7 @@ namespace GASS
 		  m_Width(width),
 		  m_Height(height),
 
-		  BaseMessage(sender_id , delay)  
+		  SystemRequestMessage(sender_id , delay)  
 		  {
 
 		  }
@@ -209,7 +211,7 @@ namespace GASS
 		  float m_Width;
 		  float m_Height;
 	};
-	typedef boost::shared_ptr<CreateTextBoxMessage> CreateTextBoxMessagePtr;
+	typedef boost::shared_ptr<CreateTextBoxRequest> CreateTextBoxRequestPtr;
 }
 
 #endif

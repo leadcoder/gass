@@ -20,7 +20,7 @@ namespace GASS
 	EditPositionTool::EditPositionTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	EditPositionTool::~EditPositionTool()
@@ -55,7 +55,7 @@ namespace GASS
 	}
 
 
-	void EditPositionTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void EditPositionTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		m_SelectedObject = message->GetSceneObject();
 	}

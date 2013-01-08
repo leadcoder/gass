@@ -70,11 +70,11 @@ namespace GASS
 	void OgreGraphicsSystem::Init()
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedNotifyMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineMessage ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleMessage ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxMessage ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineRequest ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleRequest ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
@@ -113,7 +113,7 @@ namespace GASS
 			void* main_handle = static_cast<void*>(window_hnd);
 			m_Windows[name] = window;
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
+			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 		else
@@ -122,14 +122,14 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::OnDebugPrint(DebugPrintMessagePtr message)
+	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
 		std::string debug_text = message->GetText();
 		m_DebugTextBox->Print(debug_text.c_str());
 		m_DebugTextBox->SetActive(true);
 	}
 
-	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedNotifyMessagePtr message)
+	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
 		std::map<std::string, Ogre::RenderWindow*>::iterator iter = m_Windows.begin();
 		//resize all 
@@ -193,7 +193,7 @@ namespace GASS
 				"TRIANGLE COUNT: " << tri_count << "\n"
 				"BATCH COUNT: " << batch_count << "\n";
 			std::string stats_text = sstream.str();
-			GetSimSystemManager()->SendImmediate(MessagePtr( new DebugPrintMessage(stats_text)));
+			GetSimSystemManager()->SendImmediate(SystemMessagePtr( new DebugPrintRequest(stats_text)));
 		}
 		//update listeners
 		SimSystem::Update(delta_time);
@@ -279,7 +279,7 @@ namespace GASS
 		if(m_Windows.size() == 1) // first window?
 		{
 			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			MessagePtr window_msg(new MainWindowCreatedNotifyMessage(handle,main_handle));
+			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 	}
@@ -328,7 +328,7 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::OnDrawLine(DrawLineMessagePtr message)
+	void OgreGraphicsSystem::OnDrawLine(DrawLineRequestPtr message)
 	{
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
@@ -337,7 +337,7 @@ namespace GASS
 	}
 
 
-	void OgreGraphicsSystem::OnDrawCircle(DrawCircleMessagePtr message)
+	void OgreGraphicsSystem::OnDrawCircle(DrawCircleRequestPtr message)
 	{
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
@@ -348,7 +348,7 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::OnInitializeTextBox(CreateTextBoxMessagePtr message)
+	void OgreGraphicsSystem::OnInitializeTextBox(CreateTextBoxRequestPtr message)
 	{
 		/*Vec4 color = message->m_Color;
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);

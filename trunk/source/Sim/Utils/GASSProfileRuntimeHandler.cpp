@@ -21,11 +21,11 @@ namespace GASS
 		std::stringstream sstream;
 		sstream << "FPS:" << fps << std::endl;
 		std::string fps_mess = sstream.str();
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(fps_mess)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(fps_mess)));
 
 		
 		std::string mess = "Cur: Min: Avg: Max: Time Calls: Profile Name:";
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(mess)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(mess)));
 
 
 		//Font::DebugPrint("Cur: Min: Avg: Max: Time Calls: Profile Name:");
@@ -60,7 +60,7 @@ namespace GASS
 		std::stringstream sstream;
 		sstream << cur << " " << min << " " << avg << " " << max << " " << time << " " << num << " " << indentedName;
 		std::string mess = sstream.str();
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintMessage(mess)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(mess)));
 	}
 
 	void ProfileRuntimeHandler::EndOutput()

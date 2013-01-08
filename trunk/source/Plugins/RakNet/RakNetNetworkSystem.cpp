@@ -102,12 +102,15 @@ namespace GASS
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,SceneAboutToLoadNotifyMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,PreSceneLoadEvent,0));
+
+		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
+		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
 	
 		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
 		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
@@ -127,11 +130,9 @@ namespace GASS
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessageWithData", int, RakNetBaseReplica, RemoteMessageWithData, const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 	}
 
-	void RakNetNetworkSystem::OnSceneLoaded(SceneAboutToLoadNotifyMessagePtr message)
+	void RakNetNetworkSystem::OnSceneLoaded(PreSceneLoadEventPtr message)
 	{
 		m_Scene = message->GetScene();
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
 	}
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayRequestPtr message)
@@ -168,12 +169,12 @@ namespace GASS
 	
 
 
-	void RakNetNetworkSystem::OnStartServer(StartServerMessagePtr message)
+	void RakNetNetworkSystem::OnStartServer(StartServerRequestPtr message)
 	{
 		StartServer(message->GetServerName(),message->GetPort());
 	}
 
-	void RakNetNetworkSystem::OnStopServer(StopServerMessagePtr message)
+	void RakNetNetworkSystem::OnStopServer(StopServerRequestPtr message)
 	{
 		Stop();
 	}
@@ -182,7 +183,7 @@ namespace GASS
 	{
 		if(m_Active)
 		{
-			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage));
+			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest));
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage));
 			//Unregister update fucntion
 			//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
@@ -192,12 +193,12 @@ namespace GASS
 		m_Active = false;
 	}
 
-	void RakNetNetworkSystem::OnStartClient(StartClientMessagePtr message)
+	void RakNetNetworkSystem::OnStartClient(StartClientRequestPtr message)
 	{
 		StartClient(message->GetClientPort(),message->GetServerPort());
 	}
 
-	void RakNetNetworkSystem::OnConnectToServer(ConnectToServerMessagePtr message)
+	void RakNetNetworkSystem::OnConnectToServer(ConnectToServerRequestPtr message)
 	{
 		ConnectToServer(message->GetServerName(),message->GetServerPort(),0);
 	}
@@ -213,7 +214,7 @@ namespace GASS
 			m_RakPeer->Shutdown(100, 0);
 		if(m_Active)
 		{
-			//GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage));
+			//GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent));
 		}
 		m_Active=false;
 	}
@@ -262,7 +263,7 @@ namespace GASS
 		//Register update fucntion
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		//Catch scene load messages
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent,0));
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
 		//m_Logger.LogHeader();
@@ -272,7 +273,7 @@ namespace GASS
 	void RakNetNetworkSystem::StartClient(int client_port,int server_port)
 	{
 		m_IsServer = 0;
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage,0));
 
 		//Anytime we get a new connection, call AddParticipant() on that connection
@@ -317,7 +318,7 @@ namespace GASS
 			UpdateClient(delta);
 
 		//
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new NetworkPostUpdateMessage()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new NetworkPostUpdateEvent()));
 	}
 
 	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int client_port)
@@ -365,7 +366,7 @@ namespace GASS
 			//printf("replica about to be created!\n");
 			RakNetMasterReplica* object = new RakNetMasterReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
-			MessagePtr message( new MasterReplicaCreatedMessage(object));
+			SystemMessagePtr message( new MasterReplicaCreatedEvent(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 			//printf("replica created!\n");
 		}
@@ -374,7 +375,7 @@ namespace GASS
 			//printf("replica about to be created!\n");
 			RakNetChildReplica* object = new RakNetChildReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
-			MessagePtr message( new ChildReplicaCreatedMessage(object));
+			SystemMessagePtr message( new ChildReplicaCreatedEvent(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 			//printf("replica created!\n");
 		}
@@ -413,7 +414,7 @@ namespace GASS
 				{
 					m_ClientMap.erase(pos);
 				}
-				MessagePtr message (new ClientDisconnectedMessage(name,port));
+				SystemMessagePtr message (new ClientDisconnectedEvent(name,port));
 				GetSimSystemManager()->PostMessage(message);
 			}
 			else if (p->data[0] == ID_NEW_INCOMING_CONNECTION || p->data[0]==ID_CONNECTION_REQUEST_ACCEPTED)
@@ -431,7 +432,7 @@ namespace GASS
 				data.IP = name;
 				m_ClientMap[name] = data;
 
-				MessagePtr message (new ClientConnectedMessage(name,port));
+				SystemMessagePtr message (new ClientConnectedEvent(name,port));
 				GetSimSystemManager()->PostMessage(message);
 
 				//Send client config
@@ -499,7 +500,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
+	void RakNetNetworkSystem::OnSceneAboutToLoad(PreSceneLoadEventPtr message)
 	{
 		m_ServerData->MapName =	message->GetScene()->GetName();
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
@@ -548,12 +549,12 @@ namespace GASS
 				//printf("Ping is %i\n", (unsigned int)(RakNet::GetTime()-time));
 				//printf("Data is %i bytes longIBaseSound.hn", dataLength);
 				//m_ServerMap[response.IP] = response;
-				MessagePtr message(new ServerResponseMessage(response.IP, response.Port, response.Ping));
+				SystemMessagePtr message(new ServerResponseEvent(response.IP, response.Port, response.Ping));
 				GetSimSystemManager()->PostMessage(message);
 
 				std::stringstream ss;
 				ss << "Ping time:" << response.Ping << " Time:" <<response.Time << "\n";
-				MessagePtr debug_msg(new DebugPrintMessage(ss.str()));
+				SystemMessagePtr debug_msg(new DebugPrintRequest(ss.str()));
 				SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg);
 				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
 			}
@@ -562,7 +563,7 @@ namespace GASS
 				ServerData data;
 				RakNet::BitStream server_data(p->data+1,p->length-1,false);
 				DeserializeServerData(&server_data,&data);
-				MessagePtr message(new StartSceanrioRequestMessage(data.MapName));
+				SystemMessagePtr message(new StartSceanrioRequest(data.MapName));
 				GetSimSystemManager()->PostMessage(message);
 				
 				std::cout << "ID_START_SCENE" << std::endl;
@@ -592,7 +593,7 @@ namespace GASS
 			{
 				std::string name = p->systemAddress.ToString();
 				int port = p->systemAddress.port;
-				MessagePtr message (new ServerDisconnectedMessage(name,port));
+				SystemMessagePtr message (new ServerDisconnectedEvent(name,port));
 				GetSimSystemManager()->PostMessage(message);
 			}
 			else if (p->data[0]==ID_TIME_OF_DAY)
@@ -604,12 +605,12 @@ namespace GASS
 				bs.Read(speed);
 				bs.Read(rise);
 				bs.Read(set);
-				MessagePtr message(new TimeOfDayRequest(time,set,rise,speed));
+				SceneMessagePtr message(new TimeOfDayRequest(time,set,rise,speed));
 				
 				ScenePtr scene = GetScene();
 				if(scene)
 				{
-					SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+					scene->PostMessage(message);
 				}
 			}
 			else if (p->data[0]==ID_WEATHER)
@@ -620,12 +621,12 @@ namespace GASS
 				bs.Read(fog_dist);
 				bs.Read(fog_density);
 				bs.Read(cloud_factor);
-				MessagePtr message(new WeatherRequest(fog_dist,fog_density,cloud_factor));
+				SceneMessagePtr message(new WeatherRequest(fog_dist,fog_density,cloud_factor));
 				
 				ScenePtr scene = GetScene();
 				if(scene)
 				{
-					SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+					scene->PostMessage(message);
 				}
 			}
 			else if(p->data[0]==ID_RPC_REMOTE_ERROR)

@@ -77,14 +77,14 @@ void OISInputSystem::RegisterReflection()
 void OISInputSystem::OnCreate(SystemManagerPtr owner)
 {
 	SimSystem::OnCreate(owner);
-	GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,MainWindowCreatedNotifyMessage,1));
+	GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,MainWindowCreatedEvent,1));
 }
 
 void OISInputSystem::Init()
 {
 
 }
-void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
+void OISInputSystem::OnInit(MainWindowCreatedEventPtr message)
 {
 	SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
@@ -180,7 +180,7 @@ void OISInputSystem::OnInit(MainWindowCreatedNotifyMessagePtr message)
 			m_MouseWinHeight =height;
 		}
 	}
-	SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new InputSystemLoadedMessage()));
+	SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 }
 
 void OISInputSystem::Shutdown()
@@ -199,7 +199,7 @@ void OISInputSystem::Shutdown()
 	}
 }
 
-void OISInputSystem::OnViewportMovedOrResized(RenderWindowResizedNotifyMessagePtr message)
+void OISInputSystem::OnViewportMovedOrResized(RenderWindowResizedEventPtr message)
 {
 	if(m_Mouse)
 	{

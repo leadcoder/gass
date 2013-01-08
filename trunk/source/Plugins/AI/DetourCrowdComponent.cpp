@@ -16,6 +16,8 @@
 #include "DetourCrowd/DetourCrowd.h"
 #include "AISceneManager.h"
 #include "AIMessages.h"
+//temp!
+#include "PedestrianBehaviorComponent.h"
 
 namespace GASS
 {
@@ -252,6 +254,31 @@ namespace GASS
 		{
 			m_Agents[i]->UpdateLocation(delta_time);
 		}
+
+		int dead =0;
+		int flee =0;
+		int wander =0;
+		//TODO: Move this to other component
+		for(int i = 0; i < m_Agents.size(); i++)
+		{
+			PedestrianBehaviorComponentPtr comp = m_Agents[i]->GetSceneObject()->GetFirstComponentByClass<PedestrianBehaviorComponent>();
+			if(comp->GetState() == "Dead")
+				dead++;
+			else if(comp->GetState() == "Flee")
+				flee++;
+			else if(comp->GetState() == "Wander")
+				wander++;
+		}
+
+		unsigned int num_agents = m_Agents.size();
+		std::stringstream sstream;
+		sstream << "ACTIVE AGENTS:" << num_agents << "\n" <<
+			"DEAD: " << dead << "\n"
+			"FLEE: " << flee << "\n"
+			"WANDER: " << wander << "\n";
+
+		SystemMessagePtr message = SystemMessagePtr(new CreateTextBoxRequest("CROWD_STATS",sstream.str(),Vec4(1,1,1,1),0,50,100,100));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 	}
 
 	void DetourCrowdComponent::OnMoved(PositionMessagePtr message)

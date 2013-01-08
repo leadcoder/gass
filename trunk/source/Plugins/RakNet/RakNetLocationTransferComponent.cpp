@@ -337,7 +337,7 @@ namespace GASS
 
 			//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 #ifdef _DEBUG_LTC_
-			MessagePtr debug_msg2(new DebugPrintMessage(std::string(debug_text)));
+			MessagePtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
 #endif
 

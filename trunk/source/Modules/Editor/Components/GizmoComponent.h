@@ -31,14 +31,14 @@ namespace GASS
 		bool GetActive() const {return m_Active;}
 		std::string GetSpaceMode() const {return m_Mode;}
 	private:
-		void OnGridMessage(GridMessagePtr message);
+		void OnChangeGridRequest(ChangeGridRequestPtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnNewCursorInfo(CursorMoved3DMessagePtr message);
+		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void OnChangeCamera(ChangeCameraRequestPtr message);
-		void OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);
 		void OnEditMode(EditModeMessagePtr message);

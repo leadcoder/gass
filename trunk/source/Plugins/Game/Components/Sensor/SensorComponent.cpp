@@ -83,7 +83,7 @@ namespace GASS
 		//debug?
 		if(m_Debug)
 		{
-			MessagePtr message(new DrawCircleMessage(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
+			SystemMessagePtr message(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 		}
 

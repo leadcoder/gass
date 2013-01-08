@@ -66,13 +66,13 @@ namespace GASS
 	void RakNetNetworkChildComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaEvent,0));
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNetworkPostUpdate,NetworkPostUpdateMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNetworkPostUpdate,NetworkPostUpdateEvent,0));
 		if(raknet->IsServer())
 		{
 			m_Replica = new RakNetChildReplica(raknet->GetReplicaManager());
@@ -97,7 +97,7 @@ namespace GASS
 
 			if(m_Replica== NULL) //replica not available jet, trig serach on new child replica messages
 			{
-				SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage,0));
+				SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent,0));
 //					
 			}
 			else
@@ -105,7 +105,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkChildComponent::OnNewChildReplica(ChildReplicaCreatedMessagePtr message)
+	void RakNetNetworkChildComponent::OnNewChildReplica(ChildReplicaCreatedEventPtr message)
 	{
 		RakNetChildReplica* replica = message->GetReplica();
 		RakNetNetworkMasterComponentPtr top_comp = GetSceneObject()->GetObjectUnderRoot()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
@@ -117,16 +117,16 @@ namespace GASS
 			{
 				m_Replica = replica;
 				m_Replica->SetOwner(GetSceneObject());
-				GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaMessage(m_Replica)));
+				GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaEvent(m_Replica)));
 				//this is not allowed, post to finalize object
-				//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+				//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent));
 			}
 		}
 	}
 
-	void RakNetNetworkChildComponent::OnGotReplica(ComponentGotReplicaMessagePtr message)
+	void RakNetNetworkChildComponent::OnGotReplica(ComponentGotReplicaEventPtr message)
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent));
 	}
 
 	void RakNetNetworkChildComponent::OnDelete()
@@ -224,7 +224,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkChildComponent::OnNetworkPostUpdate(NetworkPostUpdateMessagePtr message)
+	void RakNetNetworkChildComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr message)
 	{
 		//everything is sent!
 		m_SerializePackages.clear();

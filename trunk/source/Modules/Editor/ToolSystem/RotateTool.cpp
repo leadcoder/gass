@@ -23,7 +23,7 @@ namespace GASS
 		m_Controller(controller),
 		m_Active(false)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	RotateTool::~RotateTool()
@@ -60,8 +60,8 @@ namespace GASS
 					std::vector<std::string> attribs;
 					attribs.push_back("Rotation");
 					attribs.push_back("Quaternion");
-					GASS::MessagePtr attrib_change_msg(new ObjectAttributeChangedMessage(selected,attribs, from_id, 1.0/send_freq));
-					SimEngine::Get().GetSimSystemManager()->SendImmediate(attrib_change_msg);
+					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
+					SimEngine::Get().GetScene()->SendImmediate(attrib_change_msg);
 				}
 
 			}
@@ -148,7 +148,7 @@ namespace GASS
 		}
 
 		int from_id = (int) this;
-		GASS::MessagePtr change_msg(new SceneChangedMessage(from_id));
+		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
@@ -203,7 +203,7 @@ namespace GASS
 	}
 
 
-	void RotateTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void RotateTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		if(m_Active)
 		{

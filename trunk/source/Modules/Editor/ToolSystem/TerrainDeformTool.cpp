@@ -24,7 +24,7 @@ namespace GASS
 	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1),m_Noise(0), m_TEM(TEM_DEFORM),m_InvertBrush(1),m_ActiveLayer(TL_1)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllSettingsMessage,0));
 	}
 
@@ -134,7 +134,7 @@ namespace GASS
 		}
 	}
 
-	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectionChangedMessagePtr message)
+	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		m_SelectedObject = message->GetSceneObject();
 	}

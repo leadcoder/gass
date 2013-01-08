@@ -46,8 +46,8 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnLoad ,LoadSceneManagersMessage,0));
-			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnUnload ,UnloadSceneManagersMessage,0));
+			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnLoad ,LoadSceneManagersRequest,0));
+			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnUnload ,UnLoadSceneManagersRequest,0));
 		}
 
 		AISystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<AISystem>();

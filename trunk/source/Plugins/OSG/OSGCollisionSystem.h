@@ -48,8 +48,8 @@ namespace GASS
 		void Update(double delta);
 	private:
 		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
-		void OnUnloadScene(SceneUnloadNotifyMessagePtr message);
-		void OnLoadScene(SceneAboutToLoadNotifyMessagePtr message);
+		void OnUnloadScene(SceneUnloadedEventPtr message);
+		void OnLoadScene(PreSceneLoadEventPtr message);
 		void OnChangeCamera(ChangeCameraRequestPtr message);
 		RequestMap m_RequestMap;
 		ResultMap m_ResultMap;

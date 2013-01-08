@@ -67,12 +67,12 @@ namespace GASS
 		/**
 		Post system message
 		*/
-		void PostMessage(MessagePtr message);
+		void PostMessage(SystemMessagePtr message);
 
 		/**
 		Force send of system message
 		*/
-		void SendImmediate(MessagePtr message);
+		void SendImmediate(SystemMessagePtr message);
 
 		/**
 		Clear all unproccessed messages
@@ -134,7 +134,7 @@ namespace GASS
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SystemPtr> SystemVector;
 		SystemVector m_Systems;
-		//void OnSimulationStepRequest(RequestTimeStepMessagePtr message);
+		//void OnSimulationStepRequest(TimeStepRequestPtr message);
 		//void StepSimulation(double delta_time);		
 		
 		

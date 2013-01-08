@@ -57,7 +57,7 @@ namespace GASS
 		m_SimulationTaskNode = TaskNodePtr(new TaskNode());
 
 		//Hack to support asyncron request
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest,RequestTimeStepMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest,TimeStepRequest,0));
 		
 	}
 
@@ -94,7 +94,7 @@ namespace GASS
 		{
 			m_StepSimulationRequest = false;
 			//send message that we are done
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(MessagePtr(new TimeStepDoneMessage()));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
 		}
 		SimEngine::Get().GetSimSystemManager()->SyncMessages(delta_time);
 		
@@ -110,7 +110,7 @@ namespace GASS
 		m_SimulationTaskNode->LoadXML(xml_elem);
 	}
 
-	void RunTimeController::OnSimulationStepRequest(RequestTimeStepMessagePtr message)
+	void RunTimeController::OnSimulationStepRequest(TimeStepRequestPtr message)
 	{
 		m_StepSimulationRequest = true;
 		m_RequestDeltaTime = message->GetTimeStep();

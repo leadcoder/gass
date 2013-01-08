@@ -16,10 +16,10 @@ namespace GASS
 		void Update();
 		FilePath GetWorkingFolder() const;
 	protected:
-		void OnRequestSimulatiornStep(RequestTimeStepMessagePtr message);
+		void OnRequestSimulatiornStep(TimeStepRequestPtr message);
 		//helpers
 		void  UnloadScene();
-		void OnLoadScene(SceneLoadedNotifyMessagePtr message);
+		void OnLoadScene(PostSceneLoadEventPtr message);
 		
 		std::string m_StartScene;
 

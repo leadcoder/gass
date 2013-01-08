@@ -130,7 +130,7 @@ namespace GASS
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
 
-		MessagePtr loaded_msg(new GFXSceneManagerLoadedNotifyMessage(std::string("OSG"),root,shadow_node));
+		SystemMessagePtr loaded_msg(new GFXSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());

@@ -50,13 +50,14 @@ namespace GASS
 	{
 
 	}
-
-
+	
 	void ODECollisionSystem::Init()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneUnloaded,SceneUnloadNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneLoaded,SceneLoadedNotifyMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneAboutToLoad,SceneAboutToLoadNotifyMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneUnloaded,SceneUnloadedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneLoaded,PostSceneLoadEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneAboutToLoad,PreSceneLoadEvent,0));
+		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitializedEvent,0));
+
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	
 		SystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
@@ -74,15 +75,13 @@ namespace GASS
 	}
 
 
-	void ODECollisionSystem::OnSceneAboutToLoad(SceneAboutToLoadNotifyMessagePtr message)
+	void ODECollisionSystem::OnSceneAboutToLoad(PreSceneLoadEventPtr message)
 	{
-		
 		m_Space = dHashSpaceCreate(m_Space);
 		m_Scene = message->GetScene();
-		message->GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneObjectInitialize,PreSceneObjectInitializedEvent,0));
 	}
 
-	void ODECollisionSystem::OnSceneLoaded(SceneLoadedNotifyMessagePtr message)
+	void ODECollisionSystem::OnSceneLoaded(PostSceneLoadEventPtr message)
 	{
 
 	}
@@ -123,7 +122,7 @@ namespace GASS
 		return m_Space;
 	}
 
-	void ODECollisionSystem::OnSceneUnloaded(SceneUnloadNotifyMessagePtr message)
+	void ODECollisionSystem::OnSceneUnloaded(SceneUnloadedEventPtr message)
 	{
 		dSpaceDestroy(m_Space);
 		m_Space = 0;
@@ -194,8 +193,6 @@ namespace GASS
 		SimSystem::Update(delta_time);
 	}
 
-
-
 	bool ODECollisionSystem::Check(CollisionHandle handle, CollisionResult &result)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
@@ -221,8 +218,6 @@ namespace GASS
 			}
 		}
 	}
-
-	
 
 	Float ODECollisionSystem::GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute) const
 	{

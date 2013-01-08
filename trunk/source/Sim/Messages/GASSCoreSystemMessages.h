@@ -35,14 +35,46 @@ namespace GASS
 	
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+
+	/**
+	Base class for all system messages
+	*/
+	class SystemMessage : public BaseMessage
+	{
+	protected:
+		SystemMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef boost::shared_ptr<SystemMessage> SystemMessagePtr;
+	
+	//////////////////////////
+	//request message section
+	////////////////////////
+
+	class SystemRequestMessage : public SystemMessage
+	{
+	protected:
+		SystemRequestMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SystemMessage(sender_id , delay)
+		  {
+
+		  }
+	};
+	typedef boost::shared_ptr<SystemRequestMessage> SystemRequestMessagePtr;
+
 	/**
 	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
 	*/
-	class DebugPrintMessage : public BaseMessage
+
+
+
+	class DebugPrintRequest : public SystemRequestMessage
 	{
 	public:
-		DebugPrintMessage(const std::string &text, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay),
+		DebugPrintRequest(const std::string &text, SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay),
 			  m_Text(text)  { }
 		  std::string GetText()const {return m_Text;}
 
@@ -50,61 +82,12 @@ namespace GASS
 		std::string m_Text;
 
 	};
-	typedef boost::shared_ptr<DebugPrintMessage> DebugPrintMessagePtr;
+	typedef boost::shared_ptr<DebugPrintRequest> DebugPrintRequestPtr;
 
-	/**
-		This message is posted by the Scene class before the scenes are loaded.
-	*/
-
-	class SceneAboutToLoadNotifyMessage : public BaseMessage
+	class TimeStepRequest : public SystemRequestMessage
 	{
 	public:
-		SceneAboutToLoadNotifyMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
-			  m_Scene(scene){}
-
-		  ScenePtr GetScene() const {return m_Scene;}
-	private:
-		ScenePtr m_Scene;
-	};
-
-	typedef boost::shared_ptr<SceneAboutToLoadNotifyMessage> SceneAboutToLoadNotifyMessagePtr;
-
-	/**
-		This message is posted by the Scene class after a scene is loaded.
-	*/
-	class SceneLoadedNotifyMessage : public BaseMessage
-	{
-	public:
-		SceneLoadedNotifyMessage(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
-			  m_Scene(scene){}
-
-		  ScenePtr GetScene() const {return m_Scene;}
-	private:
-		ScenePtr m_Scene;
-	};
-	typedef boost::shared_ptr<SceneLoadedNotifyMessage> SceneLoadedNotifyMessagePtr;
-
-
-	class SceneUnloadNotifyMessage : public BaseMessage
-	{
-	public:
-		SceneUnloadNotifyMessage(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
-			  m_Scene(scene){}
-
-		  ScenePtr GetScene() const {return m_Scene;}
-	private:
-		ScenePtr m_Scene;
-	};
-	typedef boost::shared_ptr<SceneUnloadNotifyMessage> SceneUnloadNotifyMessagePtr;
-
-
-	class RequestTimeStepMessage : public BaseMessage
-	{
-	public:
-		RequestTimeStepMessage  (const double &step, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay), m_TimeStep(step)
+		TimeStepRequest  (const double &step, SenderID sender_id = -1, double delay= 0) : SystemRequestMessage(sender_id , delay), m_TimeStep(step)
 		{
 
 		}
@@ -112,49 +95,114 @@ namespace GASS
 	private:
 		double m_TimeStep;
 	};
-	typedef boost::shared_ptr<RequestTimeStepMessage> RequestTimeStepMessagePtr;
+	typedef boost::shared_ptr<TimeStepRequest> TimeStepRequestPtr;
 
 
-	class TimeStepDoneMessage : public BaseMessage
+	//////////////////////////
+	//event message section
+	////////////////////////
+
+
+	class SystemEventMessage : public SystemMessage
 	{
-	public:
-		TimeStepDoneMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
-		{
-		}
-	private:
-	};
-	typedef boost::shared_ptr<TimeStepDoneMessage > TimeStepDoneMessagePtr;
+	protected:
+		SystemEventMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SystemMessage(sender_id , delay)
+		  {
 
-	class InputSystemLoadedMessage : public BaseMessage
-	{
-	public:
-		InputSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
-		{
-		}
-	private:
+		  }
 	};
-	typedef boost::shared_ptr<InputSystemLoadedMessage> InputSystemLoadedMessagePtr;
+	typedef boost::shared_ptr<SystemEventMessage> SystemEventMessagePtr;
 
 
-	class GraphicsSystemLoadedMessage : public BaseMessage
-	{
-	public:
-		GraphicsSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
-		{
-		}
-	private:
-	};
-	typedef boost::shared_ptr<GraphicsSystemLoadedMessage> GraphicsSystemLoadedMessagePtr;
+	/**
+		This message is posted by the Scene class before the scenes are loaded.
+	*/
 	
-	class PhysicsSystemLoadedMessage : public BaseMessage
+	class PreSceneLoadEvent : public SystemEventMessage
 	{
 	public:
-		PhysicsSystemLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay)
+		PreSceneLoadEvent(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
+			  m_Scene(scene){}
+
+		  ScenePtr GetScene() const {return m_Scene;}
+	private:
+		ScenePtr m_Scene;
+	};
+
+	typedef boost::shared_ptr<PreSceneLoadEvent> PreSceneLoadEventPtr;
+
+	/**
+		This message is posted by the Scene class after a scene is loaded.
+	*/
+	class PostSceneLoadEvent : public SystemEventMessage
+	{
+	public:
+		PostSceneLoadEvent(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
+			  m_Scene(scene){}
+
+		  ScenePtr GetScene() const {return m_Scene;}
+	private:
+		ScenePtr m_Scene;
+	};
+	typedef boost::shared_ptr<PostSceneLoadEvent> PostSceneLoadEventPtr;
+
+
+	class SceneUnloadedEvent : public SystemEventMessage
+	{
+	public:
+		SceneUnloadedEvent(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
+			  m_Scene(scene){}
+
+		  ScenePtr GetScene() const {return m_Scene;}
+	private:
+		ScenePtr m_Scene;
+	};
+	typedef boost::shared_ptr<SceneUnloadedEvent> SceneUnloadedEventPtr;
+
+	class TimeStepDoneEvent : public SystemEventMessage
+	{
+	public:
+		TimeStepDoneEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
 		{
 		}
 	private:
 	};
-	typedef boost::shared_ptr<PhysicsSystemLoadedMessage> PhysicsSystemLoadedMessagePtr;
+	typedef boost::shared_ptr<TimeStepDoneEvent > TimeStepDoneEventPtr;
+
+	class InputSystemLoadedEvent : public SystemEventMessage
+	{
+	public:
+		InputSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<InputSystemLoadedEvent> InputSystemLoadedEventPtr;
+
+
+	class GraphicsSystemLoadedEvent : public SystemEventMessage
+	{
+	public:
+		GraphicsSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<GraphicsSystemLoadedEvent> GraphicsSystemLoadedEventPtr;
+	
+	class PhysicsSystemLoadedEvent : public SystemEventMessage
+	{
+	public:
+		PhysicsSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
+		{
+		}
+	private:
+	};
+	typedef boost::shared_ptr<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
 
 
 }
