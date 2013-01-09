@@ -66,11 +66,8 @@ namespace GASS
 		bool m_CreateMainWindowOnInit;
 		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
 		std::string m_ShadowSettingsFile;
-
 		TextBox* m_DebugTextBox;
-
 		std::map<std::string,TextBox*>  m_TextBoxes;
-		
 	};
 	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef boost::weak_ptr<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

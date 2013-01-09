@@ -44,12 +44,12 @@ namespace GASS
 		/**
 			Get main render window
 		*/
-		virtual RenderWindow GetMainRenderWindow() const = 0;
+		virtual RenderWindowPtr GetMainRenderWindow() const = 0;
 
 		/**
 			Get all render windows
 		*/
-		virtual std::vector<RenderWindow> GetRenderWindows() const = 0;
+		virtual std::vector<RenderWindowPtr> GetRenderWindows() const = 0;
 		
 		/**
 			Create new render window 
@@ -59,7 +59,7 @@ namespace GASS
 			@param handle Main window handle (parent window)
 		*/
 
-		virtual RenderWindow CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0) = 0;
+		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0) = 0;
 		/**
 			Create new viewport in render window 
 			@param name Unique viewport name

@@ -43,7 +43,6 @@
 #include <OgreLogManager.h>
 
 
-
 namespace GASS
 {
 	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), 
@@ -131,22 +130,22 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
-		std::map<std::string, Ogre::RenderWindow*>::iterator iter = m_Windows.begin();
+		std::map<std::string, OgreRenderWindowPtr>::iterator iter = m_Windows.begin();
 		//resize all 
 		while(iter != m_Windows.end())
 		{
-			iter->second->windowMovedOrResized();
+			iter->second->m_Window->windowMovedOrResized();
 			++iter;
 		}
 	}
 
 	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)
 	{
-		std::map<std::string, Ogre::RenderWindow*>::iterator win_iter = m_Windows.begin();
+		std::map<std::string, OgreRenderWindowPtr>::iterator win_iter = m_Windows.begin();
 		while(win_iter != m_Windows.end())
 		{
 			//set same scene manager in all views
-			win_iter->second->removeAllViewports();	
+			win_iter->second->m_Window->removeAllViewports();	
 			++win_iter;
 		}
 
@@ -159,11 +158,12 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
+	RenderWindowPtr OgreGraphicsSystem::GetMainRenderWindow() const
 	{
-		unsigned int depth;
+		RenderWindowPtr main_win;
 		if(m_Windows.size() > 0)
-			m_Windows.begin()->second->getMetrics(width, height, depth, left, top);
+			main_win =  m_Windows.begin()->second;
+		return main_win;
 	}
 
 	void OgreGraphicsSystem::Update(double delta_time)
@@ -184,9 +184,9 @@ namespace GASS
 
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
-			float a_fps = m_Windows.begin()->second->getAverageFPS(); 
-			size_t tri_count = m_Windows.begin()->second->getTriangleCount(); 
-			size_t batch_count = m_Windows.begin()->second->getBatchCount();
+			float a_fps = m_Windows.begin()->second->m_Window->getAverageFPS(); 
+			size_t tri_count = m_Windows.begin()->second->m_Window->getTriangleCount(); 
+			size_t batch_count = m_Windows.begin()->second->m_Window->getBatchCount();
 
 			std::stringstream sstream;
 			sstream << "AVERAGE FPS:" << a_fps << "\n" <<
@@ -201,7 +201,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
 	{
-		Ogre::RenderWindow* win = m_Windows[win_name];
+		Ogre::RenderWindow* win = m_Windows[win_name]->m_Window;
 		int num_viewports = win->getNumViewports();
 
 		//we need a camera before we can create the viewport!
@@ -251,8 +251,7 @@ namespace GASS
 		m_PostFilters = filters;
 	}
 
-	//void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
-	RenderWindow OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle)
+	RenderWindowPtr OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle)
 	{
 		Ogre::RenderWindow *window = NULL;
 
@@ -269,8 +268,8 @@ namespace GASS
 		{
 			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
 		}
-		
-		m_Windows[name] = window;
+		OgreRenderWindowPtr win(new OgreRenderWindow(window));
+		m_Windows[name] = win;
 		void* window_hnd = 0;
 		window->getCustomAttribute("WINDOW", &window_hnd);
 		//We send a event when a render window is cretated, usefull for other plugins to get hold of window handles
@@ -280,7 +279,7 @@ namespace GASS
 		{
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 		}
-		return RenderWindow(name,window->getWidth(),window->getHeight(),0,0,window_hnd);
+		return win;
 	}
 
 	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
@@ -290,7 +289,7 @@ namespace GASS
 		if(m_Windows.find(render_window) == m_Windows.end())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Can't find render window:" + render_window, "OgreGraphicsSystem::CreateViewport");
 
-		Ogre::RenderWindow* window = m_Windows[render_window];
+		Ogre::RenderWindow* window = m_Windows[render_window]->m_Window;
 		if(window)
 		{
 			//we need a scene mananger before we can create viewports, 
@@ -327,8 +326,22 @@ namespace GASS
 	{
 		if(m_Viewports.find(name) != m_Viewports.end() && m_Viewports[name].m_OgreViewport != NULL)
 		{
-			m_Windows[win_name]->removeViewport(m_Viewports[name].m_ZDepth);
+			m_Windows[win_name]->m_Window->removeViewport(m_Viewports[name].m_ZDepth);
 		}
+	}
+
+
+	std::vector<RenderWindowPtr> OgreGraphicsSystem::GetRenderWindows() const
+	{
+		std::vector<RenderWindowPtr> windows;
+		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = m_Windows.begin();
+		
+		while(iter != m_Windows.end())
+		{
+			windows.push_back(iter->second);
+			++iter;
+		}
+		return windows;
 	}
 
 	void OgreGraphicsSystem::OnDrawLine(DrawLineRequestPtr message)

@@ -26,13 +26,12 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-
+#include <OgreRenderWindow.h>
 #include <string>
 
 namespace Ogre
 {
 	class Root;
-	class RenderWindow;
 	class SceneManager;
 	class ColourValue;
 	class Viewport;
@@ -40,6 +39,29 @@ namespace Ogre
 
 namespace GASS
 {
+	class OgreRenderWindow  : public IRenderWindow
+	{
+	public:
+		OgreRenderWindow(Ogre::RenderWindow* win) : m_Window(win)
+		{
+
+		}
+		
+		virtual unsigned int GetWidth() const {return m_Window->getWidth();}
+		virtual unsigned int GetHeight() const {return m_Window->getHeight();}
+		virtual void* GetHWND() const
+		{
+			void* window_hnd = 0;
+			m_Window->getCustomAttribute("WINDOW", &window_hnd);
+			return window_hnd; 
+		}
+		Ogre::RenderWindow* m_Window;
+	};
+	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
+
+	
+
+
 	class Viewport
 	{
 	public:
@@ -74,19 +96,20 @@ namespace GASS
 		virtual void Update(double time);
 		//IGraphicsSystem
 
-		virtual RenderWindow GetMainRenderWindow();
-		virtual std::vector<RenderWindow> GetRenderWindows();
+		virtual RenderWindowPtr GetMainRenderWindow() const;
+		virtual std::vector<RenderWindowPtr> GetRenderWindows() const;
 
 		//void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
-		RenderWindow CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
+		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
-		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
+		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 	protected:
+		ADD_ATTRIBUTE(bool,UpdateMessagePump);
+
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
-
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
@@ -99,12 +122,9 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
-
-		ADD_ATTRIBUTE(bool,UpdateMessagePump);
-
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
-		std::map<std::string, Ogre::RenderWindow*>	m_Windows;
+		std::map<std::string, OgreRenderWindowPtr>	m_Windows;
 		std::map<std::string, Viewport> m_Viewports;
 		std::map<std::string, Ogre::Viewport> m_OgreViewports;
 		Ogre::SceneManager* m_SceneMgr;

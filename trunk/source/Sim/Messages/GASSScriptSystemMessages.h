@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <string>
 
 namespace GASS

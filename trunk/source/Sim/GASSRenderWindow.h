@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_RENDER_WINDOW_H
-#define GASS_RENDER_WINDOW_H
+#ifndef GASS_I_RENDER_WINDOW_H
+#define GASS_I_RENDER_WINDOW_H
 
 #include "Core/Common.h"
 
@@ -28,21 +28,16 @@ namespace GASS
 	class GASSExport IRenderWindow
 	{
 	public:
-		RenderWindow(const std::string name,unsigned int &width, unsigned int &height, int &left, int &top) : m_Name(name), 
-			m_Width(width),
-		m_Height(height),
-		m_Left(left),
-		m_Top(top),
-		m_Handel(NULL)
+		IRenderWindow() 
 		{
 
 		}
-		std::string m_Name;
-		unsigned int m_Width;
-		unsigned int m_Height;
-		unsigned int m_Left;
-		unsigned int m_Top;
-		void* m_Handel;
+		virtual ~IRenderWindow() {}
+
+		virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
+		virtual void* GetHWND() const = 0;
 	};
+	typedef boost::shared_ptr<IRenderWindow> RenderWindowPtr;
 }
 #endif 

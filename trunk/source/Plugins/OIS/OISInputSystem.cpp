@@ -175,13 +175,12 @@ namespace GASS
 			if(gs)
 			{
 				unsigned int width, height;
-				int left, top;
-				gs->GetMainWindowInfo(width, height, left, top);
+				RenderWindowPtr window = gs->GetMainRenderWindow();
 				const OIS::MouseState &ms = m_Mouse->getMouseState();
-				ms.width = width;
-				ms.height = height;
-				m_MouseWinWidth = width;
-				m_MouseWinHeight =height;
+				ms.width = window->GetWidth();
+				ms.height = window->GetHeight();
+				m_MouseWinWidth = ms.width;
+				m_MouseWinHeight = ms.height;
 			}
 			SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 		}

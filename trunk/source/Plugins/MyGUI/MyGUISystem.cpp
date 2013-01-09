@@ -46,8 +46,8 @@ namespace GASS
 	void MyGUISystem::OnCreate(SystemManagerPtr owner)
 	{
 		SimSystem::OnCreate(owner);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptMessage,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedEvent,0));
 	}
 
 	void MyGUISystem::Init()
@@ -55,7 +55,7 @@ namespace GASS
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
-	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedMessagePtr message)
+	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedEventPtr message)
 	{
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddKeyListener(this);
@@ -64,7 +64,7 @@ namespace GASS
 
 	diagnostic::StatisticInfo* mInfo =NULL;
 
-	void MyGUISystem::OnLoadGUIScript(GUIScriptMessagePtr message)
+	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)
 	{
 		//CEGUI::System::getSingleton().executeScriptFile(message->GetFilename());
 		MyGUI::OgrePlatform* mPlatform = new MyGUI::OgrePlatform();

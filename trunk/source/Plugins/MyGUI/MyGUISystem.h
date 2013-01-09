@@ -34,9 +34,9 @@ namespace GASS
 		virtual void OnCreate(SystemManagerPtr owner);
 		virtual std::string GetSystemName() const {return "MyGUISystem";}
 	protected:
-		void OnInputSystemLoaded(InputSystemLoadedMessagePtr message);
+		void OnInputSystemLoaded(InputSystemLoadedEventPtr message);
 		void OnShutdown(MessagePtr message);
-		void OnLoadGUIScript(GUIScriptMessagePtr message);
+		void OnLoadGUIScript(GUIScriptRequestPtr message);
 		bool MouseMoved(const MouseData &data);
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
