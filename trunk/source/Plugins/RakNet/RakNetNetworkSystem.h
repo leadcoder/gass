@@ -124,7 +124,7 @@ namespace GASS
 		void OnStartServer(StartServerRequestPtr message);
 		void OnStartClient(StartClientRequestPtr message);
 		void OnConnectToServer(ConnectToServerRequestPtr message);
-		void OnPingRequest(PingRequestMessagePtr message);
+		void OnPingRequest(PingRequestPtr message);
 		void OnSceneAboutToLoad(PreSceneLoadEventPtr message);
 		void OnStopServer(StopServerRequestPtr message);
 		void OnStopClient(StopClientMessagePtr message);

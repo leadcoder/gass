@@ -137,9 +137,8 @@ namespace GASS
 			}
 		}
 		xmlDoc->Clear();
-		// Delete our allocated document and return success ;)
+		// Delete our allocated document
 		delete xmlDoc;
-		
 	}
 
 	void BaseComponentContainerTemplateManager::LoadFromPath(const std::string &path, bool recursive)

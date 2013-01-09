@@ -184,7 +184,7 @@ namespace GASS
 		if(m_Active)
 		{
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest));
-			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage));
+			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequest));
 			//Unregister update fucntion
 			//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		}
@@ -274,7 +274,7 @@ namespace GASS
 	{
 		m_IsServer = 0;
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequestMessage,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequest,0));
 
 		//Anytime we get a new connection, call AddParticipant() on that connection
 		m_ReplicaManager->SetAutoParticipateNewConnections(true);
@@ -492,7 +492,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnPingRequest(PingRequestMessagePtr message)
+	void RakNetNetworkSystem::OnPingRequest(PingRequestPtr message)
 	{
 		if(m_RakPeer)
 		{

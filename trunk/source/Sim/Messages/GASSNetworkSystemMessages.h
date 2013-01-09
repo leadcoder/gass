@@ -202,17 +202,17 @@ namespace GASS
 	/**
 	Ping for servers
 	*/
-	class PingRequestMessage : public BaseMessage
+	class PingRequest : public SystemRequestMessage
 	{
 	public:
-		PingRequestMessage(int server_port,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		PingRequest(int server_port,SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_ServerPort(server_port){}
 		 int GetServerPort() const {return m_ServerPort;}
 	private:
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<PingRequestMessage> PingRequestMessagePtr;
+	typedef boost::shared_ptr<PingRequest> PingRequestPtr;
 
 
 	/**

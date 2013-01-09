@@ -79,7 +79,7 @@ namespace GASS
 		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		if(gfx_system)
 		{
-			gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle,main_win_handle);
+			gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
 			gfx_system->CreateViewport(render_win_name,render_win_name, 0, 0, 1, 1);
 		}
 		m_Initilized  = true;

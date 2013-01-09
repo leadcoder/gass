@@ -58,17 +58,17 @@ namespace GASS
 	/**
 	Load a gui script file	
 	*/
-	class GUIScriptMessage : public BaseMessage
+	class GUIScriptRequest : public SystemRequestMessage
 	{
 	public:
-		GUIScriptMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		GUIScriptRequest(const std::string &filename, SenderID sender_id = -1, double delay= 0) :
+		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(filename){}
 
 		 std::string GetFilename() const {return m_Name;}
 	private:
 		std::string m_Name;
 	};
-	typedef boost::shared_ptr<GUIScriptMessage> GUIScriptMessagePtr;
+	typedef boost::shared_ptr<GUIScriptRequest> GUIScriptRequestPtr;
 }
 #endif

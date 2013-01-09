@@ -42,7 +42,7 @@ namespace GASS
 		virtual void Update(double delta);
 
 		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
-		void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0);
+		void CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
 
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}

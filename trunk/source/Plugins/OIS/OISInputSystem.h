@@ -36,7 +36,7 @@
 namespace GASS
 {
 
-	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener
+	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem,public IProxyInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener
 	{
 	public:
 		OISInputSystem();
@@ -46,7 +46,7 @@ namespace GASS
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "OISInputSystem";}
 		virtual void Update(double delta_time);
-
+		
 		//IInputSystem
 		virtual void AddKeyListener(IKeyListener* key_listener);
 		virtual void RemoveKeyListener(IKeyListener* key_listener);
@@ -61,7 +61,9 @@ namespace GASS
 		virtual bool GetEnableKey() const;
 		virtual bool GetEnableJoystick() const;
 		virtual bool GetEnableMouse() const;
+		virtual void SetMainWindowHandle(void *main_win_handle);
 	
+		//IProxyInputSystem
 		virtual void InjectMouseMoved(const MouseData &data);
 		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id );
 		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id );

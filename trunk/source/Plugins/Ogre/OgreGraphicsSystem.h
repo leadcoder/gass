@@ -73,8 +73,12 @@ namespace GASS
 		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
 		virtual void Update(double time);
 		//IGraphicsSystem
-		void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
-		void CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle = 0);
+
+		virtual RenderWindow GetMainRenderWindow();
+		virtual std::vector<RenderWindow> GetRenderWindows();
+
+		//void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
+		RenderWindow CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
 		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
 		OgrePostProcessPtr GetPostProcess() {return m_PostProcess;}
 	protected:

@@ -25,6 +25,7 @@
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
 
+#include "Core/Utils/GASSException.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -98,11 +99,7 @@ namespace GASS
 				m_Root->saveConfig();
 		}
 
-		//Force register in primary thread if ogl
-		//if(m_Root->getRenderSystem()->getName().find("GL") != Ogre::String::npos)
-		//	m_TaskGroup = MAIN_TASK_GROUP;
-
-		if(m_CreateMainWindowOnInit)
+		/*if(m_CreateMainWindowOnInit)
 		{
 			std::string name = "MainWindow";
 			Ogre::RenderWindow *window = m_Root->initialise(true,name);
@@ -117,9 +114,12 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(window_msg);
 		}
 		else
-		{
-			m_Root->initialise(false);
-		}
+		{*/
+			
+		//}
+
+		m_Root->initialise(false);
+		//wait that first render window is created before send message that graphic system is initialized
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -251,42 +251,45 @@ namespace GASS
 		m_PostFilters = filters;
 	}
 
-	void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
+	//void OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
+	RenderWindow OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle)
 	{
 		Ogre::RenderWindow *window = NULL;
 
 		if(m_Windows.find(name) != m_Windows.end())
-			return;
+			GASS_EXCEPT(Exception::ERR_DUPLICATE_ITEM,"Render window already exist:" + name, "OgreGraphicsSystem::CreateRenderWindow");
 
-		if(handle)
+		if(external_window_handle)
 		{
 			Ogre::NameValuePairList miscParams;
-			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)handle);
+			miscParams["externalWindowHandle"] = Ogre::StringConverter::toString((size_t)external_window_handle);
 			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false, &miscParams);
 		}
 		else
 		{
 			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
-			if(main_handle == 0)
-			{
-				void* window_hnd = 0;
-				window->getCustomAttribute("WINDOW", &window_hnd);
-				handle = window_hnd;
-				main_handle = window_hnd;
-			}
 		}
+		
 		m_Windows[name] = window;
-		if(m_Windows.size() == 1) // first window?
+		void* window_hnd = 0;
+		window->getCustomAttribute("WINDOW", &window_hnd);
+		//We send a event when a render window is cretated, usefull for other plugins to get hold of window handles
+		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new RenderWindowCreatedEvent(window_hnd)));
+
+		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initlized
 		{
-			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
-			GetSimSystemManager()->SendImmediate(window_msg);
+			GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 		}
+		return RenderWindow(name,window->getWidth(),window->getHeight(),0,0,window_hnd);
 	}
 
 	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
 	{
 		//check that this window exist!
+
+		if(m_Windows.find(render_window) == m_Windows.end())
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Can't find render window:" + render_window, "OgreGraphicsSystem::CreateViewport");
+
 		Ogre::RenderWindow* window = m_Windows[render_window];
 		if(window)
 		{

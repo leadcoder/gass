@@ -54,7 +54,6 @@ namespace GASS
 		m_MouseIsDown = false;
 	}
 
-
 	void EditPositionTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		m_SelectedObject = message->GetSceneObject();

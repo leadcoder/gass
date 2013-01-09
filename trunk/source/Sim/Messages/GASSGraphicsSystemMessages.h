@@ -68,12 +68,34 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<GFXSceneManagerLoadedEvent> GFXSceneManagerLoadedEventPtr;
 
+
 	/**
 		Message posted by the graphic system to notify that a new render window has been created.
 		Suscribe to this message if you need to get hold of the render window handle,
 	*/
 
-	class MainWindowCreatedEvent : public SystemEventMessage
+	class RenderWindowCreatedEvent : public SystemEventMessage
+	{
+	public:
+		RenderWindowCreatedEvent(void* render_window_handle, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
+		   m_Handle(render_window_handle)
+		  {
+
+		  }
+		  void* GetRenderWindowHandle() const {return m_Handle;}
+	private:
+		void* m_Handle;
+	};
+	typedef boost::shared_ptr<RenderWindowCreatedEvent> MainWindowCreatedEventPtr;
+
+
+	/**
+		Message posted by the graphic system to notify that a new render window has been created.
+		Suscribe to this message if you need to get hold of the render window handle,
+	*/
+
+	/*class MainWindowCreatedEvent : public SystemEventMessage
 	{
 	public:
 		MainWindowCreatedEvent(void* render_window_handle, void* main_window_handle,SenderID sender_id = -1, double delay= 0) :
@@ -87,7 +109,7 @@ namespace GASS
 		void* m_MainHandle;
 
 	};
-	typedef boost::shared_ptr<MainWindowCreatedEvent> MainWindowCreatedEventPtr;
+	typedef boost::shared_ptr<MainWindowCreatedEvent> MainWindowCreatedEventPtr;*/
 
 
 	/**

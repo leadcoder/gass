@@ -117,13 +117,14 @@ namespace GASS
 		if(name != "")
 		{
 			FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
-
 			
 			rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
 			const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 			//Load scene specific templates, filename should probably be a scene parameter
-			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
+			const std::string template_file_name = scene_path.GetFullPath() + "/templates.xml";
+			if(boost::filesystem::exists(boost::filesystem::path(template_file_name)))  
+				SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
 			TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
 			if(!xmlDoc->LoadFile())

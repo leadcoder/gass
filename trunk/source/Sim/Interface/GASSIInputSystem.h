@@ -325,6 +325,26 @@ namespace GASS
 		virtual bool GetEnableMouse() const= 0;
 		virtual void ClipInputWindow(int left,int top,int right,int bottom) = 0;
 
+		//OIS need this, and probably most input system
+		virtual void SetMainWindowHandle(void *main_win_handle) = 0;
+
+		//Possible to overide mouse and key input,  
+		/*virtual void InjectMouseMoved(const MouseData &data) =0;
+		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id ) = 0;
+		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id ) = 0;
+
+		virtual void InjectKeyPressed( int key, unsigned int text) = 0;
+		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		*/
+		
+	};
+	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;
+
+	
+	class GASSExport IProxyInputSystem  
+	{
+	public:
+		virtual ~IProxyInputSystem(){}
+	
 		//Possible to overide mouse and key input,  
 		virtual void InjectMouseMoved(const MouseData &data) =0;
 		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id ) = 0;
@@ -334,5 +354,5 @@ namespace GASS
 		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		
 		
 	};
-	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;
+	typedef boost::shared_ptr<IProxyInputSystem> IProxyInputSystemPtr;
 }

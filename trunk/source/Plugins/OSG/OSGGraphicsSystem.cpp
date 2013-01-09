@@ -128,7 +128,7 @@ namespace GASS
 		m_DebugTextBox->setTextSize(12);
 
 
-		if(m_CreateMainWindowOnInit)
+		/*if(m_CreateMainWindowOnInit)
 		{
 			osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
 			if (!wsi) 
@@ -140,7 +140,7 @@ namespace GASS
 
 			CreateRenderWindow("MainWindow",800, 600,0);
 			CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
-		}
+		}*/
 
 
 		//Load shadow settings
@@ -179,6 +179,8 @@ namespace GASS
 
 		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
 		//osgDB::Registry::instance()->setOptions(opt); 
+
+		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 	}
 
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -191,12 +193,9 @@ namespace GASS
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
 	{
-
 		osgViewer::ViewerBase::Views views;
 		m_Viewer->getViews(views);
-
 		root->addChild(&m_DebugTextBox->getGroup());
-
 		//set same scene in all viewports for the moment
 		for(int i = 0; i < views.size(); i++)
 		{
@@ -205,7 +204,7 @@ namespace GASS
 		//m_Viewer->realize();
 	}
 
-	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* handle, void* main_handle)
+	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_handle)
 	{
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 
@@ -218,14 +217,14 @@ namespace GASS
 		if(m_Windows.size() > 0)
 			traits->sharedContext = m_Windows.begin()->second;
 
+		void* win_handle = external_handle;
 
-		if(handle) //external window
+		if(external_handle) //external window
 		{
-			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)handle);
+			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)external_handle);
 			traits->windowDecoration = false;
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
-
 		}
 		else 
 		{
@@ -236,7 +235,7 @@ namespace GASS
 		osg::ref_ptr<osg::GraphicsContext> graphics_context = osg::GraphicsContext::createGraphicsContext(traits.get());
 		if (graphics_context.valid())
 		{
-			osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
+			//osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
 			//need to ensure that the window is cleared make sure that the complete window is set the correct colour
 			//rather than just the parts of the window that are under the camera's viewports
 			graphics_context->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
@@ -244,30 +243,25 @@ namespace GASS
 		}
 		else
 		{
-			osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
 		}
 		m_Windows[name] = graphics_context;
 
-
-
-		if(m_Windows.size() == 1) //first window created?
+		//if(m_Windows.size() == 1) //first window created?
 		{
-			if(handle == 0) //internal window
+			if(win_handle == 0) //internal window
 			{
 #if defined(WIN32) && !defined(__CYGWIN__) 	
 				osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
-				main_handle = (void*) win32_window->getHWND();
-				handle = main_handle;
+				win_handle = (void*) win32_window->getHWND();
 #endif
 			}
-			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
+			SystemMessagePtr window_msg(new RenderWindowCreatedEvent(win_handle));
 			GetSimSystemManager()->SendImmediate(window_msg);
-
 		}
 	}
 
 	void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height)
-		//void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, int pos_x, int pos_y, int width, int height)
 	{
 		if(m_Windows.find(render_window) != m_Windows.end())
 		{

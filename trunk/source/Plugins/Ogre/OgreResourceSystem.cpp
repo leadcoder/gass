@@ -55,7 +55,7 @@ namespace GASS
 	void OgreResourceSystem::OnCreate(SystemManagerPtr owner)
 	{
 		SimSystem::OnCreate(owner);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,MainWindowCreatedEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreResourceSystem::OnInit,GraphicsSystemLoadedEvent,0));
 	}
 
 	void OgreResourceSystem::Init()
@@ -98,7 +98,7 @@ namespace GASS
 		}
 	}
 
-	void OgreResourceSystem::OnInit(MainWindowCreatedEventPtr message)
+	void OgreResourceSystem::OnInit(GraphicsSystemLoadedEventPtr message)
 	{
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize Started";
 		for(int i = 0; i < m_ResourceLocations.size(); i++)
@@ -109,7 +109,6 @@ namespace GASS
 		LogManager::getSingleton().stream() << "OgreResourceSystem Initlize All Resource Groups";
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 		LogManager::getSingleton().stream() << "OgreResourceSystem Completed";
-
 	}
 
 	void OgreResourceSystem::AddResourceGroup(const std::string &resource_group)
