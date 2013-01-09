@@ -53,7 +53,7 @@ public:
 		}
 
 
-		m_Engine->GetSimSystemManager()->SetPauseSimulation(false);
+		//m_Engine->GetSimSystemManager()->SetPauseSimulation(false);
 		
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
@@ -69,7 +69,7 @@ public:
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+			GASS::SceneMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj,"ALL"));
 			scene->PostMessage(camera_msg);
 		}
 
@@ -83,7 +83,7 @@ public:
 			if(object)
 				object->SendImmediate(pos_msg);
 		}
-		m_Engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::GUIScriptMessage("GUI.xml")));
+		m_Engine->GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::GUIScriptRequest("GUI.xml")));
 		return true;
 	}
 

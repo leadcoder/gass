@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SimApplication UpdateFrequency="160" Scene="../../../common/data/scenaries/ogre_demo" SystemConfig="../Configuration/systems.xml" Plugins="../Configuration/plugins.xml" ControlSettings="../Configuration/control_settings.xml">
+<SimApplication UpdateFrequency="160" Scene="ogre_demo" SystemConfig="../Configuration/systems.xml" Plugins="../Configuration/plugins.xml" ControlSettings="../Configuration/control_settings.xml">
   <Templates>
     <Template Name="../../../common/data/templates/vehicles/jim_tank.xml"/>
     <Template Name="../Configuration/app_templates.xml"/>
   </Templates>
   <Objects>
     <Object Name="JimTank"/>
+    <!--<Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>
+    <Object Name="JimTank"/>-->
   </Objects>
 </SimApplication>

@@ -16,7 +16,7 @@ public:
 
 	void OnClientConnected(GASS::MessagePtr message)
 	{
-		GASS::ClientConnectedMessagePtr mess = boost::shared_dynamic_cast<GASS::ClientConnectedMessage>(message);
+		GASS::ClientConnectedEventPtr mess = boost::shared_dynamic_cast<GASS::ClientConnectedEvent>(message);
 		printf("Client connected to server:%s",mess->GetClientName().c_str());
 	}
 
@@ -28,10 +28,9 @@ public:
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
 
-
-		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartServerMessage("SimDemoServer",2005)));
+		m_Engine->GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::StartServerRequest("SimDemoServer",2005)));
 		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),shared_from_this()));
-		m_Engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedMessage),callback,0);
+		m_Engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedEvent),callback,0);
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
@@ -46,7 +45,7 @@ public:
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+			GASS::SceneMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj,"ALL"));
 			scene->PostMessage(camera_msg);
 		}
 

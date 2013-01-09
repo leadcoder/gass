@@ -11,11 +11,11 @@ public:
 	bool IsConnected() const {return m_IsConnected;}
 	void OnServerResponse(GASS::MessagePtr message)
 	{
-		GASS::ServerResponseMessagePtr mess = boost::shared_dynamic_cast<GASS::ServerResponseMessage>(message);
+		GASS::ServerResponseEventPtr mess = boost::shared_dynamic_cast<GASS::ServerResponseEvent>(message);
 		printf("Client got response from server:%s\n",mess->GetServerName().c_str());
 		//Connect to server?
 		//try to connect
-		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::ConnectToServerMessage(mess->GetServerName(),2005)));
+		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::ConnectToServerRequest(mess->GetServerName(),2005)));
 
 
 		m_IsConnected = true;
@@ -23,7 +23,7 @@ public:
 
 	void OnLoadScene(GASS::MessagePtr message)
 	{
-		GASS::StartSceanrioRequestMessagePtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequestMessage>(message);
+		GASS::StartSceanrioRequestPtr mess = boost::shared_dynamic_cast<GASS::StartSceanrioRequest>(message);
 		printf("Client got scene request message:%s\n",mess->GetSceneName().c_str());
 		//m_Scene->Load("../../../common/data/scenes/" + mess->GetSceneName());
 
@@ -35,7 +35,7 @@ public:
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			GASS::MessagePtr camera_msg(new GASS::ChangeCameraMessage(free_obj,"ALL"));
+			GASS::SceneMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj,"ALL"));
 			scene->PostMessage(camera_msg);
 		}
 	}
@@ -54,9 +54,9 @@ public:
 			m_Engine->GetSceneObjectTemplateManager()->Load(m_Templates[i]);
 		}
 
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseMessage,0));
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequestMessage,0));
-		m_Engine->GetSimSystemManager()->SendImmediate(GASS::MessagePtr(new GASS::StartClientMessage("SimDemoClient",2006,2005)));
+		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseEvent,0));
+		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequest,0));
+		m_Engine->GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::StartClientRequest("SimDemoClient",2006,2005)));
 
 		GASS::ScenePtr scene (new GASS::Scene());
 		m_Scene = scene;
@@ -69,7 +69,7 @@ public:
 			m_Engine->Update();
 
 			//send ping request
-			m_Engine->GetSimSystemManager()->PostMessage(GASS::MessagePtr(new GASS::PingRequestMessage(2001)));
+			m_Engine->GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::PingRequest(2001)));
 			update_time += 1.0;
 			//			Sleep(1000);
 			std::cout << ".";
