@@ -254,7 +254,6 @@ namespace GASS
 	RenderWindowPtr OgreGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle)
 	{
 		Ogre::RenderWindow *window = NULL;
-
 		if(m_Windows.find(name) != m_Windows.end())
 			GASS_EXCEPT(Exception::ERR_DUPLICATE_ITEM,"Render window already exist:" + name, "OgreGraphicsSystem::CreateRenderWindow");
 
@@ -285,7 +284,6 @@ namespace GASS
 	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
 	{
 		//check that this window exist!
-
 		if(m_Windows.find(render_window) == m_Windows.end())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Can't find render window:" + render_window, "OgreGraphicsSystem::CreateViewport");
 
