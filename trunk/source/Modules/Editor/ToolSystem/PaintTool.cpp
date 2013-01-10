@@ -45,7 +45,7 @@ namespace GASS
 			}
 
 			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos,selected,from_id));
-			SimEngine::Get().GetScene()->SendImmediate(paint_msg);
+			m_Controller->GetEditorSystem()->GetScene()->SendImmediate(paint_msg);
 		}
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)

@@ -96,8 +96,7 @@ namespace GASS
 			//send message that we are done
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
 		}
-		SimEngine::Get().GetSimSystemManager()->SyncMessages(delta_time);
-		
+		SimEngine::Get().SyncMessages(delta_time);
 	}
 
 	void RunTimeController::Log()

@@ -61,7 +61,7 @@ namespace GASS
 					attribs.push_back("Rotation");
 					attribs.push_back("Quaternion");
 					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-					SimEngine::Get().GetScene()->SendImmediate(attrib_change_msg);
+					m_Controller->GetEditorSystem()->GetScene()->SendImmediate(attrib_change_msg);
 				}
 
 			}

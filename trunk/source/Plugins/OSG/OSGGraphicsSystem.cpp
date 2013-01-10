@@ -179,16 +179,13 @@ namespace GASS
 
 		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
 		//osgDB::Registry::instance()->setOptions(opt); 
-
 		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 	}
 
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
 		std::string debug_text = message->GetText();
-
 		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
-
 	}
 
 	void OSGGraphicsSystem::SetActiveData(osg::Group* root)

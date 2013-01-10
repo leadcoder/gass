@@ -46,12 +46,12 @@
 
 namespace GASS
 {
-	Scene::Scene() : m_StartPos(Vec3(0,0,0)),
+	Scene::Scene(const std::string &name) : m_Name(name) ,
+		m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
 		m_SceneMessageManager(new MessageManager()),
 		m_SceneLoaded(false),
 		m_CreateCalled(false)
-		
 	{
 		
 	}
@@ -72,6 +72,12 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
 		m_CreateCalled = true;
+	}
+
+
+	std::string Scene::GetResourceGroupName() const
+	{
+		return "GASSSceneResGroup" + m_Name;
 	}
 
 	void Scene::Load(const std::string &name)
@@ -118,7 +124,7 @@ namespace GASS
 		{
 			FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
 			
-			rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
+			rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
 			const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 			//Load scene specific templates, filename should probably be a scene parameter
@@ -140,10 +146,10 @@ namespace GASS
 			xmlDoc->Clear();
 			//Delete our allocated document
 			delete xmlDoc;
-			rs->LoadResourceGroup("GASSSceneResGroup");
+			rs->LoadResourceGroup(GetResourceGroupName());
 		}
 		else
-			rs->AddResourceGroup("GASSSceneResGroup");
+			rs->AddResourceGroup(GetResourceGroupName());
 	
 		SystemMessagePtr enter_load_msg(new PreSceneLoadEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
@@ -184,7 +190,7 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 		if(rs == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Save");
-		rs->AddResourceLocation(scene_path,"GASSSceneResGroup","FileSystem",true);
+		rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
 
 		TiXmlDocument doc;  
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
@@ -277,7 +283,7 @@ namespace GASS
 			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
 			if(rs == NULL)
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
-			rs->RemoveResourceGroup("GASSSceneResGroup");
+			rs->RemoveResourceGroup(GetResourceGroupName());
 			m_SceneLoaded = false;
 			m_SceneManagers.clear();
 			m_SceneMessageManager->Clear();

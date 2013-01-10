@@ -70,8 +70,7 @@ namespace GASS
 			USER_SYSTEM_LOAD_PRIORITY = 4,
 
 		};
-
-		Scene();
+		Scene(const std::string &name = std::string(""));
 		virtual ~Scene();
 		static void RegisterReflection();
 
@@ -199,6 +198,8 @@ namespace GASS
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);
 		void Unload();
+
+		std::string GetResourceGroupName() const;
 protected:
 		/**
 		Load scene  from xml,

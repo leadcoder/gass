@@ -141,7 +141,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)
 	{
-		std::map<std::string, OgreRenderWindowPtr>::iterator win_iter = m_Windows.begin();
+		/*std::map<std::string, OgreRenderWindowPtr>::iterator win_iter = m_Windows.begin();
 		while(win_iter != m_Windows.end())
 		{
 			//set same scene manager in all views
@@ -155,7 +155,7 @@ namespace GASS
 		{
 			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue(),vp_iter->second.m_ZDepth);
 			++vp_iter;
-		}
+		}*/
 	}
 
 	RenderWindowPtr OgreGraphicsSystem::GetMainRenderWindow() const
@@ -171,13 +171,13 @@ namespace GASS
 		if(m_UpdateMessagePump) //take care of window events?
 			Ogre::WindowEventUtilities::messagePump();
 
-		if(DebugDrawer::getSingletonPtr())
-			DebugDrawer::getSingleton().build();
+		//if(m_DebugDrawer)
+		//	m_DebugDrawer->build();
 
 		m_Root->renderOneFrame();
 
-		if(DebugDrawer::getSingletonPtr())
-			DebugDrawer::getSingleton().clear();
+		//if(m_DebugDrawer)
+		//	m_DebugDrawer->clear();
 
 		m_DebugTextBox->SetActive(true);
 		m_DebugTextBox->UpdateTextBox();
@@ -197,6 +197,52 @@ namespace GASS
 		}
 		//update listeners
 		SimSystem::Update(delta_time);
+	}
+
+	ViewportPtr OgreRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
+	{
+		int num_viewports = m_Window->getNumViewports();
+
+		//we need a camera before we can create the viewport!
+		std::stringstream ss;
+		ss << "DefaultViewportCamera" << num_viewports;
+		std::string cam_name;
+		ss >> cam_name;
+
+		//get graphic system and create assign dummy camera to scene
+		Ogre::SceneManager *sm = GetSystem()->GetBootSceneManager();
+		Ogre::Camera* cam;
+		if(sm->hasCamera(cam_name))
+			cam = sm->getCamera(cam_name);
+		else
+			cam = sm->createCamera(cam_name);
+
+		cam->setPosition(Ogre::Vector3(0,0,0));
+		cam->setNearClipDistance(0.02f);
+		cam->setFarClipDistance(5000);
+		
+		Ogre::Viewport* vp = m_Window->addViewport(cam, num_viewports, left , top, width , height);
+
+		// Create one viewport, entire window
+		//vp->setBackgroundColour(colour);
+		//Alter the camera aspect ratio to match the viewport
+		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
+		OgreViewportPtr vp_wrapper(new OgreViewport(vp));
+		m_Viewports.push_back(vp_wrapper);
+		return vp_wrapper;
+
+		//add post process to all windows, change this to camera effect instead?
+		/*if(m_PostProcess)
+		{
+			m_PostProcess.reset();
+		}*/
+
+		//m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
+		//m_PostProcess->SetActiveCompositors(GetPostFilters());
+
+		//save viewport settings for recreation when scene manager is changed
+		//Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
+		//m_Viewports[name] = save_vp;
 	}
 
 	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
@@ -266,8 +312,10 @@ namespace GASS
 		else
 		{
 			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+			window->setDeactivateOnFocusChange(false);
 		}
-		OgreRenderWindowPtr win(new OgreRenderWindow(window));
+		
+		OgreRenderWindowPtr win(new OgreRenderWindow(this,window));
 		m_Windows[name] = win;
 		void* window_hnd = 0;
 		window->getCustomAttribute("WINDOW", &window_hnd);
@@ -281,7 +329,7 @@ namespace GASS
 		return win;
 	}
 
-	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
+/*	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
 	{
 		//check that this window exist!
 		if(m_Windows.find(render_window) == m_Windows.end())
@@ -299,7 +347,7 @@ namespace GASS
 				return;
 			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),static_cast<int>(m_Viewports.size()));
 		}
-	}
+	}*/
 
 	void OgreGraphicsSystem::ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp)
 	{
@@ -333,7 +381,6 @@ namespace GASS
 	{
 		std::vector<RenderWindowPtr> windows;
 		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = m_Windows.begin();
-		
 		while(iter != m_Windows.end())
 		{
 			windows.push_back(iter->second);
@@ -346,18 +393,18 @@ namespace GASS
 	{
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
-		if(DebugDrawer::getSingletonPtr())
-			DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
+		//if(DebugDrawer::getSingletonPtr())
+		//	DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
 	}
 
 	void OgreGraphicsSystem::OnDrawCircle(DrawCircleRequestPtr message)
 	{
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
-		if(DebugDrawer::getSingletonPtr())
+		//if(DebugDrawer::getSingletonPtr())
 		{
 
-			DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
+			//DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
 		}
 	}
 

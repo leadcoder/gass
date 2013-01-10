@@ -212,17 +212,6 @@ int IcoSphere::addToVertices(std::list<VertexPair> *target, const Ogre::Vector3 
  
 // ===============================================================================================
 
-template<> DebugDrawer* Ogre::Singleton<DebugDrawer>::ms_Singleton = 0;
-DebugDrawer* DebugDrawer::getSingletonPtr(void)
-{
-    return ms_Singleton;
-}
- 
-DebugDrawer& DebugDrawer::getSingleton(void)
-{  
-    assert( ms_Singleton );  return ( *ms_Singleton );  
-}
-
 
 DebugDrawer::DebugDrawer(Ogre::SceneManager *_sceneManager, float _fillAlpha)
    : sceneManager(_sceneManager), fillAlpha(_fillAlpha), manualObject(0), linesIndex(0), trianglesIndex(0),isEnabled(true)

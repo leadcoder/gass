@@ -135,7 +135,8 @@ namespace GASS
 				attribs.push_back("Longitude");
 				attribs.push_back("Projected");
 				GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-				SimEngine::Get().GetScene()->PostMessage(attrib_change_msg);
+				m_Controller->GetEditorSystem()->GetScene()->PostMessage(attrib_change_msg);
+
 			}
 
 			m_MoveUpdateCount++;

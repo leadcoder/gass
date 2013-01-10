@@ -121,19 +121,24 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
 	{
-		if(m_SceneMgr)
-		{
-			delete DebugDrawer::getSingletonPtr();
-			m_SceneMgr->clearScene();
-			Root::getSingleton().destroySceneManager(m_SceneMgr);
-			m_SceneMgr = NULL;
-			OgreGraphicsSystemPtr(m_GFXSystem)->Update(0);
-		}
+		delete m_DebugDrawer;
+		m_SceneMgr->clearScene();
+		Root::getSingleton().destroySceneManager(m_SceneMgr);
+		m_SceneMgr = NULL;
+		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0);
 	}
 
 	void OgreGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
-		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, m_Name);
+
+		static unsigned int scene_man_id = 0;
+		std::stringstream ss;
+		std::string name;
+		ss << GetName() << scene_man_id;
+		ss >> name;
+		scene_man_id++;
+
+		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, name);
 		if(m_SceneMgr == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"SceneManager " + m_SceneManagerType +" not found","OgreGraphicsSceneManager::OnLoad");
 		UpdateShadowSettings();
@@ -141,7 +146,6 @@ namespace GASS
 		UpdateLightSettings();
 		UpdateFogSettings();
 		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
-
 		OgreGraphicsSystemPtr(m_GFXSystem)->Register(shared_from_this());
 
 		//Give hook to 3dparty plugins to attach, maybee send other info
@@ -149,9 +153,8 @@ namespace GASS
 		SystemMessagePtr loaded_msg(new GFXSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = OgreGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-
 		//Create debug render system
-		new DebugDrawer(m_SceneMgr, 0.5f);
+		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherRequest(WeatherRequestPtr message)

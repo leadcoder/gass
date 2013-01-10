@@ -49,9 +49,7 @@ namespace GASS
 			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnLoad ,LoadSceneManagersRequest,0));
 			scene->RegisterForMessage(REG_TMESS(AISceneManager::OnUnload ,UnLoadSceneManagersRequest,0));
 		}
-
 		AISystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<AISystem>();
-
 		//AISystem not found, cast exception
 		if(!system)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AISystem", "AISceneManager::OnCreate");
@@ -60,7 +58,6 @@ namespace GASS
 		system->Register(listener);
 	}
 
-	
 	void AISceneManager::OnLoad(MessagePtr message)
 	{
 		

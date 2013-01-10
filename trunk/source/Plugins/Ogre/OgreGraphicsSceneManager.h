@@ -31,7 +31,9 @@ namespace Ogre
 {
 	class SceneManager;
 	class LiSPSMShadowCameraSetup;
+	
 }
+class DebugDrawer;
 
 namespace GASS
 {
@@ -150,6 +152,7 @@ namespace GASS
 		Ogre::SceneManager* m_SceneMgr;
 		boost::weak_ptr<OgreGraphicsSystem> m_GFXSystem;
 		std::vector<IComponent*> m_GFXComponents;
+		DebugDrawer* m_DebugDrawer;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
 	typedef boost::weak_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerWeakPtr;

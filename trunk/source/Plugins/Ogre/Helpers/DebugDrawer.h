@@ -57,14 +57,14 @@ private:
 	int index;
 };
  
-class DebugDrawer : public Ogre::Singleton<DebugDrawer>
+class DebugDrawer
 {
 public:
 	DebugDrawer(Ogre::SceneManager *_sceneManager, float _fillAlpha);
 	~DebugDrawer();
 
-	static DebugDrawer& getSingleton(void);
-	static DebugDrawer* getSingletonPtr(void);
+	//static DebugDrawer& getSingleton(void);
+	//static DebugDrawer* getSingletonPtr(void);
  
 	void build();
  

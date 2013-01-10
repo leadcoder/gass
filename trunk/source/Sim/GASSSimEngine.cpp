@@ -54,7 +54,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine() : m_CurrentTime(0), m_MaxUpdateFreq(0), m_Scene(new Scene())
+	SimEngine::SimEngine() : m_CurrentTime(0), m_MaxUpdateFreq(0)
 	{
 		m_PluginManager = PluginManagerPtr(new PluginManager());
 		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
@@ -74,6 +74,7 @@ namespace GASS
 		assert(m_Instance);
 		return m_Instance;
 	}
+
 	SimEngine& SimEngine::Get(void)
 	{
 		assert(m_Instance);
@@ -99,7 +100,7 @@ namespace GASS
 		m_SystemManager->Init();
 
 		//Create scene object		
-		m_Scene->Create();
+		//m_Scene->Create();
 
 		//intilize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
@@ -228,23 +229,28 @@ namespace GASS
 #endif
 	}
 
-	SceneWeakPtr SimEngine::LoadScene(const std::string &name)
+	void SimEngine::DestroyScene(ScenePtr scene)
 	{
-		m_Scene->Unload();
-		m_Scene->Load(name);
-		return m_Scene;
+		scene->Unload();
+		SceneVector::iterator iter = m_Scenes.begin();
+		while(iter != m_Scenes.end())
+		{
+			if(scene == *iter)
+			{
+				m_Scenes.erase(iter);
+				return;
+			}
+			iter++;
+		}
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed find scene", "SimEngine::DestroyScene");
 	}
 
-	void SimEngine::SaveScene(const std::string &name)
+	SceneWeakPtr SimEngine::CreateScene()
 	{
-		m_Scene->Save(name);
-	}
-
-	SceneWeakPtr SimEngine::NewScene()
-	{
-		m_Scene->Unload();
-		m_Scene->Load("");
-		return m_Scene;
+		ScenePtr scene(new Scene());
+		scene->Create();
+		m_Scenes.push_back(scene);
+		return scene;
 	}
 
 	std::vector<std::string> SimEngine::GetSavedScenes() const
@@ -263,15 +269,12 @@ namespace GASS
 					{
 						std::string scene_name = iter->path().filename().generic_string();
 						scene_names.push_back(scene_name);
-						//m_Scenes.push_back(iter->path().string());
 					}
 				}
 			}
 		}
 		return scene_names;
 	}
-
-	
 
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
@@ -285,7 +288,16 @@ namespace GASS
 		return true;
 	}
 
-/*	SimEngine::SceneIterator SimEngine::GetScenes()
+	void SimEngine::SyncMessages(double delta_time)
+	{
+		m_SystemManager->SyncMessages(delta_time);
+		for(size_t i = 0 ; i < m_Scenes.size(); i++)
+		{
+			m_Scenes[i]->SyncMessages(delta_time);
+		}
+	}
+
+	SimEngine::SceneIterator SimEngine::GetScenes()
 	{
 		return SceneIterator(m_Scenes.begin(),m_Scenes.end());
 	}
@@ -293,6 +305,6 @@ namespace GASS
 	SimEngine::ConstSceneIterator SimEngine::GetScenes() const
 	{
 		return ConstSceneIterator(m_Scenes.begin(),m_Scenes.end());
-	}*/
+	}
 
 }

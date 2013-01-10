@@ -25,6 +25,19 @@
 
 namespace GASS
 {
+
+	class GASSExport IViewport
+	{
+	public:
+		IViewport() 
+		{
+
+		}
+		virtual ~IViewport() {}
+		
+	};
+	typedef boost::shared_ptr<IViewport> ViewportPtr;
+
 	class GASSExport IRenderWindow
 	{
 	public:
@@ -33,10 +46,10 @@ namespace GASS
 
 		}
 		virtual ~IRenderWindow() {}
-
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 		virtual void* GetHWND() const = 0;
+		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) = 0;
 	};
 	typedef boost::shared_ptr<IRenderWindow> RenderWindowPtr;
 }

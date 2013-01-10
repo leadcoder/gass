@@ -43,7 +43,7 @@ namespace GASS
 			{
 				float intensity = m_Intensity*m_InvertBrush*m_Controller->GetDeltaTime();
 				//TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
-				TerrainComponentPtr terrain = SimEngine::Get().GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
+				TerrainComponentPtr terrain = m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 				if(terrain)
 				{
 					BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);

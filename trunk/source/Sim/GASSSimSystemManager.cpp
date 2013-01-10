@@ -228,35 +228,16 @@ namespace GASS
 		//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(stat_msg);
 	}*/
 
-	
-
 	void SimSystemManager::SyncMessages(double delta_time)
 	{
 		m_SystemMessageManager->Update(delta_time);
-		//update all scene messages managers
-		if(SimEngine::Get().GetScene())
-		{
-			SimEngine::Get().GetScene()->SyncMessages(delta_time);
-		}
-		/*SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
-		while(iter.hasMoreElements())
-		{
-			ScenePtr scene = iter.getNext();
-			scene->SyncMessages(delta_time);
-		}*/
 	}
-
 
 	size_t SimSystemManager::GetQueuedMessages() const
 	{
 		int num = (int) m_SystemMessageManager->GetQueuedMessages();
-		while(SimEngine::Get().GetScene())
-		{
-			num = (int) SimEngine::Get().GetScene()->GetQueuedMessages();
-		}
 		return (size_t) num;
 	}
-
 
 	int SimSystemManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{

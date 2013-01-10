@@ -39,10 +39,26 @@ namespace Ogre
 
 namespace GASS
 {
+	class OgreGraphicsSystem;
+	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	typedef boost::weak_ptr<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
+
+	class OgreViewport  : public IViewport
+	{
+	public:
+		OgreViewport(Ogre::Viewport* vp) : m_OgreViewport(vp)
+		{
+
+		}
+		OgreViewport(){}
+		Ogre::Viewport* m_OgreViewport;
+	};
+	typedef boost::shared_ptr<OgreViewport> OgreViewportPtr;
+
 	class OgreRenderWindow  : public IRenderWindow
 	{
 	public:
-		OgreRenderWindow(Ogre::RenderWindow* win) : m_Window(win)
+		OgreRenderWindow(OgreGraphicsSystem* system, Ogre::RenderWindow* win) : m_System(system), m_Window(win)
 		{
 
 		}
@@ -55,11 +71,13 @@ namespace GASS
 			m_Window->getCustomAttribute("WINDOW", &window_hnd);
 			return window_hnd; 
 		}
+		OgreGraphicsSystem* GetSystem() const{return m_System;}
+		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
 		Ogre::RenderWindow* m_Window;
+		std::vector<OgreViewportPtr> m_Viewports;
+		OgreGraphicsSystem* m_System;
 	};
 	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
-
-	
 
 
 	class Viewport
@@ -101,7 +119,7 @@ namespace GASS
 
 		//void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
 		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
-		void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
+		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 	protected:
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
@@ -135,5 +153,6 @@ namespace GASS
 		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
 	};
-	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	
+	
 }

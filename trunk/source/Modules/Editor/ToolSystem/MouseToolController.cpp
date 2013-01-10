@@ -455,7 +455,7 @@ namespace GASS
 		m_LastScreenPos = mouse_pos;
 		int mess_id = (int) this;
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
-		SimEngine::Get().GetScene()->PostMessage(cursor_msg);
+		GetEditorSystem()->GetScene()->PostMessage(cursor_msg);
 		return true;
 	}
 
@@ -505,7 +505,7 @@ namespace GASS
 					//show Immediate!
 					//Disable OIS input to avoid background selection
 					GASS::SceneMessagePtr message(new ShowObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
-					SimEngine::Get().GetScene()->SendImmediate(message);
+					GetEditorSystem()->GetScene()->SendImmediate(message);
 				}
 			}
 			return true;

@@ -38,7 +38,7 @@ namespace GASS
 		m_MouseTools->Init();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,PostSceneLoadEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,PreSceneLoadEvent,0));
-		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraRequest,0));
+		
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
@@ -105,9 +105,8 @@ namespace GASS
 			}
 		}
 		m_Scene = scene;
-
+		scene->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraRequest,0));
 		SetObjectSite(scene->GetRootSceneObject());
-
 		//load selection object
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
@@ -137,7 +136,7 @@ namespace GASS
 			//notify listeners
 			int from_id = (int) this;
 			SceneMessagePtr selection_msg(new ObjectSelectionChangedEvent(obj,from_id));
-			SimEngine::Get().GetScene()->PostMessage(selection_msg);
+			ScenePtr(m_Scene)->PostMessage(selection_msg);
 		}
 	}
 
@@ -147,7 +146,7 @@ namespace GASS
 		if(m_LockedObjects.end() != iter)
 		{
 			m_LockedObjects.erase(iter);
-			SimEngine::Get().GetScene()->PostMessage(SceneMessagePtr(new ObjectLockChangedEvent(SceneObjectPtr(obj),false)));
+			ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectLockChangedEvent(SceneObjectPtr(obj),false)));
 		}
 	}
 
@@ -157,7 +156,7 @@ namespace GASS
 		if(m_LockedObjects.end() == iter)
 		{
 			m_LockedObjects.insert(obj);
-			SimEngine::Get().GetScene()->PostMessage(SceneMessagePtr(new ObjectLockChangedEvent(SceneObjectPtr(obj),true)));
+			ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectLockChangedEvent(SceneObjectPtr(obj),true)));
 		}
 	}
 
@@ -185,7 +184,7 @@ namespace GASS
 		if(m_InvisibleObjects.end() != iter)
 		{
 			m_InvisibleObjects.erase(iter);
-			SimEngine::Get().GetScene()->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj),true)));
+			ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj),true)));
 		}
 	}
 
@@ -195,7 +194,7 @@ namespace GASS
 		if(m_InvisibleObjects.end() == iter)
 		{
 			m_InvisibleObjects.insert(obj);
-			SimEngine::Get().GetScene()->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj),false)));
+			ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj),false)));
 		}
 	}
 
@@ -211,7 +210,7 @@ namespace GASS
 	void EditorSystem::SetObjectSite(SceneObjectPtr obj)
 	{
 		m_CurrentSite = obj;
-		SimEngine::Get().GetScene()->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
+		ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
 	}
 
 	SceneObjectPtr EditorSystem::GetObjectSite() const

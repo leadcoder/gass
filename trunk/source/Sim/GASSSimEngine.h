@@ -40,7 +40,6 @@ namespace GASS
 	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
 	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
 	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	//typedef boost::shared_ptr<ControlSettingsManager> ControlSettingsManagerPtr;
 	typedef boost::shared_ptr<RunTimeController> RuntimeControllerPtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::shared_ptr<Scene> ScenePtr;
@@ -147,30 +146,24 @@ namespace GASS
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 
-		/**
-			Load scene form file
-		*/
-		SceneWeakPtr LoadScene(const std::string &name);
-		SceneWeakPtr NewScene();
-		void SaveScene(const std::string &name);
-		void UnloadScene();
-
-		//SceneIterator GetScenes();
-		//ConstSceneIterator GetScenes() const;
-		ScenePtr GetScene() const {return m_Scene;}
+		void DestroyScene(ScenePtr scene);
+		SceneWeakPtr CreateScene();
+		ConstSceneIterator GetScenes() const;
+		SceneIterator GetScenes();
 		FilePath GetScenePath() const {return m_ScenePath;}
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
 		std::vector<std::string> GetSavedScenes() const;
+		void SyncMessages(double delta_time);
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		RuntimeControllerPtr m_RTC;
-		//SceneVector m_Scenes;
+		SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
-		ScenePtr m_Scene;
+		//ScenePtr m_Scene;
 		FilePath m_ScenePath;
 	};
 }

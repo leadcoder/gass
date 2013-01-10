@@ -109,9 +109,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,PreSceneLoadEvent,0));
 
-		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
-		SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
-	
+		
 		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
 		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
@@ -133,6 +131,8 @@ namespace GASS
 	void RakNetNetworkSystem::OnSceneLoaded(PreSceneLoadEventPtr message)
 	{
 		m_Scene = message->GetScene();
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
 	}
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayRequestPtr message)
@@ -164,10 +164,6 @@ namespace GASS
 			m_RakPeer->Send(&out, HIGH_PRIORITY, RELIABLE_ORDERED,0,UNASSIGNED_SYSTEM_ADDRESS,true);
 		}
 	}
-
-
-	
-
 
 	void RakNetNetworkSystem::OnStartServer(StartServerRequestPtr message)
 	{
