@@ -46,12 +46,13 @@ namespace GASS
 	class OgreViewport  : public IViewport
 	{
 	public:
-		OgreViewport(Ogre::Viewport* vp) : m_OgreViewport(vp)
+		OgreViewport(const std::string &name,Ogre::Viewport* vp) : m_Name(name), m_OgreViewport(vp)
 		{
 
 		}
 		OgreViewport(){}
 		Ogre::Viewport* m_OgreViewport;
+		std::string m_Name;
 	};
 	typedef boost::shared_ptr<OgreViewport> OgreViewportPtr;
 
@@ -80,7 +81,7 @@ namespace GASS
 	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
 
 
-	class Viewport
+	/*class Viewport
 	{
 	public:
 		Viewport(const std::string &name, const std::string &window, float left,float top,float width, float height, int z_depth, Ogre::Viewport* vp = NULL) : m_Name(name),m_Window(window),m_Left(left),m_Top(top),m_Width(width), m_Height(height),m_OgreViewport(vp),m_ZDepth(z_depth)
@@ -95,7 +96,7 @@ namespace GASS
 		float m_Height;
 		int m_ZDepth;
 		Ogre::Viewport* m_OgreViewport;
-	};
+	};*/
 	class OgreDebugTextOutput;
 	class OgrePostProcess;
 	class OgreCameraComponent;
@@ -130,8 +131,8 @@ namespace GASS
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
-		void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
-		void RemoveViewport(const std::string &name, const std::string &win_name);
+		//void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
+		//void RemoveViewport(const std::string &name, const std::string &win_name);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		bool GetShowStats() const {return m_ShowStats;}
@@ -143,8 +144,8 @@ namespace GASS
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		std::map<std::string, OgreRenderWindowPtr>	m_Windows;
-		std::map<std::string, Viewport> m_Viewports;
-		std::map<std::string, Ogre::Viewport> m_OgreViewports;
+		//std::map<std::string, Viewport> m_Viewports;
+		//std::map<std::string, Ogre::Viewport> m_OgreViewports;
 		Ogre::SceneManager* m_SceneMgr;
 		std::vector<std::string> m_Plugins;
 		std::vector<std::string> m_PostFilters;

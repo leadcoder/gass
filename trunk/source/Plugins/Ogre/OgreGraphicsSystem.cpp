@@ -227,7 +227,7 @@ namespace GASS
 		//vp->setBackgroundColour(colour);
 		//Alter the camera aspect ratio to match the viewport
 		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
-		OgreViewportPtr vp_wrapper(new OgreViewport(vp));
+		OgreViewportPtr vp_wrapper(new OgreViewport(name,vp));
 		m_Viewports.push_back(vp_wrapper);
 		return vp_wrapper;
 
@@ -245,7 +245,7 @@ namespace GASS
 		//m_Viewports[name] = save_vp;
 	}
 
-	void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
+	/*void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
 	{
 		Ogre::RenderWindow* win = m_Windows[win_name]->m_Window;
 		int num_viewports = win->getNumViewports();
@@ -285,7 +285,7 @@ namespace GASS
 		//save viewport settings for recreation when scene manager is changed
 		Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
 		m_Viewports[name] = save_vp;
-	}
+	}*/
 
 	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
 	{
@@ -351,31 +351,18 @@ namespace GASS
 
 	void OgreGraphicsSystem::ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp)
 	{
-		if(vp_name == "ALL")
+		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = m_Windows.begin();
+		while(iter != m_Windows.end())
 		{
-			std::map<std::string,Viewport>::iterator iter = m_Viewports.begin();
-			while(iter != m_Viewports.end())
+			std::vector<OgreViewportPtr> viewports = iter->second->m_Viewports;
+			for(size_t i = 0 ; i < viewports.size(); i++)
 			{
-
-				if(iter->second.m_OgreViewport)
-					iter->second.m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
-				++iter;
+				if(vp_name == "ALL" || viewports[i]->m_Name == vp_name)
+					viewports[i]->m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
 			}
-		}
-		else if(m_Viewports.find(vp_name) != m_Viewports.end() && m_Viewports[vp_name].m_OgreViewport != NULL)
-		{
-			m_Viewports[vp_name].m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
+			++iter;
 		}
 	}
-
-	void OgreGraphicsSystem::RemoveViewport(const std::string &name, const std::string &win_name)
-	{
-		if(m_Viewports.find(name) != m_Viewports.end() && m_Viewports[name].m_OgreViewport != NULL)
-		{
-			m_Windows[win_name]->m_Window->removeViewport(m_Viewports[name].m_ZDepth);
-		}
-	}
-
 
 	std::vector<RenderWindowPtr> OgreGraphicsSystem::GetRenderWindows() const
 	{
