@@ -19,6 +19,8 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
+#include "Plugins/Ogre/OgreRenderWindow.h"
+#include "Plugins/Ogre/OgreViewport.h"
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
@@ -118,6 +120,8 @@ namespace GASS
 		//}
 
 		m_Root->initialise(false);
+
+		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
 		//wait that first render window is created before send message that graphic system is initialized
 	}
 
@@ -134,7 +138,7 @@ namespace GASS
 		//resize all 
 		while(iter != m_Windows.end())
 		{
-			iter->second->m_Window->windowMovedOrResized();
+			iter->second->GetOgreWindow()->windowMovedOrResized();
 			++iter;
 		}
 	}
@@ -184,9 +188,9 @@ namespace GASS
 
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
-			float a_fps = m_Windows.begin()->second->m_Window->getAverageFPS(); 
-			size_t tri_count = m_Windows.begin()->second->m_Window->getTriangleCount(); 
-			size_t batch_count = m_Windows.begin()->second->m_Window->getBatchCount();
+			float a_fps = m_Windows.begin()->second->GetOgreWindow()->getAverageFPS(); 
+			size_t tri_count = m_Windows.begin()->second->GetOgreWindow()->getTriangleCount(); 
+			size_t batch_count = m_Windows.begin()->second->GetOgreWindow()->getBatchCount();
 
 			std::stringstream sstream;
 			sstream << "AVERAGE FPS:" << a_fps << "\n" <<
@@ -198,94 +202,6 @@ namespace GASS
 		//update listeners
 		SimSystem::Update(delta_time);
 	}
-
-	ViewportPtr OgreRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
-	{
-		int num_viewports = m_Window->getNumViewports();
-
-		//we need a camera before we can create the viewport!
-		std::stringstream ss;
-		ss << "DefaultViewportCamera" << num_viewports;
-		std::string cam_name;
-		ss >> cam_name;
-
-		//get graphic system and create assign dummy camera to scene
-		Ogre::SceneManager *sm = GetSystem()->GetBootSceneManager();
-		Ogre::Camera* cam;
-		if(sm->hasCamera(cam_name))
-			cam = sm->getCamera(cam_name);
-		else
-			cam = sm->createCamera(cam_name);
-
-		cam->setPosition(Ogre::Vector3(0,0,0));
-		cam->setNearClipDistance(0.02f);
-		cam->setFarClipDistance(5000);
-		
-		Ogre::Viewport* vp = m_Window->addViewport(cam, num_viewports, left , top, width , height);
-
-		// Create one viewport, entire window
-		//vp->setBackgroundColour(colour);
-		//Alter the camera aspect ratio to match the viewport
-		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
-		OgreViewportPtr vp_wrapper(new OgreViewport(name,vp));
-		m_Viewports.push_back(vp_wrapper);
-		return vp_wrapper;
-
-		//add post process to all windows, change this to camera effect instead?
-		/*if(m_PostProcess)
-		{
-			m_PostProcess.reset();
-		}*/
-
-		//m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
-		//m_PostProcess->SetActiveCompositors(GetPostFilters());
-
-		//save viewport settings for recreation when scene manager is changed
-		//Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
-		//m_Viewports[name] = save_vp;
-	}
-
-	/*void OgreGraphicsSystem::AddViewport(Ogre::SceneManager *sm, const std::string &name,const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth)
-	{
-		Ogre::RenderWindow* win = m_Windows[win_name]->m_Window;
-		int num_viewports = win->getNumViewports();
-
-		//we need a camera before we can create the viewport!
-		std::stringstream ss;
-		ss << "DefaultViewportCamera" << num_viewports;
-		std::string cam_name;
-		ss >> cam_name;
-
-		Ogre::Camera* cam;
-		if(sm->hasCamera(cam_name))
-			cam = sm->getCamera(cam_name);
-		else
-			cam = sm->createCamera(cam_name);
-
-		cam->setPosition(Ogre::Vector3(0,0,0));
-		cam->setNearClipDistance(0.02f);
-		cam->setFarClipDistance(5000);
-		assert(cam && win);
-		Ogre::Viewport* vp = win->addViewport(cam, zdepth, left , top, width , height);
-
-		// Create one viewport, entire window
-		vp->setBackgroundColour(colour);
-		//Alter the camera aspect ratio to match the viewport
-		cam->setAspectRatio( Ogre::Real(vp->getActualWidth())/Ogre::Real(vp->getActualHeight()));
-
-		//add post process to all windows, change this to camera effect instead?
-		if(m_PostProcess)
-		{
-			m_PostProcess.reset();
-		}
-
-		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
-		m_PostProcess->SetActiveCompositors(GetPostFilters());
-
-		//save viewport settings for recreation when scene manager is changed
-		Viewport save_vp(name,win_name,left,top,width,height,zdepth,vp);
-		m_Viewports[name] = save_vp;
-	}*/
 
 	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
 	{
@@ -329,40 +245,6 @@ namespace GASS
 		return win;
 	}
 
-/*	void OgreGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float left, float top, float  width, float height)
-	{
-		//check that this window exist!
-		if(m_Windows.find(render_window) == m_Windows.end())
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Can't find render window:" + render_window, "OgreGraphicsSystem::CreateViewport");
-
-		Ogre::RenderWindow* window = m_Windows[render_window]->m_Window;
-		if(window)
-		{
-			//we need a scene mananger before we can create viewports, 
-			//"TerrainSceneManager" will do for now, this will change when scene is loaded by OgreSceneManager class
-			if(m_SceneMgr == NULL) 
-				m_SceneMgr = m_Root->createSceneManager("TerrainSceneManager");
-
-			if(m_Viewports.find(name) != m_Viewports.end())
-				return;
-			AddViewport(m_SceneMgr, name, render_window, left , top, width , height,Ogre::ColourValue(),static_cast<int>(m_Viewports.size()));
-		}
-	}*/
-
-	void OgreGraphicsSystem::ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp)
-	{
-		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = m_Windows.begin();
-		while(iter != m_Windows.end())
-		{
-			std::vector<OgreViewportPtr> viewports = iter->second->m_Viewports;
-			for(size_t i = 0 ; i < viewports.size(); i++)
-			{
-				if(vp_name == "ALL" || viewports[i]->m_Name == vp_name)
-					viewports[i]->m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
-			}
-			++iter;
-		}
-	}
 
 	std::vector<RenderWindowPtr> OgreGraphicsSystem::GetRenderWindows() const
 	{

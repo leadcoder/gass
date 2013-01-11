@@ -12,6 +12,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 
@@ -62,7 +63,6 @@ namespace GASS
 		if(!m_EditorSystem)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " GizmoComponent::OnInitialize");
 
-		
 		//Change geomtry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(m_Type == GT_AXIS || m_Type == GT_PLANE)
@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest));
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent));
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
@@ -119,7 +119,7 @@ namespace GASS
 			BuildMesh();
 	}
 
-	void GizmoComponent::OnChangeCamera(ChangeCameraRequestPtr message)
+	void GizmoComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		//Unregister from previous camera
 		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
@@ -128,7 +128,9 @@ namespace GASS
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage));
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage));
 		}
-		SceneObjectPtr cam_obj =  message->GetCamera();
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
 		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage,1));
@@ -244,7 +246,6 @@ namespace GASS
 				if(selected_lc && ((message->GetPosition() - selected_lc->GetWorldPosition()).Length()) > MOVMENT_EPSILON)
 				{
 					selected->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
-				
 				}
 			}
 		}
@@ -296,8 +297,8 @@ namespace GASS
 	void GizmoComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		BuildMesh();
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest,1));
-
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent,1));
+		//GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest,1));
 		m_ActiveCameraObject = m_EditorSystem->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)

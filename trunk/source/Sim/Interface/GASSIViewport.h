@@ -18,13 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_I_RENDER_WINDOW_H
-#define GASS_I_RENDER_WINDOW_H
+#ifndef GASS_I_VIEWPORT_H
+#define GASS_I_VIEWPORT_H
 
 #include "Core/Common.h"
+#include "Sim/GASSCommon.h"
 
 namespace GASS
 {
+	class ICameraComponent;
+	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
+	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
+	
 
 	class GASSExport IViewport
 	{
@@ -34,23 +39,11 @@ namespace GASS
 
 		}
 		virtual ~IViewport() {}
-		
+		virtual CameraComponentPtr GetCamera() const = 0;
+		virtual void SetCamera(CameraComponentPtr camera) = 0;
+		virtual std::string GetName() const = 0;
 	};
 	typedef boost::shared_ptr<IViewport> ViewportPtr;
-
-	class GASSExport IRenderWindow
-	{
-	public:
-		IRenderWindow() 
-		{
-
-		}
-		virtual ~IRenderWindow() {}
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
-		virtual void* GetHWND() const = 0;
-		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) = 0;
-	};
-	typedef boost::shared_ptr<IRenderWindow> RenderWindowPtr;
 }
+
 #endif 

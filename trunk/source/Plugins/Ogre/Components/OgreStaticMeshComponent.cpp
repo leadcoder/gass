@@ -89,7 +89,7 @@ namespace GASS
 		//Use this name to generate unique filename, used by geometry interface. 
 		//m_Filename = name;
 			
-		m_StaticGeometry  = ogsm->GetSceneManger()->createStaticGeometry(name);
+		m_StaticGeometry  = ogsm->GetOgreSceneManger()->createStaticGeometry(name);
 		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
         m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
 		
@@ -104,7 +104,7 @@ namespace GASS
 		MeshMap::iterator iter = m_MeshInstances.begin();
 		while(iter != m_MeshInstances.end())
 		{
-			Ogre::Entity* entity = ogsm->GetSceneManger()->createEntity(iter->first,iter->first);
+			Ogre::Entity* entity = ogsm->GetOgreSceneManger()->createEntity(iter->first,iter->first);
 			for(size_t i = 0;  i < iter->second.size(); i++)
 			{
 				Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);
@@ -126,7 +126,7 @@ namespace GASS
 		{
 			OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );
 			if(ogsm)
-				ogsm->GetSceneManger()->destroyStaticGeometry(m_StaticGeometry);
+				ogsm->GetOgreSceneManger()->destroyStaticGeometry(m_StaticGeometry);
 		}
 	}
 

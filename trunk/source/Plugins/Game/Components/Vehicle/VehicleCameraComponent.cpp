@@ -40,6 +40,7 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Plugins/Game/Components/Input/InputHandlerComponent.h"
 
 
@@ -95,8 +96,9 @@ namespace GASS
 
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
-		MessagePtr cam_msg(new ChangeCameraRequest(GetSceneObject(),m_PreferredViewport));
-		//GetSceneObject()->GetScene()->SendImmediate(cam_msg);
+		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
+		MessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
+		//SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)

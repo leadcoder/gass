@@ -8,6 +8,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
@@ -74,7 +75,7 @@ namespace GASS
 		void SetUseTerrainNormalOnDrop(bool value);
 		void OnSceneLoaded(PostSceneLoadEventPtr message);
 		void OnNewScene(PreSceneLoadEventPtr message);
-		void OnChangeCamera(ChangeCameraRequestPtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;

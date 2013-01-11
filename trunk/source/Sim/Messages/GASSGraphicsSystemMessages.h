@@ -22,7 +22,7 @@
 #define GRAPHICS_SYSTEM_MESSAGES_H
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
@@ -33,11 +33,15 @@ namespace GASS
 	class Scene;
 	class Scene;
 	class SceneObject;
+	class ICameraComponent;
+	class IViewport;
 
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	
+	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
+	typedef boost::shared_ptr<IViewport> ViewportPtr;
+
 
 	/**
 	Message posted by the graphic scene manager to notify that the scene manager
@@ -59,8 +63,6 @@ namespace GASS
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
 		  void *GetSceneGraphRootNode()const {return m_RootNode;}
 		  void *GetSceneGraphShadowNode()const {return m_ShadowNode;}
-
-
 	private:
 		void* m_RootNode;
 		void* m_ShadowNode;
@@ -70,8 +72,8 @@ namespace GASS
 
 
 	/**
-		Message posted by the graphic system to notify that a new render window has been created.
-		Suscribe to this message if you need to get hold of the render window handle,
+	Message posted by the graphic system to notify that a new render window has been created.
+	Suscribe to this message if you need to get hold of the render window handle,
 	*/
 
 	class RenderWindowCreatedEvent : public SystemEventMessage
@@ -79,7 +81,7 @@ namespace GASS
 	public:
 		RenderWindowCreatedEvent(void* render_window_handle, SenderID sender_id = -1, double delay= 0) :
 		  SystemEventMessage(sender_id , delay),
-		   m_Handle(render_window_handle)
+			  m_Handle(render_window_handle)
 		  {
 
 		  }
@@ -90,45 +92,40 @@ namespace GASS
 	typedef boost::shared_ptr<RenderWindowCreatedEvent> MainWindowCreatedEventPtr;
 
 
+
 	/**
-		Message posted by the graphic system to notify that a new render window has been created.
-		Suscribe to this message if you need to get hold of the render window handle,
+	Event fired when viewport change camera
 	*/
 
-	/*class MainWindowCreatedEvent : public SystemEventMessage
+	class CameraChangedEvent : public SystemEventMessage
 	{
 	public:
-		MainWindowCreatedEvent(void* render_window_handle, void* main_window_handle,SenderID sender_id = -1, double delay= 0) :
-		  SystemEventMessage(sender_id , delay),
-			  m_Handle(render_window_handle),m_MainHandle(main_window_handle) { }
-		  void* GetRenderWindowHandle() const {return m_Handle;}
-		  void* GetMainHandle() const {return m_MainHandle;}
+		/**
+		Constructor
+		@param camera Pointer to the new camera
+		*/
+		CameraChangedEvent(ViewportPtr viewport, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_Viewport(viewport)
+		  {
 
+		  }
+		  ViewportPtr  GetViewport() const {return m_Viewport;}
 	private:
-		void* m_Handle;
-		void* m_MainHandle;
-
+		ViewportPtr m_Viewport;
 	};
-	typedef boost::shared_ptr<MainWindowCreatedEvent> MainWindowCreatedEventPtr;*/
+	typedef boost::shared_ptr<CameraChangedEvent> CameraChangedEventPtr;
 
-
-	/**
-		If you have a created a external render window this messages should be posted by the external
-		owner if the render window has moved or resized.
-		A graphic system implementation should suscribe to this message to notify
-		it's internal window system about the change
-	*/
-
+	
 	class ViewportMovedOrResizedEvent : public SystemEventMessage
 	{
 	public:
 		ViewportMovedOrResizedEvent (const std::string &viewport_name, int pos_x, int pos_y, int width,int height,SenderID sender_id = -1, double delay= 0) :
 		  m_PosX(pos_x),
-		  m_PosY(pos_y),
-		  m_Width(width),
-		  m_Height(height),
-		  m_VPName(viewport_name),
-		  SystemEventMessage(sender_id , delay)  {}
+			  m_PosY(pos_y),
+			  m_Width(width),
+			  m_Height(height),
+			  m_VPName(viewport_name),
+			  SystemEventMessage(sender_id , delay)  {}
 		  int GetPositionX()const {return m_PosX;}
 		  int GetPositionY()const {return m_PosY;}
 		  int GetWidth()const {return m_Width;}
@@ -146,9 +143,9 @@ namespace GASS
 	public:
 		RenderWindowResizedEvent(const std::string &window_name, int width,int height,SenderID sender_id = -1, double delay= 0) :
 		  m_Width(width),
-		  m_Height(height),
-		  m_WinName(window_name),
-		  SystemEventMessage(sender_id , delay)  {}
+			  m_Height(height),
+			  m_WinName(window_name),
+			  SystemEventMessage(sender_id , delay)  {}
 		  int GetWidth()const {return m_Width;}
 		  int GetHeight()const {return m_Height;}
 		  std::string GetWindowName() const {return m_WinName;}
@@ -158,6 +155,30 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
 
+	/**
+	Message used for changing camera for viewport. 
+	This message can be sent by user.
+	*/
+	class ChangeCameraRequest : public SystemRequestMessage
+	{
+	public:
+		/**
+		Constructor
+		@param camera The camera to activate
+		@param viewport The name of the viewport target
+		*/
+		ChangeCameraRequest(CameraComponentPtr camera ,const std::string &viewport="", SenderID sender_id = -1, double delay= 0) : 
+		  SystemRequestMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
+		  {
+
+		  }
+		  CameraComponentPtr GetCamera() const {return m_Camera;}
+		  std::string GetViewport() const {return m_Viewport;}
+	private:
+		CameraComponentPtr m_Camera;
+		std::string m_Viewport;
+	};
+	typedef boost::shared_ptr<ChangeCameraRequest> ChangeCameraRequestPtr;
 
 
 	//debug messages
@@ -165,15 +186,15 @@ namespace GASS
 	{
 	public:
 		DrawLineRequest(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) : SystemRequestMessage(sender_id , delay) ,
-		  m_Start(start),
-		  m_End(end),
-		  m_Color(color)
-		  {
+			m_Start(start),
+			m_End(end),
+			m_Color(color)
+		{
 		}
-		  
-		  Vec3 GetStart()const {return m_Start;}
-		  Vec3 GetEnd()const {return m_End;}
-		  Vec4 GetColor()const {return m_Color;}
+
+		Vec3 GetStart()const {return m_Start;}
+		Vec3 GetEnd()const {return m_End;}
+		Vec4 GetColor()const {return m_Color;}
 	private:
 		Vec3 m_Start,m_End;
 		Vec4 m_Color;
@@ -186,11 +207,11 @@ namespace GASS
 	public:
 		DrawCircleRequest(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
 		  m_Center(center),
-		  m_Radius(radius),
-		  m_Color(color),
-		  m_Segments(segments),
-		  m_Filled(filled),
-		  SystemRequestMessage(sender_id , delay)  
+			  m_Radius(radius),
+			  m_Color(color),
+			  m_Segments(segments),
+			  m_Filled(filled),
+			  SystemRequestMessage(sender_id , delay)  
 		  {
 
 		  }
@@ -213,14 +234,14 @@ namespace GASS
 	public:
 		CreateTextBoxRequest(const std::string &text_area_id, const std::string &text ,const Vec4 &color, float pos_x,float pos_y, float width, float height, SenderID sender_id = -1, double delay= 0) :
 		  m_BoxID(text_area_id),
-		  m_Text(text),
-		  m_Color(color),
-		  m_PosX(pos_x),
-		  m_PosY(pos_y),
-		  m_Width(width),
-		  m_Height(height),
+			  m_Text(text),
+			  m_Color(color),
+			  m_PosX(pos_x),
+			  m_PosY(pos_y),
+			  m_Width(width),
+			  m_Height(height),
 
-		  SystemRequestMessage(sender_id , delay)  
+			  SystemRequestMessage(sender_id , delay)  
 		  {
 
 		  }

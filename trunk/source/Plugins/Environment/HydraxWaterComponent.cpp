@@ -21,7 +21,7 @@
 #include "HydraxWaterComponent.h"
 #include "HydraxRTTListener.h"
 #include "Plugins/Ogre/OgreConvert.h"
-//#include "Plugins/Ogre/IOgreCameraProxy.h"
+#include "Plugins/Ogre/IOgreCameraProxy.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -30,7 +30,9 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 
 #include <Ogre.h>
 
@@ -112,7 +114,7 @@ namespace GASS
 		if(m_Initialized)
 			return;
 
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnChangeCamera,CameraChangedEvent,0));
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
 		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::RenderTarget* target = NULL;
@@ -135,7 +137,7 @@ namespace GASS
 		delete m_Hydrax;
 		Ogre::ResourceGroupManager::getSingletonPtr()->destroyResourceGroup("Hydrax");
 
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedEvent));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( HydraxWaterComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void HydraxWaterComponent::SetSave(const std::string &value)
@@ -633,8 +635,8 @@ namespace GASS
 	{
 		if(m_Hydrax)
 		{
-			//OgreCameraProxyPtr cam2 = message->GetCamera()->GetFirstComponentByClass<IOgreCameraProxy>();
-			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
+			OgreCameraProxyPtr camera_proxy = boost::shared_dynamic_cast<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+			Ogre::Camera * cam = camera_proxy->GetOgreCamera();
 			if(cam)
 			{
 				m_Hydrax->setCamera(cam);

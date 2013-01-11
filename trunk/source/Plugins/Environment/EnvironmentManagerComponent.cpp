@@ -26,6 +26,7 @@
 #include <SkyX.h>
 
 #include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -34,6 +35,9 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+
 
 #include <Ogre.h>
 
@@ -163,7 +167,7 @@ namespace GASS
 		SetSunGradient(m_SunGradientValues);
 		SetAmbientGradient(m_AmbientGradientValues);
 		SetFogGradient(m_FogGradientValues);
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent,0));
 		
 	}
 
@@ -180,7 +184,7 @@ namespace GASS
 
 		m_SunLight = NULL;
 		Ogre::Root::getSingleton().removeFrameListener(this);
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
@@ -372,7 +376,8 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
-		m_CurrentCamera = static_cast<Ogre::Camera*> (message->GetUserData());
+		OgreCameraProxyPtr camera_proxy = boost::shared_dynamic_cast<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+		m_CurrentCamera = camera_proxy->GetOgreCamera();
 	}
 
 	

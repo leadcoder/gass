@@ -79,8 +79,8 @@ namespace GASS
 		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
 		if(gfx_system)
 		{
-			gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
-			gfx_system->CreateViewport(render_win_name,render_win_name, 0, 0, 1, 1);
+			RenderWindowPtr win = gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
+			win->CreateViewport("MainViewport", 0, 0, 1, 1);
 		}
 		m_Initilized  = true;
 	}
@@ -125,8 +125,8 @@ namespace GASS
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			SceneMessagePtr camera_msg(new ChangeCameraRequest(free_obj,"RenderWindow"));
-			scene->PostMessage(camera_msg);
+			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
 		}
 
 		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());

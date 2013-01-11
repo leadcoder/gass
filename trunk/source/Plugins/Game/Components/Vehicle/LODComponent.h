@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
@@ -47,7 +47,7 @@ namespace GASS
 	private:
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void OnObjectMoved(TransformationNotifyMessagePtr message);
-		void OnChangeCamera(CameraChangedEventPtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
 
 		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}
 		void SetLowLODDistance(float value) {m_LowLODDistance = value;}

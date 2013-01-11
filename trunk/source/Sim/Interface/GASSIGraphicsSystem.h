@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSRenderWindow.h"
+#include "Sim/Interface/GASSIRenderWindow.h"
 #include "Core/System/GASSISystem.h"
 #include <string>
 

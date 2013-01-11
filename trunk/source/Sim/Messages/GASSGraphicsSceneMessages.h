@@ -39,34 +39,7 @@ namespace GASS
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
 	//*********************************************************
 
-	/**
-	Message used for changing camera un viewport. 
-	This message can be sent by user.
-	*/
-	class ChangeCameraRequest : public SceneRequestMessage
-	{
-	public:
-		/**
-			Constructor
-			@param camera The camera to activate
-			@param viewport The name of the viewport target
-		*/
-		ChangeCameraRequest(SceneObjectPtr camera ,const std::string &viewport, SenderID sender_id = -1, double delay= 0) : 
-		  SceneRequestMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
-		  {
-
-		  }
-		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  std::string GetViewport() const {return m_Viewport;}
-	private:
-		SceneObjectPtr m_Camera;
-		std::string m_Viewport;
-	};
-	typedef boost::shared_ptr<ChangeCameraRequest> ChangeCameraRequestPtr;
-
-
-
-
+	
 	/**
 	Change time of day, this message can be used to change current time in
 	scenes that support dynamic lighting
@@ -138,28 +111,7 @@ namespace GASS
 	typedef boost::shared_ptr<WeatherRequest> WeatherRequestPtr;
 
 
-	/**
-		Message sent by graphics system when viewport camera is changed 
-	*/
-	class CameraChangedEvent : public SceneEventMessage
-	{
-	public:
-		/**
-		Constructor
-		@param camera Pointer to the new camera
-		*/
-		CameraChangedEvent(SceneObjectPtr camera , void* user_data, SenderID sender_id = -1, double delay= 0) : 
-		  SceneEventMessage(sender_id , delay), m_Camera(camera),m_UserData(user_data)
-		  {
 
-		  }
-		  SceneObjectPtr GetCamera() const {return m_Camera;}
-		  void* GetUserData() const {return m_UserData;}
-	private:
-		SceneObjectPtr m_Camera;
-		void *m_UserData;
-	};
-	typedef boost::shared_ptr<CameraChangedEvent> CameraChangedEventPtr;
 }
 
 #endif

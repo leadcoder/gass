@@ -23,7 +23,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreFrameListener.h>

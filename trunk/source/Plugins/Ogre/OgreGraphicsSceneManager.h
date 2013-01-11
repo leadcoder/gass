@@ -49,7 +49,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void Update(double delta_time);
-		Ogre::SceneManager* GetSceneManger() {return m_SceneMgr;}
 
 		//Fog
 		std::string GetFogMode() const {return m_FogMode;}
@@ -63,27 +62,18 @@ namespace GASS
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
-		
+
+		Ogre::SceneManager* GetOgreSceneManger() {return m_SceneMgr;}
 	protected:
 		void OnLoad(MessagePtr message);		
-		void OnChangeCamera(ChangeCameraRequestPtr message);
 		void OnUnload(UnLoadSceneManagersRequestPtr message);
-		//void OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
-
-		
-		
 	private:
-		
-		
 		void UpdateLightSettings();
 		void UpdateSkySettings();
 		void UpdateShadowSettings();
 
 		//Keep private for now, 
-
-		 
-
 		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value; UpdateLightSettings();}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
 
@@ -115,9 +105,6 @@ namespace GASS
 		void SetShadowCasterMaterial(const std::string &name) {m_ShadowCasterMaterial = name;UpdateShadowSettings();}
 		void SetUseAggressiveFocusRegion(bool value) {m_UseAggressiveFocusRegion = value ;UpdateShadowSettings();}
 		void SetShadowDirectionalLightExtrusionDistance(float value) {m_ShadowDirectionalLightExtrusionDistance = value;UpdateShadowSettings();}
-		
-		
-	
 	private:	
 		//fog
 		float m_FogDensity;

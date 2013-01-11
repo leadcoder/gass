@@ -6,14 +6,16 @@
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/Interface/GASSIResourceSystem.h"
-#include "Sim/GASSScene.h"
-#include "Sim/GASSScene.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
 
+#include "Sim/GASSScene.h"
+#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/GASSBaseSceneComponent.h"
+
 #include "Framework/Framework.h"
 
 
@@ -52,6 +54,7 @@ namespace GASS
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,PreSceneLoadEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));
 		
 
 		if ( m_IsInitialised ) return;
@@ -129,12 +132,15 @@ namespace GASS
 
 	void OpenALSoundSystem::OnSceneLoaded(PreSceneLoadEventPtr message)
 	{
-		message->GetScene()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnChangeCamera,CameraChangedEvent,0));
+		
 	}
 
-	void OpenALSoundSystem::OnChangeCamera(CameraChangedEventPtr message)
+	void OpenALSoundSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		SceneObjectPtr cam_obj = message->GetCamera();
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+
+
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
 		if(current_cam_obj)
 		{

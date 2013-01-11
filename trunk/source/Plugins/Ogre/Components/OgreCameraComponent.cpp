@@ -76,7 +76,6 @@ namespace GASS
 
 	void OgreCameraComponent::OnInitialize()
 	{
-		//priorty = 1 -> load this one after nodes
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,0));
 	}
@@ -85,9 +84,8 @@ namespace GASS
 	{
 		OgreGraphicsSceneManagerPtr ogsm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
+		Ogre::SceneManager* sm = ogsm->GetOgreSceneManger();
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
-
 		if(!lc)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component", "OgreCameraComponent::OnLoad");
@@ -113,7 +111,6 @@ namespace GASS
 		SetPolygonMode(m_PolygonMode);
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
-
 
 	std::vector<std::string> OgreCameraComponent::GetPostFilters() const
 	{

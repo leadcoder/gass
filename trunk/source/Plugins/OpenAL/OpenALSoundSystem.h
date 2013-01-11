@@ -8,7 +8,7 @@
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #ifdef WIN32
 #include "al.h"
@@ -62,7 +62,7 @@ namespace GASS
 
 		void OnInit(MessagePtr message);
 		void OnSceneLoaded(PreSceneLoadEventPtr message);
-		void OnChangeCamera(CameraChangedEventPtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
 

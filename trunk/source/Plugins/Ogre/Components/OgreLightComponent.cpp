@@ -87,7 +87,7 @@ namespace GASS
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
+		Ogre::SceneManager* sm = ogsm->GetOgreSceneManger();
 
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
 		

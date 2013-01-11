@@ -39,64 +39,13 @@ namespace Ogre
 
 namespace GASS
 {
-	class OgreGraphicsSystem;
-	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
-	typedef boost::weak_ptr<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
+	//class OgreGraphicsSystem;
+	//typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	//typedef boost::weak_ptr<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
 
-	class OgreViewport  : public IViewport
-	{
-	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp) : m_Name(name), m_OgreViewport(vp)
-		{
-
-		}
-		OgreViewport(){}
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-	};
-	typedef boost::shared_ptr<OgreViewport> OgreViewportPtr;
-
-	class OgreRenderWindow  : public IRenderWindow
-	{
-	public:
-		OgreRenderWindow(OgreGraphicsSystem* system, Ogre::RenderWindow* win) : m_System(system), m_Window(win)
-		{
-
-		}
-		
-		virtual unsigned int GetWidth() const {return m_Window->getWidth();}
-		virtual unsigned int GetHeight() const {return m_Window->getHeight();}
-		virtual void* GetHWND() const
-		{
-			void* window_hnd = 0;
-			m_Window->getCustomAttribute("WINDOW", &window_hnd);
-			return window_hnd; 
-		}
-		OgreGraphicsSystem* GetSystem() const{return m_System;}
-		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
-		Ogre::RenderWindow* m_Window;
-		std::vector<OgreViewportPtr> m_Viewports;
-		OgreGraphicsSystem* m_System;
-	};
+	class OgreRenderWindow;
 	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
 
-
-	/*class Viewport
-	{
-	public:
-		Viewport(const std::string &name, const std::string &window, float left,float top,float width, float height, int z_depth, Ogre::Viewport* vp = NULL) : m_Name(name),m_Window(window),m_Left(left),m_Top(top),m_Width(width), m_Height(height),m_OgreViewport(vp),m_ZDepth(z_depth)
-		{
-		}
-		Viewport(){}
-		std::string m_Name;
-		std::string m_Window;
-		float m_Left;
-		float m_Top;
-		float m_Width;
-		float m_Height;
-		int m_ZDepth;
-		Ogre::Viewport* m_OgreViewport;
-	};*/
 	class OgreDebugTextOutput;
 	class OgrePostProcess;
 	class OgreCameraComponent;
@@ -122,6 +71,7 @@ namespace GASS
 		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
+		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 	protected:
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 
@@ -131,21 +81,18 @@ namespace GASS
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
-		//void AddViewport(Ogre::SceneManager *sm, const std::string &name, const std::string &win_name, float left , float top, float width , float height,Ogre::ColourValue colour, int zdepth);
-		//void RemoveViewport(const std::string &name, const std::string &win_name);
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		bool GetShowStats() const {return m_ShowStats;}
 		void SetShowStats(bool value){m_ShowStats = value;}
-		void ChangeCamera(const std::string &vp_name, OgreCameraComponentPtr cam_comp);
+		
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
+		
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		std::map<std::string, OgreRenderWindowPtr>	m_Windows;
-		//std::map<std::string, Viewport> m_Viewports;
-		//std::map<std::string, Ogre::Viewport> m_OgreViewports;
 		Ogre::SceneManager* m_SceneMgr;
 		std::vector<std::string> m_Plugins;
 		std::vector<std::string> m_PostFilters;
@@ -154,6 +101,8 @@ namespace GASS
 		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
 	};
+	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	
 	
 	
 }

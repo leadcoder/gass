@@ -18,41 +18,30 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef HUD_COMPONENT_H
-#define HUD_COMPONENT_H
+#ifndef GASS_I_RENDER_WINDOW_H
+#define GASS_I_RENDER_WINDOW_H
 
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Core/Common.h"
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSQuaternion.h"
-#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
-	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	class IViewport;
+	typedef boost::shared_ptr<IViewport> ViewportPtr;
 
-	class HUDComponent : public Reflection<HUDComponent,BaseSceneComponent>
+	class GASSExport IRenderWindow
 	{
 	public:
-		HUDComponent();
-		virtual ~HUDComponent();
-		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-	private:
-		void OnCameraChanged(CameraChangedEventPtr message);
-		void UpdateHUD();
-		std::string GetMaterial() const {return m_Material;}
-		void SetMaterial(const std::string &material);
-		std::string m_Material;
-		bool m_Initialized;
+		IRenderWindow() 
+		{
+
+		}
+		virtual ~IRenderWindow() {}
+		virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
+		virtual void* GetHWND() const = 0;
+		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) = 0;
 	};
+	typedef boost::shared_ptr<IRenderWindow> RenderWindowPtr;
 }
-#endif
+#endif 

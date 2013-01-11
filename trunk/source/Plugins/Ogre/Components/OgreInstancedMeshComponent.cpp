@@ -165,7 +165,7 @@ namespace GASS
 		MeshMap::iterator iter = m_MeshInstances.begin();
 		while(iter != m_MeshInstances.end())
 		{
-			Ogre::InstancedGeometry* instancedGeometry = new InstancedGeometry(ogsm->GetSceneManger(),iter->first + "Inst" );
+			Ogre::InstancedGeometry* instancedGeometry = new InstancedGeometry(ogsm->GetOgreSceneManger(),iter->first + "Inst" );
 			instancedGeometry->setBatchInstanceDimensions (Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
 
 			if(m_RenderQueue == "SkiesLate")
@@ -179,7 +179,7 @@ namespace GASS
 
 			//m_InstancedGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
 			//instancedGeometry->setBatchInstanceDimensions (Vector3(300, 300, 300));
-			Ogre::Entity* entity = ogsm->GetSceneManger()->createEntity(iter->first,iter->first);
+			Ogre::Entity* entity = ogsm->GetOgreSceneManger()->createEntity(iter->first,iter->first);
 			setupInstancedMaterialToEntity(entity);
 
 			//calulate number of entities in batch
@@ -231,7 +231,7 @@ namespace GASS
 
 			}
 			instancedGeometry->setVisible(true);
-			ogsm->GetSceneManger()->destroyEntity (entity);
+			ogsm->GetOgreSceneManger()->destroyEntity (entity);
 			m_InstancedGeometries.push_back(instancedGeometry);
 			++iter;
 			/*for(size_t i = 0;  i < iter->second.size(); i++)
@@ -300,7 +300,7 @@ namespace GASS
 		{
 			for(size_t i = 0; i < m_InstancedGeometries.size(); i++)
 			{
-				ogsm->GetSceneManger()->destroyInstancedGeometry(m_InstancedGeometries[i]);
+				ogsm->GetOgreSceneManger()->destroyInstancedGeometry(m_InstancedGeometries[i]);
 			}
 		}
 	}

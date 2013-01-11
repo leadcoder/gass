@@ -115,7 +115,6 @@ namespace GASS
 		assert(scene);
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnLoadSceneManagersRequest,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 	}
 
@@ -145,7 +144,7 @@ namespace GASS
 		UpdateSkySettings();
 		UpdateLightSettings();
 		UpdateFogSettings();
-		OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
+		//OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
 		OgreGraphicsSystemPtr(m_GFXSystem)->Register(shared_from_this());
 
 		//Give hook to 3dparty plugins to attach, maybee send other info
@@ -164,17 +163,21 @@ namespace GASS
 		SetFogDensity(message->GetFogDensity());
 	}
 
-	void OgreGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
+	/*void OgreGraphicsSystem::ChangeCamera(Ogre::Camera* camera,const std::string &vp_name)
 	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		const std::string vp_name = message->GetViewport();
-
-		OgreCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OgreCameraComponent>();
-		OgreGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(vp_name, cam_comp);
-		OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
-		SceneMessagePtr cam_message(new CameraChangedEvent(cam_obj,cam_comp->GetOgreCamera()));
-		GetScene()->PostMessage(cam_message);
-	}
+		std::vector<OgreRenderWindowPtr> windows = OgreGraphicsSystemPtr(m_GFXSystem)->GetRenderWindows();
+		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = windows.begin();
+		while(iter != windows.end())
+		{
+			std::vector<OgreViewportPtr> viewports = iter->second->m_Viewports;
+			for(size_t i = 0 ; i < viewports.size(); i++)
+			{
+				if(vp_name == "" || viewports[i]->m_Name == vp_name)
+					viewports[i]->m_OgreViewport->setCamera(camera);
+			}
+			++iter;
+		}
+	}*/
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{

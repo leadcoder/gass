@@ -33,6 +33,8 @@
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 
 
 namespace GASS
@@ -60,7 +62,7 @@ namespace GASS
 	void LODComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationNotifyMessage,0));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LODComponent::OnChangeCamera,CameraChangedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(LODComponent::OnCameraChanged,CameraChangedEvent,0));
 		//get active camera
 		
 		SceneObjectPtr camera = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstChildByName("FreeCamera",false);
@@ -78,7 +80,7 @@ namespace GASS
 
 	void LODComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( LODComponent::OnChangeCamera,CameraChangedEvent));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(LODComponent::OnCameraChanged,CameraChangedEvent));
 
 		SceneObjectPtr cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam)
@@ -88,9 +90,10 @@ namespace GASS
 	}
 	
 	
-	void LODComponent::OnChangeCamera(CameraChangedEventPtr message)
+	void LODComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		SceneObjectPtr cam_obj = message->GetCamera();
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
 		
 		SceneObjectPtr prev_cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(prev_cam)

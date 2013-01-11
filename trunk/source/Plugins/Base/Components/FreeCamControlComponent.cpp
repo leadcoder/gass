@@ -32,7 +32,7 @@
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 
@@ -85,18 +85,15 @@ namespace GASS
 		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
 		RegisterEnumProperty<MotionModeBinder>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
 		RegisterProperty<bool>("Debug", &GASS::FreeCamControlComponent::GetDebug, &GASS::FreeCamControlComponent::SetDebug);
-
 	}
 
 	void FreeCamControlComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange, PositionMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage ,0));
-		
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
-
-		ScenePtr scene = GetSceneObject()->GetScene();
-		scene->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest, 0 ));
+		//ScenePtr scene = GetSceneObject()->GetScene();
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest, 0));
 		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<CoreSystem>()->GetTaskNode();
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -105,8 +102,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnDelete()
 	{
-		ScenePtr scene = GetSceneObject()->GetScene();
-		scene->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest));
 	}
 
 	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
@@ -114,7 +110,7 @@ namespace GASS
 		ChangeCameraRequestPtr cc_mess = boost::shared_dynamic_cast<ChangeCameraRequest>(message);
 		if(cc_mess)
 		{
-			SceneObjectPtr cam_obj = cc_mess->GetCamera();
+			SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(cc_mess->GetCamera())->GetSceneObject();
 
 			if(GetSceneObject() == cam_obj)
 			{

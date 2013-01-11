@@ -30,7 +30,7 @@
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -156,8 +156,8 @@ namespace GASS
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{
-				SceneMessagePtr cam_msg(new ChangeCameraRequest(GetSceneObject(),"Viewport0"));
-				GetSceneObject()->GetScene()->SendImmediate(cam_msg);
+				SystemMessagePtr cam_msg(new ChangeCameraRequest(GetSceneObject()->GetFirstComponentByClass<ICameraComponent>()));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
 			}
 			m_CurrentVehicle.reset();
 			m_CurrentSeat.reset();

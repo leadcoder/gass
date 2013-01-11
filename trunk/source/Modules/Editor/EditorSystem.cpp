@@ -5,11 +5,12 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
-
-
+#include "Sim/GASSBaseSceneComponent.h"
 #include "ToolSystem/MouseToolController.h"
+
 namespace GASS
 {
 	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader),
@@ -38,6 +39,8 @@ namespace GASS
 		m_MouseTools->Init();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,PostSceneLoadEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,PreSceneLoadEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnCameraChanged,CameraChangedEvent,0));
+		
 		
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
@@ -105,7 +108,7 @@ namespace GASS
 			}
 		}
 		m_Scene = scene;
-		scene->RegisterForMessage(REG_TMESS(EditorSystem::OnChangeCamera,ChangeCameraRequest,0));
+		
 		SetObjectSite(scene->GetRootSceneObject());
 		//load selection object
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
@@ -116,11 +119,13 @@ namespace GASS
 		GASS::ScenePtr scene = message->GetScene();
 	}
 
-	void EditorSystem::OnChangeCamera(ChangeCameraRequestPtr message)
+	void EditorSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		SceneObjectPtr cam_obj =  message->GetCamera();
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+
 		m_ActiveCameraObject = cam_obj;
-		m_ActiveCamera = cam_obj->GetFirstComponentByClass<ICameraComponent>();
+		m_ActiveCamera = camera;
 	}
 
 	SceneObjectPtr EditorSystem::GetSelectedObject() const

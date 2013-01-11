@@ -86,7 +86,7 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-		m_ParticleSystem  = ogsm->GetSceneManger()->createParticleSystem(name, m_ParticleTemplate);
+		m_ParticleSystem  = ogsm->GetOgreSceneManger()->createParticleSystem(name, m_ParticleTemplate);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_ParticleSystem);
 
 		if(m_TimeToLive > -1)

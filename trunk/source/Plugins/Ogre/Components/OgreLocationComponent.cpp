@@ -86,7 +86,7 @@ namespace GASS
 	
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
-		Ogre::SceneManager* sm = ogsm->GetSceneManger();
+		Ogre::SceneManager* sm = ogsm->GetOgreSceneManger();
 
 		static unsigned int obj_id = 0;
 		obj_id++;

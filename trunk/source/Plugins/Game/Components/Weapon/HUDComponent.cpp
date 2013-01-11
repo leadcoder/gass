@@ -32,7 +32,8 @@
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSMeshData.h"
 
 namespace GASS
@@ -54,8 +55,7 @@ namespace GASS
 
 	void HUDComponent::OnInitialize()
 	{
-		
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraRequest,1));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HUDComponent::OnCameraChanged,CameraChangedEvent,1));
 		GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
 		UpdateHUD();
 		m_Initialized = true;
@@ -63,12 +63,14 @@ namespace GASS
 
 	void HUDComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnChangeCamera,ChangeCameraRequest));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(HUDComponent::OnCameraChanged,CameraChangedEvent));
 	}
 
-	void HUDComponent::OnChangeCamera(ChangeCameraRequestPtr message)
+	void HUDComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		if(message->GetCamera() == 	GetSceneObject()->GetParentSceneObject())
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		if(cam_obj == 	GetSceneObject()->GetParentSceneObject())
 		{
 			//show hud
 			GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(true)));

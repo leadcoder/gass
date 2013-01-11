@@ -5,6 +5,7 @@
 #include "Sim/GASSMeshData.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #define GT_AXIS "GT_AXIS"
@@ -37,7 +38,7 @@ namespace GASS
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
-		void OnChangeCamera(ChangeCameraRequestPtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);

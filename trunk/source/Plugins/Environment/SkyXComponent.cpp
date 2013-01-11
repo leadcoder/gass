@@ -21,8 +21,9 @@
 #include "SkyXComponent.h"
 #include "SkyXVolumeCloudComponent.h"
 #include "SkyXCloudLayerComponent.h"
-
+#include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Plugins/Ogre/OgreConvert.h"
+
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -31,6 +32,9 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include <Ogre.h>
 
 namespace GASS
@@ -84,7 +88,7 @@ namespace GASS
 
 		// Create SkyX object
 		Init(ocam);
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
 		m_Initialized = true;
 	}
 
@@ -94,7 +98,7 @@ namespace GASS
 		Ogre::Root::getSingleton().removeFrameListener(this);
 		delete m_SkyX;
 		m_SkyX = NULL;
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void SkyXComponent::SetMoonSize(const Float &value)
@@ -228,14 +232,13 @@ namespace GASS
 		}
 	}
 
-	
-
 	void SkyXComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		if(m_SkyX)
 		{
-			Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
-			Init(cam);
+			OgreCameraProxyPtr camera_proxy = boost::shared_dynamic_cast<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+			//Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
+			Init(camera_proxy->GetOgreCamera());
 		}
 	}
 
