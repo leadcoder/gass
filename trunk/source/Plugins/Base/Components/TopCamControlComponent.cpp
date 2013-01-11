@@ -23,14 +23,13 @@
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/GASSSimEngine.h"
-
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -77,7 +76,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraRequest, 0 ));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnCameraChanged, CameraChangedEvent, 0 ));
 	
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -86,14 +85,12 @@ namespace GASS
 
 	void TopCamControlComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnChangeCamera, ChangeCameraRequest));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( TopCamControlComponent::OnCameraChanged, CameraChangedEvent));
 	}
 
-	void TopCamControlComponent::OnChangeCamera(MessagePtr message)
+	void TopCamControlComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		ChangeCameraRequestPtr cc_mess = boost::shared_static_cast<ChangeCameraRequest>(message);
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(cc_mess->GetCamera())->GetSceneObject();
-
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(message->GetViewport()->GetCamera())->GetSceneObject();
 		if(GetSceneObject() == cam_obj)
 		{
 			m_Active = true;

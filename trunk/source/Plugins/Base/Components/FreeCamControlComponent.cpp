@@ -22,28 +22,24 @@
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
+
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
-
+#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-
 #include "Sim/GASSSimEngine.h"
-
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Math/GASSQuaternion.h"
-
-
 
 namespace GASS
 {
@@ -93,7 +89,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
 		//ScenePtr scene = GetSceneObject()->GetScene();
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest, 0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnCameraChanged,CameraChangedEvent, 0));
 		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<CoreSystem>()->GetTaskNode();
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -102,23 +98,16 @@ namespace GASS
 
 	void FreeCamControlComponent::OnDelete()
 	{
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnChangeCamera, ChangeCameraRequest));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( FreeCamControlComponent::OnCameraChanged, CameraChangedEvent));
 	}
 
-	void FreeCamControlComponent::OnChangeCamera(MessagePtr message)
+	void FreeCamControlComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		ChangeCameraRequestPtr cc_mess = boost::shared_dynamic_cast<ChangeCameraRequest>(message);
-		if(cc_mess)
-		{
-			SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(cc_mess->GetCamera())->GetSceneObject();
-
-			if(GetSceneObject() == cam_obj)
-			{
-				m_Active = true;
-			}
-			else
-				m_Active = false;
-		}
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(message->GetViewport()->GetCamera())->GetSceneObject();
+		if(GetSceneObject() == cam_obj)
+			m_Active = true;
+		else
+			m_Active = false;
 	}
 
 	void FreeCamControlComponent::PositionChange(MessagePtr message)

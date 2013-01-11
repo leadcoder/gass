@@ -20,14 +20,14 @@
 
 #pragma once
 
-
-#include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Plugins/Base/CoreMessages.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
 {
@@ -54,7 +54,7 @@ namespace GASS
 		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
-		void OnChangeCamera(MessagePtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(ControllSettingsMessagePtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
 		float GetMaxWindowSize() const {return m_MaxWindowSize;}
