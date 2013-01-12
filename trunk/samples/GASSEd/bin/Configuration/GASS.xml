@@ -14,7 +14,7 @@
   <!--<Plugin PluginFile = "GASSPluginRakNet"/>-->
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
-<ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
+<ScenePath value="../../../common/data/"/>
 <SceneObjectTemplateManager>
 	<AddObjectIDToName value ="true"/>
 	<ObjectIDPrefix value="["/>

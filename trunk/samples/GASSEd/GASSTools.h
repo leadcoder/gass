@@ -11,12 +11,12 @@ QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSpinBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
-
+class GASSEd;
 class StandardToolBar : public QToolBar, public GASS::StaticMessageListener
 {
     Q_OBJECT
 public:
-    StandardToolBar(const QString &title, QWidget *parent);
+    StandardToolBar(const QString &title, GASSEd *parent);
 protected:
 	void OnToolChanged(GASS::ToolChangedEventPtr message);
 
@@ -33,6 +33,7 @@ protected:
 	QAction* m_TerrainFlattenAct;
 	QAction* m_TerrainPaintAct;
 	QAction* m_VegetationPaintAct;
+	GASSEd* m_GASSEd;
 private slots:
 	void OnNew();
 	void OnSave();

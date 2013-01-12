@@ -6,7 +6,8 @@
 
 #include "Sim/GASS.h" 
 
-GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent),
+GASSSceneTreeWidget::GASSSceneTreeWidget(GASSEd *parent): QTreeWidget(parent),
+	m_GASSEd(parent),
 	m_Root(NULL)
 {
 	setHeaderHidden(true);
@@ -19,8 +20,6 @@ GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent),
 	
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
-	
-	
 }
 
 GASSSceneTreeWidget::~GASSSceneTreeWidget()
@@ -134,7 +133,7 @@ void GASSSceneTreeWidget::selectionChanged()
 	if(!internal_select && items.size() > 0)
 	{
 		GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
-		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SelectSceneObject(obj);
+		m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
 	}
 }
 
@@ -145,7 +144,7 @@ void GASSSceneTreeWidget::showContextMenu(const QPoint& pos)
     // for QAbstractScrollArea and derived classes you would use:
     // QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); 
 	GASSEd* gassed = (GASSEd*)parentWidget();
-	GASS::SceneObjectPtr obj = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetSelectedObject();
+	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetSelectedObject();
 	gassed->ShowObjectContextMenu(obj,globalPos);
 }
 

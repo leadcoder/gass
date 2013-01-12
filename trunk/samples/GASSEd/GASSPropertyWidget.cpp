@@ -6,7 +6,7 @@
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
 
-GASSPropertyWidget::GASSPropertyWidget( QWidget *parent): QtTreePropertyBrowser(parent), m_Root(NULL),m_Polulating(false)
+GASSPropertyWidget::GASSPropertyWidget( GASSEd *parent): QtTreePropertyBrowser(parent), m_GASSEd(parent),m_Root(NULL),m_Polulating(false)
 {
 	registerCustomTypes();
 

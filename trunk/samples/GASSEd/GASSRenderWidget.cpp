@@ -1,12 +1,15 @@
 #include "GASSRenderWidget.h"
 #include "GASSEd.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
+
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 
 #include "Sim/GASS.h" 
 
-GASSRenderWidget::GASSRenderWidget( QWidget *parent): QWidget(parent),
+GASSRenderWidget::GASSRenderWidget( GASSEd *parent): QWidget(parent),
+	m_GASSEd(parent),
 	m_Initialized(false)
 {
 	setAttribute(Qt::WA_PaintOnScreen);
@@ -49,7 +52,8 @@ void GASSRenderWidget::dropEvent(QDropEvent *event)
 		QPoint pos = event->pos();
 		GASS::Vec2 norm_pos((float) pos.x() / (float) m_Size.width(),
 			(float) pos.y() / (float) m_Size.height());
-		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->CreateSceneObject(template_name,norm_pos);
+		if(m_GASSEd->GetScene())
+			m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->CreateSceneObject(template_name,norm_pos);
 	}
 }
 
@@ -64,7 +68,7 @@ void GASSRenderWidget::paintEvent(QPaintEvent *e)
 {
 	if(m_Initialized)
 	{
-		m_MainWin->m_GASSApp->Update(); 
+		m_GASSEd->m_GASSApp->Update(); 
 	}
 	update();
 	e->accept();
@@ -74,7 +78,7 @@ void GASSRenderWidget::showEvent(QShowEvent *e)
 {
 	if(!m_Initialized)
 	{
-		m_MainWin->Initialize(this->winId());
+		m_GASSEd->Initialize(this->winId());
 		m_Initialized = true;
 	}
 	QWidget::showEvent(e);
@@ -87,7 +91,7 @@ void GASSRenderWidget::resizeEvent(QResizeEvent *e)
 	{
 		const QSize &newSize = e->size();
 		m_Size = newSize;
-		if(m_MainWin->m_GASSApp)
+		if(m_GASSEd->m_GASSApp)
 		{
 			GASS::SystemMessagePtr resize_message(new GASS::ViewportMovedOrResizedEvent("RenderWindow",0,0,newSize.width(), newSize.height()));
 			GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();

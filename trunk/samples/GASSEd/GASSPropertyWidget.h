@@ -8,9 +8,10 @@
 #include "qttreepropertybrowser.h"
 #include "VariantManager.h"
 #include "VariantFactory.h"
+#include "GASSEd.h"
 #include <QtGui>
-
 #include "Sim/GASS.h"
+
 namespace GASS
 {
 	class PropertySettings;
@@ -40,7 +41,7 @@ class GASSPropertyWidget : public QtTreePropertyBrowser, public GASS::StaticMess
 {
 	Q_OBJECT
 public:
-	GASSPropertyWidget( QWidget *parent=0 );
+	GASSPropertyWidget(GASSEd *parent);
 	virtual ~GASSPropertyWidget();
 	void OnLoadScene(GASS::PreSceneLoadEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
@@ -55,8 +56,8 @@ protected:
 	QtVariantEditorFactory *m_VariantFactory;
 	//VariantManager *m_VariantManager;
 	//VariantFactory *m_VariantFactory;
-	
 
+	GASSEd *m_GASSEd;
 	bool m_Polulating;
 	std::map<QtProperty*,GASSVariantProperty> m_PropMap;
 

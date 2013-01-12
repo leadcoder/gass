@@ -54,7 +54,7 @@ void GASSResourceTreeWidget::selectionChanged()
 	if(items.size() > 0)
 	{
 		//GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
-		//GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SelectSceneObject(obj);
+		//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
 	}
 }
 

@@ -12,14 +12,17 @@ QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSpinBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 
+class GASSEd;
+
 class BrushSettingsWidget : public QToolBar, public GASS::StaticMessageListener
 {
     Q_OBJECT
 public:
-    BrushSettingsWidget(const QString &title, QWidget *parent);
+    BrushSettingsWidget(const QString &title, GASSEd *parent);
 protected:
 	double m_BrushSize;
 	double m_BrushFade;
+	GASSEd* m_GASSEd;
 private slots:
     void OnBrushSizeChanged(int value);
 	void OnBrushFadeChanged(int value);

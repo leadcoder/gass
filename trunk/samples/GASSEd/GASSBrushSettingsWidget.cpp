@@ -1,7 +1,9 @@
 #include "GASSBrushSettingsWidget.h"
+#include "GASSEd.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Sim/GASS.h"
 #include "Modules/Editor/EditorMessages.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
@@ -17,8 +19,9 @@
 #include <QComboBox>
 #include <stdlib.h>
 
-BrushSettingsWidget::BrushSettingsWidget(const QString &title, QWidget *parent)
+BrushSettingsWidget::BrushSettingsWidget(const QString &title, GASSEd *parent)
     : QToolBar(parent),
+	m_GASSEd(parent),
 	m_BrushFade(100),
 	m_BrushSize(10)
 {
@@ -76,30 +79,42 @@ BrushSettingsWidget::BrushSettingsWidget(const QString &title, QWidget *parent)
 
 void BrushSettingsWidget::OnBrushSizeChanged(int value)
 {
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    m_BrushSize = value/10.0;
-	tool->SetBrushSize(m_BrushSize);
-	tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
+	if(m_GASSEd->GetScene())
+	{
+		GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
+		m_BrushSize = value/10.0;
+		tool->SetBrushSize(m_BrushSize);
+		tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
+	}
 }
 
 void BrushSettingsWidget::OnBrushFadeChanged(int value)
 {
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    m_BrushFade = value;
-	tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
+	if(m_GASSEd->GetScene())
+	{
+		GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
+		m_BrushFade = value;
+		tool->SetBrushInnerSize(m_BrushSize*m_BrushFade/100.0);
+	}
 }
 
 void BrushSettingsWidget::OnBrushIntChanged(int value)
 {
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    float intensity = value/100.0;
-	tool->SetIntensity(intensity);
+	if(m_GASSEd->GetScene())
+	{
+		GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
+		float intensity = value/100.0;
+		tool->SetIntensity(intensity);
+	}
 }
 
 void BrushSettingsWidget::OnBrushNoiseChanged(int value)
 {
-	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetMouseToolController()->GetTool(TID_TERRAIN));
-    float intensity = value/100.0;
-	tool->SetNoise(intensity);
+	if(m_GASSEd->GetScene())
+	{
+		GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
+		float intensity = value/100.0;
+		tool->SetNoise(intensity);
+	}
 }
 

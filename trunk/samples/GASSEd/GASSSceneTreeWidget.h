@@ -3,12 +3,13 @@
 #pragma warning (disable : 4100)
 #include "Sim/GASS.h"
 #include "Modules/Editor/EditorMessages.h"
+#include "GASSEd.h"
 #include <QtGui>
 class GASSSceneTreeWidget : public QTreeWidget, public GASS::StaticMessageListener
 {
 	Q_OBJECT;
 public:
-	GASSSceneTreeWidget( QWidget *parent=0 );
+	GASSSceneTreeWidget(GASSEd *parent);
 	virtual ~GASSSceneTreeWidget();
 	void OnLoadScene(GASS::PreSceneLoadEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
@@ -21,6 +22,7 @@ public:
 protected:
 	GASS::SceneWeakPtr m_Scene;
 	QTreeWidgetItem *m_Root;
+	GASSEd* m_GASSEd;
 	std::map<GASS::SceneObject*,QTreeWidgetItem*> m_ItemMap;
 	std::map<QTreeWidgetItem*,GASS::SceneObjectWeakPtr> m_ObjectMap;
  public slots:

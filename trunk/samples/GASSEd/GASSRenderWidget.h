@@ -8,7 +8,7 @@ class GASSRenderWidget : public QWidget
 {
 	Q_OBJECT;
 public:
-	GASSRenderWidget( QWidget *parent=0 );
+	GASSRenderWidget( GASSEd *parent=0 );
 	virtual ~GASSRenderWidget();
 	virtual QPaintEngine* paintEngine() const;
 	virtual void paintEvent(QPaintEvent *e);
@@ -22,7 +22,7 @@ public:
 	void showEvent(QShowEvent *e);
 	void initialize();
 
-	GASSEd* m_MainWin;
+	GASSEd* m_GASSEd;
 protected:
 	GASS::MouseData GetMouseData(QMouseEvent *e) const;
 	GASS::MouseButtonId GetMouseButton(QMouseEvent *e) const;

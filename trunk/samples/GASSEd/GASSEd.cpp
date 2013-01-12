@@ -32,6 +32,7 @@
 #include "GASSSSaveSceneWidget.h"
 #include "GASSBrushSettingsWidget.h"
 #include "Modules/Editor/EditorApplication.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
 
 
@@ -52,7 +53,7 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
 
 	m_GASSApp = new GASS::EditorApplication();
 	GASSRenderWidget* main_widget = new GASSRenderWidget();
-	main_widget->m_MainWin = this;
+	main_widget->m_GASSEd = this;
 	setCentralWidget(main_widget);
 
     setupToolBar();
@@ -66,12 +67,12 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
 	addDockWidget(Qt::LeftDockWidgetArea , res_dock);
 	
 	QDockWidget* tree_dock = new QDockWidget("Scene");
-	tree_dock->setWidget(new  GASSSceneTreeWidget());
+	tree_dock->setWidget(new  GASSSceneTreeWidget(this));
 	tree_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	addDockWidget(Qt::LeftDockWidgetArea , tree_dock);
 	
 	QDockWidget *prop_dock = new QDockWidget("Properties");
-	prop_dock->setWidget(new GASSPropertyWidget(prop_dock));
+	prop_dock->setWidget(new GASSPropertyWidget(this));
 	prop_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	splitDockWidget(tree_dock,prop_dock,Qt::Vertical);
 }
@@ -89,7 +90,7 @@ void GASSEd::Initialize(void* render_win_handle)
 	OnNew();
 	//GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene());
 	//scene->Load("");
-	//GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+	//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
 }
 
 void GASSEd::actionTriggered(QAction *action)
@@ -352,7 +353,7 @@ void GASSEd::OnNew()
 		GASS::SimEngine::Get().DestroyScene(GetScene());
 	m_Scene = GASS::SimEngine::Get().CreateScene();
 	GetScene()->Load("");
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(GetScene()->GetSceneryRoot());
+	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	
 }
 
@@ -375,7 +376,7 @@ void GASSEd::OnOpen()
 			GASS::SimEngine::Get().DestroyScene(GetScene());
 		m_Scene = GASS::SimEngine::Get().CreateScene();
 		GetScene()->Load(selected_scene);
-		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(GetScene()->GetSceneryRoot());
+		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	}
 }
 
