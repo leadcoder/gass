@@ -1,5 +1,6 @@
 //#include <stdafx.h>
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "EditorComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -59,10 +60,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
-		if(!m_EditorSystem)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " EditorComponent::OnInitialize");
-
+		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 		SetLock(m_Lock); 
 		SetVisible(m_Visible);
 	}
@@ -80,11 +78,10 @@ namespace GASS
 		SceneObjectPtr obj = GetSceneObject();
 		if(obj)
 		{
-			
 			if(m_Lock)
-				m_EditorSystem->LockObject(obj);
+				m_EditorSceneManager->LockObject(obj);
 			else
-				m_EditorSystem->UnlockObject(obj);
+				m_EditorSceneManager->UnlockObject(obj);
 
 		}
 	}
@@ -104,9 +101,9 @@ namespace GASS
 		if(obj)
 		{
 			if(m_Visible)
-				m_EditorSystem->UnhideObject(obj);
+				m_EditorSceneManager->UnhideObject(obj);
 			else
-				m_EditorSystem->HideObject(obj);
+				m_EditorSceneManager->HideObject(obj);
 		}
 	}
 

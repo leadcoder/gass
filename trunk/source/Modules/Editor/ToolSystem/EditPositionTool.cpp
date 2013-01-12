@@ -21,7 +21,7 @@ namespace GASS
 		m_Controller(controller)
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		//controller->GetEditorSystem()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		//controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	EditPositionTool::~EditPositionTool()

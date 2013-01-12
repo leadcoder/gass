@@ -2,6 +2,7 @@
 #include "CreateTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -52,7 +53,7 @@ namespace GASS
 		SceneObjectPtr parent_obj(m_ParentObject,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				int from_id = (int) this;

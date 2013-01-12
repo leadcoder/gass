@@ -1,4 +1,5 @@
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "GizmoComponent.h"
@@ -59,9 +60,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest,0));
 
 
-		m_EditorSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
-		if(!m_EditorSystem)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", " GizmoComponent::OnInitialize");
+		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 
 		//Change geomtry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
@@ -299,7 +298,7 @@ namespace GASS
 		BuildMesh();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent,1));
 		//GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest,1));
-		m_ActiveCameraObject = m_EditorSystem->GetActiveCameraObject();
+		m_ActiveCameraObject = m_EditorSceneManager->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
 		{
@@ -308,7 +307,7 @@ namespace GASS
 		}
 		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
-		SetSelection(m_EditorSystem->GetSelectedObject());
+		SetSelection(m_EditorSceneManager->GetSelectedObject());
 	}
 
 
@@ -546,9 +545,9 @@ namespace GASS
 			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
 			else
-				grid_size = m_EditorSystem->GetMouseToolController()->GetGridSize();
+				grid_size = m_EditorSceneManager->GetMouseToolController()->GetGridSize();
 			float half_grid_size = grid_size/2.0;
-			float grid_spacing = m_EditorSystem->GetMouseToolController()->GetGridSpacing();
+			float grid_spacing = m_EditorSceneManager->GetMouseToolController()->GetGridSpacing();
 			int n = (grid_size / grid_spacing)/2;
 			int index = 0;
 			for(int i = -n ;  i <= n; i++)
@@ -701,7 +700,7 @@ namespace GASS
 			static float rest_angle = 0;
 			Quaternion final_rot;
 			float angle = delta;
-			angle = m_EditorSystem->GetMouseToolController()->SnapAngle(angle+rest_angle);
+			angle = m_EditorSceneManager->GetMouseToolController()->SnapAngle(angle+rest_angle);
 			if(angle == 0)
 			{
 				rest_angle += delta;
@@ -724,7 +723,7 @@ namespace GASS
 		Float t = Math::Dot(axis_dir,c);
 		if(m_Mode == GM_LOCAL)
 		{
-			t = m_EditorSystem->GetMouseToolController()->SnapPosition(t);
+			t = m_EditorSceneManager->GetMouseToolController()->SnapPosition(t);
 		}
 			//t = SnapValue(t,m_MovmentSnap);
 		Vec3 point_on_axis = axis_dir*t;
@@ -733,9 +732,9 @@ namespace GASS
 
 		if(m_Mode == GM_WORLD)
 		{
-			res.x = m_EditorSystem->GetMouseToolController()->SnapPosition(res.x);
-			res.z = m_EditorSystem->GetMouseToolController()->SnapPosition(res.z);
-			res.y = m_EditorSystem->GetMouseToolController()->SnapPosition(res.y);
+			res.x = m_EditorSceneManager->GetMouseToolController()->SnapPosition(res.x);
+			res.z = m_EditorSceneManager->GetMouseToolController()->SnapPosition(res.z);
+			res.y = m_EditorSceneManager->GetMouseToolController()->SnapPosition(res.y);
 		}
 
 		return res;

@@ -1,7 +1,10 @@
 #pragma once
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "../EditorCommon.h"
+#include "Modules/Editor/EditorCommon.h"
+#include "Modules/Editor/EditorSceneManager.h"
+
+
 namespace GASS
 {
 	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,BaseSceneComponent>
@@ -49,7 +52,7 @@ namespace GASS
 		bool m_ShowInTree;
 		bool m_AllowRemove;
 		bool m_AllowDragAndDrop;
-		EditorSystemPtr m_EditorSystem;
+		EditorSceneManagerPtr m_EditorSceneManager;
 	};
 	typedef boost::shared_ptr<EditorComponent> EditorComponentPtr;
 }

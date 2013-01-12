@@ -2,6 +2,7 @@
 #include "MeasurementTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -33,7 +34,7 @@ namespace GASS
 		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)
 		{
-			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
+			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			Vec3 offset = Vec3(0,0.1f,0);
 			UpdateLine(m_StartPos+offset, info.m_3DPos+offset);
 		}
@@ -109,7 +110,7 @@ namespace GASS
 
 		if(!ruler)
 		{
-			ruler = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
+			ruler = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate("RulerObject",m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			if(!ruler)
 			{
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create in RulerObject","MeasurementTool::GetOrCreateRulerObject");

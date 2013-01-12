@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../EditorCommon.h"
-#include "../EditorMessages.h"
+#include "Modules/Editor/EditorCommon.h"
+#include "Modules/Editor/EditorMessages.h"
 #include "Sim/GASSGeometryFlags.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
@@ -22,6 +22,7 @@ namespace GASS
 {
 	class ControlSetting;
 	class SceneObject;
+	class EditorSceneManager;
 	class Scene;
 	class ICameraComponent;
 	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
@@ -34,10 +35,8 @@ namespace GASS
 	{
 		friend class IMouseTool;
 	public:
-		
-		MouseToolController(EditorSystem* system);
-		virtual ~MouseToolController(void);
-
+		MouseToolController(EditorSceneManager* sm);
+		~MouseToolController(void);
 		void Init();
 		void AddTool(IMouseTool* tool);
 		bool SelectTool(const std::string &tool_name);
@@ -57,7 +56,6 @@ namespace GASS
 		Float SnapPosition(Float value);
 		Float SnapAngle(Float value);
 		void Update(double delta);
-		
 		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
@@ -68,7 +66,7 @@ namespace GASS
 		bool MouseMoved(const MouseData &data);
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
-		EditorSystem* GetEditorSystem() const {return m_EditorSystem;}
+		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
@@ -78,7 +76,7 @@ namespace GASS
 		void MouseDown(const CursorInfo &info);
 		void MouseUp(const CursorInfo &info);
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
-		void OnFocusChanged(WindowFocusChangedMessagePtr message);
+		//void OnFocusChanged(WindowFocusChangedMessagePtr message);
 
 		//helper
 		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
@@ -104,7 +102,7 @@ namespace GASS
 		Vec2 m_LastScreenPos;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;
-		EditorSystem* m_EditorSystem;
+		EditorSceneManager* m_EditorSceneManager;
 	};
 }
 

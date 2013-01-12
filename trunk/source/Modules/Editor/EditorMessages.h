@@ -162,7 +162,7 @@ namespace GASS
 	typedef boost::shared_ptr<ToolChangedEvent> ToolChangedEventPtr;
 
 
-	class WindowFocusChangedMessage : public BaseMessage
+	/*class WindowFocusChangedMessage : public BaseMessage
 	{
 	public:
 		WindowFocusChangedMessage(const std::string &window, bool focus,SenderID sender_id = -1, double delay= 0) : 
@@ -173,7 +173,7 @@ namespace GASS
 		std::string  m_Window;
 		bool m_Focus;
 	};
-	typedef boost::shared_ptr<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;
+	typedef boost::shared_ptr<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;*/
 
 	class SceneChangedEvent: public SystemEventMessage
 	{

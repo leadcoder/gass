@@ -111,9 +111,9 @@ namespace GASS
 						Vec3 new_position = info.m_3DPos - m_Offset;
 						
 
-						new_position.x = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.x);
-						new_position.y = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.y);
-						new_position.z = m_Controller->GetEditorSystem()->GetMouseToolController()->SnapPosition(new_position.z);
+						new_position.x = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.x);
+						new_position.y = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.y);
+						new_position.z = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.z);
 
 
 						GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
@@ -135,7 +135,7 @@ namespace GASS
 				attribs.push_back("Longitude");
 				attribs.push_back("Projected");
 				GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-				m_Controller->GetEditorSystem()->GetScene()->PostMessage(attrib_change_msg);
+				m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
 
 			}
 
@@ -235,7 +235,7 @@ namespace GASS
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
-						m_Controller->GetEditorSystem()->SelectSceneObject(obj_under_cursor);
+						m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 					}
 				}
 
@@ -249,7 +249,7 @@ namespace GASS
 
 	bool MoveTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!m_Controller->GetEditorSystem()->IsObjectStatic(obj) && !m_Controller->GetEditorSystem()->IsObjectLocked(obj) && m_Controller->GetEditorSystem()->IsObjectVisible(obj));
+		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && !m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
 	}
 
 	void MoveTool::Stop()
@@ -261,11 +261,11 @@ namespace GASS
 	SceneObjectPtr MoveTool::GetOrCreateGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
+		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
+			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "GizmoMoveObject";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 			//Send selection message to inform gizmo about current object
@@ -275,7 +275,7 @@ namespace GASS
 				if(current)
 				{
 					//gizmo->PostMessage();
-					//m_Controller->GetEditorSystem()->SelectSceneObject(current);
+					//m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
 				}
 			}*/
 		}

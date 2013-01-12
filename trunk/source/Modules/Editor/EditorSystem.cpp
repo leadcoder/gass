@@ -15,39 +15,39 @@
 
 namespace GASS
 {
-	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader),
-		m_SceneObjectsSelectable(false)
+	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader)
+		//m_SceneObjectsSelectable(false)
 	{
-		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
+		//m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
 	}
 
 	EditorSystem::~EditorSystem(void)
 	{
 		delete m_GUISettings;
-		m_LockedObjects.clear();
-		m_StaticObjects.clear();
-		m_InvisibleObjects.clear();
+		//m_LockedObjects.clear();
+		//m_StaticObjects.clear();
+		//m_InvisibleObjects.clear();
 	}
 
 	void EditorSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, ISystem>);
 		SceneManagerFactory::GetPtr()->Register("EditorSceneManager",new GASS::Creator<EditorSceneManager, ISceneManager>);
-		RegisterProperty<float>("MouseRayPickDistance", &GASS::EditorSystem::GetRayPickDistance, &GASS::EditorSystem::SetRayPickDistance);
-		RegisterProperty<bool>("AutoRotateObjectOnDrop", &GASS::EditorSystem::GetUseTerrainNormalOnDrop, &GASS::EditorSystem::SetUseTerrainNormalOnDrop);
+		//RegisterProperty<float>("MouseRayPickDistance", &GASS::EditorSystem::GetRayPickDistance, &GASS::EditorSystem::SetRayPickDistance);
+		//RegisterProperty<bool>("AutoRotateObjectOnDrop", &GASS::EditorSystem::GetUseTerrainNormalOnDrop, &GASS::EditorSystem::SetUseTerrainNormalOnDrop);
 	}
 
 	void EditorSystem::Init()
 	{
-		m_MouseTools->Init();
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,PostSceneLoadEvent,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,PreSceneLoadEvent,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnCameraChanged,CameraChangedEvent,0));
+		//m_MouseTools->Init();
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,PostSceneLoadEvent,0));
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,PreSceneLoadEvent,0));
+//		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnCameraChanged,CameraChangedEvent,0));
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
-	void EditorSystem::SetRayPickDistance(float value) 
+	/*void EditorSystem::SetRayPickDistance(float value) 
 	{
 		m_MouseTools->SetRayPickDistance(value);
 	}
@@ -65,12 +65,12 @@ namespace GASS
 	bool EditorSystem::GetUseTerrainNormalOnDrop() const 
 	{
 		return m_MouseTools->GetUseTerrainNormalOnDrop();
-	}
+	}*/
 
-	void EditorSystem::Update(double delta_time)
+	/*void EditorSystem::Update(double delta_time)
 	{
 		GetMouseToolController()->Update(delta_time);
-	}
+	}*/
 
 	void EditorSystem::SetPaths(const FilePath &execution_folder,
 							 const FilePath &appdata_folder,
@@ -81,7 +81,7 @@ namespace GASS
 		m_MyDocumentsFolder = m_MyDocumentsFolder;
 	}
 
-	void EditorSystem::AddStaticObject(SceneObjectPtr obj, bool rec)
+	/*void EditorSystem::AddStaticObject(SceneObjectPtr obj, bool rec)
 	{
 		m_StaticObjects.insert(obj);
 		if(rec)
@@ -299,5 +299,5 @@ namespace GASS
 				cam_obj->PostMessage(MessagePtr(new PositionMessage(object_pos)));
 			}
 		}
-	}
+	}*/
 }

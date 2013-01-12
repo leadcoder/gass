@@ -1,6 +1,7 @@
 #include "PaintTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -45,7 +46,7 @@ namespace GASS
 			}
 
 			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos,selected,from_id));
-			m_Controller->GetEditorSystem()->GetScene()->SendImmediate(paint_msg);
+			m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(paint_msg);
 		}
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
@@ -80,11 +81,11 @@ namespace GASS
 	SceneObjectPtr PaintTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
+		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
+			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
+			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 
@@ -94,7 +95,7 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
 				if(current)
 				{
-					m_Controller->GetEditorSystem()->SelectSceneObject(current);
+					m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
 				}
 			}
 		}

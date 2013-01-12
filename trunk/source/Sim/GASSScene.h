@@ -25,6 +25,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/Utils/GASSIterators.h"
+#include "Core/Utils/GASSException.h"
 
 class TiXmlElement;
 
@@ -165,7 +166,7 @@ namespace GASS
 		/**Get first SceneManager of certain class. This function allow you to pass the class as a template 
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstSceneManagerByClass() const
+		boost::shared_ptr<T> GetFirstSceneManagerByClass(bool no_throw=false) const
 		{
 			boost::shared_ptr<T> ret;
 			for(int i = 0 ; i < m_SceneManagers.size(); i++)
@@ -173,6 +174,11 @@ namespace GASS
 				ret = boost::shared_dynamic_cast<T>(m_SceneManagers[i]);
 				if(ret)
 					return ret;
+			}
+			if(!no_throw)
+			{
+				std::string sm_name = typeid(T).name();
+				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"Scene Manager not found:" + sm_name, "Scene::GetFirstSceneManagerByClass");
 			}
 			return ret;
 		}

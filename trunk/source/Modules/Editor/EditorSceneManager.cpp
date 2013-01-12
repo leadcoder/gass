@@ -19,7 +19,7 @@ namespace GASS
 {
 	EditorSceneManager::EditorSceneManager() : m_SceneObjectsSelectable(false)
 	{
-		//m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
+		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
 	}
 
 	EditorSceneManager::~EditorSceneManager(void)
@@ -31,24 +31,51 @@ namespace GASS
 
 	void EditorSceneManager::RegisterReflection()
 	{
-		
+
 	}
 
 	void EditorSceneManager::OnCreate()
 	{
-		m_MouseTools->Init();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged,CameraChangedEvent,0));
-		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		GetScene()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnLoad ,LoadSceneManagersRequest,0));
+	}
+
+	void EditorSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
+	{
+		ScenePtr scene = GetScene();
+		m_MouseTools->Init();
 		SystemListenerPtr listener = shared_from_this();
+		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
 		system->Register(listener);
-		//Register at rtc
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+
+		
+		if(!m_SceneObjectsSelectable) //add static objects
+		{
+			IComponentContainer::ComponentContainerIterator iter = scene->GetRootSceneObject()->GetChildren();
+			while(iter.hasMoreElements())
+			{
+				//Lock recursive?
+				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
+				AddStaticObject(obj, true);
+			}
+		}
+		SetObjectSite(scene->GetRootSceneObject());
+		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
 	void EditorSceneManager::SystemTick(double delta_time)
 	{
 		GetMouseToolController()->Update(delta_time);
 		BaseSceneManager::SystemTick(delta_time);
+	}
+	
+	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
+	{
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+
+		m_ActiveCameraObject = cam_obj;
+		m_ActiveCamera = camera;
 	}
 
 	void EditorSceneManager::AddStaticObject(SceneObjectPtr obj, bool rec)

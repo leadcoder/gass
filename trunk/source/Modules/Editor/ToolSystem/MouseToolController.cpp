@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "IMouseTool.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -38,7 +39,7 @@
 
 namespace GASS
 {
-	MouseToolController::MouseToolController(EditorSystem* system): m_ActiveTool(NULL),
+	MouseToolController::MouseToolController(EditorSceneManager* sm): m_ActiveTool(NULL),
 		m_Active(false),
 		m_GridSpacing(1),
 		m_GridSize(10),
@@ -51,27 +52,30 @@ namespace GASS
 		m_UseTerrainNormalOnDrop(false),
 		m_LastScreenPos(0,0),
 		m_ControlSettingName("EditorInputSettings"),
-		m_EditorSystem(system)
+		m_EditorSceneManager(sm)
 	{
 
 	}
 
 	MouseToolController::~MouseToolController(void)
 	{
+		for(size_t i = 0; i < m_Tools.size(); i++)
+		{
+			delete m_Tools[i];
+		}
 
 	}
 
 	void MouseToolController::Init()
 	{
-		m_EditorSystem->GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
-		m_EditorSystem->GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
-		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
+		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IInputSystem>();
 		input_system->AddMouseListener(this);
 
 		//add default tools (based on config?)
 		IMouseTool* tool = new MoveTool(this);
 		AddTool(tool);
-		
 		tool = new GASS::SelectTool(this);
 		AddTool(tool);
 		tool = new RotateTool(this);
@@ -84,16 +88,12 @@ namespace GASS
 		AddTool(tool);
 		tool = new EditPositionTool(this);
 		AddTool(tool);
-
 		tool = new TerrainDeformTool(this);
 		AddTool(tool);
-
 		tool = new PaintTool(this);
 		AddTool(tool);
-
 		SelectTool(TID_SELECT);
 		SetActive(true);
-
 	}
 
 	IMouseTool* MouseToolController::GetTool(const std::string &tool_name)
@@ -108,14 +108,14 @@ namespace GASS
 		return NULL;
 	}
 
-	void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
+	/*void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
 	{
 		std::string window = message->GetWindow();
 		if(window == "RenderWindow")
 		{
 			m_Active = message->GetFocus();
 		}
-	}
+	}*/
 
 	void MouseToolController::OnInput(ControllSettingsMessagePtr message)
 	{
@@ -165,7 +165,7 @@ namespace GASS
 					m_ActiveTool->Stop();
 				m_ActiveTool = m_Tools[i];
 				m_ActiveTool->Start();
-				m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ToolChangedEvent(tool_name)));
+				SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new ToolChangedEvent(tool_name)));
 				return true;
 			}
 		}
@@ -186,7 +186,7 @@ namespace GASS
 						new_tool = 0;
 					int id = (int) this;
 					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
-					m_EditorSystem->GetSimSystemManager()->PostMessage(tool_msg);
+					SimEngine::Get().GetSimSystemManager()->PostMessage(tool_msg);
 					return;
 				}
 			}
@@ -207,7 +207,7 @@ namespace GASS
 
 					int id = (int) this;
 					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
-					m_EditorSystem->GetSimSystemManager()->PostMessage(tool_msg);
+					SimEngine::Get().GetSimSystemManager()->PostMessage(tool_msg);
 
 					return;
 				}
@@ -271,7 +271,7 @@ namespace GASS
 		info.m_ScreenPos = cursor_pos;
 		info.m_Delta.x = info.m_ScreenPos.x - m_LastScreenPos.x;
 		info.m_Delta.y = info.m_ScreenPos.y - m_LastScreenPos.y;
-		CameraComponentPtr cam = m_EditorSystem->GetActiveCamera();
+		CameraComponentPtr cam = m_EditorSceneManager->GetActiveCamera();
 
 		//get ray direction
 		if(cam)
@@ -310,13 +310,13 @@ namespace GASS
 	void MouseToolController::SetGridSpacing(Float value)
 	{
 		m_GridSpacing = value;
-		m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetGridSize(Float value)
 	{
 		m_GridSize = value;
-		m_EditorSystem->GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetSnapMovment(Float value)
@@ -367,7 +367,7 @@ namespace GASS
 
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
-		ScenePtr scene = m_EditorSystem->GetScene();;
+		ScenePtr scene = m_EditorSceneManager->GetScene();;
 		SceneObjectPtr pointer(m_PointerObject,boost::detail::sp_nothrow_tag());
 		if(!pointer &&  scene)
 		{
@@ -455,7 +455,7 @@ namespace GASS
 		m_LastScreenPos = mouse_pos;
 		int mess_id = (int) this;
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
-		GetEditorSystem()->GetScene()->PostMessage(cursor_msg);
+		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 		return true;
 	}
 
@@ -499,13 +499,13 @@ namespace GASS
 			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
 			if(abs(delta.x) + abs(delta.y) < 0.001)
 			{
-				SceneObjectPtr selected = m_EditorSystem->GetSelectedObject();
+				SceneObjectPtr selected = m_EditorSceneManager->GetSelectedObject();
 				if(SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()) == selected)
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
 					GASS::SceneMessagePtr message(new ShowObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
-					GetEditorSystem()->GetScene()->SendImmediate(message);
+					m_EditorSceneManager->GetScene()->SendImmediate(message);
 				}
 			}
 			return true;
@@ -527,8 +527,8 @@ namespace GASS
 
 	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{
-		ScenePtr cur_scene = m_EditorSystem->GetScene();
-		SceneObjectPtr site = m_EditorSystem->GetObjectSite();
+		ScenePtr cur_scene = m_EditorSceneManager->GetScene();
+		SceneObjectPtr site = m_EditorSceneManager->GetObjectSite();
 		if(site && cur_scene)
 		{
 			SceneObjectPtr so = SimEngine::Get().CreateObjectFromTemplate(obj_name);

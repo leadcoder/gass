@@ -1,4 +1,6 @@
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
+
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "DistanceScaleComponent.h"
@@ -45,15 +47,10 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionMessage,0));
-
-		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraChanged,CameraChangedEvent,1));
 
-		EditorSystemPtr es = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<EditorSystem>();
-		if(!es)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "DistanceScaleComponent::OnLoad");
-
-		m_ActiveCameraObject = es->GetActiveCameraObject();
+		EditorSceneManagerPtr esm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+		m_ActiveCameraObject = esm->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
 		if(cam_obj)
 		{

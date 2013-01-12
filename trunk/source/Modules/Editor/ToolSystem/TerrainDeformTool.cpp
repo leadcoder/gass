@@ -1,7 +1,8 @@
 #include "TerrainDeformTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
-#include "../Components/PaintGizmoComponent.h"
+#include "Modules/Editor/EditorSceneManager.h"
+#include "Modules/Editor/Components/PaintGizmoComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -43,7 +44,7 @@ namespace GASS
 			{
 				float intensity = m_Intensity*m_InvertBrush*m_Controller->GetDeltaTime();
 				//TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
-				TerrainComponentPtr terrain = m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
+				TerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
 				if(terrain)
 				{
 					BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);
@@ -107,11 +108,11 @@ namespace GASS
 	SceneObjectPtr TerrainDeformTool::GetOrCreateGizmo()
 	{
 		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
-		if(!gizmo &&  m_Controller->GetEditorSystem()->GetScene())
+		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			ScenePtr scene = m_Controller->GetEditorSystem()->GetScene();
+			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			gizmo = m_Controller->GetEditorSystem()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSystem()->GetScene()->GetRootSceneObject());
+			gizmo = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = gizmo;
 			PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
 			if(!comp)

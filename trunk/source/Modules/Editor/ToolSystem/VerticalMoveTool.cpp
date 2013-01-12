@@ -1,6 +1,7 @@
 #include "VerticalMoveTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -58,11 +59,11 @@ namespace GASS
 		m_MouseIsDown = true;
 
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
-		if(obj_under_cursor && !m_Controller->GetEditorSystem()->IsObjectStatic(obj_under_cursor))
+		if(obj_under_cursor && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
 		{
-			m_Controller->GetEditorSystem()->SelectSceneObject(obj_under_cursor);
+			m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 
-			if(!m_Controller->GetEditorSystem()->IsObjectLocked(obj_under_cursor))
+			if(!m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
 			{
 				int from_id = (int) this;
 				m_SelectedObject = obj_under_cursor;
