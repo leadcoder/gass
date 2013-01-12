@@ -77,11 +77,11 @@ namespace GASS
 		//Create main render window, this will trigger
 		const std::string render_win_name = "RenderWindow";
 		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
-		if(gfx_system)
-		{
-			RenderWindowPtr win = gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
-			win->CreateViewport("MainViewport", 0, 0, 1, 1);
-		}
+		RenderWindowPtr win = gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
+		win->CreateViewport("MainViewport", 0, 0, 1, 1);
+	
+		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IInputSystem>();
+		input_system->SetMainWindowHandle(main_win_handle);
 		m_Initilized  = true;
 	}
 
