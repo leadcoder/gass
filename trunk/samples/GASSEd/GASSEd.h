@@ -29,12 +29,13 @@ private:
     QList<QDockWidget*> extraDockWidgets;
     QAction *createDockWidgetAction;
     QMenu *destroyDockWidgetMenu;
-
+	GASS::SceneWeakPtr m_Scene;
 public:
     GASSEd(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	GASS::EditorApplication* m_GASSApp;
 	void Initialize(void* render_win_handle);
 	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
+	GASS::ScenePtr GetScene() const {return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
 protected:
     void showEvent(QShowEvent *event);
 public slots:

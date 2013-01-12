@@ -2,11 +2,11 @@
 #include "Sim/GASS.h"
  #include "GASSSSaveSceneWidget.h"
 
- GASSSSaveSceneWidget::GASSSSaveSceneWidget()
+ GASSSSaveSceneWidget::GASSSSaveSceneWidget(GASS::ScenePtr scene)
  {
 	 std::string scene_name;
-	 if(GASS::SimEngine::Get().GetScene())
-		 scene_name = GASS::SimEngine::Get().GetScene()->GetName();
+	 if(scene)
+		 scene_name = scene->GetName();
 	 int pre_select = -1;
  	 m_ComoBox = new QComboBox();
 	 m_ComoBox->setEditable(true);

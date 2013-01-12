@@ -21,6 +21,9 @@
 #include <QPushButton>
 #include <QTreeWidget>
 #include <qdebug.h>
+
+#include "Sim/GASSScene.h"
+
 #include "GASSRenderWidget.h"
 #include "GASSSceneTreeWidget.h"
 #include "GASSResourceTreeWidget.h"
@@ -30,7 +33,8 @@
 #include "GASSBrushSettingsWidget.h"
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
-#include "Sim/GASSScene.h"
+
+
 
 
 Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
@@ -82,15 +86,10 @@ void GASSEd::Initialize(void* render_win_handle)
 	//load component schema
 	GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
-	
-	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
-	
-	/*GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("CustomMeshObject",scene->GetRootSceneObject());
-	GASS::Vec3 pos = scene->GetStartPos();
-	GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
-	if(object)
-		object->SendImmediate(pos_msg);*/
+	OnNew();
+	//GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene());
+	//scene->Load("");
+	//GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
 }
 
 void GASSEd::actionTriggered(QAction *action)
@@ -349,17 +348,20 @@ void GASSEd::destroyDockWidget(QAction *action)
 
 void GASSEd::OnNew()
 {
-	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().NewScene());
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+	if(GetScene())
+		GASS::SimEngine::Get().DestroyScene(GetScene());
+	m_Scene = GASS::SimEngine::Get().CreateScene();
+	GetScene()->Load("");
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	
 }
 
 void GASSEd::OnSave()
 {
-	GASSSSaveSceneWidget dialog;
+	GASSSSaveSceneWidget dialog(GetScene());
     dialog.exec();
 	std::string selected_scene_name = dialog.GetSelected();
-	GASS::SimEngine::Get().SaveScene(selected_scene_name);
+	GetScene()->Save(selected_scene_name);
 }
 
 void GASSEd::OnOpen()
@@ -369,8 +371,11 @@ void GASSEd::OnOpen()
 	std::string selected_scene = dialog.GetSelected();
 	if(selected_scene != "")
 	{
-		GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().LoadScene(selected_scene));
-		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(scene->GetSceneryRoot());
+		if(GetScene())
+			GASS::SimEngine::Get().DestroyScene(GetScene());
+		m_Scene = GASS::SimEngine::Get().CreateScene();
+		GetScene()->Load(selected_scene);
+		GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	}
 }
 

@@ -19,9 +19,7 @@ GASSSceneTreeWidget::GASSSceneTreeWidget( QWidget *parent): QTreeWidget(parent),
 	
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
-	GASS::SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
-	GASS::SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
-	GASS::SimEngine::Get().GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));
+	
 	
 }
 
@@ -33,6 +31,11 @@ GASSSceneTreeWidget::~GASSSceneTreeWidget()
 void GASSSceneTreeWidget::OnLoadScene(GASS::PreSceneLoadEventPtr message)
 {
 	m_Scene = message->GetScene();
+
+	message->GetScene()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
+	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
+	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));
+
 	m_Root= new  QTreeWidgetItem();
 	m_Root->setText(0,"Root");
 	m_ItemMap[message->GetScene()->GetRootSceneObject().get()] = m_Root;
