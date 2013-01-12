@@ -293,8 +293,6 @@ namespace GASS
 			}
 			else
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
-
-				
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
 
 		}

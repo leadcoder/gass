@@ -182,7 +182,7 @@ namespace GASS
 			col_sys->Process();
 		}*/
 
-		
+		BaseSceneManager::SystemTick(delta_time);
 	}
 
 
