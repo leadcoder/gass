@@ -32,6 +32,7 @@
 #include "GrassLoader.h"
 #include "DensityMapComponent.h"
 
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
@@ -105,8 +106,12 @@ namespace GASS
 		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 		ImpostorPage::setImpostorResolution(m_ImposterResolution);
 		
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
 
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
@@ -223,9 +228,7 @@ namespace GASS
 			delete m_PagedGeometry;
 		}
 
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		sm->destroyEntity(m_TreeEntity);
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())

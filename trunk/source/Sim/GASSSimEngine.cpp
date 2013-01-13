@@ -247,9 +247,9 @@ namespace GASS
 		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed find scene", "SimEngine::DestroyScene");
 	}
 
-	SceneWeakPtr SimEngine::CreateScene()
+	SceneWeakPtr SimEngine::CreateScene(const std::string &name)
 	{
-		ScenePtr scene(new Scene());
+		ScenePtr scene(new Scene(name));
 		scene->Create();
 		m_Scenes.push_back(scene);
 		return scene;

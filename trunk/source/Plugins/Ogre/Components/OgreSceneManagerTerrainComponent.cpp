@@ -74,7 +74,7 @@ namespace GASS
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
-		m_OgreSceneManager = ogsm->GetOgreSceneManger();
+		m_OgreSceneManager = ogsm->GetOgreSceneManager();
 
 		if(m_CreateCollisionMesh)
 		{

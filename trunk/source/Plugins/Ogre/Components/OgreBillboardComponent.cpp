@@ -145,7 +145,7 @@ namespace GASS
 				}
 			}
 		
-			m_BillboardSet = ogsm->GetOgreSceneManger()->createBillboardSet(name);
+			m_BillboardSet = ogsm->GetOgreSceneManager()->createBillboardSet(name);
 			m_BillboardSet->setMaterialName(material_name);
 
 			Vec3 pos = Vec3(0,m_Height/2.0,0);

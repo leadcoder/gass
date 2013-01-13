@@ -63,20 +63,21 @@ namespace GASS
 		m_FogColor(1,1,1),
 		m_AmbientColor(1,1,1),
 		//Shadows
-		m_ShadowType ("AdditiveIntegratedTextureShadows"),
+		m_ShadowType("AdditiveIntegratedTextureShadows"),
 		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),
 		m_ShadowProjType ("LiSPSM"),
 		m_TextureShadowSize (1024),
 		m_NumShadowTextures (1),
 		m_SelfShadowing (false),
 		m_UseAggressiveFocusRegion(true),
-		m_OptimalAdjustFactor (1),
+		m_OptimalAdjustFactor(1),
 		m_FarShadowDistance (100),
 		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SkyboxMaterial(""),
 		m_SceneManagerType("TerrainSceneManager"),
 		m_SceneMgr (NULL)
 	{
+
 	}
 
 	OgreGraphicsSceneManager::~OgreGraphicsSceneManager(void)
@@ -163,21 +164,7 @@ namespace GASS
 		SetFogDensity(message->GetFogDensity());
 	}
 
-	/*void OgreGraphicsSystem::ChangeCamera(Ogre::Camera* camera,const std::string &vp_name)
-	{
-		std::vector<OgreRenderWindowPtr> windows = OgreGraphicsSystemPtr(m_GFXSystem)->GetRenderWindows();
-		std::map<std::string, OgreRenderWindowPtr>::const_iterator iter = windows.begin();
-		while(iter != windows.end())
-		{
-			std::vector<OgreViewportPtr> viewports = iter->second->m_Viewports;
-			for(size_t i = 0 ; i < viewports.size(); i++)
-			{
-				if(vp_name == "" || viewports[i]->m_Name == vp_name)
-					viewports[i]->m_OgreViewport->setCamera(camera);
-			}
-			++iter;
-		}
-	}*/
+	
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{

@@ -101,7 +101,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerMessage,0));
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
-		m_OgreSceneManager = ogsm->GetOgreSceneManger();
+		m_OgreSceneManager = ogsm->GetOgreSceneManager();
 		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 
 		if(!terrain_man) //try parent

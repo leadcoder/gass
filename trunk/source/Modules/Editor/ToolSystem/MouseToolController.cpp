@@ -64,6 +64,9 @@ namespace GASS
 			delete m_Tools[i];
 		}
 
+		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		input_system->RemoveMouseListener(this);
+
 	}
 
 	void MouseToolController::Init()

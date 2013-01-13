@@ -37,7 +37,7 @@ namespace GASS
 	void EditorSceneManager::OnCreate()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged,CameraChangedEvent,0));
-		GetScene()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnLoad ,LoadSceneManagersRequest,0));
+		GetScene()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnLoad ,LoadSceneManagersRequest,2));
 	}
 
 	void EditorSceneManager::OnLoad(LoadSceneManagersRequestPtr message)

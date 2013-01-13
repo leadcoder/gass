@@ -96,7 +96,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassGeometryComponent::OnPaint,GrassPaintMessage,0));
 		//assert(ogsm);
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
+
 		Ogre::RenderTarget *target = NULL;
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
@@ -194,7 +199,7 @@ namespace GASS
 				m_DensityImage.save(fp_denmap);
 			}
 			stream.setNull();
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, "GASSSceneResGroup").first;
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
 			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_GrassLayer->setDensityMap(m_DensityTexture);
 		}
@@ -218,7 +223,6 @@ namespace GASS
 
 	std::string GrassGeometryComponent::GetDensityMap() const
 	{
-
 		return m_DensityMapFilename;
 	}
 
@@ -228,7 +232,6 @@ namespace GASS
 		if(m_GrassLayer)
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 	}
-
 
 	void GrassGeometryComponent::SaveXML(TiXmlElement *obj_elem)
 	{

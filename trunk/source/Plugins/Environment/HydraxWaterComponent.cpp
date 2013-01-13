@@ -22,7 +22,7 @@
 #include "HydraxRTTListener.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
-
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -115,8 +115,13 @@ namespace GASS
 			return;
 
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnChangeCamera,CameraChangedEvent,0));
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
+
 		Ogre::RenderTarget* target = NULL;
 
 		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())

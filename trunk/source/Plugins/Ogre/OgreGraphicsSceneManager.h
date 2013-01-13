@@ -25,6 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
+#include "IOgreSceneManagerProxy.h"
 #include <string>
 
 namespace Ogre
@@ -39,7 +40,7 @@ namespace GASS
 {
 	class IComponent;
 	class OgreGraphicsSystem;
-	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>
+	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy
 	{
 	private:
 		void UpdateFogSettings();
@@ -62,8 +63,9 @@ namespace GASS
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
-
-		Ogre::SceneManager* GetOgreSceneManger() {return m_SceneMgr;}
+		
+		//IOgreSceneManagerProxy
+		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}
 	protected:
 		void OnLoad(MessagePtr message);		
 		void OnUnload(UnLoadSceneManagersRequestPtr message);
