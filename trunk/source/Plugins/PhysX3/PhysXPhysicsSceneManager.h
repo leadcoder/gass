@@ -53,6 +53,9 @@ namespace GASS
 		virtual ~PhysXPhysicsSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void OnInit();
+		virtual void OnShutdown();
+		
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
@@ -61,8 +64,6 @@ namespace GASS
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:
 		void SystemTick(double delta);
-		void OnLoad(LoadSceneManagersRequestPtr message);
-		void OnUnload(UnLoadSceneManagersRequestPtr message);
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;

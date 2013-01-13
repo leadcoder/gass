@@ -95,7 +95,7 @@ namespace GASS
 		physx::PxTransform pose = physx::PxTransform::createIdentity();
 		pose.p = physx::PxVec3(position.x,position.y,position.z);
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
 		physx::PxRigidStatic* pxActor = system->GetPxSDK()->createRigidStatic(pose);
 

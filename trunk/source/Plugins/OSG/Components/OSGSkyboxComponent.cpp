@@ -113,7 +113,7 @@ namespace GASS
 		full_path += extension;
 		
 		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(!rs->GetFullPath(full_path,full_path))
 		{
 			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture: " + full_path,"OSGSkyboxComponent::GetTexturePath");

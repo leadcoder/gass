@@ -75,7 +75,7 @@ namespace GASS
 		SceneObjectPtr cam_obj = message->GetCamera();
 		
 		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
-		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		osgViewer::ViewerBase::Views views;
 		gfx_sys->GetViewer()->getViews(views);
 
@@ -283,7 +283,7 @@ namespace GASS
 			m_UpdateCameraFromLocation = false;
 		return;
 
-		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 
 		//GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 

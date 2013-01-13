@@ -132,7 +132,7 @@ namespace GASS
 		physx::PxReal density = 1.0f;
 		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
 		SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);

@@ -65,7 +65,7 @@ namespace GASS
 		Float  rad = GetRadius();
 		
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material);
 

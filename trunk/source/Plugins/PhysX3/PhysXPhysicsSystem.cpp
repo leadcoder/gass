@@ -109,7 +109,7 @@ namespace GASS
 		FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
 		
 		LoadTires(path.GetFullPath());
-		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IMaterialSystem>();
+		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
 		for(size_t i=0; i< m_DrivableMaterialNames.size() ; i++) 
 		{
 			//Create a new material.

@@ -140,7 +140,7 @@ namespace GASS
 		//physx::PxReal density = 1.0f;
 		physx::PxTransform transform(a2->getGlobalPose());//(PxConvert::ToPx(pos_b1), PxConvert::ToPx(rot_b1));
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		//m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
 		//sm->GetPxScene()->addActor(*m_RollAxisActor);
 

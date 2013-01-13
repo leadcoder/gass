@@ -57,7 +57,7 @@ namespace GASS
 
 	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedEventPtr message)
 	{
-		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddKeyListener(this);
 		input_system->AddMouseListener(this);
 	}

@@ -283,7 +283,7 @@ namespace GASS
 		//PxRigidDynamic* vehActor=createVehicleActor4W(m_ChassisData,&wheelConvexMeshes4[0],chassisMesh.m_ConvexMesh,*scene_manager->GetPxScene(),*system->GetPxSDK(),*system->GetDefaultMaterial());
 		//m_Actor = vehActor;
 
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
 
 		//We need a rigid body actor for the vehicle.

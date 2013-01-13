@@ -98,7 +98,7 @@ namespace GASS
 		m_WheelData.mMOI = wheel_MOI;
 		m_WheelData.mWidth = wheel_width;
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		m_TireData.mType = system->GetTireIDFromName("SLICKS");
 	}
 }

@@ -118,7 +118,7 @@ namespace GASS
 
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
 		ILocationComponent *location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
 		Vec3 a2_pos = location->GetPosition();

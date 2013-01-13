@@ -103,7 +103,7 @@ namespace GASS
 
 	physx::PxShape* PhysXTerrainGeometryComponent::CreateTerrain()
 	{
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
 		TerrainComponentPtr terrain = GetTerrainComponent();
 		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);

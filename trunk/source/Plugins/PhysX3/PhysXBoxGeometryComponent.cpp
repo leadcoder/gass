@@ -65,7 +65,7 @@ namespace GASS
 		}
 		size = GetSize();
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxTransform offset = physx::PxTransform::createIdentity();

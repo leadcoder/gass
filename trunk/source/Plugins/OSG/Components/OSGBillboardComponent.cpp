@@ -106,7 +106,7 @@ namespace GASS
 	{
 		
 		std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(!rs->GetFullPath(m_Material,full_path))
 		{
 			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture:" + full_path,"OSGBillboardComponent::OnLoad");

@@ -204,7 +204,7 @@ namespace GASS
 		}
 
 		std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		//check if extension exist?
 		std::string extesion =  Misc::GetExtension(filename);
 		std::string mod_filename =  filename;

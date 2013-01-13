@@ -73,7 +73,7 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::OnCreate()
 	{
-		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
@@ -124,7 +124,7 @@ namespace GASS
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 
-		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OSGGraphicsSystem>();
+		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find OSGGraphicsSystem", "OSGGraphicsSceneManager::OnLoad");
 		system->Register(shared_from_this());

@@ -43,7 +43,7 @@ namespace GASS
 
 	void PhysXPlaneGeometryComponent::OnInitialize()
 	{
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<PhysXPhysicsSystem>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxReal d = 0.0f;	 
