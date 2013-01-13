@@ -351,10 +351,8 @@ void GASSEd::OnNew()
 {
 	if(GetScene())
 		GASS::SimEngine::Get().DestroyScene(GetScene());
-	m_Scene = GASS::SimEngine::Get().CreateScene();
-	GetScene()->Load("");
+	m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
-	
 }
 
 void GASSEd::OnSave()
@@ -374,7 +372,7 @@ void GASSEd::OnOpen()
 	{
 		if(GetScene())
 			GASS::SimEngine::Get().DestroyScene(GetScene());
-		m_Scene = GASS::SimEngine::Get().CreateScene();
+		m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	}
