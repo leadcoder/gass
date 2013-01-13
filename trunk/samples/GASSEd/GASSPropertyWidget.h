@@ -43,7 +43,7 @@ class GASSPropertyWidget : public QtTreePropertyBrowser, public GASS::StaticMess
 public:
 	GASSPropertyWidget(GASSEd *parent);
 	virtual ~GASSPropertyWidget();
-	void OnLoadScene(GASS::PreSceneLoadEventPtr message);
+	void OnLoadScene(GASS::PreSceneCreateEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
 	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
 protected:

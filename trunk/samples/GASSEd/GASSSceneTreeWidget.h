@@ -11,7 +11,7 @@ class GASSSceneTreeWidget : public QTreeWidget, public GASS::StaticMessageListen
 public:
 	GASSSceneTreeWidget(GASSEd *parent);
 	virtual ~GASSSceneTreeWidget();
-	void OnLoadScene(GASS::PreSceneLoadEventPtr message);
+	void OnLoadScene(GASS::PreSceneCreateEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
 	void OnLoadSceneObject(GASS::PostComponentsInitializedEventPtr message);
 	void OnUnloadSceneObject(GASS::SceneObjectRemovedEventPtr message);

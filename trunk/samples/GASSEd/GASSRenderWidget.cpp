@@ -102,7 +102,7 @@ void GASSRenderWidget::resizeEvent(QResizeEvent *e)
 
 void GASSRenderWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IProxyInputSystem>();
+	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
 	if(is)
 		is->InjectMouseReleased(GetMouseData(e),GetMouseButton(e));
 	QWidget::mouseReleaseEvent(e);
@@ -110,7 +110,7 @@ void GASSRenderWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void GASSRenderWidget::mousePressEvent(QMouseEvent *e)
 {
-	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IProxyInputSystem>();
+	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
 	if(is)
 	{
 		is->InjectMousePressed(GetMouseData(e),GetMouseButton(e));
@@ -120,7 +120,7 @@ void GASSRenderWidget::mousePressEvent(QMouseEvent *e)
 
 void GASSRenderWidget::mouseMoveEvent(QMouseEvent *e)
 {
-	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IProxyInputSystem>();
+	GASS::IProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
 	if(is)
 	{
 		GASS::MouseData  md = GetMouseData(e);

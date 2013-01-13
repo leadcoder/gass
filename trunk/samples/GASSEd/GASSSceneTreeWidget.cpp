@@ -18,7 +18,7 @@ GASSSceneTreeWidget::GASSSceneTreeWidget(GASSEd *parent): QTreeWidget(parent),
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 	
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnLoadScene,GASS::PreSceneCreateEvent,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
 }
 
@@ -27,10 +27,9 @@ GASSSceneTreeWidget::~GASSSceneTreeWidget()
 
 }
 
-void GASSSceneTreeWidget::OnLoadScene(GASS::PreSceneLoadEventPtr message)
+void GASSSceneTreeWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 {
 	m_Scene = message->GetScene();
-
 	message->GetScene()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));

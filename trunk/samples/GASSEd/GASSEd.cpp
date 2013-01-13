@@ -86,7 +86,7 @@ void GASSEd::Initialize(void* render_win_handle)
 	m_GASSApp->Init(working_folder, appdata_folder_path, mydocuments_folder_path, "", main_win_handle, render_win_handle);
 	//load component schema
 	GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
 	OnNew();
 	//GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene());
 	//scene->Load("");
@@ -353,6 +353,7 @@ void GASSEd::OnNew()
 		GASS::SimEngine::Get().DestroyScene(GetScene());
 	m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
+	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
 }
 
 void GASSEd::OnSave()
@@ -375,6 +376,9 @@ void GASSEd::OnOpen()
 		m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
+		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
+
+		
 	}
 }
 

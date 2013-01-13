@@ -10,7 +10,7 @@ GASSPropertyWidget::GASSPropertyWidget( GASSEd *parent): QtTreePropertyBrowser(p
 {
 	registerCustomTypes();
 
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnLoadScene,GASS::PreSceneCreateEvent,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
 	
 
@@ -56,7 +56,7 @@ void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &valu
 	}
 }
 
-void GASSPropertyWidget::OnLoadScene(GASS::PreSceneLoadEventPtr message)
+void GASSPropertyWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
 	scene->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
@@ -87,7 +87,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 	if(!object)
 		return;
 	std::string class_name  = object->GetRTTI()->GetClassName();
-	const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
+	const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
 	if(os && os->Visible) //we have settings
 	{
 		m_Root = m_VariantManager->addProperty(QtVariantPropertyManager::groupTypeId(),QLatin1String(object->GetName().c_str()));
@@ -108,7 +108,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 		{
 			GASS::BaseComponentPtr comp = boost::shared_static_cast<GASS::BaseComponent>(comp_iter.getNext());
 			std::string class_name = comp->GetRTTI()->GetClassName();
-			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
+			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
 			if(os && os->Visible) //we have settings!
 			{
 				//os->GetProperty()->GUIControlType
@@ -189,7 +189,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		try
 		{
 			GASS::Resource resource = boost::any_cast<GASS::Resource>(any_value);
-			GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+			GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
 			if(rs == NULL)
 				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "GASSPropertyWidget::CreateProp");
 			std::vector<std::string> values = rs->GetResourcesFromGroup(ps->ResourceType,ps->ResourceGroup);
@@ -246,7 +246,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			break;
 		/*case GASS::CT_RESOURCE_COMBO:
 			{
-				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
 				if(rs == NULL)
 					GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 				std::vector<std::string> values = rs->GetResourceNames(ps->ResourceGroup);
@@ -269,7 +269,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			break;
 		case GASS::CT_CONTENT_COMBO:
 			{
-				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::IResourceSystem>();
+				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
 				if(rs == NULL)
 					GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Load");
 				std::vector<std::string> values = rs->GetContentNamesFromGroup(ps->ComboContentType,ps->ResourceGroup);

@@ -15,7 +15,7 @@ GASSResourceTreeWidget::GASSResourceTreeWidget( QWidget *parent): QTreeWidget(pa
 	setDragDropMode(QAbstractItemView::DragOnly);
 	QObject::connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(selectionChanged()));
 	
-	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSResourceTreeWidget::OnLoadScene,GASS::PreSceneLoadEvent,0));
+	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSResourceTreeWidget::OnLoadScene,GASS::PreSceneCreateEvent,0));
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GASSResourceTreeWidget::OnUnloadScene,GASS::SceneUnloadedEvent,0));
 }
 
@@ -24,7 +24,7 @@ GASSResourceTreeWidget::~GASSResourceTreeWidget()
 
 }
 
-void GASSResourceTreeWidget::OnLoadScene(GASS::PreSceneLoadEventPtr message)
+void GASSResourceTreeWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
 	m_Scene = scene;
