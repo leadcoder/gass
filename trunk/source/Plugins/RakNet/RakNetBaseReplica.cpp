@@ -56,7 +56,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
@@ -81,7 +81,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
@@ -106,7 +106,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
@@ -132,7 +132,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
@@ -167,7 +167,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());

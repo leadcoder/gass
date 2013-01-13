@@ -70,7 +70,7 @@ namespace GASS
 
 	void RakNetMessageTransferComponent::OnInitialize()
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
@@ -86,7 +86,7 @@ namespace GASS
 
 	bool RakNetMessageTransferComponent::IsRemote() const
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(raknet && raknet->IsActive())
 			return !raknet->IsServer();
 		return false;

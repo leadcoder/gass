@@ -42,11 +42,9 @@ namespace GASS
 		virtual ~CoreSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void OnInit();
+		virtual void OnShutdown();
 	protected:
-		void OnLoad(MessagePtr message);
-		void OnLoadSceneObject(MessagePtr message);
-	private:
-		bool m_Init;
 	};
 	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 
 	

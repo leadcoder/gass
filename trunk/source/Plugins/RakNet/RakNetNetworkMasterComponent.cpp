@@ -64,7 +64,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeMessage,0));
 	
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
@@ -106,7 +106,7 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::OnDelete()
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(raknet->IsServer())
 		{
 			delete m_Replica;
@@ -133,7 +133,7 @@ namespace GASS
 		address.binaryAddress = message->GetAddress().m_Address;
 		address.port  = message->GetAddress().m_Port;
 		
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		//Signal serialize
 		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
 	}

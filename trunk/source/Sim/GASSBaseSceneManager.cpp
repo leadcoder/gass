@@ -46,12 +46,6 @@ namespace GASS
 		RegisterProperty<std::string>( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
 	}
 
-
-	void BaseSceneManager::OnCreate() 
-	{
-
-	}
-
 	struct SceneListenerExecutor
 	{
 		SceneListenerExecutor(const std::vector<SceneManagerListenerWeakPtr>& sl_vector, double delta_time)

@@ -135,7 +135,7 @@ namespace GASS
 				material->setDepthWriteEnabled(true);
 				material->setCullingMode(Ogre::CULL_NONE);
 				std::string fullpath;
-				IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
+				IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
 
 				//check if material is texture?
 				if(rs->GetFullPath(m_Material.Name(),fullpath))

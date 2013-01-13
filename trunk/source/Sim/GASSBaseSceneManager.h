@@ -55,14 +55,11 @@ namespace GASS
 		virtual void SetName(const std::string &name) {m_Name = name;}
 		virtual ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
 		virtual void SetScene(ScenePtr owner){m_Scene = owner;}
-		virtual void OnCreate();
-		virtual void SystemTick(double delta_time);
 		virtual void Register(SceneManagerListenerPtr listener);
 		virtual void Unregister(SceneManagerListenerPtr listener);
-
-		virtual void PreUpdate(){};
-		virtual void PostUpdate(){};
 	
+		//ISystemListener
+		virtual void SystemTick(double delta_time);
 		//IXMLSerialize
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);

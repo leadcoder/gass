@@ -113,7 +113,7 @@ namespace GASS
 			user_bounds = false;
 		}
 
-		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ICollisionSystem>().get();
+		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<ICollisionSystem>().get();
 
 		if(!user_bounds)
 		{

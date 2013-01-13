@@ -73,7 +73,7 @@ namespace GASS
 
 	void RakNetInputTransferComponent::OnInitialize()
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
@@ -104,7 +104,7 @@ namespace GASS
 		std::string controller = message->GetController();
 
 		float value = message->GetValue();
-		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		int controller_index = css->GetIndexFromName(m_ControlSettingName,controller);
 		if(controller_index >= 0)
 		{
@@ -129,7 +129,7 @@ namespace GASS
 			m_InputHistory[controller_index] = value;
 			
 
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 
 			if(message->GetControllerType() == CT_AXIS && new_value)
 			{
@@ -174,7 +174,7 @@ namespace GASS
 	void RakNetInputTransferComponent::ReceivedInput(int controller, float value)
 	{
 		int id = 8888;
-		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		std::string c_name = css->GetNameFromIndex(m_ControlSettingName,controller);
 		//std::string c_name = m_ControlSetting->m_IndexToName[controller];
 		MessagePtr message(new InputControllerMessage(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
@@ -189,13 +189,13 @@ namespace GASS
 			NetworkPackagePtr package = message->GetPackage();
 			InputPackagePtr input_package = boost::shared_dynamic_cast<InputPackage>(package);
 
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			SystemAddress address = raknet->GetRakPeer()->GetInternalID();
 			if(input_package->Generator == address.binaryAddress) //generate by my self!!!
 				return;
 			
 
-			ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+			ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 			//std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
 			std::string controller = css->GetNameFromIndex(m_ControlSettingName,input_package->Index);
 			MessagePtr ctrl_message(new InputControllerMessage(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));

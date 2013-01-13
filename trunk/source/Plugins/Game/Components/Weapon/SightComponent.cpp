@@ -403,7 +403,7 @@ namespace GASS
 
 	void SightComponent::UpdateTargetDistance()
 	{
-		CollisionSystemPtr col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+		CollisionSystemPtr col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
 
 		if(col_sys)
 		{

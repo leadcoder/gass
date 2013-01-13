@@ -34,8 +34,11 @@ namespace GASS
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();
 		virtual void OnCreate();
+		virtual void OnInit();
+		virtual void OnShutdown();
 		
 		void SystemTick(double delta_time);
+
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
 		SceneObjectPtr GetSelectedObject() const;
 		void SelectSceneObject(SceneObjectPtr obj);
@@ -56,9 +59,7 @@ namespace GASS
 		void MoveCameraToObject(SceneObjectPtr obj);
 		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
-
 	protected:
-		void OnLoad(LoadSceneManagersRequestPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;

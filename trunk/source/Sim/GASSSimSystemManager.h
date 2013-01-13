@@ -25,6 +25,7 @@
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/System/GASSISystemManager.h"
+#include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimSystem.h"
 
 #define PRE_SIM_BUCKET 9998 //magic number
@@ -94,14 +95,19 @@ namespace GASS
 			of the class type exist tbe first one loaded will be returned
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstSystem()
+		boost::shared_ptr<T> GetFirstSystemByClass(bool no_throw = false)
 		{
 			boost::shared_ptr<T> sys;
 			for(size_t i = 0 ; i < m_Systems.size(); i++)
 			{
 				sys = boost::shared_dynamic_cast<T>(m_Systems[i]);
 				if(sys)
-					break;
+					return sys;
+			}
+			if(!no_throw)
+			{
+				std::string sys_name = typeid(T).name();
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"System not found:" + sys_name, "SimSystemManager::GetFirstSystemByClass");
 			}
 			return sys;
 		}
@@ -124,43 +130,13 @@ namespace GASS
 		*/
 		void Load(const std::string &filename);
 
-
 		//Move this to private
 		void SyncMessages(double delta_time);
 	private:
 		SystemPtr LoadSystem(TiXmlElement *system_elem);
 		size_t GetQueuedMessages() const;
-
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SystemPtr> SystemVector;
 		SystemVector m_Systems;
-		//void OnSimulationStepRequest(TimeStepRequestPtr message);
-		//void StepSimulation(double delta_time);		
-		
-		
-		//bool m_SimulationPaused;
-		//bool m_SimulateRealTime;
-		//double m_SimulationUpdateInterval;
-		//double m_SimulationTimeToProcess;
-		//int m_MaxSimSteps;
-		//int m_LastNumSimulationSteps;
-		//bool m_StepSimulationRequest;
-		//double m_RequestDeltaTime;
-
-		/*SimpleProfileDataMap* m_SimStats;
-
-		struct MessageData
-		{
-			int Before;
-			int After;
-		};
-
-		typedef std::map<int,MessageData> MessageStatMap;
-		MessageStatMap m_MessageStats;
-	
-		
-		
-		typedef std::map<int,SystemVector> UpdateMap;
-		UpdateMap m_UpdateBuckets;*/
 	};
 }

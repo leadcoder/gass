@@ -82,12 +82,8 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoad,LoadSceneManagersRequest,0));
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
-		//GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
 		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
-
 
 	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsMessagePtr message)
 	{
@@ -97,24 +93,16 @@ namespace GASS
 			m_Paused = true;
 	}
 
-	/*void ODEPhysicsSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
+	void ODEPhysicsSceneManager::OnInit()
 	{
+		ScenePtr scene = GetScene();
 
-	}*/
-
-
-	void ODEPhysicsSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
-	{
-		ScenePtr scene = message->GetScene();
-
-		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
+		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find ODEPhysicsSystem", "ODEPhysicsSceneManager::OnLoad");
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
-		
 
-		//dInitODE2(0);
 		m_Space = 0;
 		m_World = dWorldCreate();
 		m_Space = dHashSpaceCreate(m_Space);
@@ -130,20 +118,16 @@ namespace GASS
 		dWorldSetAutoDisableAngularThreshold(m_World, 0.01);
 		dWorldSetAutoDisableSteps(m_World, 10);
 		dWorldSetAutoDisableTime(m_World, 0);
-		//dAllocateODEDataForThread(dAllocateMaskAll);
-
 		m_Init = true;
 	}
 
-	void ODEPhysicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
+	void ODEPhysicsSceneManager::OnShutdown()
 	{
 		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
 		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);
-		//if(m_StaticSpace) dSpaceDestroy (m_StaticSpace);
 		if(m_World) dWorldDestroy (m_World);
-		//dCloseODE();
 		int address = (int) this;
-		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<ODEPhysicsSystem>();
+		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Unregister(listener);
 	}
@@ -176,7 +160,7 @@ namespace GASS
 		}
 
 		//Temp: move this to ODEPhysicsSystem
-		/*ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>().get());
+		/*ODECollisionSystem* col_sys = dynamic_cast<ODECollisionSystem*>(SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>().get());
 		if(col_sys)
 		{
 			col_sys->Process();

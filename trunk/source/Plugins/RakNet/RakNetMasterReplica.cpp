@@ -58,7 +58,7 @@ namespace GASS
 		m_Owner = object;
 		m_TemplateName = object->GetTemplateName();
 		
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		
@@ -86,7 +86,7 @@ namespace GASS
 
 	void RakNetMasterReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		// We must set the network ID of all remote objects
@@ -264,7 +264,7 @@ namespace GASS
 			RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
 			// If this is a server
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (raknet->IsServer())
 			{
 				// Synchronisation events should be forwarded to other clients
@@ -279,7 +279,7 @@ namespace GASS
 	{
 		if(m_Owner)
 		{
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			if (networkCaller==0)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());

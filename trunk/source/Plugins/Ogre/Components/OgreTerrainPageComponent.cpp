@@ -257,7 +257,7 @@ namespace GASS
 		if(!boost::filesystem::exists(filename))
 		{
 			//try get resource from ResourceSystem
-			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
+			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
 			std::string full_path;
 			if(!rs->GetFullPath(filename,full_path))
 			{

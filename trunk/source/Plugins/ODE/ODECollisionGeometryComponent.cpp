@@ -223,7 +223,7 @@ namespace GASS
 
 	ODECollisionSystemPtr ODECollisionGeometryComponent::GetCollisionSystem() const
 	{
-		ODECollisionSystemPtr system =  SimEngine::Get().GetSimSystemManager()->GetFirstSystem<ODECollisionSystem>();
+		ODECollisionSystemPtr system =  SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<ODECollisionSystem>();
 		if(!system)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"ODECollisionSystem not found", "ODECollisionGeometryComponent::GetCollisionSystem");
 		return system;

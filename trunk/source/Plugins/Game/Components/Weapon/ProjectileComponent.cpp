@@ -73,7 +73,7 @@ namespace GASS
 
 		m_TimeLeft = m_TimeToLive;
 		//save for fast access
-		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
 		//register fot ticks
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(shared_from_this());
 	}

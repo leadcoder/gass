@@ -65,7 +65,7 @@ namespace GASS
 		//Shadows
 		m_ShadowType("AdditiveIntegratedTextureShadows"),
 		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),
-		m_ShadowProjType ("LiSPSM"),
+		m_ShadowProjType("LiSPSM"),
 		m_TextureShadowSize (1024),
 		m_NumShadowTextures (1),
 		m_SelfShadowing (false),
@@ -111,33 +111,24 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnCreate()
 	{
 		int address = (int) this;
-		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<OgreGraphicsSystem>();
+		OgreGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OgreGraphicsSystem>();
+		m_GFXSystem = system;
+		//register on system to get updates
+		system->Register(shared_from_this());
 		ScenePtr scene = GetScene();
-		assert(scene);
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnLoad ,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnUnload, UnLoadSceneManagersRequest,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 	}
 
-	void OgreGraphicsSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
+	void OgreGraphicsSceneManager::OnInit()
 	{
-		delete m_DebugDrawer;
-		m_SceneMgr->clearScene();
-		Root::getSingleton().destroySceneManager(m_SceneMgr);
-		m_SceneMgr = NULL;
-		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0);
-	}
-
-	void OgreGraphicsSceneManager::OnLoad(MessagePtr message)
-	{
-
+		//create unique name
 		static unsigned int scene_man_id = 0;
 		std::stringstream ss;
 		std::string name;
 		ss << GetName() << scene_man_id;
 		ss >> name;
 		scene_man_id++;
-
+		//m_SceneMgr = Root::getSingleton().createSceneManager(m_GFXSystem->GetSceneManagerType(), name);
 		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, name);
 		if(m_SceneMgr == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"SceneManager " + m_SceneManagerType +" not found","OgreGraphicsSceneManager::OnLoad");
@@ -145,16 +136,23 @@ namespace GASS
 		UpdateSkySettings();
 		UpdateLightSettings();
 		UpdateFogSettings();
-		//OgreGraphicsSystemPtr(m_GFXSystem)->SetActiveSceneManger(m_SceneMgr);
-		OgreGraphicsSystemPtr(m_GFXSystem)->Register(shared_from_this());
-
+		
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
-		SystemMessagePtr loaded_msg(new GFXSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
+		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = OgreGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
 		//Create debug render system
 		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
+	}
+
+	void OgreGraphicsSceneManager::OnShutdown()
+	{
+		delete m_DebugDrawer;
+		m_SceneMgr->clearScene();
+		Root::getSingleton().destroySceneManager(m_SceneMgr);
+		m_SceneMgr = NULL;
+		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0); //why?
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherRequest(WeatherRequestPtr message)
@@ -163,8 +161,6 @@ namespace GASS
 		SetFogEnd(message->GetFogDistance());
 		SetFogDensity(message->GetFogDensity());
 	}
-
-	
 
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{
@@ -193,10 +189,6 @@ namespace GASS
 		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.x, m_AmbientColor.y, m_AmbientColor.z));
 	}
 
-	void OgreGraphicsSceneManager::Update(double delta_time)
-	{
-
-	}
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
 	{

@@ -41,10 +41,11 @@ namespace GASS
 		virtual ~RaknetNetworkSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
-		void Update(double delta);
+		virtual void OnInit();
+		virtual void OnShutdown();
+
+		//void Update(double delta);
 	protected:
-		void OnLoad(LoadSceneManagersRequestPtr message);
-		void OnUnload(UnLoadSceneManagersRequestPtr message);
 		void OnNewMasterReplica(MasterReplicaCreatedEventPtr message);
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 	private:

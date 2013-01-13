@@ -64,7 +64,7 @@ namespace GASS
 			delete m_Tools[i];
 		}
 
-		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->RemoveMouseListener(this);
 
 	}
@@ -73,7 +73,7 @@ namespace GASS
 	{
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
-		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddMouseListener(this);
 
 		//add default tools (based on config?)
@@ -251,7 +251,7 @@ namespace GASS
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
 			ray_direction = ray_direction*raycast_distance;
-			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ICollisionSystem>();
+			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
 
 			if(!col_sys)
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get CollisionSystem", "MouseToolController::CameraRaycast");

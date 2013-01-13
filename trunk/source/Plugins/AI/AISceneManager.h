@@ -36,9 +36,9 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnCreate();
 		virtual void SystemTick(double delta_time); 
+		virtual void OnInit();
+		virtual void OnShutdown();
 	protected:
-		void OnLoad(MessagePtr message);
-		void OnUnload(MessagePtr message);
 		ADD_ATTRIBUTE(bool,Paused)
 	};
 	typedef boost::shared_ptr<AISceneManager> AISceneManagerPtr; 

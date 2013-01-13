@@ -66,17 +66,9 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoad,LoadSceneManagersRequest,0));
-		GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
-		//GetScene()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnLoadSceneObject,SceneObjectCreatedNotifyMessage,Scene::PHYSICS_COMPONENT_LOAD_PRIORITY));
-		
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent,0));
 	}
 
-	/*void RaknetNetworkSceneManager::OnLoadSceneObject(SceneObjectCreatedNotifyMessagePtr message)
-	{
-		
-	}*/
 
 	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedEventPtr message)
 	{
@@ -106,46 +98,16 @@ namespace GASS
 		}
 	}
 
-	void RaknetNetworkSceneManager::Update(double delta_time)
+	void RaknetNetworkSceneManager::OnInit()
 	{
-
-		if (m_Paused)
-			return;
-
-		//do some time slicing
-		m_TimeToProcess += delta_time;
-		int num_steps = (int) (m_TimeToProcess / m_SimulationUpdateInterval);
-		int clamp_num_steps = num_steps;
-
-		//Take max 4 simulation step each frame
-		if(num_steps > m_MaxSimSteps) clamp_num_steps = m_MaxSimSteps;
-
-		for (int i = 0; i < clamp_num_steps; ++i)
-		{
-
-		}
-		//std::cout << "Steps:" <<  clamp_num_steps << std::endl;
-		m_TimeToProcess -= m_SimulationUpdateInterval * num_steps;
-
-
-
-
-	}
-
-
-	void RaknetNetworkSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
-	{
-		ScenePtr scene = message->GetScene();
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		RakNetNetworkSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find RakNetNetworkSystem", "RaketNetworkSceneManager::OnLoad");
 		system->Register(shared_from_this());
 	}
 
-	void RaknetNetworkSceneManager::OnUnload(UnLoadSceneManagersRequestPtr message)
+	void RaknetNetworkSceneManager::OnShutdown()
 	{
-
 		int address = (int) this;
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);

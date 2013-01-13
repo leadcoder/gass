@@ -55,30 +55,16 @@ namespace GASS
 
 	void GameSceneManager::OnCreate()
 	{
-		ScenePtr scene = GetScene();
-		if(scene)
-		{
-			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoad ,LoadSceneManagersRequest,0));
-			scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnUnload ,UnLoadSceneManagersRequest,0));
-			//scene->RegisterForMessage(REG_TMESS(GameSceneManager::OnLoadSceneObject, SceneObjectCreatedNotifyMessage ,Scene::CORE_COMPONENT_LOAD_PRIORITY));
-		}
 	}
-
-	/*void GameSceneManager::OnLoadSceneObject(MessagePtr message)
+	
+	void GameSceneManager::OnInit()
 	{
-		//Initlize all sim components and send scene mananger as argument
-	}*/
-
-	void GameSceneManager::OnLoad(MessagePtr message)
-	{
-		GameSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GameSystem>();
+		GameSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GameSystem>();
 		SystemListenerPtr listener = shared_from_this();
-		if(!system)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find GameSystem", "GameSceneManager::OnLoad");
 		system->Register(listener);
 	}
 
-	void GameSceneManager::OnUnload(MessagePtr message)
+	void GameSceneManager::OnShutdown()
 	{
 
 	}

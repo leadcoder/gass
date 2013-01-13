@@ -54,10 +54,10 @@ namespace GASS
 	implementation.
 	*/
 
-	class GFXSceneManagerLoadedEvent : public SystemEventMessage
+	class GraphicsSceneManagerLoadedEvent : public SystemEventMessage
 	{
 	public:
-		GFXSceneManagerLoadedEvent(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) :
+		GraphicsSceneManagerLoadedEvent(const std::string &render_system, void* scene_graph_root_node,void* scene_graph_shadow_node,SenderID sender_id = -1, double delay= 0) :
 		  SystemEventMessage(sender_id , delay),
 			  m_RenderSystem(render_system),m_RootNode(scene_graph_root_node) ,m_ShadowNode(scene_graph_shadow_node) { }
 		  std::string GetRenderSystem()const {return m_RenderSystem;}
@@ -68,7 +68,7 @@ namespace GASS
 		void* m_ShadowNode;
 		std::string m_RenderSystem;
 	};
-	typedef boost::shared_ptr<GFXSceneManagerLoadedEvent> GFXSceneManagerLoadedEventPtr;
+	typedef boost::shared_ptr<GraphicsSceneManagerLoadedEvent> GraphicsSceneManagerLoadedEventPtr;
 
 
 	/**

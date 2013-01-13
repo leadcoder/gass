@@ -363,7 +363,7 @@ namespace GASS
 				radius = sphere->GetRadius();
 			}
 
-			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<GASS::ODECollisionSystem>();
+			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ODECollisionSystem>();
 			Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetScene(),hingePoint,false);
 			//std::cout << "height" <<  height_above_ground << "\n";
 

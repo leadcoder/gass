@@ -90,7 +90,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
 		//ScenePtr scene = GetSceneObject()->GetScene();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnCameraChanged,CameraChangedEvent, 0));
-		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<CoreSystem>()->GetTaskNode();
+		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<CoreSystem>()->GetTaskNode();
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);

@@ -90,7 +90,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnInitialize()
 	{
 		
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
@@ -201,7 +201,7 @@ namespace GASS
 
 	bool RakNetLocationTransferComponent::IsRemote() const
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(raknet && raknet->IsActive())
 			return !raknet->IsServer();
 		return false;
@@ -209,7 +209,7 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::SceneManagerTick(double delta)
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		
 		if(raknet->IsServer())
 		{

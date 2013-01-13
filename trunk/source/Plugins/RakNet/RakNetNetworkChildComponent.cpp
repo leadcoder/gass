@@ -68,7 +68,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnSerialize,NetworkSerializeMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnGotReplica,ComponentGotReplicaEvent,0));
 		
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
 
@@ -131,7 +131,7 @@ namespace GASS
 
 	void RakNetNetworkChildComponent::OnDelete()
 	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(raknet->IsServer())
 		{
 			delete m_Replica;
@@ -154,7 +154,7 @@ namespace GASS
 		if(!found)
 			m_SerializePackages.push_back(message->GetPackage());
 		
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		SystemAddress address;
 
 		address.binaryAddress = message->GetAddress().m_Address;
@@ -216,7 +216,7 @@ namespace GASS
 		if(m_Replica && m_Replica->HasPropertiesChanged())
 		{
 			//std::cout << "props has changed\n";
-			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystem<RakNetNetworkSystem>();
+			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 			
 			//Signal serialize

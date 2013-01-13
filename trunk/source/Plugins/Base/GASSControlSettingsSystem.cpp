@@ -297,7 +297,7 @@ namespace GASS
 	
 		
 
-		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IInputSystem>();
+		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 
 		if(!input_system)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No input system found!", "ControlSettingsSystem::Load");		

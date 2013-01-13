@@ -37,15 +37,14 @@ namespace GASS
 	void EditorSceneManager::OnCreate()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged,CameraChangedEvent,0));
-		GetScene()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnLoad ,LoadSceneManagersRequest,2));
 	}
 
-	void EditorSceneManager::OnLoad(LoadSceneManagersRequestPtr message)
+	void EditorSceneManager::OnInit()
 	{
 		ScenePtr scene = GetScene();
 		m_MouseTools->Init();
 		SystemListenerPtr listener = shared_from_this();
-		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		system->Register(listener);
 
 		
@@ -61,6 +60,11 @@ namespace GASS
 		}
 		SetObjectSite(scene->GetRootSceneObject());
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
+	}
+
+	void EditorSceneManager::OnShutdown()
+	{
+
 	}
 
 	void EditorSceneManager::SystemTick(double delta_time)

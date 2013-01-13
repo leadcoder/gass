@@ -234,7 +234,7 @@ namespace GASS
 		ALvoid*		data=NULL;
 		std::string full_path = "";
 
-		IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>().get();
+		IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
 		SoundMap::iterator pos;
 		pos = m_BufferMap.find(filePath);
 		if (pos != m_BufferMap.end())

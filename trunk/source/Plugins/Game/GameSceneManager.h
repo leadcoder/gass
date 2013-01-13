@@ -40,10 +40,9 @@ namespace GASS
 		virtual ~GameSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void OnInit();
+		virtual void OnShutdown();
 	protected:
-		void OnLoad(MessagePtr message);
-		void OnUnload(MessagePtr message);
-		void OnLoadSceneObject(MessagePtr message);
 	};
 	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr; 
 

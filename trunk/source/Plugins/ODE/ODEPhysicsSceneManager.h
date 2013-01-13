@@ -50,7 +50,11 @@ namespace GASS
 		ODEPhysicsSceneManager();
 		virtual ~ODEPhysicsSceneManager();
 		static void RegisterReflection();
+		
 		virtual void OnCreate();
+		virtual void OnInit();
+		virtual void OnShutdown();
+
 		dSpaceID GetPhysicsSpace(){return m_Space;}
 		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
 		ODECollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
@@ -61,8 +65,7 @@ namespace GASS
 		void SystemTick(double delta);
 		bool IsActive()const {return !m_Paused;}
 	protected:
-		void OnLoad(LoadSceneManagersRequestPtr message);
-		void OnUnload(UnLoadSceneManagersRequestPtr message);
+		
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
@@ -71,7 +74,6 @@ namespace GASS
 	private:
 		dWorldID m_World;
 		dSpaceID m_Space;
-		//dSpaceID m_StaticSpace;
 		dSpaceID m_CollisionSpace;
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;

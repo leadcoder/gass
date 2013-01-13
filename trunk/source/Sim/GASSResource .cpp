@@ -50,7 +50,7 @@ namespace GASS
 	FilePath Resource::GetFilePath() const
 	{
 		FilePath path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		std::string full_path;
 		if(rs->GetFullPath(m_ResourceName,full_path))
 		{
@@ -61,7 +61,7 @@ namespace GASS
 
 	std::vector<std::string> MeshResource::GetAllOptions()
 	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(rs == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
 		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_MESH,"");
@@ -70,7 +70,7 @@ namespace GASS
 
 	std::vector<std::string> TextureResource::GetAllOptions()
 	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(rs == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
 		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_TEXTURE,"");
@@ -79,7 +79,7 @@ namespace GASS
 
 	std::vector<std::string> MaterialResource::GetAllOptions()
 	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(rs == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
 		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_TEXTURE,"");

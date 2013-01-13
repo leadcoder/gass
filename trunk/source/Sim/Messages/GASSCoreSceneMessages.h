@@ -165,7 +165,7 @@ namespace GASS
 	It's up to each scene manager to catch this and load it's 
 	dependencies
 	*/
-	class LoadSceneManagersRequest: public InternalSceneMessage
+	/*class LoadSceneManagersRequest: public InternalSceneMessage
 	{
 	public:
 		LoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
@@ -177,7 +177,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;
+	typedef boost::shared_ptr<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;*/
 
 
 	/**
@@ -187,7 +187,7 @@ namespace GASS
 	it's resources.
 	
 	*/
-	class UnLoadSceneManagersRequest : public InternalSceneMessage
+	/*class UnLoadSceneManagersRequest : public InternalSceneMessage
 	{
 	public:
 		UnLoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
@@ -199,7 +199,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;
+	typedef boost::shared_ptr<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;*/
 
 	/**
 		Message sent by SceneObject before scene object is Initialized 

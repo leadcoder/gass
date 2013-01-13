@@ -49,14 +49,14 @@ namespace GASS
 		se->Init(gass_config_file);
 
 		//load keyboard config!
-		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystem<IControlSettingsSystem>();
+		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		if(css)
 		{
 			css->Load(config_path +  "GASSControlSettings.xml");
 		}
 
 		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,PostSceneLoadEvent,0));
-		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystem<EditorSystem>();
+		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
 		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);
@@ -76,11 +76,11 @@ namespace GASS
 
 		//Create main render window, this will trigger
 		const std::string render_win_name = "RenderWindow";
-		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
+		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 		RenderWindowPtr win = gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
 		win->CreateViewport("MainViewport", 0, 0, 1, 1);
 	
-		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystem<GASS::IInputSystem>();
+		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 		input_system->SetMainWindowHandle(main_win_handle);
 		m_Initilized  = true;
 	}

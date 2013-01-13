@@ -171,7 +171,7 @@ namespace GASS
 			}
 #endif
 
-			GraphicsSystemPtr gs = GetSimSystemManager()->GetFirstSystem<IGraphicsSystem>();
+			GraphicsSystemPtr gs = GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 			if(gs)
 			{
 				unsigned int width, height;

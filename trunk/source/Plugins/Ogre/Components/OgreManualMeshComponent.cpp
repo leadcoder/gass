@@ -223,7 +223,7 @@ namespace GASS
 
 					if(texture_name != "")
 					{
-						ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<IResourceSystem>();
+						ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 						if(rs == NULL)
 							return;
 			

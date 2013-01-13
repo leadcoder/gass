@@ -49,25 +49,18 @@ namespace GASS
 
 	void CoreSceneManager::OnCreate()
 	{
-		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystem<CoreSystem>();
-		//core system not found, cast exception
-		if(!system)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find CoreSystem", "CoreSceneManager::OnCreate");
-		
+		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<CoreSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
-		ScenePtr scene = GetScene();
-		scene->RegisterForMessage(typeid(LoadSceneManagersRequest), MESSAGE_FUNC( CoreSceneManager::OnLoad ));
 	}
 
-	/*void CoreSceneManager::OnLoadSceneObject(MessagePtr message)
+	void CoreSceneManager::OnInit()
 	{
 		
-	}*/
+ 	}
 
-	void CoreSceneManager::OnLoad(MessagePtr message)
+	void CoreSceneManager::OnShutdown()
 	{
-		//LoadSceneManagersRequestPtr lsmm = boost::shared_static_cast<LoadSceneManagersRequestPtr>(message);
-		m_Init = true;
+		
  	}
 }
