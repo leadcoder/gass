@@ -117,10 +117,7 @@ namespace GASS
 		system->Register(shared_from_this());
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
-	}
 
-	void OgreGraphicsSceneManager::OnInit()
-	{
 		//create unique name
 		static unsigned int scene_man_id = 0;
 		std::stringstream ss;
@@ -136,14 +133,18 @@ namespace GASS
 		UpdateSkySettings();
 		UpdateLightSettings();
 		UpdateFogSettings();
-		
+		//Create debug render system
+		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
+
+	}
+
+	void OgreGraphicsSceneManager::OnInit()
+	{
 		//Give hook to 3dparty plugins to attach, maybee send other info
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = OgreGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-		//Create debug render system
-		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
 	}
 
 	void OgreGraphicsSceneManager::OnShutdown()

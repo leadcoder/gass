@@ -41,11 +41,13 @@ namespace GASS
 	{
 		//m_MouseTools->Init();
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnSceneLoaded,PostSceneLoadEvent,0));
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnNewScene,PreSceneLoadEvent,0));
+		
 //		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnCameraChanged,CameraChangedEvent,0));
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
+
+
 
 	/*void EditorSystem::SetRayPickDistance(float value) 
 	{
@@ -115,11 +117,7 @@ namespace GASS
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
-	void EditorSystem::OnNewScene(GASS::PreSceneLoadEventPtr message)
-	{
-		GASS::ScenePtr scene = message->GetScene();
-	}
-
+	
 	void EditorSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();

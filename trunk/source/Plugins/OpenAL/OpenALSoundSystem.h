@@ -61,7 +61,7 @@ namespace GASS
 		std::string ListAvailableDevices( void );
 
 		void OnInit(MessagePtr message);
-		void OnSceneLoaded(PreSceneLoadEventPtr message);
+		void OnSceneLoaded(PreSceneCreateEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnCameraMoved(TransformationNotifyMessagePtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);

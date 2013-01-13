@@ -25,7 +25,7 @@ namespace GASS
 		m_Active(false),
 		m_SnapToMouse(false)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		m_Controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	MoveTool::~MoveTool()

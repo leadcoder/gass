@@ -102,12 +102,13 @@ namespace GASS
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 		
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneCreateEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientMessage,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientRequest,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneLoaded,PreSceneLoadEvent,0));
+
+	
 
 		
 		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
@@ -128,12 +129,6 @@ namespace GASS
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessageWithData", int, RakNetBaseReplica, RemoteMessageWithData, const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 	}
 
-	void RakNetNetworkSystem::OnSceneLoaded(PreSceneLoadEventPtr message)
-	{
-		m_Scene = message->GetScene();
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
-		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
-	}
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayRequestPtr message)
 	{
@@ -496,8 +491,12 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnSceneAboutToLoad(PreSceneLoadEventPtr message)
+	void RakNetNetworkSystem::OnSceneAboutToLoad(PreSceneCreateEventPtr message)
 	{
+		m_Scene = message->GetScene();
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
+		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
+
 		m_ServerData->MapName =	message->GetScene()->GetName();
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
 

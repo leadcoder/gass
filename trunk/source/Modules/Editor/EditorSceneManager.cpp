@@ -2,7 +2,8 @@
 #include "EditorSystem.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -41,12 +42,12 @@ namespace GASS
 
 	void EditorSceneManager::OnInit()
 	{
-		ScenePtr scene = GetScene();
-		m_MouseTools->Init();
 		SystemListenerPtr listener = shared_from_this();
 		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		system->Register(listener);
 
+		ScenePtr scene = GetScene();
+		m_MouseTools->Init();
 		
 		if(!m_SceneObjectsSelectable) //add static objects
 		{
@@ -59,6 +60,7 @@ namespace GASS
 			}
 		}
 		SetObjectSite(scene->GetRootSceneObject());
+		//Load some objects
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
@@ -71,6 +73,50 @@ namespace GASS
 	{
 		GetMouseToolController()->Update(delta_time);
 		BaseSceneManager::SystemTick(delta_time);
+	}
+
+	void EditorSceneManager::CreateCamera()
+	{
+		ScenePtr scene = GetScene();
+		//load top camera
+		Vec3 vel(0,0,0);
+		Vec3 pos = scene->GetStartPos();
+		Quaternion rot(scene->GetStartRot());
+		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
+		
+		if(!free_obj) //If no FreeCameraObject template found, create one
+		{
+			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
+			fre_cam_template->SetName("FreeCameraObject");
+			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
+			location_comp->SetName("LocationComp");
+
+			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
+			camera_comp->SetName("FreeCameraComp");
+
+			ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
+			cc_comp->SetName("FreeCameraCtrlComp");
+
+			fre_cam_template->AddComponent(location_comp);
+			fre_cam_template->AddComponent(camera_comp);
+			fre_cam_template->AddComponent(cc_comp);
+
+			SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(fre_cam_template);
+
+			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
+		}
+
+		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
+		if(free_obj)
+		{
+			free_obj->SendImmediate(pos_msg);
+			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
+		}
+
+		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
+		if(top_obj)
+			top_obj->SendImmediate(pos_msg);
 	}
 	
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)

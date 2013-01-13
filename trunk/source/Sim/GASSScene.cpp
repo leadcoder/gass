@@ -69,7 +69,13 @@ namespace GASS
 
 	void Scene::Create()
 	{
-		SystemMessagePtr enter_load_msg(new PreSceneLoadEvent(shared_from_this()));
+		//Create empty root node
+		m_Root = SceneObjectPtr(new SceneObject());
+		m_Root->SetName("Root");
+		m_Root->Initialize(shared_from_this());
+
+
+		SystemMessagePtr enter_load_msg(new PreSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
 
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
@@ -89,14 +95,12 @@ namespace GASS
 			m_SceneManagers.push_back(sm);
 		}
 
+		
 		for(int i = 0; i < m_SceneManagers.size() ; i++)
 		{
 			m_SceneManagers[i]->OnInit();
 		}
 
-		m_Root = SceneObjectPtr(new SceneObject());
-		m_Root->SetName("Root");
-		m_Root->Initialize(shared_from_this());
 		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
@@ -106,9 +110,29 @@ namespace GASS
 		m_CreateCalled = true;
 		//send load message
 		//m_SceneMessageManager->SendImmediate(MessagePtr(new LoadSceneManagersRequest(shared_from_this())));
-		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
+		SystemMessagePtr system_msg(new PostSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 		m_SceneLoaded = true;
+	}
+
+
+	void Scene::Unload()
+	{
+		//if(m_SceneLoaded)
+		m_Root->OnDelete();
+		m_Root.reset();
+		for(int i = 0; i < m_SceneManagers.size() ; i++)
+		{
+			m_SceneManagers[i]->OnShutdown();
+		}
+			
+		SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		rs->RemoveResourceGroup(GetResourceGroupName());
+		m_SceneLoaded = false;
+		m_SceneManagers.clear();
+		m_SceneMessageManager->Clear();
 	}
 
 	std::string Scene::GetResourceGroupName() const
@@ -118,16 +142,17 @@ namespace GASS
 
 	void Scene::Load(const std::string &name)
 	{
+		m_FolderName = name;
 		if(name == "")
 		{
 			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
 				"You must provide a scene name",
 				"Scene::Load");
 		}
-		m_Name = name;
-		if(!m_CreateCalled)
+		
+		//if(!m_CreateCalled)
 		{
-			Create();
+		//	Create();
 			/*GASS_EXCEPT(Exception::ERR_INVALID_STATE,
 				"You must call Create before using the scene class",
 				"Scene::Load");*/
@@ -139,10 +164,10 @@ namespace GASS
 				"Scene already loaded, you must onload before load",
 				"Scene::Load");
 		}*/
-
+		//m_Name = name;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
-		rs->AddResourceGroup(GetResourceGroupName());
+		//rs->AddResourceGroup(GetResourceGroupName());
 		rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
 		rs->LoadResourceGroup(GetResourceGroupName());
 
@@ -181,11 +206,12 @@ namespace GASS
 	
 	FilePath Scene::GetSceneFolder() const
 	{
-		return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_Name);
+		return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_FolderName);
 	}
 
 	void Scene::Save(const std::string &name)
 	{
+		m_FolderName = name;
 		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
 		boost::filesystem::path boost_path(scene_path.GetFullPath()); 
 		if(!boost::filesystem::exists(boost_path))  
@@ -199,8 +225,6 @@ namespace GASS
 		}
 
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::Save");
 		rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
 
 		TiXmlDocument doc;  
@@ -277,35 +301,7 @@ namespace GASS
 		}
 	}
 
-	void Scene::Unload()
-	{
-		if(m_SceneLoaded)
-		{
-			m_Root->OnDelete();
-			m_Root.reset();
-
-
-			for(int i = 0; i < m_SceneManagers.size() ; i++)
-			{
-				m_SceneManagers[i]->OnShutdown();
-			}
-			
-			SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
-			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-			if(rs == NULL)
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "Scene::SaveXML");
-			rs->RemoveResourceGroup(GetResourceGroupName());
-			m_SceneLoaded = false;
-			m_SceneManagers.clear();
-			m_SceneMessageManager->Clear();
-		}
-	}
-
-	void Scene::Load()
-	{
-		
-	}
+	
 
 	SceneManagerPtr Scene::LoadSceneManager(TiXmlElement *sm_elem)
 	{

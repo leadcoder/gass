@@ -22,7 +22,8 @@ namespace GASS
 	PaintTool::PaintTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	PaintTool::~PaintTool()

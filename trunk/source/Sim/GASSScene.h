@@ -56,7 +56,7 @@ namespace GASS
 	{
 		friend class SceneObject;
 	public:
-		enum
+		/*enum
 		{
 			GFX_COMPONENT_LOAD_PRIORITY = 0,
 			PHYSICS_COMPONENT_LOAD_PRIORITY = 1,
@@ -70,7 +70,7 @@ namespace GASS
 			CORE_SYSTEM_LOAD_PRIORITY = 3,
 			USER_SYSTEM_LOAD_PRIORITY = 4,
 
-		};
+		};*/
 		Scene(const std::string &name = std::string(""));
 		virtual ~Scene();
 		static void RegisterReflection();
@@ -197,12 +197,13 @@ namespace GASS
 		*/
 		size_t GetQueuedMessages() const;
 
-		void Load();
+		
 		/**
 		Get all scenes from path. This function recursively search for scene.xml 
 		files and push that path to the return vector
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);
+
 		void Unload();
 
 		std::string GetResourceGroupName() const;
@@ -237,6 +238,7 @@ protected:
 		SceneManagerVector m_SceneManagers;
 
 		std::string m_Name;
+		std::string m_FolderName;
 
 		MessageManagerPtr m_SceneMessageManager;
 

@@ -23,7 +23,8 @@ namespace GASS
 		m_Controller(controller),
 		m_Active(false)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	RotateTool::~RotateTool()

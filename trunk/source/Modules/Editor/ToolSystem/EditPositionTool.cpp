@@ -1,6 +1,7 @@
 #include "EditPositionTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -20,8 +21,8 @@ namespace GASS
 	EditPositionTool::EditPositionTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		//controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
 	EditPositionTool::~EditPositionTool()

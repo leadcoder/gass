@@ -231,13 +231,16 @@ namespace GASS
 #endif
 	}
 
-	void SimEngine::DestroyScene(ScenePtr scene)
+	void SimEngine::DestroyScene(SceneWeakPtr scene)
 	{
-		scene->Unload();
+		ScenePtr the_scene = ScenePtr(scene,boost::detail::sp_nothrow_tag());
+		if(!the_scene)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene no valid", "SimEngine::DestroyScene");
+		the_scene->Unload();
 		SceneVector::iterator iter = m_Scenes.begin();
 		while(iter != m_Scenes.end())
 		{
-			if(scene == *iter)
+			if(the_scene == *iter)
 			{
 				m_Scenes.erase(iter);
 				return;

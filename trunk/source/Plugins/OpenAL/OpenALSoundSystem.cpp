@@ -53,7 +53,7 @@ namespace GASS
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		//catch camera change messages to update openal listener
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,PreSceneLoadEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,PreSceneCreateEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));
 		
 
@@ -130,7 +130,7 @@ namespace GASS
 
 
 
-	void OpenALSoundSystem::OnSceneLoaded(PreSceneLoadEventPtr message)
+	void OpenALSoundSystem::OnSceneLoaded(PreSceneCreateEventPtr message)
 	{
 		
 	}

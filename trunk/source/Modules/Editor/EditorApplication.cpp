@@ -55,7 +55,7 @@ namespace GASS
 			css->Load(config_path +  "GASSControlSettings.xml");
 		}
 
-		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnLoadScene,PostSceneLoadEvent,0));
+//		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnSceneCreated,PostSceneCreateEvent,0));
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
@@ -90,7 +90,7 @@ namespace GASS
 		SimEngine::Get().Update();
 	}
 
-	void EditorApplication::OnLoadScene(PostSceneLoadEventPtr message)
+	/*void EditorApplication::OnLoadScene(PostSceneLoadEventPtr message)
 	{
 		ScenePtr scene = message->GetScene();
 		//load top camera
@@ -105,7 +105,6 @@ namespace GASS
 			fre_cam_template->SetName("FreeCameraObject");
 			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
 			location_comp->SetName("LocationComp");
-
 			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
 			camera_comp->SetName("FreeCameraComp");
 
@@ -132,7 +131,7 @@ namespace GASS
 		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
 		if(top_obj)
 			top_obj->SendImmediate(pos_msg);
-	}
+	}*/
 
 	bool  EditorApplication::LoadSettings(const std::string &filename)
 	{

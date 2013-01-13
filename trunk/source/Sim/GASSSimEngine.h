@@ -146,7 +146,7 @@ namespace GASS
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 
-		void DestroyScene(ScenePtr scene);
+		void DestroyScene(SceneWeakPtr scene);
 		SceneWeakPtr CreateScene(const std::string &name);
 		ConstSceneIterator GetScenes() const;
 		SceneIterator GetScenes();

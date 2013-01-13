@@ -71,9 +71,7 @@ namespace GASS
 		dSpaceID GetSpace() const;
 	private:
 		bool HasCollisionMesh(const std::string &name);
-
-		void OnSceneAboutToLoad(PreSceneLoadEventPtr message);
-		void OnSceneLoaded(PostSceneLoadEventPtr message);
+		void OnPreSceneCreate(PreSceneCreateEventPtr message);
 		void OnSceneUnloaded(SceneUnloadedEventPtr message);
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		RequestMap m_RequestMap;

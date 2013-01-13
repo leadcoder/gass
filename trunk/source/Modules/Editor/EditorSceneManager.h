@@ -57,6 +57,7 @@ namespace GASS
 		void SetObjectSite(SceneObjectPtr obj);
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
+		void CreateCamera();
 		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
 	protected:

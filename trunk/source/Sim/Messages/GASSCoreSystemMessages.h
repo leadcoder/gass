@@ -119,10 +119,10 @@ namespace GASS
 		This message is posted by the Scene class before the scenes are loaded.
 	*/
 	
-	class PreSceneLoadEvent : public SystemEventMessage
+	class PreSceneCreateEvent : public SystemEventMessage
 	{
 	public:
-		PreSceneLoadEvent(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
+		PreSceneCreateEvent(ScenePtr scene, SenderID sender_id = -1, double delay= 0) :
 		  SystemEventMessage(sender_id , delay) ,
 			  m_Scene(scene){}
 
@@ -131,15 +131,15 @@ namespace GASS
 		ScenePtr m_Scene;
 	};
 
-	typedef boost::shared_ptr<PreSceneLoadEvent> PreSceneLoadEventPtr;
+	typedef boost::shared_ptr<PreSceneCreateEvent> PreSceneCreateEventPtr;
 
 	/**
 		This message is posted by the Scene class after a scene is loaded.
 	*/
-	class PostSceneLoadEvent : public SystemEventMessage
+	class PostSceneCreateEvent : public SystemEventMessage
 	{
 	public:
-		PostSceneLoadEvent(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
+		PostSceneCreateEvent(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
 		  SystemEventMessage(sender_id , delay) ,
 			  m_Scene(scene){}
 
@@ -147,7 +147,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<PostSceneLoadEvent> PostSceneLoadEventPtr;
+	typedef boost::shared_ptr<PostSceneCreateEvent> PostSceneCreateEventPtr;
 
 
 	class SceneUnloadedEvent : public SystemEventMessage
