@@ -42,12 +42,8 @@
 namespace GASS
 {
 	ITerrainComponent* GrassLayerComponent::m_Terrain = NULL;
-	ICollisionSystem * GrassLayerComponent::m_CollisionSystem = NULL;
 
 	GrassLayerComponent::GrassLayerComponent(void) : m_DensityFactor(0.001),
-		//m_Bounds(0,0,0,0),
-		//m_PageSize(50),
-		//m_PagedGeometry(NULL),
 		m_GrassLoader (NULL),
 		m_MaxSize(1,1),
 		m_MinSize(1,1),
@@ -55,11 +51,9 @@ namespace GASS
 		m_SwaySpeed(0),
 		m_SwayLength(0),
 		m_SwayDistribution(10),
-		//m_ViewDist(50),
 		m_RenderTechnique("Quad"),
 		m_Blend(false),
 		m_GrassLayer(NULL)
-		//m_LOD0(0)
 	{
 
 	}
@@ -88,7 +82,7 @@ namespace GASS
 	void GrassLayerComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,GrassLoaderComponentLoaded,0));
-		//wait for grass loader
+	
 	}
 
 	void GrassLayerComponent::OnDelete()
@@ -323,7 +317,6 @@ namespace GASS
 				m_GrassLayer->setSwaySpeed(m_SwaySpeed);
 				m_GrassLayer->setSwayLength(m_SwayLength);
 				m_GrassLayer->setSwayDistribution(m_SwayDistribution);
-				//FileLog::Print("speed:%f length:%f dist:%f",m_SwaySpeed,m_SwayLength,m_SwayDistribution);
 			}
 			else
 			{

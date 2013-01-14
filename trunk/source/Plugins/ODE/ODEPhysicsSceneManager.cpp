@@ -25,19 +25,13 @@
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
 #include "Sim/GASSSimEngine.h"
-
-
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-//#include "Main/Root.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
-
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 
 
@@ -46,7 +40,6 @@ namespace GASS
 	bool ODEPhysicsSceneManager::m_ZUp = true;
 
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager() :m_Space(0),
-		//m_StaticSpace(0),
 		m_World(0),
 		m_CollisionSpace(0),
 		m_ContactGroup (0),

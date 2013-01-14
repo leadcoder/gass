@@ -34,7 +34,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSMeshData.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "WaypointComponent.h"
 #include "WaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"

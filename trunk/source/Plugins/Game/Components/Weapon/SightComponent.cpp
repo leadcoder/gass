@@ -42,7 +42,7 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 namespace GASS
 {
@@ -403,23 +403,18 @@ namespace GASS
 
 	void SightComponent::UpdateTargetDistance()
 	{
-		CollisionSystemPtr col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
-
-		if(col_sys)
-		{
+		CollisionSceneManagerPtr col_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
 		GASS::CollisionRequest request;
 		CollisionResult result;
 		request.LineStart = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*10;
 		//max distance is 20000m
 		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
 		request.Type = COL_LINE;
-		request.Scene = GetSceneObject()->GetScene();
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
-		col_sys->Force(request,result);
+		col_sm->Force(request,result);
 		if(result.Coll)
 		{
-			
 			//m_TargetDistance = (request.LineStart - result.CollPosition).Length() + 10;
 			m_TargetDistance = result.CollDist+10;
 			if(SceneObjectPtr(result.CollSceneObject))
@@ -433,10 +428,6 @@ namespace GASS
 		}
 		else
 			m_TargetDistance = 5000;
-		}
-
-
 		
 	}
-
 }

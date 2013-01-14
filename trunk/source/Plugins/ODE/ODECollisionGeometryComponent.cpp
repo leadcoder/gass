@@ -25,6 +25,7 @@
 
 #include "Plugins/ODE/ODECollisionGeometryComponent.h"
 #include "Plugins/ODE/ODECollisionSystem.h"
+#include "Plugins/ODE/ODECollisionSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
@@ -221,12 +222,9 @@ namespace GASS
 			dGeomEnable(m_GeomID);
 	}
 
-	ODECollisionSystemPtr ODECollisionGeometryComponent::GetCollisionSystem() const
+	ODECollisionSceneManagerPtr ODECollisionGeometryComponent::GetCollisionSceneManager() const
 	{
-		ODECollisionSystemPtr system =  SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<ODECollisionSystem>();
-		if(!system)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"ODECollisionSystem not found", "ODECollisionGeometryComponent::GetCollisionSystem");
-		return system;
+		return GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODECollisionSceneManager>();
 	}
 
 	dGeomID ODECollisionGeometryComponent::CreateBoxGeometry()
@@ -245,7 +243,7 @@ namespace GASS
 		Vec3 offset = (box.m_Max + box.m_Min)*0.5;
 		dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
 		
-		dGeomID gid = dCreateGeomTransform(GetCollisionSystem()->GetSpace());
+		dGeomID gid = dCreateGeomTransform(GetCollisionSceneManager()->GetSpace());
 		dGeomTransformSetCleanup(gid, 1 );
 		dGeomTransformSetGeom(gid,m_OffsetGeomID);
 		return gid;
@@ -263,7 +261,7 @@ namespace GASS
 		location->GetWorldRotation().ToRotationMatrix(rot_mat);
 		Vec3 pos = location->GetWorldPosition();
 		Vec3 normal = rot_mat.GetUpVector();
-		dGeomID geom_id = dCreatePlane(GetCollisionSystem()->GetSpace(), normal.x, normal.y, normal.z, pos.x+pos.y+pos.z);
+		dGeomID geom_id = dCreatePlane(GetCollisionSceneManager()->GetSpace(), normal.x, normal.y, normal.z, pos.x+pos.y+pos.z);
 		return geom_id;
 		//dGeomPlaneSetParams(m_GeomID, normal.x, normal.y, normal.z, pos - );
 	}
@@ -280,8 +278,8 @@ namespace GASS
 			{
 				col_mesh_id = res->GetResource().Name();
 			}
-			ODECollisionMeshInfo col_mesh = GetCollisionSystem()->CreateCollisionMesh(col_mesh_id,mesh);
-			geom_id = dCreateTriMesh(GetCollisionSystem()->GetSpace(), col_mesh.ID, 0, 0, 0);
+			ODECollisionMeshInfo col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(col_mesh_id,mesh);
+			geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
 		}
 		else
 		{
@@ -393,7 +391,7 @@ namespace GASS
 			// Give some very bounds which, while conservative,
 			// makes AABB computation more accurate than +/-INF.
 			dGeomHeightfieldDataSetBounds( heightid, m_TerrainData.m_TerrainBounds.m_Min.y,  m_TerrainData.m_TerrainBounds.m_Max.y);
-			geom_id = dCreateHeightfield( GetCollisionSystem()->GetSpace(), heightid, 1 );
+			geom_id = dCreateHeightfield( GetCollisionSceneManager()->GetSpace(), heightid, 1 );
 
 			Vec3 center_position;
 			center_position.x = m_TerrainData.m_TerrainBounds.m_Min.x + (m_TerrainData.m_TerrainBounds.m_Max.x - m_TerrainData.m_TerrainBounds.m_Min.x)*0.5;

@@ -30,7 +30,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
@@ -123,7 +123,7 @@ namespace GASS
 		Vec4 m_Bounds;
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
-		static ICollisionSystem* m_CollisionSystem;
+		static ICollisionSceneManager* m_CollisionSM;
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;
 		GeometryPageManager* m_LOD0;

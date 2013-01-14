@@ -38,6 +38,7 @@ namespace GASS
 		virtual void SystemTick(double delta_time); 
 		virtual void OnInit();
 		virtual void OnShutdown();
+		virtual bool GetSerialize() const {return false;}
 	protected:
 		ADD_ATTRIBUTE(bool,Paused)
 	};

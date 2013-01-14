@@ -24,6 +24,7 @@
 #include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -54,21 +55,25 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
+		virtual bool GetSerialize() const {return false;}
+
+		dWorldID GetWorld()const {return m_World;}
+		void SystemTick(double delta);
+		bool IsActive()const {return !m_Paused;}
 
 		dSpaceID GetPhysicsSpace(){return m_Space;}
 		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
 		ODECollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
 		bool HasCollisionMesh(const std::string &name);
-		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
-		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
-		dWorldID GetWorld()const {return m_World;}
-		void SystemTick(double delta);
-		bool IsActive()const {return !m_Paused;}
-	protected:
-		
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
+		
+		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
+		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
+	protected:
+	
+		
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
 	private:

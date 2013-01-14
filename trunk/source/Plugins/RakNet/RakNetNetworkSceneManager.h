@@ -43,8 +43,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-
-		//void Update(double delta);
+		virtual bool GetSerialize() const {return false;}
 	protected:
 		void OnNewMasterReplica(MasterReplicaCreatedEventPtr message);
 		void GeneratePartID(SceneObjectPtr obj, int &id);

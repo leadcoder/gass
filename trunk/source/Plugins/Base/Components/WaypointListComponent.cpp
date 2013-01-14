@@ -27,7 +27,7 @@
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"

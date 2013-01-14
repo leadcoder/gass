@@ -44,6 +44,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
+		virtual bool GetSerialize() const {return false;}
 	protected:
 	};
 	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 

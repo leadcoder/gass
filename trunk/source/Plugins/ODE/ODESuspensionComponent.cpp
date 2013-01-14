@@ -333,7 +333,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::UpdateSwayBars(VelocityNotifyMessagePtr message)
+	/*void ODESuspensionComponent::UpdateSwayBars(VelocityNotifyMessagePtr message)
 	{
 		//Hack to keep vehicles from flipping upside down
 		if(m_SwayForce > 0)
@@ -384,7 +384,7 @@ namespace GASS
 				dBodyAddForceAtPos( b1, -axis2.x*amt, -axis2.y*amt, -axis2.z*amt, wp[0], wp[1], wp[2] );
 			}
 		}
-	}
+	}*/
 
 	void ODESuspensionComponent::JointCorrectHinge2()
 	{

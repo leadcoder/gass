@@ -73,7 +73,7 @@ namespace GASS
 
 		m_TimeLeft = m_TimeToLive;
 		//save for fast access
-		m_ColSys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
+		m_ColSM = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
 		//register fot ticks
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(shared_from_this());
 	}
@@ -176,12 +176,11 @@ namespace GASS
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_dir;
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
 				
 
-			m_ColHandle = m_ColSys->Request(request);
+			m_ColHandle = m_ColSM->Request(request);
 			m_HasColHandle = true;
 
 			m_Pos = new_pos;
@@ -215,7 +214,7 @@ namespace GASS
 		GASS::CollisionResult result;
 		if(m_HasColHandle)
 		{
-			if(m_ColSys->Check(m_ColHandle,result))
+			if(m_ColSM->Check(m_ColHandle,result))
 			{
 				m_HasColHandle = false;
 				if(result.Coll)
@@ -255,13 +254,10 @@ namespace GASS
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
 
 				//Send force message to indicate hit
-
 				Vec3 force = proj_dir*m_ImpactForce;
 				MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,force));
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
 			}
-
-			//GetSceneObject()->GetScene()->DeleteObject(GetSceneObject());
 			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
 			GetSceneObject()->GetScene()->PostMessage(remove_msg);
 
@@ -269,9 +265,6 @@ namespace GASS
 				SpawnEffect(m_EndEffectTemplateName);
 			return;
 		}
-
-		//std::cout << "Step physics:" << GetSceneObject()->GetName() << std::endl;
-
 		StepPhysics(m_PhysicsDeltaTime);
 		m_PhysicsDeltaTime = 0;
 	}

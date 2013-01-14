@@ -29,8 +29,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
-
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 namespace GASS
 {
@@ -75,7 +74,7 @@ namespace GASS
 		float m_ExplodeNearEnemyDistance;
 		double m_PhysicsDeltaTime;
 		CollisionHandle m_ColHandle;
-		CollisionSystemPtr m_ColSys;
+		CollisionSceneManagerPtr m_ColSM;
 		Vec3 m_Pos;
 		Quaternion m_Rot;
 		float m_MaxDamage;

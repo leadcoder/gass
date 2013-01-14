@@ -205,7 +205,7 @@ namespace GASS
 			m_RakPeer->Shutdown(100, 0);
 		if(m_Active)
 		{
-			//GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent));
+			
 		}
 		m_Active=false;
 	}
@@ -254,7 +254,7 @@ namespace GASS
 		//Register update fucntion
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		//Catch scene load messages
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneLoadEvent,0));
+		
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
 		//m_Logger.LogHeader();

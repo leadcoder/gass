@@ -24,6 +24,7 @@
 #include <ode/ode.h>
 #include <map>
 #include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -36,56 +37,17 @@
 
 namespace GASS
 {
-	class IMeshComponent;
-	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
-	struct MeshData;
-
-	struct ODECollisionMeshInfo
+	class ODECollisionSystem : public Reflection<ODECollisionSystem , SimSystem> 
 	{
-		MeshData* Mesh;
-		dTriMeshDataID ID;
-	};
-
-	class ODECollisionSystem : public Reflection<ODECollisionSystem , SimSystem> , public ICollisionSystem
-	{
-	public:
-		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
-		typedef std::map<CollisionHandle,CollisionResult> ResultMap;
-		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
 	public:
 		ODECollisionSystem();
 		virtual ~ODECollisionSystem();
 		static void RegisterReflection();
 		virtual void Init();
-		virtual void Update(double delta_time);
+		//virtual void Update(double delta_time);
 		virtual std::string GetSystemName() const {return "ODECollisionSystem";}
-
-		CollisionHandle Request(const CollisionRequest &request);
-		bool Check(CollisionHandle handle, CollisionResult &result);
-		void Force(CollisionRequest &request, CollisionResult &result) const;
-		void Process();
-		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
-	
-		//used by collision geometry
-		ODECollisionMeshInfo CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
-		dSpaceID GetSpace() const;
 	private:
-		bool HasCollisionMesh(const std::string &name);
-		void OnPreSceneCreate(PreSceneCreateEventPtr message);
-		void OnSceneUnloaded(SceneUnloadedEventPtr message);
-		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
-		RequestMap m_RequestMap;
-		ResultMap m_ResultMap;
-		unsigned int m_HandleCount;
-		tbb::spin_mutex m_RequestMutex;
-		tbb::spin_mutex m_ResultMutex;
-		float m_MaxRaySegment;
-		SceneWeakPtr m_Scene;
-		CollisionMeshMap m_ColMeshMap;
-		dSpaceID m_Space;
 	};
 	typedef boost::shared_ptr<ODECollisionSystem> ODECollisionSystemPtr;
-
-
 }
 

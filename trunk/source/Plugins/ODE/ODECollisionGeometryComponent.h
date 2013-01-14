@@ -29,20 +29,21 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
+#include "ODECollisionGeometryComponent.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 
 namespace GASS
 {
 	class IGeometryComponent;
 	class ITerrainComponent;
-	class ODECollisionSystem;
-	typedef boost::shared_ptr<ODECollisionSystem> ODECollisionSystemPtr;
+	class ODECollisionSceneManager;
+	typedef boost::shared_ptr<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
 	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
 
 	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>
 	{
-		
+		friend class ODECollisionSceneManager;
 	public:
 		friend class ODECollisionSystem;
 		enum CollisionGeomType
@@ -79,7 +80,7 @@ namespace GASS
 		void SetRotation(const Quaternion &rot);
 		void SetScale(const Vec3 &scale);
 		bool IsInitialized() const;
-		ODECollisionSystemPtr GetCollisionSystem() const;
+		ODECollisionSceneManagerPtr GetCollisionSceneManager() const;
 		dGeomID CreateMeshGeometry();
 		dGeomID CreateTerrainGeometry();
 		dGeomID CreateBoxGeometry();

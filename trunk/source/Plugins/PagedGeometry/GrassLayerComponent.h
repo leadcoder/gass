@@ -31,7 +31,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
@@ -118,7 +118,6 @@ protected:
 		std::string m_DensityMapFilename;
 		float m_ImposterAlphaRejectionValue;
 		static ITerrainComponent *m_Terrain;
-		static ICollisionSystem* m_CollisionSystem;
 	};
 
 	typedef boost::shared_ptr<GrassLayerComponent> GrassLayerComponentPtr;

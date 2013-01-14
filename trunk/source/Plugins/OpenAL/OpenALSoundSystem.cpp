@@ -140,7 +140,6 @@ namespace GASS
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
 		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
 
-
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
 		if(current_cam_obj)
 		{
@@ -176,7 +175,6 @@ namespace GASS
 
 	void OpenALSoundSystem::UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel)
 	{
-
 		// Position of the listener.
 		ALfloat ListenerPos[] = { pos.x, pos.y, pos.z};
 		// Velocity of the listener.

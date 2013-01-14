@@ -51,7 +51,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		
+		virtual bool GetSerialize() const {return true;}
 		//Fog
 		std::string GetFogMode() const {return m_FogMode;}
 		float GetFogStart() const {return m_FogStart;}

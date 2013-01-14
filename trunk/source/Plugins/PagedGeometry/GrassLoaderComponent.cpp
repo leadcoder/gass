@@ -43,7 +43,7 @@
 namespace GASS
 {
 	ITerrainComponent* GrassLoaderComponent::m_Terrain = NULL;
-	ICollisionSystem * GrassLoaderComponent::m_CollisionSystem = NULL;
+	ICollisionSceneManager * GrassLoaderComponent::m_CollisionSM = NULL;
 
 	GrassLoaderComponent::GrassLoaderComponent(void) : m_CustomBounds(0,0,0,0),
 		m_PageSize(50),
@@ -91,7 +91,7 @@ namespace GASS
 			user_bounds = false;
 		}
 
-		m_CollisionSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<ICollisionSystem>().get();
+		m_CollisionSM = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
 
 		if(!user_bounds)
 		{
@@ -295,18 +295,18 @@ namespace GASS
 
 	float GrassLoaderComponent::GetCollisionSystemHeight(float x, float z)
 	{
-		if(m_CollisionSystem)
+		if(m_CollisionSM)
 		{
 			GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
-			request.Scene = GetSceneObject()->GetScene();
+			
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
 			GASS::CollisionResult result;
 			result.Coll = false;
-			m_CollisionSystem->Force(request,result);
+			m_CollisionSM->Force(request,result);
 			if(result.Coll)
 				return result.CollPosition.y;
 		}
