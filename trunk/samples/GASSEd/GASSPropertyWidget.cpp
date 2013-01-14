@@ -190,8 +190,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		{
 			GASS::Resource resource = boost::any_cast<GASS::Resource>(any_value);
 			GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
-			if(rs == NULL)
-				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "GASSPropertyWidget::CreateProp");
 			std::vector<std::string> values = rs->GetResourcesFromGroup(ps->ResourceType,ps->ResourceGroup);
 				
 			item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
