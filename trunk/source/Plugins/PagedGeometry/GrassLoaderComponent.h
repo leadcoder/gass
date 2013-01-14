@@ -97,7 +97,7 @@ protected:
 		float m_PageSize;
 		std::string m_DensityMapFilename;
 		Vec4 m_CustomBounds;
-		static ITerrainComponent *m_Terrain;
+		static IHeightmapTerrainComponent *m_Terrain;
 		static ICollisionSceneManager* m_CollisionSM;
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;

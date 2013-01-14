@@ -314,6 +314,12 @@ namespace GASS
 		return m_HeightData;
 	}
 
+
+	Float OgreSceneManagerTerrainComponent::GetHeightAtPoint(int x, int y) const
+	{
+		return m_HeightData[y*m_HMDim+x];
+	}
+
 	GeometryFlags OgreSceneManagerTerrainComponent::GetGeometryFlags() const
 	{
 		return m_GeomFlags;

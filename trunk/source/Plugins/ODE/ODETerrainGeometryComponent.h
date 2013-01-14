@@ -35,13 +35,13 @@
 
 namespace GASS
 {
-	class ITerrainComponent;
+	class IHeightmapTerrainComponent;
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
 	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
+	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 	
 
 	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
@@ -70,7 +70,7 @@ namespace GASS
 		void Reset();
 		dSpaceID GetSpace();
 		dGeomID CreateTerrain();
-		TerrainComponentPtr GetTerrainComponent() const;
+		HeightmapTerrainComponentPtr GetTerrainComponent() const;
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:

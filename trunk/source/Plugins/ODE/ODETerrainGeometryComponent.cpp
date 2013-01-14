@@ -97,9 +97,9 @@ namespace GASS
 		TerrainComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
-			geom = boost::shared_dynamic_cast<ITerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			geom = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
+		else geom = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		return geom;
 	}
 

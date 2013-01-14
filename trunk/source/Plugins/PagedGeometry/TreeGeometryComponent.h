@@ -46,7 +46,7 @@ using namespace Forests;
 
 namespace GASS
 {
-	class ITerrainComponent;
+	class IHeightmapTerrainComponent;
 	class DensityMapComponent;
 	typedef boost::shared_ptr<DensityMapComponent> DensityMapComponentPtr;
 
@@ -245,7 +245,7 @@ namespace GASS
 		TBounds m_MapBounds;
 		float m_ImposterAlphaRejectionValue;
 		std::string m_MeshFileName;
-		static ITerrainComponent *m_Terrain;
+		static IHeightmapTerrainComponent *m_Terrain;
 		int m_ImposterResolution;
 
 		TreeLoader2D *m_TreeLoader2d;

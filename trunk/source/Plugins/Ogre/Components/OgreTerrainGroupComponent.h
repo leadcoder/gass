@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -39,7 +38,7 @@ namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreTerrainGroupComponent : public Reflection<OgreTerrainGroupComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent
+	class OgreTerrainGroupComponent : public Reflection<OgreTerrainGroupComponent,BaseSceneComponent>, public IMeshComponent, public IGeometryComponent
 	{
 	public:
 		OgreTerrainGroupComponent();
@@ -53,12 +52,13 @@ namespace GASS
 		virtual Resource GetTerrainResource()const {return m_TerrainResource;}
 
 		//ITerrainComponent
-		virtual Float GetHeight(Float x, Float z) const;
+		/*virtual Float GetHeight(Float x, Float z) const;
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const {}
 		virtual unsigned int GetSamplesX() const;
 		virtual unsigned int GetSamplesZ() const;
 		virtual float* GetHeightData() const {return NULL;}
-
+		virtual Float GetHeightAtPoint(int x, int y) const {return 0;}
+		*/
 		//IGeometryComponent
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);

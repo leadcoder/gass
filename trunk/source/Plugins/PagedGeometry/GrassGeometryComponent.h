@@ -48,7 +48,7 @@ using namespace Forests;
 
 namespace GASS
 {
-	class ITerrainComponent;
+	class IHeightmapTerrainComponent;
 
 	class GrassGeometryComponent : public Reflection<GrassGeometryComponent,BaseSceneComponent> , public Ogre::RenderTargetListener
 	{
@@ -97,7 +97,7 @@ namespace GASS
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
 		float GetCollisionSystemHeight(float x, float z);
-		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
+		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
 
@@ -122,7 +122,7 @@ namespace GASS
 		std::string m_DensityMapFilename;
 		Vec4 m_Bounds;
 		float m_ImposterAlphaRejectionValue;
-		static ITerrainComponent *m_Terrain;
+		static IHeightmapTerrainComponent *m_Terrain;
 		static ICollisionSceneManager* m_CollisionSM;
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;

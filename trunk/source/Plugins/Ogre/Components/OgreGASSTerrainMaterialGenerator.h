@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include <tinyxml.h>
 

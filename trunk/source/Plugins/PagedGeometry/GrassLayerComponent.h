@@ -117,7 +117,7 @@ protected:
 		float m_DensityFactor;
 		std::string m_DensityMapFilename;
 		float m_ImposterAlphaRejectionValue;
-		static ITerrainComponent *m_Terrain;
+		static IHeightmapTerrainComponent *m_Terrain;
 	};
 
 	typedef boost::shared_ptr<GrassLayerComponent> GrassLayerComponentPtr;

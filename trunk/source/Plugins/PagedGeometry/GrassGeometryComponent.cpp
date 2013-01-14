@@ -40,7 +40,7 @@
 
 namespace GASS
 {
-	ITerrainComponent* GrassGeometryComponent::m_Terrain = NULL;
+	IHeightmapTerrainComponent* GrassGeometryComponent::m_Terrain = NULL;
 	ICollisionSceneManager * GrassGeometryComponent::m_CollisionSM = NULL;
 
 	GrassGeometryComponent::GrassGeometryComponent(void) : m_DensityFactor(0.001),
@@ -503,7 +503,7 @@ namespace GASS
 
 	TerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
 	{
-		TerrainComponentPtr terrain = obj->GetFirstComponentByClass<ITerrainComponent>();
+		TerrainComponentPtr terrain = obj->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		if(terrain)
 			return terrain;
 

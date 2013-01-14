@@ -48,7 +48,7 @@
 
 namespace GASS
 {
-	ITerrainComponent* TreeGeometryComponent::m_Terrain = NULL;
+	IHeightmapTerrainComponent* TreeGeometryComponent::m_Terrain = NULL;
 
 	void TreeGeometryComponent::RegisterReflection()
 	{
@@ -129,7 +129,7 @@ namespace GASS
 		if(!user_bounds)
 		{
 			SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
-			TerrainComponentPtr terrain = root->GetFirstComponentByClass<ITerrainComponent>(true);
+			HeightmapTerrainComponentPtr terrain = root->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
 				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);

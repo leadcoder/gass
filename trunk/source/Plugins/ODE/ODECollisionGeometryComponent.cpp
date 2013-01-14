@@ -344,7 +344,7 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateTerrainGeometry()
 	{
-		TerrainComponentPtr terrain= GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
+		HeightmapTerrainComponentPtr terrain= GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 
 		if(!terrain)
 		{
@@ -363,6 +363,8 @@ namespace GASS
 			m_TerrainData.m_TerrainBounds = geom->GetBoundingBox();
 			int samples_x = terrain->GetSamplesX();
 			int samples_z = terrain->GetSamplesZ();
+			m_TerrainData.m_Samples = samples_x;
+			
 			Float size_x = m_TerrainData.m_TerrainBounds.m_Max.x - m_TerrainData.m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainData.m_TerrainBounds.m_Max.z - m_TerrainData.m_TerrainBounds.m_Min.z;
 			m_TerrainData.m_SampleWidth = size_x/(samples_x-1);
@@ -370,7 +372,7 @@ namespace GASS
 
 			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
 			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
-			//FileLog::Print("thickness %f",thickness );
+			
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
 			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space),
 				this, // pUserData ?
@@ -410,6 +412,7 @@ namespace GASS
 
 	Float ODECollisionGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
+		return m_TerrainData.m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData.m_Samples-1-z);
 		Float world_x = x * m_TerrainData.m_SampleWidth + m_TerrainData.m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_TerrainData.m_SampleWidth + m_TerrainData.m_TerrainBounds.m_Min.z;
 		Float h = m_TerrainData.m_TerrainGeom->GetHeight(world_x,world_z);

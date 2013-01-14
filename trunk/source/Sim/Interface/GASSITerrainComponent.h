@@ -35,34 +35,28 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with components should 
 		instead be done through messages.
 	*/
-	class GASSExport ITerrainComponent
+	class GASSExport IHeightmapTerrainComponent
 	{
 	public:
-		virtual ~ITerrainComponent(){}
+		virtual ~IHeightmapTerrainComponent(){}
 
 		/**
 		Get terrain height at world position x,z (assume y up direction)
 		*/
-		virtual Float GetHeight(Float x, Float z) const = 0;
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
+		virtual Float GetHeightAtPoint(int x, int z) const = 0;
+		virtual Float GetHeightAtWorldPosition(Float x, Float z) const = 0;
+		//virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
 
 		/**
-		Get terrain samples x dir
+		Get terrain samples
 		*/
-		virtual unsigned int GetSamplesX() const =0;
-
-		/**
-		Get terrain samples z dir
-		*/
-		virtual unsigned int GetSamplesZ() const =0;
-
+		virtual unsigned int GetSamples() const =0;
 		/**
 		Get pointer to terrain data height field, if not available return NULL
 		*/
 		virtual float* GetHeightData() const = 0;
-
 	private:
 	};
-	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
+	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 }
 

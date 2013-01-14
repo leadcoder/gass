@@ -780,6 +780,13 @@ namespace GASS
 		}
 	}
 
+
+	Float OgreTerrainPageComponent::GetHeightAtPoint(int x, int y) const
+	{
+		if(m_Terrain)
+			return m_Terrain->getHeightAtPoint(x,y);
+	}
+
 	Float OgreTerrainPageComponent::GetHeight(Float x, Float z) const
 	{
 		if(m_Terrain)

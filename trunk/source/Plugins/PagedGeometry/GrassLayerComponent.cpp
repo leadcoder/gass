@@ -41,7 +41,7 @@
 
 namespace GASS
 {
-	ITerrainComponent* GrassLayerComponent::m_Terrain = NULL;
+	IHeightmapTerrainComponent* GrassLayerComponent::m_Terrain = NULL;
 
 	GrassLayerComponent::GrassLayerComponent(void) : m_DensityFactor(0.001),
 		m_GrassLoader (NULL),

@@ -39,7 +39,7 @@ namespace GASS
 		{
 			if(selected)
 			{
-				TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
+				HeightmapTerrainComponentPtr terrain = selected->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 				if(terrain)
 				{
 					selected->GetParentSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,116, 90,1.0)));

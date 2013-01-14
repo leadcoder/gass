@@ -46,8 +46,7 @@ using namespace Forests;
 
 namespace GASS
 {
-	class ITerrainComponent;
-
+	
 	class DensityMapComponent : public Reflection<DensityMapComponent,BaseSceneComponent>  , public Ogre::RenderTargetListener
 	{
 	public:

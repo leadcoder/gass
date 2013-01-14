@@ -42,7 +42,7 @@
 
 namespace GASS
 {
-	ITerrainComponent* GrassLoaderComponent::m_Terrain = NULL;
+	IHeightmapTerrainComponent* GrassLoaderComponent::m_Terrain = NULL;
 	ICollisionSceneManager * GrassLoaderComponent::m_CollisionSM = NULL;
 
 	GrassLoaderComponent::GrassLoaderComponent(void) : m_CustomBounds(0,0,0,0),
@@ -95,7 +95,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
+			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			
 			if(terrain)
 			{

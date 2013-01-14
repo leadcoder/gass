@@ -34,7 +34,6 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSITerrainComponent.h"
 
 
 namespace GASS

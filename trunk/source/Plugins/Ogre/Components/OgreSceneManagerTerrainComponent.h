@@ -35,7 +35,7 @@ namespace GASS
 {
 	class CustomTerrainPageListener;
 	class CollisionMesh;
-	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public ITerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
+	class OgreSceneManagerTerrainComponent : public Reflection<OgreSceneManagerTerrainComponent,BaseSceneComponent>, public IHeightmapTerrainComponent, public IMeshComponent, public IGeometryComponent,  Ogre::TerrainPageSourceListener
 	{
 	public:
 		OgreSceneManagerTerrainComponent();
@@ -50,11 +50,11 @@ namespace GASS
 		virtual void SetTerrainResource(const Resource &filename);
 
 		//ITerrainComponent
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal)const {}
-		virtual Float GetHeight(Float x, Float z) const;
-		virtual unsigned int GetSamplesX() const;
-		virtual unsigned int GetSamplesZ() const;
+		//virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal)const {}
+		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
+		virtual unsigned int GetSamples() const;
 		float* GetHeightData() const;
+		virtual Float GetHeightAtPoint(int x, int y) const;
 		
 		//IGeometryComponent
 		AABox GetBoundingBox() const;

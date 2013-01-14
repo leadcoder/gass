@@ -55,7 +55,7 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		
+		virtual bool GetSerialize() const {return false;}
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);

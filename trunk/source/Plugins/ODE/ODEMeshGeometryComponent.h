@@ -34,7 +34,6 @@
 
 namespace GASS
 {
-	class ITerrainComponent;
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;

@@ -112,6 +112,7 @@ namespace GASS
 			Float m_SampleHeight;
 			AABox m_TerrainBounds;
 			ITerrainComponent* m_TerrainGeom;
+			int m_Samples;
 		};
 		static TerrainData m_TerrainData;
 

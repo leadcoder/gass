@@ -38,7 +38,6 @@
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include <boost/bind.hpp>
