@@ -376,10 +376,9 @@ namespace GASS
 			OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 			if(page)
 			{
-				GetSceneObject()->RemoveChild(child);
+				GetSceneObject()->RemoveChildSceneObject(child);
 				children = GetSceneObject()->GetChildren();
 			}
-			//release pointers by reallocate children list
 		}
 	}
 

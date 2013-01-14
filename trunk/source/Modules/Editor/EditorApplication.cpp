@@ -90,7 +90,7 @@ namespace GASS
 		SimEngine::Get().Update();
 	}
 
-	/*void EditorApplication::OnLoadScene(PostSceneLoadEventPtr message)
+	/*void EditorApplication::OnLoadScene(PostSceneCreateEventPtr message)
 	{
 		ScenePtr scene = message->GetScene();
 		//load top camera

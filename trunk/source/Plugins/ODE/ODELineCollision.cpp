@@ -22,19 +22,18 @@
 #include "Plugins/ODE/ODELineCollision.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 
 
 namespace GASS
 {
-
-
 	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,dGeomID space_id, float segment_length) :	m_Request(request),
 		m_Result(result),
 		m_Space(space_id),
 		m_RayGeom(0),
 		m_SegmentLength(segment_length)
 	{
-		
 		m_RayDir = request->LineEnd - request->LineStart;
 		m_RayStart = request->LineStart;
 		m_RayLength = m_RayDir.Length();
@@ -48,6 +47,9 @@ namespace GASS
 
 	void ODELineCollision::Process()
 	{
+		ScenePtr scene = SimEngine::Get().GetScenes().getNext();
+		GraphicsSceneManagerPtr gsm = scene->GetFirstSceneManagerByClass<IGraphicsSceneManager>();
+
 		//split ray into segments
 		if(m_SegmentLength > 0)
 		{
@@ -67,6 +69,14 @@ namespace GASS
 				const Vec3 rayStart = m_RayStart + m_RayDir*(i*m_SegmentLength);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
+
+
+				Vec3 debugRayStart = rayStart;
+				debugRayStart.x += 5;
+
+				gsm->DrawLine(debugRayStart,Vec3(debugRayStart.x,debugRayStart.y+10,debugRayStart.z),Vec4(0,0,0,0.6));
+				gsm->DrawLine(debugRayStart,debugRayStart + m_RayDir*m_SegmentLength,Vec4(Float(i)/Float(5),0,0,1));
+
 				if(m_Result->Coll == true)
 				{
 					dGeomDestroy(ray);

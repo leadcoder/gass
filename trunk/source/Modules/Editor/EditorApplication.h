@@ -19,7 +19,7 @@ namespace GASS
 		void OnRequestSimulatiornStep(TimeStepRequestPtr message);
 		//helpers
 		void  UnloadScene();
-//		void OnLoadScene(PostSceneLoadEventPtr message);
+//		void OnLoadScene(PostSceneCreateEventPtr message);
 		
 		std::string m_StartScene;
 

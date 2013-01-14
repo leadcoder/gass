@@ -33,6 +33,7 @@
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
+#include "Plugins/Ogre/OgreConvert.h"
 
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -136,6 +137,15 @@ namespace GASS
 		//Create debug render system
 		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
 
+		Ogre::Root::getSingletonPtr()->addFrameListener(this);
+	}
+
+
+	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color)
+	{
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		if(m_DebugDrawer)
+			m_DebugDrawer->drawLine(Convert::ToOgre(start),Convert::ToOgre(end),ogre_color);		
 	}
 
 	void OgreGraphicsSceneManager::OnInit()
@@ -151,9 +161,24 @@ namespace GASS
 	{
 		delete m_DebugDrawer;
 		m_SceneMgr->clearScene();
+		Ogre::Root::getSingletonPtr()->removeFrameListener(this);
 		Root::getSingleton().destroySceneManager(m_SceneMgr);
 		m_SceneMgr = NULL;
 		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0); //why?
+	}
+
+
+	
+	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &evt)
+	{
+		m_DebugDrawer->build();
+		return true;
+	}
+
+	bool OgreGraphicsSceneManager::frameEnded (const Ogre::FrameEvent &evt)
+	{
+		m_DebugDrawer->clear();
+		return true;
 	}
 
 	void OgreGraphicsSceneManager::OnWeatherRequest(WeatherRequestPtr message)
@@ -279,7 +304,6 @@ namespace GASS
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 		m_SceneMgr->setShowDebugShadows(true);
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
-
 
 		
 		/*if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))

@@ -240,30 +240,23 @@ namespace GASS
 
 	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
 	{
-		GASS::CollisionResult result;
+		CollisionResult result;
 		result.Coll = false;
-		GASS::BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<GASS::BaseSceneComponent>(cam);
+		BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(cam);
 		if(cam && bsc)
 		{
-
-			//ScenePtr scene = cam_obj->GetScene();
+			CollisionSceneManagerPtr col_sm = bsc->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
 			Vec3 ray_start;
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
 			ray_direction = ray_direction*raycast_distance;
-			GASS::CollisionSystemPtr col_sys = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ICollisionSystem>();
-
-			if(!col_sys)
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get CollisionSystem", "MouseToolController::CameraRaycast");
-
 			GASS::CollisionRequest request;
 			request.LineStart = ray_start;
 			request.LineEnd = ray_start + ray_direction;
 			request.Type = COL_LINE;
-			request.Scene = bsc->GetSceneObject()->GetScene();
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = col_bits;
-			col_sys->Force(request,result);
+			col_sm->Force(request,result);
 		}
 		return result;
 	}

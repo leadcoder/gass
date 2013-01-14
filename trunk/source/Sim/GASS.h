@@ -61,6 +61,7 @@
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/Interface/GASSIPhysicsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"

@@ -63,7 +63,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OgreGraphicsSystem",new GASS::Creator<OgreGraphicsSystem, ISystem>);
 		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
-		RegisterVectorProperty<std::string >("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
+		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
@@ -143,25 +143,6 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSystem::SetActiveSceneManger(Ogre::SceneManager *sm)
-	{
-		/*std::map<std::string, OgreRenderWindowPtr>::iterator win_iter = m_Windows.begin();
-		while(win_iter != m_Windows.end())
-		{
-			//set same scene manager in all views
-			win_iter->second->m_Window->removeAllViewports();	
-			++win_iter;
-		}
-
-		//re-add all viewports?
-		std::map<std::string, Viewport>::iterator vp_iter = m_Viewports.begin();
-		while(vp_iter != m_Viewports.end())
-		{
-			AddViewport(sm,vp_iter->second.m_Name,vp_iter->second.m_Window,vp_iter->second.m_Left,vp_iter->second.m_Top,vp_iter->second.m_Width,vp_iter->second.m_Height,Ogre::ColourValue(),vp_iter->second.m_ZDepth);
-			++vp_iter;
-		}*/
-	}
-
 	RenderWindowPtr OgreGraphicsSystem::GetMainRenderWindow() const
 	{
 		RenderWindowPtr main_win;
@@ -177,6 +158,8 @@ namespace GASS
 
 		//if(m_DebugDrawer)
 		//	m_DebugDrawer->build();
+
+	
 
 		m_Root->renderOneFrame();
 

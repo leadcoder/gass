@@ -21,16 +21,18 @@
 #pragma once
 
 #include "Sim/Interface/GASSIGraphicsSystem.h"
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "IOgreSceneManagerProxy.h"
 #include <string>
+#include <OgreSceneManager.h>
 
 namespace Ogre
 {
-	class SceneManager;
+	
 	class LiSPSMShadowCameraSetup;
 	
 }
@@ -40,7 +42,7 @@ namespace GASS
 {
 	class IComponent;
 	class OgreGraphicsSystem;
-	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy
+	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy, public IGraphicsSceneManager, Ogre::FrameListener
 	{
 	private:
 		void UpdateFogSettings();
@@ -64,15 +66,24 @@ namespace GASS
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
+
+		//IGraphicsSceneManager
+		void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color);
 		
 		//IOgreSceneManagerProxy
 		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}
 	protected:
+		//Ogre::SceneManager::Listener
+		virtual bool frameStarted (const Ogre::FrameEvent &evt);
+		virtual bool frameEnded (const Ogre::FrameEvent &evt);
 		void OnWeatherRequest(WeatherRequestPtr message);
 	private:
 		void UpdateLightSettings();
 		void UpdateSkySettings();
 		void UpdateShadowSettings();
+
+		
+		
 
 		//Keep private for now, 
 		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value; UpdateLightSettings();}
@@ -136,7 +147,6 @@ namespace GASS
 		float m_FarShadowDistance;
 		float m_ShadowDirectionalLightExtrusionDistance;
 		Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
-
 		Ogre::SceneManager* m_SceneMgr;
 		boost::weak_ptr<OgreGraphicsSystem> m_GFXSystem;
 		std::vector<IComponent*> m_GFXComponents;

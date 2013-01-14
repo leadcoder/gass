@@ -30,6 +30,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 //include to ensure interface export
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSILightComponent.h"
@@ -42,6 +43,7 @@
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSIPhysicsSystem.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIResourceComponent.h"
@@ -236,7 +238,7 @@ namespace GASS
 		ScenePtr the_scene = ScenePtr(scene,boost::detail::sp_nothrow_tag());
 		if(!the_scene)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene no valid", "SimEngine::DestroyScene");
-		the_scene->Unload();
+		the_scene->OnUnload();
 		SceneVector::iterator iter = m_Scenes.begin();
 		while(iter != m_Scenes.end())
 		{
@@ -253,7 +255,7 @@ namespace GASS
 	SceneWeakPtr SimEngine::CreateScene(const std::string &name)
 	{
 		ScenePtr scene(new Scene(name));
-		scene->Create();
+		scene->OnCreate();
 		m_Scenes.push_back(scene);
 		return scene;
 	}

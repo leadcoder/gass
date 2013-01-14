@@ -58,6 +58,7 @@ namespace GASS
 		virtual void SetScene(ScenePtr owner) = 0;
 		virtual void Register(SceneManagerListenerPtr listener) = 0;
 		virtual void Unregister(SceneManagerListenerPtr listener) = 0;
+		virtual bool GetSerialize() const =0;
 
 	};
 

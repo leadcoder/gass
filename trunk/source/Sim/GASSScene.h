@@ -55,36 +55,13 @@ namespace GASS
 		public IMessageListener
 	{
 		friend class SceneObject;
+		friend class SimEngine;
 	public:
-		/*enum
-		{
-			GFX_COMPONENT_LOAD_PRIORITY = 0,
-			PHYSICS_COMPONENT_LOAD_PRIORITY = 1,
-			SOUND_COMPONENT_LOAD_PRIORITY = 2,
-			CORE_COMPONENT_LOAD_PRIORITY = 3,
-			USER_COMPONENT_LOAD_PRIORITY = 4,
-
-			GFX_SYSTEM_LOAD_PRIORITY = 0,
-			PHYSICS_SYSTEM_LOAD_PRIORITY = 1,
-			SOUND_SYSTEM_LOAD_PRIORITY = 2,
-			CORE_SYSTEM_LOAD_PRIORITY = 3,
-			USER_SYSTEM_LOAD_PRIORITY = 4,
-
-		};*/
-		Scene(const std::string &name = std::string(""));
+		Scene(const std::string &name);
 		virtual ~Scene();
 		static void RegisterReflection();
 
-		/**
-		This function must be called by creator before using this class.
-		This function allocate the scene object manager which take the
-		Scene as constructor argument and therefore can not be
-		allocated in the Scene contructor where shared_from_this()
-		is not excepted. Further this function allocate all registred scene managers,
-		they also need a SceneScenePtr and therefore not possible to allocate
-		this stuff in the constructor
-		*/
-		void Create();
+		
 
 		/**
 		Get the start position for this scene,
@@ -124,8 +101,16 @@ namespace GASS
 		Unregister for scene scene messages
 		*/
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
+
+
 		void PostMessage(SceneMessagePtr message);
 		void SendImmediate(SceneMessagePtr message);
+
+
+		/**
+			Get how many messages that is unprocessed
+		*/
+		size_t GetQueuedMessages() const;
 
 		/**
 		Load a new scene from path
@@ -145,7 +130,7 @@ namespace GASS
 		/**
 		Set scene scene name
 		*/
-		void SetName(const std::string &name) {m_Name = name;}
+		//void SetName(const std::string &name) {m_Name = name;}
 
 		/**
 		Register for scene scene messages, see SceneSceneMessages.h for available messages
@@ -190,12 +175,9 @@ namespace GASS
 		/**
 			Check if scene has been loaded
 		*/
-		bool IsSceneLoaded() const {return m_SceneLoaded;}
+		//bool IsSceneLoaded() const {return m_SceneLoaded;}
 
-		/**
-			Get how many messages that is unprocessed
-		*/
-		size_t GetQueuedMessages() const;
+		
 
 		
 		/**
@@ -203,11 +185,22 @@ namespace GASS
 		files and push that path to the return vector
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);
-
-		void Unload();
-
 		std::string GetResourceGroupName() const;
 protected:
+
+	/**
+		This function must be called by creator before using this class.
+		This function allocate the scene object manager which take the
+		Scene as constructor argument and therefore can not be
+		allocated in the Scene contructor where shared_from_this()
+		is not excepted. Further this function allocate all registred scene managers,
+		they also need a SceneScenePtr and therefore not possible to allocate
+		this stuff in the constructor
+		*/
+		void OnCreate();
+
+		void OnUnload();
+
 		/**
 		Load scene  from xml,
 		this method is called by the scene LoadXML method in the scene class
@@ -246,8 +239,7 @@ protected:
 		SceneObjectPtr m_Root;
 		SceneObjectWeakPtr m_TerrainObjects;
 
-		bool m_SceneLoaded;
-		bool m_CreateCalled;
+		bool m_Initlized;
 	};
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::weak_ptr<Scene> SceneWeakPtr;

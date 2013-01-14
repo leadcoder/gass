@@ -50,15 +50,14 @@ namespace GASS
 		m_StartPos(Vec3(0,0,0)),
 		m_StartRot(Vec3(0,0,0)),
 		m_SceneMessageManager(new MessageManager()),
-		m_SceneLoaded(false),
-		m_CreateCalled(false)
+		m_Initlized(false)
 	{
 		
 	}
 
 	Scene::~Scene()
 	{
-		//Unload();
+	
 	}
 
 	void Scene::RegisterReflection()
@@ -67,7 +66,7 @@ namespace GASS
 		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
 	}
 
-	void Scene::Create()
+	void Scene::OnCreate()
 	{
 		//Create empty root node
 		m_Root = SceneObjectPtr(new SceneObject());
@@ -94,7 +93,6 @@ namespace GASS
 			sm->OnCreate();
 			m_SceneManagers.push_back(sm);
 		}
-
 		
 		for(int i = 0; i < m_SceneManagers.size() ; i++)
 		{
@@ -107,18 +105,15 @@ namespace GASS
 		m_TerrainObjects = scenery;
 		m_Root->AddChildSceneObject(scenery,true);
 
-		m_CreateCalled = true;
 		//send load message
 		//m_SceneMessageManager->SendImmediate(MessagePtr(new LoadSceneManagersRequest(shared_from_this())));
 		SystemMessagePtr system_msg(new PostSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
-		m_SceneLoaded = true;
+		m_Initlized = true;
 	}
 
-
-	void Scene::Unload()
+	void Scene::OnUnload()
 	{
-		//if(m_SceneLoaded)
 		m_Root->OnDelete();
 		m_Root.reset();
 		for(int i = 0; i < m_SceneManagers.size() ; i++)
@@ -130,9 +125,9 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		rs->RemoveResourceGroup(GetResourceGroupName());
-		m_SceneLoaded = false;
 		m_SceneManagers.clear();
 		m_SceneMessageManager->Clear();
+		m_Initlized = false;
 	}
 
 	std::string Scene::GetResourceGroupName() const
@@ -252,7 +247,7 @@ namespace GASS
 
 	void Scene::SyncMessages(double delta_time) const
 	{
-		if(m_SceneLoaded)
+		if(m_Initlized)
 		{
 			m_SceneMessageManager->Update(delta_time);
 			m_Root->SyncMessages(delta_time);
@@ -295,13 +290,16 @@ namespace GASS
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
 		{
 			SceneManagerPtr sm = m_SceneManagers[i];
-			XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
-			if(serialize)
-				serialize->SaveXML(sms_elem);
+			if(sm->GetSerialize()) //should we save this scene mananer settings to sceen?
+			{
+				XMLSerializePtr serialize = boost::shared_dynamic_cast<IXMLSerialize>(sm);
+				if(serialize)
+				{
+					serialize->SaveXML(sms_elem);
+				}
+			}
 		}
 	}
-
-	
 
 	SceneManagerPtr Scene::LoadSceneManager(TiXmlElement *sm_elem)
 	{
