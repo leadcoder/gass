@@ -50,7 +50,6 @@ namespace GASS
 		m_RayPickDistance(3000),
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
-		m_LastScreenPos(0,0),
 		m_ControlSettingName("EditorInputSettings"),
 		m_EditorSceneManager(sm)
 	{
@@ -218,23 +217,23 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::MouseMoved(const CursorInfo &info)
+	/*void MouseToolController::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->MouseMoved(info);
 	}
 
-	void MouseToolController::MouseDown(const CursorInfo &info)
+	void MouseToolController::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->MouseDown(info);
 	}
 
-	void MouseToolController::MouseUp(const CursorInfo &info)
+	void MouseToolController::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->MouseUp(info);
-	}
+	}*/
 
 
 
@@ -261,12 +260,9 @@ namespace GASS
 		return result;
 	}
 
-	CursorInfo MouseToolController::GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance)
+	SceneCursorInfo MouseToolController::GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance)
 	{
-		CursorInfo info;
-		info.m_ScreenPos = cursor_pos;
-		info.m_Delta.x = info.m_ScreenPos.x - m_LastScreenPos.x;
-		info.m_Delta.y = info.m_ScreenPos.y - m_LastScreenPos.y;
+		SceneCursorInfo info;
 		CameraComponentPtr cam = m_EditorSceneManager->GetActiveCamera();
 
 		//get ray direction
@@ -412,7 +408,7 @@ namespace GASS
 
 	void MouseToolController::Update(double delta)
 	{
-		m_Delta = delta;
+		//m_Delta = delta;
 		//debug message
 
 		/*std::stringstream ss;
@@ -420,16 +416,22 @@ namespace GASS
 		const std::string message = ss.str();
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));*/
 
-		CursorInfo info = GetCursorInfo(m_LastScreenPos,m_RayPickDistance);
-		MouseMoved(info);
-		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		
+
+		/*for(int i = 0; i < m_Tools.size(); i++)
+		{
+		}*/
+		if(m_ActiveTool)
+			m_ActiveTool->Update(delta);
+		//MouseMoved(info);
+		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor)
 		{
 			std::stringstream ss;
 			ss << " Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos << "\n";
 			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
 			//SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));
-		}
+		}*/
 	}
 
 	void MouseToolController::SetEnableGizmo(int value) 
@@ -444,14 +446,15 @@ namespace GASS
 
 	bool MouseToolController::MouseMoved(const MouseData &data)
 	{
-		Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
-		CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
-		//MoveTo(info);
-		//saved for delta calculation, remove this?
-		m_LastScreenPos = mouse_pos;
+		SceneCursorInfo info = GetSceneCursorInfo(Vec2(data.XAbsNorm,data.YAbsNorm),m_RayPickDistance);
+		//inform tools
+		if(m_ActiveTool)
+			m_ActiveTool->MouseMoved(data,info);
+		
 		int mess_id = (int) this;
-		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(mouse_pos,info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
+		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
 		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
+
 		return true;
 	}
 
@@ -462,8 +465,9 @@ namespace GASS
 			if(button == MBID_LEFT)
 			{
 				Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
-				CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
-				MouseDown(info);
+				SceneCursorInfo info = GetSceneCursorInfo(mouse_pos,m_RayPickDistance);
+				if(m_ActiveTool)
+					m_ActiveTool->MouseDown(data,info);
 				return true;
 			}
 			else if(button == MBID_RIGHT)
@@ -479,15 +483,16 @@ namespace GASS
 		if(button == MBID_LEFT)
 		{
 				Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
-				CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
-				MouseUp(info);
+				SceneCursorInfo info = GetSceneCursorInfo(mouse_pos,m_RayPickDistance);
+				if(m_ActiveTool)
+					m_ActiveTool->MouseUp(data,info);
 				return true;
 		}
 
 		else if(button == MBID_RIGHT)
 		{
 			Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);	
-			CursorInfo info = GetCursorInfo(mouse_pos,m_RayPickDistance);
+			SceneCursorInfo info = GetSceneCursorInfo(mouse_pos,m_RayPickDistance);
 			
 			//check if cursor at rest
 			Vec2 delta;
@@ -511,7 +516,7 @@ namespace GASS
 
 	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
 	{
-		CursorInfo cursorInfo = GetCursorInfo(mouse_pos, 1000000);
+		SceneCursorInfo cursorInfo = GetSceneCursorInfo(mouse_pos, 1000000);
 		GASS::Vec3 drop_pos = cursorInfo.m_3DPos;
 		drop_pos.x = SnapPosition(drop_pos.x);
 		drop_pos.y = SnapPosition(drop_pos.y);

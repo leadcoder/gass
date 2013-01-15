@@ -706,7 +706,7 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreTerrainPageComponent::GetSamplesX() const
+	unsigned int OgreTerrainPageComponent::GetSamples() const
 	{
 		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(!terrain_man) //try parent
@@ -714,11 +714,6 @@ namespace GASS
 		if(terrain_man) //try parent
 			return terrain_man->GetImportTerrainSize();
 		else return 0;
-	}
-
-	unsigned int OgreTerrainPageComponent::GetSamplesZ() const
-	{
-		return GetSamplesX();
 	}
 
 
@@ -787,7 +782,7 @@ namespace GASS
 			return m_Terrain->getHeightAtPoint(x,y);
 	}
 
-	Float OgreTerrainPageComponent::GetHeight(Float x, Float z) const
+	Float OgreTerrainPageComponent::GetHeightAtWorldLocation(Float x, Float z) const
 	{
 		if(m_Terrain)
 			return m_Terrain->getHeightAtWorldPosition(x,10000,z);

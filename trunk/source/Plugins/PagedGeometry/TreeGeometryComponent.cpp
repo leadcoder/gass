@@ -257,7 +257,6 @@ namespace GASS
 									m_MapBounds.top + maxPageZ*m_PageSize);
 
 		//update page by page
-		
 		for(int i = minPageX ; i < maxPageX; i++)
 		{
 			for(int j = minPageZ ; j < maxPageZ ; j++)
@@ -282,7 +281,7 @@ namespace GASS
 	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
-			return m_Terrain->GetHeight(x,z);
+			return m_Terrain->GetHeightAtWorldLocation(x,z);
 		else
 			return 0;
 	}
@@ -339,7 +338,7 @@ namespace GASS
 					if(m_PrecalcHeight)
 					{
 						if(m_Terrain)
-							y = m_Terrain->GetHeight(x,z);
+							y = m_Terrain->GetHeightAtWorldLocation(x,z);
 						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
 					else

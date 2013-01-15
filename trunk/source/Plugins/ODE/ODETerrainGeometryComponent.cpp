@@ -92,20 +92,20 @@ namespace GASS
 		SetCollisionCategory(m_CollisionCategory);
 	}
 
-	TerrainComponentPtr ODETerrainGeometryComponent::GetTerrainComponent() const 
+	HeightmapTerrainComponentPtr ODETerrainGeometryComponent::GetTerrainComponent() const 
 	{
-		TerrainComponentPtr geom;
+		HeightmapTerrainComponentPtr terrain;
 		if(m_GeometryTemplate != "")
 		{
-			geom = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			terrain = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
-		return geom;
+		else terrain = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
+		return terrain;
 	}
 
 	dGeomID ODETerrainGeometryComponent::CreateTerrain()
 	{
-		TerrainComponentPtr terrain = GetTerrainComponent();
+		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
 		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
@@ -116,8 +116,8 @@ namespace GASS
 		if(terrain)
 		{
 			m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetSamplesX();
-			int samples_z = terrain->GetSamplesZ();
+			int samples_x = terrain->GetSamples();
+			int samples_z = terrain->GetSamples();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
 			m_SampleWidth = size_x/(samples_x-1);
@@ -173,7 +173,7 @@ namespace GASS
 	{
 		Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
-		Float h = m_TerrainGeom->GetHeight(world_x,world_z);
+		Float h = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 		//std::cout << "hpos:" << world_x << world_z << "\n";
 		//std::cout << "height:" << h << "\n";
 		return h;

@@ -44,7 +44,7 @@ namespace GASS
 		Get terrain height at world position x,z (assume y up direction)
 		*/
 		virtual Float GetHeightAtPoint(int x, int z) const = 0;
-		virtual Float GetHeightAtWorldPosition(Float x, Float z) const = 0;
+		virtual Float GetHeightAtWorldLocation(Float x, Float z) const = 0;
 		//virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
 
 		/**

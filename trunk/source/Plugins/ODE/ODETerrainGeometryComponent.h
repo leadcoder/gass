@@ -78,7 +78,7 @@ namespace GASS
 		
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
-		ITerrainComponent* m_TerrainGeom;
+		IHeightmapTerrainComponent* m_TerrainGeom;
 		unsigned long m_CollisionCategory;
 		unsigned long m_CollisionBits;
 		dGeomID m_GeomID;

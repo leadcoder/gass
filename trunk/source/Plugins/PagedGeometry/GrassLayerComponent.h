@@ -24,7 +24,9 @@
 #define GRASS_GEOMETRY_COMPONENT_H
 
 
-#include "PagedGeometry.h"
+#include <PagedGeometry.h>
+#include <GrassLoader.h>
+#include <OgreRenderTargetListener.h>
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -32,15 +34,11 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-
 #include "Core/MessageSystem/GASSIMessage.h"
-#include <OgreRenderTargetListener.h>
 #include "PGMessages.h"
 
 namespace Forests
 {
-	class PagedGeometry;
-	class GrassLoader;
 	class GrassLayer;
 	class GeometryPageManager;
 }
@@ -50,6 +48,18 @@ using namespace Forests;
 namespace GASS
 {
 	class ITerrainComponent;
+
+	START_ENUM_BINDER(FadeTechnique,FadeTechniqueBinder)
+		BIND(FADETECH_ALPHAGROW);
+		BIND(FADETECH_ALPHA);
+		BIND(FADETECH_GROW);
+	END_ENUM_BINDER(FadeTechnique,FadeTechniqueBinder);
+
+	START_ENUM_BINDER(GrassTechnique,RenderTechniqueBinder)
+		BIND(GRASSTECH_QUAD);
+		BIND(GRASSTECH_CROSSQUADS);
+		BIND(GRASSTECH_SPRITE);
+	END_ENUM_BINDER(GrassTechnique,RenderTechniqueBinder);
 
 	class GrassLayerComponent : public Reflection<GrassLayerComponent,BaseSceneComponent> , public Ogre::RenderTargetListener
 	{
@@ -73,10 +83,10 @@ namespace GASS
 		void SetColorMap(const std::string &name);
 		Resource GetMaterial() const;
 		void SetMaterial(const Resource &name);
-		std::string GetFadeTech() const;
-		void SetFadeTech(const std::string &tech);
-		std::string GetRenderTechnique() const;
-		void SetRenderTechnique(const std::string &tech);
+		FadeTechniqueBinder GetFadeTechnique() const;
+		void SetFadeTechnique(const FadeTechniqueBinder &tech);
+		RenderTechniqueBinder GetRenderTechnique() const;
+		void SetRenderTechnique(const RenderTechniqueBinder &tech);
 		bool GetBlendWithGround() const;
 		void SetBlendWithGround(bool value);
 		Vec2 GetMaxSize() const;
@@ -96,26 +106,28 @@ namespace GASS
 protected:
 		
 		float GetCollisionSystemHeight(float x, float z);
-		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
+		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
 		void update();
-		
 		std::string m_ColorMapFilename;
+		std::string m_DensityMapFilename;
+		
 		Resource m_Material;
 		GrassLoader* m_GrassLoader;
+		
 		Vec2 m_MaxSize;
 		Vec2 m_MinSize;
 		bool m_EnableSway;
 		float m_SwaySpeed;
 		float m_SwayLength;
 		float m_SwayDistribution;
-		std::string m_FadeTech;
+		FadeTechniqueBinder m_FadeTechnique;
 		bool m_Blend;
-		std::string m_RenderTechnique;
+		RenderTechniqueBinder m_RenderTechnique;
 		GrassLayer *m_GrassLayer;
 		float m_DensityFactor;
-		std::string m_DensityMapFilename;
+		
 		float m_ImposterAlphaRejectionValue;
 		static IHeightmapTerrainComponent *m_Terrain;
 	};

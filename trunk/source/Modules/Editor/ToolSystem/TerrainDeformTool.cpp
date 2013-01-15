@@ -22,10 +22,10 @@
 namespace GASS
 {
 
-	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),
+	TerrainDeformTool::TerrainDeformTool(MouseToolController* controller): m_MouseIsDown(false),m_CursorPos(0,0,0),
 		m_Controller(controller),m_BrushSize(116),m_BrushInnerSize(90), m_Intensity(1),m_Noise(0), m_TEM(TEM_DEFORM),m_InvertBrush(1),m_ActiveLayer(TL_1)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllSettingsMessage,0));
 	}
 
@@ -34,61 +34,60 @@ namespace GASS
 
 	}
 
-	void TerrainDeformTool::MouseMoved(const CursorInfo &info)
+	void TerrainDeformTool::Update(double delta)
 	{
-		int from_id = (int) this;
-		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
-		if(m_MouseIsDown)// && selected)
+		if(m_MouseIsDown)
 		{
-			//if(selected)
+			float intensity = m_Intensity*m_InvertBrush*delta;
+			HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+			if(terrain)
 			{
-				float intensity = m_Intensity*m_InvertBrush*m_Controller->GetDeltaTime();
-				//TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
-				TerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ITerrainComponent>(true);
-				if(terrain)
+				BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);
+				SceneObjectPtr terrain_group = bsc->GetSceneObject()->GetParentSceneObject();
+
+				switch(m_TEM)
 				{
-					BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);
-					
-					switch(m_TEM)
-					{
-					case TEM_DEFORM:
-						bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
-						break;
-					case TEM_FLATTEN:
-						bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
-						break;
-					case TEM_SMOOTH:
-						bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
-						break;
-					case TEM_LAYER_PAINT:
-						bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
-						break;
-					}
-				}
-				if(m_TEM == TEM_VEGETATION_PAINT)
-				{
-					SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
-					if(selected)
-						selected->PostMessage(MessagePtr(new GrassPaintMessage(info.m_3DPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+				case TEM_DEFORM:
+					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					break;
+				case TEM_FLATTEN:
+					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					break;
+				case TEM_SMOOTH:
+					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					break;
+				case TEM_LAYER_PAINT:
+					terrain_group->PostMessage(MessagePtr(new TerrainPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
+					break;
 				}
 			}
-			//GASS::MessagePtr paint_msg(new PaintMessage(info.m_3DPos,selected,from_id));
-			//SimEngine::Get().GetSimSystemManager()->SendImmediate(paint_msg);
+			if(m_TEM == TEM_VEGETATION_PAINT)
+			{
+				SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+				if(selected)
+					selected->PostMessage(MessagePtr(new GrassPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+			}
 		}
+	}
+
+	void TerrainDeformTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
+	{
+		m_CursorPos = info.m_3DPos;
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
+			int from_id = (int) this;
 			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(info.m_3DPos,from_id));
 			gizmo->PostMessage(pos_msg);
 		}
 	}
 
-	void TerrainDeformTool::MouseDown(const CursorInfo &info)
+	void TerrainDeformTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 	}
 
-	void TerrainDeformTool::MouseUp(const CursorInfo &info)
+	void TerrainDeformTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 	}
@@ -187,9 +186,9 @@ namespace GASS
 		m_Noise= value;
 	}
 
-	void TerrainDeformTool::SetLayerTexture(const std::string &texture, float tiling)
+	/*void TerrainDeformTool::SetLayerTexture(const std::string &texture, float tiling)
 	{
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)
 		{
 			TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
@@ -197,8 +196,15 @@ namespace GASS
 			{
 				selected->PostMessage(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
 			}
+		}*/
+
+	/*	HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+		if(terrain)
+		{
+			BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);
+			bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
 		}
-	}
+	}*/
 
 
 	void TerrainDeformTool::OnInput(ControllSettingsMessagePtr message)

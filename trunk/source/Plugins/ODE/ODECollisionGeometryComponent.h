@@ -35,11 +35,11 @@
 namespace GASS
 {
 	class IGeometryComponent;
-	class ITerrainComponent;
+	class IHeightmapTerrainComponent;
 	class ODECollisionSceneManager;
 	typedef boost::shared_ptr<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
+	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 
 	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>
 	{
@@ -97,7 +97,7 @@ namespace GASS
 		CollisionGeomType GetType() const {return m_Type;}
 
 		//Height map based Terrain helpers
-		TerrainComponentPtr GetTerrainComponent() const;
+		HeightmapTerrainComponentPtr  GetTerrainComponent() const;
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
@@ -111,7 +111,7 @@ namespace GASS
 			Float m_SampleWidth;
 			Float m_SampleHeight;
 			AABox m_TerrainBounds;
-			ITerrainComponent* m_TerrainGeom;
+			IHeightmapTerrainComponent* m_TerrainGeom;
 			int m_Samples;
 		};
 		static TerrainData m_TerrainData;

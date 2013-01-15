@@ -361,8 +361,8 @@ namespace GASS
 		if(terrain)
 		{
 			m_TerrainData.m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetSamplesX();
-			int samples_z = terrain->GetSamplesZ();
+			int samples_x = terrain->GetSamples();
+			int samples_z = terrain->GetSamples();
 			m_TerrainData.m_Samples = samples_x;
 			
 			Float size_x = m_TerrainData.m_TerrainBounds.m_Max.x - m_TerrainData.m_TerrainBounds.m_Min.x;
@@ -413,11 +413,8 @@ namespace GASS
 	Float ODECollisionGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
 		return m_TerrainData.m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData.m_Samples-1-z);
-		Float world_x = x * m_TerrainData.m_SampleWidth + m_TerrainData.m_TerrainBounds.m_Min.x;
-		Float world_z = z * m_TerrainData.m_SampleWidth + m_TerrainData.m_TerrainBounds.m_Min.z;
-		Float h = m_TerrainData.m_TerrainGeom->GetHeight(world_x,world_z);
-		return h;
 	}
+
 	ODECollisionGeometryComponent::TerrainData ODECollisionGeometryComponent::m_TerrainData = ODECollisionGeometryComponent::TerrainData();
 
 }

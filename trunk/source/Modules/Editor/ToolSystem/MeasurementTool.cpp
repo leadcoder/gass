@@ -29,7 +29,7 @@ namespace GASS
 
 	}
 
-	void MeasurementTool::MouseMoved(const CursorInfo &info)
+	void MeasurementTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown)
@@ -41,13 +41,13 @@ namespace GASS
 	}
 
 
-	void MeasurementTool::MouseDown(const CursorInfo &info)
+	void MeasurementTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 		m_StartPos = info.m_3DPos;
 	}
 
-	void MeasurementTool::MouseUp(const CursorInfo &info)
+	void MeasurementTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr ruler = GetOrCreateRulerObject();

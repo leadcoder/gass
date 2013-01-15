@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -89,7 +90,10 @@ namespace GASS
 	protected:
 		void SetTypeFromName(const std::string &name) 
 		{
-			m_Enum = m_Names[name];
+			if(m_Names.find(name) != m_Names.end())
+				m_Enum = m_Names[name];
+			else
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find enum:" + name,"IntEnumBinder::SetValueFromName");
 		}
 
 		std::string GetName() const
@@ -281,7 +285,13 @@ namespace GASS
 	protected:
 		void SetValueFromName(const std::string &name) 
 		{
-			m_Value = m_NameToEnumMap[name];
+			if(m_NameToEnumMap.find(name) != m_NameToEnumMap.end())
+				m_Value = m_NameToEnumMap[name];
+			else
+			{
+				const std::string class_name = typeid(CLASS).name();
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find enum:" + name + " In class" + class_name,"SingleEnumBinder::SetValueFromName");
+			}
 		}
 
 		std::string GetNameFromValue() const

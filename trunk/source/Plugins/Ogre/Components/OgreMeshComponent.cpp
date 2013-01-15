@@ -49,8 +49,8 @@ namespace GASS
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
-		//,m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
 	{
 
 	}
@@ -64,7 +64,7 @@ namespace GASS
 	void OgreMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
-		//RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
+		RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
 		RegisterEnumProperty<MeshResource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
@@ -125,7 +125,7 @@ namespace GASS
 			//m_OgreEntity->setQueryFlags(1);
 			//LoadLightmap();
 			SetCastShadow(m_CastShadow);
-			//SetRenderQueue(m_RenderQueue);
+			SetRenderQueue(m_RenderQueue);
 
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
@@ -437,14 +437,14 @@ namespace GASS
 	}
 
 
-	/*void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
+	void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
 	{
 		m_RenderQueue = rq;
 		if(m_OgreEntity)
 		{
 			m_OgreEntity->setRenderQueueGroup(m_RenderQueue.GetValue());
 		}
-	}*/
+	}
 
 	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
 	{

@@ -31,7 +31,7 @@ namespace GASS
 
 	}
 
-	void PaintTool::MouseMoved(const CursorInfo &info)
+	void PaintTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		int from_id = (int) this;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -57,12 +57,12 @@ namespace GASS
 		}
 	}
 
-	void PaintTool::MouseDown(const CursorInfo &info)
+	void PaintTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 	}
 
-	void PaintTool::MouseUp(const CursorInfo &info)
+	void PaintTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 	}

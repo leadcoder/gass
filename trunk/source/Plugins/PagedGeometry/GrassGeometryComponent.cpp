@@ -117,7 +117,7 @@ namespace GASS
 
 		if(!user_bounds)
 		{
-			TerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
+			HeightmapTerrainComponentPtr terrain = GetTerrainComponent(GetSceneObject());
 			if(!terrain)
 			{
 				SceneObjectPtr root = GetSceneObject()->GetScene()->GetRootSceneObject();
@@ -501,9 +501,9 @@ namespace GASS
 	}
 
 
-	TerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
+	HeightmapTerrainComponentPtr GrassGeometryComponent::GetTerrainComponent(SceneObjectPtr obj)
 	{
-		TerrainComponentPtr terrain = obj->GetFirstComponentByClass<IHeightmapTerrainComponent>();
+		HeightmapTerrainComponentPtr terrain = obj->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		if(terrain)
 			return terrain;
 
@@ -541,7 +541,7 @@ namespace GASS
 	float GrassGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
-			return m_Terrain->GetHeight(x,z);
+			return m_Terrain->GetHeightAtWorldLocation(x,z);
 		else
 		{
 			GrassGeometryComponent* grass = static_cast<GrassGeometryComponent*> (user_data);

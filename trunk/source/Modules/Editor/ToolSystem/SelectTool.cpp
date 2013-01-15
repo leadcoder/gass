@@ -27,12 +27,12 @@ namespace GASS
 
 	}
 
-	void SelectTool::MouseMoved(const CursorInfo &info)
+	void SelectTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 
 	}
 
-	void SelectTool::MouseDown(const CursorInfo &info)
+	void SelectTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 
@@ -51,7 +51,7 @@ namespace GASS
 		}
 	}
 
-	void SelectTool::MouseUp(const CursorInfo &info)
+	void SelectTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());

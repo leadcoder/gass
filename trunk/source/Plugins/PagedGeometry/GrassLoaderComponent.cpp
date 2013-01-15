@@ -74,7 +74,6 @@ namespace GASS
 
 	void GrassLoaderComponent::OnInitialize()
 	{
-
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
 	
@@ -316,7 +315,7 @@ namespace GASS
 	float GrassLoaderComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
-			return m_Terrain->GetHeight(x,z);
+			return m_Terrain->GetHeightAtWorldLocation(x,z);
 		else
 		{
 			GrassLoaderComponent* grass = static_cast<GrassLoaderComponent*> (user_data);

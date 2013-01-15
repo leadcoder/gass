@@ -60,7 +60,7 @@ namespace GASS
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		float GetRayPickDistance() const {return m_RayPickDistance;}
-		double GetDeltaTime() const {return m_Delta;}
+		//double GetDeltaTime() const {return m_Delta;}
 
 		//IMouseListener
 		bool MouseMoved(const MouseData &data);
@@ -71,12 +71,8 @@ namespace GASS
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-		CursorInfo GetCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
-		void MouseMoved(const CursorInfo &info);
-		void MouseDown(const CursorInfo &info);
-		void MouseUp(const CursorInfo &info);
+		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
-		//void OnFocusChanged(WindowFocusChangedMessagePtr message);
 
 		//helper
 		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
@@ -98,8 +94,7 @@ namespace GASS
 		float m_RayPickDistance;
 		bool m_EnableGizmo;
 		bool m_UseTerrainNormalOnDrop;
-		double m_Delta;
-		Vec2 m_LastScreenPos;
+		//double m_Delta;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;
 		EditorSceneManager* m_EditorSceneManager;

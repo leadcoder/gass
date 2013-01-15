@@ -43,7 +43,7 @@ namespace GASS
 			const std::string prop_name = prop_elem->Value();
 			if(prop_elem->FirstAttribute())
 			{
-				std::string attrib_name =  Misc::ToLower(prop_elem->FirstAttribute()->Name());
+				const std::string attrib_name =  Misc::ToLower(prop_elem->FirstAttribute()->Name());
 
 				if(attrib_name == "value") 
 				{

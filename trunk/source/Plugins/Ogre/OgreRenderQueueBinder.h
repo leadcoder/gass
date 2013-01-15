@@ -44,20 +44,6 @@ namespace GASS
 		Bind("RENDER_QUEUE_MAX",Ogre::RENDER_QUEUE_MAX);
 	END_ENUM_BINDER(Ogre::RenderQueueGroupID,RenderQueueBinder);
 }
-	/*class RenderQueueBinder : public SingleEnumBinder<Ogre::RenderQueueGroupID,RenderQueueBinder>
-	{
-	public:
-		RenderQueueBinder(){}
-		RenderQueueBinder(Ogre::RenderQueueGroupID value):SingleEnumBinder<Ogre::RenderQueueGroupID,RenderQueueBinder>(value){}
-		virtual ~RenderQueueBinder(){}
-		static void Register()
-		{
-
-		}
-	};
-	template<> std::map<std::string ,Ogre::RenderQueueGroupID>  SingleEnumBinder<Ogre::RenderQueueGroupID,RenderQueueBinder>::m_NameToEnumMap;
-	template<> std::map<Ogre::RenderQueueGroupID,std::string> SingleEnumBinder<Ogre::RenderQueueGroupID,RenderQueueBinder>::m_EnumToNameMap;
 	
-	}*/
 
 

@@ -33,7 +33,7 @@ namespace GASS
 	}
 
 
-	void RotateTool::MouseMoved(const CursorInfo &info)
+	void RotateTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected && CheckIfEditable(selected))
@@ -42,8 +42,8 @@ namespace GASS
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				Float rotation_rad_step = (info.m_Delta.x);
-				rotation_rad_step = rotation_rad_step*10;
+				Float rotation_rad_step = 0;//(info.m_Delta.x);
+				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;
 				GASS::MessagePtr rot_msg(new GASS::WorldRotationMessage(new_rot,from_id));
@@ -74,10 +74,10 @@ namespace GASS
 		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && !m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
 	}
 
-	void RotateTool::MouseDown(const CursorInfo &info)
+	void RotateTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		m_MouseDownPos = info.m_ScreenPos;
+		m_MouseDownPos.Set(data.XAbsNorm,data.YAbsNorm);
 		m_RotateY = false;
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
 		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
@@ -103,12 +103,12 @@ namespace GASS
 	}
 
 
-	void RotateTool::MouseUp(const CursorInfo &info)
+	void RotateTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 		bool slection_mode = false;
 
-		if(info.m_ScreenPos == m_MouseDownPos)
+		if(Vec2(data.XAbsNorm,data.YAbsNorm) == m_MouseDownPos)
 		{
 			slection_mode = true;
 		}

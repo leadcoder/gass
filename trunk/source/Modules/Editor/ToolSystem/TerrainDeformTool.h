@@ -35,9 +35,11 @@ namespace GASS
 		virtual ~TerrainDeformTool(void);
 
 		//IMouseTool interface
-		virtual void MouseMoved(const CursorInfo &info);
-		virtual void MouseDown(const CursorInfo &info);
-		virtual void MouseUp(const CursorInfo &info);
+		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
+		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
+		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
+		virtual void Update(double delta);
+
 		virtual std::string GetName() {return TID_TERRAIN;}
 		virtual void Stop();
 		virtual void Start();
@@ -46,11 +48,8 @@ namespace GASS
 		float GetBrushSize() const {return m_BrushSize;}
 		void SetIntensity(float value);
 		void SetNoise(float value);
-		
 		void SetModMode(TerrainEditMode value) {m_TEM = value;}
 		TerrainEditMode GetModMode() const {return m_TEM;}
-
-		void SetLayerTexture(const std::string &texture, float tiling);
 		void SetActiveLayer(TerrainLayer layer) {m_ActiveLayer = layer;}
 	private:
 		GASS::SceneObjectPtr GetOrCreateGizmo();
@@ -71,6 +70,7 @@ namespace GASS
 		float m_InvertBrush;
 		TerrainEditMode m_TEM;
 		TerrainLayer m_ActiveLayer;
+		Vec3 m_CursorPos;
 
 	};
 }

@@ -444,29 +444,20 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreTerrainGroupComponent::GetSamplesX() const
-	{
-		return 0;
-	}
-
-	unsigned int OgreTerrainGroupComponent::GetSamplesZ() const
-	{
-		return 0;
-	}
-
+	
 	void OgreTerrainGroupComponent::GetMeshData(MeshDataPtr mesh_data) const
 	{
 
 	}
 
-	Float OgreTerrainGroupComponent::GetHeight(Float x, Float z) const 
+	/*Float OgreTerrainGroupComponent::GetHeight(Float x, Float z) const 
 	{
 		if(m_TerrainGroup)
 		{
 			return m_TerrainGroup->getHeightAtWorldPosition(x,0,z);
 		}
 		return 0;
-	}
+	}*/
 
 
 	void OgreTerrainGroupComponent::OnTerrainLayerPaint(TerrainPaintMessagePtr message)

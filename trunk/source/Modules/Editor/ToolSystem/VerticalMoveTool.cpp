@@ -28,7 +28,7 @@ namespace GASS
 
 	}
 
-	void VerticalMoveTool::MouseMoved(const CursorInfo &info)
+	void VerticalMoveTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(m_MouseIsDown && selected)
@@ -41,7 +41,7 @@ namespace GASS
 				Vec3 new_position = comp->GetPosition();
 
 				//move seleced object
-				up = up*(-info.m_Delta.y);
+				//up = up*(-info.m_Delta.y);
 				new_position = new_position + up;
 
 				int from_id = (int) this;
@@ -54,7 +54,7 @@ namespace GASS
 		}
 	}
 
-	void VerticalMoveTool::MouseDown(const CursorInfo &info)
+	void VerticalMoveTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 
@@ -76,7 +76,7 @@ namespace GASS
 		}
 	}
 
-	void VerticalMoveTool::MouseUp(const CursorInfo &info)
+	void VerticalMoveTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());

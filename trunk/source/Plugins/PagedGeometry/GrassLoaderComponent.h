@@ -83,7 +83,7 @@ namespace GASS
 		std::string GetImportDensityMap() const;
 protected:
 		float GetCollisionSystemHeight(float x, float z);
-		TerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
+		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
 		void OnPaint(GrassPaintMessagePtr message);

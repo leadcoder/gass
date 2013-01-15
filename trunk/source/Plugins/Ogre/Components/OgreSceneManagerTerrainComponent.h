@@ -71,8 +71,7 @@ namespace GASS
 		bool m_Center;
 		Float m_WorldWidth;
 		Float m_WorldHeight;
-		int m_NodesPerSideAllPagesW;
-		int m_NodesPerSideAllPagesH;
+		int m_NodesPerSideAllPages;
 		bool m_CreateCollisionMesh;
 		Resource m_TerrainConfigFile;
 		Ogre::SceneManager* m_OgreSceneManager;

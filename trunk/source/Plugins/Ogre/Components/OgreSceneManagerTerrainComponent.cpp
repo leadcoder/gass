@@ -50,8 +50,7 @@ namespace GASS
 		m_MaxHeight(0),
 		m_WorldWidth(0),
 		m_WorldHeight(0),
-		m_NodesPerSideAllPagesW(0),
-		m_NodesPerSideAllPagesH(0),
+		m_NodesPerSideAllPages(0),
 		m_OgreSceneManager(NULL),
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
 	{
@@ -155,8 +154,7 @@ namespace GASS
 			m_MaxHeight = m_Scale.y;
 			m_WorldWidth  = m_Scale.x * (nodes_per_side-1);
 			m_WorldHeight = m_Scale.z * (nodes_per_side-1);
-			m_NodesPerSideAllPagesW = nodes_per_side;
-			m_NodesPerSideAllPagesH = nodes_per_side;
+			m_NodesPerSideAllPages = nodes_per_side;
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
 		}
 	}
@@ -184,15 +182,11 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreSceneManagerTerrainComponent::GetSamplesX() const
+	unsigned int OgreSceneManagerTerrainComponent::GetSamples() const
 	{
-		return m_NodesPerSideAllPagesW;
+		return m_NodesPerSideAllPages;
 	}
-	unsigned int OgreSceneManagerTerrainComponent::GetSamplesZ() const
-	{
-		return m_NodesPerSideAllPagesH;
-	}
-
+	
 	void OgreSceneManagerTerrainComponent::pageConstructed(Ogre::TerrainSceneManager* manager, size_t pagex, size_t pagez, Ogre::Real* heightData)
 	{
 		Ogre::Vector3 scale = manager->getScale();
@@ -260,7 +254,7 @@ namespace GASS
 #define LERP(a, b, t) (a + (b - a) * t)
 #endif
 
-	Float OgreSceneManagerTerrainComponent::GetHeight(Float x, Float z) const
+	Float OgreSceneManagerTerrainComponent::GetHeightAtWorldLocation(Float x, Float z) const
 	{
 		//Factor in our horizontal scaling
 		x /= m_Scale.x;

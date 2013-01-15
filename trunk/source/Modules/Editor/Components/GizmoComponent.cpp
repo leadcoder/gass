@@ -68,7 +68,7 @@ namespace GASS
 			gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
 		else
 			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
-	
+
 	}
 
 	void GizmoComponent::OnDelete()
@@ -110,7 +110,7 @@ namespace GASS
 		}
 	}
 
-	
+
 
 	void GizmoComponent::OnChangeGridRequest(ChangeGridRequestPtr message)
 	{
@@ -157,7 +157,7 @@ namespace GASS
 			break;
 		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
 			{
-				
+
 			}
 			break;
 		}
@@ -272,7 +272,7 @@ namespace GASS
 
 			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 gizmo_pos = gizmo_location->GetWorldPosition();
-			
+
 
 			Float dist = (gizmo_pos-cam_pos).Length();
 
@@ -324,11 +324,11 @@ namespace GASS
 
 			MeshVertex vertex;
 			float box_volume = m_Size * 0.01;
-			
+
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = Vec4(1,1,1,1);
 			Vec3 offset(0,-box_volume,box_volume);
-		
+
 			vertex.Pos = Vec3(0,box_volume,box_volume)  + offset;
 			m_MeshData->VertexVector.push_back(vertex);
 			vertex.Pos = Vec3(0,box_volume,-box_volume) + offset;
@@ -388,7 +388,7 @@ namespace GASS
 			m_MeshData->IndexVector.push_back(3);
 
 
-			
+
 			//hat
 			box_volume = box_volume*4;
 			vertex.Pos = Vec3(m_Size ,box_volume,box_volume) + offset;;
@@ -412,7 +412,7 @@ namespace GASS
 			m_MeshData->IndexVector.push_back(11);
 
 
-			
+
 			m_MeshData->IndexVector.push_back(8);
 			m_MeshData->IndexVector.push_back(12);
 			m_MeshData->IndexVector.push_back(9);
@@ -532,11 +532,11 @@ namespace GASS
 			m_MeshData->Type = TRIANGLE_LIST;
 		}
 
-		
+
 		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 		{
 			MeshVertex vertex;
-			
+
 			vertex.Pos = Vec3(0,0,0);
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = m_Color;
@@ -579,7 +579,7 @@ namespace GASS
 	{
 		if(m_Type == GT_FIXED_GRID)
 			return;
-		
+
 		bool grid = false;
 		if(m_Type == GT_GRID)
 			grid = true;
@@ -631,13 +631,13 @@ namespace GASS
 
 		//check all planes
 
-		
-		
+
+
 		//float value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
 		//float value2 = Math::IsectRayPlane(ray_start,ray_dir,c_pos,v_vec);
 		//if(value2 < value)
 		//	value = value2;
-		
+
 
 
 		//select projection plane
@@ -671,17 +671,17 @@ namespace GASS
 				Vec3 proj_v = ProjectPointOnAxis(c_pos, v_vec, isect_pos);
 
 				Vec3 ret = c_pos + (proj_r - c_pos ) + (proj_v - c_pos);
-				
+
 				return ret;
 			}
 			//return isect_pos;
 		}
 		return c_pos;
-		}
+	}
 
 	Quaternion  GizmoComponent::GetRotation(float delta)
 	{
-		
+
 		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
 		if(selected)
 		{
@@ -690,7 +690,7 @@ namespace GASS
 			Mat4 rot_mat;
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);
-			
+
 			Vec3 r_vec = rot_mat.GetRightVector();
 			Vec3 v_vec = rot_mat.GetViewDirVector();
 			Vec3 up_vec = rot_mat.GetUpVector();
@@ -716,7 +716,7 @@ namespace GASS
 		return Quaternion::IDENTITY;
 	}
 
-	
+
 	Vec3 GizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p)
 	{
 		Vec3 c = p-axis_origin;
@@ -725,7 +725,7 @@ namespace GASS
 		{
 			t = m_EditorSceneManager->GetMouseToolController()->SnapPosition(t);
 		}
-			//t = SnapValue(t,m_MovmentSnap);
+		//t = SnapValue(t,m_MovmentSnap);
 		Vec3 point_on_axis = axis_dir*t;
 
 		Vec3 res = (axis_origin + point_on_axis);

@@ -170,7 +170,7 @@ namespace GASS
 				points[i] = points[i] + origo;
 
 
-			IHeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
@@ -282,12 +282,12 @@ namespace GASS
 			if(terrain && m_ClampToTerrain)
 			{
 				for (int j = 1; j < num_horizontal_pts-1; j++) 
-					curr_vertices[j].y = terrain->GetHeight(curr_vertices[j].x + origo.x,curr_vertices[j].z + origo.z) + m_RoadOffset - origo.y;
+					curr_vertices[j].y = terrain->GetHeightAtWorldLocation(curr_vertices[j].x + origo.x,curr_vertices[j].z + origo.z) + m_RoadOffset - origo.y;
 
 				if(!m_UseSkirts)
 				{
-					curr_vertices[0].y = terrain->GetHeight(curr_vertices[0].x + origo.x,curr_vertices[0].z + origo.z) - origo.y;
-					curr_vertices[num_horizontal_pts-1].y = terrain->GetHeight(curr_vertices[num_horizontal_pts-1].x + origo.x,curr_vertices[num_horizontal_pts-1].z + origo.z)-origo.y;
+					curr_vertices[0].y = terrain->GetHeightAtWorldLocation(curr_vertices[0].x + origo.x,curr_vertices[0].z + origo.z) - origo.y;
+					curr_vertices[num_horizontal_pts-1].y = terrain->GetHeightAtWorldLocation(curr_vertices[num_horizontal_pts-1].x + origo.x,curr_vertices[num_horizontal_pts-1].z + origo.z)-origo.y;
 				}
 			}
 			else

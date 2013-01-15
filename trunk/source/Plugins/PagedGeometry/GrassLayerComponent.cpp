@@ -51,7 +51,8 @@ namespace GASS
 		m_SwaySpeed(0),
 		m_SwayLength(0),
 		m_SwayDistribution(10),
-		m_RenderTechnique("Quad"),
+		m_RenderTechnique(GRASSTECH_QUAD),
+		m_FadeTechnique(FADETECH_ALPHAGROW),
 		m_Blend(false),
 		m_GrassLayer(NULL)
 	{
@@ -68,8 +69,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
 		RegisterProperty<Resource>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
-		RegisterProperty<std::string>("FadeTech", &GrassLayerComponent::GetFadeTech, &GrassLayerComponent::SetFadeTech);
-		RegisterProperty<std::string>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
+		RegisterEnumProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique);
+		RegisterEnumProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
 		RegisterProperty<Vec2>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize);
 		RegisterProperty<Vec2>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize);
@@ -110,8 +111,8 @@ namespace GASS
 		if(gl_component->GetColorMap() != "")
 			m_GrassLayer->setColorMap(gl_component->GetColorMap());
 
-		SetFadeTech(m_FadeTech);
-		SetRenderTechnique(m_RenderTechnique );
+		SetFadeTechnique(m_FadeTechnique);
+		SetRenderTechnique(m_RenderTechnique);
 		if(m_GrassLayer)
 		{
 			UpdateSway();
@@ -156,61 +157,33 @@ namespace GASS
 		}
 	}
 
-	std::string GrassLayerComponent::GetFadeTech() const
+	FadeTechniqueBinder GrassLayerComponent::GetFadeTechnique() const
 	{
-		return m_FadeTech;
+		return m_FadeTechnique;
 	}
 
-	void GrassLayerComponent::SetFadeTech(const std::string &tech)
+	void GrassLayerComponent::SetFadeTechnique(const FadeTechniqueBinder &tech)
 	{
-		m_FadeTech = tech;
+		m_FadeTechnique = tech;
 		if(m_GrassLayer)
-		{
-			
-			if(m_FadeTech == "AlphaGrow")
-			{
-				m_GrassLayer->setFadeTechnique(FADETECH_ALPHAGROW);
-			}
-			else if(m_FadeTech == "Alpha")
-			{
-				m_GrassLayer->setFadeTechnique(FADETECH_ALPHA);
-			}
-			else if(m_FadeTech == "Grow")
-			{
-				m_GrassLayer->setFadeTechnique(FADETECH_GROW);
-			}
-		}
+			m_GrassLayer->setFadeTechnique(tech.GetValue());
 	}
 
-	std::string GrassLayerComponent::GetRenderTechnique() const
+	RenderTechniqueBinder GrassLayerComponent::GetRenderTechnique() const
 	{
 		return m_RenderTechnique;
 	}
 
-	void GrassLayerComponent::SetRenderTechnique(const std::string &tech)
+	void GrassLayerComponent::SetRenderTechnique(const RenderTechniqueBinder &tech)
 	{
 		m_RenderTechnique = tech;
 		if(m_GrassLayer)
-		{
-			if(m_RenderTechnique == "Quad")
-			{
-				m_GrassLayer->setRenderTechnique(GRASSTECH_QUAD,m_Blend);
-			}
-			else if(m_RenderTechnique == "CrossQuads")
-			{
-				m_GrassLayer->setRenderTechnique(GRASSTECH_CROSSQUADS,m_Blend);
-			}
-			else if(m_RenderTechnique == "Sprite")
-			{
-				m_GrassLayer->setRenderTechnique(GRASSTECH_SPRITE,m_Blend);
-			}
-		}
+			m_GrassLayer->setRenderTechnique(tech.GetValue());
 	}
 
 	bool GrassLayerComponent::GetBlendWithGround() const
 	{
 		return m_Blend;
-
 	}
 
 	void GrassLayerComponent::SetBlendWithGround(bool value)

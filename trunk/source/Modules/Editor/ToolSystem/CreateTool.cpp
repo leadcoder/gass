@@ -29,7 +29,7 @@ namespace GASS
 
 	}
 
-	void CreateTool::MouseMoved(const CursorInfo &info)
+	void CreateTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 
 	}
@@ -45,7 +45,7 @@ namespace GASS
 
 	}
 
-	void CreateTool::MouseDown(const CursorInfo &info)
+	void CreateTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 		SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
@@ -68,7 +68,7 @@ namespace GASS
 		}
 	}
 
-	void CreateTool::MouseUp(const CursorInfo &info)
+	void CreateTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 	}

@@ -21,7 +21,7 @@ namespace GASS
 	EditPositionTool::EditPositionTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		
 		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
@@ -30,12 +30,12 @@ namespace GASS
 
 	}
 
-	void EditPositionTool::MouseMoved(const CursorInfo &info)
+	void EditPositionTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 
 	}
 
-	void EditPositionTool::MouseDown(const CursorInfo &info)
+	void EditPositionTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
 		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
@@ -51,7 +51,7 @@ namespace GASS
 	}
 
 
-	void EditPositionTool::MouseUp(const CursorInfo &info)
+	void EditPositionTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
 	}

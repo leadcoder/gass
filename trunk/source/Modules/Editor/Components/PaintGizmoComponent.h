@@ -24,7 +24,6 @@ namespace GASS
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
 		float GetSize() const{return m_Size;}
-		
 		Vec4 GetColor() const{return m_Color;}
 		void SetColor(const Vec4 &value){m_Color =value;}
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
