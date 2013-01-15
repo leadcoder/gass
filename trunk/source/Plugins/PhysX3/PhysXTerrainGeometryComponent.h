@@ -26,12 +26,12 @@
 
 namespace GASS
 {
-	class ITerrainComponent;
+	class IHeightmapTerrainComponent;
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
 	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<ITerrainComponent> TerrainComponentPtr;
+	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 
 	class PhysXTerrainGeometryComponent : public Reflection<PhysXTerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
 	{
@@ -57,12 +57,12 @@ namespace GASS
 		void Enable();
 		void Reset();
 		physx::PxShape* CreateTerrain();
-		TerrainComponentPtr GetTerrainComponent() const;
+		HeightmapTerrainComponentPtr GetTerrainComponent() const;
 	protected:
 		Float m_SampleWidth;
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
-		ITerrainComponent* m_TerrainGeom;
+		IHeightmapTerrainComponent* m_TerrainGeom;
 		unsigned long m_CollisionCategory;
 		unsigned long m_CollisionBits;
 		std::string m_GeometryTemplate;

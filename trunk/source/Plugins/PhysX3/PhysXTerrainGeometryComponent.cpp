@@ -90,14 +90,14 @@ namespace GASS
 		SetCollisionCategory(m_CollisionCategory);
 	}
 
-	TerrainComponentPtr PhysXTerrainGeometryComponent::GetTerrainComponent() const 
+	HeightmapTerrainComponentPtr PhysXTerrainGeometryComponent::GetTerrainComponent() const 
 	{
-		TerrainComponentPtr geom;
+		HeightmapTerrainComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
-			geom = boost::shared_dynamic_cast<ITerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			geom = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
-		else geom = GetSceneObject()->GetFirstComponentByClass<ITerrainComponent>();
+		else geom = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		return geom;
 	}
 
@@ -105,7 +105,7 @@ namespace GASS
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
-		TerrainComponentPtr terrain = GetTerrainComponent();
+		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
 		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
@@ -116,8 +116,8 @@ namespace GASS
 		if(terrain)
 		{
 			m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetSamplesX();
-			int samples_z = terrain->GetSamplesZ();
+			int samples_x = terrain->GetSamples();
+			int samples_z = terrain->GetSamples();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
 			m_SampleWidth = size_x/(samples_x-1);
@@ -137,7 +137,7 @@ namespace GASS
 				{
 					Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 					Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
-					Float height = m_TerrainGeom->GetHeight(world_x,world_z);
+					Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 
 					samples[z+x*samples_x].height = (physx::PxI16)(height/heightScale);
 					//samples[x+z*samples_x].setTessFlag();
