@@ -223,7 +223,7 @@ namespace GASS
 		m_IndexY=index;
 	}
 
-	void OgreTerrainPageComponent::SetHeightMap(const Resource &res) 
+	void OgreTerrainPageComponent::SetHeightMap(const ResourceHandle &res) 
 	{
 		m_HeightMapFile = res;
 	}
@@ -301,7 +301,7 @@ namespace GASS
 		m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 	}
 
-	void OgreTerrainPageComponent::SetColorMap(const Resource &color_map_res)
+	void OgreTerrainPageComponent::SetColorMap(const ResourceHandle &color_map_res)
 	{
 		m_ColorMap = color_map_res;
 		ImportColorMap(m_ColorMap.GetFilePath());
@@ -339,7 +339,7 @@ namespace GASS
 		return m_ColorMap;
 	}
 
-	void OgreTerrainPageComponent::SetDiffuseLayer0(const Resource &diffuse)
+	void OgreTerrainPageComponent::SetDiffuseLayer0(const ResourceHandle &diffuse)
 	{
 		m_DiffuseLayer0 = diffuse;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer0.Valid())
@@ -348,12 +348,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetDiffuseLayer0() const
+	ResourceHandle OgreTerrainPageComponent::GetDiffuseLayer0() const
 	{
 		return m_DiffuseLayer0;
 	}
 
-	void OgreTerrainPageComponent::SetNormalLayer0(const Resource &normal)
+	void OgreTerrainPageComponent::SetNormalLayer0(const ResourceHandle &normal)
 	{
 		m_NormalLayer0 = normal;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer0.Valid())
@@ -362,12 +362,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetNormalLayer0() const
+	ResourceHandle OgreTerrainPageComponent::GetNormalLayer0() const
 	{
 		return m_NormalLayer0;
 	}
 
-	void OgreTerrainPageComponent::SetDiffuseLayer1(const Resource &diffuse)
+	void OgreTerrainPageComponent::SetDiffuseLayer1(const ResourceHandle &diffuse)
 	{
 		m_DiffuseLayer1 = diffuse;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer1.Valid())
@@ -376,12 +376,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetDiffuseLayer1() const
+	ResourceHandle OgreTerrainPageComponent::GetDiffuseLayer1() const
 	{
 		return m_DiffuseLayer1;
 	}
 
-	void OgreTerrainPageComponent::SetNormalLayer1(const Resource &normal)
+	void OgreTerrainPageComponent::SetNormalLayer1(const ResourceHandle &normal)
 	{
 		m_NormalLayer1 = normal;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer1.Valid())
@@ -390,12 +390,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetNormalLayer1() const
+	ResourceHandle OgreTerrainPageComponent::GetNormalLayer1() const
 	{
 		return m_NormalLayer1;
 	}
 
-	void OgreTerrainPageComponent::SetDiffuseLayer2(const Resource &diffuse)
+	void OgreTerrainPageComponent::SetDiffuseLayer2(const ResourceHandle &diffuse)
 	{
 		m_DiffuseLayer2 = diffuse;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer2.Valid())
@@ -404,12 +404,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetDiffuseLayer2() const
+	ResourceHandle OgreTerrainPageComponent::GetDiffuseLayer2() const
 	{
 		return m_DiffuseLayer2;
 	}
 
-	void OgreTerrainPageComponent::SetNormalLayer2(const Resource &normal)
+	void OgreTerrainPageComponent::SetNormalLayer2(const ResourceHandle &normal)
 	{
 		m_NormalLayer2 = normal;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer2.Valid())
@@ -418,13 +418,13 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetNormalLayer2() const
+	ResourceHandle OgreTerrainPageComponent::GetNormalLayer2() const
 	{
 		return m_NormalLayer2;
 	}
 
 
-	void OgreTerrainPageComponent::SetDiffuseLayer3(const Resource &diffuse)
+	void OgreTerrainPageComponent::SetDiffuseLayer3(const ResourceHandle &diffuse)
 	{
 		m_DiffuseLayer3 = diffuse;
 		if(m_Terrain && m_DiffuseLayer3.Valid())
@@ -433,12 +433,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetDiffuseLayer3() const
+	ResourceHandle OgreTerrainPageComponent::GetDiffuseLayer3() const
 	{
 		return m_DiffuseLayer3;
 	}
 
-	void OgreTerrainPageComponent::SetNormalLayer3(const Resource &normal)
+	void OgreTerrainPageComponent::SetNormalLayer3(const ResourceHandle &normal)
 	{
 		m_NormalLayer3 = normal;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer3.Valid())
@@ -447,12 +447,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetNormalLayer3() const
+	ResourceHandle OgreTerrainPageComponent::GetNormalLayer3() const
 	{
 		return m_NormalLayer3;
 	}
 
-	void OgreTerrainPageComponent::SetDiffuseLayer4(const Resource &diffuse)
+	void OgreTerrainPageComponent::SetDiffuseLayer4(const ResourceHandle &diffuse)
 	{
 		m_DiffuseLayer4 = diffuse;
 		if(m_Terrain && m_DiffuseLayer4.Valid())
@@ -461,12 +461,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetDiffuseLayer4() const
+	ResourceHandle OgreTerrainPageComponent::GetDiffuseLayer4() const
 	{
 		return m_DiffuseLayer4;
 	}
 
-	void OgreTerrainPageComponent::SetNormalLayer4(const Resource &normal)
+	void OgreTerrainPageComponent::SetNormalLayer4(const ResourceHandle &normal)
 	{
 		m_NormalLayer4 = normal;//Misc::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer4.Valid())
@@ -475,12 +475,12 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetNormalLayer4() const
+	ResourceHandle OgreTerrainPageComponent::GetNormalLayer4() const
 	{
 		return m_NormalLayer4;
 	}
 
-	void OgreTerrainPageComponent::SetMask(const Resource &mask)
+	void OgreTerrainPageComponent::SetMask(const ResourceHandle &mask)
 	{
 		m_Mask = mask;
 	}

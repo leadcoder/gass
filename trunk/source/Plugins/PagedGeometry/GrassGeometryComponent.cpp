@@ -311,7 +311,7 @@ namespace GASS
 		return m_Material;
 	}
 
-	void GrassGeometryComponent::SetMaterial(const Resource &name)
+	void GrassGeometryComponent::SetMaterial(const ResourceHandle &name)
 	{
 		m_Material = name;
 	}

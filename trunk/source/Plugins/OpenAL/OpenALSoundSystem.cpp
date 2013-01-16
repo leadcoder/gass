@@ -230,9 +230,7 @@ namespace GASS
 	void OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format)
 	{
 		ALvoid*		data=NULL;
-		std::string full_path = "";
-
-		IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
+	
 		SoundMap::iterator pos;
 		pos = m_BufferMap.find(filePath);
 		if (pos != m_BufferMap.end())
@@ -245,7 +243,6 @@ namespace GASS
 			{
 				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"All sound buffers are in use","OpenALSoundComponent::LoadWaveSound()");
 			}
-			if(rs->GetFullPath(filePath,full_path))
 			{
 				// We have more buffers free, generate a new one
 				alGenBuffers(1, &buffer);
@@ -253,7 +250,7 @@ namespace GASS
 				alGetError();   // Clear Error Code
 
 				//ALFWLoadWaveToBuffer (ALbyte*)full_path.c_str(), &format, &data, &size, &freq, &loop);
-				ALFWLoadWaveToBuffer( (ALbyte*)full_path.c_str(),buffer);
+				ALFWLoadWaveToBuffer( (ALbyte*)filePath.c_str(),buffer);
 
 				if ( CheckAlError("loadWAV::alutLoadWAVFile: ") )
 					return ;
@@ -278,10 +275,7 @@ namespace GASS
 
 				//m_BaseFreq = freq;
 			}
-			else
-			{
-				return;
-			}
+			
 		}
 		return;
 	}

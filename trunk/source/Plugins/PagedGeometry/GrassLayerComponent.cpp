@@ -144,7 +144,7 @@ namespace GASS
 		return m_Material;
 	}
 
-	void GrassLayerComponent::SetMaterial(const Resource &material)
+	void GrassLayerComponent::SetMaterial(const ResourceHandle &material)
 	{
 		m_Material = material;
 		if(m_GrassLayer)

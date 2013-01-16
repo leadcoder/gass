@@ -26,6 +26,7 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Plugins/Ogre/OgreMaterial.h"
 
 namespace Ogre
 {
@@ -55,14 +56,14 @@ namespace GASS
 		void SetHeight(float height);
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
-		void SetMaterial(const Resource &mat) {m_Material = mat;}
-		Resource GetMaterial()const {return m_Material;}
+		void SetMaterial(const OgreMaterial &mat) {m_Material = mat;}
+		OgreMaterial GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		std::string m_RenderQueue;
-		Resource m_Material;
+		OgreMaterial m_Material;
 		bool m_CastShadow;
 
 		Ogre::BillboardSet* m_BillboardSet;

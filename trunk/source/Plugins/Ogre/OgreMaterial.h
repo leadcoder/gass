@@ -17,37 +17,46 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef ARROW_GEOMETRY_COMPONENT_H
-#define ARROW_GEOMETRY_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSCommon.h"
-#include "Sim/GASSResourceHandle.h"
-#include "Core/MessageSystem/GASSIMessage.h"
+#pragma once
+
+/*#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Core/Utils/GASSFilePath.h"
+#include "Core/MessageSystem/GASSMessageType.h"
+#include <string>
+namespace Ogre
+{
+	
+}*/
+#include <string>
 
 namespace GASS
 {
-	class ArrowGeometryComponent : public Reflection<ArrowGeometryComponent,BaseSceneComponent>
+	class OgreMaterial
 	{
 	public:
-		ArrowGeometryComponent(void);
-		~ArrowGeometryComponent(void);
-		static void RegisterReflection();
-		virtual void OnInitialize();
-		void SetTexture(const ResourceHandle &texture_name);
-		ResourceHandle GetTexture() const;
+		OgreMaterial(const std::string name) : m_Name(name){}
+		OgreMaterial(){}
+		virtual ~OgreMaterial(){}
+		std::string GetName() const {return m_Name;}
+		void SetName(const std::string &name) {m_Name =name;}
+		friend std::ostream& operator << (std::ostream& os, const OgreMaterial& mat)
+		{
+			os << mat.GetName(); 
+			return os;
+		}
+		friend std::istream& operator >> (std::istream& os, OgreMaterial& mat)
+		{
+			std::string name;
+			os >> name;
+			mat.SetName(name);
+			return os;
+		}
 	protected:
-		void GenerateMesh();
-		void OnLoad(MessagePtr message);
-		void OnChangeName(MessagePtr message);
-		Vec2 GetSize() const;
-		void SetSize(const Vec2 &value);
-		Vec4 GetColor() const{return m_Color;}
-		void SetColor(const Vec4 &value){m_Color =value;}
-		Vec2 m_Size;
-		ResourceHandle m_Texture;
-		Vec4 m_Color;
-	private:
+		std::string m_Name;
 	};
 }
-#endif

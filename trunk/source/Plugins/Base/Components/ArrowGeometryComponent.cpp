@@ -53,7 +53,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("ArrowGeometryComponent",new GASS::Creator<ArrowGeometryComponent, IComponent>);
 		RegisterProperty<Vec2>("Size", &GASS::ArrowGeometryComponent::GetSize, &GASS::ArrowGeometryComponent::SetSize);
-		RegisterProperty<Resource>("Texture", &GASS::ArrowGeometryComponent::GetTexture, &GASS::ArrowGeometryComponent::SetTexture);
+		RegisterProperty<ResourceHandle>("Texture", &GASS::ArrowGeometryComponent::GetTexture, &GASS::ArrowGeometryComponent::SetTexture);
 		RegisterProperty<Vec4>("Color",&ArrowGeometryComponent::GetColor, &ArrowGeometryComponent::SetColor);
 	}
 
@@ -214,7 +214,7 @@ namespace GASS
 		//SetTexture(m_Texture);
 	}
 
-	void ArrowGeometryComponent::SetTexture(const Resource &texture_name)
+	void ArrowGeometryComponent::SetTexture(const ResourceHandle &texture_name)
 	{
 		m_Texture = texture_name;
 		if(GetSceneObject())
@@ -224,7 +224,7 @@ namespace GASS
 		}
 	}
 
-	Resource ArrowGeometryComponent::GetTexture() const
+	ResourceHandle ArrowGeometryComponent::GetTexture() const
 	{
 		return m_Texture;
 	}

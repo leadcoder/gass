@@ -82,7 +82,7 @@ namespace GASS
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
 		Resource GetMaterial() const;
-		void SetMaterial(const Resource &name);
+		void SetMaterial(const ResourceHandle &name);
 		FadeTechniqueBinder GetFadeTechnique() const;
 		void SetFadeTechnique(const FadeTechniqueBinder &tech);
 		RenderTechniqueBinder GetRenderTechnique() const;

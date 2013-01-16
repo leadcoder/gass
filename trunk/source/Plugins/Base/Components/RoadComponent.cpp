@@ -97,13 +97,13 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void RoadComponent::SetMaterial(const Resource &value)
+	void RoadComponent::SetMaterial(const ResourceHandle &value)
 	{
 		m_Material = value;
 		UpdateRoadMesh();
 	}
 
-	Resource RoadComponent::GetMaterial() const 
+	ResourceHandle RoadComponent::GetMaterial() const 
 	{
 		return m_Material;
 	}

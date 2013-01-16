@@ -65,7 +65,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		RegisterEnumProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue);
-		RegisterEnumProperty<MeshResource>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
+		RegisterEnumProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow);
 	}
 
@@ -101,11 +101,11 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::SetMeshResource(const MeshResource &res) 
+	void OgreMeshComponent::SetMeshResource(const ResourceHandle &res) 
 	{
 		m_MeshResource = res;
 
-		if(m_MeshResource.Valid() && m_ReadyToLoadMesh)
+		if(m_MeshResource.Name() != "" &&  m_ReadyToLoadMesh)
 		{
 			OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 			if(m_OgreEntity) //release previous mesh
@@ -366,7 +366,7 @@ namespace GASS
 
 	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		MeshResource resource(message->GetFileName());
+		ResourceHandle resource(message->GetFileName());
 		SetMeshResource(resource);
 	}
 

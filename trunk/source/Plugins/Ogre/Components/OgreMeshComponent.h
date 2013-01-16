@@ -55,7 +55,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
 		//IResourceComponent
-		Resource GetResource() const {return m_MeshResource;}
+		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -64,8 +64,8 @@ namespace GASS
 	protected:
 		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
-		MeshResource GetMeshResource() const {return m_MeshResource;}
-		void SetMeshResource(const MeshResource &res);
+		ResourceHandle GetMeshResource() const {return m_MeshResource;}
+		void SetMeshResource(const ResourceHandle &res);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
 
@@ -84,7 +84,7 @@ namespace GASS
 
 		Ogre::Entity* m_OgreEntity;
 		RenderQueueBinder m_RenderQueue;
-		MeshResource m_MeshResource;
+		ResourceHandle m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;

@@ -40,6 +40,7 @@
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
+
 #include "Plugins/Ogre/OgreConvert.h"
 
 
@@ -67,7 +68,8 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, IComponent>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
-		RegisterProperty<Resource>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
+		RegisterProperty<OgreMaterial>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
+		//RegisterProperty<ResourceHandle>("Texture", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
@@ -118,55 +120,43 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-		if(m_Material.Valid())
+		std::string material_name = m_Material.GetName();
+		Ogre::MaterialPtr material;
+		if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
+		else
 		{
-			std::string material_name = m_Material.Name();
-			Ogre::MaterialPtr material;
-			if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
-			else
-			{
-				material = Ogre::MaterialManager::getSingleton().create(material_name, "GASS",false, 0); // Manual, loader
-				// Remove pre-created technique from defaults
-				material->removeAllTechniques();
-				// Create a techinique and a pass and a texture unit
-				Ogre::Technique * technique = material->createTechnique();
-				Ogre::Pass* pass = technique->createPass();
-				material->setLightingEnabled(false);
-				material->setDepthWriteEnabled(true);
-				material->setCullingMode(Ogre::CULL_NONE);
-				std::string fullpath;
-				IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
-
-				//check if material is texture?
-				if(rs->GetFullPath(m_Material.Name(),fullpath))
-				{
-					Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material.Name(),0);
-					pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
-				}
-			}
-		
-			m_BillboardSet = ogsm->GetOgreSceneManager()->createBillboardSet(name);
-			m_BillboardSet->setMaterialName(material_name);
-
-			Vec3 pos = Vec3(0,m_Height/2.0,0);
-			Ogre::ColourValue color = Ogre::ColourValue::White;
-			Ogre::Billboard* billboard = m_BillboardSet->createBillboard(Convert::ToOgre(pos),color);
-			billboard->mPosition = Convert::ToOgre(pos);
-			billboard->setColour(color);
-			billboard->setDimensions(m_Width,m_Height);
-			billboard->setTexcoordRect(0, 0,1, 1);
-			m_Billboard = billboard;
-			float bbsize = m_Height;
-			if(m_Width > m_Height) bbsize = m_Width;
-			bbsize *=  0.5f;
-			m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
-			lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
-
-			
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+			material = Ogre::MaterialManager::getSingleton().create(material_name, "GASS",false, 0); // Manual, loader
+			// Remove pre-created technique from defaults
+			material->removeAllTechniques();
+			// Create a techinique and a pass and a texture unit
+			Ogre::Technique * technique = material->createTechnique();
+			Ogre::Pass* pass = technique->createPass();
+			material->setLightingEnabled(false);
+			material->setDepthWriteEnabled(true);
+			material->setCullingMode(Ogre::CULL_NONE);
+			std::string fullpath;
+			Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material.GetName(),0);
+			pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
 		}
-	}
 
+		m_BillboardSet = ogsm->GetOgreSceneManager()->createBillboardSet(name);
+		m_BillboardSet->setMaterialName(material_name);
+
+		Vec3 pos = Vec3(0,m_Height/2.0,0);
+		Ogre::ColourValue color = Ogre::ColourValue::White;
+		Ogre::Billboard* billboard = m_BillboardSet->createBillboard(Convert::ToOgre(pos),color);
+		billboard->mPosition = Convert::ToOgre(pos);
+		billboard->setColour(color);
+		billboard->setDimensions(m_Width,m_Height);
+		billboard->setTexcoordRect(0, 0,1, 1);
+		m_Billboard = billboard;
+		float bbsize = m_Height;
+		if(m_Width > m_Height) bbsize = m_Width;
+		bbsize *=  0.5f;
+		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
+		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+	}
 	
 	AABox OgreBillboardComponent::GetBoundingBox() const
 	{

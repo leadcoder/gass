@@ -92,7 +92,7 @@ namespace GASS
 		}
 	}
 
-	void OgreSceneManagerTerrainComponent::SetTerrainResource(const Resource &res) 
+	void OgreSceneManagerTerrainComponent::SetTerrainResource(const ResourceHandle &res) 
 	{
 		m_TerrainConfigFile = res;
 		LoadTerrain(m_TerrainConfigFile.Name());

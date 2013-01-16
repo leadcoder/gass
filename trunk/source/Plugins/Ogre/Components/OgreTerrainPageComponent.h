@@ -24,6 +24,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSResourceHandle.h"
 #include <tinyxml.h>
 
 #include "Sim/GASSBaseSceneComponent.h"
@@ -48,8 +49,9 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 
+		
+		virtual ResourceHandle GetTerrainResource() const;
 		//IMeshComponent interface
-		virtual Resource GetTerrainResource() const;
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		//IHeightmapTerrainComponent
@@ -65,8 +67,8 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
 		void LoadFromFile();
-		Resource GetHeightMap()const {return m_HeightMapFile;}
-		void SetHeightMap(const Resource &filename);
+		ResourceHandle GetHeightMap()const {return m_HeightMapFile;}
+		void SetHeightMap(const ResourceHandle &filename);
 		std::string GetFromResourceSystem(const std::string &filename);
 		void UpdatePosition();
 		int GetIndexX() const;
@@ -76,27 +78,27 @@ namespace GASS
 		void SetPosition(const Vec3 &pos);
 		Vec3 GetPosition() const; 
 		void SetColorMap(const Resource &colormap);
-		Resource GetColorMap() const; 
-		void SetDiffuseLayer0(const Resource &diffuse);
-		Resource GetDiffuseLayer0() const;
-		void SetNormalLayer0(const Resource &diffuse);
-		Resource GetNormalLayer0() const;
-		void SetDiffuseLayer1(const Resource &diffuse);
-		Resource GetDiffuseLayer1() const;
-		void SetNormalLayer1(const Resource &diffuse);
-		Resource GetNormalLayer1() const;
-		void SetDiffuseLayer2(const Resource &diffuse);
-		Resource GetDiffuseLayer2() const;
-		void SetNormalLayer2(const Resource &diffuse);
-		Resource GetNormalLayer2() const;
-		void SetDiffuseLayer3(const Resource &diffuse);
-		Resource GetDiffuseLayer3() const;
-		void SetNormalLayer3(const Resource &diffuse);
-		Resource GetNormalLayer3() const;
-		void SetDiffuseLayer4(const Resource &diffuse);
-		Resource GetDiffuseLayer4() const;
-		void SetNormalLayer4(const Resource &diffuse);
-		Resource GetNormalLayer4() const;
+		ResourceHandle GetColorMap() const; 
+		void SetDiffuseLayer0(const ResourceHandle &diffuse);
+		ResourceHandle GetDiffuseLayer0() const;
+		void SetNormalLayer0(const ResourceHandle &diffuse);
+		ResourceHandle GetNormalLayer0() const;
+		void SetDiffuseLayer1(const ResourceHandle &diffuse);
+		ResourceHandle GetDiffuseLayer1() const;
+		void SetNormalLayer1(const ResourceHandle &diffuse);
+		ResourceHandle GetNormalLayer1() const;
+		void SetDiffuseLayer2(const ResourceHandle &diffuse);
+		ResourceHandle GetDiffuseLayer2() const;
+		void SetNormalLayer2(const ResourceHandle &diffuse);
+		ResourceHandle GetNormalLayer2() const;
+		void SetDiffuseLayer3(const ResourceHandle &diffuse);
+		ResourceHandle GetDiffuseLayer3() const;
+		void SetNormalLayer3(const ResourceHandle &diffuse);
+		ResourceHandle GetNormalLayer3() const;
+		void SetDiffuseLayer4(const ResourceHandle &diffuse);
+		ResourceHandle GetDiffuseLayer4() const;
+		void SetNormalLayer4(const ResourceHandle &diffuse);
+		ResourceHandle GetNormalLayer4() const;
 		void SetTilingLayer0(float value);
 		float GetTilingLayer0() const;
 		void SetTilingLayer1(float value);
@@ -107,8 +109,8 @@ namespace GASS
 		float GetTilingLayer3() const;
 		void SetTilingLayer4(float value);
 		float GetTilingLayer4() const;
-		void SetMask(const Resource &mask);
-		Resource GetMask() const;
+		void SetMask(const ResourceHandle &mask);
+		ResourceHandle GetMask() const;
 		//void SetMaskLayer1(const std::string &mask);
 		//std::string GetMaskLayer1() const;
 		//void SetMaskLayer2(const std::string &mask);
@@ -126,21 +128,21 @@ namespace GASS
 		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
 		
 		bool m_CreateCollisionMesh;
-		Resource m_HeightMapFile;
-		Resource m_ColorMap;
-		Resource m_Mask;
+		ResourceHandle m_HeightMapFile;
+		ResourceHandle m_ColorMap;
+		ResourceHandle m_Mask;
 		//Resource m_MaskLayer1;
 		//Resource m_MaskLayer2;
-		Resource m_DiffuseLayer0;
-		Resource m_NormalLayer0;
-		Resource m_DiffuseLayer1;
-		Resource m_NormalLayer1;
-		Resource m_DiffuseLayer2;
-		Resource m_NormalLayer2;
-		Resource m_DiffuseLayer3;
-		Resource m_NormalLayer3;
-		Resource m_DiffuseLayer4;
-		Resource m_NormalLayer4;
+		ResourceHandle m_DiffuseLayer0;
+		ResourceHandle m_NormalLayer0;
+		ResourceHandle m_DiffuseLayer1;
+		ResourceHandle m_NormalLayer1;
+		ResourceHandle m_DiffuseLayer2;
+		ResourceHandle m_NormalLayer2;
+		ResourceHandle m_DiffuseLayer3;
+		ResourceHandle m_NormalLayer3;
+		ResourceHandle m_DiffuseLayer4;
+		ResourceHandle m_NormalLayer4;
 		Ogre::SceneManager* m_OgreSceneManager;
 		Ogre::TerrainGroup* m_TerrainGroup;
 		Ogre::Terrain* m_Terrain;

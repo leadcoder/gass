@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSResource.h"
+#include "Sim/GASSResourceHandle.h"
 
 namespace GASS
 {
@@ -35,7 +35,7 @@ namespace GASS
 		/**
 		Should return resource object
 		*/
-		virtual Resource GetResource() const =0;
+		virtual ResourceHandle GetResource() const =0;
 	};
 	typedef boost::shared_ptr<IResourceComponent> ResourceComponentPtr;
 }

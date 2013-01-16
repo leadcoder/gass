@@ -58,7 +58,7 @@ namespace GASS
 		ControlType GUIControlType;
 		std::string FileControlSettings;
 		std::string ResourceGroup;
-		ResourceType ResourceType;
+		std::string ResourceType;
 		std::vector<std::string> Restrictions;
 		std::vector<std::string> ReferenceComponentFilters;
 		std::vector<std::string> ReferenceNameFilters;

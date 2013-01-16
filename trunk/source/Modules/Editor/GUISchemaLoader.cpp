@@ -148,19 +148,7 @@ namespace GASS
 
 				if(gui_elem->Attribute("resourceType"))
 				{
-					std::string  rt = gui_elem->Attribute("resourceType");
-					if(rt == "MATERIAL")
-					{
-						ps.ResourceType = RT_MATERIAL;
-					}
-					else if(rt == "TEXTURE")
-					{
-						ps.ResourceType = RT_TEXTURE;
-					}
-					else if(rt == "MESH")
-					{
-						ps.ResourceType = RT_MESH;
-					}
+					ps.ResourceType = gui_elem->Attribute("resourceType");
 				}
 
 				if(gui_elem->Attribute("fileControlSettings"))

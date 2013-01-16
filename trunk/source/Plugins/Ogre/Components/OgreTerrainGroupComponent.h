@@ -49,7 +49,7 @@ namespace GASS
 		
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
-		virtual Resource GetTerrainResource()const {return m_TerrainResource;}
+		virtual ResourceHandle GetTerrainResource()const {return m_TerrainResource;}
 
 		//ITerrainComponent
 		/*virtual Float GetHeight(Float x, Float z) const;

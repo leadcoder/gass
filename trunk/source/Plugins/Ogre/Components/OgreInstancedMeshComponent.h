@@ -59,7 +59,7 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
-		virtual Resource GetMeshResource()const {return m_MeshResource;}
+		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
@@ -95,7 +95,7 @@ namespace GASS
 		MeshMap m_MeshInstances;
 		std::vector<Ogre::InstancedGeometry*> m_InstancedGeometries;
 		OgreGraphicsSceneManagerWeakPtr m_OgreSceneManager;
-		Resource m_MeshResource;
+		ResourceHandle m_MeshResource;
 		Float m_RegionSize;
 		Vec3 m_GlobalScale;
 		GeometryFlags m_GeomFlags;
