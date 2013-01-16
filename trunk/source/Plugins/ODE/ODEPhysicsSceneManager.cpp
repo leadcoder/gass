@@ -30,7 +30,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-#include "Plugins/ODE/ODECollisionSystem.h"
+//#include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 

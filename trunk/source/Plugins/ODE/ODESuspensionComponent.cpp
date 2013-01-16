@@ -22,7 +22,7 @@
 #include "Plugins/ODE/ODESuspensionComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-#include "Plugins/ODE/ODECollisionSystem.h"
+//#include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -36,9 +36,6 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include <boost/bind.hpp>
-//#include "Main/SceneNodes/BaseObject.h"
-//#include "Main/SceneNodes/TransformationNode.h"
-//#include "Main/Helpers/Font.h"
 
 namespace GASS
 {
