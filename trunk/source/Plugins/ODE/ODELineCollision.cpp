@@ -47,8 +47,8 @@ namespace GASS
 
 	void ODELineCollision::Process()
 	{
-		ScenePtr scene = SimEngine::Get().GetScenes().getNext();
-		GraphicsSceneManagerPtr gsm = scene->GetFirstSceneManagerByClass<IGraphicsSceneManager>();
+		//ScenePtr scene = SimEngine::Get().GetScenes().getNext();
+		//GraphicsSceneManagerPtr gsm = scene->GetFirstSceneManagerByClass<IGraphicsSceneManager>();
 
 		//split ray into segments
 		if(m_SegmentLength > 0)
@@ -71,11 +71,11 @@ namespace GASS
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 
 
-				Vec3 debugRayStart = rayStart;
+				/*Vec3 debugRayStart = rayStart;
 				debugRayStart.x += 5;
 
 				gsm->DrawLine(debugRayStart,Vec3(debugRayStart.x,debugRayStart.y+10,debugRayStart.z),Vec4(0,0,0,0.6));
-				gsm->DrawLine(debugRayStart,debugRayStart + m_RayDir*m_SegmentLength,Vec4(Float(i)/Float(5),0,0,1));
+				gsm->DrawLine(debugRayStart,debugRayStart + m_RayDir*m_SegmentLength,Vec4(Float(i)/Float(5),0,0,1));*/
 
 				if(m_Result->Coll == true)
 				{
