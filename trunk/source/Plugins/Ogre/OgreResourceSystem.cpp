@@ -176,8 +176,6 @@ namespace GASS
 		}			
 	}
 
-
-
 	void OgreResourceSystem::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
@@ -318,7 +316,6 @@ namespace GASS
 						content.push_back(files[i]);
 				}
 
-
 		/*		Ogre::TextureManager::ResourceMapIterator iter = Ogre::TextureManager::getSingleton().getResourceIterator();
 				while(iter.hasMoreElements())
 				{
@@ -330,7 +327,6 @@ namespace GASS
 				}*/
 			}
 			break;
-
 		case RT_MESH:
 			{
 				std::vector<std::string> meshes = GetResourceNames(resource_group);
@@ -352,7 +348,6 @@ namespace GASS
 					if(Misc::GetExtension(sounds[i]) == "wav")
 						content.push_back(sounds[i]);
 				}
-				
 			}
 			break;
 		}

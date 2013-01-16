@@ -106,8 +106,6 @@ namespace GASS
 	std::string Misc::RemoveFilename(const std::string &path)
 	{
 		std::string ret = path;
-
-		
 		std::string::size_type pos1 = ret.find_last_of("/",ret.size());
 		std::string::size_type pos2 = ret.find_last_of("\\",ret.size());
 		if(pos1 > pos2 && pos1 != std::string::npos)

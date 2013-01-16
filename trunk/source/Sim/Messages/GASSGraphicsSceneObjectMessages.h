@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSResource.h"
+#include "Sim/GASSResourceHandle.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
@@ -608,10 +608,10 @@ namespace GASS
 		}
 		TerrainLayer  GetLayer() const { return m_Layer;}
 		float GetTiling() const {return m_Tiling;}
-		Resource GetTexture() const {return m_Texture;}
+		ResourceHandle GetTexture() const {return m_Texture;}
 	private:
 		TerrainLayer m_Layer;
-		Resource m_Texture;
+		ResourceHandle m_Texture;
 		float m_Tiling;
 	};
 	typedef boost::shared_ptr<TerrainLayerMessage> TerrainLayerMessagePtr;

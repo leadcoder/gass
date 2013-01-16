@@ -30,10 +30,13 @@
 namespace GASS
 {
 
-	FilePath::FilePath(const std::string &path)
+	FilePath::FilePath(const std::string &path, bool expand)
 	{
 		m_RawPath  = path;
-		m_ExpandedPath = ExpandEnvVariables(path);
+		if(expand)
+			m_ExpandedPath = ExpandEnvVariables(path);
+		else
+			m_ExpandedPath = path; 
 	}
 
 	FilePath::FilePath()
@@ -83,11 +86,11 @@ namespace GASS
 				if (varName.length() > 0)
 				{
 					char* temp_str = getenv(varName.c_str());
-					
+
 					if (temp_str)
 					{
 						curStr.replace( occurIndex1, replaceStr.length(), std::string(temp_str));
-					
+
 					}
 					else
 					{
@@ -128,7 +131,6 @@ namespace GASS
 
 		curStr = Misc::Replace(curStr, "\\", "/");
 		curStr = Misc::Replace(curStr, "//", "/");
-
 		return curStr;
 	}
 
@@ -145,22 +147,25 @@ namespace GASS
 
 	std::string FilePath::GetExtension() const
 	{
-		std::string ret, reversed_string;
+		boost::filesystem::path boost_path(m_ExpandedPath); 
+		return boost_path.extension().generic_string();
+
+		/*std::string ret, reversed_string;
 		std::string::size_type pos = m_ExpandedPath.find_last_of(".");
 
 		if (pos == m_ExpandedPath.npos)
 			return "";
 
-		ret = m_ExpandedPath.substr(pos+1);
-
-		return ret;
+		ret = m_ExpandedPath.substr(pos+1);*/
+		//return ret;
 	}
 
 	std::string FilePath::GetFilename() const
 	{
-		std::string ret = m_ExpandedPath;
+		boost::filesystem::path boost_path(m_ExpandedPath); 
+		return boost_path.filename().generic_string();
 
-		std::string::size_type  pos = ret.find("/",0);
+		/*std::string::size_type  pos = ret.find("/",0);
 		while(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
@@ -173,10 +178,10 @@ namespace GASS
 			ret = ret.substr(pos+1);
 			pos = ret.find("\\",0);
 		}
-		return ret;
+		return ret;*/
 	}
 
-	
+
 	std::string FilePath::GetPathNoFile() const
 	{
 		std::string ret = m_ExpandedPath;
@@ -186,5 +191,64 @@ namespace GASS
 			ret = ret.substr(0,pos+1);
 		}
 		return ret;
+	}
+
+
+	void FilePath::GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive)
+	{
+		boost::filesystem::path boost_path(path.GetFullPath()); 
+		if( boost::filesystem::exists(boost_path))  
+		{
+			boost::filesystem::directory_iterator end ;    
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			{
+				if (boost::filesystem::is_directory( *iter ))      
+				{   
+					folders.push_back(FilePath(iter->path().string(),false));
+					if(recursive)
+						GetFilesFromPath(folders,FilePath(iter->path().string(),false), recursive);
+				}
+			}
+		}
+	}
+
+
+	void FilePath::GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive, const std::vector<std::string> extenstion_filters)
+	{
+		boost::filesystem::path boost_path(path.GetFullPath()); 
+		if( boost::filesystem::exists(boost_path))  
+		{
+			boost::filesystem::directory_iterator end ;    
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			{
+				if (boost::filesystem::is_directory( *iter )  && recursive)      
+				{   
+					GetFilesFromPath(files,FilePath(iter->path().string(),false), recursive,extenstion_filters);
+				}
+				else
+				{
+					if(extenstion_filters.size() > 0)
+					{
+						const std::string exstension = iter->path().extension().generic_string();
+
+						bool find_ext = false;
+						for(size_t i = 0; i < extenstion_filters.size(); i++)
+						{
+							if(Misc::ToLower(exstension) == extenstion_filters[i])
+							{
+								find_ext = true;
+								break;
+							}
+						}
+						if(find_ext)
+							files.push_back(FilePath(iter->path().string(),false));
+					}
+					else
+					{
+						files.push_back(FilePath(iter->path().string(),false));
+					}
+				}
+			}
+		}
 	}
 }

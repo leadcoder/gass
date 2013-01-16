@@ -27,39 +27,9 @@
 
 namespace GASS
 {
-	Resource::Resource()
-	{
+	
 
-	}
-
-	Resource::Resource(const std::string &name) : m_ResourceName(name)
-	{
-
-	}
-
-	Resource::~Resource()
-	{
-
-	}
-
-	bool Resource::Valid() const
-	{
-		return (m_ResourceName != "");
-	}
-
-	FilePath Resource::GetFilePath() const
-	{
-		FilePath path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		std::string full_path;
-		if(rs->GetFullPath(m_ResourceName,full_path))
-		{
-			path.SetPath(full_path);
-		}
-		return path;
-	}
-
-	std::vector<std::string> MeshResource::GetAllOptions()
+/*	std::vector<std::string> MeshResource::GetAllOptions()
 	{
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		if(rs == NULL)
@@ -84,6 +54,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
 		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_TEXTURE,"");
 		return options;
-	}
+	}*/
 		
 }

@@ -28,71 +28,14 @@
 
 namespace GASS
 {
-	/*class Scene;
-	class SceneObject;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
-
-	enum CollisionType
-	{
-		COL_SPHERE,
-		COL_LINE
-	};
-
-	struct CollisionRequest
-	{
-		CollisionType Type;
-		Sphere ColSphere;
-		Vec3 LineStart;
-		Vec3 LineEnd;
-		SceneWeakPtr Scene;
-		bool ReturnFirstCollisionPoint;
-		GeometryFlags CollisionBits;
-	};
-	
-	struct CollisionResult
-	{
-		Vec3 CollNormal;
-		Vec3 CollPosition;
-		double CollDist;
-		bool Coll;
-		SceneObjectWeakPtr CollSceneObject;
-	};
-
-	typedef unsigned int CollisionHandle;*/
-
 	/**
-		Collision interface
-		
-		Implementaion of this interface must be thread safe so that 
-		interaction is can be done during RTC update if running GASS 
-		in multi-threaded mode. 
+		Collision system interface
 	*/
 
 	class GASSExport ICollisionSystem
 	{
 	public:
 		virtual ~ICollisionSystem(){}
-		/**
-			Request a new collision query, the handle returned is used when to check
-			if the request is processed.
-		*/
-		//virtual CollisionHandle Request(const CollisionRequest &request)= 0;
-		
-		/**
-			Check is a collision request is processed. The function return true is the 
-			request is processed and the result is placed in the CollisionResult argument.
-		*/
-		//virtual bool Check(CollisionHandle handle, CollisionResult &result) = 0;
-
-		/**
-			This function will force a the collision system to process 
-			the collision request and the collision result will be
-			available immediately. 
-			@remarks Calling this method can stall the caller if the collision system
-			implementation is threaded and therefore is busy processing other requests
-		*/
-		//virtual void Force(CollisionRequest &request, CollisionResult &result) const = 0;
 	protected:
 	};
 

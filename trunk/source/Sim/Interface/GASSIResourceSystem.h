@@ -21,12 +21,13 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSResource.h"
 #include "Core/Utils/GASSFilePath.h"
 #include <string>
 
 namespace GASS
 {
-	enum ResourceType
+	/*enum ResourceType
 	{
 		RT_MESH,
 		RT_MATERIAL,
@@ -35,6 +36,12 @@ namespace GASS
 		RT_TEMPLATE,
 		RT_SOUND,
 		RT_USER,
+	};*/
+
+	struct ResourceType
+	{
+		std::string Name;
+		std::vector<std::string> Extensions;
 	};
 
 	/**
@@ -56,7 +63,7 @@ namespace GASS
 			@file_path Will hold full path to resrouce on return
 			@return true if resource is found
 		*/
-		virtual bool GetFullPath(const std::string &file_name,std::string &file_path) = 0;
+		//virtual bool GetFullPath(const std::string &file_name,std::string &file_path) = 0;
 		
 		/**
 			Add new resource location
@@ -66,7 +73,6 @@ namespace GASS
 			@recursive Search in subfolders or not
 		*/
 		virtual void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
-		
 		/**
 			Remove resource location from resource group
 			@path Full file path to the resource location
@@ -95,13 +101,15 @@ namespace GASS
 			Get all resource names from resource group
 			@resource_group The resources group
 		*/
-		virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const = 0;
+		//virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const = 0;
+		virtual Resource GetResourceByName(const std::string &name) const = 0;
+		virtual std::vector<Resource> GetResources(const std::string &resource_type_name = "", const std::string &resource_group = "") const = 0;
 
 		/**
 			Get all content names inside resources of resource group
 			@resource_group The resources group
 		*/
-		virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const = 0;
+		//virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const = 0;
 	protected:
 	};
 

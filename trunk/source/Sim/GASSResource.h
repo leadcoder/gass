@@ -18,73 +18,32 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_MESH_RESOURCE_H
-#define GASS_MESH_RESOURCE_H
+#ifndef GASS_RESOURCE_H
+#define GASS_RESOURCE_H
 
 #include "Core/Common.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Core/Utils/GASSFilePath.h"
+#include "Sim/GASSCommon.h"
 
 namespace GASS
 {
 	class GASSExport Resource
 	{
 	public:
-		Resource();
-		Resource(const std::string &name);
-		virtual ~Resource();
-		std::string Name() const { return m_ResourceName;}
-		void SetName(const std::string &name)  { m_ResourceName=name;}
-		std::string GetGroup() const { return m_ResourceGroup;}
-		void SetGroup(const std::string &group)  { m_ResourceGroup=group;}
-		FilePath GetFilePath() const;
-		bool Valid() const;
-		friend std::ostream& operator << (std::ostream& os, const Resource& res)
+		Resource(const FilePath &path,const std::string &group,const std::string &type) :m_ResourcePath(path),
+			m_ResourceGroup(group),
+			m_ResourceType(type)
 		{
-			os << res.Name();
-			return os;
-		}
-
-		friend std::istream& operator >> (std::istream& os, Resource& res)
-		{
-			std::string name;
-			os >> name;
-			res.SetName(name);
-			return os;
-		}
+		};
+		virtual ~Resource(){};
+		std::string Name() const { return m_ResourcePath.GetFilename();}
+		std::string Group() const { return m_ResourceGroup;}
+		std::string Type() const { return m_ResourceType;}
+		FilePath Path() { return m_ResourcePath;}
 	private:
-		std::string m_ResourceName;
+		FilePath m_ResourcePath;
 		std::string m_ResourceGroup;
-	};
-
-	class GASSExport MeshResource: public Resource
-	{
-	public:
-		MeshResource(){}
-		MeshResource(const std::string &name) : Resource(name) {}
-		virtual ~MeshResource() {}
-		static std::vector<std::string> GetAllOptions(); 
-		static bool IsMultiValue() {return false;}
-	};
-
-	class GASSExport TextureResource: public Resource
-	{
-	public:
-		TextureResource(){}
-		TextureResource(const std::string &name) : Resource(name) {}
-		virtual ~TextureResource() {}
-		static std::vector<std::string> GetAllOptions(); 
-		static bool IsMultiValue() {return false;}
-	};
-
-
-	class GASSExport MaterialResource : public Resource
-	{
-	public:
-		MaterialResource(){}
-		MaterialResource(const std::string &name) : Resource(name) {}
-		virtual ~MaterialResource() {}
-		static std::vector<std::string> GetAllOptions(); 
-		static bool IsMultiValue() {return false;}
+		std::string m_ResourceType;
 	};
 }
 #endif 
