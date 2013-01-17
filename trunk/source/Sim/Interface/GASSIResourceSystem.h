@@ -33,6 +33,7 @@ namespace GASS
 		std::string Name;
 		std::vector<std::string> Extensions;
 	};
+	typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
 
 	/**
 		Interface that all resource systems must be derived from
@@ -41,6 +42,7 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with systems should 
 		instead be done through messages.
 	*/
+
 	class GASSExport IResourceSystem
 	{
 	public:
@@ -97,6 +99,8 @@ namespace GASS
 		virtual void RegisterResourceType(const ResourceType &res_type) = 0;
 		//virtual std::vector<ResourceLocationPtr> GetResourceLocations() const = 0;
 		virtual std::string GetResourceTypeByExtension(const std::string &extension) const = 0;
+
+		virtual ResourceGroupVector GetResourceGroups() const = 0;
 
 		/**
 			Get all content names inside resources of resource group

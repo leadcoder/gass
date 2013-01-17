@@ -52,11 +52,15 @@ namespace GASS
 		//get resource system
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		//Parse for ogre scripts
-		std::vector<ResourceLocationPtr> locations = rs->GetResourceLocations();
-		for(int i = 0; i < locations.size(); i++)
+		ResourceGroupVector groups = rs->GetResourceGroups();
+		for(int i = 0; i < groups.size(); i++)
 		{
-			ResourceLocationPtr rl = locations[i];
-			AddResourceLocation(rl->m_Path.GetFullPath(),rl->m_Group,rl->m_Type);
+			ResourceLocationVector locations = groups[i]->GetResourceLocations();
+			for(int j = 0; j < locations.size(); j++)
+			{
+				ResourceLocationPtr rl = locations[i];
+				AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),rl->GetType());
+			}
 		}
 		LogManager::getSingleton().stream() << "OgreResourceManager Initlize All Resource Groups";
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();

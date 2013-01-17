@@ -30,7 +30,7 @@ namespace GASS
 	{
 		
 	public:
-		typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
+		
 		BaseResourceSystem();
 		virtual ~BaseResourceSystem();
 		static void RegisterReflection();
