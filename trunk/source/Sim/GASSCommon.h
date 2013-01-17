@@ -98,4 +98,17 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/bind.hpp>
 
+#define FDECL(CLASS) class CLASS; typedef boost::shared_ptr<CLASS> ##CLASS##Ptr; typedef boost::weak_ptr<CLASS> ##CLASS##WeakPtr;
+#define PDECL(CLASS) typedef boost::shared_ptr<CLASS> ##CLASS##Ptr; typedef boost::weak_ptr<CLASS> ##CLASS##WeakPtr;
+
+#define IFDECL(CLASS) class I##CLASS##; typedef boost::shared_ptr<I##CLASS##> ##CLASS##Ptr; typedef boost::weak_ptr<I##CLASS##> ##CLASS##WeakPtr;
+#define IPDECL(CLASS) typedef boost::shared_ptr<I##CLASS##> ##CLASS##Ptr; typedef boost::weak_ptr<I##CLASS##> ##CLASS##WeakPtr;
+
+//#define SCAST(CLASS,PTR) boost::shared_static_cast<CLASS>(PTR);
+#define DCAST(CLASS,PTR) boost::shared_dynamic_cast<CLASS>(PTR)
+#define SHARE_CLASS(CLASS) boost::enable_shared_from_this<CLASS>
+
+
+
+
 

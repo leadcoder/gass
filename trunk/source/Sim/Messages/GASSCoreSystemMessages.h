@@ -31,10 +31,11 @@ namespace GASS
 {
 	class Scene;
 	class SceneObject;
-
+	class ResourceLocation;
 	
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef boost::shared_ptr<ResourceLocation> ResourceLocationPtr;
 
 	/**
 	Base class for all system messages
@@ -203,6 +204,33 @@ namespace GASS
 	private:
 	};
 	typedef boost::shared_ptr<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
+
+
+	class ResourceLocationCreatedEvent : public SystemEventMessage
+	{
+	public:
+		ResourceLocationCreatedEvent(ResourceLocationPtr location, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Location(location)
+		{
+		}
+		ResourceLocationPtr GetLocation() const{return m_Location;}
+	private:
+		ResourceLocationPtr m_Location;
+	};
+	typedef boost::shared_ptr<ResourceLocationCreatedEvent> ResourceLocationCreatedEventPtr;
+
+
+	class ResourceGroupRemovedEvent: public SystemEventMessage
+	{
+	public:
+		ResourceGroupRemovedEvent(const std::string &group, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Group(group)
+		{
+		}
+		std::string GetGroup() const{return m_Group;}
+	private:
+		std::string m_Group;
+	};
+	typedef boost::shared_ptr<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
+
 
 
 }

@@ -88,7 +88,6 @@ namespace GASS
 		RegisterProperty<bool>("EnableSway", &GrassGeometryComponent::GetEnableSway, &GrassGeometryComponent::SetEnableSway);
 		RegisterProperty<float>("SwayDistribution", &GrassGeometryComponent::GetSwayDistribution, &GrassGeometryComponent::SetSwayDistribution);
 		RegisterProperty<float>("ViewDistance", &GrassGeometryComponent::GetViewDistance, &GrassGeometryComponent::SetViewDistance);
-
 	}
 
 	void GrassGeometryComponent::OnInitialize()

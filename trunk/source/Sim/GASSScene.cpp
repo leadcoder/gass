@@ -81,7 +81,8 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
 	
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		rs->AddResourceGroup(GetResourceGroupName());
+		m_ResourceGroup  = rs->CreateResourceGroup(GetResourceGroupName());
+		
 		//Add all registered scene manangers to the scene
 	
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
@@ -124,7 +125,7 @@ namespace GASS
 		SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		rs->RemoveResourceGroup(GetResourceGroupName());
+		rs->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
 		m_SceneManagers.clear();
 		m_SceneMessageManager->Clear();
 		m_Initlized = false;
@@ -160,11 +161,11 @@ namespace GASS
 				"Scene::Load");
 		}*/
 		//m_Name = name;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
 		//rs->AddResourceGroup(GetResourceGroupName());
-		rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
-		rs->LoadResourceGroup(GetResourceGroupName());
+		ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		//rs->LoadResourceGroup(GetResourceGroupName());
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
@@ -220,7 +221,7 @@ namespace GASS
 		}
 
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		rs->AddResourceLocation(scene_path,GetResourceGroupName(),"FileSystem",true);
+		ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 
 		TiXmlDocument doc;  
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  

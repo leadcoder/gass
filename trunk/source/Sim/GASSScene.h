@@ -31,19 +31,15 @@ class TiXmlElement;
 
 namespace GASS
 {
-	class MessageManager;
-	class ISceneManager;
-	class SceneObject;
-	class SceneObjectManager;
-
-	typedef boost::shared_ptr<SceneObjectManager> SceneObjectManagerPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	FDECL(ResourceGroup)
+	FDECL(MessageManager)
+	FDECL(SceneObject)
+	FDECL(SceneObjectManager)
+	IFDECL(SceneManager)
+	
 	typedef std::vector<SceneManagerPtr> SceneManagerVector;
-	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
 	typedef VectorIterator<SceneManagerVector> SceneManagerIterator;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr; 
-
+	
 	/**
 	A Scene in gass can be loaded from disc or created in runtime.  
 	The scene class will create instances of all registered scene managers and also create 
@@ -219,29 +215,22 @@ protected:
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectRequestPtr message);
 
-		
-		
-		
 		//Helper function to LoadXML
 		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
 
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;
-
 		SceneManagerVector m_SceneManagers;
-
 		std::string m_Name;
 		std::string m_FolderName;
-
 		MessageManagerPtr m_SceneMessageManager;
 
 		//Scene root node
 		SceneObjectPtr m_Root;
 		SceneObjectWeakPtr m_TerrainObjects;
-
+		ResourceGroupWeakPtr m_ResourceGroup;
 		bool m_Initlized;
 	};
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	PDECL(Scene)
 }
 

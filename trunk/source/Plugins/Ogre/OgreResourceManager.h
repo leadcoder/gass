@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://sourceforge.net/projects/gass/                                 *
+* See http://code.google.com/p/gass/                                 *
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
@@ -20,40 +20,36 @@
 
 #pragma once
 
-#include "Sim/GASS.h"
-#include "Sim/GASSResourceLocation.h"
+#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSSimSystem.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Core/Utils/GASSFilePath.h"
+
+#include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
+namespace Ogre
+{
+	class Root;
+	class RenderWindow;
+	class SceneManager;
+}
 
 namespace GASS
 {
-	class GASSExport BaseResourceSystem : public Reflection<BaseResourceSystem, SimSystem>,  public IResourceSystem
+	class OgreResourceManager
 	{
-		
 	public:
-		typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
-		BaseResourceSystem();
-		virtual ~BaseResourceSystem();
+		OgreResourceManager();
+		virtual ~OgreResourceManager();
 		static void RegisterReflection();
-		virtual void Init() {};
-		virtual void LoadXML(TiXmlElement *elem);
-		std::string GetSystemName() const {return "BaseResourceSystem";}
-		//IResourceSystem
-		//void RemoveResourceGroup(const std::string &name);
-		void RemoveResourceGroup(ResourceGroupPtr group);
-		ResourceGroupPtr CreateResourceGroup(const std::string &name);
-		ResourceGroupVector GetResourceGroups() const {return m_ResourceGroups;}
-		bool HasResourceGroup(const std::string &name);
-		std::string GetResourceTypeByExtension(const std::string &extension) const;
-		Resource GetFirstResourceByName(const std::string &resource_name) const;
-		void RegisterResourceType(const ResourceType &res_type);
-		//std::vector<Resource> GetResources(const std::string &resource_type = "", const std::string &resource_group = "") const;
-		
-		//void RegisterResourceType(const ResourceType &res_type);
+		void Init();
+		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type);
+		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
+		void RemoveResourceGroup(const std::string &resource_group);
+		void AddResourceGroup(const std::string &resource_group);
+		void LoadResourceGroup(const std::string &resource_group);
 	protected:
-		
-//		void AddResourceGroup(const std::string &resource_group){};
-	private:
-		ResourceGroupVector m_ResourceGroups;
-		std::vector<ResourceType> m_ResourceTypes;
 	};
 }

@@ -22,22 +22,12 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSResource.h"
+#include "Sim/GASSResourceGroup.h"
 #include "Core/Utils/GASSFilePath.h"
 #include <string>
 
 namespace GASS
 {
-	/*enum ResourceType
-	{
-		RT_MESH,
-		RT_MATERIAL,
-		RT_TEXTURE,
-		RT_SCRIPT,
-		RT_TEMPLATE,
-		RT_SOUND,
-		RT_USER,
-	};*/
-
 	struct ResourceType
 	{
 		std::string Name;
@@ -51,7 +41,6 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with systems should 
 		instead be done through messages.
 	*/
-
 	class GASSExport IResourceSystem
 	{
 	public:
@@ -72,38 +61,42 @@ namespace GASS
 			@type  resrouce type FileSystem or Zip
 			@recursive Search in subfolders or not
 		*/
-		virtual void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
+
+		
+		//virtual ResourceLocationWeakPtr CreateResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive) = 0;
 		/**
 			Remove resource location from resource group
 			@path Full file path to the resource location
 			@resource_group The resource group that hold the location
 		*/
-		virtual void RemoveResourceLocation(const FilePath &path,const std::string &resource_group) = 0;
+		//virtual void RemoveResourceLocation(ResourceLocationWeakPtr location) = 0;
 
 		/**
 			Remove resource group
 			@resource_group The resources group
 		*/
-		virtual void RemoveResourceGroup(const std::string &resource_group) = 0;
-		
+		virtual void RemoveResourceGroup(ResourceGroupPtr resource_group) = 0;
 		/**
 			Add resource group
 			@resource_group The resources group
 		*/
-		virtual void AddResourceGroup(const std::string &resource_group) = 0;
+		virtual ResourceGroupPtr CreateResourceGroup(const std::string &name) = 0;
 		/**
 			Force load of resource group
 			@resource_group The resources group
 		*/
-		virtual void LoadResourceGroup(const std::string &resource_group) = 0;
+		//virtual void LoadResourceGroup(const std::string &resource_group) = 0;
 
 		/**
 			Get all resource names from resource group
 			@resource_group The resources group
 		*/
 		//virtual std::vector<std::string> GetResourceNames(const std::string &resource_group) const = 0;
-		virtual Resource GetResourceByName(const std::string &name) const = 0;
-		virtual std::vector<Resource> GetResources(const std::string &resource_type_name = "", const std::string &resource_group = "") const = 0;
+		virtual Resource GetFirstResourceByName(const std::string &name) const = 0;
+		//virtual std::vector<Resource> GetResources(const std::string &resource_type_name = "", const std::string &resource_group = "") const = 0;
+		virtual void RegisterResourceType(const ResourceType &res_type) = 0;
+		//virtual std::vector<ResourceLocationPtr> GetResourceLocations() const = 0;
+		virtual std::string GetResourceTypeByExtension(const std::string &extension) const = 0;
 
 		/**
 			Get all content names inside resources of resource group
@@ -112,6 +105,5 @@ namespace GASS
 		//virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const = 0;
 	protected:
 	};
-
 	typedef boost::shared_ptr<IResourceSystem> ResourceSystemPtr;
 }

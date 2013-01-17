@@ -50,16 +50,15 @@ namespace GASS
 
 			if(attrib_name == "AddResourceLocation")
 			{
-				ResourceLocation rl;
-
-				rl.m_Path = FilePath(attrib->Attribute("Path"));
-				rl.m_Type = attrib->Attribute("Type");
-				rl.m_Group = attrib->Attribute("Group");
-				std::string rec = attrib->Attribute("Recursive");
-				rl.m_Recursive = false;
-				if(rec == "true")
-					rl.m_Recursive = true;
-				AddResourceLocationRecursive(rl);
+				
+				const FilePath path = FilePath(attrib->Attribute("Path"));
+				const std::string type = attrib->Attribute("Type");
+				const std::string group = attrib->Attribute("Group");
+				const std::string rec = attrib->Attribute("Recursive");
+				bool recursive = false;
+				if(Misc::ToLower(rec) == "true")
+					recursive = true;
+				//CreateResourceLocation(path,group,type,recursive);
 			}
 			else
 			{
@@ -70,82 +69,59 @@ namespace GASS
 		}
 	}
 
-	void BaseResourceSystem::AddResourceLocationRecursive(const ResourceLocation &rl)
+
+	/*void BaseResourceSystem::LoadResourceGroup(const std::string &resource_group)
 	{
-		boost::filesystem::path boost_path(rl.m_Path.GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
+
+	}*/
+
+	bool BaseResourceSystem::HasResourceGroup(const std::string &name)
+	{
+		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		while(iter != m_ResourceGroups.end())
 		{
-			m_ResourceLocations.push_back(rl);
-			if(rl.m_Recursive)
+			if(name == (*iter)->GetName())
 			{
-				boost::filesystem::directory_iterator end ;    
-				for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
-				{
-					if (boost::filesystem::is_directory( *iter ) )      
-					{   
-						ResourceLocation rec_rl = rl;
-						rec_rl.m_Path = iter->path().string();
-						AddResourceLocationRecursive(rec_rl);
-					}     
-				}
+				return true;
 			}
+			++iter;
 		}
+		return false;
 	}
 
-	void BaseResourceSystem::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type, bool recursive)
+	ResourceGroupPtr BaseResourceSystem::CreateResourceGroup(const std::string &name)
 	{
-		ResourceLocation rl;
-		rl.m_Path = path;
-		rl.m_Type= type;
-		rl.m_Group = resource_group;
-		rl.m_Recursive = recursive;
-		AddResourceLocationRecursive(rl);
+		ResourceSystemPtr system = DCAST(IResourceSystem,shared_from_this());
+		ResourceGroupPtr group(new ResourceGroup(system,name));
+		m_ResourceGroups.push_back(group);
+		return group;
 	}
 
-	void BaseResourceSystem::LoadResourceGroup(const std::string &resource_group)
-	{
 
-	}
-
-	void BaseResourceSystem::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
+	void BaseResourceSystem::RemoveResourceGroup(ResourceGroupPtr group)
 	{
-		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
-		while(iter != m_ResourceLocations.end())
+		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		while(iter != m_ResourceGroups.end())
 		{
-			std::string temp_file_path = iter->m_Path.GetFullPath();
-			if(temp_file_path  == path.GetFullPath() && resource_group == iter->m_Group)
+			if(group == (*iter))
 			{
-				iter = m_ResourceLocations.erase(iter);
+				iter = m_ResourceGroups.erase(iter);
 			}
 			else
 				++iter;
 		}
 	}
 
-	void BaseResourceSystem::RemoveResourceGroup(const std::string &resource_group)
+	/*std::vector<Resource> BaseResourceSystem::GetResources(const std::string &resource_type, const std::string &resource_group) const
 	{
-		std::vector<ResourceLocation>::iterator iter = m_ResourceLocations.begin();
-		while(iter != m_ResourceLocations.end())
-		{
-			if(resource_group == iter->m_Group)
-			{
-				iter = m_ResourceLocations.erase(iter);
-			}
-			else
-				++iter;
-		}
-	}
-
-	std::vector<Resource> BaseResourceSystem::GetResources(const std::string &resource_type, const std::string &resource_group) const
-	{
-		std::vector<ResourceLocation>::const_iterator iter = m_ResourceLocations.begin();
+		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
 		std::vector<Resource> resources;
 		while(iter != m_ResourceLocations.end())
 		{
-			if(resource_group == iter->m_Group)
+			if(resource_group == (*iter)->Group)
 			{
 				std::vector<FilePath> files;
-				FilePath::GetFilesFromPath(files,iter->m_Path);
+				FilePath::GetFilesFromPath(files,(*iter)->m_Path);
 				for(size_t i = 0; i< files.size(); i++)
 				{
 					const std::string res_type = GetType(files[i].GetExtension());
@@ -156,9 +132,9 @@ namespace GASS
 			++iter;
 		}
 		return resources;
-	}
+	}*/
 
-	const std::string BaseResourceSystem::GetType(const std::string extension) const
+	std::string BaseResourceSystem::GetResourceTypeByExtension(const std::string &extension) const
 	{
 		for(size_t i = 0; i < m_ResourceTypes.size();i++)
 		{
@@ -173,22 +149,15 @@ namespace GASS
 		return "";
 	}
 
-	Resource BaseResourceSystem::GetResourceByName(const std::string &resource_name) const
+	Resource BaseResourceSystem::GetFirstResourceByName(const std::string &resource_name) const
 	{
-		std::vector<ResourceLocation>::const_iterator iter = m_ResourceLocations.begin();
-		while(iter != m_ResourceLocations.end())
+		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		ResourceVector resources;
+		while(iter != m_ResourceGroups.end())
 		{
-			std::vector<FilePath> files;
-			const std::string resource_group = iter->m_Group;
-			FilePath::GetFilesFromPath(files,iter->m_Path);
-			for(size_t i = 0; i< files.size(); i++)
-			{
-				if(resource_name == files[i].GetFilename())
-				{
-					const std::string res_type = GetType(files[i].GetExtension());
-					return Resource(files[i],resource_group,res_type);
-				}
-			}
+			resources = (*iter)->GetResourcesByName(resource_name);
+			if(resources.size() > 0)
+				return 	resources[0];
 			++iter;
 		}
 		return Resource(FilePath(""),"","");
