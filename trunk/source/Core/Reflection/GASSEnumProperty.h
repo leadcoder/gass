@@ -58,6 +58,7 @@ namespace GASS
 		{
 
 		}
+
 		virtual std::vector<std::string> GetEnumList() const
 		{
 			return T::GetAllOptions();

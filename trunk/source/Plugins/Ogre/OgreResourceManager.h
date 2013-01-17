@@ -29,12 +29,6 @@
 
 #include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
-namespace Ogre
-{
-	class Root;
-	class RenderWindow;
-	class SceneManager;
-}
 
 namespace GASS
 {

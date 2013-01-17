@@ -67,19 +67,19 @@ namespace GASS
 	void OgreTerrainPageComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainPageComponent",new Creator<OgreTerrainPageComponent, IComponent>);
-		RegisterProperty<Resource>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap);
-		RegisterProperty<Resource>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap);
-		RegisterProperty<Resource>("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask);
-		RegisterProperty<Resource>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0);
-		RegisterProperty<Resource>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0);
-		RegisterProperty<Resource>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1);
-		RegisterProperty<Resource>("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1);
-		RegisterProperty<Resource>("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2);
-		RegisterProperty<Resource>("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2);
-		RegisterProperty<Resource>("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3);
-		RegisterProperty<Resource>("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3);
-		RegisterProperty<Resource>("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4);
-		RegisterProperty<Resource>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4);
+		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap);
+		RegisterProperty<ResourceHandle>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap);
+		RegisterProperty<ResourceHandle>("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask);
+		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0);
+		RegisterProperty<ResourceHandle>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0);
+		RegisterProperty<ResourceHandle>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1);
+		RegisterProperty<ResourceHandle>("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1);
+		RegisterProperty<ResourceHandle>("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2);
+		RegisterProperty<ResourceHandle>("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2);
+		RegisterProperty<ResourceHandle>("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3);
+		RegisterProperty<ResourceHandle>("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3);
+		RegisterProperty<ResourceHandle>("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4);
+		RegisterProperty<ResourceHandle>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4);
 		RegisterProperty<float>("TilingLayer0", &GASS::OgreTerrainPageComponent::GetTilingLayer0, &GASS::OgreTerrainPageComponent::SetTilingLayer0);
 		RegisterProperty<float>("TilingLayer1", &GASS::OgreTerrainPageComponent::GetTilingLayer1, &GASS::OgreTerrainPageComponent::SetTilingLayer1);
 		RegisterProperty<float>("TilingLayer2", &GASS::OgreTerrainPageComponent::GetTilingLayer2, &GASS::OgreTerrainPageComponent::SetTilingLayer2);
@@ -120,7 +120,7 @@ namespace GASS
 				{
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
 					if(m_HeightMapFile.Valid()) //import height map
-						ImportHeightMap(m_HeightMapFile.GetFilePath());
+						ImportHeightMap(m_HeightMapFile.GetResource().Path().GetFullPath());
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
@@ -130,10 +130,10 @@ namespace GASS
 				//SetPosition(m_Pos);
 				UpdatePosition();
 				if(m_ColorMap.Valid())
-					ImportColorMap(m_ColorMap.GetFilePath());
+					ImportColorMap(m_ColorMap.GetResource().Path());
 
 				if(m_Mask.Valid()) 
-					ImportDetailMask(m_Mask.GetFilePath());
+					ImportDetailMask(m_Mask.GetResource().Path());
 
 				if(m_DiffuseLayer0.Valid())
 					SetDiffuseLayer0(m_DiffuseLayer0);
@@ -251,23 +251,7 @@ namespace GASS
 		}
 	}
 
-	std::string OgreTerrainPageComponent::GetFromResourceSystem(const std::string &filename)
-	{
-		boost::filesystem::path boost_path(filename);
-		if(!boost::filesystem::exists(filename))
-		{
-			//try get resource from ResourceSystem
-			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
-			std::string full_path;
-			if(!rs->GetFullPath(filename,full_path))
-			{
-				return std::string("");
-			}
-			return full_path;
-		}
-		return std::string("");
-	}
-
+	
 	void OgreTerrainPageComponent::ImportHeightMap(const FilePath &filename)
 	{
 		if(m_OgreSceneManager && filename.GetFullPath() != "")
@@ -286,11 +270,11 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetTerrainResource() const
+	ResourceHandle OgreTerrainPageComponent::GetTerrainResource() const
 	{
 		std::stringstream ss;
 		ss << "OgreTerrainPageComponent_" << m_IndexX << "_" << m_IndexY;
-		Resource res(ss.str());
+		ResourceHandle res(ss.str());
 		return res;
 	}
 
@@ -304,7 +288,7 @@ namespace GASS
 	void OgreTerrainPageComponent::SetColorMap(const ResourceHandle &color_map_res)
 	{
 		m_ColorMap = color_map_res;
-		ImportColorMap(m_ColorMap.GetFilePath());
+		ImportColorMap(m_ColorMap.GetResource().Path());
 	}
 
 	void OgreTerrainPageComponent::ImportColorMap(const FilePath &filename)
@@ -334,7 +318,7 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetColorMap() const 
+	ResourceHandle OgreTerrainPageComponent::GetColorMap() const 
 	{
 		return m_ColorMap;
 	}
@@ -527,7 +511,7 @@ namespace GASS
 		}
 	}
 
-	Resource OgreTerrainPageComponent::GetMask() const
+	ResourceHandle OgreTerrainPageComponent::GetMask() const
 	{
 		return m_Mask;
 	}

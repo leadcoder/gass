@@ -21,6 +21,8 @@
 #include "GASSResourceGroup.h"
 #include "GASSResourceLocation.h"
 #include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
 
 namespace GASS
 {
@@ -41,7 +43,10 @@ namespace GASS
 		if(recursive)
 			AddResourceLocationRecursive(rl);
 		else
+		{
 			m_ResourceLocations.push_back(rl);
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
+		}
 		return rl;
 	}
 
@@ -71,7 +76,9 @@ namespace GASS
 			
 			if(location == *iter)
 			{
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
 				iter = m_ResourceLocations.erase(iter);
+				
 			}
 			else
 				++iter;

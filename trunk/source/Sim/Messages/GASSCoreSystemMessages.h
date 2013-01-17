@@ -32,11 +32,14 @@ namespace GASS
 	class Scene;
 	class SceneObject;
 	class ResourceLocation;
+	class ResourceGroup;
 	
 	typedef boost::shared_ptr<Scene> ScenePtr;
 	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
 	typedef boost::shared_ptr<ResourceLocation> ResourceLocationPtr;
-
+	typedef boost::shared_ptr<ResourceGroup> ResourceGroupPtr;
+	
+	
 	/**
 	Base class for all system messages
 	*/
@@ -102,8 +105,6 @@ namespace GASS
 	//////////////////////////
 	//event message section
 	////////////////////////
-
-
 	class SystemEventMessage : public SystemMessage
 	{
 	protected:
@@ -205,6 +206,29 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
 
+	class ResourceGroupCreatedEvent: public SystemEventMessage
+	{
+	public:
+		ResourceGroupCreatedEvent(ResourceGroupPtr group, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Group(group)
+		{
+		}
+		ResourceGroupPtr GetGroup() const{return m_Group;}
+	private:
+		ResourceGroupPtr m_Group;
+	};
+	typedef boost::shared_ptr<ResourceGroupCreatedEvent> ResourceGroupCreatedEventPtr;
+
+	class ResourceGroupRemovedEvent: public SystemEventMessage
+	{
+	public:
+		ResourceGroupRemovedEvent(ResourceGroupPtr group, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Group(group)
+		{
+		}
+		ResourceGroupPtr GetGroup() const{return m_Group;}
+	private:
+		ResourceGroupPtr m_Group;
+	};
+	typedef boost::shared_ptr<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
 
 	class ResourceLocationCreatedEvent : public SystemEventMessage
 	{
@@ -218,18 +242,19 @@ namespace GASS
 	};
 	typedef boost::shared_ptr<ResourceLocationCreatedEvent> ResourceLocationCreatedEventPtr;
 
-
-	class ResourceGroupRemovedEvent: public SystemEventMessage
+	class ResourceLocationRemovedEvent : public SystemEventMessage
 	{
 	public:
-		ResourceGroupRemovedEvent(const std::string &group, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Group(group)
+		ResourceLocationRemovedEvent(ResourceLocationPtr location, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Location(location)
 		{
 		}
-		std::string GetGroup() const{return m_Group;}
+		ResourceLocationPtr GetLocation() const{return m_Location;}
 	private:
-		std::string m_Group;
+		ResourceLocationPtr m_Location;
 	};
-	typedef boost::shared_ptr<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
+	typedef boost::shared_ptr<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
+
+	
 
 
 

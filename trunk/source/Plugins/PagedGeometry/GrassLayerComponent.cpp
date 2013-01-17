@@ -68,7 +68,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
-		RegisterProperty<Resource>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
+		RegisterProperty<OgreMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
 		RegisterEnumProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique);
 		RegisterEnumProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
@@ -99,7 +99,7 @@ namespace GASS
 		GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
 		m_GrassLoader = gl_component->GetGrassLoader();
 		
-		m_GrassLayer = m_GrassLoader->addLayer(m_Material.Name());
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material.GetName());
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 		m_GrassLayer->setDensity(m_DensityFactor);
@@ -139,17 +139,17 @@ namespace GASS
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
-	Resource GrassLayerComponent::GetMaterial() const
+	OgreMaterial GrassLayerComponent::GetMaterial() const
 	{
 		return m_Material;
 	}
 
-	void GrassLayerComponent::SetMaterial(const ResourceHandle &material)
+	void GrassLayerComponent::SetMaterial(const OgreMaterial &material)
 	{
 		m_Material = material;
 		if(m_GrassLayer)
 		{
-			m_GrassLayer->setMaterialName(material.Name());
+			m_GrassLayer->setMaterialName(material.GetName());
 			GrassLoaderComponentPtr gl_component = GetSceneObject()->GetFirstComponentByClass<GrassLoaderComponent>(true);
 			{
 				gl_component->ReloadGeometry();

@@ -223,23 +223,17 @@ namespace GASS
 
 					if(texture_name != "")
 					{
-						ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-						if(rs == NULL)
-							return;
-			
-						std::string full_path;
-						if(!rs->GetFullPath(full_path,texture_name))
-						{
+						//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+						//std::string full_path = ;
 							//add resource location
-							std::string path = Misc::RemoveFilename(texture_name);
-							if(path != "")
+							//std::string path = Misc::RemoveFilename(texture_name);
+						/*	if(path != "")
 							{
 								rs->AddResourceLocation(path,GetSceneObject()->GetScene()->GetResourceGroupName(),"FileSystem",false);
 							}
 							else 
 								return;
-						}
-						
+						*/
 						const std::string stripped_name = Misc::GetFilename(texture_name);
 						textureUnit->setTextureName(stripped_name);
 					}

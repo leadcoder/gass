@@ -41,6 +41,7 @@ namespace GASS
 		~ResourceLocation();
 		FilePath GetPath() const {return m_Path;}
 		ResourceLocationType  GetType() const {return m_Type;}
+		ResourceGroupPtr GetGroup() const {return m_Owner;}
 	private:
 		FilePath m_Path;
 		ResourceLocationType m_Type;

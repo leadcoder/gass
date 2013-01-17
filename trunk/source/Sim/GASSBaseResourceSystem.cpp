@@ -94,6 +94,7 @@ namespace GASS
 		ResourceSystemPtr system = DCAST(IResourceSystem,shared_from_this());
 		ResourceGroupPtr group(new ResourceGroup(system,name));
 		m_ResourceGroups.push_back(group);
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));
 		return group;
 	}
 
@@ -105,7 +106,9 @@ namespace GASS
 		{
 			if(group == (*iter))
 			{
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupRemovedEventPtr(new ResourceGroupRemovedEvent(group)));
 				iter = m_ResourceGroups.erase(iter);
+				
 			}
 			else
 				++iter;

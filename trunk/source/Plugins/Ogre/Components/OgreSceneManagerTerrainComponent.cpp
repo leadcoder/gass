@@ -66,7 +66,7 @@ namespace GASS
 	void OgreSceneManagerTerrainComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainComponent",new Creator<OgreSceneManagerTerrainComponent, IComponent>);
-		RegisterProperty<Resource>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetTerrainResource, &GASS::OgreSceneManagerTerrainComponent::SetTerrainResource);
+		RegisterProperty<ResourceHandle>("TerrainConfigFile", &GASS::OgreSceneManagerTerrainComponent::GetTerrainResource, &GASS::OgreSceneManagerTerrainComponent::SetTerrainResource);
 	}
 
 	void OgreSceneManagerTerrainComponent::OnInitialize()
@@ -106,12 +106,12 @@ namespace GASS
 			//unload previous terrain
 			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
 
-			std::string full_path;
-			if(!rs->GetFullPath(filename,full_path))
+			const std::string full_path = rs->GetFirstResourceByName(filename).Path().GetFullPath();
+			/*if(!rs->GetResource())
 			{
 				GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed find terrain configuration " + filename, "OgreSceneManagerTerrainComponent::LoadTerrain");
 				//LogManager::getSingleton().stream() << "WARNING:Faild to load terrain %s",filename.c_str());
-			}
+			}*/
 
 			m_OgreSceneManager->setWorldGeometry(full_path);
 			Ogre::Vector3 scale = Ogre::Vector3::ZERO;

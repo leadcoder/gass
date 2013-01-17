@@ -77,7 +77,7 @@ namespace GASS
 		void SetIndexY(int index);
 		void SetPosition(const Vec3 &pos);
 		Vec3 GetPosition() const; 
-		void SetColorMap(const Resource &colormap);
+		void SetColorMap(const ResourceHandle &colormap);
 		ResourceHandle GetColorMap() const; 
 		void SetDiffuseLayer0(const ResourceHandle &diffuse);
 		ResourceHandle GetDiffuseLayer0() const;

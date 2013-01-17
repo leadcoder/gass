@@ -45,6 +45,8 @@ namespace GASS
 
 	class OgreRenderWindow;
 	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
+	class OgreResourceManager;
+	typedef boost::shared_ptr<OgreResourceManager> OgreResourceManagerPtr;
 
 	class OgreDebugTextOutput;
 	class OgrePostProcess;
@@ -79,6 +81,13 @@ namespace GASS
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
+
+		//Resource listeners
+		void OnResourceGroupCreated(ResourceGroupCreatedEventPtr message);
+		void OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message);
+		void OnResourceLocationCreated(ResourceLocationCreatedEventPtr message);
+		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
+		
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
@@ -100,6 +109,7 @@ namespace GASS
 		bool m_CreateMainWindowOnInit;
 		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
+		OgreResourceManagerPtr m_ResourceManager;
 	};
 	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 	

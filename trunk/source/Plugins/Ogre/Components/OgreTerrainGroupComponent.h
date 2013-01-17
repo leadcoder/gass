@@ -49,8 +49,7 @@ namespace GASS
 		
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
-		virtual ResourceHandle GetTerrainResource()const {return m_TerrainResource;}
-
+	
 		//ITerrainComponent
 		/*virtual Float GetHeight(Float x, Float z) const;
 		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const {}
@@ -72,6 +71,7 @@ namespace GASS
 		int GetImportTerrainSize() const;
 		Vec3 GetScale() const {return m_Scale;}
 	protected:
+		ResourceHandle GetTerrainResource()const {return m_TerrainResource;}
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
 		void SetCustomMaterial(const std::string &material);
@@ -148,7 +148,7 @@ namespace GASS
 		Ogre::PageManager* m_PageManager;
 		int m_TerrainSize;
 		float m_TerrainWorldSize;
-		Resource m_TerrainResource;
+		ResourceHandle m_TerrainResource;
 		std::string m_CustomMaterial;
 		Vec3 m_Origin;
 		bool m_FadeDetail;

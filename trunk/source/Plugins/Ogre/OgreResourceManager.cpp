@@ -53,7 +53,6 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		//Parse for ogre scripts
 		std::vector<ResourceLocationPtr> locations = rs->GetResourceLocations();
-		
 		for(int i = 0; i < locations.size(); i++)
 		{
 			ResourceLocationPtr rl = locations[i];

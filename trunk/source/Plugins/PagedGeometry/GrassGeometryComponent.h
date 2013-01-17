@@ -34,6 +34,7 @@
 
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
+#include "Plugins/Ogre/OgreMaterial.h"
 #include "PGMessages.h"
 
 namespace Forests
@@ -74,8 +75,8 @@ namespace GASS
 		void SetBounds(const Vec4 &bounds);
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
-		Resource GetMaterial() const;
-		void SetMaterial(const ResourceHandle &name);
+		OgreMaterial GetMaterial() const;
+		void SetMaterial(const OgreMaterial &name);
 		std::string GetFadeTech() const;
 		void SetFadeTech(const std::string &tech);
 		std::string GetRenderTechnique() const;
@@ -102,7 +103,7 @@ namespace GASS
 		void UpdateSway();
 
 		std::string m_ColorMapFilename;
-		Resource m_Material;
+		OgreMaterial m_Material;
 		GrassLoader* m_GrassLoader;
 		Vec2 m_MaxSize;
 		Vec2 m_MinSize;

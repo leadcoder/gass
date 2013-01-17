@@ -305,12 +305,12 @@ namespace GASS
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
-	Resource GrassGeometryComponent::GetMaterial() const
+	OgreMaterial GrassGeometryComponent::GetMaterial() const
 	{
 		return m_Material;
 	}
 
-	void GrassGeometryComponent::SetMaterial(const ResourceHandle &name)
+	void GrassGeometryComponent::SetMaterial(const OgreMaterial &name)
 	{
 		m_Material = name;
 	}

@@ -26,6 +26,7 @@
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
+#include "Plugins/Ogre/OgreResourceManager.h"
 
 #include "Core/Utils/GASSException.h"
 #include "Core/System/GASSSystemFactory.h"
@@ -50,7 +51,8 @@ namespace GASS
 	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), 
 		m_SceneMgr(NULL),
 		m_UpdateMessagePump(true),
-		m_DebugTextBox (new OgreDebugTextOutput())
+		m_DebugTextBox (new OgreDebugTextOutput()),
+		m_ResourceManager(OgreResourceManagerPtr(new OgreResourceManager))
 	{
 	}
 
@@ -78,6 +80,12 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleRequest ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
+		
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationCreated ,ResourceLocationCreatedEvent ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent ,0));
+		
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
@@ -123,6 +131,8 @@ namespace GASS
 
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
 		//wait that first render window is created before send message that graphic system is initialized
+
+		m_ResourceManager->Init(); //why?
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -269,6 +279,25 @@ namespace GASS
 		TextRenderer::getSingleton().addTextBox(message->m_BoxID, message->m_Text, message->m_PosX, message->m_PosY, message->m_Width, message->m_Width, ogre_color);
 		else
 		TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
+	}
+	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
+	{
+		m_ResourceManager->AddResourceGroup(message->GetGroup()->GetName());
+	}
+
+	void OgreGraphicsSystem::OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message)
+	{
+		m_ResourceManager->RemoveResourceGroup(message->GetGroup()->GetName());
+	}
+
+	void OgreGraphicsSystem::OnResourceLocationCreated(ResourceLocationCreatedEventPtr message)
+	{
+		m_ResourceManager->AddResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName(),"FileSystem");
+	}
+
+	void OgreGraphicsSystem::OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message)
+	{
+		m_ResourceManager->RemoveResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName(),);
 	}
 }
 
