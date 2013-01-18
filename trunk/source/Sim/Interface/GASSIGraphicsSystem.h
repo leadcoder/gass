@@ -69,7 +69,6 @@ namespace GASS
 			@param width Normalized viewport width  (where render window width == 1.0)
 			@param height Normalized viewport height (where render window height == 1.0)
 		*/
-
 //		virtual void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height) = 0;
 
 		

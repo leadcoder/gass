@@ -148,8 +148,12 @@ namespace GASS
 	std::string FilePath::GetExtension() const
 	{
 		boost::filesystem::path boost_path(m_ExpandedPath); 
-		return boost_path.extension().generic_string();
-
+		std::string ext = boost_path.extension().generic_string();
+		//remove dot
+		if(ext != "")
+			ext = ext.substr(1);
+		return ext;
+	
 		/*std::string ret, reversed_string;
 		std::string::size_type pos = m_ExpandedPath.find_last_of(".");
 
@@ -197,7 +201,7 @@ namespace GASS
 	void FilePath::GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive)
 	{
 		boost::filesystem::path boost_path(path.GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
+		if( boost::filesystem::exists(boost_path) && boost::filesystem::is_directory( boost_path))  
 		{
 			boost::filesystem::directory_iterator end ;    
 			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
@@ -216,9 +220,9 @@ namespace GASS
 	void FilePath::GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive, const std::vector<std::string> extenstion_filters)
 	{
 		boost::filesystem::path boost_path(path.GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
+		if( boost::filesystem::exists(boost_path) && boost::filesystem::is_directory( boost_path))  
 		{
-			boost::filesystem::directory_iterator end ;    
+			boost::filesystem::directory_iterator end;
 			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
 			{
 				if (boost::filesystem::is_directory( *iter )  && recursive)      

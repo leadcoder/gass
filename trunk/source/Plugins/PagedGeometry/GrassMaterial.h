@@ -25,20 +25,20 @@
 
 namespace GASS
 {
-	class OgreMaterial
+	class GrassMaterial
 	{
 	public:
-		OgreMaterial(const std::string name) : m_Name(name){}
-		OgreMaterial(){}
-		virtual ~OgreMaterial(){}
+		GrassMaterial(const std::string name) : m_Name(name){}
+		GrassMaterial(){}
+		virtual ~GrassMaterial(){}
 		std::string GetName() const {return m_Name;}
 		void SetName(const std::string &name) {m_Name =name;}
-		friend std::ostream& operator << (std::ostream& os, const OgreMaterial& mat)
+		friend std::ostream& operator << (std::ostream& os, const GrassMaterial& mat)
 		{
 			os << mat.GetName(); 
 			return os;
 		}
-		friend std::istream& operator >> (std::istream& os, OgreMaterial& mat)
+		friend std::istream& operator >> (std::istream& os, GrassMaterial& mat)
 		{
 			std::string name;
 			os >> name;
@@ -53,13 +53,15 @@ namespace GASS
 			while(iter.hasMoreElements())
 			{
 				Ogre::MaterialPtr ptr = iter.getNext();
-				if(filter == "" ||  ptr->getGroup() == filter)
+				if(ptr->getGroup() == "GASS_VEGETATION_MATERIALS")
 				{
 					content.push_back(ptr->getName());
 				}
 			}
 			return content;
 		}
+
+		bool static IsMultiValue() {return false;}
 
 	protected:
 		std::string m_Name;

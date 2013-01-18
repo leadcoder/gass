@@ -38,7 +38,7 @@ namespace GASS
 	{
 	public:
 		virtual ~IEnumProperty(){}
-		virtual std::vector<std::string> GetEnumList() const = 0;
+		virtual std::vector<std::string> GetEnumList(const std::string &filter) const = 0;
 		virtual bool IsMultiValue() const = 0;
 	};
 
@@ -59,9 +59,9 @@ namespace GASS
 
 		}
 
-		virtual std::vector<std::string> GetEnumList() const
+		virtual std::vector<std::string> GetEnumList(const std::string &filter) const
 		{
-			return T::GetAllOptions();
+			return T::GetAllOptions(filter);
 		}
 
 		virtual bool IsMultiValue() const

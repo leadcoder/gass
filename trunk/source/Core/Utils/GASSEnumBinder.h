@@ -75,7 +75,7 @@ namespace GASS
 			return (m_Enum == v.Get());
 		}
 
-		static std::vector<std::string> GetAllOptions() 
+		static std::vector<std::string> GetAllOptions(const std::string &filter) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,int>::iterator iter =  m_Names.begin();
@@ -164,7 +164,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions() 
+		static std::vector<std::string> GetAllOptions(const std::string &filter) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
@@ -270,7 +270,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions() 
+		static std::vector<std::string> GetAllOptions(const std::string &filter) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();

@@ -30,6 +30,7 @@ namespace GASS
 	ResourceGroup::ResourceGroup(ResourceSystemPtr owner, const std::string &name) : m_Owner(owner),	
 		m_Name(name)
 	{
+
 	}
 
 	ResourceGroup::~ResourceGroup()
@@ -56,6 +57,7 @@ namespace GASS
 		if( boost::filesystem::exists(boost_path))  
 		{
 			m_ResourceLocations.push_back(rl);
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
 			boost::filesystem::directory_iterator end ;    
 			for(boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
 			{

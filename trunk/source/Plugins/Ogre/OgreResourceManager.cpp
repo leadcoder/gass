@@ -58,12 +58,14 @@ namespace GASS
 			ResourceLocationVector locations = groups[i]->GetResourceLocations();
 			for(int j = 0; j < locations.size(); j++)
 			{
-				ResourceLocationPtr rl = locations[i];
-				AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),rl->GetType());
+				ResourceLocationPtr rl = locations[j];
+				if(rl->GetType() == RLT_FILESYSTEM)
+					AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),"FileSystem");
+				else if(rl->GetType() == RLT_ZIP)
+					AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),"Zip");
+
 			}
 		}
-		LogManager::getSingleton().stream() << "OgreResourceManager Initlize All Resource Groups";
-		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 		LogManager::getSingleton().stream() << "OgreResourceManager Completed";
 	}
 

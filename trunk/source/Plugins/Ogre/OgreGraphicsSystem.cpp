@@ -86,6 +86,22 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationCreated ,ResourceLocationCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent ,0));
 		
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceType mesh_type;
+		mesh_type.Name = "MESH";
+		mesh_type.Extensions.push_back("mesh");
+		rs->RegisterResourceType(mesh_type);
+
+		ResourceType texture_type;
+		texture_type.Name = "TEXTURE";
+		texture_type.Extensions.push_back("dds");
+		texture_type.Extensions.push_back("png");
+		texture_type.Extensions.push_back("bmp");
+		texture_type.Extensions.push_back("tga");
+		texture_type.Extensions.push_back("gif");
+		texture_type.Extensions.push_back("jpg");
+		rs->RegisterResourceType(texture_type);
+
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
@@ -233,7 +249,14 @@ namespace GASS
 
 		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initlized
 		{
+
+			LogManager::getSingleton().stream() << "Initialise All Resource Groups Started";
+			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+			LogManager::getSingleton().stream() << "Initialise All Resource Groups Compledted";
+		
+
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
+
 		}
 		return win;
 	}
@@ -297,7 +320,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message)
 	{
-		m_ResourceManager->RemoveResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName(),);
+		m_ResourceManager->RemoveResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName());
 	}
 }
 

@@ -29,7 +29,7 @@ namespace GASS
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
-		
+		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		Vec4 m_Color;
 		float m_Size;
 		std::string m_Type;

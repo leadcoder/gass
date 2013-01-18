@@ -68,6 +68,8 @@ namespace GASS
 		static Float ReadFloat(TiXmlElement *xml_elem, const std::string &tag);
 		static int ReadInt(TiXmlElement *xml_elem, const std::string &tag);
 
+		static std::string ReadStringAttribute(TiXmlElement *xml_elem, const std::string &attrib);
+
 		static std::string LoadTextFile(const std::string &file_name);
 		static std::string RemoveExtension(const std::string &file_name);
 		static std::string RemoveQuotation(char* str);

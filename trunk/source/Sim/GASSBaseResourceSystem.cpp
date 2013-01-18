@@ -43,32 +43,44 @@ namespace GASS
 	//Use custom load
 	void BaseResourceSystem::LoadXML(TiXmlElement *elem)
 	{
-		TiXmlElement *attrib = elem->FirstChildElement();
-		while(attrib)
+		TiXmlElement *prop_elem = elem->FirstChildElement();
+		while(prop_elem)
 		{
-			std::string attrib_name = attrib->Value();
-
-			if(attrib_name == "AddResourceLocation")
+			const std::string elem_name = prop_elem->Value();
+			if(elem_name == "ResourceGroup")
 			{
-				
-				const FilePath path = FilePath(attrib->Attribute("Path"));
-				const std::string type = attrib->Attribute("Type");
-				const std::string group = attrib->Attribute("Group");
-				const std::string rec = attrib->Attribute("Recursive");
-				bool recursive = false;
-				if(Misc::ToLower(rec) == "true")
-					recursive = true;
-				//CreateResourceLocation(path,group,type,recursive);
+				TiXmlElement *group_elem = prop_elem->FirstChildElement();
+				const std::string group_name = Misc::ReadStringAttribute(prop_elem,"name");
+				ResourceGroupPtr group = CreateResourceGroup(group_name);
+				while(group_elem)
+				{
+					const std::string group_elem_name = group_elem->Value();
+					if(group_elem_name == "AddResourceLocation")
+					{
+						const FilePath path = Misc::ReadStringAttribute(group_elem,"path");
+						const std::string type = Misc::ReadStringAttribute(group_elem,"type");
+						const std::string rec = Misc::ReadStringAttribute(group_elem,"recursive");
+						bool recursive = false;
+						if(Misc::ToLower(rec) == "true")
+							recursive = true;
+
+						if(Misc::ToLower(type) == "filesystem")
+							group->AddResourceLocation(path,RLT_FILESYSTEM,recursive);
+						else if(Misc::ToLower(type) == "zip")
+							group->AddResourceLocation(path,RLT_ZIP,recursive);
+						//CreateResourceLocation();
+					}
+					group_elem  = group_elem->NextSiblingElement();
+				}
 			}
 			else
 			{
-				std::string attrib_val = attrib->FirstAttribute()->Value();
-				SetPropertyByString(attrib_name,attrib_val);
+				const std::string attrib_val = prop_elem->FirstAttribute()->Value();
+				SetPropertyByString(elem_name,attrib_val);
 			}
-			attrib  = attrib->NextSiblingElement();
+			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
-
 
 	/*void BaseResourceSystem::LoadResourceGroup(const std::string &resource_group)
 	{
@@ -139,11 +151,13 @@ namespace GASS
 
 	std::string BaseResourceSystem::GetResourceTypeByExtension(const std::string &extension) const
 	{
+		std::string ext = Misc::ToLower(extension);
+	
 		for(size_t i = 0; i < m_ResourceTypes.size();i++)
 		{
 			for(size_t j = 0; j < m_ResourceTypes[i].Extensions.size(); j++)
 			{
-				if(extension == m_ResourceTypes[i].Extensions[j])
+				if(ext == Misc::ToLower(m_ResourceTypes[i].Extensions[j]))
 				{
 					return m_ResourceTypes[i].Name;
 				}

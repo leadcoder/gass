@@ -51,10 +51,11 @@ namespace GASS
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		
-		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
-		if(selected)
+		//SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		//if(selected)
 		{
-			selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));
+			//selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));
+			
 		}
 	}
 
@@ -66,6 +67,7 @@ namespace GASS
 		if(previous_selected)
 		{
 			previous_selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));
+			previous_selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnGeometryChanged,GeometryChangedMessage));
 		}
 
 		SceneObjectPtr  new_selected = message->GetSceneObject();
@@ -87,6 +89,7 @@ namespace GASS
 				GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(lc->GetScale(),SELECTION_COMP_SENDER)));
 
 				new_selected->RegisterForMessage(REG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
+				new_selected->RegisterForMessage(REG_TMESS(SelectionComponent::OnGeometryChanged,GeometryChangedMessage ,0));
 				m_SelectedObject = new_selected;
 
 				GeometryComponentPtr gc = new_selected->GetFirstComponentByClass<IGeometryComponent>();
@@ -121,6 +124,12 @@ namespace GASS
 		}
 		GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(message->GetRotation(),SELECTION_COMP_SENDER)));
 		GetSceneObject()->SendImmediate(MessagePtr(new ScaleMessage(message->GetScale(),SELECTION_COMP_SENDER)));
+	}
+
+	void SelectionComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	{
+		m_BBox = message->GetGeometry()->GetBoundingBox();
+		BuildMesh();
 	}
 	
 	void SelectionComponent::BuildMesh()
@@ -168,8 +177,5 @@ namespace GASS
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
-
 	}
-
-	
 }

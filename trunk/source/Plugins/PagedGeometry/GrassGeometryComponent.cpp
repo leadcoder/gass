@@ -77,7 +77,7 @@ namespace GASS
 		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue);
 		RegisterProperty<Vec4>("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds);
 		RegisterProperty<std::string>("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap);
-		RegisterProperty<Resource>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial);
+		RegisterProperty<OgreMaterial>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial);
 		RegisterProperty<std::string>("FadeTech", &GrassGeometryComponent::GetFadeTech, &GrassGeometryComponent::SetFadeTech);
 		RegisterProperty<std::string>("RenderTechnique", &GrassGeometryComponent::GetRenderTechnique, &GrassGeometryComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassGeometryComponent::GetBlendWithGround, &GrassGeometryComponent::SetBlendWithGround);
@@ -157,7 +157,7 @@ namespace GASS
 		m_PagedGeometry->setPageLoader(m_GrassLoader);
 		
 		m_GrassLoader->setHeightFunction(GrassGeometryComponent::GetTerrainHeight,this);
-		m_GrassLayer = m_GrassLoader->addLayer(m_Material.Name());
+		m_GrassLayer = m_GrassLoader->addLayer(m_Material.GetName());
 		m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 		m_GrassLayer->setMinimumSize(m_MinSize.x,m_MinSize.y);
 		m_GrassLayer->setDensity(m_DensityFactor);

@@ -691,6 +691,7 @@ namespace GASS
 	public:
 		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Geometry(geom){}
+		  GeometryComponentPtr  GetGeometry() const {return m_Geometry;}
 	private:
 		GeometryComponentPtr m_Geometry;
 	};

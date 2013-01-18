@@ -42,7 +42,7 @@ namespace GASS
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				Float rotation_rad_step = 0;//(info.m_Delta.x);
+				Float rotation_rad_step = data.XRel*0.2;
 				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;

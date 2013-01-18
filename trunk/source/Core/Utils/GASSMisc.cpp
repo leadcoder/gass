@@ -357,7 +357,6 @@ namespace GASS
 				}
 				else
 				{
-					const std::string exstension = iter->path().extension().generic_string();
 					std::string filename; 
 					if(full_path)
 						filename = iter->path().string();
@@ -380,6 +379,22 @@ namespace GASS
 		else
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find tag:" + tag, "Misc::ReadString");
+		}
+		return ret;
+	}
+
+
+	std::string Misc::ReadStringAttribute(TiXmlElement *xml_elem, const std::string &attrib)
+	{
+		std::string ret;
+		if(xml_elem->Attribute(attrib.c_str()))
+		{
+			ret = xml_elem->Attribute(attrib.c_str());
+		}
+		else
+		{
+			const std::string document_name = xml_elem->GetDocument()->Value();
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find attribute:" + attrib +" In file:" +document_name, "Misc::ReadStringAttribute");
 		}
 		return ret;
 	}

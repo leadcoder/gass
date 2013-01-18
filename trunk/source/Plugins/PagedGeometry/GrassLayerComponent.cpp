@@ -68,7 +68,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
-		RegisterProperty<OgreMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
+		RegisterEnumProperty<GrassMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
 		RegisterEnumProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique);
 		RegisterEnumProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
@@ -139,12 +139,12 @@ namespace GASS
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
-	OgreMaterial GrassLayerComponent::GetMaterial() const
+	GrassMaterial GrassLayerComponent::GetMaterial() const
 	{
 		return m_Material;
 	}
 
-	void GrassLayerComponent::SetMaterial(const OgreMaterial &material)
+	void GrassLayerComponent::SetMaterial(const GrassMaterial &material)
 	{
 		m_Material = material;
 		if(m_GrassLayer)

@@ -102,6 +102,8 @@ namespace GASS
 
 		virtual ResourceGroupVector GetResourceGroups() const = 0;
 
+		
+
 		/**
 			Get all content names inside resources of resource group
 			@resource_group The resources group

@@ -47,32 +47,5 @@ namespace GASS
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		return rs->GetFirstResourceByName(Name());
 	}
-	
-/*	std::vector<std::string> MeshResource::GetAllOptions()
-	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
-		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_MESH,"");
-		return options;
-	}
-
-	std::vector<std::string> TextureResource::GetAllOptions()
-	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
-		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_TEXTURE,"");
-		return options;
-	}
-
-	std::vector<std::string> MaterialResource::GetAllOptions()
-	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(rs == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No Resource Manager Found", "MeshResource::GetAllOptions");
-		std::vector<std::string> options = rs->GetResourcesFromGroup(RT_TEXTURE,"");
-		return options;
-	}*/
 		
 }
