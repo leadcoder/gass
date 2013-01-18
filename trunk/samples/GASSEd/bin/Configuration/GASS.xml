@@ -48,23 +48,18 @@
 	<TaskNode value="SIM"/>
   </GameSystem>
   <RakNetNetworkSystem>
-    <Name value = "NetworkSystem"/>
 	<TaskNode value="SIM"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
-    <Name value = "SoundSystem"/>
 	<TaskNode value="PRE_SIM"/>
   </OpenALSoundSystem>
   <CEGUISystem>
-    <Name value = "GUISystem"/>
 	<TaskNode value="PRE_SIM"/>
   </CEGUISystem>
   <LuaScriptSystem>
-    <Name value = "GUISystem"/>
 	<TaskNode value="PRE_SIM"/>
   </LuaScriptSystem>
   <PhysXPhysicsSystem>
-    <Name value = "PhysicsSystem"/>
 	<TaskNode value="SIM"/>
   </PhysXPhysicsSystem>
  <!--<ODEPhysicsSystem>
@@ -89,30 +84,41 @@
     <PostFilters value="HDR"/>
 	<TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
-  <OgreResourceSystem>
-  <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" Group="SkyX" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/programs" Group="Ogre" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/scripts" Group="Ogre" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/textures" Group="Ogre" Type="FileSystem" Recursive="true"/>!-->
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/materials/" Group="GASS" Type="FileSystem" Recursive="false"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" Group="GASS_VEGETATION_MATERIALS" Type="FileSystem" Recursive="false"/>
-
-	<!--<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/particles/" Group="GASS" Type="FileSystem" Recursive="false"/>-->
-    
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/misc" Group="GASS" Type="FileSystem" Recursive="false"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/editor/icons/" Group="GASS" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" Group="GASS_VEGETATION_TEXTURES" Type="FileSystem" Recursive="false"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/textures/terrain/detail" Group="GASS_DETAIL_TEXTURES" Type="FileSystem" Recursive="false"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS" Group="GASS" Type="FileSystem" Recursive="true"/>
-	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" Group="GASS_VEGETATION" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%GASS_DATA_HOME%/gfx/ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="false"/>
-  </OgreResourceSystem>
+  <BaseResourceSystem>
+    <!--<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" type="Zip" recursive="false"/>
+    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" Group="SkyX" type="FileSystem" recursive="true"/>
+    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/programs" Group="Ogre" type="FileSystem" recursive="true"/>
+    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/scripts" Group="Ogre" type="FileSystem" recursive="true"/>
+    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/textures" Group="Ogre" type="FileSystem" recursive="true"/>!-->
+	<!--<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/particles/" Group="GASS" type="FileSystem" recursive="false"/>-->
+	<ResourceGroup name="Bootstrap">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="PagedGeometry">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/" type="FileSystem" recursive="false"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/misc" type="FileSystem" recursive="false"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/editor/icons/"  type="FileSystem" recursive="false"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS"  type="FileSystem" recursive="true"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" type="FileSystem" recursive="true"/>
+	    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/Fonts" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_VEGETATION_MATERIALS">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_VEGETATION">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
+    </ResourceGroup>
+	<ResourceGroup name="GASS_VEGETATION_TEXTURES">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_DETAIL_TEXTURES">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/terrain/detail" type="FileSystem" recursive="false"/>
+    </ResourceGroup>
+  </BaseResourceSystem>
 </Systems>
-
 <RTC>
 	<NumberOfThreads value="-1"/> <!-- -1 == auto-->
 	<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->

@@ -143,7 +143,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	GASSVariantProperty gp;
 	GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
 
-
 	if(prop->GetTypeID() == GASS::PROP_BOOL)
 	{
 		item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
@@ -151,7 +150,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	}
 	else if(enum_prop)
 	{
-		std::vector<std::string> options = enum_prop->GetEnumList();
+		std::vector<std::string> options = enum_prop->GetEnumList("");
 		bool multi_value = enum_prop->IsMultiValue();
 
 		if(multi_value)
@@ -188,10 +187,24 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		prop->GetValue(obj.get(), any_value);
 		try
 		{
-			GASS::Resource resource = boost::any_cast<GASS::Resource>(any_value);
+			GASS::ResourceHandle resource = boost::any_cast<GASS::ResourceHandle>(any_value);
 			GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
-			std::vector<std::string> values = rs->GetResourcesFromGroup(ps->ResourceType,ps->ResourceGroup);
-				
+			
+			GASS::ResourceGroupVector groups = rs->GetResourceGroups();
+			std::vector<std::string> values;
+			for(size_t i = 0; i < groups.size();i++)
+			{
+				GASS::ResourceGroupPtr group = groups[i];
+				if(group->GetName() == ps->ResourceGroup)
+				{
+					GASS::ResourceVector res_vec = group->GetResourcesByType(ps->ResourceType);
+					for(size_t j = 0; j < res_vec.size();j++)
+					{
+						values.push_back(res_vec[j].Name());
+					}
+				}
+			}
+
 			item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
 			QStringList enumNames;
 			int select = -1;
