@@ -32,7 +32,7 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::shared_ptr<IOSGCameraManipulator> OSGCameraManipulatorPtr;
-	typedef boost::weak_ptr<IOSGCameraManipulator> OSGCameraManipulatorWeakPtr;
+	typedef SPTR<IOSGCameraManipulator> OSGCameraManipulatorPtr;
+	typedef WPTR<IOSGCameraManipulator> OSGCameraManipulatorWeakPtr;
 }
 

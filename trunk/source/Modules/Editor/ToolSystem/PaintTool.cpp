@@ -34,7 +34,7 @@ namespace GASS
 	void PaintTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
 		int from_id = (int) this;
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(m_MouseIsDown)// && selected)
 		{
 			if(selected)
@@ -81,7 +81,7 @@ namespace GASS
 
 	SceneObjectPtr PaintTool::GetMasterGizmo()
 	{
-		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr gizmo(m_MasterGizmoObject,NO_THROW);
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
@@ -93,7 +93,7 @@ namespace GASS
 			//Send selection message to inform gizmo about current object
 			if(gizmo)
 			{
-				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
+				SceneObjectPtr current (m_SelectedObject,NO_THROW);
 				if(current)
 				{
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
@@ -148,7 +148,7 @@ namespace GASS
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
 		}
 	}

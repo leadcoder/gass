@@ -30,7 +30,7 @@ namespace GASS
 	IFDECL(ResourceSystem)
 	typedef std::vector<Resource> ResourceVector; 
 	typedef std::vector<ResourceLocationPtr> ResourceLocationVector;
-	class GASSExport ResourceGroup : public SHARE_CLASS(ResourceGroup)
+	class GASSExport ResourceGroup : public SHARE_CLASS<ResourceGroup>
 	{
 	public:
 		ResourceGroup(ResourceSystemPtr owner, const std::string &name);

@@ -31,5 +31,5 @@ namespace GASS
 		virtual ~IOgreCameraProxy(){}
 		virtual Ogre::Camera* GetOgreCamera() const = 0;
 	};
-	typedef boost::shared_ptr<IOgreCameraProxy> OgreCameraProxyPtr;
+	typedef SPTR<IOgreCameraProxy> OgreCameraProxyPtr;
 }

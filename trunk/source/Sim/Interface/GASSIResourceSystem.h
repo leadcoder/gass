@@ -111,5 +111,5 @@ namespace GASS
 		//virtual std::vector<std::string> GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const = 0;
 	protected:
 	};
-	typedef boost::shared_ptr<IResourceSystem> ResourceSystemPtr;
+	typedef SPTR<IResourceSystem> ResourceSystemPtr;
 }

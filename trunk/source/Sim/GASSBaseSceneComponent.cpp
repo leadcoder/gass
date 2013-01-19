@@ -39,7 +39,7 @@ namespace GASS
 
 	SceneObjectPtr BaseSceneComponent::GetSceneObject() const
 	{
-		return boost::shared_static_cast<SceneObject>(GetOwner());
+		return STATIC_CAST<SceneObject>(GetOwner());
 	}
 
 	void BaseSceneComponent::OnInitialize()

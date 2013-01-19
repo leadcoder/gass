@@ -39,10 +39,10 @@ namespace GASS
 
 
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
-	class VehicleWheel :  public boost::enable_shared_from_this<VehicleWheel> ,public IMessageListener
+	class VehicleWheel :  public SHARE_CLASS<VehicleWheel> ,public IMessageListener
 	{
 	public:
 		VehicleWheel(SceneObjectPtr  wheel);
@@ -55,7 +55,7 @@ namespace GASS
 		float m_Velocity;
 		float m_AngularVelocity;
 	};
-	typedef boost::shared_ptr<VehicleWheel> VehicleWheelPtr;
+	typedef SPTR<VehicleWheel> VehicleWheelPtr;
 
 	enum EngineType
 	{

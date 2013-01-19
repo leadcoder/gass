@@ -124,7 +124,7 @@ namespace GASS
 		else //use 
 			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
 
-		LocationComponentPtr location = boost::shared_dynamic_cast<ILocationComponent>( shared_from_this());
+		LocationComponentPtr location = DYNAMIC_CAST<ILocationComponent>( shared_from_this());
 		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
 		
 		
@@ -348,13 +348,13 @@ namespace GASS
 	OgreLocationComponentPtr OgreLocationComponent::GetParentLocation()
 	{
 		OgreLocationComponentPtr parent_location;
-		SceneObjectPtr scene_obj  = boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr scene_obj  = STATIC_CAST<SceneObject>(GetSceneObject()->GetParent());
 		while(scene_obj && !parent_location)
 		{
 			parent_location  = scene_obj->GetFirstComponentByClass<OgreLocationComponent>();
 			if(parent_location)
 				return parent_location;
-			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());
+			scene_obj = STATIC_CAST<SceneObject>(scene_obj->GetParent());
 		}
 		return parent_location;
 	}

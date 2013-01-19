@@ -24,7 +24,7 @@ namespace GASS
 	
 	class MouseToolController;
 	class MessageManager;
-	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
+	typedef SPTR<MouseToolController> MouseToolControllerPtr;
 
 	class EditorModuleExport EditorSystem :  public Reflection<EditorSystem, SimSystem>
 	{
@@ -48,5 +48,5 @@ namespace GASS
 		GUISchemaLoader* m_GUISettings;
 		
 	};
-	typedef boost::shared_ptr<EditorSystem> EditorSystemPtr;
+	typedef SPTR<EditorSystem> EditorSystemPtr;
 }

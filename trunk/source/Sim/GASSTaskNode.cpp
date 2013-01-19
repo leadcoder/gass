@@ -134,7 +134,7 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				TaskNodeListenerPtr listener = TaskNodeListenerPtr(m_Listeners[i],boost::detail::sp_nothrow_tag());
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(m_Listeners[i],NO_THROW);
 				if(listener)
 					listener->Update(m_DeltaTime);
 			}
@@ -288,7 +288,7 @@ namespace GASS
 
 			while(iter != m_Listeners.end())
 			{
-				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
 					listener->Update(delta_time);
@@ -306,7 +306,7 @@ namespace GASS
 			{
 				tbb::task_list task_list;
 			
-				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
 					task_list.push_back(*new(parent->allocate_child()) UpdateListenerTask(delta_time,listener));
@@ -374,7 +374,7 @@ namespace GASS
 
 						while(iter != m_TaskNode->m_Listeners.end())
 						{
-							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 							if(listener)
 							{
 								listener->Update(delta_time);
@@ -389,7 +389,7 @@ namespace GASS
 						{
 							tbb::task_list task_list;
 
-							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 							if(listener)
 							{
 								task_list.push_back(*new(parent->allocate_child()) UpdateListenerTask(delta_time,listener));

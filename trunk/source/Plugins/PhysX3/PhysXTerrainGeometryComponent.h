@@ -29,9 +29,9 @@ namespace GASS
 	class IHeightmapTerrainComponent;
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 
 	class PhysXTerrainGeometryComponent : public Reflection<PhysXTerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
 	{

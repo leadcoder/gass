@@ -67,7 +67,7 @@ namespace GASS
 		ListenerVector::iterator iter = m_AllListeners.begin();
 		while(iter != m_AllListeners.end())
 		{
-			SceneObjectPtr list_obj((*iter).Object,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr list_obj((*iter).Object,NO_THROW);
 			if(object == list_obj)
 			{
 				iter = m_AllListeners.erase(iter);
@@ -82,7 +82,7 @@ namespace GASS
 		ListenerVector::iterator  iter = m_AllListeners.begin();
 		while(iter != m_AllListeners.end())
 		{
-			SceneObjectPtr obj((*iter).Object,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr obj((*iter).Object,NO_THROW);
 			if(obj)
 			{
 				const Vec3 pos = obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();

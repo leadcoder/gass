@@ -10,7 +10,7 @@
 namespace GASS
 {
 	class SignatureComponent;
-	typedef boost::weak_ptr<SignatureComponent> SignatureComponentWeakPtr;
+	typedef WPTR<SignatureComponent> SignatureComponentWeakPtr;
 
 	class SensorComponent :  public Reflection<SensorComponent,BaseSceneComponent> 
 	{
@@ -38,6 +38,6 @@ namespace GASS
 		std::vector<SignatureComponentWeakPtr> m_AllObjects;
 		std::map<SignatureComponentWeakPtr,DetectionData> m_DetectedObjects;
 	};
-	typedef boost::shared_ptr<SensorComponent> SensorComponentPtr;
+	typedef SPTR<SensorComponent> SensorComponentPtr;
 }
 #endif

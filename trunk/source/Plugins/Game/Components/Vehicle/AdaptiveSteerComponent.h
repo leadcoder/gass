@@ -34,8 +34,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class AdaptiveSteerComponent :  public Reflection<AdaptiveSteerComponent,BaseSceneComponent>
 	{

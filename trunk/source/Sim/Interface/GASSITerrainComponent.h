@@ -57,6 +57,6 @@ namespace GASS
 		virtual float* GetHeightData() const = 0;
 	private:
 	};
-	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 }
 

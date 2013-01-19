@@ -38,7 +38,7 @@ namespace GASS
 		SamplePolyAreas m_Area;
 		bool m_Initialized;
 	};
-	typedef boost::shared_ptr<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;
-	typedef boost::weak_ptr<RecastConvexVolumeComponent> RecastConvexVolumeComponentWeakPtr;
+	typedef SPTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;
+	typedef WPTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentWeakPtr;
 }
 

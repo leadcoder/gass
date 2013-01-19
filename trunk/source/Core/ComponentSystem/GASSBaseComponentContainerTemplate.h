@@ -44,13 +44,13 @@ namespace GASS
 			The BaseComponentContainerTemplate is a convinience class that implements
 			the	IComponentContainerTemplate it also inherite from the reflection template
 			class which enables attribute reflection in a easy way. The inheritance from
-			boost::enable_shared_from_this is used to get hold of ourself (this) as
+			SHARE_CLASS is used to get hold of ourself (this) as
 			a shared pointer with the shared_from_this() function.
 			To get more information what you get by inherit from this
 			class see the documentation for each interface
 
 	*/
-	class GASSCoreExport BaseComponentContainerTemplate : public Reflection<BaseComponentContainerTemplate, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseComponentContainerTemplate>, public IComponentContainerTemplate , public IXMLSerialize, public ISerialize
+	class GASSCoreExport BaseComponentContainerTemplate : public Reflection<BaseComponentContainerTemplate, BaseReflectionObject> ,public SHARE_CLASS<BaseComponentContainerTemplate>, public IComponentContainerTemplate , public IXMLSerialize, public ISerialize
 	{
 	public:
 		//typedef std::vector<IComponent*> ComponentVector;
@@ -67,7 +67,7 @@ namespace GASS
 		virtual void AddChild(ComponentContainerTemplatePtr child);
 		virtual void RemoveChild(ComponentContainerTemplatePtr child);
 		virtual ComponentContainerTemplateIterator GetChildren();
-		virtual ComponentContainerTemplatePtr GetParent() const {return ComponentContainerTemplatePtr(m_Parent,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual ComponentContainerTemplatePtr GetParent() const {return ComponentContainerTemplatePtr(m_Parent,NO_THROW);}//allow null pointer}
 		virtual void SetParent(ComponentContainerTemplateWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
 		virtual ComponentPtr GetComponent(const std::string &name) const;
@@ -126,7 +126,7 @@ namespace GASS
 		bool m_Serialize;
 		ComponentContainerTemplateWeakPtr m_Parent;
 	};
-	typedef boost::shared_ptr<BaseComponentContainerTemplate> BaseComponentContainerTemplatePtr;
+	typedef SPTR<BaseComponentContainerTemplate> BaseComponentContainerTemplatePtr;
 
 }
 #endif // #ifndef BASECOMPONENTCONTAINERTEMPLATE_HH

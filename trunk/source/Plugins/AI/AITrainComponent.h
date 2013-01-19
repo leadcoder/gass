@@ -78,5 +78,5 @@ namespace GASS
 		
 		
 	};
-	typedef boost::shared_ptr<AITrainComponent> AITrainComponentPtr;
+	typedef SPTR<AITrainComponent> AITrainComponentPtr;
 }

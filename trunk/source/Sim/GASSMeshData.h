@@ -70,5 +70,5 @@ namespace GASS
 			Type =LINE_LIST;
 		}
 	};
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
 }

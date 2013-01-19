@@ -179,5 +179,5 @@ namespace GASS
 		std::vector<std::string> m_ActiveVec;
 	};
 
-	typedef boost::shared_ptr<OgrePostProcess> OgrePostProcessPtr;
+	typedef SPTR<OgrePostProcess> OgrePostProcessPtr;
 }

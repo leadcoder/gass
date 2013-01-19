@@ -36,7 +36,7 @@ namespace GASS
 {
 	class IMeshComponent;
 	struct MeshData;
-	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
+	typedef SPTR<IMeshComponent> MeshComponentPtr;
 	struct ODECollisionMesh
 	{
 		MeshData* Mesh;
@@ -90,8 +90,8 @@ namespace GASS
 		int m_MaxSimSteps;
 		static bool m_ZUp;
 	};
-	typedef boost::shared_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerPtr;
-	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	typedef SPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerPtr;
+	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 	
 	
 }

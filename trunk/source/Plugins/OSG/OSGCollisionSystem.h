@@ -58,7 +58,7 @@ namespace GASS
 		tbb::spin_mutex m_ResultMutex;
 		OSGCameraComponentWeakPtr m_CurrentCamera;
 	};
-	typedef boost::shared_ptr<OSGCollisionSystem> OSGCollisionSystemPtr;
+	typedef SPTR<OSGCollisionSystem> OSGCollisionSystemPtr;
 
 
 }

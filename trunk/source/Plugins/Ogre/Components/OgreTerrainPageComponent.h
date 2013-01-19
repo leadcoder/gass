@@ -156,6 +156,6 @@ namespace GASS
 		GeometryFlags m_GeomFlags;		
 	};
 
-	typedef boost::shared_ptr<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;
+	typedef SPTR<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;
 }
 

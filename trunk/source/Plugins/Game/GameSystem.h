@@ -38,5 +38,5 @@ namespace GASS
 		virtual void Init();
 	protected:
 	};
-	typedef boost::shared_ptr<GameSystem> GameSystemPtr;
+	typedef SPTR<GameSystem> GameSystemPtr;
 }

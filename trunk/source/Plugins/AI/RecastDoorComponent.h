@@ -44,7 +44,7 @@ namespace GASS
 		dtPolyRef m_PolyRefs[MAX_REF_POLYS];
 		int m_PolyRefCount;
 	};
-	typedef boost::shared_ptr<RecastDoorComponent> RecastDoorComponentPtr;
-	typedef boost::weak_ptr<RecastDoorComponent> RecastDoorComponentWeakPtr;
+	typedef SPTR<RecastDoorComponent> RecastDoorComponentPtr;
+	typedef WPTR<RecastDoorComponent> RecastDoorComponentWeakPtr;
 }
 

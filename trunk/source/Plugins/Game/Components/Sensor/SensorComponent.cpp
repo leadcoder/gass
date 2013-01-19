@@ -57,7 +57,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<SignatureComponent>(comps,true);
 		for(size_t i = 0; i < comps.size(); i++)
 		{
-			SignatureComponentPtr sig = boost::shared_dynamic_cast<SignatureComponent>(comps[i]);
+			SignatureComponentPtr sig = DYNAMIC_CAST<SignatureComponent>(comps[i]);
 			m_AllObjects.push_back(sig);
 		}
 	}
@@ -97,7 +97,7 @@ namespace GASS
 			std::vector<SignatureComponentWeakPtr>::const_iterator iter = m_AllObjects.begin();
 			while(iter != m_AllObjects.end())
 			{
-				SignatureComponentPtr signature(*iter,boost::detail::sp_nothrow_tag());
+				SignatureComponentPtr signature(*iter,NO_THROW);
 				if(signature)
 				{
 					const Vec3 pos = signature->GetPosition();

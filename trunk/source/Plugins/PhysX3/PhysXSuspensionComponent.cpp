@@ -126,7 +126,7 @@ namespace GASS
 
 		for(int i = 0; i < components.size(); i++)
 		{
-			PhysXBodyComponentPtr body = boost::shared_static_cast<PhysXBodyComponent>(components[i]);
+			PhysXBodyComponentPtr body = STATIC_CAST<PhysXBodyComponent>(components[i]);
 			//if(body->GetPxActor() && body->GetPxActor() != a2)
 			//	PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetPxScene()->setActorPairFlags(*body->GetPxActor(), *a2, PX_IGNORE_PAIR);
 		}

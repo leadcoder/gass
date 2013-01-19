@@ -43,6 +43,6 @@ namespace GASS
 	private:
 	};
 
-	typedef boost::shared_ptr<DebugComponent> DebugComponentPtr;
+	typedef SPTR<DebugComponent> DebugComponentPtr;
 }
 #endif

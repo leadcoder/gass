@@ -39,7 +39,7 @@ namespace GASS
 		float m_MinDistance;
 		bool m_ScaleLocation;
 	};
-	typedef boost::shared_ptr<DistanceScaleComponent> DistanceScaleComponentPtr;
+	typedef SPTR<DistanceScaleComponent> DistanceScaleComponentPtr;
 }
 
 

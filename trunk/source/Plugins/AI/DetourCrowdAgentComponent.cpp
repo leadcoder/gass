@@ -48,7 +48,7 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnChangeName(GASS::MessagePtr message)
 	{
-		SceneObjectNameMessagePtr nm = boost::shared_static_cast<SceneObjectNameMessage>(message);
+		SceneObjectNameMessagePtr nm = STATIC_CAST<SceneObjectNameMessage>(message);
 	}
 
 	float DetourCrowdAgentComponent::GetMaxSpeed() const
@@ -167,7 +167,7 @@ namespace GASS
 
 		if(crowd_comp)
 		{
-			crowd_comp->RegisterAgent(boost::shared_dynamic_cast<DetourCrowdAgentComponent>(shared_from_this()));
+			crowd_comp->RegisterAgent(DYNAMIC_CAST<DetourCrowdAgentComponent>(shared_from_this()));
 			dtCrowd* crowd = crowd_comp->GetCrowd();
 			if(crowd)
 			{
@@ -251,7 +251,7 @@ namespace GASS
 		DetourCrowdComponentPtr crowd_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<DetourCrowdComponent>();
 		if(crowd_comp)
 		{
-			crowd_comp->UnregisterAgent(boost::shared_dynamic_cast<DetourCrowdAgentComponent>(shared_from_this()));
+			crowd_comp->UnregisterAgent(DYNAMIC_CAST<DetourCrowdAgentComponent>(shared_from_this()));
 		}
 	}
 

@@ -337,7 +337,7 @@ namespace GASS
 		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		*/
 		
 	};
-	typedef boost::shared_ptr<IInputSystem> InputSystemPtr;
+	typedef SPTR<IInputSystem> InputSystemPtr;
 
 	
 	class GASSExport IProxyInputSystem  
@@ -354,5 +354,5 @@ namespace GASS
 		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		
 		
 	};
-	typedef boost::shared_ptr<IProxyInputSystem> IProxyInputSystemPtr;
+	typedef SPTR<IProxyInputSystem> IProxyInputSystemPtr;
 }

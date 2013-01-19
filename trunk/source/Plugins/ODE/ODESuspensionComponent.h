@@ -31,7 +31,7 @@ namespace GASS
 {
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
-	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 
 
 	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>

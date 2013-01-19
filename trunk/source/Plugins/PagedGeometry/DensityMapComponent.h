@@ -75,7 +75,7 @@ namespace GASS
 		TBounds m_MapBounds;
 		Ogre::Image m_DensityImage;
 	};
-	typedef boost::shared_ptr<DensityMapComponent> DensityMapComponentPtr; 
+	typedef SPTR<DensityMapComponent> DensityMapComponentPtr; 
 }
 
 #endif

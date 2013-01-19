@@ -34,8 +34,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class InputProxyComponent : public Reflection<InputProxyComponent,BaseSceneComponent>
 	{
@@ -50,6 +50,6 @@ namespace GASS
 		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};
 
-	typedef boost::shared_ptr<InputProxyComponent> InputProxyComponentPtr;
+	typedef SPTR<InputProxyComponent> InputProxyComponentPtr;
 }
 #endif

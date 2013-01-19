@@ -58,7 +58,7 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				SceneManagerListenerPtr listener = SceneManagerListenerPtr(m_SLVector[i],boost::detail::sp_nothrow_tag());
+				SceneManagerListenerPtr listener = SceneManagerListenerPtr(m_SLVector[i],NO_THROW);
 				listener->SceneManagerTick(m_DeltaTime);
 			}
 		}
@@ -73,7 +73,7 @@ namespace GASS
 		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		/*while(iter != m_Listeners.end())
 		{
-			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,NO_THROW);
 			if(listener)
 			{
 				listener->SceneManagerTick(delta_time);
@@ -86,7 +86,7 @@ namespace GASS
 
 		while(iter != m_Listeners.end())
 		{
-			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag());
+			SceneManagerListenerPtr listener = SceneManagerListenerPtr(*iter,NO_THROW);
 			if(listener)
 			{
 				iter++;
@@ -112,7 +112,7 @@ namespace GASS
 		while(iter != m_Listeners.end())
 		{
 			
-			if(SceneManagerListenerPtr(*iter,boost::detail::sp_nothrow_tag()) == listener)
+			if(SceneManagerListenerPtr(*iter,NO_THROW) == listener)
 				iter = m_Listeners.erase(iter);
 			else
 				iter++;

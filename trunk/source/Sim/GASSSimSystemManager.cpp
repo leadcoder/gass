@@ -61,7 +61,7 @@ namespace GASS
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
 
 		//support asyncron request
-		//boost::shared_ptr<SimSystemManager> shared_this = shared_from_this();
+		//SPTR<SimSystemManager> shared_this = shared_from_this();
 		//MessageFuncPtr func_ptr(new GASS::MessageFunc<TimeStepRequest>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
 		//RegisterForMessage(typeid(TimeStepRequest),func_ptr,0);
 
@@ -277,7 +277,7 @@ namespace GASS
 		{
 			if(system_name ==  m_Systems[i]->GetSystemName())
 			{
-				return boost::shared_dynamic_cast<SimSystem>(m_Systems[i]);
+				return DYNAMIC_CAST<SimSystem>(m_Systems[i]);
 			}
 		}
 		return SimSystemPtr();
@@ -326,7 +326,7 @@ namespace GASS
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
-			XMLSerializePtr  serialize = boost::shared_dynamic_cast<IXMLSerialize> (system);
+			XMLSerializePtr  serialize = DYNAMIC_CAST<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);
 		}

@@ -376,7 +376,7 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
-		OgreCameraProxyPtr camera_proxy = boost::shared_dynamic_cast<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+		OgreCameraProxyPtr camera_proxy = DYNAMIC_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
 		m_CurrentCamera = camera_proxy->GetOgreCamera();
 	}
 

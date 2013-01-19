@@ -31,9 +31,9 @@ namespace GASS
 {
 	//class SceneObject;
 	
-	//typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	//typedef SPTR<SceneObject> SceneObjectPtr;
 
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public boost::enable_shared_from_this<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
+	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
 	{
 		friend class SceneObject;
 	public:
@@ -48,7 +48,7 @@ namespace GASS
 		void InitializePointers();
 
 	};
-	typedef boost::shared_ptr<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef boost::weak_ptr<BaseSceneComponent> BaseSceneComponentWeakPtr;
+	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
+	typedef WPTR<BaseSceneComponent> BaseSceneComponentWeakPtr;
 }
 #endif // #ifndef BASESCENECOMPONENT_HH

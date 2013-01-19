@@ -31,10 +31,10 @@
 namespace GASS
 {
 	class ISystemManager;
-	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
+	typedef WPTR<ISystemManager> SystemManagerWeakPtr;
 
 	class SimSystemManager;
-	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
+	typedef SPTR<SimSystemManager> SimSystemManagerPtr;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -46,7 +46,7 @@ namespace GASS
 	/**
 		Base class that GASSSim systems should be derived from 
 	*/
-	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public ISystem, public boost::enable_shared_from_this<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
+	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public ISystem, public SHARE_CLASS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
 	{
 	public:
 		SimSystem();
@@ -80,5 +80,5 @@ namespace GASS
 		SystemManagerWeakPtr m_Owner;
 		std::string m_TaskNodeName;
 	};
-	typedef boost::shared_ptr<SimSystem> SimSystemPtr;
+	typedef SPTR<SimSystem> SimSystemPtr;
 }

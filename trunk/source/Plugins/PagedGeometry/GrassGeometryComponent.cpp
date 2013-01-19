@@ -124,7 +124,7 @@ namespace GASS
 			}
 			if(terrain)
 			{
-				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
 				AABox aabox = geom->GetBoundingBox();
 
 				m_Bounds.x = aabox.m_Min.x;
@@ -509,7 +509,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 			terrain = GetTerrainComponent(child);
 			if(terrain)
 				return terrain;

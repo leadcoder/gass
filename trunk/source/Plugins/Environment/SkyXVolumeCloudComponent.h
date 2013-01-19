@@ -82,7 +82,7 @@ namespace GASS
 		
 	
 	};
-	typedef boost::shared_ptr<SkyXVolumeCloudComponent> SkyXVolumeCloudComponentPtr; 
+	typedef SPTR<SkyXVolumeCloudComponent> SkyXVolumeCloudComponentPtr; 
 
 }
 

@@ -34,10 +34,10 @@ namespace GASS
 	class ResourceLocation;
 	class ResourceGroup;
 	
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::shared_ptr<ResourceLocation> ResourceLocationPtr;
-	typedef boost::shared_ptr<ResourceGroup> ResourceGroupPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef SPTR<ResourceLocation> ResourceLocationPtr;
+	typedef SPTR<ResourceGroup> ResourceGroupPtr;
 	
 	
 	/**
@@ -51,7 +51,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef boost::shared_ptr<SystemMessage> SystemMessagePtr;
+	typedef SPTR<SystemMessage> SystemMessagePtr;
 	
 	//////////////////////////
 	//request message section
@@ -66,7 +66,7 @@ namespace GASS
 
 		  }
 	};
-	typedef boost::shared_ptr<SystemRequestMessage> SystemRequestMessagePtr;
+	typedef SPTR<SystemRequestMessage> SystemRequestMessagePtr;
 
 	/**
 	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
@@ -86,7 +86,7 @@ namespace GASS
 		std::string m_Text;
 
 	};
-	typedef boost::shared_ptr<DebugPrintRequest> DebugPrintRequestPtr;
+	typedef SPTR<DebugPrintRequest> DebugPrintRequestPtr;
 
 	class TimeStepRequest : public SystemRequestMessage
 	{
@@ -99,7 +99,7 @@ namespace GASS
 	private:
 		double m_TimeStep;
 	};
-	typedef boost::shared_ptr<TimeStepRequest> TimeStepRequestPtr;
+	typedef SPTR<TimeStepRequest> TimeStepRequestPtr;
 
 
 	//////////////////////////
@@ -114,7 +114,7 @@ namespace GASS
 
 		  }
 	};
-	typedef boost::shared_ptr<SystemEventMessage> SystemEventMessagePtr;
+	typedef SPTR<SystemEventMessage> SystemEventMessagePtr;
 
 
 	/**
@@ -133,7 +133,7 @@ namespace GASS
 		ScenePtr m_Scene;
 	};
 
-	typedef boost::shared_ptr<PreSceneCreateEvent> PreSceneCreateEventPtr;
+	typedef SPTR<PreSceneCreateEvent> PreSceneCreateEventPtr;
 
 	/**
 		This message is posted by the Scene class after a scene is loaded.
@@ -149,7 +149,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<PostSceneCreateEvent> PostSceneCreateEventPtr;
+	typedef SPTR<PostSceneCreateEvent> PostSceneCreateEventPtr;
 
 
 	class SceneUnloadedEvent : public SystemEventMessage
@@ -163,7 +163,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<SceneUnloadedEvent> SceneUnloadedEventPtr;
+	typedef SPTR<SceneUnloadedEvent> SceneUnloadedEventPtr;
 
 	class TimeStepDoneEvent : public SystemEventMessage
 	{
@@ -173,7 +173,7 @@ namespace GASS
 		}
 	private:
 	};
-	typedef boost::shared_ptr<TimeStepDoneEvent > TimeStepDoneEventPtr;
+	typedef SPTR<TimeStepDoneEvent > TimeStepDoneEventPtr;
 
 	class InputSystemLoadedEvent : public SystemEventMessage
 	{
@@ -183,7 +183,7 @@ namespace GASS
 		}
 	private:
 	};
-	typedef boost::shared_ptr<InputSystemLoadedEvent> InputSystemLoadedEventPtr;
+	typedef SPTR<InputSystemLoadedEvent> InputSystemLoadedEventPtr;
 
 
 	class GraphicsSystemLoadedEvent : public SystemEventMessage
@@ -194,7 +194,7 @@ namespace GASS
 		}
 	private:
 	};
-	typedef boost::shared_ptr<GraphicsSystemLoadedEvent> GraphicsSystemLoadedEventPtr;
+	typedef SPTR<GraphicsSystemLoadedEvent> GraphicsSystemLoadedEventPtr;
 	
 	class PhysicsSystemLoadedEvent : public SystemEventMessage
 	{
@@ -204,7 +204,7 @@ namespace GASS
 		}
 	private:
 	};
-	typedef boost::shared_ptr<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
+	typedef SPTR<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
 
 	class ResourceGroupCreatedEvent: public SystemEventMessage
 	{
@@ -216,7 +216,7 @@ namespace GASS
 	private:
 		ResourceGroupPtr m_Group;
 	};
-	typedef boost::shared_ptr<ResourceGroupCreatedEvent> ResourceGroupCreatedEventPtr;
+	typedef SPTR<ResourceGroupCreatedEvent> ResourceGroupCreatedEventPtr;
 
 	class ResourceGroupRemovedEvent: public SystemEventMessage
 	{
@@ -228,7 +228,7 @@ namespace GASS
 	private:
 		ResourceGroupPtr m_Group;
 	};
-	typedef boost::shared_ptr<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
+	typedef SPTR<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
 
 	class ResourceLocationCreatedEvent : public SystemEventMessage
 	{
@@ -240,7 +240,7 @@ namespace GASS
 	private:
 		ResourceLocationPtr m_Location;
 	};
-	typedef boost::shared_ptr<ResourceLocationCreatedEvent> ResourceLocationCreatedEventPtr;
+	typedef SPTR<ResourceLocationCreatedEvent> ResourceLocationCreatedEventPtr;
 
 	class ResourceLocationRemovedEvent : public SystemEventMessage
 	{
@@ -252,7 +252,7 @@ namespace GASS
 	private:
 		ResourceLocationPtr m_Location;
 	};
-	typedef boost::shared_ptr<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
+	typedef SPTR<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
 
 	
 

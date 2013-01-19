@@ -25,8 +25,8 @@
 namespace GASS
 {
 	class Scene;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef WPTR<Scene> SceneWeakPtr;
 
 	class GASSExport ISceneManagerListener
 	{
@@ -34,8 +34,8 @@ namespace GASS
 		virtual void SceneManagerTick(double delta) = 0;
 	};
 
-	typedef boost::weak_ptr<ISceneManagerListener> SceneManagerListenerWeakPtr;
-	typedef boost::shared_ptr<ISceneManagerListener> SceneManagerListenerPtr;
+	typedef WPTR<ISceneManagerListener> SceneManagerListenerWeakPtr;
+	typedef SPTR<ISceneManagerListener> SceneManagerListenerPtr;
 
 	/**
 		Interface that all scene managers must implement.
@@ -62,7 +62,7 @@ namespace GASS
 
 	};
 
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
 
 	
 }

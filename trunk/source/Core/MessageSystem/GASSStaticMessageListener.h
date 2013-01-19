@@ -32,17 +32,17 @@ namespace GASS
 	public:
 		StaticMessageListener()
 		{
-			m_SharedFromThis = boost::shared_ptr<StaticMessageListener>(this,null_deleter());
+			m_SharedFromThis = SPTR<StaticMessageListener>(this,null_deleter());
 		}
 		virtual ~StaticMessageListener(){}
 
-		boost::shared_ptr<StaticMessageListener> shared_from_this()
+		SPTR<StaticMessageListener> shared_from_this()
 		{
 			return m_SharedFromThis;
 		}
 
 	protected:
-		boost::shared_ptr<StaticMessageListener> m_SharedFromThis;
+		SPTR<StaticMessageListener> m_SharedFromThis;
 	};
 }
 

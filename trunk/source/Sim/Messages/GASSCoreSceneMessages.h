@@ -30,8 +30,8 @@ namespace GASS
 {
 	class SceneObject;
 	class Scene;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
 
 
 
@@ -43,7 +43,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef boost::shared_ptr<SceneMessage> SceneMessagePtr;
+	typedef SPTR<SceneMessage> SceneMessagePtr;
 
 
 	class SceneEventMessage : public SceneMessage
@@ -54,7 +54,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef boost::shared_ptr<SceneEventMessage> SceneEventMessagePtr;
+	typedef SPTR<SceneEventMessage> SceneEventMessagePtr;
 
 	class SceneRequestMessage : public SceneMessage
 	{
@@ -64,7 +64,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef boost::shared_ptr<SceneRequestMessage> SceneRequestMessagePtr;
+	typedef SPTR<SceneRequestMessage> SceneRequestMessagePtr;
 
 
 	//*********************************************************
@@ -93,7 +93,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<RemoveSceneObjectRequest> RemoveSceneObjectRequestPtr;
+	typedef SPTR<RemoveSceneObjectRequest> RemoveSceneObjectRequestPtr;
 
 
 	/**
@@ -139,7 +139,7 @@ namespace GASS
 		SceneObjectPtr m_Parent;
 	};
 
-	typedef boost::shared_ptr<SpawnObjectFromTemplateRequest> SpawnObjectFromTemplateRequestPtr;
+	typedef SPTR<SpawnObjectFromTemplateRequest> SpawnObjectFromTemplateRequestPtr;
 
 	
 	//*********************************************************
@@ -157,7 +157,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef boost::shared_ptr<InternalSceneMessage> InternalSceneMessagePtr;
+	typedef SPTR<InternalSceneMessage> InternalSceneMessagePtr;
 
 	/**
 	Event sent by the scene class while loading a 
@@ -177,7 +177,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;*/
+	typedef SPTR<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;*/
 
 
 	/**
@@ -199,7 +199,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef boost::shared_ptr<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;*/
+	typedef SPTR<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;*/
 
 	/**
 		Message sent by SceneObject before scene object is Initialized 
@@ -220,7 +220,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PreSceneObjectInitializedEvent> PreSceneObjectInitializedEventPtr;
+	typedef SPTR<PreSceneObjectInitializedEvent> PreSceneObjectInitializedEventPtr;
 
 
 	/**
@@ -242,7 +242,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PostComponentsInitializedEvent> PostComponentsInitializedEventPtr;
+	typedef SPTR<PostComponentsInitializedEvent> PostComponentsInitializedEventPtr;
 
 	/**
 		Message sent after SceneObject is Initialized
@@ -263,7 +263,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PostSceneObjectInitializedEvent> PostSceneObjectInitializedEventPtr;
+	typedef SPTR<PostSceneObjectInitializedEvent> PostSceneObjectInitializedEventPtr;
 
 
 	/**
@@ -285,7 +285,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<SceneObjectRemovedEvent> SceneObjectRemovedEventPtr;
+	typedef SPTR<SceneObjectRemovedEvent> SceneObjectRemovedEventPtr;
 }
 
 #endif

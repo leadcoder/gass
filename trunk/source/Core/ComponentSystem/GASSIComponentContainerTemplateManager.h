@@ -30,8 +30,8 @@ namespace GASS
 	class IComponentContainer;
 	class IComponentContainerTemplate;
 
-	typedef boost::shared_ptr<IComponentContainerTemplate> ComponentContainerTemplatePtr;
-	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
+	typedef SPTR<IComponentContainerTemplate> ComponentContainerTemplatePtr;
+	typedef SPTR<IComponentContainer> ComponentContainerPtr;
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -104,9 +104,9 @@ namespace GASS
 
 	};
 
-	typedef boost::shared_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
-	typedef boost::shared_ptr<IComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
-	typedef boost::weak_ptr<IComponentContainerTemplateManager> ComponentContainerTemplateManagerWeakPtr;
+	typedef SPTR<IComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
+	typedef SPTR<IComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
+	typedef WPTR<IComponentContainerTemplateManager> ComponentContainerTemplateManagerWeakPtr;
 }
 
 #endif // #ifndef ICOMPONENTCONTAINERTEMPLATEMANAGER_HH

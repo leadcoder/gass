@@ -64,7 +64,7 @@ namespace GASS
 	void OgreViewport::SetCamera(CameraComponentPtr camera)
 	{
 		m_Camera = camera;
-		OgreCameraComponentPtr cam_comp = boost::shared_dynamic_cast<OgreCameraComponent>(camera);
+		OgreCameraComponentPtr cam_comp = DYNAMIC_CAST<OgreCameraComponent>(camera);
 		m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
 		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 		ViewportPtr viewport = shared_from_this();

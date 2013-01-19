@@ -29,7 +29,7 @@ class TextBox;
 namespace GASS
 {
 	class OSGCameraComponent;
-	typedef boost::shared_ptr<OSGCameraComponent> OSGCameraComponentPtr;
+	typedef SPTR<OSGCameraComponent> OSGCameraComponentPtr;
 	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem
 	{
 		friend class OSGGraphicsSceneManager;
@@ -69,6 +69,6 @@ namespace GASS
 		TextBox* m_DebugTextBox;
 		std::map<std::string,TextBox*>  m_TextBoxes;
 	};
-	typedef boost::shared_ptr<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
-	typedef boost::weak_ptr<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
+	typedef SPTR<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
+	typedef WPTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
 }

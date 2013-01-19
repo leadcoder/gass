@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
 	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,BaseSceneComponent>
 	{
@@ -127,6 +127,6 @@ namespace GASS
 		physx::PxRevoluteJoint *m_RollJoint;
 		physx::PxD6Joint *m_Joint;
 	};
-	typedef boost::shared_ptr<PhysXHingeComponent> PhysXHingeComponentPtr;
+	typedef SPTR<PhysXHingeComponent> PhysXHingeComponentPtr;
 }
 

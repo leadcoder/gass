@@ -31,7 +31,7 @@ namespace GASS
 
 	void MeasurementTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
-		//SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		//SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(m_MouseIsDown)
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
@@ -56,7 +56,7 @@ namespace GASS
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
-			BaseReflectionObjectPtr props = boost::shared_dynamic_cast<BaseReflectionObject>(text);
+			BaseReflectionObjectPtr props = DYNAMIC_CAST<BaseReflectionObject>(text);
 			std::string measurement_value = "";
 			MessagePtr text_mess(new TextCaptionMessage(measurement_value));
 			ruler->PostMessage(text_mess);
@@ -106,7 +106,7 @@ namespace GASS
 
 	SceneObjectPtr MeasurementTool::GetOrCreateRulerObject() 
 	{
-		GASS::SceneObjectPtr ruler(m_RulerObject,boost::detail::sp_nothrow_tag());
+		GASS::SceneObjectPtr ruler(m_RulerObject,NO_THROW);
 
 		if(!ruler)
 		{

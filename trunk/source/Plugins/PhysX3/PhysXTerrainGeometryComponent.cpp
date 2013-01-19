@@ -95,7 +95,7 @@ namespace GASS
 		HeightmapTerrainComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
-			geom = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			geom = DYNAMIC_CAST<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else geom = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		return geom;
@@ -106,7 +106,7 @@ namespace GASS
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
 		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
-		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+		GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainGeom = terrain.get();

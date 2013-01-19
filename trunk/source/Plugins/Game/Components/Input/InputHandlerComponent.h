@@ -34,8 +34,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
 	{
@@ -55,6 +55,6 @@ namespace GASS
 		bool m_Empty;
 	};
 
-	typedef boost::shared_ptr<InputHandlerComponent> InputHandlerComponentPtr;
+	typedef SPTR<InputHandlerComponent> InputHandlerComponentPtr;
 }
 #endif

@@ -54,7 +54,7 @@ namespace GASS
 		float m_Value;
 		ControllerType m_ControllerType;
 	};
-	typedef boost::shared_ptr<ControllSettingsMessage> ControllSettingsMessagePtr;
+	typedef SPTR<ControllSettingsMessage> ControllSettingsMessagePtr;
 
 	class InputControllerMessage : public BaseMessage
 	{
@@ -77,7 +77,7 @@ namespace GASS
 		float m_Value;
 		ControllerType m_ControllerType;
 	};
-	typedef boost::shared_ptr<InputControllerMessage> InputControllerMessagePtr;
+	typedef SPTR<InputControllerMessage> InputControllerMessagePtr;
 
 	class GASSExport IControlSettingsSystem 
 	{
@@ -88,5 +88,5 @@ namespace GASS
 		virtual int GetIndexFromName(const std::string &settings, const std::string &name) = 0;
 	private:
 	};
-	typedef boost::shared_ptr<IControlSettingsSystem> ControlSettingsSystemPtr;
+	typedef SPTR<IControlSettingsSystem> ControlSettingsSystemPtr;
 }

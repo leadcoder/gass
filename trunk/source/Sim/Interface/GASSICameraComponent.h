@@ -42,6 +42,6 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
-	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
+	typedef WPTR<ICameraComponent> CameraComponentWeakPtr;
+	typedef SPTR<ICameraComponent> CameraComponentPtr;
 }

@@ -28,8 +28,8 @@ namespace GASS
 {
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 	
 	class PhysXMeshGeometryComponent : public Reflection<PhysXMeshGeometryComponent,BaseSceneComponent>
 	{
@@ -45,5 +45,5 @@ namespace GASS
 	protected:
 		PhysXTriangleMesh m_TriangleMesh;
 	};
-	typedef boost::shared_ptr<PhysXMeshGeometryComponent> PhysXMeshGeometryComponentPtr;
+	typedef SPTR<PhysXMeshGeometryComponent> PhysXMeshGeometryComponentPtr;
 }

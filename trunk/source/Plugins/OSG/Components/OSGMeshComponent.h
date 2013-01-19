@@ -211,6 +211,6 @@ namespace GASS
 		bool m_Expand;
 	};
 
-	typedef boost::shared_ptr<OSGMeshComponent> OSGMeshComponentPtr;
+	typedef SPTR<OSGMeshComponent> OSGMeshComponentPtr;
 }
 

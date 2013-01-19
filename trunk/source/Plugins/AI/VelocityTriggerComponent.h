@@ -32,6 +32,6 @@ namespace GASS
 		bool m_Initialized;
 	};
 
-	typedef boost::shared_ptr<VelocityTriggerComponent> VelocityTriggerComponentPtr;
+	typedef SPTR<VelocityTriggerComponent> VelocityTriggerComponentPtr;
 }
 #endif

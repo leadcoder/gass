@@ -33,8 +33,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,BaseSceneComponent>
 	{
@@ -54,6 +54,6 @@ namespace GASS
 		std::string m_PreferredViewport;
 		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
 	};
-	typedef boost::shared_ptr<VehicleCameraComponent> VehicleCameraComponentPtr;
+	typedef SPTR<VehicleCameraComponent> VehicleCameraComponentPtr;
 }
 #endif

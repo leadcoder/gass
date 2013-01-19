@@ -225,7 +225,7 @@ namespace GASS
 
 	Vec3 OSGSkyboxComponent::GetEyePosition()
 	{
-		SceneObjectPtr cam_obj (m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr cam_obj (m_ActiveCameraObject,NO_THROW);
 		Vec3 pos(0,0,0);
 		if(cam_obj)
 		{

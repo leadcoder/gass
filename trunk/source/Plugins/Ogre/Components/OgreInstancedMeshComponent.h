@@ -101,6 +101,6 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 	};
 
-	typedef boost::shared_ptr<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;
+	typedef SPTR<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;
 }
 

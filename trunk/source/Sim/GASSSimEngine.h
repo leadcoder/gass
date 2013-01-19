@@ -37,13 +37,13 @@ namespace GASS
 	class Scene;
 	class TaskNode;
 	
-	typedef boost::shared_ptr<PluginManager> PluginManagerPtr;
-	typedef boost::shared_ptr<SimSystemManager> SimSystemManagerPtr;
-	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	typedef boost::shared_ptr<RunTimeController> RuntimeControllerPtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	typedef SPTR<PluginManager> PluginManagerPtr;
+	typedef SPTR<SimSystemManager> SimSystemManagerPtr;
+	typedef SPTR<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
+	typedef SPTR<RunTimeController> RuntimeControllerPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef WPTR<Scene> SceneWeakPtr;
 
 	/** \addtogroup GASSSim
 	*  @{

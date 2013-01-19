@@ -201,7 +201,7 @@ namespace GASS
 			BaseComponentContainer::ComponentContainerIterator children = obj->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 				child->PostMessage(message);
 				RecPost(message,child);
 			}
@@ -259,7 +259,7 @@ namespace GASS
 		if(objs.size() > 0)
 		{
 			SceneObjectPtr obj = objs.front();
-			boost::shared_ptr<IWaypointListComponent> wpl_comp = obj->GetFirstComponentByClass<IWaypointListComponent>();
+			SPTR<IWaypointListComponent> wpl_comp = obj->GetFirstComponentByClass<IWaypointListComponent>();
 			if(wpl_comp)
 			{
 				return wpl_comp.get();

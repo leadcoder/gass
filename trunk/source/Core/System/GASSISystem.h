@@ -27,7 +27,7 @@
 namespace GASS
 {
 	class ISystemManager;
-	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
+	typedef SPTR<ISystemManager> SystemManagerPtr;
 	typedef std::string SystemType;
 	
 	class ISystemListener
@@ -36,8 +36,8 @@ namespace GASS
 	public:
 		virtual void SystemTick(double delta_time) = 0;
 	};
-	typedef boost::shared_ptr<ISystemListener> SystemListenerPtr;
-	typedef boost::weak_ptr<ISystemListener> SystemListenerWeakPtr;
+	typedef SPTR<ISystemListener> SystemListenerPtr;
+	typedef WPTR<ISystemListener> SystemListenerWeakPtr;
 
 
 	/** \addtogroup GASSCore
@@ -71,7 +71,7 @@ namespace GASS
 		virtual void Register(SystemListenerPtr listener) = 0;
 		virtual void Unregister(SystemListenerPtr listener)= 0;
 	};
-	typedef boost::shared_ptr<ISystem> SystemPtr;
-	typedef boost::weak_ptr<ISystem> SystemWeakPtr;
+	typedef SPTR<ISystem> SystemPtr;
+	typedef WPTR<ISystem> SystemWeakPtr;
 }
 #endif // #ifndef ISYSTEM_HH

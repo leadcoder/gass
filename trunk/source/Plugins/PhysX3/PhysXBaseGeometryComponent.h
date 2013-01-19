@@ -35,9 +35,9 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	class PhysXBodyComponent;
 	class IGeometryComponent;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<PhysXBodyComponent> PhysXBodyComponentPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 	
 	
 	enum
@@ -110,6 +110,6 @@ namespace GASS
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		std::string m_GeometryTemplate;
 	};
-	typedef boost::shared_ptr<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
+	typedef SPTR<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
 }
 #endif 

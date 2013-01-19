@@ -30,8 +30,8 @@ namespace GASS
 {
 	typedef std::string SceneObjectID; 
 	class SceneObjectTemplate;
-	typedef boost::shared_ptr<SceneObjectTemplate> SceneObjectTemplatePtr;
-	typedef boost::weak_ptr<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
+	typedef SPTR<SceneObjectTemplate> SceneObjectTemplatePtr;
+	typedef WPTR<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
 	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
 	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate , BaseComponentContainerTemplate>
 	{

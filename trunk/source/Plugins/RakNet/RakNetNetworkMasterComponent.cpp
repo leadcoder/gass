@@ -99,7 +99,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 			GeneratePartID(child,++id);
 		}
 	}

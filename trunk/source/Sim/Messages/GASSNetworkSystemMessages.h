@@ -35,9 +35,9 @@ namespace GASS
 	class Scene;
 	class SceneObject;
 
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
 
 	/**
 	Start network server
@@ -56,7 +56,7 @@ namespace GASS
 		std::string m_Name;
 		int m_Port;
 	};
-	typedef boost::shared_ptr<StartServerRequest> StartServerRequestPtr;
+	typedef SPTR<StartServerRequest> StartServerRequestPtr;
 
 
 	/**
@@ -69,7 +69,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<StopServerRequest> StopServerRequestPtr;
+	typedef SPTR<StopServerRequest> StopServerRequestPtr;
 
 
 
@@ -88,7 +88,7 @@ namespace GASS
 		std::string m_Name;
 		int m_ClientPort;
 	};
-	typedef boost::shared_ptr<ClientConnectedEvent> ClientConnectedEventPtr;
+	typedef SPTR<ClientConnectedEvent> ClientConnectedEventPtr;
 
 
 	/**
@@ -106,7 +106,7 @@ namespace GASS
 		std::string m_Name;
 		int m_ClientPort;
 	};
-	typedef boost::shared_ptr<ClientDisconnectedEvent> ClientDisconnectedEventPtr;
+	typedef SPTR<ClientDisconnectedEvent> ClientDisconnectedEventPtr;
 
 
 	/////////NETWORK CLIENT MESSAGES////////////////
@@ -128,7 +128,7 @@ namespace GASS
 		int m_ClientPort;
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<StartClientRequest> StartClientRequestPtr;
+	typedef SPTR<StartClientRequest> StartClientRequestPtr;
 
 
 	/**
@@ -145,7 +145,7 @@ namespace GASS
 		std::string m_Name;
 		int m_Port;
 	};
-	typedef boost::shared_ptr<ServerDisconnectedEvent> ServerDisconnectedEventPtr;
+	typedef SPTR<ServerDisconnectedEvent> ServerDisconnectedEventPtr;
 
 	/**
 	Stop network client
@@ -157,7 +157,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<StopClientMessage> StopClientMessagePtr;
+	typedef SPTR<StopClientMessage> StopClientMessagePtr;
 
 
 	/**
@@ -178,7 +178,7 @@ namespace GASS
 		int m_ServerPort;
 		float m_PingTime;
 	};
-	typedef boost::shared_ptr<ServerResponseEvent> ServerResponseEventPtr;
+	typedef SPTR<ServerResponseEvent> ServerResponseEventPtr;
 
 
 	/**
@@ -197,7 +197,7 @@ namespace GASS
 		std::string m_Name;
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<ConnectToServerRequest> ConnectToServerRequestPtr;
+	typedef SPTR<ConnectToServerRequest> ConnectToServerRequestPtr;
 
 	/**
 	Ping for servers
@@ -212,7 +212,7 @@ namespace GASS
 	private:
 		int m_ServerPort;
 	};
-	typedef boost::shared_ptr<PingRequest> PingRequestPtr;
+	typedef SPTR<PingRequest> PingRequestPtr;
 
 
 	/**
@@ -229,7 +229,7 @@ namespace GASS
 	private:
 		std::string m_Name;
 	};
-	typedef boost::shared_ptr<StartSceanrioRequest> StartSceanrioRequestPtr;
+	typedef SPTR<StartSceanrioRequest> StartSceanrioRequestPtr;
 
 	class ShutdownSceanrioRequestMessage : public BaseMessage
 	{
@@ -240,7 +240,7 @@ namespace GASS
 		  }
 	};
 
-	typedef boost::shared_ptr<ShutdownSceanrioRequestMessage> ShutdownSceanrioRequestMessagePtr;
+	typedef SPTR<ShutdownSceanrioRequestMessage> ShutdownSceanrioRequestMessagePtr;
 
 }
 #endif

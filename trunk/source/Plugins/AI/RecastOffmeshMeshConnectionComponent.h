@@ -46,7 +46,7 @@ namespace GASS
 		Vec3 m_EndPos;
 		SceneObjectWeakPtr m_EndNode;
 	};
-	typedef boost::shared_ptr<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentPtr;
-	typedef boost::weak_ptr<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentWeakPtr;
+	typedef SPTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentPtr;
+	typedef WPTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentWeakPtr;
 }
 

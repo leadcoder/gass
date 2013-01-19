@@ -103,7 +103,7 @@ namespace GASS
 
 	ResourceGroupPtr BaseResourceSystem::CreateResourceGroup(const std::string &name)
 	{
-		ResourceSystemPtr system = DCAST(IResourceSystem,shared_from_this());
+		ResourceSystemPtr system = DYNAMIC_CAST<IResourceSystem>(shared_from_this());
 		ResourceGroupPtr group(new ResourceGroup(system,name));
 		m_ResourceGroups.push_back(group);
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));

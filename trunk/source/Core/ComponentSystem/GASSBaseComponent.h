@@ -32,13 +32,8 @@
 
 namespace GASS
 {
-	class IComponentContainer;
-
-	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
-	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
-	typedef boost::shared_ptr<IComponent> ComponentPtr;
-	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
-
+	IFDECL(ComponentContainer)
+	
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -147,7 +142,7 @@ namespace GASS
 		std::string m_Name;
 		ComponentContainerWeakPtr m_Owner;
 	};
-	typedef boost::shared_ptr<BaseComponent> BaseComponentPtr;
+	PDECL(BaseComponent);
 
 }
 #endif // #ifndef BASECOMPONENT_HH

@@ -39,11 +39,11 @@ namespace GASS
 		virtual ~SceneObjectLink();
 		SceneObjectPtr operator ->()
 		{
-			return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());
+			return SceneObjectPtr(m_Link,NO_THROW);
 		}
-		bool IsValid() const {return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());}
+		bool IsValid() const {return SceneObjectPtr(m_Link,NO_THROW);}
 		SceneObjectID GetLinkObjectID() const {return m_LinkObjectID;}
-		SceneObjectPtr GetObjectPtr() const {return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());}
+		SceneObjectPtr GetObjectPtr() const {return SceneObjectPtr(m_Link,NO_THROW);}
 	protected:
 		SceneObjectPtr GetRoot(SceneObjectPtr obj);
 		friend std::ostream& operator << (std::ostream& os, const SceneObjectLink& sol)

@@ -54,7 +54,7 @@ namespace GASS
 		bool m_AllowDragAndDrop;
 		EditorSceneManagerPtr m_EditorSceneManager;
 	};
-	typedef boost::shared_ptr<EditorComponent> EditorComponentPtr;
+	typedef SPTR<EditorComponent> EditorComponentPtr;
 }
 
 

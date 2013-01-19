@@ -36,8 +36,8 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
 	/**
 	An ODE geometry-object has a lot of common operations/functionality like, transformations, 

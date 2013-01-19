@@ -37,12 +37,12 @@ namespace GASS
 	class Scene;
 	class SceneObject;
 
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef WPTR<Scene> SceneWeakPtr;
 
-	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<MessageManager> MessageManagerPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
 
 	/**
@@ -66,7 +66,7 @@ namespace GASS
 		virtual ~SceneObject();
 		static void RegisterReflection();
 		void SyncMessages(double delta_time, bool recursive = true) const;
-		ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+		ScenePtr GetScene() const {return ScenePtr(m_Scene,NO_THROW);}
 
 		void RemoveChildSceneObject(SceneObjectPtr child);
 		void AddChildSceneObject(SceneObjectPtr child , bool load);
@@ -82,7 +82,7 @@ namespace GASS
 		SceneObjectPtr GetParentSceneObject() const
 		{
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
-			return boost::shared_static_cast<SceneObject>(GetParent());
+			return STATIC_CAST<SceneObject>(GetParent());
 		}
 
 		/**Get all components of certain class. This function allow you to pass the class name as a string
@@ -110,7 +110,7 @@ namespace GASS
 		{
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				boost::shared_ptr<T> ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				SPTR<T> ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					components.push_back(ret);
 			}
@@ -120,7 +120,7 @@ namespace GASS
 				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
-					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+					SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 					child->GetComponentsByClass<T>(components,recursive);
 				}
 			}
@@ -130,12 +130,12 @@ namespace GASS
 			@recursive Indicates if we should search for component in child scene objects
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstComponentByClass(bool recursive = false) const
+		SPTR<T> GetFirstComponentByClass(bool recursive = false) const
 		{
-			boost::shared_ptr<T> ret;
+			SPTR<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					return ret;
 			}
@@ -145,7 +145,7 @@ namespace GASS
 				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
-					SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+					SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 					ret = child->GetFirstComponentByClass<T>(recursive);
 					if(ret)
 						return ret;
@@ -159,12 +159,12 @@ namespace GASS
 			This function allow you to pass the class as a template argument
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstParentComponentByClass() const
+		SPTR<T> GetFirstParentComponentByClass() const
 		{
-			boost::shared_ptr<T> ret;
+			SPTR<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				ret = boost::shared_dynamic_cast<T>(m_ComponentVector[i]);
+				ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					return ret;
 			}

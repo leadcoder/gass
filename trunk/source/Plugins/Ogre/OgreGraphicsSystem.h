@@ -40,19 +40,19 @@ namespace Ogre
 namespace GASS
 {
 	//class OgreGraphicsSystem;
-	//typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
-	//typedef boost::weak_ptr<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
+	//typedef SPTR<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	//typedef WPTR<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
 
 	class OgreRenderWindow;
-	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
+	typedef SPTR<OgreRenderWindow> OgreRenderWindowPtr;
 	class OgreResourceManager;
-	typedef boost::shared_ptr<OgreResourceManager> OgreResourceManagerPtr;
+	typedef SPTR<OgreResourceManager> OgreResourceManagerPtr;
 
 	class OgreDebugTextOutput;
 	class OgrePostProcess;
 	class OgreCameraComponent;
-	typedef boost::shared_ptr<OgrePostProcess> OgrePostProcessPtr;
-	typedef boost::shared_ptr<OgreCameraComponent> OgreCameraComponentPtr;
+	typedef SPTR<OgrePostProcess> OgrePostProcessPtr;
+	typedef SPTR<OgreCameraComponent> OgreCameraComponentPtr;
 
 	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
 	{
@@ -111,7 +111,7 @@ namespace GASS
 		OgrePostProcessPtr m_PostProcess;
 		OgreResourceManagerPtr m_ResourceManager;
 	};
-	typedef boost::shared_ptr<OgreGraphicsSystem> OgreGraphicsSystemPtr;
+	typedef SPTR<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 	
 	
 	

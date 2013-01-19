@@ -105,7 +105,7 @@ namespace GASS
 				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 				if(comp)
 				{
-					SerializePtr s_comp = boost::shared_dynamic_cast<ISerialize>(comp);
+					SerializePtr s_comp = DYNAMIC_CAST<ISerialize>(comp);
 					if(s_comp)
 					{
 						if(!s_comp->Serialize(serializer))
@@ -124,15 +124,15 @@ namespace GASS
 			for(int i  = 0 ; i < num_children; i++)
 			{
 				const std::string class_name = GetRTTI()->GetClassName();
-				ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(ComponentContainerFactory::Get().Create(class_name));
+				ComponentContainerTemplatePtr child = DYNAMIC_CAST<IComponentContainerTemplate>(ComponentContainerFactory::Get().Create(class_name));
 				if(!child)
 				{
 					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + class_name,"BaseComponentContainerTemplate::Serialize");
 				}
-				//ComponentContainerTemplatePtr child  = boost::shared_dynamic_cast<IComponentContainerTemplate> (CreateInstance());
+				//ComponentContainerTemplatePtr child  = DYNAMIC_CAST<IComponentContainerTemplate> (CreateInstance());
 				if(child)
 				{
-					SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
+					SerializePtr s_child = DYNAMIC_CAST<ISerialize>(child);
 					if(s_child)
 					{
 						if(!s_child->Serialize(serializer))
@@ -152,7 +152,7 @@ namespace GASS
 			while (iter != m_ComponentVector.end())
 			{
 				ComponentPtr comp = (*iter);
-				SerializePtr s_comp = boost::shared_dynamic_cast<ISerialize>(comp);
+				SerializePtr s_comp = DYNAMIC_CAST<ISerialize>(comp);
 				if(s_comp)
 				{
 					if(!s_comp->Serialize(serializer))
@@ -169,7 +169,7 @@ namespace GASS
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 			{
 				ComponentContainerTemplatePtr child = *go_iter;
-				SerializePtr s_child = boost::shared_dynamic_cast<ISerialize>(child);
+				SerializePtr s_child = DYNAMIC_CAST<ISerialize>(child);
 				if(s_child)
 				{
 					if(!s_child->Serialize(serializer))
@@ -220,7 +220,7 @@ namespace GASS
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
-			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
+			XMLSerializePtr s_comp = DYNAMIC_CAST<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->SaveXML(comp_elem);
 		}
@@ -232,7 +232,7 @@ namespace GASS
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::iterator cc_iter;
 		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); ++cc_iter)
 		{
-			XMLSerializePtr child = boost::shared_dynamic_cast<IXMLSerialize>(*cc_iter);
+			XMLSerializePtr child = DYNAMIC_CAST<IXMLSerialize>(*cc_iter);
 			if(child)
 			{
 				child->SaveXML(cc_elem);
@@ -257,7 +257,7 @@ namespace GASS
 					if(target_comp) //over loading component
 					{
 						ComponentPtr comp = LoadComponent(comp_elem);
-						ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+						ComponentTemplatePtr template_comp = DYNAMIC_CAST<IComponentTemplate>(comp);
 						if(template_comp)
 						{
 							template_comp->AssignFrom(target_comp);
@@ -282,7 +282,7 @@ namespace GASS
 					if(container)
 					{
 						AddChild(container);
-						XMLSerializePtr s_container = boost::shared_dynamic_cast<IXMLSerialize> (container);
+						XMLSerializePtr s_container = DYNAMIC_CAST<IXMLSerialize> (container);
 						if(s_container)
 							s_container->LoadXML(cc_elem);
 					}
@@ -319,7 +319,7 @@ namespace GASS
 		if(comp)
 		{
 			comp->SetName(comp_type);
-			XMLSerializePtr s_comp = boost::shared_dynamic_cast<IXMLSerialize> (comp);
+			XMLSerializePtr s_comp = DYNAMIC_CAST<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->LoadXML(comp_template);
 		}
@@ -347,7 +347,7 @@ namespace GASS
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
-			ComponentTemplatePtr template_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+			ComponentTemplatePtr template_comp = DYNAMIC_CAST<IComponentTemplate>(comp);
 			if(template_comp)
 			{
 				const std::string name = comp->GetName();
@@ -378,7 +378,7 @@ namespace GASS
 			{
 				new_object =  inheritance->CreateComponentContainer(part_id,manager);
 				
-				BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(new_object);
+				BaseReflectionObjectPtr ref_obj = DYNAMIC_CAST<BaseReflectionObject>(new_object);
 				//copy container attributes to new object
 				if(ref_obj)
 					BaseReflectionObject::SetProperties(ref_obj);
@@ -429,7 +429,7 @@ namespace GASS
 		BaseComponentContainerTemplate::ComponentContainerTemplateVector::const_iterator iter;
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); ++iter)
 		{
-			ComponentContainerTemplatePtr child = boost::shared_dynamic_cast<IComponentContainerTemplate>(*iter);
+			ComponentContainerTemplatePtr child = DYNAMIC_CAST<IComponentContainerTemplate>(*iter);
 			if(child)
 			{
 				ComponentContainerPtr new_child (child->CreateComponentContainer(part_id,manager));
@@ -457,14 +457,14 @@ namespace GASS
 		if(!container)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 				"Failed to create instance " + type,"BaseComponentContainerTemplate::CreateComponentContainer");
-		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(container);
+		BaseReflectionObjectPtr ref_obj = DYNAMIC_CAST<BaseReflectionObject>(container);
 		BaseReflectionObject::SetProperties(ref_obj);
 
 		ComponentVector::const_iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
-			ComponentTemplatePtr temp_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+			ComponentTemplatePtr temp_comp = DYNAMIC_CAST<IComponentTemplate>(comp);
 			if(temp_comp)
 			{
 				ComponentPtr new_comp = temp_comp->CreateCopy();
@@ -482,20 +482,20 @@ namespace GASS
 			const std::string old_template_name = cc->GetTemplateName();
 			if(old_template_name != "")
 			{
-				old_temp = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(manager->GetTemplate(old_template_name));
+				old_temp = DYNAMIC_CAST<BaseComponentContainerTemplate>(manager->GetTemplate(old_template_name));
 				if(old_temp)
 					SetInheritance(old_temp->GetInheritance());
 			}
 		}
 
-		BaseReflectionObjectPtr ref_obj = boost::shared_dynamic_cast<BaseReflectionObject>(cc);
+		BaseReflectionObjectPtr ref_obj = DYNAMIC_CAST<BaseReflectionObject>(cc);
 		ref_obj->SetProperties(shared_from_this());
 
 		IComponentContainer::ComponentIterator comp_iter = cc->GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			ComponentPtr comp = boost::shared_static_cast<IComponent>(comp_iter.getNext());
-			ComponentTemplatePtr temp_comp = boost::shared_dynamic_cast<IComponentTemplate>(comp);
+			ComponentPtr comp = STATIC_CAST<IComponent>(comp_iter.getNext());
+			ComponentTemplatePtr temp_comp = DYNAMIC_CAST<IComponentTemplate>(comp);
 			if(temp_comp)
 			{
 				ComponentPtr template_comp = temp_comp->CreateCopy();
@@ -523,12 +523,12 @@ namespace GASS
 				}
 			}
 			const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-			BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>(ComponentContainerFactory::Get().Create(factory_class_name));
+			BaseComponentContainerTemplatePtr new_child = DYNAMIC_CAST<BaseComponentContainerTemplate>(ComponentContainerFactory::Get().Create(factory_class_name));
 			if(!new_child)
 			{
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + factory_class_name,"BaseComponentContainerTemplate::Serialize");
 			}
-			//BaseComponentContainerTemplatePtr new_child = boost::shared_dynamic_cast<BaseComponentContainerTemplate>( CreateInstance());
+			//BaseComponentContainerTemplatePtr new_child = DYNAMIC_CAST<BaseComponentContainerTemplate>( CreateInstance());
 			if(!found && new_child)
 			{
 				new_child->CreateFromComponentContainer(child,manager,keep_inheritance);
@@ -566,7 +566,7 @@ namespace GASS
 		}
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); ++iter)
 		{
-			BaseComponentContainerTemplatePtr child = boost::shared_static_cast<BaseComponentContainerTemplate>( *iter);
+			BaseComponentContainerTemplatePtr child = STATIC_CAST<BaseComponentContainerTemplate>( *iter);
 			child->DebugPrint(tc+1);
 		}
 		//TAB(tc) << "Children - " << std::endl;

@@ -49,7 +49,7 @@ namespace GASS
 
 	void VehicleWheel::Init()
 	{
-		SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr wheel_obj(m_WheelObject,NO_THROW);
 		if(wheel_obj)
 		{
 			wheel_obj->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
@@ -58,7 +58,7 @@ namespace GASS
 
 	VehicleWheel::~VehicleWheel()
 	{
-		//SceneObjectPtr wheel_obj(m_WheelObject,boost::detail::sp_nothrow_tag());
+		//SceneObjectPtr wheel_obj(m_WheelObject,NO_THROW);
 		//if(wheel_obj)
 		//	wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
 	}
@@ -631,7 +631,7 @@ namespace GASS
 		for(int i = 0; i < m_VehicleWheels.size(); i++)
 		{
 			VehicleWheelPtr wheel = m_VehicleWheels[i];
-			SceneObjectPtr wheel_obj(wheel->m_WheelObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr wheel_obj(wheel->m_WheelObject,NO_THROW);
 
 			if(wheel_obj)
 			{

@@ -37,7 +37,7 @@ namespace GASS
 	private:
 	};*/
 	class TaskNode;
-	typedef boost::shared_ptr<TaskNode> TaskNodePtr;
+	typedef SPTR<TaskNode> TaskNodePtr;
 	class ITaskNodeListener
 	{
 	public:
@@ -46,8 +46,8 @@ namespace GASS
 	};
 	
 
-	typedef boost::weak_ptr<ITaskNodeListener> TaskNodeListenerWeakPtr;
-	typedef boost::shared_ptr<ITaskNodeListener> TaskNodeListenerPtr;
+	typedef WPTR<ITaskNodeListener> TaskNodeListenerWeakPtr;
+	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
 	class TaskNode
 	{
 	public:

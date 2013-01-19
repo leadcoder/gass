@@ -78,13 +78,13 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent));
-		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
+		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
-			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage));
 		}
 
-		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
 			selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage));
@@ -96,7 +96,7 @@ namespace GASS
 		m_Mode = message->GetEditMode();
 		if(m_Mode == GM_LOCAL)
 		{
-			SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 			if(selected)
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
@@ -121,14 +121,14 @@ namespace GASS
 	void GizmoComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		//Unregister from previous camera
-		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
+		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
-			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage));
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterMessage));
 		}
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
@@ -173,7 +173,7 @@ namespace GASS
 		if(m_Type == GT_FIXED_GRID)
 			return;
 		//Unregister form previous
-		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr  previous_selected(m_SelectedObject,NO_THROW);
 		if(previous_selected)
 		{
 			previous_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage));
@@ -237,7 +237,7 @@ namespace GASS
 	{
 		if(GIZMO_SENDER!= message->GetSenderID())
 		{
-			SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 			if(selected)
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
@@ -264,7 +264,7 @@ namespace GASS
 
 		if(m_Type == GT_GRID)
 			return;
-		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr camera(m_ActiveCameraObject,NO_THROW);
 		if(camera)
 		{
 			LocationComponentPtr cam_location = camera->GetFirstComponentByClass<ILocationComponent>();
@@ -299,7 +299,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent,1));
 		//GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest,1));
 		m_ActiveCameraObject = m_EditorSceneManager->GetActiveCameraObject();
-		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr cam_obj(m_ActiveCameraObject,NO_THROW);
 		if(cam_obj)
 		{
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationNotifyMessage,1));
@@ -682,7 +682,7 @@ namespace GASS
 	Quaternion  GizmoComponent::GetRotation(float delta)
 	{
 
-		SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
 			Quaternion selected_rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();

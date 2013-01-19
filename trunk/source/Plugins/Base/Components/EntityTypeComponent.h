@@ -27,7 +27,7 @@
 namespace GASS
 {
 	class EntityTypeComponent;
-	typedef boost::weak_ptr<EntityTypeComponent> EntityTypeComponentWeakPtr;
+	typedef WPTR<EntityTypeComponent> EntityTypeComponentWeakPtr;
 	class EntityTypeComponent : public Reflection<EntityTypeComponent,BaseSceneComponent>
 	{
 	public:
@@ -46,7 +46,7 @@ namespace GASS
 	
 	};
 
-	typedef boost::shared_ptr<EntityTypeComponent> EntityTypeComponentPtr;
+	typedef SPTR<EntityTypeComponent> EntityTypeComponentPtr;
 	
 }
 

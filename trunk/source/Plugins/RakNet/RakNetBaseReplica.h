@@ -36,7 +36,7 @@ class ReplicaManager;
 namespace GASS
 {
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
 
 	class RakNetBaseReplica  : public Replica
 	{

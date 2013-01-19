@@ -33,9 +33,9 @@ namespace Ogre
 namespace GASS
 {
 	//class ICameraComponent;
-	//typedef boost::shared_ptr<ICameraComponent> CameraComponentWeakPtr;
+	//typedef SPTR<ICameraComponent> CameraComponentWeakPtr;
 
-	class OgreViewport : public IViewport, public boost::enable_shared_from_this<OgreViewport>, public IMessageListener
+	class OgreViewport : public IViewport, public SHARE_CLASS<OgreViewport>, public IMessageListener
 	{
 		friend class OgreRenderWindow;
 	public:
@@ -52,5 +52,5 @@ namespace GASS
 		OgreRenderWindow* m_Window;
 		CameraComponentWeakPtr m_Camera;
 	};
-	typedef boost::shared_ptr<OgreViewport> OgreViewportPtr;
+	typedef SPTR<OgreViewport> OgreViewportPtr;
 }

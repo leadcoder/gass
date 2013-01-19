@@ -25,7 +25,7 @@ namespace GASS
 	
 	class MouseToolController;
 	class MessageManager;
-	typedef boost::shared_ptr<MouseToolController> MouseToolControllerPtr;
+	typedef SPTR<MouseToolController> MouseToolControllerPtr;
 
 	class EditorModuleExport EditorSceneManager :  public Reflection<EditorSceneManager, BaseSceneManager>
 	{
@@ -58,8 +58,8 @@ namespace GASS
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
 		void CreateCamera();
-		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,boost::detail::sp_nothrow_tag());}
-		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());}
+		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,NO_THROW);}
+		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,NO_THROW);}
 
 	protected:
 
@@ -74,5 +74,5 @@ namespace GASS
 		bool m_SceneObjectsSelectable;
 		SceneObjectWeakPtr m_CurrentSite;
 	};
-	typedef boost::shared_ptr<EditorSceneManager> EditorSceneManagerPtr;
+	typedef SPTR<EditorSceneManager> EditorSceneManagerPtr;
 }

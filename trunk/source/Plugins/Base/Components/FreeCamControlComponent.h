@@ -34,8 +34,8 @@ namespace GASS
 	class ILocationComponent;
 	class ICameraComponent;
 	class Scene;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef WPTR<Scene> SceneWeakPtr;
 
 	enum MotionMode
 	{

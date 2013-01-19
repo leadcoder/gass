@@ -27,6 +27,6 @@ namespace GASS
 		virtual ~PlatformTypeReflection();
 		static void Register();
 	};
-	typedef boost::shared_ptr<PlatformTypeReflection> PlatformTypeReflectionPtr;
+	typedef SPTR<PlatformTypeReflection> PlatformTypeReflectionPtr;
 }
 #endif

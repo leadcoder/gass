@@ -211,7 +211,7 @@ static int convexhull(const float* pts, int npts, int* out)
 		
 		for(size_t i = 0; i < components.size(); i++)
 		{
-			RecastConvexVolumeComponentPtr comp = boost::shared_dynamic_cast<RecastConvexVolumeComponent>(components[i]);
+			RecastConvexVolumeComponentPtr comp = DYNAMIC_CAST<RecastConvexVolumeComponent>(components[i]);
 			GeometryComponentPtr geom = comp->GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 			if(geom)
 			{
@@ -285,7 +285,7 @@ static int convexhull(const float* pts, int npts, int* out)
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastOffmeshMeshConnectionComponent>(components,true);
 		for(int i = 0; i < components.size(); i++)
 		{
-			RecastOffmeshMeshConnectionComponentPtr comp = boost::shared_dynamic_cast<RecastOffmeshMeshConnectionComponent>(components[i]);
+			RecastOffmeshMeshConnectionComponentPtr comp = DYNAMIC_CAST<RecastOffmeshMeshConnectionComponent>(components[i]);
 			Vec3 pos1 = comp->GetStartPos();
 			Vec3 pos2 = comp->GetEndPos();
 

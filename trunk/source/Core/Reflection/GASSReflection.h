@@ -70,15 +70,15 @@ namespace GASS
 	class Reflection : public TInClass
 	{
 	public :
-		typedef boost::shared_ptr<T> TPtr;
+		typedef SPTR<T> TPtr;
 		Reflection()
 		{
 		}
 
 		//This function make abtract functions in classes, use objectfactory instead!
-		/*virtual boost::shared_ptr<BaseReflectionObject> CreateInstance()
+		/*virtual SPTR<BaseReflectionObject> CreateInstance()
 		{
-			boost::shared_ptr<T>  instance (new T());
+			SPTR<T>  instance (new T());
 			return instance;
         }*/
 

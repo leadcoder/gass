@@ -27,8 +27,8 @@ namespace GASS
 {
 	class OSGGraphicsSceneManager;
 	class OSGLocationComponent;
-	typedef boost::shared_ptr<OSGLocationComponent>  OSGLocationComponentPtr;
-	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	typedef SPTR<OSGLocationComponent>  OSGLocationComponentPtr;
+	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 
 	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public osg::NodeCallback
 	{
@@ -92,8 +92,8 @@ namespace GASS
 		
 	};
 
-	typedef boost::weak_ptr<OSGLocationComponent> OSGLocationComponentWeakPtr;
-	typedef boost::shared_ptr<OSGLocationComponent> OSGLocationComponentPtr;
+	typedef WPTR<OSGLocationComponent> OSGLocationComponentWeakPtr;
+	typedef SPTR<OSGLocationComponent> OSGLocationComponentPtr;
 	
 }
 

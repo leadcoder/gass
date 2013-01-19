@@ -40,10 +40,10 @@ namespace GASS
 {
 	class ITaskNodeListener;
 	class TaskNode;
-	typedef boost::shared_ptr<ITaskNodeListener> TaskNodeListenerPtr;
-	typedef boost::shared_ptr<TaskNode> TaskNodePtr;
+	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
+	typedef SPTR<TaskNode> TaskNodePtr;
 
-	class GASSExport RunTimeController : public boost::enable_shared_from_this<RunTimeController>,  public IMessageListener
+	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener
 	{
 	public:
 		RunTimeController();
@@ -75,7 +75,7 @@ namespace GASS
 		double m_RequestDeltaTime;
 
 	};
-	typedef boost::shared_ptr<RunTimeController> RunTimeControllerPtr;
+	typedef SPTR<RunTimeController> RunTimeControllerPtr;
 }
 
 #endif

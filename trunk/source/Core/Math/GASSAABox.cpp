@@ -204,7 +204,7 @@ namespace GASS
 		const Vec3* p1,*p2;
 		for(i = 0; i < poly.m_VertexVector.size(); i++)
 		{
-			int i2;
+			size_t i2;
 			if(i == poly.m_VertexVector.size()-1) i2 = 0; else i2 = i+1;
 			p1 = &poly.m_VertexVector[i];
 			p2 = &poly.m_VertexVector[i2];

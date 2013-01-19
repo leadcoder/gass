@@ -51,7 +51,7 @@ namespace GASS
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		
-		//SceneObjectPtr  selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		//SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 		//if(selected)
 		{
 			//selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));
@@ -62,7 +62,7 @@ namespace GASS
 	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		//Unregister form previous selection
-		SceneObjectPtr  previous_selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr  previous_selected(m_SelectedObject,NO_THROW);
 		if(previous_selected)
 		{
 			previous_selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));

@@ -241,7 +241,7 @@ namespace GASS
 	{
 		CollisionResult result;
 		result.Coll = false;
-		BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(cam);
+		BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(cam);
 		if(cam && bsc)
 		{
 			CollisionSceneManagerPtr col_sm = bsc->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
@@ -275,7 +275,7 @@ namespace GASS
 
 		if(gizmo_result.Coll)
 		{
-			SceneObjectPtr col_obj(gizmo_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr col_obj(gizmo_result.CollSceneObject,NO_THROW);
 			if(col_obj)
 			{
 				info.m_3DPos = gizmo_result.CollPosition;
@@ -288,7 +288,7 @@ namespace GASS
 			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_SCENE_OBJECTS);
 			if(mesh_result.Coll)
 			{
-				SceneObjectPtr col_obj(mesh_result.CollSceneObject,boost::detail::sp_nothrow_tag());
+				SceneObjectPtr col_obj(mesh_result.CollSceneObject,NO_THROW);
 				if(col_obj)
 				{
 					info.m_3DPos = mesh_result.CollPosition;
@@ -360,7 +360,7 @@ namespace GASS
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
 		ScenePtr scene = m_EditorSceneManager->GetScene();;
-		SceneObjectPtr pointer(m_PointerObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr pointer(m_PointerObject,NO_THROW);
 		if(!pointer &&  scene)
 		{
 			GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("PointerObject",scene->GetRootSceneObject());
@@ -424,7 +424,7 @@ namespace GASS
 		if(m_ActiveTool)
 			m_ActiveTool->Update(delta);
 		//MouseMoved(info);
-		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)
 		{
 			std::stringstream ss;
@@ -452,7 +452,7 @@ namespace GASS
 			m_ActiveTool->MouseMoved(data,info);
 		
 		int mess_id = (int) this;
-		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()),mess_id));
+		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,NO_THROW),mess_id));
 		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 
 		return true;
@@ -501,7 +501,7 @@ namespace GASS
 			if(abs(delta.x) + abs(delta.y) < 0.001)
 			{
 				SceneObjectPtr selected = m_EditorSceneManager->GetSelectedObject();
-				if(SceneObjectPtr(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag()) == selected)
+				if(SceneObjectPtr(info.m_ObjectUnderCursor,NO_THROW) == selected)
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection

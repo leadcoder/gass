@@ -100,7 +100,7 @@ namespace GASS
 		}
 
 
-		LocationComponentPtr location = boost::shared_dynamic_cast<ILocationComponent>( shared_from_this());
+		LocationComponentPtr location = DYNAMIC_CAST<ILocationComponent>( shared_from_this());
 		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
 
 		MessagePtr pos_msg(new PositionMessage(m_Pos));
@@ -211,7 +211,7 @@ namespace GASS
 		GASS::IComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
+			SceneObjectPtr obj = STATIC_CAST<SceneObject>(iter.getNext());
 			OSGLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if(c_location)
 				c_location->SendTransMessage();
@@ -425,7 +425,7 @@ namespace GASS
 				parent->GetOSGNode()->addChild(m_TransformNode);
 			else
 			{
-				OSGGraphicsSceneManagerPtr scene_man(m_GFXSceneManager,boost::detail::sp_nothrow_tag());
+				OSGGraphicsSceneManagerPtr scene_man(m_GFXSceneManager,NO_THROW);
 				if(scene_man)
 				{
 					osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
@@ -451,13 +451,13 @@ namespace GASS
 	OSGLocationComponentPtr OSGLocationComponent::GetParentLocation()
 	{
 		OSGLocationComponentPtr parent_location;
-		SceneObjectPtr scene_obj  = boost::shared_static_cast<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr scene_obj  = STATIC_CAST<SceneObject>(GetSceneObject()->GetParent());
 		while(scene_obj && !parent_location)
 		{
 			parent_location  = scene_obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if(parent_location)
 				return parent_location;
-			scene_obj = boost::shared_static_cast<SceneObject>(scene_obj->GetParent());
+			scene_obj = STATIC_CAST<SceneObject>(scene_obj->GetParent());
 		}
 		return parent_location;
 	}

@@ -17,7 +17,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
+	typedef SPTR<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
 
 	class ObjectLockChangedEvent : public SceneEventMessage
 	{
@@ -30,7 +30,7 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		bool m_Lock;
 	};
-	typedef boost::shared_ptr<ObjectLockChangedEvent> ObjectLockChangedEventPtr;
+	typedef SPTR<ObjectLockChangedEvent> ObjectLockChangedEventPtr;
 
 	class ObjectVisibilityChangedEvent : public SceneEventMessage
 	{
@@ -43,7 +43,7 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		bool m_Visible;
 	};
-	typedef boost::shared_ptr<ObjectVisibilityChangedEvent > ObjectVisibilityChangedEventPtr;
+	typedef SPTR<ObjectVisibilityChangedEvent > ObjectVisibilityChangedEventPtr;
 
 	class ObjectSiteChangedEvent : public SceneEventMessage
 	{
@@ -54,7 +54,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectSiteChangedEvent> ObjectSiteChangedEventPtr;
+	typedef SPTR<ObjectSiteChangedEvent> ObjectSiteChangedEventPtr;
 
 
 	class ObjectZoomedEvent : public SceneEventMessage
@@ -66,7 +66,7 @@ namespace GASS
 	private:
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectZoomedEvent> ObjectZoomedEventPtr;
+	typedef SPTR<ObjectZoomedEvent> ObjectZoomedEventPtr;
 
 	class ShowObjectMenuRequest : public SceneRequestMessage
 	{
@@ -79,7 +79,7 @@ namespace GASS
 		SceneObjectPtr m_Object;
 		Vec2 m_Pos;
 	};
-	typedef boost::shared_ptr<ShowObjectMenuRequest> ShowObjectMenuRequestPtr;
+	typedef SPTR<ShowObjectMenuRequest> ShowObjectMenuRequestPtr;
 
 	class ObjectDroppedMessage : public BaseMessage
 	{
@@ -92,7 +92,7 @@ namespace GASS
 		std::string m_ObjectName;
 		Vec2 m_ScreenPosition;
 	};
-	typedef boost::shared_ptr<ObjectDroppedMessage> ObjectDroppedMessagePtr;
+	typedef SPTR<ObjectDroppedMessage> ObjectDroppedMessagePtr;
 
 
 	
@@ -109,7 +109,7 @@ namespace GASS
 		Vec3 m_3DPosition;
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<CursorMovedOverSceneEvent> CursorMovedOverSceneEventPtr;
+	typedef SPTR<CursorMovedOverSceneEvent> CursorMovedOverSceneEventPtr;
 
 
 
@@ -124,7 +124,7 @@ namespace GASS
 		Vec3 m_Position;
 		SceneObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<PaintRequest> PaintRequestPtr;
+	typedef SPTR<PaintRequest> PaintRequestPtr;
 
 	class ToolChangedEvent : public SystemEventMessage
 	{
@@ -159,7 +159,7 @@ namespace GASS
 		std::string m_ObjectName;
 		GASS::SceneObjectPtr m_ParentObject; 
 	};
-	typedef boost::shared_ptr<ToolChangedEvent> ToolChangedEventPtr;
+	typedef SPTR<ToolChangedEvent> ToolChangedEventPtr;
 
 
 	/*class WindowFocusChangedMessage : public BaseMessage
@@ -173,7 +173,7 @@ namespace GASS
 		std::string  m_Window;
 		bool m_Focus;
 	};
-	typedef boost::shared_ptr<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;*/
+	typedef SPTR<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;*/
 
 	class SceneChangedEvent: public SystemEventMessage
 	{
@@ -182,7 +182,7 @@ namespace GASS
 		  SystemEventMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<SceneChangedEvent> SceneChangedEventPtr;
+	typedef SPTR<SceneChangedEvent> SceneChangedEventPtr;
 		
 	class ObjectChangedMessage : public BaseMessage
 	{
@@ -193,7 +193,7 @@ namespace GASS
 	private:
 		BaseReflectionObjectPtr m_Object;
 	};
-	typedef boost::shared_ptr<ObjectChangedMessage> ObjectChangedMessagePtr;
+	typedef SPTR<ObjectChangedMessage> ObjectChangedMessagePtr;
 
 	class ObjectAttributeChangedEvent : public SceneEventMessage
 	{
@@ -206,7 +206,7 @@ namespace GASS
 		BaseReflectionObjectPtr m_Object;
 		std::vector<std::string> m_Attributes;
 	};
-	typedef boost::shared_ptr<ObjectAttributeChangedEvent> ObjectAttributeChangedEventPtr;
+	typedef SPTR<ObjectAttributeChangedEvent> ObjectAttributeChangedEventPtr;
 
 
 	class TextFeedbackMessage : public BaseMessage
@@ -218,7 +218,7 @@ namespace GASS
 	private:
 		std::string m_Text;
 	};
-	typedef boost::shared_ptr<TextFeedbackMessage> TextFeedbackMessagePtr;
+	typedef SPTR<TextFeedbackMessage> TextFeedbackMessagePtr;
 
 	class ClearFeedbackWindowMessage : public BaseMessage
 	{
@@ -226,7 +226,7 @@ namespace GASS
 		ClearFeedbackWindowMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay) {}
 	};
-	typedef boost::shared_ptr<ClearFeedbackWindowMessage> ClearFeedbackWindowMessagePtr;
+	typedef SPTR<ClearFeedbackWindowMessage> ClearFeedbackWindowMessagePtr;
 
 
 	class LayoutLoadedMessage : public BaseMessage
@@ -236,7 +236,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<LayoutLoadedMessage> LayoutLoadedMessagePtr;
+	typedef SPTR<LayoutLoadedMessage> LayoutLoadedMessagePtr;
 
 
 
@@ -253,7 +253,7 @@ namespace GASS
 		std::string m_Menu;
 		std::string m_Icon;
 	};
-	typedef boost::shared_ptr<CreateResourceMessage> CreateResourceMessagePtr;
+	typedef SPTR<CreateResourceMessage> CreateResourceMessagePtr;
 
 
 	class RemoveResourceMessage : public BaseMessage
@@ -267,7 +267,7 @@ namespace GASS
 		std::string m_Template;
 		std::string m_Menu;
 	};
-	typedef boost::shared_ptr<RemoveResourceMessage> RemoveResourceMessagePtr;
+	typedef SPTR<RemoveResourceMessage> RemoveResourceMessagePtr;
 
 	class AboutMessage : public BaseMessage
 	{
@@ -275,7 +275,7 @@ namespace GASS
 		AboutMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay) {}
 	};
-	typedef boost::shared_ptr<AboutMessage> AboutMessagePtr;
+	typedef SPTR<AboutMessage> AboutMessagePtr;
 
 
 
@@ -288,7 +288,7 @@ namespace GASS
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<NewGASSSceneMessage> NewGASSSceneMessagePtr;
+	typedef SPTR<NewGASSSceneMessage> NewGASSSceneMessagePtr;
 
 	class LoadGASSSceneMessage : public BaseMessage
 	{
@@ -299,7 +299,7 @@ namespace GASS
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<LoadGASSSceneMessage> LoadGASSSceneMessagePtr;
+	typedef SPTR<LoadGASSSceneMessage> LoadGASSSceneMessagePtr;
 
 
 	class SaveGASSSceneMessage : public BaseMessage
@@ -311,7 +311,7 @@ namespace GASS
 	private:
 		std::string  m_Filename;
 	};
-	typedef boost::shared_ptr<SaveGASSSceneMessage> SaveGASSSceneMessagePtr;
+	typedef SPTR<SaveGASSSceneMessage> SaveGASSSceneMessagePtr;
 
 	class EditModeMessage : public BaseMessage
 	{
@@ -322,7 +322,7 @@ namespace GASS
 	private:
 		std::string  m_Mode;
 	};
-	typedef boost::shared_ptr<EditModeMessage> EditModeMessagePtr;
+	typedef SPTR<EditModeMessage> EditModeMessagePtr;
 
 
 	/*class SnapSettingsMessage : public BaseMessage
@@ -336,7 +336,7 @@ namespace GASS
 		Float m_MSnap;
 		Float m_RSnap;
 	};
-	typedef boost::shared_ptr<SnapSettingsMessage> SnapSettingsMessagePtr;
+	typedef SPTR<SnapSettingsMessage> SnapSettingsMessagePtr;
 
 	class SnapModeMessage : public BaseMessage
 	{
@@ -349,7 +349,7 @@ namespace GASS
 		bool m_MSnap;
 		bool m_RSnap;
 	};
-	typedef boost::shared_ptr<SnapModeMessage> SnapModeMessagePtr;
+	typedef SPTR<SnapModeMessage> SnapModeMessagePtr;
 	*/
 
 
@@ -364,7 +364,7 @@ namespace GASS
 		Float m_Spacing;
 		Float m_Size;
 	};
-	typedef boost::shared_ptr<ChangeGridRequest> ChangeGridRequestPtr;
+	typedef SPTR<ChangeGridRequest> ChangeGridRequestPtr;
 	
 
 	class TemplateSelectedMessage : public BaseMessage
@@ -377,7 +377,7 @@ namespace GASS
 	private:
 		std::string  m_Name;
 	};
-	typedef boost::shared_ptr<TemplateSelectedMessage> TemplateSelectedMessagePtr;
+	typedef SPTR<TemplateSelectedMessage> TemplateSelectedMessagePtr;
 
 
 	class EditPositionMessage : public BaseMessage
@@ -392,7 +392,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef boost::shared_ptr<EditPositionMessage> EditPositionMessagePtr;
+	typedef SPTR<EditPositionMessage> EditPositionMessagePtr;
 
 }
 #endif 

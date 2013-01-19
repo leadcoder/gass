@@ -74,7 +74,7 @@ namespace GASS
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
 	};
 
-	typedef boost::shared_ptr<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;
+	typedef SPTR<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;
 }
 
 #endif

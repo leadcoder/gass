@@ -35,10 +35,10 @@ namespace GASS
 
 	void RotateTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(m_MouseIsDown && selected && CheckIfEditable(selected))
 		{
-			SceneObjectPtr gizmo(m_CurrentGizmo,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr gizmo(m_CurrentGizmo,NO_THROW);
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
@@ -79,7 +79,7 @@ namespace GASS
 		m_MouseIsDown = true;
 		m_MouseDownPos.Set(data.XAbsNorm,data.YAbsNorm);
 		m_RotateY = false;
-		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 		{
 			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
@@ -87,7 +87,7 @@ namespace GASS
 			{
 				m_CurrentGizmo = obj_under_cursor;
 			}
-			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,boost::detail::sp_nothrow_tag()))
+			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,NO_THROW))
 			{
 				m_RotateY = true;
 				int from_id = (int) this;
@@ -115,7 +115,7 @@ namespace GASS
 		m_CurrentGizmo.reset();
 
 
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected && CheckIfEditable(selected))
 		{
 			int from_id = (int) this;
@@ -130,7 +130,7 @@ namespace GASS
 
 		if(slection_mode) //selection mode
 		{
-			SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,NO_THROW);
 			if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 			{
 				if(!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
@@ -161,7 +161,7 @@ namespace GASS
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
 		}
 	}
@@ -174,7 +174,7 @@ namespace GASS
 
 	SceneObjectPtr RotateTool::GetMasterGizmo()
 	{
-		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr gizmo(m_MasterGizmoObject,NO_THROW);
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
@@ -187,7 +187,7 @@ namespace GASS
 
 			if(gizmo)
 			{
-				SceneObjectPtr current (m_SelectedObject,boost::detail::sp_nothrow_tag());
+				SceneObjectPtr current (m_SelectedObject,NO_THROW);
 				if(current)
 				{
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(current);

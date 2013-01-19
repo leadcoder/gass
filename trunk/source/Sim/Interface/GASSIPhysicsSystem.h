@@ -36,5 +36,5 @@ namespace GASS
 		virtual ~IPhysicsSystem(){}
 	protected:
 	};
-	typedef boost::shared_ptr<IPhysicsSystem> PhysicsSystemPtr;
+	typedef SPTR<IPhysicsSystem> PhysicsSystemPtr;
 }

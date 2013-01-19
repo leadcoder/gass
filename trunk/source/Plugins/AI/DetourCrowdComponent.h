@@ -61,7 +61,7 @@ namespace GASS
 
 
 		void OnGoToPosisiton(GotoPositionMessagePtr message);
-		RecastNavigationMeshComponentPtr  GetRecastNavigationMeshComponent() const {return RecastNavigationMeshComponentPtr(m_Mesh,boost::detail::sp_nothrow_tag());}
+		RecastNavigationMeshComponentPtr  GetRecastNavigationMeshComponent() const {return RecastNavigationMeshComponentPtr(m_Mesh,NO_THROW);}
 		void InitCrowd(dtCrowd* crowd, dtNavMesh* nav);
 		RecastNavigationMeshComponentPtr FindNavMesh(const std::string &name) const;
 		void CircularScattering(const std::vector<std::string>   &selection, int num_vehicles, const GASS::Vec3 &start_pos, double radius);
@@ -111,7 +111,7 @@ namespace GASS
 		std::vector<DetourCrowdAgentComponentPtr> m_Agents;
 
 	};
-	typedef boost::shared_ptr<DetourCrowdComponent> DetourCrowdComponentPtr;
-	typedef boost::weak_ptr<DetourCrowdComponent> DetourCrowdComponentWeakPtr;
+	typedef SPTR<DetourCrowdComponent> DetourCrowdComponentPtr;
+	typedef WPTR<DetourCrowdComponent> DetourCrowdComponentWeakPtr;
 }
 

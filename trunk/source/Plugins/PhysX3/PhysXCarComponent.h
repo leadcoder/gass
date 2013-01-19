@@ -27,7 +27,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
 	class PhysXCarComponent : public Reflection<PhysXCarComponent,BaseSceneComponent>
 	{
@@ -72,6 +72,6 @@ namespace GASS
 		float m_SteerInput;
 		physx::PxVehicleChassisData m_ChassisData;
 	};
-	typedef boost::shared_ptr<PhysXCarComponent> PhysXCarComponentPtr;
+	typedef SPTR<PhysXCarComponent> PhysXCarComponentPtr;
 }
 

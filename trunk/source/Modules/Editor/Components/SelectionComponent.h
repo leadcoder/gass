@@ -41,7 +41,7 @@ namespace GASS
 		AABox m_BBox;
 	};
 
-	typedef boost::shared_ptr<SelectionComponent> SelectionComponentPtr;
+	typedef SPTR<SelectionComponent> SelectionComponentPtr;
 }
 
 

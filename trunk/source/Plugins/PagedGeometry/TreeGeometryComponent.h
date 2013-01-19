@@ -48,7 +48,7 @@ namespace GASS
 {
 	class IHeightmapTerrainComponent;
 	class DensityMapComponent;
-	typedef boost::shared_ptr<DensityMapComponent> DensityMapComponentPtr;
+	typedef SPTR<DensityMapComponent> DensityMapComponentPtr;
 
 
 	class TreeGeometryComponent : public Reflection<TreeGeometryComponent,BaseSceneComponent>  , public Ogre::RenderTargetListener
@@ -253,7 +253,7 @@ namespace GASS
 
 		Ogre::Entity *m_TreeEntity;
 	};
-	typedef boost::shared_ptr<TreeGeometryComponent> TreeGeometryComponentPtr;
+	typedef SPTR<TreeGeometryComponent> TreeGeometryComponentPtr;
 }
 
 #endif

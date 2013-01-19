@@ -126,4 +126,18 @@ namespace GASS
 #include <boost/filesystem.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+
+#define SPTR boost::shared_ptr
+#define WPTR boost::weak_ptr
+#define FDECL(CLASS) class CLASS; typedef SPTR<CLASS> ##CLASS##Ptr; typedef WPTR<CLASS> ##CLASS##WeakPtr;
+#define PDECL(CLASS) typedef SPTR<CLASS> ##CLASS##Ptr; typedef WPTR<CLASS> ##CLASS##WeakPtr;
+
+#define IFDECL(CLASS) class I##CLASS##; typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
+#define IPDECL(CLASS) typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
+
+#define DYNAMIC_CAST boost::shared_dynamic_cast
+#define STATIC_CAST boost::shared_static_cast
+#define SHARE_CLASS boost::enable_shared_from_this
+#define NO_THROW boost::detail::sp_nothrow_tag()
+
 #endif // #ifndef COMMON_HH

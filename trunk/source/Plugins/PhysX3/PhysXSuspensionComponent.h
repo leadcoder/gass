@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
 	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>
 	{
@@ -133,6 +133,6 @@ namespace GASS
 		physx::PxPrismaticJoint *m_SpringJoint;
 		physx::PxD6Joint *m_Joint;
 	};
-	typedef boost::shared_ptr<PhysXSuspensionComponent> PhysXSuspensionComponentPtr;
+	typedef SPTR<PhysXSuspensionComponent> PhysXSuspensionComponentPtr;
 }
 

@@ -47,7 +47,7 @@ namespace GASS
 	*/
 
 	class GASSExport Scene : public Reflection<Scene, BaseReflectionObject>, 
-		public boost::enable_shared_from_this<Scene> , 
+		public SHARE_CLASS<Scene> , 
 		public IMessageListener
 	{
 		friend class SceneObject;
@@ -147,12 +147,12 @@ namespace GASS
 		/**Get first SceneManager of certain class. This function allow you to pass the class as a template 
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstSceneManagerByClass(bool no_throw=false) const
+		SPTR<T> GetFirstSceneManagerByClass(bool no_throw=false) const
 		{
-			boost::shared_ptr<T> ret;
+			SPTR<T> ret;
 			for(int i = 0 ; i < m_SceneManagers.size(); i++)
 			{
-				ret = boost::shared_dynamic_cast<T>(m_SceneManagers[i]);
+				ret = DYNAMIC_CAST<T>(m_SceneManagers[i]);
 				if(ret)
 					return ret;
 			}

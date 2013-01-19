@@ -235,7 +235,7 @@ namespace GASS
 
 	void SimEngine::DestroyScene(SceneWeakPtr scene)
 	{
-		ScenePtr the_scene = ScenePtr(scene,boost::detail::sp_nothrow_tag());
+		ScenePtr the_scene = ScenePtr(scene,NO_THROW);
 		if(!the_scene)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene no valid", "SimEngine::DestroyScene");
 		the_scene->OnUnload();
@@ -286,7 +286,7 @@ namespace GASS
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
 		ComponentContainerPtr cc  = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
-		SceneObjectPtr so = boost::shared_static_cast<SceneObject>(cc);
+		SceneObjectPtr so = STATIC_CAST<SceneObject>(cc);
 		return so;
 	}
 

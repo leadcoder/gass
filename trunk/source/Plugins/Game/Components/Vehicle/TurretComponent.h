@@ -34,8 +34,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
 	{
@@ -85,6 +85,6 @@ namespace GASS
 		Float m_AngularVelocity;
 		Float m_RotValue;
 	};
-	typedef boost::shared_ptr<TurretComponent> TurretComponentPtr;
+	typedef SPTR<TurretComponent> TurretComponentPtr;
 }
 #endif

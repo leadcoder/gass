@@ -24,7 +24,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef boost::weak_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
 	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>
 	{

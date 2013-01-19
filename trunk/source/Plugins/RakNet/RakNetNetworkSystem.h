@@ -173,7 +173,7 @@ namespace GASS
 		double m_LocationSendFrequency;
 		PacketLogger m_Logger;
 	};
-	typedef boost::shared_ptr<RakNetNetworkSystem> RakNetNetworkSystemPtr;
+	typedef SPTR<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }
 
 #endif

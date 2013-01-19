@@ -21,9 +21,8 @@
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "tinyxml.h"
-
 #include "Core/Reflection/GASSPropertyTypes.h"
+#include "tinyxml.h"
 
 namespace GASS
 {
@@ -53,7 +52,7 @@ namespace GASS
 	
 	ComponentContainerPtr BaseComponent::GetOwner() const 
 	{
-		return ComponentContainerPtr(m_Owner,boost::detail::sp_nothrow_tag());
+		return ComponentContainerPtr(m_Owner,NO_THROW);
 	}
 
 	void BaseComponent::SetOwner(ComponentContainerPtr owner)
@@ -61,7 +60,6 @@ namespace GASS
 		m_Owner = owner;
 	}
 	
-
 	bool BaseComponent::Serialize(ISerializer* serializer)
 	{
 		if(serializer->Loading())
@@ -98,19 +96,19 @@ namespace GASS
 	ComponentPtr BaseComponent::CreateCopy()
 	{
 		const std::string factory_class_name = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		BaseComponentPtr new_comp = boost::shared_static_cast<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
+		BaseComponentPtr new_comp = STATIC_CAST<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
 		if(!new_comp)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"BaseComponent::CreateCopy");
 		}
-		//BaseComponentPtr new_comp = boost::shared_static_cast<BaseComponent>(CreateInstance());
+		//BaseComponentPtr new_comp = STATIC_CAST<BaseComponent>(CreateInstance());
 		BaseReflectionObject::SetProperties(new_comp);
 		return new_comp;
 	}
 
 	void BaseComponent::AssignFrom(ComponentPtr obj)
 	{
-		BaseComponentPtr  base_comp = boost::shared_static_cast<BaseComponent>(obj);
+		BaseComponentPtr  base_comp = STATIC_CAST<BaseComponent>(obj);
 		BaseReflectionObject::SetProperties(base_comp);
 	}	
 	

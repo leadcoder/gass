@@ -452,7 +452,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
 		while(cc_iter1.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_dynamic_cast<GASS::SceneObject>(cc_iter1.getNext());
+			SceneObjectPtr child = DYNAMIC_CAST<GASS::SceneObject>(cc_iter1.getNext());
 			wheels.push_back(child);
 		}
 

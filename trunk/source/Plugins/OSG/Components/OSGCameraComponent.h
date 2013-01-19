@@ -64,7 +64,7 @@ namespace GASS
 		bool m_UpdateCameraFromLocation;
 	};
 
-	typedef boost::shared_ptr<OSGCameraComponent> OSGCameraComponentPtr;
-	typedef boost::weak_ptr<OSGCameraComponent> OSGCameraComponentWeakPtr;
+	typedef SPTR<OSGCameraComponent> OSGCameraComponentPtr;
+	typedef WPTR<OSGCameraComponent> OSGCameraComponentWeakPtr;
 }
 

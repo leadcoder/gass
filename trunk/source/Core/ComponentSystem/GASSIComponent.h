@@ -27,8 +27,8 @@ namespace GASS
 {
 	class IComponentContainer;
 
-	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
-	typedef boost::weak_ptr<IComponentContainer> ComponentContainerWeakPtr;
+	typedef SPTR<IComponentContainer> ComponentContainerPtr;
+	typedef WPTR<IComponentContainer> ComponentContainerWeakPtr;
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -71,8 +71,8 @@ namespace GASS
 		virtual ComponentContainerPtr GetOwner() const = 0;
 	};
 
-	typedef boost::shared_ptr<IComponent> ComponentPtr;
-	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
+	typedef SPTR<IComponent> ComponentPtr;
+	typedef WPTR<IComponent> ComponentWeakPtr;
 
 }
 #endif // #ifndef ICOMPONENT_HH

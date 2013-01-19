@@ -49,6 +49,6 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::weak_ptr<ILocationComponent> LocationComponentWeakPtr;
-	typedef boost::shared_ptr<ILocationComponent> LocationComponentPtr;
+	typedef WPTR<ILocationComponent> LocationComponentWeakPtr;
+	typedef SPTR<ILocationComponent> LocationComponentPtr;
 }

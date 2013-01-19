@@ -41,5 +41,5 @@ namespace GASS
 		Quaternion m_Rotation;
 		Vec3 m_Position;
 	};
-	typedef boost::shared_ptr<KeyframeAnimationComponent> KeyframeAnimationComponentPtr;
+	typedef SPTR<KeyframeAnimationComponent> KeyframeAnimationComponentPtr;
 }

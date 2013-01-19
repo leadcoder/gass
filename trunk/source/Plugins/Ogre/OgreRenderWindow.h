@@ -32,7 +32,7 @@ namespace GASS
 {
 	class OgreGraphicsSystem;
 	class OgreViewport;
-	typedef boost::shared_ptr<OgreViewport> OgreViewportPtr;
+	typedef SPTR<OgreViewport> OgreViewportPtr;
 
 	class OgreRenderWindow  : public IRenderWindow
 	{
@@ -54,5 +54,5 @@ namespace GASS
 		OgreViewportVector m_Viewports;
 		OgreGraphicsSystem* m_System;
 	};
-	typedef boost::shared_ptr<OgreRenderWindow> OgreRenderWindowPtr;
+	typedef SPTR<OgreRenderWindow> OgreRenderWindowPtr;
 }

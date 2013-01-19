@@ -64,5 +64,5 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags) = 0;
 	protected:
 	};
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 }

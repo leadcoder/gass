@@ -314,7 +314,7 @@ namespace GASS
 		bool m_Initialized;
 
 	};
-	typedef boost::shared_ptr<HydraxWaterComponent> HydraxWaterComponentPtr;
+	typedef SPTR<HydraxWaterComponent> HydraxWaterComponentPtr;
 }
 
 #endif

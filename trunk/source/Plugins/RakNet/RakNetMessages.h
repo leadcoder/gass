@@ -35,7 +35,7 @@ namespace GASS
 	private:
 		RakNetBase* m_Replica;
 	};
-	typedef boost::shared_ptr<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
+	typedef SPTR<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
 
 	class RakNetMasterReplica;
 	class MasterReplicaCreatedEvent : public SystemEventMessage
@@ -47,7 +47,7 @@ namespace GASS
 	private:
 		RakNetMasterReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<MasterReplicaCreatedEvent> MasterReplicaCreatedEventPtr;
+	typedef SPTR<MasterReplicaCreatedEvent> MasterReplicaCreatedEventPtr;
 
 
 	class RakNetChildReplica;
@@ -60,7 +60,7 @@ namespace GASS
 	private:
 		RakNetChildReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<ChildReplicaCreatedEvent > ChildReplicaCreatedEventPtr;
+	typedef SPTR<ChildReplicaCreatedEvent > ChildReplicaCreatedEventPtr;
 
 	class ComponentGotReplicaEvent : public SystemEventMessage
 	{
@@ -71,7 +71,7 @@ namespace GASS
 	private:
 		RakNetChildReplica* m_Replica;
 	};
-	typedef boost::shared_ptr<ComponentGotReplicaEvent> ComponentGotReplicaEventPtr;
+	typedef SPTR<ComponentGotReplicaEvent> ComponentGotReplicaEventPtr;
 
 
 	class NetworkPostUpdateEvent : public SystemEventMessage
@@ -84,7 +84,7 @@ namespace GASS
 		  }
 		
 	};
-	typedef boost::shared_ptr<NetworkPostUpdateEvent> NetworkPostUpdateEventPtr;
+	typedef SPTR<NetworkPostUpdateEvent> NetworkPostUpdateEventPtr;
 
 
 	

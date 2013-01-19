@@ -34,7 +34,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;
+	typedef SPTR<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;
 
 	class WaypointListUpdatedMessage : public BaseMessage
 	{
@@ -45,7 +45,7 @@ namespace GASS
 	private:
 		
 	};
-	typedef boost::shared_ptr<WaypointListUpdatedMessage> WaypointListUpdatedMessagePtr;
+	typedef SPTR<WaypointListUpdatedMessage> WaypointListUpdatedMessagePtr;
 
 
 	class TriggerEnterMessage : public BaseMessage
@@ -57,7 +57,7 @@ namespace GASS
 	private:
 		SceneObjectPtr  m_Trigger;
 	};
-	typedef boost::shared_ptr<TriggerEnterMessage> TriggerEnterMessagePtr;
+	typedef SPTR<TriggerEnterMessage> TriggerEnterMessagePtr;
 
 
 	class TriggerExitMessage : public BaseMessage
@@ -70,7 +70,7 @@ namespace GASS
 		SceneObjectPtr  m_Trigger;
 		
 	};
-	typedef boost::shared_ptr<TriggerExitMessage > TriggerExitMessagePtr;
+	typedef SPTR<TriggerExitMessage > TriggerExitMessagePtr;
 
 
 }

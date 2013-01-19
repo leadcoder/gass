@@ -42,7 +42,7 @@ namespace GASS
 	};
 
 	class PhysXBodyComponent;
-	typedef boost::shared_ptr<PhysXBodyComponent> PhysXBodyComponentPtr;
+	typedef SPTR<PhysXBodyComponent> PhysXBodyComponentPtr;
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>
 	{
@@ -86,5 +86,5 @@ namespace GASS
 		physx::PxBatchQuery* m_WheelRaycastBatchQuery;
 		std::vector<physx::PxVehicleWheels*> m_Vehicles;
 	};
-	typedef boost::shared_ptr<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
+	typedef SPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
 }

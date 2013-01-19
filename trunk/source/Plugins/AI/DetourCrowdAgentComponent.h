@@ -76,5 +76,5 @@ namespace GASS
 		Quaternion m_DesiredRot;
 		double m_AccTime;
 	};
-	typedef boost::shared_ptr<DetourCrowdAgentComponent> DetourCrowdAgentComponentPtr;
+	typedef SPTR<DetourCrowdAgentComponent> DetourCrowdAgentComponentPtr;
 }

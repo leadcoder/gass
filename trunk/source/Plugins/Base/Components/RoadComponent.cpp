@@ -128,7 +128,7 @@ namespace GASS
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
-				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
+				BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(terrain);
 				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 			}
 
@@ -139,7 +139,7 @@ namespace GASS
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
 			for(int i = 0 ;  i < components.size(); i++)
 			{
-				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
+				BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(components[i]);
 				if(last_obj != bsc->GetSceneObject())
 					bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 				last_obj = bsc->GetSceneObject();
@@ -172,7 +172,7 @@ namespace GASS
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
-				BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(terrain);
+				BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(terrain);
 				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
 			}
 		}

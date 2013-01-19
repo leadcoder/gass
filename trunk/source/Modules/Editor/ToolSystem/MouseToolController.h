@@ -25,13 +25,13 @@ namespace GASS
 	class EditorSceneManager;
 	class Scene;
 	class ICameraComponent;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
-	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<ICameraComponent> CameraComponentWeakPtr;
+	typedef SPTR<ICameraComponent> CameraComponentPtr;
 	class EditorSystem; 
 
-	class EditorModuleExport MouseToolController : public boost::enable_shared_from_this<MouseToolController>, public IMessageListener, public IMouseListener
+	class EditorModuleExport MouseToolController : public SHARE_CLASS<MouseToolController>, public IMessageListener, public IMouseListener
 	{
 		friend class IMouseTool;
 	public:

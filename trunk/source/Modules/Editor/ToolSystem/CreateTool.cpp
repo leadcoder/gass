@@ -48,9 +48,9 @@ namespace GASS
 	void CreateTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,NO_THROW);
 
-		SceneObjectPtr parent_obj(m_ParentObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr parent_obj(m_ParentObject,NO_THROW);
 		if(obj_under_cursor)
 		{
 			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);

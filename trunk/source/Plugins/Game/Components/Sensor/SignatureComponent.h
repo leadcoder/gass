@@ -38,7 +38,7 @@ namespace GASS
 		Vec3 m_Velocity;
 	};
 
-	typedef boost::shared_ptr<SignatureComponent> SignatureComponentPtr;
-	typedef boost::weak_ptr<SignatureComponent> SignatureComponentWeakPtr;
+	typedef SPTR<SignatureComponent> SignatureComponentPtr;
+	typedef WPTR<SignatureComponent> SignatureComponentWeakPtr;
 }
 #endif

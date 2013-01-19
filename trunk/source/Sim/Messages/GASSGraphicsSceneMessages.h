@@ -31,8 +31,8 @@ namespace GASS
 {
 	class SceneObject;
 	class Scene;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
 
 
 	//*********************************************************
@@ -74,7 +74,7 @@ namespace GASS
 		double m_SunRise;
 		double m_SunSet;
 	};
-	typedef boost::shared_ptr<TimeOfDayRequest> TimeOfDayRequestPtr;
+	typedef SPTR<TimeOfDayRequest> TimeOfDayRequestPtr;
 
 	/**
 	Change scene weather. 
@@ -108,7 +108,7 @@ namespace GASS
 		float m_Clouds;
 		Vec3 m_FogColor;
 	};
-	typedef boost::shared_ptr<WeatherRequest> WeatherRequestPtr;
+	typedef SPTR<WeatherRequest> WeatherRequestPtr;
 
 
 

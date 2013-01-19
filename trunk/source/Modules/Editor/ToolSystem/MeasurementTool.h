@@ -10,9 +10,9 @@ namespace GASS
 	class MouseToolController;
 	class SceneObject;
 	class IComponent;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<IComponent> ComponentWeakPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<IComponent> ComponentWeakPtr;
 
 
 	class EditorModuleExport MeasurementTool : public IMouseTool

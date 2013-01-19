@@ -50,7 +50,7 @@ namespace GASS
 		void OnTriggerEnter(TriggerEnterMessagePtr);
 		void OnTriggerExit(TriggerExitMessagePtr);
 		void OnHealthChanged(HealthChangedMessagePtr message);
-		SceneObjectPtr GetCurrentTarget() const {return SceneObjectPtr(m_CurrentTarget,boost::detail::sp_nothrow_tag());}
+		SceneObjectPtr GetCurrentTarget() const {return SceneObjectPtr(m_CurrentTarget,NO_THROW);}
 
 		SceneObjectPtr GetRandomLocationObject(const SceneObjectID &id) const;
 		Vec3 GetRandomLocation(SceneObjectPtr so) const;
@@ -75,5 +75,5 @@ namespace GASS
 		Float m_Health;
 		
 	};
-	typedef boost::shared_ptr<PedestrianBehaviorComponent> PedestrianBehaviorComponentPtr;
+	typedef SPTR<PedestrianBehaviorComponent> PedestrianBehaviorComponentPtr;
 }

@@ -74,7 +74,7 @@ namespace GASS
 		EditorSceneManagerPtr m_EditorSceneManager;
 	};
 
-	typedef boost::shared_ptr<GizmoComponent> GizmoComponentPtr;
+	typedef SPTR<GizmoComponent> GizmoComponentPtr;
 }
 
 

@@ -49,7 +49,7 @@ namespace GASS
 		*/
 		virtual bool Serialize(ISerializer*) = 0;
 	};
-	typedef boost::shared_ptr<ISerialize> SerializePtr;
+	typedef SPTR<ISerialize> SerializePtr;
 }
 
 #endif // #ifndef ISERIALIZE_HH

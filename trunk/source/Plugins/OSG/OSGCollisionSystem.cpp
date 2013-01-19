@@ -286,10 +286,10 @@ namespace GASS
 							//OSGNodeData* data = (OSGNodeData*)intersection.nodePath[i]->getUserData();
 							if(data)
 							{
-								BaseSceneComponentPtr bo(data->m_Component,boost::detail::sp_nothrow_tag());
+								BaseSceneComponentPtr bo(data->m_Component,NO_THROW);
 								if(bo)
 								{
-									GeometryComponentPtr geom  = boost::shared_dynamic_cast<IGeometryComponent>(bo);
+									GeometryComponentPtr geom  = DYNAMIC_CAST<IGeometryComponent>(bo);
 									if(geom)
 									{
 										/*bool found = false;

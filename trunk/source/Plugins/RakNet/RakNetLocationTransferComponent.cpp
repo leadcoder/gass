@@ -97,7 +97,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
 
 		
-		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
@@ -119,7 +119,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
 			for(int i = 0;  i< components.size(); i++)
 			{
-				BaseSceneComponentPtr comp = boost::shared_dynamic_cast<BaseSceneComponent>(components[i]);
+				BaseSceneComponentPtr comp = DYNAMIC_CAST<BaseSceneComponent>(components[i]);
 				comp->GetSceneObject()->PostMessage(disable_msg);
 			}
 
@@ -128,7 +128,7 @@ namespace GASS
 			{
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				BaseSceneComponentPtr base = boost::shared_dynamic_cast<BaseSceneComponent>(location);
+				BaseSceneComponentPtr base = DYNAMIC_CAST<BaseSceneComponent>(location);
 				base->SetPropertyByType("AttachToParent",boost::any(true));
 			}
 		}
@@ -190,7 +190,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnDelete()
 	{
 
-		SceneObjectPtr parent = boost::shared_dynamic_cast<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
@@ -228,7 +228,7 @@ namespace GASS
 				unsigned int time_stamp = RakNet::GetTime();
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
-				boost::shared_ptr<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
+				SPTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
 				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediate(serialize_message);
 			}
@@ -350,7 +350,7 @@ namespace GASS
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
 			NetworkPackagePtr package = message->GetPackage();
-			TransformationPackagePtr trans_package = boost::shared_dynamic_cast<TransformationPackage>(package);
+			TransformationPackagePtr trans_package = DYNAMIC_CAST<TransformationPackage>(package);
 
 			//if(trans_package->TimeStamp < m_TimeStampHistory[0])
 			//	std::cout << "wrong order!!" << std::endl;

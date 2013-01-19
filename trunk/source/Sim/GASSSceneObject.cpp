@@ -70,14 +70,14 @@ namespace GASS
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(*iter);
 			bsc->InitializePointers();
 			++iter;
 		}
 		IComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 			child->InitializePointers();
 		}
 	}
@@ -95,14 +95,14 @@ namespace GASS
 		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 			child->OnDelete();
 		}
 
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(*iter);
 			
 			bsc->OnDelete();
 			++iter;
@@ -111,7 +111,7 @@ namespace GASS
 		//MessagePtr msg(new UnloadComponentsMessage());
 		//SendImmediate(msg);
 
-		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+		SceneObjectPtr this_obj = STATIC_CAST<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
 	}
@@ -120,7 +120,7 @@ namespace GASS
 	{
 		m_Scene = scene;
 
-		SceneObjectPtr this_obj = boost::shared_static_cast<SceneObject>(shared_from_this());
+		SceneObjectPtr this_obj = STATIC_CAST<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
 	
@@ -131,7 +131,7 @@ namespace GASS
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = boost::shared_dynamic_cast<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(*iter);
 			bsc->OnInitialize();
 			++iter;
 		}
@@ -145,7 +145,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 			child->Initialize(scene);
 		}
 
@@ -163,7 +163,7 @@ namespace GASS
 		{
 			container = ComponentContainerPtr(container->GetParent());
 		}
-		return  boost::shared_static_cast<SceneObject>(container);
+		return  STATIC_CAST<SceneObject>(container);
 	}
 
 	struct MessageSyncExecutor
@@ -178,7 +178,7 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(m_CCVector[i]);
+				SceneObjectPtr obj = STATIC_CAST<SceneObject>(m_CCVector[i]);
 				obj->SyncMessages(m_DeltaTime);
 			}
 		}
@@ -196,7 +196,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerVector::const_iterator go_iter;
 			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); ++go_iter)
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>( *go_iter);
+				SceneObjectPtr child = STATIC_CAST<SceneObject>( *go_iter);
 				child->SyncMessages(delta_time);
 			}*/
 			
@@ -204,7 +204,7 @@ namespace GASS
 			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 				child->SyncMessages(delta_time);
 			}
 
@@ -221,7 +221,7 @@ namespace GASS
 		IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 			num += child->GetQueuedMessages();
 		}
 		return num;
@@ -233,7 +233,7 @@ namespace GASS
 		IComponentContainer::ComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
+			BaseSceneComponentPtr comp = STATIC_CAST<BaseSceneComponent>(comp_iter.getNext());
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				components.push_back(comp);
@@ -245,7 +245,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 				child->GetComponentsByClass(components, class_name);
 			}
 		}
@@ -257,7 +257,7 @@ namespace GASS
 		IComponentContainer::ComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = boost::shared_static_cast<BaseSceneComponent>(comp_iter.getNext());
+			BaseSceneComponentPtr comp = STATIC_CAST<BaseSceneComponent>(comp_iter.getNext());
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				return comp;
@@ -268,7 +268,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(cc_iter.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
 				ComponentPtr res = child->GetFirstComponentByClass(class_name,recursive);
 				if(res)
 					return res;
@@ -284,7 +284,7 @@ namespace GASS
 			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
 			while(iter != m_ComponentContainerVector.end())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 
 				if(exact_math)
 				{
@@ -313,7 +313,7 @@ namespace GASS
 		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
 		while(iter != m_ComponentContainerVector.end())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 			iter++;
 			if(exact_math)
 			{
@@ -337,7 +337,7 @@ namespace GASS
 			
 			while(iter != m_ComponentContainerVector.end())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 				SceneObjectPtr ret = child->GetFirstChildByName(name,exact_math,recursive);
 				if(ret)
 					return ret;
@@ -352,7 +352,7 @@ namespace GASS
 		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
 		while(iter != m_ComponentContainerVector.end())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 			iter++;
 			if(child->GetID() == id)
 			{
@@ -363,7 +363,7 @@ namespace GASS
 		iter =  m_ComponentContainerVector.begin();
 		while(iter != m_ComponentContainerVector.end())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 			iter++;
 			SceneObjectPtr ret = child->GetChildByID(id);
 			if(ret)
@@ -380,7 +380,7 @@ namespace GASS
 			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
 			while(iter != m_ComponentContainerVector.end())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(*iter);
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(*iter);
 
 				if(exact_math)
 				{
@@ -482,12 +482,12 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 		if(cc_elem->Attribute("from_template"))
 		{
 			std::string template_name = cc_elem->Attribute("from_template");
-			cc = boost::shared_static_cast<IComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+			cc = STATIC_CAST<IComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 		}
 		else
 		{
 			const std::string cc_name = cc_elem->Value();
-			cc = boost::shared_static_cast<IComponentContainer>(ComponentContainerFactory::Get().Create(cc_name));
+			cc = STATIC_CAST<IComponentContainer>(ComponentContainerFactory::Get().Create(cc_name));
 		}
 		return cc;
 	}

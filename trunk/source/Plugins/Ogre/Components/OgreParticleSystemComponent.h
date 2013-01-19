@@ -61,6 +61,6 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 	};
 
-	typedef boost::shared_ptr<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;
+	typedef SPTR<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;
 }
 

@@ -36,5 +36,5 @@ namespace GASS
 	private:
 		
 	};
-	typedef boost::shared_ptr<AISystem> AISystemPtr; 
+	typedef SPTR<AISystem> AISystemPtr; 
 }

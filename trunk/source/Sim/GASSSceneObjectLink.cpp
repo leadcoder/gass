@@ -38,7 +38,7 @@ namespace GASS
 	{
 		if(m_Initialized)
 		{
-			SceneObjectPtr owner(m_Owner,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr owner(m_Owner,NO_THROW);
 			if(owner && m_LinkObjectID != UNKOWN_LINK_ID)
 			{
 				SceneObjectPtr obj;
@@ -70,7 +70,7 @@ namespace GASS
 		{
 			container = ComponentContainerPtr(container->GetParent());
 		}
-		return  boost::shared_static_cast<SceneObject>(container);
+		return  STATIC_CAST<SceneObject>(container);
 	}
 
 
@@ -83,12 +83,12 @@ namespace GASS
 
 	/*SceneObjectPtr SceneObjectLink::GetLinkObject() const
 	{
-		return SceneObjectPtr(m_Link,boost::detail::sp_nothrow_tag());
+		return SceneObjectPtr(m_Link,NO_THROW);
 	}*/
 
 	SceneObjectPtr SceneObjectLink::GetOwnerObject() const
 	{
-		return SceneObjectPtr(m_Owner,boost::detail::sp_nothrow_tag());
+		return SceneObjectPtr(m_Owner,NO_THROW);
 	}
 }
 

@@ -136,7 +136,7 @@ namespace GASS
 			BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 				OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 				if(page)
 				{
@@ -212,7 +212,7 @@ namespace GASS
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
-				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
+				OgreTerrainPageComponentPtr page = DYNAMIC_CAST<OgreTerrainPageComponent>(comps[i]);
 				if(page)
 				{
 					page->LoadFromFile();
@@ -372,7 +372,7 @@ namespace GASS
 		BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
 			OgreTerrainPageComponentPtr page = child->GetFirstComponentByClass<OgreTerrainPageComponent>();
 			if(page)
 			{
@@ -409,7 +409,7 @@ namespace GASS
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
-				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
+				OgreTerrainPageComponentPtr page = DYNAMIC_CAST<OgreTerrainPageComponent>(comps[i]);
 				if(page)
 				{
 
@@ -432,7 +432,7 @@ namespace GASS
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
-				OgreTerrainPageComponentPtr page = boost::shared_dynamic_cast<OgreTerrainPageComponent>(comps[i]);
+				OgreTerrainPageComponentPtr page = DYNAMIC_CAST<OgreTerrainPageComponent>(comps[i]);
 				if(page)
 				{
 

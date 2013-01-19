@@ -36,7 +36,7 @@ namespace GASS
 	{
 		m_MouseIsDown = true;
 
-		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)// && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
 		{
 			m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
@@ -54,7 +54,7 @@ namespace GASS
 	void SelectTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
 			int from_id = (int) this;

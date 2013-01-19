@@ -97,7 +97,7 @@ namespace GASS
 		HeightmapTerrainComponentPtr terrain;
 		if(m_GeometryTemplate != "")
 		{
-			terrain = boost::shared_dynamic_cast<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			terrain = DYNAMIC_CAST<IHeightmapTerrainComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else terrain = GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 		return terrain;
@@ -106,7 +106,7 @@ namespace GASS
 	dGeomID ODETerrainGeometryComponent::CreateTerrain()
 	{
 		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
-		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+		GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainGeom = terrain.get();

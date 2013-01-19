@@ -55,7 +55,7 @@ namespace GASS
 			while(iter.hasMoreElements())
 			{
 				//Lock recursive?
-				SceneObjectPtr obj = boost::shared_static_cast<SceneObject>(iter.getNext());
+				SceneObjectPtr obj = STATIC_CAST<SceneObject>(iter.getNext());
 				AddStaticObject(obj, true);
 			}
 		}
@@ -122,7 +122,7 @@ namespace GASS
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = camera;
@@ -136,7 +136,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 			while(iter.hasMoreElements())
 			{
-				SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+				SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
 				AddStaticObject(child,rec);
 			}
 		}
@@ -144,7 +144,7 @@ namespace GASS
 
 	SceneObjectPtr EditorSceneManager::GetSelectedObject() const
 	{
-		return SceneObjectPtr(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		return SceneObjectPtr(m_SelectedObject,NO_THROW);
 	}
 
 	void EditorSceneManager::SelectSceneObject(SceneObjectPtr obj)
@@ -234,16 +234,16 @@ namespace GASS
 
 	SceneObjectPtr EditorSceneManager::GetObjectSite() const
 	{
-		return SceneObjectPtr(m_CurrentSite,boost::detail::sp_nothrow_tag());
+		return SceneObjectPtr(m_CurrentSite,NO_THROW);
 	}
 
 	void EditorSceneManager::MoveCameraToObject(SceneObjectPtr obj)	
 	{
-		SceneObjectPtr cam_obj (m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
-		CameraComponentPtr cam(m_ActiveCamera,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr cam_obj (m_ActiveCameraObject,NO_THROW);
+		CameraComponentPtr cam(m_ActiveCamera,NO_THROW);
 		if(cam_obj && cam)
 		{
-			BaseReflectionObjectPtr cam_props = boost::shared_dynamic_cast<BaseReflectionObject>(cam);
+			BaseReflectionObjectPtr cam_props = DYNAMIC_CAST<BaseReflectionObject>(cam);
 			bool ortho_mode = false;
 
 			float object_size = 10;

@@ -26,7 +26,7 @@
 namespace GASS
 {
 	class IComponent;
-	typedef boost::shared_ptr<IComponent> ComponentPtr;
+	typedef SPTR<IComponent> ComponentPtr;
 
 
 	/** \addtogroup GASSCore
@@ -79,7 +79,7 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::shared_ptr<IComponentTemplate> ComponentTemplatePtr;
-	typedef boost::weak_ptr<IComponentTemplate> ComponentTemplateWeakPtr;
+	typedef SPTR<IComponentTemplate> ComponentTemplatePtr;
+	typedef WPTR<IComponentTemplate> ComponentTemplateWeakPtr;
 }
 #endif // #ifndef ICOMPONENTTEMPLATE_HH

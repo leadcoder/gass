@@ -23,6 +23,6 @@ namespace GASS
 		virtual ~PlatformTeamReflection();
 		static void Register();
 	};
-	typedef boost::shared_ptr<PlatformTeamReflection> PlatformTeamReflectionPtr;
+	typedef SPTR<PlatformTeamReflection> PlatformTeamReflectionPtr;
 }
 #endif

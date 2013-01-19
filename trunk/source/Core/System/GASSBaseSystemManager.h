@@ -46,7 +46,7 @@ namespace GASS
 		Convinience system manager that load system from xml file
 	*/
 	
-	class GASSCoreExport BaseSystemManager : public ISystemManager, public boost::enable_shared_from_this<BaseSystemManager>
+	class GASSCoreExport BaseSystemManager : public ISystemManager, public SHARE_CLASS<BaseSystemManager>
 	{
 	public:
 		BaseSystemManager();
@@ -81,12 +81,12 @@ namespace GASS
 			of the class type exist tbe first one loaded will be returned
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstSystem()
+		SPTR<T> GetFirstSystem()
 		{
-			boost::shared_ptr<T> sys;
+			SPTR<T> sys;
 			for(size_t i = 0 ; i < m_Systems.size(); i++)
 			{
-				sys = boost::shared_dynamic_cast<T>(m_Systems[i]);
+				sys = DYNAMIC_CAST<T>(m_Systems[i]);
 				if(sys)
 					break;
 			}

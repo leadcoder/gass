@@ -197,7 +197,7 @@ namespace GASS
 		if(filename == "") //not loaded
 			return;
 
-		boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
+		SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
@@ -242,7 +242,7 @@ namespace GASS
 			SetLighting(m_Lighting);
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(boost::shared_dynamic_cast<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
 
 			//expand children
 			if(m_Expand)
@@ -275,7 +275,7 @@ namespace GASS
 			//add top transform or replace current location?
 			//move top transform to location!
 			//node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
-			//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
+			//SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 			//GetOSGNode()->setPosition();
 			//osg::Matrix mat = node->asTransform()->asMatrixTransform()->getMatrix();
 			//HACK: reset top transform to get zoom function to work on nodes that dont have location!
@@ -301,7 +301,7 @@ namespace GASS
 		SceneObjectPtr so;
 		try
 		{
-			so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+			so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 		}
 		catch(...)
 		{
@@ -323,7 +323,7 @@ namespace GASS
 				LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();	
 
 				}*/
-				boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+				SPTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
 				node->setUserData(node_data);
 				mesh_comp->SetMeshNode(node);
@@ -357,7 +357,7 @@ namespace GASS
 				SceneObjectPtr so;
 				try
 				{
-					so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+					so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 				}
 				catch(std::exception& e)
 				{
@@ -393,7 +393,7 @@ namespace GASS
 							}*/
 
 
-				/*			boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+				/*			SPTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 							OSGNodeData* node_data = new OSGNodeData(mesh_comp);
 							child_node->setUserData(node_data);
 							mesh_comp->SetMeshNode(child_node);
@@ -418,7 +418,7 @@ namespace GASS
 			SceneObjectPtr so;
 			try
 			{
-				so = boost::shared_dynamic_cast<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+				so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 			}
 			catch(std::exception& e)
 			{
@@ -434,7 +434,7 @@ namespace GASS
 				{
 					LogManager::getSingleton().stream() << "found Geode";	
 
-					boost::shared_ptr<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+					SPTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 					OSGNodeData* node_data = new OSGNodeData(mesh_comp);
 					node->setUserData(node_data);
 					mesh_comp->SetMeshNode(node);
@@ -519,7 +519,7 @@ namespace GASS
 			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
 			if (geode) 
 			{
-				//boost::shared_ptr<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
+				//SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 				//lc->GetOSGNode()->addChild(geode);
 
 				osg::BoundingBox bbox = geode->getBoundingBox();

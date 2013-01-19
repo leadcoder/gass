@@ -45,7 +45,7 @@ namespace GASS
 		MessageFuncPtr m_Callback;
 		int m_Priority;
 	};
-	typedef boost::shared_ptr<MessageReg> MessageRegPtr;
+	typedef SPTR<MessageReg> MessageRegPtr;
 	typedef std::list<MessageRegPtr> MessageRegList;
 	
 	
@@ -63,7 +63,7 @@ namespace GASS
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
-	typedef boost::shared_ptr<MessageTypeListeners> MessageTypeListenersPtr;
+	typedef SPTR<MessageTypeListeners> MessageTypeListenersPtr;
 
 }
 #endif 

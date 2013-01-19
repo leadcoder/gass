@@ -34,8 +34,8 @@ namespace GASS
 {
 	class Scene;
 	class SceneObject;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
-	typedef boost::weak_ptr<Scene> SceneWeakPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+	typedef WPTR<Scene> SceneWeakPtr;
 
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>

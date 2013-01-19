@@ -1,17 +1,3 @@
-/****************************************************************************
-*                                                                           *
-* HiFiEngine                                                                *
-* Copyright (C)2003 - 2005 Johan Hedstrom                                   *
-* Email: hifiengine@gmail.com                                               *
-* Web page: http://n00b.dyndns.org/HiFiEngine                               *
-*                                                                           *
-* HiFiEngine is only used with knowledge from the author. This software     *
-* is not allowed to redistribute without permission from the author.        *
-* For further license information, please turn to the product home page or  *
-* contact author. Abuse against the HiFiEngine license is prohibited by law.*
-*                                                                           *
-*****************************************************************************/ 
-
 #ifndef MYGUI_SYSTEM
 #define MYGUI_SYSTEM
 
@@ -45,7 +31,7 @@ namespace GASS
 
 		MyGUI::Gui* mGUI;
 	};
-	typedef boost::shared_ptr<MyGUISystem> MyGUISystemPtr;
+	typedef SPTR<MyGUISystem> MyGUISystemPtr;
 }
 
 #endif

@@ -31,7 +31,7 @@
 namespace GASS
 {
 	class ISystemManager;
-	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
+	typedef WPTR<ISystemManager> SystemManagerWeakPtr;
 
 
 	/** \addtogroup GASSCore

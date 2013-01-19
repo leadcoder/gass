@@ -67,11 +67,11 @@ namespace GASS
 	dGeomID ODEMeshGeometryComponent::CreateODEGeom()
 	{
 		dGeomID geom_id = 0;
-		MeshComponentPtr mesh  = boost::shared_dynamic_cast<IMeshComponent>(GetGeometry());
+		MeshComponentPtr mesh  = DYNAMIC_CAST<IMeshComponent>(GetGeometry());
 		if(mesh)
 		{
 			std::string col_mesh_id = GetSceneObject()->GetName();
-			ResourceComponentPtr res  = boost::shared_dynamic_cast<IResourceComponent>(GetGeometry());
+			ResourceComponentPtr res  = DYNAMIC_CAST<IResourceComponent>(GetGeometry());
 			if(res)
 			{
 				col_mesh_id = res->GetResource().Name();

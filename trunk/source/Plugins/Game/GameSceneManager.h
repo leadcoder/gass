@@ -45,7 +45,7 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 	protected:
 	};
-	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr; 
+	typedef SPTR<GameSceneManager> GameSceneManagerPtr; 
 
 }
 #endif

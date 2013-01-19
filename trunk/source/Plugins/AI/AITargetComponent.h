@@ -52,6 +52,6 @@ namespace GASS
 		AITargetComponent::TargetType m_Type;
 	};
 
-	typedef boost::shared_ptr<AITargetComponent> AITargetComponentPtr;
+	typedef SPTR<AITargetComponent> AITargetComponentPtr;
 }
 #endif

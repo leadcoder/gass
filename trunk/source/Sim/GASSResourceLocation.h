@@ -48,6 +48,6 @@ namespace GASS
 		ResourceGroupPtr m_Owner;
 
 	};
-	typedef boost::shared_ptr<ResourceLocation> ResourceLocationPtr;
-	typedef boost::weak_ptr<ResourceLocation> ResourceLocationWeakPtr;
+	typedef SPTR<ResourceLocation> ResourceLocationPtr;
+	typedef WPTR<ResourceLocation> ResourceLocationWeakPtr;
 }

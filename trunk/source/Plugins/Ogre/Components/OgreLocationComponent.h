@@ -38,7 +38,7 @@ namespace Ogre
 namespace GASS
 {
 	class OgreLocationComponent;
-	typedef boost::shared_ptr<OgreLocationComponent> OgreLocationComponentPtr;
+	typedef SPTR<OgreLocationComponent> OgreLocationComponentPtr;
 
 	class GASSPluginExport OgreLocationComponent : public Reflection<OgreLocationComponent,BaseSceneComponent>, public ILocationComponent, public Ogre::Node::Listener, public OgreSceneNodeSource
 	{

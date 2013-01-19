@@ -60,7 +60,7 @@ namespace GASS
 		std::string GetPropType(IProperty* prop) const;
 		std::map<std::string,SchemaObject> m_Objects;
 	};
-	typedef boost::shared_ptr<SchemaManager> SchemaManagerPtr;
+	typedef SPTR<SchemaManager> SchemaManagerPtr;
 
 }
 #endif 

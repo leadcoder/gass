@@ -134,7 +134,7 @@ namespace GASS
 			if(message->GetControllerType() == CT_AXIS && new_value)
 			{
 				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
-				boost::shared_ptr<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
+				SPTR<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
 				
 				
 				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
@@ -187,7 +187,7 @@ namespace GASS
 		{
 			int id = 8888;
 			NetworkPackagePtr package = message->GetPackage();
-			InputPackagePtr input_package = boost::shared_dynamic_cast<InputPackage>(package);
+			InputPackagePtr input_package = DYNAMIC_CAST<InputPackage>(package);
 
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			SystemAddress address = raknet->GetRakPeer()->GetInternalID();

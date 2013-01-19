@@ -71,12 +71,12 @@ namespace GASS
 		unsigned int TimeStamp;
 	};
 
-	typedef boost::shared_ptr<InputPackage> InputPackagePtr;
+	typedef SPTR<InputPackage> InputPackagePtr;
 
 	class SceneObject;
 	
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>
 	{
@@ -100,6 +100,6 @@ namespace GASS
 		typedef std::map<int,float> InputHistoryMap;
 		InputHistoryMap m_InputHistory;
 	};
-	typedef boost::shared_ptr<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
+	typedef SPTR<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
 }
 #endif

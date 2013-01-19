@@ -38,8 +38,8 @@ namespace GASS
 	void GoToPositionTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
-		SceneObjectPtr object_under_c(info.m_ObjectUnderCursor,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
+		SceneObjectPtr object_under_c(info.m_ObjectUnderCursor,NO_THROW);
 		
 		if(selected && object_under_c)
 		{

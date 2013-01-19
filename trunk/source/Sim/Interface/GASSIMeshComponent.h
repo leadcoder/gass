@@ -43,6 +43,6 @@ namespace GASS
 		*/
 		virtual void GetMeshData(MeshDataPtr mesh_data) const =0;
 	};
-	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
+	typedef SPTR<IMeshComponent> MeshComponentPtr;
 }
 

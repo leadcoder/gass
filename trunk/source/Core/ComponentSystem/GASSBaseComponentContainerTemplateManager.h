@@ -36,7 +36,7 @@ namespace GASS
 	class IComponentContainerTemplate;
 	class BaseObjectTemplate;
 
-	typedef boost::shared_ptr<IComponentContainer> ComponentContainerPtr;
+	typedef SPTR<IComponentContainer> ComponentContainerPtr;
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -55,7 +55,7 @@ namespace GASS
 		  will work with this implementation.
 	*/
 
-	class GASSCoreExport BaseComponentContainerTemplateManager: public boost::enable_shared_from_this<BaseComponentContainerTemplateManager> , public IComponentContainerTemplateManager
+	class GASSCoreExport BaseComponentContainerTemplateManager: public SHARE_CLASS<BaseComponentContainerTemplateManager> , public IComponentContainerTemplateManager
 	{
 		friend class IComponentContainerTemplate;
 	public:
@@ -130,8 +130,8 @@ namespace GASS
 		std::string m_ObjectIDSuffix;
 		TemplateMap m_TemplateMap;
 	};
-	typedef boost::shared_ptr<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	typedef boost::shared_ptr<BaseComponentContainerTemplateManager const> BaseComponentContainerTemplateManagerConstPtr;
+	typedef SPTR<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
+	typedef SPTR<BaseComponentContainerTemplateManager const> BaseComponentContainerTemplateManagerConstPtr;
 }
 
 #endif // #ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH

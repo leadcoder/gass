@@ -23,7 +23,7 @@ namespace GASS
 	public:
 		IMouseTool()
 		{
-			m_SharedFromThis = boost::shared_ptr<IMouseTool>(this,message_null_deleter());
+			m_SharedFromThis = SPTR<IMouseTool>(this,message_null_deleter());
 		}
 		virtual ~IMouseTool(void){}
 		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info) = 0;
@@ -34,12 +34,12 @@ namespace GASS
 		virtual void Stop() = 0;
 		virtual void Start() = 0;
 
-		boost::shared_ptr<IMouseTool> shared_from_this()
+		SPTR<IMouseTool> shared_from_this()
 		{
 			return m_SharedFromThis;
 		}
 
 	protected:
-		boost::shared_ptr<IMouseTool> m_SharedFromThis;
+		SPTR<IMouseTool> m_SharedFromThis;
 	};
 }

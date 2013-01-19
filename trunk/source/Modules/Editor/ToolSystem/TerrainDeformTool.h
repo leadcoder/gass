@@ -14,8 +14,8 @@ namespace GASS
 	class SceneObject;
 	class MouseToolController;
 	class IMessage;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::shared_ptr<IMessage> MessagePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef SPTR<IMessage> MessagePtr;
 
 
 	class EditorModuleExport TerrainDeformTool : public IMouseTool

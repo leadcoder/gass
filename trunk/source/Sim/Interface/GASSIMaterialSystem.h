@@ -37,5 +37,5 @@ namespace GASS
 		virtual MaterialData GetMaterial(const std::string material_name) const = 0;
 	private:
 	};
-	typedef boost::shared_ptr<IMaterialSystem> MaterialSystemPtr;
+	typedef SPTR<IMaterialSystem> MaterialSystemPtr;
 }

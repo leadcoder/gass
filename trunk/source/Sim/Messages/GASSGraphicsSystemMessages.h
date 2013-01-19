@@ -36,11 +36,11 @@ namespace GASS
 	class ICameraComponent;
 	class IViewport;
 
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::shared_ptr<ICameraComponent> CameraComponentPtr;
-	typedef boost::shared_ptr<IViewport> ViewportPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef SPTR<ICameraComponent> CameraComponentPtr;
+	typedef SPTR<IViewport> ViewportPtr;
 
 
 	/**
@@ -68,7 +68,7 @@ namespace GASS
 		void* m_ShadowNode;
 		std::string m_RenderSystem;
 	};
-	typedef boost::shared_ptr<GraphicsSceneManagerLoadedEvent> GraphicsSceneManagerLoadedEventPtr;
+	typedef SPTR<GraphicsSceneManagerLoadedEvent> GraphicsSceneManagerLoadedEventPtr;
 
 
 	/**
@@ -89,7 +89,7 @@ namespace GASS
 	private:
 		void* m_Handle;
 	};
-	typedef boost::shared_ptr<RenderWindowCreatedEvent> MainWindowCreatedEventPtr;
+	typedef SPTR<RenderWindowCreatedEvent> MainWindowCreatedEventPtr;
 
 
 
@@ -113,7 +113,7 @@ namespace GASS
 	private:
 		ViewportPtr m_Viewport;
 	};
-	typedef boost::shared_ptr<CameraChangedEvent> CameraChangedEventPtr;
+	typedef SPTR<CameraChangedEvent> CameraChangedEventPtr;
 
 	
 	class ViewportMovedOrResizedEvent : public SystemEventMessage
@@ -135,7 +135,7 @@ namespace GASS
 		int m_Width,m_Height,m_PosX,m_PosY;
 		std::string m_VPName;
 	};
-	typedef boost::shared_ptr<ViewportMovedOrResizedEvent> ViewportMovedOrResizedEventPtr;
+	typedef SPTR<ViewportMovedOrResizedEvent> ViewportMovedOrResizedEventPtr;
 
 
 	class RenderWindowResizedEvent : public SystemEventMessage
@@ -153,7 +153,7 @@ namespace GASS
 		int m_Width,m_Height;
 		std::string m_WinName;
 	};
-	typedef boost::shared_ptr<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
+	typedef SPTR<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
 
 	/**
 	Message used for changing camera for viewport. 
@@ -178,7 +178,7 @@ namespace GASS
 		CameraComponentPtr m_Camera;
 		std::string m_Viewport;
 	};
-	typedef boost::shared_ptr<ChangeCameraRequest> ChangeCameraRequestPtr;
+	typedef SPTR<ChangeCameraRequest> ChangeCameraRequestPtr;
 
 
 	//debug messages
@@ -199,7 +199,7 @@ namespace GASS
 		Vec3 m_Start,m_End;
 		Vec4 m_Color;
 	};
-	typedef boost::shared_ptr<DrawLineRequest> DrawLineRequestPtr;
+	typedef SPTR<DrawLineRequest> DrawLineRequestPtr;
 
 
 	class DrawCircleRequest : public SystemRequestMessage
@@ -227,7 +227,7 @@ namespace GASS
 		int m_Segments;
 		bool m_Filled;
 	};
-	typedef boost::shared_ptr<DrawCircleRequest> DrawCircleRequestPtr;
+	typedef SPTR<DrawCircleRequest> DrawCircleRequestPtr;
 
 	class CreateTextBoxRequest : public SystemRequestMessage
 	{
@@ -254,7 +254,7 @@ namespace GASS
 		  float m_Width;
 		  float m_Height;
 	};
-	typedef boost::shared_ptr<CreateTextBoxRequest> CreateTextBoxRequestPtr;
+	typedef SPTR<CreateTextBoxRequest> CreateTextBoxRequestPtr;
 }
 
 #endif

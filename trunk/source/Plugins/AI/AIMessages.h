@@ -36,7 +36,7 @@ namespace GASS
 	private:
 		bool m_Open;
 	};
-	typedef boost::shared_ptr<DoorMessage> DoorMessagePtr;
+	typedef SPTR<DoorMessage> DoorMessagePtr;
 
 
 	class HealthChangedMessage : public BaseMessage
@@ -51,7 +51,7 @@ namespace GASS
 	private:
 		double m_Health;
 	};
-	typedef boost::shared_ptr<HealthChangedMessage> HealthChangedMessagePtr;
+	typedef SPTR<HealthChangedMessage> HealthChangedMessagePtr;
 
 	class StanceChangedMessage : public BaseMessage
 	{
@@ -65,6 +65,6 @@ namespace GASS
 	private:
 		int m_Stance;
 	};
-	typedef boost::shared_ptr<StanceChangedMessage> StanceChangedMessagePtr;
+	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;
 }
 #endif

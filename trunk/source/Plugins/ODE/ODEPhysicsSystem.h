@@ -45,6 +45,6 @@ namespace GASS
 		bool m_Init;
 	};
 
-	typedef boost::shared_ptr<ODEPhysicsSystem> ODEPhysicsSystemPtr;
+	typedef SPTR<ODEPhysicsSystem> ODEPhysicsSystemPtr;
 }
 

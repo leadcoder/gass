@@ -184,7 +184,7 @@ namespace GASS
 				IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 				while(children.hasMoreElements())
 				{
-					SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+					SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
 					DetourCrowdAgentComponentPtr agent = child_obj->GetFirstComponentByClass<DetourCrowdAgentComponent>();
 					if(agent)
 					{
@@ -223,7 +223,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
 			}
 		}
 	}
@@ -342,7 +342,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
 			DetourCrowdAgentComponentPtr agent = child_obj->GetFirstComponentByClass<DetourCrowdAgentComponent>();
 			if(agent)
 			{
@@ -361,7 +361,7 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 		for(int i = 0; i < components.size(); i++)
 		{
-			DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+			DetourCrowdAgentComponentPtr comp = DYNAMIC_CAST<DetourCrowdAgentComponent>(components[i]);
 			comp->GetSceneObject()->SendImmediate(message);
 		}
 	}
@@ -559,7 +559,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 			for(int i = 0; i < components.size(); i++)
 			{
-				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				DetourCrowdAgentComponentPtr comp = DYNAMIC_CAST<DetourCrowdAgentComponent>(components[i]);
 				comp->SetRadius(value);
 			}
 		}
@@ -575,7 +575,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 			for(int i = 0; i < components.size(); i++)
 			{
-				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				DetourCrowdAgentComponentPtr comp = DYNAMIC_CAST<DetourCrowdAgentComponent>(components[i]);
 				comp->SetSeparationWeight(m_SeparationWeight);
 			}
 		}
@@ -596,7 +596,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 			for(int i = 0; i < components.size(); i++)
 			{
-				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				DetourCrowdAgentComponentPtr comp = DYNAMIC_CAST<DetourCrowdAgentComponent>(components[i]);
 				comp->SetHeight(value);
 			}
 		}
@@ -615,7 +615,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass<DetourCrowdAgentComponent>(components);
 			for(int i = 0; i < components.size(); i++)
 			{
-				DetourCrowdAgentComponentPtr comp = boost::shared_dynamic_cast<DetourCrowdAgentComponent>(components[i]);
+				DetourCrowdAgentComponentPtr comp = DYNAMIC_CAST<DetourCrowdAgentComponent>(components[i]);
 				comp->GetSceneObject()->PostMessage(MessagePtr(new HealthChangedMessage(value)));
 			}
 		}

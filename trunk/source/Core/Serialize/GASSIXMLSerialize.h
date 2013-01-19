@@ -47,6 +47,6 @@ namespace GASS
 		virtual void SaveXML(TiXmlElement *xml_elem) = 0;
 	};
 
-	typedef boost::shared_ptr<IXMLSerialize> XMLSerializePtr;
+	typedef SPTR<IXMLSerialize> XMLSerializePtr;
 }
 #endif // #ifndef IXMLSERIALIZE_HH

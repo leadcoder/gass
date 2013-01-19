@@ -148,10 +148,10 @@ namespace GASS
 		float m_ShadowDirectionalLightExtrusionDistance;
 		Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
 		Ogre::SceneManager* m_SceneMgr;
-		boost::weak_ptr<OgreGraphicsSystem> m_GFXSystem;
+		WPTR<OgreGraphicsSystem> m_GFXSystem;
 		std::vector<IComponent*> m_GFXComponents;
 		DebugDrawer* m_DebugDrawer;
 	};
-	typedef boost::shared_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
-	typedef boost::weak_ptr<OgreGraphicsSceneManager> OgreGraphicsSceneManagerWeakPtr;
+	typedef SPTR<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
+	typedef WPTR<OgreGraphicsSceneManager> OgreGraphicsSceneManagerWeakPtr;
 }

@@ -224,7 +224,7 @@ namespace GASS
 		}
 		dBodySetData(m_ODEBodyID, (void*)this);
 
-		boost::shared_ptr<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		SPTR<ILocationComponent> location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);

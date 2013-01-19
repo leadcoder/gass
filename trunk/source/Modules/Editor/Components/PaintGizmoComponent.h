@@ -44,7 +44,7 @@ namespace GASS
 		HeightmapTerrainComponentPtr m_HMTerrain;
 	};
 
-	typedef boost::shared_ptr<PaintGizmoComponent> PaintGizmoComponentPtr;
+	typedef SPTR<PaintGizmoComponent> PaintGizmoComponentPtr;
 }
 
 

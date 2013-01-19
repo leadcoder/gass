@@ -42,7 +42,7 @@ namespace GASS
 		impossible, so we keep it public for now.
 	*/
 
-	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public boost::enable_shared_from_this<BaseSceneManager>, public ISceneManager, public IXMLSerialize, public IMessageListener, public ISystemListener
+	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public SHARE_CLASS<BaseSceneManager>, public ISceneManager, public IXMLSerialize, public IMessageListener, public ISystemListener
 	{
 	public:
 		BaseSceneManager();
@@ -53,7 +53,7 @@ namespace GASS
 		//ISceneManager
 		virtual std::string GetName() const {return m_Name;}
 		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual ScenePtr GetScene() const {return ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual ScenePtr GetScene() const {return ScenePtr(m_Scene,NO_THROW);}//allow null pointer}
 		virtual void SetScene(ScenePtr owner){m_Scene = owner;}
 		virtual void Register(SceneManagerListenerPtr listener);
 		virtual void Unregister(SceneManagerListenerPtr listener);

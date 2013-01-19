@@ -42,7 +42,7 @@ namespace GASS
 		std::string m_ManName;// m_OrthoWindowHeight;
 		osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
 	};
-	typedef boost::shared_ptr<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
-	typedef boost::weak_ptr<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;
+	typedef SPTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
+	typedef WPTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;
 }
 

@@ -43,6 +43,6 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::weak_ptr<INetworkComponent> NetworkComponentWeakPtr;
-	typedef boost::shared_ptr<INetworkComponent> NetworkComponentPtr;
+	typedef WPTR<INetworkComponent> NetworkComponentWeakPtr;
+	typedef SPTR<INetworkComponent> NetworkComponentPtr;
 }

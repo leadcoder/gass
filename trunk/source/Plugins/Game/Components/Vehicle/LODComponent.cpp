@@ -82,7 +82,7 @@ namespace GASS
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(LODComponent::OnCameraChanged,CameraChangedEvent));
 
-		SceneObjectPtr cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr cam(m_ActiveCameraObject,NO_THROW);
 		if(cam)
 		{
 			cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage));
@@ -93,9 +93,9 @@ namespace GASS
 	void LODComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 		
-		SceneObjectPtr prev_cam(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr prev_cam(m_ActiveCameraObject,NO_THROW);
 		if(prev_cam)
 		{
 			prev_cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage));

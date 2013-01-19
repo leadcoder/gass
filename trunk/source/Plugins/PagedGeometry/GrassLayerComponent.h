@@ -133,7 +133,7 @@ protected:
 		static IHeightmapTerrainComponent *m_Terrain;
 	};
 
-	typedef boost::shared_ptr<GrassLayerComponent> GrassLayerComponentPtr;
+	typedef SPTR<GrassLayerComponent> GrassLayerComponentPtr;
 }
 
 #endif

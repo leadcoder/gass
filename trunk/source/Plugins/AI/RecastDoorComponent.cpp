@@ -80,12 +80,12 @@ namespace GASS
 	
 	void RecastDoorComponent::UpdatePolyState(bool value)
 	{
-		RecastNavigationMeshComponentPtr nav_mesh(m_NavMeshComp,boost::detail::sp_nothrow_tag());
+		RecastNavigationMeshComponentPtr nav_mesh(m_NavMeshComp,NO_THROW);
 
 		if(!nav_mesh)
 		{
 			m_NavMeshComp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<RecastNavigationMeshComponent>(true);
-			nav_mesh = RecastNavigationMeshComponentPtr (m_NavMeshComp,boost::detail::sp_nothrow_tag());
+			nav_mesh = RecastNavigationMeshComponentPtr (m_NavMeshComp,NO_THROW);
 		}
 		
 		if (nav_mesh && nav_mesh->GetNavMesh() && nav_mesh->GetNavMeshQuery())
@@ -97,7 +97,7 @@ namespace GASS
 				{
 					boost::any any_size;
 					ComponentPtr comp = GetSceneObject()->GetFirstComponentByClass("BoxGeometryComponent",false);
-					BaseReflectionObjectPtr bro = boost::shared_dynamic_cast<BaseReflectionObject>(comp);
+					BaseReflectionObjectPtr bro = DYNAMIC_CAST<BaseReflectionObject>(comp);
 					bro->GetPropertyByType("Size",any_size);
 					Vec3 size = boost::any_cast<Vec3>(any_size);
 					size = size* 0.5;

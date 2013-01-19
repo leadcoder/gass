@@ -35,9 +35,9 @@ namespace GASS
 	class Scene;
 	class SceneObject;
 
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<Scene> ScenePtr;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<Scene> ScenePtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
 
 
 	//Script messages
@@ -54,7 +54,7 @@ namespace GASS
 	private:
 		void *m_State;
 	};
-	typedef boost::shared_ptr<LuaScriptStateMessage> LuaScriptStateMessagePtr;
+	typedef SPTR<LuaScriptStateMessage> LuaScriptStateMessagePtr;
 
 	/**
 	Load a gui script file	
@@ -70,6 +70,6 @@ namespace GASS
 	private:
 		std::string m_Name;
 	};
-	typedef boost::shared_ptr<GUIScriptRequest> GUIScriptRequestPtr;
+	typedef SPTR<GUIScriptRequest> GUIScriptRequestPtr;
 }
 #endif

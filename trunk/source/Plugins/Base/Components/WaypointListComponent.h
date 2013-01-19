@@ -72,8 +72,8 @@ namespace GASS
 		Vec4 m_LineColor;
 	};
 
-	typedef boost::shared_ptr<WaypointListComponent> WaypointListComponentPtr;
-	typedef boost::weak_ptr<WaypointListComponent> WaypointListComponentWeakPtr;
+	typedef SPTR<WaypointListComponent> WaypointListComponentPtr;
+	typedef WPTR<WaypointListComponent> WaypointListComponentWeakPtr;
 	
 }
 

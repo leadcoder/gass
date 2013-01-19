@@ -247,7 +247,7 @@ namespace GASS
 						RandomRespawn(target_comp->GetDelay());
 						break;
 					case AITargetComponent::PLATFORM_TARGET: //first child is target object
-						SceneObjectPtr new_target = boost::shared_dynamic_cast<SceneObject>(so->GetChildren().getNext());
+						SceneObjectPtr new_target = DYNAMIC_CAST<SceneObject>(so->GetChildren().getNext());
 						if(new_target)
 						{
 							bool enabled = target_comp->GetEnable();

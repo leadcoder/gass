@@ -39,9 +39,9 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef boost::weak_ptr<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 	
 
 	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent

@@ -98,7 +98,7 @@ namespace GASS
 		for(size_t i = 0 ; i < names.size(); i++)
 		{
 			ComponentContainerPtr container (ComponentContainerFactory::Get().Create(names[i]));
-			BaseReflectionObjectPtr bro = boost::shared_dynamic_cast<BaseReflectionObject>(container);
+			BaseReflectionObjectPtr bro = DYNAMIC_CAST<BaseReflectionObject>(container);
 			Save(outpath,names[i],bro);
 		}
 
@@ -106,7 +106,7 @@ namespace GASS
 		for(size_t i = 0 ; i < names.size(); i++)
 		{
 			ComponentPtr comp (ComponentFactory::Get().Create(names[i]));
-			BaseReflectionObjectPtr bro = boost::shared_dynamic_cast<BaseReflectionObject>(comp);
+			BaseReflectionObjectPtr bro = DYNAMIC_CAST<BaseReflectionObject>(comp);
 			std::string class_name = bro->GetRTTI()->GetClassName();
 			if(bro)
 				Save(outpath,class_name,bro);

@@ -51,5 +51,5 @@ namespace GASS
 		bool m_Initialized;
 		Key m_Key;
 	};
-	typedef boost::shared_ptr<AnimationKeyComponent> AnimationKeyComponentPtr;
+	typedef SPTR<AnimationKeyComponent> AnimationKeyComponentPtr;
 }

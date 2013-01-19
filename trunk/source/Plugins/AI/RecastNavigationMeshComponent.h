@@ -216,7 +216,7 @@ namespace GASS
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
 	};
-	typedef boost::shared_ptr<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
-	typedef boost::weak_ptr<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;
+	typedef SPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
+	typedef WPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;
 }
 

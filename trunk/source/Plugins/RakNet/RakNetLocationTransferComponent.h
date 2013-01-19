@@ -73,7 +73,7 @@ namespace GASS
 		Vec3 AngularVelocity;
 		unsigned int TimeStamp;
 	};
-	typedef boost::shared_ptr<TransformationPackage> TransformationPackagePtr;
+	typedef SPTR<TransformationPackage> TransformationPackagePtr;
 
 
 
@@ -114,8 +114,8 @@ namespace GASS
 
 	class SceneObject;
 
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public INetworkComponent
 	{
@@ -163,6 +163,6 @@ namespace GASS
 		Quaternion m_ParentRot;
 		ADD_ATTRIBUTE(ClientLocationMode,ClientLocationMode);
 	};
-	typedef boost::shared_ptr<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
+	typedef SPTR<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }
 #endif

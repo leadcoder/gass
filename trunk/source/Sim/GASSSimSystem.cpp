@@ -42,7 +42,7 @@ namespace GASS
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
 	{
-		return boost::shared_dynamic_cast<SimSystemManager>(SystemManagerPtr(m_Owner));
+		return DYNAMIC_CAST<SimSystemManager>(SystemManagerPtr(m_Owner));
 	}
 
 	void SimSystem::Register(SystemListenerPtr listener)
@@ -55,7 +55,7 @@ namespace GASS
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
-			SystemListenerPtr c_list(*iter,boost::detail::sp_nothrow_tag());
+			SystemListenerPtr c_list(*iter,NO_THROW);
 			if(listener == c_list)
 				iter = m_Listeners.erase(iter);
 			else
@@ -75,7 +75,7 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				SystemListenerPtr listener(m_SLVector[i],boost::detail::sp_nothrow_tag());
+				SystemListenerPtr listener(m_SLVector[i],NO_THROW);
 				listener->SystemTick(m_DeltaTime);
 			}
 		}
@@ -89,7 +89,7 @@ namespace GASS
 		//remove dead listeners
 		while(iter != m_Listeners.end())
 		{
-			SystemListenerPtr listener(*iter,boost::detail::sp_nothrow_tag());
+			SystemListenerPtr listener(*iter,NO_THROW);
 			
 			if(!listener)
 				iter = m_Listeners.erase(iter);
@@ -100,7 +100,7 @@ namespace GASS
 		}
 		if(m_Listeners.size() == 1)
 		{
-			SystemListenerPtr listener(*m_Listeners.begin(),boost::detail::sp_nothrow_tag());
+			SystemListenerPtr listener(*m_Listeners.begin(),NO_THROW);
 			listener->SystemTick(delta);
 		}
 		else

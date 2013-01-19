@@ -35,6 +35,6 @@ namespace GASS
 		virtual ~PolygonModeWrapper();
 		static void Register();
 	};
-	typedef boost::shared_ptr<PolygonModeWrapper> PolygonModeWrapperPtr;
+	typedef SPTR<PolygonModeWrapper> PolygonModeWrapperPtr;
 }
 

@@ -67,16 +67,16 @@ namespace GASS
 
 	};
 	class IMessageFunc;
-	typedef boost::shared_ptr<IMessageFunc> MessageFuncPtr;
-	typedef boost::shared_ptr<IMessage> MessagePtr;
+	typedef SPTR<IMessageFunc> MessageFuncPtr;
+	typedef SPTR<IMessage> MessagePtr;
 
 	class IMessageListener
 	{
 	public:
 		virtual ~IMessageListener(){};
 	};
-	typedef boost::shared_ptr<IMessageListener> MessageListenerPtr;
-	typedef boost::weak_ptr<IMessageListener> MessageListenerWeakPtr;
+	typedef SPTR<IMessageListener> MessageListenerPtr;
+	typedef WPTR<IMessageListener> MessageListenerWeakPtr;
 
 
 	
@@ -129,7 +129,7 @@ namespace GASS
 
 		}
 
-		MessageFunc(boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> func, MessageListenerPtr object) : m_Func(func), m_Object(object)
+		MessageFunc(boost::function<void (SPTR<MESSAGE_TYPE>)> func, MessageListenerPtr object) : m_Func(func), m_Object(object)
 		{
 
 		}
@@ -147,7 +147,7 @@ namespace GASS
 		{
 			//cast to this message type
 			//TODO: should we use dynamic cast instead so messages of incorrect type can be spotted?
-			boost::shared_ptr<MESSAGE_TYPE> typed_mess = boost::shared_static_cast<MESSAGE_TYPE>(message);
+			SPTR<MESSAGE_TYPE> typed_mess = STATIC_CAST<MESSAGE_TYPE>(message);
 			m_Func(typed_mess);
 		}
 
@@ -159,7 +159,7 @@ namespace GASS
 
 		MessageListenerPtr GetObjectPtr() const
 		{
-			return MessageListenerPtr(m_Object, boost::detail::sp_nothrow_tag());
+			return MessageListenerPtr(m_Object, NO_THROW);
 		}
 
 		void* GetFuncPtr() const
@@ -168,7 +168,7 @@ namespace GASS
 		}
 
 		MessageListenerWeakPtr m_Object;
-		boost::function<void (boost::shared_ptr<MESSAGE_TYPE>)> m_Func;
+		boost::function<void (SPTR<MESSAGE_TYPE>)> m_Func;
 	};
 
 

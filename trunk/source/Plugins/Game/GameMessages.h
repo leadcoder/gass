@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class GameSceneManager;
-	typedef boost::shared_ptr<GameSceneManager> GameSceneManagerPtr;
+	typedef SPTR<GameSceneManager> GameSceneManagerPtr;
 	
 
 	class EnterVehicleMessage : public BaseMessage
@@ -42,7 +42,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<EnterVehicleMessage> EnterVehicleMessagePtr;
+	typedef SPTR<EnterVehicleMessage> EnterVehicleMessagePtr;
 
 
 	class ExitVehicleMessage : public BaseMessage
@@ -55,7 +55,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<ExitVehicleMessage> ExitVehicleMessagePtr;
+	typedef SPTR<ExitVehicleMessage> ExitVehicleMessagePtr;
 
 	class GotoPositionMessage : public BaseMessage
 	{
@@ -69,7 +69,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef boost::shared_ptr<GotoPositionMessage> GotoPositionMessagePtr;
+	typedef SPTR<GotoPositionMessage> GotoPositionMessagePtr;
 
 
 	class DesiredSpeedMessage : public BaseMessage
@@ -84,7 +84,7 @@ namespace GASS
 	private:
 		float m_Speed;
 	};
-	typedef boost::shared_ptr<DesiredSpeedMessage> DesiredSpeedMessagePtr;
+	typedef SPTR<DesiredSpeedMessage> DesiredSpeedMessagePtr;
 
 
 	
@@ -103,7 +103,7 @@ namespace GASS
 		Vec3 m_Position;
 		int m_Priority;
 	};
-	typedef boost::shared_ptr<AimAtPositionMessage> AimAtPositionMessagePtr;
+	typedef SPTR<AimAtPositionMessage> AimAtPositionMessagePtr;
 
 	class ActivateAutoAimMessage : public BaseMessage
 	{
@@ -119,7 +119,7 @@ namespace GASS
 		bool m_Active;
 		int m_Priority;
 	};
-	typedef boost::shared_ptr<ActivateAutoAimMessage> ActivateAutoAimMessagePtr;
+	typedef SPTR<ActivateAutoAimMessage> ActivateAutoAimMessagePtr;
 
 
 	class BarrelTransformationMessage : public BaseMessage
@@ -136,7 +136,7 @@ namespace GASS
 		Mat4 m_Trans;
 		
 	};
-	typedef boost::shared_ptr<BarrelTransformationMessage> BarrelTransformationMessagePtr;
+	typedef SPTR<BarrelTransformationMessage> BarrelTransformationMessagePtr;
 
 	/*class PlayerInputMessage : public BaseMessage
 	{
@@ -152,7 +152,7 @@ namespace GASS
 		std::string m_Controller;
 		float m_Value;
 	};
-	typedef boost::shared_ptr<PlayerInputMessage> PlayerInputMessagePtr;*/
+	typedef SPTR<PlayerInputMessage> PlayerInputMessagePtr;*/
 
 
 	class ReloadMessage : public BaseMessage
@@ -165,7 +165,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<ReloadMessage> ReloadMessagePtr;
+	typedef SPTR<ReloadMessage> ReloadMessagePtr;
 
 
 	class FireMessage : public BaseMessage
@@ -178,7 +178,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<FireMessage> FireMessagePtr;
+	typedef SPTR<FireMessage> FireMessagePtr;
 
 
 	class ReadyToFireMessage : public BaseMessage
@@ -191,7 +191,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<ReadyToFireMessage> ReadyToFireMessagePtr;
+	typedef SPTR<ReadyToFireMessage> ReadyToFireMessagePtr;
 
 
 	class HitMessage : public BaseMessage
@@ -210,7 +210,7 @@ namespace GASS
 		Vec3 m_HitDirection;
 		Vec3 m_HitPosition;
 	};
-	typedef boost::shared_ptr<HitMessage> HitMessagePtr;
+	typedef SPTR<HitMessage> HitMessagePtr;
 
 
 	class OutOfArmorMessage : public BaseMessage
@@ -226,7 +226,7 @@ namespace GASS
 		
 		
 	};
-	typedef boost::shared_ptr<OutOfArmorMessage> OutOfArmorMessagePtr;
+	typedef SPTR<OutOfArmorMessage> OutOfArmorMessagePtr;
 
 	/**
 		Send message to client to enter object
@@ -244,7 +244,7 @@ namespace GASS
 		std::string m_Message;
 		std::string m_Data;
 	};
-	typedef boost::shared_ptr<ClientRemoteMessage> ClientRemoteMessagePtr;
+	typedef SPTR<ClientRemoteMessage> ClientRemoteMessagePtr;
 
 
 	/**
@@ -267,7 +267,7 @@ namespace GASS
 	private:
 		LODLevel m_Level;
 	};
-	typedef boost::shared_ptr<LODMessage> LODMessagePtr;
+	typedef SPTR<LODMessage> LODMessagePtr;
 
 
 	class VehicleEngineStatusMessage : public BaseMessage
@@ -285,7 +285,7 @@ namespace GASS
 		float m_Speed;
 		int m_Gear;
 	};
-	typedef boost::shared_ptr<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
+	typedef SPTR<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
 
 
 	
@@ -299,7 +299,7 @@ namespace GASS
 	private:
 		DetectionVector m_DetectionData;
 	};
-	typedef boost::shared_ptr<SensorMessage> SensorMessagePtr;
+	typedef SPTR<SensorMessage> SensorMessagePtr;
 
 
 	class SensorGotTargetMessage : public BaseMessage
@@ -311,7 +311,7 @@ namespace GASS
 	private:
 		DetectionData m_DetectionData;
 	};
-	typedef boost::shared_ptr<SensorGotTargetMessage> SensorGotTargetMessagePtr;
+	typedef SPTR<SensorGotTargetMessage> SensorGotTargetMessagePtr;
 
 
 	class SensorLostTargetMessage : public BaseMessage
@@ -323,7 +323,7 @@ namespace GASS
 	private:
 		DetectionData m_DetectionData;
 	};
-	typedef boost::shared_ptr<SensorLostTargetMessage> SensorLostTargetMessagePtr;
+	typedef SPTR<SensorLostTargetMessage> SensorLostTargetMessagePtr;
 
 	
 

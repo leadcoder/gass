@@ -52,7 +52,7 @@ namespace GASS
 	class GASSCoreExport MessageManager
 	{
 	public:
-        typedef boost::shared_ptr<IMessage> MessagePtr;
+        typedef SPTR<IMessage> MessagePtr;
 		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
 		typedef std::map<MessageType,MessageTypeListenersPtr> MessageTypeListenerMap;
@@ -108,7 +108,7 @@ namespace GASS
 		MessageTypeListenerMap m_MessageTypes;
 		tbb::spin_mutex *m_Mutex;
 	};
-	typedef boost::shared_ptr<MessageManager> MessageManagerPtr;
+	typedef SPTR<MessageManager> MessageManagerPtr;
 
 	#define REG_TMESS(FUNCTION,TYPED_MESSAGE,PRIORITY) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
 	#define UNREG_TMESS(FUNCTION,TYPED_MESSAGE) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE)

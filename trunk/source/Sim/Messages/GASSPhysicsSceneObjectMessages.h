@@ -32,9 +32,9 @@ namespace GASS
 	class ISceneManager;
 	class IGeometryComponent;
 	struct ManualMeshData;
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
@@ -59,7 +59,7 @@ namespace GASS
 	private:
 		bool m_Enable;
 	};
-	typedef boost::shared_ptr<CollisionSettingsMessage> CollisionSettingsMessagePtr;
+	typedef SPTR<CollisionSettingsMessage> CollisionSettingsMessagePtr;
 
 	/**
 	Message used to enable/disable physics debugging
@@ -78,7 +78,7 @@ namespace GASS
 		bool m_DebugGeometry;
 	};
 
-	typedef boost::shared_ptr<PhysicsDebugMessage> PhysicsDebugMessagePtr;
+	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
 	/**
 	Messages used to interact with joint components usually found in
@@ -110,7 +110,7 @@ namespace GASS
 		PhysicsJointParameterType m_Parameter;
 		float m_Value;
 	};
-	typedef boost::shared_ptr<PhysicsJointMessage> PhysicsJointMessagePtr;
+	typedef SPTR<PhysicsJointMessage> PhysicsJointMessagePtr;
 
 	/**
 	Message used to interact with physics bodies.
@@ -141,7 +141,7 @@ namespace GASS
 		PhysicsBodyParameterType m_Parameter;
 		Vec3 m_Value;
 	};
-	typedef boost::shared_ptr<PhysicsBodyMessage> PhysicsBodyMessagePtr;
+	typedef SPTR<PhysicsBodyMessage> PhysicsBodyMessagePtr;
 
 	/**
 	Message used to change mass of physics bodies.
@@ -159,7 +159,7 @@ namespace GASS
 		Float m_Value;
 	};
 
-	typedef boost::shared_ptr<PhysicsMassMessage> PhysicsMassMessagePtr;
+	typedef SPTR<PhysicsMassMessage> PhysicsMassMessagePtr;
 
 
 
@@ -174,7 +174,7 @@ namespace GASS
 		  BaseMessage( sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<BodyLoadedMessage> BodyLoadedMessagePtr;
+	typedef SPTR<BodyLoadedMessage> BodyLoadedMessagePtr;
 
 
 	class VelocityNotifyMessage : public BaseMessage
@@ -188,7 +188,7 @@ namespace GASS
 		Vec3 m_LinearVel;
 		Vec3 m_AngularVel;
 	};
-	typedef boost::shared_ptr<VelocityNotifyMessage> VelocityNotifyMessagePtr;
+	typedef SPTR<VelocityNotifyMessage> VelocityNotifyMessagePtr;
 
 	class HingeJointNotifyMessage : public BaseMessage
 	{
@@ -201,7 +201,7 @@ namespace GASS
 		float m_Angle;
 		float m_AngleRate;
 	};
-	typedef boost::shared_ptr<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
+	typedef SPTR<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
 
 	
 }

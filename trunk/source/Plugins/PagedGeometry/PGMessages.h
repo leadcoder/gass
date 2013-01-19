@@ -35,7 +35,7 @@ namespace GASS
 		{
 		}
 	};
-	typedef boost::shared_ptr<GrassLoaderComponentLoaded> GrassLoaderComponentLoadedPtr;
+	typedef SPTR<GrassLoaderComponentLoaded> GrassLoaderComponentLoadedPtr;
 
 	
 	class GrassPaintMessage : public BaseMessage
@@ -62,5 +62,5 @@ namespace GASS
 		float m_Intensity;
 		float m_Noise;
 	};
-	typedef boost::shared_ptr<GrassPaintMessage> GrassPaintMessagePtr;
+	typedef SPTR<GrassPaintMessage> GrassPaintMessagePtr;
 }

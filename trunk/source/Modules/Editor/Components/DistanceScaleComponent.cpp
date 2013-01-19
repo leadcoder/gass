@@ -51,7 +51,7 @@ namespace GASS
 
 		EditorSceneManagerPtr esm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 		m_ActiveCameraObject = esm->GetActiveCameraObject();
-		SceneObjectPtr cam_obj(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr cam_obj(m_ActiveCameraObject,NO_THROW);
 		if(cam_obj)
 		{
 			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
@@ -62,9 +62,9 @@ namespace GASS
 	void DistanceScaleComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraChanged,CameraChangedEvent));
-		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
+		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
-			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
 			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage));
 		}
 	}
@@ -73,14 +73,14 @@ namespace GASS
 	void DistanceScaleComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		//Unregister from previous camera
-		if(SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag()))
+		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
-			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
 			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage));
 			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage));
 		}
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
@@ -138,7 +138,7 @@ namespace GASS
 
 	void DistanceScaleComponent::UpdateScale()
 	{
-		SceneObjectPtr camera(m_ActiveCameraObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr camera(m_ActiveCameraObject,NO_THROW);
 		if(camera)
 		{
 			LocationComponentPtr cam_location = camera->GetFirstComponentByClass<ILocationComponent>();

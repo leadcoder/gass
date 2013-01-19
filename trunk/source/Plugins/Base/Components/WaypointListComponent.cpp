@@ -137,7 +137,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+				SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
@@ -221,7 +221,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  boost::shared_static_cast<SceneObject>(children.getNext());
+			SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
 			WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 			if(comp)
 			{

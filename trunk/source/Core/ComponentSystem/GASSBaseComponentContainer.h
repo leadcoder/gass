@@ -44,14 +44,14 @@ namespace GASS
 			The BaseComponentContainer is a convinience class that implements the
 			IComponentContainer it also inherite from the reflection template class
 			which enables attribute reflection in a easy way.
-			The inheritance from boost::enable_shared_from_this is used to
+			The inheritance from SHARE_CLASS is used to
 			get hold of ourself (this) as a shared pointer with the
 			shared_from_this() function.
 			To get more information what you get by inherit from this
 			class see the documentation for each interface
 
 	*/
-	class GASSCoreExport BaseComponentContainer : public Reflection<BaseComponentContainer, BaseReflectionObject> ,public boost::enable_shared_from_this<BaseComponentContainer>, public IComponentContainer, public IXMLSerialize, public ISerialize,  public IMessageListener
+	class GASSCoreExport BaseComponentContainer : public Reflection<BaseComponentContainer, BaseReflectionObject> ,public SHARE_CLASS<BaseComponentContainer>, public IComponentContainer, public IXMLSerialize, public ISerialize,  public IMessageListener
 	{
 	public:
 		BaseComponentContainer();
@@ -65,7 +65,7 @@ namespace GASS
 		virtual void RemoveChild(ComponentContainerPtr child);
 		virtual ComponentContainerIterator GetChildren();
 		virtual ConstComponentContainerIterator GetChildren() const;
-		virtual ComponentContainerPtr GetParent() const {return ComponentContainerPtr(m_Parent,boost::detail::sp_nothrow_tag());}//allow null pointer}
+		virtual ComponentContainerPtr GetParent() const {return ComponentContainerPtr(m_Parent,NO_THROW);}//allow null pointer}
 		virtual void SetParent(ComponentContainerWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
 		virtual ComponentPtr GetComponent(const std::string &name) const;
@@ -114,7 +114,7 @@ namespace GASS
 		//Activate/deactivate serialization
 		bool m_Serialize;
 	};
-	typedef boost::shared_ptr<BaseComponentContainer> BaseComponentContainerPtr;
+	typedef SPTR<BaseComponentContainer> BaseComponentContainerPtr;
 
 }
 #endif // #ifndef BASECOMPONENTCONTAINER_HH

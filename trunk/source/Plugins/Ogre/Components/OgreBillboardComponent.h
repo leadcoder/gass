@@ -73,7 +73,7 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 	};
 
-	typedef boost::shared_ptr<OgreBillboardComponent> OgreBillboardComponentPtr;
+	typedef SPTR<OgreBillboardComponent> OgreBillboardComponentPtr;
 
 }
 

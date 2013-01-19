@@ -158,6 +158,6 @@ namespace GASS
 		Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
 		GeometryFlags m_GeomFlags;
 	};
-	typedef boost::shared_ptr<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
+	typedef SPTR<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 }
 

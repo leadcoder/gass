@@ -56,6 +56,6 @@ namespace GASS
 			double m_Delay;
 			SenderID m_SenderID;
 	};
-	typedef boost::shared_ptr<BaseMessage> BaseMessagePtr;
+	typedef SPTR<BaseMessage> BaseMessagePtr;
 }
 #endif 

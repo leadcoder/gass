@@ -54,6 +54,6 @@ namespace GASS
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		void Call(const std::string &message, const std::string &data);
 	};
-	typedef boost::shared_ptr<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
+	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

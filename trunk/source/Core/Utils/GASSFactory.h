@@ -43,7 +43,7 @@ namespace GASS
 	class CreatorBase
 	{
 	public:
-		typedef boost::shared_ptr<Base> BasePtr;
+		typedef SPTR<Base> BasePtr;
 		virtual ~CreatorBase() {}
 		virtual BasePtr Create() const = 0;
 		virtual std::string GetClassName() const = 0;
@@ -55,8 +55,8 @@ namespace GASS
 
 
 	public:
-		typedef boost::shared_ptr<Base> BasePtr;
-		typedef boost::shared_ptr<Product> ProductPtr;
+		typedef SPTR<Base> BasePtr;
+		typedef SPTR<Product> ProductPtr;
 		Creator()
 		{
 			m_ClassName = Misc::Demangle(typeid(Product).name());
@@ -65,7 +65,7 @@ namespace GASS
 		virtual BasePtr Create() const
 		{
 			ProductPtr obj(new Product);
-			return boost::shared_static_cast<Base>(obj);
+			return STATIC_CAST<Base>(obj);
 		}
 		virtual std::string GetClassName() const {return m_ClassName;}
 		std::string m_ClassName;
@@ -81,7 +81,7 @@ namespace GASS
 	class Factory
 	{
 	public:
-		typedef boost::shared_ptr<Base> BasePtr;
+		typedef SPTR<Base> BasePtr;
 		BasePtr Create(ObjectType type);
 		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
 		bool Remove(ObjectType type);
@@ -151,12 +151,12 @@ namespace GASS
 	}
 
 	template<class Base, class ObjectType>
-	boost::shared_ptr<Base> Factory<Base,ObjectType>::Create(ObjectType type)
+	SPTR<Base> Factory<Base,ObjectType>::Create(ObjectType type)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end())
 		{
-			boost::shared_ptr<Base> ret;
+			SPTR<Base> ret;
 			return ret;
 		}
 

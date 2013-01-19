@@ -10,7 +10,7 @@ namespace GASS
 {
 	class MouseToolController;
 	class SceneObject;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class EditorModuleExport GoToPositionTool: public IMouseTool
 	{

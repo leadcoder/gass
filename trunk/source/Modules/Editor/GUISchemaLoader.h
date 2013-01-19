@@ -94,7 +94,7 @@ namespace GASS
 		bool LoadBoolAttribute(TiXmlElement* elem, const std::string &name);
 		std::map<std::string, ObjectSettings> m_Settings;
 	};
-	typedef boost::shared_ptr<GUISchemaLoader> GUISchemaLoaderPtr;
+	typedef SPTR<GUISchemaLoader> GUISchemaLoaderPtr;
 
 }
 #endif 

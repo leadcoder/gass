@@ -74,5 +74,5 @@ namespace GASS
 		
 	protected:
 	};
-	typedef boost::shared_ptr<IGraphicsSystem> GraphicsSystemPtr;
+	typedef SPTR<IGraphicsSystem> GraphicsSystemPtr;
 }

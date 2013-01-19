@@ -38,5 +38,5 @@ namespace GASS
 		virtual void Init();
 	protected:
 	};
-	typedef boost::shared_ptr<CoreSystem> CoreSystemPtr;
+	typedef SPTR<CoreSystem> CoreSystemPtr;
 }

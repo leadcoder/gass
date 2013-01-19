@@ -111,8 +111,8 @@ namespace GASS
 
 	};
 
-	typedef boost::shared_ptr<RoadComponent> RoadComponentPtr;
-	typedef boost::weak_ptr<RoadComponent> RoadComponentWeakPtr;
+	typedef SPTR<RoadComponent> RoadComponentPtr;
+	typedef WPTR<RoadComponent> RoadComponentWeakPtr;
 
 }
 

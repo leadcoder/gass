@@ -39,6 +39,6 @@ namespace GASS
 		SceneObjectID m_ListenerID;
 	};
 
-	typedef boost::shared_ptr<TriggerComponent> TriggerComponentPtr;
+	typedef SPTR<TriggerComponent> TriggerComponentPtr;
 }
 #endif

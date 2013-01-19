@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class WaypointComponent;
-	typedef boost::weak_ptr<WaypointComponent> WaypointComponentWeakPtr;
+	typedef WPTR<WaypointComponent> WaypointComponentWeakPtr;
 
 	class WaypointComponent : public Reflection<WaypointComponent,BaseSceneComponent>
 	{
@@ -60,7 +60,7 @@ namespace GASS
 		bool m_CustomTangent;
 	};
 
-	typedef boost::shared_ptr<WaypointComponent> WaypointComponentPtr;
+	typedef SPTR<WaypointComponent> WaypointComponentPtr;
 	
 }
 

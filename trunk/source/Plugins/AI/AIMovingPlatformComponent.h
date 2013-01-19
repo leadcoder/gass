@@ -54,5 +54,5 @@ namespace GASS
 		Float m_Velocity;
 		Float m_DesiredVelocity;
 	};
-	typedef boost::shared_ptr<AIMovingPlatformComponent> AIMovingPlatformComponentPtr;
+	typedef SPTR<AIMovingPlatformComponent> AIMovingPlatformComponentPtr;
 }

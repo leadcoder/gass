@@ -32,9 +32,9 @@ namespace GASS
 	class ISceneManager;
 	class IGeometryComponent;
 	struct ManualMeshData;
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
 
 	//*********************************************************
@@ -65,5 +65,5 @@ namespace GASS
 		SoundParameterType m_Parameter;
 		float m_Value;
 	};
-	typedef boost::shared_ptr<SoundParameterMessage> SoundParameterMessagePtr;
+	typedef SPTR<SoundParameterMessage> SoundParameterMessagePtr;
 }

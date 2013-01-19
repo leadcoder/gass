@@ -45,10 +45,10 @@ namespace GASS
 	class IGeometryComponent;
 	class CoreSceneManager;
 	struct ManualMeshData;
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<CoreSceneManager> CoreSceneManagerPtr; 
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<CoreSceneManager> CoreSceneManagerPtr; 
 	
 	
 
@@ -73,7 +73,7 @@ namespace GASS
 
 
 	};
-	typedef boost::shared_ptr<SceneObjectNameMessage> SceneObjectNameMessagePtr;
+	typedef SPTR<SceneObjectNameMessage> SceneObjectNameMessagePtr;
 
 	/**
 		Message that can be used to show debug information about a object
@@ -91,7 +91,7 @@ namespace GASS
 	private:
 		bool m_ShowObjectName;
 	};
-	typedef boost::shared_ptr<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
+	typedef SPTR<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
 
 	
 	//*********************************************************
@@ -111,7 +111,7 @@ namespace GASS
 		  }
 	private:
 	};
-	typedef boost::shared_ptr<UnloadComponentsMessage> UnloadComponentsMessagePtr;
+	typedef SPTR<UnloadComponentsMessage> UnloadComponentsMessagePtr;
 
 	class LoadComponentsMessage : public BaseMessage
 	{
@@ -120,6 +120,6 @@ namespace GASS
 		 BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<LoadComponentsMessage> LoadComponentsMessagePtr;*/
+	typedef SPTR<LoadComponentsMessage> LoadComponentsMessagePtr;*/
 	
 }

@@ -420,7 +420,7 @@ namespace GASS
 			if(SceneObjectPtr(result.CollSceneObject))
 				m_TargetName = SceneObjectPtr(result.CollSceneObject)->GetName();
 
-			SceneObjectPtr so(m_TargetObject,boost::detail::sp_nothrow_tag());
+			SceneObjectPtr so(m_TargetObject,NO_THROW);
 			if(so)
 			{
 				so->PostMessage(MessagePtr(new WorldPositionMessage(result.CollPosition)));

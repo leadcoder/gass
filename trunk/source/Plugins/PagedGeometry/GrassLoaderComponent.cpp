@@ -107,7 +107,7 @@ namespace GASS
 			
 			if(terrain)
 			{
-				GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+				GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
 				AABox aabox = geom->GetBoundingBox();
 				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
 				//for speed we save the raw pointer , we will access this for each height callback
@@ -223,7 +223,7 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
-			GrassLayerComponentPtr layer = boost::shared_dynamic_cast<GrassLayerComponent>(components[i]);
+			GrassLayerComponentPtr layer = DYNAMIC_CAST<GrassLayerComponent>(components[i]);
 			layer->GetLayer()->setDensityMap(m_DensityTexture,CHANNEL_BLUE);
 		}
 
@@ -374,7 +374,7 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
-			GrassLayerComponentPtr layer = boost::shared_dynamic_cast<GrassLayerComponent>(components[i]);
+			GrassLayerComponentPtr layer = DYNAMIC_CAST<GrassLayerComponent>(components[i]);
 
 			Forests::DensityMap *dmap = layer->GetLayer()->getDensityMap();
 			if(dmap)

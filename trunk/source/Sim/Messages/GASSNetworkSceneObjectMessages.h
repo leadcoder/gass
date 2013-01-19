@@ -32,9 +32,9 @@ namespace GASS
 	class ISceneManager;
 	class IGeometryComponent;
 	struct ManualMeshData;
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
 
 
@@ -55,12 +55,12 @@ namespace GASS
 	private:
 		SceneManagerPtr m_NetworkSceneManager;
 	};
-	typedef boost::shared_ptr<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
+	typedef SPTR<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
 
 	
 	
 
-	//typedef boost::shared_ptr<char> NetworkDataPtr;
+	//typedef SPTR<char> NetworkDataPtr;
 	class NetworkPackage
 	{
 	public:
@@ -74,7 +74,7 @@ namespace GASS
 		int Id;
 		//NetworkDataPtr Data;
 	};
-	typedef boost::shared_ptr<NetworkPackage> NetworkPackagePtr;
+	typedef SPTR<NetworkPackage> NetworkPackagePtr;
 
 	class NetworkAddress
 	{
@@ -104,7 +104,7 @@ namespace GASS
 		NetworkAddress m_Address;
 
 	};
-	typedef boost::shared_ptr<NetworkSerializeMessage> NetworkSerializeMessagePtr;
+	typedef SPTR<NetworkSerializeMessage> NetworkSerializeMessagePtr;
 
 
 
@@ -127,7 +127,7 @@ namespace GASS
 		NetworkAddress m_Address;
 
 	};
-	typedef boost::shared_ptr<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
+	typedef SPTR<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
 
 
 

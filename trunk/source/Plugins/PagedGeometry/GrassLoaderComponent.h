@@ -105,7 +105,7 @@ protected:
 		Forests::DensityMap *m_DensityMap;
 		void update();
 	};
-	typedef boost::shared_ptr<GrassLoaderComponent> GrassLoaderComponentPtr;
+	typedef SPTR<GrassLoaderComponent> GrassLoaderComponentPtr;
 }
 
 #endif

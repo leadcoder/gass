@@ -40,8 +40,8 @@ namespace GASS
 {
 	class SceneObject;
 	class RakNetMasterReplica;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
 
 	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,BaseSceneComponent>
@@ -70,6 +70,6 @@ namespace GASS
 		NetworkPackageVector m_SerializePackages;
 	};
 
-	typedef boost::shared_ptr<RakNetNetworkMasterComponent> RakNetNetworkMasterComponentPtr;
+	typedef SPTR<RakNetNetworkMasterComponent> RakNetNetworkMasterComponentPtr;
 }
 #endif

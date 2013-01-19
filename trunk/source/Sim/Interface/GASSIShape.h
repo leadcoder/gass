@@ -36,5 +36,5 @@ namespace GASS
 		virtual Vec3 GetRandomPoint() const = 0;
 	protected:
 	};
-	typedef boost::shared_ptr<IShape> ShapePtr;
+	typedef SPTR<IShape> ShapePtr;
 }

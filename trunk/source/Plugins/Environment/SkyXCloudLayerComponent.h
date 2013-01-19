@@ -65,7 +65,7 @@ namespace GASS
 		SkyX::CloudLayer::Options m_Options;
 
 	};
-	typedef boost::shared_ptr<SkyXCloudLayerComponent> SkyXCloudLayerComponentPtr; 
+	typedef SPTR<SkyXCloudLayerComponent> SkyXCloudLayerComponentPtr; 
 }
 
 #endif

@@ -63,7 +63,7 @@ namespace GASS
 			}
 			if(m_TEM == TEM_VEGETATION_PAINT)
 			{
-				SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+				SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 				if(selected)
 					selected->PostMessage(MessagePtr(new GrassPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 			}
@@ -106,7 +106,7 @@ namespace GASS
 
 	SceneObjectPtr TerrainDeformTool::GetOrCreateGizmo()
 	{
-		SceneObjectPtr gizmo(m_MasterGizmoObject,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr gizmo(m_MasterGizmoObject,NO_THROW);
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
@@ -145,7 +145,7 @@ namespace GASS
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = boost::shared_static_cast<SceneObject>(iter.getNext());
+			SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
 		}
 	}
@@ -188,7 +188,7 @@ namespace GASS
 
 	/*void TerrainDeformTool::SetLayerTexture(const std::string &texture, float tiling)
 	{
-		/*SceneObjectPtr selected(m_SelectedObject,boost::detail::sp_nothrow_tag());
+		/*SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
 			TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();

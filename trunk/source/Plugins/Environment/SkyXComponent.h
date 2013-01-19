@@ -85,7 +85,7 @@ namespace GASS
 		bool m_SkyDomeFog;
 		bool m_Initialized;
 	};
-	typedef boost::shared_ptr<SkyXComponent> SkyXComponentPtr;
+	typedef SPTR<SkyXComponent> SkyXComponentPtr;
 
 
 	class SkyXComponentLoadedMessage : public BaseMessage
@@ -93,7 +93,7 @@ namespace GASS
 	public:
 		SkyXComponentLoadedMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay){}
 	};
-	typedef boost::shared_ptr<SkyXComponentLoadedMessage> SkyXComponentLoadedMessagePtr;
+	typedef SPTR<SkyXComponentLoadedMessage> SkyXComponentLoadedMessagePtr;
 }
 
 #endif

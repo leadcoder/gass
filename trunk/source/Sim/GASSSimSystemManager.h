@@ -46,7 +46,7 @@ namespace GASS
 	To handle the messages the SimSystemManager use the 
 	MessageManager class
 	*/
-	class GASSExport SimSystemManager : public ISystemManager, public boost::enable_shared_from_this<SimSystemManager>,  public IMessageListener
+	class GASSExport SimSystemManager : public ISystemManager, public SHARE_CLASS<SimSystemManager>,  public IMessageListener
 	{
 	public:
 		SimSystemManager();
@@ -95,12 +95,12 @@ namespace GASS
 			of the class type exist tbe first one loaded will be returned
 		*/
 		template <class T>
-		boost::shared_ptr<T> GetFirstSystemByClass(bool no_throw = false)
+		SPTR<T> GetFirstSystemByClass(bool no_throw = false)
 		{
-			boost::shared_ptr<T> sys;
+			SPTR<T> sys;
 			for(size_t i = 0 ; i < m_Systems.size(); i++)
 			{
-				sys = boost::shared_dynamic_cast<T>(m_Systems[i]);
+				sys = DYNAMIC_CAST<T>(m_Systems[i]);
 				if(sys)
 					return sys;
 			}

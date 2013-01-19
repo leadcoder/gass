@@ -47,10 +47,10 @@ namespace GASS
 	class IGeometryComponent;
 	class ILocationComponent;
 	struct ManualMeshData;
-	typedef boost::shared_ptr<ManualMeshData> ManualMeshDataPtr;
-	typedef boost::shared_ptr<ISceneManager> SceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<ILocationComponent> LocationComponentPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ISceneManager> SceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<ILocationComponent> LocationComponentPtr;
 
 	//*********************************************************
 	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
@@ -80,7 +80,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef boost::shared_ptr<PositionMessage> PositionMessagePtr;
+	typedef SPTR<PositionMessage> PositionMessagePtr;
 
 
 	/**
@@ -108,7 +108,7 @@ namespace GASS
 	private:
 		Quaternion m_Rotation;
 	};
-	typedef boost::shared_ptr<RotationMessage> RotationMessagePtr;
+	typedef SPTR<RotationMessage> RotationMessagePtr;
 
 
 
@@ -143,7 +143,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef boost::shared_ptr<WorldPositionMessage> WorldPositionMessagePtr;
+	typedef SPTR<WorldPositionMessage> WorldPositionMessagePtr;
 
 
 
@@ -179,7 +179,7 @@ namespace GASS
 	private:
 		Quaternion m_Rotation;
 	};
-	typedef boost::shared_ptr<WorldRotationMessage> WorldRotationMessagePtr;
+	typedef SPTR<WorldRotationMessage> WorldRotationMessagePtr;
 
 	/**
 	Scale (relative to parent) change requested.
@@ -206,7 +206,7 @@ namespace GASS
 	private:
 		Vec3 m_Scale;
 	};
-	typedef boost::shared_ptr<ScaleMessage> ScaleMessagePtr;
+	typedef SPTR<ScaleMessage> ScaleMessagePtr;
 
 
 	
@@ -237,7 +237,7 @@ namespace GASS
 		bool m_Visible;
 	};
 
-	typedef boost::shared_ptr<VisibilityMessage> VisibilityMessagePtr;
+	typedef SPTR<VisibilityMessage> VisibilityMessagePtr;
 
 
 	/**
@@ -256,7 +256,7 @@ namespace GASS
 	private:
 		bool m_AttachToParent;
 	};
-	typedef boost::shared_ptr<AttachToParentMessage> AttachToParentMessagePtr;
+	typedef SPTR<AttachToParentMessage> AttachToParentMessagePtr;
 
 
 	/**
@@ -276,7 +276,7 @@ namespace GASS
 	private:
 
 	};
-	typedef boost::shared_ptr<ParentChangedMessage> ParentChangedMessagePtr;
+	typedef SPTR<ParentChangedMessage> ParentChangedMessagePtr;
 
 	/**
 		Message used to modify camera settings
@@ -301,7 +301,7 @@ namespace GASS
 		float m_Value2;
 		CameraParameterType m_Parameter;
 	};
-	typedef boost::shared_ptr<CameraParameterMessage> CameraParameterMessagePtr;
+	typedef SPTR<CameraParameterMessage> CameraParameterMessagePtr;
 
 
 	class BoundingInfoMessage : public BaseMessage
@@ -317,7 +317,7 @@ namespace GASS
 		bool m_BBVisible;
 	};
 
-	typedef boost::shared_ptr<BoundingInfoMessage> BoundingInfoMessagePtr;
+	typedef SPTR<BoundingInfoMessage> BoundingInfoMessagePtr;
 
 
 	/**
@@ -333,7 +333,7 @@ namespace GASS
 		  }
 	};
 
-	typedef boost::shared_ptr<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
+	typedef SPTR<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
 
 
 	
@@ -353,7 +353,7 @@ namespace GASS
 	private:
 		std::string m_FileName;
 	};
-	typedef boost::shared_ptr<MeshFileMessage> MeshFileMessagePtr;
+	typedef SPTR<MeshFileMessage> MeshFileMessagePtr;
 
 	/**
 	Modify mesh texture coordinates,  mesh components will listen to this message
@@ -367,7 +367,7 @@ namespace GASS
 	private:
 		Vec2 m_TexCoords;
 	};
-	typedef boost::shared_ptr<TextureCoordinateMessage> TextureCoordinateMessagePtr;
+	typedef SPTR<TextureCoordinateMessage> TextureCoordinateMessagePtr;
 
 	/**
 	Change material of mesh components
@@ -391,7 +391,7 @@ namespace GASS
 		float m_Shininess;
 		bool m_DepthTest;
 	};
-	typedef boost::shared_ptr<MaterialMessage> MaterialMessagePtr;
+	typedef SPTR<MaterialMessage> MaterialMessagePtr;
 
 
 	/**
@@ -408,7 +408,7 @@ namespace GASS
 	private:
 		std::string m_Texture;
 	};
-	typedef boost::shared_ptr<TextureMessage> TextureMessagePtr;
+	typedef SPTR<TextureMessage> TextureMessagePtr;
 
 
 	/**
@@ -427,7 +427,7 @@ namespace GASS
 		Vec3 m_Position;
 		Quaternion m_Rotation;
 	};
-	typedef boost::shared_ptr<BoneTransformationMessage> BoneTransformationMessagePtr;
+	typedef SPTR<BoneTransformationMessage> BoneTransformationMessagePtr;
 
 
 	/**
@@ -443,7 +443,7 @@ namespace GASS
 		ManualMeshDataPtr m_Data;
 
 	};
-	typedef boost::shared_ptr<ManualMeshDataMessage> ManualMeshDataMessagePtr;
+	typedef SPTR<ManualMeshDataMessage> ManualMeshDataMessagePtr;
 
 	
 	/**
@@ -456,7 +456,7 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef boost::shared_ptr<ClearManualMeshMessage> ClearManualMeshMessagePtr;
+	typedef SPTR<ClearManualMeshMessage> ClearManualMeshMessagePtr;
 
 	
 	/**
@@ -477,7 +477,7 @@ namespace GASS
 	private:
 		Vec3 m_Scale;
 	};
-	typedef boost::shared_ptr<GeometryScaleMessage> GeometryScaleMessagePtr;
+	typedef SPTR<GeometryScaleMessage> GeometryScaleMessagePtr;
 
 	/**
 	  Change particle system parameter
@@ -505,7 +505,7 @@ namespace GASS
 		int m_Emitter;
 		ParticleSystemParameterType m_Parameter;
 	};
-	typedef boost::shared_ptr<ParticleSystemParameterMessage> ParticleSystemParameterMessagePtr;
+	typedef SPTR<ParticleSystemParameterMessage> ParticleSystemParameterMessagePtr;
 
 	class TextCaptionMessage : public BaseMessage
 	{
@@ -516,7 +516,7 @@ namespace GASS
 	private:
 		std::string m_Caption;
 	};
-	typedef boost::shared_ptr<TextCaptionMessage> TextCaptionMessagePtr;
+	typedef SPTR<TextCaptionMessage> TextCaptionMessagePtr;
 
 	class TerrainHeightModifyMessage : public BaseMessage
 	{
@@ -551,7 +551,7 @@ namespace GASS
 		float m_Intensity;
 		float m_Noise;
 	};
-	typedef boost::shared_ptr<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
+	typedef SPTR<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
 
 	
 	enum TerrainLayer
@@ -593,7 +593,7 @@ namespace GASS
 		float m_Intensity;
 		float m_Noise;
 	};
-	typedef boost::shared_ptr<TerrainPaintMessage> TerrainPaintMessagePtr;
+	typedef SPTR<TerrainPaintMessage> TerrainPaintMessagePtr;
 
 	class TerrainLayerMessage : public BaseMessage
 	{
@@ -614,7 +614,7 @@ namespace GASS
 		ResourceHandle m_Texture;
 		float m_Tiling;
 	};
-	typedef boost::shared_ptr<TerrainLayerMessage> TerrainLayerMessagePtr;
+	typedef SPTR<TerrainLayerMessage> TerrainLayerMessagePtr;
 
 	class RoadMessage : public BaseMessage
 	{
@@ -640,7 +640,7 @@ namespace GASS
 		float m_FlattenWidth;
 		float m_PaintIntensity;
 	};
-	typedef boost::shared_ptr<RoadMessage> RoadMessagePtr;
+	typedef SPTR<RoadMessage> RoadMessagePtr;
 
 
 	//*********************************************************
@@ -656,7 +656,7 @@ namespace GASS
 	private:
 		LocationComponentPtr m_Location;
 	};
-	typedef boost::shared_ptr<LocationLoadedMessage> LocationLoadedMessagePtr;
+	typedef SPTR<LocationLoadedMessage> LocationLoadedMessagePtr;
 
 
 	/** Message sent by scene node when scene node is moved
@@ -681,7 +681,7 @@ namespace GASS
 		Quaternion m_Rotation;
 		Vec3 m_Scale;
 	};
-	typedef boost::shared_ptr<TransformationNotifyMessage> TransformationNotifyMessagePtr;
+	typedef SPTR<TransformationNotifyMessage> TransformationNotifyMessagePtr;
 
 	/**
 		Messages sent by geomtery components when its geometry is changed. 
@@ -695,7 +695,7 @@ namespace GASS
 	private:
 		GeometryComponentPtr m_Geometry;
 	};
-	typedef boost::shared_ptr<GeometryChangedMessage> GeometryChangedMessagePtr;
+	typedef SPTR<GeometryChangedMessage> GeometryChangedMessagePtr;
 
 
 	

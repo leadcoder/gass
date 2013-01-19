@@ -42,7 +42,7 @@ namespace GASS
 	protected:
 		ADD_ATTRIBUTE(bool,Paused)
 	};
-	typedef boost::shared_ptr<AISceneManager> AISceneManagerPtr; 
+	typedef SPTR<AISceneManager> AISceneManagerPtr; 
 
 }
 #endif

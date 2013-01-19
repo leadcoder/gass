@@ -46,7 +46,7 @@ namespace GASS
 		virtual void Init() = 0;
 	private:
 	};
-	typedef boost::shared_ptr<ISystemManager> SystemManagerPtr;
-	typedef boost::weak_ptr<ISystemManager> SystemManagerWeakPtr;
+	typedef SPTR<ISystemManager> SystemManagerPtr;
+	typedef WPTR<ISystemManager> SystemManagerWeakPtr;
 }
 #endif // #ifndef ISYSTEMMANAGER_HH

@@ -34,7 +34,7 @@ namespace osgShadow
 namespace GASS
 {
 	class OSGGraphicsSystem;
-	typedef boost::weak_ptr<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
+	typedef WPTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
 
 	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager>
 	{
@@ -88,8 +88,8 @@ namespace GASS
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};
-	typedef boost::shared_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
-	typedef boost::weak_ptr<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	typedef SPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
+	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 
 	
 }

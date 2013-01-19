@@ -35,8 +35,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef boost::shared_ptr<SceneObject> SceneObjectPtr;
-	typedef boost::weak_ptr<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
 	class AutoAimComponent :  public Reflection<AutoAimComponent,BaseSceneComponent>
 	{
@@ -100,6 +100,6 @@ namespace GASS
 		bool m_GotNewAimPoint;
 		int m_CurrentAimPriority;
 	};
-	typedef boost::shared_ptr<AutoAimComponent> AutoAimComponentPtr;
+	typedef SPTR<AutoAimComponent> AutoAimComponentPtr;
 }
 #endif

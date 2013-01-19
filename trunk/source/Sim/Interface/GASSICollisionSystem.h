@@ -39,5 +39,5 @@ namespace GASS
 	protected:
 	};
 
-	typedef boost::shared_ptr<ICollisionSystem> CollisionSystemPtr;
+	typedef SPTR<ICollisionSystem> CollisionSystemPtr;
 }

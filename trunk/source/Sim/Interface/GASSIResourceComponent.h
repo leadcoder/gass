@@ -37,6 +37,6 @@ namespace GASS
 		*/
 		virtual ResourceHandle GetResource() const =0;
 	};
-	typedef boost::shared_ptr<IResourceComponent> ResourceComponentPtr;
+	typedef SPTR<IResourceComponent> ResourceComponentPtr;
 }
 

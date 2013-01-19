@@ -167,7 +167,7 @@ namespace GASS
 				mobj = billboard->GetBillboardSet();
 			else
 			{
-				boost::shared_ptr<OgreManualMeshComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreManualMeshComponent>();
+				SPTR<OgreManualMeshComponent> line = GetSceneObject()->GetFirstComponentByClass<OgreManualMeshComponent>();
 				if(line)
 					mobj = line->GetManualObject();
 			}

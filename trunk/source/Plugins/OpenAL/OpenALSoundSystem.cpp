@@ -138,9 +138,9 @@ namespace GASS
 	void OpenALSoundSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = boost::shared_dynamic_cast<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
-		SceneObjectPtr current_cam_obj(m_CurrentCamera,boost::detail::sp_nothrow_tag());
+		SceneObjectPtr current_cam_obj(m_CurrentCamera,NO_THROW);
 		if(current_cam_obj)
 		{
 			current_cam_obj->UnregisterForMessage(typeid(TransformationNotifyMessage), TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage));
