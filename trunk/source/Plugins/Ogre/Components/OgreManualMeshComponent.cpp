@@ -188,7 +188,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
 	{
 		if(message->GetTexture() == "")

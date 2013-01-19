@@ -113,11 +113,12 @@ namespace GASS
 		else
 			ocam = sm->createCamera("DummyCamera");
 
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-
-		target->addListener(this);
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			target->addListener(this);
+		}
 
 		bool user_bounds = true;
 		if(m_CustomBounds.x == 0 && m_CustomBounds.y == 0 && m_CustomBounds.z == 0 && m_CustomBounds.w == 0)
@@ -230,10 +231,13 @@ namespace GASS
 
 		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		sm->destroyEntity(m_TreeEntity);
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->removeListener(this);
+		
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			target->removeListener(this);
+		}
 	}
 
 	

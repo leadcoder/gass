@@ -2,11 +2,14 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSMeshData.h"
+#include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {
+	IFDECL(HeightmapTerrainComponent)
+
 	class EditorModuleExport PaintGizmoComponent : public Reflection<PaintGizmoComponent,BaseSceneComponent>
 	{
 	public:
@@ -28,7 +31,7 @@ namespace GASS
 		void SetColor(const Vec4 &value){m_Color =value;}
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
-
+		Float GetHeight() const;
 		ManualMeshDataPtr m_MeshData;	
 		Vec4 m_Color;
 		float m_Size;
@@ -37,6 +40,8 @@ namespace GASS
 		//helpers
 		std::string m_Mode;
 		bool m_Active;
+		Vec3 m_Pos;
+		HeightmapTerrainComponentPtr m_HMTerrain;
 	};
 
 	typedef boost::shared_ptr<PaintGizmoComponent> PaintGizmoComponentPtr;

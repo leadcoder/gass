@@ -59,7 +59,6 @@ namespace GASS
 		}
 	}
 
-
 	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
 		//Unregister form previous selection

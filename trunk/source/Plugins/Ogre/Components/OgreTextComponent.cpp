@@ -36,6 +36,7 @@
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -68,19 +69,11 @@ namespace GASS
 		if(m_TextObject)
 		{
 			delete m_TextObject;
-
-			Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-			if(sm)
+			Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+			while (iter.hasMoreElements())
 			{
-				Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-				Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-				Ogre::RenderTarget *target = NULL;
-				if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-				{
-					target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-					target->removeListener(this);
-				}
-				
+				Ogre::RenderTarget* target = iter.getNext();
+				target->removeListener(this);
 			}
 		}
 		if(m_Attribs)
@@ -120,18 +113,16 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0));
 	
-	
-			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
+		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
 		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
 
 		
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		
 
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
 		{
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+			Ogre::RenderTarget* target = iter.getNext();
 			target->addListener(this);
 		}
 		
@@ -141,8 +132,16 @@ namespace GASS
 		color.b = m_Color.z;
 		color.a = m_Color.w;
 
+		//create dummy camera
+
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
+
 		m_Attribs = new MovableTextOverlayAttributes("Attrs1",ocam,"BlueHighway",m_Size,color,"RedTransparent");
-		
 	}
 
 	void OgreTextComponent::OnGeomChanged(GeometryChangedMessagePtr message)

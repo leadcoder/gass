@@ -11,6 +11,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
 
 
 
@@ -19,7 +20,7 @@
 namespace GASS
 {
 
-	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new ManualMeshData), m_Color(1,0,0,1),
+	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new ManualMeshData), m_Color(0,1,0,1),
 		m_Size(30),
 		m_InnerSize(20),
 		m_Type("follow_height"),
@@ -49,16 +50,22 @@ namespace GASS
 
 	void PaintGizmoComponent::OnDelete()
 	{
-		
+
 	}
 
 	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		
+		//rebulid each frame
+		m_Pos = message->GetPosition();
+		BuildMesh();
+
 	}
 
 	void PaintGizmoComponent::BuildMesh()
 	{
+		if(!m_HMTerrain)
+			m_HMTerrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+
 		m_MeshData->VertexVector.clear();
 		m_MeshData->IndexVector.clear();
 
@@ -66,16 +73,22 @@ namespace GASS
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = m_Color;
 		m_MeshData->Type = LINE_STRIP;
-		m_MeshData->Material = "WhiteTransparentNoLighting";
+		m_MeshData->Material = "PaintGizmoMat";
 
-		const float samples = 30;
+		const float samples = 60;
 		const float rad = 2*MY_PI/samples;
 		float x,y;
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*m_Size;
 			y = sin(rad*i)*m_Size;
-			vertex.Pos.Set(x,0,y);
+			Float h = 0;
+			if(m_HMTerrain)
+			{
+				h = m_HMTerrain->GetHeightAtWorldLocation(x+m_Pos.x,y+m_Pos.z)-m_Pos.y + 0.1;
+			}
+
+			vertex.Pos.Set(x,h,y);
 			m_MeshData->VertexVector.push_back(vertex);
 		}
 		m_MeshData->VertexVector.push_back(vertex);
@@ -84,7 +97,12 @@ namespace GASS
 		{
 			x = cos(rad*i)*m_InnerSize;
 			y = sin(rad*i)*m_InnerSize;
-			vertex.Pos.Set(x,0,y);
+			Float h = 0;
+			if(m_HMTerrain)
+			{
+				h = m_HMTerrain->GetHeightAtWorldLocation(x+m_Pos.x,y+m_Pos.z)-m_Pos.y + 0.1;
+			}
+			vertex.Pos.Set(x,h,y);
 			m_MeshData->VertexVector.push_back(vertex);
 		}
 		m_MeshData->VertexVector.push_back(vertex);

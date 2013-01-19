@@ -39,6 +39,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 
 namespace GASS
 {
@@ -77,13 +78,21 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
 	
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->addListener(this);
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
 
+
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			target->addListener(this);
+		}
+	
 		bool user_bounds = true;
 		if(m_CustomBounds.x == 0 && m_CustomBounds.y == 0 && m_CustomBounds.z == 0 && m_CustomBounds.w == 0)
 		{
@@ -167,12 +176,12 @@ namespace GASS
 			delete m_PagedGeometry;
 		}
 
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
-		Ogre::RenderTarget *target = NULL;
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		target->removeListener(this);
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			target->removeListener(this);
+		}
 	}
 
 	std::string GrassLoaderComponent::GetDensityMap() const
