@@ -117,16 +117,24 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HydraxWaterComponent::OnChangeCamera,CameraChangedEvent,0));
 		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		Ogre::Camera* ocam = NULL;
-		if(sm->hasCamera("DummyCamera"))
-			ocam = sm->getCamera("DummyCamera");
-		else
-			ocam = sm->createCamera("DummyCamera");
-
+		//if(sm->hasCamera("DummyCamera"))
+		//	ocam = sm->getCamera("DummyCamera");
+		//else
+		//	ocam = sm->createCamera("DummyCamera");
 		Ogre::RenderTarget* target = NULL;
-
-		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
-			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
-		Ogre::Viewport* vp = target->getViewport(0);
+		Ogre::Viewport* vp =NULL;
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			if(target->getNumViewports() > 0)
+			{
+				ocam = target->getViewport(0)->getCamera();
+				vp = target->getViewport(0);
+				break;
+			}
+			//target->addListener(this);
+		}
 		Ogre::Root::getSingleton().addFrameListener(this);
 		CreateHydrax(sm, ocam, vp);
 		m_Initialized = true;
