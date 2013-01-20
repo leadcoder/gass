@@ -8,7 +8,8 @@
 
 GASSSceneTreeWidget::GASSSceneTreeWidget(GASSEd *parent): QTreeWidget(parent),
 	m_GASSEd(parent),
-	m_Root(NULL)
+	m_ObjectRootItem(NULL),
+	m_SceneItem(NULL)
 {
 	setHeaderHidden(true);
 	setMinimumSize(200,200);
@@ -34,11 +35,17 @@ void GASSSceneTreeWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));
 
-	m_Root= new  QTreeWidgetItem();
-	m_Root->setText(0,"Root");
-	m_ItemMap[message->GetScene()->GetRootSceneObject().get()] = m_Root;
-	m_ObjectMap[m_Root]=message->GetScene()->GetRootSceneObject();
-	addTopLevelItem(m_Root);
+	m_SceneItem = new  QTreeWidgetItem();
+	m_SceneItem->setText(0,"Scene");
+
+	addTopLevelItem(m_SceneItem);
+	
+	m_ObjectRootItem = new  QTreeWidgetItem();
+	m_ObjectRootItem->setText(0,"SceneObjects");
+
+	m_ItemMap[message->GetScene()->GetRootSceneObject().get()] = m_ObjectRootItem;
+	m_ObjectMap[m_ObjectRootItem]=message->GetScene()->GetRootSceneObject();
+	m_SceneItem->addChild(m_ObjectRootItem);
 }
 
 void GASSSceneTreeWidget::OnUnloadScene(GASS::SceneUnloadedEventPtr message)
@@ -131,8 +138,20 @@ void GASSSceneTreeWidget::selectionChanged()
 	QList<QTreeWidgetItem*> items = selectedItems();
 	if(!internal_select && items.size() > 0)
 	{
-		GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
-		m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
+		if(items[0] == m_SceneItem)
+		{
+			//send scene selection message
+			GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
+			GASS::ScenePtr(m_Scene)->PostMessage(message);
+		}
+		else
+		{
+			GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
+			if(obj)
+			{
+				m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
+			}
+		}
 	}
 }
 
@@ -144,7 +163,21 @@ void GASSSceneTreeWidget::showContextMenu(const QPoint& pos)
     // QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); 
 	GASSEd* gassed = (GASSEd*)parentWidget();
 	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetSelectedObject();
-	gassed->ShowObjectContextMenu(obj,globalPos);
+
+	QList<QTreeWidgetItem*> items = selectedItems();
+	if(!internal_select && items.size() > 0)
+	{
+		if(items[0] == m_SceneItem)
+		{
+
+		}
+		else if(items[0] == m_ObjectRootItem)
+		{
+			
+		}
+		else
+			gassed->ShowObjectContextMenu(obj,globalPos);
+	}
 }
 
 

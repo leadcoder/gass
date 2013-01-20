@@ -21,7 +21,8 @@ public:
 
 protected:
 	GASS::SceneWeakPtr m_Scene;
-	QTreeWidgetItem *m_Root;
+	QTreeWidgetItem *m_ObjectRootItem;
+	QTreeWidgetItem *m_SceneItem;
 	GASSEd* m_GASSEd;
 	std::map<GASS::SceneObject*,QTreeWidgetItem*> m_ItemMap;
 	std::map<QTreeWidgetItem*,GASS::SceneObjectWeakPtr> m_ObjectMap;

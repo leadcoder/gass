@@ -46,10 +46,12 @@ public:
 	void OnLoadScene(GASS::PreSceneCreateEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
 	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
+	void OnSceneSelected(GASS::SceneSelectionChangedEventPtr message);
 protected:
 	
 	QtVariantProperty * CreateProp(GASS::BaseReflectionObjectPtr obj, GASS::IProperty* prop,const GASS::PropertySettings *ps);
 	void Show(GASS::SceneObjectPtr object);
+	void Show(GASS::ScenePtr scene);
 	GASS::SceneWeakPtr m_Scene;
 	QtProperty *m_Root;
 	QtVariantPropertyManager *m_VariantManager;

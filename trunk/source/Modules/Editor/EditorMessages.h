@@ -19,6 +19,17 @@ namespace GASS
 	};
 	typedef SPTR<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
 
+	class SceneSelectionChangedEvent : public SceneEventMessage
+	{
+	public:
+		SceneSelectionChangedEvent(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
+		  SceneEventMessage(sender_id , delay), m_Scene(scene){}
+		  ScenePtr GetScene() const {return m_Scene;}
+	private:
+		ScenePtr m_Scene;
+	};
+	typedef SPTR<SceneSelectionChangedEvent> SceneSelectionChangedEventPtr;
+
 	class ObjectLockChangedEvent : public SceneEventMessage
 	{
 	public:
