@@ -85,8 +85,8 @@ void GASSEd::Initialize(void* render_win_handle)
 	void* main_win_handle = winId();
 	m_GASSApp->Init(working_folder, appdata_folder_path, mydocuments_folder_path, "", main_win_handle, render_win_handle);
 	//load component schema
-	GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
-	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath(gass_data_path.GetFullPath() + "/schema");
+	//GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath("../configuration/schema");
 	OnNew();
 	//GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene());
 	//scene->Load("");

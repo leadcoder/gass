@@ -11,10 +11,11 @@
   <Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
   <Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
+  <Plugin PluginFile = "GASSPlugins/GASSPluginEnvironment"/>
   <!--<Plugin PluginFile = "GASSPluginRakNet"/>-->
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
-<ScenePath value="../../../common/data/"/>
+<ScenePath value="../../../common/data/scenaries"/>
 <SceneObjectTemplateManager>
 	<AddObjectIDToName value ="true"/>
 	<ObjectIDPrefix value="["/>
@@ -94,6 +95,13 @@
 	<ResourceGroup name="Bootstrap">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
 	</ResourceGroup>
+	<ResourceGroup name="SkyX">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="HYDRAX">
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	
 	<ResourceGroup name="PagedGeometry">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
 	</ResourceGroup>

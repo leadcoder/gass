@@ -70,6 +70,11 @@ copy "%QT_HOME%\bin\QtGuid4.dll" bin\\Debug
 copy  qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\\Release
 copy  qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5d.dll bin\\Debug
 
+rem copy xsd from code source
+mkdir %GASS_HOME%\samples\GASSEd\bin\configuration\schema
+cd "%GASS_HOME%\\source"
+FOR /R %%X IN (*.xsd) DO copy "%%X" %GASS_HOME%\samples\GASSEd\bin\configuration\schema\
+
 pause
 
 
