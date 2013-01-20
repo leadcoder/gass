@@ -57,7 +57,7 @@ using namespace Ogre;
 namespace GASS
 {
 	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) :	m_FogStart(200),
-		m_FogEnd(400),
+		m_FogEnd(40000),
 		m_UseFog(1),
 		m_FogMode("Linear"),
 		m_FogDensity(0.01),

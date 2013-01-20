@@ -27,6 +27,7 @@
 
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -135,7 +136,8 @@ namespace GASS
 	void EnvironmentManagerComponent::OnInitialize()
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EnvironmentManagerComponent::OnWeatherRequest,WeatherRequest,0));
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+	 
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		Ogre::Root::getSingleton().addFrameListener(this);
 		SkyXComponentPtr skyx = GetSceneObject()->GetFirstComponentByClass<SkyXComponent>();
@@ -178,7 +180,8 @@ namespace GASS
 
 	void EnvironmentManagerComponent::OnDelete()
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		if(sm && m_SunLight)
 			sm->destroyLight(m_SunLight);
 
@@ -402,7 +405,7 @@ namespace GASS
 		float point = (-lightDir.y + 1.0f) / 2.0f;
 
 
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
 		/*bool preForceDisableShadows = m_ForceDisableShadows;
 		m_ForceDisableShadows = (lightDir.y > 0.15f) ? true : false;

@@ -36,6 +36,7 @@
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 
 
 namespace GASS
@@ -78,7 +79,7 @@ namespace GASS
 
 	void OgreLightComponent::OnDelete()
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		if(sm && m_OgreLight)
 			sm->destroyLight(m_OgreLight);
 	}

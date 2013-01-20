@@ -22,6 +22,7 @@
 #include "SkyXVolumeCloudComponent.h"
 #include "SkyXCloudLayerComponent.h"
 #include "Plugins/Ogre/IOgreCameraProxy.h"
+#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 #include "Plugins/Ogre/OgreConvert.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -75,11 +76,29 @@ namespace GASS
 	{
 		if(m_Initialized)
 			return;
+
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayRequest,TimeOfDayRequest,0));
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
-		Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		Ogre::Camera* ocam = NULL;
+		if(sm->hasCamera("DummyCamera"))
+			ocam = sm->getCamera("DummyCamera");
+		else
+			ocam = sm->createCamera("DummyCamera");
+
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderTarget* target = iter.getNext();
+			if(target->getNumViewports() > 0)
+			{
+				ocam = target->getViewport(0)->getCamera();
+				break;
+			}
+			//target->addListener(this);
+		}
 		Ogre::Root::getSingleton().addFrameListener(this);
-		float save_clip  = ocam->getFarClipDistance();
+		//float save_clip  = ocam->getFarClipDistance();
 		
 		//ocam->setFarClipDistance(m_Radius);
 		//Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
@@ -244,7 +263,8 @@ namespace GASS
 
 	void SkyXComponent::Init(Ogre::Camera* ocam)
 	{
-		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		
+		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 
 		delete m_SkyX;
 		m_SkyX = new SkyX::SkyX(sm, ocam);
