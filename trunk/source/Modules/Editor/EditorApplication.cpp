@@ -55,7 +55,6 @@ namespace GASS
 			css->Load(config_path +  "GASSControlSettings.xml");
 		}
 
-//		se->GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorApplication::OnSceneCreated,PostSceneCreateEvent,0));
 		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified" targetNamespace="GASS" xmlns="GASS" xmlns:GASS="GASS">
+    <xs:element name="RecastOffmeshMeshConnectionComponent">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Radius">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+						<xs:guiSettings visible="true" editable="false">
+						</xs:guiSettings>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Mode">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+						<xs:guiSettings visible="true" editable="false">
+							<xs:restriction>
+								<xs:enumeration value="BIDIRECTIONAL"/>
+								<xs:enumeration value="DOWN_STREAM"/>
+								<xs:enumeration value="UP_STREAM"/>
+							</xs:restriction>
+						</xs:guiSettings>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

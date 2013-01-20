@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified" targetNamespace="GASS" xmlns="GASS" xmlns:GASS="GASS">
+    <xs:element name="DetourCrowdAgentComponent">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Script">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Group">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Radius">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Height">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="MaxAcceleration">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="MaxSpeed">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="SeparationWeight">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

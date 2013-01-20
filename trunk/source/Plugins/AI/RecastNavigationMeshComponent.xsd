@@ -1,0 +1,237 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified" targetNamespace="GASS" xmlns="GASS" xmlns:GASS="GASS">
+    <xs:element name="RecastNavigationMeshComponent">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">RecastNavigationMeshComponent</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+				<xs:element name="CellSize">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Cell size</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="CellHeight">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Cell height</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="AgentHeight">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Agent height</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="AgentRadius">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Agent radius</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="AgentMaxClimb">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">AgentMaxClimb</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="AgentMaxSlope">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">AgentMaxSlope</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="RegionMinSize">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">RegionMinSize</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="RegionMergeSize">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">RegionMergeSize</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="EdgeMaxLen">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">EdgeMaxLen</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="EdgeMaxError">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">EdgeMaxError</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="VertsPerPoly">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">VertsPerPoly</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="DetailSampleDist">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">DetailSampleDist</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="DetailSampleMaxError">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">DetailSampleMaxError</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Visible">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Visible</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:bool" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="ShowMeshSolid">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">ShowMeshSolid</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:bool" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="MeshBoundingMin">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">MeshBoundingMin</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:Vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="MeshBoundingMin">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">MeshBoundingMin</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:Vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="TileSize">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">TileSize</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:int" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="ImportMesh">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">ImportMesh</xs:documentation>
+						<xs:guiSettings visible="true" editable="false" controlType="FILE_DIALOG" fileControlSettings="navmesh"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="ExportMesh">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">ExportMesh</xs:documentation>
+						<xs:guiSettings visible="false" editable="false" controlType="FILE_DIALOG" fileControlSettings="navmesh"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="MeshSelection">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Select meshes to create navigation from</xs:documentation>
+						<xs:guiSettings visible="true" editable="false"  controlType="OBJECT_REFERENCE" referenceComponentFilters="OgreMeshComponent OgreSceneManagerTerrainComponent OgreTerrainPageComponent OSGMeshComponent"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="BoundingBoxFromShape">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Get bounding box from shape</xs:documentation>
+						<xs:guiSettings visible="true" editable="false" controlType="OBJECT_REFERENCE" referenceComponentFilters="BoxGeometryComponent"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Build">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Build navigation mesh</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:bool" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="ShowMeshLines">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Show navigation mesh in wireframe</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:bool" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Transparency">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">The transparency value for the navigation mesh , (0-100) where 0 is full transparency and 100 solid</xs:documentation>
+						<xs:guiSettings visible="true" editable="true"/>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:int" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -297,7 +297,6 @@ namespace GASS
 	{
 		BuildMesh();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent,1));
-		//GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeCamera,ChangeCameraRequest,1));
 		m_ActiveCameraObject = m_EditorSceneManager->GetActiveCameraObject();
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,NO_THROW);
 		if(cam_obj)

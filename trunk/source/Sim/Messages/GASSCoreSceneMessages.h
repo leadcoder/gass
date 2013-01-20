@@ -72,8 +72,6 @@ namespace GASS
 	//*********************************************************
 	
 
-
-
 	/**
 	Message used to remove a scene object from the scene
 	*/
@@ -146,9 +144,7 @@ namespace GASS
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 
-
-
-
+	
 	class InternalSceneMessage : public BaseMessage
 	{
 	protected:
@@ -159,51 +155,7 @@ namespace GASS
 	};
 	typedef SPTR<InternalSceneMessage> InternalSceneMessagePtr;
 
-	/**
-	Event sent by the scene class while loading a 
-	new scene.
-	It's up to each scene manager to catch this and load it's 
-	dependencies
-	*/
-	/*class LoadSceneManagersRequest: public InternalSceneMessage
-	{
-	public:
-		LoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
-		  InternalSceneMessage(sender_id , delay), m_Scene(scene)
-		  {
 
-		  }
-		  ScenePtr GetScene() const {return m_Scene;}
-	private:
-		ScenePtr m_Scene;
-	};
-	typedef SPTR<LoadSceneManagersRequest> LoadSceneManagersRequestPtr;*/
-
-
-	/**
-	Event sent by the scene class 
-	while unloading a scene.
-	It's up to each scene manager to catch this free 
-	it's resources.
-	
-	*/
-	/*class UnLoadSceneManagersRequest : public InternalSceneMessage
-	{
-	public:
-		UnLoadSceneManagersRequest(ScenePtr scene, SenderID sender_id = -1, double delay= 0) : 
-		  InternalSceneMessage(sender_id , delay), m_Scene(scene)
-		  {
-
-		  }
-		  ScenePtr GetScene() const {return m_Scene;}
-	private:
-		ScenePtr m_Scene;
-	};
-	typedef SPTR<UnLoadSceneManagersRequest> UnLoadSceneManagersRequestPtr;*/
-
-	/**
-		Message sent by SceneObject before scene object is Initialized 
-	*/
 	class PreSceneObjectInitializedEvent : public InternalSceneMessage
 	{
 	public:
