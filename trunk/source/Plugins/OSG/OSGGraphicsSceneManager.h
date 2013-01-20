@@ -87,6 +87,7 @@ namespace GASS
 		osg::ref_ptr<osg::Group> m_RootNode;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
+		osgViewer::View *m_View;
 	};
 	typedef SPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;

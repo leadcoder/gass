@@ -201,62 +201,61 @@ namespace GASS
 		//m_Viewer->realize();
 	}
 
-	void OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_handle)
-	{
-		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-
-		traits->x = 100;
-		traits->y = 100;
-		traits->width = width;
-		traits->height = height;
-		traits->doubleBuffer = true;
-		traits->sharedContext = 0;
-		if(m_Windows.size() > 0)
-			traits->sharedContext = m_Windows.begin()->second;
-
-		void* win_handle = external_handle;
-
-		if(external_handle) //external window
+		RenderWindowPtr OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_handle)
 		{
-			osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)external_handle);
-			traits->windowDecoration = false;
-			traits->setInheritedWindowPixelFormat = true;
-			traits->inheritedWindowData = windata;
-		}
-		else 
-		{
-			traits->windowDecoration = true;
-			traits->windowName = name;
-		}
+			osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 
-		osg::ref_ptr<osg::GraphicsContext> graphics_context = osg::GraphicsContext::createGraphicsContext(traits.get());
-		if (graphics_context.valid())
-		{
-			//osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
-			//need to ensure that the window is cleared make sure that the complete window is set the correct colour
-			//rather than just the parts of the window that are under the camera's viewports
-			graphics_context->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
-			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-		else
-		{
-			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
-		}
-		m_Windows[name] = graphics_context;
+			traits->x = 100;
+			traits->y = 100;
+			traits->width = width;
+			traits->height = height;
+			traits->doubleBuffer = true;
+			traits->sharedContext = 0;
+			if(m_Windows.size() > 0)
+				traits->sharedContext = m_Windows.begin()->second;
+			void* win_handle = external_handle;
 
-		//if(m_Windows.size() == 1) //first window created?
-		{
-			if(win_handle == 0) //internal window
+			if(external_handle) //external window
 			{
-#if defined(WIN32) && !defined(__CYGWIN__) 	
-				osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
-				win_handle = (void*) win32_window->getHWND();
-#endif
+				osg::ref_ptr<osg::Referenced> windata = new osgViewer::GraphicsWindowWin32::WindowData((HWND)external_handle);
+				traits->windowDecoration = false;
+				traits->setInheritedWindowPixelFormat = true;
+				traits->inheritedWindowData = windata;
 			}
-			SystemMessagePtr window_msg(new RenderWindowCreatedEvent(win_handle));
-			GetSimSystemManager()->SendImmediate(window_msg);
+			else 
+			{
+				traits->windowDecoration = true;
+				traits->windowName = name;
+			}
+
+			osg::ref_ptr<osg::GraphicsContext> graphics_context = osg::GraphicsContext::createGraphicsContext(traits.get());
+			if (graphics_context.valid())
+			{
+				//osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
+				//need to ensure that the window is cleared make sure that the complete window is set the correct colour
+				//rather than just the parts of the window that are under the camera's viewports
+				graphics_context->setClearColor(osg::Vec4f(0.8f,0.0f,0.0f,1.0f));
+				graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			}
+			else
+			{
+				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
+			}
+			m_Windows[name] = graphics_context;
+
+			//if(m_Windows.size() == 1) //first window created?
+			{
+				if(win_handle == 0) //internal window
+				{
+#if defined(WIN32) && !defined(__CYGWIN__) 	
+					osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
+					win_handle = (void*) win32_window->getHWND();
+#endif
+				}
+				SystemMessagePtr window_msg(new RenderWindowCreatedEvent(win_handle));
+				GetSimSystemManager()->SendImmediate(window_msg);
+			}
 		}
-	}
 
 	void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height)
 	{

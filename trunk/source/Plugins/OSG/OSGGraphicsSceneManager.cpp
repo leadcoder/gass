@@ -86,8 +86,38 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnInitialize");
 		}
-	}
 
+		osgViewer::View* view = new osgViewer::View;
+		m_View = view;
+		view->setName(GetName());
+		m_GFXSystem->GetViewer()->addView(view);
+
+		view->setLightingMode(osg::View::SKY_LIGHT); 
+		view->getDatabasePager()->setDoPreCompile( true );
+		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
+		// add some OSG handlers:
+
+		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
+		stats->setKeyEventTogglesOnScreenStats('y');
+		stats->setKeyEventPrintsOutStats(0);
+
+		view->addEventHandler(stats);
+
+		view->addEventHandler(new osgViewer::WindowSizeHandler());
+		view->addEventHandler(new osgViewer::ThreadingHandler());
+		view->addEventHandler(new osgViewer::LODScaleHandler());
+
+		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
+		ssm->setKeyEventCyclePolygonMode('p');
+		ssm->setKeyEventToggleTexturing('o');
+		view->addEventHandler(ssm);
+		//view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
+		view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+		//view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+		
+		//view->getCamera()->setViewport(new osg::Viewport(p_left, p_top, p_width,p_height));
+		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);
+	}
 
 	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
 	{
