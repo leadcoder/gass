@@ -143,11 +143,10 @@ namespace GASS
 		TiXmlElement *xSettings = 0;
 		xSettings = xmlDoc->FirstChildElement("EditorApplication");
 		TiXmlElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
-		TiXmlElement *gui_state = xSettings->FirstChildElement("GUIState");
 		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
-		TiXmlElement *xexternal_update = xSettings->FirstChildElement("ExternalUpdate");
 		TiXmlElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
 
+		
 		if(xupdate_freq)
 		{
 			m_UpdateFreq = atoi(xupdate_freq->Attribute("value"));
@@ -174,24 +173,11 @@ namespace GASS
 		{
 			m_StartScene = start_scene->Attribute("value");
 		}
-
-
 		xmlDoc->Clear();
 		// Delete our allocated document and return success ;)
 		delete xmlDoc;
 		return true;
 	}
-	
-
-/*	void EditorApplication::NewScene()
-	{
-		m_Scene = ScenePtr(SimEngine::Get().NewScene());
-	}*/
-
-	/*void EditorApplication::SaveScene(const FilePath &path)
-	{
-		SimEngine::Get().SaveScene(path);
-	}*/
 
 }
 

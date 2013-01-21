@@ -85,7 +85,7 @@ namespace GASS
 			if(rl->GetType() == RLT_FILESYSTEM)
 				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"FileSystem", rl->GetGroup()->GetName(),false);
 			else if(rl->GetType() == RLT_ZIP)
-				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"zip", rl->GetGroup()->GetName(),false);
+				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"Zip", rl->GetGroup()->GetName(),false);
 		}
 		if(load)
 			rsm->initialiseResourceGroup(group->GetName());

@@ -53,7 +53,8 @@
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-
+#include <stdlib.h>
+#include <stdio.h>
 #include <tinyxml.h>
 
 namespace GASS
@@ -96,8 +97,6 @@ namespace GASS
 	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
 		m_PluginManager->LoadFromFile(configuration.GetFullPath());
 		
-		m_SystemManager->Load(configuration.GetFullPath());
-		
 		LoadSettings(configuration);
 		
 		//Initialize systems
@@ -123,9 +122,25 @@ namespace GASS
 		//add top tag!
 		TiXmlDocument *xml_settings = xmlDoc;
 
+		TiXmlElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
+		if(xml_data_path)
+		{
+			std::string env_data_path = Misc::ReadString((TiXmlElement *)xml_settings,"SetDataPath");
+			if(boost::filesystem::exists(boost::filesystem::path(env_data_path)))
+			{
+				env_data_path = "GASS_DATA_HOME=" + env_data_path;
+				_putenv(env_data_path.c_str()); 
+			}
+		}
+
+
 		TiXmlElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if(xml_scene_path)
 			m_ScenePath.SetPath(Misc::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
+
+
+		m_SystemManager->Load(configuration_file.GetFullPath());
+		
 
 		//read SceneObjectTemplateManager settings
 		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
