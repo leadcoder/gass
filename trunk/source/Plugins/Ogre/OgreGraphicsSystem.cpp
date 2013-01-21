@@ -303,7 +303,7 @@ namespace GASS
 	}
 	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
 	{
-		m_ResourceManager->AddResourceGroup(message->GetGroup());
+		m_ResourceManager->AddResourceGroup(message->GetGroup(),true);
 	}
 
 	void OgreGraphicsSystem::OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message)

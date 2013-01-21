@@ -165,10 +165,13 @@ namespace GASS
 				"Scene::Load");
 		}*/
 		//m_Name = name;
-		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		rs->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
+		ResourceGroupPtr res_group(new ResourceGroup(GetResourceGroupName()));
+		m_ResourceGroup = res_group;
 		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
-		//rs->AddResourceGroup(GetResourceGroupName());
-		ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		res_group->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		rs->AddResourceGroup(res_group);
 		//rs->LoadResourceGroup(GetResourceGroupName());
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
