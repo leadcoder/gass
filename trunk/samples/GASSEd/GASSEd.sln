@@ -15,6 +15,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtSolutions_PropertyBrowser
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginPagedGeometry", "..\..\build\GASSPluginPagedGeometry.vcxproj", "{1A447765-DB18-3448-8383-2C5A2B1B4335}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginODE", "..\..\build\GASSPluginODE.vcxproj", "{F95E884B-4D83-D341-9668-D663F750FFAE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginEnvironment", "..\..\build\GASSPluginEnvironment.vcxproj", "{0754E013-17D2-3F4F-BB50-DC1A738270DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -79,6 +83,18 @@ Global
 		{1A447765-DB18-3448-8383-2C5A2B1B4335}.Release|Win32.Build.0 = Release|Win32
 		{1A447765-DB18-3448-8383-2C5A2B1B4335}.Release|x64.ActiveCfg = Release|x64
 		{1A447765-DB18-3448-8383-2C5A2B1B4335}.Release|x64.Build.0 = Release|x64
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Debug|Win32.Build.0 = Debug|Win32
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Debug|x64.ActiveCfg = Debug|Win32
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Release|Win32.ActiveCfg = Release|Win32
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Release|Win32.Build.0 = Release|Win32
+		{F95E884B-4D83-D341-9668-D663F750FFAE}.Release|x64.ActiveCfg = Release|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Debug|Win32.Build.0 = Debug|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Debug|x64.ActiveCfg = Debug|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Release|Win32.ActiveCfg = Release|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Release|Win32.Build.0 = Release|Win32
+		{0754E013-17D2-3F4F-BB50-DC1A738270DC}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,7 +45,6 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
 {
     setObjectName("GASSEd");
     setWindowTitle("GASSEd");
-
     /*center = new QTextEdit(this);
     center->setReadOnly(true);
     center->setMinimumSize(400, 205);
@@ -61,7 +60,7 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
     statusBar()->showMessage(tr("Status Bar"));
 	setDockNestingEnabled(true);
 
-	QDockWidget* res_dock = new QDockWidget("Res");
+	QDockWidget* res_dock = new QDockWidget("Resources");
 	res_dock->setWidget(new  GASSResourceTreeWidget());
 	res_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	addDockWidget(Qt::LeftDockWidgetArea , res_dock);
@@ -377,8 +376,6 @@ void GASSEd::OnOpen()
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
-
-		
 	}
 }
 
