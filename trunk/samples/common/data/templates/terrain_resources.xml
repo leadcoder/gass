@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+  <SceneObjectTemplate>
+    <Name value="OgreTerrainPageObject"/>
+    <Components>
+      <OgreTerrainPageComponent>
+        <IndexX value ="0"/>
+        <IndexY value ="0"/>
+        <Position value ="0 0 0"/>
+      </OgreTerrainPageComponent>
+      <PhysicsTerrainGeometryComponent>
+      </PhysicsTerrainGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="OgrePagedTerrainObject"/>
+    <Components>
+      <OgreTerrainGroupComponent>
+        <ImportTerrainWorldSize value="1000"/>
+        <ImportTerrainSize value="513"/>
+      </OgreTerrainGroupComponent>
+    </Components>
+    <ComponentContainers>
+      <!--  <SceneObjectTemplate>
+        <Name value="OgreTerrainPageObject0x0"/>
+        <Components>
+          <OgreTerrainPageComponent>
+            <IndexX value ="0"/>
+            <IndexY value ="0"/>
+            <Position value ="0 0 0"/>
+          </OgreTerrainPageComponent>
+        </Components>
+      </SceneObjectTemplate>
+      <SceneObjectTemplate>
+        <Name value="OgreTerrainPageObject1x0"/>
+        <Components>
+          <OgreTerrainPageComponent>
+            <IndexX value ="1"/>
+            <IndexY value ="0"/>
+            <Position value ="1000 0 0"/>
+          </OgreTerrainPageComponent>
+        </Components>
+      </SceneObjectTemplate>-->
+    </ComponentContainers>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="OgreTerrainObject"/>
+    <Components>
+      <OgreTerrainComponent>
+        <TerrainConfigFile value=""/>
+      </OgreTerrainComponent>
+      <LocationComponent/>
+      <PhysicsTerrainGeometryComponent>
+      </PhysicsTerrainGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="CustomMeshObject"/>
+    <Components>
+      <MeshComponent>
+        <Filename value="Container_01.mesh"/>
+        <CastShadow value="1"/>
+      </MeshComponent>
+      <LocationComponent/>
+      <PhysicsMeshGeometryComponent>
+      </PhysicsMeshGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="HydraxWater"/>
+    <Components>
+      <HydraxWaterComponent>
+        <ConfigurationFile value=""/>
+        <ResourceLocation value="%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax"/>
+      </HydraxWaterComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SkyXVolumeClouds"/>
+    <Components>
+      <SkyXComponent>
+      </SkyXComponent>
+      <SkyXVolumeCloudComponent>
+        <Name value="VolumeClouds"/>
+      </SkyXVolumeCloudComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SkyXLayerClouds"/>
+    <Components>
+      <SkyXComponent>
+      </SkyXComponent>
+      <SkyXCloudLayerComponent>
+        <Name value="Layer1"/>
+      </SkyXCloudLayerComponent>
+      <SkyXCloudLayerComponent>
+        <Name value="Layer2"/>
+      </SkyXCloudLayerComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SkyXVolumeAndLayerClouds"/>
+    <Components>
+      <SkyXComponent>
+      </SkyXComponent>
+      <SkyXVolumeCloudComponent>
+        <Name value="VolumeClouds"/>
+      </SkyXVolumeCloudComponent>
+      <SkyXCloudLayerComponent>
+        <Name value="Layer1"/>
+      </SkyXCloudLayerComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="EnvironmentObject"/>
+    <Components>
+      <HydraxWaterComponent>
+        <ResourceLocation value="%GASS_DATA_PATH%/gfx/ogre/ExternalResources/hydrax"/>
+      </HydraxWaterComponent>
+      <SkyXComponent>
+      </SkyXComponent>
+      <SkyXVolumeCloudComponent>
+        <Name value="VolumeClouds"/>
+      </SkyXVolumeCloudComponent>
+      <SkyXCloudLayerComponent>
+        <Name value="Layer1"/>
+      </SkyXCloudLayerComponent>
+      <EnvironmentManagerComponent>
+        <Name value="EnvironmentManagerComponent"/>
+      </EnvironmentManagerComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SkyObject"/>
+    <Components>
+      <SkyXComponent>
+      </SkyXComponent>
+      <!--<SkyXVolumeCloudComponent>
+        <Name value="VolumeClouds"/>
+      </SkyXVolumeCloudComponent>-->
+      <SkyXCloudLayerComponent>
+        <Name value="Layer1"/>
+      </SkyXCloudLayerComponent>
+      <EnvironmentManagerComponent>
+        <Name value="EnvironmentManagerComponent"/>
+      </EnvironmentManagerComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="SunLight"/>
+    <Components>
+      <LightComponent>
+        <LightType value="LT_DIRECTIONAL"/>
+        <CastShadow value="1"/>
+      </LightComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="45 45 0"/>
+      </LocationComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="GrassVegetationObject"/>
+    <Components>
+      <GrassLoaderComponent>
+	    <Name value = "GRASS_LOADER"/>
+        <PageSize value = "45"/>
+        <ViewDistance value ="100"/>
+        <DensityMap value= ""/>
+        <ColorMap value= "grass_color.png"/>
+      </GrassLoaderComponent>
+      <GrassLayerComponent>
+        <Name value = "FAR_LAYER"/>
+        <Material value="FadeGrass2"/>
+        <DensityFactor value= "1"/>
+        <MaxSize value="2.0 0.7"/>
+        <MinSize value="1.5 0.5"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="FADETECH_ALPHA"/>
+        <RenderTechnique value ="GRASSTECH_QUAD"/>
+        <BlendWithGround value="false"/>
+      </GrassLayerComponent>
+    </Components>
+  </SceneObjectTemplate>
+   <SceneObjectTemplate>
+    <Name value="PlantVegetationObject"/>
+    <Components>
+      <GrassLoaderComponent>
+		<Name value = "PLANT_LOADER"/>
+        <PageSize value = "45"/>
+        <ViewDistance value ="100"/>
+        <DensityMap value= ""/>
+        <!--<ColorMap value= "grass_color.png"/>-->
+      </GrassLoaderComponent>
+      <GrassLayerComponent>
+        <Name value = "PLANT_LAYER_1"/>
+        <Material value="PlantMat01"/>
+        <DensityFactor value= "0.05"/>
+        <MaxSize value="1.0 1.3"/>
+        <MinSize value="0.5 0.8"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="FADETECH_ALPHA"/>
+        <RenderTechnique value ="GRASSTECH_QUAD"/>
+        <BlendWithGround value="false"/>
+      </GrassLayerComponent>
+      <GrassLayerComponent>
+        <Name value = "PLANT_LAYER_2"/>
+        <Material value="PlantMat02"/>
+        <DensityFactor value= "0.05"/>
+        <MaxSize value="1.0 1.3"/>
+        <MinSize value="0.5 0.8"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="FADETECH_ALPHA"/>
+        <RenderTechnique value ="GRASSTECH_QUAD"/>
+        <BlendWithGround value="false"/>
+      </GrassLayerComponent>
+      <GrassLayerComponent>
+        <Name value = "PLANT_LAYER_3"/>
+        <Material value="PlantMat03"/>
+        <DensityFactor value= "0.05"/>
+        <MaxSize value="1.0 1.3"/>
+        <MinSize value="0.5 0.8"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="FADETECH_ALPHA"/>
+        <RenderTechnique value ="GRASSTECH_QUAD"/>
+        <BlendWithGround value="false"/>
+      </GrassLayerComponent>
+      <GrassLayerComponent>
+        <Name value = "PLANT_LAYER_4"/>
+        <Material value="PlantMat04"/>
+        <DensityFactor value= "0.05"/>
+        <MaxSize value="1.0 1.3"/>
+        <MinSize value="0.5 0.8"/>
+        <EnableSway value="true"/>
+        <SwaySpeed value="0.1"/>
+        <SwayLength value="0.1"/>
+        <SwayDistribution value="10"/>
+        <FadeTech value ="FADETECH_ALPHA"/>
+        <RenderTechnique value ="GRASSTECH_QUAD"/>
+        <BlendWithGround value="false"/>
+      </GrassLayerComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <!---<SceneObjectTemplate>
+    <Name value="ForestVegetationObject"/>
+    <Components>
+      <DensityMapComponent/>
+      <TreeGeometryComponent>
+        <Name value="TreeLayer2"/>
+        <Mesh value="LOD01_stob_4_gran4_m1-1.mesh"/>
+        <DensityMap value="kvarn_tree_mask.png"/>
+        <DensityFactor value="0.005"/>
+        <SetHeightAtStartup value ="true"/>
+        <MeshDistance value ="300"/>
+        <ImposterDistance value ="700"/>
+        <MaxMinScale value ="0.9 1.1"/>
+      </TreeGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>-->
+   <SceneObjectTemplate>
+    <Name value="ForestVegetationObject"/>
+    <Components>
+      <DensityMapComponent/>
+      <TreeGeometryComponent>
+        <Name value="Gran01"/>
+        <Mesh value= "gran01.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.004"/>
+        <MeshDistance value ="70"/>
+        <PageSize value ="50"/>
+        <MeshFadeDistance value ="0"/>
+        <ImposterDistance value ="300"/>
+        <ImposterFadeDistance value ="40"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.5 1"/>
+        <CastShadows value="true"/>
+      </TreeGeometryComponent>
+      <TreeGeometryComponent>
+        <Name value="Gran02"/>
+        <Mesh value= "Gran02.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.004"/>
+        <MeshDistance value ="70"/>
+        <PageSize value ="50"/>
+        <MeshFadeDistance value ="0"/>
+        <ImposterDistance value ="500"/>
+        <ImposterFadeDistance value ="40"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.5 1"/>
+        <CastShadows value="true"/>
+      </TreeGeometryComponent>
+      <TreeGeometryComponent>
+        <Name value="Bjork01"/>
+        <Mesh value= "Bjork01.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.0005"/>
+        <MeshDistance value ="90"/>
+        <PageSize value ="50"/>
+        <MeshFadeDistance value ="0"/>
+        <ImposterDistance value ="400"/>
+        <ImposterFadeDistance value ="40"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.2 0.5"/>
+        <CastShadows value="true"/>
+      </TreeGeometryComponent>
+      <TreeGeometryComponent>
+        <Name value="Plant01"/>
+        <Mesh value= "Plant01.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.1"/>
+        <MeshDistance value ="20"/>
+        <PageSize value ="10"/>
+        <MeshFadeDistance value ="5"/>
+        <ImposterDistance value ="0"/>
+        <ImposterFadeDistance value ="0"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.6 1.0"/>
+      </TreeGeometryComponent>
+      <TreeGeometryComponent>
+        <Name value="Plant03"/>
+        <Mesh value= "Plant03.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.05"/>
+        <MeshDistance value ="20"/>
+        <PageSize value ="10"/>
+        <MeshFadeDistance value ="5"/>
+        <ImposterDistance value ="0"/>
+        <ImposterFadeDistance value ="0"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.6 1.0"/>
+      </TreeGeometryComponent>
+      <TreeGeometryComponent>
+        <Name value="Plant04"/>
+        <Mesh value= "Plant04.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.05"/>
+        <MeshDistance value ="20"/>
+        <PageSize value ="10"/>
+        <MeshFadeDistance value ="5"/>
+        <ImposterDistance value ="0"/>
+        <ImposterFadeDistance value ="0"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.6 1.0"/>
+      </TreeGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="WaypointList"/>
+    <Components>
+      <WaypointListComponent>
+        <Radius value ="0"/>
+      </WaypointListComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+        <AttachToParent value="0"/>
+      </LocationComponent>
+      <ManualMeshComponent>
+      </ManualMeshComponent>
+      <RoadComponent/>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="Waypoint"/>
+    <Components>
+      <WaypointComponent>
+      </WaypointComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+        <AttachToParent value="1"/>
+      </LocationComponent>
+      <!--<BoxGeometryComponent>
+		<Size value="0.2 0.2 0.2"/>
+	  </BoxGeometryComponent>-->
+      <BillboardComponent>
+        <Name value="NodeGeom"/>
+        <Material value="node.dds"/>
+        <Width value="0.4"/>
+        <Height value="0.4"/>
+      </BillboardComponent>
+      <ManualMeshComponent>
+        <Name value="TangentGeom"/>
+      </ManualMeshComponent>
+      <PhysicsBoxGeometryComponent/>
+    </Components>
+    <ComponentContainers>
+      <SceneObjectTemplate>
+        <Name value="Tangent"/>
+        <Components>
+          <LocationComponent>
+            <Position value="0 0 2"/>
+            <Rotation value="0 0 0"/>
+            <AttachToParent value="1"/>
+          </LocationComponent>
+          <BoxGeometryComponent>
+            <Size value="0.1 0.1 0.1"/>
+          </BoxGeometryComponent>
+          <ManualMeshComponent>
+          </ManualMeshComponent>
+          <PhysicsBoxGeometryComponent/>
+        </Components>
+        <ComponentContainers>
+        </ComponentContainers>
+      </SceneObjectTemplate>
+    </ComponentContainers>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="PaintGizmo"/>
+	<Serialize value="false"/>
+    <Components>
+      <ManualMeshComponent>
+      </ManualMeshComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </LocationComponent>
+      <PaintGizmoComponent>
+        <Type value="test"/>
+        <Color value="1 1 1 1"/>
+        <Size value ="6"/>
+      </PaintGizmoComponent>
+    </Components>
+  </SceneObjectTemplate>
+</Templates>
