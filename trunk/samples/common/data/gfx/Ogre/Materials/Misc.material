@@ -74,9 +74,6 @@ technique
    }
 }
 
-
-
- 
 material PaintGizmoMat
 {
 technique
