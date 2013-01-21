@@ -8,7 +8,7 @@ void casterVP(
 	float4 position			: POSITION,
 	float4 texcoord			: TEXCOORD0,
 	out float4 outPos		: POSITION,
-	out float2 outDepth	: TEXCOORD0,
+	out float2 outDepth		: TEXCOORD0,
 	out float2 outTex		: TEXCOORD1,
 
 
@@ -46,6 +46,7 @@ void casterFP(
 	float finalDepth = depth.x / depth.y;
 #endif
 	float4 trans = tex2D(tex,texcoord);
+	
 	
 	//finalDepth = finalDepth*0.001 +finalDepth;
 	//no alpha info?

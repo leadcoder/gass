@@ -9,6 +9,8 @@ material RoadMat : DiffuseTemplate
 		{ 
 			//alpha_rejection greater 128 
 			scene_blend alpha_blend
+			depth_write off
+
 			//ambient 1 1 1 1 
 			//diffuse 1 1 1 1  
 
@@ -56,4 +58,182 @@ material TinyRoad : DiffuseTemplate
 
 	} 
 } 
+
+material MuddyRoadWithTracks : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			scene_blend alpha_blend
+			depth_write off
+			depth_bias	4 4
+			ambient 1 1 1 0.5 
+			diffuse 1 1 1 0.5  
+
+			texture_unit diffuse_map
+			{ 
+				texture muddy_road_with_tracks.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+material StoneRoadWithTracks : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			scene_blend alpha_blend
+			depth_write off
+			depth_bias	5 5
+			ambient 1 1 1 0.5 
+			diffuse 1 1 1 0.5  
+
+
+
+			texture_unit diffuse_map
+			{ 
+				texture stone_road_with_tracks.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+material DirtRoadWithTracks : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			scene_blend alpha_blend
+			depth_write off
+			depth_bias	5 5
+
+			texture_unit diffuse_map
+			{ 
+				texture dirt_road_with_tracks.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+material AsphaltRoad01 : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit diffuse_map
+			{ 
+				texture asphalt_road_01.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+material AsphaltRoadNoAlpha01 : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			texture_unit diffuse_map
+			{ 
+				texture asphalt_road_01.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+
+material AsphaltRoad02 : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			scene_blend alpha_blend
+			depth_write off
+			ambient 0.7 0.7 0.7 1  
+			diffuse 0.7 0.7 0.7 1  
+
+
+			texture_unit diffuse_map
+			{ 
+				texture asphalt_road_02.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
+material AsphaltRoadNoAlpha02 : DiffuseTemplate
+{ 
+	technique light
+	{ 
+		pass 
+		{ 
+			texture_unit diffuse_map
+			{ 
+				texture asphalt_road_02.dds
+			}
+			texture_unit
+			{	
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+			}
+
+		} 
+	} 
+} 
+
 
