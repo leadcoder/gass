@@ -15,7 +15,8 @@
   <!--<Plugin PluginFile = "GASSPluginRakNet"/>-->
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
-<ScenePath value="../../../common/data/scenaries"/>
+ <SetDataPath value="../../../common/data/"/>
+ <ScenePath value="%GASS_DATA_HOME%/scenaries"/>
 <SceneObjectTemplateManager>
 	<AddObjectIDToName value ="true"/>
 	<ObjectIDPrefix value="["/>
@@ -23,8 +24,8 @@
 	<Load>
 		<!--<Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
 		<Template value="../Configuration/app_templates.xml"/>-->
-		<Template value="%GASS_DATA_HOME%/templates/editor/prerequisite.xml"/>
-       <Template value="%GASS_DATA_HOME%/templates/editor/gassed.xml"/>
+		<Template value="%GASS_DATA_HOME%/templates/editor_system.xml"/>
+        <Template value="%GASS_DATA_HOME%/templates/terrain_resources.xml"/>
     </Load>
 </SceneObjectTemplateManager>
 <Systems>
@@ -86,12 +87,6 @@
 	<TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
   <BaseResourceSystem>
-    <!--<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" type="Zip" recursive="false"/>
-    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" Group="SkyX" type="FileSystem" recursive="true"/>
-    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/programs" Group="Ogre" type="FileSystem" recursive="true"/>
-    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/scripts" Group="Ogre" type="FileSystem" recursive="true"/>
-    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/ogre/materials/textures" Group="Ogre" type="FileSystem" recursive="true"/>!-->
-	<!--<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/particles/" Group="GASS" type="FileSystem" recursive="false"/>-->
 	<ResourceGroup name="Bootstrap">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
 	</ResourceGroup>
@@ -101,17 +96,13 @@
 	<ResourceGroup name="HYDRAX">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
 	</ResourceGroup>
-	
 	<ResourceGroup name="PagedGeometry">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
 	</ResourceGroup>
 	<ResourceGroup name="GASS">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/" type="FileSystem" recursive="false"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/misc" type="FileSystem" recursive="false"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/editor/icons/"  type="FileSystem" recursive="false"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/GENESIS"  type="FileSystem" recursive="true"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/KvarnBuildings" type="FileSystem" recursive="true"/>
-	    <AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/Fonts" type="FileSystem" recursive="false"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials" type="FileSystem" recursive="false"/>
 	</ResourceGroup>
 	<ResourceGroup name="GASS_VEGETATION_MATERIALS">
 		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
