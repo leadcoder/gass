@@ -51,7 +51,7 @@ namespace GASS
 			{
 				TiXmlElement *group_elem = prop_elem->FirstChildElement();
 				const std::string group_name = Misc::ReadStringAttribute(prop_elem,"name");
-				ResourceGroupPtr group = CreateResourceGroup(group_name);
+				ResourceGroupPtr group(new ResourceGroup(group_name));
 				while(group_elem)
 				{
 					const std::string group_elem_name = group_elem->Value();
@@ -72,6 +72,7 @@ namespace GASS
 					}
 					group_elem  = group_elem->NextSiblingElement();
 				}
+				AddResourceGroup(group);
 			}
 			else
 			{
@@ -81,11 +82,6 @@ namespace GASS
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
-
-	/*void BaseResourceSystem::LoadResourceGroup(const std::string &resource_group)
-	{
-
-	}*/
 
 	bool BaseResourceSystem::HasResourceGroup(const std::string &name)
 	{
@@ -101,15 +97,11 @@ namespace GASS
 		return false;
 	}
 
-	ResourceGroupPtr BaseResourceSystem::CreateResourceGroup(const std::string &name)
+	void BaseResourceSystem::AddResourceGroup(ResourceGroupPtr group)
 	{
-		ResourceSystemPtr system = DYNAMIC_CAST<IResourceSystem>(shared_from_this());
-		ResourceGroupPtr group(new ResourceGroup(system,name));
 		m_ResourceGroups.push_back(group);
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));
-		return group;
 	}
-
 
 	void BaseResourceSystem::RemoveResourceGroup(ResourceGroupPtr group)
 	{
@@ -127,28 +119,7 @@ namespace GASS
 		}
 	}
 
-	/*std::vector<Resource> BaseResourceSystem::GetResources(const std::string &resource_type, const std::string &resource_group) const
-	{
-		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
-		std::vector<Resource> resources;
-		while(iter != m_ResourceLocations.end())
-		{
-			if(resource_group == (*iter)->Group)
-			{
-				std::vector<FilePath> files;
-				FilePath::GetFilesFromPath(files,(*iter)->m_Path);
-				for(size_t i = 0; i< files.size(); i++)
-				{
-					const std::string res_type = GetType(files[i].GetExtension());
-					if(resource_type == "" || res_type  == resource_type)
-						resources.push_back(Resource(files[i],resource_group,res_type));
-				}
-			}
-			++iter;
-		}
-		return resources;
-	}*/
-
+	
 	std::string BaseResourceSystem::GetResourceTypeByExtension(const std::string &extension) const
 	{
 		std::string ext = Misc::ToLower(extension);
@@ -180,119 +151,11 @@ namespace GASS
 		return Resource(FilePath(""),"","");
 	}
 
-	/*bool BaseResourceSystem::GetFullPath(const std::string &file_name,std::string &file_path)
-	{
-		boost::filesystem::path boost_file(file_name); 
-		if( boost::filesystem::exists(boost_file))  
-		{
-			return true;
-		}
-		else 
-		{
-			for(int i  = 0; i < m_ResourceLocations.size(); i++)
-			{
-				boost::filesystem::path temp_file_path(m_ResourceLocations[i].m_Path.GetFullPath() + "/" +  file_name);
-				if(boost::filesystem::exists(temp_file_path))
-				{
-					file_path = temp_file_path.string();
-					return true;
-				}
-			}
-		}
-		LogManager::getSingleton().stream() << "WARNING:Failed to find resource: " << file_name;
-		return false;
-	}*/
 
 	void BaseResourceSystem::RegisterResourceType(const ResourceType &res_type) 
 	{
 		m_ResourceTypes.push_back(res_type);
 	}
-
-	/*std::vector<Resource> BaseResourceSystem::GetResourcesFromGroup(const std::string &resource_group, const std::string &resource_class) const
-	{
-		std::vector<Resource> content;
-		std::vector<std::string> files = GetResourceNames(resource_group);
-		if(resource_class != "")
-		{
-			if(m_ResourceTypes.find(resource_class) != m_ResourceTypes.end())
-			{
-				for(size_t i = 0; i < files.size(); i++)
-				{
-					const std::string ext = Misc::GetExtension(files[i]);
-					if(HasFileType(resource_class,ext))
-					{
-						content.push_back(files[i]);	
-					}
-				}
-				return content;
-			}
-			else
-			{
-
-			}
-		}
-		else
-		{
-
-		}
-		return content;
-	}
-
-	std::vector<std::string> BaseResourceSystem::GetResourcesFromGroup(ResourceType rt, const std::string &resource_group) const
-	{
-		std::vector<std::string> content;
-		switch(rt)
-		{
-		case RT_MATERIAL:
-			{
-			}
-			break;
-		case RT_TEXTURE:
-			{
-				std::vector<std::string> files = GetResourceNames(resource_group);
-				for(size_t i = 0; i < files.size(); i++)
-				{
-					const std::string ext = Misc::GetExtension(files[i]);
-					if(ext == "bmp"||
-						ext == "jpg"||
-						ext == "gif"||
-						ext == "dds"||
-						ext == "tga"||
-						ext == "png"
-						)
-						content.push_back(files[i]);
-				}
-			}
-			break;
-		case RT_MESH:
-			{
-				std::vector<std::string> meshes = GetResourceNames(resource_group);
-				for(size_t i = 0; i < meshes.size(); i++)
-				{
-					if(Misc::GetExtension(meshes[i]) == "mesh")
-						content.push_back(meshes[i]);
-				}
-			}
-			break;
-		case RT_SOUND:
-			{
-				std::vector<std::string> sounds = GetResourceNames(resource_group);
-				for(size_t i = 0; i < sounds.size(); i++)
-				{
-					if(Misc::GetExtension(sounds[i]) == "wav")
-						content.push_back(sounds[i]);
-				}
-			}
-			break;
-		}
-		return content;
-	}
-
-	std::vector<std::string> BaseResourceSystem::GetResourcesFromGroup(ResourceType rt,const std::string &resource_group) const
-	{
-		std::vector<std::string> content;
-		return content;
-	}*/
 }
 
 

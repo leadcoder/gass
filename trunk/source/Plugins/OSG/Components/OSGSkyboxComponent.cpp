@@ -48,7 +48,6 @@
 
 namespace GASS
 {
-
 	OSGSkyboxComponent::OSGSkyboxComponent() 
 	{
 
@@ -65,44 +64,17 @@ namespace GASS
 		RegisterProperty<std::string>("Material", &GetMaterial, &SetMaterial);
 	}
 
-
 	void OSGSkyboxComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedEvent,0));
-
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		root_node->addChild(CreateSkyBox());
-
-
-		//check if dds, then flip texcoords
-
-	/*	m_OSGBillboard = new osg::Billboard();
-		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
-		m_OSGBillboard->addDrawable(
-			CreateSquare(osg::Vec3(-0.5f,0.0f,0.0f),
-			osg::Vec3(1.0f,0.0f,0.0f)*m_Width,
-			osg::Vec3(0.0f,0.0f,1.0f)*m_Height,
-			//osgDB::readImageFile("Images/reflect.rgb")),
-			osgDB::readImageFile(full_path)).get(),
-			osg::Vec3(0.0f,0.0f,0.0f));
-
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-		lc->GetOSGNode()->addChild(m_OSGBillboard.get());*/
-
 	}
 
 	void OSGSkyboxComponent::OnDelete()
 	{
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS( OSGSkyboxComponent::OnChangeCamera,CameraChangedEvent));
 	}
 	
-	void OSGSkyboxComponent::OnChangeCamera(CameraChangedEventPtr message)
-	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		m_ActiveCameraObject = cam_obj;
-	}
-
 	std::string OSGSkyboxComponent::GetTexturePath(const std::string &side) const
 	{
 		std::string extension = Misc::GetExtension(m_Material);
@@ -112,12 +84,8 @@ namespace GASS
 		full_path += ".";
 		full_path += extension;
 		
-		
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(!rs->GetFullPath(full_path,full_path))
-		{
-			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture: " + full_path,"OSGSkyboxComponent::GetTexturePath");
-		}
+		full_path = rs->GetFirstResourceByName(full_path).Path().GetFullPath();
 		return full_path;
 	}
 
@@ -223,7 +191,7 @@ namespace GASS
 		}
 	};
 
-	Vec3 OSGSkyboxComponent::GetEyePosition()
+	/*Vec3 OSGSkyboxComponent::GetEyePosition()
 	{
 		SceneObjectPtr cam_obj (m_ActiveCameraObject,NO_THROW);
 		Vec3 pos(0,0,0);
@@ -237,7 +205,7 @@ namespace GASS
 			}
 		}
 		return pos;
-	}
+	}*/
 	
 
 

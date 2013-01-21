@@ -83,8 +83,6 @@ namespace GASS
 		
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationCreated ,ResourceLocationCreatedEvent ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent ,0));
 		
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		ResourceType mesh_type;
@@ -305,22 +303,12 @@ namespace GASS
 	}
 	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
 	{
-		m_ResourceManager->AddResourceGroup(message->GetGroup()->GetName());
+		m_ResourceManager->AddResourceGroup(message->GetGroup());
 	}
 
 	void OgreGraphicsSystem::OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message)
 	{
 		m_ResourceManager->RemoveResourceGroup(message->GetGroup()->GetName());
-	}
-
-	void OgreGraphicsSystem::OnResourceLocationCreated(ResourceLocationCreatedEventPtr message)
-	{
-		m_ResourceManager->AddResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName(),"FileSystem");
-	}
-
-	void OgreGraphicsSystem::OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message)
-	{
-		m_ResourceManager->RemoveResourceLocation(message->GetLocation()->GetPath(), message->GetLocation()->GetGroup()->GetName());
 	}
 }
 

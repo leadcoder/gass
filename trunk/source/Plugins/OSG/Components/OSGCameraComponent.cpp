@@ -72,15 +72,13 @@ namespace GASS
 
 	void OSGCameraComponent::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		
-		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
+		OSGCameraComponentPtr cam_comp = DYNAMIC_CAST<OSGCameraComponent>(message->GetCamera());
 		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		osgViewer::ViewerBase::Views views;
 		gfx_sys->GetViewer()->getViews(views);
 
 		bool this_camera = false;
-		if(cam_obj == GetSceneObject())
+		if(cam_comp == shared_from_this())
 		{
 			this_camera = true;
 		}

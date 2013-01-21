@@ -195,7 +195,7 @@ namespace GASS
 		}
 	}
 
-	Float ODECollisionSceneManager::GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute) const
+	Float ODECollisionSceneManager::GetHeight(const Vec3 &pos, bool absolute) const
 	{
 		CollisionRequest request;
 		CollisionResult result;

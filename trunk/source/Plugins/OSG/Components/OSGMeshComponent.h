@@ -168,7 +168,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 
 		//IResourceComponent
-		Resource GetResource() const {return m_MeshResource;}
+		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
@@ -180,8 +180,8 @@ namespace GASS
 		
 		bool GetLighting() const;
 		void SetLighting(bool value);
-		Resource GetMeshResource() const {return m_MeshResource;}
-		void SetMeshResource(const Resource &res);
+		ResourceHandle GetMeshResource() const {return m_MeshResource;}
+		void SetMeshResource(const ResourceHandle &res);
 		bool GetExpand() const;
 		void SetExpand(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
@@ -196,11 +196,11 @@ namespace GASS
 		void OnVisibilityMessage(VisibilityMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
-		void LoadMesh(const std::string &filename);
+		void LoadMesh(const ResourceHandle &filename);
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
-		Resource m_MeshResource;
+		ResourceHandle m_MeshResource;
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
 		osg::ref_ptr<osg::Node> m_MeshNode;

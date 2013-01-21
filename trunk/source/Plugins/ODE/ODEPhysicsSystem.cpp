@@ -65,7 +65,6 @@ namespace GASS
 	void ODEPhysicsSystem::Init()
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<ODEBodyComponent, IComponent>);
 		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, IComponent>);
@@ -76,8 +75,6 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<ODESphereGeometryComponent, IComponent>);
 		ComponentFactory::GetPtr()->Register("PhysicsSuspensionComponent",new Creator<ODESuspensionComponent, IComponent>);
 		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, IComponent>);
-		
-	
 		dInitODE2(0);
 		dAllocateODEDataForThread(dAllocateMaskAll);
 	}

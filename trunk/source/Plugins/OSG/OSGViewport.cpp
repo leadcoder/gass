@@ -21,11 +21,12 @@
 #include "Core/Common.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Plugins/Ogre/OgreViewport.h"
-#include "Plugins/Ogre/OgreGraphicsSystem.h"
-#include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/OSG/OSGViewport.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/Components/OSGCameraComponent.h"
+
 #include "Core/Utils/GASSException.h"
-#include <osgViewport>
+#include <osgViewer/Viewer>
 
 namespace GASS
 {
@@ -43,7 +44,7 @@ namespace GASS
 
 	void OSGViewport::Init()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreViewport::OnChangeCamera,ChangeCameraRequest,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGViewport::OnChangeCamera,ChangeCameraRequest,0));
 	}
 
 	void OSGViewport::OnChangeCamera(ChangeCameraRequestPtr message)
@@ -64,7 +65,7 @@ namespace GASS
 	{
 		m_Camera = camera;
 		OSGCameraComponentPtr cam_comp = DYNAMIC_CAST<OSGCameraComponent>(camera);
-		m_OSGViewport->setCamera(cam_comp->GetOgreCamera());
+		cam_comp->GetOSGCamera()->setViewport(m_OSGViewport);
 		ViewportPtr viewport = shared_from_this();
 		SystemMessagePtr cam_message(new CameraChangedEvent(viewport));
 		SimEngine::Get().GetSimSystemManager()->PostMessage(cam_message);

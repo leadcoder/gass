@@ -33,7 +33,7 @@ namespace GASS
 	class GASSExport ResourceGroup : public SHARE_CLASS<ResourceGroup>
 	{
 	public:
-		ResourceGroup(ResourceSystemPtr owner, const std::string &name);
+		ResourceGroup(const std::string &name);
 		~ResourceGroup();
 		ResourceLocationPtr AddResourceLocation(const FilePath &path, ResourceLocationType type, bool recursive);
 		void RemoveResourceLocation(ResourceLocationPtr location);
@@ -41,12 +41,11 @@ namespace GASS
 		std::string GetName() const{return m_Name;}
 		ResourceVector GetResourcesByName(const std::string &resource_name) const;
 		ResourceVector GetResourcesByType(const std::string &resource_type = "") const;
-		//ResourceVector GetResources(const std::string &resource_type = "") const;
 	private:
 		void AddResourceLocationRecursive(ResourceLocationPtr rl);
 		std::string m_Name;
 		ResourceLocationVector m_ResourceLocations;
-		ResourceSystemPtr m_Owner;
+		//ResourceSystemPtr m_Owner;
 	};
 	PDECL(ResourceGroup)
 }

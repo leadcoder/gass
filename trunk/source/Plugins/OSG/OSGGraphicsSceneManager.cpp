@@ -19,12 +19,12 @@
 *****************************************************************************/
 
 
-#include <boost/bind.hpp>
+
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
+#include <osgViewer/ViewerEventHandlers>
 #include <osgUtil/Optimizer>
 #include <osgDB/ReadFile> 
-
 
 #include <osgShadow/ShadowedScene>
 #include <osgShadow/ShadowVolume>
@@ -34,6 +34,9 @@
 #include <osgShadow/ParallelSplitShadowMap>
 #include <osgShadow/LightSpacePerspectiveShadowMap>
 #include <osgShadow/StandardShadowMap>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/GUIEventHandler>
+
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -78,9 +81,7 @@ namespace GASS
 		if(scene)
 		{
 			//scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnSceneObjectCreated,SceneObjectCreatedNotifyMessage,Scene::GFX_COMPONENT_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnLoad,LoadSceneManagersRequest,Scene::GFX_SYSTEM_LOAD_PRIORITY));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnUnload,UnLoadSceneManagersRequest,0));
-			scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
+			//scene->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
 		}
 		else
 		{
@@ -90,7 +91,7 @@ namespace GASS
 		osgViewer::View* view = new osgViewer::View;
 		m_View = view;
 		view->setName(GetName());
-		m_GFXSystem->GetViewer()->addView(view);
+		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->addView(view);
 
 		view->setLightingMode(osg::View::SKY_LIGHT); 
 		view->getDatabasePager()->setDoPreCompile( true );
@@ -119,7 +120,7 @@ namespace GASS
 		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);
 	}
 
-	void OSGGraphicsSceneManager::OnLoad(MessagePtr message)
+	void OSGGraphicsSceneManager::OnInit()
 	{
 		ScenePtr scene = GetScene();
 		assert(scene);
@@ -149,7 +150,7 @@ namespace GASS
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
 
-		SystemMessagePtr loaded_msg(new GFXSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
+		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
 		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
@@ -160,18 +161,18 @@ namespace GASS
 		system->Register(shared_from_this());
 	}
 
-	void OSGGraphicsSceneManager::OnUnload(MessagePtr message)
+	void OSGGraphicsSceneManager::OnShutdown()
 	{
 
 	}
 
-	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
+/*	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
 	{
 		SceneObjectPtr cam_obj = message->GetCamera();
 		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
 		OSGGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(message->GetViewport(), cam_comp);
 		GetScene()->PostMessage(SceneMessagePtr(new CameraChangedEvent(cam_obj,cam_comp->GetOSGCamera())));
-	}
+	}*/
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{

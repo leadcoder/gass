@@ -27,10 +27,9 @@
 namespace GASS
 {
 
-	ResourceGroup::ResourceGroup(ResourceSystemPtr owner, const std::string &name) : m_Owner(owner),	
-		m_Name(name)
+	ResourceGroup::ResourceGroup(const std::string &name) : m_Name(name)
 	{
-
+		
 	}
 
 	ResourceGroup::~ResourceGroup()
@@ -46,7 +45,7 @@ namespace GASS
 		else
 		{
 			m_ResourceLocations.push_back(rl);
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
+			//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
 		}
 		return rl;
 	}
@@ -57,7 +56,7 @@ namespace GASS
 		if( boost::filesystem::exists(boost_path))  
 		{
 			m_ResourceLocations.push_back(rl);
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
+			//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
 			boost::filesystem::directory_iterator end ;    
 			for(boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
 			{
@@ -75,10 +74,9 @@ namespace GASS
 		std::vector<ResourceLocationPtr>::iterator iter = m_ResourceLocations.begin();
 		while(iter != m_ResourceLocations.end())
 		{
-			
 			if(location == *iter)
 			{
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
+				//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
 				iter = m_ResourceLocations.erase(iter);
 				
 			}
@@ -91,13 +89,14 @@ namespace GASS
 	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
 		ResourceVector resources;
+		ResourceSystemPtr res_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		while(iter != m_ResourceLocations.end())
 		{
 			std::vector<FilePath> files;
 			FilePath::GetFilesFromPath(files,(*iter)->GetPath());
 			for(size_t i = 0; i< files.size(); i++)
 			{
-				const std::string res_type = m_Owner->GetResourceTypeByExtension(files[i].GetExtension());
+				const std::string res_type = res_sys->GetResourceTypeByExtension(files[i].GetExtension());
 				if(res_type  == resource_type)
 					resources.push_back(Resource(files[i],GetName(),res_type));
 			}
@@ -110,6 +109,7 @@ namespace GASS
 	{
 		ResourceVector resources;
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
+		ResourceSystemPtr res_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		while(iter != m_ResourceLocations.end())
 		{
 			std::vector<FilePath> files;
@@ -118,7 +118,7 @@ namespace GASS
 			{
 				if(resource_name == files[i].GetFilename())
 				{
-					const std::string res_type = m_Owner->GetResourceTypeByExtension(files[i].GetExtension());
+					const std::string res_type = res_sys->GetResourceTypeByExtension(files[i].GetExtension());
 					resources.push_back(Resource(files[i],GetName(),res_type));
 				}
 			}

@@ -105,12 +105,8 @@ namespace GASS
 	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		
-		std::string full_path;
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		if(!rs->GetFullPath(m_Material,full_path))
-		{
-			GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture:" + full_path,"OSGBillboardComponent::OnLoad");
-		}
+		const std::string  full_path = rs->GetFirstResourceByName(m_Material).Path().GetFullPath();
 
 		Vec3 up(0,0,m_Height);
 		Vec3 east(m_Width,0,0);

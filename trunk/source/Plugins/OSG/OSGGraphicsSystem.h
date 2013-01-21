@@ -28,8 +28,9 @@
 class TextBox;
 namespace GASS
 {
-	class OSGCameraComponent;
-	typedef SPTR<OSGCameraComponent> OSGCameraComponentPtr;
+	FDECL(OSGRenderWindow)
+	FDECL(OSGCameraComponent)
+
 	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem
 	{
 		friend class OSGGraphicsSceneManager;
@@ -42,16 +43,14 @@ namespace GASS
 		virtual void Update(double delta);
 
 		virtual RenderWindowPtr GetMainRenderWindow() const;
-		virtual std::vector<RenderWindowPtr> GetRenderWindows() const;
+		virtual RenderWindowVector GetRenderWindows() const;
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
-		//void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height);
+		
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 	protected:
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
-		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
-		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		
 		void SetActiveData(osg::Group* root);
 		void LoadShadowSettings(TiXmlElement *shadow_elem);
@@ -61,13 +60,12 @@ namespace GASS
 		void ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp);
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
-
-		std::map<std::string,osg::ref_ptr<osg::GraphicsContext> > m_Windows;
-		bool m_CreateMainWindowOnInit;
+		std::vector<OSGRenderWindowPtr> m_Windows;
 		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
 		std::string m_ShadowSettingsFile;
 		TextBox* m_DebugTextBox;
 		std::map<std::string,TextBox*>  m_TextBoxes;
+		
 	};
 	typedef SPTR<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef WPTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

@@ -40,7 +40,7 @@ namespace GASS
 		//IResourceSystem
 		//void RemoveResourceGroup(const std::string &name);
 		void RemoveResourceGroup(ResourceGroupPtr group);
-		ResourceGroupPtr CreateResourceGroup(const std::string &name);
+		void AddResourceGroup(ResourceGroupPtr group);
 		ResourceGroupVector GetResourceGroups() const {return m_ResourceGroups;}
 		bool HasResourceGroup(const std::string &name);
 		std::string GetResourceTypeByExtension(const std::string &extension) const;

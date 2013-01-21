@@ -81,7 +81,11 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
 	
 		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		m_ResourceGroup  = rs->CreateResourceGroup(GetResourceGroupName());
+		
+		ResourceGroupPtr scene_group(new ResourceGroup(GetResourceGroupName()));
+		m_ResourceGroup  = scene_group;
+		rs->AddResourceGroup(scene_group);
+		
 		
 		//Add all registered scene manangers to the scene
 	

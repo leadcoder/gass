@@ -33,33 +33,13 @@ namespace GASS
 	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
-		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
-		typedef std::map<CollisionHandle,CollisionResult> ResultMap;
-	public:
 		OSGCollisionSystem();
 		virtual ~OSGCollisionSystem();
 		static void RegisterReflection();
 		virtual void Init();
 		std::string GetSystemName() const {return "OSGCollisionSystem";}
-		CollisionHandle Request(const CollisionRequest &request);
-		bool Check(CollisionHandle handle, CollisionResult &result);
-		void Force(CollisionRequest &request, CollisionResult &result) const;
-		Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
-		void Update(double delta);
 	private:
-		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
-		void OnUnloadScene(SceneUnloadedEventPtr message);
-		void OnLoadScene(PreSceneLoadEventPtr message);
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		RequestMap m_RequestMap;
-		ResultMap m_ResultMap;
-		unsigned int m_HandleCount;
-		tbb::spin_mutex m_RequestMutex;
-		tbb::spin_mutex m_ResultMutex;
-		OSGCameraComponentWeakPtr m_CurrentCamera;
 	};
 	typedef SPTR<OSGCollisionSystem> OSGCollisionSystemPtr;
-
-
 }
 

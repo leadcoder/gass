@@ -56,7 +56,7 @@ namespace GASS
 	void OSGMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
-		RegisterProperty<Resource>("Filename", &GetMeshResource, &SetMeshResource);
+		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
@@ -163,7 +163,7 @@ namespace GASS
 	}
 
 
-	void OSGMeshComponent::SetMeshResource(const Resource &res)
+	void OSGMeshComponent::SetMeshResource(const ResourceHandle &res)
 	{
 		m_MeshResource = res;
 		if(m_Initlized) //not loaded
@@ -192,9 +192,9 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::LoadMesh(const std::string &filename)
+	void OSGMeshComponent::LoadMesh(const ResourceHandle &filename)
 	{
-		if(filename == "") //not loaded
+		if(!filename.Valid()) //not loaded
 			return;
 
 		SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -203,15 +203,16 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
 		}
 
-		std::string full_path;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
 		//check if extension exist?
-		std::string extesion =  Misc::GetExtension(filename);
-		std::string mod_filename =  filename;
+		FilePath file_path = filename.GetResource().Path();
+		const std::string extension =  file_path.GetExtension();
+
+		std::string  mod_file_path = file_path.GetFullPath();
 		//hack to convert ogre meshes
-		if(extesion == "mesh") //this is ogre model, try to load 3ds instead
+		if(extension == "mesh") //this is ogre model, try to load 3ds instead
 		{
-			mod_filename = Misc::Replace(mod_filename,".mesh",".3ds");
+			mod_file_path = Misc::Replace(mod_file_path,".mesh",".3ds");
 		}
 
 		if(m_MeshNode.valid())
@@ -220,38 +221,31 @@ namespace GASS
 			m_MeshNode.release();
 		}
 
-		if(rs->GetFullPath(mod_filename,full_path))
+		//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
+		//osgUtil::Optimizer optimizer;
+		//optimizer.optimize(loadedModel.get());
+		m_MeshNode = (osg::Group*) osgDB::readNodeFile((mod_file_path));
+
+		if( ! m_MeshNode)
 		{
-			std::string path = Misc::RemoveFilename(full_path);
-			//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
-			//osgUtil::Optimizer optimizer;
-			//optimizer.optimize(loadedModel.get());
-			m_MeshNode = (osg::Group*) osgDB::readNodeFile((full_path));
-
-			if( ! m_MeshNode)
-			{
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + full_path,"OSGMeshComponent::SetFilename");
-			}
-
-			osgUtil::Optimizer optimizer;
-			optimizer.optimize(m_MeshNode.get());
-
-			OSGNodeData* data = new OSGNodeData(shared_from_this());
-			m_MeshNode->setUserData(data);
-
-			SetLighting(m_Lighting);
-			SetCastShadow(m_CastShadow);
-			SetReceiveShadow(m_ReceiveShadow);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
-
-			//expand children
-			if(m_Expand)
-				Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + mod_file_path,"OSGMeshComponent::SetFilename");
 		}
-		else 
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find mesh: " + full_path,"OSGMeshComponent::SetFilename");
 
+		osgUtil::Optimizer optimizer;
+		optimizer.optimize(m_MeshNode.get());
 
+		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		m_MeshNode->setUserData(data);
+
+		SetLighting(m_Lighting);
+		SetCastShadow(m_CastShadow);
+		SetReceiveShadow(m_ReceiveShadow);
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+
+		//expand children
+		if(m_Expand)
+			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+	
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
 		//update mask!
 		SetGeometryFlags(m_GeomFlags);
@@ -456,8 +450,7 @@ namespace GASS
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{
-		Resource res;
-		res.SetName (message->GetFileName());
+		ResourceHandle res(message->GetFileName());
 		SetMeshResource(res);
 	}
 

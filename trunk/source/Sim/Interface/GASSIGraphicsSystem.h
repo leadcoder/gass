@@ -36,6 +36,9 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with systems should 
 		instead be done through messages.
 	*/
+
+	typedef std::vector<RenderWindowPtr> RenderWindowVector;
+
 	class GASSExport IGraphicsSystem
 	{
 	public:
@@ -49,7 +52,7 @@ namespace GASS
 		/**
 			Get all render windows
 		*/
-		virtual std::vector<RenderWindowPtr> GetRenderWindows() const = 0;
+		virtual RenderWindowVector GetRenderWindows() const = 0;
 		
 		/**
 			Create new render window 

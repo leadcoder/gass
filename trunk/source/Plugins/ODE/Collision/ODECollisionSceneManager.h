@@ -61,7 +61,7 @@ namespace GASS
 		virtual CollisionHandle Request(const CollisionRequest &request);
 		virtual bool Check(CollisionHandle handle, CollisionResult &result);
 		virtual void Force(CollisionRequest &request, CollisionResult &result) const;
-		virtual Float GetHeight(ScenePtr scene, const Vec3 &pos, bool absolute=true) const;
+		virtual Float GetHeight(const Vec3 &pos, bool absolute=true) const;
 	protected:
 		void Process();
 		//used by collision geometry

@@ -19,6 +19,7 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
+//#include "Sim/GASSResourceHandle.h"
 class osg::Billboard;
 class osg::Image;
 class osg::Drawable;
@@ -26,9 +27,6 @@ class osgText::Text;
 
 namespace GASS
 {
-	
-
-
 	class OSGTextComponent : public Reflection<OSGTextComponent,BaseSceneComponent> 
 	{
 	public:
@@ -42,10 +40,8 @@ namespace GASS
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);
-
-
-		void SetFont(const std::string &font);
-		std::string GetFont()const {return m_Font;}
+		void SetFont(const ResourceHandle &font);
+		ResourceHandle GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;
 		void SetCharacterSize(float size);
 		void SetScaleByDistance(bool value) {m_ScaleByDistance = value;}
@@ -56,9 +52,7 @@ namespace GASS
 		Vec4 GetColor() const {return m_Color;}
 		void SetDropShadow(bool value) {m_DropShadow = value;}
 		bool GetDropShadow() const {return m_DropShadow;}
-
-		
-		std::string m_Font;
+		ResourceHandle m_Font;
 		float m_Width;
 		float m_Height;
 		osg::ref_ptr<osgText::Text> m_OSGText;

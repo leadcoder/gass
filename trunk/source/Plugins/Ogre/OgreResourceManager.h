@@ -39,11 +39,9 @@ namespace GASS
 		virtual ~OgreResourceManager();
 		static void RegisterReflection();
 		void Init();
-		void AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type);
-		void RemoveResourceLocation(const FilePath &path,const std::string &resource_group);
 		void RemoveResourceGroup(const std::string &resource_group);
-		void AddResourceGroup(const std::string &resource_group);
-		void LoadResourceGroup(const std::string &resource_group);
+		void AddResourceGroup(ResourceGroupPtr group, bool load);
 	protected:
+		bool m_Initialized;
 	};
 }

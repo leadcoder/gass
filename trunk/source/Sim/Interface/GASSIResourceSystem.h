@@ -82,7 +82,7 @@ namespace GASS
 			Add resource group
 			@resource_group The resources group
 		*/
-		virtual ResourceGroupPtr CreateResourceGroup(const std::string &name) = 0;
+		virtual void AddResourceGroup(ResourceGroupPtr group) =0;
 		/**
 			Force load of resource group
 			@resource_group The resources group

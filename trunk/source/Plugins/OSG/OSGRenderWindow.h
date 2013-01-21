@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/Interface/GASSIRenderWindow.h"
+#include <osgViewer/Viewer>
 #include <string>
 
 namespace GASS
@@ -33,19 +34,19 @@ namespace GASS
 	{
 	public:
 		typedef std::vector<OSGViewportPtr> OSGViewportVector;
-		OSGRenderWindow(OSGGraphicsSystem* system, Ogre::RenderWindow* win) : m_System(system), m_Window(win)
-		{
 
-		}
+		OSGRenderWindow(OSGGraphicsSystem* system, osg::ref_ptr<osg::GraphicsContext> win);
+		~OSGRenderWindow();
+		
 		//IRenderWindow
 		virtual unsigned int GetWidth() const;
 		virtual unsigned int GetHeight() const;
 		virtual void* GetHWND() const;
 		OSGGraphicsSystem* GetSystem() const{return m_System;}
-		Ogre::RenderWindow* GetOSGWindow() const{return m_Window;}
+		osg::ref_ptr<osg::GraphicsContext> GetOSGWindow() const {return m_Window;}
 		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
 	private:
-		Ogre::RenderWindow* m_Window;
+		osg::ref_ptr<osg::GraphicsContext> m_Window;
 		OSGViewportVector m_Viewports;
 		OSGGraphicsSystem* m_System;
 	};

@@ -230,7 +230,7 @@ namespace GASS
 	};
 	typedef SPTR<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
 
-	class ResourceLocationCreatedEvent : public SystemEventMessage
+	/*class ResourceLocationCreatedEvent : public SystemEventMessage
 	{
 	public:
 		ResourceLocationCreatedEvent(ResourceLocationPtr location, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Location(location)
@@ -254,6 +254,19 @@ namespace GASS
 	};
 	typedef SPTR<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
 
+
+	class ResourceGroupLoadEvent : public SystemEventMessage
+	{
+	public:
+		ResourceGroupLoadEvent(ResourceGroupPtr group, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_Group(group)
+		{
+
+		}
+		ResourceGroupPtr GetGroup() const{return m_Group;}
+	private:
+		ResourceGroupPtr m_Group;
+	};
+	typedef SPTR<ResourceGroupLoadEvent> ResourceGroupLoadEventPtr;*/
 	
 
 

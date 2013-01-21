@@ -39,10 +39,7 @@ namespace Ogre
 
 namespace GASS
 {
-	//class OgreGraphicsSystem;
-	//typedef SPTR<OgreGraphicsSystem> OgreGraphicsSystemPtr;
-	//typedef WPTR<OgreGraphicsSystem> OgreGraphicsSystemWeakPtr;
-
+	
 	class OgreRenderWindow;
 	typedef SPTR<OgreRenderWindow> OgreRenderWindowPtr;
 	class OgreResourceManager;
@@ -67,7 +64,7 @@ namespace GASS
 		//IGraphicsSystem
 
 		virtual RenderWindowPtr GetMainRenderWindow() const;
-		virtual std::vector<RenderWindowPtr> GetRenderWindows() const;
+		virtual RenderWindowVector GetRenderWindows() const;
 
 		//void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
 		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
@@ -85,8 +82,6 @@ namespace GASS
 		//Resource listeners
 		void OnResourceGroupCreated(ResourceGroupCreatedEventPtr message);
 		void OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message);
-		void OnResourceLocationCreated(ResourceLocationCreatedEventPtr message);
-		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
 		
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}

@@ -37,7 +37,7 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreResourceManager::OgreResourceManager(void)
+	OgreResourceManager::OgreResourceManager(void) : m_Initialized (false)
 	{
 	}
 
@@ -55,32 +55,12 @@ namespace GASS
 		ResourceGroupVector groups = rs->GetResourceGroups();
 		for(int i = 0; i < groups.size(); i++)
 		{
-			ResourceLocationVector locations = groups[i]->GetResourceLocations();
-			for(int j = 0; j < locations.size(); j++)
-			{
-				ResourceLocationPtr rl = locations[j];
-				if(rl->GetType() == RLT_FILESYSTEM)
-					AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),"FileSystem");
-				else if(rl->GetType() == RLT_ZIP)
-					AddResourceLocation(rl->GetPath().GetFullPath(),rl->GetGroup()->GetName(),"Zip");
-
-			}
+			AddResourceGroup(groups[i],false);
 		}
 		LogManager::getSingleton().stream() << "OgreResourceManager Completed";
 	}
 
-	void OgreResourceManager::AddResourceLocation(const FilePath &path,const std::string &resource_group,const std::string &type)
-	{
-		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		Ogre::StringVector groups = rsm->getResourceGroups();
-		if (std::find(groups.begin(), groups.end(), resource_group) == groups.end())
-		{
-			rsm->createResourceGroup(resource_group);
-		}
-		rsm->addResourceLocation(path.GetFullPath(),type, resource_group,false);
-	}
-
-	void OgreResourceManager::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
+	/*void OgreResourceManager::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 		Ogre::StringVector groups = rsm->getResourceGroups();
@@ -88,12 +68,27 @@ namespace GASS
 		{
 			rsm->removeResourceLocation(path.GetFullPath(),resource_group);
 		}
-	}
+	}*/
 
-	void OgreResourceManager::AddResourceGroup(const std::string &resource_group)
+	void OgreResourceManager::AddResourceGroup(ResourceGroupPtr group, bool load)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		rsm->createResourceGroup(resource_group);
+		Ogre::StringVector groups = rsm->getResourceGroups();
+		if (std::find(groups.begin(), groups.end(), group->GetName()) == groups.end())
+		{
+			rsm->createResourceGroup(group->GetName());
+		}
+		ResourceLocationVector locations = group->GetResourceLocations();
+		for(int i = 0; i < locations.size(); i++)
+		{
+			ResourceLocationPtr rl = locations[i];
+			if(rl->GetType() == RLT_FILESYSTEM)
+				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"FileSystem", rl->GetGroup()->GetName(),false);
+			else if(rl->GetType() == RLT_ZIP)
+				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"zip", rl->GetGroup()->GetName(),false);
+		}
+		if(load)
+			rsm->initialiseResourceGroup(group->GetName());
 	}
 
 	void OgreResourceManager::RemoveResourceGroup(const std::string &resource_group)
@@ -105,12 +100,7 @@ namespace GASS
 			rsm->destroyResourceGroup(resource_group);
 		}
 	}
-
-	void OgreResourceManager::LoadResourceGroup(const std::string &resource_group)
-	{
-		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		rsm->initialiseResourceGroup(resource_group);
-	}
+	
 }
 
 

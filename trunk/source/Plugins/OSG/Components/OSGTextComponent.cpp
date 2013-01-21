@@ -54,7 +54,7 @@ namespace GASS
 	void OSGTextComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, IComponent>);
-		RegisterProperty<std::string>("Font", &GetFont, &SetFont);
+		RegisterProperty<ResourceHandle>("Font", &GetFont, &SetFont);
 		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
 		RegisterProperty<bool>("ScaleByDistance", &OSGTextComponent::GetScaleByDistance, &OSGTextComponent::SetScaleByDistance);
 		RegisterProperty<Vec3>("Offset", &OSGTextComponent::GetOffset, &OSGTextComponent::SetOffset);
@@ -102,7 +102,6 @@ namespace GASS
 		//m_OSGText->setDrawMode(osgText::TextBase::DrawModeMask::TEXT | osgText::TextBase::DrawModeMask::FILLEDBOUNDINGBOX);
 		//m_OSGText->setBoundingBoxColor(osg::Vec4d(0.2,0.2,0.3,0.7));
 
-		
 		m_OSGGeode = new osg::Geode;
 		m_OSGGeode->addDrawable(m_OSGText.get());
     
@@ -119,19 +118,12 @@ namespace GASS
         nodess->setAttribute(program);
 	}
 
-	void OSGTextComponent::SetFont(const std::string &font) 
+	void OSGTextComponent::SetFont(const ResourceHandle &font) 
 	{
 		m_Font = font;
 		if(m_OSGText.valid())
 		{
-			std::string full_path;
-			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-			if(!rs->GetFullPath(m_Font,full_path))
-			{
-				GASS_EXCEPT(Exception::ERR_FILE_NOT_FOUND,"Failed to find texture:" + full_path,"OSGTextComponent::SetFont");
-			}
-			else
-				m_OSGText->setFont(full_path);
+			m_OSGText->setFont(font.GetResource().Path().GetFullPath());
 		}
 	}
 

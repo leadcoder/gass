@@ -25,11 +25,14 @@
 #include <osg/Fog>
 #include <osg/PositionAttitudeTransform>
 #include <string>
+#include <osgViewer/View>
 
 namespace osgShadow
 {
 	class ShadowedScene;
 }
+
+
 
 namespace GASS
 {
@@ -43,17 +46,14 @@ namespace GASS
 		virtual ~OSGGraphicsSceneManager();
 		static void RegisterReflection();
 		virtual void OnCreate();
+		virtual void OnInit();		
+		virtual void OnShutdown();
+		virtual bool GetSerialize() const {return true;}
+		
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
-		//static void UpdateNodeMask(osg::Node *node, GeometryFlags category);
-	protected:
-		void OnLoad(MessagePtr message);		
-		void OnUnload(MessagePtr message);
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-
-	private:
-		void UpdateFogSettings();
 		
+	private:
 		//Fog
 		float GetFogStart() const {return m_FogStart;}
 		float GetFogEnd() const {return m_FogEnd;}
@@ -64,6 +64,7 @@ namespace GASS
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 &value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
+		void UpdateFogSettings();
 
 		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
