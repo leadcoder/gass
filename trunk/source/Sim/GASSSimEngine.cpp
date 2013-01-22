@@ -52,20 +52,25 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/GASSRunTimeController.h"
+#include "Sim/GASSResourceManager.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <tinyxml.h>
 
+
 namespace GASS
 {
-	SimEngine::SimEngine() : m_CurrentTime(0), m_MaxUpdateFreq(0)
+	SimEngine::SimEngine() : m_CurrentTime(0), 
+		m_MaxUpdateFreq(0), 
+		m_PluginManager(new PluginManager()),
+		m_ResourceManager(new ResourceManager()),
+		m_SystemManager(new SimSystemManager()),
+		m_SceneObjectTemplateManager(new BaseComponentContainerTemplateManager()),
+		m_RTC(new RunTimeController())
 	{
-		m_PluginManager = PluginManagerPtr(new PluginManager());
-		m_SystemManager = SimSystemManagerPtr(new SimSystemManager());
-		m_SceneObjectTemplateManager = BaseComponentContainerTemplateManagerPtr(new BaseComponentContainerTemplateManager());
-		m_RTC = RunTimeControllerPtr(new RunTimeController());
-		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
+		
 	}
 
 	SimEngine::~SimEngine()
@@ -132,16 +137,19 @@ namespace GASS
 				_putenv(env_data_path.c_str()); 
 			}
 		}
-
+		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 
 		TiXmlElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if(xml_scene_path)
 			m_ScenePath.SetPath(Misc::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
 
 
-		m_SystemManager->Load(configuration_file.GetFullPath());
-		
+		TiXmlElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
+		if(xml_res_man)
+			m_ResourceManager->LoadXML(xml_res_man);
 
+		m_SystemManager->Load(configuration_file.GetFullPath());
+	
 		//read SceneObjectTemplateManager settings
 		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
 		if(xml_sotm)

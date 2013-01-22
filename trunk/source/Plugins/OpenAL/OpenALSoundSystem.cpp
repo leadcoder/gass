@@ -5,7 +5,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
 

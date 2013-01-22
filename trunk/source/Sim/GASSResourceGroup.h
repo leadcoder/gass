@@ -45,7 +45,6 @@ namespace GASS
 		void AddResourceLocationRecursive(ResourceLocationPtr rl);
 		std::string m_Name;
 		ResourceLocationVector m_ResourceLocations;
-		//ResourceSystemPtr m_Owner;
 	};
 	PDECL(ResourceGroup)
 }

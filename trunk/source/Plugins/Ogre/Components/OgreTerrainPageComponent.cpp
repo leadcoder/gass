@@ -29,7 +29,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"

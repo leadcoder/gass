@@ -33,7 +33,7 @@
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreParticleSystemComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"

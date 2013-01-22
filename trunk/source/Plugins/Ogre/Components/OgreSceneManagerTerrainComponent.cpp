@@ -30,7 +30,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"
@@ -104,9 +104,9 @@ namespace GASS
 		if(m_OgreSceneManager && filename != "")
 		{
 			//unload previous terrain
-			IResourceSystem* rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>().get();
+			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 
-			const std::string full_path = rs->GetFirstResourceByName(filename).Path().GetFullPath();
+			const std::string full_path = rm->GetFirstResourceByName(filename).Path().GetFullPath();
 			/*if(!rs->GetResource())
 			{
 				GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed find terrain configuration " + filename, "OgreSceneManagerTerrainComponent::LoadTerrain");

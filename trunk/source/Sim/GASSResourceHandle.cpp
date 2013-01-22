@@ -22,7 +22,7 @@
 #include "Sim/GASSResourceHandle.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS
@@ -44,8 +44,7 @@ namespace GASS
 
 	Resource ResourceHandle::GetResource() const
 	{
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		return rs->GetFirstResourceByName(Name());
+		return SimEngine::Get().GetResourceManager()->GetFirstResourceByName(Name());
 	}
 		
 }

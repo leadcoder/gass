@@ -127,6 +127,7 @@ namespace GASS
 #include <boost/enable_shared_from_this.hpp>
 
 
+
 #define SPTR boost::shared_ptr
 #define WPTR boost::weak_ptr
 #define FDECL(CLASS) class CLASS; typedef SPTR<CLASS> ##CLASS##Ptr; typedef WPTR<CLASS> ##CLASS##WeakPtr;

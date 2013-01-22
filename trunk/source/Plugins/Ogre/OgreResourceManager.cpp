@@ -18,19 +18,20 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/OgreResourceManager.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSResourceGroup.h"
 #include <boost/bind.hpp>
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
 #include <OgreMaterialManager.h>
 #include <OgreMeshManager.h>
-#include "tinyxml.h"
+#include <tinyxml.h>
 #include <boost/filesystem.hpp>
 
 using namespace Ogre;
@@ -50,9 +51,9 @@ namespace GASS
 	{
 		LogManager::getSingleton().stream() << "OgreResourceManager Initlize Started";
 		//get resource system
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		//Parse for ogre scripts
-		ResourceGroupVector groups = rs->GetResourceGroups();
+		ResourceGroupVector groups = rm->GetResourceGroups();
 		for(int i = 0; i < groups.size(); i++)
 		{
 			AddResourceGroup(groups[i],false);

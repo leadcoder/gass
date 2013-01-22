@@ -32,7 +32,7 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSINetworkComponent.h"
 
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 

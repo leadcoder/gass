@@ -20,9 +20,9 @@
 
 #include "GASSResourceGroup.h"
 #include "GASSResourceLocation.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSResourceManager.h"
 
 namespace GASS
 {
@@ -89,14 +89,14 @@ namespace GASS
 	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
 		ResourceVector resources;
-		ResourceSystemPtr res_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
 			std::vector<FilePath> files;
 			FilePath::GetFilesFromPath(files,(*iter)->GetPath());
 			for(size_t i = 0; i< files.size(); i++)
 			{
-				const std::string res_type = res_sys->GetResourceTypeByExtension(files[i].GetExtension());
+				const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
 				if(res_type  == resource_type)
 					resources.push_back(Resource(files[i],GetName(),res_type));
 			}
@@ -109,7 +109,7 @@ namespace GASS
 	{
 		ResourceVector resources;
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
-		ResourceSystemPtr res_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
 			std::vector<FilePath> files;
@@ -118,7 +118,7 @@ namespace GASS
 			{
 				if(resource_name == files[i].GetFilename())
 				{
-					const std::string res_type = res_sys->GetResourceTypeByExtension(files[i].GetExtension());
+					const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
 					resources.push_back(Resource(files[i],GetName(),res_type));
 				}
 			}

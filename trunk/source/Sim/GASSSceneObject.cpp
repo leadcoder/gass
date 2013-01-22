@@ -33,9 +33,9 @@
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
-#include <tinyxml.h>
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"
+#include <tinyxml.h>
 
 namespace GASS
 {

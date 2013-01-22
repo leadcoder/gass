@@ -166,11 +166,10 @@ namespace GASS
 		//	m_GrassLayer->setDensityMap(m_DensityMapFilename);
 		//else
 		{
-			//create from in run time?
 			//try to load 
 
-			ScenePtr  scene = GetSceneObject()->GetScene();
-			std::string scene_path = scene->GetSceneFolder().GetFullPath();
+			
+			
 
 
 			std::string denmapname;
@@ -181,23 +180,37 @@ namespace GASS
 			else
 				denmapname = "density_map_" + GetName() + ".tga";
 
-			const std::string fp_denmap = scene_path + "/" + denmapname;
-			std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-			try
+
+			ScenePtr  scene = GetSceneObject()->GetScene();
+			std::string scene_path = scene->GetSceneFolder().GetFullPath();
+			if(scene_path != "")
 			{
-				m_DensityImage.load(stream);
+				const std::string fp_denmap = scene_path + "/" + denmapname;
+				std::fstream fstr(fp_denmap.c_str(), std::ios::in|std::ios::binary);
+				Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+				try
+				{
+					m_DensityImage.load(stream);
+				}
+				catch(...)
+				{
+					int densize = 1024;
+					Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
+					memset(data, 0, densize * densize * 4);
+
+					m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
+					m_DensityImage.save(fp_denmap);
+				}
+				stream.setNull();
 			}
-			catch(...)
+			else
 			{
 				int densize = 1024;
 				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, densize * densize * 4, Ogre::MEMCATEGORY_GENERAL);
 				memset(data, 0, densize * densize * 4);
-
 				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
-				m_DensityImage.save(fp_denmap);
+				//m_DensityImage.save(fp_denmap);
 			}
-			stream.setNull();
 			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
 			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_GrassLayer->setDensityMap(m_DensityTexture);

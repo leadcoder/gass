@@ -105,8 +105,8 @@ namespace GASS
 	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		const std::string  full_path = rs->GetFirstResourceByName(m_Material).Path().GetFullPath();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		const std::string  full_path = rm->GetFirstResourceByName(m_Material).Path().GetFullPath();
 
 		Vec3 up(0,0,m_Height);
 		Vec3 east(m_Width,0,0);

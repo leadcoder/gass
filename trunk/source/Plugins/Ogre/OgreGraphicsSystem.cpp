@@ -36,6 +36,7 @@
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/GASSResourceGroup.h"
 #include <boost/bind.hpp>
 
 #include <OgreRoot.h>
@@ -84,11 +85,11 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
 		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";
 		mesh_type.Extensions.push_back("mesh");
-		rs->RegisterResourceType(mesh_type);
+		rm->RegisterResourceType(mesh_type);
 
 		ResourceType texture_type;
 		texture_type.Name = "TEXTURE";
@@ -98,7 +99,7 @@ namespace GASS
 		texture_type.Extensions.push_back("tga");
 		texture_type.Extensions.push_back("gif");
 		texture_type.Extensions.push_back("jpg");
-		rs->RegisterResourceType(texture_type);
+		rm->RegisterResourceType(texture_type);
 
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");

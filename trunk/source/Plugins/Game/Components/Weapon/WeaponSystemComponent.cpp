@@ -28,7 +28,7 @@
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 

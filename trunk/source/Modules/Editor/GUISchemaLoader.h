@@ -28,7 +28,7 @@
 #include "Core/Serialize/GASSISerialize.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSIComponentTemplate.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 
 class TiXmlDocument;
 

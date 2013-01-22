@@ -112,8 +112,8 @@ namespace GASS
 		m_Viewer->setKeyEventSetsDone(0);
 		std::string full_path;
 
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		Resource font_res = rs->GetFirstResourceByName("arial.ttf");
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		Resource font_res = rm->GetFirstResourceByName("arial.ttf");
 		m_DebugTextBox->setPosition(osg::Vec3d(0, 5, 0));
 		m_DebugTextBox->setFont(font_res.Path().GetFullPath());
 		m_DebugTextBox->setTextSize(12);
@@ -391,8 +391,8 @@ namespace GASS
 			TextBox* text_box = new TextBox();
 
 			std::string full_path;
-			ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-			Resource font_res = rs->GetFirstResourceByName("arial.ttf");
+			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+			Resource font_res = rm->GetFirstResourceByName("arial.ttf");
 
 			text_box->setPosition(osg::Vec3d(0, 0, 0));
 			text_box->setFont(font_res.Path().GetFullPath());

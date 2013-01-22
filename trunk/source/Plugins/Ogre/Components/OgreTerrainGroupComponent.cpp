@@ -33,7 +33,7 @@
 #include "Sim/GASSSceneObject.h"
 
 
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/GASSSimEngine.h"
@@ -116,9 +116,11 @@ namespace GASS
 	void OgreTerrainGroupComponent::SaveXML(TiXmlElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
-
+		
 		if(m_TerrainGroup)
 		{
+			//reset resource group!!
+			m_TerrainGroup->setResourceGroup(GetSceneObject()->GetScene()->GetResourceGroupName());
 			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 			m_TerrainGroup->saveAllTerrains(false);
 		}
@@ -294,19 +296,19 @@ namespace GASS
 
 		defaultimp.layerList.resize(5);
 		defaultimp.layerList[0].worldSize = 10;
-		defaultimp.layerList[0].textureNames.push_back("default.dds");
+		defaultimp.layerList[0].textureNames.push_back("detail_default.dds");
 
 		defaultimp.layerList[1].worldSize = 10;
-		defaultimp.layerList[1].textureNames.push_back("default.dds");
+		defaultimp.layerList[1].textureNames.push_back("detail_default.dds");
 
 		defaultimp.layerList[2].worldSize = 10;
-		defaultimp.layerList[2].textureNames.push_back("default.dds");
+		defaultimp.layerList[2].textureNames.push_back("detail_default.dds");
 
 		defaultimp.layerList[3].worldSize = 10;
-		defaultimp.layerList[3].textureNames.push_back("default.dds");
+		defaultimp.layerList[3].textureNames.push_back("detail_default.dds");
 
 		defaultimp.layerList[4].worldSize = 10;
-		defaultimp.layerList[4].textureNames.push_back("default.dds");
+		defaultimp.layerList[4].textureNames.push_back("detail_default.dds");
 
 		m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 

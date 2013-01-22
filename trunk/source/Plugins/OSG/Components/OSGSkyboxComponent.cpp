@@ -84,8 +84,8 @@ namespace GASS
 		full_path += ".";
 		full_path += extension;
 		
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		full_path = rs->GetFirstResourceByName(full_path).Path().GetFullPath();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		full_path = rm->GetFirstResourceByName(full_path).Path().GetFullPath();
 		return full_path;
 	}
 

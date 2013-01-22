@@ -30,7 +30,8 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 
@@ -80,11 +81,11 @@ namespace GASS
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
 	
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		
 		ResourceGroupPtr scene_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup  = scene_group;
-		rs->AddResourceGroup(scene_group);
+		rm->AddResourceGroup(scene_group);
 		
 		
 		//Add all registered scene manangers to the scene
@@ -128,8 +129,8 @@ namespace GASS
 			
 		SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		rs->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		rm->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
 		m_SceneManagers.clear();
 		m_SceneMessageManager->Clear();
 		m_Initlized = false;
@@ -165,13 +166,13 @@ namespace GASS
 				"Scene::Load");
 		}*/
 		//m_Name = name;
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
-		rs->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		rm->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
 		ResourceGroupPtr res_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup = res_group;
 		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
 		res_group->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
-		rs->AddResourceGroup(res_group);
+		rm->AddResourceGroup(res_group);
 		//rs->LoadResourceGroup(GetResourceGroupName());
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
@@ -209,7 +210,9 @@ namespace GASS
 	
 	FilePath Scene::GetSceneFolder() const
 	{
-		return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_FolderName);
+		if(m_FolderName != "")
+			return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_FolderName);
+		return FilePath("");
 	}
 
 	void Scene::Save(const std::string &name)
@@ -227,7 +230,7 @@ namespace GASS
 			return;
 		}
 
-		ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		//ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 
 		TiXmlDocument doc;  

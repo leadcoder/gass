@@ -203,7 +203,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
 		}
 
-		//ResourceSystemPtr rs = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IResourceSystem>();
+		
 		//check if extension exist?
 		FilePath file_path = filename.GetResource().Path();
 		const std::string extension =  file_path.GetExtension();

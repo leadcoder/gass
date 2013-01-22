@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSIResourceSystem.h"
+#include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"

@@ -29,21 +29,14 @@
 
 namespace GASS
 {
-	class PluginManager;
-	class SimSystemManager;
-	class BaseComponentContainerTemplateManager;
-	class RunTimeController;
-	class SceneObject;
-	class Scene;
+	FDECL(PluginManager)
+	FDECL(ResourceManager)
+	FDECL(SimSystemManager)
+	FDECL(RunTimeController)
+	FDECL(BaseComponentContainerTemplateManager)
+	FDECL(SceneObject)
+	FDECL(Scene)
 	class TaskNode;
-	
-	typedef SPTR<PluginManager> PluginManagerPtr;
-	typedef SPTR<SimSystemManager> SimSystemManagerPtr;
-	typedef SPTR<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	typedef SPTR<RunTimeController> RuntimeControllerPtr;
-	typedef SPTR<SceneObject> SceneObjectPtr;
-	typedef SPTR<Scene> ScenePtr;
-	typedef WPTR<Scene> SceneWeakPtr;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -132,7 +125,7 @@ namespace GASS
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
 		*/
-		RuntimeControllerPtr GetRuntimeController(){return m_RTC;}
+		RunTimeControllerPtr GetRuntimeController() const {return m_RTC;}
 
 
 		/**
@@ -154,12 +147,16 @@ namespace GASS
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
 		std::vector<std::string> GetSavedScenes() const;
 		void SyncMessages(double delta_time);
+
+
+		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		RuntimeControllerPtr m_RTC;
+		RunTimeControllerPtr m_RTC;
+		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;

@@ -32,7 +32,7 @@
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 
 
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 

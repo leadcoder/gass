@@ -33,7 +33,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 
-#include "Sim/Interface/GASSIResourceSystem.h"
+
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 #include "Sim/GASSSimEngine.h"

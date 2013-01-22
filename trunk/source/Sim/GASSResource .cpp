@@ -22,7 +22,6 @@
 #include "Sim/GASSResource.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIResourceSystem.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS

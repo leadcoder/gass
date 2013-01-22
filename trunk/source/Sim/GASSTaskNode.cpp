@@ -24,9 +24,9 @@
 
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSMisc.h"
-#include <tinyxml.h>
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"
+#include <tinyxml.h>
 
 namespace GASS
 {

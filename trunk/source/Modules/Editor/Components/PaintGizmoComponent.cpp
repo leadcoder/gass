@@ -58,7 +58,6 @@ namespace GASS
 		//rebulid each frame
 		m_Pos = message->GetPosition();
 		BuildMesh();
-
 	}
 
 	void PaintGizmoComponent::BuildMesh()
@@ -106,8 +105,6 @@ namespace GASS
 			m_MeshData->VertexVector.push_back(vertex);
 		}
 		m_MeshData->VertexVector.push_back(vertex);
-
-
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
