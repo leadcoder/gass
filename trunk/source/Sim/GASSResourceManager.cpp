@@ -17,31 +17,27 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <boost/bind.hpp>
-#include <boost/filesystem.hpp>
-#include <tinyxml.h>
-#include "GASSBaseResourceSystem.h"
 
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSResourceGroup.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Core/Utils/GASSMisc.h"
+#include <tinyxml.h>
 
 namespace GASS
 {
-	BaseResourceSystem::BaseResourceSystem(void)
+	ResourceManager::ResourceManager(void)
 	{
 	
 	}
 
-	BaseResourceSystem::~BaseResourceSystem(void)
+	ResourceManager::~ResourceManager(void)
 	{
 	
 	}
-
-	void BaseResourceSystem::RegisterReflection()
-	{
-		SystemFactory::GetPtr()->Register("BaseResourceSystem",new GASS::Creator<BaseResourceSystem, ISystem>);
-	}
 	
-	//Use custom load
-	void BaseResourceSystem::LoadXML(TiXmlElement *elem)
+	void ResourceManager::LoadXML(TiXmlElement *elem)
 	{
 		TiXmlElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
@@ -55,7 +51,7 @@ namespace GASS
 				while(group_elem)
 				{
 					const std::string group_elem_name = group_elem->Value();
-					if(group_elem_name == "AddResourceLocation")
+					if(group_elem_name == "ResourceLocation")
 					{
 						const FilePath path = Misc::ReadStringAttribute(group_elem,"path");
 						const std::string type = Misc::ReadStringAttribute(group_elem,"type");
@@ -74,16 +70,16 @@ namespace GASS
 				}
 				AddResourceGroup(group);
 			}
-			else
+			/*else
 			{
 				const std::string attrib_val = prop_elem->FirstAttribute()->Value();
 				SetPropertyByString(elem_name,attrib_val);
-			}
+			}*/
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
 
-	bool BaseResourceSystem::HasResourceGroup(const std::string &name)
+	bool ResourceManager::HasResourceGroup(const std::string &name)
 	{
 		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
@@ -97,13 +93,13 @@ namespace GASS
 		return false;
 	}
 
-	void BaseResourceSystem::AddResourceGroup(ResourceGroupPtr group)
+	void ResourceManager::AddResourceGroup(ResourceGroupPtr group)
 	{
 		m_ResourceGroups.push_back(group);
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));
 	}
 
-	void BaseResourceSystem::RemoveResourceGroup(ResourceGroupPtr group)
+	void ResourceManager::RemoveResourceGroup(ResourceGroupPtr group)
 	{
 		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
@@ -120,7 +116,7 @@ namespace GASS
 	}
 
 	
-	std::string BaseResourceSystem::GetResourceTypeByExtension(const std::string &extension) const
+	std::string ResourceManager::GetResourceTypeByExtension(const std::string &extension) const
 	{
 		std::string ext = Misc::ToLower(extension);
 	
@@ -137,7 +133,7 @@ namespace GASS
 		return "";
 	}
 
-	Resource BaseResourceSystem::GetFirstResourceByName(const std::string &resource_name) const
+	Resource ResourceManager::GetFirstResourceByName(const std::string &resource_name) const
 	{
 		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
 		ResourceVector resources;
@@ -152,7 +148,7 @@ namespace GASS
 	}
 
 
-	void BaseResourceSystem::RegisterResourceType(const ResourceType &res_type) 
+	void ResourceManager::RegisterResourceType(const ResourceType &res_type) 
 	{
 		m_ResourceTypes.push_back(res_type);
 	}

@@ -20,38 +20,82 @@
 
 #pragma once
 
-#include "Sim/GASS.h"
+
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSResourceLocation.h"
-#include <string>
+#include "Sim/GASSResource.h"
+class TiXmlElement;
 
 namespace GASS
 {
-	class GASSExport BaseResourceSystem : public Reflection<BaseResourceSystem, SimSystem>,  public IResourceSystem
+
+	struct ResourceType
 	{
-		
+		std::string Name;
+		std::vector<std::string> Extensions;
+
+	};
+	typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
+
+	/**
+		ResourceManager
+	*/
+	class GASSExport ResourceManager
+	{
 	public:
-		
-		BaseResourceSystem();
-		virtual ~BaseResourceSystem();
-		static void RegisterReflection();
-		virtual void Init() {};
-		virtual void LoadXML(TiXmlElement *elem);
-		std::string GetSystemName() const {return "BaseResourceSystem";}
-		//IResourceSystem
-		//void RemoveResourceGroup(const std::string &name);
-		void RemoveResourceGroup(ResourceGroupPtr group);
+		ResourceManager();
+		virtual ~ResourceManager();
+
+		/**
+			Load resource groups from xml
+			@resource_group The resources group
+		*/
+
+		void LoadXML(TiXmlElement *elem);
+		/**
+			Add resource group
+			@resource_group The resources group
+		*/
 		void AddResourceGroup(ResourceGroupPtr group);
+		
+
+		/**
+			Remove resource group
+			@resource_group The resources group
+		*/
+
+		void RemoveResourceGroup(ResourceGroupPtr group);
+
+
+		/**
+			Get all resource groups
+		*/
 		ResourceGroupVector GetResourceGroups() const {return m_ResourceGroups;}
+
+		/**
+			Check if resource group is present
+			@name Name of the resource group
+		*/
 		bool HasResourceGroup(const std::string &name);
+
+		/**
+			Check if extension is associated with resource type
+			@extension File extension to check
+		*/
 		std::string GetResourceTypeByExtension(const std::string &extension) const;
+
+		/**
+			Get first resource by name. All resrouces gorups are checked.
+			@resource_name Name of resource
+		*/
 		Resource GetFirstResourceByName(const std::string &resource_name) const;
+
+		/**
+			Register new resource type
+			@resource_name Name of resource
+		*/
 		void RegisterResourceType(const ResourceType &res_type);
-		//std::vector<Resource> GetResources(const std::string &resource_type = "", const std::string &resource_group = "") const;
-		
-		//void RegisterResourceType(const ResourceType &res_type);
 	protected:
-		
-//		void AddResourceGroup(const std::string &resource_group){};
 	private:
 		ResourceGroupVector m_ResourceGroups;
 		std::vector<ResourceType> m_ResourceTypes;
