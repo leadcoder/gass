@@ -17,6 +17,45 @@
   </Plugins>
  <SetDataPath value="../../../common/data/"/>
  <ScenePath value="%GASS_DATA_HOME%/scenaries"/>
+ <ResourceManager>
+	<ResourceGroup name="Bootstrap">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="SkyX">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="HYDRAX">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="PagedGeometry">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_VEGETATION_MATERIALS">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/vegetation" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_ROAD_MATERIALS">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/road" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/road" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	<ResourceGroup name="GASS_SKY_MATERIALS">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/sky" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
+	</ResourceGroup>
+	
+	<!--<ResourceGroup name="GASS_VEGETATION">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
+    </ResourceGroup>-->
+	<ResourceGroup name="GASS_DETAIL_TEXTURES">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="false"/>
+    </ResourceGroup>
+  </ResourceManager>
 <SceneObjectTemplateManager>
 	<AddObjectIDToName value ="true"/>
 	<ObjectIDPrefix value="["/>
@@ -86,45 +125,15 @@
     <PostFilters value="HDR"/>
 	<TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
-  <BaseResourceSystem>
-	<ResourceGroup name="Bootstrap">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="SkyX">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" type="FileSystem" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="HYDRAX">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="PagedGeometry">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
-	</ResourceGroup>
-	<ResourceGroup name="GASS">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials" type="FileSystem" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="GASS_VEGETATION_MATERIALS">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="GASS_VEGETATION">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
-    </ResourceGroup>
-	<ResourceGroup name="GASS_VEGETATION_TEXTURES">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/terrain/vegetation" type="FileSystem" recursive="false"/>
-	</ResourceGroup>
-	<ResourceGroup name="GASS_DETAIL_TEXTURES">
-		<AddResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/terrain/detail" type="FileSystem" recursive="false"/>
-    </ResourceGroup>
-  </BaseResourceSystem>
+  
 </Systems>
 <RTC>
 	<NumberOfThreads value="-1"/> <!-- -1 == auto-->
 	<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
 	<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
 	<TaskNode name="ROOT_NODE" mode="SEQUENCE">
-		<TaskNode name="PRE_SIM" mode="PARALLEL"/>
-		<TaskNode name="SIM" mode="PARALLEL"/>
-		<TaskNode name="POST_SIM" mode="PARALLEL"/>
+		<TaskNode name="PRE_SIM" mode="SEQUENCE"/>
+		<TaskNode name="SIM" mode="SEQUENCE"/>
+		<TaskNode name="POST_SIM" mode="SEQUENCE"/>
 	</TaskNode>
 </RTC>

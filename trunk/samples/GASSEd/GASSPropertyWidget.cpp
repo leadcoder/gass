@@ -239,7 +239,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	}
 	else
 	{
-		
 		boost::any any_value;
 		prop->GetValue(obj.get(), any_value);
 
@@ -248,9 +247,9 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			try
 			{
 				GASS::ResourceHandle resource = boost::any_cast<GASS::ResourceHandle>(any_value);
-				GASS::ResourceSystemPtr rs = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::IResourceSystem>();
+				GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 
-				GASS::ResourceGroupVector groups = rs->GetResourceGroups();
+				GASS::ResourceGroupVector groups = rm->GetResourceGroups();
 				std::vector<std::string> values;
 				for(size_t i = 0; i < groups.size();i++)
 				{
@@ -285,7 +284,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 
 			}
 		}
-
 		try
 		{
 			GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
@@ -300,7 +298,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				
 		}
 	}
-	
 
 	if(item == NULL && ps)
 	{
@@ -319,6 +316,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	
 		}
 	}
+
 	if(item == NULL)
 	{
 		item = m_VariantManager->addProperty(QVariant::String, prop_name.c_str());
