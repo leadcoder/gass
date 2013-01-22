@@ -404,7 +404,7 @@ material BakedDiffuseLightMapTemplate
 				
 			texture_unit diffuse_map
 			{
-				texture BaseMap.tga
+				texture default.dds
 			}
 			// shadowmap 1
 			texture_unit shadow_map
@@ -464,7 +464,7 @@ material BakedDiffuseLightMapWithDetailTemplate
 				
 			texture_unit diffuse_map
 			{
-				texture BaseMap.tga
+				texture default.dds
 			}
 			
 			
@@ -480,7 +480,7 @@ material BakedDiffuseLightMapWithDetailTemplate
 			
 			texture_unit detail_map
 			{
-				texture DetailMap.tga
+				texture default.dds
 			}
 		}
 	} 
@@ -526,7 +526,7 @@ material TerrainSplat3LightMap
 				
 			texture_unit color_map
 			{
-				texture BaseMap.tga
+				texture default.dds
 			}
 			texture_unit splat_map
 			{
@@ -551,7 +551,7 @@ material TerrainSplat3LightMap
 			
 			texture_unit detail3_map
 			{
-				texture lightmap.dds
+				texture default.dds
 			}
 			// shadowmap 1
 			texture_unit shadow_map
@@ -605,12 +605,12 @@ material TerrainSplat3BakedLightMap
 				
 			texture_unit color_map
 			{
-				texture BaseMap.tga
+				texture default.dds
 			}
 			texture_unit splat_map
 			{
 				// coverage texture : rgba handling alpha for each splat
-				texture Cover.tga
+				texture default.dds
 			}
 
 			texture_unit detail0_map
@@ -807,7 +807,7 @@ material VegetationTemplate
 
 			texture_unit diffuse_map
 			{
-				texture Cover.tga
+				texture default.dds
 			}
 			texture_unit shadow_map
 			{

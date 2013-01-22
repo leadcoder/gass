@@ -1,6 +1,6 @@
  import * from  "terrain.material"	 
 
-material TestGrass : VegetationTemplate
+material DefaultGrass : VegetationTemplate
 { 
 	//receive_shadows off 
 	technique light
@@ -8,13 +8,13 @@ material TestGrass : VegetationTemplate
 		pass 
 		{ 
 			alpha_rejection greater 128 
-				ambient 1 1 1 1 
-				specular 0.0 0.0 0.0 1 10 
-				emissive 0.0 1.0 0.0 0.5 
+			ambient 1 1 1 1 
+			specular 0.0 0.0 0.0 1 10 
+			emissive 0.0 1.0 0.0 0.5 
 
 			texture_unit diffuse_map
 			{ 
-				texture grass02.dds 
+				texture veg_default.dds 
 			}
 		} 
 
