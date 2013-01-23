@@ -110,7 +110,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 		GASS::IComponentContainer::ComponentIterator comp_iter = object->GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			GASS::BaseComponentPtr comp = boost::shared_static_cast<GASS::BaseComponent>(comp_iter.getNext());
+			GASS::BaseComponentPtr comp = STATIC_CAST<GASS::BaseComponent>(comp_iter.getNext());
 			std::string class_name = comp->GetRTTI()->GetClassName();
 			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
 			if(os && os->Visible) //we have settings!

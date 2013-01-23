@@ -58,7 +58,7 @@ void GASSSceneTreeWidget::OnUnloadScene(GASS::SceneUnloadedEventPtr message)
 void GASSSceneTreeWidget::OnLoadSceneObject(GASS::PostComponentsInitializedEventPtr message)
 {
 	GASS::SceneObjectPtr obj = message->GetSceneObject();
-	GASS::SceneObjectPtr parent = boost::shared_dynamic_cast<GASS::SceneObject>(obj->GetParent());
+	GASS::SceneObjectPtr parent = DYNAMIC_CAST<GASS::SceneObject>(obj->GetParent());
 	if(parent)
 	{
 		GASS::EditorComponentPtr editor_comp = obj->GetFirstComponentByClass<GASS::EditorComponent>();
