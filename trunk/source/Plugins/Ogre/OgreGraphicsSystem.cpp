@@ -45,7 +45,9 @@
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
 #include <OgreLogManager.h>
-
+#ifdef OGRE_19
+#include <Overlay/OgreOverlaySystem.h>
+#endif
 
 namespace GASS
 {
@@ -84,6 +86,10 @@ namespace GASS
 		
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
+
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationAdded,ResourceLocationAddedEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
+
 		
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
@@ -105,6 +111,12 @@ namespace GASS
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
 
 		//Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
+
+		#ifdef OGRE_19
+			Ogre::OverlaySystem* m_OverlaySystem = new Ogre::OverlaySystem();
+		#endif
+
+
 
 		for(int i = 0; i < m_Plugins.size(); i++)
 		{
@@ -302,6 +314,8 @@ namespace GASS
 		else
 		TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
 	}
+
+	
 	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
 	{
 		m_ResourceManager->AddResourceGroup(message->GetGroup(),true);
@@ -310,6 +324,17 @@ namespace GASS
 	void OgreGraphicsSystem::OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message)
 	{
 		m_ResourceManager->RemoveResourceGroup(message->GetGroup()->GetName());
+	}
+
+
+	void OgreGraphicsSystem::OnResourceLocationAdded(ResourceLocationAddedEventPtr message)
+	{
+		m_ResourceManager->AddResourceLocation(message->GetLocation());
+	}
+
+	void OgreGraphicsSystem::OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message)
+	{
+		m_ResourceManager->RemoveResourceLocation(message->GetLocation());
 	}
 }
 

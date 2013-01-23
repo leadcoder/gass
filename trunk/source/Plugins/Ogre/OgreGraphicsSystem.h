@@ -82,7 +82,9 @@ namespace GASS
 		//Resource listeners
 		void OnResourceGroupCreated(ResourceGroupCreatedEventPtr message);
 		void OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message);
-		
+		void OnResourceLocationAdded(ResourceLocationAddedEventPtr message);
+		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
+
 		void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}

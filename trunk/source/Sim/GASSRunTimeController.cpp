@@ -85,7 +85,6 @@ namespace GASS
 		}
 	}
 
-
 	void RunTimeController::Update(double delta_time)
 	{
 		m_SimulationTaskNode->Update(delta_time,NULL);

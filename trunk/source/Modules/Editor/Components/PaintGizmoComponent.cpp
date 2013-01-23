@@ -24,7 +24,8 @@ namespace GASS
 		m_Size(30),
 		m_InnerSize(20),
 		m_Type("follow_height"),
-		m_Active(false)
+		m_Active(false),
+		m_Pos(1,0,0)
 	{
 
 	}
@@ -56,8 +57,11 @@ namespace GASS
 	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
 		//rebulid each frame
-		m_Pos = message->GetPosition();
-		BuildMesh();
+		if(m_Pos != message->GetPosition())
+		{
+			m_Pos = message->GetPosition();
+			BuildMesh();
+		}
 	}
 
 	void PaintGizmoComponent::BuildMesh()

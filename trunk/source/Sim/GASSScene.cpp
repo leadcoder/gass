@@ -171,7 +171,7 @@ namespace GASS
 		ResourceGroupPtr res_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup = res_group;
 		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
-		res_group->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		m_ResourceLocation = res_group->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 		rm->AddResourceGroup(res_group);
 		//rs->LoadResourceGroup(GetResourceGroupName());
 
@@ -217,7 +217,8 @@ namespace GASS
 
 	void Scene::Save(const std::string &name)
 	{
-		m_FolderName = name;
+		
+		
 		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
 		boost::filesystem::path boost_path(scene_path.GetFullPath()); 
 		if(!boost::filesystem::exists(boost_path))  
@@ -230,8 +231,14 @@ namespace GASS
 			return;
 		}
 
-		//ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+
+
+		if(ResourceLocationPtr(m_ResourceLocation,NO_THROW))//remove previous location?
+		{
+			ResourceGroupPtr(m_ResourceGroup)->RemoveResourceLocation(ResourceLocationPtr(m_ResourceLocation));
+		}
+		m_FolderName = name;
+		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 
 		TiXmlDocument doc;  
 		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  

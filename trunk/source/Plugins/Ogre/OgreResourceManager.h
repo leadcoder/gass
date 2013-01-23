@@ -41,6 +41,10 @@ namespace GASS
 		void Init();
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceGroup(ResourceGroupPtr group, bool load);
+
+		void AddResourceLocation(ResourceLocationPtr location);
+		void RemoveResourceLocation(ResourceLocationPtr location);
+
 	protected:
 		bool m_Initialized;
 	};

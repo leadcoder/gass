@@ -155,6 +155,7 @@ namespace Ogre
 			/// Internal
 			bool _isSM3Available() const { return mSM3Available; }
 		
+			bool isVertexCompressionSupported() const {return false;}
 		protected:
 
 			enum TechniqueType

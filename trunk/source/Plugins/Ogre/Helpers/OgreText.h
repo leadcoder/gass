@@ -1,6 +1,9 @@
 #include <Ogre.h>
 #include <OgreSingleton.h>
- 
+#ifdef OGRE_19
+#include <Overlay/OgreOverlay.h>
+#endif
+
 class TextRenderer : public Ogre::Singleton<TextRenderer>
 {
 private:

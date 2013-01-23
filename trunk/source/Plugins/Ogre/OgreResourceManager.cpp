@@ -61,15 +61,7 @@ namespace GASS
 		LogManager::getSingleton().stream() << "OgreResourceManager Completed";
 	}
 
-	/*void OgreResourceManager::RemoveResourceLocation(const FilePath &path,const std::string &resource_group)
-	{
-		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
-		Ogre::StringVector groups = rsm->getResourceGroups();
-		if (std::find(groups.begin(), groups.end(), resource_group) != groups.end())
-		{
-			rsm->removeResourceLocation(path.GetFullPath(),resource_group);
-		}
-	}*/
+	
 
 	void OgreResourceManager::AddResourceGroup(ResourceGroupPtr group, bool load)
 	{
@@ -82,11 +74,7 @@ namespace GASS
 		ResourceLocationVector locations = group->GetResourceLocations();
 		for(int i = 0; i < locations.size(); i++)
 		{
-			ResourceLocationPtr rl = locations[i];
-			if(rl->GetType() == RLT_FILESYSTEM)
-				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"FileSystem", rl->GetGroup()->GetName(),false);
-			else if(rl->GetType() == RLT_ZIP)
-				rsm->addResourceLocation(rl->GetPath().GetFullPath(),"Zip", rl->GetGroup()->GetName(),false);
+			AddResourceLocation(locations[i]);
 		}
 		if(load)
 			rsm->initialiseResourceGroup(group->GetName());
@@ -101,6 +89,23 @@ namespace GASS
 			rsm->destroyResourceGroup(resource_group);
 		}
 	}
+
+	void OgreResourceManager::AddResourceLocation(ResourceLocationPtr location)
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		if(location->GetType() == RLT_FILESYSTEM)
+			rsm->addResourceLocation(location->GetPath().GetFullPath(),"FileSystem", location->GetGroup()->GetName(),false);
+		else if(location->GetType() == RLT_ZIP)
+			rsm->addResourceLocation(location->GetPath().GetFullPath(),"Zip", location->GetGroup()->GetName(),false);
+	}
+
+	
+	void OgreResourceManager::RemoveResourceLocation(ResourceLocationPtr location)
+	{
+		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
+		rsm->removeResourceLocation(location->GetPath().GetFullPath(),location->GetGroup()->GetName());
+	}
+
 	
 }
 

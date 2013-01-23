@@ -349,7 +349,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No TerrainComponent found while collision shape type is CST_TERRAIN", "ODECollisionGeometryComponent::CreateTerrainGeometry");
 		}
 		
-		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);
+		GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainData.m_TerrainGeom = terrain.get();
@@ -412,7 +412,6 @@ namespace GASS
 	{
 		return m_TerrainData.m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData.m_Samples-1-z);
 	}
-
 
 	void ODECollisionGeometryComponent::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
 	{

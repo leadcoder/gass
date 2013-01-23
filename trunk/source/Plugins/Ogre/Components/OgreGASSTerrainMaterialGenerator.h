@@ -121,7 +121,7 @@ namespace GASS
          void setLightmapEnabled(bool enabled) {}
          bool isCompositeMapEnabled() const  { return false; }
          void setCompositeMapEnabled(bool enabled) {}
-
+		 bool isVertexCompressionSupported() const {return false;}
 	  protected:
 		  Ogre::String m_Material;
       };

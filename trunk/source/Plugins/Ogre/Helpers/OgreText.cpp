@@ -1,9 +1,17 @@
 #include "OgreText.h"
  
-template<> TextRenderer* Ogre::Singleton<TextRenderer>::ms_Singleton = 0;
+#ifdef OGRE_19
+	#include <Overlay/OgreOverlayManager.h>
+	#include <Overlay/OgreOverlayContainer.h>
+	template<> TextRenderer* Ogre::Singleton<TextRenderer>::msSingleton = 0;
+#else
+	template<> TextRenderer* Ogre::Singleton<TextRenderer>::ms_Singleton = 0;
+#endif 
+
  
 TextRenderer::TextRenderer()
 {
+	//_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
     _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
  
     _overlay = _overlayMgr->create("overlay1");

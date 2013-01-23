@@ -32,6 +32,7 @@ class TiXmlElement;
 namespace GASS
 {
 	FDECL(ResourceGroup)
+	FDECL(ResourceLocation)
 	FDECL(MessageManager)
 	FDECL(SceneObject)
 	FDECL(SceneObjectManager)
@@ -229,6 +230,7 @@ protected:
 		SceneObjectPtr m_Root;
 		SceneObjectWeakPtr m_TerrainObjects;
 		ResourceGroupWeakPtr m_ResourceGroup;
+		ResourceLocationWeakPtr m_ResourceLocation;
 		bool m_Initlized;
 	};
 	PDECL(Scene)

@@ -47,8 +47,9 @@
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
-#include <OgreOverlayManager.h>
-#include <OgreOverlayContainer.h>
+
+/*#include <OgreOverlayManager.h>
+#include <OgreOverlayContainer.h>*/
 #include <OgreShadowCameraSetupLiSPSM.h>
 #include <OgreShadowCameraSetupPlaneOptimal.h>
 
@@ -75,7 +76,7 @@ namespace GASS
 		m_FarShadowDistance (100),
 		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SkyboxMaterial(""),
-		m_SceneManagerType("TerrainSceneManager"),
+		m_SceneManagerType("OctreeSceneManager"),
 		m_SceneMgr (NULL)
 	{
 

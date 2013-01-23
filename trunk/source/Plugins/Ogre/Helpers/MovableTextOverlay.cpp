@@ -1,4 +1,12 @@
-#include <OgreFontManager.h>
+
+#ifdef OGRE_19
+	#include <Overlay/OgreFontManager.h>
+	#include <Overlay/OgreOverlayManager.h>
+	#include <Overlay/OgreOverlayContainer.h>
+#else
+	#include <OgreFontManager.h>
+#endif
+
 #include <OgrePrerequisites.h>
 #include "MovableTextOverlay.h"
 

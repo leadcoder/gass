@@ -59,6 +59,7 @@ namespace Ogre
 
 
 		mProfiles.push_back(OGRE_NEW SM2Profile(this, "SM2", "Profile for rendering on Shader Model 2 capable cards"));
+		
 		// TODO - check hardware capabilities & use fallbacks if required (more profiles needed)
 		setActiveProfile("SM2");
 

@@ -45,7 +45,7 @@ namespace GASS
 		else
 		{
 			m_ResourceLocations.push_back(rl);
-			//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
 		}
 		return rl;
 	}
@@ -56,7 +56,7 @@ namespace GASS
 		if( boost::filesystem::exists(boost_path))  
 		{
 			m_ResourceLocations.push_back(rl);
-			//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationCreatedEventPtr(new ResourceLocationCreatedEvent(rl)));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
 			boost::filesystem::directory_iterator end ;    
 			for(boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
 			{
@@ -76,7 +76,7 @@ namespace GASS
 		{
 			if(location == *iter)
 			{
-				//SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
 				iter = m_ResourceLocations.erase(iter);
 				
 			}
