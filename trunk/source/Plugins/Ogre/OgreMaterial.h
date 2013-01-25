@@ -46,6 +46,8 @@ namespace GASS
 			return os;
 		}
 
+		static bool IsMultiValue() {return false;}
+
 		static std::vector<std::string> GetAllOptions(const std::string &filter)
 		{
 			std::vector<std::string> content;

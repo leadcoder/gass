@@ -34,8 +34,6 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/OgreConvert.h"
-
-
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/System/GASSSystemFactory.h"
@@ -60,20 +58,20 @@ namespace GASS
 	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) :	m_FogStart(200),
 		m_FogEnd(40000),
 		m_UseFog(1),
-		m_FogMode("Linear"),
+		m_FogMode(Ogre::FOG_LINEAR),
 		m_FogDensity(0.01),
 		m_FogColor(1,1,1),
 		m_AmbientColor(1,1,1),
 		//Shadows
-		m_ShadowType("AdditiveIntegratedTextureShadows"),
+		m_ShadowMode(TEXTURE_SHADOWS_ADDITIVE_INTEGRATED),
 		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),
-		m_ShadowProjType("LiSPSM"),
-		m_TextureShadowSize (1024),
-		m_NumShadowTextures (1),
+		m_TextureShadowProjection(LISPSM),
+		m_TextureShadowSize(1024),
+		m_NumShadowTextures(1),
 		m_SelfShadowing (false),
 		m_UseAggressiveFocusRegion(true),
 		m_OptimalAdjustFactor(1),
-		m_FarShadowDistance (100),
+		m_FarShadowDistance(100),
 		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SkyboxMaterial(""),
 		m_SceneManagerType("OctreeSceneManager"),
@@ -90,14 +88,14 @@ namespace GASS
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
-		RegisterProperty<std::string>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode);
+		RegisterEnumProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode);
 		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart);
 		RegisterProperty<float>( "FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd);
 		RegisterProperty<float>( "FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity);
-		RegisterProperty<Vec3>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor);
-		RegisterProperty<Vec3>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor);
+		RegisterProperty<ColorRGB>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor);
+		RegisterProperty<ColorRGB>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor);
 		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType);
-		RegisterProperty<std::string>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
+		RegisterEnumProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
 		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing );
 		RegisterProperty<bool> ("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion,&GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion);
 		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance);
@@ -105,9 +103,9 @@ namespace GASS
 		RegisterProperty<float> ("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor,&GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor);
 		RegisterProperty<int>("NumShadowTextures",&GASS::OgreGraphicsSceneManager::GetNumShadowTextures,&GASS::OgreGraphicsSceneManager::SetNumShadowTextures);
 		RegisterProperty<int>("TextureShadowSize",&GASS::OgreGraphicsSceneManager::GetTextureShadowSize,&GASS::OgreGraphicsSceneManager::SetTextureShadowSize);
-		RegisterProperty<std::string>("ShadowProjType",&GASS::OgreGraphicsSceneManager::GetShadowProjType,&GASS::OgreGraphicsSceneManager::SetShadowProjType);
-		RegisterProperty<std::string>("ShadowType",&GASS::OgreGraphicsSceneManager::GetShadowType,&GASS::OgreGraphicsSceneManager::SetShadowType);
-		RegisterProperty<std::string>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
+		RegisterEnumProperty<TextureShadowProjectionBinder>("TextureShadowProjection",&GASS::OgreGraphicsSceneManager::GetTextureShadowProjection,&GASS::OgreGraphicsSceneManager::SetTextureShadowProjection);
+		RegisterEnumProperty<ShadowModeBinder>("ShadowMode",&GASS::OgreGraphicsSceneManager::GetShadowMode,&GASS::OgreGraphicsSceneManager::SetShadowMode);
+		RegisterEnumProperty<OgreMaterial>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()
@@ -192,28 +190,27 @@ namespace GASS
 	void OgreGraphicsSceneManager::UpdateFogSettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		ColourValue fogColour(m_FogColor.x, m_FogColor.y, m_FogColor.z);
-		if(m_FogMode == "Linear")
-			m_SceneMgr->setFog(Ogre::FOG_LINEAR, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		else if(m_FogMode == "Exp")
+		ColourValue fogColour(m_FogColor.r, m_FogColor.g, m_FogColor.b);
+		m_SceneMgr->setFog(m_FogMode.GetValue(), fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+		/*else if(m_FogMode == "Exp")
 			m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "Exp2")
 			m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
 		else if(m_FogMode == "None")
-			m_SceneMgr->setFog(Ogre::FOG_NONE, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
+			m_SceneMgr->setFog(Ogre::FOG_NONE, fogColour, m_FogDensity, m_FogStart, m_FogEnd);*/
 	}
 
 	void OgreGraphicsSceneManager::UpdateSkySettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		if(m_SkyboxMaterial != "")
-			m_SceneMgr->setSkyBox(true, m_SkyboxMaterial, 50);
+		if(m_SkyboxMaterial.GetName() != "")
+			m_SceneMgr->setSkyBox(true, m_SkyboxMaterial.GetName(), 50);
 	}
 
 	void OgreGraphicsSceneManager::UpdateLightSettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.x, m_AmbientColor.y, m_AmbientColor.z));
+		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b));
 	}
 
 
@@ -231,76 +228,82 @@ namespace GASS
 			isOpenGL = false;
 		}
 		bool tex_shadow = false;
-		if(m_ShadowType == "AdditiveIntegratedTextureShadows")
+		switch(m_ShadowMode.GetValue())
 		{
-			tex_shadow = true;
-			if(isOpenGL)
-				m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
-			else m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-			//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-			//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
-			//sm->setShadowCasterRenderBackFaces(true);
+		case TEXTURE_SHADOWS_ADDITIVE_INTEGRATED:
+			{
+				tex_shadow = true;
+				if(isOpenGL)
+					m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
+				else m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
+				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
+				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
+				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
+				//sm->setShadowCasterRenderBackFaces(true);
 
-			//sm->setShadowCasterRenderBackFaces(false);
-			//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
-		}
-
-		if(m_ShadowType == "TextureShadowsAdditive")
-		{
-			tex_shadow = true;
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
-			m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
-			m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
-
-		}
-		if(m_ShadowType == "TextureShadowsModulative")
-		{
-			tex_shadow = true;
-			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-			m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
-			m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+				//sm->setShadowCasterRenderBackFaces(false);
+				//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
+			}
+			break;
+		case TEXTURE_SHADOWS_ADDITIVE:
+			{
+				tex_shadow = true;
+				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
+				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
+				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+			}
+			break;
+		case TEXTURE_SHADOWS_MODULATIVE: 
+			{
+				tex_shadow = true;
+				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
+				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+			}
+			break;
 		}
 
 		if(tex_shadow)
 		{
-
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
 			m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
 			//sm->setShadowTextureCasterMaterial("DepthShadowmap_Caster_Float");
-			if(m_ShadowCasterMaterial != "")
+			//if(m_ShadowCasterMaterial.Valid())
 			{
-
-				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial);
+				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial.GetName());
 			}
 
 			ShadowCameraSetupPtr currentShadowCameraSetup;
-			if(m_ShadowProjType == "LiSPSM")
+			switch(m_TextureShadowProjection.GetValue())
 			{
-				m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
-				currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
-				m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
-				m_LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
-				m_LiSPSMSetup->setCameraLightDirectionThreshold(Ogre::Degree( 10));
-			}
-			else if (m_ShadowProjType == "Uniform")
-			{
-				currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
-				m_SceneMgr->setShadowCasterRenderBackFaces(false);
+			case LISPSM:
+				{
+					m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
+					currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
+					m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
+					m_LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
+					m_LiSPSMSetup->setCameraLightDirectionThreshold(Ogre::Degree( 10));
+				}
+				break;
+			case UNIFORM:
+				{
+					currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
+					m_SceneMgr->setShadowCasterRenderBackFaces(false);
 
-			}
-			else if (m_ShadowProjType == "UniformFocused")
-			{
-				Ogre::FocusedShadowCameraSetup* fscs = new Ogre::FocusedShadowCameraSetup();
-				fscs->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
-				currentShadowCameraSetup = ShadowCameraSetupPtr(fscs);
+				}
+				break;
+			case UNIFORM_FOCUSED:
+				{
+					Ogre::FocusedShadowCameraSetup* fscs = new Ogre::FocusedShadowCameraSetup();
+					fscs->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
+					currentShadowCameraSetup = ShadowCameraSetupPtr(fscs);
 
+				}
+				break;
 			}
-			else
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
+			//GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
-
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 		m_SceneMgr->setShowDebugShadows(true);

@@ -21,6 +21,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Sim/Interface/GASSILightComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -50,10 +51,10 @@ namespace GASS
 		Vec4 GetAttenuationParams()const {return m_AttenuationParams;}
 		void SetSpotParams(const Vec3 &params);
 		Vec3 GetSpotParams()const {return m_SpotParams;}
-		void SetDiffuse(const Vec3 &diffuse);
-		Vec3 GetDiffuse()const {return m_Diffuse;}
-		void SetSpecular(const Vec3 &specular);
-		Vec3 GetSpecular()const {return m_Specular;}
+		void SetDiffuse(const ColorRGB &diffuse);
+		ColorRGB GetDiffuse()const {return m_Diffuse;}
+		void SetSpecular(const ColorRGB &specular);
+		ColorRGB GetSpecular()const {return m_Specular;}
 		void SetCastShadow(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
 	protected:
@@ -62,8 +63,8 @@ namespace GASS
 		Ogre::Light* m_OgreLight;
 		LightTypeBinder m_LightType;
 
-		Vec3 m_Diffuse;
-		Vec3 m_Specular;
+		ColorRGB m_Diffuse;
+		ColorRGB m_Specular;
 		Vec4 m_AttenuationParams;
 		bool m_CastShadow;
 		Vec3 m_SpotParams;

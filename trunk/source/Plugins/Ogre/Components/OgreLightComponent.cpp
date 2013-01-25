@@ -68,8 +68,8 @@ namespace GASS
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow);
 
-		RegisterProperty<Vec3>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse);
-		RegisterProperty<Vec3>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular);
+		RegisterProperty<ColorRGB>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse);
+		RegisterProperty<ColorRGB>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular);
 	}
 
 	void OgreLightComponent::OnInitialize()
@@ -149,18 +149,18 @@ namespace GASS
 		}
 	}
 
-	void OgreLightComponent::SetDiffuse(const Vec3 &diffuse)
+	void OgreLightComponent::SetDiffuse(const ColorRGB &diffuse)
 	{
 		m_Diffuse = diffuse;
 		if(m_OgreLight)
-			m_OgreLight->setDiffuseColour(m_Diffuse.x,m_Diffuse.y,m_Diffuse.z);
+			m_OgreLight->setDiffuseColour(m_Diffuse.r,m_Diffuse.g,m_Diffuse.b);
 
 	}
-	void OgreLightComponent::SetSpecular(const Vec3 &specular)
+	void OgreLightComponent::SetSpecular(const ColorRGB &specular)
 	{
 		m_Specular = specular;
 		if(m_OgreLight)
-			m_OgreLight->setSpecularColour(m_Specular.x,m_Specular.y,m_Specular.z);
+			m_OgreLight->setSpecularColour(m_Specular.r,m_Specular.g,m_Specular.b);
 
 	}
 	void OgreLightComponent::SetCastShadow(bool value)

@@ -26,20 +26,53 @@
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "IOgreSceneManagerProxy.h"
+#include "OgreMaterial.h"
 #include <string>
 #include <OgreSceneManager.h>
 
 namespace Ogre
 {
-	
 	class LiSPSMShadowCameraSetup;
-	
 }
 class DebugDrawer;
 
 namespace GASS
 {
+	enum ShadowMode
+	{
+		TEXTURE_SHADOWS_ADDITIVE_INTEGRATED,
+		TEXTURE_SHADOWS_ADDITIVE, 
+		TEXTURE_SHADOWS_MODULATIVE
+	};
+
+	enum TextureShadowProjection
+	{
+		LISPSM,
+		UNIFORM,
+		UNIFORM_FOCUSED
+	};
+
+	START_ENUM_BINDER(ShadowMode,ShadowModeBinder)
+		BIND(TEXTURE_SHADOWS_ADDITIVE_INTEGRATED)
+		BIND(TEXTURE_SHADOWS_ADDITIVE)
+		BIND(TEXTURE_SHADOWS_MODULATIVE)
+	END_ENUM_BINDER(ShadowMode,ShadowModeBinder)
+
+	START_ENUM_BINDER(TextureShadowProjection,TextureShadowProjectionBinder)
+		BIND(LISPSM)
+		BIND(UNIFORM)
+		BIND(UNIFORM_FOCUSED)
+	END_ENUM_BINDER(TextureShadowProjection,TextureShadowProjectionBinder)
+
+	START_ENUM_BINDER(Ogre::FogMode,FogModeBinder)
+		Bind("FOG_LINEAR",Ogre::FOG_LINEAR);
+		Bind("FOG_EXP",Ogre::FOG_EXP);
+		Bind("FOG_EXP2",Ogre::FOG_EXP2);
+		Bind("FOG_NONE",Ogre::FOG_NONE);
+	END_ENUM_BINDER(Ogre::FogMode,FogModeBinder)
+
 	class IComponent;
 	class OgreGraphicsSystem;
 	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy, public IGraphicsSceneManager, Ogre::FrameListener
@@ -55,16 +88,16 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
 		//Fog
-		std::string GetFogMode() const {return m_FogMode;}
+		FogModeBinder GetFogMode() const {return m_FogMode;}
 		float GetFogStart() const {return m_FogStart;}
 		float GetFogEnd() const {return m_FogEnd;}
 		float GetFogDensity() const {return m_FogDensity;}
-		Vec3 GetFogColor() const {return m_FogColor;}
+		ColorRGB GetFogColor() const {return m_FogColor;}
 
-		void SetFogMode(const std::string &mode) {m_FogMode=mode; UpdateFogSettings();}
+		void SetFogMode(const FogModeBinder &mode) {m_FogMode=mode; UpdateFogSettings();}
 		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
-		void SetFogColor(const Vec3 value) {m_FogColor = value; UpdateFogSettings();}
+		void SetFogColor(const ColorRGB value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 
 		//IGraphicsSceneManager
@@ -82,23 +115,20 @@ namespace GASS
 		void UpdateSkySettings();
 		void UpdateShadowSettings();
 
-		
-		
-
 		//Keep private for now, 
-		void SetAmbientColor(const Vec3 value) {m_AmbientColor = value; UpdateLightSettings();}
-		Vec3 GetAmbientColor() const {return m_AmbientColor;}
+		void SetAmbientColor(const ColorRGB value) {m_AmbientColor = value; UpdateLightSettings();}
+		ColorRGB GetAmbientColor() const {return m_AmbientColor;}
 
 		void SetSceneManagerType(const std::string &name) {m_SceneManagerType = name;}
 		std::string GetSceneManagerType() const {return m_SceneManagerType;}
 
-		void SetSkyboxMaterial(const std::string &name) {m_SkyboxMaterial = name; UpdateSkySettings();}
-		std::string GetSkyboxMaterial() const {return m_SkyboxMaterial;}
+		void SetSkyboxMaterial(const OgreMaterial &name) {m_SkyboxMaterial = name; UpdateSkySettings();}
+		OgreMaterial GetSkyboxMaterial() const {return m_SkyboxMaterial;}
 
 		//shadows
-		std::string GetShadowType() const {return m_ShadowType;}
-		std::string GetShadowCasterMaterial() const {return m_ShadowCasterMaterial;}
-		std::string GetShadowProjType() const {return m_ShadowProjType;}
+		ShadowModeBinder GetShadowMode() const {return m_ShadowMode;}
+		OgreMaterial GetShadowCasterMaterial() const {return m_ShadowCasterMaterial;}
+		TextureShadowProjectionBinder GetTextureShadowProjection() const {return m_TextureShadowProjection;}
 		int GetTextureShadowSize() const {return m_TextureShadowSize;}
 		int GetNumShadowTextures() const {return m_NumShadowTextures;}
 		float GetOptimalAdjustFactor() const {return m_OptimalAdjustFactor;}
@@ -112,33 +142,33 @@ namespace GASS
 		void SetOptimalAdjustFactor(float value) {m_OptimalAdjustFactor = value;UpdateShadowSettings();}
 		void SetNumShadowTextures(int size) {m_NumShadowTextures = size;UpdateShadowSettings();}
 		void SetTextureShadowSize(int size) {m_TextureShadowSize = size;UpdateShadowSettings();}
-		void SetShadowProjType(const std::string &name) {m_ShadowProjType = name;UpdateShadowSettings();}
-		void SetShadowType(const std::string &name) {m_ShadowType = name;UpdateShadowSettings();}
-		void SetShadowCasterMaterial(const std::string &name) {m_ShadowCasterMaterial = name;UpdateShadowSettings();}
+		void SetTextureShadowProjection(const TextureShadowProjectionBinder &value) {m_TextureShadowProjection = value;UpdateShadowSettings();}
+		void SetShadowMode(const ShadowModeBinder &value) {m_ShadowMode = value;UpdateShadowSettings();}
+		void SetShadowCasterMaterial(const OgreMaterial &value) {m_ShadowCasterMaterial = value; UpdateShadowSettings();}
 		void SetUseAggressiveFocusRegion(bool value) {m_UseAggressiveFocusRegion = value ;UpdateShadowSettings();}
 		void SetShadowDirectionalLightExtrusionDistance(float value) {m_ShadowDirectionalLightExtrusionDistance = value;UpdateShadowSettings();}
 	private:	
 		//fog
 		float m_FogDensity;
 		int m_UseFog;
-		Vec3 m_FogColor;
+		ColorRGB m_FogColor;
 		float m_FogEnd;
 		float m_FogStart;
-		std::string m_FogMode;
+		FogModeBinder m_FogMode;
 
 		//light attributes
-		Vec3 m_AmbientColor;
+		ColorRGB m_AmbientColor;
 		
 		//Type of scene mangaer
 		std::string m_SceneManagerType;
 
 		//Sky
-		std::string m_SkyboxMaterial;
+		OgreMaterial m_SkyboxMaterial;
 
 		//Shadows
-		std::string m_ShadowType;
-		std::string m_ShadowCasterMaterial;
-		std::string m_ShadowProjType;
+		ShadowModeBinder m_ShadowMode;
+		TextureShadowProjectionBinder m_TextureShadowProjection;
+		OgreMaterial m_ShadowCasterMaterial;
 		int m_TextureShadowSize;
 		int m_NumShadowTextures;
 		bool m_SelfShadowing;
@@ -149,7 +179,7 @@ namespace GASS
 		Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
 		Ogre::SceneManager* m_SceneMgr;
 		WPTR<OgreGraphicsSystem> m_GFXSystem;
-		std::vector<IComponent*> m_GFXComponents;
+		//std::vector<IComponent*> m_GFXComponents;
 		DebugDrawer* m_DebugDrawer;
 	};
 	typedef SPTR<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;
