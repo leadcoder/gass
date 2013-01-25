@@ -199,12 +199,9 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	GASSVariantProperty gp;
 	GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
 	
-	if(prop->GetTypeID() == GASS::PROP_BOOL)
-	{
-		item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
-		item->setValue(prop_value.c_str());
-	}
-	else if(enum_prop)
+	//if(prop->GetTypeID() == GASS::PROP_BOOL)
+	
+	if(enum_prop)
 	{
 		std::vector<std::string> options = enum_prop->GetEnumList("");
 		bool multi_value = enum_prop->IsMultiValue();
@@ -239,16 +236,24 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	}
 	else
 	{
-		boost::any any_value;
-		prop->GetValue(obj.get(), any_value);
 
-		if(ps)
+		if(*prop->GetType() == typeid(bool))
 		{
-			try
+			item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
+			item->setValue(prop_value.c_str());
+		}
+		else if(*prop->GetType() == typeid(GASS::Vec3))
+		{
+			item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
+			GASS::Vec3 vec(0,0,0);
+			//std::stringstream(prop_value) >> vec;
+			item->setValue(QColor(vec.x,vec.y,vec.z));
+		}
+		else if(*prop->GetType() == typeid(GASS::ResourceHandle))
+		{
+			if(ps)
 			{
-				GASS::ResourceHandle resource = boost::any_cast<GASS::ResourceHandle>(any_value);
 				GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
-
 				GASS::ResourceGroupVector groups = rm->GetResourceGroups();
 				std::vector<std::string> values;
 				for(size_t i = 0; i < groups.size();i++)
@@ -277,25 +282,15 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				item->setAttribute(QLatin1String("enumNames"), enumNames);
 				if(select > -1)
 					item->setValue(select);
-
-			}
-			catch(...)
-			{
-
 			}
 		}
-		try
+		if(*prop->GetType() == typeid(GASS::FilePath))
 		{
-			GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
-			std::string filename = file_path.GetFullPath();
+			//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
+			std::string filename = prop_value;
 			filename = GASS::Misc::Replace(filename,"/","\\");
 			item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
 			item->setValue(filename.c_str());
-		}
-		catch(...)
-		{
-			
-				
 		}
 	}
 
@@ -313,10 +308,8 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				//item = new CGASSFileProperty(obj,prop, filename.c_str(), ps->FileControlSettings.c_str(),_T(ps->Documentation.c_str()));
 			}
 			break;
-	
 		}
 	}
-
 	if(item == NULL)
 	{
 		item = m_VariantManager->addProperty(QVariant::String, prop_name.c_str());

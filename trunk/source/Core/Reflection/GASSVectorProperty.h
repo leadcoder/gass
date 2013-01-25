@@ -86,6 +86,11 @@ namespace GASS
 			}
 		}
 
+		virtual const std::type_info* GetType()
+		{
+			return &typeid(T);
+		}
+
 		virtual PropertyType GetTypeID() const
 		{
 			if(typeid(T) == typeid(int))

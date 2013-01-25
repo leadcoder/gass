@@ -56,6 +56,8 @@ namespace GASS
 		**/
 		inline TypedProperty(const std::string  &name );
 
+
+		virtual const std::type_info* GetType();
 		/**
 		 Returns the type of this property.
 		 */
@@ -85,6 +87,15 @@ namespace GASS
 	IProperty(name)
 	{
 	}
+
+
+	template <class T>
+	const std::type_info* TypedProperty<T>::GetType()
+	{
+		return &typeid(T);
+	}
+
+	
 
 	template <class T>
 	PropertyType TypedProperty<T>::GetTypeID() const
