@@ -3,6 +3,7 @@
 #include "VariantManager.h"
 #include "VariantFactory.h"
 #include "CustomTypes.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
 
@@ -47,9 +48,13 @@ void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &valu
 				const std::string str_name = gp.m_Options[value.toInt()];
 				gp.UpdateValue(str_name);
 			}
+			/*else if (varProp && varProp->propertyType() == QtVariantPropertyManager::ColorTypeId()) 
+			{
+				const std::string str_name = gp.m_Options[value.toInt()];
+				gp.UpdateValue(str_name);
+			}*/
 			else
 			{
-				
 				gp.UpdateValue(value_as_std_string);
 			}
 		}
@@ -226,7 +231,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				gp.m_Options.push_back(options[i]);
 				enumNames << options[i].c_str();
 				if(prop_value == options[i])
-					select = i;
+					select = (int)i;
 			}
 
 			item->setAttribute(QLatin1String("enumNames"), enumNames);
@@ -237,19 +242,20 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	else
 	{
 
-		if(*prop->GetType() == typeid(bool))
+		if(*prop->GetTypeID() == typeid(bool))
 		{
 			item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
 			item->setValue(prop_value.c_str());
 		}
-		else if(*prop->GetType() == typeid(GASS::Vec3))
+		else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
 		{
+			boost::any any_value;
+			prop->GetValue(obj.get(),any_value );
+			GASS::ColorRGB color = boost::any_cast<GASS::ColorRGB>(any_value);
 			item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
-			GASS::Vec3 vec(0,0,0);
-			//std::stringstream(prop_value) >> vec;
-			item->setValue(QColor(vec.x,vec.y,vec.z));
+			item->setValue(QColor(color.r,color.g,color.b));
 		}
-		else if(*prop->GetType() == typeid(GASS::ResourceHandle))
+		else if(*prop->GetTypeID() == typeid(GASS::ResourceHandle))
 		{
 			if(ps)
 			{
@@ -277,14 +283,14 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					gp.m_Options.push_back(values[i]);
 					enumNames << values[i].c_str();
 					if(prop_value == values[i])
-						select = i;
+						select = (int) i;
 				}
 				item->setAttribute(QLatin1String("enumNames"), enumNames);
 				if(select > -1)
 					item->setValue(select);
 			}
 		}
-		if(*prop->GetType() == typeid(GASS::FilePath))
+		if(*prop->GetTypeID() == typeid(GASS::FilePath))
 		{
 			//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
 			std::string filename = prop_value;
