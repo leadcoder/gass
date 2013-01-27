@@ -62,8 +62,7 @@ namespace GASS
         {
             return m_Name;
         }
-		virtual const std::type_info* GetType() = 0;
-		virtual PropertyType GetTypeID() const = 0;
+		virtual const std::type_info* GetTypeID() const = 0;
 		virtual std::string GetTypeName() const = 0;
 
 		/**

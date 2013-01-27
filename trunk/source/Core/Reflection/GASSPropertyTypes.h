@@ -33,7 +33,7 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	enum PropertyType
+	/*enum PropertyType
 	{
 		PROP_BOOL,
 		PROP_INT,
@@ -44,6 +44,6 @@ namespace GASS
 		PROP_VEC4,
 		PROP_UNKNOWN,
 		PROP_MAX_PROPERTY_TYPES
-	};
+	};*/
 }
 #endif

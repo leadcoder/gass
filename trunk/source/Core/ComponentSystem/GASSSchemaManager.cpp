@@ -193,11 +193,9 @@ namespace GASS
 	{
 		std::string type_id;
 
-		switch(prop->GetTypeID())
+		if(*prop->GetTypeID() == typeid(std::string))
 		{
-		case PROP_STRING:
 			type_id = "xs:string";
-			break;
 		}
 		if(type_id == "")
 			type_id = "xs:" + prop->GetTypeName();

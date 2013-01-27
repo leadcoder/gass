@@ -86,46 +86,12 @@ namespace GASS
 			}
 		}
 
-		virtual const std::type_info* GetType()
+		virtual const std::type_info* GetTypeID() const
 		{
 			return &typeid(T);
 		}
 
-		virtual PropertyType GetTypeID() const
-		{
-			if(typeid(T) == typeid(int))
-			{
-				return PROP_INT;
-			}
-			else if(typeid(T) == typeid(float))
-			{
-				return PROP_FLOAT;
-			}
-			else if(typeid(T) == typeid(std::string))
-			{
-				return PROP_STRING;
-			}
-			else if(typeid(T) == typeid(Vec2))
-			{
-				return PROP_VEC2;
-			}
-			else if(typeid(T) == typeid(Vec3))
-			{
-				return PROP_VEC3;
-			}
-			else if(typeid(T) == typeid(Vec4))
-			{
-				return PROP_VEC4;
-			}
-			else if(typeid(T) == typeid(bool))
-			{
-				return PROP_BOOL;
-			}
-			else
-				return PROP_UNKNOWN;
-		}
-
-
+	
 		void Serialize(BaseReflectionObject* object,ISerializer* serializer)
 		{
 			if(serializer->Loading())
