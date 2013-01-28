@@ -301,7 +301,7 @@ namespace GASS
 				
 				for(int i = 0 ; i < components.size(); i++)
 				{
-					PhysXBodyComponentPtr body = STATIC_CAST<PhysXBodyComponent>(components[i]);
+					PhysXBodyComponentPtr body = STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 					if(body.get() != this)
 					{
 						LocationComponentPtr location = body->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
@@ -316,7 +316,7 @@ namespace GASS
 				
 				for(int i = 0 ; i < components.size(); i++)
 				{
-					PhysXJointPtr joint = STATIC_CAST<PhysXJoint>(components[i]);
+					PhysXJointPtr joint = STATIC_PTR_CAST<PhysXJoint>(components[i]);
 					//if(joint.get() != this)
 					{
 						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponent<ILocationComponent>();
@@ -331,7 +331,7 @@ namespace GASS
 				
 				for(int i = 0 ; i < components.size(); i++)
 				{
-					PhysXSuspensionComponentPtr joint = STATIC_CAST<PhysXSuspensionComponent>(components[i]);
+					PhysXSuspensionComponentPtr joint = STATIC_PTR_CAST<PhysXSuspensionComponent>(components[i]);
 					//if(joint.get() != this)
 					{
 						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();

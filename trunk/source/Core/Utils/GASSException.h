@@ -262,6 +262,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return UnimplementedException(code.number, desc, src, file, line);
 		}
 		static FileNotFoundException create(
@@ -269,6 +270,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return FileNotFoundException(code.number, desc, src, file, line);
 		}
 		static FileReadException create(
@@ -276,6 +278,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return FileReadException(code.number, desc, src, file, line);
 		}
 
@@ -284,6 +287,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return IOException(code.number, desc, src, file, line);
 		}
 		static InvalidStateException create(
@@ -291,6 +295,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return InvalidStateException(code.number, desc, src, file, line);
 		}
 		static InvalidParametersException create(
@@ -298,6 +303,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return InvalidParametersException(code.number, desc, src, file, line);
 		}
 		static ItemIdentityException create(
@@ -305,6 +311,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return ItemIdentityException(code.number, desc, src, file, line);
 		}
 		static ItemIdentityException create(
@@ -312,6 +319,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return ItemIdentityException(code.number, desc, src, file, line);
 		}
 		static InternalErrorException create(
@@ -319,6 +327,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return InternalErrorException(code.number, desc, src, file, line);
 		}
 		static RuntimeAssertionException create(
@@ -326,6 +335,7 @@ namespace GASS {
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
 		{
+			(void) code;
 			return RuntimeAssertionException(code.number, desc, src, file, line);
 		}
 

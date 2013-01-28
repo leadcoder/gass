@@ -132,7 +132,7 @@ namespace GASS
 		GeometryComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
-			geom = DYNAMIC_CAST<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			geom = DYNAMIC_PTR_CAST<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		return geom;

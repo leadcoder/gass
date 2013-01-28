@@ -32,4 +32,5 @@ namespace GASS
 		virtual float GetRadius() const = 0; 
 	protected:
 	};
+	
 }

@@ -248,16 +248,31 @@ namespace GASS
 			curr_height = vertex.y;
 
 			last_pos.y = vertex.y = 0; 
-
+			Float width_mult = 1.0;
 			// positive is left vector 
 			if( i== 0 && points.size() > 1)
 			{
 				front = (points[1] - vertex); 
 				front.y = 0;
 			}
-			else
-				front = (vertex-last_pos); 
+			else if(i < points.size() - 1)
+			{
+				Vec3 v1 = (vertex-last_pos);
+				Vec3 v2 = (points[i+1] - vertex);
+				v1.Normalize();
+				v2.Normalize();
+				front = v1 + v2;
 
+				front.Normalize();
+				width_mult = Math::Dot(v1,front);
+				if(width_mult > 0)
+					width_mult = 1.0/width_mult;
+			}
+			else
+			{
+				front = (vertex-last_pos);
+			}
+			front.Normalize();
 			lr_vector = Math::Cross(front,Vec3(0,1,0)); 
 			lr_vector.Normalize(); 
 			// end of lrVector calculation 
@@ -266,7 +281,7 @@ namespace GASS
 			{ 
 				// create this side piece 
 				curr_vertices[j] = vertex; 
-				curr_vertices[j] += lr_vector*lr_vector_multiplier[j]; 
+				curr_vertices[j] += lr_vector*lr_vector_multiplier[j]*width_mult; 
 
 				// update height 
 				//curr_vertices[j].y = mTerrainMesh->getHeight(curr_vertices[j]); 
@@ -313,12 +328,8 @@ namespace GASS
 				mesh_vertex.Color.Set(1,1,1,1);
 				mesh_vertex.TexCoord.x = u_coord[j];
 				mesh_vertex.TexCoord.y = v_coord;
-				// get vertex from created values 
 				mesh_data->VertexVector.push_back(mesh_vertex);
-				//m_RoadObject->position(curr_vertices[j]); 
-				//m_RoadObject->normal(0,1,0);
-				//m_RoadObject->textureCoord(u_coord[j], v_coord); 
-				//mesh_data->IndexVector
+			
 
 			
 			} 

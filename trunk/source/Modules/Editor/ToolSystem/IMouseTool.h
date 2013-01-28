@@ -29,7 +29,7 @@ namespace GASS
 		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info) = 0;
 		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info) = 0;
 		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info) = 0;
-		virtual void Update(double delta_time) {};
+		virtual void Update(double delta_time) {(void)delta_time;}
 		virtual std::string GetName() = 0;
 		virtual void Stop() = 0;
 		virtual void Start() = 0;

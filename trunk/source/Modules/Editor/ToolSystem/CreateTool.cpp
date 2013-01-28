@@ -37,10 +37,10 @@ namespace GASS
 	void CreateTool::OnToolChanged(ToolChangedEventPtr message)
 	{
 		std::string new_tool = message->GetTool();
-		if(new_tool == "CreateTool")
+		if(new_tool == TID_CREATE)
 		{
-			m_ObjectName = message->GetCreateObjectName();
-			m_ParentObject = message->GetCreateParentObject();
+			//m_ObjectName = message->GetCreateObjectName();
+			//m_ParentObject = message->GetCreateParentObject();
 		}
 
 	}
@@ -51,7 +51,7 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor (info.m_ObjectUnderCursor,NO_THROW);
 
 		SceneObjectPtr parent_obj(m_ParentObject,NO_THROW);
-		if(obj_under_cursor)
+		if(obj_under_cursor && parent_obj)
 		{
 			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)

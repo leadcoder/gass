@@ -146,32 +146,11 @@ namespace GASS
 		  {
 
 		  }
-
-		  void SetCreateObjectName(const std::string &object_name) 
-		  {
-			  m_ObjectName =object_name;
-		  }
-		  std::string GetCreateObjectName() const 
-		  {
-			  return m_ObjectName;
-		  }
-		  void SetCreateParentObject(GASS::SceneObjectPtr obj) 
-		  {
-			  m_ParentObject = obj;
-		  }
-		  GASS::SceneObjectPtr GetCreateParentObject() const 
-		  {
-			  return m_ParentObject;
-		  }
-
 		  std::string GetTool() const {return m_Tool;}
 	private:
 		std::string  m_Tool;
-		std::string m_ObjectName;
-		GASS::SceneObjectPtr m_ParentObject; 
 	};
 	typedef SPTR<ToolChangedEvent> ToolChangedEventPtr;
-
 
 	/*class WindowFocusChangedMessage : public BaseMessage
 	{

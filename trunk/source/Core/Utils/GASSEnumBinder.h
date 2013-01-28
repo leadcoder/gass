@@ -77,6 +77,7 @@ namespace GASS
 
 		static std::vector<std::string> GetAllOptions(const std::string &filter) 
 		{
+			(void) filter;
 			std::vector<std::string> types;
 			std::map<std::string ,int>::iterator iter =  m_Names.begin();
 			while(iter != m_Names.end())

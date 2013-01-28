@@ -18,3 +18,4 @@
 #define TID_GOTO_POS "GoToPositionTool"
 #define TID_EDIT_POS "EditPositionTool"
 #define TID_MEASUREMENT "MeasurementTool"
+#define TID_CREATE "CreateTool"

@@ -217,25 +217,6 @@ namespace GASS
 		}
 	}
 
-	/*void MouseToolController::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
-	{
-		if(m_ActiveTool)
-			m_ActiveTool->MouseMoved(info);
-	}
-
-	void MouseToolController::MouseDown(const MouseData &data, const SceneCursorInfo &info)
-	{
-		if(m_ActiveTool)
-			m_ActiveTool->MouseDown(info);
-	}
-
-	void MouseToolController::MouseUp(const MouseData &data, const SceneCursorInfo &info)
-	{
-		if(m_ActiveTool)
-			m_ActiveTool->MouseUp(info);
-	}*/
-
-
 
 	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
 	{
@@ -280,7 +261,7 @@ namespace GASS
 			{
 				info.m_3DPos = gizmo_result.CollPosition;
 				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
-				//std::cout << result.CollPosition << std::endl;
+				
 			}
 		}
 		else
@@ -345,17 +326,7 @@ namespace GASS
 			return value;
 	}
 
-	/*void MouseToolController::OnSnapSettingsMessage(SnapSettingsMessagePtr message)
-	{
-		m_SnapMovment = message->GetMovementSnap();
-		m_SnapAngle = message->GetRotationSnap();
-	}*/
-
-	/*void MouseToolController::OnSnapModeMessage(SnapModeMessagePtr message)
-	{
-		m_EnableMovmentSnap = message->MovementSnapEnabled();
-		m_EnableAngleSnap = message->RotationSnapEnabled();
-	}*/
+	
 
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
@@ -408,22 +379,15 @@ namespace GASS
 
 	void MouseToolController::Update(double delta)
 	{
-		//m_Delta = delta;
+		if(m_ActiveTool)
+			m_ActiveTool->Update(delta);
 		//debug message
-
 		/*std::stringstream ss;
 		ss << " Cursor pos:" << m_LastScreenPos << "\n";
 		const std::string message = ss.str();
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));*/
 
 		
-
-		/*for(int i = 0; i < m_Tools.size(); i++)
-		{
-		}*/
-		if(m_ActiveTool)
-			m_ActiveTool->Update(delta);
-		//MouseMoved(info);
 		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)
 		{
