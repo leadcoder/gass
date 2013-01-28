@@ -62,7 +62,52 @@ namespace GASS
 			}
 			return content;
 		}
+	protected:
+		std::string m_Name;
+	};
 
+
+	class OgreSkyboxMaterial
+	{
+	public:
+		OgreSkyboxMaterial(const std::string name) : m_Name(name){}
+		OgreSkyboxMaterial(): m_Name("NONE"){}
+		virtual ~OgreSkyboxMaterial(){}
+		std::string GetName() const {return m_Name;}
+		void SetName(const std::string &name) {m_Name =name;}
+		bool Enabled() const{return (m_Name !="NONE");}
+		
+		friend std::ostream& operator << (std::ostream& os, const OgreSkyboxMaterial& mat)
+		{
+			os << mat.GetName(); 
+			return os;
+		}
+		friend std::istream& operator >> (std::istream& os, OgreSkyboxMaterial& mat)
+		{
+			std::string name;
+			os >> name;
+			mat.SetName(name);
+			return os;
+		}
+
+		static bool IsMultiValue() {return false;}
+
+		static std::vector<std::string> GetAllOptions(const std::string &filter)
+		{
+			std::vector<std::string> content;
+			content.push_back("NONE");
+			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
+			while(iter.hasMoreElements())
+			{
+				Ogre::MaterialPtr ptr = iter.getNext();
+				if(ptr->getGroup() == "GASS_SKYBOX_MATERIALS")
+				{
+					content.push_back(ptr->getName());
+				}
+			}
+			
+			return content;
+		}
 	protected:
 		std::string m_Name;
 	};

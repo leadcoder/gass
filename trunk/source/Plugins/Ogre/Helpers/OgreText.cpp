@@ -3,10 +3,11 @@
 #ifdef OGRE_19
 	#include <Overlay/OgreOverlayManager.h>
 	#include <Overlay/OgreOverlayContainer.h>
-	template<> TextRenderer* Ogre::Singleton<TextRenderer>::msSingleton = 0;
-#else
-	template<> TextRenderer* Ogre::Singleton<TextRenderer>::ms_Singleton = 0;
 #endif 
+
+
+template<> TextRenderer* Ogre::Singleton<TextRenderer>::msSingleton = 0;
+
 
  
 TextRenderer::TextRenderer()

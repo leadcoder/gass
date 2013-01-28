@@ -32,6 +32,7 @@
 #include "Core/Utils/GASSFactory.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"

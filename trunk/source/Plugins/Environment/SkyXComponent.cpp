@@ -80,12 +80,8 @@ namespace GASS
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayRequest,TimeOfDayRequest,0));
 
 		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		
 		Ogre::Camera* ocam = NULL;
-		if(sm->hasCamera("DummyCamera"))
-			ocam = sm->getCamera("DummyCamera");
-		else
-			ocam = sm->createCamera("DummyCamera");
-
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
@@ -96,6 +92,15 @@ namespace GASS
 				break;
 			}
 			//target->addListener(this);
+		}
+
+
+		if(ocam == NULL)
+		{
+			if(sm->hasCamera("DummyCamera"))
+				ocam = sm->getCamera("DummyCamera");
+			else
+				ocam = sm->createCamera("DummyCamera");
 		}
 		Ogre::Root::getSingleton().addFrameListener(this);
 		//float save_clip  = ocam->getFarClipDistance();

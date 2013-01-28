@@ -153,7 +153,8 @@ namespace GASS
 		float m_TilingLayer2;
 		float m_TilingLayer3;
 		float m_TilingLayer4;
-		GeometryFlags m_GeomFlags;		
+		GeometryFlags m_GeomFlags;	
+		Vec3 m_Pos;
 	};
 
 	typedef SPTR<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;

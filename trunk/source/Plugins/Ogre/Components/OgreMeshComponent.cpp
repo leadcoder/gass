@@ -50,7 +50,7 @@ namespace GASS
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
-		m_RenderQueue(RENDER_QUEUE_WORLD_GEOMETRY_1)
+		m_RenderQueue(RENDER_QUEUE_MAIN)
 	{
 
 	}

@@ -181,7 +181,6 @@
 				<xs:element name="Position">
                     <xs:annotation>
                         <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
-						<xs:guiSettings visible="true" editable="true" controlType="FILE_DIALOG" fileControlSettings="png"/>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute name="value" type="xs:vec3" use="required" />
@@ -190,7 +189,6 @@
 				<xs:element name="IndexX">
                     <xs:annotation>
                         <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
-						<xs:guiSettings visible="true" editable="true" controlType="FILE_DIALOG" fileControlSettings="png"/>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute name="value" type="xs:int" use="required" />
@@ -199,7 +197,6 @@
 				<xs:element name="IndexY">
                     <xs:annotation>
                         <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
-						<xs:guiSettings visible="true" editable="true" controlType="FILE_DIALOG" fileControlSettings="png"/>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute name="value" type="xs:int" use="required" />

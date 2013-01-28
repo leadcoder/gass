@@ -54,7 +54,8 @@ namespace GASS
 		m_TilingLayer2(5),
 		m_TilingLayer3(5),
 		m_TilingLayer4(5),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_Pos(0,0,0)
 	{
 
 	}
@@ -127,7 +128,8 @@ namespace GASS
 				
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
-				//SetPosition(m_Pos);
+				if(m_Pos != Vec3(0,0,0))
+					SetPosition(m_Pos);
 				UpdatePosition();
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource().Path());
@@ -791,20 +793,21 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetPosition(const Vec3 &pos)
 	{
-		/*	m_Pos = pos;
+		m_Pos = pos;
 		if(m_Terrain)
 		{
-		m_Terrain->setPosition(Convert::ToOgre(pos));
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
-		}*/
+			m_Terrain->setPosition(Convert::ToOgre(pos));
+			//GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
+		}
 	}
 
 	Vec3 OgreTerrainPageComponent::GetPosition() const
 	{
-		Vec3 pos(0,0,0);
+		return m_Pos;
+		/*Vec3 pos(0,0,0);
 		if(m_TerrainGroup)
 			pos= Convert::ToGASS(m_TerrainGroup->getOrigin());
-		return pos;
+		return pos;*/
 	}
 
 	GeometryFlags OgreTerrainPageComponent::GetGeometryFlags() const

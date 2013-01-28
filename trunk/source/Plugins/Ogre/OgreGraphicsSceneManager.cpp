@@ -73,7 +73,6 @@ namespace GASS
 		m_OptimalAdjustFactor(1),
 		m_FarShadowDistance(100),
 		m_ShadowDirectionalLightExtrusionDistance(1000),
-		m_SkyboxMaterial(""),
 		m_SceneManagerType("OctreeSceneManager"),
 		m_SceneMgr (NULL)
 	{
@@ -95,7 +94,7 @@ namespace GASS
 		RegisterProperty<ColorRGB>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor);
 		RegisterProperty<ColorRGB>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor);
 		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType);
-		RegisterEnumProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
+		RegisterEnumProperty<OgreSkyboxMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
 		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing );
 		RegisterProperty<bool> ("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion,&GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion);
 		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance);
@@ -192,19 +191,15 @@ namespace GASS
 		if(m_SceneMgr == NULL) return;
 		ColourValue fogColour(m_FogColor.r, m_FogColor.g, m_FogColor.b);
 		m_SceneMgr->setFog(m_FogMode.GetValue(), fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		/*else if(m_FogMode == "Exp")
-			m_SceneMgr->setFog(Ogre::FOG_EXP, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		else if(m_FogMode == "Exp2")
-			m_SceneMgr->setFog(Ogre::FOG_EXP2, fogColour, m_FogDensity, m_FogStart, m_FogEnd);
-		else if(m_FogMode == "None")
-			m_SceneMgr->setFog(Ogre::FOG_NONE, fogColour, m_FogDensity, m_FogStart, m_FogEnd);*/
 	}
 
 	void OgreGraphicsSceneManager::UpdateSkySettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		if(m_SkyboxMaterial.GetName() != "")
+		if(m_SkyboxMaterial.Enabled() && m_SkyboxMaterial.GetName() != "")
 			m_SceneMgr->setSkyBox(true, m_SkyboxMaterial.GetName(), 50);
+		else
+			m_SceneMgr->setSkyBoxEnabled(false);
 	}
 
 	void OgreGraphicsSceneManager::UpdateLightSettings()
