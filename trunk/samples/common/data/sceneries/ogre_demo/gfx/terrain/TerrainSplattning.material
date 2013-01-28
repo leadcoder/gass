@@ -1,0 +1,23 @@
+import DiffuseTemplate from "terrain.material"
+
+material TerrainMat : DiffuseTemplate
+{
+	technique light
+	{ 
+		pass 
+		{ 
+			ambient 1 1 1 1 
+			specular 0.0 0.0 0.0 1 10 
+			emissive 0.0 1.0 0.0 0.5 
+			texture_unit diffuse_map
+			{ 
+				texture gfx/terrain/terrain_color.dds
+
+			}
+			
+		} 
+
+	}
+}
+
+
