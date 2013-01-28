@@ -109,6 +109,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\QtGuid4.lib;$(QTDIR)\lib\QtCored4.lib;QtSolutions_PropertyBrowser-2.5d.lib;GASSCore_d.lib;GASSSim_d.lib;GASSEditorModule_d.lib;%(AdditionalDependencies)</AdditionalDependencies>

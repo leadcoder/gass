@@ -46,16 +46,17 @@ void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &valu
 			if (varProp && varProp->propertyType() == QtVariantPropertyManager::enumTypeId()) 
 			{
 				const std::string str_name = gp.m_Options[value.toInt()];
-				gp.UpdateValue(str_name);
+				gp.UpdateValueByString(str_name);
 			}
-			/*else if (varProp && varProp->propertyType() == QtVariantPropertyManager::ColorTypeId()) 
+			else if (varProp && varProp->propertyType() == QVariant::Color) 
 			{
-				const std::string str_name = gp.m_Options[value.toInt()];
-				gp.UpdateValue(str_name);
-			}*/
+				QColor qcolor = v.value<QColor>();
+				GASS::ColorRGB color(qcolor.redF(),qcolor.greenF(),qcolor.blueF());
+				gp.UpdateValue(boost::any(color));
+			}
 			else
 			{
-				gp.UpdateValue(value_as_std_string);
+				gp.UpdateValueByString(value_as_std_string);
 			}
 		}
 	}
@@ -115,7 +116,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 		GASS::IComponentContainer::ComponentIterator comp_iter = object->GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			GASS::BaseComponentPtr comp = STATIC_CAST<GASS::BaseComponent>(comp_iter.getNext());
+			GASS::BaseComponentPtr comp = STATIC_PTR_CAST<GASS::BaseComponent>(comp_iter.getNext());
 			std::string class_name = comp->GetRTTI()->GetClassName();
 			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
 			if(os && os->Visible) //we have settings!
@@ -171,7 +172,7 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 		while(iter.hasMoreElements())
 		{
 			GASS::SceneManagerPtr sm = iter.getNext();
-			GASS::BaseReflectionObjectPtr obj = DYNAMIC_CAST<GASS::BaseReflectionObject>(sm);
+			GASS::BaseReflectionObjectPtr obj = DYNAMIC_PTR_CAST<GASS::BaseReflectionObject>(sm);
 			std::string class_name = obj->GetRTTI()->GetClassName();
 			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
 			if(os && os->Visible) //we have settings!
@@ -253,7 +254,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			prop->GetValue(obj.get(),any_value );
 			GASS::ColorRGB color = boost::any_cast<GASS::ColorRGB>(any_value);
 			item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
-			item->setValue(QColor(color.r,color.g,color.b));
+			item->setValue(QColor(color.r*255,color.g*255,color.b*255));
 		}
 		else if(*prop->GetTypeID() == typeid(GASS::ResourceHandle))
 		{

@@ -23,12 +23,21 @@ public:
 	GASSVariantProperty() {};
 	virtual ~GASSVariantProperty() {};
 	void SetGASSData(GASS::BaseReflectionObjectPtr obj,GASS::IProperty* prop) {m_Object= obj; m_Prop = prop; }
-	void UpdateValue(const std::string &value) 
+	void UpdateValueByString(const std::string &value) 
 	{
 		GASS::BaseReflectionObjectPtr object(m_Object,boost::detail::sp_nothrow_tag());
 		if(object)
 		{
 			m_Prop->SetValueByString(object.get(),value);
+		}
+	}
+
+	void UpdateValue(boost::any  &value) 
+	{
+		GASS::BaseReflectionObjectPtr object(m_Object,boost::detail::sp_nothrow_tag());
+		if(object)
+		{
+			m_Prop->SetValue(object.get(),value);
 		}
 	}
 
