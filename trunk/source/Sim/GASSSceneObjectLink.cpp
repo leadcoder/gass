@@ -70,7 +70,7 @@ namespace GASS
 		{
 			container = ComponentContainerPtr(container->GetParent());
 		}
-		return  STATIC_CAST<SceneObject>(container);
+		return  STATIC_PTR_CAST<SceneObject>(container);
 	}
 
 

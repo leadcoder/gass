@@ -86,7 +86,7 @@ namespace GASS
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
-			XMLSerializePtr  serialize = DYNAMIC_CAST<IXMLSerialize> (system);
+			XMLSerializePtr  serialize = DYNAMIC_PTR_CAST<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);
 		}

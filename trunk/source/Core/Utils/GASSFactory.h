@@ -65,7 +65,7 @@ namespace GASS
 		virtual BasePtr Create() const
 		{
 			ProductPtr obj(new Product);
-			return STATIC_CAST<Base>(obj);
+			return STATIC_PTR_CAST<Base>(obj);
 		}
 		virtual std::string GetClassName() const {return m_ClassName;}
 		std::string m_ClassName;

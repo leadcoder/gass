@@ -73,7 +73,7 @@ namespace GASS
 		//configure all cameras
 		if(components.size() > 0)
 		{
-			BaseSceneComponentPtr camera = DYNAMIC_CAST<BaseSceneComponent>(components[0]);
+			BaseSceneComponentPtr camera = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[0]);
 			if(camera)
 			{
 				//const std::string vp_name = camera->GetPrefredViewport();

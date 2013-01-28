@@ -55,7 +55,7 @@ namespace GASS
 			while(iter.hasMoreElements())
 			{
 				//Lock recursive?
-				SceneObjectPtr obj = STATIC_CAST<SceneObject>(iter.getNext());
+				SceneObjectPtr obj = STATIC_PTR_CAST<SceneObject>(iter.getNext());
 				AddStaticObject(obj, true);
 			}
 		}
@@ -122,7 +122,7 @@ namespace GASS
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = camera;
@@ -136,7 +136,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 			while(iter.hasMoreElements())
 			{
-				SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
+				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(iter.getNext());
 				AddStaticObject(child,rec);
 			}
 		}
@@ -243,7 +243,7 @@ namespace GASS
 		CameraComponentPtr cam(m_ActiveCamera,NO_THROW);
 		if(cam_obj && cam)
 		{
-			BaseReflectionObjectPtr cam_props = DYNAMIC_CAST<BaseReflectionObject>(cam);
+			BaseReflectionObjectPtr cam_props = DYNAMIC_PTR_CAST<BaseReflectionObject>(cam);
 			bool ortho_mode = false;
 
 			float object_size = 10;

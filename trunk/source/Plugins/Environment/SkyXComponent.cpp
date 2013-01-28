@@ -260,7 +260,7 @@ namespace GASS
 	{
 		if(m_SkyX)
 		{
-			OgreCameraProxyPtr camera_proxy = DYNAMIC_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+			OgreCameraProxyPtr camera_proxy = DYNAMIC_PTR_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
 			//Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
 			Init(camera_proxy->GetOgreCamera());
 		}
@@ -316,7 +316,7 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
-			SkyXCloudLayerComponentPtr layer = DYNAMIC_CAST<SkyXCloudLayerComponent>(components[i]);
+			SkyXCloudLayerComponentPtr layer = DYNAMIC_PTR_CAST<SkyXCloudLayerComponent>(components[i]);
 			layer->CreateLayer();
 		}
 
@@ -324,7 +324,7 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass(components, "SkyXVolumeCloudComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
-			SkyXVolumeCloudComponentPtr volume = DYNAMIC_CAST<SkyXVolumeCloudComponent>(components[i]);
+			SkyXVolumeCloudComponentPtr volume = DYNAMIC_PTR_CAST<SkyXVolumeCloudComponent>(components[i]);
 			volume->CreateVolume();
 		}
 	}

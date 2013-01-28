@@ -648,7 +648,7 @@ namespace GASS
 	{
 		if(m_Hydrax)
 		{
-			OgreCameraProxyPtr camera_proxy = DYNAMIC_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
+			OgreCameraProxyPtr camera_proxy = DYNAMIC_PTR_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
 			Ogre::Camera * cam = camera_proxy->GetOgreCamera();
 			if(cam)
 			{

@@ -138,7 +138,7 @@ namespace GASS
 	void OpenALSoundSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,NO_THROW);
 		if(current_cam_obj)

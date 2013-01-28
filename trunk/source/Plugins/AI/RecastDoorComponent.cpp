@@ -97,7 +97,7 @@ namespace GASS
 				{
 					boost::any any_size;
 					ComponentPtr comp = GetSceneObject()->GetFirstComponentByClass("BoxGeometryComponent",false);
-					BaseReflectionObjectPtr bro = DYNAMIC_CAST<BaseReflectionObject>(comp);
+					BaseReflectionObjectPtr bro = DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
 					bro->GetPropertyByType("Size",any_size);
 					Vec3 size = boost::any_cast<Vec3>(any_size);
 					size = size* 0.5;

@@ -137,7 +137,7 @@ namespace GASS
 			IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
+				SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
@@ -221,7 +221,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
+			SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
 			WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 			if(comp)
 			{

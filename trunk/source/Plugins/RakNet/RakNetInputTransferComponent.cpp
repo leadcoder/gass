@@ -187,7 +187,7 @@ namespace GASS
 		{
 			int id = 8888;
 			NetworkPackagePtr package = message->GetPackage();
-			InputPackagePtr input_package = DYNAMIC_CAST<InputPackage>(package);
+			InputPackagePtr input_package = DYNAMIC_PTR_CAST<InputPackage>(package);
 
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 			SystemAddress address = raknet->GetRakPeer()->GetInternalID();

@@ -64,7 +64,7 @@ namespace GASS
 	void OSGViewport::SetCamera(CameraComponentPtr camera)
 	{
 		m_Camera = camera;
-		OSGCameraComponentPtr cam_comp = DYNAMIC_CAST<OSGCameraComponent>(camera);
+		OSGCameraComponentPtr cam_comp = DYNAMIC_PTR_CAST<OSGCameraComponent>(camera);
 		cam_comp->GetOSGCamera()->setViewport(m_OSGViewport);
 		ViewportPtr viewport = shared_from_this();
 		SystemMessagePtr cam_message(new CameraChangedEvent(viewport));

@@ -240,7 +240,7 @@ namespace GASS
 		SetLighting(m_Lighting);
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 
 		//expand children
 		if(m_Expand)
@@ -295,7 +295,7 @@ namespace GASS
 		SceneObjectPtr so;
 		try
 		{
-			so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+			so = DYNAMIC_PTR_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 		}
 		catch(...)
 		{
@@ -351,7 +351,7 @@ namespace GASS
 				SceneObjectPtr so;
 				try
 				{
-					so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+					so = DYNAMIC_PTR_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 				}
 				catch(std::exception& e)
 				{
@@ -412,7 +412,7 @@ namespace GASS
 			SceneObjectPtr so;
 			try
 			{
-				so = DYNAMIC_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+				so = DYNAMIC_PTR_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 			}
 			catch(std::exception& e)
 			{

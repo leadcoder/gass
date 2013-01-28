@@ -349,7 +349,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No TerrainComponent found while collision shape type is CST_TERRAIN", "ODECollisionGeometryComponent::CreateTerrainGeometry");
 		}
 		
-		GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
+		GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainData.m_TerrainGeom = terrain.get();

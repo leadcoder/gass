@@ -60,7 +60,7 @@ namespace GASS
 		m_Animation.m_InterpolateMode = IM_LINEAR;
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  STATIC_CAST<SceneObject>(children.getNext());
+			SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
 			AnimationKeyComponentPtr comp = child_obj->GetFirstComponentByClass<AnimationKeyComponent>();
 			if(comp)
 			{

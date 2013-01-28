@@ -126,7 +126,7 @@ namespace GASS
 			SetCastShadow(m_CastShadow);
 			SetRenderQueue(m_RenderQueue);
 
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

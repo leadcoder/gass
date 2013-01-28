@@ -68,7 +68,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 	
 		//get input from parent?
-		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		parent->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnInput,InputControllerMessage,0));
 		parent->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnVelocityMessage,VelocityNotifyMessage,0));
 	}

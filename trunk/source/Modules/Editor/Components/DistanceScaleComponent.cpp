@@ -80,7 +80,7 @@ namespace GASS
 			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage));
 		}
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));

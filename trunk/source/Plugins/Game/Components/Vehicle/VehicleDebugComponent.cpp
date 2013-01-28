@@ -70,11 +70,11 @@ namespace GASS
 			debug_template->SetName("VehicleDebugWaypointTemplate");
 			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
 			location_comp->SetName("LocationComp");
-			BaseComponentPtr text_comp = DYNAMIC_CAST<BaseComponent>(ComponentFactory::Get().Create("TextComponent"));
+			BaseComponentPtr text_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("TextComponent"));
 			text_comp->SetName("TextComp");
 			text_comp->SetPropertyByType("Text",std::string("Next waypoint"));
 
-			BaseComponentPtr bb_comp = DYNAMIC_CAST<BaseComponent>(ComponentFactory::Get().Create("BillboardComponent"));
+			BaseComponentPtr bb_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("BillboardComponent"));
 			bb_comp->SetName("BBComp");
 			
 			bb_comp->SetPropertyByType("Material",std::string("node.dds"));

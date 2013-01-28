@@ -309,7 +309,7 @@ namespace GASS
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
 		ComponentContainerPtr cc  = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
-		SceneObjectPtr so = STATIC_CAST<SceneObject>(cc);
+		SceneObjectPtr so = STATIC_PTR_CAST<SceneObject>(cc);
 		return so;
 	}
 

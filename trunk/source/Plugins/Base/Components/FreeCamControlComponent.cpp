@@ -103,7 +103,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(message->GetViewport()->GetCamera())->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(message->GetViewport()->GetCamera())->GetSceneObject();
 		if(GetSceneObject() == cam_obj)
 			m_Active = true;
 		else
@@ -114,7 +114,7 @@ namespace GASS
 	{
 		if(message->GetSenderID() != (int) this)
 		{
-			PositionMessagePtr pos_mess = STATIC_CAST<PositionMessage>(message);
+			PositionMessagePtr pos_mess = STATIC_PTR_CAST<PositionMessage>(message);
 			m_Pos = pos_mess->GetPosition();
 		}
 	}
@@ -123,7 +123,7 @@ namespace GASS
 	{
 		if(message->GetSenderID() != (int) this)
 		{
-			RotationMessagePtr pos_mess = STATIC_CAST<RotationMessage>(message);
+			RotationMessagePtr pos_mess = STATIC_PTR_CAST<RotationMessage>(message);
 
 			Mat4 rot_mat;
 			pos_mess->GetRotation().ToRotationMatrix(rot_mat);

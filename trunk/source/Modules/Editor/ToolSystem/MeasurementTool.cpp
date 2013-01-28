@@ -56,7 +56,7 @@ namespace GASS
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
-			BaseReflectionObjectPtr props = DYNAMIC_CAST<BaseReflectionObject>(text);
+			BaseReflectionObjectPtr props = DYNAMIC_PTR_CAST<BaseReflectionObject>(text);
 			std::string measurement_value = "";
 			MessagePtr text_mess(new TextCaptionMessage(measurement_value));
 			ruler->PostMessage(text_mess);

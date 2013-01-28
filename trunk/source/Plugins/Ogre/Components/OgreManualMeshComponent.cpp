@@ -184,7 +184,7 @@ namespace GASS
 			}
 			m_MeshObject->end();
 
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

@@ -311,7 +311,7 @@ namespace GASS
 								BaseSceneComponentPtr bo(data->m_Component,NO_THROW);
 								if(bo)
 								{
-									GeometryComponentPtr geom  = DYNAMIC_CAST<IGeometryComponent>(bo);
+									GeometryComponentPtr geom  = DYNAMIC_PTR_CAST<IGeometryComponent>(bo);
 									if(geom)
 									{
 									

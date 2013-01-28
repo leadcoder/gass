@@ -241,7 +241,7 @@ namespace GASS
 	{
 		CollisionResult result;
 		result.Coll = false;
-		BaseSceneComponentPtr bsc = DYNAMIC_CAST<BaseSceneComponent>(cam);
+		BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(cam);
 		if(cam && bsc)
 		{
 			CollisionSceneManagerPtr col_sm = bsc->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();

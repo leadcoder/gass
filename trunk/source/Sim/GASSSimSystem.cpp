@@ -42,7 +42,7 @@ namespace GASS
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
 	{
-		return DYNAMIC_CAST<SimSystemManager>(SystemManagerPtr(m_Owner));
+		return DYNAMIC_PTR_CAST<SimSystemManager>(SystemManagerPtr(m_Owner));
 	}
 
 	void SimSystem::Register(SystemListenerPtr listener)

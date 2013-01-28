@@ -82,7 +82,7 @@ namespace GASS
 		SceneObjectPtr GetParentSceneObject() const
 		{
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
-			return STATIC_CAST<SceneObject>(GetParent());
+			return STATIC_PTR_CAST<SceneObject>(GetParent());
 		}
 
 		/**Get all components of certain class. This function allow you to pass the class name as a string
@@ -110,7 +110,7 @@ namespace GASS
 		{
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				SPTR<T> ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
+				SPTR<T> ret = DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					components.push_back(ret);
 			}
@@ -120,7 +120,7 @@ namespace GASS
 				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
-					SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
+					SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
 					child->GetComponentsByClass<T>(components,recursive);
 				}
 			}
@@ -135,7 +135,7 @@ namespace GASS
 			SPTR<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
+				ret = DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					return ret;
 			}
@@ -145,7 +145,7 @@ namespace GASS
 				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
-					SceneObjectPtr child = STATIC_CAST<SceneObject>(cc_iter.getNext());
+					SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
 					ret = child->GetFirstComponentByClass<T>(recursive);
 					if(ret)
 						return ret;
@@ -164,7 +164,7 @@ namespace GASS
 			SPTR<T> ret;
 			for(int i = 0 ; i < m_ComponentVector.size(); i++)
 			{
-				ret = DYNAMIC_CAST<T>(m_ComponentVector[i]);
+				ret = DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
 					return ret;
 			}

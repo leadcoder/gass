@@ -100,7 +100,7 @@ namespace GASS
 			SPTR<T> sys;
 			for(size_t i = 0 ; i < m_Systems.size(); i++)
 			{
-				sys = DYNAMIC_CAST<T>(m_Systems[i]);
+				sys = DYNAMIC_PTR_CAST<T>(m_Systems[i]);
 				if(sys)
 					return sys;
 			}

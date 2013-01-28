@@ -133,7 +133,7 @@ namespace GASS
 			HeightmapTerrainComponentPtr terrain = root->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
-				GeometryComponentPtr geom = DYNAMIC_CAST<IGeometryComponent>(terrain);
+				GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 				AABox aabox = geom->GetBoundingBox();
 
 				//for speed we save the raw pointer , we will access this for each height callback

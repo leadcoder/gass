@@ -256,7 +256,7 @@ namespace GASS
 		m_OSGGeometry->setColorArray(colors);
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 
 		
 	}

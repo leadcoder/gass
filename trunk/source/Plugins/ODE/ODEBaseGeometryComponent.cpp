@@ -269,7 +269,7 @@ namespace GASS
 		GeometryComponentPtr geom;
 		if(m_GeometryTemplate != "")
 		{
-			geom = DYNAMIC_CAST<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
+			geom = DYNAMIC_PTR_CAST<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
 		}
 		else geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		return geom;
@@ -361,7 +361,7 @@ namespace GASS
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = STATIC_CAST<SceneObject>(children.getNext());
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
 			std::string::size_type pos = child->GetName().find(GetName() + "DebugPhysics");
 			if(pos  != std::string::npos)
 			{
@@ -378,12 +378,12 @@ namespace GASS
 				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
 				debug_template->SetName("DebugPhysics");
 
-				BaseComponentPtr location_comp = DYNAMIC_CAST<BaseComponent>(ComponentFactory::Get().Create("LocationComponent"));
+				BaseComponentPtr location_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("LocationComponent"));
 				location_comp->SetName("LocationComp");
 				location_comp->SetPropertyByType("AttachToParent",true);
 
 
-				BaseComponentPtr mesh_comp = DYNAMIC_CAST<BaseComponent>(ComponentFactory::Get().Create("ManualMeshComponent"));
+				BaseComponentPtr mesh_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("ManualMeshComponent"));
 				mesh_comp->SetName("MeshComp");
 				mesh_comp->SetPropertyByType("CastShadows",false);
 

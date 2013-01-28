@@ -90,7 +90,7 @@ namespace GASS
 	{
 		if(m_ShowNodeName)
 		{
-			SceneObjectNameMessagePtr name_mess = DYNAMIC_CAST<SceneObjectNameMessage>(message);
+			SceneObjectNameMessagePtr name_mess = DYNAMIC_PTR_CAST<SceneObjectNameMessage>(message);
 			if(name_mess)
 			{
 				std::string name = name_mess->GetName();
@@ -103,7 +103,7 @@ namespace GASS
 
 	void DebugComponent::OnSettings(GASS::MessagePtr message)
 	{
-		DebugComponentSettingsMessagePtr settings_mess = DYNAMIC_CAST<DebugComponentSettingsMessage>(message);
+		DebugComponentSettingsMessagePtr settings_mess = DYNAMIC_PTR_CAST<DebugComponentSettingsMessage>(message);
 		if(settings_mess)
 		{
 			SetShowNodeName(settings_mess->GetShowObjectName());

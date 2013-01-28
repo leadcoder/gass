@@ -106,7 +106,7 @@ namespace GASS
 				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
 				if(comp)
 				{
-					SerializePtr s_comp = DYNAMIC_CAST<ISerialize>(comp);
+					SerializePtr s_comp = DYNAMIC_PTR_CAST<ISerialize>(comp);
 					if(s_comp)
 					{
 						if(!s_comp->Serialize(serializer))
@@ -127,16 +127,16 @@ namespace GASS
 
 				//TODO: need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
 				const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-				ComponentContainerPtr child = DYNAMIC_CAST<IComponentContainer>(ComponentContainerFactory::Get().Create(factory_class_name));
+				ComponentContainerPtr child = DYNAMIC_PTR_CAST<IComponentContainer>(ComponentContainerFactory::Get().Create(factory_class_name));
 				if(!child)
 				{
 					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_class_name,"BaseComponentContainer::Serialize");
 				}
 
-				//ComponentContainerPtr child  = DYNAMIC_CAST<IComponentContainer> (CreateInstance());
+				//ComponentContainerPtr child  = DYNAMIC_PTR_CAST<IComponentContainer> (CreateInstance());
 				if(child)
 				{
-					SerializePtr s_child = DYNAMIC_CAST<ISerialize>(child);
+					SerializePtr s_child = DYNAMIC_PTR_CAST<ISerialize>(child);
 					if(s_child)
 					{
 						if(!s_child->Serialize(serializer))
@@ -156,7 +156,7 @@ namespace GASS
 			while (iter != m_ComponentVector.end())
 			{
 				ComponentPtr comp = (*iter);
-				SerializePtr s_comp = DYNAMIC_CAST<ISerialize>(comp);
+				SerializePtr s_comp = DYNAMIC_PTR_CAST<ISerialize>(comp);
 				if(s_comp)
 				{
 					if(!s_comp->Serialize(serializer))
@@ -172,7 +172,7 @@ namespace GASS
 			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 			{
 				ComponentContainerPtr child = *go_iter;
-				SerializePtr s_child = DYNAMIC_CAST<ISerialize>(child);
+				SerializePtr s_child = DYNAMIC_PTR_CAST<ISerialize>(child);
 				if(s_child)
 				{
 					if(!s_child->Serialize(serializer))
@@ -214,7 +214,7 @@ namespace GASS
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
-			XMLSerializePtr s_comp = DYNAMIC_CAST<IXMLSerialize> (comp);
+			XMLSerializePtr s_comp = DYNAMIC_PTR_CAST<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->SaveXML(comp_elem);
 		}
@@ -225,7 +225,7 @@ namespace GASS
 		BaseComponentContainer::ComponentContainerVector::iterator cc_iter;
 		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); ++cc_iter)
 		{
-			XMLSerializePtr child = DYNAMIC_CAST<IXMLSerialize>(*cc_iter);
+			XMLSerializePtr child = DYNAMIC_PTR_CAST<IXMLSerialize>(*cc_iter);
 			if(child)
 			{
 				child->SaveXML(cc_elem);
@@ -264,7 +264,7 @@ namespace GASS
 					if(target_comp) //over loading component
 					{
 						ComponentPtr comp = LoadComponent(comp_elem);
-						ComponentTemplatePtr template_comp = DYNAMIC_CAST<IComponentTemplate>(comp);
+						ComponentTemplatePtr template_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if(template_comp)
 						{
 							template_comp->AssignFrom(target_comp);
@@ -288,7 +288,7 @@ namespace GASS
 					//allow over loading
 					ComponentContainerPtr container = CreateComponentContainer(cc_elem);
 					AddChild(container);
-					XMLSerializePtr s_container = DYNAMIC_CAST<IXMLSerialize> (container);
+					XMLSerializePtr s_container = DYNAMIC_PTR_CAST<IXMLSerialize> (container);
 					if(s_container)
 						s_container->LoadXML(cc_elem);
 					cc_elem  = cc_elem->NextSiblingElement();
@@ -320,7 +320,7 @@ namespace GASS
 		{
 			//Give all components default name
 			comp->SetName(comp_type);
-			XMLSerializePtr s_comp = DYNAMIC_CAST<IXMLSerialize> (comp);
+			XMLSerializePtr s_comp = DYNAMIC_PTR_CAST<IXMLSerialize> (comp);
 			if(s_comp)
 				s_comp->LoadXML(comp_template);
 		}
@@ -391,7 +391,7 @@ namespace GASS
 		}
 		for(iter = m_ComponentContainerVector.begin(); iter != m_ComponentContainerVector.end(); ++iter)
 		{
-			BaseComponentContainerPtr child = STATIC_CAST<BaseComponentContainer>( *iter);
+			BaseComponentContainerPtr child = STATIC_PTR_CAST<BaseComponentContainer>( *iter);
 			child->DebugPrint(tc+1);
 		}
 		//TAB(tc) << "Children - " << std::endl;

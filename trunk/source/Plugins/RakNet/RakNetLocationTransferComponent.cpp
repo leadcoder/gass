@@ -97,7 +97,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
 
 		
-		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
@@ -119,7 +119,7 @@ namespace GASS
 			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
 			for(int i = 0;  i< components.size(); i++)
 			{
-				BaseSceneComponentPtr comp = DYNAMIC_CAST<BaseSceneComponent>(components[i]);
+				BaseSceneComponentPtr comp = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				comp->GetSceneObject()->PostMessage(disable_msg);
 			}
 
@@ -128,7 +128,7 @@ namespace GASS
 			{
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				BaseSceneComponentPtr base = DYNAMIC_CAST<BaseSceneComponent>(location);
+				BaseSceneComponentPtr base = DYNAMIC_PTR_CAST<BaseSceneComponent>(location);
 				base->SetPropertyByType("AttachToParent",boost::any(true));
 			}
 		}
@@ -190,7 +190,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnDelete()
 	{
 
-		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
@@ -350,7 +350,7 @@ namespace GASS
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
 			NetworkPackagePtr package = message->GetPackage();
-			TransformationPackagePtr trans_package = DYNAMIC_CAST<TransformationPackage>(package);
+			TransformationPackagePtr trans_package = DYNAMIC_PTR_CAST<TransformationPackage>(package);
 
 			//if(trans_package->TimeStamp < m_TimeStampHistory[0])
 			//	std::cout << "wrong order!!" << std::endl;

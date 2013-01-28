@@ -136,8 +136,8 @@ namespace GASS
 #define IFDECL(CLASS) class I##CLASS##; typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
 #define IPDECL(CLASS) typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
 
-#define DYNAMIC_CAST boost::dynamic_pointer_cast
-#define STATIC_CAST boost::static_pointer_cast
+#define DYNAMIC_PTR_CAST boost::dynamic_pointer_cast
+#define STATIC_PTR_CAST boost::static_pointer_cast
 #define SHARE_CLASS boost::enable_shared_from_this
 #define NO_THROW boost::detail::sp_nothrow_tag()
 

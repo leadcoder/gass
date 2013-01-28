@@ -310,7 +310,7 @@ namespace GASS
 			SceneManagerPtr sm = m_SceneManagers[i];
 			if(sm->GetSerialize()) //should we save this scene mananer settings to sceen?
 			{
-				XMLSerializePtr serialize = DYNAMIC_CAST<IXMLSerialize>(sm);
+				XMLSerializePtr serialize = DYNAMIC_PTR_CAST<IXMLSerialize>(sm);
 				if(serialize)
 				{
 					serialize->SaveXML(sms_elem);
@@ -328,7 +328,7 @@ namespace GASS
 			if(m_SceneManagers[i]->GetName() == sm_name)
 			{
 				sm = m_SceneManagers[i];
-				XMLSerializePtr serialize = DYNAMIC_CAST<IXMLSerialize>(sm);
+				XMLSerializePtr serialize = DYNAMIC_PTR_CAST<IXMLSerialize>(sm);
 				if(serialize)
 					serialize->LoadXML(sm_elem);
 				return sm;

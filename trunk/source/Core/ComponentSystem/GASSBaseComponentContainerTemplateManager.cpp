@@ -124,7 +124,7 @@ namespace GASS
 				ComponentContainerTemplatePtr container = (ComponentContainerTemplateFactory::Get().Create(type));
 				if(container)
 				{
-					XMLSerializePtr s_cont = DYNAMIC_CAST<IXMLSerialize>(container);
+					XMLSerializePtr s_cont = DYNAMIC_PTR_CAST<IXMLSerialize>(container);
 					if(s_cont)
 						s_cont->LoadXML(templates);
 					AddTemplate(container);

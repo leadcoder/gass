@@ -69,7 +69,7 @@ namespace GASS
 	void HUDComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 		if(cam_obj == 	GetSceneObject()->GetParentSceneObject())
 		{
 			//show hud

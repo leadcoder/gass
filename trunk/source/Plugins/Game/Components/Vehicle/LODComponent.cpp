@@ -93,7 +93,7 @@ namespace GASS
 	void LODComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = DYNAMIC_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 		
 		SceneObjectPtr prev_cam(m_ActiveCameraObject,NO_THROW);
 		if(prev_cam)

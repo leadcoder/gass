@@ -116,7 +116,7 @@ namespace GASS
 		{
 			if(system_name ==  m_Systems[i]->GetSystemName())
 			{
-				return DYNAMIC_CAST<SimSystem>(m_Systems[i]);
+				return DYNAMIC_PTR_CAST<SimSystem>(m_Systems[i]);
 			}
 		}
 		return SimSystemPtr();
@@ -165,7 +165,7 @@ namespace GASS
 		SystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
-			XMLSerializePtr  serialize = DYNAMIC_CAST<IXMLSerialize> (system);
+			XMLSerializePtr  serialize = DYNAMIC_PTR_CAST<IXMLSerialize> (system);
 			if(serialize)
 				serialize->LoadXML(system_elem);
 		}

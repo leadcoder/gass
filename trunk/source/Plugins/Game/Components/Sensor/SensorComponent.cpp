@@ -57,7 +57,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<SignatureComponent>(comps,true);
 		for(size_t i = 0; i < comps.size(); i++)
 		{
-			SignatureComponentPtr sig = DYNAMIC_CAST<SignatureComponent>(comps[i]);
+			SignatureComponentPtr sig = DYNAMIC_PTR_CAST<SignatureComponent>(comps[i]);
 			m_AllObjects.push_back(sig);
 		}
 	}

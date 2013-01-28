@@ -153,7 +153,7 @@ namespace GASS
 			SPTR<T> ret;
 			for(int i = 0 ; i < m_SceneManagers.size(); i++)
 			{
-				ret = DYNAMIC_CAST<T>(m_SceneManagers[i]);
+				ret = DYNAMIC_PTR_CAST<T>(m_SceneManagers[i]);
 				if(ret)
 					return ret;
 			}

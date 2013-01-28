@@ -63,7 +63,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		
 		//get input from parent?
-		SceneObjectPtr parent = DYNAMIC_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputControllerMessage,0));
 	}
 

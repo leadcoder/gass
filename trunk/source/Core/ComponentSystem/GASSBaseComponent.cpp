@@ -96,19 +96,19 @@ namespace GASS
 	ComponentPtr BaseComponent::CreateCopy()
 	{
 		const std::string factory_class_name = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		BaseComponentPtr new_comp = STATIC_CAST<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
+		BaseComponentPtr new_comp = STATIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
 		if(!new_comp)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"BaseComponent::CreateCopy");
 		}
-		//BaseComponentPtr new_comp = STATIC_CAST<BaseComponent>(CreateInstance());
+		//BaseComponentPtr new_comp = STATIC_PTR_CAST<BaseComponent>(CreateInstance());
 		BaseReflectionObject::SetProperties(new_comp);
 		return new_comp;
 	}
 
 	void BaseComponent::AssignFrom(ComponentPtr obj)
 	{
-		BaseComponentPtr  base_comp = STATIC_CAST<BaseComponent>(obj);
+		BaseComponentPtr  base_comp = STATIC_PTR_CAST<BaseComponent>(obj);
 		BaseReflectionObject::SetProperties(base_comp);
 	}	
 	

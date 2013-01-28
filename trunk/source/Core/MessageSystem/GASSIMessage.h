@@ -147,7 +147,7 @@ namespace GASS
 		{
 			//cast to this message type
 			//TODO: should we use dynamic cast instead so messages of incorrect type can be spotted?
-			SPTR<MESSAGE_TYPE> typed_mess = STATIC_CAST<MESSAGE_TYPE>(message);
+			SPTR<MESSAGE_TYPE> typed_mess = STATIC_PTR_CAST<MESSAGE_TYPE>(message);
 			m_Func(typed_mess);
 		}
 

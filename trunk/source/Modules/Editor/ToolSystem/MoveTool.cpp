@@ -183,7 +183,7 @@ namespace GASS
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = STATIC_CAST<SceneObject>(iter.getNext());
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
 		}
 	}

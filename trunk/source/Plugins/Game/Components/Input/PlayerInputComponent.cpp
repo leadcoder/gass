@@ -83,7 +83,7 @@ namespace GASS
 			while(objects.hasMoreElements())
 			{
 				ComponentContainerPtr cc = objects.getNext();
-				SceneObjectPtr so = STATIC_CAST<SceneObject>(cc);
+				SceneObjectPtr so = STATIC_PTR_CAST<SceneObject>(cc);
 				InputHandlerComponentPtr ihc = so->GetFirstComponentByClass<InputHandlerComponent>();
 				if(ihc)
 				{
@@ -106,7 +106,7 @@ namespace GASS
 				seat = seat % components.size();
 				if(components.size() > 0)
 				{
-					InputHandlerComponentPtr ih = DYNAMIC_CAST<InputHandlerComponent>(components[seat]);
+					InputHandlerComponentPtr ih = DYNAMIC_PTR_CAST<InputHandlerComponent>(components[seat]);
 					LocationComponentPtr location = ih->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 obj_pos = location->GetWorldPosition();
 					Float dist = (my_pos-obj_pos).FastLength();
@@ -137,7 +137,7 @@ namespace GASS
 						MessagePtr exit_msg(new ExitVehicleMessage());
 						m_CurrentSeat->PostMessage(exit_msg);
 					}
-					InputHandlerComponentPtr ih = DYNAMIC_CAST<InputHandlerComponent>(components[seat]);
+					InputHandlerComponentPtr ih = DYNAMIC_PTR_CAST<InputHandlerComponent>(components[seat]);
 					MessagePtr enter_msg(new EnterVehicleMessage());
 					m_CurrentSeat = ih->GetSceneObject();
 					m_CurrentSeat->PostMessage(enter_msg);
