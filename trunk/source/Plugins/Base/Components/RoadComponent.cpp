@@ -129,7 +129,10 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+				if(bsc->GetSceneObject())
+				{
+					bsc->GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+				}
 			}
 
 
@@ -173,7 +176,7 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
+				bsc->GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
 			}
 		}
 	}

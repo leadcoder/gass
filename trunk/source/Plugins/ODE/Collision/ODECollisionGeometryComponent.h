@@ -116,7 +116,7 @@ namespace GASS
 			IHeightmapTerrainComponent* m_TerrainGeom;
 			int m_Samples;
 		};
-		static TerrainData m_TerrainData;
+		TerrainData* m_TerrainData;
 
 	};
 

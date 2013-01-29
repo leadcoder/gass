@@ -354,5 +354,5 @@ namespace GASS
 		virtual void InjectKeyReleased( int key, unsigned int text) = 0;		
 		
 	};
-	typedef SPTR<IProxyInputSystem> IProxyInputSystemPtr;
+	typedef SPTR<IProxyInputSystem> ProxyInputSystemPtr;
 }

@@ -50,14 +50,15 @@ namespace GASS
 		m_GeomID(0),
 		m_OffsetGeomID(0),
 		m_Type(CGT_NONE),
-		m_Offset(0,0,0)
+		m_Offset(0,0,0),
+		m_TerrainData(NULL)
 	{
 
 	}
 
 	ODECollisionGeometryComponent::~ODECollisionGeometryComponent()
 	{
-
+		delete m_TerrainData;
 	}
 
 	void ODECollisionGeometryComponent::RegisterReflection()
@@ -352,21 +353,23 @@ namespace GASS
 		GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
-		m_TerrainData.m_TerrainGeom = terrain.get();
+	
 
 		dGeomID geom_id = 0;
 
 		if(terrain)
 		{
-			m_TerrainData.m_TerrainBounds = geom->GetBoundingBox();
+			m_TerrainData = new TerrainData;
+			m_TerrainData->m_TerrainGeom = terrain.get();
+			m_TerrainData->m_TerrainBounds = geom->GetBoundingBox();
 			int samples_x = terrain->GetSamples();
 			int samples_z = terrain->GetSamples();
-			m_TerrainData.m_Samples = samples_x;
+			m_TerrainData->m_Samples = samples_x;
 			
-			Float size_x = m_TerrainData.m_TerrainBounds.m_Max.x - m_TerrainData.m_TerrainBounds.m_Min.x;
-			Float size_z = m_TerrainData.m_TerrainBounds.m_Max.z - m_TerrainData.m_TerrainBounds.m_Min.z;
-			m_TerrainData.m_SampleWidth = size_x/(samples_x-1);
-			m_TerrainData.m_SampleHeight = size_z/(samples_z-1);
+			Float size_x = m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x;
+			Float size_z = m_TerrainData->m_TerrainBounds.m_Max.z - m_TerrainData->m_TerrainBounds.m_Min.z;
+			m_TerrainData->m_SampleWidth = size_x/(samples_x-1);
+			m_TerrainData->m_SampleHeight = size_z/(samples_z-1);
 
 			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
 			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
@@ -390,12 +393,12 @@ namespace GASS
 
 			// Give some very bounds which, while conservative,
 			// makes AABB computation more accurate than +/-INF.
-			dGeomHeightfieldDataSetBounds( heightid, m_TerrainData.m_TerrainBounds.m_Min.y,  m_TerrainData.m_TerrainBounds.m_Max.y);
+			dGeomHeightfieldDataSetBounds( heightid, m_TerrainData->m_TerrainBounds.m_Min.y,  m_TerrainData->m_TerrainBounds.m_Max.y);
 			geom_id = dCreateHeightfield( GetCollisionSceneManager()->GetSpace(), heightid, 1 );
 
 			Vec3 center_position;
-			center_position.x = m_TerrainData.m_TerrainBounds.m_Min.x + (m_TerrainData.m_TerrainBounds.m_Max.x - m_TerrainData.m_TerrainBounds.m_Min.x)*0.5;
-			center_position.z = m_TerrainData.m_TerrainBounds.m_Min.z + (m_TerrainData.m_TerrainBounds.m_Max.z - m_TerrainData.m_TerrainBounds.m_Min.z)*0.5;
+			center_position.x = m_TerrainData->m_TerrainBounds.m_Min.x + (m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x)*0.5;
+			center_position.z = m_TerrainData->m_TerrainBounds.m_Min.z + (m_TerrainData->m_TerrainBounds.m_Max.z - m_TerrainData->m_TerrainBounds.m_Min.z)*0.5;
 			center_position.y = 0;
 			dGeomSetPosition(geom_id, center_position.x, center_position.y, center_position.z);
 		}
@@ -410,7 +413,7 @@ namespace GASS
 
 	Float ODECollisionGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
-		return m_TerrainData.m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData.m_Samples-1-z);
+		return m_TerrainData->m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData->m_Samples-1-z);
 	}
 
 	void ODECollisionGeometryComponent::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
@@ -453,6 +456,6 @@ namespace GASS
 	}
 
 
-	ODECollisionGeometryComponent::TerrainData ODECollisionGeometryComponent::m_TerrainData = ODECollisionGeometryComponent::TerrainData();
+	//ODECollisionGeometryComponent::TerrainData ODECollisionGeometryComponent::m_TerrainData = ODECollisionGeometryComponent::TerrainData();
 
 }

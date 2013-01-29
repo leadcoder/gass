@@ -178,8 +178,9 @@ namespace GASS
 						OgreTerrainPageComponentPtr comp = so->GetFirstComponentByClass<OgreTerrainPageComponent>();
 						comp->SetIndexX(x);
 						comp->SetIndexY(y);
-						GetSceneObject()->AddChildSceneObject(so,true);
 						comp->SetPosition(Vec3(m_TerrainWorldSize*x,0,m_TerrainWorldSize*y));
+						GetSceneObject()->AddChildSceneObject(so,true);
+						
 					}
 				}
 			}
