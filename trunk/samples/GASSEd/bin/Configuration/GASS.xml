@@ -15,7 +15,7 @@
   <!--<Plugin PluginFile = "GASSPluginRakNet"/>-->
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
- <!--<SetDataPath value="../../../common/data/"/>-->
+ <SetDataPath value="../../../common/data/"/>
  <ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
  <ResourceManager>
 	<ResourceGroup name="Bootstrap">
@@ -125,7 +125,6 @@
     <PostFilters value="HDR"/>
 	<TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
-  
 </Systems>
 <RTC>
 	<NumberOfThreads value="-1"/> <!-- -1 == auto-->

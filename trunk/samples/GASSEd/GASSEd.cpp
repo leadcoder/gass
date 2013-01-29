@@ -34,6 +34,9 @@
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/ToolSystem/CreateTool.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 
 
 
@@ -383,14 +386,25 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 {
 	QMenu myMenu;
     QAction*  delete_action = myMenu.addAction("Delete");
+	QAction*  waypoint_action = NULL;
+	//check if this is a waypoint list object
+	SPTR<GASS::IWaypointListComponent> waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
+	if(waypointlist)
+	{
+		waypoint_action = myMenu.addAction("Add waypoints...");
+	}
 
     QAction* selectedItem = myMenu.exec(pos);
     if (selectedItem == delete_action)
     {
 		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
     }
-    else
+    else if(waypoint_action)
     {
-        // nothing was chosen
+		GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+		sm->GetMouseToolController()->SelectTool(TID_CREATE);
+		GASS::CreateTool* tool = static_cast<GASS::CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
+		tool->SetParentObject(obj);
+		tool->SetTemplateName("Waypoint");
     }
 }
