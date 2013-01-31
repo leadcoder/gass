@@ -79,31 +79,20 @@ namespace GASS
 	};
 	typedef SPTR<ObjectZoomedEvent> ObjectZoomedEventPtr;
 
-	class ShowObjectMenuRequest : public SceneRequestMessage
-	{
-	public:
-		ShowObjectMenuRequest(SceneObjectPtr obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
-		  SceneRequestMessage(sender_id , delay), m_Object(obj), m_Pos (screen_pos){}
-		  SceneObjectPtr GetSceneObject() const {return m_Object;}
-		  Vec2 GetScreenPosition() const {return m_Pos;}
-	private:
-		SceneObjectPtr m_Object;
-		Vec2 m_Pos;
-	};
-	typedef SPTR<ShowObjectMenuRequest> ShowObjectMenuRequestPtr;
+	
 
-	class ObjectDroppedMessage : public BaseMessage
+	class ObjectDroppedEvent : public SystemEventMessage
 	{
 	public:
-		ObjectDroppedMessage(const std::string &obj_name, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_ObjectName(obj_name), m_ScreenPosition(screen_pos) {}
+		ObjectDroppedEvent(const std::string &obj_name, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_ObjectName(obj_name), m_ScreenPosition(screen_pos) {}
 		  std::string GetObjectName() const {return m_ObjectName;}
 		  Vec2 GetScreenPosition() const {return m_ScreenPosition;}
 	private:
 		std::string m_ObjectName;
 		Vec2 m_ScreenPosition;
 	};
-	typedef SPTR<ObjectDroppedMessage> ObjectDroppedMessagePtr;
+	typedef SPTR<ObjectDroppedEvent> SceneObjectTemplateDroppedEvent;
 
 
 	
@@ -152,18 +141,6 @@ namespace GASS
 	};
 	typedef SPTR<ToolChangedEvent> ToolChangedEventPtr;
 
-	/*class WindowFocusChangedMessage : public BaseMessage
-	{
-	public:
-		WindowFocusChangedMessage(const std::string &window, bool focus,SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Window(window), m_Focus(focus){}
-		  std::string GetWindow() const {return m_Window;}
-		  bool GetFocus() const {return m_Focus;}
-	private:
-		std::string  m_Window;
-		bool m_Focus;
-	};
-	typedef SPTR<WindowFocusChangedMessage> WindowFocusChangedMessagePtr;*/
 
 	class SceneChangedEvent: public SystemEventMessage
 	{
@@ -199,25 +176,7 @@ namespace GASS
 	typedef SPTR<ObjectAttributeChangedEvent> ObjectAttributeChangedEventPtr;
 
 
-	class TextFeedbackMessage : public BaseMessage
-	{
-	public:
-		TextFeedbackMessage(std::string text, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Text(text){}
-		  std::string GetText() const {return m_Text;}
-	private:
-		std::string m_Text;
-	};
-	typedef SPTR<TextFeedbackMessage> TextFeedbackMessagePtr;
-
-	class ClearFeedbackWindowMessage : public BaseMessage
-	{
-	public:
-		ClearFeedbackWindowMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) {}
-	};
-	typedef SPTR<ClearFeedbackWindowMessage> ClearFeedbackWindowMessagePtr;
-
+	
 
 	class LayoutLoadedMessage : public BaseMessage
 	{
@@ -383,6 +342,43 @@ namespace GASS
 		Vec3 m_Position;
 	};
 	typedef SPTR<EditPositionMessage> EditPositionMessagePtr;
+
+
+	//MFC stuff, use mfc/windows messages instead?
+	class ShowSceneObjectMenuRequest : public SceneRequestMessage
+	{
+	public:
+		ShowSceneObjectMenuRequest(SceneObjectPtr obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
+		  SceneRequestMessage(sender_id , delay), m_Object(obj), m_Pos (screen_pos){}
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+		  Vec2 GetScreenPosition() const {return m_Pos;}
+	private:
+		SceneObjectPtr m_Object;
+		Vec2 m_Pos;
+	};
+	typedef SPTR<ShowSceneObjectMenuRequest> ShowSceneObjectMenuRequestPtr;
+
+
+	class TextFeedbackRequest : public SystemRequestMessage
+	{
+	public:
+		TextFeedbackRequest(std::string text, SenderID sender_id = -1, double delay= 0) : 
+		  SystemRequestMessage(sender_id , delay), m_Text(text){}
+		  std::string GetText() const {return m_Text;}
+	private:
+		std::string m_Text;
+	};
+	typedef SPTR<TextFeedbackRequest> TextFeedbackRequestPtr;
+
+
+	class ClearFeedbackWindowRequest: public SystemRequestMessage
+	{
+	public:
+		ClearFeedbackWindowRequest(SenderID sender_id = -1, double delay= 0) : 
+		  SystemRequestMessage(sender_id , delay) {}
+	};
+	typedef SPTR<ClearFeedbackWindowRequest> ClearFeedbackWindowRequestPtr;
+
 
 }
 #endif 

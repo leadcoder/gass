@@ -133,18 +133,44 @@ namespace GASS
 		return "";
 	}
 
-	Resource ResourceManager::GetFirstResourceByName(const std::string &resource_name) const
+	FileResourcePtr ResourceManager::GetFirstResourceByName(const std::string &resource_name) const
 	{
 		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{
-			resources = (*iter)->GetResourcesByName(resource_name);
+			(*iter)->GetResourcesByName(resources,resource_name);
 			if(resources.size() > 0)
 				return 	resources[0];
 			++iter;
 		}
-		return Resource(FilePath(""),"","");
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"file resource not found:" + resource_name, "ResourceManager::GetFirstResourceByName");		
+	}
+
+	ResourceVector ResourceManager::GetResourcesByName(const std::string &resource_name) const
+	{
+		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		ResourceVector resources;
+		while(iter != m_ResourceGroups.end())
+		{
+			
+			(*iter)->GetResourcesByName(resources,resource_name);
+			++iter;
+		}
+		return resources;		
+	}
+
+	bool ResourceManager::HasResource(const std::string &resource_name) const
+	{
+		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		ResourceVector resources;
+		while(iter != m_ResourceGroups.end())
+		{
+			if((*iter)->HasResource(resource_name))
+				return true;
+			++iter;
+		}
+		return false;		
 	}
 
 

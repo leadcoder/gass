@@ -123,7 +123,7 @@ namespace GASS
 		m_Font = font;
 		if(m_OSGText.valid())
 		{
-			m_OSGText->setFont(font.GetResource().Path().GetFullPath());
+			m_OSGText->setFont(font.GetResource()->Path().GetFullPath());
 		}
 	}
 

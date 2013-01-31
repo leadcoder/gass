@@ -48,14 +48,14 @@ namespace GASS
 
 		static bool IsMultiValue() {return false;}
 
-		static std::vector<std::string> GetAllOptions(const std::string &filter)
+		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options)
 		{
 			std::vector<std::string> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
 			while(iter.hasMoreElements())
 			{
 				Ogre::MaterialPtr ptr = iter.getNext();
-				if(filter == "" ||  ptr->getGroup() == filter)
+				if(options == "" ||  ptr->getGroup() == options)
 				{
 					content.push_back(ptr->getName());
 				}
@@ -92,7 +92,7 @@ namespace GASS
 
 		static bool IsMultiValue() {return false;}
 
-		static std::vector<std::string> GetAllOptions(const std::string &filter)
+		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options)
 		{
 			std::vector<std::string> content;
 			content.push_back("NONE");

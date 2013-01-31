@@ -268,10 +268,11 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					GASS::ResourceGroupPtr group = groups[i];
 					if(group->GetName() == ps->ResourceGroup)
 					{
-						GASS::ResourceVector res_vec = group->GetResourcesByType(ps->ResourceType);
+						GASS::ResourceVector res_vec;
+						group->GetResourcesByType(res_vec,ps->ResourceType);
 						for(size_t j = 0; j < res_vec.size();j++)
 						{
-							values.push_back(res_vec[j].Name());
+							values.push_back(res_vec[j]->Name());
 						}
 					}
 				}

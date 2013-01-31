@@ -34,7 +34,7 @@ namespace GASS
 		virtual ~ResourceHandle();
 		std::string Name() const { return m_ResourceName;}
 		void SetName(const std::string &name) { m_ResourceName = name;}
-		Resource GetResource() const;
+		FileResourcePtr GetResource() const;
 		bool Valid() const {return (m_ResourceName != "");}
 		friend std::ostream& operator << (std::ostream& os, const ResourceHandle& res)
 		{

@@ -113,9 +113,9 @@ namespace GASS
 		std::string full_path;
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		Resource font_res = rm->GetFirstResourceByName("arial.ttf");
+		FileResourcePtr font_res = rm->GetFirstResourceByName("arial.ttf");
 		m_DebugTextBox->setPosition(osg::Vec3d(0, 5, 0));
-		m_DebugTextBox->setFont(font_res.Path().GetFullPath());
+		m_DebugTextBox->setFont(font_res->Path().GetFullPath());
 		m_DebugTextBox->setTextSize(12);
 
 
@@ -392,10 +392,10 @@ namespace GASS
 
 			std::string full_path;
 			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-			Resource font_res = rm->GetFirstResourceByName("arial.ttf");
+			FileResourcePtr font_res = rm->GetFirstResourceByName("arial.ttf");
 
 			text_box->setPosition(osg::Vec3d(0, 0, 0));
-			text_box->setFont(font_res.Path().GetFullPath());
+			text_box->setFont(font_res->Path().GetFullPath());
 			text_box->setTextSize(10);
 
 			m_Viewer->getView(0)->getSceneData()->asGroup()->addChild(&text_box->getGroup());

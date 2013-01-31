@@ -205,7 +205,7 @@ namespace GASS
 
 		
 		//check if extension exist?
-		FilePath file_path = filename.GetResource().Path();
+		FilePath file_path = filename.GetResource()->Path();
 		const std::string extension =  file_path.GetExtension();
 
 		std::string  mod_file_path = file_path.GetFullPath();

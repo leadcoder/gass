@@ -18,32 +18,36 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_RESOURCE_H
-#define GASS_RESOURCE_H
+#ifndef GASS_FILE_RESOURCE_H
+#define GASS_FILE_RESOURCE_H
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSResourceLocation.h"
 
 namespace GASS
 {
-	class GASSExport Resource
+	class GASSExport FileResource
 	{
 	public:
-		Resource(const FilePath &path,const std::string &group,const std::string &type) :m_ResourcePath(path),
-			m_ResourceGroup(group),
+		FileResource(const FilePath &path,ResourceLocationPtr location, const std::string &type) : m_ResourcePath(path),
+			m_Location(location),
 			m_ResourceType(type)
 		{
+
 		};
-		virtual ~Resource(){};
+		virtual ~FileResource(){};
 		std::string Name() const { return m_ResourcePath.GetFilename();}
-		std::string Group() const { return m_ResourceGroup;}
+		ResourceLocationPtr Location() const { return m_Location;}
 		std::string Type() const { return m_ResourceType;}
 		FilePath Path() { return m_ResourcePath;}
+		
 	private:
 		FilePath m_ResourcePath;
-		std::string m_ResourceGroup;
+		ResourceLocationPtr m_Location;
 		std::string m_ResourceType;
 	};
+	PDECL(FileResource)
 }
 #endif 

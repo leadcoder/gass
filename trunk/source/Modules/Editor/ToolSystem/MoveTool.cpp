@@ -240,7 +240,6 @@ namespace GASS
 						m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 					}
 				}
-
 			}
 		}
 		int from_id = (int) this;

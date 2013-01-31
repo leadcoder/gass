@@ -18,8 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "GASSResourceLocation.h"
-
+#include "Sim/GASSResourceLocation.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -28,10 +30,48 @@ namespace GASS
 		m_Path(path),
 		m_Type(type)
 	{
+
 	}
+
 	ResourceLocation::~ResourceLocation()
 	{
 
+	}
+
+	void ResourceLocation::ParseLocation()
+	{
+		m_Resources.clear();
+		std::vector<FilePath> files;
+		FilePath::GetFilesFromPath(files,m_Path);
+		for(size_t i = 0; i< files.size(); i++)
+		{
+			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+			const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
+			const std::string name = files[i].GetFilename();
+			FileResourcePtr res(new FileResource(files[i],shared_from_this(),res_type));
+			m_Resources[name] = res;
+		}
+	}
+
+	FileResourcePtr ResourceLocation::GetResourceByName(const std::string &name) const
+	{
+		FileResourcePtr res;
+		ResourceMap::const_iterator iter = m_Resources.find(name);
+		if(iter != m_Resources.end())
+		{
+			res = iter->second;
+		}
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get file resource:" + name,"ResourceLocation::GetResourceByName");
+	}
+
+	bool ResourceLocation::HasResource(const std::string &name) const
+	{
+		ResourceMap::const_iterator iter = m_Resources.find(name);
+		if(iter != m_Resources.end())
+		{
+			return true;
+		}
+		return false;
 	}
 }
 

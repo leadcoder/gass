@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-
+	class BaseReflectionObject;
 	/** \addtogroup GASSSim
 	*  @{
 	*/
@@ -75,7 +75,7 @@ namespace GASS
 			return (m_Enum == v.Get());
 		}
 
-		static std::vector<std::string> GetAllOptions(const std::string &filter) 
+		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &filter) 
 		{
 			(void) filter;
 			std::vector<std::string> types;
@@ -165,7 +165,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions(const std::string &filter) 
+		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
@@ -271,7 +271,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions(const std::string &filter) 
+		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();

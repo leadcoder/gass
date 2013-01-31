@@ -414,6 +414,7 @@ namespace GASS
 	Float ODECollisionGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
 		return m_TerrainData->m_TerrainGeom->GetHeightAtPoint(x,m_TerrainData->m_Samples-1-z);
+		//return m_TerrainData->m_TerrainGeom->GetHeightAtPoint(x,z);
 	}
 
 	void ODECollisionGeometryComponent::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)

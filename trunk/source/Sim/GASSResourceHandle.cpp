@@ -42,7 +42,7 @@ namespace GASS
 
 	}
 
-	Resource ResourceHandle::GetResource() const
+	FileResourcePtr ResourceHandle::GetResource() const
 	{
 		return SimEngine::Get().GetResourceManager()->GetFirstResourceByName(Name());
 	}

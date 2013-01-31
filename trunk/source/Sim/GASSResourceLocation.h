@@ -21,12 +21,14 @@
 #pragma once
 #include "GASSCommon.h"
 #include "Core/Utils/GASSFilePath.h"
+
 namespace GASS
 {
 
-	class ResourceGroup;
-	typedef boost::shared_ptr<ResourceGroup> ResourceGroupPtr;
-
+	FDECL(ResourceGroup)
+	FDECL(FileResource)
+	
+	
 	enum ResourceLocationType
 	{
 		RLT_FILESYSTEM,
@@ -34,19 +36,25 @@ namespace GASS
 		RLT_USER
 	};
 
-	class GASSExport ResourceLocation
+	class GASSExport ResourceLocation : public  SHARE_CLASS<ResourceLocation>
 	{
 	public:
+		typedef std::map<std::string, FileResourcePtr> ResourceMap;
+
 		ResourceLocation(ResourceGroupPtr owner, const FilePath &path,ResourceLocationType type);
 		~ResourceLocation();
 		FilePath GetPath() const {return m_Path;}
 		ResourceLocationType  GetType() const {return m_Type;}
 		ResourceGroupPtr GetGroup() const {return m_Owner;}
+		void ParseLocation();
+		FileResourcePtr GetResourceByName(const std::string &name) const;
+		bool HasResource(const std::string &name) const;
+		const ResourceMap& GetResources() const {return m_Resources;}
 	private:
 		FilePath m_Path;
 		ResourceLocationType m_Type;
 		ResourceGroupPtr m_Owner;
-
+		ResourceMap m_Resources;
 	};
 	typedef SPTR<ResourceLocation> ResourceLocationPtr;
 	typedef WPTR<ResourceLocation> ResourceLocationWeakPtr;

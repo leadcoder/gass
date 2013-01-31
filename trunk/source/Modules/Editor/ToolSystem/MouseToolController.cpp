@@ -367,7 +367,7 @@ namespace GASS
 			mesh_data->IndexVector.push_back(4);
 			mesh_data->IndexVector.push_back(5);
 
-			mesh_data->Material = "GizmoArrowMat";
+			mesh_data->Material = "WhiteNoLighting";
 			mesh_data->Type = LINE_LIST;
 
 
@@ -419,6 +419,14 @@ namespace GASS
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,NO_THROW),mess_id));
 		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 
+
+		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
+		if(obj_under_cursor)
+		{
+			SceneObjectPtr pointer = GetPointerObject();
+			pointer->PostMessage(MessagePtr(new WorldPositionMessage(info.m_3DPos)));
+		}
+
 		return true;
 	}
 
@@ -469,7 +477,7 @@ namespace GASS
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
-					GASS::SceneMessagePtr message(new ShowObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
+					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
 					m_EditorSceneManager->GetScene()->SendImmediate(message);
 				}
 			}

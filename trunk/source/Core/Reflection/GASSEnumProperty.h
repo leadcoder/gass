@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-
+	class BaseReflectionObject;
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -38,7 +38,7 @@ namespace GASS
 	{
 	public:
 		virtual ~IEnumProperty(){}
-		virtual std::vector<std::string> GetEnumList(const std::string &filter) const = 0;
+		virtual std::vector<std::string> GetEnumList(const BaseReflectionObject* object, const std::string &options) const = 0;
 		virtual bool IsMultiValue() const = 0;
 	};
 
@@ -59,9 +59,9 @@ namespace GASS
 
 		}
 
-		virtual std::vector<std::string> GetEnumList(const std::string &filter) const
+		virtual std::vector<std::string> GetEnumList(const BaseReflectionObject* object, const std::string &options) const
 		{
-			return T::GetAllOptions(filter);
+			return T::GetAllOptions(object,options);
 		}
 
 		virtual bool IsMultiValue() const

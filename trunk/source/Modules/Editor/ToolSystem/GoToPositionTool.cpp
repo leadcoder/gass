@@ -21,7 +21,6 @@ namespace GASS
 	GoToPositionTool::GoToPositionTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GoToPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(GoToPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 

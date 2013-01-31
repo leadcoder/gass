@@ -28,7 +28,7 @@
 namespace GASS
 {
 	IFDECL(ResourceSystem)
-	typedef std::vector<Resource> ResourceVector; 
+	typedef std::vector<FileResourcePtr> ResourceVector; 
 	typedef std::vector<ResourceLocationPtr> ResourceLocationVector;
 	class GASSExport ResourceGroup : public SHARE_CLASS<ResourceGroup>
 	{
@@ -39,8 +39,9 @@ namespace GASS
 		void RemoveResourceLocation(ResourceLocationPtr location);
 		ResourceLocationVector GetResourceLocations() const {return m_ResourceLocations;}
 		std::string GetName() const{return m_Name;}
-		ResourceVector GetResourcesByName(const std::string &resource_name) const;
-		ResourceVector GetResourcesByType(const std::string &resource_type = "") const;
+		bool HasResource(const std::string &resource_name) const;
+		void GetResourcesByName(ResourceVector &resources, const std::string &resource_name) const;
+		void GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const;
 	private:
 		void AddResourceLocationRecursive(ResourceLocationPtr rl);
 		std::string m_Name;

@@ -121,7 +121,7 @@ namespace GASS
 				{
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
 					if(m_HeightMapFile.Valid()) //import height map
-						ImportHeightMap(m_HeightMapFile.GetResource().Path().GetFullPath());
+						ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
@@ -132,10 +132,10 @@ namespace GASS
 					SetPosition(m_Pos);
 				UpdatePosition();
 				if(m_ColorMap.Valid())
-					ImportColorMap(m_ColorMap.GetResource().Path());
+					ImportColorMap(m_ColorMap.GetResource()->Path());
 
 				if(m_Mask.Valid()) 
-					ImportDetailMask(m_Mask.GetResource().Path());
+					ImportDetailMask(m_Mask.GetResource()->Path());
 
 				if(m_DiffuseLayer0.Valid())
 					SetDiffuseLayer0(m_DiffuseLayer0);
@@ -258,17 +258,44 @@ namespace GASS
 	{
 		if(m_OgreSceneManager && filename.GetFullPath() != "")
 		{
-			std::fstream fstr(filename.GetFullPath().c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+			if(filename.GetExtension() == "png")
+			{
+				std::fstream fstr(filename.GetFullPath().c_str(), std::ios::in|std::ios::binary);
+				Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
 
-			Ogre::Image img;
-			img.load(stream);
+				Ogre::Image image;
+				image.load(stream);
 
-			m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &img);
+				bool new_load = false;
+				if(new_load)
+				{
+					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, &image);
+					// sync load since we want everything in place when we start
+					m_TerrainGroup->loadAllTerrains(true);
+				}
+				else
+				{
+					unsigned int hm_size = m_Terrain->getSize();
+					image.resize(hm_size, hm_size);
+					float *height_data = m_Terrain->getHeightData();
+					for(int y = 0;y < hm_size ;y++)
+					{
+						for(int x = 0;x < hm_size ;x++)
+						{
+							Ogre::ColourValue color = image.getColourAt(x, y, 0);
+							const Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
+							*height_data = color.r * defaultimp.inputScale;
+							++height_data;
+						}
+					}
+				}
+				stream.setNull();
 
-			// sync load since we want everything in place when we start
-			m_TerrainGroup->loadAllTerrains(true);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+				Ogre::Rect drect(0, 0, m_Terrain->getSize(), m_Terrain->getSize());
+				m_Terrain->dirtyRect(drect);
+				m_Terrain->update();
+				GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			}
 		}
 	}
 
@@ -290,7 +317,8 @@ namespace GASS
 	void OgreTerrainPageComponent::SetColorMap(const ResourceHandle &color_map_res)
 	{
 		m_ColorMap = color_map_res;
-		ImportColorMap(m_ColorMap.GetResource().Path());
+		if(m_ColorMap.Valid())
+			ImportColorMap(m_ColorMap.GetResource()->Path());
 	}
 
 	void OgreTerrainPageComponent::ImportColorMap(const FilePath &filename)
@@ -766,6 +794,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 			return m_Terrain->getHeightAtPoint(x,y);
+		return 0;
 	}
 
 	Float OgreTerrainPageComponent::GetHeightAtWorldLocation(Float x, Float z) const

@@ -36,6 +36,7 @@ namespace GASS
 
 	};
 	typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
+	typedef std::vector<FileResourcePtr> ResourceVector;
 
 	/**
 		ResourceManager
@@ -86,9 +87,23 @@ namespace GASS
 
 		/**
 			Get first resource by name. All resrouces gorups are checked.
+			Exception will be cast if resource not found
 			@resource_name Name of resource
 		*/
-		Resource GetFirstResourceByName(const std::string &resource_name) const;
+		FileResourcePtr GetFirstResourceByName(const std::string &resource_name) const;
+
+
+		/**
+			Get first resources by name. All resrouces gorups are checked.
+			@resource_name Name of resource
+		*/
+		ResourceVector GetResourcesByName(const std::string &resource_name) const;
+
+		/**
+			Check if resource exits.
+			@resource_name Name of resource
+		*/
+		bool HasResource(const std::string &resource_name) const;
 
 		/**
 			Register new resource type

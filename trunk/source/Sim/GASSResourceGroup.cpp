@@ -44,6 +44,7 @@ namespace GASS
 			AddResourceLocationRecursive(rl);
 		else
 		{
+			rl->ParseLocation();
 			m_ResourceLocations.push_back(rl);
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
 		}
@@ -55,6 +56,7 @@ namespace GASS
 		boost::filesystem::path boost_path(rl->GetPath().GetFullPath()); 
 		if( boost::filesystem::exists(boost_path))  
 		{
+			rl->ParseLocation();
 			m_ResourceLocations.push_back(rl);
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
 			boost::filesystem::directory_iterator end ;    
@@ -63,6 +65,7 @@ namespace GASS
 				if (boost::filesystem::is_directory( *iter ) )      
 				{   
 					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(),iter->path().string(),rl->GetType()));
+					
 					AddResourceLocationRecursive(rec_rl);
 				}     
 			}
@@ -85,46 +88,55 @@ namespace GASS
 		}
 	}
 
-	ResourceVector ResourceGroup::GetResourcesByType(const std::string &resource_type) const
+	void ResourceGroup::GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const
 	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
-		ResourceVector resources;
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
-			std::vector<FilePath> files;
-			FilePath::GetFilesFromPath(files,(*iter)->GetPath());
-			for(size_t i = 0; i< files.size(); i++)
+
+			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
+			while(c_iter != (*iter)->GetResources().end())
 			{
-				const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
-				if(res_type  == resource_type)
-					resources.push_back(Resource(files[i],GetName(),res_type));
+				if(c_iter->second->Type() == resource_type)
+				{
+					resources.push_back(c_iter->second);
+				}
+				c_iter++;
 			}
 			++iter;
 		}
-		return resources;
 	}
 
-	ResourceVector ResourceGroup::GetResourcesByName(const std::string &resource_name) const
+	bool ResourceGroup::HasResource(const std::string &resource_name) const
 	{
-		ResourceVector resources;
+		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
+		while(iter != m_ResourceLocations.end())
+		{
+			if((*iter)->HasResource(resource_name))
+				return true;
+			++iter;
+		}
+		return false;
+	}
+
+	void ResourceGroup::GetResourcesByName(ResourceVector &resources, const std::string &resource_name) const
+	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
-			std::vector<FilePath> files;
-			FilePath::GetFilesFromPath(files,(*iter)->GetPath());
-			for(size_t i = 0; i< files.size(); i++)
+			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
+			while(c_iter != (*iter)->GetResources().end())
 			{
-				if(resource_name == files[i].GetFilename())
+				if(c_iter->second->Name() == resource_name)
 				{
-					const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
-					resources.push_back(Resource(files[i],GetName(),res_type));
+					resources.push_back(c_iter->second);
 				}
+				c_iter++;
 			}
 			++iter;
 		}
-		return resources;
 	}
 }
 
