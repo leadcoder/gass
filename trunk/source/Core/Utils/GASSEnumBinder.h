@@ -45,7 +45,7 @@ namespace GASS
 		virtual ~IEnumBinder(){}
 	};
 
-	class IntEnumBinder : public IEnumBinder
+	/*class IntEnumBinder : public IEnumBinder
 	{
 	public:
 		IntEnumBinder(int type) : m_Enum(type)
@@ -131,7 +131,7 @@ namespace GASS
 		int m_Enum;
 		static std::map<std::string ,int> m_Names;
 		static std::map<int,std::string > m_Enums;
-	};
+	};*/
 
 
 	template< class ENUM,class CLASS>
@@ -282,7 +282,34 @@ namespace GASS
 			}
 			return types;
 		}
+
+		static std::vector<CLASS> GetAllEnums(const BaseReflectionObject* object) 
+		{
+			std::vector<CLASS> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
+			{
+				types.push_back(iter->second);
+				++iter;
+			}
+			return types;
+		}
+
 		static bool IsMultiValue() {return false;}
+
+
+		static std::vector<CLASS> GetEnumeration() 
+		{
+			std::vector<CLASS> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
+			{
+				types.push_back(iter->second);
+				++iter;
+			}
+			return types;
+		}
+
 	protected:
 		void SetValueFromName(const std::string &name) 
 		{

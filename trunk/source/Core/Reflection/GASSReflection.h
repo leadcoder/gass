@@ -94,27 +94,34 @@ namespace GASS
 		template <class PropertyType>
 		static void RegisterProperty(const std::string &name, 
 			typename Property<T, PropertyType>::GetterType getter,
-			typename Property<T, PropertyType>::SetterType setter )
+			typename Property<T, PropertyType>::SetterType setter,
+			typename Property<T, PropertyType>::RestrictionType restriction = NULL,
+			const std::string &annotation ="", 
+			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE))
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>(name, getter, setter);
+			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,restriction,annotation,flags );
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
 		static void RegisterProperty(const std::string &name, 
 			typename Property<T, PropertyType>::GetterType getter,
-			typename Property<T, PropertyType>::SetterTypeConst setter)
+			typename Property<T, PropertyType>::SetterTypeConst setter,
+			typename Property<T, PropertyType>::RestrictionType restriction = NULL,
+			const std::string &annotation ="", 
+			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE))
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter );
+			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,restriction,annotation,flags );
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
 		static void RegisterVectorProperty(const std::string &name, 
 			typename VectorProperty<T, PropertyType>::GetterType getter,
-			typename VectorProperty<T, PropertyType>::SetterType setter)
+			typename VectorProperty<T, PropertyType>::SetterType setter,
+			typename Property<T, PropertyType>::RestrictionType restriction = NULL)
 		{
-			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter);
+			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter, restriction);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 

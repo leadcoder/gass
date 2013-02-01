@@ -103,6 +103,11 @@ namespace GASS
             @param value The value returned, wrapped in the boost::any class
         */
 		virtual void GetValue(const BaseReflectionObject* object, boost::any &value) const = 0;
+
+		virtual bool HasRestrictions() const = 0;
+
+		virtual std::vector<std::string> GetRestrictionsAsString(const BaseReflectionObject* object) const = 0;
+
 	protected :
 		std::string	m_Name;
 	};

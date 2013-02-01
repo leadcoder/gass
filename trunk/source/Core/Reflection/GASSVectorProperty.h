@@ -209,6 +209,8 @@ namespace GASS
 			}
 			return res;
 		}
+		virtual bool HasRestrictions() const {return false;}
+		virtual std::vector<std::string> GetRestrictionsAsString(const BaseReflectionObject* object) const {std::vector<std::string> res; return res;}
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
