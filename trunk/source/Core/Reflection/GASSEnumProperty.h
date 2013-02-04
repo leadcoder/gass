@@ -51,10 +51,10 @@ namespace GASS
 	class EnumProperty : public Property<OwnerType,T>, public IEnumProperty
 	{
 	public:
-		EnumProperty(const std::string &name, GetterType getter, SetterType setter ): Property<OwnerType,T>(name,getter,setter)
+		EnumProperty(const std::string &name, GetterType getter, SetterType setter ): Property<OwnerType,T>(name,getter,setter,PropertyMetaDataPtr())
 		{
 		}
-		EnumProperty( const std::string &name, GetterType getter, SetterTypeConst setter ): Property<OwnerType,T>(name,getter,setter)
+		EnumProperty( const std::string &name, GetterType getter, SetterTypeConst setter ): Property<OwnerType,T>(name,getter,setter,PropertyMetaDataPtr())
 		{
 
 		}
