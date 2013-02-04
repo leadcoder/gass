@@ -46,7 +46,7 @@ namespace GASS
 			return os;
 		}
 
-		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options)
+		static std::vector<std::string> GetStringEnumeration()
 		{
 			std::vector<std::string> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();

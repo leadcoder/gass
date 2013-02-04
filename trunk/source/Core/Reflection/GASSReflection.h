@@ -30,7 +30,6 @@ This code is based on the Game Programming Gems 5 article
 #include "Core/Reflection/GASSRTTI.h"
 #include "Core/Reflection/GASSProperty.h"
 #include "Core/Reflection/GASSVectorProperty.h"
-#include "Core/Reflection/GASSEnumProperty.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSMisc.h"
 class TiXmlElement;
@@ -95,11 +94,9 @@ namespace GASS
 		static void RegisterProperty(const std::string &name, 
 			typename Property<T, PropertyType>::GetterType getter,
 			typename Property<T, PropertyType>::SetterType setter,
-			typename Property<T, PropertyType>::RestrictionType restriction = NULL,
-			const std::string &annotation ="", 
-			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE))
+			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,restriction,annotation,flags );
+			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
@@ -107,11 +104,9 @@ namespace GASS
 		static void RegisterProperty(const std::string &name, 
 			typename Property<T, PropertyType>::GetterType getter,
 			typename Property<T, PropertyType>::SetterTypeConst setter,
-			typename Property<T, PropertyType>::RestrictionType restriction = NULL,
-			const std::string &annotation ="", 
-			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE))
+			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,restriction,annotation,flags );
+			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
@@ -119,40 +114,22 @@ namespace GASS
 		static void RegisterVectorProperty(const std::string &name, 
 			typename VectorProperty<T, PropertyType>::GetterType getter,
 			typename VectorProperty<T, PropertyType>::SetterType setter,
-			typename Property<T, PropertyType>::RestrictionType restriction = NULL)
+			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter, restriction);
+			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter, meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
 		template <class PropertyType>
 		static void RegisterVectorProperty(const std::string &name, 
 			typename VectorProperty<T, PropertyType>::GetterType getter,
-			typename VectorProperty<T, PropertyType>::SetterTypeConst setter)
+			typename VectorProperty<T, PropertyType>::SetterTypeConst setter,
+			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter);
+			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-
-		template <class PropertyType>
-		static void RegisterEnumProperty(const std::string &name, 
-			typename EnumProperty<T, PropertyType>::GetterType getter,
-			typename EnumProperty<T, PropertyType>::SetterType setter )
-		{
-			EnumProperty<T, PropertyType>* property = new EnumProperty<T, PropertyType>(name, getter, setter);
-			T::GetClassRTTI()->GetProperties()->push_back(property);
-		}
-
-
-		template <class PropertyType>
-		static void RegisterEnumProperty(const std::string &name, 
-			typename EnumProperty<T, PropertyType>::GetterType getter,
-			typename EnumProperty<T, PropertyType>::SetterTypeConst setter)
-		{
-			EnumProperty<T, PropertyType>* property = new EnumProperty<T, PropertyType>( name, getter, setter );
-			T::GetClassRTTI()->GetProperties()->push_back(property);
-		}
 
 		//----------------------------------------------------------------------------------------------
 		// Returns RTTI info associated with this class type.

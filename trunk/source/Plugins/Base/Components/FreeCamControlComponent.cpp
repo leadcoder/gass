@@ -79,7 +79,8 @@ namespace GASS
 		RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
 		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
 		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
-		RegisterEnumProperty<MotionModeBinder>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode);
+		RegisterProperty<MotionModeBinder>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Motion Mode",PF_VISIBLE,&MotionModeBinder::GetStringEnumeration)));
 		RegisterProperty<bool>("Debug", &GASS::FreeCamControlComponent::GetDebug, &GASS::FreeCamControlComponent::SetDebug);
 	}
 

@@ -69,7 +69,6 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, IComponent>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
 		RegisterProperty<OgreMaterial>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
-		//RegisterProperty<ResourceHandle>("Texture", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
@@ -105,7 +104,6 @@ namespace GASS
 		if(m_Billboard) 
 			m_Billboard->setDimensions(m_Width,m_Height);
 	}
-
 
 	void OgreBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{

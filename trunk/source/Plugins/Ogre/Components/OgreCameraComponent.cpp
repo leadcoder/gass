@@ -70,7 +70,8 @@ namespace GASS
 		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
 		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
 		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog);
-		RegisterEnumProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode);
+		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode,	
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
 		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 	}
 

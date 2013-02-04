@@ -45,9 +45,8 @@ namespace GASS
 	void OSGLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, IComponent>);
-		RegisterEnumProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType);
-
-
+		RegisterProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light Type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams);
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams);
 		RegisterProperty<bool>("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow);

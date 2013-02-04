@@ -71,16 +71,27 @@ namespace GASS
 		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap);
 		RegisterProperty<ResourceHandle>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap);
 		RegisterProperty<ResourceHandle>("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask);
-		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0);
-		RegisterProperty<ResourceHandle>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0);
-		RegisterProperty<ResourceHandle>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1);
-		RegisterProperty<ResourceHandle>("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1);
-		RegisterProperty<ResourceHandle>("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2);
-		RegisterProperty<ResourceHandle>("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2);
-		RegisterProperty<ResourceHandle>("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3);
-		RegisterProperty<ResourceHandle>("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3);
-		RegisterProperty<ResourceHandle>("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4);
-		RegisterProperty<ResourceHandle>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4);
+			
+		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer1",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer1",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer2",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer2",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer3",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer3",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		RegisterProperty<ResourceHandle>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4,
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
 		RegisterProperty<float>("TilingLayer0", &GASS::OgreTerrainPageComponent::GetTilingLayer0, &GASS::OgreTerrainPageComponent::SetTilingLayer0);
 		RegisterProperty<float>("TilingLayer1", &GASS::OgreTerrainPageComponent::GetTilingLayer1, &GASS::OgreTerrainPageComponent::SetTilingLayer1);
 		RegisterProperty<float>("TilingLayer2", &GASS::OgreTerrainPageComponent::GetTilingLayer2, &GASS::OgreTerrainPageComponent::SetTilingLayer2);

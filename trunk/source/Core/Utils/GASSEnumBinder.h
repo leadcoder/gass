@@ -165,7 +165,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options) 
+		static std::vector<std::string> GetStringEnumeration() 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
@@ -176,9 +176,6 @@ namespace GASS
 			}
 			return types;
 		}
-		static bool IsMultiValue() {return true;}
-
-		//virtual void Register() = 0;
 	protected:
 		void SetValueFromNames(const std::vector<std::string> &names) 
 		{
@@ -271,7 +268,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options) 
+		/*static std::vector<std::string> GetAllOptions(const BaseReflectionObject* object, const std::string &options) 
 		{
 			std::vector<std::string> types;
 			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
@@ -295,7 +292,7 @@ namespace GASS
 			return types;
 		}
 
-		static bool IsMultiValue() {return false;}
+		static bool IsMultiValue() {return false;}*/
 
 
 		static std::vector<CLASS> GetEnumeration() 
@@ -305,6 +302,18 @@ namespace GASS
 			while(iter != m_NameToEnumMap.end())
 			{
 				types.push_back(iter->second);
+				++iter;
+			}
+			return types;
+		}
+
+		static std::vector<std::string> GetStringEnumeration() 
+		{
+			std::vector<std::string> types;
+			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			while(iter != m_NameToEnumMap.end())
+			{
+				types.push_back(iter->first);
 				++iter;
 			}
 			return types;
@@ -355,7 +364,7 @@ namespace GASS
 
 }
 
-#define START_MULTI_ENUM_BINDER(ENUM,ENUM_BINDER) \
+#define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	class ENUM_BINDER : public MultiEnumBinder<ENUM,ENUM_BINDER>  \
 	{								\
 	public:							\
@@ -368,7 +377,7 @@ namespace GASS
 #define BIND_FLAG(ENUM) Bind(#ENUM, ENUM);
 
 
-#define END_MULTI_ENUM_BINDER(ENUM,ENUM_BINDER) \
+#define END_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	}							\
 	};								\
 	template<> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\

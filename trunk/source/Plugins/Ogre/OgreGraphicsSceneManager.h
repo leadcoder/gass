@@ -122,8 +122,11 @@ namespace GASS
 		void SetSceneManagerType(const std::string &name) {m_SceneManagerType = name;}
 		std::string GetSceneManagerType() const {return m_SceneManagerType;}
 
-		void SetSkyboxMaterial(const OgreSkyboxMaterial &name) {m_SkyboxMaterial = name; UpdateSkySettings();}
-		OgreSkyboxMaterial GetSkyboxMaterial() const {return m_SkyboxMaterial;}
+		void SetSkyboxMaterial(const OgreMaterial &name) {m_SkyboxMaterial = name; UpdateSkySettings();}
+		OgreMaterial GetSkyboxMaterial() const {return m_SkyboxMaterial;}
+
+		void SetUseSkybox(bool value) {m_UseSkybox = value; UpdateSkySettings();}
+		bool GetUseSkybox() const {return m_UseSkybox;}
 
 		//shadows
 		ShadowModeBinder GetShadowMode() const {return m_ShadowMode;}
@@ -163,7 +166,8 @@ namespace GASS
 		std::string m_SceneManagerType;
 
 		//Sky
-		OgreSkyboxMaterial m_SkyboxMaterial;
+		bool m_UseSkybox;
+		OgreMaterial m_SkyboxMaterial;
 
 		//Shadows
 		ShadowModeBinder m_ShadowMode;

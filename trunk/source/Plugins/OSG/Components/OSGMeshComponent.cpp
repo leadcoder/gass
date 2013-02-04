@@ -61,7 +61,8 @@ namespace GASS
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
 		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
-		RegisterEnumProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder);
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
 	}
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

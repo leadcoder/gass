@@ -37,12 +37,6 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	enum PropertyFlags
-	{
-		PF_VISIBLE  =   1 << 0,
-		PF_EDITABLE =   1 << 1,
-	};
-	
 
 	template <class type>
 	bool GetValueFromString(type &res,const std::string &s)
@@ -108,19 +102,14 @@ namespace GASS
 		typedef T (OwnerType::*GetterType)() const; // Getter function
 		typedef void (OwnerType::*SetterType)( T Value); // Setter function
 		typedef void (OwnerType::*SetterTypeConst)( const T &Value ); // Const setter function
-		typedef std::vector<T> (OwnerType::*RestrictionType)() const; // Restriction getter function
 		Property( const std::string &name, 
 			GetterType getter, 
 			SetterType setter, 
-			RestrictionType restriction_type = NULL, 
-			const std::string &annotation ="", 
-			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE)):	TypedProperty<T>(name),
+			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_Setter(setter),
 			m_SetterConst(NULL),
-			m_Restriction(restriction_type),
-			m_Annotation(annotation),
-			m_Flags(flags)
+			m_MetaData(meta_data)
 		{
 
 		}
@@ -128,15 +117,11 @@ namespace GASS
 		Property( const std::string &name, 
 			GetterType getter, 
 			SetterTypeConst setter, 
-			RestrictionType restriction_type = NULL,
-			const std::string &annotation ="", 
-			PropertyFlags flags = static_cast<PropertyFlags>(PF_VISIBLE | PF_EDITABLE)):	TypedProperty<T>(name),
+			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_SetterConst(setter),
 			m_Setter(NULL),
-			m_Restriction(restriction_type),
-			m_Annotation(annotation),
-			m_Flags(flags)
+			m_MetaData(meta_data)
 		{
 
 		}
@@ -146,30 +131,19 @@ namespace GASS
 			return (((OwnerType*)object)->*m_Getter)();
 		}
 
-		virtual bool HasRestrictions() const
+		virtual bool HasMetaData() const
 		{
-			return (m_Restriction != NULL);
+			return (m_MetaData != NULL);
 		}
 
-		virtual std::vector<T> GetRestrictions(const BaseReflectionObject* object) const
+		virtual PropertyMetaDataPtr GetMetaData() const
 		{
-			if(m_Restriction)
-				return (((OwnerType*)object)->*m_Restriction)();
-			std::vector<T> ret;
-			return ret;
-		}
-
-		virtual std::vector<std::string> GetRestrictionsAsString(const BaseReflectionObject* object) const
-		{
-			std::vector<std::string> string_restriction_vec;
-			std::vector<T> restriction_vec = GetRestrictions(object);
-			for(size_t i = 0; i < restriction_vec.size(); i++)
+			if(m_MetaData)
 			{
-				std::string option;
-				GetStringFromValue<T>(restriction_vec[i],option);
-				string_restriction_vec.push_back(option);
+				return m_MetaData;
 			}
-			return string_restriction_vec;
+			else
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "Property::GetPropertyMetaData");
 		}
 
 		virtual void SetValue( BaseReflectionObject* object, const T &value )
@@ -231,15 +205,11 @@ namespace GASS
 			T res = GetValue(object);
 			value = res;
 		}
-		std::string GetAnnotation() const {return m_Annotation;}
-		PropertyFlags  GetFlags() const {return m_Flags;}
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
 		SetterTypeConst	m_SetterConst;
-		RestrictionType	m_Restriction;
-		std::string m_Annotation;
-		PropertyFlags m_Flags;
+		PropertyMetaDataPtr m_MetaData;
 	};
 
 #define REG_ATTRIBUTE(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );

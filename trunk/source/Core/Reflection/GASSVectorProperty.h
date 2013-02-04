@@ -53,19 +53,21 @@ namespace GASS
 		typedef std::vector<T> (OwnerType::*GetterType)() const;				// Getter function
 		typedef void (OwnerType::*SetterType)( std::vector<T> Value);	// Setter function
 		typedef void (OwnerType::*SetterTypeConst)( const std::vector<T> &Value );	// cpnst setter function
-		VectorProperty(const std::string &name, GetterType getter, SetterType setter):
+		VectorProperty(const std::string &name, GetterType getter, SetterType setter,PropertyMetaDataPtr meta_data):
 		TypedProperty<std::vector<T> >(name),
 			m_Getter(getter),
 			m_Setter(setter),
-			m_SetterConst(NULL)
+			m_SetterConst(NULL),
+			m_MetaData(meta_data)
 		{
 
 		}
-		VectorProperty(const std::string &name, GetterType getter, SetterTypeConst setter):
+		VectorProperty(const std::string &name, GetterType getter, SetterTypeConst setter,PropertyMetaDataPtr meta_data):
 		TypedProperty<std::vector<T> >(name),
 			m_Getter(getter),
 			m_SetterConst(setter),
-			m_Setter(NULL)
+			m_Setter(NULL),
+			m_MetaData(meta_data)
 		{
 		}
 
@@ -209,12 +211,13 @@ namespace GASS
 			}
 			return res;
 		}
-		virtual bool HasRestrictions() const {return false;}
-		virtual std::vector<std::string> GetRestrictionsAsString(const BaseReflectionObject* object) const {std::vector<std::string> res; return res;}
+		virtual bool HasMetaData() const {return false;}
+		virtual PropertyMetaDataPtr GetMetaData() const {PropertyMetaDataPtr res; return res;}
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
 		SetterTypeConst	m_SetterConst;
+		PropertyMetaDataPtr m_MetaData;
 	};
 }
 #endif

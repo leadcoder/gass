@@ -28,12 +28,12 @@ This class is based on the Game Programming Gems 5 article
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSPropertyTypes.h"
+#include "Core/Reflection/GASSPropertyData.h"
 
 namespace GASS
 {
 	class ISerializer;
 	class BaseReflectionObject;
-
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -104,9 +104,8 @@ namespace GASS
         */
 		virtual void GetValue(const BaseReflectionObject* object, boost::any &value) const = 0;
 
-		virtual bool HasRestrictions() const = 0;
-
-		virtual std::vector<std::string> GetRestrictionsAsString(const BaseReflectionObject* object) const = 0;
+		virtual bool HasMetaData() const = 0;
+		virtual PropertyMetaDataPtr GetMetaData() const = 0;
 
 	protected :
 		std::string	m_Name;

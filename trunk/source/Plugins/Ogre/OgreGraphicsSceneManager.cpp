@@ -74,7 +74,8 @@ namespace GASS
 		m_FarShadowDistance(100),
 		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SceneManagerType("OctreeSceneManager"),
-		m_SceneMgr (NULL)
+		m_SceneMgr (NULL),
+		m_UseSkybox(false)
 	{
 
 	}
@@ -87,14 +88,17 @@ namespace GASS
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
-		RegisterEnumProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode);
+		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type",PF_VISIBLE,&FogModeBinder::GetStringEnumeration)));
 		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart);
 		RegisterProperty<float>( "FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd);
 		RegisterProperty<float>( "FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity);
 		RegisterProperty<ColorRGB>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor);
 		RegisterProperty<ColorRGB>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor);
 		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType);
-		RegisterEnumProperty<OgreSkyboxMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial);
+		RegisterProperty<bool>("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox);
+		RegisterProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial,
+				OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Skybox Material selection",PF_VISIBLE,"GASS_SKYBOX_MATERIALS")));
 		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing );
 		RegisterProperty<bool> ("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion,&GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion);
 		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance);
@@ -102,9 +106,12 @@ namespace GASS
 		RegisterProperty<float> ("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor,&GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor);
 		RegisterProperty<int>("NumShadowTextures",&GASS::OgreGraphicsSceneManager::GetNumShadowTextures,&GASS::OgreGraphicsSceneManager::SetNumShadowTextures);
 		RegisterProperty<int>("TextureShadowSize",&GASS::OgreGraphicsSceneManager::GetTextureShadowSize,&GASS::OgreGraphicsSceneManager::SetTextureShadowSize);
-		RegisterEnumProperty<TextureShadowProjectionBinder>("TextureShadowProjection",&GASS::OgreGraphicsSceneManager::GetTextureShadowProjection,&GASS::OgreGraphicsSceneManager::SetTextureShadowProjection);
-		RegisterEnumProperty<ShadowModeBinder>("ShadowMode",&GASS::OgreGraphicsSceneManager::GetShadowMode,&GASS::OgreGraphicsSceneManager::SetShadowMode);
-		RegisterEnumProperty<OgreMaterial>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial);
+		RegisterProperty<TextureShadowProjectionBinder>("TextureShadowProjection",&GASS::OgreGraphicsSceneManager::GetTextureShadowProjection,&GASS::OgreGraphicsSceneManager::SetTextureShadowProjection,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Texture Shadow Projection Type",PF_VISIBLE,&TextureShadowProjectionBinder::GetStringEnumeration)));
+		RegisterProperty<ShadowModeBinder>("ShadowMode",&GASS::OgreGraphicsSceneManager::GetShadowMode,&GASS::OgreGraphicsSceneManager::SetShadowMode,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Shadow Mode",PF_VISIBLE,&ShadowModeBinder::GetStringEnumeration)));
+		RegisterProperty<OgreMaterial>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial,
+			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Shadow Caster Material",PF_VISIBLE)));
 	}
 
 	void OgreGraphicsSceneManager::OnCreate()
@@ -196,10 +203,9 @@ namespace GASS
 	void OgreGraphicsSceneManager::UpdateSkySettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		if(m_SkyboxMaterial.Enabled() && m_SkyboxMaterial.GetName() != "")
-			m_SceneMgr->setSkyBox(true, m_SkyboxMaterial.GetName(), 50);
-		else
-			m_SceneMgr->setSkyBoxEnabled(false);
+		if(m_SkyboxMaterial.GetName() != "")
+			m_SceneMgr->setSkyBox(m_UseSkybox, m_SkyboxMaterial.GetName(), 50);
+		m_SceneMgr->setSkyBoxEnabled(m_UseSkybox);
 	}
 
 	void OgreGraphicsSceneManager::UpdateLightSettings()
@@ -207,7 +213,6 @@ namespace GASS
 		if(m_SceneMgr == NULL) return;
 		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b));
 	}
-
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
 	{

@@ -34,6 +34,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
+#include "Plugins/Ogre/OgreMaterial.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "GrassMaterial.h"
 #include "PGMessages.h"
@@ -82,8 +83,8 @@ namespace GASS
 		void SetDensityFactor(float factor);
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
-		GrassMaterial GetMaterial() const;
-		void SetMaterial(const GrassMaterial &name);
+		OgreMaterial GetMaterial() const;
+		void SetMaterial(const OgreMaterial &name);
 		FadeTechniqueBinder GetFadeTechnique() const;
 		void SetFadeTechnique(const FadeTechniqueBinder &tech);
 		RenderTechniqueBinder GetRenderTechnique() const;
@@ -114,7 +115,7 @@ protected:
 		std::string m_ColorMapFilename;
 		std::string m_DensityMapFilename;
 		
-		GrassMaterial m_Material;
+		OgreMaterial m_Material;
 		GrassLoader* m_GrassLoader;
 		
 		Vec2 m_MaxSize;

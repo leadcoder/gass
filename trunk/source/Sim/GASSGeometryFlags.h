@@ -84,7 +84,7 @@ namespace GASS
 	/**
 		Class used to make GeometryFlags reflection possible
 	*/
-	START_MULTI_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
+	START_FLAG_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
 		BIND_FLAG(GEOMETRY_FLAG_UNKOWN)
 		BIND_FLAG(GEOMETRY_FLAG_GROUND)
 		BIND_FLAG(GEOMETRY_FLAG_STATIC_OBJECT)
@@ -92,5 +92,5 @@ namespace GASS
 		BIND_FLAG(GEOMETRY_FLAG_TRANSPARENT_OBJECT)
 		BIND_FLAG(GEOMETRY_FLAG_EDITOR)
 		BIND_FLAG(GEOMETRY_FLAG_GIZMO)
-	END_MULTI_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
+	END_FLAG_ENUM_BINDER(GeometryFlags,GeometryFlagsBinder)
 }

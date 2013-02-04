@@ -68,9 +68,12 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
-		RegisterEnumProperty<GrassMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial);
-		RegisterEnumProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique);
-		RegisterEnumProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique);
+		RegisterProperty<OgreMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial,
+			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Grass Material",PF_VISIBLE,"GASS_VEGETATION_MATERIALS")));
+		RegisterProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("FadeTechnique",PF_VISIBLE,&FadeTechniqueBinder::GetStringEnumeration)));
+		RegisterProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("RenderTechnique",PF_VISIBLE,&RenderTechniqueBinder::GetStringEnumeration)));
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
 		RegisterProperty<Vec2>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize);
 		RegisterProperty<Vec2>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize);
@@ -136,12 +139,12 @@ namespace GASS
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}
 
-	GrassMaterial GrassLayerComponent::GetMaterial() const
+	OgreMaterial GrassLayerComponent::GetMaterial() const
 	{
 		return m_Material;
 	}
 
-	void GrassLayerComponent::SetMaterial(const GrassMaterial &material)
+	void GrassLayerComponent::SetMaterial(const OgreMaterial &material)
 	{
 		m_Material = material;
 		if(m_GrassLayer)
