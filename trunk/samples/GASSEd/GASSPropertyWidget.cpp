@@ -203,11 +203,11 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	const std::string prop_value = prop->GetValueAsString(obj.get());
 	QtVariantProperty* item = NULL;
 	GASSVariantProperty gp;
-	GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
+	//GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
 	
 	//if(prop->GetTypeID() == GASS::PROP_BOOL)
 	
-	if(enum_prop)
+	/*if(enum_prop)
 	{
 		std::vector<std::string> options = enum_prop->GetEnumList("");
 		bool multi_value = enum_prop->IsMultiValue();
@@ -240,65 +240,102 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				item->setValue(select);
 		}
 	}
-	else
+	else*/
 	{
-
-		if(*prop->GetTypeID() == typeid(bool))
+		bool visible = true;
+		bool editable = true;
+		std::string documentation = "No Doc";
+		if(prop->HasMetaData())
 		{
-			item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
-			item->setValue(prop_value.c_str());
-		}
-		else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
-		{
-			boost::any any_value;
-			prop->GetValue(obj.get(),any_value );
-			GASS::ColorRGB color = boost::any_cast<GASS::ColorRGB>(any_value);
-			item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
-			item->setValue(QColor(color.r*255,color.g*255,color.b*255));
-		}
-		else if(*prop->GetTypeID() == typeid(GASS::ResourceHandle))
-		{
-			if(ps)
+			GASS::BasePropertyMetaDataPtr meta_data = DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
+			GASS::PropertyFlags flags = meta_data->GetFlags();
+			editable = (flags & GASS::PF_EDITABLE);
+			visible  = (flags & GASS::PF_VISIBLE);
+			documentation = meta_data->GetAnnotation();
+			if(visible)
 			{
-				GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
-				GASS::ResourceGroupVector groups = rm->GetResourceGroups();
-				std::vector<std::string> values;
-				for(size_t i = 0; i < groups.size();i++)
+				if(DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
 				{
-					GASS::ResourceGroupPtr group = groups[i];
-					if(group->GetName() == ps->ResourceGroup)
-					{
-						GASS::ResourceVector res_vec;
-						group->GetResourcesByType(res_vec,ps->ResourceType);
-						for(size_t j = 0; j < res_vec.size();j++)
-						{
-							values.push_back(res_vec[j]->Name());
-						}
-					}
-				}
+					item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+					GASS::EnumerationPropertyMetaDataPtr enumeration_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
+					std::vector<std::string> enumeration = enumeration_data->GetEnumeration();
 
-				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
-				QStringList enumNames;
-				int select = -1;
-				for(size_t i = 0 ; i < values.size() ; i++)
-				{
-					gp.m_Options.push_back(values[i]);
-					enumNames << values[i].c_str();
-					if(prop_value == values[i])
-						select = (int) i;
+					QStringList enumNames;
+					int select = -1;
+					for(size_t i = 0 ; i < enumeration.size() ; i++)
+					{
+						gp.m_Options.push_back(enumeration[i]);
+						enumNames << enumeration[i].c_str();
+						if(prop_value == enumeration[i])
+							select = (int)i;
+					}
+					item->setAttribute(QLatin1String("enumNames"), enumNames);
+					if(select > -1)
+						item->setValue(select);
 				}
-				item->setAttribute(QLatin1String("enumNames"), enumNames);
-				if(select > -1)
-					item->setValue(select);
 			}
 		}
-		if(*prop->GetTypeID() == typeid(GASS::FilePath))
+
+		if(!item && visible)
 		{
-			//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
-			std::string filename = prop_value;
-			filename = GASS::Misc::Replace(filename,"/","\\");
-			item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
-			item->setValue(filename.c_str());
+
+			if(*prop->GetTypeID() == typeid(bool))
+			{
+				item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
+				item->setValue(prop_value.c_str());
+			}
+			else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
+			{
+				boost::any any_value;
+				prop->GetValue(obj.get(),any_value );
+				GASS::ColorRGB color = boost::any_cast<GASS::ColorRGB>(any_value);
+				item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
+				item->setValue(QColor(color.r*255,color.g*255,color.b*255));
+			}
+			/*else if(*prop->GetTypeID() == typeid(GASS::ResourceHandle))
+			{
+				if(ps)
+				{
+					GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+					GASS::ResourceGroupVector groups = rm->GetResourceGroups();
+					std::vector<std::string> values;
+					for(size_t i = 0; i < groups.size();i++)
+					{
+						GASS::ResourceGroupPtr group = groups[i];
+						if(group->GetName() == ps->ResourceGroup)
+						{
+							GASS::ResourceVector res_vec;
+							group->GetResourcesByType(res_vec,ps->ResourceType);
+							for(size_t j = 0; j < res_vec.size();j++)
+							{
+								values.push_back(res_vec[j]->Name());
+							}
+						}
+					}
+
+					item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+					QStringList enumNames;
+					int select = -1;
+					for(size_t i = 0 ; i < values.size() ; i++)
+					{
+						gp.m_Options.push_back(values[i]);
+						enumNames << values[i].c_str();
+						if(prop_value == values[i])
+							select = (int) i;
+					}
+					item->setAttribute(QLatin1String("enumNames"), enumNames);
+					if(select > -1)
+						item->setValue(select);
+				}
+			}*/
+			else if(*prop->GetTypeID() == typeid(GASS::FilePath))
+			{
+				//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
+				std::string filename = prop_value;
+				filename = GASS::Misc::Replace(filename,"/","\\");
+				item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
+				item->setValue(filename.c_str());
+			}
 		}
 	}
 
