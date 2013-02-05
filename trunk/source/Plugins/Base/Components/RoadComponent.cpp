@@ -82,7 +82,7 @@ namespace GASS
 		RegisterProperty<Vec2>("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale);
 		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts);
 		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain);
-		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
+		RegisterProperty<ResourceHandle>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
 	}
 
 	void RoadComponent::OnInitialize()
@@ -97,13 +97,13 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void RoadComponent::SetMaterial(const std::string &value)
+	void RoadComponent::SetMaterial(const ResourceHandle &value)
 	{
 		m_Material = value;
 		UpdateRoadMesh();
 	}
 
-	std::string RoadComponent::GetMaterial() const 
+	ResourceHandle RoadComponent::GetMaterial() const 
 	{
 		return m_Material;
 	}
@@ -124,7 +124,6 @@ namespace GASS
 			//create absolute positions
 			for(int i = 0 ; i < points.size(); i++)
 				points[i] = points[i] + origo;
-
 
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
@@ -172,7 +171,6 @@ namespace GASS
 			for(int i = 0 ; i < points.size(); i++)
 				points[i] = points[i] + origo;
 
-
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
@@ -207,7 +205,7 @@ namespace GASS
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 
-		mesh_data->Material = m_Material;
+		mesh_data->Material = m_Material.Name();
 		mesh_data->Type = TRIANGLE_LIST;
 
 		std::vector<Vec3> points = wpl->GetWaypoints();

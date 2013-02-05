@@ -133,7 +133,6 @@ namespace GASS
 
 				// Render just before overlays
 				m_MeshObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY - 1);
-
 				//Set up flags not to trigger ray cast detection
 				//m_MeshObject->setQueryFlags();
 				//setQueryFlagsNoHit(m_MeshObject);

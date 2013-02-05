@@ -61,8 +61,6 @@ namespace GASS
 		LogManager::getSingleton().stream() << "OgreResourceManager Completed";
 	}
 
-	
-
 	void OgreResourceManager::AddResourceGroup(ResourceGroupPtr group, bool load)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
@@ -99,14 +97,11 @@ namespace GASS
 			rsm->addResourceLocation(location->GetPath().GetFullPath(),"Zip", location->GetGroup()->GetName(),false);
 	}
 
-	
 	void OgreResourceManager::RemoveResourceLocation(ResourceLocationPtr location)
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 		rsm->removeResourceLocation(location->GetPath().GetFullPath(),location->GetGroup()->GetName());
 	}
-
-	
 }
 
 

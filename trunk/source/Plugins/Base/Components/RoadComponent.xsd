@@ -105,6 +105,7 @@
                 <xs:element name="Material">
                     <xs:annotation>
                         <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+						<xs:guiSettings visible="true" editable="true" resourceGroup="GASS_ROAD_MATERIAL"/>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute name="value" type="xs:string" use="required" />
