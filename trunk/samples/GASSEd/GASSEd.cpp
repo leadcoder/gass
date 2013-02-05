@@ -89,6 +89,7 @@ void GASSEd::Initialize(void* render_win_handle)
 	//load component schema
 	//GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath("../configuration/schema");
+	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->UpdateMetaDataForAllObjects();
 	OnNew();
 	//GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene());
 	//scene->Load("");

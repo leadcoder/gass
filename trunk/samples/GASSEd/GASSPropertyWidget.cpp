@@ -4,6 +4,7 @@
 #include "VariantFactory.h"
 #include "CustomTypes.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Reflection/GASSObjectMetaData.h"
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
 
@@ -97,9 +98,10 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 	if(!object)
 		return;
 	std::string class_name  = object->GetRTTI()->GetClassName();
-	const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
-	if(os && os->Visible) //we have settings
+	
+	if(object->HasMetaData() && object->GetMetaData()->GetFlags() & GASS::OF_VISIBLE)  
 	{
+		
 		m_Root = m_VariantManager->addProperty(QtVariantPropertyManager::groupTypeId(),QLatin1String(object->GetName().c_str()));
 		addProperty(m_Root);
 
@@ -107,8 +109,8 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 		for(size_t i = 0;  i < props.size(); i++)
 		{
 
-			const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
-			QtVariantProperty* grid_prop = CreateProp(object,props[i],ps);
+			//const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
+			QtVariantProperty* grid_prop = CreateProp(object,props[i]);
 			if(grid_prop)
 				m_Root->addSubProperty(grid_prop);
 		}
@@ -118,8 +120,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 		{
 			GASS::BaseComponentPtr comp = STATIC_PTR_CAST<GASS::BaseComponent>(comp_iter.getNext());
 			std::string class_name = comp->GetRTTI()->GetClassName();
-			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
-			if(os && os->Visible) //we have settings!
+			if(comp->HasMetaData() &&  comp->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
 			{
 				//os->GetProperty()->GUIControlType
 				QtVariantProperty* comp_root  = m_VariantManager->addProperty(QtVariantPropertyManager::groupTypeId(),QLatin1String(class_name.c_str()));
@@ -130,8 +131,8 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 				GASS::PropertyVector props = comp->GetProperties();
 				for(size_t i = 0;  i < props.size(); i++)
 				{
-					const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
-					QtVariantProperty* grid_prop = CreateProp(comp,props[i],ps);
+					//const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
+					QtVariantProperty* grid_prop = CreateProp(comp,props[i]);//,ps);
 					if(grid_prop)
 						comp_root->addSubProperty(grid_prop);
 				}
@@ -154,16 +155,16 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 	if(!scene)
 		return;
 	std::string class_name  = scene->GetRTTI()->GetClassName();
-	const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
-	if(os && os->Visible) //we have settings
+	//const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
+	if(scene->HasMetaData() && scene->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings
 	{
 		m_Root = m_VariantManager->addProperty(QtVariantPropertyManager::groupTypeId(),QLatin1String(scene->GetName().c_str()));
 		addProperty(m_Root);
 		GASS::PropertyVector props = scene->GetProperties();
 		for(size_t i = 0;  i < props.size(); i++)
 		{
-			const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
-			QtVariantProperty* grid_prop = CreateProp(scene,props[i],ps);
+			//const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
+			QtVariantProperty* grid_prop = CreateProp(scene,props[i]);//,ps);
 			if(grid_prop)
 				m_Root->addSubProperty(grid_prop);
 		}
@@ -174,16 +175,16 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 			GASS::SceneManagerPtr sm = iter.getNext();
 			GASS::BaseReflectionObjectPtr obj = DYNAMIC_PTR_CAST<GASS::BaseReflectionObject>(sm);
 			std::string class_name = obj->GetRTTI()->GetClassName();
-			const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
-			if(os && os->Visible) //we have settings!
+			//const GASS::ObjectSettings* os = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->GetObjectSettings(class_name);
+			if(obj->HasMetaData() && obj->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
 			{
 				QtVariantProperty* sm_root  = m_VariantManager->addProperty(QtVariantPropertyManager::groupTypeId(),QLatin1String(class_name.c_str()));
 				m_Root->addSubProperty(sm_root);
 				GASS::PropertyVector props = obj->GetProperties();
 				for(size_t i = 0;  i < props.size(); i++)
 				{
-					const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
-					QtVariantProperty* grid_prop = CreateProp(obj,props[i],ps);
+					//const GASS::PropertySettings* ps = os->GetProperty(props[i]->GetName());
+					QtVariantProperty* grid_prop = CreateProp(obj,props[i]);//,ps);
 					if(grid_prop)
 						sm_root->addSubProperty(grid_prop);
 				}
@@ -195,90 +196,45 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 
 
 
-QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr obj, GASS::IProperty* prop,const GASS::PropertySettings *ps)
+QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr obj, GASS::IProperty* prop)//const GASS::PropertySettings *ps)
 {
-	if(ps && !ps->Visible)
-		return NULL;
+	//if(ps && !ps->Visible)
+	//	return NULL;
 	const std::string prop_name = prop->GetName();
 	const std::string prop_value = prop->GetValueAsString(obj.get());
 	QtVariantProperty* item = NULL;
 	GASSVariantProperty gp;
-	//GASS::IEnumProperty* enum_prop = dynamic_cast<GASS::IEnumProperty*>(prop);
-	
-	//if(prop->GetTypeID() == GASS::PROP_BOOL)
-	
-	/*if(enum_prop)
+	if(prop->HasMetaData())
 	{
-		std::vector<std::string> options = enum_prop->GetEnumList("");
-		bool multi_value = enum_prop->IsMultiValue();
-
-		if(multi_value)
-		{
-			//CGASSMultiSelectionProperty *ms_prop = new CGASSMultiSelectionProperty(obj,prop, _T(ps->Documentation.c_str()));
-			//ms_prop->AllowEdit(false);
-			for(size_t i = 0 ; i < options.size() ; i++)
-			{
-				//ms_prop->AddItem(options[i]);
-			}
-			//grid_prop = ms_prop;
-		}
-		else
+		GASS::BasePropertyMetaDataPtr meta_data = DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
+		GASS::PropertyFlags flags = meta_data->GetFlags();
+		bool editable = (flags & GASS::PF_EDITABLE);
+		bool visible  = (flags & GASS::PF_VISIBLE);
+		std::string documentation = meta_data->GetAnnotation();
+		if(!visible)
+			return NULL;
+		
+		if(DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
 		{
 			item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+			GASS::EnumerationPropertyMetaDataPtr enumeration_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
+			std::vector<std::string> enumeration = enumeration_data->GetEnumeration();
+
 			QStringList enumNames;
 			int select = -1;
-			for(size_t i = 0 ; i < options.size() ; i++)
+			for(size_t i = 0 ; i < enumeration.size() ; i++)
 			{
-				gp.m_Options.push_back(options[i]);
-				enumNames << options[i].c_str();
-				if(prop_value == options[i])
+				gp.m_Options.push_back(enumeration[i]);
+				enumNames << enumeration[i].c_str();
+				if(prop_value == enumeration[i])
 					select = (int)i;
 			}
-
 			item->setAttribute(QLatin1String("enumNames"), enumNames);
 			if(select > -1)
 				item->setValue(select);
 		}
-	}
-	else*/
-	{
-		bool visible = true;
-		bool editable = true;
-		std::string documentation = "No Doc";
-		if(prop->HasMetaData())
+		else if(!item)
 		{
-			GASS::BasePropertyMetaDataPtr meta_data = DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
-			GASS::PropertyFlags flags = meta_data->GetFlags();
-			editable = (flags & GASS::PF_EDITABLE);
-			visible  = (flags & GASS::PF_VISIBLE);
-			documentation = meta_data->GetAnnotation();
-			if(visible)
-			{
-				if(DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
-				{
-					item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
-					GASS::EnumerationPropertyMetaDataPtr enumeration_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
-					std::vector<std::string> enumeration = enumeration_data->GetEnumeration();
-
-					QStringList enumNames;
-					int select = -1;
-					for(size_t i = 0 ; i < enumeration.size() ; i++)
-					{
-						gp.m_Options.push_back(enumeration[i]);
-						enumNames << enumeration[i].c_str();
-						if(prop_value == enumeration[i])
-							select = (int)i;
-					}
-					item->setAttribute(QLatin1String("enumNames"), enumNames);
-					if(select > -1)
-						item->setValue(select);
-				}
-			}
-		}
-
-		if(!item && visible)
-		{
-
 			if(*prop->GetTypeID() == typeid(bool))
 			{
 				item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
@@ -292,42 +248,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
 				item->setValue(QColor(color.r*255,color.g*255,color.b*255));
 			}
-			/*else if(*prop->GetTypeID() == typeid(GASS::ResourceHandle))
-			{
-				if(ps)
-				{
-					GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
-					GASS::ResourceGroupVector groups = rm->GetResourceGroups();
-					std::vector<std::string> values;
-					for(size_t i = 0; i < groups.size();i++)
-					{
-						GASS::ResourceGroupPtr group = groups[i];
-						if(group->GetName() == ps->ResourceGroup)
-						{
-							GASS::ResourceVector res_vec;
-							group->GetResourcesByType(res_vec,ps->ResourceType);
-							for(size_t j = 0; j < res_vec.size();j++)
-							{
-								values.push_back(res_vec[j]->Name());
-							}
-						}
-					}
-
-					item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
-					QStringList enumNames;
-					int select = -1;
-					for(size_t i = 0 ; i < values.size() ; i++)
-					{
-						gp.m_Options.push_back(values[i]);
-						enumNames << values[i].c_str();
-						if(prop_value == values[i])
-							select = (int) i;
-					}
-					item->setAttribute(QLatin1String("enumNames"), enumNames);
-					if(select > -1)
-						item->setValue(select);
-				}
-			}*/
 			else if(*prop->GetTypeID() == typeid(GASS::FilePath))
 			{
 				//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
@@ -338,32 +258,13 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			}
 		}
 	}
-
-	if(item == NULL && ps)
-	{
-		//first check if specific control type is present
-		switch(ps->GUIControlType)
-		{
-		case GASS::CT_FILE_DIALOG:
-			{
-				std::string filename = prop->GetValueAsString(obj.get());
-				filename = GASS::Misc::Replace(filename,"/","\\");
-				item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
-				item->setValue(filename.c_str());
-				//item = new CGASSFileProperty(obj,prop, filename.c_str(), ps->FileControlSettings.c_str(),_T(ps->Documentation.c_str()));
-			}
-			break;
-		}
-	}
-	if(item == NULL)
+/*	else if(item == NULL)
 	{
 		item = m_VariantManager->addProperty(QVariant::String, prop_name.c_str());
 		item->setValue(prop_value.c_str());
-	}
-	
+	}*/
 	gp.SetGASSData(obj,prop);
 	m_PropMap[item] = gp;
-
 	return item;
 }
 
