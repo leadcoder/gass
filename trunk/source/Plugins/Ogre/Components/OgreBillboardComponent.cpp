@@ -108,6 +108,7 @@ namespace GASS
 	void OgreBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Billboard", OF_VISIBLE)));
 		
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 

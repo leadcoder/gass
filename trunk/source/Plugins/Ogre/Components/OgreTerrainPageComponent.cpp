@@ -68,12 +68,13 @@ namespace GASS
 	void OgreTerrainPageComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainPageComponent",new Creator<OgreTerrainPageComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("OgreTerrainPageComponent", OF_VISIBLE)));
 		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap);
 		RegisterProperty<ResourceHandle>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap);
 		RegisterProperty<ResourceHandle>("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask);
 			
 		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer texture map for layer 0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
 		RegisterProperty<ResourceHandle>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0,
 			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
 		RegisterProperty<ResourceHandle>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1,

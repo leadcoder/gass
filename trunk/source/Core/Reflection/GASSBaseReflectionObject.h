@@ -90,6 +90,10 @@ namespace GASS
 		Get all properties from this object
 		*/
 		PropertyVector GetProperties() const;
+
+		bool HasMetaData() const;
+		ObjectMetaDataPtr GetMetaData() const;
+	private:
 	};
 
 }

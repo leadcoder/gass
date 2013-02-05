@@ -66,11 +66,8 @@ namespace GASS
 		friend std::istream& operator >> (std::istream& is, FilePath& path)
 		{
 			is.unsetf(std::ios::skipws);
-			//std::string value;
 			std::string line;
 			std::getline (is,line);
-
-			//is >> value;
 			path.SetPath(line);
 			return is;
 		}

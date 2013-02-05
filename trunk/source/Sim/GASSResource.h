@@ -43,7 +43,6 @@ namespace GASS
 		ResourceLocationPtr Location() const { return m_Location;}
 		std::string Type() const { return m_ResourceType;}
 		FilePath Path() { return m_ResourcePath;}
-		
 	private:
 		FilePath m_ResourcePath;
 		ResourceLocationPtr m_Location;

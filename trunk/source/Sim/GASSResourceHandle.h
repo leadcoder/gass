@@ -38,15 +38,17 @@ namespace GASS
 		bool Valid() const {return (m_ResourceName != "");}
 		friend std::ostream& operator << (std::ostream& os, const ResourceHandle& res)
 		{
-			os << res.Name(); 
+			os.unsetf(std::ios::skipws);
+			os << res.Name();
 			return os;
 		}
-		friend std::istream& operator >> (std::istream& os, ResourceHandle& res)
+		friend std::istream& operator >> (std::istream& is, ResourceHandle& res)
 		{
+			is.unsetf(std::ios::skipws);
 			std::string name;
-			os >> name;
+			std::getline (is,name);
 			res.SetName(name);
-			return os;
+			return is;
 		}
 	private:
 		std::string m_ResourceName;

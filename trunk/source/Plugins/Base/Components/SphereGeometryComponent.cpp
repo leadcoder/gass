@@ -49,6 +49,7 @@ namespace GASS
 	void SphereGeometryComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("SphereGeometryComponent",new GASS::Creator<SphereGeometryComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("SphereGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
 	}
 

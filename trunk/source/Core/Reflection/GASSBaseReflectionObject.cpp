@@ -251,4 +251,17 @@ namespace GASS
 		}
 		return props;
 	}
+
+
+	bool BaseReflectionObject::HasMetaData() const
+	{
+		RTTI* pRTTI = GetRTTI();
+		return pRTTI->HasMetaData();
+	}
+
+	ObjectMetaDataPtr BaseReflectionObject::GetMetaData() const
+	{
+		RTTI* pRTTI = GetRTTI();
+		return pRTTI->GetMetaData();
+	}
 }

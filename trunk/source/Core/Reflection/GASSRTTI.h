@@ -29,6 +29,7 @@ This class is based on the Game Programming Gems 5 article
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSIProperty.h"
+#include "Core/Reflection/GASSObjectMetaData.h"
 
 namespace GASS
 {
@@ -154,12 +155,34 @@ namespace GASS
 		{
 			return &m_Properties;
 		}
+
+		bool HasMetaData() const
+		{
+			return (m_MetaData != NULL);
+			
+		}
+		
+		ObjectMetaDataPtr GetMetaData() const
+		{
+			if(m_MetaData)
+			{
+				return m_MetaData;
+			}
+			else
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "RTTI::GetMetaData");
+		}
+
+		void SetMetaData(ObjectMetaDataPtr data)
+		{
+			m_MetaData = data;
+		}
+
 	private:
 		std::string m_ClassName;		// Class name
 		RTTI* m_BaseRTTI;			// Base class RTTI structure
 		//ClassFactoryFunc m_ObjectFactory;	 // Factory function
 		std::list<IProperty*> m_Properties;	 // Property list
-
+		ObjectMetaDataPtr m_MetaData;
 	};
 }
 #endif

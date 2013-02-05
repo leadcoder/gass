@@ -89,7 +89,9 @@ namespace GASS
 		void LoadAllFromPath(const std::string filepath);
 		void Load(const std::string filename);
 		const ObjectSettings*  GetObjectSettings(const std::string &name) const;
+		void UpdateMetaDataForAllObjects();
 	protected:
+		void UpdateObjectMetaData(const std::string &classname, BaseReflectionObjectPtr object);
 		PropertySettings LoadProperty(TiXmlElement* elem);
 		bool LoadBoolAttribute(TiXmlElement* elem, const std::string &name);
 		std::map<std::string, ObjectSettings> m_Settings;

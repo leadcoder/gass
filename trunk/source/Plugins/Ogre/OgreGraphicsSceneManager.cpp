@@ -87,7 +87,11 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
+
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
+		
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
+
 		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type",PF_VISIBLE,&FogModeBinder::GetStringEnumeration)));
 		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart);

@@ -62,10 +62,10 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, ColorRGB& v)
+		friend std::istream& operator >> (std::istream& is, ColorRGB& v)
 		{
-			os >> v.r >>  v.g >>  v.b;
-			return os;
+			is >> v.r >>  v.g >>  v.b;
+			return is;
 		}
 	};
 }

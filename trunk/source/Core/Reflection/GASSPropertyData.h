@@ -35,12 +35,16 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	enum PropertyFlags
+	enum PropertyFlags 
 	{
+		PF_RESET  = 0,
 		PF_VISIBLE  =   1 << 0,
 		PF_EDITABLE =   1 << 1,
 	};
 
+
+	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
+	{return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));}
 
 	class IPropertyMetaData
 	{
@@ -56,7 +60,9 @@ namespace GASS
 	public:
 		BasePropertyMetaData(const std::string &annotation, PropertyFlags flags): m_Annotation(annotation), m_Flags(flags) {}
 		std::string GetAnnotation() const {return m_Annotation;}
+		void SetAnnotation(const std::string &value) {m_Annotation= value;}
 		PropertyFlags GetFlags() const {return m_Flags;}
+		void SetFlags(PropertyFlags value) {m_Flags= value;}
 	private:
 		std::string m_Annotation;
 		PropertyFlags m_Flags;
@@ -79,22 +85,20 @@ namespace GASS
 	typedef SPTR<EnumerationPropertyMetaData> EnumerationPropertyMetaDataPtr;
 	
 
-	/*class StringEnumerationPropertyMetaData : public BasePropertyMetaData
+	class StaticEnumerationPropertyMetaData : public EnumerationPropertyMetaData
 	{
 	public:
-		StringEnumerationPropertyMetaData(const std::string &annotation, PropertyFlags flags,const std::vector<std::string> enumeration,bool multi_select = false): BasePropertyMetaData(annotation,flags) , 
-			m_Enumeration(enumeration),
-			m_MultiSelect(multi_select)
+		StaticEnumerationPropertyMetaData(const std::string &annotation, PropertyFlags flags,const std::vector<std::string> enumeration,bool multi_select = false): EnumerationPropertyMetaData(annotation,flags,multi_select) , 
+			m_Enumeration(enumeration)
 		{
 
 		}
 		virtual std::vector<std::string> GetEnumeration() const {return m_Enumeration;}
-		bool GetMultiSelect() const {return m_MultiSelect;}
 	private:
 		std::vector<std::string> m_Enumeration;
-		bool m_MultiSelect;
 	};
-	typedef SPTR<StringEnumerationPropertyMetaData> StringEnumerationPropertyMetaDataPtr;*/
+	typedef SPTR<StaticEnumerationPropertyMetaData> StaticEnumerationPropertyMetaDataPtr;
+
 
 	typedef std::vector<std::string> EnumerationFunc(void);
 	class EnumerationProxyPropertyMetaData : public EnumerationPropertyMetaData

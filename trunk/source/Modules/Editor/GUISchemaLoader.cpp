@@ -265,6 +265,59 @@ namespace GASS
 			return &iter->second;
 		return NULL;
 	}
+
+	void GUISchemaLoader::UpdateMetaDataForAllObjects()
+	{
+		std::vector<std::string> names= ComponentContainerFactory::GetPtr()->GetFactoryNames();
+		for(size_t i = 0 ; i < names.size(); i++)
+		{
+			ComponentContainerPtr container (ComponentContainerFactory::Get().Create(names[i]));
+			BaseReflectionObjectPtr bro = DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
+			UpdateObjectMetaData(names[i],bro);
+		}
+
+		names = ComponentFactory::GetPtr()->GetFactoryNames();
+		for(size_t i = 0 ; i < names.size(); i++)
+		{
+			ComponentPtr comp (ComponentFactory::Get().Create(names[i]));
+			BaseReflectionObjectPtr bro = DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
+			std::string class_name = bro->GetRTTI()->GetClassName();
+			if(bro)
+				UpdateObjectMetaData(class_name,bro);
+		}
+	}
+
+	void GUISchemaLoader::UpdateObjectMetaData(const std::string &classname, BaseReflectionObjectPtr object)
+	{
+		const ObjectSettings* settings =   GetObjectSettings(classname);
+		if(settings)
+		{
+			GASS::PropertyVector props = object->GetProperties();
+			for(size_t i = 0;  i < props.size(); i++)
+			{
+				const std::string prop_name = props[i]->GetName();
+				const PropertySettings* prop = settings->GetProperty(prop_name);
+				if(prop)
+				{
+					if(props[i]->HasMetaData())
+					{
+						BasePropertyMetaDataPtr data = DYNAMIC_PTR_CAST<BasePropertyMetaData>(props[i]->GetMetaData());
+						data->SetAnnotation(settings->Documentation);
+						int flags = 0;
+						if(prop->Visible)
+							flags = flags | PF_VISIBLE;
+						if(prop->Editable)
+							flags = flags | PF_EDITABLE;
+						data->SetFlags(static_cast<PropertyFlags>(flags));
+					}
+					else //add meta data?
+					{
+
+					}
+				}
+			}
+		}
+	}
 }
 
 

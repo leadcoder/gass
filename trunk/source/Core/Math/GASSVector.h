@@ -304,10 +304,10 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, Vec3& vec)
+		friend std::istream& operator >> (std::istream& is, Vec3& vec)
 		{
-			os >> vec.x >>  vec.y >> vec.z;
-			return os;
+			is >> vec.x >>  vec.y >> vec.z;
+			return is;
 		}
 
 		void FastNormalize();
@@ -442,10 +442,10 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, Vec4& vec)
+		friend std::istream& operator >> (std::istream& is, Vec4& vec)
 		{
-			os >> vec.x >> vec.y >> vec.z >> vec.w;
-			return os;
+			is >> vec.x >> vec.y >> vec.z >> vec.w;
+			return is;
 		}
 	};
 }
