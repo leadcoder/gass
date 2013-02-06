@@ -68,13 +68,18 @@ namespace GASS
 		
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("CameraComponent", OF_VISIBLE)));
 
-		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance);
-		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance);
-		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov);
-		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho);
-		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog);
+		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clip plane Distance",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near clipplane distance",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Field Of View (degress)",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Orthographic projection (otherwise Perpective)",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Let far clip plane be locked to end fog distance",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode,	
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode for this camera",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
 		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 	}
 

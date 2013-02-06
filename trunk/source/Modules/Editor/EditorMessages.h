@@ -151,16 +151,16 @@ namespace GASS
 	};
 	typedef SPTR<SceneChangedEvent> SceneChangedEventPtr;
 		
-	class ObjectChangedMessage : public BaseMessage
+	class SceneObjectChangedEvent : public SceneEventMessage
 	{
 	public:
-		ObjectChangedMessage(BaseReflectionObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Object(obj){}
-		  BaseReflectionObjectPtr GetObject() const {return m_Object;}
+		SceneObjectChangedEvent(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
+		  SceneEventMessage(sender_id , delay), m_Object(obj){}
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
 	private:
-		BaseReflectionObjectPtr m_Object;
+		SceneObjectPtr m_Object;
 	};
-	typedef SPTR<ObjectChangedMessage> ObjectChangedMessagePtr;
+	typedef SPTR<SceneObjectChangedEvent> SceneObjectChangedEventPtr;
 
 	class ObjectAttributeChangedEvent : public SceneEventMessage
 	{

@@ -60,12 +60,11 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration() const;
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
 	private:
 		std::string m_ResourceGroup;
 		std::string m_ResourceType;
 	};
 	typedef SPTR<FileResourcePropertyMetaData> FileResourcePropertyMetaDataPtr;
-
 }
 #endif 

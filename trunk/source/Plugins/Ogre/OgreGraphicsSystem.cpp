@@ -72,6 +72,24 @@ namespace GASS
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
+
+
+		//we need to register resource types here, if we wait to ::Init() ResourceManager is already initialized
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		ResourceType mesh_type;
+		mesh_type.Name = "MESH";
+		mesh_type.Extensions.push_back("mesh");
+		rm->RegisterResourceType(mesh_type);
+
+		ResourceType texture_type;
+		texture_type.Name = "TEXTURE";
+		texture_type.Extensions.push_back("dds");
+		texture_type.Extensions.push_back("png");
+		texture_type.Extensions.push_back("bmp");
+		texture_type.Extensions.push_back("tga");
+		texture_type.Extensions.push_back("gif");
+		texture_type.Extensions.push_back("jpg");
+		rm->RegisterResourceType(texture_type);
 	}
 
 	void OgreGraphicsSystem::Init()
@@ -91,21 +109,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
 
 		
-		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		ResourceType mesh_type;
-		mesh_type.Name = "MESH";
-		mesh_type.Extensions.push_back("mesh");
-		rm->RegisterResourceType(mesh_type);
-
-		ResourceType texture_type;
-		texture_type.Name = "TEXTURE";
-		texture_type.Extensions.push_back("dds");
-		texture_type.Extensions.push_back("png");
-		texture_type.Extensions.push_back("bmp");
-		texture_type.Extensions.push_back("tga");
-		texture_type.Extensions.push_back("gif");
-		texture_type.Extensions.push_back("jpg");
-		rm->RegisterResourceType(texture_type);
+		
 
 		//Load plugins
 		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");

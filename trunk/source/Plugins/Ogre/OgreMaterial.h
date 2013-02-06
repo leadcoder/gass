@@ -57,7 +57,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration() const 
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const 
 		{
 			std::vector<std::string> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();

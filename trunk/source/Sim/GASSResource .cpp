@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	std::vector<std::string> FileResourcePropertyMetaData::GetEnumeration() const
+	std::vector<std::string> FileResourcePropertyMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
 	{
 		std::vector<std::string> content;
 		GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
@@ -38,7 +38,7 @@ namespace GASS
 		for(size_t i = 0; i < groups.size();i++)
 		{
 			GASS::ResourceGroupPtr group = groups[i];
-			if(group->GetName() == m_ResourceGroup)
+			if(m_ResourceGroup == "" || group->GetName() == m_ResourceGroup)
 			{
 				GASS::ResourceVector res_vec;
 				group->GetResourcesByType(res_vec,m_ResourceType);

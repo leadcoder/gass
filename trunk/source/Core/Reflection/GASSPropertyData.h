@@ -41,7 +41,8 @@ namespace GASS
 		PF_VISIBLE  =   1 << 0,
 		PF_EDITABLE =   1 << 1,
 	};
-
+	class BaseReflectionObject;
+	typedef SPTR<BaseReflectionObject> BaseReflectionObjectPtr;
 
 	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
 	{return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));}
@@ -77,7 +78,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration() const = 0;
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const = 0;
 		virtual bool GetMultiSelect() const {return m_MultiSelect;}
 	private:
 		bool m_MultiSelect;
@@ -93,7 +94,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration() const {return m_Enumeration;}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_Enumeration;}
 	private:
 		std::vector<std::string> m_Enumeration;
 	};
@@ -110,7 +111,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration() const {return m_EnumFunc();}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc();}
 		bool GetMultiSelect() const {return m_MultiSelect;}
 	private:
 		bool m_MultiSelect;

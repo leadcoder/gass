@@ -76,7 +76,7 @@ namespace GASS
 	{
 		m_Lock = value;
 		SceneObjectPtr obj = GetSceneObject();
-		if(obj)
+		if(obj && m_EditorSceneManager)
 		{
 			if(m_Lock)
 				m_EditorSceneManager->LockObject(obj);
@@ -98,7 +98,7 @@ namespace GASS
 	{
 		m_Visible = value;
 		SceneObjectPtr obj = GetSceneObject();
-		if(obj)
+		if(obj && m_EditorSceneManager)
 		{
 			if(m_Visible)
 				m_EditorSceneManager->UnhideObject(obj);
