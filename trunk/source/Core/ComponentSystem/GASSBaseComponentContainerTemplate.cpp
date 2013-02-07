@@ -522,8 +522,8 @@ namespace GASS
 					}
 				}
 			}
-			const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-			BaseComponentContainerTemplatePtr new_child = DYNAMIC_PTR_CAST<BaseComponentContainerTemplate>(ComponentContainerFactory::Get().Create(factory_class_name));
+			const std::string factory_class_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+			BaseComponentContainerTemplatePtr new_child = DYNAMIC_PTR_CAST<BaseComponentContainerTemplate>(ComponentContainerTemplateFactory::Get().Create(factory_class_name));
 			if(!new_child)
 			{
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + factory_class_name,"BaseComponentContainerTemplate::Serialize");
