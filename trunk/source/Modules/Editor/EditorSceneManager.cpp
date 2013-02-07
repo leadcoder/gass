@@ -253,7 +253,10 @@ namespace GASS
 			if(gc)
 			{
 				object_size = gc->GetBoundingSphere().m_Radius*4;
-				object_pos = (gc->GetBoundingBox().m_Min + gc->GetBoundingBox().m_Max)*0.5;
+				//object_pos = (gc->GetBoundingBox().m_Min + gc->GetBoundingBox().m_Max)*0.5;
+				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+				if(lc)
+					object_pos = lc->GetWorldPosition();
 
 				//LogManager::getSingleton().stream() << "zoom box min" << gc->GetBoundingBox().m_Min;	
 				//LogManager::getSingleton().stream() << "zoom box max" << gc->GetBoundingBox().m_Max;	

@@ -81,10 +81,10 @@ namespace GASS
 
 	
 
-	class ObjectDroppedEvent : public SystemEventMessage
+	class SceneObjectTemplateDroppedEvent : public SystemEventMessage
 	{
 	public:
-		ObjectDroppedEvent(const std::string &obj_name, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
+		SceneObjectTemplateDroppedEvent(const std::string &obj_name, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
 		  SystemEventMessage(sender_id , delay), m_ObjectName(obj_name), m_ScreenPosition(screen_pos) {}
 		  std::string GetObjectName() const {return m_ObjectName;}
 		  Vec2 GetScreenPosition() const {return m_ScreenPosition;}
@@ -92,7 +92,7 @@ namespace GASS
 		std::string m_ObjectName;
 		Vec2 m_ScreenPosition;
 	};
-	typedef SPTR<ObjectDroppedEvent> SceneObjectTemplateDroppedEvent;
+	typedef SPTR<SceneObjectTemplateDroppedEvent> SceneObjectTemplateDroppedEventPtr;
 
 
 	
