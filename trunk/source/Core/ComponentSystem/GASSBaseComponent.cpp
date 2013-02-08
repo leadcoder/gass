@@ -102,14 +102,14 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"BaseComponent::CreateCopy");
 		}
 		//BaseComponentPtr new_comp = STATIC_PTR_CAST<BaseComponent>(CreateInstance());
-		BaseReflectionObject::SetProperties(new_comp);
+		BaseReflectionObject::CopyPropertiesTo(new_comp);
 		return new_comp;
 	}
 
-	void BaseComponent::AssignFrom(ComponentPtr obj)
+	void BaseComponent::CopyPropertiesTo(ComponentPtr dest_comp)
 	{
-		BaseComponentPtr  base_comp = STATIC_PTR_CAST<BaseComponent>(obj);
-		BaseReflectionObject::SetProperties(base_comp);
+		BaseComponentPtr  dest_base_comp = STATIC_PTR_CAST<BaseComponent>(dest_comp);
+		BaseReflectionObject::CopyPropertiesTo(dest_base_comp);
 	}	
 	
 }

@@ -219,6 +219,14 @@ namespace GASS
 		void LoadFromFile(const std::string &filename);
 		void SaveToFile(const std::string &filename);
 		size_t GetQueuedMessages() const;
+
+		/**Create a copy of this scene object include all components and optional ascendants. 
+			The copy will not be initialized or added to the scene, its up to the user to add 
+			this copy new host SceneObject. The copy will only reflect registred properties.
+		   
+		   @copy_children Indicates if child SceneObjects also should be copied
+		*/
+		SceneObjectPtr CreateCopy(bool copy_children_recursively = true) const;
 	protected:
 
 		void InitializePointers();

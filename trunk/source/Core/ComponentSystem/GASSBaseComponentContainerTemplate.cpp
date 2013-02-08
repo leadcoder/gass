@@ -260,7 +260,7 @@ namespace GASS
 						ComponentTemplatePtr template_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if(template_comp)
 						{
-							template_comp->AssignFrom(target_comp);
+							template_comp->CopyPropertiesTo(target_comp);
 						}
 					}
 					else
@@ -354,7 +354,7 @@ namespace GASS
 				ComponentPtr target_comp (cc->GetComponent(name));
 				if(target_comp)
 				{
-					template_comp->AssignFrom(target_comp);
+					template_comp->CopyPropertiesTo(target_comp);
 				}
 				else
 				{
@@ -381,7 +381,7 @@ namespace GASS
 				BaseReflectionObjectPtr ref_obj = DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
 				//copy container attributes to new object
 				if(ref_obj)
-					BaseReflectionObject::SetProperties(ref_obj);
+					BaseReflectionObject::CopyPropertiesTo(ref_obj);
 		
 				if(manager->GetAddObjectIDToName())
 					new_object->SetName(CreateUniqueName(manager));
@@ -458,7 +458,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 				"Failed to create instance " + type,"BaseComponentContainerTemplate::CreateComponentContainer");
 		BaseReflectionObjectPtr ref_obj = DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
-		BaseReflectionObject::SetProperties(ref_obj);
+		BaseReflectionObject::CopyPropertiesTo(ref_obj);
 
 		ComponentVector::const_iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
@@ -489,7 +489,7 @@ namespace GASS
 		}
 
 		BaseReflectionObjectPtr ref_obj = DYNAMIC_PTR_CAST<BaseReflectionObject>(cc);
-		ref_obj->SetProperties(shared_from_this());
+		ref_obj->CopyPropertiesTo(shared_from_this());
 
 		IComponentContainer::ComponentIterator comp_iter = cc->GetComponents();
 		while(comp_iter.hasMoreElements())
@@ -526,7 +526,7 @@ namespace GASS
 			BaseComponentContainerTemplatePtr new_child = DYNAMIC_PTR_CAST<BaseComponentContainerTemplate>(ComponentContainerTemplateFactory::Get().Create(factory_class_name));
 			if(!new_child)
 			{
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + factory_class_name,"BaseComponentContainerTemplate::Serialize");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + factory_class_name,"BaseComponentContainerTemplate::CreateFromComponentContainer");
 			}
 			//BaseComponentContainerTemplatePtr new_child = DYNAMIC_PTR_CAST<BaseComponentContainerTemplate>( CreateInstance());
 			if(!found && new_child)

@@ -132,11 +132,12 @@ namespace GASS
 		*/
 		virtual ComponentPtr CreateCopy();
 		/**
-			This function will assign all matching 
+			This function will copy all matching 
 			attributes (attributes with same name) from 
-			supplied comp argument to this component.
+			this component to destination component.
+			@dest_comp Destination component
 		*/
-		virtual void AssignFrom(ComponentPtr comp);
+		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
 
 	protected:
 		std::string m_Name;

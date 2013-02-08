@@ -39,6 +39,7 @@ namespace GASS
 		
 	}
 
+
 	BaseComponentContainer::~BaseComponentContainer(void)
 	{
 
@@ -248,7 +249,7 @@ namespace GASS
 				{
 					ComponentPtr target_comp;
 
-					//Try Get overload component by name first, if not found assume only one component of same type
+					//Try to get component by name first, if not found assume only one component of same type
 					TiXmlElement *name_elem =comp_elem->FirstChildElement("Name");
 					if(name_elem)
 					{
@@ -261,16 +262,15 @@ namespace GASS
 						target_comp = GetComponent(comp_name);
 					}					
 
-					if(target_comp) //over loading component
+					if(target_comp) //component already exist, replace attributes component
 					{
 						ComponentPtr comp = LoadComponent(comp_elem);
 						ComponentTemplatePtr template_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if(template_comp)
 						{
-							template_comp->AssignFrom(target_comp);
+							template_comp->CopyPropertiesTo(target_comp);
 						}
 					}
-
 					else
 					{
 						ComponentPtr comp = LoadComponent(comp_elem);

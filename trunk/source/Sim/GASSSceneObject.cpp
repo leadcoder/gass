@@ -39,7 +39,7 @@
 
 namespace GASS
 {
-	SceneObject::SceneObject() : m_MessageManager (new MessageManager())
+	SceneObject::SceneObject() : m_MessageManager(new MessageManager())
 	{
 
 	}
@@ -47,6 +47,39 @@ namespace GASS
 	SceneObject::~SceneObject(void)
 	{
 		
+	}
+
+
+	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
+	{
+		// use object factory intead to support derives from scene object?
+		SceneObjectPtr new_obj(new  SceneObject());
+		//set object properties
+		//const BaseReflectionObjectPtr this_obj = boost::const_pointer_cast<BaseReflectionObject>(shared_from_this());
+		CopyPropertiesTo(new_obj);
+
+		//copy components
+		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
+		while(comp_iter.hasMoreElements())
+		{
+			ComponentPtr comp = STATIC_PTR_CAST<IComponent>(comp_iter.getNext());
+			ComponentTemplatePtr temp_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
+			if(temp_comp)
+			{
+				ComponentPtr template_comp = temp_comp->CreateCopy();
+				new_obj->AddComponent(template_comp);
+			}
+		}
+
+		//copy children
+		IComponentContainer::ConstComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
+			SceneObjectPtr new_child = child->CreateCopy();
+			new_obj->AddChild(new_child);
+		}
+		return new_obj;
 	}
 
 	void SceneObject::RegisterReflection()

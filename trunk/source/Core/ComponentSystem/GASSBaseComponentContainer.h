@@ -31,7 +31,7 @@
 
 namespace GASS
 {
-
+	FDECL(BaseComponentContainer);
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -104,7 +104,8 @@ namespace GASS
 		void InheritComponentData(ComponentContainerPtr cc);
 		//Allow custom parsing for object creation
 		virtual ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
-		
+		void Copy(BaseComponentContainerPtr object_to_copy);
+	
 		ComponentPtr LoadComponent(TiXmlElement *comp_template);
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;

@@ -73,9 +73,9 @@ namespace GASS
 		virtual ComponentPtr CreateCopy() = 0;
 
 		/**
-			Assing this template to existing component
+			Assign this template to existing component
 		*/
-		virtual void AssignFrom(ComponentPtr) = 0;
+		virtual void CopyPropertiesTo(ComponentPtr) = 0;
 	protected:
 	};
 
