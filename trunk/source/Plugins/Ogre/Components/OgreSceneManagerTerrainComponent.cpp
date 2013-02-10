@@ -106,7 +106,7 @@ namespace GASS
 			//unload previous terrain
 			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 
-			const std::string full_path = rm->GetFirstResourceByName(filename).Path().GetFullPath();
+			const std::string full_path = rm->GetFirstResourceByName(filename)->Path().GetFullPath();
 			/*if(!rs->GetResource())
 			{
 				GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed find terrain configuration " + filename, "OgreSceneManagerTerrainComponent::LoadTerrain");
@@ -155,7 +155,7 @@ namespace GASS
 			m_WorldWidth  = m_Scale.x * (nodes_per_side-1);
 			m_WorldHeight = m_Scale.z * (nodes_per_side-1);
 			m_NodesPerSideAllPages = nodes_per_side;
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

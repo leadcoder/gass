@@ -423,8 +423,8 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)
 		{
-			SceneObjectPtr pointer = GetPointerObject();
-			pointer->PostMessage(MessagePtr(new WorldPositionMessage(info.m_3DPos)));
+			//SceneObjectPtr pointer = GetPointerObject();
+			//pointer->PostMessage(MessagePtr(new WorldPositionMessage(info.m_3DPos)));
 		}
 
 		return true;

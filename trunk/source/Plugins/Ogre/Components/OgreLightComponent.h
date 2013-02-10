@@ -57,6 +57,10 @@ namespace GASS
 		ColorRGB GetSpecular()const {return m_Specular;}
 		void SetCastShadow(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
+
+		void SetDir(const Vec3 &dir);
+		Vec3 GetDir() const;
+	
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDelete();

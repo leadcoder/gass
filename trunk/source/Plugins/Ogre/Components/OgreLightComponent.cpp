@@ -47,9 +47,9 @@ namespace GASS
 		m_LightType (LT_DIRECTIONAL),
 		m_Diffuse(1,1,1),
 		m_Specular(0,0,0),
-		m_AttenuationParams(0,1,0,20),
+		m_AttenuationParams(600, 1.0, 0.007, 0.0002),
 		m_CastShadow(true),
-		m_SpotParams(1,30,40)
+		m_SpotParams(30,40,1)
 	{
 
 	}
@@ -68,6 +68,7 @@ namespace GASS
 
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams);
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams);
+		RegisterProperty<Vec3>("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow);
 
 		RegisterProperty<ColorRGB>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse);
@@ -102,9 +103,8 @@ namespace GASS
 		ss >> name;
 
 		m_OgreLight = sm->createLight(name);
-		lc->GetOgreNode()->attachObject(m_OgreLight);
-
-
+		
+		
 		SetLightType(m_LightType);
 		SetAttenuationParams(m_AttenuationParams);
 		SetCastShadow(m_CastShadow);
@@ -114,7 +114,11 @@ namespace GASS
 
 		m_OgreLight->setVisible(true);
 		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
-		//m_OgreLight->setDirection(0,1,0);
+		m_OgreLight->setShadowNearClipDistance( 1 );
+		m_OgreLight->setShadowFarClipDistance( 3000 );
+		//m_OgreLight->setDirection(0,0,-1);
+
+		lc->GetOgreNode()->attachObject(m_OgreLight);
 	}
 
 
@@ -141,6 +145,22 @@ namespace GASS
 		}
 	}
 
+	void OgreLightComponent::SetDir(const Vec3 &dir)
+	{
+		if(m_OgreLight)
+			m_OgreLight->setDirection(dir.x,dir.y,dir.z);
+	}
+	Vec3 OgreLightComponent::GetDir() const
+	{
+		Vec3 dir;
+		if(m_OgreLight)
+		{
+			const Ogre::Vector3 odir = m_OgreLight->getDirection();
+			dir.Set(odir.x,odir.y,odir.z);
+		}
+		return dir;
+	}
+
 	void OgreLightComponent::SetSpotParams(const Vec3 &params)
 	{
 		m_SpotParams = params;
@@ -148,6 +168,7 @@ namespace GASS
 		if(m_OgreLight && m_LightType == LT_SPOT)
 		{
 			m_OgreLight->setSpotlightRange(Ogre::Radian(Math::Deg2Rad(params.x)), Ogre::Radian(Math::Deg2Rad(params.y)), params.z);
+			//setSpotlightRange
 		}
 	}
 
