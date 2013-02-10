@@ -66,13 +66,19 @@ namespace GASS
 		RegisterProperty<LightTypeBinder>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
 
-		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams);
-		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams);
-		RegisterProperty<Vec3>("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
-		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow);
+		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams,
+						BasePropertyMetaDataPtr(new BasePropertyMetaData("Attenuation Parameters: Distance, Constant, Linear, Quad",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<ColorRGB>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse);
-		RegisterProperty<ColorRGB>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular);
+		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Spotlight Parameters: Inner cone, Outer cone, falloff",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<Vec3>("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
+		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("CastShadow",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<ColorRGB>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<ColorRGB>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void OgreLightComponent::OnInitialize()

@@ -163,7 +163,10 @@ namespace GASS
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
 		//wait that first render window is created before send message that graphic system is initialized
 
-		m_ResourceManager->Init(); //why?
+		m_ResourceManager->Init(); 
+
+		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
+		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
