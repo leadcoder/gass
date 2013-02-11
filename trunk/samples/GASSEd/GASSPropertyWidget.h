@@ -73,7 +73,7 @@ protected:
 	std::map<QtProperty*,GASSVariantProperty> m_PropMap;
 
 private slots:
-	void valueChanged(QtProperty *property, const QVariant &value);
+	void slotValueChanged(QtProperty *property, const QVariant &value);
 };
 
 #endif

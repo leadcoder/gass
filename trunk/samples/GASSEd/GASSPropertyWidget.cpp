@@ -17,12 +17,15 @@ GASSPropertyWidget::GASSPropertyWidget( GASSEd *parent): QtTreePropertyBrowser(p
 	
 
 	m_VariantManager = new VariantManager(this);
-	connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(valueChanged(QtProperty *, const QVariant &)));
+	
 	m_VariantFactory = new VariantFactory(this);
 	setFactoryForManager(m_VariantManager, m_VariantFactory);
 	setPropertiesWithoutValueMarked(true);
 	setRootIsDecorated(false);
 	setMinimumSize(200,200);
+	//connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(valueChanged(QtProperty *, const QVariant &)));
+	connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(slotValueChanged(QtProperty *, const QVariant &)));
+
 }
 
 GASSPropertyWidget::~GASSPropertyWidget()
@@ -30,7 +33,7 @@ GASSPropertyWidget::~GASSPropertyWidget()
 
 }
 
-void GASSPropertyWidget::valueChanged(QtProperty *property, const QVariant &value)
+void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &value)
 {
 	//check if we just populate
 	if(!m_Polulating)
@@ -228,6 +231,33 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				if(select > -1)
 					item->setValue(select);
 			}
+			else if(DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
+			{
+				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+				GASS::FilePathPropertyMetaDataPtr file_path_data = DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data);
+				std::string filter = file_path_data->GetFilter();
+				GASS::FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
+
+				std::string filename = prop_value;
+				filename = GASS::Misc::Replace(filename,"/","\\");
+				
+				//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
+				switch(type)
+				{
+				case GASS::FilePathPropertyMetaData::IMPORT_FILE:
+					item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
+					item->setValue(filename.c_str());
+					item->setAttribute(QLatin1String("filter"),QVariant(filter.c_str()));
+					break;
+				case GASS::FilePathPropertyMetaData::EXPORT_FILE:
+					item = m_VariantManager->addProperty(newFileTypeId(),prop_name.c_str());
+					item->setValue(filename.c_str());
+					item->setAttribute(QLatin1String("filter"),QVariant(filter.c_str()));
+					break;
+				case GASS::FilePathPropertyMetaData::PATH_SELECTION:
+					break;
+				}
+			}
 			else if(!item)
 			{
 				if(*prop->GetTypeID() == typeid(bool))
@@ -250,6 +280,8 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					filename = GASS::Misc::Replace(filename,"/","\\");
 					item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
 					item->setValue(filename.c_str());
+					//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
+					//item->setAttribute(QLatin1String("filter"),QVariant("*.png;*.jpg"));
 				}
 				else
 				{
