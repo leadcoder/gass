@@ -49,8 +49,9 @@ namespace GASS
 	void DensityMapComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("DensityMapComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png;*.tga")));
 		RegisterProperty<FilePath>("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}

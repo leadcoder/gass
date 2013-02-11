@@ -150,5 +150,28 @@ namespace GASS
 		int m_Min;
 	};
 	typedef SPTR<IntMaxMinPropertyMetaData> IntMaxMinPropertyMetaDataPtr;
+
+
+	class FilePathPropertyMetaData : public BasePropertyMetaData
+	{
+	public:
+		enum FilePathEditType
+		{
+			IMPORT_FILE,
+			EXPORT_FILE,
+			PATH_SELECTION,
+		};
+
+		FilePathPropertyMetaData(const std::string &annotation, PropertyFlags flags, FilePathEditType type, const std::string &filter = ""): BasePropertyMetaData(annotation,flags) ,
+			m_Type(type),m_Filter(filter)
+		{
+		}
+		std::string GetFilter() const {return m_Filter;}
+		FilePathEditType GetType() const {return m_Type;}
+	private:
+		FilePathEditType m_Type;
+		std::string m_Filter;
+	};
+	typedef SPTR<FilePathPropertyMetaData> FilePathPropertyMetaDataPtr;
 }
 #endif

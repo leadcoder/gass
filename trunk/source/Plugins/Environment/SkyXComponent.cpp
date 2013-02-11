@@ -85,11 +85,14 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			if(target->getNumViewports() > 0)
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
 			{
-				ocam = target->getViewport(0)->getCamera();
-				break;
+				if(target->getNumViewports() > 0)
+				{
+					ocam = target->getViewport(0)->getCamera();
+					break;
+				}
 			}
 			//target->addListener(this);
 		}

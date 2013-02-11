@@ -53,6 +53,7 @@ namespace GASS
 	void TreeGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TreeGeometryComponent",new Creator<TreeGeometryComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("TreeGeometryComponent", OF_VISIBLE)));
 
 		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
@@ -131,8 +132,10 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			target->addListener(this);
+			//only render windows for now
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+				target->addListener(this);
 		}
 
 		bool user_bounds = true;
@@ -250,8 +253,10 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			target->removeListener(this);
+			//only render windows for now
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+				target->removeListener(this);
 		}
 	}
 

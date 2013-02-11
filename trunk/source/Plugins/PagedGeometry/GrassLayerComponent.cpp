@@ -67,20 +67,29 @@ namespace GASS
 	void GrassLayerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, IComponent>);
-		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("GrassLayerComponent", OF_VISIBLE)));
+		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<OgreMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial,
 			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Grass Material",PF_VISIBLE,"GASS_VEGETATION_MATERIALS")));
 		RegisterProperty<FadeTechniqueBinder>("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("FadeTechnique",PF_VISIBLE,&FadeTechniqueBinder::GetStringEnumeration)));
 		RegisterProperty<RenderTechniqueBinder>("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("RenderTechnique",PF_VISIBLE,&RenderTechniqueBinder::GetStringEnumeration)));
-		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround);
-		RegisterProperty<Vec2>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize);
-		RegisterProperty<Vec2>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize);
-		RegisterProperty<float>("SwaySpeed", &GrassLayerComponent::GetSwaySpeed, &GrassLayerComponent::SetSwaySpeed);
-		RegisterProperty<float>("SwayLength", &GrassLayerComponent::GetSwayLength, &GrassLayerComponent::SetSwayLength);
-		RegisterProperty<bool>("EnableSway", &GrassLayerComponent::GetEnableSway, &GrassLayerComponent::SetEnableSway);
-		RegisterProperty<float>("SwayDistribution", &GrassLayerComponent::GetSwayDistribution, &GrassLayerComponent::SetSwayDistribution);
+		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fade out alpha",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec2>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max polygon size radomize interval",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec2>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Min polygon size radomize interval",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("SwaySpeed", &GrassLayerComponent::GetSwaySpeed, &GrassLayerComponent::SetSwaySpeed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("SwayLength", &GrassLayerComponent::GetSwayLength, &GrassLayerComponent::SetSwayLength,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("EnableSway", &GrassLayerComponent::GetEnableSway, &GrassLayerComponent::SetEnableSway,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("SwayDistribution", &GrassLayerComponent::GetSwayDistribution, &GrassLayerComponent::SetSwayDistribution,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void GrassLayerComponent::OnInitialize()

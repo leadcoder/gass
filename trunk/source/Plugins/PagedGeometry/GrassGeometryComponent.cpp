@@ -71,13 +71,20 @@ namespace GASS
 	void GrassGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("GrassGeometryComponent",new Creator<GrassGeometryComponent, IComponent>);
-		RegisterProperty<std::string>("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap);
-		RegisterProperty<float>("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor);
-		RegisterProperty<float>("PageSize", &GrassGeometryComponent::GetPageSize, &GrassGeometryComponent::SetPageSize);
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue);
-		RegisterProperty<Vec4>("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds);
-		RegisterProperty<std::string>("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap);
-		RegisterProperty<OgreMaterial>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial);
+		RegisterProperty<std::string>("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<float>("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("PageSize", &GrassGeometryComponent::GetPageSize, &GrassGeometryComponent::SetPageSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Need scene reload to take effect",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec4>("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<std::string>("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<OgreMaterial>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<std::string>("FadeTech", &GrassGeometryComponent::GetFadeTech, &GrassGeometryComponent::SetFadeTech);
 		RegisterProperty<std::string>("RenderTechnique", &GrassGeometryComponent::GetRenderTechnique, &GrassGeometryComponent::SetRenderTechnique);
 		RegisterProperty<bool>("BlendWithGround", &GrassGeometryComponent::GetBlendWithGround, &GrassGeometryComponent::SetBlendWithGround);

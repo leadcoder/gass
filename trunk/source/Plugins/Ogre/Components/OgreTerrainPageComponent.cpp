@@ -116,11 +116,11 @@ namespace GASS
 
 		//import functions, can be used from editor, use full-path to resource and execute import
 		RegisterProperty<FilePath>("ImportHeightMap", &GASS::OgreTerrainPageComponent::GetImportHeightMap, &GASS::OgreTerrainPageComponent::ImportHeightMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import height map, only png files supported",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png")));
 		RegisterProperty<FilePath>("ImportColorMap", &GASS::OgreTerrainPageComponent::GetImportColorMap, &GASS::OgreTerrainPageComponent::ImportColorMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import color map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png;*.dds;*.jpg;*.*")));
 		RegisterProperty<FilePath>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.tga;*.dds;*.png;*.*")));
 	}
 
 	void OgreTerrainPageComponent::OnInitialize()

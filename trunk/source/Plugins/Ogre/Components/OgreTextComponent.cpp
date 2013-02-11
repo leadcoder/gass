@@ -72,8 +72,9 @@ namespace GASS
 			Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 			while (iter.hasMoreElements())
 			{
-				Ogre::RenderTarget* target = iter.getNext();
-				target->removeListener(this);
+				Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+				if(target)
+					target->removeListener(this);
 			}
 		}
 		if(m_Attribs)
@@ -123,8 +124,9 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			target->addListener(this);
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+					target->addListener(this);
 		}
 		
 		Ogre::ColourValue color;

@@ -23,6 +23,7 @@
 #include <boost/bind.hpp>
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
+#include <OgreRenderWindow.h>
 #include "GrassLoaderComponent.h"
 #include "GrassLayerComponent.h"
 #include "PagedGeometry.h"
@@ -66,12 +67,19 @@ namespace GASS
 	void GrassLoaderComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("GrassLoaderComponent",new Creator<GrassLoaderComponent, IComponent>);
-		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap);
-		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap);
-		RegisterProperty<float>("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize);
-		RegisterProperty<Vec4>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds);
-		RegisterProperty<std::string>("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap);
-		RegisterProperty<float>("ViewDistance", &GrassLoaderComponent::GetViewDistance, &GrassLoaderComponent::SetViewDistance);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("GrassLoaderComponent", OF_VISIBLE)));
+		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Can only be specified in template",PF_VISIBLE)));
+		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap,
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png;*.tga")));
+		RegisterProperty<float>("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("You need to reload scene before this property take effect",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec4>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<std::string>("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<float>("ViewDistance", &GrassLoaderComponent::GetViewDistance, &GrassLoaderComponent::SetViewDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void GrassLoaderComponent::OnInitialize()
@@ -90,8 +98,9 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			target->addListener(this);
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+				target->addListener(this);
 		}
 	
 		bool user_bounds = true;
@@ -187,8 +196,9 @@ namespace GASS
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
-			Ogre::RenderTarget* target = iter.getNext();
-			target->removeListener(this);
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+				target->removeListener(this);
 		}
 	}
 
