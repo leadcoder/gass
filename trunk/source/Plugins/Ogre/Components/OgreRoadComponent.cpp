@@ -13,7 +13,7 @@
 *****************************************************************************/ 
 
 #include <boost/bind.hpp>
-#include "RoadComponent.h"
+#include "OgreRoadComponent.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSplineAnimation.h"
@@ -25,26 +25,24 @@
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSMeshData.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "WaypointComponent.h"
-#include "WaypointListComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Plugins/Ogre/OgreMaterial.h"
 
 namespace GASS
 {
 	template<> std::map<std::string ,TerrainLayer> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_NameToEnumMap;
 	template<> std::map<TerrainLayer,std::string> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_EnumToNameMap;
 
-	RoadComponent::RoadComponent() : m_Initialized(false), 
+	OgreRoadComponent::OgreRoadComponent() : m_Initialized(false), 
 		m_TerrainPaintIntensity(0.01), 
 		m_RoadOffset(0.3), 
 		m_TerrainFlattenWidth(30), 
@@ -60,72 +58,72 @@ namespace GASS
 
 	}
 
-	RoadComponent::~RoadComponent()
+	OgreRoadComponent::~OgreRoadComponent()
 	{
 
 	}
 
-	void RoadComponent::RegisterReflection()
+	void OgreRoadComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RoadComponent",new Creator<RoadComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("RoadComponent", OF_VISIBLE)));
-		RegisterProperty<bool>("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain,
+		ComponentFactory::GetPtr()->Register("OgreRoadComponent",new Creator<OgreRoadComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("OgreRoadComponent", OF_VISIBLE)));
+		RegisterProperty<bool>("FlattenTerrain", &GASS::OgreRoadComponent::GetFlattenTerrain, &GASS::OgreRoadComponent::SetFlattenTerrain,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("PaintTerrain", &GASS::RoadComponent::GetPaintTerrain, &GASS::RoadComponent::SetPaintTerrain,
+		RegisterProperty<bool>("PaintTerrain", &GASS::OgreRoadComponent::GetPaintTerrain, &GASS::OgreRoadComponent::SetPaintTerrain,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainFlattenWidth", &GASS::RoadComponent::GetTerrainFlattenWidth, &GASS::RoadComponent::SetTerrainFlattenWidth,
+		RegisterProperty<float>("TerrainFlattenWidth", &GASS::OgreRoadComponent::GetTerrainFlattenWidth, &GASS::OgreRoadComponent::SetTerrainFlattenWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainPaintWidth", &GASS::RoadComponent::GetTerrainPaintWidth, &GASS::RoadComponent::SetTerrainPaintWidth,
+		RegisterProperty<float>("TerrainPaintWidth", &GASS::OgreRoadComponent::GetTerrainPaintWidth, &GASS::OgreRoadComponent::SetTerrainPaintWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainPaintIntensity", &GASS::RoadComponent::GetTerrainPaintIntensity, &GASS::RoadComponent::SetTerrainPaintIntensity,
+		RegisterProperty<float>("TerrainPaintIntensity", &GASS::OgreRoadComponent::GetTerrainPaintIntensity, &GASS::OgreRoadComponent::SetTerrainPaintIntensity,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::RoadComponent::GetTerrainPaintLayer, &GASS::RoadComponent::SetTerrainPaintLayer);
+		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::OgreRoadComponent::GetTerrainPaintLayer, &GASS::OgreRoadComponent::SetTerrainPaintLayer);
 			
-		RegisterProperty<float>("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth,
+		RegisterProperty<float>("RoadWidth", &GASS::OgreRoadComponent::GetRoadWidth, &GASS::OgreRoadComponent::SetRoadWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset,
+		RegisterProperty<float>("RoadOffset", &GASS::OgreRoadComponent::GetRoadOffset, &GASS::OgreRoadComponent::SetRoadOffset,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth,
+		RegisterProperty<float>("DitchWidth", &GASS::OgreRoadComponent::GetDitchWidth, &GASS::OgreRoadComponent::SetDitchWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale,
+		RegisterProperty<Vec2>("TileScale", &GASS::OgreRoadComponent::GetTileScale, &GASS::OgreRoadComponent::SetTileScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts,
+		RegisterProperty<bool>("UseSkirts", &GASS::OgreRoadComponent::GetUseSkirts, &GASS::OgreRoadComponent::SetUseSkirts,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain,
+		RegisterProperty<bool>("ClampToTerrain", &GASS::OgreRoadComponent::GetClampToTerrain, &GASS::OgreRoadComponent::SetClampToTerrain,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ResourceHandle>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial);
+		RegisterProperty<ResourceHandle>("Material", &GASS::OgreRoadComponent::GetMaterial, &GASS::OgreRoadComponent::SetMaterial,
+			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
 	}
 
-	void RoadComponent::OnInitialize()
+	void OgreRoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,UpdateWaypointListMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreRoadComponent::OnUpdate,UpdateWaypointListMessage,1));
 		
 		//get waypoint list
-		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		SPTR<IWaypointListComponent> wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 		if(!wpl)
-			LogManager::getSingleton().stream() << "WARNING:RoadComponent depends on WaypointListComponent";
+			LogManager::getSingleton().stream() << "WARNING:OgreRoadComponent depends on WaypointListComponent";
 
 		m_Initialized = true;
 	}
 
-	void RoadComponent::SetMaterial(const ResourceHandle &value)
+	void OgreRoadComponent::SetMaterial(const ResourceHandle &value)
 	{
 		m_Material = value;
 		UpdateRoadMesh();
 	}
 
-	ResourceHandle RoadComponent::GetMaterial() const 
+	ResourceHandle OgreRoadComponent::GetMaterial() const 
 	{
 		return m_Material;
 	}
 
-	void RoadComponent::SetPaintTerrain(bool value)
+	void OgreRoadComponent::SetPaintTerrain(bool value)
 	{
 		if(!m_Initialized)
 			return;
 
-
-		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 		if(wpl)
 		{
 
@@ -146,7 +144,6 @@ namespace GASS
 				}
 			}
 
-
 			SceneObjectPtr last_obj;
 			IComponentContainer::ComponentVector components;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
@@ -160,18 +157,18 @@ namespace GASS
 			}
 		}
 	}
-	bool RoadComponent::GetPaintTerrain() const
+	bool OgreRoadComponent::GetPaintTerrain() const
 	{
 		return false;
 	}
 
 
-	void RoadComponent::SetFlattenTerrain(bool value)
+	void OgreRoadComponent::SetFlattenTerrain(bool value)
 	{
 		if(!m_Initialized)
 			return;
 
-		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 		if(wpl)
 		{
 
@@ -191,18 +188,18 @@ namespace GASS
 		}
 	}
 
-	bool RoadComponent::GetFlattenTerrain() const
+	bool OgreRoadComponent::GetFlattenTerrain() const
 	{
 		return false;
 	}
 
 
-	void RoadComponent::OnUpdate(UpdateWaypointListMessagePtr message)
+	void OgreRoadComponent::OnUpdate(UpdateWaypointListMessagePtr message)
 	{
 		UpdateRoadMesh();
 	}
 
-	void RoadComponent::UpdateRoadMesh() 
+	void OgreRoadComponent::UpdateRoadMesh() 
 	{ 
 		if(!m_Initialized)
 			return;
@@ -212,7 +209,7 @@ namespace GASS
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		const Vec3 origo = location->GetWorldPosition();
 	
-		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 

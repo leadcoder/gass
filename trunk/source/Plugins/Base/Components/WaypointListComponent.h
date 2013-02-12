@@ -37,6 +37,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const;
+		virtual std::string GetWaypointTemplate() const;
 		float GetRadius()const;
 	protected:
 		ADD_ATTRIBUTE(bool,ShowPathLine);
@@ -44,6 +45,9 @@ namespace GASS
 		void SetRadius(float radius);
 		int GetSplineSteps()const;
 		void SetSplineSteps(int steps);
+
+		
+		void SetWaypointTemplate(const std::string &name);
 		
 		bool GetEnableSpline()const;
 		void SetEnableSpline(bool value);
@@ -70,10 +74,11 @@ namespace GASS
 		bool m_AutoUpdateTangents;
 		bool m_ShowWaypoints;
 		Vec4 m_LineColor;
+		std::string m_WaypointTemplate;
 	};
 
-	typedef SPTR<WaypointListComponent> WaypointListComponentPtr;
-	typedef WPTR<WaypointListComponent> WaypointListComponentWeakPtr;
+	//typedef SPTR<WaypointListComponent> WaypointListComponentPtr;
+	//typedef WPTR<WaypointListComponent> WaypointListComponentWeakPtr;
 	
 }
 

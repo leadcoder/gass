@@ -216,14 +216,18 @@ namespace GASS
 		{
 			m_ImposterResolution=value;
 		}
-		
 
+		
 		void OnPaint(GrassPaintMessagePtr message);
 		
 
 		//expose impostor regeneration for gui
 		void SetRegenerateAllImpostors(bool value);
 		bool GetRegenerateAllImpostors() const;
+
+		//support dynamic lighting
+		void SetDynamicImpostorLighting(bool value);
+		bool GetDynamicImpostorLighting() const;
 		
 		DensityMapComponentPtr m_DensityMap;
 		//Ogre::PixelBox *m_DensityMap;
@@ -252,6 +256,7 @@ namespace GASS
 		TreeLoader3D *m_TreeLoader3d;
 
 		Ogre::Entity *m_TreeEntity;
+		bool m_DynamicImpostorLighting;
 	};
 	typedef SPTR<TreeGeometryComponent> TreeGeometryComponentPtr;
 }

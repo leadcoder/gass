@@ -29,6 +29,7 @@
 #include "BatchPage.h"
 #include "TreeLoader2D.h"
 #include "TreeLoader3D.h"
+#include "StaticBillboardSet.h"
 #include "GrassLoader.h"
 #include "DensityMapComponent.h"
 
@@ -86,6 +87,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("RegenerateAllImpostors", &TreeGeometryComponent::GetRegenerateAllImpostors, &TreeGeometryComponent::SetRegenerateAllImpostors,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("DynamicImpostorLighting", &TreeGeometryComponent::GetDynamicImpostorLighting, &TreeGeometryComponent::SetDynamicImpostorLighting,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable experimental dynamic impostor lighting. Note that this will effect all TreeGeometryComponent",PF_VISIBLE | PF_EDITABLE)));
+		
 	}
 
 
@@ -104,9 +108,11 @@ namespace GASS
 		m_ImposterAlphaRejectionValue(50),
 		m_CreateShadowMap(false),
 		m_TreeEntity(NULL),
-		m_ImposterResolution(128)
+		m_ImposterResolution(128),
+		m_DynamicImpostorLighting(false)
 	{
 		m_RandomTable = new RandomTable();
+
 	}
 
 	TreeGeometryComponent::~TreeGeometryComponent(void)
@@ -119,6 +125,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
 		
+		SetDynamicImpostorLighting(m_DynamicImpostorLighting);
 		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 		ImpostorPage::setImpostorResolution(m_ImposterResolution);
 		
@@ -323,6 +330,21 @@ namespace GASS
 	bool TreeGeometryComponent::GetRegenerateAllImpostors() const
 	{
 		return false;
+	}
+
+
+	void TreeGeometryComponent::SetDynamicImpostorLighting(bool value)
+	{
+		m_DynamicImpostorLighting  = value;
+		if(value)
+		{
+			StaticBillboardSet::setDynamicLighting(value);
+		}
+	}
+
+	bool TreeGeometryComponent::GetDynamicImpostorLighting() const
+	{
+		return m_DynamicImpostorLighting;
 	}
 
 	void TreeGeometryComponent::UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z)

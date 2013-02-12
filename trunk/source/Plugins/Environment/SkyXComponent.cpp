@@ -59,17 +59,30 @@ namespace GASS
 	void SkyXComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SkyXComponent",new Creator<SkyXComponent, IComponent>);
-		RegisterProperty<double>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier);
-		RegisterProperty<Vec3>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime);
-		RegisterProperty<Float>("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius);
-		RegisterProperty<Float>("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius);
-		RegisterProperty<Float>("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure);
-		RegisterProperty<Float>("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition);
-		RegisterProperty<Float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier);
-		RegisterProperty<Float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier);
-		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples);
-		RegisterProperty<Float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize);
-		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("SkyXComponent", OF_VISIBLE )));
+		RegisterProperty<double>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+			
+		RegisterProperty<Float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void SkyXComponent::OnInitialize()

@@ -30,7 +30,8 @@ namespace GASS
 		virtual ~IWaypointListComponent(){}
 		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const = 0; 
 		virtual float GetRadius() const = 0; 
+		virtual std::string GetWaypointTemplate() const = 0;
 	protected:
 	};
-	
+	typedef SPTR<IWaypointListComponent> WaypointListComponentPtr;
 }
