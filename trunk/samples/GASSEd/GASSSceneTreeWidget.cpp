@@ -143,6 +143,7 @@ void GASSSceneTreeWidget::selectionChanged()
 			//send scene selection message
 			GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
 			GASS::ScenePtr(m_Scene)->PostMessage(message);
+			//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(GASS::SceneObjectPtr());
 		}
 		else
 		{

@@ -406,6 +406,6 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 		sm->GetMouseToolController()->SelectTool(TID_CREATE);
 		GASS::CreateTool* tool = static_cast<GASS::CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
 		tool->SetParentObject(obj);
-		tool->SetTemplateName("Waypoint");
+		tool->SetTemplateName(waypointlist->GetWaypointTemplate());
     }
 }
