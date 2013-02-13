@@ -33,7 +33,7 @@
 #include "OgreTerrainMaterialGeneratorA.h"
 #include "OgreTerrainPaging.h"
 #include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
-
+#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorC.h"
 namespace GASS
 {
 	class CustomTerrainPageListener;
@@ -155,7 +155,8 @@ namespace GASS
 		float m_DetailFadeDist;
 		bool m_FadeOutColor;
 		float m_NearColorWeight;
-		Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
+		//Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
+		Ogre::TerrainMaterialGeneratorC::SM2Profile* m_TerrainProfile;
 		GeometryFlags m_GeomFlags;
 	};
 	typedef SPTR<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
