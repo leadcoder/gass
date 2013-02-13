@@ -41,7 +41,11 @@ namespace GASS
 		static	void RegisterReflection();
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
+		void SetInstantiable(bool value) {m_Instantiable = value;}
+		bool GetInstantiable() const {return m_Instantiable;}
 	protected:
 		SceneObjectID m_ID;
+		bool m_Instantiable;
+		
 	};
 }

@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	SceneObjectTemplate::SceneObjectTemplate()
+	SceneObjectTemplate::SceneObjectTemplate() : m_Instantiable(false)
 	{
 		
 	}
@@ -41,6 +41,7 @@ namespace GASS
 	{
 		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
+		RegisterProperty<bool>("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
 	}
 
 }
