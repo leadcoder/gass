@@ -386,7 +386,12 @@ void GASSEd::OnOpen()
 void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 {
 	QMenu myMenu;
-    QAction*  delete_action = myMenu.addAction("Delete");
+	QAction*  delete_action = myMenu.addAction("Delete");
+	QAction*  copy_action = myMenu.addAction("Copy");
+	QAction*  paste_action = NULL;
+	//GASS::SceneObjectPtr copy_obj(m_CopyBuffer, boost::detail::sp_nothrow_tag());
+    //if(copy_obj)
+		paste_action = myMenu.addAction("Paste");
 	QAction*  waypoint_action = NULL;
 	//check if this is a waypoint list object
 	SPTR<GASS::IWaypointListComponent> waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
@@ -394,13 +399,12 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 	{
 		waypoint_action = myMenu.addAction("Add waypoints...");
 	}
-
     QAction* selectedItem = myMenu.exec(pos);
     if (selectedItem == delete_action)
     {
 		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
     }
-    else if(waypoint_action)
+    else if(waypoint_action && selectedItem == waypoint_action)
     {
 		GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
 		sm->GetMouseToolController()->SelectTool(TID_CREATE);
@@ -408,4 +412,16 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 		tool->SetParentObject(obj);
 		tool->SetTemplateName(waypointlist->GetWaypointTemplate());
     }
+	else if(selectedItem == copy_action)
+	{
+		m_SceneObjectCopyBuffer = obj;
+	}
+	else if(paste_action && selectedItem == paste_action)
+	{
+		GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
+    
+		GASS::SceneObjectPtr new_obj = copy_obj->CreateCopy();
+		obj->AddChildSceneObject(new_obj,true);
+		
+	}
 }

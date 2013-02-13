@@ -30,6 +30,7 @@ private:
     QAction *createDockWidgetAction;
     QMenu *destroyDockWidgetMenu;
 	GASS::SceneWeakPtr m_Scene;
+	GASS::SceneObjectWeakPtr m_SceneObjectCopyBuffer;
 public:
     GASSEd(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	GASS::EditorApplication* m_GASSApp;
