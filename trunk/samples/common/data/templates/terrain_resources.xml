@@ -8,12 +8,13 @@
         <IndexY value ="0"/>
         <Position value ="0 0 0"/>
       </OgreTerrainPageComponent>
-      <PhysicsTerrainGeometryComponent>
-      </PhysicsTerrainGeometryComponent>
+     <!-- <PhysicsTerrainGeometryComponent>
+      </PhysicsTerrainGeometryComponent>-->
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="OgrePagedTerrainObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <OgreTerrainGroupComponent>
         <ImportTerrainWorldSize value="1000"/>
@@ -43,7 +44,7 @@
       </SceneObjectTemplate>-->
     </ComponentContainers>
   </SceneObjectTemplate>
-  <SceneObjectTemplate>
+ <!-- <SceneObjectTemplate>
     <Name value="OgreTerrainObject"/>
     <Components>
       <OgreTerrainComponent>
@@ -53,9 +54,10 @@
       <PhysicsTerrainGeometryComponent>
       </PhysicsTerrainGeometryComponent>
     </Components>
-  </SceneObjectTemplate>
+  </SceneObjectTemplate>-->
   <SceneObjectTemplate>
     <Name value="CustomMeshObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <MeshComponent>
         <Filename value="default.mesh"/>
@@ -68,6 +70,7 @@
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="HydraxWater"/>
+	<Instantiable value= "true"/>
     <Components>
       <HydraxWaterComponent>
         <ConfigurationFile value=""/>
@@ -132,6 +135,7 @@
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="SkyObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <SkyXComponent>
       </SkyXComponent>
@@ -147,7 +151,8 @@
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
-    <Name value="SunLight"/>
+    <Name value="LightObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <LightComponent>
         <LightType value="LT_DIRECTIONAL"/>
@@ -161,6 +166,7 @@
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="GrassVegetationObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <GrassLoaderComponent>
 	    <Name value = "GRASS_LOADER"/>
@@ -185,182 +191,34 @@
       </GrassLayerComponent>
     </Components>
   </SceneObjectTemplate>
-   <SceneObjectTemplate>
-    <Name value="PlantVegetationObject"/>
-    <Components>
-      <GrassLoaderComponent>
-		<Name value = "PLANT_LOADER"/>
-        <PageSize value = "45"/>
-        <ViewDistance value ="100"/>
-        <DensityMap value= ""/>
-        <!--<ColorMap value= "grass_color.png"/>-->
-      </GrassLoaderComponent>
-      <GrassLayerComponent>
-        <Name value = "PLANT_LAYER_1"/>
-        <Material value="DefaultGrass"/>
-        <DensityFactor value= "0.05"/>
-        <MaxSize value="1.0 1.3"/>
-        <MinSize value="0.5 0.8"/>
-        <EnableSway value="true"/>
-        <SwaySpeed value="0.1"/>
-        <SwayLength value="0.1"/>
-        <SwayDistribution value="10"/>
-        <FadeTechnique value ="FADETECH_ALPHA"/>
-        <RenderTechnique value ="GRASSTECH_QUAD"/>
-        <BlendWithGround value="false"/>
-      </GrassLayerComponent>
-      <GrassLayerComponent>
-        <Name value = "PLANT_LAYER_2"/>
-        <Material value="DefaultGrass"/>
-        <DensityFactor value= "0.05"/>
-        <MaxSize value="1.0 1.3"/>
-        <MinSize value="0.5 0.8"/>
-        <EnableSway value="true"/>
-        <SwaySpeed value="0.1"/>
-        <SwayLength value="0.1"/>
-        <SwayDistribution value="10"/>
-        <FadeTechnique value ="FADETECH_ALPHA"/>
-        <RenderTechnique value ="GRASSTECH_QUAD"/>
-        <BlendWithGround value="false"/>
-      </GrassLayerComponent>
-      <GrassLayerComponent>
-        <Name value = "PLANT_LAYER_3"/>
-        <Material value="DefaultGrass"/>
-        <DensityFactor value= "0.05"/>
-        <MaxSize value="1.0 1.3"/>
-        <MinSize value="0.5 0.8"/>
-        <EnableSway value="true"/>
-        <SwaySpeed value="0.1"/>
-        <SwayLength value="0.1"/>
-        <SwayDistribution value="10"/>
-        <FadeTechnique value ="FADETECH_ALPHA"/>
-        <RenderTechnique value ="GRASSTECH_QUAD"/>
-        <BlendWithGround value="false"/>
-      </GrassLayerComponent>
-      <GrassLayerComponent>
-        <Name value = "PLANT_LAYER_4"/>
-        <Material value="DefaultGrass"/>
-        <DensityFactor value= "0.05"/>
-        <MaxSize value="1.0 1.3"/>
-        <MinSize value="0.5 0.8"/>
-        <EnableSway value="true"/>
-        <SwaySpeed value="0.1"/>
-        <SwayLength value="0.1"/>
-        <SwayDistribution value="10"/>
-        <FadeTechnique value ="FADETECH_ALPHA"/>
-        <RenderTechnique value ="GRASSTECH_QUAD"/>
-        <BlendWithGround value="false"/>
-      </GrassLayerComponent>
-    </Components>
-  </SceneObjectTemplate>
-  <!---<SceneObjectTemplate>
-    <Name value="ForestVegetationObject"/>
+  <SceneObjectTemplate>
+    <Name value="FirVegetationObject"/>
+	<Instantiable value="true"/>
     <Components>
       <DensityMapComponent/>
       <TreeGeometryComponent>
-        <Name value="TreeLayer2"/>
-        <Mesh value="LOD01_stob_4_gran4_m1-1.mesh"/>
-        <DensityMap value="kvarn_tree_mask.png"/>
-        <DensityFactor value="0.005"/>
-        <SetHeightAtStartup value ="true"/>
-        <MeshDistance value ="300"/>
-        <ImposterDistance value ="700"/>
-        <MaxMinScale value ="0.9 1.1"/>
-      </TreeGeometryComponent>
-    </Components>
-  </SceneObjectTemplate>-->
-   <SceneObjectTemplate>
-    <Name value="ForestVegetationObject"/>
-    <Components>
-      <DensityMapComponent/>
-      <TreeGeometryComponent>
-        <Name value="Gran01"/>
-        <Mesh value= "gran01.mesh"/>
+        <Name value="Fir1"/>
+        <Mesh value= "fir05_30.mesh"/>
         <ImposterAlphaRejectionValue value ="140"/>
         <DensityFactor value= "0.004"/>
-        <MeshDistance value ="70"/>
+        <MeshDistance value ="170"/>
         <PageSize value ="50"/>
         <MeshFadeDistance value ="0"/>
         <ImposterDistance value ="300"/>
         <ImposterFadeDistance value ="40"/>
         <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.5 1"/>
+        <MaxMinScale value ="0.05 0.1"/>
         <CastShadows value="true"/>
-      </TreeGeometryComponent>
-      <TreeGeometryComponent>
-        <Name value="Gran02"/>
-        <Mesh value= "Gran02.mesh"/>
-        <ImposterAlphaRejectionValue value ="140"/>
-        <DensityFactor value= "0.004"/>
-        <MeshDistance value ="70"/>
-        <PageSize value ="50"/>
-        <MeshFadeDistance value ="0"/>
-        <ImposterDistance value ="500"/>
-        <ImposterFadeDistance value ="40"/>
-        <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.5 1"/>
-        <CastShadows value="true"/>
-      </TreeGeometryComponent>
-      <TreeGeometryComponent>
-        <Name value="Bjork01"/>
-        <Mesh value= "Bjork01.mesh"/>
-        <ImposterAlphaRejectionValue value ="140"/>
-        <DensityFactor value= "0.0005"/>
-        <MeshDistance value ="90"/>
-        <PageSize value ="50"/>
-        <MeshFadeDistance value ="0"/>
-        <ImposterDistance value ="400"/>
-        <ImposterFadeDistance value ="40"/>
-        <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.2 0.5"/>
-        <CastShadows value="true"/>
-      </TreeGeometryComponent>
-      <TreeGeometryComponent>
-        <Name value="Plant01"/>
-        <Mesh value= "Plant01.mesh"/>
-        <ImposterAlphaRejectionValue value ="140"/>
-        <DensityFactor value= "0.1"/>
-        <MeshDistance value ="20"/>
-        <PageSize value ="10"/>
-        <MeshFadeDistance value ="5"/>
-        <ImposterDistance value ="0"/>
-        <ImposterFadeDistance value ="0"/>
-        <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.6 1.0"/>
-      </TreeGeometryComponent>
-      <TreeGeometryComponent>
-        <Name value="Plant03"/>
-        <Mesh value= "Plant03.mesh"/>
-        <ImposterAlphaRejectionValue value ="140"/>
-        <DensityFactor value= "0.05"/>
-        <MeshDistance value ="20"/>
-        <PageSize value ="10"/>
-        <MeshFadeDistance value ="5"/>
-        <ImposterDistance value ="0"/>
-        <ImposterFadeDistance value ="0"/>
-        <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.6 1.0"/>
-      </TreeGeometryComponent>
-      <TreeGeometryComponent>
-        <Name value="Plant04"/>
-        <Mesh value= "Plant04.mesh"/>
-        <ImposterAlphaRejectionValue value ="140"/>
-        <DensityFactor value= "0.05"/>
-        <MeshDistance value ="20"/>
-        <PageSize value ="10"/>
-        <MeshFadeDistance value ="5"/>
-        <ImposterDistance value ="0"/>
-        <ImposterFadeDistance value ="0"/>
-        <SetHeightAtStartup value = "true"/>
-        <MaxMinScale value ="0.6 1.0"/>
       </TreeGeometryComponent>
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
-    <Name value="WaypointList"/>
+    <Name value="RoadObject"/>
+	<Instantiable value="true"/>
     <Components>
       <WaypointListComponent>
         <Radius value ="0"/>
+		<WaypointTemplate value="RoadWaypoint"/>
       </WaypointListComponent>
       <LocationComponent>
         <Position value="0 0 0"/>
@@ -369,11 +227,12 @@
       </LocationComponent>
       <ManualMeshComponent>
       </ManualMeshComponent>
-      <RoadComponent/>
+      <OgreRoadComponent>
+	  </OgreRoadComponent>
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
-    <Name value="Waypoint"/>
+    <Name value="RoadWaypoint"/>
     <Components>
       <WaypointComponent>
       </WaypointComponent>

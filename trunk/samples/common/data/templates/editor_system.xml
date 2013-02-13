@@ -66,6 +66,7 @@
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="GroupObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <LocationComponent>
         <AttachToParent value="1"/>
@@ -87,6 +88,7 @@
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="MeshObject"/>
+	<Instantiable value= "true"/>
     <Components>
       <LocationComponent>
         <AttachToParent value="1"/>
@@ -473,6 +475,18 @@
         <ChangeMaterialWhenSelected value="0"/>
         <ShowBBWhenSelected value="0"/>
       </EditorComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value="PointerObject"/>
+    <Serialize value="false"/>
+    <Components>
+      <ManualMeshComponent>
+      </ManualMeshComponent>
+      <LocationComponent>
+        <Position value="0 0 0"/>
+        <Rotation value="0 0 0"/>
+      </LocationComponent>
     </Components>
   </SceneObjectTemplate>
 </Templates>
