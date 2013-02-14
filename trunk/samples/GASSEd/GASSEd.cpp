@@ -20,6 +20,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTreeWidget>
+//#include <QAccel.h>
 #include <qdebug.h>
 
 #include "Sim/GASSScene.h"
@@ -77,6 +78,7 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
 	prop_dock->setWidget(new GASSPropertyWidget(this));
 	prop_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	splitDockWidget(tree_dock,prop_dock,Qt::Vertical);
+	 
 }
 
 void GASSEd::Initialize(void* render_win_handle)
@@ -96,10 +98,10 @@ void GASSEd::Initialize(void* render_win_handle)
 	//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
 }
 
-void GASSEd::actionTriggered(QAction *action)
+/*void GASSEd::actionTriggered(QAction *action)
 {
     qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
-}
+}*/
 
 void GASSEd::setupToolBar()
 {
@@ -111,31 +113,58 @@ void GASSEd::setupToolBar()
 
 void GASSEd::setupMenuBar()
 {
-    QMenu *menu = menuBar()->addMenu(tr("&File"));
+	m_FileMenu = menuBar()->addMenu(tr("&File"));
 
-	QAction *action = menu->addAction(tr("New"));
-    connect(action, SIGNAL(triggered()), this, SLOT(OnNew()));
+	QAction *action = m_FileMenu->addAction(tr("New"));
+	connect(action, SIGNAL(triggered()), this, SLOT(OnNew()));
 
-	action = menu->addAction(tr("Save..."));
-    connect(action, SIGNAL(triggered()), this, SLOT(OnSave()));
+	action = m_FileMenu->addAction(tr("Save..."));
+	connect(action, SIGNAL(triggered()), this, SLOT(OnSave()));
 
-	action = menu->addAction(tr("Load..."));
-    connect(action, SIGNAL(triggered()), this, SLOT(OnOpen()));
+	action = m_FileMenu->addAction(tr("Load..."));
+	connect(action, SIGNAL(triggered()), this, SLOT(OnOpen()));
 
-    action = menu->addAction(tr("Save layout..."));
-    connect(action, SIGNAL(triggered()), this, SLOT(saveLayout()));
+	action = m_FileMenu->addAction(tr("Save layout..."));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveLayout()));
 
-    action = menu->addAction(tr("Load layout..."));
-    connect(action, SIGNAL(triggered()), this, SLOT(loadLayout()));
+	action = m_FileMenu->addAction(tr("Load layout..."));
+	connect(action, SIGNAL(triggered()), this, SLOT(loadLayout()));
 
-    action = menu->addAction(tr("Switch layout direction"));
-    connect(action, SIGNAL(triggered()), this, SLOT(switchLayoutDirection()));
+	action = m_FileMenu->addAction(tr("Switch layout direction"));
+	connect(action, SIGNAL(triggered()), this, SLOT(switchLayoutDirection()));
 
-    menu->addSeparator();
+	m_FileMenu->addSeparator();
 
-    menu->addAction(tr("&Quit"), this, SLOT(close()));
+	m_FileMenu->addAction(tr("&Quit"), this, SLOT(close()));
 
- 
+	m_EditMenu = menuBar()->addMenu(tr("&Edit"));
+
+	m_CopyAct = m_EditMenu->addAction(tr("&Copy"));
+	m_CopyAct->setShortcut(tr("Ctrl+C"));
+	m_CopyAct->setEnabled(false);
+	connect(m_CopyAct, SIGNAL(triggered()), this, SLOT(OnCopy()));
+
+	m_CutAct = m_EditMenu->addAction(tr("&Cut"));
+	m_CutAct->setShortcut(tr("Ctrl+X"));
+	m_CutAct->setEnabled(false);
+	connect(m_CutAct, SIGNAL(triggered()), this, SLOT(OnCut()));
+
+	m_PasteAct = m_EditMenu->addAction(tr("&Paste"));
+	m_PasteAct->setShortcut(tr("Ctrl+V"));
+	m_PasteAct->setEnabled(false);
+	connect(m_PasteAct, SIGNAL(triggered()), this, SLOT(OnPaste()));
+
+	m_DeleteAct = m_EditMenu->addAction(tr("&Delete"));
+	m_DeleteAct->setEnabled(false);
+	m_DeleteAct->setShortcut(QKeySequence::Delete);
+	connect(m_DeleteAct, SIGNAL(triggered()), this, SLOT(OnDelete()));
+
+	m_AddWaypointsAct = m_EditMenu->addAction(tr("&Add waypoints..."));
+	m_AddWaypointsAct->setEnabled(false);
+	m_AddWaypointsAct->setVisible(false);
+	connect(m_AddWaypointsAct, SIGNAL(triggered()), this, SLOT(OnAddWaypoints()));
+
+	
 }
 
 void GASSEd::saveLayout()
@@ -212,7 +241,7 @@ void GASSEd::loadLayout()
         return;
     }
 }
-
+/*
 QAction *addAction(QMenu *menu, const QString &text, QActionGroup *group, QSignalMapper *mapper,
                     int id)
 {
@@ -348,7 +377,7 @@ void GASSEd::destroyDockWidget(QAction *action)
 
     if (destroyDockWidgetMenu->isEmpty())
         destroyDockWidgetMenu->setEnabled(false);
-}
+}*/
 
 void GASSEd::OnNew()
 {
@@ -357,6 +386,7 @@ void GASSEd::OnNew()
 	m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
+	GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
 }
 
 void GASSEd::OnSave()
@@ -377,20 +407,24 @@ void GASSEd::OnOpen()
 		if(GetScene())
 			GASS::SimEngine::Get().DestroyScene(GetScene());
 		m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
+		
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
+		GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
 	}
 }
 
 void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 {
-	QMenu myMenu;
+	m_SelectedObject = obj;
+	m_EditMenu->exec(pos);
+	/*QMenu myMenu;
 	QAction*  delete_action = myMenu.addAction("Delete");
 	QAction*  copy_action = myMenu.addAction("Copy");
 	QAction*  paste_action = NULL;
-	//GASS::SceneObjectPtr copy_obj(m_CopyBuffer, boost::detail::sp_nothrow_tag());
-    //if(copy_obj)
+	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
+    if(copy_obj)
 		paste_action = myMenu.addAction("Paste");
 	QAction*  waypoint_action = NULL;
 	//check if this is a waypoint list object
@@ -414,14 +448,110 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
     }
 	else if(selectedItem == copy_action)
 	{
-		m_SceneObjectCopyBuffer = obj;
+		OnCopy();
 	}
 	else if(paste_action && selectedItem == paste_action)
 	{
-		GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
-    
+		OnPaste();
+	}*/
+}
+
+void GASSEd::OnCopy()
+{
+	m_SceneObjectCutBuffer.reset();
+	m_SceneObjectCopyBuffer = m_SelectedObject;
+}
+
+
+void GASSEd::OnCut()
+{
+	m_SceneObjectCopyBuffer.reset();
+	m_SceneObjectCutBuffer = m_SelectedObject;
+}
+
+void GASSEd::OnPaste()
+{
+	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+    if(copy_obj && obj)
+	{
 		GASS::SceneObjectPtr new_obj = copy_obj->CreateCopy();
 		obj->AddChildSceneObject(new_obj,true);
-		
+	}
+
+	GASS::SceneObjectPtr cut_obj(m_SceneObjectCutBuffer, boost::detail::sp_nothrow_tag());
+    if(cut_obj && obj)
+	{
+		cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
+		obj->AddChild(cut_obj);
+		int id = (int) this;
+		cut_obj->PostMessage(GASS::MessagePtr(new GASS::ParentChangedMessage(id)));
+		cut_obj.reset();
+		m_PasteAct->setEnabled(false);
+	}
+}
+
+void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
+{
+	m_SelectedObject = message->GetSceneObject();
+	
+	m_CopyAct->setEnabled(false);
+	m_PasteAct->setEnabled(false);
+	m_CutAct->setEnabled(false);
+	m_DeleteAct->setEnabled(false);
+
+	m_AddWaypointsAct->setEnabled(false);
+	m_AddWaypointsAct->setVisible(false);
+
+	GASS::SceneObjectPtr obj(m_SelectedObject, NO_THROW);
+	if(obj)
+	{
+		m_DeleteAct->setEnabled(true);
+		m_CopyAct->setEnabled(true);
+		m_CutAct->setEnabled(true);
+		if(GASS::SceneObjectPtr(m_SceneObjectCopyBuffer, NO_THROW))
+		{
+			m_PasteAct->setEnabled(true);
+		}
+
+		if(GASS::SceneObjectPtr(m_SceneObjectCutBuffer, NO_THROW))
+		{
+			m_PasteAct->setEnabled(true);
+		}
+
+		GASS::WaypointListComponentPtr waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
+		if(waypointlist)
+		{
+			m_AddWaypointsAct->setEnabled(true);
+			m_AddWaypointsAct->setVisible(true);
+		}
+	}
+}
+
+
+void GASSEd::OnDelete()
+{
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+    if(obj)
+	{
+		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
+	}
+}
+
+
+void GASSEd::OnAddWaypoints()
+{
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+    if(obj)
+	{
+		GASS::WaypointListComponentPtr waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
+		if(waypointlist)
+		{
+			GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+			sm->GetMouseToolController()->SelectTool(TID_CREATE);
+			GASS::CreateTool* tool = static_cast<GASS::CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
+			tool->SetParentObject(obj);
+			tool->SetTemplateName(waypointlist->GetWaypointTemplate());
+		}
 	}
 }

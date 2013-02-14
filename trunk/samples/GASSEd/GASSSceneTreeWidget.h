@@ -18,7 +18,7 @@ public:
 	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
 	QTreeWidgetItem *GetTreeItem(GASS::SceneObjectPtr obj) const;
 	GASS::SceneObjectPtr GetSceneObject(QTreeWidgetItem*  item) const;
-
+	void OnParentChanged(GASS::SceneObjectChangedParentEventPtr message);
 protected:
 	GASS::SceneWeakPtr m_Scene;
 	QTreeWidgetItem *m_ObjectRootItem;

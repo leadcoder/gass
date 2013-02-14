@@ -37,9 +37,13 @@ void GASSResourceTreeWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 	
 	for(size_t i = 0; i < temps.size(); i++)
 	{
-		QTreeWidgetItem *item= new  QTreeWidgetItem();
-		item->setText(0,temps[i].c_str());
-		root->addChild(item);
+		GASS::SceneObjectTemplatePtr t = DYNAMIC_PTR_CAST<GASS::SceneObjectTemplate>(GASS::SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temps[i]));
+		if(t->GetInstantiable())
+		{
+			QTreeWidgetItem *item= new  QTreeWidgetItem();
+			item->setText(0,temps[i].c_str());
+			root->addChild(item);
+		}
 	}
 }
 
