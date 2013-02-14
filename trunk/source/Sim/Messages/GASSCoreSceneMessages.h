@@ -238,6 +238,24 @@ namespace GASS
 		SceneObjectPtr m_Object;
 	};
 	typedef SPTR<SceneObjectRemovedEvent> SceneObjectRemovedEventPtr;
+
+	class SceneObjectChangedParentEvent : public SceneEventMessage
+	{
+	public:
+		/**
+		Constructor
+		@param object Pointer to the object that has been removed
+		*/
+		SceneObjectChangedParentEvent(SceneObjectPtr object , SenderID sender_id = -1, double delay= 0) : 
+		  SceneEventMessage(sender_id , delay), m_Object(object)
+		  {
+
+		  }
+		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+	private:
+		SceneObjectPtr m_Object;
+	};
+	typedef SPTR<SceneObjectChangedParentEvent> SceneObjectChangedParentEventPtr;
 }
 
 #endif

@@ -86,19 +86,36 @@ namespace GASS
 			if(gc)
 			{
 				m_CurrentGizmo = obj_under_cursor;
+
+				SceneObjectPtr selected = SceneObjectPtr(m_SelectedObject,NO_THROW);
+				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
+				{
+					SceneObjectPtr new_obj = selected->CreateCopy();
+					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
+					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+				}
+
 			}
 			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,NO_THROW))
 			{
 				m_RotateY = true;
 				int from_id = (int) this;
+
+				SceneObjectPtr selected = SceneObjectPtr(m_SelectedObject,NO_THROW);
+				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
+				{
+					SceneObjectPtr new_obj = selected->CreateCopy();
+					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
+					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+					selected = new_obj;
+				}
+
 				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
-				SendMessageRec(obj_under_cursor,col_msg);
+				SendMessageRec(selected,col_msg);
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
 					SendMessageRec(gizmo,col_msg);
-
 			}
-			//m_FirstMoveUpdate = true;
 		}
 	}
 

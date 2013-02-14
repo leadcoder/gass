@@ -22,6 +22,13 @@
 
 namespace GASS
 {
+
+	enum GizmoEditMode
+	{
+		GM_LOCAL,
+		GM_WORLD,
+	};
+
 	
 	class MouseToolController;
 	class MessageManager;

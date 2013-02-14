@@ -31,7 +31,9 @@ namespace GASS
 	typedef SPTR<ICameraComponent> CameraComponentPtr;
 	class EditorSystem; 
 
-	class EditorModuleExport MouseToolController : public SHARE_CLASS<MouseToolController>, public IMessageListener, public IMouseListener
+	
+
+	class EditorModuleExport MouseToolController : public SHARE_CLASS<MouseToolController>, public IMessageListener, public IMouseListener , public IKeyListener
 	{
 		friend class IMouseTool;
 	public:
@@ -47,6 +49,8 @@ namespace GASS
 		void SetGridSize(Float value); 
 		void SetSnapMovment(Float value);
 		void SetSnapAngle(Float value);
+		void SetEditMode(GizmoEditMode value);
+		GizmoEditMode  GetEditMode() const {return m_EditMode;}
 		Float GetGridSpacing() const {return m_GridSpacing;}
 		Float GetGridSize() const {return m_GridSize;}
 		Float GetSnapMovment() const {return m_SnapMovment;}
@@ -60,16 +64,24 @@ namespace GASS
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		float GetRayPickDistance() const {return m_RayPickDistance;}
+		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
 
 		//IMouseListener
 		bool MouseMoved(const MouseData &data);
 		bool MousePressed(const MouseData &data, MouseButtonId id );
 		bool MouseReleased(const MouseData &data, MouseButtonId id );
-		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
+
+		//IKeyListener
+		bool KeyPressed( int key, unsigned int text);
+		bool KeyReleased( int key, unsigned int text);		
+	
+	
+		bool IsShiftDown() const {return m_ShiftDown;}
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
+		
 		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
 
@@ -93,6 +105,9 @@ namespace GASS
 		float m_RayPickDistance;
 		bool m_EnableGizmo;
 		bool m_UseTerrainNormalOnDrop;
+		bool m_ShiftDown;
+		bool m_CtrlDown;
+		GizmoEditMode m_EditMode;
 		//double m_Delta;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;

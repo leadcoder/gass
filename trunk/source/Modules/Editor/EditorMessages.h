@@ -5,6 +5,7 @@
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/GASSSceneObjectTemplate.h"
+#include "Modules/Editor/EditorSceneManager.h"
 
 namespace GASS
 {
@@ -262,16 +263,16 @@ namespace GASS
 	};
 	typedef SPTR<SaveGASSSceneMessage> SaveGASSSceneMessagePtr;
 
-	class EditModeMessage : public BaseMessage
+	class EditModeChangedEvent : public SystemEventMessage
 	{
 	public:
-		EditModeMessage(const std::string &mode, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Mode(mode){}
-		  std::string GetEditMode() const {return m_Mode;}
+		EditModeChangedEvent(GizmoEditMode mode, SenderID sender_id = -1, double delay= 0) : 
+		  SystemEventMessage(sender_id , delay), m_Mode(mode){}
+		  GizmoEditMode GetEditMode() const {return m_Mode;}
 	private:
-		std::string  m_Mode;
+		GizmoEditMode  m_Mode;
 	};
-	typedef SPTR<EditModeMessage> EditModeMessagePtr;
+	typedef SPTR<EditModeChangedEvent> EditModeChangedEventPtr;
 
 
 	/*class SnapSettingsMessage : public BaseMessage

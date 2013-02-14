@@ -43,7 +43,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete(){};
 		virtual void SceneManagerTick(double delta) {(void)delta;}
-		virtual void Update(double delta) {};
+		virtual void Update(double delta) {(void)delta;};
 	protected:
 		void InitializePointers();
 

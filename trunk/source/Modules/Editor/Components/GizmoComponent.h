@@ -1,6 +1,7 @@
 #pragma once
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSMeshData.h"
@@ -13,9 +14,6 @@
 #define GT_PLANE "GT_PLANE"
 #define GT_GRID "GT_GRID"
 #define GT_FIXED_GRID "GT_FIXED_GRID"
-
-#define GM_WORLD "GM_WORLD"
-#define GM_LOCAL "GM_LOCAL"
 
 namespace GASS
 {
@@ -31,7 +29,7 @@ namespace GASS
 		Quaternion GetRotation(float detla);
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
-		std::string GetSpaceMode() const {return m_Mode;}
+		GizmoEditMode GetMode() const {return m_Mode;}
 	private:
 		void OnChangeGridRequest(ChangeGridRequestPtr message);
 		void OnCameraParameter(CameraParameterMessagePtr message);
@@ -43,7 +41,7 @@ namespace GASS
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
 		void OnWorldPosition(WorldPositionMessagePtr message);
-		void OnEditMode(EditModeMessagePtr message);
+		void OnEditMode(EditModeChangedEventPtr message);
 
 		void SetSelection(SceneObjectPtr  object);
 		void BuildMesh();
@@ -68,7 +66,7 @@ namespace GASS
 		bool m_Highlight;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
 		GASS::SceneObjectWeakPtr m_SelectedObject;
-		std::string m_Mode;
+		GizmoEditMode m_Mode;
 		Float m_GridDist;
 		bool m_Active;
 		EditorSceneManagerPtr m_EditorSceneManager;

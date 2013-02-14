@@ -46,6 +46,5 @@ namespace GASS
 	protected:
 		SceneObjectID m_ID;
 		bool m_Instantiable;
-		
 	};
 }

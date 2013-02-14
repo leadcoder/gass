@@ -66,7 +66,7 @@ namespace GASS
 			{
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
-				const Vec3 rayStart = m_RayStart + m_RayDir*(i*m_SegmentLength);
+				const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*m_SegmentLength);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 
@@ -79,9 +79,9 @@ namespace GASS
 
 				if(m_Result->Coll == true)
 				{
-					dGeomDestroy(ray);
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
 					m_Result->CollDist = m_Result->CollDist+i*m_SegmentLength;
+					dGeomDestroy(ray);
 					return;
 				}
 			}

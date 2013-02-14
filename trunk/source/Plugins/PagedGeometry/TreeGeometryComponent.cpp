@@ -168,6 +168,7 @@ namespace GASS
 		}
 
 		m_PagedGeometry = new PagedGeometry(ocam, m_PageSize);
+		m_PagedGeometry->setShadersEnabled(true);
 		m_DensityMap = GetSceneObject()->GetFirstComponentByClass<DensityMapComponent>();
 		if(m_DensityMap)
 			m_DensityMap->SetMapBounds(m_MapBounds);
@@ -183,7 +184,6 @@ namespace GASS
 			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.1,m_MeshFadeDist,Ogre::Any(1));
 			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.5,m_MeshFadeDist,Ogre::Any(0));
 			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,m_MeshFadeDist,Ogre::Any(1));
-
 			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,0,Ogre::Any(3));
 		}
 		if(m_ImposterDist >  0)

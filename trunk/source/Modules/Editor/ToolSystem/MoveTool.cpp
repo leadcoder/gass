@@ -55,7 +55,7 @@ namespace GASS
 					if(comp)
 					{
 						m_Offset = comp->GetWorldPosition();
-						if(gc->GetSpaceMode() == "World")
+						if(gc->GetMode() == GM_WORLD)
 						{
 							m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
 							m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
@@ -91,7 +91,7 @@ namespace GASS
 							if(gizmo)
 							{
 								GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-								if(gc->GetSpaceMode() == "World")
+								if(gc->GetMode() == GM_WORLD)
 								{
 									m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
 									m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
@@ -159,6 +159,16 @@ namespace GASS
 				m_CurrentGizmo = obj_under_cursor;
 				if(gc)
 					gc->SetActive(true);
+
+				//create copy if shift is pressed
+				SceneObjectPtr selected = SceneObjectPtr(m_SelectedObject,NO_THROW);
+				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
+				{
+					SceneObjectPtr new_obj = selected->CreateCopy();
+					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
+					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+				}
+
 			}
 			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,NO_THROW))
 			{
@@ -166,12 +176,21 @@ namespace GASS
 				int from_id = (int) this;
 
 				//Disable object collision
+
+				//create copy if shift is pressed
+				SceneObjectPtr selected = SceneObjectPtr(m_SelectedObject,NO_THROW);
+				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
+				{
+					SceneObjectPtr new_obj = selected->CreateCopy();
+					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
+					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+					selected = new_obj;
+				}
 				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
-				SendMessageRec(obj_under_cursor,col_msg);
+				SendMessageRec(selected,col_msg);
 				SceneObjectPtr gizmo = GetOrCreateGizmo();
 				if(gizmo)
 					SendMessageRec(gizmo,col_msg);
-
 			}
 			m_MoveUpdateCount = 0;
 		}

@@ -51,7 +51,9 @@ namespace GASS
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
 		m_ControlSettingName("EditorInputSettings"),
-		m_EditorSceneManager(sm)
+		m_EditorSceneManager(sm),
+		m_ShiftDown(false),
+		m_CtrlDown(false)
 	{
 
 	}
@@ -62,18 +64,20 @@ namespace GASS
 		{
 			delete m_Tools[i];
 		}
-
 		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->RemoveMouseListener(this);
-
+		input_system->RemoveKeyListener(this);
 	}
 
 	void MouseToolController::Init()
 	{
+		SetEditMode(GM_LOCAL);
+
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
 		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddMouseListener(this);
+		input_system->AddKeyListener(this);
 
 		//add default tools (based on config?)
 		IMouseTool* tool = new MoveTool(this);
@@ -124,7 +128,7 @@ namespace GASS
 		//Check settings
 		if(m_ControlSettingName != message->GetSettings())
 			return;
-		if(m_Active)
+		/*if(m_Active)
 		{
 			std::string name = message->GetController();
 			float value = message->GetValue();
@@ -149,7 +153,7 @@ namespace GASS
 			{
 				SelectTool(name);
 			}
-		}
+		}*/
 	}
 
 	void MouseToolController::AddTool(IMouseTool* tool)
@@ -173,7 +177,6 @@ namespace GASS
 		}
 		return false;
 	}
-
 
 	void MouseToolController::NextTool()
 	{
@@ -426,7 +429,6 @@ namespace GASS
 			//SceneObjectPtr pointer = GetPointerObject();
 			//pointer->PostMessage(MessagePtr(new WorldPositionMessage(info.m_3DPos)));
 		}
-
 		return true;
 	}
 
@@ -486,6 +488,36 @@ namespace GASS
 		return false;
 	}
 
+
+	bool MouseToolController::KeyPressed( int key, unsigned int text)
+	{
+		if(key == KEY_LSHIFT)
+				m_ShiftDown = true;
+
+		if(key == KEY_LCONTROL)
+				m_CtrlDown = true;
+
+		if(key == KEY_G && m_CtrlDown)
+		{
+			if(m_EditMode == GM_LOCAL)
+				SetEditMode(GM_WORLD);
+			else
+				SetEditMode(GM_LOCAL);
+			
+		}
+		return true;
+	}
+
+	bool MouseToolController::KeyReleased( int key, unsigned int text)
+	{
+		if(key == KEY_LSHIFT)
+			m_ShiftDown = false;
+		if(key == KEY_LCONTROL)
+				m_CtrlDown = false;
+		return true;
+	}
+
+
 	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
 	{
 		SceneCursorInfo cursorInfo = GetSceneCursorInfo(mouse_pos, 1000000);
@@ -497,6 +529,13 @@ namespace GASS
 		GASS::Quaternion rot;
 		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
 	}
+
+	void MouseToolController::SetEditMode(GizmoEditMode value)
+	{
+		m_EditMode = value;
+		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new EditModeChangedEvent(m_EditMode)));
+	}
+
 
 	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{

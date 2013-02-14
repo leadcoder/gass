@@ -385,6 +385,7 @@ namespace GASS
 			SetWorldPosition(world_pos);
 			SetWorldRotation(world_rot);
 			m_OgreNode->needUpdate();
+			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new SceneObjectChangedParentEvent(GetSceneObject())));
 		}
 	}
 

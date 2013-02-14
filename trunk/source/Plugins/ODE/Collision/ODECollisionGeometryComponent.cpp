@@ -393,7 +393,9 @@ namespace GASS
 
 			// Give some very bounds which, while conservative,
 			// makes AABB computation more accurate than +/-INF.
-			dGeomHeightfieldDataSetBounds( heightid, m_TerrainData->m_TerrainBounds.m_Min.y,  m_TerrainData->m_TerrainBounds.m_Max.y);
+			//dGeomHeightfieldDataSetBounds( heightid, m_TerrainData->m_TerrainBounds.m_Min.y,  m_TerrainData->m_TerrainBounds.m_Max.y);
+			//if we support dynamic terrains (ie terrain editor) min,max is unkonwn att start so just set some values predefined values
+			dGeomHeightfieldDataSetBounds( heightid, 0, 2000);
 			geom_id = dCreateHeightfield( GetCollisionSceneManager()->GetSpace(), heightid, 1 );
 
 			Vec3 center_position;
@@ -455,8 +457,4 @@ namespace GASS
 		m.m_Data2[15] = 1;
 
 	}
-
-
-	//ODECollisionGeometryComponent::TerrainData ODECollisionGeometryComponent::m_TerrainData = ODECollisionGeometryComponent::TerrainData();
-
 }

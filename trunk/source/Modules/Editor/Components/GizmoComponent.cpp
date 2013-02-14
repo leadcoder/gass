@@ -56,11 +56,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent, 1000));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeMessage,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest,0));
 
-
 		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+		m_Mode = m_EditorSceneManager->GetMouseToolController()->GetEditMode();
 
 		//Change geomtry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
@@ -75,7 +75,7 @@ namespace GASS
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent));
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeMessage));
+		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnEditMode,EditModeChangedEvent));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent));
 		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
@@ -91,7 +91,7 @@ namespace GASS
 		}
 	}
 
-	void GizmoComponent::OnEditMode(EditModeMessagePtr message)
+	void GizmoComponent::OnEditMode(EditModeChangedEventPtr message)
 	{
 		m_Mode = message->GetEditMode();
 		if(m_Mode == GM_LOCAL)
@@ -109,8 +109,6 @@ namespace GASS
 			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
 		}
 	}
-
-
 
 	void GizmoComponent::OnChangeGridRequest(ChangeGridRequestPtr message)
 	{
