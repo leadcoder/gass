@@ -1,6 +1,7 @@
- import * from  "terrain.material"	 
+ //import * from  "terrain.material"	 
 
-material DefaultGrass : VegetationTemplate
+material DefaultGrass 
+//: VegetationTemplate
 { 
 	//receive_shadows off 
 	technique light
@@ -17,7 +18,6 @@ material DefaultGrass : VegetationTemplate
 				texture veg_default.dds 
 			}
 		} 
-
 	} 
 } 
 

@@ -1,0 +1,926 @@
+/////////////Start Ambient//////////////////////////
+vertex_program AmbientVert unified
+{
+	delegate AmbientVert_HLSL
+	delegate AmbientVert_CG
+}
+
+vertex_program AmbientVert_CG cg 
+{ 
+   source ambient.shader  
+   entry_point AmbientVert 
+   profiles vs_1_1 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldViewProj worldviewproj_matrix
+		 param_named_auto ambient derived_ambient_light_colour
+   } 
+}
+
+vertex_program AmbientVert_HLSL hlsl 
+{ 
+   source ambient.shader
+   entry_point AmbientVert 
+   target vs_2_0
+   default_params 
+   { 
+         param_named_auto worldViewProj worldviewproj_matrix
+		 param_named_auto ambient derived_ambient_light_colour
+   } 
+}
+
+vertex_program AmbientBaseMapVert unified
+{
+	delegate AmbientBaseMapVert_HLSL
+	delegate AmbientBaseMapVert_CG
+}
+
+vertex_program AmbientBaseMapVert_CG cg 
+{ 
+   source ambient.shader
+   entry_point AmbientTextureVert 
+   profiles vs_1_1 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldViewProj worldviewproj_matrix
+		 param_named_auto ambient derived_ambient_light_colour
+   } 
+}
+
+vertex_program AmbientBaseMapVert_HLSL hlsl 
+{ 
+   source ambient.shader
+   entry_point AmbientTextureVert 
+   target vs_2_0
+   default_params 
+   { 
+         param_named_auto worldViewProj worldviewproj_matrix
+		 param_named_auto ambient derived_ambient_light_colour
+   }    
+}
+
+
+fragment_program AmbientSplattingFrag unified
+{
+	delegate AmbientSplattingFrag_HLSL
+	delegate AmbientSplattingFrag_CG
+}
+
+fragment_program AmbientSplattingFrag_HLSL hlsl 
+{ 
+   source ambient.shader
+   entry_point AmbientFrag
+   preprocessor_defines BASE_MAP,DETAIL_SPLATTING 
+   target ps_2_b   
+   default_params 
+   {
+      
+   }  
+ }
+
+fragment_program AmbientSplattingFrag_CG cg 
+{ 
+   source ambient.shader
+   entry_point AmbientFrag 
+   compile_arguments -DBASE_MAP=1 -DDETAIL_SPLATTING=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      
+   }  
+}
+
+
+/////////////End Ambient//////////////////////////
+
+
+material GASS_Common
+{
+	lod_values 100
+	set $AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+    
+	technique PPLHighLOD1
+    {
+	  scheme PPLHigh
+	  lod_index 1
+      pass Fallback
+      {
+	     ambient $AmbientColor
+		 diffuse $DiffuseColor
+		 specular $SpecularColor $Shininess
+	  }
+   }   
+   
+    technique PPLLowLOD0
+    {
+	  scheme PPLLow
+      pass MainPass
+      {
+	     ambient $AmbientColor
+		 diffuse $DiffuseColor
+		 specular $SpecularColor $Shininess
+      }
+   }
+}
+
+material GASS_TextureCommon : GASS_Common
+{ 
+	technique PPLHighLOD1
+    {
+	  scheme PPLHigh
+	  lod_index 1
+      pass Fallback
+      {
+	     ambient $AmbientColor
+		 diffuse $DiffuseColor
+		 specular $SpecularColor $Shininess
+		 texture_unit
+         {
+			  texture default.dds
+			  texture_alias BaseTexture
+         }
+      }
+    }
+
+	technique PPLLowLOD0
+    {
+	  scheme PPLLow
+      pass MainPass
+      {
+	     ambient $AmbientColor
+		 diffuse $DiffuseColor
+		 specular $SpecularColor $Shininess
+		 texture_unit
+         {
+			  texture NMBumpsOut.png
+              //tex_address_mode clamp
+         }
+      }
+   }
+}
+
+
+/////////////START PerPixel//////////////////////////
+
+vertex_program PerPixelVert unified
+{
+	delegate PerPixelVert_HLSL
+	delegate PerPixelVert_CG
+}
+
+vertex_program PerPixelVert_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert
+   target vs_2_0
+   preprocessor_defines INTEGRATED_SHADOWS
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+vertex_program PerPixelVert_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert 
+   compile_arguments -DINTEGRATED_SHADOWS=1
+   profiles vs_2_0 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+fragment_program PerPixelFrag unified
+{
+	delegate PerPixelFrag_HLSL
+	delegate PerPixelFrag_CG
+}
+
+fragment_program PerPixelFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines INTEGRATED_SHADOWS 
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+ }
+
+fragment_program PerPixelFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DINTEGRATED_SHADOWS=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+}
+
+
+material GASS_ColorOnly : GASS_Common 
+{ 
+   technique PPLHighLOD0
+   {
+	  scheme PPLHigh
+	  lod_index 0
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse 0 0 0 
+		 specular 0 0 0 0
+		 vertex_program_ref AmbientVert
+         {
+         }
+      }
+      pass 
+      { 
+	    ambient 0 0 0 
+		diffuse $DiffuseColor
+		specular $SpecularColor $Shininess
+        iteration once_per_light
+        scene_blend add  
+
+        vertex_program_ref PerPixelVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelFrag
+		{ 
+		}
+
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+	  } 
+   }
+   technique PPLHighLOD1
+   {
+	  scheme PPLHigh
+	  lod_index 1
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse $DiffuseColor
+		 specular $SpecularColor $Shininess
+	   }
+   }   
+}
+
+/////////////END PerPixel//////////////////////////
+
+/////////////START PerPixelBaseMap//////////////////////////
+vertex_program PerPixelBaseMapVert unified
+{
+	delegate PerPixelBaseMapVert_HLSL
+	delegate PerPixelBaseMapVert_CG
+}
+
+vertex_program PerPixelBaseMapVert_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert
+   target vs_2_0
+   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+vertex_program PerPixelBaseMapVert_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1
+   profiles vs_2_0 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+fragment_program PerPixelBaseMapFrag unified
+{
+	delegate PerPixelBaseMapFrag_HLSL
+	delegate PerPixelBaseMapFrag_CG
+}
+
+fragment_program PerPixelBaseMapFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS 
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+ }
+
+fragment_program PerPixelBaseMapFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+}
+
+
+material GASS_BaseMap : GASS_TextureCommon
+{ 
+   technique PPLHighLOD0
+   {
+	  scheme PPLHigh
+	  lod_index 0
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse 0 0 0 
+		 specular 0 0 0 0
+		 vertex_program_ref AmbientBaseMapVert
+         {
+		 }
+         texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}
+      }
+      pass 
+      { 
+	    ambient 0 0 0 
+		diffuse $DiffuseColor
+		specular $SpecularColor $Shininess
+        iteration once_per_light
+        scene_blend add  
+
+        vertex_program_ref PerPixelBaseMapVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelBaseMapFrag
+		{ 
+		}
+
+		texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}			
+		
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+	  } 
+   }
+}
+
+/////////////END PerPixelBaseMap//////////////////////////
+
+/////////////START PerPixelBaseAndNormalMap//////////////////////////
+vertex_program PerPixelBaseAndNormalMapVert unified
+{
+	delegate PerPixelBaseAndNormalMapVert_HLSL
+	delegate PerPixelBaseAndNormalMapVert_CG
+}
+
+vertex_program PerPixelBaseAndNormalMapVert_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert
+   target vs_2_0
+   preprocessor_defines BASE_MAP,NORMAL_MAP,INTEGRATED_SHADOWS
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+vertex_program PerPixelBaseAndNormalMapVert_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1 -DNORMAL_MAP=1
+   profiles vs_2_0 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+fragment_program PerPixelBaseAndNormalMapFrag unified
+{
+	delegate PerPixelBaseAndNormalMapFrag_HLSL
+	delegate PerPixelBaseAndNormalMapFrag_CG
+}
+
+fragment_program PerPixelBaseAndNormalMapFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines BASE_MAP,NORMAL_MAP,INTEGRATED_SHADOWS 
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+ }
+
+fragment_program PerPixelBaseAndNormalMapFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1 -DNORMAL_MAP=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+   }  
+}
+
+material GASS_BaseAndNormalMap : GASS_TextureCommon
+{ 
+   technique PPLHighLOD0
+   {
+	  scheme PPLHigh
+	  lod_index 0
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse 0 0 0 
+		 specular 0 0 0 0
+		 vertex_program_ref AmbientBaseMapVert
+         {
+         }
+         texture_unit
+         {
+			 texture default.dds
+			 texture_alias BaseTexture
+         }
+      }
+      pass 
+      { 
+	    ambient 0 0 0 
+		diffuse $DiffuseColor
+		specular $SpecularColor $Shininess
+        iteration once_per_light
+        scene_blend add  
+
+        vertex_program_ref PerPixelBaseAndNormalMapVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelBaseAndNormalMapFrag
+		{ 
+		}
+
+		texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}			
+		
+		texture_unit normal_map
+		{ 
+			texture default.dds
+			texture_alias NormalTexture
+		}
+		// shadowmap 1
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+	  } 
+   }   
+}
+
+/////////////END PerPixelBaseAndNormalMap//////////////////////////
+
+/////////////START PerPixelBaseAndParallaxMap//////////////////////////
+
+fragment_program PerPixelBaseAndParallaxMapFrag unified
+{
+	delegate PerPixelBaseAndParallaxMapFrag_HLSL
+	delegate PerPixelBaseAndParallaxMapFrag_CG
+}
+
+fragment_program PerPixelBaseAndParallaxMapFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines BASE_MAP,NORMAL_MAP,INTEGRATED_SHADOWS,PARALLAX_EFFECT
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named displacementScaleBias float2 0.04 0.02
+   }  
+ }
+
+fragment_program PerPixelBaseAndParallaxMapFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1 -DNORMAL_MAP=1 -DPARALLAX_EFFECT=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named displacementScaleBias float2 0.04 0.02
+	  
+	  
+   }  
+}
+
+material GASS_BaseAndParallaxMap : GASS_TextureCommon
+{ 
+   technique PPLHighLOD0
+   {
+	  scheme PPLHigh
+	  lod_index 0
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse 0 0 0 
+		 specular 0 0 0 0
+		 vertex_program_ref AmbientBaseMapVert
+         {
+         }
+		 
+         texture_unit
+         {
+			texture default.dds
+			texture_alias BaseTexture
+		 }
+      }
+      pass 
+      { 
+	    ambient 0 0 0 
+		diffuse $DiffuseColor
+		specular $SpecularColor $Shininess
+        iteration once_per_light
+        scene_blend add  
+
+        vertex_program_ref PerPixelBaseAndNormalMapVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelBaseAndParallaxMapFrag
+		{ 
+		}
+
+		texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}			
+		
+		texture_unit normal_map
+		{ 
+			texture default.dds
+			texture_alias NormalTexture
+		}
+		// shadowmap 1
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+	  } 
+   }
+}
+
+/////////////END PerPixelBaseAndParallaxMap//////////////////////////
+
+/////////////START PerPixelBaseMapAndDetailSplatting//////////////////////////
+vertex_program PerPixelBaseMapAndDetailSplattingVert unified
+{
+	delegate PerPixelBaseMapAndDetailSplattingVert_HLSL
+	delegate PerPixelBaseMapAndDetailSplattingVert_CG
+}
+
+vertex_program PerPixelBaseMapAndDetailSplattingVert_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert
+   target vs_2_0
+   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+vertex_program PerPixelBaseMapAndDetailSplattingVert_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelVert 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1
+   profiles vs_2_0 arbvp1 
+   default_params 
+   { 
+         param_named_auto worldviewproj worldviewproj_matrix
+		 param_named_auto worldMat world_matrix
+		 param_named_auto lightPosition light_position_object_space 0
+		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
+   } 
+} 
+
+fragment_program PerPixelBaseMapAndDetailSplattingFrag unified
+{
+	delegate PerPixelBaseMapAndDetailSplattingFrag_HLSL
+	delegate PerPixelBaseMapAndDetailSplattingFrag_CG
+}
+
+fragment_program PerPixelBaseMapAndDetailSplattingFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS,DETAIL_SPLATTING
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named splatScales float4 200 200 200 200
+   }  
+ }
+
+fragment_program PerPixelBaseMapAndDetailSplattingFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1 -DDETAIL_SPLATTING=1 
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named splatScales float4 200 200 200 200
+   }  
+}
+
+material GASS_BaseMapAndDetailSplatting : GASS_TextureCommon
+{ 
+   set $SplatScales "200 200 200 200"
+   technique PPLHighLOD0
+   {
+	  scheme PPLHigh
+	  lod_index 0
+      pass
+      {
+	     ambient $AmbientColor
+		 diffuse 0 0 0 
+		 specular 0 0 0 0
+		 vertex_program_ref AmbientBaseMapVert
+         {
+		 
+		 }
+		 fragment_program_ref AmbientSplattingFrag
+		 {
+			param_named splatScales float4 $SplatScales
+		 }
+		 
+        texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}
+		texture_unit splat_map
+		{
+		  texture default.dds
+		  texture_alias SplatTexture
+		}
+
+		texture_unit detail_map1
+		{
+		  texture default.dds
+		  texture_alias DetailTexture1
+		}
+
+		texture_unit detail_map2
+		{
+		  texture default.dds
+		  texture_alias DetailTexture2
+		}		
+		
+		texture_unit detail_map3
+		{
+		  texture default.dds
+		  texture_alias DetailTexture3
+		}		
+      }
+      pass 
+      { 
+	    ambient 0 0 0 
+		diffuse $DiffuseColor
+		specular $SpecularColor $Shininess
+        iteration once_per_light
+        scene_blend add  
+
+        vertex_program_ref PerPixelBaseMapAndDetailSplattingVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelBaseMapAndDetailSplattingFrag
+		{
+			param_named splatScales float4 $SplatScales		
+		}
+
+		texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}
+		
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+
+		texture_unit splat_map
+		{
+		  texture default.dds
+		  texture_alias SplatTexture
+		}
+
+		texture_unit detail_map1
+		{
+		  texture default.dds
+		  texture_alias DetailTexture1
+		}
+
+		texture_unit detail_map2
+		{
+		  texture default.dds
+		  texture_alias DetailTexture2
+		}		
+		
+		texture_unit detail_map3
+		{
+		  texture default.dds
+		  texture_alias DetailTexture3
+		}		
+	  } 
+   }
+}
+
+/////////////END PerPixelBaseMapAndDetailSplatting//////////////////////////
+
+//test materials
+
+material test_PerPixel : GASS_ColorOnly
+{
+	set	$AmbientColor "1 0 0"
+    set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
+
+material test_PerPixelBaseMap : GASS_BaseMap
+{
+    set_texture_alias BaseTexture default.dds
+    set	$AmbientColor "0.1 0.1 0.1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
+
+material test_PerPixelBaseAndNormalMap : GASS_BaseAndNormalMap
+{
+    set_texture_alias BaseTexture default.dds
+    //set_texture_alias NormalTexture NMBumpsOut.png
+	set	$AmbientColor "0.6 0.1 1"
+    set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
+
+material test_PerPixelBaseAndParallaxMap : GASS_BaseAndParallaxMap
+{
+    set_texture_alias BaseTexture default.dds
+    //set_texture_alias NormalTexture NMBumpsOut.png
+	set	$AmbientColor "1 1 1"
+    set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
+
