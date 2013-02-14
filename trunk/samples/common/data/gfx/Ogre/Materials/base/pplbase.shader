@@ -69,6 +69,11 @@ void PerPixelVert(float4 position : POSITION
    oNormal = normal;
    
    float3 lightDir = lightPosition.xyz -  (position.xyz * lightPosition.w);
+   
+   worldMat[0][3] = 0;
+   worldMat[1][3] = 0;
+   worldMat[2][3] = 0;
+   
    lightDir	= mul(worldMat,float4(lightDir,1));
    OLightDist = length(lightDir);
 #ifdef NORMAL_MAP

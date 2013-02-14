@@ -101,6 +101,10 @@ material GASS_Common
 	set $DiffuseColor "1 1 1"
     set $SpecularColor "1 1 1"
     set $Shininess "128"
+	
+	set $SceneBlend "one zero"
+	set $DepthWrite "on"
+	set $AlphaRejection "always_pass"
     
 	technique PPLHighLOD1
     {
@@ -111,6 +115,9 @@ material GASS_Common
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
 	  }
    }   
    
@@ -122,6 +129,9 @@ material GASS_Common
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
       }
    }
 }
@@ -137,6 +147,10 @@ material GASS_TextureCommon : GASS_Common
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
+		 
 		 texture_unit
          {
 			  texture default.dds
@@ -153,9 +167,12 @@ material GASS_TextureCommon : GASS_Common
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
 		 texture_unit
          {
-			  texture NMBumpsOut.png
+			  texture default.dds
               //tex_address_mode clamp
          }
       }
@@ -255,6 +272,9 @@ material GASS_ColorOnly : GASS_Common
       pass
       {
 	     ambient $AmbientColor
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
 		 diffuse 0 0 0 
 		 specular 0 0 0 0
 		 vertex_program_ref AmbientVert
@@ -266,6 +286,9 @@ material GASS_ColorOnly : GASS_Common
 	    ambient 0 0 0 
 		diffuse $DiffuseColor
 		specular $SpecularColor $Shininess
+		depth_write $DepthWrite
+		scene_blend $SceneBlend
+		alpha_rejection $AlphaRejection
         iteration once_per_light
         scene_blend add  
 
@@ -295,6 +318,9 @@ material GASS_ColorOnly : GASS_Common
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
 	   }
    }   
 }
@@ -394,6 +420,9 @@ material GASS_BaseMap : GASS_TextureCommon
 	     ambient $AmbientColor
 		 diffuse 0 0 0 
 		 specular 0 0 0 0
+		 depth_write $DepthWrite
+		 scene_blend $SceneBlend
+		 alpha_rejection $AlphaRejection
 		 vertex_program_ref AmbientBaseMapVert
          {
 		 }
@@ -408,6 +437,9 @@ material GASS_BaseMap : GASS_TextureCommon
 	    ambient 0 0 0 
 		diffuse $DiffuseColor
 		specular $SpecularColor $Shininess
+		depth_write $DepthWrite
+		scene_blend $SceneBlend
+		alpha_rejection $AlphaRejection
         iteration once_per_light
         scene_blend add  
 
