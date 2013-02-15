@@ -105,12 +105,42 @@ material GASS_Common
 	set $SceneBlend "one zero"
 	set $DepthWrite "on"
 	set $AlphaRejection "always_pass"
-    
-	technique PPLHighLOD1
+	
+	
+	 technique ALM_LOD0_TECH
+     {
+	   scheme ALM_STD
+	   lod_index 0
+       pass ALM_LOD0_AMBIENT_PASS
+       {
+			ambient $AmbientColor
+			diffuse 0 0 0 
+			specular 0 0 0 0
+			depth_write $DepthWrite
+			scene_blend $SceneBlend
+			alpha_rejection $AlphaRejection
+			vertex_program_ref AmbientVert
+			{
+			}
+	   }
+       pass ALM_LOD0_LIGHT_PASS
+       {
+			fog_override true
+			ambient 0 0 0 
+			diffuse $DiffuseColor
+			specular $SpecularColor $Shininess
+			depth_write $DepthWrite
+			alpha_rejection $AlphaRejection
+			depth_write $DepthWrite
+			iteration once_per_light
+			scene_blend add  
+	   } 
+    }
+	technique ALM_LOD1_TECH
     {
-	  scheme PPLHigh
+	  scheme ALM_STD
 	  lod_index 1
-      pass Fallback
+      pass ALM_LOD1_MAIN_PASS
       {
 	     ambient $AmbientColor
 		 diffuse $DiffuseColor
@@ -121,12 +151,13 @@ material GASS_Common
 	  }
    }   
    
-    technique PPLLowLOD0
+    technique FFP_LOD0_TECH
     {
-	  scheme PPLLow
-      pass MainPass
+	  scheme FFP_STD
+	  lod_index 0
+      pass FFP_MAIN_PASS
       {
-	     ambient $AmbientColor
+		 ambient $AmbientColor
 		 diffuse $DiffuseColor
 		 specular $SpecularColor $Shininess
 		 depth_write $DepthWrite
@@ -138,19 +169,25 @@ material GASS_Common
 
 material GASS_TextureCommon : GASS_Common
 { 
-	technique PPLHighLOD1
+	technique ALM_LOD0_TECH
     {
-	  scheme PPLHigh
-	  lod_index 1
-      pass Fallback
+		pass ALM_LOD0_AMBIENT_PASS
+		{
+			vertex_program_ref AmbientBaseMapVert
+			{
+			}
+			texture_unit
+			{
+				texture default.dds
+				texture_alias BaseTexture
+			}
+		}
+    }
+	
+	technique ALM_LOD1_TECH
+    {
+	  pass ALM_LOD1_MAIN_PASS
       {
-	     ambient $AmbientColor
-		 diffuse $DiffuseColor
-		 specular $SpecularColor $Shininess
-		 depth_write $DepthWrite
-		 scene_blend $SceneBlend
-		 alpha_rejection $AlphaRejection
-		 
 		 texture_unit
          {
 			  texture default.dds
@@ -159,21 +196,14 @@ material GASS_TextureCommon : GASS_Common
       }
     }
 
-	technique PPLLowLOD0
+	technique FFP_LOD0_TECH
     {
-	  scheme PPLLow
-      pass MainPass
+      pass FFP_MAIN_PASS
       {
-	     ambient $AmbientColor
-		 diffuse $DiffuseColor
-		 specular $SpecularColor $Shininess
-		 depth_write $DepthWrite
-		 scene_blend $SceneBlend
-		 alpha_rejection $AlphaRejection
 		 texture_unit
          {
 			  texture default.dds
-              //tex_address_mode clamp
+              texture_alias BaseTexture
          }
       }
    }
@@ -262,36 +292,12 @@ fragment_program PerPixelFrag_CG cg
    }  
 }
 
-
 material GASS_ColorOnly : GASS_Common 
 { 
-   technique PPLHighLOD0
+   technique ALM_LOD0_TECH
    {
-	  scheme PPLHigh
-	  lod_index 0
-      pass
-      {
-	     ambient $AmbientColor
-		 depth_write $DepthWrite
-		 scene_blend $SceneBlend
-		 alpha_rejection $AlphaRejection
-		 diffuse 0 0 0 
-		 specular 0 0 0 0
-		 vertex_program_ref AmbientVert
-         {
-         }
-      }
-      pass 
+      pass ALM_LOD0_LIGHT_PASS
       { 
-	    ambient 0 0 0 
-		diffuse $DiffuseColor
-		specular $SpecularColor $Shininess
-		depth_write $DepthWrite
-		scene_blend $SceneBlend
-		alpha_rejection $AlphaRejection
-        iteration once_per_light
-        scene_blend add  
-
         vertex_program_ref PerPixelVert
         { 
         }   
@@ -309,20 +315,6 @@ material GASS_ColorOnly : GASS_Common
 		}
 	  } 
    }
-   technique PPLHighLOD1
-   {
-	  scheme PPLHigh
-	  lod_index 1
-      pass
-      {
-	     ambient $AmbientColor
-		 diffuse $DiffuseColor
-		 specular $SpecularColor $Shininess
-		 depth_write $DepthWrite
-		 scene_blend $SceneBlend
-		 alpha_rejection $AlphaRejection
-	   }
-   }   
 }
 
 /////////////END PerPixel//////////////////////////
@@ -411,38 +403,10 @@ fragment_program PerPixelBaseMapFrag_CG cg
 
 material GASS_BaseMap : GASS_TextureCommon
 { 
-   technique PPLHighLOD0
+   technique ALM_LOD0_TECH
    {
-	  scheme PPLHigh
-	  lod_index 0
-      pass
-      {
-	     ambient $AmbientColor
-		 diffuse 0 0 0 
-		 specular 0 0 0 0
-		 depth_write $DepthWrite
-		 scene_blend $SceneBlend
-		 alpha_rejection $AlphaRejection
-		 vertex_program_ref AmbientBaseMapVert
-         {
-		 }
-         texture_unit base_map
-		{
-		  texture default.dds
-		  texture_alias BaseTexture
-		}
-      }
-      pass 
+      pass ALM_LOD0_LIGHT_PASS
       { 
-	    ambient 0 0 0 
-		diffuse $DiffuseColor
-		specular $SpecularColor $Shininess
-		depth_write $DepthWrite
-		scene_blend $SceneBlend
-		alpha_rejection $AlphaRejection
-        iteration once_per_light
-        scene_blend add  
-
         vertex_program_ref PerPixelBaseMapVert
         { 
         }   
@@ -450,12 +414,12 @@ material GASS_BaseMap : GASS_TextureCommon
 		fragment_program_ref PerPixelBaseMapFrag
 		{ 
 		}
-
+		
 		texture_unit base_map
 		{
 		  texture default.dds
 		  texture_alias BaseTexture
-		}			
+		}
 		
 		texture_unit  shadow_map
 		{
@@ -553,32 +517,10 @@ fragment_program PerPixelBaseAndNormalMapFrag_CG cg
 
 material GASS_BaseAndNormalMap : GASS_TextureCommon
 { 
-   technique PPLHighLOD0
+   technique ALM_LOD0_TECH
    {
-	  scheme PPLHigh
-	  lod_index 0
-      pass
-      {
-	     ambient $AmbientColor
-		 diffuse 0 0 0 
-		 specular 0 0 0 0
-		 vertex_program_ref AmbientBaseMapVert
-         {
-         }
-         texture_unit
-         {
-			 texture default.dds
-			 texture_alias BaseTexture
-         }
-      }
-      pass 
+      pass ALM_LOD0_LIGHT_PASS
       { 
-	    ambient 0 0 0 
-		diffuse $DiffuseColor
-		specular $SpecularColor $Shininess
-        iteration once_per_light
-        scene_blend add  
-
         vertex_program_ref PerPixelBaseAndNormalMapVert
         { 
         }   
@@ -664,33 +606,10 @@ fragment_program PerPixelBaseAndParallaxMapFrag_CG cg
 
 material GASS_BaseAndParallaxMap : GASS_TextureCommon
 { 
-   technique PPLHighLOD0
+   technique ALM_LOD0_TECH
    {
-	  scheme PPLHigh
-	  lod_index 0
-      pass
-      {
-	     ambient $AmbientColor
-		 diffuse 0 0 0 
-		 specular 0 0 0 0
-		 vertex_program_ref AmbientBaseMapVert
-         {
-         }
-		 
-         texture_unit
-         {
-			texture default.dds
-			texture_alias BaseTexture
-		 }
-      }
-      pass 
+      pass ALM_LOD0_LIGHT_PASS
       { 
-	    ambient 0 0 0 
-		diffuse $DiffuseColor
-		specular $SpecularColor $Shininess
-        iteration once_per_light
-        scene_blend add  
-
         vertex_program_ref PerPixelBaseAndNormalMapVert
         { 
         }   
@@ -725,41 +644,6 @@ material GASS_BaseAndParallaxMap : GASS_TextureCommon
 /////////////END PerPixelBaseAndParallaxMap//////////////////////////
 
 /////////////START PerPixelBaseMapAndDetailSplatting//////////////////////////
-vertex_program PerPixelBaseMapAndDetailSplattingVert unified
-{
-	delegate PerPixelBaseMapAndDetailSplattingVert_HLSL
-	delegate PerPixelBaseMapAndDetailSplattingVert_CG
-}
-
-vertex_program PerPixelBaseMapAndDetailSplattingVert_HLSL hlsl 
-{ 
-   source pplbase.shader
-   entry_point PerPixelVert
-   target vs_2_0
-   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS
-   default_params 
-   { 
-         param_named_auto worldviewproj worldviewproj_matrix
-		 param_named_auto worldMat world_matrix
-		 param_named_auto lightPosition light_position_object_space 0
-		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
-   } 
-} 
-
-vertex_program PerPixelBaseMapAndDetailSplattingVert_CG cg 
-{ 
-   source pplbase.shader
-   entry_point PerPixelVert 
-   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1
-   profiles vs_2_0 arbvp1 
-   default_params 
-   { 
-         param_named_auto worldviewproj worldviewproj_matrix
-		 param_named_auto worldMat world_matrix
-		 param_named_auto lightPosition light_position_object_space 0
-		 param_named_auto texWorldViewProj texture_worldviewproj_matrix 0
-   } 
-} 
 
 fragment_program PerPixelBaseMapAndDetailSplattingFrag unified
 {
@@ -810,15 +694,12 @@ fragment_program PerPixelBaseMapAndDetailSplattingFrag_CG cg
 material GASS_BaseMapAndDetailSplatting : GASS_TextureCommon
 { 
    set $SplatScales "200 200 200 200"
-   technique PPLHighLOD0
+   set $LOD1AmbientColor "1 1 1 1"
+   set $LOD1DiffuseColor "1 1 1 1"
+   technique ALM_LOD0_TECH
    {
-	  scheme PPLHigh
-	  lod_index 0
-      pass
+	  pass ALM_LOD0_AMBIENT_PASS
       {
-	     ambient $AmbientColor
-		 diffuse 0 0 0 
-		 specular 0 0 0 0
 		 vertex_program_ref AmbientBaseMapVert
          {
 		 
@@ -857,15 +738,9 @@ material GASS_BaseMapAndDetailSplatting : GASS_TextureCommon
 		  texture_alias DetailTexture3
 		}		
       }
-      pass 
+      pass ALM_LOD0_LIGHT_PASS
       { 
-	    ambient 0 0 0 
-		diffuse $DiffuseColor
-		specular $SpecularColor $Shininess
-        iteration once_per_light
-        scene_blend add  
-
-        vertex_program_ref PerPixelBaseMapAndDetailSplattingVert
+	    vertex_program_ref PerPixelBaseMapVert
         { 
         }   
 
@@ -913,9 +788,193 @@ material GASS_BaseMapAndDetailSplatting : GASS_TextureCommon
 		}		
 	  } 
    }
+   technique ALM_LOD1_TECH
+   {
+	  pass ALM_LOD1_MAIN_PASS
+      {
+	     ambient $LOD1AmbientColor
+		 diffuse $LOD1DiffuseColor
+		 texture_unit
+         {
+			  texture default.dds
+			  texture_alias BaseTexture
+         }
+      }
+   }
 }
 
 /////////////END PerPixelBaseMapAndDetailSplatting//////////////////////////
+
+
+/////////////START PerPixelBaseMapAndNormalMapAndDetailSplatting//////////////////////////
+
+fragment_program PerPixelBaseMapAndNormalMapAndDetailSplattingFrag unified
+{
+	delegate PerPixelBaseMapAndNormalMapAndDetailSplattingFrag_HLSL
+	delegate PerPixelBaseMapAndNormalMapAndDetailSplattingFrag_CG
+}
+
+fragment_program PerPixelBaseMapAndNormalMapAndDetailSplattingFrag_HLSL hlsl 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag
+   preprocessor_defines BASE_MAP,INTEGRATED_SHADOWS,DETAIL_SPLATTING,NORMAL_MAP,GENERATE_TANGENT
+   target ps_2_b   
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named splatScales float4 200 200 200 200
+   }  
+ }
+
+fragment_program PerPixelBaseMapAndNormalMapAndDetailSplattingFrag_CG cg 
+{ 
+   source pplbase.shader
+   entry_point PerPixelFrag 
+   compile_arguments -DBASE_MAP=1 -DINTEGRATED_SHADOWS=1 -DDETAIL_SPLATTING=1 -DNORMAL_MAP=1 DGENERATE_TANGENT=1
+   profiles ps_2_x arbfp1
+   default_params 
+   {
+      param_named_auto eyePosition camera_position_object_space
+      param_named_auto lightPosition light_position_object_space 0
+      param_named_auto lightDiffuse derived_light_diffuse_colour 0
+	  param_named_auto lightSpecular derived_light_specular_colour 0
+	  param_named_auto spotDirection light_direction_object_space 0
+	  param_named_auto spotParams spotlight_params 0
+	  param_named_auto exponent surface_shininess
+	  param_named_auto lightAtt light_attenuation 0
+	  param_named splatScales float4 200 200 200 200
+   }  
+}
+
+material GASS_BaseMapAndNormalMapAndDetailSplatting : GASS_TextureCommon
+{ 
+   set $SplatScales "200 200 200 200"
+   set $LOD1AmbientColor "1 1 1 1"
+   set $LOD1DiffuseColor "1 1 1 1"
+   
+   
+   technique ALM_LOD0_TECH
+   {
+	  pass ALM_LOD0_AMBIENT_PASS
+      {
+		 vertex_program_ref AmbientBaseMapVert
+         {
+		 
+		 }
+		 fragment_program_ref AmbientSplattingFrag
+		 {
+			param_named splatScales float4 $SplatScales
+		 }
+		 
+        texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}
+		
+		texture_unit splat_map
+		{
+		  texture default.dds
+		  texture_alias SplatTexture
+		}
+
+		texture_unit detail_map1
+		{
+		  texture default.dds
+		  texture_alias DetailTexture1
+		}
+
+		texture_unit detail_map2
+		{
+		  texture default.dds
+		  texture_alias DetailTexture2
+		}		
+		
+		texture_unit detail_map3
+		{
+		  texture default.dds
+		  texture_alias DetailTexture3
+		}		
+      }
+      pass ALM_LOD0_LIGHT_PASS
+      {  
+        vertex_program_ref PerPixelBaseAndNormalMapVert
+        { 
+        }   
+
+		fragment_program_ref PerPixelBaseMapAndNormalMapAndDetailSplattingFrag
+		{
+			param_named splatScales float4 $SplatScales		
+		}
+
+		texture_unit base_map
+		{
+		  texture default.dds
+		  texture_alias BaseTexture
+		}
+		
+		texture_unit normal_map
+		{ 
+			texture default.dds
+			texture_alias NormalTexture
+		}
+		
+		texture_unit  shadow_map
+		{
+			content_type shadow
+			tex_address_mode border
+			tex_border_colour 1 1 1 1
+			filtering none
+		}
+
+		texture_unit splat_map
+		{
+		  texture default.dds
+		  texture_alias SplatTexture
+		}
+
+		texture_unit detail_map1
+		{
+		  texture default.dds
+		  texture_alias DetailTexture1
+		}
+
+		texture_unit detail_map2
+		{
+		  texture default.dds
+		  texture_alias DetailTexture2
+		}		
+		
+		texture_unit detail_map3
+		{
+		  texture default.dds
+		  texture_alias DetailTexture3
+		}		
+	  } 
+   }
+   technique ALM_LOD1_TECH
+   {
+	  pass ALM_LOD1_MAIN_PASS
+      {
+	     ambient $LOD1AmbientColor
+		 diffuse $LOD1DiffuseColor
+		 texture_unit
+         {
+			  texture default.dds
+			  texture_alias BaseTexture
+         }
+      }
+   }
+}
+/////////////END PerPixelBaseMapAndNormalMapAndDetailSplatting//////////////////////////
 
 //test materials
 

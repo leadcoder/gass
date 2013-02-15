@@ -49,8 +49,10 @@ void PerPixelVert(float4 position : POSITION
 #ifdef NORMAL_MAP
 					,float2 uv         : TEXCOORD0
 					,out float2 oUv    : TEXCOORD0
+//#ifndef GENERATE_TANGENT
 					,out float3 oTangent : TEXCOORD3
 				    ,float3 tangent     : TANGENT0
+//#endif
 #elif BASE_MAP
 					,float2 uv         : TEXCOORD0
 					,out float2 oUv    : TEXCOORD0
@@ -73,7 +75,6 @@ void PerPixelVert(float4 position : POSITION
    worldMat[0][3] = 0;
    worldMat[1][3] = 0;
    worldMat[2][3] = 0;
-   
    lightDir	= mul(worldMat,float4(lightDir,1));
    OLightDist = length(lightDir);
 #ifdef NORMAL_MAP
@@ -139,7 +140,14 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 	lightDir = normalize(lightDir);
 	if(lightDist > lightAtt.x)
 		clip(-1.0);
-	
+
+#ifdef GENERATE_TANGENT
+	tangent = float3(-1,0,0);
+	N = expand(tex2D(normalHeightMap, uv).xyz);
+	float3 bin = normalize(cross(tangent ,N)); 
+	tangent = normalize(cross(N, bin));
+#endif		
+
 #ifdef NORMAL_MAP
 	float3 T = normalize(tangent);
 	float3 binormal = normalize(cross(T ,N)); 
