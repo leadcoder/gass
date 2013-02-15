@@ -63,11 +63,17 @@ namespace GASS
 				Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
 				Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
 				mat = temp_mat->clone("TerrainPageMaterial");
-				Ogre::TextureUnitState* tu = mat->getTechnique(0)->getPass(0)->getTextureUnitState("normal_map");
-				if(tu)
+				for(int  i = 0 ;i < mat->getNumTechniques(); i++)
 				{
-					tu->setTextureName(terrain->getTerrainNormalMap()->getName());
-					tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+					for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
+					{
+						Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
+						if(tu)
+						{
+							tu->setTextureName(terrain->getTerrainNormalMap()->getName());
+							tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+						}
+					}
 				}
 			}
 			return mat;
@@ -82,11 +88,17 @@ namespace GASS
 				Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
 				Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
 				mat = temp_mat->clone("TerrainPageCompositeMaterial");
-				Ogre::TextureUnitState* tu = mat->getTechnique(0)->getPass(0)->getTextureUnitState("normal_map");
-				if(tu)
+				for(int  i = 0 ;i < mat->getNumTechniques(); i++)
 				{
-					tu->setTextureName(terrain->getTerrainNormalMap()->getName());
-					tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+					for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
+					{
+						Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
+						if(tu)
+						{
+							tu->setTextureName(terrain->getTerrainNormalMap()->getName());
+							tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+						}
+					}
 				}
 			}
 			return mat;
