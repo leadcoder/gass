@@ -138,6 +138,17 @@ namespace GASS
 			}
 			//target->addListener(this);
 		}
+
+		if(ocam == NULL)
+		{
+			if(sm->hasCamera("DummyCamera"))
+				ocam = sm->getCamera("DummyCamera");
+			else
+				ocam = sm->createCamera("DummyCamera");
+
+			vp->setCamera(ocam);
+		}
+
 		Ogre::Root::getSingleton().addFrameListener(this);
 		CreateHydrax(sm, ocam, vp);
 		m_Initialized = true;

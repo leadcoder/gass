@@ -107,9 +107,7 @@ namespace GASS
 					break;
 				}
 			}
-			//target->addListener(this);
 		}
-
 
 		if(ocam == NULL)
 		{

@@ -59,7 +59,7 @@ namespace Ogre
 
 
 		mProfiles.push_back(OGRE_NEW SM2Profile(this, "SM2", "Profile for rendering on Shader Model 2 capable cards"));
-		
+
 		// TODO - check hardware capabilities & use fallbacks if required (more profiles needed)
 		setActiveProfile("SM2");
 
@@ -225,13 +225,13 @@ namespace Ogre
 
 	}
 	//---------------------------------------------------------------------
-        //added to return 9 light total; 1 directional, 8 point
-        int TerrainMaterialGeneratorC::SM2Profile::getNumberOfLightsSupported() const
-    {
-        return 3;
-    }
- 
-        //---------------------------------------------------------------------
+	//added to return 9 light total; 1 directional, 8 point
+	int TerrainMaterialGeneratorC::SM2Profile::getNumberOfLightsSupported() const
+	{
+		return 3;
+	}
+
+	//---------------------------------------------------------------------
 	MaterialPtr TerrainMaterialGeneratorC::SM2Profile::generate(const Terrain* terrain)
 	{
 		// re-use old material if exists
@@ -472,6 +472,7 @@ namespace Ogre
 		ret->setSource(sourceStr.str());
 		ret->load();
 		defaultFpParams(prof, terrain, tt, ret);
+
 		//LogManager::getSingleton().logMessage("FP:"+ ret->getName() + "\n" + ret->getSource());
 
 #if OGRE_DEBUG_MODE
@@ -557,24 +558,24 @@ namespace Ogre
 		params->setIgnoreMissingParams(true);
 
 		params->setNamedAutoConstant("ambient", GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR);
-                // openMW MULTILIGHT
-                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-        {
-                params->setNamedAutoConstant("lightPosObjSpace"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_POSITION_OBJECT_SPACE, i);
-                params->setNamedAutoConstant("lightDiffuseColour"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR, i);
-                if (i > 0)
-				{
-                    params->setNamedAutoConstant("lightAttenuation"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_ATTENUATION, i);
-					params->setNamedAutoConstant("spotParams"+StringConverter::toString(i), GpuProgramParameters::ACT_SPOTLIGHT_PARAMS, i);
-					params->setNamedAutoConstant("spotDir"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_DIRECTION_OBJECT_SPACE, i);
-				}
-                if(i == 0)
-                                        params->setNamedAutoConstant("lightSpecularColour", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR, i);
-        }
- 
-                //params->setNamedAutoConstant("lightPosObjSpace", GpuProgramParameters::ACT_LIGHT_POSITION_OBJECT_SPACE, 0);
-                //params->setNamedAutoConstant("lightDiffuseColour", GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR, 0);
-                //params->setNamedAutoConstant("lightSpecularColour", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR, 0);
+		// openMW MULTILIGHT
+		for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+		{
+			params->setNamedAutoConstant("lightPosObjSpace"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_POSITION_OBJECT_SPACE, i);
+			params->setNamedAutoConstant("lightDiffuseColour"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR, i);
+			if (i > 0)
+			{
+				params->setNamedAutoConstant("lightAttenuation"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_ATTENUATION, i);
+				params->setNamedAutoConstant("spotParams"+StringConverter::toString(i), GpuProgramParameters::ACT_SPOTLIGHT_PARAMS, i);
+				params->setNamedAutoConstant("spotDir"+StringConverter::toString(i), GpuProgramParameters::ACT_LIGHT_DIRECTION_OBJECT_SPACE, i);
+			}
+			if(i == 0)
+				params->setNamedAutoConstant("lightSpecularColour", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR, i);
+		}
+
+		//params->setNamedAutoConstant("lightPosObjSpace", GpuProgramParameters::ACT_LIGHT_POSITION_OBJECT_SPACE, 0);
+		//params->setNamedAutoConstant("lightDiffuseColour", GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR, 0);
+		//params->setNamedAutoConstant("lightSpecularColour", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR, 0);
 		params->setNamedAutoConstant("eyePosObjSpace", GpuProgramParameters::ACT_CAMERA_POSITION_OBJECT_SPACE);
 		params->setNamedAutoConstant("fogColour", GpuProgramParameters::ACT_FOG_COLOUR);
 
@@ -973,36 +974,36 @@ namespace Ogre
 		outStream <<
 			// Only 1 light supported in this version
 			// deferred shading profile / generator later, ok? :)
-                        "uniform float3 ambient,\n";
- 
-                        //MULTILIGHT for loop num lights here
-                        //"uniform float4 lightPosObjSpace,\n"
-                        //"uniform float3 lightDiffuseColour,\n"
-                        //"uniform float3 lightSpecularColour,\n"
-                        //openmw adds attenuation for num light - 9 lights here; probly one directional light all more pont lights
-                        //en here
-                        //openmw multi
-                        for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                {
-                        outStream <<
-                                                        "uniform float4 lightPosObjSpace"<<i<<",\n"
-                                                        "uniform float3 lightDiffuseColour"<<i<<",\n"
-                                                        //"uniform float3 lightSpecularColour"<<i<<",\n"
-                        ;
- 
-                                                if(i == 0)
-                                                        outStream << "uniform float3 lightSpecularColour,\n";
-                        if (i > 0)
-						{
-                            outStream <<
-                            "uniform float4 lightAttenuation"<<i<<",\n"
-							"uniform float4 spotParams"<<i<<",\n"
-							"uniform float3 spotDir"<<i<<",\n";
-						}
- 
-                }
- 
-                        outStream <<
+			"uniform float3 ambient,\n";
+
+		//MULTILIGHT for loop num lights here
+		//"uniform float4 lightPosObjSpace,\n"
+		//"uniform float3 lightDiffuseColour,\n"
+		//"uniform float3 lightSpecularColour,\n"
+		//openmw adds attenuation for num light - 9 lights here; probly one directional light all more pont lights
+		//en here
+		//openmw multi
+		for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+		{
+			outStream <<
+				"uniform float4 lightPosObjSpace"<<i<<",\n"
+				"uniform float3 lightDiffuseColour"<<i<<",\n"
+				//"uniform float3 lightSpecularColour"<<i<<",\n"
+				;
+
+			if(i == 0)
+				outStream << "uniform float3 lightSpecularColour,\n";
+			if (i > 0)
+			{
+				outStream <<
+					"uniform float4 lightAttenuation"<<i<<",\n"
+					"uniform float4 spotParams"<<i<<",\n"
+					"uniform float3 spotDir"<<i<<",\n";
+			}
+
+		}
+
+		outStream <<
 			"uniform float3 eyePosObjSpace,\n"
 			// pack scale, bias and specular
 			"uniform float4 scaleBiasSpecular,\n";
@@ -1076,17 +1077,17 @@ namespace Ogre
 
 		}
 
-                // openMW MULTILIAGHT
- 
-                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                        outStream <<
-                        "       float3 lightDir"<<i<<" = \n"
-                        "               lightPosObjSpace"<<i<<".xyz -  (position.xyz * lightPosObjSpace"<<i<<".w);\n";
- 
- 
-                //outStream <<
-                //      "       float3 lightDir = \n"
-                //      "               lightPosObjSpace.xyz -  (position.xyz * lightPosObjSpace.w);\n";
+		// openMW MULTILIAGHT
+
+		for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+			outStream <<
+			"       float3 lightDir"<<i<<" = \n"
+			"               lightPosObjSpace"<<i<<".xyz -  (position.xyz * lightPosObjSpace"<<i<<".w);\n";
+
+
+		//outStream <<
+		//      "       float3 lightDir = \n"
+		//      "               lightPosObjSpace.xyz -  (position.xyz * lightPosObjSpace.w);\n";
 		outStream <<
 			"	float3 eyeDir = eyePosObjSpace - position.xyz;\n"
 
@@ -1136,87 +1137,89 @@ namespace Ogre
 
 				// set up lighting result placeholders for interpolation
 				outStream <<  "	float4 litRes, litResLayer;\n";
- 
-                                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                        outStream <<  " float4 litResLayer"<<i<<";\n";
-                                //outStream << "        float3 TSlightDir;\n";
-                                //outStream << "        float3 TShalfAngle;\n";
-                                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                        outStream << "  float3 TShalfAngle"<<i<<";\n";
-                                outStream << "  float3 TSeyeDir, TSnormal;\n";
+
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+					outStream <<  " float4 litResLayer"<<i<<";\n";
+				//outStream << "        float3 TSlightDir;\n";
+				//outStream << "        float3 TShalfAngle;\n";
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+					outStream << "  float3 TShalfAngle"<<i<<";\n";
+				outStream << "  float3 TSeyeDir, TSnormal;\n";
 				if (prof->isLayerParallaxMappingEnabled())
 					outStream << "	float displacement;\n";
 				// move 
-                                //outStream << "        TSlightDir = normalize(mul(TBN, lightDir));\n";
+				//outStream << "        TSlightDir = normalize(mul(TBN, lightDir));\n";
 				outStream << "	TSeyeDir = normalize(mul(TBN, eyeDir));\n";
 
-                                //init litRes<i> vars
-                                if (prof->getNumberOfLightsSupported() > 1)
-                    outStream << "float d; \n"
-                                "float attn; \n";
- 
-                outStream <<
-                "      eyeDir = normalize(eyeDir); \n";
- 
-                                // simple per-pixel lighting with no normal mapping
-                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                {
-                        outStream <<
-                            "   float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), dot(normalize(lightDir"<<i<<"+eyeDir),normalize(normal)), scaleBiasSpecular.z);\n";
-                                                outStream <<
-                                                        "       float3 TSlightDir"<<i<<" = normalize(mul(TBN, lightDir"<<i<<"));\n";
-                    if (i > 0)
-                        outStream <<
-                        // pre-multiply light color with attenuation factor
-                            "d = length( lightDir"<<i<<" ); \n"
-                            "attn = ( 1.0 / (( lightAttenuation"<<i<<".y ) + ( lightAttenuation"<<i<<".z * d ) + ( lightAttenuation"<<i<<".w * d * d ))); \n"
-                            "lightDiffuseColour"<<i<<" *= attn; \n"
+				//init litRes<i> vars
+				if (prof->getNumberOfLightsSupported() > 1)
+					outStream << "float d; \n"
+					"float attn; \n";
 
-							"float rho"<<i<<" = saturate(dot(-spotDir"<<i<<", normalize(lightDir"<<i<<"))); \n"
-							// factor = (rho - cos(outer/2) / cos(inner/2) - cos(outer/2)) ^ falloff
-							"float spotFactor"<<i<<" = pow(saturate(rho"<<i<<" - spotParams"<<i<<".y) / (spotParams"<<i<<".x - spotParams"<<i<<".y), spotParams"<<i<<".z); \n"
-							"lightDiffuseColour"<<i<<" *= spotFactor"<<i<<"; \n";
-                }
-                                //init litRes<i> vars END
+				outStream <<
+					"      eyeDir = normalize(eyeDir); \n";
+
+				// simple per-pixel lighting with no normal mapping
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+				{
+
+					//outStream << "   float4 litRes" <<i<< ";\n";
+					outStream <<
+						"   float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), dot(normalize(lightDir"<<i<<"+eyeDir),normalize(normal)), scaleBiasSpecular.z);\n";
+					outStream <<
+						"       float3 TSlightDir"<<i<<" = normalize(mul(TBN, lightDir"<<i<<"));\n";
+					if (i > 0)
+						outStream <<
+						// pre-multiply light color with attenuation factor
+						"d = length( lightDir"<<i<<" ); \n"
+						"attn = ( 1.0 / (( lightAttenuation"<<i<<".y ) + ( lightAttenuation"<<i<<".z * d ) + ( lightAttenuation"<<i<<".w * d * d ))); \n"
+						"lightDiffuseColour"<<i<<" *= attn; \n"
+
+						"float rho"<<i<<" = saturate(dot(-spotDir"<<i<<", normalize(lightDir"<<i<<"))); \n"
+						// factor = (rho - cos(outer/2) / cos(inner/2) - cos(outer/2)) ^ falloff
+						"float spotFactor"<<i<<" = pow(saturate(rho"<<i<<" - spotParams"<<i<<".y) / (spotParams"<<i<<".x - spotParams"<<i<<".y), spotParams"<<i<<".z); \n"
+						"lightDiffuseColour"<<i<<" *= spotFactor"<<i<<"; \n";
+				}
+				//init litRes<i> vars END
 			}
 			else
 			{
-                                // openMW MULTILIGHT
-                                if (prof->getNumberOfLightsSupported() > 1)
-                    outStream << "float d; \n"
-                                "float attn; \n";
- 
-                outStream <<
-                "      eyeDir = normalize(eyeDir); \n";
- 
-                                // simple per-pixel lighting with no normal mapping
-                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                {
-                        outStream <<
-                            //" float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), 0, scaleBiasSpecular.z);\n";
-                                                        "       float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), dot(normalize(lightDir"<<i<<"+eyeDir),normalize(normal)), scaleBiasSpecular.z);\n";
- 
-                    if (i > 0)
-                        outStream <<
-                        // pre-multiply light color with attenuation factor
-                            "d = length( lightDir"<<i<<" ); \n"
-							
-                            "attn = ( 1.0 / (( lightAttenuation"<<i<<".y ) + ( lightAttenuation"<<i<<".z * d ) + ( lightAttenuation"<<i<<".w * d * d ))); \n"
-                            "lightDiffuseColour"<<i<<" *= attn; \n"
+				// openMW MULTILIGHT
+				if (prof->getNumberOfLightsSupported() > 1)
+					outStream << "float d; \n"
+					"float attn; \n";
 
-							"float rho"<<i<<" = saturate(dot(-spotDir"<<i<<", normalize(lightDir"<<i<<"))); \n"
-							// factor = (rho - cos(outer/2) / cos(inner/2) - cos(outer/2)) ^ falloff
-							"float spotFactor"<<i<<" = pow(saturate(rho"<<i<<" - spotParams"<<i<<".y) / (spotParams"<<i<<".x - spotParams"<<i<<".y), spotParams"<<i<<".z); \n"
-							"lightDiffuseColour"<<i<<" *= spotFactor"<<i<<"; \n";
-                }
- 
- 
- 
+				outStream <<
+					"      eyeDir = normalize(eyeDir); \n";
+
 				// simple per-pixel lighting with no normal mapping
-                                //outStream << "        lightDir = normalize(lightDir);\n";
-                                //outStream << "        eyeDir = normalize(eyeDir);\n";
-                                //outStream << "        float3 halfAngle = normalize(lightDir + eyeDir);\n";
-                                //outStream << "        float4 litRes = lit(dot(lightDir, normal), dot(halfAngle, normal), scaleBiasSpecular.z);\n";
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+				{
+					outStream <<
+						//" float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), 0, scaleBiasSpecular.z);\n";
+						"       float4 litRes"<<i<<" = lit(dot(normalize(lightDir"<<i<<"), normalize(normal)), dot(normalize(lightDir"<<i<<"+eyeDir),normalize(normal)), scaleBiasSpecular.z);\n";
+
+					if (i > 0)
+						outStream <<
+						// pre-multiply light color with attenuation factor
+						"d = length( lightDir"<<i<<" ); \n"
+
+						"attn = ( 1.0 / (( lightAttenuation"<<i<<".y ) + ( lightAttenuation"<<i<<".z * d ) + ( lightAttenuation"<<i<<".w * d * d ))); \n"
+						"lightDiffuseColour"<<i<<" *= attn; \n"
+
+						"float rho"<<i<<" = saturate(dot(-spotDir"<<i<<", normalize(lightDir"<<i<<"))); \n"
+						// factor = (rho - cos(outer/2) / cos(inner/2) - cos(outer/2)) ^ falloff
+						"float spotFactor"<<i<<" = pow(saturate(rho"<<i<<" - spotParams"<<i<<".y) / (spotParams"<<i<<".x - spotParams"<<i<<".y), spotParams"<<i<<".z); \n"
+						"lightDiffuseColour"<<i<<" *= spotFactor"<<i<<"; \n";
+				}
+
+
+
+				// simple per-pixel lighting with no normal mapping
+				//outStream << "        lightDir = normalize(lightDir);\n";
+				//outStream << "        eyeDir = normalize(eyeDir);\n";
+				//outStream << "        float3 halfAngle = normalize(lightDir + eyeDir);\n";
+				//outStream << "        float4 litRes = lit(dot(lightDir, normal), dot(halfAngle, normal), scaleBiasSpecular.z);\n";
 
 			}
 		}
@@ -1262,23 +1265,23 @@ namespace Ogre
 
 			// access TS normal map
 			outStream << "	TSnormal = expand(tex2D(normtex" << layer << ", uv" << layer << ")).rgb;\n";
-                        //outStream << "        TShalfAngle = normalize(TSlightDir + TSeyeDir);\n";
- 
-                        for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                outStream << "  TShalfAngle"<<i<<"= normalize(TSlightDir"<<i<<" + TSeyeDir);\n";
-                        for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                outStream << "  litResLayer"<<i<<" = lit(dot(TSlightDir"<<i<<", TSnormal), dot(TShalfAngle"<<i<<", TSnormal), scaleBiasSpecular.z);\n";
- 
+			//outStream << "        TShalfAngle = normalize(TSlightDir + TSeyeDir);\n";
+
+			for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+				outStream << "  TShalfAngle"<<i<<"= normalize(TSlightDir"<<i<<" + TSeyeDir);\n";
+			for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+				outStream << "  litResLayer"<<i<<" = lit(dot(TSlightDir"<<i<<", TSnormal), dot(TShalfAngle"<<i<<", TSnormal), scaleBiasSpecular.z);\n";
+
 			if (!layer)
-                        {
-                                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                        outStream << "  litRes"<<i<<" = litResLayer"<<i<<";\n";
-                        }
+			{
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+					outStream << "  litRes"<<i<<" = litResLayer"<<i<<";\n";
+			}
 			else
-                        {
-                                for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-                                        outStream << "  litRes"<<i<<" = lerp(litRes"<<i<<", litResLayer"<<i<<", " << blendWeightStr << ");\n";
-                        }
+			{
+				for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+					outStream << "  litRes"<<i<<" = lerp(litRes"<<i<<", litResLayer"<<i<<", " << blendWeightStr << ");\n";
+			}
 		}
 
 		// sample diffuse texture
@@ -1369,7 +1372,7 @@ namespace Ogre
 					outStream << "  float eye_dist = length(eyePosObjSpace-position.xyz);\n";
 					outStream << "  float fade_val = saturate((eye_dist -" << prof->GetDetailFadeDist() << ") / " << prof->GetDetailFadeDist() << ");\n";
 					outStream << "  float4 globalColour = tex2D(globalColourMap, uv) * 0.5;\n";
-					
+
 					if(prof->GetFadeOutColor())
 						outStream << "	diffuse = lerp(lerp(diffuse,globalColour,"<< prof->GetNearColorWeight() << "), globalColour.xyz, fade_val);\n";
 					else
@@ -1391,21 +1394,21 @@ namespace Ogre
 			}
 
 			// diffuse lighting
-                        //outStream << "        outputCol.rgb += ambient * diffuse + litRes.y * lightDiffuseColour * diffuse * shadow;\n";
- 
-                        //openMW MULTILIGHT
-                        outStream << "  outputCol.rgb += ambient * diffuse; \n";
-                        // diffuse lighting
-            for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
-            {
-                // shadows only for first light (directional)
-                if (i==0)
-                    outStream << "      outputCol.rgb += litRes"<<i<<".y * lightDiffuseColour"<<i<<" * diffuse * shadow;\n";
-                else
-                    outStream << "      outputCol.rgb += litRes"<<i<<".y * lightDiffuseColour"<<i<<" * diffuse;\n";
-            }
- 
- 
+			//outStream << "        outputCol.rgb += ambient * diffuse + litRes.y * lightDiffuseColour * diffuse * shadow;\n";
+
+			//openMW MULTILIGHT
+			outStream << "  outputCol.rgb += ambient * diffuse; \n";
+			// diffuse lighting
+			for (int i=0; i<prof->getNumberOfLightsSupported(); ++i)
+			{
+				// shadows only for first light (directional)
+				if (i==0)
+					outStream << "      outputCol.rgb += litRes"<<i<<".y * lightDiffuseColour"<<i<<" * diffuse * shadow;\n";
+				else
+					outStream << "      outputCol.rgb += litRes"<<i<<".y * lightDiffuseColour"<<i<<" * diffuse;\n";
+			}
+
+
 
 			// specular default
 			if (!prof->isLayerSpecularMappingEnabled())
@@ -1421,7 +1424,7 @@ namespace Ogre
 			else
 			{
 				// Apply specular
-				outStream << "	outputCol.rgb += litRes.z * lightSpecularColour * specular * shadow;\n";
+				outStream << "	outputCol.rgb += litRes0.z * lightSpecularColour * specular * shadow;\n";
 
 				if (prof->getParent()->getDebugLevel())
 				{
@@ -1468,7 +1471,7 @@ namespace Ogre
 				"   float4 temp_uv = uv/uv.w; \n"
 				"   float center_depth = tex2D(shadowMap, temp_uv.xy).x; \n"
 				"   if(center_depth >= 1.0) return 1.0;\n" //JH
-				
+
 				"	float shadow = 0.0; \n"
 				"	float offset = (NUM_SHADOW_SAMPLES_1D/2 - 0.5) * SHADOW_FILTER_SCALE; \n"
 				"	for (float y = -offset; y <= offset; y += SHADOW_FILTER_SCALE) \n"

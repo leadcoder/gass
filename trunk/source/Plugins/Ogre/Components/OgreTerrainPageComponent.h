@@ -29,11 +29,12 @@
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
-#include "OgreTerrain.h"
-#include "OgreTerrainGroup.h"
-#include "OgreTerrainQuadTreeNode.h"
-#include "OgreTerrainMaterialGeneratorA.h"
-#include "OgreTerrainPaging.h"
+#include "Plugins/Ogre/OgreRenderQueueBinder.h"
+#include <OgreTerrain.h>
+#include <OgreTerrainGroup.h>
+#include <OgreTerrainQuadTreeNode.h>
+#include <OgreTerrainMaterialGeneratorA.h>
+#include <OgreTerrainPaging.h>
 
 namespace GASS
 {
@@ -111,6 +112,7 @@ namespace GASS
 		float GetTilingLayer4() const;
 		void SetMask(const ResourceHandle &mask);
 		ResourceHandle GetMask() const;
+		
 		//void SetMaskLayer1(const std::string &mask);
 		//std::string GetMaskLayer1() const;
 		//void SetMaskLayer2(const std::string &mask);
@@ -126,6 +128,10 @@ namespace GASS
 		void ImportDetailMask(const FilePath &mask);
 		FilePath GetImportDetailMask() const {return FilePath("");}
 		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
+
+		RenderQueueBinder GetRenderQueue() const {return m_RenderQueue;}
+		void SetRenderQueue(const RenderQueueBinder &rq);
+		RenderQueueBinder m_RenderQueue;
 		
 		bool m_CreateCollisionMesh;
 		ResourceHandle m_HeightMapFile;

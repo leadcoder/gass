@@ -22,6 +22,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include <OgreCommon.h>
+#include <OgreRenderQueue.h>
 
 namespace GASS
 {

@@ -262,6 +262,8 @@ namespace GASS
 		}
 		else
 		{
+			//m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorB()));
+			//m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorC()));
 			m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorC::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
 			m_TerrainProfile->setLightmapEnabled(false);

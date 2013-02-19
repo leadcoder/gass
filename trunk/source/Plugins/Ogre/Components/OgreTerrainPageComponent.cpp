@@ -55,7 +55,8 @@ namespace GASS
 		m_TilingLayer3(5),
 		m_TilingLayer4(5),
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
-		m_Pos(0,0,0)
+		m_Pos(0,0,0),
+		m_RenderQueue(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1)
 	{
 
 	}
@@ -114,6 +115,9 @@ namespace GASS
 		RegisterProperty<int>("IndexY", &GASS::OgreTerrainPageComponent::GetIndexY, &GASS::OgreTerrainPageComponent::SetIndexY,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
+		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreTerrainPageComponent::GetRenderQueue, &GASS::OgreTerrainPageComponent::SetRenderQueue,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
+
 		//import functions, can be used from editor, use full-path to resource and execute import
 		RegisterProperty<FilePath>("ImportHeightMap", &GASS::OgreTerrainPageComponent::GetImportHeightMap, &GASS::OgreTerrainPageComponent::ImportHeightMap,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import height map, only png files supported",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png")));
@@ -122,6 +126,16 @@ namespace GASS
 		RegisterProperty<FilePath>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.tga;*.dds;*.png;*.*")));
 	}
+
+	void OgreTerrainPageComponent::SetRenderQueue(const RenderQueueBinder &rq) 
+	{
+		m_RenderQueue = rq;
+		if(m_Terrain)
+		{
+			m_Terrain->setRenderQueueGroup(m_RenderQueue.GetValue());
+		}
+	}
+
 
 	void OgreTerrainPageComponent::OnInitialize()
 	{
@@ -152,7 +166,9 @@ namespace GASS
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 				
+				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
+	
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				if(m_Pos != Vec3(0,0,0))
 					SetPosition(m_Pos);
