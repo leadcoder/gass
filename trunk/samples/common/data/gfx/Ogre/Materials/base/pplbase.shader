@@ -197,5 +197,5 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 #ifdef STD_FOG
 	lightColor.xyz = calcFog(eyeDistance,fogParams, fogColor, lightColor.xyz);
 #endif
-	oColor = float4(lightColor.xyz, alpha*lightDiffuse.a);
+	oColor = float4(lightColor.xyz*alpha, alpha);
 }  

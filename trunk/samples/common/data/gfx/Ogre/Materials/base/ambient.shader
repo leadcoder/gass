@@ -63,8 +63,12 @@ void AmbientFrag(float4 ambient : COLOR,
 #endif
 				out float4 oColor : COLOR)
 {
+	float alpha = 1.0;
 #if BASE_MAP
-    ambient = ambient*tex2D(baseMap, uv);
+    float4 base_tex = tex2D(baseMap, uv);
+	alpha = base_tex.a;
+	ambient.xyz = base_tex.xyz * ambient.xyz;
+	ambient.a = alpha;
 #endif	
 #if DETAIL_SPLATTING
     ambient.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,uv,splatScales,ambient.xyz);
@@ -73,6 +77,7 @@ void AmbientFrag(float4 ambient : COLOR,
 #ifdef STD_FOG
 	ambient.xyz = calcFog(eyeDist,fogParams, fogColor, ambient.xyz);
 #endif
+	ambient.xyz =  ambient.xyz;
 	oColor = ambient;
 }
  

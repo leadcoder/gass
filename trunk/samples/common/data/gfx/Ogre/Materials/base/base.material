@@ -130,8 +130,7 @@ material GASS_Common
 			diffuse $DiffuseColor
 			specular $SpecularColor $Shininess
 			depth_write $DepthWrite
-			alpha_rejection $AlphaRejection
-			depth_write $DepthWrite
+			//alpha_rejection $AlphaRejection
 			iteration once_per_light
 			scene_blend add  
 	   } 
