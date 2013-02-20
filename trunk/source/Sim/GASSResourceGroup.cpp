@@ -126,7 +126,14 @@ namespace GASS
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
-			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
+			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().find(resource_name);
+			if(c_iter != (*iter)->GetResources().end())
+			{
+				resources.push_back(c_iter->second);
+			}
+			++iter;
+
+			/*ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
 			while(c_iter != (*iter)->GetResources().end())
 			{
 				if(c_iter->second->Name() == resource_name)
@@ -135,7 +142,7 @@ namespace GASS
 				}
 				c_iter++;
 			}
-			++iter;
+			++iter;*/
 		}
 	}
 }

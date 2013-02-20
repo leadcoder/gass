@@ -58,7 +58,6 @@ namespace GASS
 	OgreMeshComponent::~OgreMeshComponent()
 	{
 
-
 	}
 
 	void OgreMeshComponent::RegisterReflection()

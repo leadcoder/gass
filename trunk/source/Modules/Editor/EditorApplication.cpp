@@ -19,7 +19,7 @@
 
 namespace GASS
 {
-	EditorApplication::EditorApplication() : m_Initilized(false), 
+	EditorApplication::EditorApplication(const FilePath &log_folder) : m_Initilized(false), 
 		m_Mode("StandAlone"),
 		m_ServerName("GASS_SERVER"),
 		m_ClientName("GASS_CLIENT"),
@@ -28,7 +28,9 @@ namespace GASS
 	{
 		new SimEngine();
 		LogManager* log_man = new LogManager();
-		log_man->createLog("GASS.log", true, true);
+		const std::string log_file = log_folder.GetFullPath() + "GASS.log";
+		log_man->createLog(log_file, true, true);
+		m_LogFolder = log_folder;
 	}
 
 	EditorApplication::~EditorApplication(void)
@@ -36,17 +38,15 @@ namespace GASS
 		delete SimEngine::GetPtr();
 	}
 
-	void EditorApplication::Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle, void *render_win_handle)
+	void EditorApplication::Init(const FilePath &working_folder, const std::string &render_system, void* main_win_handle, void *render_win_handle)
 	{	
 		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
 		//app settings
 		LoadSettings(config_path + "EditorApplication.xml");
 		SimEngine *se = SimEngine::GetPtr();
 
-		se->SetScenePath(FilePath(se->GetScenePath().GetFullPath() + render_system + "/" ));
-		
 		const std::string gass_config_file = config_path + "GASS" + render_system + ".xml";
-		se->Init(gass_config_file);
+		se->Init(gass_config_file,m_LogFolder);
 
 		//load keyboard config!
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
@@ -55,10 +55,10 @@ namespace GASS
 			css->Load(config_path +  "GASSControlSettings.xml");
 		}
 
-		EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
+		/*EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if(!es)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
-		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);
+		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);*/
 
 		//Start client or server?
 		if(Misc::ToLower(m_Mode) == "server")
@@ -88,49 +88,6 @@ namespace GASS
 	{
 		SimEngine::Get().Update();
 	}
-
-	/*void EditorApplication::OnLoadScene(PostSceneCreateEventPtr message)
-	{
-		ScenePtr scene = message->GetScene();
-		//load top camera
-		Vec3 vel(0,0,0);
-		Vec3 pos = scene->GetStartPos();
-		Quaternion rot(scene->GetStartRot());
-		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		
-		if(!free_obj) //If no FreeCameraObject template found, create one
-		{
-			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
-			fre_cam_template->SetName("FreeCameraObject");
-			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
-			location_comp->SetName("LocationComp");
-			ComponentPtr camera_comp (ComponentFactory::Get().Create("CameraComponent"));
-			camera_comp->SetName("FreeCameraComp");
-
-			ComponentPtr cc_comp (ComponentFactory::Get().Create("FreeCamControlComponent"));
-			cc_comp->SetName("FreeCameraCtrlComp");
-
-			fre_cam_template->AddComponent(location_comp);
-			fre_cam_template->AddComponent(camera_comp);
-			fre_cam_template->AddComponent(cc_comp);
-
-			SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(fre_cam_template);
-
-			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		}
-
-		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
-		if(free_obj)
-		{
-			free_obj->SendImmediate(pos_msg);
-			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
-			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
-		}
-
-		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
-		if(top_obj)
-			top_obj->SendImmediate(pos_msg);
-	}*/
 
 	bool  EditorApplication::LoadSettings(const std::string &filename)
 	{

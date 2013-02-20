@@ -10,11 +10,11 @@ namespace GASS
 	class EditorModuleExport EditorApplication : public StaticMessageListener
 	{
 	public:
-		EditorApplication();
+		EditorApplication(const FilePath &log_folder);
 		~EditorApplication();
-		void Init(const FilePath &working_folder, const FilePath &appdata_folder_path, const FilePath &mydocuments_folder_path, const std::string &render_system, void* main_win_handle,void*  render_win_handle);
+		void Init(const FilePath &working_folder, const std::string &render_system, void* main_win_handle,void*  render_win_handle);
 		void Update();
-		FilePath GetWorkingFolder() const;
+		//FilePath GetWorkingFolder() const;
 	protected:
 		void OnRequestSimulatiornStep(TimeStepRequestPtr message);
 		//helpers
@@ -33,12 +33,14 @@ namespace GASS
 		std::string m_ClientName;
 		int m_ServerPort;
 		int m_ClientPort;
-		FilePath m_WorkingFolder;
+		
 		double m_UpdateFreq;
 
 		volatile bool m_StepSimulation;
 		double m_SimStepDeltaTime;
 		bool m_ExternalUpdate;
+		FilePath m_LogFolder;
+		//FilePath m_WorkingFolder;
 	};
 }
 

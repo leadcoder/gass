@@ -70,15 +70,13 @@ namespace GASS
 		static SimEngine& Get();
 
 		/**
-			This function will initialize the sim engine. When this function is called
-			the plugin manager will first try to load all GASS plugins listed in the 
-			plugin_file. After that the system manager try to load all systems
-			listed in the system_file. 
-			@param plugin_file xml-file listing all plugins to load.
-			@param system_file xml-file listing all systems to load.
-			@param num_rtc_threads Threads to use in the RTC, see RTCcontroller for more information.
+			This function will initialize the GASS simulation engine. When this function is called
+			all GASS plugins listed in the configuration_file are loaded. After that the system manager try to load all systems
+			listed in the configuration_file. 
+			@param configuration_file xml-file listing all plugins to load.
+			@param log_folder Alternative File path for log files. 
 		*/
-		void Init(const FilePath &plugin_file = FilePath("gass.xml"));
+		void Init(const FilePath &configuration_file = FilePath("gass.xml"), const FilePath &log_folder = FilePath(""));
 
 		/**
 		Main update for GASS.
@@ -143,12 +141,16 @@ namespace GASS
 		SceneWeakPtr CreateScene(const std::string &name);
 		ConstSceneIterator GetScenes() const;
 		SceneIterator GetScenes();
+
+		
+
+		FilePath GetLogFolder() const {return m_LogFolder;}
+		void SetLogFolder(const FilePath &path) {m_LogFolder = path;}
+
 		FilePath GetScenePath() const {return m_ScenePath;}
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
 		std::vector<std::string> GetSavedScenes() const;
 		void SyncMessages(double delta_time);
-
-
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
@@ -162,6 +164,7 @@ namespace GASS
 		double m_MaxUpdateFreq;
 		//ScenePtr m_Scene;
 		FilePath m_ScenePath;
+		FilePath m_LogFolder;
 	};
 }
 

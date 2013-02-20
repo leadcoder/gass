@@ -68,7 +68,8 @@ namespace GASS
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
 		m_SceneObjectTemplateManager(new BaseComponentContainerTemplateManager()),
-		m_RTC(new RunTimeController())
+		m_RTC(new RunTimeController()),
+		m_LogFolder("")
 	{
 		
 	}
@@ -91,13 +92,16 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void SimEngine::Init(const FilePath &configuration)
+	void SimEngine::Init(const FilePath &configuration, const FilePath &log_folder)
 	{
+		m_LogFolder = log_folder;
 		// Create log manager
 		if(LogManager::getSingletonPtr() == 0)
 		{
 			LogManager* log_man = new LogManager();
-			log_man->createLog("GASS.log", true, true);
+
+			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
+			log_man->createLog(log_file, true, true);
 		}
 	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
 		m_PluginManager->LoadFromFile(configuration.GetFullPath());

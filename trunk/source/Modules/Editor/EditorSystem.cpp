@@ -36,13 +36,13 @@ namespace GASS
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
-	void EditorSystem::SetPaths(const FilePath &execution_folder,
+	/*void EditorSystem::SetPaths(const FilePath &execution_folder,
 		const FilePath &appdata_folder,
 		const FilePath &mydocuments_folder)
 	{
 		m_ExecutionFolder = execution_folder;
 		m_AppDataFolder = appdata_folder;
 		m_MyDocumentsFolder = m_MyDocumentsFolder;
-	}
+	}*/
 
 }

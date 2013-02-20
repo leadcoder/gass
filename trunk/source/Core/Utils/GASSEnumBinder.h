@@ -209,7 +209,7 @@ namespace GASS
 	protected:
 		void SetValueFromName(const std::string &name) 
 		{
-			if(m_NameToEnumMap.find(name) != m_NameToEnumMap.end())
+			if(name != "" && m_NameToEnumMap.find(name) != m_NameToEnumMap.end())
 				m_Value = m_NameToEnumMap[name];
 			else
 			{
@@ -234,7 +234,12 @@ namespace GASS
 		{
 			std::string name;
 			if(os >> name)
-				enum_binder.SetValueFromName(name);	
+				enum_binder.SetValueFromName(name);
+			else
+			{
+				const std::string class_name = typeid(CLASS).name();
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to parse enum value in class" + class_name,"SingleEnumBinder::SetValueFromName");
+			}
 			return os;
 		}
 

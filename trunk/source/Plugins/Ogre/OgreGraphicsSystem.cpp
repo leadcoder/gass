@@ -110,9 +110,11 @@ namespace GASS
 
 		
 		
-
+		const std::string log_folder = SimEngine::Get().GetLogFolder().GetFullPath();
+		const std::string ogre_log = log_folder + "ogre.log";
+		const std::string ogre_cfg = log_folder + "ogre.cfg";
 		//Load plugins
-		m_Root = new Ogre::Root("","ogre.cfg","ogre.log");
+		m_Root = new Ogre::Root("",ogre_cfg,ogre_log);
 
 		//Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 
