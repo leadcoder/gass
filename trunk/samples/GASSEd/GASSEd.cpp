@@ -54,7 +54,7 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
     center->setMinimumSize(400, 205);
     setCentralWidget(center);*/
 
-	m_GASSApp = new GASS::EditorApplication();
+	m_GASSApp = new GASS::EditorApplication(GASS::FilePath(""));
 	GASSRenderWidget* main_widget = new GASSRenderWidget();
 	main_widget->m_GASSEd = this;
 	setCentralWidget(main_widget);
@@ -84,10 +84,8 @@ GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
 void GASSEd::Initialize(void* render_win_handle)
 {
 	GASS::FilePath working_folder("./");
-	GASS::FilePath appdata_folder_path("./");
-	GASS::FilePath mydocuments_folder_path("./");
 	void* main_win_handle = winId();
-	m_GASSApp->Init(working_folder, appdata_folder_path, mydocuments_folder_path, "", main_win_handle, render_win_handle);
+	m_GASSApp->Init(working_folder, "", main_win_handle, render_win_handle);
 	//load component schema
 	//GASS::FilePath gass_data_path("%GASS_DATA_HOME%");
 	GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>()->GetGUISettings()->LoadAllFromPath("../configuration/schema");
