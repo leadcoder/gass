@@ -35,7 +35,6 @@ namespace GASS
 	void SelectTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)// && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
 		{

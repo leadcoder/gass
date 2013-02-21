@@ -64,12 +64,13 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("MeshComponent", OF_VISIBLE)));
-		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
+		
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
 			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("Mesh filename",PF_VISIBLE,"","MESH")));
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
 	}
 
 	void OgreMeshComponent::OnInitialize()
@@ -380,11 +381,8 @@ namespace GASS
 
 	void OgreMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-
 		if(!m_OgreEntity)
 			return;
-
-
 		if(!m_UniqueMaterialCreated) 
 		{
 			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
@@ -396,6 +394,7 @@ namespace GASS
 			}
 			m_UniqueMaterialCreated = true;
 		}
+
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);

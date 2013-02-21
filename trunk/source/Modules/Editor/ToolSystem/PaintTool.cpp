@@ -20,7 +20,7 @@ namespace GASS
 {
 
 	PaintTool::PaintTool(MouseToolController* controller): m_MouseIsDown(false),
-		m_Controller(controller)
+		m_Controller(controller),m_Active(false)
 	{
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
@@ -118,7 +118,7 @@ namespace GASS
 
 	void PaintTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
 	{
-		if(m_Active)
+		/*if(m_Active)
 		{
 			//hide gizmo
 			if(message->GetSceneObject())
@@ -137,7 +137,7 @@ namespace GASS
 			{
 				SetGizmoVisiblity(false);
 			}
-		}
+		}*/
 		m_SelectedObject = message->GetSceneObject();
 	}
 
