@@ -70,6 +70,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("OgreTerrainPageComponent",new Creator<OgreTerrainPageComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("OgreTerrainPageComponent", OF_VISIBLE)));
+		
 		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<ResourceHandle>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap,
@@ -160,12 +161,14 @@ namespace GASS
 				else
 				{
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
-					if(m_HeightMapFile.Valid()) //import height map
-						ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
+					
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 				
+				if(m_HeightMapFile.Valid()) //import height map
+					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
+
 				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 	

@@ -31,6 +31,7 @@ This class is based on the Game Programming Gems 5 article
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Reflection/GASSTypedProperty.h"
 #include <sstream>
+#define VEC_ELEM_SEP "#"
 
 namespace GASS
 {
@@ -133,12 +134,30 @@ namespace GASS
 			try
 			{
 				std::vector<T> res;
-				std::stringstream str(value);
 				T out_value;
-				while(str >> out_value)
+				std::string temp = value;
+				std::string::size_type pos = temp.find(VEC_ELEM_SEP,0);
+				while(pos != std::string::npos)
 				{
+					const std::string elem_str = temp.substr(0,pos);
+					std::stringstream str(elem_str);
+					str >> out_value;
+					res.push_back(out_value);
+					temp = temp.substr(pos+1);
+					pos = temp.find(VEC_ELEM_SEP,0);
+				}
+				if(temp != "") //last element
+				{
+					std::stringstream str(temp);
+					str >> out_value;
 					res.push_back(out_value);
 				}
+	
+				/*while(str >> out_value)
+				{
+					res.push_back(out_value);
+				}*/
+
 				SetValue(object,res);
 			}
 			catch(...)
@@ -156,14 +175,12 @@ namespace GASS
 			{
 				std::string str_val;
 				if(i > 0 )
-					res += " ";
+					res += VEC_ELEM_SEP;
 
 				std::stringstream sstream;
 				sstream.unsetf(std::ios::skipws);
 				sstream << val[i];
 				str_val = sstream.str();
-
-
 				res += str_val;
 			}
 			return res;
