@@ -16,7 +16,7 @@
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
  <SetDataPath value="../../../common/data/"/>
- <ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
+ <ScenePath value="%GASS_DATA_HOME%/sceneries/"/>
  <ResourceManager>
 	<ResourceGroup name="Bootstrap">
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
@@ -108,20 +108,17 @@
 	<TaskNode value="2"/>
   </ODEPhysicsSystem>-->
   <ODECollisionSystem>
-    <Name value = "CollisionSystem"/>
 	<TaskNode value="PRE_SIM"/>
   </ODECollisionSystem>
   <OgreGraphicsSystem>
    <CreateMainWindowOnInit value="0"/>
    <UpdateMessagePump value="false"/>
-    <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
     <Plugin value="RenderSystem_Direct3D9"/>
     <Plugin value="Plugin_CgProgramManager"/>
     <Plugin value="Plugin_BSPSceneManager"/>
     <Plugin value="Plugin_OctreeSceneManager"/>
     <Plugin value="Plugin_ParticleFX"/>
-    <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
 	<TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>

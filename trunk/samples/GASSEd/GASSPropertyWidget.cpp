@@ -23,7 +23,6 @@ GASSPropertyWidget::GASSPropertyWidget( GASSEd *parent): QtTreePropertyBrowser(p
 	setPropertiesWithoutValueMarked(true);
 	setRootIsDecorated(false);
 	setMinimumSize(200,200);
-	//connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(valueChanged(QtProperty *, const QVariant &)));
 	connect(m_VariantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(slotValueChanged(QtProperty *, const QVariant &)));
 
 }
