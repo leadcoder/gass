@@ -298,13 +298,22 @@ namespace GASS
 				//std::string attrib_name = class_attribute->FirstAttribute()->Name();
 				if(class_attribute->FirstAttribute())
 				{
-				const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
-				if (!SetPropertyByString(data_name,attrib_val))
-					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
+					const std::string attrib_val = class_attribute->FirstAttribute()->Value();//class_attribute->Attribute(attrib_name);
+					try
+					{
+						SetPropertyByString(data_name,attrib_val);
+					}
+					catch(...)
+					{
+					
+						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->Value()),"BaseComponentContainerTemplate::LoadXML");
+						//LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
+					}
 				}
 				else
 				{
-					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t no value attribute found for xml tag: " << data_name;
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No value attribute found for xml tag: " + data_name + " In:" + std::string(obj_elem->GetDocument()->Value()), "BaseComponentContainerTemplate::LoadXML");
+					//LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t no value attribute found for xml tag: " << data_name;
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();

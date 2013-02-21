@@ -38,12 +38,15 @@ namespace GASS
 			os << mat.GetName(); 
 			return os;
 		}
-		friend std::istream& operator >> (std::istream& os, OgreMaterial& mat)
+		friend std::istream& operator >> (std::istream& is, OgreMaterial& mat)
 		{
 			std::string name;
-			os >> name;
+			if(!(is >> name))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse OgreMaterial value","OgreMaterial::>>");
+			}
 			mat.SetName(name);
-			return os;
+			return is;
 		}
 	protected:
 		std::string m_Name;

@@ -22,6 +22,7 @@
 #define GASS_COLOR_RGB_H
 
 #include "Core/Common.h"
+#include "Core/Utils/GASSException.h"
 #include <assert.h>
 #include <math.h>
 namespace GASS
@@ -64,7 +65,10 @@ namespace GASS
 
 		friend std::istream& operator >> (std::istream& is, ColorRGB& v)
 		{
-			is >> v.r >>  v.g >>  v.b;
+			if(!(is >> v.r >>  v.g >>  v.b))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse ColorRGB","ColorRGB::>>");
+			}
 			return is;
 		}
 	};

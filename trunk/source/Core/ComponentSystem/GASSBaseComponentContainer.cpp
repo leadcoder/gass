@@ -297,8 +297,14 @@ namespace GASS
 			else //base object attribute
 			{
 				const std::string attrib_val = class_attribute->FirstAttribute()->Value();
-				if (!SetPropertyByString(data_name,attrib_val))
-					LogManager::getSingleton().stream() << "WARNING:BaseComponentContainer::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\tproperty not found: " << data_name;
+				try
+				{
+					SetPropertyByString(data_name,attrib_val);
+				}
+				catch(...)
+				{
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->Value()),"BaseComponentContainer::LoadXML");
+				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
 		}

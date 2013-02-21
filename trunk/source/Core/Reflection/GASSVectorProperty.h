@@ -130,16 +130,21 @@ namespace GASS
 
 		void SetValueByString(BaseReflectionObject* object, const std::string &value)
 		{
-			std::vector<T> res;
-
-			std::stringstream str(value);
-			T out_value;
-			while(str >> out_value)
+			try
 			{
-				res.push_back(out_value);
+				std::vector<T> res;
+				std::stringstream str(value);
+				T out_value;
+				while(str >> out_value)
+				{
+					res.push_back(out_value);
+				}
+				SetValue(object,res);
 			}
-
-			SetValue(object,res);
+			catch(...)
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set poperty:" + m_Name + " With value:" + value,"VectorProperty::SetValueByString");
+			}
 		}
 
 		std::string GetValueAsString(const BaseReflectionObject* object) const

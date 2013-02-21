@@ -58,7 +58,7 @@ namespace GASS
             @param value The value provided as string
             @return true if property found and set
 		*/
-		bool SetPropertyByString(const std::string &property_name,const std::string &value);
+		void SetPropertyByString(const std::string &property_name,const std::string &value);
 		/**Get property by string
 		    @param property_name Name of the property to get
             @param value The value provided as string
@@ -71,13 +71,15 @@ namespace GASS
             @param value The value provided as boost::any
             @return true if property found and set
 		*/
-		bool SetPropertyByType(const std::string &property_name, boost::any value);
+		void SetPropertyByType(const std::string &property_name, boost::any value);
 
 		/**Get property value
 		    @param property_name Name of the property to get
             @param value The value provided as boost::any
             @return true if property found
 		*/
+
+		bool HasProperty(const std::string &property_name) const;
 		bool GetPropertyByType(const std::string &property_name, boost::any &value);
 
 		void LoadProperties(TiXmlElement *elem);

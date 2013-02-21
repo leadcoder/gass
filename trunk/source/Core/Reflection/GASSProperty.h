@@ -177,9 +177,16 @@ namespace GASS
 
 		void SetValueByString(BaseReflectionObject* object, const std::string &value)
 		{
-			T res;
-			GetValueFromString<T>(res,value);
-			SetValue(object,res);
+			try
+			{
+				T res;
+				GetValueFromString<T>(res,value);
+				SetValue(object,res);
+			}
+			catch(...)
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set poperty:" + m_Name + " With value:" + value,"Property::SetValueByString");
+			}
 		}
 
 		std::string GetValueAsString(const BaseReflectionObject* object) const 

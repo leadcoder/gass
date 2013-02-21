@@ -24,6 +24,7 @@
 #include "Core/Common.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSMatrix.h"
+#include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <assert.h>
 #include <math.h>
@@ -73,10 +74,13 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, Vec2& vec)
+		friend std::istream& operator >> (std::istream& is, Vec2& vec)
 		{
-			os >> vec.x >>  vec.y;
-			return os;
+			if(!(is >> vec.x >>  vec.y))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse vec2 value","Vec2::>>");
+			}
+			return is;
 		}
 	};
 
@@ -130,10 +134,13 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, Vec2i& vec)
+		friend std::istream& operator >> (std::istream& is, Vec2i& vec)
 		{
-			os >> vec.x  >> vec.y;
-			return os;
+			if(!(is >> vec.x  >> vec.y))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Vec2i","Vec2i::>>");
+			}
+			return is;
 		}
 
 
@@ -306,7 +313,11 @@ namespace GASS
 
 		friend std::istream& operator >> (std::istream& is, Vec3& vec)
 		{
-			is >> vec.x >>  vec.y >> vec.z;
+			if(!(is >> vec.x >>  vec.y >> vec.z))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Vec3","Vec3::>>");
+			}
+
 			return is;
 		}
 
@@ -444,7 +455,10 @@ namespace GASS
 
 		friend std::istream& operator >> (std::istream& is, Vec4& vec)
 		{
-			is >> vec.x >> vec.y >> vec.z >> vec.w;
+			if(!(is >> vec.x >> vec.y >> vec.z >> vec.w))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Vec4","Vec4::>>");
+			}
 			return is;
 		}
 	};

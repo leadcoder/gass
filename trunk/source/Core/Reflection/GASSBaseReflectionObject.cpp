@@ -48,17 +48,31 @@ namespace GASS
 				if(attrib_name == "value") 
 				{
 					const std::string prop_val = prop_elem->FirstAttribute()->Value();
-					if (!SetPropertyByString(prop_name,prop_val))
-						LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\t property not found: "<< prop_name;
+
+					try
+					{
+						SetPropertyByString(prop_name,prop_val);
+					}
+					catch(...)
+					{
+						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + prop_name +" With attribute:"+ prop_val+  " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadXML");
+						//GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed xml parsing in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
+
+						//LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
+						//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\t property not found: "<< prop_name;
+					}
+						
 				}
 				else
 				{
-					LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename: " << prop_elem->GetDocument()->Value() << "\t unkown property syntax for " << prop_name << "\"value\" expected, found " << attrib_name;
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
+					//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename: " << prop_elem->GetDocument()->Value() << "\t unkown property syntax for " << prop_name << "\"value\" expected, found " << attrib_name;
 				}
 			}
 			else
 			{
-				LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" << prop_elem->GetDocument()->Value() <<" \t No attribute found for property " <<prop_name;
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No attribute found for property for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
+				//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" << prop_elem->GetDocument()->Value() <<" \t No attribute found for property " <<prop_name;
 			}
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
@@ -100,7 +114,7 @@ namespace GASS
 		return true;
 	}
 
-	bool BaseReflectionObject::SetPropertyByString(const std::string &property_name,const std::string &value)
+	void BaseReflectionObject::SetPropertyByString(const std::string &property_name,const std::string &value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -113,18 +127,39 @@ namespace GASS
 				if(prop_name == property_name)
 				{
 					prop->SetValueByString(this,value);
+					return;
+				}
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name + " With value:" + value,"BaseReflectionObject::SetPropertyByString");
+	}
 
+
+	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<IProperty*>::const_iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				IProperty * prop = (*iter);
+				const std::string prop_name = prop->GetName();
+				if(prop_name == property_name)
+				{
+					
 					return true;
 				}
 				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
-
 		return false;
 	}
 
-	bool BaseReflectionObject::SetPropertyByType(const std::string &property_name, boost::any value)
+	void BaseReflectionObject::SetPropertyByType(const std::string &property_name, boost::any value)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -137,14 +172,13 @@ namespace GASS
 				if(prop_name == property_name)
 				{
 					prop->SetValue(this,value);
-					return true;
+					return;
 				}
 				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
-
-		return false;
+		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name,"BaseReflectionObject::SetPropertyByType");
 	}
 
 	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, boost::any &value)
@@ -221,7 +255,8 @@ namespace GASS
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					IProperty * prop = (*iter);
-					bool ret = dest->SetPropertyByString(prop->GetName(),prop->GetValueAsString(this));
+					if(dest->HasProperty(prop->GetName()))
+						dest->SetPropertyByString(prop->GetName(), prop->GetValueAsString(this));
 					//Here we want to copy all common properties from one object to another 
 					//(typically from template to instance), so ignore if some properties don't exist in destination object
 					//if (!ret)

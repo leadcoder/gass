@@ -109,10 +109,13 @@ namespace GASS
 			return os;
 		}
 
-		friend std::istream& operator >> (std::istream& os, Quaternion& q)
+		friend std::istream& operator >> (std::istream& is, Quaternion& q)
 		{
-			os >> q.x >>  q.y >> q.z >> q.w;
-			return os;
+			if(!(is >> q.x >>  q.y >> q.z >> q.w))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Quaternion","Quaternion::>>");
+			}
+			return is;
 		}
 
 		// cutoff for sine near zero
