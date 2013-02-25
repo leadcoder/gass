@@ -110,6 +110,7 @@ namespace GASS
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
+
 		std::string full_path;
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
@@ -215,9 +216,26 @@ namespace GASS
 
 	RenderWindowPtr OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_handle)
 	{
-		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits();
-		traits->x = 100;
-		traits->y = 100;
+
+		osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
+		if (!wsi)
+	    {
+			
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to get WindowingSystemInterface", "OSGGraphicsSystem::CreateRenderWindow");
+	    }
+
+		osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
+
+		
+		
+
+		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(ds);
+
+		traits->readDISPLAY();
+
+		traits->screenNum = 0;
+		traits->x = 0;
+		traits->y = 0;
 		traits->width = width;
 		traits->height = height;
 		traits->doubleBuffer = true;
@@ -248,12 +266,15 @@ namespace GASS
 			//rather than just the parts of the window that are under the camera's viewports
 			graphics_context->setClearColor(osg::Vec4f(0.0f,0.0f,0.0f,1.0f));
 			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
+			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
+
 		}
 		else
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
 		}
-
 
 		OSGRenderWindowPtr win(new  OSGRenderWindow(this,graphics_context));
 		m_Windows.push_back(win);

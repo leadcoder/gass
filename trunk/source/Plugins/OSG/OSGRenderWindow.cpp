@@ -64,7 +64,14 @@ namespace GASS
 	ViewportPtr OSGRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
 	{
 		osg::Viewport* osg_vp = new osg::Viewport(left, top, width,height);
+
+		osg::ref_ptr<osg::Camera> camera = new osg::Camera;
+	    camera->setGraphicsContext(m_Window.get());
+		camera->setViewport(osg_vp);
+
 		OSGViewportPtr vp(new OSGViewport(name,osg_vp, this));
+		
+		vp->Init();
 		m_Viewports.push_back(vp);
 		return vp;
 	}

@@ -35,6 +35,8 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGGraphicsSceneManager.h"
+
 
 
 namespace GASS
@@ -68,6 +70,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
+		
+		//Get osg camera from view
+		OSGGraphicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
+		osgViewer::View* view = sm->GetOSGView();
+		SetOSGCamera(view->getCamera());
+
 	}
 
 	void OSGCameraComponent::OnChangeCamera(ChangeCameraRequestPtr message)

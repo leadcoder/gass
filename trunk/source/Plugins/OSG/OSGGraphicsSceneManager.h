@@ -49,7 +49,7 @@ namespace GASS
 		virtual void OnInit();		
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
-		
+		osgViewer::View* GetOSGView() const {return m_View;}
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
 		

@@ -43,6 +43,8 @@
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Plugins/OSG/OSGRenderWindow.h"
+
 
 
 
@@ -91,6 +93,17 @@ namespace GASS
 		osgViewer::View* view = new osgViewer::View;
 		m_View = view;
 		view->setName(GetName());
+
+		OSGGraphicsSystemPtr sys(m_GFXSystem);
+		RenderWindowPtr temp = RenderWindowPtr(sys->GetMainRenderWindow());
+		OSGRenderWindowPtr win = DYNAMIC_PTR_CAST<OSGRenderWindow>(temp );
+		osg::ref_ptr<osg::GraphicsContext> gc = win->GetOSGWindow();
+		
+		osg::ref_ptr<osg::Camera> cam = view->getCamera();
+		cam->setGraphicsContext(gc.get());
+		cam->setViewport(0, 0, 200, 200);
+
+
 		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->addView(view);
 
 		view->setLightingMode(osg::View::SKY_LIGHT); 
@@ -116,15 +129,9 @@ namespace GASS
 		view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 		//view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 		
-		//view->getCamera()->setViewport(new osg::Viewport(p_left, p_top, p_width,p_height));
+		//view->getCamera()->setViewport(new osg::Viewport(0, 0, 100,100));
 		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);
-	}
 
-	void OSGGraphicsSceneManager::OnInit()
-	{
-		ScenePtr scene = GetScene();
-		assert(scene);
-	
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
 
@@ -146,6 +153,13 @@ namespace GASS
 		short attr = osg::StateAttribute::ON;
 		state->setMode(GL_FOG, attr);
 		GetOSGShadowRootNode()->setStateSet(state);
+
+	}
+
+	void OSGGraphicsSceneManager::OnInit()
+	{
+		//ScenePtr scene = GetScene();
+		//assert(scene);
 
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
@@ -197,25 +211,6 @@ namespace GASS
 			return m_ShadowedScene;
 		return m_RootNode;
 	}
-
-
-	/*void OSGGraphicsSceneManager::UpdateNodeMask(osg::Node* node, GeometryFlags category)
-	{
-		//reset 
-		/*node->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  node->getNodeMask());
-		switch(category)
-		{
-		case GT_REGULAR:
-			node->setNodeMask(NM_REGULAR_GEOMETRY | node->getNodeMask());
-			break;
-		case GT_TERRAIN:
-			node->setNodeMask(NM_TERRAIN_GEOMETRY | node->getNodeMask());
-			break;
-		case GT_GIZMO:
-			node->setNodeMask(NM_GIZMO_GEOMETRY | node->getNodeMask());
-			break;
-		}
-	}*/
 
 }
 
