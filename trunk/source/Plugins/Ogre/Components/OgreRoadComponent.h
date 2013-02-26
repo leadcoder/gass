@@ -54,6 +54,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
+		ADD_ATTRIBUTE(float,CustomDitchTexturePercent)
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;
 

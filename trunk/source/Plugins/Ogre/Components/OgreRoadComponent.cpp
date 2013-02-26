@@ -53,7 +53,8 @@ namespace GASS
 		m_UseSkirts(false),
 		m_TerrainPaintLayer(TL_2),
 		m_ClampToTerrain(true),
-		m_TileScale(1,10)
+		m_TileScale(1,10),
+		m_CustomDitchTexturePercent(0)
 	{
 
 	}
@@ -93,6 +94,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<ResourceHandle>("Material", &GASS::OgreRoadComponent::GetMaterial, &GASS::OgreRoadComponent::SetMaterial,
 			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
+		RegisterProperty<float>("CustomDitchTexturePercent", &GASS::OgreRoadComponent::GetCustomDitchTexturePercent, &GASS::OgreRoadComponent::SetCustomDitchTexturePercent,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		
 	}
 
 	void OgreRoadComponent::OnInitialize()
@@ -232,11 +236,13 @@ namespace GASS
 		Vec3 uv_new_pos; 
 		Vec3 pos, front; 
 
-
 		float tot_width = m_RoadWidth + 2*m_DitchWidth;
+		
 		Float u = m_DitchWidth/tot_width;
+		if(m_CustomDitchTexturePercent != 0)
+			u = m_CustomDitchTexturePercent;
 		//Float u_coord[5] = {0,0.03125,0.5,1-0.03125,1};
-		Float u_coord[5] = {0,u,0.5,1-u,1};
+		Float u_coord[5] = {0,u,0.5,(1-u),1};
 		Float lr_vector_multiplier[5] = {tot_width*0.5, m_RoadWidth*0.5, 0, -m_RoadWidth*0.5, -tot_width*0.5}; 
 
 		Float curr_height; 
@@ -325,23 +331,16 @@ namespace GASS
 					curr_vertices[num_horizontal_pts-1].y = curr_height;
 				}
 			}
-
-			
-
 			last_pos = curr_vertices[2]; 
-
 			// finally add vertices 
 			for (int j = 0; j < num_horizontal_pts; j++) 
 			{ 
 				MeshVertex mesh_vertex;
 				mesh_vertex.Pos = curr_vertices[j];
 				mesh_vertex.Color.Set(1,1,1,1);
-				mesh_vertex.TexCoord.x = u_coord[j];
+				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
 				mesh_vertex.TexCoord.y = v_coord;
 				mesh_data->VertexVector.push_back(mesh_vertex);
-			
-
-			
 			} 
 		} 
 
