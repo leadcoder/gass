@@ -52,7 +52,7 @@ namespace GASS
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		
-		void SetActiveData(osg::Group* root);
+		//void SetActiveData(osg::Group* root);
 		void LoadShadowSettings(TiXmlElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}

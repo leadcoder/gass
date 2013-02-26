@@ -49,7 +49,7 @@ namespace GASS
 		virtual void OnInit();		
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
-		osgViewer::View* GetOSGView() const {return m_View;}
+		//osgViewer::View* GetOSGView() const {return m_View;}
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
 		
@@ -88,7 +88,7 @@ namespace GASS
 		osg::ref_ptr<osg::Group> m_RootNode;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
-		osgViewer::View *m_View;
+		//osgViewer::View *m_View;
 	};
 	typedef SPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;

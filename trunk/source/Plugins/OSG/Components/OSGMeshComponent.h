@@ -197,6 +197,9 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const ResourceHandle &filename);
+		void LoadMesh(const std::string &file_name);
+		void SetImportMesh(const FilePath &file_name);
+		FilePath  GetImportMesh() const;
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 

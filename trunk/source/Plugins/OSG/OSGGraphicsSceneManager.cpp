@@ -44,6 +44,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGRenderWindow.h"
+#include "Plugins/OSG/OSGViewport.h"
 
 
 
@@ -90,7 +91,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnInitialize");
 		}
 
-		osgViewer::View* view = new osgViewer::View;
+		/*osgViewer::View* view = new osgViewer::View;
 		m_View = view;
 		view->setName(GetName());
 
@@ -98,12 +99,13 @@ namespace GASS
 		RenderWindowPtr temp = RenderWindowPtr(sys->GetMainRenderWindow());
 		OSGRenderWindowPtr win = DYNAMIC_PTR_CAST<OSGRenderWindow>(temp );
 		osg::ref_ptr<osg::GraphicsContext> gc = win->GetOSGWindow();
+
+		OSGViewportPtr vp = *win->GetViewports().begin();
+		view->setCamera(vp->GetOSGCamera());
 		
-		osg::ref_ptr<osg::Camera> cam = view->getCamera();
-		cam->setGraphicsContext(gc.get());
-		cam->setViewport(0, 0, 200, 200);
-
-
+		//osg::ref_ptr<osg::Camera> cam = view->getCamera();
+		//cam->setGraphicsContext(gc.get());
+		//cam->setViewport(0, 0, 200, 200);
 		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->addView(view);
 
 		view->setLightingMode(osg::View::SKY_LIGHT); 
@@ -130,7 +132,7 @@ namespace GASS
 		//view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 		
 		//view->getCamera()->setViewport(new osg::Viewport(0, 0, 100,100));
-		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);
+		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);*/
 
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
@@ -167,7 +169,7 @@ namespace GASS
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-		OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
+		//OSGGraphicsSystemPtr(m_GFXSystem)->SetActiveData(m_RootNode.get());
 
 		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		if(system == NULL)
@@ -200,7 +202,6 @@ namespace GASS
 			m_Fog->setMode(osg::Fog::EXP);
 		else if(m_FogMode == "Exp2")
 			m_Fog->setMode(osg::Fog::EXP2);
-
 	}
 
 

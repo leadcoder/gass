@@ -45,6 +45,7 @@ namespace GASS
 		OSGGraphicsSystem* GetSystem() const{return m_System;}
 		osg::ref_ptr<osg::GraphicsContext> GetOSGWindow() const {return m_Window;}
 		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
+		OSGViewportVector GetViewports() const {return m_Viewports;}
 	private:
 		osg::ref_ptr<osg::GraphicsContext> m_Window;
 		OSGViewportVector m_Viewports;

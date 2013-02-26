@@ -191,7 +191,7 @@ namespace GASS
 		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
 	}
 
-	void OSGGraphicsSystem::SetActiveData(osg::Group* root)
+	/*void OSGGraphicsSystem::SetActiveData(osg::Group* root)
 	{
 		osgViewer::ViewerBase::Views views;
 		m_Viewer->getViews(views);
@@ -202,7 +202,7 @@ namespace GASS
 			views[i]->setSceneData(root);
 		}
 		//m_Viewer->realize();
-	}
+	}*/
 
 
 	RenderWindowPtr OSGGraphicsSystem::GetMainRenderWindow() const

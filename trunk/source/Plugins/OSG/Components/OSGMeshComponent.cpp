@@ -57,12 +57,16 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
 		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource);
+		
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
 		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
 		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
+
+		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,"*.3ds *.flt *.obj")));
 	}
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
@@ -157,7 +161,7 @@ namespace GASS
 
 	void OSGMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-		LoadMesh(m_MeshResource.Name());
+		LoadMesh(m_MeshResource);
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 		m_Initlized = true;
@@ -189,8 +193,18 @@ namespace GASS
 		{
 			//m_MeshNode->setNodeMask(~NM_VISIBLE & m_MeshNode->getNodeMask());
 			m_MeshNode->setNodeMask(0);
-
 		}
+	}
+
+	FilePath OSGMeshComponent::GetImportMesh() const
+	{
+		return FilePath();
+	}
+
+	void OSGMeshComponent::SetImportMesh(const FilePath &path)
+	{
+		if(path.GetFullPath() !="")
+			LoadMesh(path.GetFullPath());
 	}
 
 	void OSGMeshComponent::LoadMesh(const ResourceHandle &filename)
@@ -198,22 +212,58 @@ namespace GASS
 		if(!filename.Valid()) //not loaded
 			return;
 
-		SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-		if(!lc)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
-		}
-
-		
 		//check if extension exist?
 		FilePath file_path = filename.GetResource()->Path();
 		const std::string extension =  file_path.GetExtension();
-
 		std::string  mod_file_path = file_path.GetFullPath();
 		//hack to convert ogre meshes
 		if(extension == "mesh") //this is ogre model, try to load 3ds instead
 		{
 			mod_file_path = Misc::Replace(mod_file_path,".mesh",".3ds");
+		}
+
+		LoadMesh(mod_file_path);
+
+		/*if(m_MeshNode.valid())
+		{
+			lc->GetOSGNode()->removeChild(m_MeshNode.get());
+			m_MeshNode.release();
+		}
+
+		m_MeshNode = (osg::Group*) osgDB::readNodeFile((mod_file_path));
+
+		if( ! m_MeshNode)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + mod_file_path,"OSGMeshComponent::SetFilename");
+		}
+
+		osgUtil::Optimizer optimizer;
+		optimizer.optimize(m_MeshNode.get());
+
+		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		m_MeshNode->setUserData(data);
+
+		SetLighting(m_Lighting);
+		SetCastShadow(m_CastShadow);
+		SetReceiveShadow(m_ReceiveShadow);
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+
+		//expand children
+		if(m_Expand)
+			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+	
+		lc->GetOSGNode()->addChild(m_MeshNode.get());
+		//update mask!
+		SetGeometryFlags(m_GeomFlags);*/
+	}
+
+
+	void OSGMeshComponent::LoadMesh(const std::string &file_name)
+	{
+		SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
+		if(!lc)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed loading " + GetSceneObject()->GetName()  + ", not possible to use mesh components without location compoent","OSGMeshComponent::SetFilename");
 		}
 
 		if(m_MeshNode.valid())
@@ -225,11 +275,11 @@ namespace GASS
 		//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
 		//osgUtil::Optimizer optimizer;
 		//optimizer.optimize(loadedModel.get());
-		m_MeshNode = (osg::Group*) osgDB::readNodeFile((mod_file_path));
+		m_MeshNode = (osg::Group*) osgDB::readNodeFile((file_name));
 
 		if( ! m_MeshNode)
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + mod_file_path,"OSGMeshComponent::SetFilename");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + file_name,"OSGMeshComponent::SetFilename");
 		}
 
 		osgUtil::Optimizer optimizer;

@@ -72,9 +72,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
 		
 		//Get osg camera from view
-		OSGGraphicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
-		osgViewer::View* view = sm->GetOSGView();
-		SetOSGCamera(view->getCamera());
+		//OSGGraphicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
+		//osgViewer::View* view = sm->GetOSGView();
+		//SetOSGCamera(view->getCamera());
 
 	}
 

@@ -31,18 +31,20 @@ namespace GASS
 	{
 		friend class OSGRenderWindow;
 	public:
-		OSGViewport(const std::string &name,osg::Viewport* vp, OSGRenderWindow* window);
+		OSGViewport(const std::string &name,osgViewer::View* view, OSGRenderWindow* window);
 		virtual ~OSGViewport();
 		virtual CameraComponentPtr GetCamera() const;
 		virtual void SetCamera(CameraComponentPtr camera);
 		virtual std::string GetName() const {return m_Name;}
+		osg::Camera* GetOSGCamera() const {return m_OSGCamera;}
 	private:
 		void Init();
 		void OnChangeCamera(ChangeCameraRequestPtr message);
-		osg::Viewport* m_OSGViewport;
+		osg::ref_ptr<osg::Camera> m_OSGCamera; 
 		std::string m_Name;
 		OSGRenderWindow* m_Window;
 		CameraComponentWeakPtr m_Camera;
+		osgViewer::View* m_OSGView;
 	};
 	typedef SPTR<OSGViewport> OSGViewportPtr;
 }

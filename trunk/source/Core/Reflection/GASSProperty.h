@@ -185,7 +185,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set poperty:" + m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 
@@ -203,7 +203,17 @@ namespace GASS
 		}
 		void SetValue(BaseReflectionObject* object, boost::any &value)
 		{
-			T res = boost::any_cast<T>(value);
+			
+			T res;
+			try
+			{
+				res = boost::any_cast<T>(value);
+			}
+			catch(...)
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value","Property::SetValue");
+			}
+
 			SetValue(object,res);
 		}
 
