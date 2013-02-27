@@ -324,6 +324,7 @@ namespace GASS
 
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = Vec4(1,1,1,1);
+			vertex.Normal = Vec3(0,1,0);
 			Vec3 offset(0,-box_volume,box_volume);
 
 			vertex.Pos = Vec3(0,box_volume,box_volume)  + offset;
@@ -464,6 +465,7 @@ namespace GASS
 			float thickness = 0.01;
 			MeshVertex vertex;
 			vertex.Pos = Vec3(0,-thickness,0);
+			vertex.Normal = Vec3(0,1,0);
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = Vec4(1,1,1,1);
 			m_MeshData->VertexVector.push_back(vertex);
@@ -535,6 +537,7 @@ namespace GASS
 			MeshVertex vertex;
 
 			vertex.Pos = Vec3(0,0,0);
+			vertex.Normal = Vec3(0,1,0);
 			vertex.TexCoord.Set(0,0);
 			vertex.Color  = m_Color;
 

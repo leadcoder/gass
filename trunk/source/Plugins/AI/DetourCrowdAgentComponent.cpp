@@ -404,6 +404,7 @@ namespace GASS
 		MeshVertex vertex;
 		vertex.TexCoord.Set(0,0);
 		vertex.Color.Set(1,0,0,1);
+		vertex.Normal = Vec3(0,1,0);
 
 		float samples = 24;
 		float rad = 2*MY_PI/samples;

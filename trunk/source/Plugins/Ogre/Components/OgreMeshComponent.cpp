@@ -71,6 +71,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
+
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
 	void OgreMeshComponent::OnInitialize()
@@ -495,5 +498,15 @@ namespace GASS
 	void OgreMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+	void OgreMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
+	{
+		SetGeometryFlags(value.GetValue());
+	}
+
+	GeometryFlagsBinder OgreMeshComponent::GetGeometryFlagsBinder() const
+	{
+		return GeometryFlagsBinder(GetGeometryFlags());
 	}
 }

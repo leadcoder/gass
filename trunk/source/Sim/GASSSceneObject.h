@@ -27,8 +27,7 @@
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSScene.h"
-
-
+#include <boost/uuid/uuid.hpp>
 
 namespace GASS
 {
@@ -238,7 +237,6 @@ namespace GASS
 		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
-
 	};
 
 }

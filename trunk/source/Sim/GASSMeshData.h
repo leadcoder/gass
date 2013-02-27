@@ -39,6 +39,7 @@ namespace GASS
 	struct MeshVertex
 	{
 		Vec3 Pos;
+		Vec3 Normal;
 		Vec4 Color;
 		Vec2 TexCoord;
 	};

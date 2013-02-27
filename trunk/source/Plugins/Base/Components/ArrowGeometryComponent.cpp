@@ -88,6 +88,7 @@ namespace GASS
 
 		vertex.TexCoord.Set(0,0);
 		vertex.Color  = Vec4(1,1,1,1);
+		vertex.Normal = Vec3(0,1,0);
 		Vec3 offset(-box_volume,box_volume,0);
 
 		vertex.Pos = Vec3(box_volume,box_volume,0)  + offset;

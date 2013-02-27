@@ -43,7 +43,7 @@ namespace GASS
 			std::string name;
 			if(!(is >> name))
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse OgreMaterial value","OgreMaterial::>>");
+				//GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse OgreMaterial value","OgreMaterial::>>");
 			}
 			mat.SetName(name);
 			return is;

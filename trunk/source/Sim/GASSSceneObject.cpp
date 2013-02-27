@@ -17,6 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
+
+#include <boost/uuid/uuid_generators.hpp>
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -40,8 +43,9 @@
 namespace GASS
 {
 	SceneObject::SceneObject() : m_MessageManager(new MessageManager())
+		//m_GUID(boost::uuids::random_generator()())
 	{
-
+		
 	}
 
 	SceneObject::~SceneObject(void)
@@ -153,6 +157,7 @@ namespace GASS
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
+		
 		m_Scene = scene;
 
 		SceneObjectPtr this_obj = STATIC_PTR_CAST<SceneObject>(shared_from_this());

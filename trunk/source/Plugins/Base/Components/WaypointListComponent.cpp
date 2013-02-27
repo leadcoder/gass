@@ -190,6 +190,7 @@ namespace GASS
 			mesh_data->Material = "WhiteTransparentNoLighting";
 
 			vertex.TexCoord.Set(0,0);
+			vertex.Normal = Vec3(0,1,0);
 			vertex.Color = m_LineColor;
 			mesh_data->Type = LINE_STRIP;
 			

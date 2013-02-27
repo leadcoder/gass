@@ -129,6 +129,7 @@ namespace GASS
 
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(1,1,1,1);
+		vertex.Normal = Vec3(0,1,0);
 		mesh_data->Type = LINE_LIST;
 
 		const float samples = 24;

@@ -74,6 +74,7 @@ namespace GASS
 
 		MeshVertex vertex;
 		vertex.TexCoord.Set(0,0);
+		vertex.Normal = Vec3(0,1,0);
 		vertex.Color = m_Color;
 		m_MeshData->Type = LINE_STRIP;
 		m_MeshData->Material = "PaintGizmoMat";

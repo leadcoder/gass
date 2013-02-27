@@ -141,6 +141,7 @@ namespace GASS
 
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = m_Color;
+		vertex.Normal = Vec3(0,1,0);
 		mesh_data->Type = LINE_LIST;
 		std::vector<Vec3> conrners;
 

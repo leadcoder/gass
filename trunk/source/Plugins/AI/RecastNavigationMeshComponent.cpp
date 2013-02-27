@@ -1487,6 +1487,7 @@ static int convexhull(const float* pts, int npts, int* out)
 						vertex.Pos  = Vec3(pos[0],pos[1],pos[2]);
 						vertex.Color = color;
 						vertex.TexCoord.Set(0,0);
+						vertex.Normal = Vec3(0,1,0);
 						tris.push_back(vertex);
 					}
 				}

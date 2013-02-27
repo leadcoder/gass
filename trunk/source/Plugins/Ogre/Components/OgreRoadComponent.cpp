@@ -78,7 +78,8 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("TerrainPaintIntensity", &GASS::OgreRoadComponent::GetTerrainPaintIntensity, &GASS::OgreRoadComponent::SetTerrainPaintIntensity,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::OgreRoadComponent::GetTerrainPaintLayer, &GASS::OgreRoadComponent::SetTerrainPaintLayer);
+		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::OgreRoadComponent::GetTerrainPaintLayer, &GASS::OgreRoadComponent::SetTerrainPaintLayer,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Select paint layer",PF_VISIBLE,&TerrainLayerBinder::GetStringEnumeration)));
 			
 		RegisterProperty<float>("RoadWidth", &GASS::OgreRoadComponent::GetRoadWidth, &GASS::OgreRoadComponent::SetRoadWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -333,18 +334,70 @@ namespace GASS
 			}
 			last_pos = curr_vertices[2]; 
 			// finally add vertices 
-			for (int j = 0; j < num_horizontal_pts; j++) 
+			/*for (int j = 0; j < num_horizontal_pts; j++) 
 			{ 
 				MeshVertex mesh_vertex;
 				mesh_vertex.Pos = curr_vertices[j];
+				//mesh_vertex.Normal.Set(0,1,0);
 				mesh_vertex.Color.Set(1,1,1,1);
 				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
 				mesh_vertex.TexCoord.y = v_coord;
 				mesh_data->VertexVector.push_back(mesh_vertex);
-			} 
+			}*/
+
+
+			for (int j = 1; j < num_horizontal_pts; j++) 
+			{ 
+				MeshVertex mesh_vertex;
+				mesh_vertex.Pos = curr_vertices[j-1];
+				mesh_vertex.Normal.Set(0,1,0);
+				mesh_vertex.Color.Set(1,1,1,1);
+				mesh_vertex.TexCoord.x = u_coord[j-1]*m_TileScale.x;
+				mesh_vertex.TexCoord.y = v_coord;
+				mesh_data->VertexVector.push_back(mesh_vertex);
+
+				mesh_vertex.Pos = curr_vertices[j];
+				mesh_vertex.Normal.Set(0,1,0);
+				mesh_vertex.Color.Set(1,1,1,1);
+				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
+				mesh_vertex.TexCoord.y = v_coord;
+				mesh_data->VertexVector.push_back(mesh_vertex);
+			}
 		} 
 
+
 		for (int n = 0; n < points.size()-1; n++) 
+		{
+			int num_horizontal_vertex = num_horizontal_pts*2-2;
+			// create four: 0,1,4 0,4,3 1,2,5 1,5,4 (0->6 + offset) 
+			for (vertex_offset = n*num_horizontal_vertex; vertex_offset < (n+1)*num_horizontal_vertex-1; vertex_offset += 2) // vertex_offset 
+			{ 
+				unsigned short face[3*2] = {vertex_offset + 0,vertex_offset + num_horizontal_vertex+1, vertex_offset + 1, 
+					vertex_offset + 0,vertex_offset + num_horizontal_vertex,vertex_offset + num_horizontal_vertex+1}; 
+
+				for (int j=0; j<6; j++)
+					mesh_data->IndexVector.push_back(face[j]);
+			} 
+		}
+
+		//Do normals
+		for(size_t i = 0 ;  i < mesh_data->IndexVector.size(); i+=6)
+		{
+			MeshVertex* v1 = &mesh_data->VertexVector[mesh_data->IndexVector[i]];
+			MeshVertex* v2 = &mesh_data->VertexVector[mesh_data->IndexVector[i+1]];
+			MeshVertex* v3 = &mesh_data->VertexVector[mesh_data->IndexVector[i+2]];
+			Vec3 normal = Math::GetNormal(v1->Pos,v2->Pos,v3->Pos);
+
+			v1->Normal = normal;
+			v2->Normal = normal;
+			v3->Normal = normal;
+
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+3]])->Normal = normal;
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Normal = normal;
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Normal = normal;
+		}
+
+		/*for (int n = 0; n < points.size()-1; n++) 
 		{ 
 			// create four: 0,1,4 0,4,3 1,2,5 1,5,4 (0->6 + offset) 
 			for (vertex_offset = n*num_horizontal_pts; vertex_offset < (n+1)*num_horizontal_pts-1; vertex_offset++) // vertex_offset 
@@ -356,7 +409,7 @@ namespace GASS
 					mesh_data->IndexVector.push_back(face[j]);
 				
 			} 
-		} 
+		} */
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}

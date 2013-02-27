@@ -106,15 +106,12 @@ namespace GASS
 	{
 	public:
 		EnumerationProxyPropertyMetaData(const std::string &annotation, PropertyFlags flags,EnumerationFunc *enumeration_func,bool multi_select = false): EnumerationPropertyMetaData(annotation,flags,multi_select) , 
-			m_EnumFunc(enumeration_func),
-			m_MultiSelect(multi_select)
+			m_EnumFunc(enumeration_func)
 		{
 
 		}
 		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc();}
-		bool GetMultiSelect() const {return m_MultiSelect;}
 	private:
-		bool m_MultiSelect;
 		EnumerationFunc* m_EnumFunc;
 
 	};

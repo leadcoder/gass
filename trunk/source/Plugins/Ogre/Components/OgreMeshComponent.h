@@ -68,6 +68,8 @@ namespace GASS
 		void SetMeshResource(const ResourceHandle &res);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
+		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
+		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
 		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const;
 		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
@@ -78,6 +80,7 @@ namespace GASS
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
+		
 
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;

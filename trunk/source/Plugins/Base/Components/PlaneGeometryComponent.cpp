@@ -99,6 +99,7 @@ namespace GASS
 		Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex v1,v2,v3,v4;
+
 		
 		mesh_data->Material = "PlaneGeometry";//"WhiteTransparentNoLighting";
 		
@@ -106,15 +107,19 @@ namespace GASS
 		mesh_data->Type = TRIANGLE_LIST;
 		
 		v1.Pos = Vec3( size.x ,0 , size.y);
+		v1.Normal = Vec3(0,1,0);
 		v1.TexCoord.Set(1,1);
 		v1.Color = color;
 		v2.Pos = Vec3(-size.x ,0 , size.y);
+		v2.Normal = Vec3(0,1,0);
 		v2.TexCoord.Set(0,1);
 		v2.Color = color;
 		v3.Pos = Vec3(-size.x ,0 ,-size.y);
+		v3.Normal = Vec3(0,1,0);
 		v3.TexCoord.Set(0,0);
 		v3.Color = color;
 		v4.Pos = Vec3( size.x ,0 ,-size.y);
+		v4.Normal = Vec3(0,1,0);
 		v4.TexCoord.Set(1,0);
 		v4.Color = color;
 

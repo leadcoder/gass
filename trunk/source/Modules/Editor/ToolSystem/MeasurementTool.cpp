@@ -76,6 +76,7 @@ namespace GASS
 		mesh_data->Type = LINE_STRIP;
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(1,0,0,1);
+		vertex.Normal = Vec3(0,1,0);
 		vertex.Pos = start - text_pos;
 		mesh_data->VertexVector.push_back(vertex);
 		vertex.Pos = end - text_pos;
