@@ -23,6 +23,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS
@@ -106,6 +107,46 @@ namespace GASS
 										"BaseSceneComponent::InitializePointers()");
 
 						}
+					}
+				}
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+	}
+
+	void BaseSceneComponent::InitializeSceneObjectRef()
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				IProperty * prop = (*iter);
+				const std::string prop_name = prop->GetTypeName();
+				if(std::string::npos != prop_name.find("SceneObjectRef"))
+				{
+					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
+					if(vector_prop)
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						std::vector<SceneObjectRef> links = boost::any_cast<std::vector<SceneObjectRef> >(any_link);
+						for(int i = 0 ; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref( links[i].GetRefGUID());
+							links[i] = new_ref;
+						}
+						prop->SetValue(this,boost::any(links));
+					}
+					else
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						SceneObjectRef old_ref = boost::any_cast<SceneObjectRef>(any_link);
+						SceneObjectRef new_ref( old_ref.GetRefGUID());
+						prop->SetValue(this,boost::any(new_ref));
 					}
 				}
 				++iter;

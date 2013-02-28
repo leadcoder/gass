@@ -20,6 +20,8 @@
 
 
 #include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -43,9 +45,8 @@
 namespace GASS
 {
 	SceneObject::SceneObject() : m_MessageManager(new MessageManager())
-		//m_GUID(boost::uuids::random_generator()())
 	{
-		
+		m_GUID = boost::uuids::nil_uuid();
 	}
 
 	SceneObject::~SceneObject(void)
@@ -90,8 +91,9 @@ namespace GASS
 	{
 		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Container for all components", OF_VISIBLE)));
-
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
+		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Globally Unique IDentifier",PF_VISIBLE)));
 	}
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
@@ -157,7 +159,8 @@ namespace GASS
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
-		
+		if(m_GUID.is_nil())
+			m_GUID = boost::uuids::random_generator()();
 		m_Scene = scene;
 
 		SceneObjectPtr this_obj = STATIC_PTR_CAST<SceneObject>(shared_from_this());
@@ -317,6 +320,30 @@ namespace GASS
 		return ComponentPtr();
 	}
 
+	SceneObjectPtr SceneObject::GetChildByGUID(const SceneObjectGUID &guid)
+	{
+		ComponentContainerVector::const_iterator comp_iter =  m_ComponentContainerVector.begin();
+		while(comp_iter != m_ComponentContainerVector.end())
+		{
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(*comp_iter);
+			comp_iter++;
+			if(child->GetGUID() == guid)
+			{
+					return child;
+			}
+		}
+		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+		while(iter != m_ComponentContainerVector.end())
+		{
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(*iter);
+			SceneObjectPtr ret = child->GetChildByGUID(guid);
+			if(ret)
+				return ret;
+			iter++;
+		}
+		return SceneObjectPtr();
+	}
+	
 	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
 	{
 		if(recursive)

@@ -18,38 +18,55 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_BASE_SCENE_COMPONENT_H
-#define GASS_BASE_SCENE_COMPONENT_H
+#pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSISceneManager.h"
-#include "Sim/GASSTaskNode.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
+#include "Core/Reflection/GASSBaseReflectionObject.h"
+#include "Core/ComponentSystem/GASSBaseComponentContainer.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/GASSBaseSceneComponent.h"
+
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 namespace GASS
 {
-	//class SceneObject;
-	
-	//typedef SPTR<SceneObject> SceneObjectPtr;
-
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
+	class GASSExport SceneObjectRef 
 	{
-		friend class SceneObject;
+		friend class BaseSceneComponent;
 	public:
-		BaseSceneComponent();
-		virtual ~BaseSceneComponent();
-		SceneObjectPtr GetSceneObject() const;
-		virtual void OnInitialize();
-		virtual void OnDelete(){};
-		virtual void SceneManagerTick(double delta) {(void)delta;}
-		virtual void Update(double delta) {(void)delta;};
+		SceneObjectRef();
+		SceneObjectRef(SceneObjectPtr obj);
+		SceneObjectRef(SceneObjectGUID guid);
+		virtual ~SceneObjectRef();
+		SceneObjectPtr operator ->()
+		{
+			return SceneObjectPtr(m_RefObject,NO_THROW);
+		}
+		//bool IsValid() const {return SceneObjectPtr(m_RefObject,NO_THROW);}
+		SceneObjectGUID GetRefGUID() const {return m_RefObjectGUID;}
+		void SetRefGUID(const SceneObjectGUID &guid);
+		SceneObjectPtr GetRefObject() const {return SceneObjectPtr(m_RefObject,NO_THROW);}
 	protected:
-		void InitializePointers();
-		void InitializeSceneObjectRef();
+		void UpdateRefPtr();
 
+		friend std::ostream& operator << (std::ostream& os, const SceneObjectRef& sor)
+		{
+			os << sor.m_RefObjectGUID;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& is, SceneObjectRef& sor)
+		{
+			SceneObjectGUID guid;
+			is >> guid;
+			sor.SetRefGUID(guid);
+			return is;
+		}
+		SceneObjectWeakPtr m_RefObject;
+		SceneObjectGUID m_RefObjectGUID;
 	};
-	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef WPTR<BaseSceneComponent> BaseSceneComponentWeakPtr;
 }
-#endif // #ifndef BASESCENECOMPONENT_HH

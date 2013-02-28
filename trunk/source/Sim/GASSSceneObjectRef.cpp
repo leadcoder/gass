@@ -17,39 +17,55 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#ifndef GASS_BASE_SCENE_COMPONENT_H
-#define GASS_BASE_SCENE_COMPONENT_H
-
-#include "Sim/GASSCommon.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSISceneManager.h"
-#include "Sim/GASSTaskNode.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/GASSSimEngine.h"
+#include "Core/Common.h"
+
 namespace GASS
 {
-	//class SceneObject;
-	
-	//typedef SPTR<SceneObject> SceneObjectPtr;
-
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
+	SceneObjectRef::SceneObjectRef() : m_RefObjectGUID(boost::uuids::nil_uuid())
 	{
-		friend class SceneObject;
-	public:
-		BaseSceneComponent();
-		virtual ~BaseSceneComponent();
-		SceneObjectPtr GetSceneObject() const;
-		virtual void OnInitialize();
-		virtual void OnDelete(){};
-		virtual void SceneManagerTick(double delta) {(void)delta;}
-		virtual void Update(double delta) {(void)delta;};
-	protected:
-		void InitializePointers();
-		void InitializeSceneObjectRef();
 
-	};
-	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef WPTR<BaseSceneComponent> BaseSceneComponentWeakPtr;
+	}
+
+	SceneObjectRef::SceneObjectRef(SceneObjectPtr obj) : m_RefObject(obj)
+	{
+		m_RefObjectGUID = obj->GetGUID();
+	}
+
+	SceneObjectRef::SceneObjectRef(SceneObjectGUID guid) : m_RefObjectGUID(guid)
+	{
+		UpdateRefPtr();
+	}
+
+
+	SceneObjectRef::~SceneObjectRef(void)
+	{
+		
+	}
+
+	void SceneObjectRef::SetRefGUID(const SceneObjectGUID &guid)
+	{
+		m_RefObjectGUID  = guid;
+		UpdateRefPtr();
+	}
+
+	void SceneObjectRef::UpdateRefPtr()
+	{
+		if(!m_RefObjectGUID.is_nil())
+		{
+			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
+			while(iter.hasMoreElements())
+			{
+				ScenePtr scene = iter.getNext();
+				SceneObjectPtr obj = scene->GetRootSceneObject()->GetChildByGUID(m_RefObjectGUID);
+				if(obj)
+				{
+					m_RefObject = obj;
+					return;
+				}
+			}
+		}
+	}
 }
-#endif // #ifndef BASESCENECOMPONENT_HH

@@ -32,6 +32,7 @@
 namespace GASS
 {
 	typedef std::string SceneObjectID;
+	typedef boost::uuids::uuid SceneObjectGUID;
 	class MessageManager;
 	class Scene;
 	class SceneObject;
@@ -191,6 +192,13 @@ namespace GASS
 		*/
 		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true) const;
 
+		
+		/** Get child scene objects that match GUID. 
+			@name The object GUID to search for
+		*/
+		SceneObjectPtr GetChildByGUID(const SceneObjectGUID &guid);
+
+
 		/** Get first child scene objects that match id.
 			@id The object id to search for
 		*/
@@ -226,6 +234,8 @@ namespace GASS
 		   @copy_children Indicates if child SceneObjects also should be copied
 		*/
 		SceneObjectPtr CreateCopy(bool copy_children_recursively = true) const;
+		SceneObjectGUID GetGUID() const {return m_GUID;}
+		void SetGUID(const SceneObjectGUID& value) {m_GUID=value;}
 	protected:
 
 		void InitializePointers();
@@ -237,6 +247,7 @@ namespace GASS
 		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
+		SceneObjectGUID m_GUID;
 	};
 
 }
