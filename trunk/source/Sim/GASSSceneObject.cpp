@@ -55,12 +55,19 @@ namespace GASS
 	}
 
 
+
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
+	{
+		SceneObjectPtr copy = CreateCopyRec(copy_children_recursively);
+		copy->GenerateNewGUID(true);
+		return copy;
+	}
+
+	SceneObjectPtr SceneObject::CreateCopyRec(bool copy_children_recursively) const
 	{
 		// use object factory intead to support derives from scene object?
 		SceneObjectPtr new_obj(new  SceneObject());
 		//set object properties
-		//const BaseReflectionObjectPtr this_obj = boost::const_pointer_cast<BaseReflectionObject>(shared_from_this());
 		CopyPropertiesTo(new_obj);
 
 		//copy components
@@ -81,10 +88,58 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
-			SceneObjectPtr new_child = child->CreateCopy();
+			SceneObjectPtr new_child = child->CreateCopyRec(copy_children_recursively);
 			new_obj->AddChild(new_child);
 		}
 		return new_obj;
+	}
+
+	void SceneObject::GenerateNewGUID(bool recursively)
+	{
+		std::map<SceneObjectGUID,SceneObjectGUID> ref_map;
+		//save old guid:s first
+		GenerateNewGUIDRec(ref_map, recursively);
+
+		//remap GUID refs
+		RemapRefRec(ref_map);
+	}
+
+	void SceneObject::GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively)
+	{
+		//save old guid:s first
+		SceneObjectGUID new_guid = boost::uuids::random_generator()();
+		ref_map[m_GUID] = new_guid;
+		m_GUID = new_guid;
+
+		if(recursively)
+		{
+			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
+				child->GenerateNewGUIDRec(ref_map,recursively);
+			}
+		}
+	}
+
+	void SceneObject::RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
+	{
+		//remap references
+		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		while(comp_iter.hasMoreElements())
+		{
+			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			if(comp)
+			{
+				comp->RemapReferences(ref_map);
+			}
+		}
+		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
+			child->RemapRefRec(ref_map);
+		}
 	}
 
 	void SceneObject::RegisterReflection()
@@ -101,6 +156,7 @@ namespace GASS
 		child->InitializePointers();
 
 		BaseComponentContainer::AddChild(child);
+
 		if(load && GetScene()) //if we have scene Initialize?
 			child->Initialize(GetScene());
 	}
@@ -122,6 +178,8 @@ namespace GASS
 			child->InitializePointers();
 		}
 	}
+
+	
 
 	//Override
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
@@ -234,6 +292,15 @@ namespace GASS
 		m_MessageManager->Update(delta_time);
 		if(recursive)
 		{
+			
+			
+			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+			while(cc_iter.hasMoreElements())
+			{
+				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
+				child->SyncMessages(delta_time);
+			}
+
 			//Create copy before update
 			/*IComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
 			IComponentContainer::ComponentContainerVector::const_iterator go_iter;
@@ -243,13 +310,7 @@ namespace GASS
 				child->SyncMessages(delta_time);
 			}*/
 			
-			
-			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
-			while(cc_iter.hasMoreElements())
-			{
-				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
-				child->SyncMessages(delta_time);
-			}
+
 
 			//parallel update, problem with set world position that have to use parent transforms
 			//MessageSyncExecutor exec(m_ComponentContainerVector,delta_time);

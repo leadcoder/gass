@@ -45,7 +45,7 @@ namespace GASS
 
 	void BaseSceneComponent::OnInitialize()
 	{
-		//InitializePointers();
+		
 	}
 
 	void BaseSceneComponent::InitializePointers()
@@ -57,8 +57,9 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetTypeName();
-				if(std::string::npos != prop_name.find("SceneObjectLink"))
+				//const std::string prop_name = prop->GetTypeName();
+				//if(std::string::npos != prop_name.find("SceneObjectLink"))
+				if(*prop->GetTypeID() == typeid(SceneObjectLink))
 				{
 					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
 					if(vector_prop)
@@ -124,8 +125,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetTypeName();
-				if(std::string::npos != prop_name.find("SceneObjectRef"))
+				if(*prop->GetTypeID() == typeid(SceneObjectRef))
 				{
 					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
 					if(vector_prop)
@@ -147,6 +147,56 @@ namespace GASS
 						SceneObjectRef old_ref = boost::any_cast<SceneObjectRef>(any_link);
 						SceneObjectRef new_ref( old_ref.GetRefGUID());
 						prop->SetValue(this,boost::any(new_ref));
+					}
+				}
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+	}
+
+
+	void BaseSceneComponent::RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				IProperty * prop = (*iter);
+				//const std::string prop_name = prop->GetTypeName();
+				//if(std::string::npos != prop_name.find("SceneObjectRef"))
+				if(*prop->GetTypeID() == typeid(SceneObjectRef))
+				{
+					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
+					if(vector_prop)
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						std::vector<SceneObjectRef> links = boost::any_cast<std::vector<SceneObjectRef> >(any_link);
+						for(int i = 0 ; i < links.size(); i++)
+						{
+							std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
+							if(guid_iter != ref_map.end())
+							{
+								SceneObjectRef new_ref( guid_iter->second);
+								links[i] = new_ref;
+							}
+						}
+						prop->SetValue(this,boost::any(links));
+					}
+					else
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						SceneObjectRef old_ref = boost::any_cast<SceneObjectRef>(any_link);
+						std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
+						if(guid_iter != ref_map.end())
+						{
+							SceneObjectRef new_ref(  guid_iter->second);
+							prop->SetValue(this,boost::any(new_ref));
+						}
 					}
 				}
 				++iter;

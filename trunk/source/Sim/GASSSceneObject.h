@@ -236,12 +236,16 @@ namespace GASS
 		SceneObjectPtr CreateCopy(bool copy_children_recursively = true) const;
 		SceneObjectGUID GetGUID() const {return m_GUID;}
 		void SetGUID(const SceneObjectGUID& value) {m_GUID=value;}
+		void GenerateNewGUID(bool recursively);
 	protected:
-
 		void InitializePointers();
-
 		void Initialize(ScenePtr scene);
 		void OnDelete();
+
+
+		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
+		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
+		void GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
 
 		ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
 		SceneWeakPtr m_Scene;
@@ -249,5 +253,30 @@ namespace GASS
 		SceneObjectID m_ID;
 		SceneObjectGUID m_GUID;
 	};
+
+
+	class ISceneObjectEnumerationPropertyMetaData
+	{
+	public:
+		virtual std::vector<SceneObjectPtr> GetEnumeration(BaseReflectionObjectPtr object) const = 0;
+	private:
+	};
+	typedef SPTR<ISceneObjectEnumerationPropertyMetaData> SceneObjectEnumerationPropertyMetaDataPtr;
+
+
+	typedef std::vector<SceneObjectPtr> SceneObjectEnumerationFunc(BaseReflectionObjectPtr obj);
+	class SceneObjectEnumerationProxyPropertyMetaData : public BasePropertyMetaData, public ISceneObjectEnumerationPropertyMetaData
+	{
+	public:
+		SceneObjectEnumerationProxyPropertyMetaData(const std::string &annotation, PropertyFlags flags,SceneObjectEnumerationFunc *enumeration_func,bool multi_select = false): BasePropertyMetaData(annotation,flags), 
+			m_EnumFunc(enumeration_func)
+		{
+
+		}
+		virtual std::vector<SceneObjectPtr> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc(object);}
+	private:
+		SceneObjectEnumerationFunc* m_EnumFunc;
+	};
+	typedef SPTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
 
 }

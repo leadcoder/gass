@@ -45,6 +45,7 @@ namespace GASS
 		virtual void SceneManagerTick(double delta) {(void)delta;}
 		virtual void Update(double delta) {(void)delta;};
 	protected:
+		void RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void InitializePointers();
 		void InitializeSceneObjectRef();
 
