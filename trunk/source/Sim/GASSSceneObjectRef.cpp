@@ -17,13 +17,17 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
+#include "Core/Common.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-#include "Core/Common.h"
 
 namespace GASS
 {
+
+	 
+
 	SceneObjectRef::SceneObjectRef() : m_RefObjectGUID(boost::uuids::nil_uuid())
 	{
 
@@ -69,5 +73,24 @@ namespace GASS
 		}
 		else
 			m_RefObject.reset();
+	}
+
+	void SceneObjectRef::ResolveTemplateReferences(SceneObjectPtr root)
+	{
+		if(m_LocalID != "")
+		{
+			SceneObjectPtr obj;
+			if(root->GetID()  == m_LocalID)
+				obj = root;
+			else 
+				obj = root->GetChildByID(m_LocalID);
+			if(obj)
+			{
+				//generate id if not present?
+				m_RefObjectGUID = obj->GetGUID();
+				m_RefObject = obj;
+				m_LocalID = "";
+			}
+		}
 	}
 }

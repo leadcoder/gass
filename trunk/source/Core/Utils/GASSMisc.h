@@ -21,8 +21,6 @@
 #ifndef MISC_HH
 #define MISC_HH
 
-#include <string>
-#include <algorithm>
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
 class TiXmlElement;

@@ -21,15 +21,9 @@
 #ifndef GASS_BASE_SYSTEM_MANAGER_H
 #define GASS_BASE_SYSTEM_MANAGER_H
 
-#include <list>
-#include <map>
-#include <vector>
-#include <boost/enable_shared_from_this.hpp>
-
 #include "Core/Common.h"
 #include "Core/System/GASSISystem.h"
 #include "Core/System/GASSISystemManager.h"
-
 
 class TiXmlElement;
 namespace GASS

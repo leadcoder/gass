@@ -59,6 +59,7 @@
 // disable: "C++ exception handler used, but unwind semantics are not enabled. Specify -GX"
 #   pragma warning( disable: 4530)
 
+# pragma warning( disable: 4996)
 // disable: "signed/unsigned mismatch"
 //#   pragma warning( disable: 4018)
 
@@ -108,14 +109,17 @@ namespace GASS
 	typedef double Float;
 }
 
-
 #include <assert.h>
+
+
 
 //stl
 #include <string>
 #include <vector>
 #include <map>
 #include <list>
+#include <algorithm>
+#include <xutility>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -125,6 +129,13 @@ namespace GASS
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/enable_shared_from_this.hpp>
+
+# pragma warning( disable: 4996)
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+# pragma warning( disable: 4996)
+
 
 
 

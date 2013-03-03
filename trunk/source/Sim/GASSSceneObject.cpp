@@ -18,10 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
-
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -153,7 +149,7 @@ namespace GASS
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
-		child->InitializePointers();
+		child->InitializePointers(); //intialize SceneObjectLink:s
 
 		BaseComponentContainer::AddChild(child);
 
@@ -161,6 +157,37 @@ namespace GASS
 			child->Initialize(GetScene());
 	}
 
+	void SceneObject::ResolveTemplateReferences(SceneObjectPtr template_root)
+	{
+		ComponentVector::iterator iter = m_ComponentVector.begin();
+		while (iter != m_ComponentVector.end())
+		{
+			BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
+			bsc->ResolveTemplateReferences(template_root);
+			++iter;
+		}
+		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
+			child->ResolveTemplateReferences(template_root);
+		}
+	}
+
+	void SceneObject::GenerateGUID(bool recursive)
+	{
+		if(m_GUID.is_nil())
+			m_GUID = boost::uuids::random_generator()();
+		if(recursive)
+		{
+			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			while(children.hasMoreElements())
+			{
+				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
+				child->GenerateGUID(recursive);
+			}
+		}
+	}
 
 	void SceneObject::InitializePointers()
 	{
@@ -180,7 +207,6 @@ namespace GASS
 	}
 
 	
-
 	//Override
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
@@ -225,10 +251,8 @@ namespace GASS
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
 	
-		
-
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
-		//only initilize components, let each child be initilize manually
+	
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
@@ -238,9 +262,9 @@ namespace GASS
 		}
 		MessagePtr load_msg(new PostComponentsInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(load_msg);
-
-		//SendImmediate(MessagePtr(new LoadComponentsMessage()));
-		//Pump initial messages
+		//Pump message system, some components may use PostMessage instead of SendImmediate, 
+		//a reson for this could be to make use of the message listener priority flag 
+		//to take control of initialization order
 		SyncMessages(0,false);
 
 		IComponentContainer::ComponentContainerIterator children = GetChildren();

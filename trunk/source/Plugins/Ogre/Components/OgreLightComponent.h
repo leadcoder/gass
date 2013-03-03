@@ -62,6 +62,7 @@ namespace GASS
 		Vec3 GetDir() const;
 	
 	protected:
+		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDelete();
 		Ogre::Light* m_OgreLight;

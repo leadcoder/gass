@@ -179,10 +179,12 @@ namespace GASS
 				col.a = color.w;
 				m_MeshObject->colour(col);
 			}
+
 			for(int i = 0; i < data->IndexVector.size();i++)
 			{
 				m_MeshObject->index(data->IndexVector[i]);
 			}
+
 			m_MeshObject->end();
 
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));

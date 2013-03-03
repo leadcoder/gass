@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <string>
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"

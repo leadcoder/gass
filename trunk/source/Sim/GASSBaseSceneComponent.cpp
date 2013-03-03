@@ -156,6 +156,48 @@ namespace GASS
 	}
 
 
+	void BaseSceneComponent::ResolveTemplateReferences(SceneObjectPtr template_root)
+	{
+		RTTI* pRTTI = GetRTTI();
+		while(pRTTI)
+		{
+			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			while(iter != pRTTI->GetProperties()->end())
+			{
+				IProperty * prop = (*iter);
+				if(*prop->GetTypeID() == typeid(SceneObjectRef))
+				{
+					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
+					if(vector_prop)
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						std::vector<SceneObjectRef> links = boost::any_cast<std::vector<SceneObjectRef> >(any_link);
+						for(int i = 0 ; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref = links[i];
+							new_ref.ResolveTemplateReferences(template_root);
+							links[i] = new_ref;
+						}
+						prop->SetValue(this,boost::any(links));
+					}
+					else
+					{
+						boost::any any_link;
+						prop->GetValue(this,any_link);
+						SceneObjectRef so_ref = boost::any_cast<SceneObjectRef>(any_link);
+						so_ref.ResolveTemplateReferences(template_root);
+						prop->SetValue(this,boost::any(so_ref));
+					}
+				}
+				++iter;
+			}
+			pRTTI = pRTTI->GetAncestorRTTI();
+		}
+	}
+
+
+
 	void BaseSceneComponent::RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
 	{
 		RTTI* pRTTI = GetRTTI();

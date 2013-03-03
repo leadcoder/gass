@@ -48,6 +48,8 @@ namespace GASS
 		void RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void InitializePointers();
 		void InitializeSceneObjectRef();
+		//called by sceneobject to resolve SceneObjectRef 
+		void ResolveTemplateReferences(SceneObjectPtr template_root);
 
 	};
 	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;

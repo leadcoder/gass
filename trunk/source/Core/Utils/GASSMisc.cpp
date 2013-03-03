@@ -23,9 +23,9 @@
 #include "GASSMisc.h"
 #include "GASSLogManager.h"
 #include "GASSException.h"
-#include <algorithm>
-#include <string.h>
 #include <tinyxml.h>
+#include <string.h>
+
 #include <boost/filesystem.hpp>
 
 #ifndef WIN32

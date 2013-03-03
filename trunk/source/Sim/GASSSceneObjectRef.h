@@ -28,9 +28,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSBaseSceneComponent.h"
 
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
 
 namespace GASS
 {
@@ -52,21 +49,36 @@ namespace GASS
 		SceneObjectPtr GetRefObject() const {return SceneObjectPtr(m_RefObject,NO_THROW);}
 	protected:
 		void UpdateRefPtr();
+		void ResolveTemplateReferences(SceneObjectPtr template_root);
+
 
 		friend std::ostream& operator << (std::ostream& os, const SceneObjectRef& sor)
 		{
 			os << sor.m_RefObjectGUID;
 			return os;
 		}
-
 		friend std::istream& operator >> (std::istream& is, SceneObjectRef& sor)
 		{
-			SceneObjectGUID guid;
-			is >> guid;
-			sor.SetRefGUID(guid);
+			std::string string_id;
+			is >> string_id;
+			size_t id_len = string_id.length();
+			if(id_len == 37) // Must be a real GUID
+			{
+				std::stringstream ss;
+				ss << string_id;
+				SceneObjectGUID guid;
+				ss >> guid;
+				sor.SetRefGUID(SceneObjectGUID(guid));
+			}
+			else // we have local id, save and remap to guid later
+			{
+				sor.m_LocalID = string_id ;
+			}
 			return is;
 		}
+
 		SceneObjectWeakPtr m_RefObject;
 		SceneObjectGUID m_RefObjectGUID;
+		std::string m_LocalID;
 	};
 }
