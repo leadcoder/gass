@@ -314,6 +314,8 @@ namespace GASS
 	{
 		ComponentContainerPtr cc  = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
 		SceneObjectPtr so = STATIC_PTR_CAST<SceneObject>(cc);
+		so->GenerateGUID(true);
+		so->ResolveTemplateReferences(so);
 		return so;
 	}
 

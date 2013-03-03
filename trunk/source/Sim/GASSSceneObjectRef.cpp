@@ -89,7 +89,12 @@ namespace GASS
 				//generate id if not present?
 				m_RefObjectGUID = obj->GetGUID();
 				m_RefObject = obj;
-				m_LocalID = "";
+				//m_LocalID = "";
+			}
+			else
+			{
+				//failed to resolve scene object reference in template instance
+				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"Failed to resolve SceneObjectRef:" + m_LocalID + " configured in template", "SceneObjectRef::ResolveTemplateReferences");
 			}
 		}
 	}

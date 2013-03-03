@@ -236,17 +236,17 @@ namespace GASS
 		SceneObjectGUID GetGUID() const {return m_GUID;}
 		void SetGUID(const SceneObjectGUID& value) {m_GUID=value;}
 		void GenerateNewGUID(bool recursively);
+		void GenerateGUID(bool recursive);
+		void ResolveTemplateReferences(SceneObjectPtr template_root);
 	protected:
 		void InitializePointers();
 		void Initialize(ScenePtr scene);
 		void OnDelete();
 
-
 		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
 		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
-		void ResolveTemplateReferences(SceneObjectPtr template_root);
-		void GenerateGUID(bool recursive);
+		
 
 		ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
 		SceneWeakPtr m_Scene;

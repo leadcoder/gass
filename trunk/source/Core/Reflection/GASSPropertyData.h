@@ -170,5 +170,6 @@ namespace GASS
 		std::string m_Filter;
 	};
 	typedef SPTR<FilePathPropertyMetaData> FilePathPropertyMetaDataPtr;
+
 }
 #endif
