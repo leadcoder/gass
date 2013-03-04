@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Templates>
+ <SceneObjectTemplate>
+    <Name value="MyBox"/>
+    <ID value="CHASSIS"/>
+    <Components>
+      <LocationComponent>
+        <AttachToParent value="1"/>
+      </LocationComponent>
+      <MeshComponent>
+        <Filename value="JIM_TANK_hull.mesh"/>
+        <CastShadow value="1"/>
+      </MeshComponent>
+      <PhysicsBodyComponent>
+        <Mass value="1.0"/>
+      </PhysicsBodyComponent>
+	  <PhysicsBoxGeometryComponent>
+		  <SizeFromMesh value="true"/>
+		  <Friction value="1"/>
+	  </PhysicsBoxGeometryComponent>
+    </Components>
+    <ComponentContainers/>
+  </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="JimTank"/>
     <ID value="CHASSIS"/>
@@ -28,7 +49,7 @@
         <ParticleTemplate value="ExhaustFumes"/>
       </ParticleSystemComponent>
       <VehicleEngineComponent>
-        <Wheels value="WHEEL_R1 WHEEL_R2 WHEEL_R3 WHEEL_R4 WHEEL_R5 WHEEL_R6 WHEEL_L1 WHEEL_L2 WHEEL_L3 WHEEL_L4 WHEEL_L5 WHEEL_L6"/>
+        <Wheels value="WHEEL_R1;WHEEL_R2;WHEEL_R3;WHEEL_R4;WHEEL_R5;WHEEL_R6;WHEEL_L1;WHEEL_L2;WHEEL_L3;WHEEL_L4;WHEEL_L5;WHEEL_L6"/>
         <EngineType value="tank"/>
         <Power value="0.01"/>
         <Automatic  value="1"/>
@@ -40,8 +61,8 @@
         <RPMGearChangeUp value="3000"/>
         <RPMGearChangeDown value="1500"/>
         <!--<GearRatio value="-13.42 -16.42 0 16.42 12.15 11.52 11.17"/>-->
-        <GearRatio value="-13.42 -16.42 0 16.42 13.15 10.52 7.17"/>
-        <TurnForce value="100"/>
+        <GearRatio value="-13.42;-16.42;0;16.42;13.15;10.52;7.17"/>
+        
       </VehicleEngineComponent>
       <InputHandlerComponent>
         <ControlSetting value ="TankInputSettings"/>
@@ -74,10 +95,10 @@
           <AutoAimComponent>
             <BarrelObject value="BARREL"/>
             <TurretObject value="TURRET"/>
-            <MaxSteerVelocity value="1"/>
-            <SteerForce value ="100"/>
-            <YawPID value="0.03 0.0001 0.009"/>
-            <PitchPID value="0.0032 0.0001 0.001"/>
+            <!--<MaxSteerVelocity value="1"/>-->
+            <SteerForce value ="1000"/>
+            <YawPID value="0.3 0.0001 0.009"/>
+            <PitchPID value="0.032 0.0001 0.001"/>
           </AutoAimComponent>
           <PhysicsBoxGeometryComponent>
           </PhysicsBoxGeometryComponent>
@@ -115,7 +136,6 @@
           <NetworkChildComponent>
           </NetworkChildComponent>
           <LocationTransferComponent>
-            <RelativeToParent value="2"/>
             <UpdatePosition value="0"/>
           </LocationTransferComponent>
           <!--<InputTransferComponent>
@@ -205,14 +225,15 @@
                 <ActivateController value="ActivateTurret"/>
                 <YawController value="Yaw"/>
                 <PitchController value="Pitch"/>
-                <SendDesiredPointController value="ActivateAutoAim"/>
+                <SendDesiredPointController value="ActivateTurret"/>
                 <ResetToBarrelController value="ResetSight"/>
                 <MaxYawVelocity value="1"/>
                 <MaxPitchVelocity value="0.6"/>
                 <YawMaxMinAngle value="1000 -1000"/>
                 <PitchMaxMinAngle value="20 -20"/>
-                <AutoAimObject value="BARREL"/>
+                <AutoAimObject value="TURRET"/>
                 <AutoAimPriority value="0"/>
+				<Debug value ="true"/>
                 <!--<InputHandlerObject value="MAIN_SIGHT"/>-->
               </SightComponent>
               <InputProxyComponent>
@@ -390,7 +411,6 @@
         <Friction value="1.0"/>
       </PhysicsSphereGeometryComponent>
       <PhysicsBodyComponent>
-        <GeometryType value="sphere"/>
         <Mass value="0.02"/>
       </PhysicsBodyComponent>
       <PhysicsSuspensionComponent>
@@ -401,7 +421,6 @@
       <NetworkChildComponent>
       </NetworkChildComponent>
       <LocationTransferComponent>
-        <RelativeToParent value="0"/>
         <UpdatePosition value="1"/>
       </LocationTransferComponent>
     </Components>
