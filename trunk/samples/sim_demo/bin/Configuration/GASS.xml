@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Plugins>
-   <!-- load all from path-->
+  <!-- load all from path-->
   <!--<Directory Path = "GASSPlugins"/>-->
   <Plugin PluginFile = "GASSPluginOgre"/>
   <Plugin PluginFile = "GASSPluginOIS"/>
@@ -13,112 +13,122 @@
   <Plugin PluginFile = "GASSPluginBase"/>
   <Plugin PluginFile = "GASSPluginRakNet"/>
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
-  </Plugins>
-  <ScenePath value="../../../common/data/scenaries"/>
+</Plugins>
+<SetDataPath value="../../../common/data/"/>
+<ScenePath value="../../../common/data/sceneries"/>
+<ResourceManager>
+  <ResourceGroup name="Bootstrap">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="SkyX">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="HYDRAX">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="PagedGeometry">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
+  </ResourceGroup>
+  <ResourceGroup name="GASS">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
+	
+  </ResourceGroup>
+  <ResourceGroup name="GASS_VEGETATION_MATERIALS">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/vegetation" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="GASS_ROAD_MATERIALS">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/road" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/road" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="GASS_SKYBOX_MATERIALS">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/sky" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <!--<ResourceGroup name="GASS_VEGETATION">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
+    </ResourceGroup>-->
+  <ResourceGroup name="GASS_DETAIL_TEXTURES">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="GASS_GUI">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI_Media" type="FileSystem" recursive="true"/>
+  </ResourceGroup>
+</ResourceManager>
 <SceneObjectTemplateManager>
-	<AddObjectIDToName value ="true"/>
-	<ObjectIDPrefix value="["/>
-	<ObjectIDSufix value="]"/>
-	<Load>
-		<Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
-		<Template value="../Configuration/app_templates.xml"/>
-    </Load>
+  <AddObjectIDToName value ="true"/>
+  <ObjectIDPrefix value="["/>
+  <ObjectIDSufix value="]"/>
+  <Load>
+    <Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
+    <Template value="../Configuration/app_templates.xml"/>
+  </Load>
 </SceneObjectTemplateManager>
 <Systems>
- <OISInputSystem>
-    <Name value = "InputSystem"/>
-	<TaskNode value="PRE_SIM"/> <!-- PRE BUCKET UPDATE-->
-	<ExclusiveMode value="false"/>
+  <OISInputSystem>
+    <TaskNode value="PRE_SIM"/>
+    <!-- PRE BUCKET UPDATE-->
+    <ExclusiveMode value="false"/>
   </OISInputSystem>
   <ControlSettingsSystem>
-	<TaskNode value="PRE_SIM"/>
+    <TaskNode value="PRE_SIM"/>
   </ControlSettingsSystem>
   <CoreSystem>
-	<TaskNode value="PRE_SIM"/>
+    <TaskNode value="PRE_SIM"/>
   </CoreSystem>
   <MyGUISystem>
-	<TaskNode value="PRE_SIM"/>
-  </MyGUISystem>  
+    <TaskNode value="PRE_SIM"/>
+  </MyGUISystem>
   <GameSystem>
-	<TaskNode value="SIM"/>
+    <TaskNode value="SIM"/>
   </GameSystem>
   <RakNetNetworkSystem>
-    <Name value = "NetworkSystem"/>
-	<TaskNode value="SIM"/>
+    <TaskNode value="SIM"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
-    <Name value = "SoundSystem"/>
-	<TaskNode value="PRE_SIM"/>
+    <TaskNode value="PRE_SIM"/>
   </OpenALSoundSystem>
   <CEGUISystem>
-    <Name value = "GUISystem"/>
-	<TaskNode value="PRE_SIM"/>
+    <TaskNode value="PRE_SIM"/>
   </CEGUISystem>
   <LuaScriptSystem>
-    <Name value = "GUISystem"/>
-	<TaskNode value="PRE_SIM"/>
+    <TaskNode value="PRE_SIM"/>
   </LuaScriptSystem>
   <PhysXPhysicsSystem>
-    <Name value = "PhysicsSystem"/>
-	<TaskNode value="SIM"/>
+    <TaskNode value="SIM"/>
   </PhysXPhysicsSystem>
- <!--<ODEPhysicsSystem>
-    <Name value = "PhysicsSystem"/>
-	<TaskNode value="2"/>
+  <ODEPhysicsSystem>
+    <TaskNode value="SIM"/>
   </ODEPhysicsSystem>
-  <ODECollisionSystem>
+  <!--<ODECollisionSystem>
     <Name value = "CollisionSystem"/>
 	<TaskNode value="-1"/>
   </ODECollisionSystem>-->
   <OgreGraphicsSystem>
-    <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
     <Plugin value="RenderSystem_Direct3D9"/>
     <Plugin value="Plugin_CgProgramManager"/>
     <Plugin value="Plugin_BSPSceneManager"/>
     <Plugin value="Plugin_OctreeSceneManager"/>
     <Plugin value="Plugin_ParticleFX"/>
-    <TaskGroup value="MAIN_TASK_GROUP"/>
     <PostFilters value="HDR"/>
-	<TaskNode value="POST_SIM"/>
+    <TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
-  <OgreResourceSystem>
-    <Name value = "ResourceSystem"/>
-   <!-- <AddResourceLocation Path="%OGRE_HOME%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="%OGRE_HOME%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>-->
-    <AddResourceLocation Path="../../../common/data" Group="GASS" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <AddResourceLocation Path="../../../common/data/gfx/GUI/MyGUI_Media" Group="General" Type="FileSystem" Recursive="true"/>
-	
-	<!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/imagesets" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/layouts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/looknfeel" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/lua_scripts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/schemes" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/xml_schemas" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-    <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
-	
-  </OgreResourceSystem>
 </Systems>
-
 <RTC>
-	<NumberOfThreads value="-1"/> <!-- -1 == auto-->
-	<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
-	<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
-	<TaskNode name="ROOT_NODE" mode="SEQUENCE">
-		<TaskNode name="PRE_SIM" mode="PARALLEL"/>
-		<TaskNode name="SIM" mode="PARALLEL"/>
-		<TaskNode name="POST_SIM" mode="PARALLEL"/>
-	</TaskNode>
+  <NumberOfThreads value="-1"/>
+  <!-- -1 == auto-->
+  <MaxUpdateFreqency value="1000"/>
+  <!-- -1 == not max update freq-->
+  <ExternalSimulationUpdate value="false"/>
+  <!-- let application trigger simulation updates-->
+  <TaskNode name="ROOT_NODE" mode="SEQUENCE">
+    <TaskNode name="PRE_SIM" mode="PARALLEL"/>
+    <TaskNode name="SIM" mode="PARALLEL"/>
+    <TaskNode name="POST_SIM" mode="PARALLEL"/>
+  </TaskNode>
 </RTC>

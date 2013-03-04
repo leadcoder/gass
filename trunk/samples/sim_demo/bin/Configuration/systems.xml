@@ -4,10 +4,14 @@
     <Name value = "InputSystem"/>
 	<!--<UpdateBucket value="9998"/> --><!-- PRE BUCKET UPDATE-->
 	<UpdateBucket value="0"/> 
+	<ExclusiveMode value="false"/>
   </OISInputSystem>
   <CoreSystem>
 	<UpdateBucket value="0"/>
   </CoreSystem>
+  <MyGUISystem>
+	<UpdateBucket value="9998"/>
+  </MyGUISystem>  
   <GameSystem>
 	<UpdateBucket value="0"/>
   </GameSystem>
@@ -27,14 +31,18 @@
     <Name value = "GUISystem"/>
 	<UpdateBucket value="-1"/>
   </LuaScriptSystem>
- <ODEPhysicsSystem>
+  <PhysXPhysicsSystem>
     <Name value = "PhysicsSystem"/>
 	<UpdateBucket value="0"/>
+  </PhysXPhysicsSystem>
+ <!--<ODEPhysicsSystem>
+    <Name value = "PhysicsSystem"/>
+	<UpdateBucket value="2"/>
   </ODEPhysicsSystem>
   <ODECollisionSystem>
     <Name value = "CollisionSystem"/>
 	<UpdateBucket value="1"/>
-  </ODECollisionSystem>
+  </ODECollisionSystem>-->
   <OgreGraphicsSystem>
     <Name value = "GraphicsSystem"/>
     <Plugin value="RenderSystem_GL"/>
@@ -50,19 +58,21 @@
   </OgreGraphicsSystem>
   <OgreResourceSystem>
     <Name value = "ResourceSystem"/>
-    <AddResourceLocation Path="%OGRE_HOME%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
+   <!-- <AddResourceLocation Path="%OGRE_HOME%/Media/materials/programs" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_HOME%/Media/materials/scripts" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_HOME%/Media/materials/textures" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="%OGRE_HOME%/Media/particle" Group="OGRE" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/OgreCore.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/Ogre/bguires.zip" Group="Bootstrap" Type="Zip" Recursive="false"/>
-    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data/gfx/Ogre/ExternalResources/PagedGeometry" Group="PagedGeometry" Type="FileSystem" Recursive="true"/>-->
     <AddResourceLocation Path="../../../common/data" Group="GASS" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Materials" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Particles" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/Fonts" Group="GASS" Type="FileSystem" Recursive="true"/>
     <AddResourceLocation Path="../../../common/data/gfx/Ogre/3dmodels/JimTank" Group="GASS" Type="FileSystem" Recursive="true"/>
-    <!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
+    <AddResourceLocation Path="../../../common/data/gfx/GUI/MyGUI_Media" Group="General" Type="FileSystem" Recursive="true"/>
+	
+	<!--<AddResourceLocation Path="./" Group="Impostors" Type="FileSystem" Recursive="false"/>-->
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/fonts" Group="CEGUI" Type="FileSystem" Recursive="false"/>
     <AddResourceLocation Path="../../../../dependencies/CEGUI-SDK-0.7.2-vc9/datafiles/imagesets" Group="CEGUI" Type="FileSystem" Recursive="false"/>

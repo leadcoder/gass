@@ -9,7 +9,7 @@
         <RunSpeed value="1000"/>
         <WalkSpeed value="20"/>
         <TurnSpeed value="10"/>
-        <Mode value="Aircraft"/>
+        <Mode value="MM_AIRCRAFT"/>
         <Debug value="0"/>
       </FreeCamControlComponent>
       <PlayerInputComponent>

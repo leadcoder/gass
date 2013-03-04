@@ -6,11 +6,6 @@
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
   </VehicleEngineInputSettings>
-  <TurretInputSettings>
-    <MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_T" NegKey="INPUT_Y"/>
-    <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
-  <MapControllerToInput Controller="ActivateTurret"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_V" Repeat="false"/>
-  </TurretInputSettings>
   <TankInputSettings>
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_K" NegKey="INPUT_H"/>
@@ -18,12 +13,12 @@
     <MapControllerToInput Controller="Pitch" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_1"/>
     <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_MOUSE"  Button="INPUT_BUTTON_0" Repeat="false"/>
     <MapControllerToInput Controller="ActivateTurret"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_X" Repeat="false"/>
-</TankInputSettings>
+  </TankInputSettings>
   <TurretInputSettings>
     <!--<MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_T" NegKey="INPUT_Y"/>-->
     <MapControllerToInput Controller="Yaw" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_0"/>
     <MapControllerToInput Controller="ActivateTurret"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_V" Repeat="false"/>
-      <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_MOUSE"  Button="INPUT_BUTTON_1" Repeat="false"/>
+    <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_MOUSE"  Button="INPUT_BUTTON_1" Repeat="false"/>
   </TurretInputSettings>
   <FreeCameraInputSettings>
     <MapControllerToInput Controller="EnterVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_E" Repeat="false"/>
