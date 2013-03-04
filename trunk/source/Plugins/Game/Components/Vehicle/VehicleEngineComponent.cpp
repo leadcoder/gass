@@ -352,7 +352,7 @@ namespace GASS
 			m_VehicleWheels.clear();
 			for(int i = 0; i < m_WheelObjects.size(); i++)
 			{
-				VehicleWheelPtr wheel(new VehicleWheel(m_WheelObjects[i].GetObjectPtr()));
+				VehicleWheelPtr wheel(new VehicleWheel(m_WheelObjects[i].GetRefObject()));
 				wheel->Init();
 				m_VehicleWheels.push_back(wheel);
 			}

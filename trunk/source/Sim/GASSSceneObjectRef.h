@@ -47,6 +47,7 @@ namespace GASS
 		SceneObjectGUID GetRefGUID() const {return m_RefObjectGUID;}
 		void SetRefGUID(const SceneObjectGUID &guid);
 		SceneObjectPtr GetRefObject() const {return SceneObjectPtr(m_RefObject,NO_THROW);}
+		bool IsValid() const {if(SceneObjectPtr(m_RefObject,NO_THROW)) return true; else return false;}
 	protected:
 		void UpdateRefPtr();
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
@@ -62,7 +63,7 @@ namespace GASS
 			std::string string_id;
 			is >> string_id;
 			size_t id_len = string_id.length();
-			if(id_len == 37) // Must be a real GUID
+			if(id_len == 36) // Must be a real GUID
 			{
 				std::stringstream ss;
 				ss << string_id;
