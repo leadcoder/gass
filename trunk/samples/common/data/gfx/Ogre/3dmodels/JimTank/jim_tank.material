@@ -1,7 +1,6 @@
-import * from "terrain.material"
 
 
-material JIM_TANK_hatches : DiffuseTemplate
+material JIM_TANK_hatches 
 {
       technique light
 	{
@@ -22,7 +21,7 @@ material JIM_TANK_hatches : DiffuseTemplate
 }
 
 
-material JIM_TANK_hull : DiffuseTemplate
+material JIM_TANK_hull 
 {
 	technique light
 	{
@@ -42,7 +41,7 @@ material JIM_TANK_hull : DiffuseTemplate
 }
 
 
-material JIM_TANK_turret : DiffuseTemplate
+material JIM_TANK_turret 
 {
 	technique light
 	{
@@ -62,7 +61,7 @@ material JIM_TANK_turret : DiffuseTemplate
 }
 
 
-material JIM_gattling : DiffuseTemplate
+material JIM_gattling 
 {
 	technique light
 	{
@@ -124,7 +123,7 @@ material T72_band
 }
 
 
-material T72_wheels : DiffuseTemplate
+material T72_wheels 
 {
 	technique light
 	{

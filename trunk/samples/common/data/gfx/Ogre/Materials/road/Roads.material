@@ -11,4 +11,24 @@ material DefaultRoad : GASS_BaseMap
 } 
 
 
+material CampFence : GASS_BaseMap
+{ 
+	//receive_shadows off 
+	set_texture_alias BaseTexture road_fence.dds
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
+
+material CampWall : GASS_BaseMap
+{ 
+	//receive_shadows off 
+	set_texture_alias BaseTexture road_sandwall.dds
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}  
+
 

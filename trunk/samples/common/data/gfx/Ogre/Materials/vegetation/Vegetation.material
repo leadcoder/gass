@@ -1,23 +1,10 @@
- //import * from  "terrain.material"	 
-
-material DefaultGrass 
-//: VegetationTemplate
+import * from  "paged_geometry.material"	
+material DefaultGrass : PGGrassTemplate
 { 
-	//receive_shadows off 
-	technique light
-	{ 
-		pass 
-		{ 
-			alpha_rejection greater 128 
-			ambient 1 1 1 1 
-			specular 0.0 0.0 0.0 1 10 
-			emissive 0.0 1.0 0.0 0.5 
-
-			texture_unit diffuse_map
-			{ 
-				texture veg_default.dds 
-			}
-		} 
-	} 
+	set_texture_alias BaseTexture veg_default.dds
+	set	$AmbientColor "0.5 0.55 0.5 1"
+	set $DiffuseColor "0.5 0.55 0.5 1"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
+	set $AlphaRejection "greater 128"
 } 
-
