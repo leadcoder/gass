@@ -46,7 +46,7 @@ public:
 		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
 
 		//load keyboard config!
-		GASS::ControlSettingsSystemPtr css = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IControlSettingsSystem>();
+		GASS::ControlSettingsSystemPtr css = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IControlSettingsSystem>();
 		if(css)
 		{
 			css->Load("../Configuration/control_settings.xml");
@@ -55,12 +55,21 @@ public:
 
 		//m_Engine->GetSimSystemManager()->SetPauseSimulation(false);
 		
-		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystem<GASS::IGraphicsSystem>();
-		gfx_sys->CreateViewport("MainViewport", "MainWindow", 0,0,1, 1);
+		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
+		
+		GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
+		win->CreateViewport("MainViewport", 0, 0, 1, 1);
+
+		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
+		input_system->SetMainWindowHandle(win->GetHWND());
+		
+	
 
 		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scene:" <<  m_SceneName;
-		m_Scene = m_Engine->LoadScene(m_SceneName);
+		m_Scene = m_Engine->CreateScene("NewScene");
+		//m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
+		scene->Load(m_SceneName);
 		//m_Scene->Load(m_SceneName);
 		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		//create free camera and set start pos
@@ -69,8 +78,9 @@ public:
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
-			GASS::SceneMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj,"ALL"));
-			scene->PostMessage(camera_msg);
+
+			GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
+			m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 		}
 
 		for(int i = 0; i <  m_Objects.size();i++)

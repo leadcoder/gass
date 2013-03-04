@@ -33,7 +33,7 @@
 #include <conio.h>
 #endif
 GASS::MessageManager mm;
-
+/*
 void CreateManualObject()
 {
 	GASS::BaseComponentContainerTemplatePtr container( new GASS::BaseComponentContainerTemplate()); //boost::shared_static_cast<GASS::BaseComponentContainer>( GASS::ComponentContainerTemplateFactory::Get().Create("BaseComponentContainer"));
@@ -91,7 +91,7 @@ void TestCollision(GASS::ScenePtr scene)
 }
 
 GASS::ScenePtr scene(new GASS::Scene());
-
+*/
 
 #ifndef WIN32
 #include <stdio.h>
