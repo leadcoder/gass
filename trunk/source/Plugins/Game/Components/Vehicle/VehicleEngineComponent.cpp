@@ -126,7 +126,7 @@ namespace GASS
 	void VehicleEngineComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
-		RegisterVectorProperty<SceneObjectLink>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
+		RegisterVectorProperty<SceneObjectRef>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType);
 		RegisterProperty<bool>("Automatic", &VehicleEngineComponent::GetAutomatic, &VehicleEngineComponent::SetAutomatic);
 		RegisterProperty<bool>("InvertDrivetrainOutput", &VehicleEngineComponent::GetInvert, &VehicleEngineComponent::SetInvert);
@@ -338,12 +338,12 @@ namespace GASS
 		return m_GearBoxRatio;
 	}
 
-	std::vector<SceneObjectLink> VehicleEngineComponent::GetWheels() const
+	std::vector<SceneObjectRef> VehicleEngineComponent::GetWheels() const
 	{
 		return m_WheelObjects;
 	}
 
-	void VehicleEngineComponent::SetWheels(const std::vector<SceneObjectLink> &wheels)
+	void VehicleEngineComponent::SetWheels(const std::vector<SceneObjectRef> &wheels)
 	{
 		m_WheelObjects = wheels;
 		//Update wheel list

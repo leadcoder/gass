@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Plugins/Game/GameMessages.h"
@@ -57,8 +57,8 @@ namespace GASS
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
 
-		ADD_ATTRIBUTE(SceneObjectLink,FireSoundObject1P);
-		ADD_ATTRIBUTE(SceneObjectLink,FireSoundObject3P);
+		ADD_ATTRIBUTE(SceneObjectRef,FireSoundObject1P);
+		ADD_ATTRIBUTE(SceneObjectRef,FireSoundObject3P);
 		ADD_ATTRIBUTE(std::string,FireController);
 		ADD_ATTRIBUTE(std::string,ReloadController);
 

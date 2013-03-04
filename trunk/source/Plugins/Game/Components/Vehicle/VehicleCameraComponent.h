@@ -25,7 +25,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
@@ -52,7 +52,7 @@ namespace GASS
 		void OnExit(ExitVehicleMessagePtr message);
 
 		std::string m_PreferredViewport;
-		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
+		ADD_ATTRIBUTE(SceneObjectRef,InputHandlerObject);
 	};
 	typedef SPTR<VehicleCameraComponent> VehicleCameraComponentPtr;
 }

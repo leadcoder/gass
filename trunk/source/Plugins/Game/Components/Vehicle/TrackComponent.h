@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Plugins/Game/GameMessages.h"
@@ -55,7 +55,7 @@ namespace GASS
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		
 
-		ADD_ATTRIBUTE(SceneObjectLink,DriveWheel)
+		ADD_ATTRIBUTE(SceneObjectRef,DriveWheel)
 		
 		bool m_Initialized;
 		Vec2 m_AnimationSpeedFactor;

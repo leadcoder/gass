@@ -78,8 +78,8 @@ namespace GASS
 		RegisterProperty<float>("ReloadTime", &WeaponSystemComponent::GetReloadTime, &WeaponSystemComponent::SetReloadTime);
 		RegisterProperty<float>("RoundOfFire", &WeaponSystemComponent::GetRoundOfFire, &WeaponSystemComponent::SetRoundOfFire);
 		RegisterProperty<int>("CurrentMagazineSize", &WeaponSystemComponent::GetCurrentMagazineSize, &WeaponSystemComponent::SetCurrentMagazineSize);
-		RegisterProperty<SceneObjectLink>("FireSoundObject1P", &WeaponSystemComponent::GetFireSoundObject1P, &WeaponSystemComponent::SetFireSoundObject1P);
-		RegisterProperty<SceneObjectLink>("FireSoundObject3P", &WeaponSystemComponent::GetFireSoundObject3P, &WeaponSystemComponent::SetFireSoundObject3P);
+		RegisterProperty<SceneObjectRef>("FireSoundObject1P", &WeaponSystemComponent::GetFireSoundObject1P, &WeaponSystemComponent::SetFireSoundObject1P);
+		RegisterProperty<SceneObjectRef>("FireSoundObject3P", &WeaponSystemComponent::GetFireSoundObject3P, &WeaponSystemComponent::SetFireSoundObject3P);
 		
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
 		RegisterProperty<std::string>("FireController", &WeaponSystemComponent::GetFireController, &WeaponSystemComponent::SetFireController);

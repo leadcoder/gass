@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSCommon.h"
 
 #include "Plugins/Game/GameMessages.h"
@@ -47,10 +47,10 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void SetBarrelObject(const SceneObjectLink &value);
-		SceneObjectLink GetBarrelObject() const;
-		void SetTurretObject(const SceneObjectLink &value);
-		SceneObjectLink GetTurretObject() const;
+		void SetBarrelObject(const SceneObjectRef &value);
+		SceneObjectRef GetBarrelObject() const;
+		void SetTurretObject(const SceneObjectRef &value);
+		SceneObjectRef GetTurretObject() const;
 		
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
@@ -94,8 +94,8 @@ namespace GASS
 		PIDControl m_PitchPID;
 		bool m_Active;
 		//Float m_AngularVelocity;
-		SceneObjectLink  m_TurretObject;
-		SceneObjectLink  m_BarrelObject;
+		SceneObjectRef  m_TurretObject;
+		SceneObjectRef  m_BarrelObject;
 		Vec3 m_AimPoint;
 		bool m_GotNewAimPoint;
 		int m_CurrentAimPriority;

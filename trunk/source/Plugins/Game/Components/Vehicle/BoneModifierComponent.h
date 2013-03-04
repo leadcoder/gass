@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Plugins/Game/GameMessages.h"
@@ -57,7 +57,7 @@ namespace GASS
 		
 		std::string m_BoneName;
 		bool m_Active;
-		ADD_ATTRIBUTE(SceneObjectLink, SourceObject);
+		ADD_ATTRIBUTE(SceneObjectRef, SourceObject);
 	};
 }
 #endif

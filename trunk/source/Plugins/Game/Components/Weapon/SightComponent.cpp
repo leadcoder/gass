@@ -102,7 +102,7 @@ namespace GASS
 		RegisterProperty<int>("AutoAimPriority", &SightComponent::GetAutoAimPriority, &SightComponent::SetAutoAimPriority);
 		RegisterProperty<Vec2>("YawMaxMinAngle", &SightComponent::GetYawMaxMinAngle, &SightComponent::SetYawMaxMinAngle);
 		RegisterProperty<Vec2>("PitchMaxMinAngle", &SightComponent::GetPitchMaxMinAngle, &SightComponent::SetPitchMaxMinAngle);
-		RegisterProperty<SceneObjectLink >("AutoAimObject", &SightComponent::GetAutoAimObject, &SightComponent::SetAutoAimObject);
+		RegisterProperty<SceneObjectRef>("AutoAimObject", &SightComponent::GetAutoAimObject, &SightComponent::SetAutoAimObject);
 		RegisterVectorProperty<float>("ZoomValues", &SightComponent::GetZoomValues, &SightComponent::SetZoomValues);
 		RegisterProperty<bool>("Debug", &SightComponent::GetDebug, &SightComponent::SetDebug);
 		RegisterProperty<bool>("ResetToBarrelWhileInactive", &SightComponent::GetResetToBarrelWhileInactive, &SightComponent::SetResetToBarrelWhileInactive);

@@ -25,7 +25,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
@@ -47,7 +47,7 @@ namespace GASS
 		virtual void OnDelete();
 		void OnPlayerInput(InputControllerMessagePtr  message);
 	private:
-		ADD_ATTRIBUTE(SceneObjectLink,InputHandlerObject);
+		ADD_ATTRIBUTE(SceneObjectRef,InputHandlerObject);
 	};
 
 	typedef SPTR<InputProxyComponent> InputProxyComponentPtr;

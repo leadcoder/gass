@@ -49,10 +49,10 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysXCarComponent",new Creator<PhysXCarComponent, IComponent>);
 		RegisterProperty<float>("Mass", &PhysXCarComponent::GetMass, &PhysXCarComponent::SetMass);
-		RegisterProperty<SceneObjectLink>("FrontLeftWheel", &PhysXCarComponent::GetFrontLeftWheel, &PhysXCarComponent::SetFrontLeftWheel);
-		RegisterProperty<SceneObjectLink>("FrontRightWheel", &PhysXCarComponent::GetFrontRightWheel, &PhysXCarComponent::SetFrontRightWheel);
-		RegisterProperty<SceneObjectLink>("RearLeftWheel", &PhysXCarComponent::GetRearLeftWheel, &PhysXCarComponent::SetRearLeftWheel);
-		RegisterProperty<SceneObjectLink>("RearRightWheel", &PhysXCarComponent::GetRearRightWheel, &PhysXCarComponent::SetRearRightWheel);
+		RegisterProperty<SceneObjectRef>("FrontLeftWheel", &PhysXCarComponent::GetFrontLeftWheel, &PhysXCarComponent::SetFrontLeftWheel);
+		RegisterProperty<SceneObjectRef>("FrontRightWheel", &PhysXCarComponent::GetFrontRightWheel, &PhysXCarComponent::SetFrontRightWheel);
+		RegisterProperty<SceneObjectRef>("RearLeftWheel", &PhysXCarComponent::GetRearLeftWheel, &PhysXCarComponent::SetRearLeftWheel);
+		RegisterProperty<SceneObjectRef>("RearRightWheel", &PhysXCarComponent::GetRearRightWheel, &PhysXCarComponent::SetRearRightWheel);
 	}
 
 	PxVec3 PhysXCarComponent::ComputeDim(const PxConvexMesh* cm)

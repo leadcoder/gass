@@ -76,8 +76,8 @@ namespace GASS
 		RegisterProperty<Vec2>("TurretMaxMinAngle", &AutoAimComponent::GetTurretMaxMinAngle, &AutoAimComponent::SetTurretMaxMinAngle);
 		RegisterProperty<Vec2>("BarrelMaxMinAngle", &AutoAimComponent::GetBarrelMaxMinAngle, &AutoAimComponent::SetBarrelMaxMinAngle);
 
-		RegisterProperty<SceneObjectLink>("BarrelObject", &AutoAimComponent::GetBarrelObject, &AutoAimComponent::SetBarrelObject);
-		RegisterProperty<SceneObjectLink>("TurretObject", &AutoAimComponent::GetTurretObject, &AutoAimComponent::SetTurretObject);
+		RegisterProperty<SceneObjectRef>("BarrelObject", &AutoAimComponent::GetBarrelObject, &AutoAimComponent::SetBarrelObject);
+		RegisterProperty<SceneObjectRef>("TurretObject", &AutoAimComponent::GetTurretObject, &AutoAimComponent::SetTurretObject);
 		RegisterProperty<PIDControl>("YawPID", &AutoAimComponent::GetYawPID, &AutoAimComponent::SetYawPID);
 		RegisterProperty<PIDControl>("PitchPID", &AutoAimComponent::GetPitchPID, &AutoAimComponent::SetPitchPID);
 		
@@ -127,22 +127,22 @@ namespace GASS
 	}
 
 
-	void AutoAimComponent::SetBarrelObject(const SceneObjectLink &value)
+	void AutoAimComponent::SetBarrelObject(const SceneObjectRef &value)
 	{
 		m_BarrelObject = value;
 	}
 
-	SceneObjectLink AutoAimComponent::GetBarrelObject() const
+	SceneObjectRef AutoAimComponent::GetBarrelObject() const
 	{
 		return m_BarrelObject;
 	}
 
-	void AutoAimComponent::SetTurretObject(const SceneObjectLink &value)
+	void AutoAimComponent::SetTurretObject(const SceneObjectRef &value)
 	{
 		m_TurretObject = value;
 	}
 
-	SceneObjectLink AutoAimComponent::GetTurretObject() const
+	SceneObjectRef AutoAimComponent::GetTurretObject() const
 	{
 		return m_TurretObject;
 	}

@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 
@@ -79,8 +79,8 @@ namespace GASS
 	private:
 
 		ADD_ATTRIBUTE(float,TurnRPMAmount)
-		std::vector<SceneObjectLink> GetWheels() const;
-		void SetWheels(const std::vector<SceneObjectLink> &wheels);
+		std::vector<SceneObjectRef> GetWheels() const;
+		void SetWheels(const std::vector<SceneObjectRef> &wheels);
 
 		
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
@@ -202,7 +202,7 @@ namespace GASS
 		float m_MaxTurnForce;
 		float m_MaxTurnVel;
 
-		std::vector<SceneObjectLink> m_WheelObjects;
+		std::vector<SceneObjectRef> m_WheelObjects;
 		std::vector<VehicleWheelPtr> m_VehicleWheels;
 		Vec3 m_AngularVelocity;
 		PIDControl m_SteerCtrl;

@@ -22,7 +22,7 @@
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 
 namespace GASS
 {
@@ -59,10 +59,10 @@ namespace GASS
 		void Reset();
 		physx::PxVec3 ComputeDim(const physx::PxConvexMesh* cm);
 	protected:
-		ADD_ATTRIBUTE(SceneObjectLink,FrontLeftWheel);
-		ADD_ATTRIBUTE(SceneObjectLink,FrontRightWheel);
-		ADD_ATTRIBUTE(SceneObjectLink,RearLeftWheel);
-		ADD_ATTRIBUTE(SceneObjectLink,RearRightWheel);
+		ADD_ATTRIBUTE(SceneObjectRef,FrontLeftWheel);
+		ADD_ATTRIBUTE(SceneObjectRef,FrontRightWheel);
+		ADD_ATTRIBUTE(SceneObjectRef,RearLeftWheel);
+		ADD_ATTRIBUTE(SceneObjectRef,RearRightWheel);
 
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;

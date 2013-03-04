@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 
@@ -62,8 +62,8 @@ namespace GASS
 		Vec2 GetYawMaxMinAngle() const {return Vec2(m_YawMaxAngle,m_YawMinAngle);}
 		void SetPitchMaxMinAngle(const Vec2 &value) {m_PitchMaxAngle = value.x;m_PitchMinAngle= value.y;}
 		Vec2 GetPitchMaxMinAngle() const {return Vec2(m_PitchMaxAngle,m_PitchMinAngle);}
-		SceneObjectLink  GetAutoAimObject() const {return m_AutoAimObject;}
-		void SetAutoAimObject(const SceneObjectLink  &value) {m_AutoAimObject = value;}
+		SceneObjectRef  GetAutoAimObject() const {return m_AutoAimObject;}
+		void SetAutoAimObject(const SceneObjectRef &value) {m_AutoAimObject = value;}
 		void SceneManagerTick(double delta_time);
 		void UpdateTargetDistance();
 		
@@ -90,7 +90,7 @@ namespace GASS
 		Float m_CurrentYawAngle;
 		Float m_CurrentPitchAngle;
 		SceneObjectWeakPtr m_TargetObject;
-		SceneObjectLink m_AutoAimObject;
+		SceneObjectRef m_AutoAimObject;
 
 		ADD_ATTRIBUTE(int,AutoAimPriority);
 		ADD_ATTRIBUTE(std::string,SendDesiredPointController);
