@@ -212,6 +212,26 @@
       </TreeGeometryComponent>
     </Components>
   </SceneObjectTemplate>
+   <SceneObjectTemplate>
+    <Name value="FirForestObject"/>
+    <Components>
+      <DensityMapComponent/>
+      <TreeGeometryComponent>
+        <Name value="fir"/>
+        <Mesh value= "fir05_30.mesh"/>
+        <ImposterAlphaRejectionValue value ="140"/>
+        <DensityFactor value= "0.004"/>
+        <MeshDistance value ="70"/>
+        <PageSize value ="50"/>
+        <MeshFadeDistance value ="0"/>
+        <ImposterDistance value ="300"/>
+        <ImposterFadeDistance value ="40"/>
+        <SetHeightAtStartup value = "true"/>
+        <MaxMinScale value ="0.05 0.1"/>
+        <CastShadows value="true"/>
+      </TreeGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value="RoadObject"/>
 	<Instantiable value="true"/>
