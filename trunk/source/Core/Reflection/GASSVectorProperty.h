@@ -31,7 +31,7 @@ This class is based on the Game Programming Gems 5 article
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Reflection/GASSTypedProperty.h"
 #include <sstream>
-#define VEC_ELEM_SEP "#"
+#define VEC_ELEM_SEP ";"
 
 namespace GASS
 {

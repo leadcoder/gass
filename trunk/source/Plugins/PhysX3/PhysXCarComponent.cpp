@@ -123,10 +123,10 @@ namespace GASS
 		std::vector<PxVec3 > wheelCentreOffsets4;
 		//Add wheels 
 		std::vector<SceneObjectPtr> wheel_objects;
-		wheel_objects.push_back(m_FrontLeftWheel.GetObjectPtr());
-		wheel_objects.push_back(m_FrontRightWheel.GetObjectPtr());
-		wheel_objects.push_back(m_RearLeftWheel.GetObjectPtr());
-		wheel_objects.push_back(m_RearRightWheel.GetObjectPtr());
+		wheel_objects.push_back(m_FrontLeftWheel.GetRefObject());
+		wheel_objects.push_back(m_FrontRightWheel.GetRefObject());
+		wheel_objects.push_back(m_RearLeftWheel.GetRefObject());
+		wheel_objects.push_back(m_RearRightWheel.GetRefObject());
 
 
 		//Get data from wheels
