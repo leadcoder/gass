@@ -16,6 +16,7 @@
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   </Plugins>
  <SetDataPath value="../../../common/data/"/>
+ 
  <ScenePath value="%GASS_DATA_HOME%/sceneries/"/>
  <ResourceManager>
 	<ResourceGroup name="Bootstrap">
@@ -55,17 +56,14 @@
 	<ResourceGroup name="GASS_DETAIL_TEXTURES">
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="false"/>
     </ResourceGroup>
+	<ResourceGroup name="GASS_TEMPLATES">
+		<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="false"/>
+    </ResourceGroup>
   </ResourceManager>
 <SceneObjectTemplateManager>
 	<AddObjectIDToName value ="true"/>
 	<ObjectIDPrefix value="["/>
 	<ObjectIDSufix value="]"/>
-	<Load>
-		<!--<Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
-		<Template value="../Configuration/app_templates.xml"/>-->
-		<Template value="%GASS_DATA_HOME%/templates/editor_system.xml"/>
-        <Template value="%GASS_DATA_HOME%/templates/terrain_resources.xml"/>
-    </Load>
 </SceneObjectTemplateManager>
 <Systems>
   <EditorSystem>
