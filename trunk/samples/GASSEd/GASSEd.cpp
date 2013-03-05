@@ -389,15 +389,19 @@ void GASSEd::OnNew()
 void GASSEd::OnSave()
 {
 	GASSSSaveSceneWidget dialog(GetScene());
-    dialog.exec();
-	std::string selected_scene_name = dialog.GetSelected();
-	GetScene()->Save(selected_scene_name);
+	if(dialog.exec())
+	{
+		std::string selected_scene_name = dialog.GetSelected();
+		GetScene()->Save(selected_scene_name);
+	}
 }
 
 void GASSEd::OnOpen()
 {
 	GASSSceneSelectionWidget dialog;
-    dialog.exec();
+    if(dialog.exec() == 0)
+		return;
+
 	std::string selected_scene = dialog.GetSelected();
 	if(selected_scene != "")
 	{

@@ -6,7 +6,10 @@
  {
 	 std::string scene_name;
 	 if(scene)
-		 scene_name = scene->GetName();
+	 {
+		 scene_name = scene->GetSceneFolder().GetFullPath();
+		 scene_name = scene_name.substr(scene_name.find_last_of("/") +1, scene_name.length());
+	 }
 	 int pre_select = -1;
  	 m_ComoBox = new QComboBox();
 	 m_ComoBox->setEditable(true);
@@ -22,7 +25,7 @@
 		 m_ComoBox->setCurrentIndex(pre_select);
 	 else
 	 {
-		 m_ComoBox->addItem("NewScene");
+		 m_ComoBox->addItem("MyNewScene");
 		 m_ComoBox->setCurrentIndex(m_ComoBox->count()-1); 
 	 }
 
