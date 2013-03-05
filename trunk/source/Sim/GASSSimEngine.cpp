@@ -54,6 +54,9 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSRunTimeController.h"
 #include "Sim/GASSResourceManager.h"
+#include "Sim/GASSResourceGroup.h"
+#include "Sim/GASSResourceLocation.h"
+#include "Sim/GASSResource.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -111,6 +114,30 @@ namespace GASS
 		//Initialize systems
 		m_SystemManager->Init();
 
+		//load all templates
+		ResourceGroupVector groups = m_ResourceManager->GetResourceGroups();
+		for(size_t i = 0; i < groups.size(); i++)
+		{
+			ResourceLocationVector locations = groups[i]->GetResourceLocations();
+			for(size_t j = 0; j < locations.size(); j++)
+			{
+				ResourceLocation::ResourceMap resources = locations[j]->GetResources();
+				FileResourcePtr res;
+				ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
+				while(iter != resources.end())
+				{
+					res = iter->second;
+					const FilePath file_path = res->Path();
+					if(Misc::ToLower(file_path.GetExtension()) == "templates")
+					{
+						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
+						GetSceneObjectTemplateManager()->Load(file_path.GetFullPath());
+					}
+					iter++;
+				}
+			}
+		}
+
 		//Create scene object		
 		//m_Scene->Create();
 
@@ -167,7 +194,7 @@ namespace GASS
 			std::string sufix = Misc::ReadString(xml_sotm,"ObjectIDSufix");
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 
-			TiXmlElement *xml_load = xml_sotm->FirstChildElement("Load");
+			/*TiXmlElement *xml_load = xml_sotm->FirstChildElement("Load");
 			if(xml_load)
 			{
 				TiXmlElement *xml_temp = xml_load->FirstChildElement("Template");
@@ -184,7 +211,7 @@ namespace GASS
 
 					xml_temp = xml_temp->NextSiblingElement("Template");
 				}
-			}
+			}*/
 		}
 
 		TiXmlElement *xml_rtc = xml_settings->FirstChildElement("RTC");
