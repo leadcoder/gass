@@ -72,6 +72,18 @@ namespace GASS
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+	}
+
+
+	void OgreBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
+	{
+		SetGeometryFlags(value.GetValue());
+	}
+	GeometryFlagsBinder OgreBillboardComponent::GetGeometryFlagsBinder() const
+	{
+		return GeometryFlagsBinder(GetGeometryFlags());
 	}
 
 	void OgreBillboardComponent::OnInitialize()

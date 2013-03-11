@@ -128,7 +128,7 @@ namespace GASS
 				{
 					res = iter->second;
 					const FilePath file_path = res->Path();
-					if(Misc::ToLower(file_path.GetExtension()) == "templates")
+					if(Misc::ToLower(file_path.GetExtension()) == "template")
 					{
 						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
 						GetSceneObjectTemplateManager()->Load(file_path.GetFullPath());

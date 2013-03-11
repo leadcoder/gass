@@ -240,6 +240,23 @@ namespace GASS
 	typedef SPTR<VisibilityMessage> VisibilityMessagePtr;
 
 
+	class MeshVisibilityMessage : public BaseMessage
+	{
+	public:
+		MeshVisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Visible(visible)
+		  {
+
+		  }
+		  bool GetValue() const {return m_Visible;}
+	private:
+		bool m_Visible;
+	};
+
+	typedef SPTR<MeshVisibilityMessage> MeshVisibilityMessagePtr;
+
+
+
 	/**
 	Message use to alternate whether or not a gfx-scene node should be attached 
 	to the first parent gfx-node

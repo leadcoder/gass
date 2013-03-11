@@ -191,7 +191,7 @@ namespace GASS
 		}
 		else
 		{
-			//m_MeshNode->setNodeMask(~NM_VISIBLE & m_MeshNode->getNodeMask());
+			
 			m_MeshNode->setNodeMask(0);
 		}
 	}

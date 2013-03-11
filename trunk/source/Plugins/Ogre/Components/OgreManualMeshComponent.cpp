@@ -257,7 +257,6 @@ namespace GASS
 		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
 		if(mat.isNull()) 
 				return;
-			
 		
 		if(diffuse.w >= 0)
 			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
@@ -270,7 +269,7 @@ namespace GASS
 		if(message->GetShininess() >= 0)
 			mat->setShininess(message->GetShininess());
 
-		/*if(color.w < 1.0)
+		/*if(diffuse.w < 1.0)
 		{
 			mat->setDepthCheckEnabled(false);
 			mat->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);

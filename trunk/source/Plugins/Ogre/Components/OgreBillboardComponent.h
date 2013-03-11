@@ -49,6 +49,10 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
+		
+		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
+		GeometryFlagsBinder GetGeometryFlagsBinder() const;
+
 		void OnGeometryScale(GeometryScaleMessagePtr message);
 		float GetWidth() const;
 		void SetWidth(float width);

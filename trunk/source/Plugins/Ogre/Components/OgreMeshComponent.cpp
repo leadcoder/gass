@@ -82,6 +82,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,MeshVisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
 	}
 
@@ -134,6 +135,19 @@ namespace GASS
 			SetRenderQueue(m_RenderQueue);
 
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		}
+	}
+
+
+	void OgreMeshComponent::OnVisibilityMessage(MeshVisibilityMessagePtr message)
+	{
+		if(m_OgreEntity)
+		{
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				se->setVisible(message->GetValue());
+			}
 		}
 	}
 

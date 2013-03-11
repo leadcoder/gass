@@ -269,7 +269,7 @@ namespace GASS
 		}
 		else
 		{
-			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_SCENE_OBJECTS);
+			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
 			if(mesh_result.Coll)
 			{
 				SceneObjectPtr col_obj(mesh_result.CollSceneObject,NO_THROW);
