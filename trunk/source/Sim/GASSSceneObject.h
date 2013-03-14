@@ -176,6 +176,27 @@ namespace GASS
 			return ret;
 		}
 
+
+		template <class T>
+		SPTR<T> GetTopParentComponentByClass() const
+		{
+			SPTR<T> ret;
+			SceneObjectPtr parent = GetParentSceneObject();
+			if(parent)
+			{
+				ret =  parent->GetTopParentComponentByClass<T>();
+				if(ret)
+					return ret;
+			}
+			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			{
+				ret = DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
+				if(ret)
+					return ret;
+			}
+			return ret;
+		}
+
 		/** Get children scene objects that match name. 
 			@objects Return scene objects that match name
 			@name The object name to search for
