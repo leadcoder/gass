@@ -264,7 +264,7 @@ namespace GASS
 			//osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
 			//need to ensure that the window is cleared make sure that the complete window is set the correct colour
 			//rather than just the parts of the window that are under the camera's viewports
-			graphics_context->setClearColor(osg::Vec4f(0.0f,0.0f,0.0f,1.0f));
+			graphics_context->setClearColor(osg::Vec4f(0.0f,0.0f,1.0f,1.0f));
 			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());

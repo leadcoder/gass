@@ -27,6 +27,8 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/IOSGCameraManipulator.h"
+
 
 #include "Core/Utils/GASSException.h"
 
@@ -77,6 +79,21 @@ namespace GASS
 		ViewportPtr viewport = shared_from_this();
 		SystemMessagePtr cam_message(new CameraChangedEvent(viewport));
 		SimEngine::Get().GetSimSystemManager()->PostMessage(cam_message);
+
+		OSGCameraManipulatorPtr man = cam_comp->GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
+		if(man)
+		{
+			m_OSGView->setCameraManipulator(man->GetManipulator());
+			
+			// this should be moved to manipulator?
+			m_OSGView->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+			 // configure the near/far so we don't clip things that are up close
+			m_OSGView->getCamera()->setNearFarRatio(0.00002);
+		}
+		else 
+		{
+			m_OSGView->setCameraManipulator(NULL);
+		}
 	}
 }
 

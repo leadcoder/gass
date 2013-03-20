@@ -26,6 +26,8 @@
 #include <osg/PositionAttitudeTransform>
 #include <string>
 #include <osgViewer/View>
+#include "IOSGGraphicsSceneManager.h"
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 
 namespace osgShadow
 {
@@ -39,7 +41,7 @@ namespace GASS
 	class OSGGraphicsSystem;
 	typedef WPTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
 
-	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager>
+	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager> , public IGraphicsSceneManager , public IOSGGraphicsSceneManager
 	{
 	public:
 		OSGGraphicsSceneManager();
@@ -49,10 +51,10 @@ namespace GASS
 		virtual void OnInit();		
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
+		virtual void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color) {};
 		//osgViewer::View* GetOSGView() const {return m_View;}
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
-		
 	private:
 		//Fog
 		float GetFogStart() const {return m_FogStart;}

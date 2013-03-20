@@ -319,7 +319,7 @@ namespace GASS
 			
 			m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
 			m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
-
+			m_OSGCamera->setClearColor(osg::Vec4(1,1,1,1));
 			//m_OSGCamera->setReadBuffer(GL_BACK);
 			//m_OSGCamera->setDrawBuffer(GL_BACK);
 			//m_OSGCamera = views[i]->getCamera();
