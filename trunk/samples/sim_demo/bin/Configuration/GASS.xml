@@ -7,7 +7,8 @@
   <!--<Plugin PluginFile = "GASSPluginPhysX"/>-->
   <Plugin PluginFile = "GASSPluginODE"/>
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
-  <!--<Plugin PluginFile = "GASSPluginPagedGeometry"/>-->
+  <Plugin PluginFile = "GASSPluginPagedGeometry"/>
+  <Plugin PluginFile = "GASSPluginEnvironment"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPluginGame"/>
   <Plugin PluginFile = "GASSPluginBase"/>
@@ -58,15 +59,14 @@
   <ResourceGroup name="GASS_GUI">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI_Media" type="FileSystem" recursive="true"/>
   </ResourceGroup>
+  <ResourceGroup name="GASS_TEMPLATES">
+    <ResourceLocation  path="%GASS_DATA_HOME%/templates/" type="FileSystem" recursive="true"/>
+  </ResourceGroup>
 </ResourceManager>
 <SceneObjectTemplateManager>
   <AddObjectIDToName value ="true"/>
   <ObjectIDPrefix value="["/>
   <ObjectIDSufix value="]"/>
-  <Load>
-    <Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
-    <Template value="../Configuration/app_templates.xml"/>
-  </Load>
 </SceneObjectTemplateManager>
 <Systems>
   <OISInputSystem>
@@ -104,10 +104,9 @@
   <ODEPhysicsSystem>
     <TaskNode value="SIM"/>
   </ODEPhysicsSystem>
-  <!--<ODECollisionSystem>
-    <Name value = "CollisionSystem"/>
-	<TaskNode value="-1"/>
-  </ODECollisionSystem>-->
+  <ODECollisionSystem>
+	<TaskNode value="POST_SIM"/>
+  </ODECollisionSystem>
   <OgreGraphicsSystem>
     <Plugin value="RenderSystem_GL"/>
     <Plugin value="RenderSystem_Direct3D9"/>
@@ -125,10 +124,10 @@
   <MaxUpdateFreqency value="1000"/>
   <!-- -1 == not max update freq-->
   <ExternalSimulationUpdate value="false"/>
-  <!-- let application trigger simulation updates-->
+  <!-- let application trigger simulation updates PARALLEL-->
   <TaskNode name="ROOT_NODE" mode="SEQUENCE">
-    <TaskNode name="PRE_SIM" mode="PARALLEL"/>
-    <TaskNode name="SIM" mode="PARALLEL"/>
-    <TaskNode name="POST_SIM" mode="PARALLEL"/>
+    <TaskNode name="PRE_SIM" mode="SEQUENCE"/>
+    <TaskNode name="SIM" mode="SEQUENCE"/>
+    <TaskNode name="POST_SIM" mode="SEQUENCE"/>
   </TaskNode>
 </RTC>
