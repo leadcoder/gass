@@ -1,0 +1,225 @@
+<?xml version="1.0" ?>
+<SceneObject>
+    <ID value="SCENARY_ROOT" />
+    <GUID value="c82a0d2d-f6ff-4089-a4b9-5f651d4ef443" />
+    <Name value="Scenery" />
+    <TemplateName value="" />
+    <Serialize value="true" />
+    <Components />
+    <ComponentContainers>
+        <SceneObject>
+            <ID value="" />
+            <GUID value="01f99ca1-28b8-438e-95dd-15ef3108b075" />
+            <Name value="OgrePagedTerrainObject[11]" />
+            <TemplateName value="OgrePagedTerrainObject" />
+            <Serialize value="true" />
+            <Components>
+                <OgreTerrainGroupComponent>
+                    <ImportScale value="400" />
+                    <ImportTerrainSize value="1025" />
+                    <ImportTerrainWorldSize value="5000" />
+                    <SaveTerrain value="OgrePagedTerrain" />
+                    <LoadTerrain value="OgrePagedTerrain" />
+                    <CustomMaterial value="" />
+                    <CreatePages value="0 0" />
+                    <Origin value="0 0 0" />
+                    <FadeDetail value="true" />
+                    <DetailFadeDist value="100" />
+                    <FadeOutColor value="false" />
+                    <NearColorWeight value="0.1" />
+                    <EnableLayerNormal value="true" />
+                    <EnableLayerSpecular value="true" />
+                    <EnableLayerParallax value="true" />
+                    <Name value="OgreTerrainGroupComponent" />
+                </OgreTerrainGroupComponent>
+                <ODECollisionGeometryComponent>
+                    <Type value="MESH" />
+                    <Name value="" />
+                </ODECollisionGeometryComponent>
+            </Components>
+            <ComponentContainers>
+                <SceneObject>
+                    <ID value="" />
+                    <GUID value="3d7c51a3-6540-43c9-a6cc-2aacfdfdc70d" />
+                    <Name value="OgreTerrainPageObject[13]" />
+                    <TemplateName value="OgreTerrainPageObject" />
+                    <Serialize value="true" />
+                    <Components>
+                        <OgreTerrainPageComponent>
+                            <HeightMap value="terrain_hm.png" />
+                            <ColorMap value="terrain_color.png" />
+                            <DetailMask value="" />
+                            <DiffuseLayer0 value="grass_green-01_diffusespecular.dds" />
+                            <NormalLayer0 value="detail_default_n.dds" />
+                            <DiffuseLayer1 value="" />
+                            <NormalLayer1 value="" />
+                            <DiffuseLayer2 value="" />
+                            <NormalLayer2 value="" />
+                            <DiffuseLayer3 value="" />
+                            <NormalLayer3 value="" />
+                            <DiffuseLayer4 value="" />
+                            <NormalLayer4 value="" />
+                            <TilingLayer0 value="5" />
+                            <TilingLayer1 value="5" />
+                            <TilingLayer2 value="5" />
+                            <TilingLayer3 value="5" />
+                            <TilingLayer4 value="5" />
+                            <Position value="0 0 0" />
+                            <IndexX value="0" />
+                            <IndexY value="0" />
+                            <RenderQueue value="RENDER_QUEUE_WORLD_GEOMETRY_1" />
+                            <ImportHeightMap value="" />
+                            <ImportColorMap value="" />
+                            <ImportDetailMask value="" />
+                            <Name value="OgreTerrainPageComponent" />
+                        </OgreTerrainPageComponent>
+                        <ODECollisionGeometryComponent>
+                            <Type value="TERRAIN" />
+                            <Name value="" />
+                        </ODECollisionGeometryComponent>
+                    </Components>
+                    <ComponentContainers />
+                </SceneObject>
+            </ComponentContainers>
+        </SceneObject>
+        <SceneObject>
+            <ID value="" />
+            <GUID value="e56ab1cb-78b7-4324-b316-ebf5ce8082ec" />
+            <Name value="GrassVegetationObject[24]" />
+            <TemplateName value="GrassVegetationObject" />
+            <Serialize value="true" />
+            <Components>
+                <GrassLoaderComponent>
+                    <DensityMap value="" />
+                    <ImportDensityMap value="" />
+                    <PageSize value="45" />
+                    <CustomBounds value="0 0 0 0" />
+                    <ColorMap value="" />
+                    <ViewDistance value="100" />
+                    <Name value="GRASS_LOADER" />
+                </GrassLoaderComponent>
+                <GrassLayerComponent>
+                    <DensityFactor value="1" />
+                    <Material value="DefaultGrass" />
+                    <FadeTechnique value="FADETECH_GROW" />
+                    <RenderTechnique value="GRASSTECH_CROSSQUADS" />
+                    <BlendWithGround value="false" />
+                    <MaxSize value="0.5 0.5" />
+                    <MinSize value="0.2 0.5" />
+                    <SwaySpeed value="0.1" />
+                    <SwayLength value="0.1" />
+                    <EnableSway value="true" />
+                    <SwayDistribution value="10" />
+                    <Name value="FAR_LAYER" />
+                </GrassLayerComponent>
+            </Components>
+            <ComponentContainers />
+        </SceneObject>
+        <SceneObject>
+            <ID value="" />
+            <GUID value="c35f7d89-73d0-4c9d-b4ed-61b51694377d" />
+            <Name value="CustomMeshObject[6]" />
+            <TemplateName value="CustomMeshObject" />
+            <Serialize value="true" />
+            <Components>
+                <MeshComponent>
+                    <Filename value="fir06_30.mesh" />
+                    <CastShadow value="true" />
+                    <RenderQueue value="RENDER_QUEUE_MAIN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_UNKOWN" />
+                    <Name value="MeshComponent" />
+                </MeshComponent>
+                <LocationComponent>
+                    <Position value="-547.1054077 3.137255192 606.3955688" />
+                    <Rotation value="0 0 0" />
+                    <Quaternion value="0 0 0 -1" />
+                    <Scale value="0.1 0.1 0.1" />
+                    <AttachToParent value="false" />
+                    <Name value="LocationComponent" />
+                </LocationComponent>
+                <ODECollisionGeometryComponent>
+                    <Type value="MESH" />
+                    <Name value="" />
+                </ODECollisionGeometryComponent>
+            </Components>
+            <ComponentContainers />
+        </SceneObject>
+        <SceneObject>
+            <ID value="" />
+            <GUID value="51ef8f7c-c89b-4acc-b7ca-7f949f328961" />
+            <Name value="CustomMeshObject[9]" />
+            <TemplateName value="CustomMeshObject" />
+            <Serialize value="true" />
+            <Components>
+                <MeshComponent>
+                    <Filename value="JIM_TANK_hull.mesh" />
+                    <CastShadow value="true" />
+                    <RenderQueue value="RENDER_QUEUE_MAIN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_UNKOWN" />
+                    <Name value="MeshComponent" />
+                </MeshComponent>
+                <LocationComponent>
+                    <Position value="-539.7678223 4.146086693 613.5991821" />
+                    <Rotation value="0 0 0" />
+                    <Quaternion value="0 0 0 -1" />
+                    <Scale value="1 1 1" />
+                    <AttachToParent value="false" />
+                    <Name value="LocationComponent" />
+                </LocationComponent>
+                <ODECollisionGeometryComponent>
+                    <Type value="MESH" />
+                    <Name value="" />
+                </ODECollisionGeometryComponent>
+            </Components>
+            <ComponentContainers />
+        </SceneObject>
+        <SceneObject>
+            <ID value="" />
+            <GUID value="3b7e8d47-3c81-4ca8-8e00-f5c530ab1d6e" />
+            <Name value="SkyObject[7]" />
+            <TemplateName value="SkyObject" />
+            <Serialize value="true" />
+            <Components>
+                <SkyXComponent>
+                    <TimeMultiplier value="0" />
+                    <Time value="14 7.5 20.5" />
+                    <SunInnerRadius value="9.775010109" />
+                    <SunOuterRadius value="10.29629993" />
+                    <SunExposure value="2" />
+                    <HeightPosition value="0.009999999776" />
+                    <RayleighMultiplier value="0.002199999988" />
+                    <MieMultiplier value="0.0006750000175" />
+                    <NumberOfSamples value="4" />
+                    <MoonSize value="0.224999994" />
+                    <SkyDomeFog value="false" />
+                    <Name value="SkyXComponent" />
+                </SkyXComponent>
+                <SkyXCloudLayerComponent>
+                    <Scale value="0.001000000047" />
+                    <Height value="100" />
+                    <WindDirection value="1 1" />
+                    <TimeMultiplier value="0.125" />
+                    <DistanceAttenuation value="0.05000000075" />
+                    <DetailAttenuation value="1" />
+                    <NormalMultiplier value="2" />
+                    <HeightVolume value="0.25" />
+                    <VolumetricDisplacement value="0.009999999776" />
+                    <Name value="Layer1" />
+                </SkyXCloudLayerComponent>
+                <EnvironmentManagerComponent>
+                    <WaterGradient value="0.0232836 0.214329 0.311642;0.0174627 0.160747 0.233732;0.0145522 0.133956 0.169776;0.0116418 0.107164 0.135821;0.0058209 0.0535822 0.0679105;0.0058209 0.0535822 0.0169776" />
+                    <WaterGradientWeights value="1;0.8;0.6;0.5;0.45;0" />
+                    <SunGradient value="0.8 0.75 0.55;0.8 0.75 0.55;0.8 0.75 0.55;0.6 0.5 0.2;0.6 0.5 0.2;0.6 0.5 0.2" />
+                    <SunGradientWeights value="1;0.75;0.5625;0.5;0.45;0" />
+                    <AmbientGradient value="1 1 1;1 1 1;0.6 0.6 0.6;0.3 0.3 0.3;0.1 0.1 0.1;0.05 0.05 0.05" />
+                    <AmbientGradientWeights value="1;0.6;0.5;0.45;0.35;0" />
+                    <FogGradient value="0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753" />
+                    <FogGradientWeights value="1;0.6;0.5;0.45;0.35;0" />
+                    <SpecularWeight value="0" />
+                    <Name value="EnvironmentManagerComponent" />
+                </EnvironmentManagerComponent>
+            </Components>
+            <ComponentContainers />
+        </SceneObject>
+    </ComponentContainers>
+</SceneObject>
