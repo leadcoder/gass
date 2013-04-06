@@ -27,7 +27,8 @@ namespace GASS
 {
 	PhysXBodyComponent::PhysXBodyComponent() :	m_MassRepresentation(MR_GEOMETRY),
 		m_Mass(1),
-		m_Actor(NULL)
+		m_Actor(NULL),
+		m_EffectJoints(true)
 	{
 
 	}
@@ -36,12 +37,6 @@ namespace GASS
 	{
 		
 	}
-
-	void PhysXBodyComponent::OnMassMessage(PhysicsMassMessagePtr message)
-	{
-		SetMass(message->GetMass());
-	}
-
 
 	void PhysXBodyComponent::RegisterReflection()
 	{
@@ -56,11 +51,11 @@ namespace GASS
 	void PhysXBodyComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
 	}
 
 	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
@@ -93,6 +88,11 @@ namespace GASS
 		}
 	}
 
+	void PhysXBodyComponent::OnMassMessage(PhysicsMassMessagePtr message)
+	{
+		SetMass(message->GetMass());
+	}
+
 	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
@@ -122,6 +122,8 @@ namespace GASS
 
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+		
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
 		Quaternion rot = location->GetRotation();
@@ -129,12 +131,11 @@ namespace GASS
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
 		
-		physx::PxReal density = 1.0f;
-		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
+		//physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
+		physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
-		SetMass(m_Mass);
+		//SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
@@ -142,149 +143,14 @@ namespace GASS
 	}
 
 
-	void PhysXBodyComponent::SendTransformation()
+	Vec3 PhysXBodyComponent::GetPosition() const
 	{
-		int from_id = (int)this; //use address as id
-
-		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));
-		GetSceneObject()->PostMessage(pos_msg);
-
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
-		GetSceneObject()->PostMessage(rot_msg);
-		
-		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
-		GetSceneObject()->PostMessage(physics_msg);
-	}
-
-	void PhysXBodyComponent::SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymmetricInertia)
-	{
-		m_Mass = mass;
-		m_CGPosition = CGPosition;
-		m_SymmetricInertia = symmetricInertia;
-		m_AssymetricInertia = assymmetricInertia;
-	}
-	
-	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool rel)
-	{
+		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			//if (rel)
-			//	m_Actor->addLocalTorque(NxVec3(torque_vec.x,torque_vec.y,torque_vec.z));
-			//else
-				m_Actor->addTorque(physx::PxVec3(torque_vec.x,torque_vec.y,torque_vec.z));
+			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
 		}
-	}
-
-	void PhysXBodyComponent::SetVelocity(const Vec3 &vel, bool rel)
-	{
-		if(m_Actor)
-		{
-			if (rel) 
-				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-			else
-				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-		}
-	}
-
-	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool rel)
-	{
-		if(m_Actor)
-		{
-			if (rel) 
-				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-			else
-				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-		}
-	}
-
-
-	Vec3 PhysXBodyComponent::GetAngularVelocity(bool rel)
-	{
-		Vec3 vel(0,0,0);
-		if(m_Actor)
-		{
-			physx::PxVec3 nxvel = m_Actor->getAngularVelocity();
-			if (rel) 
-			{
-				//dVector3 vec;
-				//dBodyVectorFromWorld(m_PhysXBodyComponent,vel_p[0],vel_p[1],vel_p[2],vec);
-				vel.Set(nxvel.x,nxvel.y,nxvel.z);
-			} else
-				vel.Set(nxvel.x,nxvel.y,nxvel.z);
-		}
-		return vel;
-	}
-
-	void PhysXBodyComponent::Enable()
-	{
-		if(m_Actor)
-		{
-		}
-	}
-	bool PhysXBodyComponent::IsEnabled()
-	{
-		return true;
-	}
-
-	void PhysXBodyComponent::Disable()
-	{
-		if(m_Actor)
-		{
-		}
-	}
-
-
-	void PhysXBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
-	{
-		if(m_Actor)
-		{
-			if(rel)
-				physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor, physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(0,0,0));
-			else
-				m_Actor->addForce(physx::PxVec3(force_vec.x,force_vec.y,force_vec.z));
-		}
-	}
-
-	void PhysXBodyComponent::AddForceAtPos(const Vec3 &force_vec, const Vec3& pos_vec, bool rel_force, bool rel_pos)
-	{
-		if(m_Actor)
-		{
-			if (rel_force) 
-			{
-				if (rel_pos)
-					physx::PxRigidBodyExt::addLocalForceAtLocalPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
-				else
-					physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
-			} else 
-			{
-				if (rel_pos)
-					physx::PxRigidBodyExt::addForceAtLocalPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
-				else
-					physx::PxRigidBodyExt::addForceAtPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
-			}
-		}
-	}
-
-	void PhysXBodyComponent::SetMass(float mass)
-	{
-		m_Mass = mass;
-		if(m_Actor)
-		{
-			m_Actor->setMass(mass);
-		}
-	}
-
-	Vec3 PhysXBodyComponent::GetVelocity(bool rel)
-	{
-		Vec3 vel(0,0,0);
-		if (m_Actor) 
-		{
-			if (rel) 
-				vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
-			else
-				vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
-		}
-		return vel;
+		return pos;
 	}
 
 	void PhysXBodyComponent::SetPosition(const Vec3 &value)
@@ -361,18 +227,9 @@ namespace GASS
 		}
 	}
 
-	Vec3  PhysXBodyComponent::GetPosition() const
-	{
-		Vec3 pos(0,0,0);
-		if(m_Actor)
-		{
-			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
-		}
-		return pos;
-	}
-
 	void PhysXBodyComponent::SetRotation(const Quaternion &rot)
 	{
+		
 		if(m_Actor)
 		{
 			m_Actor->setGlobalPose(physx::PxTransform(m_Actor->getGlobalPose().p,PxConvert::ToPx(rot)));
@@ -388,6 +245,142 @@ namespace GASS
 			q = PxConvert::ToGASS(m_Actor->getGlobalPose().q);
 		}
 		return q;
+	}
+
+
+	void PhysXBodyComponent::SendTransformation()
+	{
+		int from_id = (int)this; //use address as id
+		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));
+		GetSceneObject()->PostMessage(pos_msg);
+
+		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
+		GetSceneObject()->PostMessage(rot_msg);
+		
+//		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
+//		GetSceneObject()->PostMessage(physics_msg);
+	}
+
+	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool rel)
+	{
+		if(m_Actor)
+		{
+			m_Actor->addTorque(physx::PxVec3(torque_vec.x,torque_vec.y,torque_vec.z));
+		}
+	}
+
+	void PhysXBodyComponent::SetVelocity(const Vec3 &vel, bool rel)
+	{
+		if(m_Actor)
+		{
+			if (rel) 
+				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+			else
+				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+		}
+	}
+
+	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool rel)
+	{
+		if(m_Actor)
+		{
+			if (rel) 
+				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+			else
+				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+		}
+	}
+
+
+	Vec3 PhysXBodyComponent::GetAngularVelocity(bool rel)
+	{
+		Vec3 vel(0,0,0);
+		if(m_Actor)
+		{
+			physx::PxVec3 pxvel = m_Actor->getAngularVelocity();
+			if (rel) 
+			{
+				vel.Set(pxvel.x,pxvel.y,pxvel.z);
+			} 
+			else
+				vel.Set(pxvel.x,pxvel.y,pxvel.z);
+		}
+		return vel;
+	}
+
+	void PhysXBodyComponent::Enable()
+	{
+		if(m_Actor)
+		{
+
+		}
+	}
+	bool PhysXBodyComponent::IsEnabled()
+	{
+		return true;
+	}
+
+	void PhysXBodyComponent::Disable()
+	{
+		if(m_Actor)
+		{
+
+		}
+	}
+
+
+	void PhysXBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
+	{
+		if(m_Actor)
+		{
+			if(rel)
+				physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor, physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(0,0,0));
+			else
+				m_Actor->addForce(physx::PxVec3(force_vec.x,force_vec.y,force_vec.z));
+		}
+	}
+
+	void PhysXBodyComponent::AddForceAtPos(const Vec3 &force_vec, const Vec3& pos_vec, bool rel_force, bool rel_pos)
+	{
+		if(m_Actor)
+		{
+			if (rel_force) 
+			{
+				if (rel_pos)
+					physx::PxRigidBodyExt::addLocalForceAtLocalPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
+				else
+					physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
+			} 
+			else 
+			{
+				if (rel_pos)
+					physx::PxRigidBodyExt::addForceAtLocalPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
+				else
+					physx::PxRigidBodyExt::addForceAtPos(*m_Actor,physx::PxVec3(force_vec.x,force_vec.y,force_vec.z),physx::PxVec3(pos_vec.x,pos_vec.y,pos_vec.z));
+			}
+		}
+	}
+
+	void PhysXBodyComponent::SetMass(float mass)
+	{
+		m_Mass = mass;
+		if(m_Actor)
+		{
+			m_Actor->setMass(mass);
+		}
+	}
+
+	Vec3 PhysXBodyComponent::GetVelocity(bool rel)
+	{
+		Vec3 vel(0,0,0);
+		if (m_Actor) 
+		{
+			if (rel) 
+				vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
+			else
+				vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
+		}
+		return vel;
 	}
 	
 }

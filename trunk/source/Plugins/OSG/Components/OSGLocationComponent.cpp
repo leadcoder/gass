@@ -213,7 +213,7 @@ namespace GASS
 		{
 			SceneObjectPtr obj = STATIC_PTR_CAST<SceneObject>(iter.getNext());
 			OSGLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGLocationComponent>();
-			if(c_location)
+			if(c_location && c_location->GetAttachToParent())
 				c_location->SendTransMessage();
 		}
 	}

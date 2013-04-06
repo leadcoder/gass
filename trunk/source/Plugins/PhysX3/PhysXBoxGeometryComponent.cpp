@@ -52,8 +52,8 @@ namespace GASS
 		if(!m_Body)
 			return NULL;
 		//Create shape
-		Vec3 size; 
-		if(m_SizeFromMesh)
+		Vec3 size(2,1,4); 
+		/*if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
@@ -63,20 +63,36 @@ namespace GASS
 				SetOffset((box.m_Max + box.m_Min)*0.5);
 			}
 		}
-		size = GetSize();
+		size = GetSize();*/
+		
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxTransform offset = physx::PxTransform::createIdentity();
-		offset.p = PxConvert::ToPx(GetOffset());
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(size.x/2.0,size.y/2.0,size.z/2.0), *material,offset);
+		//offset.p = PxConvert::ToPx(GetOffset());
+		physx::PxVec3 dims(size.x/2.0,size.y/2.0,size.z/2.0);
+		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(dims), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
 		
 		physx::PxFilterData collFilterData;
 		collFilterData.word0=COLLISION_FLAG_CHASSIS;
 		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
 		shape->setSimulationFilterData(collFilterData);
+
+		//physx::PxReal mass = m_Body->GetMass();
+		//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
+
+		/*float mass = 1;
+		physx::PxVec3 chassisDims(15,1,15);
+		physx::PxVec3 chassisMOI
+			((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*mass/12.0f,
+			(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*mass/12.0f,
+			(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*mass/12.0f);
 		
+		m_Body->GetPxActor()->setMass(mass);
+		m_Body->GetPxActor()->setMassSpaceInertiaTensor(chassisMOI);
+		m_Body->GetPxActor()->setCMassLocalPose(physx::PxTransform(physx::PxVec3(0,-0.5,0),physx::PxQuat::createIdentity()));
+		*/
 		return shape;
 	}
 	

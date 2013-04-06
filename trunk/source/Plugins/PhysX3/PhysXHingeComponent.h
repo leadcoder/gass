@@ -25,6 +25,8 @@
 #include <extensions/PxPrismaticJoint.h>
 #include "PhysXCommon.h"
 #include "Sim/GASS.h"
+#include "Sim/GASSSceneObjectRef.h"
+
 
 namespace GASS
 {
@@ -40,92 +42,55 @@ namespace GASS
 		virtual void OnInitialize();
 		void SetPosition(const Vec3 &value);
 	protected:
-		
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		
 		void OnParameterMessage(PhysicsJointMessagePtr message);
-		void OnLoad(BodyLoadedMessagePtr message);
-
-		//virtual void UpdateTransformation();
+		void OnBody1Loaded(BodyLoadedMessagePtr message);
+		void OnBody2Loaded(BodyLoadedMessagePtr message);
+	
 		float GetRollAngle();
 		float GetRollAngleRate();
 		void SetRollAxisVel(float velocity);
 		//void SetSpringAxisVel(float value);
 		//float GetSpringAxisVel(){return 0;}
-		float GetRollAxisForce()const {return m_RollJointForce;}
-		void SetRollAxisForce(float value);//{ m_JointForce = value;}
-		//virtual void SetSpringAxisForce(float value);
-		//float GetSpringAxisForce()const;
-		
-	
+		float GetRollAxisForce()const {return m_RevoluteJointForce;}
+		void SetRollAxisForce(float value);		
 
 		//Helpers
-
 		void CreateJoint();
 		void UpdateSuspension();
-		//void UpdateLimits();
 		void UpdateAnchor();
 		void UpdateJointAxis();
-
-
 		void UpdateMotor();
 
 		//get set section
-
-		std::string GetBody1Name()const {return m_Body1Name;}
-		void SetBody1Name(const std::string &name) {m_Body1Name = name;}
-		std::string GetBody2Name()const {return m_Body2Name;}
-		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
-		
+		SceneObjectRef GetBody1() const {return m_Body1;}
+		void SetBody1(SceneObjectRef value) {m_Body1 = value;}
+		SceneObjectRef GetBody2()const {return m_Body2;}
+		void SetBody2(SceneObjectRef value) {m_Body2 = value;}
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetStrength()const {return m_Strength;}
 		void SetStrength(float value){m_Strength =value;}
-		float GetSwayForce()const {return m_SwayForce;}
-		void SetSwayForce(float value);
 		Vec3 GetRollAxis()const {return m_RollAxis;}
 		void SetRollAxis(const Vec3 &value);
-		Vec3 GetSpringAxis()const {return m_SpringAxis;}
-		void SetSpringAxis(const Vec3 &value);
-		Vec3 GetAnchor()const {return m_Anchor;}
-		void SetAnchor(const Vec3 &value);
-
 		float GetHighStop()const {return m_HighStop;}
 		void SetHighStop(float value);
 		float GetLowStop()const {return m_LowStop;}
 		void SetLowStop(float value);
-
-
-		
-
-		
 	private:
-		//PxJoint* m_PhysXHingeComponent;
-
-		std::string m_Body1Name;
-		std::string m_Body2Name;
-		
-		
-		float m_RollJointForce;
+		SceneObjectRef m_Body1;
+		SceneObjectRef m_Body2;
+		float m_RevoluteJointForce;
 		float m_SpringJointForce;
 		float m_RollAngularVelocity;
-
-		float m_SwayForce;
 		float m_Strength;
 		float m_Damping;
-
 		float m_HighStop;
 		float m_LowStop;
-
-		Vec3 m_Anchor; 
+		bool m_Body1Loaded;
+		bool m_Body2Loaded;
 		Vec3 m_RollAxis;
-		Vec3 m_SpringAxis;
-
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		
-		physx::PxRevoluteJoint *m_RollJoint;
-		physx::PxD6Joint *m_Joint;
+		physx::PxRevoluteJoint *m_RevoluteJoint;
 	};
 	typedef SPTR<PhysXHingeComponent> PhysXHingeComponentPtr;
 }

@@ -55,6 +55,7 @@ namespace GASS
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+		bool GetAttachToParent() const;
 	protected:
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr  message);
@@ -65,7 +66,7 @@ namespace GASS
 		void OnAttachToParent(AttachToParentMessagePtr message);
 
 		void SetAttachToParent(bool value);
-		bool GetAttachToParent() const;
+		
 
 		//helper
 		OSGLocationComponentPtr GetParentLocation();

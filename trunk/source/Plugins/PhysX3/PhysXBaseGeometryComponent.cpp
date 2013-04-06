@@ -61,7 +61,8 @@ namespace GASS
 		if(m_Body)
 		{
 			if(m_SizeFromMesh)
-				GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+				//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+			    GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
 			else
 				GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
 		}
@@ -119,11 +120,14 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 		m_Shape = CreateShape();
-		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
-			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), &mass,1);
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
+			
+			//physx::PxReal mass = m_Body->GetMass();
+			//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
 		}
 	}
 
@@ -150,14 +154,17 @@ namespace GASS
 		m_SceneManager = scene_manager;
 		SetSizeFromMesh(m_SizeFromMesh);
 		m_Shape = CreateShape();
-		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
 			//physx::PxReal density = 0.001;
-			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), &mass,1);
-			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), &density,1);
+			//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
+			//add here instead;(
+			//scene_manager->GetPxScene()->addActor(*m_Body->GetPxActor());
+			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), 1);
 		}
 	}
 

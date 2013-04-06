@@ -442,7 +442,6 @@ namespace GASS
 
 	void OgrePostProcess::RegisterCompositors(Ogre::Viewport* vp)
 	{
-
 		Ogre::CompositorManager::ResourceMapIterator resourceIterator =
 			Ogre::CompositorManager::getSingleton().getResourceIterator();
 

@@ -111,7 +111,9 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
 	}
-
+physx::PxRevoluteJoint *m_RollJoint ;
+PxRigidDynamic* m_Body;
+PxRigidDynamic* m_Wheel;
 	void PhysXPhysicsSceneManager::OnInit()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
@@ -131,6 +133,10 @@ namespace GASS
 		} 
 		if(!sceneDesc.filterShader)
 			sceneDesc.filterShader  = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
+		
+		sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
+		sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
+
 		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");
@@ -168,6 +174,68 @@ namespace GASS
 		m_PxScene->addActor(*plane);
 		*/
 		m_Init = true;
+
+
+
+
+		PxVec3 pos(0,2,10);
+	PxQuat rot(0,PxVec3(0,1,0));
+	PxTransform trans(pos,rot);
+
+	
+	m_Body = system->GetPxSDK()->createRigidDynamic(trans);
+	
+	pos.y -= 1;
+	PxTransform trans2(pos,rot);
+
+	m_Wheel = system->GetPxSDK()->createRigidDynamic(trans2);
+
+	PxMaterial*	material = system->GetDefaultMaterial();
+	PxVec3 dims(1,0.4,2);
+	
+	physx::PxShape* shape = m_Body->createShape(PxBoxGeometry(dims),*material,PxTransform(PxVec3(0,0,0)));
+	physx::PxFilterData collFilterData;
+		collFilterData.word0=COLLISION_FLAG_CHASSIS;
+		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
+		shape->setSimulationFilterData(collFilterData);
+	
+	PxRigidBodyExt::updateMassAndInertia(*m_Body,10);
+	//createRenderObjectsFromActor(snowmanActor,mSnowMaterial);
+	
+
+
+	shape = m_Wheel->createShape(PxSphereGeometry(0.3),*material,PxTransform(PxVec3(0,0,0)));
+	shape->setSimulationFilterData(collFilterData);
+	
+
+	PxRigidBodyExt::updateMassAndInertia(*m_Wheel,10);
+
+	m_PxScene->addActor(*m_Body);
+	
+	
+	m_PxScene->addActor(*m_Wheel);
+	
+	 PxVec3 p2(0,-1,0);
+	 m_RollJoint = PxRevoluteJointCreate(*system->GetPxSDK(),
+			 m_Body, physx::PxTransform(p2,rot), 
+			 m_Wheel, physx::PxTransform(physx::PxVec3(0,0,0),rot));
+
+		
+		m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, false);
+		m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+		//m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_FREESPIN , true);
+		m_RollJoint->setDriveGearRatio(1);
+
+	
+	
+	//createRenderObjectsFromActor(snowmanActor2,mSnowMaterial);
+	
+	
+		
+	  
+		//m_RollJoint->setDriveVelocity(1);
+
+
 	}
 
 	void PhysXPhysicsSceneManager::OnShutdown()
@@ -205,15 +273,58 @@ namespace GASS
 		}
 	}
 
+	SceneObjectPtr body,wheel;
+
 	void PhysXPhysicsSceneManager::SystemTick(double delta_time)
 	{
 		if(m_Paused)
 			return;
 
-		if(delta_time > 0.1)
+		if(!body)
+		{
+			body = GetScene()->LoadObjectFromTemplate("TestBody",GetScene()->GetRootSceneObject());
+		}
+		Vec3 pos = PxConvert::ToGASS(m_Body->getGlobalPose().p);
+		Quaternion q = PxConvert::ToGASS(m_Body->getGlobalPose().q);
+
+		MessagePtr pos_msg(new WorldPositionMessage(pos));
+		body->PostMessage(pos_msg);
+
+		MessagePtr rot_msg(new WorldRotationMessage(q));
+		body->PostMessage(rot_msg);
+
+		if(!wheel)
+		{
+			wheel = GetScene()->LoadObjectFromTemplate("TestWheel",GetScene()->GetRootSceneObject());
+		}
+		pos = PxConvert::ToGASS(m_Wheel->getGlobalPose().p);
+		q = PxConvert::ToGASS(m_Wheel->getGlobalPose().q);
+
+		 pos_msg = MessagePtr(new WorldPositionMessage(pos));
+		wheel->PostMessage(pos_msg);
+
+		rot_msg = MessagePtr (new WorldRotationMessage(q));
+		wheel->PostMessage(rot_msg);
+
+		
+		static float angular_vel = 0.1;
+		if(GetAsyncKeyState(VK_UP))
+		{
+			angular_vel += 1.7;
+		}
+		if(GetAsyncKeyState(VK_DOWN))
+		{
+			angular_vel -= 1.7;
+		}
+		m_RollJoint->setDriveVelocity(angular_vel);
+
+
+		/*if(delta_time > 0.1)
 			m_PxScene->simulate(0.1);
 		else
 			m_PxScene->simulate(delta_time);
+			*/
+		m_PxScene->simulate(0.016666660f);
 
 		while(!m_PxScene->fetchResults())
 		{

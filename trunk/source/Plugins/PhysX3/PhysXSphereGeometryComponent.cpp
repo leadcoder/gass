@@ -53,7 +53,7 @@ namespace GASS
 			return NULL;
 		//Create shape
 		
-		if(m_SizeFromMesh)
+		/*if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
@@ -61,19 +61,22 @@ namespace GASS
 				Sphere sphere = geom->GetBoundingSphere();
 				m_Radius = sphere.m_Radius;
 			}
-		}
-		Float  rad = GetRadius();
+		}*/
+		Float  rad = 0.3;//GetRadius();
 		
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material);
-
+		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(		physx::PxVec3(0,0,0)));
+		
 		physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_WHEEL;
-		collFilterData.word1=COLLISION_FLAG_WHEEL_AGAINST;
+		collFilterData.word0=COLLISION_FLAG_CHASSIS;
+		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
 		shape->setSimulationFilterData(collFilterData);
-
+		
+		//physx::PxReal mass = m_Body->GetMass();
+		//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
+			
 
 		return shape;
 	}

@@ -269,14 +269,10 @@ namespace GASS
 
 		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initlized
 		{
+			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
 
-			LogManager::getSingleton().stream() << "Initialise All Resource Groups Started";
 			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-			LogManager::getSingleton().stream() << "Initialise All Resource Groups Compledted";
-		
-
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
-
 		}
 		return win;
 	}

@@ -29,19 +29,17 @@
 
 namespace GASS
 {
-	PhysXHingeComponent::PhysXHingeComponent() : m_RollJointForce (0),
+	PhysXHingeComponent::PhysXHingeComponent() : m_RevoluteJointForce (0),
 		m_SpringJointForce (0),
-		m_SwayForce  (0),
 		m_Strength(1),
 		m_Damping(2),
-		m_Anchor (0,0,0),
 		m_RollAxis (0,0,0),
-		m_SpringAxis (0,0,0),
-		m_RollJoint (0),
+		m_RevoluteJoint (0),
 		m_HighStop(0),
 		m_LowStop(0),
 		m_RollAngularVelocity(0),
-		m_Joint(0)
+		m_Body1Loaded(false),
+		m_Body2Loaded(false)
 	{
 
 	}
@@ -54,13 +52,17 @@ namespace GASS
 	void PhysXHingeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsHingeComponent",new Creator<PhysXHingeComponent, IComponent>);
-
-		RegisterProperty<std::string>("Body1Name", &GASS::PhysXHingeComponent::GetBody1Name, &GASS::PhysXHingeComponent::SetBody1Name);
-		RegisterProperty<std::string>("Body2Name", &GASS::PhysXHingeComponent::GetBody2Name, &GASS::PhysXHingeComponent::SetBody2Name);
-		//RegisterProperty<float>("Axis1Force", &GASS::PhysXHingeComponent::GetAxis1Force, &GASS::PhysXHingeComponent::SetAxis1Force);
-		//RegisterProperty<float>("Axis2Force", &GASS::PhysXHingeComponent::GetAxis2Force, &GASS::PhysXHingeComponent::SetAxis2Force);
+		RegisterProperty<SceneObjectRef>("Body1", &GASS::PhysXHingeComponent::GetBody1, &GASS::PhysXHingeComponent::SetBody1);
+		RegisterProperty<SceneObjectRef>("Body2", &GASS::PhysXHingeComponent::GetBody2, &GASS::PhysXHingeComponent::SetBody2);
 		RegisterProperty<float>("Damping", &GASS::PhysXHingeComponent::GetDamping, &GASS::PhysXHingeComponent::SetDamping);
 		RegisterProperty<float>("Strength", &GASS::PhysXHingeComponent::GetStrength, &GASS::PhysXHingeComponent::SetStrength);
+
+		
+		
+		//RegisterProperty<std::string>("Body1Name", &GASS::PhysXHingeComponent::GetBody1Name, &GASS::PhysXHingeComponent::SetBody1Name);
+		//RegisterProperty<std::string>("Body2Name", &GASS::PhysXHingeComponent::GetBody2Name, &GASS::PhysXHingeComponent::SetBody2Name);
+		//RegisterProperty<float>("Axis1Force", &GASS::PhysXHingeComponent::GetAxis1Force, &GASS::PhysXHingeComponent::SetAxis1Force);
+		//RegisterProperty<float>("Axis2Force", &GASS::PhysXHingeComponent::GetAxis2Force, &GASS::PhysXHingeComponent::SetAxis2Force);
 		//RegisterProperty<float>("HighStop", &GASS::PhysXHingeComponent::GetHighStop, &GASS::PhysXHingeComponent::SetHighStop);
 		//RegisterProperty<float>("LowStop", &GASS::PhysXHingeComponent::GetLowStop, &GASS::PhysXHingeComponent::SetLowStop);
 		//RegisterProperty<float>("SwayForce", &GASS::PhysXHingeComponent::GetSwayForce, &GASS::PhysXHingeComponent::SetSwayForce);
@@ -72,12 +74,35 @@ namespace GASS
 
 	void PhysXHingeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnLoad,BodyLoadedMessage,2));
+		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		
+		
+		PhysXBodyComponentPtr b1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>();
+		if(!b1)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"First body not found, your second object don't have a PhysXBodyComponent","PhysXHingeComponent::RegisterReflection");
+
+		PhysXBodyComponentPtr b2 = m_Body2->GetFirstComponentByClass<PhysXBodyComponent>();
+		if(!b2)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Second body not found, your second object don't have a PhysXBodyComponent","PhysXHingeComponent::RegisterReflection");
+	
+		// Check if bodies are already are loaded
+		if(m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+			m_Body1Loaded = true;
+		else //wait for body to be loaded
+			m_Body1->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnBody1Loaded,BodyLoadedMessage,0));
+
+		if(m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+			m_Body2Loaded = true;
+		else //wait for body to be loaded
+			m_Body2->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnBody2Loaded,BodyLoadedMessage,0));
+	
+		//both bodies are loaded -> create joint
+		if(m_Body1Loaded && m_Body2Loaded)
+			CreateJoint();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
-//		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnPositionChanged,PositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		
 	}
 
 	void PhysXHingeComponent::OnParameterMessage(PhysicsJointMessagePtr message)
@@ -101,106 +126,59 @@ namespace GASS
 		}
 	}
 
-	void PhysXHingeComponent::OnLoad(BodyLoadedMessagePtr message)
+	void PhysXHingeComponent::OnBody1Loaded(BodyLoadedMessagePtr message)
 	{
-		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-//		assert(m_SceneManager);
-		CreateJoint();
+		m_Body1Loaded = true;
+		if(m_Body2Loaded)
+			CreateJoint();
+	}
+
+	void PhysXHingeComponent::OnBody2Loaded(BodyLoadedMessagePtr message)
+	{
+		m_Body2Loaded = true;
+		if(m_Body1Loaded)
+			CreateJoint();
 	}
 
 	void PhysXHingeComponent::CreateJoint()
 	{
-		PhysXBodyComponentPtr body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
-		PhysXBodyComponentPtr body2 = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
-
-		physx::PxRigidDynamic* a1 = body1->GetPxActor();
-		physx::PxRigidDynamic* a2 = body2->GetPxActor();
-
-		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		if(!(m_Body1.IsValid() && m_Body1.IsValid()))
+			return;
 		
+		physx::PxRigidDynamic* a1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor();
+		physx::PxRigidDynamic* a2 = m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor();
+		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
-		ILocationComponent *location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
+		LocationComponentPtr location = m_Body2->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 a2_pos = location->GetPosition();
-		Quaternion a2_rot = location->GetRotation();
-		physx::PxQuat rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
-		
-		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
-			 a1,physx::PxTransform(physx::PxVec3(a2_pos.x,a2_pos.y,a2_pos.z),rot), //parent
+		physx::PxQuat rot(MY_PI/2.0,physx::PxVec3(0,1,0));
+		m_RevoluteJoint = PxRevoluteJointCreate(*system->GetPxSDK(),
+			 a1, physx::PxTransform(physx::PxVec3(a2_pos.x, a2_pos.y, a2_pos.z),rot), 
+			 a2, physx::PxTransform(physx::PxVec3(0,0,0),rot));
+
+		m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, false);
+		m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+		m_RevoluteJoint->setDriveGearRatio(1);
+		//m_RevoluteJoint->setDriveForceLimit(0.00000001);
+
+		/*physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
+			 a1, physx::PxTransform(physx::PxVec3(a2_pos.x,a2_pos.y,a2_pos.z),rot), //parent
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),rot));
 		
-		joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
+		//joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
+		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		
 		physx::PxD6JointDrive drive(10.0f, 100, 1000, false);
-		joint->setDrive(physx::PxD6Drive::eSWING, drive);
+		//joint->setDrive(physx::PxD6Drive::eSWING, drive);
+		joint->setDrive(physx::PxD6Drive::eTWIST, drive);
 		joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
-		m_Joint = joint;
+		m_Joint = joint;*/
 	}
 
 	void PhysXHingeComponent::SetRollAxis(const Vec3 &axis)
 	{
 		m_RollAxis = axis;
-		if(m_RollJoint)
-			UpdateJointAxis();
-	}
-
-	void PhysXHingeComponent::SetSpringAxis(const Vec3 &axis)
-	{
-		m_SpringAxis = axis;
-		//if(m_SpringJoint)
-		//	UpdateJointAxis();
-	}
-
-	void PhysXHingeComponent::SetPosition(const Vec3 &value)
-	{
-//		if(m_RollAxisActor)
-		{
-	//		m_RollAxisActor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_RollAxisActor->getGlobalPose().q));
-		}
-	}
-
-
-	void PhysXHingeComponent::UpdateJointAxis()
-	{
-		if (m_RollAxis.Length() != 0)
-		{
-			//m_RollJoint->setGlobalAxis(NxVec3(m_RollAxis.x,m_RollAxis.y,m_RollAxis.z));
-		}
-		else
-		{
-			//not thread safe!!! fix this
-			/*ILocationComponent *location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>().get();
-			//ILocationComponent *location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>().get();
-			Quaternion rot = location1->GetRotation();
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
-			Vec3 axis = rot_mat.GetRightVector();
-			m_RollJoint->setGlobalAxis(NxVec3(axis.x,axis.y,axis.z));*/
-		}
-	}
-
-	void PhysXHingeComponent::SetAnchor(const Vec3 &value)
-	{
-		m_Anchor = value;
-		if(m_RollJoint)
-			UpdateAnchor();
-	}
-
-	void PhysXHingeComponent::UpdateAnchor()
-	{
-		//ILocationComponent *location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>().get();
-		ILocationComponent *location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
-
-		//Vec3 pos_b1 = location1->GetPosition();
-		Vec3 pos_b2 = location2->GetPosition();
-		Vec3  world_anchor;
-
-		if(m_RollJoint)
-		{
-			world_anchor = m_Anchor + pos_b2;
-			//m_RollJoint->setGlobalAnchor(NxVec3(world_anchor.x,world_anchor.y,world_anchor.z));
-			
-		}
 	}
 
 	/*	void PhysXHingeComponent::SetLowStop(float value)
@@ -218,9 +196,9 @@ namespace GASS
 
 		void PhysXHingeComponent::UpdateLimits()
 		{
-			if(m_RollJoint)
+			if(m_RevoluteJoint)
 			{
-				NxRevoluteJoint* joint = static_cast<NxRevoluteJoint*>(m_RollJoint);
+				NxRevoluteJoint* joint = static_cast<NxRevoluteJoint*>(m_RevoluteJoint);
 				NxJointLimitPairDesc limits;
 				limits.high.setToDefault();
 				limits.high.value = m_HighStop;
@@ -234,28 +212,32 @@ namespace GASS
 */
 		float PhysXHingeComponent::GetRollAngle()
 		{
-			if(m_RollJoint)
-				return 0;//m_RollJoint->getAngle();
+			if(m_RevoluteJoint)
+				return 0;//m_RevoluteJoint->getAngle();
 			return 0;
 		}
 
 		float PhysXHingeComponent::GetRollAngleRate()
 		{
-			if(m_RollJoint)
-				return 0;//m_RollJoint->getVelocity();
+			if(m_RevoluteJoint)
+				return 0;//m_RevoluteJoint->getVelocity();
 			return 0;
 		}
 
 		void PhysXHingeComponent::UpdateMotor()
 		{
-			if(m_Joint)
+/*			if(m_Joint)
 			{
-				m_Joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_RollAngularVelocity,0,0));
+				m_Joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_RollAngularVelocity,m_RollAngularVelocity,m_RollAngularVelocity));
 				std::cout << "vel:" << m_RollAngularVelocity << "\n";
 				/*NxMotorDesc motor;
 				motor.velTarget = m_RollAngularVelocity;
-				motor.maxForce = m_RollJointForce;
-				m_RollJoint->setMotor(motor);*/
+				motor.maxForce = m_RevoluteJointForce;
+				m_RevoluteJoint->setMotor(motor);*/
+	//		}
+			if(m_RevoluteJoint)
+			{
+				m_RevoluteJoint->setDriveVelocity(m_RollAngularVelocity);
 			}
 		}
 
@@ -267,54 +249,10 @@ namespace GASS
 
 		void PhysXHingeComponent::SetRollAxisForce(float value)
 		{
-			m_RollJointForce = value;
+			m_RevoluteJointForce = value;
 			UpdateMotor();
 		}
 
-		/*void PhysXHingeComponent::SetAxis2Vel(float value)
-		{
-			m_AngularVelocity2  = value;
-			UpdateMotor();
-
-		}
-
-		void PhysXHingeComponent::SetAxis2Force(float value)
-		{
-			m_JointForce2 = value;
-			UpdateMotor();
-
-		}
-
-		float PhysXHingeComponent::GetAxis2Force() const
-		{
-			return m_JointForce2;
-		}
-
-		void PhysXHingeComponent::SetAxis1Force(float value)
-		{
-			m_JointForce1 = value;
-			UpdateMotor();
-
-		}*/
-
-		void PhysXHingeComponent::OnPositionChanged(PositionMessagePtr message)
-		{
-			int this_id = (int)this; //we used address as id
-			if(message->GetSenderID() != this_id) //Check if this message was from this class
-			{
-				Vec3 pos = message->GetPosition();
-				SetPosition(pos);
-			}
-		}
-		void PhysXHingeComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
-		{
-			int this_id = (int)this; //we used address as id
-			if(message->GetSenderID() != this_id) //Check if this message was from this class
-			{
-				Vec3 pos = message->GetPosition();
-				SetPosition(pos);
-			}
-		}
 
 		/*void PhysXHingeComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 		{
