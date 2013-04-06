@@ -9,7 +9,14 @@
         <ReceiveShadow value="1"/>
 		<GeometryCategory value="GT_TERRAIN"/>
       </MeshComponent>-->
-      <LocationComponent/>
+      <MeshComponent>
+        <Filename value="terrain.3DS"/>
+        <CastShadow value="1"/>
+        <ReceiveShadow value="1"/>
+		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
+      </MeshComponent>
+      
+	  <LocationComponent/>
       <PhysicsPlaneGeometryComponent>
        <!-- <CollisionBits value="5"/>
         <CollisionCategory value="5"/>-->
@@ -20,7 +27,7 @@
     <Name value ="MeshObject"/>
     <Components>
       <MeshComponent>
-        <Filename value="MESHTEST.3ds"/>
+        <Filename value="MESHTEST.3DS"/>
         <CastShadow value="1"/>
         <ReceiveShadow value="1"/>
 		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
