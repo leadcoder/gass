@@ -257,6 +257,7 @@ namespace GASS
 
 		Ogre::Entity *m_TreeEntity;
 		bool m_DynamicImpostorLighting;
+		Ogre::SceneManager* m_SceneMan;
 	};
 	typedef SPTR<TreeGeometryComponent> TreeGeometryComponentPtr;
 }

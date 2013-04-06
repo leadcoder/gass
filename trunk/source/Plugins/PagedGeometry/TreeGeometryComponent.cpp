@@ -51,6 +51,36 @@ namespace GASS
 {
 	IHeightmapTerrainComponent* TreeGeometryComponent::m_Terrain = NULL;
 
+	
+
+	TreeGeometryComponent::TreeGeometryComponent(void) : m_CustomBounds(0,0,0,0), 
+		m_TreeLoader2d(NULL),
+		m_TreeLoader3d(NULL),
+		m_DensityFactor(0.001),
+		m_MaxMinScale(1.1, 0.9),
+		m_CastShadows(true),
+		m_MeshDist(100),
+		m_ImposterDist(500),
+		m_PrecalcHeight(true),
+		m_PageSize(80),
+		m_MeshFadeDist(0),
+		m_ImposterFadeDist(0),
+		m_ImposterAlphaRejectionValue(50),
+		m_CreateShadowMap(false),
+		m_TreeEntity(NULL),
+		m_ImposterResolution(128),
+		m_DynamicImpostorLighting(false),
+		m_SceneMan(NULL)
+	{
+		m_RandomTable = new RandomTable();
+
+	}
+
+	TreeGeometryComponent::~TreeGeometryComponent(void)
+	{
+		delete m_RandomTable;
+	}
+
 	void TreeGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TreeGeometryComponent",new Creator<TreeGeometryComponent, IComponent>);
@@ -92,35 +122,6 @@ namespace GASS
 		
 	}
 
-
-	TreeGeometryComponent::TreeGeometryComponent(void) : m_CustomBounds(0,0,0,0), 
-		m_TreeLoader2d(NULL),
-		m_TreeLoader3d(NULL),
-		m_DensityFactor(0.001),
-		m_MaxMinScale(1.1, 0.9),
-		m_CastShadows(true),
-		m_MeshDist(100),
-		m_ImposterDist(500),
-		m_PrecalcHeight(true),
-		m_PageSize(80),
-		m_MeshFadeDist(0),
-		m_ImposterFadeDist(0),
-		m_ImposterAlphaRejectionValue(50),
-		m_CreateShadowMap(false),
-		m_TreeEntity(NULL),
-		m_ImposterResolution(128),
-		m_DynamicImpostorLighting(false)
-	{
-		m_RandomTable = new RandomTable();
-
-	}
-
-	TreeGeometryComponent::~TreeGeometryComponent(void)
-	{
-		delete m_RandomTable;
-	}
-
-
 	void TreeGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TreeGeometryComponent::OnPaint,GrassPaintMessage,0));
@@ -129,12 +130,12 @@ namespace GASS
 		ImpostorPage::setImpostorBackgroundColor(Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
 		ImpostorPage::setImpostorResolution(m_ImposterResolution);
 		
-		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		m_SceneMan = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		Ogre::Camera* ocam = NULL;
-		if(sm->hasCamera("DummyCamera"))
-			ocam = sm->getCamera("DummyCamera");
+		if(m_SceneMan->hasCamera("DummyCamera"))
+			ocam = m_SceneMan->getCamera("DummyCamera");
 		else
-			ocam = sm->createCamera("DummyCamera");
+			ocam = m_SceneMan->createCamera("DummyCamera");
 
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
@@ -225,7 +226,7 @@ namespace GASS
 		ss << GetName() << tree_id;
 		ss >> name;
 		
-		m_TreeEntity = sm->createEntity(name, m_MeshFileName);
+		m_TreeEntity = m_SceneMan->createEntity(name, m_MeshFileName);
 		m_TreeEntity->setCastShadows(m_CastShadows);
 		//add one dummy tree to allocate grid list
 		if(m_TreeLoader3d)
@@ -305,7 +306,7 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp)
+		if(vp && m_SceneMan == vp->getCamera()->getSceneManager())
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 

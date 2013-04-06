@@ -104,7 +104,7 @@ protected:
 		GeometryPageManager* m_LOD0;
 		Forests::DensityMap *m_DensityMap;
 		int m_DensityMapSize;
-		void update();
+		Ogre::SceneManager* m_SceneMan;
 	};
 	typedef SPTR<GrassLoaderComponent> GrassLoaderComponentPtr;
 }

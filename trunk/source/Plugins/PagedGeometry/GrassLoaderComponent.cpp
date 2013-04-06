@@ -54,7 +54,8 @@ namespace GASS
 		m_ViewDist(50),
 		m_LOD0(0),
 		m_DensityMap(NULL),
-		m_DensityMapSize(1024)
+		m_DensityMapSize(1024),
+		m_SceneMan(NULL)
 	{
 
 	}
@@ -87,12 +88,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
 	
-		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		m_SceneMan = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		Ogre::Camera* ocam = NULL;
-		if(sm->hasCamera("DummyCamera"))
-			ocam = sm->getCamera("DummyCamera");
+		if(m_SceneMan->hasCamera("DummyCamera"))
+			ocam = m_SceneMan->getCamera("DummyCamera");
 		else
-			ocam = sm->createCamera("DummyCamera");
+			ocam = m_SceneMan->createCamera("DummyCamera");
 
 
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
@@ -354,7 +355,7 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp)
+		if(vp && m_SceneMan == vp->getCamera()->getSceneManager())
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
