@@ -35,7 +35,8 @@ namespace GASS
 
 	PhysXBodyComponent::~PhysXBodyComponent()
 	{
-		
+		if(m_Actor)
+			m_Actor->release();
 	}
 
 	void PhysXBodyComponent::RegisterReflection()
@@ -55,7 +56,32 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsVelocityRequest,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
+
+		
+	}
+
+	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	{
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 pos = location->GetPosition();
+		Quaternion rot = location->GetRotation();
+		
+		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		m_SceneManager = sm;
+		//physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
+		physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
+		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
+		//SetMass(m_Mass);
+		//m_Actor->setAngularDamping(0.75);
+		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
+		sm->GetPxScene()->addActor(*m_Actor);
+		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		sm->Register(listener);
 	}
 
 	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
@@ -93,6 +119,13 @@ namespace GASS
 		SetMass(message->GetMass());
 	}
 
+	void PhysXBodyComponent::OnVelocity(PhysicsVelocityRequestPtr message)
+	{
+		Enable();
+		SetVelocity(message->GetVelocity(),true);
+	}
+
+
 	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
@@ -119,29 +152,6 @@ namespace GASS
 			}
 		}
 	}
-
-	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
-	{
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		
-		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 pos = location->GetPosition();
-		Quaternion rot = location->GetRotation();
-		
-		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		m_SceneManager = sm;
-		
-		//physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
-		physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
-		
-		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
-		//SetMass(m_Mass);
-		//m_Actor->setAngularDamping(0.75);
-		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
-		sm->GetPxScene()->addActor(*m_Actor);
-		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
-	}
-
 
 	Vec3 PhysXBodyComponent::GetPosition() const
 	{
@@ -248,7 +258,7 @@ namespace GASS
 	}
 
 
-	void PhysXBodyComponent::SendTransformation()
+	void PhysXBodyComponent::SceneManagerTick(double delta_time)
 	{
 		int from_id = (int)this; //use address as id
 		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));

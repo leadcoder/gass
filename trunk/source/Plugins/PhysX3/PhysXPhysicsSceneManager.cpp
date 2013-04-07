@@ -109,7 +109,7 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnCreate()
 	{
 		ScenePtr scene = GetScene();
-		scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
+		//scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
 	}
 
 	//physx::PxRevoluteJoint *m_RollJoint ;
@@ -247,13 +247,13 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
 	{
-		SceneObjectPtr obj = message->GetSceneObject();
+		/*SceneObjectPtr obj = message->GetSceneObject();
 		assert(obj);
 
 		//Save all bodies
 		PhysXBodyComponentPtr body = obj->GetFirstComponentByClass<PhysXBodyComponent>();
 		if(body)
-			m_Bodies.push_back(body);
+			m_Bodies.push_back(body);*/
 	}
 
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
@@ -341,12 +341,10 @@ namespace GASS
 			PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),1,&m_Vehicles[0]);
 		}
 
-		for(int i = 0 ; i < m_Bodies.size();i++)
+		/*for(int i = 0 ; i < m_Bodies.size();i++)
 		{
 			m_Bodies[i]->SendTransformation();
-		}
-
-
+		}*/
 		BaseSceneManager::SystemTick(delta_time);
 	}
 

@@ -52,8 +52,7 @@ namespace GASS
 		if(!m_Body)
 			return NULL;
 		//Create shape
-		Vec3 size(2,1,4); 
-		/*if(m_SizeFromMesh)
+		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
@@ -62,17 +61,20 @@ namespace GASS
 				SetSize((box.m_Max - box.m_Min));
 				SetOffset((box.m_Max + box.m_Min)*0.5);
 			}
+			else
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found, not possible to get size from geomtry","PhysXBoxGeometryComponent::CreateShape");
+			}
 		}
-		size = GetSize();*/
-		
-		
+		Vec3 size = GetSize();
+		physx::PxTransform offset = physx::PxTransform::createIdentity();
+		offset.p = PxConvert::ToPx(GetOffset());
+
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
-		physx::PxTransform offset = physx::PxTransform::createIdentity();
-		//offset.p = PxConvert::ToPx(GetOffset());
 		physx::PxVec3 dims(size.x/2.0,size.y/2.0,size.z/2.0);
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(dims), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
+		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(dims), *material,offset);
 		
 		physx::PxFilterData collFilterData;
 		collFilterData.word0=COLLISION_FLAG_CHASSIS;
@@ -107,73 +109,5 @@ namespace GASS
 	Vec3 PhysXBoxGeometryComponent::GetSize() const
 	{
 		return m_Size;
-	}
-
-	
-	void PhysXBoxGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
-	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		mesh_data->Type = LINE_LIST;
-		std::vector<Vec3> conrners;
-
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
-
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-
-		for(int i = 0; i < 4; i++)
-		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
-
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
-			mesh_data->VertexVector.push_back(vertex);
-		}
-
-		for(int i = 0; i < 4; i++)
-		{
-			vertex.Pos = conrners[4 + i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
-			mesh_data->VertexVector.push_back(vertex);
-		}
-
-/*		SceneObjectPtr scene_object = GetDebugObject();
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		scene_object->PostMessage(mesh_message);
-
-		Vec3 pos  = m_Offset + offset;
-		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));*/
-	}
-
-	void PhysXBoxGeometryComponent::UpdateDebug()
-	{
-		/*if(m_Debug)
-		{
-			if(m_BoxShape)
-			{
-				//dVector3 temp_size;
-				//dGeomBoxGetLengths (m_GeomID, temp_size);
-				hkVector4 h_size = m_BoxShape->getHalfExtents();
-				Vec3 size(h_size(0),h_size(1),h_size(2));
-				//const dReal* pos =  dGeomGetPosition(m_GeomID);
-				CreateDebugBox(size*2,m_Offset);
-			}
-		}*/
 	}
 }

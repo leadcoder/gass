@@ -34,6 +34,8 @@ namespace GASS
 
 	PhysXBaseGeometryComponent::~PhysXBaseGeometryComponent()
 	{
+		if(m_Shape)
+			m_Shape->release();
 	}
 
 	void PhysXBaseGeometryComponent::Enable()
@@ -44,36 +46,35 @@ namespace GASS
 	void PhysXBaseGeometryComponent::RegisterReflection()
 	{
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
-		RegisterProperty<float>("Friction", &GASS::PhysXBaseGeometryComponent::GetFriction, &GASS::PhysXBaseGeometryComponent::SetFriction);
+		//RegisterProperty<float>("Friction", &GASS::PhysXBaseGeometryComponent::GetFriction, &GASS::PhysXBaseGeometryComponent::SetFriction);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
-		RegisterProperty<unsigned long>("CollisionBits", &GASS::PhysXBaseGeometryComponent::GetCollisionBits, &GASS::PhysXBaseGeometryComponent::SetCollisionBits);
-		RegisterProperty<unsigned long>("CollisionCategory", &GASS::PhysXBaseGeometryComponent::GetCollisionCategory, &GASS::PhysXBaseGeometryComponent::SetCollisionCategory);
+		//RegisterProperty<unsigned long>("CollisionBits", &GASS::PhysXBaseGeometryComponent::GetCollisionBits, &GASS::PhysXBaseGeometryComponent::SetCollisionBits);
+		//RegisterProperty<unsigned long>("CollisionCategory", &GASS::PhysXBaseGeometryComponent::GetCollisionCategory, &GASS::PhysXBaseGeometryComponent::SetCollisionCategory);
 		//RegisterProperty<bool>("Debug", &GASS::PhysXBaseGeometryComponent::GetDebug, &GASS::PhysXBaseGeometryComponent::SetDebug);
 	}
 
 	void PhysXBaseGeometryComponent::OnInitialize()
 	{
-		//Try to figure out when to load
+		//Try to find out when to load
 		m_Body = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
 		LocationComponentPtr location  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
-
 		if(m_Body)
 		{
 			if(m_SizeFromMesh)
-				//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
-			    GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
+				
+				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
-				GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
+				GetSceneObject()->RegisterForMessage(typeid(BodyLoadedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 		}
 		else
 		{
 			if(m_SizeFromMesh && geom)
-				GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
 			{
 				if(location)
-					GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
+					GetSceneObject()->RegisterForMessage(typeid(LocationLoadedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 				//else
 				//	GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
 			}
@@ -82,6 +83,36 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 	}
+
+
+	void PhysXBaseGeometryComponent::OnLoad(MessagePtr message)
+	{
+		if(m_Shape)
+			m_Shape->release();
+		m_Shape = CreateShape();
+		
+		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		if(m_Body)
+		{
+			physx::PxReal mass = m_Body->GetMass();
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
+		}
+	}
+
+	/*void PhysXBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	{
+		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		assert(scene_manager);
+		m_SceneManager = scene_manager;
+		m_Shape = CreateShape();
+		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		if(m_Body)
+		{
+			physx::PxReal mass = m_Body->GetMass();
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
+		}
+	}*/
+
 
 	bool  PhysXBaseGeometryComponent::GetSizeFromMesh() const
 	{
@@ -93,7 +124,7 @@ namespace GASS
 		m_SizeFromMesh = value;
 	}
 
-	unsigned long PhysXBaseGeometryComponent::GetCollisionBits() const 
+	/*unsigned long PhysXBaseGeometryComponent::GetCollisionBits() const 
 	{
 		return m_CollisionBits;
 	}
@@ -101,7 +132,6 @@ namespace GASS
 	void PhysXBaseGeometryComponent::SetCollisionBits(unsigned long value)
 	{
 		m_CollisionBits = value;
-
 	}
 
 	unsigned long  PhysXBaseGeometryComponent::GetCollisionCategory() const 
@@ -112,67 +142,22 @@ namespace GASS
 	void PhysXBaseGeometryComponent::SetCollisionCategory(unsigned long value)
 	{
 		m_CollisionCategory =value;
-	}
+	}*/
 
-	void PhysXBaseGeometryComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
-	{
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		assert(scene_manager);
-		m_SceneManager = scene_manager;
-		m_Shape = CreateShape();
-		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
-		if(m_Body)
-		{
-			physx::PxReal mass = m_Body->GetMass();
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
-			
-			//physx::PxReal mass = m_Body->GetMass();
-			//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
-		}
-	}
+	
 
 	GeometryComponentPtr PhysXBaseGeometryComponent::GetGeometry() const 
 	{
 		GeometryComponentPtr geom;
-		if(m_GeometryTemplate != "")
-		{
-			geom = DYNAMIC_PTR_CAST<IGeometryComponent>(GetSceneObject()->GetComponent(m_GeometryTemplate));
-		}
-		else geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+		geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		return geom;
 	}
 
-	void PhysXBaseGeometryComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
-	{
-
-	}
-
-	void PhysXBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
-	{
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		assert(scene_manager);
-		m_SceneManager = scene_manager;
-		SetSizeFromMesh(m_SizeFromMesh);
-		m_Shape = CreateShape();
-		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
-
-		if(m_Body)
-		{
-			physx::PxReal mass = m_Body->GetMass();
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
-			//physx::PxReal density = 0.001;
-			//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
-			//add here instead;(
-			//scene_manager->GetPxScene()->addActor(*m_Body->GetPxActor());
-			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), 1);
-		}
-	}
-
+	
 	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
-
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
 	}
@@ -204,5 +189,6 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::SetScale(const Vec3 &value)
 	{
+
 	}
 }

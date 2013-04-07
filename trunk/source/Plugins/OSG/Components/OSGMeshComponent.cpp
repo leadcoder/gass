@@ -160,8 +160,6 @@ namespace GASS
 	void OSGMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 		LoadMesh(m_MeshResource);
-		if(m_MeshNode.get())
-			CalulateBoundingbox(m_MeshNode.get());
 		m_Initlized = true;
 	}
 
@@ -172,8 +170,8 @@ namespace GASS
 		if(m_Initlized) //not loaded
 		{
 			LoadMesh(m_MeshResource);
-			if(m_MeshNode.get())
-				CalulateBoundingbox(m_MeshNode.get());
+			//if(m_MeshNode.get())
+			//	CalulateBoundingbox(m_MeshNode.get());
 		}
 	}
 
@@ -289,6 +287,11 @@ namespace GASS
 		SetLighting(m_Lighting);
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
+
+		m_BBox = AABox();
+		if(m_MeshNode.get())
+			CalulateBoundingbox(m_MeshNode.get());
+
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 
 		//expand children

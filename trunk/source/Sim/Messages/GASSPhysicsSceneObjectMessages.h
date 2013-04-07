@@ -143,6 +143,21 @@ namespace GASS
 	};
 	typedef SPTR<PhysicsBodyMessage> PhysicsBodyMessagePtr;
 
+	class PhysicsVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetVelocity()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsVelocityRequest> PhysicsVelocityRequestPtr;
+
+
 	/**
 	Message used to change mass of physics bodies.
 	*/

@@ -41,7 +41,8 @@ namespace GASS
 		virtual ~PhysXBodyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		//void AddShape(physx::PxShapeDesc* shape);
+		virtual void SceneManagerTick(double delta_time);
+		
 		void SendTransformation();
 		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
 		float GetMass() const {return m_Mass;}
@@ -88,6 +89,8 @@ namespace GASS
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);
+
+		void OnVelocity(PhysicsVelocityRequestPtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
 		

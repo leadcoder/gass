@@ -75,41 +75,26 @@ namespace GASS
 		virtual void Disable(){};
 		virtual void Enable();
 		virtual void SetScale(const Vec3 &value);
-		void SetFriction(float value){m_Friction = value;}
-		float GetFriction() const {return m_Friction;}
 	protected:
-
 		//messages functions
-		void OnBodyLoaded(BodyLoadedMessagePtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnLoad(MessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		virtual physx::PxShape* CreateShape(){return NULL;}
 		
+		virtual physx::PxShape* CreateShape() = 0;
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
-		
 		virtual void SetOffset(const Vec3 &value){m_Offset = value;}
 		virtual Vec3 GetOffset() const {return m_Offset;}
-		virtual unsigned long GetCollisionBits() const;
-		virtual void SetCollisionBits(unsigned long value);
-		virtual unsigned long GetCollisionCategory() const;
-		virtual void SetCollisionCategory(unsigned long value);
 		virtual bool GetSizeFromMesh() const;
 		virtual void SetSizeFromMesh(bool value);
 		GeometryComponentPtr GetGeometry() const;
 		
 		PhysXBodyComponentPtr m_Body;		
 		Vec3 m_Offset;
-		float m_Friction;
-		unsigned long m_CollisionCategory;
-		unsigned long m_CollisionBits;
 		bool m_SizeFromMesh;
 		physx::PxRigidStatic *m_StaticActor;
 		physx::PxShape *m_Shape;
-		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		std::string m_GeometryTemplate;
 	};
 	typedef SPTR<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
 }
