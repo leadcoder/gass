@@ -36,20 +36,22 @@
 
 namespace GASS
 {
-	BoxGeometryComponent::BoxGeometryComponent(void) : m_Size(1,1,1)
+	BoxGeometryComponent::BoxGeometryComponent(void) : m_Size(1,1,1), 
+		m_Lines(true)
 	{
 
 	}
 
 	BoxGeometryComponent::~BoxGeometryComponent(void)
 	{
-		
+
 	}
 
 	void BoxGeometryComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("BoxGeometryComponent",new GASS::Creator<BoxGeometryComponent, IComponent>);
 		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize);
+		RegisterProperty<bool>("Lines", &GASS::BoxGeometryComponent::GetLines, &GASS::BoxGeometryComponent::SetLines);
 	}
 
 	void BoxGeometryComponent::OnInitialize()
@@ -80,7 +82,7 @@ namespace GASS
 		vertex.TexCoord.Set(0,0);
 		vertex.Color = Vec4(0,0,1,1);
 		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
+
 		std::vector<Vec3> conrners;
 
 		conrners.push_back(Vec3( size.x ,size.y , size.z));
@@ -93,26 +95,80 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
 		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
 
-		for(int i = 0; i < 4; i++)
+		if(m_Lines)
 		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
+			mesh_data->Type = LINE_LIST;
 
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
-			mesh_data->VertexVector.push_back(vertex);
+			for(int i = 0; i < 4; i++)
+			{
+				vertex.Pos = conrners[i];
+				mesh_data->VertexVector.push_back(vertex);
+				vertex.Pos = conrners[(i+1)%4];
+				mesh_data->VertexVector.push_back(vertex);
+
+				vertex.Pos = conrners[i];
+				mesh_data->VertexVector.push_back(vertex);
+				vertex.Pos = conrners[i+4];
+				mesh_data->VertexVector.push_back(vertex);
+			}
+
+			for(int i = 0; i < 4; i++)
+			{
+				vertex.Pos = conrners[4 + i];
+				mesh_data->VertexVector.push_back(vertex);
+				vertex.Pos = conrners[4 + ((i+1)%4)];
+				mesh_data->VertexVector.push_back(vertex);
+			}
+		}
+		else
+		{
+			mesh_data->Type = TRIANGLE_LIST;
+			for(int i = 0; i < conrners.size(); i++)
+			{
+				vertex.Pos = conrners[i];
+				vertex.Normal = Vec3(0,1,0); 
+				mesh_data->VertexVector.push_back(vertex);
+			}
+
+			mesh_data->IndexVector.push_back(0);
+			mesh_data->IndexVector.push_back(4);
+			mesh_data->IndexVector.push_back(5);
+			mesh_data->IndexVector.push_back(0);
+			mesh_data->IndexVector.push_back(5);
+			mesh_data->IndexVector.push_back(1);
+
+
+			mesh_data->IndexVector.push_back(1);
+			mesh_data->IndexVector.push_back(5);
+			mesh_data->IndexVector.push_back(6);
+			mesh_data->IndexVector.push_back(1);
+			mesh_data->IndexVector.push_back(6);
+			mesh_data->IndexVector.push_back(2);
+
+
+			mesh_data->IndexVector.push_back(2);
+			mesh_data->IndexVector.push_back(6);
+			mesh_data->IndexVector.push_back(7);
+			mesh_data->IndexVector.push_back(2);
+			mesh_data->IndexVector.push_back(7);
+			mesh_data->IndexVector.push_back(3);
+
+			mesh_data->IndexVector.push_back(3);
+			mesh_data->IndexVector.push_back(7);
+			mesh_data->IndexVector.push_back(4);
+			mesh_data->IndexVector.push_back(3);
+			mesh_data->IndexVector.push_back(4);
+			mesh_data->IndexVector.push_back(0);
+
+
+			mesh_data->IndexVector.push_back(0);
+			mesh_data->IndexVector.push_back(1);
+			mesh_data->IndexVector.push_back(2);
+			mesh_data->IndexVector.push_back(0);
+			mesh_data->IndexVector.push_back(2);
+			mesh_data->IndexVector.push_back(3);
 		}
 
-		for(int i = 0; i < 4; i++)
-		{
-			vertex.Pos = conrners[4 + i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
-			mesh_data->VertexVector.push_back(vertex);
-		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
@@ -139,7 +195,7 @@ namespace GASS
 		location.x = (2*rand1-1) * m_Size.x*0.5;
 		location.y = (2*rand2-1) * m_Size.y*0.5;
 		location.z = (2*rand3-1) * m_Size.z*0.5;
-		
+
 		Mat4 trans;
 		trans.SetTransformation(pos,rot,Vec3(1,1,1));
 		location = trans*location;

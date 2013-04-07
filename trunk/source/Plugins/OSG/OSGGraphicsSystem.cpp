@@ -72,7 +72,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASSSystems.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASS.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
 	{
 
 	}
@@ -97,8 +97,27 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 	}
 
+	void OSGGraphicsSystem::LoadXML(TiXmlElement *elem)
+	{
+		TiXmlElement *prop_elem = elem->FirstChildElement();
+		while(prop_elem)
+		{
+			std::string prop_name = prop_elem->Value();
+			if(prop_name == "ShadowSettings")
+			{
+				LoadShadowSettings(prop_elem);		
+			}
+			else
+			{
+				std::string prop_val = prop_elem->FirstAttribute()->Value();
+				SetPropertyByString(prop_name,prop_val);
+			}
+			prop_elem  = prop_elem->NextSiblingElement();
+		}
+	}
 
 
+	
 	void OSGGraphicsSystem::Init()
 	{
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);

@@ -51,8 +51,8 @@ namespace GASS
 	void PhysXBodyComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));

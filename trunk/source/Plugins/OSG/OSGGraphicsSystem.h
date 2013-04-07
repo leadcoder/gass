@@ -48,6 +48,8 @@ namespace GASS
 		
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
 	protected:
+		void LoadXML(TiXmlElement *elem);
+	
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);

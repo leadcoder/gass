@@ -173,7 +173,7 @@ namespace GASS
 		m_MeshResource = res;
 		if(m_Initlized) //not loaded
 		{
-			LoadMesh(m_MeshResource.Name());
+			LoadMesh(m_MeshResource);
 			if(m_MeshNode.get())
 				CalulateBoundingbox(m_MeshNode.get());
 		}

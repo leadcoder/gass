@@ -122,10 +122,11 @@ namespace GASS
 		if(!lc)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
 
+		m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
+		m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
+		
 		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
-
-
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(m_GeomFlags);
@@ -257,8 +258,8 @@ namespace GASS
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-
 		
+		m_OSGGeometry->dirtyBound();
 	}
 
 
