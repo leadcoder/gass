@@ -106,14 +106,14 @@ namespace GASS
 
 		
 		//load vehicle settings
-		FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
+		/*FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
 		
 		LoadTires(path.GetFullPath());
 		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
 		for(size_t i=0; i< m_DrivableMaterialNames.size() ; i++) 
 		{
 			//Create a new material.
-			MaterialData mat_data = mat_system->GetMaterial(m_DrivableMaterialNames[i]);
+			PhysicsMaterial mat_data = mat_system->GetMaterial(m_DrivableMaterialNames[i]);
 			//TODO: load alla materials from start
 			m_DrivableMaterials.push_back(GetPxSDK()->createMaterial(mat_data.StaticFriction, mat_data.DynamicFriction, mat_data.Restitution));
 			//Set up the drivable surface type that will be used for the new material.
@@ -138,7 +138,7 @@ namespace GASS
 					m_SurfaceTirePairs->setTypePairFriction(i,j,1.0);
 				}
 			}
-		}
+		}*/
 
 		//physx::PxExtensionVisualDebugger::connect(mSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 10, true,physx::PxGetDefaultDebuggerFlags());
 	}

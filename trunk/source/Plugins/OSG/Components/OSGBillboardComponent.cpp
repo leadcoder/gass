@@ -191,8 +191,6 @@ namespace GASS
 		//Attaching the newly defined state set object to the node state set
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
 		nodess->setAttribute(mat.get());
-
-		
 		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
         // Turn on blending
 		if(diffuse.w < 1.0)

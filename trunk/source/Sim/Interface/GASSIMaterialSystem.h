@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/GASSMaterialData.h"
+#include "Sim/GASSPhysicsMaterial.h"
 
 namespace GASS
 {
@@ -32,9 +32,9 @@ namespace GASS
 		
 		virtual ~IMaterialSystem() {};
 		virtual void LoadMaterialFile(const std::string &file) = 0;
-		virtual void AddMaterial(const MaterialData& mat) = 0;
+		virtual void AddMaterial(const PhysicsMaterial& mat) = 0;
 		virtual bool HasMaterial(const std::string material_name) const = 0;
-		virtual MaterialData GetMaterial(const std::string material_name) const = 0;
+		virtual PhysicsMaterial GetMaterial(const std::string material_name) const = 0;
 	private:
 	};
 	typedef SPTR<IMaterialSystem> MaterialSystemPtr;

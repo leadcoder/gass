@@ -55,6 +55,7 @@ namespace GASS
 		//osgViewer::View* GetOSGView() const {return m_View;}
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
+		
 	private:
 		//Fog
 		float GetFogStart() const {return m_FogStart;}

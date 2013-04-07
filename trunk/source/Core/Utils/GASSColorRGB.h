@@ -72,5 +72,41 @@ namespace GASS
 			return is;
 		}
 	};
+
+
+	class GASSCoreExport ColorRGBA
+	{
+	public:
+		Float r,g,b,a;
+		inline ColorRGBA(Float _r,Float _g,Float _b, Float _a)
+		{
+			r = _r;g = _g;b = _b;a=_a;
+		}
+		inline ColorRGBA(){}
+		inline void Set(Float _r,Float _g,Float _b, Float _a)
+		{
+			r = _r;g = _g;b = _b;a=_a;
+		}
+
+		inline bool operator== (const ColorRGBA &v) const
+		{
+			return (v.r == r &&  v.g == g &&  v.b == b && v.a == a);
+		}
+
+		friend std::ostream& operator << (std::ostream& os, const ColorRGBA& v)
+		{
+			os << v.r << " " << v.g << " " << v.b << " " << v.a;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& is, ColorRGBA& v)
+		{
+			if(!(is >> v.r >>  v.g >>  v.b >>  v.a))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse ColorRGB","ColorRGB::>>");
+			}
+			return is;
+		}
+	};
 }
 #endif 

@@ -13,7 +13,6 @@ if (os.is("windows")) then
 	flags { "NoPCH", "No64BitChecks" } --, "NoRTTI" }
 	
 else
-       defines { "dDOUBLE" }
 end
 
 	includedirs 
@@ -36,17 +35,17 @@ end
 			"GASSSim_d",
 			"tinyxml_d",
 			"tbb_debug",
-			"PhysX3CommonCHECKED_x64",
-			"PhysX3CHECKED_x64",
-			"PhysX3CookingCHECKED_x64",
-			"PhysX3CharacterKinematicCHECKED_x64",
-			"PhysX3ExtensionsCHECKED",
-			"PhysX3VehicleCHECKED",
-			"RepX3CHECKED",
-			"RepXUpgrader3CHECKED",
-			"PhysXProfileSDKCHECKED",
-			"PhysXVisualDebuggerSDKCHECKED",
-			"PxTaskCHECKED"
+			"PhysX3CommonDEBUG_x64",
+			"PhysX3DEBUG_x64",
+			"PhysX3CookingDEBUG_x64",
+			"PhysX3CharacterKinematicDEBUG_x64",
+			"PhysX3ExtensionsDEBUG",
+			"PhysX3VehicleDEBUG",
+			"RepX3DEBUG",
+			"RepXUpgrader3DEBUG",
+			"PhysXProfileSDKDEBUG",
+			"PhysXVisualDebuggerSDKDEBUG",
+			"PxTaskDEBUG"
 		}
 	libdirs 
 	{
@@ -96,17 +95,17 @@ end
 			"GASSSim_d",
 			"tinyxml_d",
 			"tbb_debug",
-			"PhysX3CommonCHECKED_x86",
-			"PhysX3CHECKED_x86",
-			"PhysX3CookingCHECKED_x86",
-			"PhysX3CharacterKinematicCHECKED_x86",
-			"PhysX3ExtensionsCHECKED",
-			"PhysX3VehicleCHECKED",
-			"RepX3CHECKED",
-			"RepXUpgrader3CHECKED",
-			"PhysXProfileSDKCHECKED",
-			"PhysXVisualDebuggerSDKCHECKED",
-			"PxTaskCHECKED"
+			"PhysX3CommonDEBUG_x86",
+			"PhysX3DEBUG_x86",
+			"PhysX3CookingDEBUG_x86",
+			"PhysX3CharacterKinematicDEBUG_x86",
+			"PhysX3ExtensionsDEBUG",
+			"PhysX3VehicleDEBUG",
+			"RepX3DEBUG",
+			"RepXUpgrader3DEBUG",
+			"PhysXProfileSDKDEBUG",
+			"PhysXVisualDebuggerSDKDEBUG",
+			"PxTaskDEBUG"
 		}
 	libdirs 
 	{

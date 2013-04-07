@@ -66,7 +66,7 @@ namespace GASS
 			TiXmlElement *xml_mat = xml_ml->FirstChildElement("Material");
 			while(xml_mat)
 			{
-				MaterialData material;
+				PhysicsMaterial material;
 				if(xml_mat->Attribute("Name"))
 					material.Name = xml_mat->Attribute("Name");
 				else
@@ -85,7 +85,7 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-	void MaterialSystem::AddMaterial(const MaterialData& mat) 
+	void MaterialSystem::AddMaterial(const PhysicsMaterial& mat) 
 	{
 		if(HasMaterial(mat.Name))
 			GASS_EXCEPT(Exception::ERR_DUPLICATE_ITEM,"Material:" + mat.Name + " already added", "MaterialSystem::AddMaterial");
@@ -97,9 +97,9 @@ namespace GASS
 		return (m_Materials.end() != m_Materials.find(material_name));
 	}
 
-	MaterialData MaterialSystem::GetMaterial(const std::string material_name) const
+	PhysicsMaterial MaterialSystem::GetMaterial(const std::string material_name) const
 	{
-		MaterialData material;	
+		PhysicsMaterial material;	
 		MaterialMap::const_iterator iter = m_Materials.find(material_name);
 		if(iter == m_Materials.end())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Material:" + material_name + " not found", "MaterialSystem::GetMaterial");

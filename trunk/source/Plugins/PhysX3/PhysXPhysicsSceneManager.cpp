@@ -111,9 +111,11 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
 	}
-physx::PxRevoluteJoint *m_RollJoint ;
-PxRigidDynamic* m_Body;
-PxRigidDynamic* m_Wheel;
+
+	//physx::PxRevoluteJoint *m_RollJoint ;
+	//PxRigidDynamic* m_Body;
+	//PxRigidDynamic* m_Wheel;
+
 	void PhysXPhysicsSceneManager::OnInit()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
@@ -177,7 +179,7 @@ PxRigidDynamic* m_Wheel;
 
 
 
-
+/*
 		PxVec3 pos(0,2,10);
 	PxQuat rot(0,PxVec3(0,1,0));
 	PxTransform trans(pos,rot);
@@ -225,7 +227,7 @@ PxRigidDynamic* m_Wheel;
 		m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
 		//m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_FREESPIN , true);
 		m_RollJoint->setDriveGearRatio(1);
-
+		*/
 	
 	
 	//createRenderObjectsFromActor(snowmanActor2,mSnowMaterial);
@@ -280,7 +282,7 @@ PxRigidDynamic* m_Wheel;
 		if(m_Paused)
 			return;
 
-		if(!body)
+		/*if(!body)
 		{
 			body = GetScene()->LoadObjectFromTemplate("TestBody",GetScene()->GetRootSceneObject());
 		}

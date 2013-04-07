@@ -21,26 +21,43 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSSimSystem.h"
-#include "Sim/GASSPhysicsMaterial.h"
-#include "Sim/Interface/GASSIMaterialSystem.h"
+#include "Core/Utils/GASSColorRGB.h"
 
 namespace GASS
 {
-	class MaterialSystem : public Reflection<MaterialSystem, SimSystem>, public IMaterialSystem
+	class GraphicsMaterial
 	{
 	public:
-		MaterialSystem();
-		virtual ~MaterialSystem();
-		static void RegisterReflection();
-		virtual std::string GetSystemName() const {return "MaterialSystem";}
-		virtual void Init();
-		virtual void LoadMaterialFile(const std::string &file);
-		virtual void AddMaterial(const PhysicsMaterial& mat);
-		virtual bool HasMaterial(const std::string material_name) const;
-		virtual PhysicsMaterial GetMaterial(const std::string material_name) const;
+		GraphicsMaterial() : m_Diffuse(1,1,1,1),
+			m_Ambient(1,1,1),
+			m_Specular(0,0,0),
+			m_SelfIllumination(0,0,0),
+			m_Shininess(0), 
+			m_DepthTest(false)
+		{}
+		GraphicsMaterial(const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : m_Diffuse(diffuse),
+			m_Ambient(ambient),
+			m_Specular(specular),
+			m_SelfIllumination(selfIllumination ),
+			m_Shininess(shininess), 
+			m_DepthTest(depth_test_on)
+		{
+
+		}
+		  ColorRGBA GetDiffuse()const {return m_Diffuse;}
+		  ColorRGB GetAmbient()const {return m_Ambient;}
+		  ColorRGB GetSpecular()const {return m_Specular;}
+		  ColorRGB GetSelfIllumination()const {return m_SelfIllumination;}
+		  float GetShininess()const {return m_Shininess;}
+		  bool GetDepthTest()const {return m_DepthTest;}
 	private:
-		typedef std::map<std::string, PhysicsMaterial> MaterialMap;
-		MaterialMap m_Materials;
+		ColorRGBA m_Diffuse;
+		ColorRGB m_Ambient;
+		ColorRGB m_Specular;
+		ColorRGB m_SelfIllumination;
+		std::vector<std::string> m_Textures;
+		float m_Shininess;
+		bool m_DepthTest;
 	};
+	typedef SPTR<GraphicsMaterial> GraphicsMaterialPtr;
 }

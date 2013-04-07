@@ -389,6 +389,7 @@ namespace GASS
 	/**
 	Change material of mesh components
 	*/
+
 	class MaterialMessage : public BaseMessage
 	{
 	public:

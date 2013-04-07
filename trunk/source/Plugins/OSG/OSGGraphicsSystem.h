@@ -20,7 +20,10 @@
 
 #pragma once
 
+
 #include "Sim/GASS.h"
+#include "Sim/GASSGraphicsMaterial.h"
+
 #include <string>
 #include <osgViewer/Viewer>
 #include <osgShadow/ShadowTechnique>
@@ -47,6 +50,7 @@ namespace GASS
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
 		
 		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
+		static void UpdateStateSet(osg::ref_ptr<osg::StateSet> state, const GraphicsMaterial &material);
 	protected:
 		void LoadXML(TiXmlElement *elem);
 	

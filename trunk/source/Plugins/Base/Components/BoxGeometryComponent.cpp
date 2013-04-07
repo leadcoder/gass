@@ -123,50 +123,140 @@ namespace GASS
 		else
 		{
 			mesh_data->Type = TRIANGLE_LIST;
-			for(int i = 0; i < conrners.size(); i++)
+			std::vector<Vec3> postions;
+
+		
+			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
+			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
+			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
+
+			postions.push_back(Vec3( size.x ,-size.y , -size.z));
+			postions.push_back(Vec3( size.x ,-size.y , -size.z));
+			postions.push_back(Vec3( size.x ,-size.y , -size.z));
+
+			postions.push_back(Vec3( size.x ,size.y , -size.z));
+			postions.push_back(Vec3( size.x ,size.y , -size.z));
+			postions.push_back(Vec3( size.x ,size.y , -size.z));
+
+			
+			postions.push_back(Vec3( -size.x ,size.y , -size.z));
+			postions.push_back(Vec3( -size.x ,size.y , -size.z));
+			postions.push_back(Vec3( -size.x ,size.y , -size.z));
+
+
+			postions.push_back(Vec3( -size.x ,-size.y , size.z));
+			postions.push_back(Vec3( -size.x ,-size.y , size.z));
+			postions.push_back(Vec3( -size.x ,-size.y , size.z));
+
+			postions.push_back(Vec3( size.x ,-size.y , size.z));
+			postions.push_back(Vec3( size.x ,-size.y , size.z));
+			postions.push_back(Vec3( size.x ,-size.y , size.z));
+
+			postions.push_back(Vec3( size.x ,size.y , size.z));
+			postions.push_back(Vec3( size.x ,size.y , size.z));
+			postions.push_back(Vec3( size.x ,size.y , size.z));
+
+			postions.push_back(Vec3( -size.x ,size.y , size.z));
+			postions.push_back(Vec3( -size.x ,size.y , size.z));
+			postions.push_back(Vec3( -size.x ,size.y , size.z));
+
+			//bottom
+			mesh_data->IndexVector.push_back(0);
+			mesh_data->IndexVector.push_back(9);
+			mesh_data->IndexVector.push_back(3);
+			mesh_data->IndexVector.push_back(9);
+			mesh_data->IndexVector.push_back(6);
+			mesh_data->IndexVector.push_back(3);
+
+			// top
+			mesh_data->IndexVector.push_back(21);  //face 3
+			mesh_data->IndexVector.push_back(12);
+			mesh_data->IndexVector.push_back(18);
+			mesh_data->IndexVector.push_back(12);  //face 4
+			mesh_data->IndexVector.push_back(15);
+			mesh_data->IndexVector.push_back(18);
+			// left
+			mesh_data->IndexVector.push_back(22);  //face 5
+			mesh_data->IndexVector.push_back(10);
+			mesh_data->IndexVector.push_back(13);
+			mesh_data->IndexVector.push_back(10);  //face 6
+			mesh_data->IndexVector.push_back(1);
+			mesh_data->IndexVector.push_back(13);
+			// right
+			mesh_data->IndexVector.push_back(16);  //face 7
+			mesh_data->IndexVector.push_back(4);
+			mesh_data->IndexVector.push_back(19);
+			mesh_data->IndexVector.push_back(4);  //face 8
+			mesh_data->IndexVector.push_back(7);
+			mesh_data->IndexVector.push_back(19);
+			// front
+			mesh_data->IndexVector.push_back(14);  //face 9
+			mesh_data->IndexVector.push_back(2);
+			mesh_data->IndexVector.push_back(17);
+			mesh_data->IndexVector.push_back(2);   //face 10
+			mesh_data->IndexVector.push_back(5);
+			mesh_data->IndexVector.push_back(17);
+			// back
+			mesh_data->IndexVector.push_back(20);  //face 11
+			mesh_data->IndexVector.push_back(8);
+			mesh_data->IndexVector.push_back(23);
+			mesh_data->IndexVector.push_back(8);   //face 12
+			mesh_data->IndexVector.push_back(11);
+			mesh_data->IndexVector.push_back(23);
+
+
+			std::vector<Vec3> normals;
+
+			normals.push_back(Vec3(+1, 0, 0));
+			normals.push_back(Vec3(-1, 0, 0));
+			normals.push_back(Vec3(0, +1, 0));
+			normals.push_back(Vec3(0, -1, 0));
+			normals.push_back(Vec3(0, 0, +1));
+			normals.push_back(Vec3(0, 0, -1));
+
+			std::vector<int> normal_indcies;
+
+			// bottom front left                   
+
+			normal_indcies.push_back(5);
+			normal_indcies.push_back(3);
+			normal_indcies.push_back(0);
+			// bottom front right
+			normal_indcies.push_back(5);
+			normal_indcies.push_back(2);
+			normal_indcies.push_back(0);
+			// bottom back right
+			normal_indcies.push_back(5);
+			normal_indcies.push_back(2);
+			normal_indcies.push_back(1);
+			// bottom back left
+			normal_indcies.push_back(5);
+			normal_indcies.push_back(3);
+			normal_indcies.push_back(1);
+			// top front left                  
+			normal_indcies.push_back(4);
+			normal_indcies.push_back(3);
+			normal_indcies.push_back(0);
+			// top front right
+			normal_indcies.push_back(4);
+			normal_indcies.push_back(2);
+			normal_indcies.push_back(0);
+			// top back right
+			normal_indcies.push_back(4);
+			normal_indcies.push_back(2);
+			normal_indcies.push_back(1);
+			// top back left
+			normal_indcies.push_back(4);
+			normal_indcies.push_back(3);
+			normal_indcies.push_back(1);
+
+
+			for(int i = 0; i < postions.size(); i++)
 			{
-				vertex.Pos = conrners[i];
-				vertex.Normal = Vec3(0,1,0); 
+				vertex.Pos = postions[i];
+				vertex.Normal = normals[normal_indcies[i]]; 
 				mesh_data->VertexVector.push_back(vertex);
 			}
-
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(4);
-			mesh_data->IndexVector.push_back(5);
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(5);
-			mesh_data->IndexVector.push_back(1);
-
-
-			mesh_data->IndexVector.push_back(1);
-			mesh_data->IndexVector.push_back(5);
-			mesh_data->IndexVector.push_back(6);
-			mesh_data->IndexVector.push_back(1);
-			mesh_data->IndexVector.push_back(6);
-			mesh_data->IndexVector.push_back(2);
-
-
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(6);
-			mesh_data->IndexVector.push_back(7);
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(7);
-			mesh_data->IndexVector.push_back(3);
-
-			mesh_data->IndexVector.push_back(3);
-			mesh_data->IndexVector.push_back(7);
-			mesh_data->IndexVector.push_back(4);
-			mesh_data->IndexVector.push_back(3);
-			mesh_data->IndexVector.push_back(4);
-			mesh_data->IndexVector.push_back(0);
-
-
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(1);
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(3);
 		}
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));

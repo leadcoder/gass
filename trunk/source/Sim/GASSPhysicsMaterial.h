@@ -24,14 +24,14 @@
 
 namespace GASS
 {
-	class MaterialData
+	class PhysicsMaterial
 	{
 	public:
-		MaterialData() : StaticFriction(1),
+		PhysicsMaterial() : StaticFriction(1),
 			DynamicFriction(1), 
 			Restitution(1)
 		{}
-		virtual ~MaterialData() {}
+		virtual ~PhysicsMaterial() {}
 		std::string Name;
 		std::string MapToVisualMaterial;
 		double StaticFriction;

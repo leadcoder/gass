@@ -36,6 +36,7 @@
 #include <osg/StateAttribute>
 #include <osg/Material>
 #include <osg/BlendFunc>
+#include <osg/CullFace>
 
 
 
@@ -96,29 +97,16 @@ namespace GASS
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		// Enable blending, select transparent bin.
-		ss->setMode( GL_BLEND, osg::StateAttribute::ON );
-		ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-		// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
-		ss->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
-
-		// Conversely, disable writing to depth buffer so that
-		// a transparent polygon will allow polygons behind it to shine through.
-		// OSG renders transparent polygons after opaque ones.
-		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
-		depth->setWriteMask( false );
-		ss->setAttributeAndModes( depth, osg::StateAttribute::ON );
-
 		//ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
+		osg::CullFace* cull = new osg::CullFace();
+		cull->setMode(osg::CullFace::BACK);
+		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
+
 
 		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
-		
-		
 
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-
 		if(!lc)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
 
@@ -152,10 +140,16 @@ namespace GASS
 
 		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
+		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
 		if(vertices)
 			vertices->clear();
 		if(colors)
 			colors->clear();
+
+		if(normals)
+			normals->clear();
+		
+
 
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
@@ -199,6 +193,7 @@ namespace GASS
 
 		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
+		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
 		
 		if(vertices)
 			vertices->clear();
@@ -210,8 +205,16 @@ namespace GASS
 		else
 			colors = new osg::Vec4Array;
 
+		if(normals)
+			normals->clear();
+		else
+			normals = new osg::Vec3Array;
+
+		
+
 		vertices->resize(data->VertexVector.size());
 		colors->resize(data->VertexVector.size());
+		normals->resize(data->VertexVector.size());
 
 //CopyOp::SHALLOW_COPY
 
@@ -239,24 +242,28 @@ namespace GASS
 
 		osg::Vec3Array::iterator vitr = vertices->begin();
 		osg::Vec4Array::iterator citr = colors->begin();
+		osg::Vec3Array::iterator nitr = normals->begin();
 
 		for(int i = 0; i < data->VertexVector.size(); i++)
 		{
 			Vec3 pos = data->VertexVector[i].Pos;
+			Vec3 normal = data->VertexVector[i].Normal;
 			Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 			Vec4 color  = data->VertexVector[i].Color;
 
-			osg::Vec3 opos = OSGConvert::Get().ToOSG(pos); 
+			osg::Vec3 o_pos = OSGConvert::Get().ToOSG(pos); 
+			osg::Vec3 o_normal = OSGConvert::Get().ToOSG(normal); 
 
-			(vitr++)->set(opos.x(), opos.y(), opos.z());
+			(vitr++)->set(o_pos.x(), o_pos.y(), o_pos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
-			
+			(nitr++)->set(o_normal.x(), o_normal.y(), o_normal.z());
 		}
 
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+		m_OSGGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		
 		m_OSGGeometry->dirtyBound();
@@ -326,7 +333,6 @@ namespace GASS
 			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 		else
 			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-
 		
 		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
         // Turn on blending
@@ -334,7 +340,20 @@ namespace GASS
 		{
 			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			nodess->setAttributeAndModes(bf);
+
+			// Enable blending, select transparent bin.
+			nodess->setMode( GL_BLEND, osg::StateAttribute::ON );
+			nodess->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+			// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
+			nodess->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+
+			// Conversely, disable writing to depth buffer so that
+			// a transparent polygon will allow polygons behind it to shine through.
+			// OSG renders transparent polygons after opaque ones.
+			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
+			depth->setWriteMask( false );
+			nodess->setAttributeAndModes( depth, osg::StateAttribute::ON );
 		}
 	}
-
 }
