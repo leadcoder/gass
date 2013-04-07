@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Plugins>
+   <!-- load all from path-->
+  <!--<Directory Path = "GASSPlugins"/>-->
+  <Plugin PluginFile = "GASSPluginOSG"/>
+  <Plugin PluginFile = "GASSPluginOIS"/>
+  <Plugin PluginFile = "GASSPluginPhysX"/>
+  <!--<Plugin PluginFile = "GASSPluginODE"/>-->
+  <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
+  <!--<Plugin PluginFile = "GASSPluginPagedGeometry"/>-->
+  <Plugin PluginFile = "GASSPluginOpenAL"/>
+  <Plugin PluginFile = "GASSPluginGame"/>
+  <Plugin PluginFile = "GASSPluginBase"/>
+  <Plugin PluginFile = "GASSPluginRakNet"/>
+ <!-- <Plugin PluginFile = "GASSPluginMyGUI"/>-->
+  </Plugins>
+  <SetDataPath value="../../../common/data/"/>
+<ScenePath value="../../../common/data/sceneries"/>
+<SceneObjectTemplateManager>
+	<AddObjectIDToName value ="true"/>
+	<ObjectIDPrefix value="["/>
+	<ObjectIDSufix value="]"/>
+	<!--<Load>
+		<Template value="../../../common/data/templates/vehicles/jim_tank.xml"/>
+		<Template value="../Configuration/app_templates.xml"/>
+		
+    </Load>-->
+</SceneObjectTemplateManager>
+<Systems>
+ <MaterialSystem/>
+ <OISInputSystem>
+    <TaskNode value="PRE_SIM"/> <!-- PRE BUCKET UPDATE-->
+	<ExclusiveMode value="false"/>
+  </OISInputSystem>
+  <ControlSettingsSystem>
+	<TaskNode value="PRE_SIM"/>
+  </ControlSettingsSystem>
+  <CoreSystem>
+	<TaskNode value="PRE_SIM"/>
+  </CoreSystem>
+  <MyGUISystem>
+	<TaskNode value="PRE_SIM"/>
+  </MyGUISystem>  
+  <GameSystem>
+	<TaskNode value="SIM"/>
+  </GameSystem>
+  <RakNetNetworkSystem>
+    <TaskNode value="SIM"/>
+  </RakNetNetworkSystem>
+  <OpenALSoundSystem>
+    <TaskNode value="PRE_SIM"/>
+  </OpenALSoundSystem>
+  <CEGUISystem>
+    <TaskNode value="PRE_SIM"/>
+  </CEGUISystem>
+  <LuaScriptSystem>
+    <TaskNode value="PRE_SIM"/>
+  </LuaScriptSystem>
+  <PhysXPhysicsSystem>
+    <TaskNode value="SIM"/>
+  </PhysXPhysicsSystem>
+ <!--<ODEPhysicsSystem>
+    <Name value = "PhysicsSystem"/>
+	<TaskNode value="2"/>
+  </ODEPhysicsSystem>
+  <ODECollisionSystem>
+    <Name value = "CollisionSystem"/>
+	<TaskNode value="-1"/>
+  </ODECollisionSystem>-->
+  <OSGGraphicsSystem>
+	<TaskNode value="POST_SIM"/>
+	<!--<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="200" TextureSize="1024" BaseTextureUnit="0" ShadowTextureUnit="5"/>-->
+	<ShadowSettings type="ParallelSplitShadowMap" MaxFarDistance="100" TextureSize="1024" NumCount="5" MinNearDistanceForSplits="5" MoveVCamBehindRCamFactor="1" PolyOffsetFactor="2.1"/>
+	
+  </OSGGraphicsSystem>
+  
+  
+  <!--<OSGResourceSystem>
+    <AddResourceLocation Path="../../../common/data/gfx/fonts" Group="GASS" Type="FileSystem" Recursive="false"/>
+	<AddResourceLocation Path="%GASS_DATA_HOME%/gfx/osg/3dmodels/Vehicles" Group="GASS" Type="FileSystem" Recursive="true"/>
+    <AddResourceLocation Path="../../../common/data" Group="GASS" Type="FileSystem" Recursive="false"/>
+    <AddResourceLocation Path="../../../common/data/gfx/GUI/MyGUI_Media" Group="General" Type="FileSystem" Recursive="true"/>
+  </OSGResourceSystem>-->
+</Systems>
+
+<ResourceManager>
+  <ResourceGroup name="GASS">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/3dmodels/vehicles"  type="FileSystem" recursive="true"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/fonts" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="GASS_TEMPLATES">
+    <!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles" type="FileSystem" recursive="true"/>-->
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="false"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+</ResourceManager>
+
+<RTC>
+	<NumberOfThreads value="-1"/> <!-- -1 == auto-->
+	<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
+	<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
+	<TaskNode name="ROOT_NODE" mode="SEQUENCE">
+		<TaskNode name="PRE_SIM" mode="PARALLEL"/>
+		<TaskNode name="SIM" mode="PARALLEL"/>
+		<TaskNode name="POST_SIM" mode="PARALLEL"/>
+	</TaskNode>
+</RTC>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimApplication UpdateFrequency="1060" Scene="osg_demo" SystemConfig="../Configuration/systems.xml" Plugins="../Configuration/plugins.xml" ControlSettings="../Configuration/control_settings.xml">
+  <Templates>
+    <!--<Template Name="../../../common/data/templates/vehicles/jim_tank.xml"/>-->
+    <Template Name="../Configuration/app_templates.xml"/>
+  </Templates>
+  <Objects>
+  <Object Name="PxBox"/>
+   <!--<Object Name="MyBox"/>-->
+  </Objects>
+</SimApplication>
