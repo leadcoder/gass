@@ -162,8 +162,6 @@ int main(int argc, char* argv[])
 	box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
 	box_obj->SendImmediate(GASS::MessagePtr(new GASS::WorldPositionMessage(GASS::Vec3(1,2,0))));
 	
-	
-	
 	//GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 	//scene->Load(m_SceneName);
 	

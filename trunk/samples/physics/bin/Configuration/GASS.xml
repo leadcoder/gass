@@ -100,8 +100,8 @@
 	<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
 	<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
 	<TaskNode name="ROOT_NODE" mode="SEQUENCE">
-		<TaskNode name="PRE_SIM" mode="PARALLEL"/>
-		<TaskNode name="SIM" mode="PARALLEL"/>
-		<TaskNode name="POST_SIM" mode="PARALLEL"/>
+		<TaskNode name="PRE_SIM" mode="SEQUENCE"/>
+		<TaskNode name="SIM" mode="SEQUENCE"/>
+		<TaskNode name="POST_SIM" mode="SEQUENCE"/>
 	</TaskNode>
 </RTC>
