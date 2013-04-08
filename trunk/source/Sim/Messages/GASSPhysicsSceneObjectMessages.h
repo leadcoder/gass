@@ -156,7 +156,49 @@ namespace GASS
 		Vec3 m_Value;
 	};
 	typedef SPTR<PhysicsVelocityRequest> PhysicsVelocityRequestPtr;
+	
+	class PhysicsAngularVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsAngularVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(value)
+		  {
 
+		  }
+		  Vec3 GetAngularVelocity()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsAngularVelocityRequest> PhysicsAngularVelocityRequestPtr;
+
+	
+	class PhysicsForceRequest : public BaseMessage
+	{
+	public:
+		PhysicsForceRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetForce()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsForceRequest> PhysicsForceRequestPtr;
+
+	class PhysicsTorqueRequest : public BaseMessage
+	{
+	public:
+		PhysicsTorqueRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetTorque()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsTorqueRequest> PhysicsTorqueRequestPtr;
 
 	/**
 	Message used to change mass of physics bodies.
