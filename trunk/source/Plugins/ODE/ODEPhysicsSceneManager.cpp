@@ -131,7 +131,10 @@ namespace GASS
 		{
 			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
 			//dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
-			dWorldQuickStep(m_World, delta_time);
+			if(delta_time > 0.1)
+				dWorldQuickStep(m_World, 0.1);
+			else
+				dWorldQuickStep(m_World, delta_time);
 			dJointGroupEmpty(m_ContactGroup);
 			//do some time slicing
 			/*m_TimeToProcess += delta_time;

@@ -116,6 +116,7 @@ namespace GASS
 		if(terrain)
 		{
 			m_TerrainBounds = geom->GetBoundingBox();
+			m_Samples = terrain->GetSamples();
 			int samples_x = terrain->GetSamples();
 			int samples_z = terrain->GetSamples();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
@@ -171,12 +172,14 @@ namespace GASS
 
 	Float ODETerrainGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
+		return m_TerrainGeom->GetHeightAtPoint(x,m_Samples-1-z);
+
 		Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 		Float h = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 		//std::cout << "hpos:" << world_x << world_z << "\n";
 		//std::cout << "height:" << h << "\n";
-		return h;
+		//return h;
 	}
 
 	unsigned long ODETerrainGeometryComponent::GetCollisionBits() const 
