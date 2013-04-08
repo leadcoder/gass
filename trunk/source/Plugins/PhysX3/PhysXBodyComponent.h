@@ -49,23 +49,33 @@ namespace GASS
 		void SetMass(float mass);
 
 	protected:
+		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnPositionChanged(PositionMessagePtr message);
+		void OnWorldPositionChanged(WorldPositionMessagePtr message);
+		void OnRotationChanged(RotationMessagePtr message);
+		void OnVelocity(PhysicsVelocityRequestPtr message);
+		void OnAngularVelocity(PhysicsAngularVelocityRequestPtr message);
+		void OnAddForce(PhysicsForceRequestPtr message);
+		void OnAddTorque(PhysicsTorqueRequestPtr message);
+		void OnParameterMessage(PhysicsBodyMessagePtr message);
+		void OnMassMessage(PhysicsMassMessagePtr message);
+		
+		void SetPosition(const Vec3 &value);
+		Vec3 GetPosition() const;
+		void SetRotation(const Quaternion &rot);
+		Quaternion GetRotation();
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
-		void SetVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetVelocity(bool rel = false);
-		void SetAngularVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetAngularVelocity(bool rel = false);
-		void Enable();
-		void Disable();
-		bool IsEnabled();
+		void SetVelocity(const Vec3 &vel);
+		Vec3 GetVelocity();
+		void SetAngularVelocity(const Vec3 &vel);
+		Vec3 GetAngularVelocity();
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
-		void SetForce(const Vec3 &force);
-		Vec3 GetMomentum();
-		void AddTorque(const Vec3 &torque_vec, bool rel = false);
+		void AddTorque(const Vec3 &torque_vec);
+		void WakeUp();
 		
-		//reflection functions
-
+		//check
 		Vec3 GetCGPosition() const {return m_CGPosition;}
 		void SetCGPosition(const Vec3 value) {m_CGPosition = value;}
 		Vec3 GetSymmetricInertia() const {return m_SymmetricInertia;}
@@ -74,26 +84,8 @@ namespace GASS
 		void SetAssymetricInertia(const Vec3 value) {m_AssymetricInertia = value;}
 		bool GetEffectJoints() const {return m_EffectJoints;}
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
-
-		
 		void SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymetricInertia);
 		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
-
-		void SetPosition(const Vec3 &value);
-		Vec3 GetPosition() const;
-		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation();
-
-		
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
-
-		void OnVelocity(PhysicsVelocityRequestPtr message);
-		void OnParameterMessage(PhysicsBodyMessagePtr message);
-		void OnMassMessage(PhysicsMassMessagePtr message);
-		
 	protected:
 		float m_Mass;
 		float m_Density;

@@ -54,9 +54,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsTorqueRequest,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
 
 		
@@ -84,7 +86,7 @@ namespace GASS
 		sm->Register(listener);
 	}
 
-	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -94,7 +96,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -121,10 +123,24 @@ namespace GASS
 
 	void PhysXBodyComponent::OnVelocity(PhysicsVelocityRequestPtr message)
 	{
-		Enable();
-		SetVelocity(message->GetVelocity(),true);
+		SetVelocity(message->GetVelocity());
 	}
 
+
+	void PhysXBodyComponent::OnAngularVelocity(PhysicsAngularVelocityRequestPtr message)
+	{
+		SetAngularVelocity(message->GetAngularVelocity());
+	}
+
+	void PhysXBodyComponent::OnAddForce(PhysicsForceRequestPtr message)
+	{
+		AddForce(message->GetForce(),false);
+	}
+
+	void PhysXBodyComponent::OnAddTorque(PhysicsTorqueRequestPtr message)
+	{
+		AddTorque(message->GetTorque());
+	}
 
 	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
@@ -132,7 +148,7 @@ namespace GASS
 		Vec3 value = message->GetValue();
 		
 		//wake body!!
-		Enable();
+		WakeUp();
 		switch(type)
 		{
 		case PhysicsBodyMessage::FORCE:
@@ -142,12 +158,12 @@ namespace GASS
 			break;
 		case PhysicsBodyMessage::TORQUE:
 			{
-				AddTorque(value,true);
+				AddTorque(value);
 				break;
 			}
 		case PhysicsBodyMessage::VELOCITY:
 			{
-				SetVelocity(value,true);
+				SetVelocity(value);
 				break;
 			}
 		}
@@ -239,7 +255,6 @@ namespace GASS
 
 	void PhysXBodyComponent::SetRotation(const Quaternion &rot)
 	{
-		
 		if(m_Actor)
 		{
 			m_Actor->setGlobalPose(physx::PxTransform(m_Actor->getGlobalPose().p,PxConvert::ToPx(rot)));
@@ -257,7 +272,6 @@ namespace GASS
 		return q;
 	}
 
-
 	void PhysXBodyComponent::SceneManagerTick(double delta_time)
 	{
 		int from_id = (int)this; //use address as id
@@ -271,7 +285,7 @@ namespace GASS
 //		GetSceneObject()->PostMessage(physics_msg);
 	}
 
-	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool rel)
+	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec)
 	{
 		if(m_Actor)
 		{
@@ -279,66 +293,42 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::SetVelocity(const Vec3 &vel, bool rel)
+	void PhysXBodyComponent::SetVelocity(const Vec3 &vel)
 	{
 		if(m_Actor)
 		{
-			if (rel) 
-				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-			else
-				m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+			m_Actor->setLinearVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
 		}
 	}
 
-	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool rel)
+	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel)
 	{
 		if(m_Actor)
 		{
-			if (rel) 
-				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
-			else
-				m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
+			m_Actor->setAngularVelocity(physx::PxVec3(vel.x,vel.y,vel.z));
 		}
 	}
 
 
-	Vec3 PhysXBodyComponent::GetAngularVelocity(bool rel)
+	Vec3 PhysXBodyComponent::GetAngularVelocity()
 	{
 		Vec3 vel(0,0,0);
 		if(m_Actor)
 		{
 			physx::PxVec3 pxvel = m_Actor->getAngularVelocity();
-			if (rel) 
-			{
-				vel.Set(pxvel.x,pxvel.y,pxvel.z);
-			} 
-			else
-				vel.Set(pxvel.x,pxvel.y,pxvel.z);
+			vel.Set(pxvel.x,pxvel.y,pxvel.z);
 		}
 		return vel;
 	}
 
-	void PhysXBodyComponent::Enable()
+	void PhysXBodyComponent::WakeUp()
 	{
 		if(m_Actor)
 		{
-
+			m_Actor->wakeUp();
 		}
 	}
-	bool PhysXBodyComponent::IsEnabled()
-	{
-		return true;
-	}
-
-	void PhysXBodyComponent::Disable()
-	{
-		if(m_Actor)
-		{
-
-		}
-	}
-
-
+	
 	void PhysXBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
 	{
 		if(m_Actor)
@@ -380,15 +370,15 @@ namespace GASS
 		}
 	}
 
-	Vec3 PhysXBodyComponent::GetVelocity(bool rel)
+	Vec3 PhysXBodyComponent::GetVelocity()
 	{
 		Vec3 vel(0,0,0);
 		if (m_Actor) 
 		{
-			if (rel) 
-				vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
-			else
-				vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
+			//if (rel) 
+			//	vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
+			//else
+			vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
 		}
 		return vel;
 	}
