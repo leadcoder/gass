@@ -27,6 +27,7 @@
 #include <string>
 #include <osgViewer/Viewer>
 #include <osgShadow/ShadowTechnique>
+#include "IOSGGraphicsSystem.h"
 
 class TextBox;
 namespace GASS
@@ -34,7 +35,7 @@ namespace GASS
 	FDECL(OSGRenderWindow)
 	FDECL(OSGCameraComponent)
 
-	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem
+	class OSGGraphicsSystem : public Reflection<OSGGraphicsSystem,SimSystem> , public IGraphicsSystem, public IOSGGraphicsSystem
 	{
 		friend class OSGGraphicsSceneManager;
 	public:
@@ -48,8 +49,7 @@ namespace GASS
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
-		
-		osgViewer::CompositeViewer*  GetViewer() {return m_Viewer ;}
+		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
 		static void UpdateStateSet(osg::ref_ptr<osg::StateSet> state, const GraphicsMaterial &material);
 	protected:
 		void LoadXML(TiXmlElement *elem);

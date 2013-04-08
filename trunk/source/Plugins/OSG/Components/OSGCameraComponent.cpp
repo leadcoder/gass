@@ -287,57 +287,6 @@ namespace GASS
 		OSGCameraManipulatorPtr camera_man = GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
 		if(camera_man)
 			m_UpdateCameraFromLocation = false;
-		return;
-
-		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-
-		//GetSceneObject()->GetSceneObjectManager()->GetSceneScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnChangeCamera,ChangeCameraRequest,0));
-
-		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-
-		
-		osgViewer::ViewerBase::Views views;
-		gfx_sys->GetViewer()->getViews(views);
-
-		int vp_id = 0;
-		
-			
-		//set same scene in all viewports for the moment 
-		//for(int i = 0; i < views.size(); i++)
-		if(vp_id < views.size())
-		{
-		
-			//uhh?
-
-			//m_OSGCamera = new osg::Camera;
-			//m_OSGCamera->setClearColor(osg::Vec4(1,1,1,1));
-
-			double fovy, aspectRatio, zNear, zFar;
-			m_OSGCamera = new osg::Camera(*views[vp_id]->getCamera());
-			//m_OSGCamera = views[vp_id]->getCamera();
-			//m_OSGCamera->setCullMask(NM_VISIBLE);
-			
-			m_OSGCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
-			m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
-			m_OSGCamera->setClearColor(osg::Vec4(1,1,1,1));
-			//m_OSGCamera->setReadBuffer(GL_BACK);
-			//m_OSGCamera->setDrawBuffer(GL_BACK);
-			//m_OSGCamera = views[i]->getCamera();
-			m_OrthoWindowHeight = m_OSGCamera->getViewport()->height();
-			UpdateProjection();
-			//m_OSGCamera->setViewMatrix(
-
-			//views[i]->getCamera()->addParent(lc->GetOSGNode());
-			//views[i]->setsetCameraManipulator(tm);
-			//->addChild(views[i]->getCamera());
-		}
-
-		//Ogre::SceneManager* sm = ogsm->GetSceneManger();
-		//OSGLocationComponent * lc = GetOwner()->GetFirstComponentByClass<OSGLocationComponent>();
-		/*m_Camera = sm->createCamera(m_Name);
-		m_Camera->setNearClipDistance(1.0);
-		m_Camera->setFarClipDistance(5000);
-		lc->GetOgreNode()->attachObject(m_Camera);*/
 	}
 
 	float OSGCameraComponent::GetFarClipDistance() const

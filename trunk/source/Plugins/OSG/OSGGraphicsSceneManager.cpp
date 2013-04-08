@@ -155,7 +155,6 @@ namespace GASS
 		short attr = osg::StateAttribute::ON;
 		state->setMode(GL_FOG, attr);
 		GetOSGShadowRootNode()->setStateSet(state);
-
 	}
 
 	void OSGGraphicsSceneManager::OnInit()

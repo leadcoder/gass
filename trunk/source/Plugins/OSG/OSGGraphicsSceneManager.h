@@ -34,8 +34,6 @@ namespace osgShadow
 	class ShadowedScene;
 }
 
-
-
 namespace GASS
 {
 	class OSGGraphicsSystem;
@@ -52,7 +50,6 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
 		virtual void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color) {};
-		//osgViewer::View* GetOSGView() const {return m_View;}
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
 		
@@ -79,10 +76,8 @@ namespace GASS
 		float m_FogEnd;
 		float m_FogStart;
 		std::string m_FogMode;
-
 		//light attributes
 		Vec3 m_AmbientColor;
-		
 		//Shadows
 		std::string m_ShadowType;
 		std::string m_ShadowCasterMaterial;
@@ -91,10 +86,7 @@ namespace GASS
 		osg::ref_ptr<osg::Group> m_RootNode;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
-		//osgViewer::View *m_View;
 	};
 	typedef SPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
-
-	
 }

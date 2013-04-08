@@ -28,7 +28,7 @@ namespace GASS
 	{
 	public:
 		virtual ~IOSGGraphicsSceneManager(){};
-		
+		virtual osg::ref_ptr<osg::Group> GetOSGRootNode() = 0 ;
 	protected:
 	};
 	typedef SPTR<IOSGGraphicsSceneManager> IOSGGraphicsSceneManagerPtr;
