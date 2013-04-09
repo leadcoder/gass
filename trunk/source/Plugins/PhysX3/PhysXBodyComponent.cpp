@@ -28,6 +28,7 @@ namespace GASS
 	PhysXBodyComponent::PhysXBodyComponent() :	m_MassRepresentation(MR_GEOMETRY),
 		m_Mass(1),
 		m_Actor(NULL),
+		m_Kinematic(false),
 		m_EffectJoints(true)
 	{
 
@@ -43,9 +44,10 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<PhysXBodyComponent, IComponent>);
 		RegisterProperty<float>("Mass", &PhysXBodyComponent::GetMass, &PhysXBodyComponent::SetMass);
-		RegisterProperty<Vec3>("CGPosition",&PhysXBodyComponent::GetCGPosition, &PhysXBodyComponent::SetCGPosition);
-		RegisterProperty<Vec3>("SymmetricInertia",&PhysXBodyComponent::GetSymmetricInertia, &PhysXBodyComponent::SetSymmetricInertia);
-		RegisterProperty<Vec3>("AssymetricInertia",&PhysXBodyComponent::GetAssymetricInertia, &PhysXBodyComponent::SetAssymetricInertia);
+		RegisterProperty<bool>("Kinematic", &PhysXBodyComponent::GetKinematic, &PhysXBodyComponent::SetKinematic);
+		//RegisterProperty<Vec3>("CGPosition",&PhysXBodyComponent::GetCGPosition, &PhysXBodyComponent::SetCGPosition);
+		//RegisterProperty<Vec3>("SymmetricInertia",&PhysXBodyComponent::GetSymmetricInertia, &PhysXBodyComponent::SetSymmetricInertia);
+		//RegisterProperty<Vec3>("AssymetricInertia",&PhysXBodyComponent::GetAssymetricInertia, &PhysXBodyComponent::SetAssymetricInertia);
 		RegisterProperty<bool>("EffectJoints",&PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
 	}
 
@@ -60,8 +62,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsForceRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsTorqueRequest,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
-
-		
 	}
 
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -73,9 +73,13 @@ namespace GASS
 		
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
-		//physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
-		physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
+		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
+		//physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
+		
+		//transfer loaded attributes to actor
+		SetKinematic(m_Kinematic);
+		
 		//SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
@@ -84,6 +88,21 @@ namespace GASS
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		sm->Register(listener);
+	}
+
+
+	void PhysXBodyComponent::SetKinematic(bool value)
+	{
+		m_Kinematic = value;
+		if(m_Actor)
+		{
+			m_Actor->setRigidDynamicFlag(physx::PxRigidDynamicFlag::eKINEMATIC, m_Kinematic);
+		}
+	}
+
+	bool PhysXBodyComponent::GetKinematic() const
+	{
+		return m_Kinematic;
 	}
 
 	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)

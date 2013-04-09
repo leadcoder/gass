@@ -72,10 +72,50 @@ namespace GASS
 
 	}
 
+	void PhysXHingeComponent::SetBody1(SceneObjectRef value) 
+	{
+		 m_Body1 = value;
+		 if(m_Body1.IsValid())
+		 {
+			 if(m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+				 m_Body1Loaded = true;
+			 else
+				 m_Body1Loaded = false;
+			 if(m_Body1Loaded && m_Body2Loaded)
+			 	CreateJoint();
+		 }
+		 else
+			 m_Body1Loaded = false;
+			
+	}
+
+	void PhysXHingeComponent::SetBody2(SceneObjectRef value) 
+	{
+		 m_Body2 = value;
+		 if(m_Body2.IsValid())
+		 {
+			 if(m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+				 m_Body2Loaded = true;
+			 else
+				 m_Body2Loaded = false;
+			 if(m_Body1Loaded && m_Body2Loaded)
+				CreateJoint();
+			 
+		 }
+		 else
+			m_Body2Loaded = false;
+	}
+
 	void PhysXHingeComponent::OnInitialize()
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
+
+		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
+		{
+			return;
+		}
 		
 		PhysXBodyComponentPtr b1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>();
 		if(!b1)
@@ -99,7 +139,7 @@ namespace GASS
 		//both bodies are loaded -> create joint
 		if(m_Body1Loaded && m_Body2Loaded)
 			CreateJoint();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
+		
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnPositionChanged,PositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnWorldPositionChanged,WorldPositionMessage,0));
@@ -150,9 +190,11 @@ namespace GASS
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
-		LocationComponentPtr location = m_Body2->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 a2_pos = location->GetPosition();
-		physx::PxQuat rot(MY_PI/2.0,physx::PxVec3(0,1,0));
+		LocationComponentPtr location1 = m_Body1->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr location2 = m_Body2->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 a2_pos = location2->GetPosition() - location1->GetPosition();
+		//physx::PxQuat rot(MY_PI/2.0,physx::PxVec3(0,1,0));
+		physx::PxQuat rot(0,physx::PxVec3(0,1,0));
 		m_RevoluteJoint = PxRevoluteJointCreate(*system->GetPxSDK(),
 			 a1, physx::PxTransform(physx::PxVec3(a2_pos.x, a2_pos.y, a2_pos.z),rot), 
 			 a2, physx::PxTransform(physx::PxVec3(0,0,0),rot));
@@ -160,6 +202,8 @@ namespace GASS
 		m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, false);
 		m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
 		m_RevoluteJoint->setDriveGearRatio(1);
+
+
 		//m_RevoluteJoint->setDriveForceLimit(0.00000001);
 
 		/*physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),

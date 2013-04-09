@@ -63,9 +63,9 @@ namespace GASS
 
 		//get set section
 		SceneObjectRef GetBody1() const {return m_Body1;}
-		void SetBody1(SceneObjectRef value) {m_Body1 = value;}
+		void SetBody1(SceneObjectRef value);
 		SceneObjectRef GetBody2()const {return m_Body2;}
-		void SetBody2(SceneObjectRef value) {m_Body2 = value;}
+		void SetBody2(SceneObjectRef value);
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetStrength()const {return m_Strength;}

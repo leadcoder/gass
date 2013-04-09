@@ -74,6 +74,8 @@ namespace GASS
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void AddTorque(const Vec3 &torque_vec);
 		void WakeUp();
+		void SetKinematic(bool value);
+		bool GetKinematic() const;
 		
 		//check
 		Vec3 GetCGPosition() const {return m_CGPosition;}
@@ -96,6 +98,8 @@ namespace GASS
 		Vec3 m_AssymetricInertia;
 		bool m_Initialized;
 		bool m_EffectJoints;
+		bool m_Kinematic;
+
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
