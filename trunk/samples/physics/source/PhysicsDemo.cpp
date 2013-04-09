@@ -21,6 +21,7 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -147,6 +148,34 @@ int main(int argc, char* argv[])
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(box_template);
 	}
 
+
+	{
+		//Create bridge tempaltes
+		GASS::SceneObjectTemplatePtr bridge_seg_template (new GASS::SceneObjectTemplate);
+		bridge_seg_template->SetName("BridgeSegment");
+		GASS::ComponentPtr location_comp (GASS::ComponentFactory::Get().Create("LocationComponent"));
+		GASS::ComponentPtr mesh_comp (GASS::ComponentFactory::Get().Create("ManualMeshComponent"));
+		GASS::ComponentPtr pbox_comp (GASS::ComponentFactory::Get().Create("PhysicsBoxGeometryComponent"));
+		GASS::ComponentPtr body_comp (GASS::ComponentFactory::Get().Create("PhysicsBodyComponent"));
+		body_comp->SetName("Body");
+		GASS::BaseComponentPtr box_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("BoxGeometryComponent"));
+		box_comp->SetPropertyByType("Size",GASS::Vec3(2,0.3,0.6));
+		box_comp->SetPropertyByType("Lines",false);
+		bridge_seg_template->AddComponent(location_comp);
+		bridge_seg_template->AddComponent(mesh_comp);
+		bridge_seg_template->AddComponent(pbox_comp);
+		bridge_seg_template->AddComponent(body_comp);
+		bridge_seg_template->AddComponent(box_comp);
+		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
+
+		GASS::SceneObjectTemplatePtr bridge_hinge_template (new GASS::SceneObjectTemplate);
+		bridge_hinge_template->SetName("BridgeHinge");
+		GASS::BaseComponentPtr hinge_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(GASS::ComponentFactory::Get().Create("PhysicsHingeComponent"));
+		hinge_comp->SetName("Hinge");
+		bridge_hinge_template->AddComponent(hinge_comp);
+		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_hinge_template);
+	}
+
 	{
 		GASS::SceneObjectTemplatePtr mesh_template (new GASS::SceneObjectTemplate);
 		mesh_template->SetName("MeshObject");
@@ -169,16 +198,44 @@ int main(int argc, char* argv[])
 	GASS::SceneObjectPtr light_obj = scene->LoadObjectFromTemplate("LightObject",scene->GetRootSceneObject());
 	light_obj->SendImmediate(GASS::MessagePtr(new GASS::RotationMessage(GASS::Vec3(40,32,0))));
 	
+	GASS::SceneObjectPtr bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment",scene->GetRootSceneObject());
+	bdrige_seg_obj2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(10,2,0))));
+	GASS::BaseComponentPtr body_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(bdrige_seg_obj2->GetComponent("Body"));
+	body_comp->SetPropertyByType("Kinematic",true);
 	
-	GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
-	box_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,0))));
+	for(int i= 1 ; i < 11 ; i++)
+	{
+		GASS::SceneObjectPtr bdrige_seg_obj1 = bdrige_seg_obj2; 
+		bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment",scene->GetRootSceneObject());
+		bdrige_seg_obj2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(10,2,i))));
+
+		GASS::SceneObjectPtr bdrige_hinge_obj = scene->LoadObjectFromTemplate("BridgeHinge",scene->GetRootSceneObject());
+		GASS::BaseComponentPtr hinge_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(bdrige_hinge_obj->GetComponent("Hinge"));
+		hinge_comp->SetPropertyByType("Body1",GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
+		hinge_comp->SetPropertyByType("Body2",GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
+	}
+
+	body_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(bdrige_seg_obj2->GetComponent("Body"));
+	body_comp->SetPropertyByType("Kinematic",true);
+
+
 	
-	GASS::SceneObjectPtr mesh_obj = scene->LoadObjectFromTemplate("MeshObject",scene->GetRootSceneObject());
+	/*GASS::SceneObjectPtr mesh_obj = scene->LoadObjectFromTemplate("MeshObject",scene->GetRootSceneObject());
 	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
 	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,5,1))));
-	
+	*/
 	//GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 	//scene->Load(m_SceneName);
+
+
+	//create bridge
+
+	GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
+	box_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(10,0.6,2))));
+
+	GASS::SceneObjectPtr box_obj2 = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
+	box_obj2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(10,0.6,20))));
+
 	
 	//create free camera and set start pos
 	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
@@ -223,7 +280,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("wheel.3ds")));
+//				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("wheel.3ds")));
 			}
 		}
 		else if(GetAsyncKeyState(VK_F2))
@@ -231,7 +288,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
+	//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
 			}
 		}
 		else
