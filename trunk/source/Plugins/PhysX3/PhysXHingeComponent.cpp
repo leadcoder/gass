@@ -86,7 +86,6 @@ namespace GASS
 		 }
 		 else
 			 m_Body1Loaded = false;
-			
 	}
 
 	void PhysXHingeComponent::SetBody2(SceneObjectRef value) 
@@ -100,7 +99,6 @@ namespace GASS
 				 m_Body2Loaded = false;
 			 if(m_Body1Loaded && m_Body2Loaded)
 				CreateJoint();
-			 
 		 }
 		 else
 			m_Body2Loaded = false;
@@ -114,7 +112,16 @@ namespace GASS
 
 		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
 		{
-			return;
+			//Check if this hinge should link this parent with this node
+			PhysXBodyComponentPtr bc1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
+			PhysXBodyComponentPtr bc2 = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
+			if(bc1 && bc2)
+			{
+				m_Body1 = SceneObjectRef(bc1->GetSceneObject());
+				m_Body2 = SceneObjectRef(bc2->GetSceneObject());
+			}
+			else
+				return;
 		}
 		
 		PhysXBodyComponentPtr b1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>();
@@ -150,7 +157,7 @@ namespace GASS
 		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
 		float value = message->GetValue();
 		//wake body!!
-		//m_Body1->Enable();
+		m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->WakeUp();
 		switch(type)
 		{
 		case PhysicsJointMessage::AXIS1_VELOCITY:

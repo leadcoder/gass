@@ -47,7 +47,7 @@ namespace GASS
 		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
-
+		void WakeUp();
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
@@ -73,7 +73,7 @@ namespace GASS
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void AddTorque(const Vec3 &torque_vec);
-		void WakeUp();
+		
 		void SetKinematic(bool value);
 		bool GetKinematic() const;
 		

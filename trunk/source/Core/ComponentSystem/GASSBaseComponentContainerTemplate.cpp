@@ -87,6 +87,16 @@ namespace GASS
 		m_ComponentVector.push_back(comp);
 	}
 
+	ComponentPtr BaseComponentContainerTemplate::AddComponent(const std::string &comp_type)
+	{
+		ComponentPtr comp = ComponentFactory::Get().Create(comp_type);
+		if(!comp)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create Component:" + comp_type,"BaseComponentContainerTemplate::AddComponent");
+		comp->SetName(comp_type);
+		AddComponent(comp);
+		return comp;
+	}
+
 	bool BaseComponentContainerTemplate::Serialize(ISerializer* serializer)
 	{
 		if(!BaseReflectionObject::SerializeProperties(serializer))

@@ -75,7 +75,6 @@ namespace GASS
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const;
 		virtual void CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance);
 
-
 		//xml serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);
 		virtual void SaveXML(TiXmlElement *obj_elem);
@@ -100,6 +99,12 @@ namespace GASS
 		all containers are serialized*/
 		bool GetSerialize()  const;
 
+		/**
+			Create and add new component
+			@param comp_type Component type to add
+			@return The new component 
+		*/
+		ComponentPtr AddComponent(const std::string &comp_type);
 	protected:
 
 		//Its possible to override this function if custom creation proccess is needed.
