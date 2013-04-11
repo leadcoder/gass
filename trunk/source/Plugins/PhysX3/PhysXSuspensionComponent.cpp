@@ -57,8 +57,6 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsSuspensionComponent",new Creator<PhysXSuspensionComponent, IComponent>);
 
-		RegisterProperty<std::string>("Body1Name", &GASS::PhysXSuspensionComponent::GetBody1Name, &GASS::PhysXSuspensionComponent::SetBody1Name);
-		RegisterProperty<std::string>("Body2Name", &GASS::PhysXSuspensionComponent::GetBody2Name, &GASS::PhysXSuspensionComponent::SetBody2Name);
 		//RegisterProperty<float>("Axis1Force", &GASS::PhysXSuspensionComponent::GetAxis1Force, &GASS::PhysXSuspensionComponent::SetAxis1Force);
 		//RegisterProperty<float>("Axis2Force", &GASS::PhysXSuspensionComponent::GetAxis2Force, &GASS::PhysXSuspensionComponent::SetAxis2Force);
 		RegisterProperty<float>("Damping", &GASS::PhysXSuspensionComponent::GetDamping, &GASS::PhysXSuspensionComponent::SetDamping);
@@ -114,44 +112,54 @@ namespace GASS
 
 	void PhysXSuspensionComponent::CreateJoint()
 	{
-		PhysXBodyComponentPtr body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
-		PhysXBodyComponentPtr body2 = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
+		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+		
+		PhysXBodyComponentPtr chassis_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
+		PhysXBodyComponentPtr wheel_comp = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
 
-		physx::PxRigidDynamic* a1 = body1->GetPxActor();
-		physx::PxRigidDynamic* a2 = body2->GetPxActor();
+		physx::PxRigidDynamic* chassis_actor = chassis_comp->GetPxActor();
+		physx::PxRigidDynamic* wheel_actor = wheel_comp->GetPxActor();
 
 		//ignore collision for all parent bodies 
 		IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
-
 		for(int i = 0; i < components.size(); i++)
 		{
 			PhysXBodyComponentPtr body = STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 			//if(body->GetPxActor() && body->GetPxActor() != a2)
 			//	PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetPxScene()->setActorPairFlags(*body->GetPxActor(), *a2, PX_IGNORE_PAIR);
 		}
-
-		ILocationComponent *location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
-		Vec3 pos_b1 = location2->GetPosition();
-		Quaternion rot_b1 = location2->GetRotation();
-
-		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-			
-		//physx::PxReal density = 1.0f;
-		physx::PxTransform transform(a2->getGlobalPose());//(PxConvert::ToPx(pos_b1), PxConvert::ToPx(rot_b1));
 		
-		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		//m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
-		//sm->GetPxScene()->addActor(*m_RollAxisActor);
-
-		physx::PxVec3 pos(pos_b1.x,pos_b1.y,pos_b1.z);
-		physx::PxQuat trot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
+		Vec3 chassis_pos = chassis_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+		Vec3 wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		
-		/*m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(transform);
-		m_RollAxisActor->setMass(a2->getMass());
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_RollAxisActor, a2->getMass());
+
+		
+		//physx::PxVec3 px_wheel_pos(wheel_pos.x,wheel_pos.y,wheel_pos.z);
+		physx::PxQuat no_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
+		physx::PxTransform roll_actor_trans(PxConvert::ToPx(wheel_pos),no_rot);
+	
+		m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(roll_actor_trans);
+		//m_RollAxisActor->setMass(0.1);
 		sm->GetPxScene()->addActor(*m_RollAxisActor);
-		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
+		//m_RollAxisActor = wheel_actor;
+		physx::PxVec3 susp_pos = PxConvert::ToPx(wheel_pos - chassis_pos);
+
+		physx::PxQuat susp_rot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
+		//physx::PxQuat susp_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
+		m_SpringJoint = PxPrismaticJointCreate(*system->GetPxSDK(),
+			 chassis_actor,physx::PxTransform(physx::PxTransform(susp_pos,susp_rot)), //parent
+			 m_RollAxisActor, physx::PxTransform(physx::PxVec3(0,0,0),susp_rot));
+		physx::PxJointLimitPair params(-1.0f, 1.0f, 0.001f);
+		/*params.restitution = 10.0;
+		params.spring = 1000;
+		params.damping = 1000;
+		params.contactDistance = 1;*/
+		m_SpringJoint->setLimit(params);
+		m_SpringJoint->setPrismaticJointFlag(physx::PxPrismaticJointFlag::eLIMIT_ENABLED, true);
+
+		/*physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
 			 m_RollAxisActor, physx::PxTransform(physx::PxVec3(0,0,0),trot));
 		
@@ -169,22 +177,20 @@ namespace GASS
 		joint2->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint2;
 		m_WheelActor = a2;*/
-		
-		physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
-			 a1,physx::PxTransform(pos,trot), //parent
-		a2, physx::PxTransform(physx::PxVec3(0,0,0),trot));
+
+		/*m_Joint = PxD6JointCreate(*system->GetPxSDK(),
+			m_RollAxisActor,physx::PxTransform(physx::PxVec3(0,0,0),no_rot), //parent
+			wheel_actor, physx::PxTransform(physx::PxVec3(0,0,0), no_rot));
 		
 		//joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
-		joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		m_Joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
 		//joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
 		physx::PxD6JointDrive drive1(6000.0f, 1000.0f, PX_MAX_F32, true);
 		physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
 		//joint->setDrive(physx::PxD6Drive::eY, drive1);
-		joint->setDrive(physx::PxD6Drive::eTWIST, drive2);
-		joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
-		m_Joint = joint;
-		m_WheelActor = a2;
-		m_RollAxisActor = NULL;
+		m_Joint->setDrive(physx::PxD6Drive::eTWIST, drive2);
+		m_Joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
+	*/
 		//physx::PxTransform trans(physx::PxVec3(0,0,0), trot);
 		/*physx::PxQuat trot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
 		
@@ -240,10 +246,10 @@ namespace GASS
 
 	void PhysXSuspensionComponent::SetPosition(const Vec3 &value)
 	{
-		if(m_RollAxisActor)
+		/*if(m_RollAxisActor)
 		{
 			m_RollAxisActor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_RollAxisActor->getGlobalPose().q));
-		}
+		}*/
 	}
 
 

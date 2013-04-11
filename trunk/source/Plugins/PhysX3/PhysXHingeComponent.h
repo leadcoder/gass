@@ -40,55 +40,57 @@ namespace GASS
 		virtual ~PhysXHingeComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void SetPosition(const Vec3 &value);
 	protected:
 		void OnParameterMessage(PhysicsJointMessagePtr message);
 		void OnBody1Loaded(BodyLoadedMessagePtr message);
 		void OnBody2Loaded(BodyLoadedMessagePtr message);
-	
-		float GetRollAngle();
-		float GetRollAngleRate();
-		void SetRollAxisVel(float velocity);
-		//void SetSpringAxisVel(float value);
-		//float GetSpringAxisVel(){return 0;}
-		float GetRollAxisForce()const {return m_RevoluteJointForce;}
-		void SetRollAxisForce(float value);		
-
+		
+		
 		//Helpers
 		void CreateJoint();
 		void UpdateSuspension();
-		void UpdateAnchor();
-		void UpdateJointAxis();
 		void UpdateMotor();
+		void UpdateLimits();
 
 		//get set section
 		SceneObjectRef GetBody1() const {return m_Body1;}
 		void SetBody1(SceneObjectRef value);
 		SceneObjectRef GetBody2()const {return m_Body2;}
 		void SetBody2(SceneObjectRef value);
+		float GetDriveForceLimit()const {return m_DriveForceLimit;}
+		void SetDriveForceLimit(float value);	
+		void SetDriveTargetVelocity(float value);
+		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetStrength()const {return m_Strength;}
 		void SetStrength(float value){m_Strength =value;}
-		Vec3 GetRollAxis()const {return m_RollAxis;}
-		void SetRollAxis(const Vec3 &value);
+		Vec3 GetRotationAxis()const {return m_RotationAxis;}
+		void SetRotationAxis(const Vec3 &value);
 		float GetHighStop()const {return m_HighStop;}
 		void SetHighStop(float value);
 		float GetLowStop()const {return m_LowStop;}
 		void SetLowStop(float value);
+		void SetEnableLimits(bool value);
+		bool GetEnableLimits() const {return m_EnableLimit;}
+		void SetEnableDrive(bool value);
+		bool GetEnableDrive() const {return m_EnableDrive;}
 	private:
 		SceneObjectRef m_Body1;
 		SceneObjectRef m_Body2;
-		float m_RevoluteJointForce;
+		float m_DriveForceLimit;
+		float m_DriveTargetVelocity;
+		Vec3 m_RotationAxis;
 		float m_SpringJointForce;
-		float m_RollAngularVelocity;
 		float m_Strength;
 		float m_Damping;
 		float m_HighStop;
 		float m_LowStop;
 		bool m_Body1Loaded;
 		bool m_Body2Loaded;
-		Vec3 m_RollAxis;
+		bool m_EnableLimit;
+		bool m_EnableDrive;
+		
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRevoluteJoint *m_RevoluteJoint;
 	};
