@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 
 			//add wheels
 			GASS::SceneObjectTemplatePtr wheel_template;
-			GASS::Float offset = -1;
+			GASS::Float offset = 1;
 
 			wheel_template =  GASS::SceneObjectTemplatePtr(new GASS::SceneObjectTemplate);
 			wheel_template->SetName("FrontLeftWheel");
@@ -186,7 +186,8 @@ int main(int argc, char* argv[])
 			wheel_template->AddComponent("PhysicsSphereGeometryComponent");
 			wheel_template->AddComponent("PhysicsBodyComponent");
 			wheel_template->AddComponent("ManualMeshComponent");
-			wheel_template->AddComponent("PhysicsHingeComponent");
+			//wheel_template->AddComponent("PhysicsHingeComponent");
+			wheel_template->AddComponent("PhysicsSuspensionComponent");
 			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 		}
 	}
@@ -285,7 +286,7 @@ int main(int argc, char* argv[])
 
 		
 	GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
-	vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,2))));
+	vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,-4))));
 	
 
 	//create free camera and set start pos
