@@ -31,6 +31,8 @@ namespace GASS
 {
 	PhysXSuspensionComponent::PhysXSuspensionComponent() : m_SpringJointMaxForce (PX_MAX_F32),
 		m_SteerJointMaxForce(1000),
+		m_SteerJointSpring(10),
+		m_SteerJointDamping(100),
 		m_WheelJointMaxForce(1000),
 		m_WheelJointSpring(10),
 		m_WheelJointDamping(100),
@@ -143,8 +145,9 @@ namespace GASS
 		physx::PxD6JointDrive suspension_drive(m_Strength, m_Damping, m_SpringJointMaxForce, false);
 		m_SuspensionJoint->setDrive(physx::PxD6Drive::eY, suspension_drive);
 
-		physx::PxD6JointDrive steer_drive(10.0f, 100, m_SteerJointMaxForce, false);
+		physx::PxD6JointDrive steer_drive(m_SteerJointSpring, m_SteerJointDamping, m_SteerJointMaxForce, false);
 		m_SuspensionJoint->setDrive(physx::PxD6Drive::eSWING, steer_drive);
+
 		SetSteerLimit(m_SteerLimit);
 
 		m_WheelAxisJoint = PxD6JointCreate(*system->GetPxSDK(),
@@ -154,7 +157,6 @@ namespace GASS
 
 		UpdateMotor();
 		m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(1,0,0));
-
 	}
 
 

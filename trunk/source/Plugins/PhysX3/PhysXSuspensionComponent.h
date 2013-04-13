@@ -78,12 +78,17 @@ namespace GASS
 		float m_WheelJointDamping;
 
 		float m_SpringJointMaxForce;
+		float m_Strength;
+		float m_Damping;
+
 		float m_SteerJointMaxForce;
+		float m_SteerJointSpring;
+		float m_SteerJointDamping;
+
 
 		
 		
-		float m_Strength;
-		float m_Damping;
+		
 		float m_SteerLimit;
 		
 		
