@@ -37,13 +37,12 @@ namespace GASS
 		m_Anchor (0,0,0),
 		m_RollAxis (0,0,0),
 		m_SpringAxis (0,0,0),
-		m_RollJoint (0),
-		m_SpringJoint (0),
+		m_WheelAxisJoint (0),
+		m_SuspensionJoint (0),
 		m_HighStop(0),
 		m_LowStop(0),
-		m_RollAxisActor(NULL),
-		m_RollAngularVelocity(0),
-		m_Joint(0)
+		m_SuspensionActor(NULL),
+		m_RollAngularVelocity(0)
 	{
 
 	}
@@ -122,42 +121,50 @@ namespace GASS
 		physx::PxRigidDynamic* wheel_actor = wheel_comp->GetPxActor();
 
 		//ignore collision for all parent bodies 
-		IComponentContainer::ComponentVector components;
+		/*IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
 		for(int i = 0; i < components.size(); i++)
 		{
 			PhysXBodyComponentPtr body = STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 			//if(body->GetPxActor() && body->GetPxActor() != a2)
 			//	PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetPxScene()->setActorPairFlags(*body->GetPxActor(), *a2, PX_IGNORE_PAIR);
-		}
+		}*/
 		
 		Vec3 chassis_pos = chassis_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+		Vec3 world_wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		
-
-		
-		//physx::PxVec3 px_wheel_pos(wheel_pos.x,wheel_pos.y,wheel_pos.z);
 		physx::PxQuat no_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
-		physx::PxTransform roll_actor_trans(PxConvert::ToPx(wheel_pos),no_rot);
+		
+		//Create actor to connect steer and suspension joint to
+		m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(PxConvert::ToPx(world_wheel_pos),no_rot));
+		m_SuspensionActor->setMass(0.1);
+		sm->GetPxScene()->addActor(*m_SuspensionActor);
 	
-		m_RollAxisActor = system->GetPxSDK()->createRigidDynamic(roll_actor_trans);
-		//m_RollAxisActor->setMass(0.1);
-		sm->GetPxScene()->addActor(*m_RollAxisActor);
-		//m_RollAxisActor = wheel_actor;
+		//Calcualte positions relative to parentfor suspension joint
 		physx::PxVec3 susp_pos = PxConvert::ToPx(wheel_pos - chassis_pos);
-
 		physx::PxQuat susp_rot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
-		//physx::PxQuat susp_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
-		m_SpringJoint = PxPrismaticJointCreate(*system->GetPxSDK(),
-			 chassis_actor,physx::PxTransform(physx::PxTransform(susp_pos,susp_rot)), //parent
-			 m_RollAxisActor, physx::PxTransform(physx::PxVec3(0,0,0),susp_rot));
-		physx::PxJointLimitPair params(-1.0f, 1.0f, 0.001f);
-		/*params.restitution = 10.0;
-		params.spring = 1000;
-		params.damping = 1000;
-		params.contactDistance = 1;*/
-		m_SpringJoint->setLimit(params);
-		m_SpringJoint->setPrismaticJointFlag(physx::PxPrismaticJointFlag::eLIMIT_ENABLED, true);
+		
+		m_SuspensionJoint = PxD6JointCreate(*system->GetPxSDK(),
+			 chassis_actor,physx::PxTransform(susp_pos,no_rot), //parent
+			 m_SuspensionActor, physx::PxTransform(physx::PxVec3(0,0,0),no_rot));
+		//_Joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
+		m_SuspensionJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
+		//m_Joint->setMotion(physx::PxD6Axis::eSWING2, physx::PxD6Motion::eLIMITED);
+		m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
+		m_SuspensionJoint->setLinearLimit(physx::PxJointLimit(1,0.1));
+		physx::PxD6JointDrive drive1(1000.0f, 10.0f, PX_MAX_F32, false);
+		m_SuspensionJoint->setDrive(physx::PxD6Drive::eY, drive1);
+		//physx::PxD6JointDrive drive2(1000.0f, 10, PX_MAX_F32, true);
+		physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
+		physx::PxD6JointDrive drive3(10.0f, 100, 1000, false);
+		
+		//m_Joint->setDrive(physx::PxD6Drive::eTWIST, drive3);
+		m_SuspensionJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,1,0));
+		m_SuspensionJoint->setDrive(physx::PxD6Drive::eSWING, drive2);
+		m_SuspensionJoint->setSwingLimit(physx::PxJointLimitCone(0.2,0.2,0.1));
+		//m_Joint->setDrive(physx::PxD6Drive::eSLERP, drive2);
+
 
 		/*physx::PxD6Joint* joint = PxD6JointCreate(*system->GetPxSDK(),
 			 a1,physx::PxTransform(pos,trot), //parent
@@ -177,20 +184,21 @@ namespace GASS
 		joint2->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
 		m_Joint = joint2;
 		m_WheelActor = a2;*/
-
-		/*m_Joint = PxD6JointCreate(*system->GetPxSDK(),
-			m_RollAxisActor,physx::PxTransform(physx::PxVec3(0,0,0),no_rot), //parent
-			wheel_actor, physx::PxTransform(physx::PxVec3(0,0,0), no_rot));
 		
+		m_WheelAxisJoint = PxD6JointCreate(*system->GetPxSDK(),
+			m_SuspensionActor,physx::PxTransform(physx::PxVec3(0,0,0),no_rot), //parent
+			wheel_actor, physx::PxTransform(physx::PxVec3(0,0,0), no_rot));
 		//joint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eFREE);
-		m_Joint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
-		//joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
-		physx::PxD6JointDrive drive1(6000.0f, 1000.0f, PX_MAX_F32, true);
-		physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
+		m_WheelAxisJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		//m_Joint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eFREE);
+		physx::PxD6JointDrive drive(10.0f, 100, 1000, false);
+		//physx::PxD6JointDrive drive2(10.0f, 100, 1000, false);
 		//joint->setDrive(physx::PxD6Drive::eY, drive1);
-		m_Joint->setDrive(physx::PxD6Drive::eTWIST, drive2);
-		m_Joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,0,0));
-	*/
+		m_WheelAxisJoint->setDrive(physx::PxD6Drive::eTWIST, drive);
+		m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(1,0,0));
+
+
+	
 		//physx::PxTransform trans(physx::PxVec3(0,0,0), trot);
 		/*physx::PxQuat trot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
 		
@@ -230,128 +238,32 @@ namespace GASS
 		SetRollAxisForce(m_RollJointForce);*/
 	}
 
-	void PhysXSuspensionComponent::SetRollAxis(const Vec3 &axis)
-	{
-		m_RollAxis = axis;
-		if(m_RollJoint)
-			UpdateJointAxis();
-	}
-
-	void PhysXSuspensionComponent::SetSpringAxis(const Vec3 &axis)
-	{
-		m_SpringAxis = axis;
-		if(m_SpringJoint)
-			UpdateJointAxis();
-	}
-
 	void PhysXSuspensionComponent::SetPosition(const Vec3 &value)
 	{
-		/*if(m_RollAxisActor)
+		if(m_SuspensionActor)
 		{
-			m_RollAxisActor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_RollAxisActor->getGlobalPose().q));
-		}*/
+			m_SuspensionActor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_SuspensionActor->getGlobalPose().q));
+		}
 	}
 
-
-	void PhysXSuspensionComponent::UpdateJointAxis()
+	float PhysXSuspensionComponent::GetRollAngle()
 	{
-		if (m_RollAxis.Length() != 0)
-		{
-			//m_RollJoint->setGlobalAxis(NxVec3(m_RollAxis.x,m_RollAxis.y,m_RollAxis.z));
-		}
-		else
-		{
-			//not thread safe!!! fix this
-			/*ILocationComponent *location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>().get();
-			//ILocationComponent *location2 = GetSceneObject()->GetFirstComponent<ILocationComponent>().get();
-			Quaternion rot = location1->GetRotation();
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
-			Vec3 axis = rot_mat.GetRightVector();
-			m_RollJoint->setGlobalAxis(NxVec3(axis.x,axis.y,axis.z));*/
-		}
+		return 0;
 	}
 
-	void PhysXSuspensionComponent::SetAnchor(const Vec3 &value)
+	float PhysXSuspensionComponent::GetRollAngleRate()
 	{
-		m_Anchor = value;
-		if(m_RollJoint)
-			UpdateAnchor();
+		return 0;
 	}
 
-	void PhysXSuspensionComponent::UpdateAnchor()
+	void PhysXSuspensionComponent::UpdateMotor()
 	{
-		//ILocationComponent *location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponent<ILocationComponent>().get();
-		ILocationComponent *location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
-
-		//Vec3 pos_b1 = location1->GetPosition();
-		Vec3 pos_b2 = location2->GetPosition();
-		Vec3  world_anchor;
-
-		if(m_RollJoint)
+		
+		if(m_WheelAxisJoint)
 		{
-			world_anchor = m_Anchor + pos_b2;
-			//m_RollJoint->setGlobalAnchor(NxVec3(world_anchor.x,world_anchor.y,world_anchor.z));
-			
+			m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_RollAngularVelocity,0,0));
 		}
 	}
-
-	/*	void PhysXSuspensionComponent::SetLowStop(float value)
-		{
-			m_LowStop = value;
-			UpdateLimits();
-		}
-
-		void PhysXSuspensionComponent::SetHighStop(float value)
-		{
-			m_HighStop = value;
-			UpdateLimits();
-		}
-
-
-		void PhysXSuspensionComponent::UpdateLimits()
-		{
-			if(m_RollJoint)
-			{
-				NxRevoluteJoint* joint = static_cast<NxRevoluteJoint*>(m_RollJoint);
-				NxJointLimitPairDesc limits;
-				limits.high.setToDefault();
-				limits.high.value = m_HighStop;
-				limits.low.setToDefault();
-				limits.low.value = m_LowStop;
-				joint->setLimits(limits);
-				
-				
-			}
-		}
-*/
-		float PhysXSuspensionComponent::GetRollAngle()
-		{
-			if(m_RollJoint)
-				return 0;//m_RollJoint->getAngle();
-			return 0;
-		}
-
-		float PhysXSuspensionComponent::GetRollAngleRate()
-		{
-			if(m_RollJoint)
-				return 0;//m_RollJoint->getVelocity();
-			return 0;
-		}
-
-		void PhysXSuspensionComponent::UpdateMotor()
-		{
-			if(m_Joint)
-			{
-				m_Joint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_RollAngularVelocity,0,0));
-				//std::cout << "vel:" << m_RollAngularVelocity << "\n";
-				/*NxMotorDesc motor;
-				motor.velTarget = m_RollAngularVelocity;
-				motor.maxForce = m_RollJointForce;
-				m_RollJoint->setMotor(motor);*/
-			}
-		}
 
 		void PhysXSuspensionComponent::SetRollAxisVel(float velocity)
 		{
@@ -364,32 +276,6 @@ namespace GASS
 			m_RollJointForce = value;
 			UpdateMotor();
 		}
-
-		/*void PhysXSuspensionComponent::SetAxis2Vel(float value)
-		{
-			m_AngularVelocity2  = value;
-			UpdateMotor();
-
-		}
-
-		void PhysXSuspensionComponent::SetAxis2Force(float value)
-		{
-			m_JointForce2 = value;
-			UpdateMotor();
-
-		}
-
-		float PhysXSuspensionComponent::GetAxis2Force() const
-		{
-			return m_JointForce2;
-		}
-
-		void PhysXSuspensionComponent::SetAxis1Force(float value)
-		{
-			m_JointForce1 = value;
-			UpdateMotor();
-
-		}*/
 
 		void PhysXSuspensionComponent::OnPositionChanged(PositionMessagePtr message)
 		{

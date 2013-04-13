@@ -127,11 +127,13 @@ namespace GASS
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 
 		//axis actor
-		physx::PxRigidDynamic *m_RollAxisActor;
-		physx::PxRigidDynamic *m_WheelActor;
-		physx::PxRevoluteJoint *m_RollJoint;
-		physx::PxPrismaticJoint *m_SpringJoint;
-		physx::PxD6Joint *m_Joint;
+		physx::PxRigidDynamic *m_SuspensionActor;
+		//physx::PxRigidDynamic *m_WheelActor;
+		//physx::PxRevoluteJoint *m_RollJoint;
+		//physx::PxPrismaticJoint *m_SpringJoint;
+		//physx::PxD6Joint *m_Joint;
+		physx::PxD6Joint *m_SuspensionJoint;
+		physx::PxD6Joint *m_WheelAxisJoint;
 	};
 	typedef SPTR<PhysXSuspensionComponent> PhysXSuspensionComponentPtr;
 }
