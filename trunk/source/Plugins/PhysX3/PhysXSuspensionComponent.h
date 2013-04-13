@@ -51,87 +51,46 @@ namespace GASS
 		float GetRollAngle();
 		float GetRollAngleRate();
 		void SetRollAxisVel(float velocity);
-		//void SetSpringAxisVel(float value);
-		//float GetSpringAxisVel(){return 0;}
-		float GetRollAxisForce()const {return m_RollJointForce;}
-		void SetRollAxisForce(float value);//{ m_JointForce = value;}
-		//virtual void SetSpringAxisForce(float value);
-		//float GetSpringAxisForce()const;
-		
-	
-
+		float GetWheelJointMaxForce()const {return m_WheelJointMaxForce;}
+		void SetWheelJointMaxForce(float value);
 		//Helpers
 
 		void CreateJoint();
 		void UpdateSuspension();
-		//void UpdateLimits();
 		void UpdateAnchor();
 		void UpdateJointAxis();
-
-
 		void UpdateMotor();
 
 		//get set section
-
-		std::string GetBody1Name()const {return m_Body1Name;}
-		void SetBody1Name(const std::string &name) {m_Body1Name = name;}
-		std::string GetBody2Name()const {return m_Body2Name;}
-		void SetBody2Name(const std::string &name) {m_Body2Name = name;}
-		
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetStrength()const {return m_Strength;}
 		void SetStrength(float value){m_Strength =value;}
-		float GetSwayForce()const {return m_SwayForce;}
-		void SetSwayForce(float value);
-		Vec3 GetRollAxis()const {return m_RollAxis;}
-		void SetRollAxis(const Vec3 &value);
-		Vec3 GetSpringAxis()const {return m_SpringAxis;}
-		void SetSpringAxis(const Vec3 &value);
-		Vec3 GetAnchor()const {return m_Anchor;}
-		void SetAnchor(const Vec3 &value);
-
-		float GetHighStop()const {return m_HighStop;}
-		void SetHighStop(float value);
-		float GetLowStop()const {return m_LowStop;}
-		void SetLowStop(float value);
-
-		void PhysXSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message);
-
+		float GetSteerLimit()const {return m_SteerLimit;}
+		void SetSteerLimit(float value);
 
 		
+		void SendJointUpdate(VelocityNotifyMessagePtr message);
 
-		
 	private:
-		//PxJoint* m_PhysXSuspensionComponent;
+		float m_WheelJointMaxForce;
+		float m_WheelJointSpring;
+		float m_WheelJointDamping;
 
-		std::string m_Body1Name;
-		std::string m_Body2Name;
+		float m_SpringJointMaxForce;
+		float m_SteerJointMaxForce;
+
 		
 		
-		float m_RollJointForce;
-		float m_SpringJointForce;
-		float m_RollAngularVelocity;
-
-		float m_SwayForce;
 		float m_Strength;
 		float m_Damping;
-
-		float m_HighStop;
-		float m_LowStop;
-
-		Vec3 m_Anchor; 
-		Vec3 m_RollAxis;
-		Vec3 m_SpringAxis;
+		float m_SteerLimit;
+		
+		
+		float m_RollAngularVelocity;//?
 
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-
-		//axis actor
 		physx::PxRigidDynamic *m_SuspensionActor;
-		//physx::PxRigidDynamic *m_WheelActor;
-		//physx::PxRevoluteJoint *m_RollJoint;
-		//physx::PxPrismaticJoint *m_SpringJoint;
-		//physx::PxD6Joint *m_Joint;
 		physx::PxD6Joint *m_SuspensionJoint;
 		physx::PxD6Joint *m_WheelAxisJoint;
 	};
