@@ -40,25 +40,23 @@ namespace GASS
 		virtual void OnInitialize();
 		void SetPosition(const Vec3 &value);
 	protected:
-		
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		
-		void OnParameterMessage(PhysicsJointMessagePtr message);
+		void OnWheelVelocityRequest(PhysicsSuspensionWheelVelocityRequestPtr message);
+		void OnSteerVelocityRequest(PhysicsSuspensionSteerVelocityRequestPtr message);
 		void OnLoad(BodyLoadedMessagePtr message);
 
-		//virtual void UpdateTransformation();
 		float GetRollAngle();
 		float GetRollAngleRate();
-		void SetRollAxisVel(float velocity);
+		void SetWheelJointVelocity(float velocity);
 		float GetWheelJointMaxForce()const {return m_WheelJointMaxForce;}
 		void SetWheelJointMaxForce(float value);
+		void SetSteerVelocity(float value);
+		void SetSteerJointMaxForce(float value);
+		float GetSteerJointMaxForce() const {return m_SteerJointMaxForce;}
+		
 		//Helpers
-
 		void CreateJoint();
-		void UpdateSuspension();
-		void UpdateAnchor();
-		void UpdateJointAxis();
 		void UpdateMotor();
 
 		//get set section
@@ -68,13 +66,10 @@ namespace GASS
 		void SetStrength(float value){m_Strength =value;}
 		float GetSteerLimit()const {return m_SteerLimit;}
 		void SetSteerLimit(float value);
-
-		
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
-
 	private:
 		float m_WheelJointMaxForce;
-		float m_WheelJointSpring;
+		//float m_WheelJointSpring;
 		float m_WheelJointDamping;
 
 		float m_SpringJointMaxForce;
@@ -84,15 +79,9 @@ namespace GASS
 		float m_SteerJointMaxForce;
 		float m_SteerJointSpring;
 		float m_SteerJointDamping;
-
-
-		
-		
-		
 		float m_SteerLimit;
-		
-		
-		float m_RollAngularVelocity;//?
+		float m_WheelAngularVelocity;
+		float m_SteerVelocity;
 
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic *m_SuspensionActor;

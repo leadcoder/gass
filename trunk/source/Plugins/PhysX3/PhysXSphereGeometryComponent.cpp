@@ -53,7 +53,7 @@ namespace GASS
 			return NULL;
 		//Create shape
 		
-		/*if(m_SizeFromMesh)
+		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
@@ -61,8 +61,8 @@ namespace GASS
 				Sphere sphere = geom->GetBoundingSphere();
 				m_Radius = sphere.m_Radius;
 			}
-		}*/
-		Float  rad = 0.3;//GetRadius();
+		}
+		Float  rad = GetRadius();
 		
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();

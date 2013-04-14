@@ -33,16 +33,16 @@ namespace GASS
 		m_SteerJointMaxForce(1000),
 		m_SteerJointSpring(10),
 		m_SteerJointDamping(100),
-		m_WheelJointMaxForce(1000),
-		m_WheelJointSpring(10),
+		m_SteerVelocity(0),
+		m_WheelJointMaxForce(PX_MAX_F32),
 		m_WheelJointDamping(100),
 		m_Strength(1000),
 		m_Damping(10),
-		m_WheelAxisJoint (0),
+		m_WheelAxisJoint(0),
 		m_SuspensionJoint (0),
 		m_SuspensionActor(NULL),
-		m_RollAngularVelocity(0),
-		m_SteerLimit(0.1)
+		m_WheelAngularVelocity(0),
+		m_SteerLimit(0.5)
 	{
 
 	}
@@ -72,35 +72,38 @@ namespace GASS
 	void PhysXSuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,BodyLoadedMessage,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnParameterMessage,PhysicsJointMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnWheelVelocityRequest,PhysicsSuspensionWheelVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionSteerVelocityRequest,0));
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnPositionChanged,PositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 
 	}
 
-	void PhysXSuspensionComponent::OnParameterMessage(PhysicsJointMessagePtr message)
+
+	void PhysXSuspensionComponent::OnWheelVelocityRequest(PhysicsSuspensionWheelVelocityRequestPtr message)
 	{
-		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
+		SetWheelJointVelocity(message->GetTargetVelocity());
+		if(message->GetMaxForce() > 0)
+			SetWheelJointMaxForce(message->GetMaxForce());
+	}
 
-		float value = message->GetValue();
+	void PhysXSuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionSteerVelocityRequestPtr message)
+	{
+		SetSteerVelocity(message->GetTargetVelocity());
+	}
 
-		//wake body!!
+	void PhysXSuspensionComponent::SetSteerVelocity(float value)
+	{
+		m_SteerVelocity = value;
+		if(m_SuspensionJoint)
+			m_SuspensionJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(0,m_SteerVelocity,0));
+	}
 
-		//m_Body1->Enable();
-		switch(type)
-		{
-		case PhysicsJointMessage::AXIS1_VELOCITY:
-			break;
-		case PhysicsJointMessage::AXIS2_VELOCITY:
-			SetRollAxisVel(value);
-			break;
-		case PhysicsJointMessage::AXIS1_FORCE:
-			break;
-		case PhysicsJointMessage::AXIS2_FORCE:
-			SetWheelJointMaxForce(value);
-			break;
-		}
+	void PhysXSuspensionComponent::SetSteerJointMaxForce(float value)
+	{
+		m_SteerJointMaxForce = value;
 	}
 
 	void PhysXSuspensionComponent::OnLoad(BodyLoadedMessagePtr message)
@@ -147,16 +150,13 @@ namespace GASS
 
 		physx::PxD6JointDrive steer_drive(m_SteerJointSpring, m_SteerJointDamping, m_SteerJointMaxForce, false);
 		m_SuspensionJoint->setDrive(physx::PxD6Drive::eSWING, steer_drive);
-
 		SetSteerLimit(m_SteerLimit);
 
 		m_WheelAxisJoint = PxD6JointCreate(*system->GetPxSDK(),
 			m_SuspensionActor,physx::PxTransform(physx::PxVec3(0,0,0),no_rot), //parent
 			wheel_actor, physx::PxTransform(physx::PxVec3(0,0,0), no_rot));
 		m_WheelAxisJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
-
-		UpdateMotor();
-		m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(1,0,0));
+		//SetWheelJointVelocity(3);
 	}
 
 
@@ -190,15 +190,16 @@ namespace GASS
 
 		if(m_WheelAxisJoint)
 		{
-			physx::PxD6JointDrive drive(m_WheelJointSpring, m_WheelJointDamping, m_WheelJointMaxForce, false);
+			physx::PxD6JointDrive drive(0, m_WheelJointDamping, m_WheelJointMaxForce, false);
 			m_WheelAxisJoint->setDrive(physx::PxD6Drive::eTWIST, drive);
-			m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_RollAngularVelocity,0,0));
+			m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_WheelAngularVelocity,0,0));
+		
 		}
 	}
 
-	void PhysXSuspensionComponent::SetRollAxisVel(float velocity)
+	void PhysXSuspensionComponent::SetWheelJointVelocity(float velocity)
 	{
-		m_RollAngularVelocity  = velocity;
+		m_WheelAngularVelocity  = velocity;
 		UpdateMotor();
 	}
 
