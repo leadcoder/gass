@@ -218,7 +218,37 @@ namespace GASS
 
 	typedef SPTR<PhysicsMassMessage> PhysicsMassMessagePtr;
 
+	class PhysicsSuspensionWheelVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsSuspensionWheelVelocityRequest(float target_velocity, float max_force = -1, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_TargetVel(target_velocity), m_MaxForce(max_force)
+		  {
 
+		  }
+		  float GetTargetVelocity()const {return m_TargetVel;}
+		  float GetMaxForce()const {return m_MaxForce;}
+	private:
+		float m_TargetVel;
+		float m_MaxForce;
+	};
+	typedef SPTR<PhysicsSuspensionWheelVelocityRequest> PhysicsSuspensionWheelVelocityRequestPtr;
+	
+	class PhysicsSuspensionSteerVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsSuspensionSteerVelocityRequest(float target_velocity, float max_force = -1, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_TargetVel(target_velocity), m_MaxForce(max_force)
+		  {
+
+		  }
+		  float GetTargetVelocity()const {return m_TargetVel;}
+		  float GetMaxForce()const {return m_MaxForce;}
+	private:
+		float m_TargetVel;
+		float m_MaxForce;
+	};
+	typedef SPTR<PhysicsSuspensionSteerVelocityRequest> PhysicsSuspensionSteerVelocityRequestPtr;
 
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
