@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 		plane_template->AddComponent("ManualMeshComponent");
 		plane_template->AddComponent("PhysicsPlaneGeometryComponent");
 		GASS::BaseComponentPtr plane_comp2  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(plane_template->AddComponent("PlaneGeometryComponent"));
-		plane_comp2 ->SetPropertyByType("Size",GASS::Vec2(100,100));
+		plane_comp2->SetPropertyByType("Size",GASS::Vec2(100,100));
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(plane_template );
 	}
 	{
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 
 			//add wheels
 			GASS::SceneObjectTemplatePtr wheel_template;
-			GASS::Float offset = -1;
+			GASS::Float offset = -1.4;
 
 			wheel_template =  GASS::SceneObjectTemplatePtr(new GASS::SceneObjectTemplate);
 			wheel_template->SetName("FrontLeftWheel");
@@ -181,8 +181,8 @@ int main(int argc, char* argv[])
 			wheel_template->SetName("WheelObject");
 			wheel_template->SetID("WHEEL");
 			wheel_template->AddComponent("LocationComponent");
-			GASS::BaseComponentPtr sphere_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(wheel_template->AddComponent("BoxGeometryComponent"));
-			//sphere_comp->SetPropertyByType("Radius",0.3);
+			GASS::BaseComponentPtr sphere_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(wheel_template->AddComponent("SphereGeometryComponent"));
+			sphere_comp->SetPropertyByType("Radius",0.3);
 			wheel_template->AddComponent("PhysicsSphereGeometryComponent");
 			wheel_template->AddComponent("PhysicsBodyComponent");
 			wheel_template->AddComponent("ManualMeshComponent");
@@ -299,6 +299,8 @@ int main(int argc, char* argv[])
 		m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 	}
 
+	static float wheel_vel = 0;
+	static float steer_vel = 0;
 	while(true)
 	{
 		m_Engine->Update();
@@ -348,21 +350,45 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		else if(GetAsyncKeyState(VK_F3))
+		else if(GetAsyncKeyState(VK_DOWN))
 		{
-			if(!key_down)
-			{
-				key_down = true;
-				GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
-				rr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsJointMessage(GASS::PhysicsJointMessage::AXIS2_VELOCITY,10)));
-			
-				GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
-				rl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsJointMessage(GASS::PhysicsJointMessage::AXIS2_VELOCITY,10)));
-			
-			}
+			key_down = true;
+			wheel_vel -= 0.05;
+		}
+		else if(GetAsyncKeyState(VK_UP))
+		{
+			key_down = true;
+			wheel_vel += 0.05;
+		}
+		else if(GetAsyncKeyState(VK_LEFT))
+		{
+			key_down = true;
+			steer_vel = 2;
+		}
+		else if(GetAsyncKeyState(VK_RIGHT))
+		{
+			key_down = true;
+			steer_vel = -2;
 		}
 		else
+		{
+			steer_vel = 0;
 			key_down = false;
+		}
+
+
+		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
+		rr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
+			
+		GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
+		rl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
+
+		GASS::SceneObjectPtr fr_wheel = vehicle_obj->GetChildByID("FR_WHEEL");
+		fr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionSteerVelocityRequest(steer_vel)));
+			
+		GASS::SceneObjectPtr fl_wheel = vehicle_obj->GetChildByID("FL_WHEEL");
+		fl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionSteerVelocityRequest(steer_vel)));
+
 	}
 	return 0;
 }
