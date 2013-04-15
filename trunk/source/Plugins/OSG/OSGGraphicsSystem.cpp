@@ -260,8 +260,8 @@ namespace GASS
 		traits->readDISPLAY();
 
 		traits->screenNum = 0;
-		traits->x = 0;
-		traits->y = 0;
+		traits->x = 50;
+		traits->y = 50;
 		traits->width = width;
 		traits->height = height;
 		traits->doubleBuffer = true;

@@ -24,6 +24,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Reflection/GASSReflection.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
+#include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSIComponentContainer.h"
 #include "Core/ComponentSystem/GASSIComponentContainerTemplate.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
@@ -104,7 +105,7 @@ namespace GASS
 			@param comp_type Component type to add
 			@return The new component 
 		*/
-		ComponentPtr AddComponent(const std::string &comp_type);
+		BaseComponentPtr AddComponent(const std::string &comp_type);
 	protected:
 
 		//Its possible to override this function if custom creation proccess is needed.
