@@ -131,7 +131,7 @@ namespace GASS
 
 		//Create actor to connect steer and suspension joint to
 		m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(PxConvert::ToPx(world_wheel_pos),no_rot));
-		m_SuspensionActor->setMass(0.1);
+		m_SuspensionActor->setMass(wheel_comp->GetMass());
 		sm->GetPxScene()->addActor(*m_SuspensionActor);
 
 		//Calcualte positions relative to parentfor suspension joint
@@ -143,7 +143,7 @@ namespace GASS
 			m_SuspensionActor, physx::PxTransform(physx::PxVec3(0,0,0),no_rot));
 
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
-		m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
+		//m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
 		m_SuspensionJoint->setLinearLimit(physx::PxJointLimit(1,0.1));
 		physx::PxD6JointDrive suspension_drive(m_Strength, m_Damping, m_SpringJointMaxForce, false);
 		m_SuspensionJoint->setDrive(physx::PxD6Drive::eY, suspension_drive);

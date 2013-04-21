@@ -50,6 +50,7 @@ namespace GASS
 		virtual void Init();
 		physx::PxPhysics* GetPxSDK() const {return m_PhysicsSDK;}
 		physx::PxMaterial* GetDefaultMaterial() const {return m_DefaultMaterial;}
+		physx::PxMaterial* GetMaterial(const std::string &name) const;
 		physx::PxDefaultAllocator* GetAllocator() {return &m_DefaultAllocator;}
 		virtual std::string GetSystemName() const {return "PhysXPhysicsSystem";}
 		physx::PxCooking* GetPxCooking() const {return m_Cooking;}
@@ -71,6 +72,7 @@ namespace GASS
 
 		std::vector<physx::PxVehicleDrivableSurfaceType> m_VehicleDrivableSurfaceTypes;;
 		std::vector<physx::PxMaterial*> m_DrivableMaterials;
+		std::map<std::string,physx::PxMaterial*> m_Materials;
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
 	};
 

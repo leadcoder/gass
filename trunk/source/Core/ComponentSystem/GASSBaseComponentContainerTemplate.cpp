@@ -89,7 +89,6 @@ namespace GASS
 
 	BaseComponentPtr BaseComponentContainerTemplate::AddComponent(const std::string &comp_type)
 	{
-		 
 		BaseComponentPtr comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create(comp_type));
 		if(!comp)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create Component:" + comp_type,"BaseComponentContainerTemplate::AddComponent");

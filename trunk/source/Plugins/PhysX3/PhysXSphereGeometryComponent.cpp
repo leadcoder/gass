@@ -26,7 +26,8 @@
 namespace GASS
 {
 	PhysXSphereGeometryComponent::PhysXSphereGeometryComponent():
-		m_Radius(1)
+		m_Radius(1),
+		m_Material("DEFAULT")
 	{
 
 	}
@@ -40,6 +41,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<PhysXSphereGeometryComponent, IComponent>);
 		RegisterProperty<Float>("Radius", &GASS::PhysXSphereGeometryComponent::GetRadius, &GASS::PhysXSphereGeometryComponent::SetRadius);
+		RegisterProperty<std::string>("Material", &GASS::PhysXSphereGeometryComponent::GetMaterial, &GASS::PhysXSphereGeometryComponent::SetMaterial);
 	}
 
 	void PhysXSphereGeometryComponent::OnInitialize()
@@ -66,7 +68,7 @@ namespace GASS
 		
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		physx::PxMaterial* material = system->GetDefaultMaterial();
+		physx::PxMaterial* material = system->GetMaterial(m_Material);
 		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(		physx::PxVec3(0,0,0)));
 		
 		physx::PxFilterData collFilterData;

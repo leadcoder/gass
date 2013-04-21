@@ -90,7 +90,6 @@ namespace GASS
 		if(m_Shape)
 			m_Shape->release();
 		m_Shape = CreateShape();
-		
 		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 		if(m_Body)
 		{
@@ -98,21 +97,6 @@ namespace GASS
 			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
 		}
 	}
-
-	/*void PhysXBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
-	{
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		assert(scene_manager);
-		m_SceneManager = scene_manager;
-		m_Shape = CreateShape();
-		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
-		if(m_Body)
-		{
-			physx::PxReal mass = m_Body->GetMass();
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
-		}
-	}*/
-
 
 	bool  PhysXBaseGeometryComponent::GetSizeFromMesh() const
 	{
@@ -123,28 +107,6 @@ namespace GASS
 	{
 		m_SizeFromMesh = value;
 	}
-
-	/*unsigned long PhysXBaseGeometryComponent::GetCollisionBits() const 
-	{
-		return m_CollisionBits;
-	}
-
-	void PhysXBaseGeometryComponent::SetCollisionBits(unsigned long value)
-	{
-		m_CollisionBits = value;
-	}
-
-	unsigned long  PhysXBaseGeometryComponent::GetCollisionCategory() const 
-	{
-		return m_CollisionCategory;
-	}
-
-	void PhysXBaseGeometryComponent::SetCollisionCategory(unsigned long value)
-	{
-		m_CollisionCategory =value;
-	}*/
-
-	
 
 	GeometryComponentPtr PhysXBaseGeometryComponent::GetGeometry() const 
 	{

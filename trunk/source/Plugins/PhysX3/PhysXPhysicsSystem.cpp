@@ -104,9 +104,19 @@ namespace GASS
 		if(!m_Cooking)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxCreateCooking failed!", "PhysXPhysicsSystem::OnInit");
 
+		//Create physx materials
+		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
+		IMaterialSystem::MaterialMap materials = mat_system->GetMaterials();
+		IMaterialSystem::MaterialMap::iterator iter = materials.begin();
+		while(iter != materials.end()) 
+		{
+			PhysicsMaterial mat_data = iter->second;
+			m_Materials[iter->first] = GetPxSDK()->createMaterial(mat_data.StaticFriction, mat_data.DynamicFriction, mat_data.Restitution);
+			iter++;
+		}
 		
 		//load vehicle settings
-		/*FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
+	/*	FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
 		
 		LoadTires(path.GetFullPath());
 		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
@@ -141,6 +151,14 @@ namespace GASS
 		}*/
 
 		//physx::PxExtensionVisualDebugger::connect(mSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 10, true,physx::PxGetDefaultDebuggerFlags());
+	}
+
+	physx::PxMaterial* PhysXPhysicsSystem::GetMaterial(const std::string &name) const
+	{
+		std::map<std::string,physx::PxMaterial*>::const_iterator iter = m_Materials.find(name);
+		if(iter != m_Materials.end())
+			return iter->second;
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find physics material:" + name,"PhysXPhysicsSystem::GetMaterial");
 	}
 
 	int PhysXPhysicsSystem::GetTireIDFromName(const std::string &name) const

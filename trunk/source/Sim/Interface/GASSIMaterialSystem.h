@@ -29,12 +29,14 @@ namespace GASS
 	class IMaterialSystem
 	{
 	public:
-		
+		typedef std::map<std::string, PhysicsMaterial> MaterialMap;
+
 		virtual ~IMaterialSystem() {};
 		virtual void LoadMaterialFile(const std::string &file) = 0;
 		virtual void AddMaterial(const PhysicsMaterial& mat) = 0;
 		virtual bool HasMaterial(const std::string material_name) const = 0;
 		virtual PhysicsMaterial GetMaterial(const std::string material_name) const = 0;
+		virtual MaterialMap& GetMaterials() = 0;
 	private:
 	};
 	typedef SPTR<IMaterialSystem> MaterialSystemPtr;

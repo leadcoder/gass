@@ -39,8 +39,8 @@ namespace GASS
 		virtual void AddMaterial(const PhysicsMaterial& mat);
 		virtual bool HasMaterial(const std::string material_name) const;
 		virtual PhysicsMaterial GetMaterial(const std::string material_name) const;
+		virtual MaterialMap& GetMaterials() {return m_Materials;}
 	private:
-		typedef std::map<std::string, PhysicsMaterial> MaterialMap;
-		MaterialMap m_Materials;
+		MaterialMap m_Materials;	
 	};
 }
