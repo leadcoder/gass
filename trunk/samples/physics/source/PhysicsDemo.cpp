@@ -131,7 +131,8 @@ int main(int argc, char* argv[])
 			vehicle_template->SetID("VEHICLE");
 			vehicle_template->AddComponent("LocationComponent");
 			vehicle_template->AddComponent("ManualMeshComponent");
-			vehicle_template->AddComponent("PhysicsBodyComponent");
+			GASS::BaseComponentPtr body_comp = vehicle_template->AddComponent("PhysicsBodyComponent");
+			body_comp->SetPropertyByType("Mass",1.0f);
 			vehicle_template->AddComponent("PhysicsBoxGeometryComponent");
 			GASS::BaseComponentPtr box_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(vehicle_template->AddComponent("BoxGeometryComponent"));
 			box_comp->SetPropertyByType("Size",GASS::Vec3(2,1,4));
@@ -184,10 +185,13 @@ int main(int argc, char* argv[])
 			GASS::BaseComponentPtr sphere_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(wheel_template->AddComponent("SphereGeometryComponent"));
 			sphere_comp->SetPropertyByType("Radius",0.3);
 			wheel_template->AddComponent("PhysicsSphereGeometryComponent");
-			wheel_template->AddComponent("PhysicsBodyComponent");
+			GASS::BaseComponentPtr body_comp = wheel_template->AddComponent("PhysicsBodyComponent");
+			body_comp->SetPropertyByType("Mass",0.1f);
 			wheel_template->AddComponent("ManualMeshComponent");
 			//wheel_template->AddComponent("PhysicsHingeComponent");
-			wheel_template->AddComponent("PhysicsSuspensionComponent");
+			GASS::BaseComponentPtr susp_comp = wheel_template->AddComponent("PhysicsSuspensionComponent");
+			susp_comp->SetPropertyByType("Damping",300.0f);
+			susp_comp->SetPropertyByType("Strength",3000.0f);
 			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 		}
 	}
@@ -353,12 +357,12 @@ int main(int argc, char* argv[])
 		else if(GetAsyncKeyState(VK_DOWN))
 		{
 			key_down = true;
-			wheel_vel -= 0.05;
+			wheel_vel -= 2;
 		}
 		else if(GetAsyncKeyState(VK_UP))
 		{
 			key_down = true;
-			wheel_vel += 0.05;
+			wheel_vel += 2;
 		}
 		else if(GetAsyncKeyState(VK_LEFT))
 		{
@@ -376,7 +380,10 @@ int main(int argc, char* argv[])
 			key_down = false;
 		}
 
+		wheel_vel *= 0.9;
 
+		if(wheel_vel > 200)
+			wheel_vel = 200;
 		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
 		rr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
 			
