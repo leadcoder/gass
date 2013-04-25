@@ -34,15 +34,8 @@ namespace GASS
 		static  void RegisterReflection();
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "EditorSystem";}
-		//void SetPaths(const FilePath &execution_folder,
-		//const FilePath &appdata_folder,
-		//const FilePath &mydocuments_folder);
-		//const FilePath GetWorkingFolder(void) {return m_ExecutionFolder;}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 	protected:
-		//FilePath m_ExecutionFolder;
-		//FilePath m_AppDataFolder;
-		//FilePath m_MyDocumentsFolder;
 		GUISchemaLoader* m_GUISettings;
 	};
 	typedef SPTR<EditorSystem> EditorSystemPtr;

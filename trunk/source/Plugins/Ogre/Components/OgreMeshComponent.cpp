@@ -34,7 +34,11 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
+#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSResourceGroup.h"
+
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
@@ -44,6 +48,17 @@ using namespace Ogre;
 
 namespace GASS
 {
+
+	std::vector<std::string> OgreMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
+	{
+		std::vector<std::string> content;
+		OgreMeshComponentPtr mesh = DYNAMIC_PTR_CAST<OgreMeshComponent>(object);
+		if(mesh)
+		{
+			content = mesh->GetAvailableMeshFiles();
+		}
+		return content;
+	}
 
 	OgreMeshComponent::OgreMeshComponent() : m_OgreEntity(NULL),
 		m_CastShadow(true),
@@ -64,9 +79,15 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("MeshComponent", OF_VISIBLE)));
-		
+
+
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("Mesh filename",PF_VISIBLE,"","MESH")));
+			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		RegisterProperty<std::string>("EnumerationResourceGroup", &OgreMeshComponent::GetEnumerationResourceGroup, &OgreMeshComponent::SetEnumerationResourceGroup,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
+		
+		//RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
+		//	FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("Mesh filename",PF_VISIBLE,"","MESH")));
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
@@ -522,5 +543,28 @@ namespace GASS
 	GeometryFlagsBinder OgreMeshComponent::GetGeometryFlagsBinder() const
 	{
 		return GeometryFlagsBinder(GetGeometryFlags());
+	}
+
+
+	std::vector<std::string> OgreMeshComponent::GetAvailableMeshFiles() const
+	{
+		std::vector<std::string> content;
+		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+		ResourceGroupVector groups = rm->GetResourceGroups();
+		std::vector<std::string> values;
+		for(size_t i = 0; i < groups.size();i++)
+		{
+			ResourceGroupPtr group = groups[i];
+			if(m_EnumerationResourceGroup == "" || group->GetName() == m_EnumerationResourceGroup)
+			{
+				ResourceVector res_vec;
+				group->GetResourcesByType(res_vec,"MESH");
+				for(size_t j = 0; j < res_vec.size();j++)
+				{
+					content.push_back(res_vec[j]->Name());
+				}
+			}
+		}
+		return content;
 	}
 }

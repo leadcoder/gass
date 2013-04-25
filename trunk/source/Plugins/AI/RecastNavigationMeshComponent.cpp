@@ -29,6 +29,14 @@
 
 namespace GASS
 {
+	std::vector<SceneObjectPtr> NavMeshEnumeration(BaseReflectionObjectPtr obj)
+	{
+		RecastNavigationMeshComponentPtr navmesh_comp = DYNAMIC_PTR_CAST<RecastNavigationMeshComponent>(obj);
+		return navmesh_comp->GetMeshSelectionEnum();
+	}
+
+
+	typedef SPTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
 	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new ManualMeshData()),
 		m_NavVisLineMesh(new ManualMeshData()),
 		m_NavMesh(NULL),
@@ -68,31 +76,59 @@ namespace GASS
 	void RecastNavigationMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, IComponent>);
-		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize);
-		RegisterProperty<float>("CellHeight", &GetCellHeight, &SetCellHeight);
-		RegisterProperty<float>("AgentHeight", &GetAgentHeight, &SetAgentHeight);
-		RegisterProperty<float>("AgentRadius", &GetAgentRadius, &SetAgentRadius);
-		RegisterProperty<float>("AgentMaxClimb", &GetAgentMaxClimb, &SetAgentMaxClimb);
-		RegisterProperty<float>("AgentMaxSlope", &GetAgentMaxSlope, &SetAgentMaxSlope);
-		RegisterProperty<float>("RegionMinSize", &GetRegionMinSize, &SetRegionMinSize);
-		RegisterProperty<float>("RegionMergeSize", &GetRegionMergeSize, &SetRegionMergeSize);
-		RegisterProperty<float>("EdgeMaxLen", &GetEdgeMaxLen, &SetEdgeMaxLen);
-		RegisterProperty<float>("EdgeMaxError", &GetEdgeMaxError, &SetEdgeMaxError);
-		RegisterProperty<float>("VertsPerPoly", &GetVertsPerPoly, &SetVertsPerPoly);
-		RegisterProperty<float>("DetailSampleDist", &GetDetailSampleDist, &SetDetailSampleDist);
-		RegisterProperty<float>("DetailSampleMaxError", &GetDetailSampleMaxError, &SetDetailSampleMaxError);
-		RegisterProperty<bool>("Build", &GetBuild, &SetBuild);
-		RegisterProperty<bool>("Visible", &GetVisible, &SetVisible);
-		RegisterProperty<bool>("ShowMeshLines", &GetShowMeshLines, &SetShowMeshLines);
-		RegisterProperty<bool>("ShowMeshSolid", &GetShowMeshSolid, &SetShowMeshSolid);
-		RegisterProperty<Vec3>("MeshBoundingMin", &GetMeshBoundingMin, &SetMeshBoundingMin);
-		RegisterProperty<Vec3>("MeshBoundingMax", &GetMeshBoundingMax, &SetMeshBoundingMax);
-		RegisterProperty<int>("TileSize", &GetTileSize, &SetTileSize);
-		RegisterProperty<int>("Transparency", &GetTransparency, &SetTransparency);
-		RegisterVectorProperty<std::string>("MeshSelection", &GetSelectedMeshes, &SetSelectedMeshes);
-		RegisterProperty<std::string>("BoundingBoxFromShape", &GetBoundingBoxFromShape, &SetBoundingBoxFromShape);
-		RegisterProperty<std::string>("ImportMesh", &GetImportMesh, &SetImportMesh);
-		RegisterProperty<std::string>("ExportMesh", &GetExportMesh, &SetExportMesh);
+
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
+		
+		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("CellHeight", &GetCellHeight, &SetCellHeight,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("AgentHeight", &GetAgentHeight, &SetAgentHeight,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("AgentRadius", &GetAgentRadius, &SetAgentRadius,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("AgentMaxClimb", &GetAgentMaxClimb, &SetAgentMaxClimb,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("AgentMaxSlope", &GetAgentMaxSlope, &SetAgentMaxSlope,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("RegionMinSize", &GetRegionMinSize, &SetRegionMinSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("RegionMergeSize", &GetRegionMergeSize, &SetRegionMergeSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("EdgeMaxLen", &GetEdgeMaxLen, &SetEdgeMaxLen,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("EdgeMaxError", &GetEdgeMaxError, &SetEdgeMaxError,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("VertsPerPoly", &GetVertsPerPoly, &SetVertsPerPoly,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("DetailSampleDist", &GetDetailSampleDist, &SetDetailSampleDist,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("DetailSampleMaxError", &GetDetailSampleMaxError, &SetDetailSampleMaxError,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Build", &GetBuild, &SetBuild,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Visible", &GetVisible, &SetVisible,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("ShowMeshLines", &GetShowMeshLines, &SetShowMeshLines,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("ShowMeshSolid", &GetShowMeshSolid, &SetShowMeshSolid,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("MeshBoundingMin", &GetMeshBoundingMin, &SetMeshBoundingMin,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("MeshBoundingMax", &GetMeshBoundingMax, &SetMeshBoundingMax,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("TileSize", &GetTileSize, &SetTileSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("Transparency", &GetTransparency, &SetTransparency,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<SceneObjectRef>("MeshSelection", &GetSelectedMeshes, &SetSelectedMeshes,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Transmitter connection",PF_VISIBLE,NavMeshEnumeration)));
+		RegisterProperty<std::string>("BoundingBoxFromShape", &GetBoundingBoxFromShape, &SetBoundingBoxFromShape,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<FilePath>("ExportMesh", &GetExportMesh, &SetExportMesh,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void RecastNavigationMeshComponent::OnInitialize()
@@ -813,7 +849,6 @@ static int convexhull(const float* pts, int npts, int* out)
 		{
 			UpdateNavMeshVis();
 		}
-		
 	}
 
 	Vec3 RecastNavigationMeshComponent::GetMeshBoundingMin() const
@@ -998,71 +1033,83 @@ static int convexhull(const float* pts, int npts, int* out)
 		return m_BBShape;
 	}
 
-	void RecastNavigationMeshComponent::SetExportMesh(const std::string &value)
+	void RecastNavigationMeshComponent::SetExportMesh(const FilePath &value)
 	{
 		if(m_Initialized && m_NavMesh)
 		{
-			SaveAllTiles(value.c_str(), m_NavMesh);
+			
+			SaveAllTiles(value.GetFullPath().c_str(), m_NavMesh);
 		}
 	}
 
-	std::string RecastNavigationMeshComponent::GetExportMesh() const
+	FilePath RecastNavigationMeshComponent::GetExportMesh() const
 	{
-		return "";
+		return FilePath("");
 	}
 
-	void RecastNavigationMeshComponent::SetImportMesh(const std::string &value)
+	void RecastNavigationMeshComponent::SetImportMesh(const FilePath &value)
 	{
 		if(m_Initialized)
 		{
 			dtFreeNavMesh(m_NavMesh);
-			m_NavMesh = LoadAll(value.c_str());
+			m_NavMesh = LoadAll(value.GetFullPath().c_str());
 			m_NavQuery->init(m_NavMesh, 2048);
 
 			UpdateNavMeshVis();
 		}
 	}
 
-	std::string RecastNavigationMeshComponent::GetImportMesh() const
+	FilePath RecastNavigationMeshComponent::GetImportMesh() const
 	{
-		return "";
+		return FilePath("");
+	}
+
+	std::vector<SceneObjectPtr> RecastNavigationMeshComponent::GetMeshSelectionEnum()
+	{
+		std::vector<SceneObjectPtr> objs;
+		if(GetSceneObject())
+		{
+			IComponentContainer::ComponentVector components;
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
+			for(size_t i = 0; i < components.size() ; i++)
+			{
+				BaseSceneComponentPtr comp = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
+				objs.push_back(comp->GetSceneObject());
+			}
+		}
+		return objs;
 	}
 
 
-	void RecastNavigationMeshComponent::SetSelectedMeshes(const std::vector<std::string> &value)
+	void RecastNavigationMeshComponent::SetSelectedMeshes(const std::vector<SceneObjectRef> &value)
 	{
 		m_SelectedMeshes = value;
-		//update bounds from mesh
+		//update bounds from mesh selection
 		if(GetSceneObject())
 		{
-			std::vector<SceneObjectPtr> objs;
 			m_MeshBounding = AABox();
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
-				objs.clear();
-				GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildrenByName(objs,m_SelectedMeshes[i]);
-				if(objs.size() > 0)
+				SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
+				if(obj)
 				{
-					SceneObjectPtr obj = objs.front();
-					if(obj)
-					{
-						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-						AABox box = geom->GetBoundingBox();
+					GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
+					LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+					AABox box = geom->GetBoundingBox();
 
-						if(lc)
-						{
-							Vec3 world_pos = lc->GetWorldPosition();
-							Quaternion world_rot = lc->GetWorldRotation();
-							Mat4 trans_mat;
-							trans_mat.Identity();
-							world_rot.ToRotationMatrix(trans_mat);
-							trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
-							box.Transform(trans_mat);
-						}
-						m_MeshBounding.Union(box);
+					if(lc)
+					{
+						Vec3 world_pos = lc->GetWorldPosition();
+						Quaternion world_rot = lc->GetWorldRotation();
+						Mat4 trans_mat;
+						trans_mat.Identity();
+						world_rot.ToRotationMatrix(trans_mat);
+						trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+						box.Transform(trans_mat);
 					}
+					m_MeshBounding.Union(box);
 				}
+
 			}
 		}
 	}
@@ -1074,11 +1121,8 @@ static int convexhull(const float* pts, int npts, int* out)
 			std::vector<MeshDataPtr> mesh_data_vec;
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
-				std::vector<SceneObjectPtr> objs;
-				GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildrenByName(objs,m_SelectedMeshes[i]);
-				if(objs.size() > 0)
 				{
-					SceneObjectPtr obj = objs.front();
+					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
 						MeshDataPtr mesh_data = new MeshData;

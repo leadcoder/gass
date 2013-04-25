@@ -115,4 +115,5 @@ namespace GASS
 		ResourceGroupVector m_ResourceGroups;
 		std::vector<ResourceType> m_ResourceTypes;
 	};
+	typedef SPTR<ResourceManager> ResourceManagerPtr;
 }

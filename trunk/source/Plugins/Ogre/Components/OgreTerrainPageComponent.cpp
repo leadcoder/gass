@@ -120,12 +120,22 @@ namespace GASS
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
 
 		//import functions, can be used from editor, use full-path to resource and execute import
+		std::vector<std::string> hm_ext;
+		hm_ext.push_back("png");
 		RegisterProperty<FilePath>("ImportHeightMap", &GASS::OgreTerrainPageComponent::GetImportHeightMap, &GASS::OgreTerrainPageComponent::ImportHeightMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import height map, only png files supported",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import height map, only png files supported",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, hm_ext)));
+
+		std::vector<std::string> color_ext;
+		color_ext.push_back("png");
+		color_ext.push_back("dds");
+		color_ext.push_back("jpg");
+		color_ext.push_back("*");
+
 		RegisterProperty<FilePath>("ImportColorMap", &GASS::OgreTerrainPageComponent::GetImportColorMap, &GASS::OgreTerrainPageComponent::ImportColorMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import color map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png;*.dds;*.jpg;*.*")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import color map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, color_ext)));
+
 		RegisterProperty<FilePath>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.tga;*.dds;*.png;*.*")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, color_ext)));
 	}
 
 	void OgreTerrainPageComponent::SetRenderQueue(const RenderQueueBinder &rq) 

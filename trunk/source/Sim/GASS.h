@@ -61,8 +61,10 @@
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/Interface/GASSICollisionSystem.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
+#include "Sim/Interface/GASSIProjectionSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIWorldLocationComponent.h"
 
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
@@ -81,6 +83,8 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSResourceHandle.h"
+#include "Sim/GASSSceneObjectRef.h"
+
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"

@@ -90,9 +90,9 @@ namespace GASS
 		RegisterProperty<std::string>("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
 		RegisterProperty<float>("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
 		RegisterProperty<float>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
-		//RegisterProperty<Vec4>("TextColor", &GASS::OgreTextComponent::GetTextColor, &GASS::OgreTextComponent::SetTextColor);
-		//TODO: add OSG attributes:  Font
+		RegisterProperty<bool>("ScaleByDistance", &OgreTextComponent::GetScaleByDistance, &OgreTextComponent::SetScaleByDistance);
 	}
+	
 
 	Ogre::UTFString ConvertToUTF(Ogre::String String) 
 	{ 
@@ -246,8 +246,6 @@ namespace GASS
 		std::string caption = message->GetCaption();
 		SetText(caption);
 	}
-
-	
 
 	void OgreTextComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{

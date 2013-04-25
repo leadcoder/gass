@@ -111,7 +111,7 @@ namespace GASS
 			{
 				SPTR<T> ret = DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
-					components.push_back(ret);
+					components.push_back(m_ComponentVector[i]);
 			}
 
 			if(recursive)

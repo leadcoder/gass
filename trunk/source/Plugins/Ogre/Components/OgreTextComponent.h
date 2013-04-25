@@ -43,6 +43,7 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere() const;
 	protected:
+		ADD_ATTRIBUTE(bool,ScaleByDistance)
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		void OnGeomChanged(GeometryChangedMessagePtr message);
 		void OnCaptionMessage(TextCaptionMessagePtr message);

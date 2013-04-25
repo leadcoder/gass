@@ -67,12 +67,16 @@ namespace GASS
 
 	void GrassLoaderComponent::RegisterReflection()
 	{
+		std::vector<std::string> ext;
+		ext.push_back("png");
+		ext.push_back("tga");
+
 		ComponentFactory::GetPtr()->Register("GrassLoaderComponent",new Creator<GrassLoaderComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("GrassLoaderComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Can only be specified in template",PF_VISIBLE)));
 		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, "*.png;*.tga")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, ext)));
 		RegisterProperty<float>("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("You need to reload scene before this property take effect",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec4>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,

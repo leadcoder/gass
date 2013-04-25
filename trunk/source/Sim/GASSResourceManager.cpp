@@ -173,7 +173,6 @@ namespace GASS
 		return false;		
 	}
 
-
 	void ResourceManager::RegisterResourceType(const ResourceType &res_type) 
 	{
 		m_ResourceTypes.push_back(res_type);

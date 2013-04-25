@@ -233,8 +233,8 @@ namespace GASS
 			}
 			return res;
 		}
-		virtual bool HasMetaData() const {return false;}
-		virtual PropertyMetaDataPtr GetMetaData() const {PropertyMetaDataPtr res; return res;}
+		virtual bool HasMetaData() const {return (m_MetaData != NULL);}
+		virtual PropertyMetaDataPtr GetMetaData() const {return m_MetaData;}
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;

@@ -113,6 +113,9 @@ namespace GASS
 		virtual Vec3 GetRandomPoint() const;
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
+
+		//need to be public for enumerator access it
+		std::vector<SceneObjectPtr> GetMeshSelectionEnum();
 	protected:
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
@@ -145,9 +148,9 @@ namespace GASS
 		void SetVertsPerPoly(const float value);
 		void SetDetailSampleDist(const float value);
 		void SetDetailSampleMaxError(const float value);
-		void SetSelectedMeshes(const std::vector<std::string> &value);
+		void SetSelectedMeshes(const std::vector<SceneObjectRef>  &value);
 		void SetTileSize(const int size);
-		std::vector<std::string> GetSelectedMeshes() const {return m_SelectedMeshes;}
+		std::vector<SceneObjectRef>  GetSelectedMeshes() const {return m_SelectedMeshes;}
 		bool GetBuild() const;
 		void SetBuild(const bool value);
 		void SetShowMeshLines(bool value);
@@ -174,18 +177,20 @@ namespace GASS
 		void Cleanup();
 		void SetVisible(bool value);
 		bool GetVisible() const;
-		void SetExportMesh(const std::string &value);
-		std::string GetExportMesh() const;
-		void SetImportMesh(const std::string &value);
-		std::string GetImportMesh() const;
+		void SetExportMesh(const FilePath &value);
+		FilePath GetExportMesh() const;
+		void SetImportMesh(const FilePath &value);
+		FilePath GetImportMesh() const;
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
+
 		
+
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
 		ManualMeshDataPtr m_NavVisTriMesh;
 		ManualMeshDataPtr m_NavVisLineMesh;
-		std::vector<std::string> m_SelectedMeshes;
+		std::vector<SceneObjectRef> m_SelectedMeshes;
 		bool m_ShowMeshLines;
 		bool m_ShowMeshSolid;
 		bool m_Visible;

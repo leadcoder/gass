@@ -56,17 +56,29 @@ namespace GASS
 	void OSGMeshComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("MeshComponent", OF_VISIBLE)));
+
 		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource);
-		
-		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
-		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow);
-		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting);
-		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand);
+			//OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh receive shadows or not",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Lighting", &GetLighting, &SetLighting,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable Light for this mesh",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Expand", &GetExpand, &SetExpand,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
 
+		std::vector<std::string> ext;
+		ext.push_back("3ds");
+		ext.push_back("flt");
+		ext.push_back("obj");
+		ext.push_back("*");
+
 		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,"*.3ds *.flt *.obj")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
 	}
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

@@ -41,6 +41,17 @@ namespace Ogre
 
 namespace GASS
 {
+
+	class OgreMeshEnumerationMetaData : public EnumerationPropertyMetaData
+	{
+	public:
+		OgreMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+	private:
+	};
+	typedef SPTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
+
+
 	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
 	public:
@@ -61,7 +72,11 @@ namespace GASS
 		virtual void GetMeshData(MeshDataPtr mesh_data) const;
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
+
+		//used by enumeration class
+		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
+		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)
 		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
@@ -81,8 +96,7 @@ namespace GASS
 		void OnVisibilityMessage(MeshVisibilityMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
-		
-
+	
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
 

@@ -159,15 +159,16 @@ namespace GASS
 			PATH_SELECTION,
 		};
 
-		FilePathPropertyMetaData(const std::string &annotation, PropertyFlags flags, FilePathEditType type, const std::string &filter = ""): BasePropertyMetaData(annotation,flags) ,
-			m_Type(type),m_Filter(filter)
+		FilePathPropertyMetaData(const std::string &annotation, PropertyFlags flags, FilePathEditType type, const std::vector<std::string> &extensions): BasePropertyMetaData(annotation,flags) ,
+			m_Type(type), m_Extensions(extensions)
 		{
 		}
-		std::string GetFilter() const {return m_Filter;}
+		std::vector<std::string> GetExtensions() const {return m_Extensions;}
 		FilePathEditType GetType() const {return m_Type;}
 	private:
 		FilePathEditType m_Type;
-		std::string m_Filter;
+		std::vector<std::string> m_Extensions;
+		
 	};
 	typedef SPTR<FilePathPropertyMetaData> FilePathPropertyMetaDataPtr;
 

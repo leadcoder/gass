@@ -64,6 +64,10 @@ namespace GASS
 
 	void WaypointListComponent::RegisterReflection()
 	{
+
+		std::vector<std::string> ext;
+		ext.push_back("txt");
+
 		ComponentFactory::GetPtr()->Register("WaypointListComponent",new Creator<WaypointListComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("WaypointListComponent", OF_VISIBLE)));
 		RegisterProperty<float>("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius,
@@ -79,7 +83,7 @@ namespace GASS
 		RegisterProperty<int>("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<FilePath>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export this path to text file",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE,"*.txt")));
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export this path to text file",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE,ext)));
 		RegisterProperty<std::string>("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		

@@ -51,7 +51,10 @@
 
 namespace GASS
 {
-	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),m_UniqueMaterialCreated(false),m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),
+		m_UniqueMaterialCreated(false),
+		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_CastShadows(false)
 	{
 
 	}
@@ -64,6 +67,9 @@ namespace GASS
 	void OgreManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, IComponent>);
+		
+		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void OgreManualMeshComponent::OnInitialize()
@@ -92,10 +98,19 @@ namespace GASS
 
 		m_MeshObject = sm->createManualObject(name);
 		m_MeshObject->setDynamic(true);
-		m_MeshObject->setCastShadows(false);
+		m_MeshObject->setCastShadows(m_CastShadows);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 	}
+
+
+	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
+	{
+		m_CastShadows = castShadow;
+		if(m_MeshObject)
+			m_MeshObject->setCastShadows(m_CastShadows);
+	}
+
 
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{

@@ -47,6 +47,9 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
+		void SetCastShadow(bool castShadow);
+		bool GetCastShadow() const {return m_CastShadows;}
+
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
@@ -58,6 +61,7 @@ namespace GASS
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<MeshData> m_MeshData;
 		bool m_UniqueMaterialCreated;
+		bool m_CastShadows;
 		GeometryFlags m_GeomFlags;
 	};
 }

@@ -54,6 +54,7 @@ namespace GASS
 		m_TerrainPaintLayer(TL_2),
 		m_ClampToTerrain(true),
 		m_TileScale(1,10),
+		m_CAP(false),
 		m_CustomDitchTexturePercent(0)
 	{
 
@@ -97,7 +98,8 @@ namespace GASS
 			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
 		RegisterProperty<float>("CustomDitchTexturePercent", &GASS::OgreRoadComponent::GetCustomDitchTexturePercent, &GASS::OgreRoadComponent::SetCustomDitchTexturePercent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		
+		RegisterProperty<bool>("CAP", &GASS::OgreRoadComponent::GetCAP, &GASS::OgreRoadComponent::SetCAP,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void OgreRoadComponent::OnInitialize()
@@ -299,14 +301,6 @@ namespace GASS
 				// create this side piece 
 				curr_vertices[j] = vertex; 
 				curr_vertices[j] += lr_vector*lr_vector_multiplier[j]*width_mult; 
-
-				// update height 
-				//curr_vertices[j].y = mTerrainMesh->getHeight(curr_vertices[j]); 
-				/*curr_vertices[j].y = vertex.y; 
-				if (curr_vertices[j].y > curr_height && j != 0 && j != num_horizontal_pts-1)
-				{
-					curr_height = curr_vertices[j].y; 
-				}*/
 			} 
 
 
@@ -396,6 +390,98 @@ namespace GASS
 			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Normal = normal;
 			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Normal = normal;
 		}
+
+		
+		if(m_CAP)
+		{
+			//CAP under
+			int num_horizontal_vertex = num_horizontal_pts*2-2;
+			for (int n = 0; n < points.size()-1; n++) 
+			{
+				vertex_offset = n*num_horizontal_vertex;
+				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex - 1 );
+				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1 );
+				mesh_data->IndexVector.push_back(vertex_offset);
+
+				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1);
+				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex);
+				mesh_data->IndexVector.push_back(vertex_offset);
+			}
+
+			//CAP START and END
+			float offset = (points.size()-1)*num_horizontal_vertex;
+			for (int i = 0; i < num_horizontal_vertex-1 ; i++ ) 
+			{
+				//start cap
+				MeshVertex m0 = mesh_data->VertexVector[0];
+				MeshVertex m1 = mesh_data->VertexVector[i];
+				MeshVertex m2 = mesh_data->VertexVector[i+1];
+				
+				Vec3 normal = Math::GetNormal(m0.Pos,m1.Pos,m2.Pos);
+				
+				m0.Normal = normal;
+				m1.Normal = normal;
+				m2.Normal = normal;
+				Vec3 t1 = m1.Pos - m0.Pos;
+				Vec3 t2 = m2.Pos - m0.Pos;
+				
+
+				m0.TexCoord.x = 0;
+				m0.TexCoord.y = 0;
+
+				m1.TexCoord.y = t1.y;
+				t1.y = 0;
+				m1.TexCoord.x = t1.Length();
+
+				m2.TexCoord.y = t2.y;
+				t2.y = 0;
+				m2.TexCoord.x = t2.Length();
+
+				int start_ind = mesh_data->VertexVector.size();
+				mesh_data->IndexVector.push_back(start_ind);
+				mesh_data->IndexVector.push_back(start_ind+1);
+				mesh_data->IndexVector.push_back(start_ind+2);
+				mesh_data->VertexVector.push_back(m0);
+				mesh_data->VertexVector.push_back(m1);
+				mesh_data->VertexVector.push_back(m2);
+
+				//end cap
+
+				
+				m0 = mesh_data->VertexVector[offset];
+				m1 = mesh_data->VertexVector[offset + i];
+				m2 = mesh_data->VertexVector[offset +i+1];
+				normal = Math::GetNormal(m0.Pos,m1.Pos,m2.Pos);
+				
+				m0.Normal = normal;
+				m1.Normal = normal;
+				m2.Normal = normal;
+				t1 = m1.Pos - m0.Pos;
+				t2 = m2.Pos - m0.Pos;
+				
+				m0.TexCoord.x = 0;
+				m0.TexCoord.y = 0;
+
+				m1.TexCoord.y = t1.y;
+				t1.y = 0;
+				m1.TexCoord.x = t1.Length();
+
+				m2.TexCoord.y = t2.y;
+				t2.y = 0;
+				m2.TexCoord.x = t2.Length();
+
+				start_ind = mesh_data->VertexVector.size();
+				mesh_data->IndexVector.push_back(start_ind);
+				mesh_data->IndexVector.push_back(start_ind+1);
+				mesh_data->IndexVector.push_back(start_ind+2);
+				mesh_data->VertexVector.push_back(m2);
+				mesh_data->VertexVector.push_back(m1);
+				mesh_data->VertexVector.push_back(m0);
+			} 
+		}
+
+
+		
 
 		/*for (int n = 0; n < points.size()-1; n++) 
 		{ 
