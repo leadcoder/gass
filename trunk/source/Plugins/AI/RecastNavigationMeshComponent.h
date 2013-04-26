@@ -57,46 +57,16 @@ namespace GASS
 		SAMPLE_POLYFLAGS_ALL = 0xffff      // All abilities.
 	};
 
-	static SamplePolyAreas GetAreaFromName(const std::string &name)
-	{
-		
-		if(name== "SAMPLE_POLYAREA_OBSTACLE")
-			return  SAMPLE_POLYAREA_OBSTACLE;
-		else if(name== "SAMPLE_POLYAREA_GROUND")
-			return  SAMPLE_POLYAREA_GROUND;
-		else if(name== "SAMPLE_POLYAREA_GROUND")
-			return SAMPLE_POLYAREA_WATER;
-		else if(name== "SAMPLE_POLYAREA_ROAD")
-			return SAMPLE_POLYAREA_ROAD;
-		else if(name== "SAMPLE_POLYAREA_DOOR")
-			return SAMPLE_POLYAREA_DOOR;
-		else if(name== "SAMPLE_POLYAREA_GRASS")
-			return SAMPLE_POLYAREA_GRASS;
-		else if(name== "SAMPLE_POLYAREA_JUMP")
-			return SAMPLE_POLYAREA_JUMP;
-		return SAMPLE_POLYAREA_GROUND;
-	}
-	
 
-	static std::string GetAreaName(SamplePolyAreas value)
-	{
-		if(value== SAMPLE_POLYAREA_OBSTACLE)
-			return  "SAMPLE_POLYAREA_OBSTACLE";
-		else if(value== SAMPLE_POLYAREA_GROUND)
-			return  "SAMPLE_POLYAREA_GROUND";
-		else if(value== SAMPLE_POLYAREA_GROUND)
-			return "SAMPLE_POLYAREA_WATER";
-		else if(value== SAMPLE_POLYAREA_ROAD)
-			return "SAMPLE_POLYAREA_ROAD";
-		else if(value== SAMPLE_POLYAREA_DOOR)
-			return "SAMPLE_POLYAREA_DOOR";
-		else if(value== SAMPLE_POLYAREA_GRASS)
-			return "SAMPLE_POLYAREA_GRASS";
-		else if(value== SAMPLE_POLYAREA_JUMP)
-			return "SAMPLE_POLYAREA_JUMP";
-		return "SAMPLE_POLYAREA_GROUND";
-	}
-
+	START_ENUM_BINDER(SamplePolyAreas,SamplePolyAreasBinder)
+		BIND(SAMPLE_POLYAREA_OBSTACLE)
+		BIND(SAMPLE_POLYAREA_GROUND)
+		BIND(SAMPLE_POLYAREA_WATER)
+		BIND(SAMPLE_POLYAREA_ROAD)
+		BIND(SAMPLE_POLYAREA_DOOR)
+		BIND(SAMPLE_POLYAREA_GRASS)
+		BIND(SAMPLE_POLYAREA_JUMP)
+	END_ENUM_BINDER(SamplePolyAreas,SamplePolyAreasBinder)
 
 	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape
 	{

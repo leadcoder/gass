@@ -21,7 +21,8 @@
 
 namespace GASS
 {
-	RecastConvexVolumeComponent::RecastConvexVolumeComponent() : m_Initialized(false), m_Area(SAMPLE_POLYAREA_GROUND)
+	RecastConvexVolumeComponent::RecastConvexVolumeComponent() : m_Initialized(false), 
+		m_AreaType(SAMPLE_POLYAREA_GROUND)
 	{
 
 	}
@@ -34,10 +35,12 @@ namespace GASS
 	void RecastConvexVolumeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("RecastConvexVolumeComponent",new Creator<RecastConvexVolumeComponent, IComponent>);
-		RegisterProperty<std::string>("AreaType", &RecastConvexVolumeComponent::GetAreaType, &RecastConvexVolumeComponent::SetAreaType);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("RecastConvexVolumeComponent", OF_VISIBLE)));
+		RegisterProperty<SamplePolyAreasBinder>("AreaType", &RecastConvexVolumeComponent::GetAreaType, &RecastConvexVolumeComponent::SetAreaType,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Area Type",PF_VISIBLE,&SamplePolyAreasBinder::GetStringEnumeration)));
 	}
 
-	void RecastConvexVolumeComponent::SetAreaType(const std::string value)
+	/*void RecastConvexVolumeComponent::SetAreaType(const std::string value)
 	{
 		m_Area = GetAreaFromName(value);
 	}
@@ -45,7 +48,7 @@ namespace GASS
 	std::string RecastConvexVolumeComponent::GetAreaType() const
 	{
 		return GetAreaName(m_Area);
-	}
+	}*/
 
 	void RecastConvexVolumeComponent::OnInitialize()
 	{

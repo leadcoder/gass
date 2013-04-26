@@ -251,7 +251,7 @@ static int convexhull(const float* pts, int npts, int* out)
 			GeometryComponentPtr geom = comp->GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 			if(geom)
 			{
-				const unsigned char area = comp->GetArea();
+				SamplePolyAreas area = comp->GetAreaType().GetValue();
 
 				AABox box = geom->GetBoundingBox();
 				std::vector<Vec3> corners = box.GetCorners();

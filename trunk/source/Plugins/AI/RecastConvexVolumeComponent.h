@@ -29,13 +29,10 @@ namespace GASS
 		virtual ~RecastConvexVolumeComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		SamplePolyAreas GetArea() const {return m_Area;}
+		ADD_ATTRIBUTE(SamplePolyAreasBinder,AreaType)
 	protected:
-		void SetAreaType(const std::string value);
-		std::string GetAreaType() const;
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
-		SamplePolyAreas m_Area;
 		bool m_Initialized;
 	};
 	typedef SPTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;
