@@ -22,6 +22,7 @@
 #   pragma warning (disable : 4541)
 #include "Sim/GASS.h"
 #include <osg/PositionAttitudeTransform>
+#include "Plugins/OSG/IOSGNode.h"
 
 namespace GASS
 {
@@ -30,7 +31,7 @@ namespace GASS
 	typedef SPTR<OSGLocationComponent>  OSGLocationComponentPtr;
 	typedef WPTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 
-	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public osg::NodeCallback
+	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public IOSGNode, public osg::NodeCallback
 	{
 	public:
 		OSGLocationComponent();
@@ -51,9 +52,13 @@ namespace GASS
 		virtual void SetWorldRotation(const Quaternion &value);
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale() const {return m_Scale;}
+		//IOSGNode interface
+
+		osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
+
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
-
+		
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 		bool GetAttachToParent() const;
 	protected:
