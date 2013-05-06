@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent()
+	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent() : m_Material("DEFAULT")
 	{
 
 	}
@@ -39,27 +39,28 @@ namespace GASS
 	void PhysXPlaneGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<PhysXPlaneGeometryComponent, IComponent>);
+		RegisterProperty<std::string>("Material", &GASS::PhysXPlaneGeometryComponent::GetMaterial, &GASS::PhysXPlaneGeometryComponent::SetMaterial);
 	}
 
 	void PhysXPlaneGeometryComponent::OnInitialize()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxReal d = 0.0f;	 
 		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f),physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
 		physx::PxRigidStatic* plane = system->GetPxSDK()->createRigidStatic(pose);
-		physx::PxShape* shape = plane->createShape(physx::PxPlaneGeometry(), *system->GetDefaultMaterial());
-		
-		physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_GROUND;
-		collFilterData.word1=COLLISION_FLAG_GROUND_AGAINST;
-		shape->setSimulationFilterData(collFilterData);
+		physx::PxMaterial* material = system->GetMaterial(m_Material);
+		physx::PxShape* shape = plane->createShape(physx::PxPlaneGeometry(), *material);
 		
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
 		shape->setQueryFilterData(queryFilterData);
 	
+		physx::PxFilterData collFilterData;
+		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
+		collFilterData.word0 = GEOMETRY_FLAG_GROUND;
+		collFilterData.word1 = against;
+		shape->setSimulationFilterData(collFilterData);
 
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->GetPxScene()->addActor(*plane);

@@ -35,6 +35,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
+		ADD_ATTRIBUTE(std::string,Material);
 		
 	};
 }

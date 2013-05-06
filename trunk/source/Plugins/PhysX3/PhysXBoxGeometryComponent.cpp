@@ -55,11 +55,12 @@ namespace GASS
 		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
+		
 			if(geom)
 			{
 				AABox box = geom->GetBoundingBox();
 				SetSize((box.m_Max - box.m_Min));
-				SetOffset((box.m_Max + box.m_Min)*0.5);
+				//SetOffset((box.m_Max + box.m_Min)*0.5);
 			}
 			else
 			{
@@ -68,7 +69,7 @@ namespace GASS
 		}
 		Vec3 size = GetSize();
 		physx::PxTransform offset = physx::PxTransform::createIdentity();
-		offset.p = PxConvert::ToPx(GetOffset());
+		//offset.p = PxConvert::ToPx(GetOffset());
 
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
@@ -76,11 +77,7 @@ namespace GASS
 		physx::PxVec3 dims(size.x/2.0,size.y/2.0,size.z/2.0);
 		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(dims), *material,offset);
 		
-		physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_CHASSIS;
-		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
-		shape->setSimulationFilterData(collFilterData);
-
+	
 		//physx::PxReal mass = m_Body->GetMass();
 		//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
 

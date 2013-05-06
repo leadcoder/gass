@@ -40,6 +40,10 @@ namespace GASS
 		virtual bool HasMaterial(const std::string material_name) const;
 		virtual PhysicsMaterial GetMaterial(const std::string material_name) const;
 		virtual MaterialMap& GetMaterials() {return m_Materials;}
+
+		//experimental
+		void LoadGeometryFlagsFile(const std::string &file);
+	
 	private:
 		MaterialMap m_Materials;	
 	};

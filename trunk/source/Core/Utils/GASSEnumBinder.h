@@ -94,7 +94,13 @@ namespace GASS
 			m_Value = static_cast<ENUM>(0);
 			for(size_t i=0; i< names.size() ; i++)
 			{
-				m_Value = static_cast<ENUM>(static_cast<int>(m_Value) | static_cast<int>(m_NameToEnumMap[names[i]]));
+				if(names[i] != "" && m_NameToEnumMap.find(names[i]) != m_NameToEnumMap.end())
+					m_Value = static_cast<ENUM>(static_cast<int>(m_Value) | static_cast<int>(m_NameToEnumMap[names[i]]));
+				else
+				{
+					const std::string class_name = typeid(CLASS).name();
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find enum:" + names[i] + " In class" + class_name,"SingleEnumBinder::SetValueFromName");
+				}
 			}
 		}
 

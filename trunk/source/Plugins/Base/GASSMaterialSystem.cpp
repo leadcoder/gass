@@ -20,6 +20,7 @@
 #include "GASSMaterialSystem.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
+#include "Sim/GASSGeometryFlags.h"
 #include <tinyxml.h>
 
 
@@ -44,12 +45,14 @@ namespace GASS
 	{
 		//Load all material files from gass data path
 		std::vector<std::string> files;
-		FilePath path("%GASS_DATA_HOME%/materials");
+		FilePath path("%GASS_DATA_HOME%/physics");
 		Misc::GetFilesFromPath(files,path.GetFullPath(),true,true);
 		for(size_t i = 0; i< files.size(); i++)
 		{
 			if(Misc::GetExtension(files[i]) == "gassmat")
 				LoadMaterialFile(files[i]);
+			//else if(Misc::GetExtension(files[i]) == "gassgeom")
+			//	LoadGeometryFlagsFile(files[i]);
 		}
 	}
 
@@ -84,6 +87,47 @@ namespace GASS
 		}
 		delete xmlDoc;
 	}
+
+	void MaterialSystem::LoadGeometryFlagsFile(const std::string &file)
+	{
+		std::map<GeometryFlags, GeometryFlags> m_CollisionMaskMap;
+		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
+		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
+		if (!xmlDoc->LoadFile())
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
+		
+		TiXmlElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		if(xml_geom_list)
+		{
+			TiXmlElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
+			while(xml_geom)
+			{
+				std::string geom_name;
+				if(xml_geom->Attribute("Name"))
+					geom_name = xml_geom->Attribute("Name");
+				else
+					GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "MaterialSystem::LoadMaterialFile");
+				
+				GeometryFlagsBinder gf;
+				std::stringstream ss_gf(geom_name);
+				ss_gf >> gf;
+				
+				std::string value = xml_geom->Attribute("CollisionMask");
+				//parse mask
+				GeometryFlagsBinder gf_mask;
+				std::stringstream ss_gf_mask(value);
+				ss_gf_mask >> gf_mask;
+
+				m_CollisionMaskMap[gf.GetValue()] = gf_mask.GetValue();
+
+				int mask = static_cast<int> (gf_mask.GetValue());
+				
+				xml_geom = xml_geom->NextSiblingElement("Geometry");
+			}
+		}
+		delete xmlDoc;
+	}
+
 
 	void MaterialSystem::AddMaterial(const PhysicsMaterial& mat) 
 	{

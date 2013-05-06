@@ -46,10 +46,7 @@
 
 namespace GASS
 {
-	PhysXTerrainGeometryComponent::PhysXTerrainGeometryComponent(): m_Friction(1),
-		m_CollisionCategory(1),
-		m_CollisionBits(1),
-		m_Debug(false)
+	PhysXTerrainGeometryComponent::PhysXTerrainGeometryComponent(): m_Debug(false)
 	{
 
 	}
@@ -62,8 +59,6 @@ namespace GASS
 	void PhysXTerrainGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<PhysXTerrainGeometryComponent, IComponent>);
-		RegisterProperty<unsigned long>("CollisionBits", &GASS::PhysXTerrainGeometryComponent::GetCollisionBits, &GASS::PhysXTerrainGeometryComponent::SetCollisionBits);
-		RegisterProperty<unsigned long>("CollisionCategory", &GASS::PhysXTerrainGeometryComponent::GetCollisionCategory, &GASS::PhysXTerrainGeometryComponent::SetCollisionCategory);
 	}
 
 	void PhysXTerrainGeometryComponent::OnInitialize()
@@ -86,8 +81,6 @@ namespace GASS
 	{
 		Reset();
 		m_Shape = CreateTerrain();
-		SetCollisionBits(m_CollisionBits);
-		SetCollisionCategory(m_CollisionCategory);
 	}
 
 	HeightmapTerrainComponentPtr PhysXTerrainGeometryComponent::GetTerrainComponent() const 
@@ -177,7 +170,7 @@ namespace GASS
 			shape = hfActor->createShape(hfGeom, *system->GetDefaultMaterial());
 
 			physx::PxFilterData collFilterData;
-			collFilterData.word0=COLLISION_FLAG_GROUND;
+			collFilterData.word0=GEOMETRY_FLAG_GROUND;
 			collFilterData.word1=COLLISION_FLAG_GROUND_AGAINST;
 			shape->setSimulationFilterData(collFilterData);
 
@@ -187,16 +180,8 @@ namespace GASS
 		return shape;
 	}
 
-	unsigned long PhysXTerrainGeometryComponent::GetCollisionBits() const 
-	{
-		return m_CollisionBits;
-	}
-
-	void PhysXTerrainGeometryComponent::SetCollisionBits(unsigned long value)
-	{
-		m_CollisionBits = value;
-	}
-
+	
+	
 	void PhysXTerrainGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
 		bool value = message->EnableCollision();
@@ -219,20 +204,8 @@ namespace GASS
 	{
 	}
 
-	unsigned long PhysXTerrainGeometryComponent::GetCollisionCategory() const 
-	{
-		return m_CollisionCategory;
-	}
-
-	void PhysXTerrainGeometryComponent::SetCollisionCategory(unsigned long value)
-	{
-		m_CollisionCategory =value;
-
-	}
-
 	void PhysXTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
 	{
 		//SetDebug(message->DebugGeometry());
 	}
 }
-

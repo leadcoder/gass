@@ -29,6 +29,7 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
+#include "IODEGeometryComponent.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 
 namespace GASS
@@ -47,7 +48,7 @@ namespace GASS
 	not be instantiated in configuration files
 	*/
 
-	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
+	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:

@@ -104,10 +104,10 @@ namespace GASS
 		physx::PxTriangleMeshGeometry geometry = physx::PxTriangleMeshGeometry(m_TriangleMesh.m_TriangleMesh);
 		physx::PxShape* shape = pxActor->createShape(geometry, *material);
 		
-		physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_DRIVABLE_OBSTACLE;
-		collFilterData.word1=COLLISION_FLAG_DRIVABLE_OBSTACLE_AGAINST;
-		shape->setSimulationFilterData(collFilterData);
+		//physx::PxFilterData collFilterData;
+		//collFilterData.word0=COLLISION_FLAG_GROUND_AGAINST;
+		//collFilterData.word1=COLLISION_FLAG_DRIVABLE_OBSTACLE_AGAINST;
+		//shape->setSimulationFilterData(collFilterData);
 		
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);

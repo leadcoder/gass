@@ -177,67 +177,6 @@ namespace GASS
 		*/
 		m_Init = true;
 
-
-
-/*
-		PxVec3 pos(0,2,10);
-	PxQuat rot(0,PxVec3(0,1,0));
-	PxTransform trans(pos,rot);
-
-	
-	m_Body = system->GetPxSDK()->createRigidDynamic(trans);
-	
-	pos.y -= 1;
-	PxTransform trans2(pos,rot);
-
-	m_Wheel = system->GetPxSDK()->createRigidDynamic(trans2);
-
-	PxMaterial*	material = system->GetDefaultMaterial();
-	PxVec3 dims(1,0.4,2);
-	
-	physx::PxShape* shape = m_Body->createShape(PxBoxGeometry(dims),*material,PxTransform(PxVec3(0,0,0)));
-	physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_CHASSIS;
-		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
-		shape->setSimulationFilterData(collFilterData);
-	
-	PxRigidBodyExt::updateMassAndInertia(*m_Body,10);
-	//createRenderObjectsFromActor(snowmanActor,mSnowMaterial);
-	
-
-
-	shape = m_Wheel->createShape(PxSphereGeometry(0.3),*material,PxTransform(PxVec3(0,0,0)));
-	shape->setSimulationFilterData(collFilterData);
-	
-
-	PxRigidBodyExt::updateMassAndInertia(*m_Wheel,10);
-
-	m_PxScene->addActor(*m_Body);
-	
-	
-	m_PxScene->addActor(*m_Wheel);
-	
-	 PxVec3 p2(0,-1,0);
-	 m_RollJoint = PxRevoluteJointCreate(*system->GetPxSDK(),
-			 m_Body, physx::PxTransform(p2,rot), 
-			 m_Wheel, physx::PxTransform(physx::PxVec3(0,0,0),rot));
-
-		
-		m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, false);
-		m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
-		//m_RollJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_FREESPIN , true);
-		m_RollJoint->setDriveGearRatio(1);
-		*/
-	
-	
-	//createRenderObjectsFromActor(snowmanActor2,mSnowMaterial);
-	
-	
-		
-	  
-		//m_RollJoint->setDriveVelocity(1);
-
-
 	}
 
 	void PhysXPhysicsSceneManager::OnShutdown()

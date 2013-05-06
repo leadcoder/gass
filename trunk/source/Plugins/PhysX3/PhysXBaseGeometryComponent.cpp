@@ -46,10 +46,7 @@ namespace GASS
 	void PhysXBaseGeometryComponent::RegisterReflection()
 	{
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
-		//RegisterProperty<float>("Friction", &GASS::PhysXBaseGeometryComponent::GetFriction, &GASS::PhysXBaseGeometryComponent::SetFriction);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
-		//RegisterProperty<unsigned long>("CollisionBits", &GASS::PhysXBaseGeometryComponent::GetCollisionBits, &GASS::PhysXBaseGeometryComponent::SetCollisionBits);
-		//RegisterProperty<unsigned long>("CollisionCategory", &GASS::PhysXBaseGeometryComponent::GetCollisionCategory, &GASS::PhysXBaseGeometryComponent::SetCollisionCategory);
 		//RegisterProperty<bool>("Debug", &GASS::PhysXBaseGeometryComponent::GetDebug, &GASS::PhysXBaseGeometryComponent::SetDebug);
 	}
 
@@ -90,11 +87,27 @@ namespace GASS
 		if(m_Shape)
 			m_Shape->release();
 		m_Shape = CreateShape();
+
+		//update collision flags
+		GeometryComponentPtr geom  = GetGeometry();
+		physx::PxFilterData collFilterData;
+		if(geom)
+		{
+			GeometryFlags against = GeometryFlagManager::GetMask(geom->GetGeometryFlags());
+			collFilterData.word0 = geom->GetGeometryFlags();
+			collFilterData.word1 = against;
+			m_Shape->setSimulationFilterData(collFilterData);
+		}
+		else //?
+		{
+
+		}
 		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass);
+			const physx::PxVec3 localPos = physx::PxVec3(m_Offset.x,m_Offset.y,m_Offset.z);
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass,&localPos);
 		}
 	}
 

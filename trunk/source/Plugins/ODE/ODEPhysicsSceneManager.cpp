@@ -33,6 +33,7 @@
 //#include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
+#include "Plugins/ODE/IODEGeometryComponent.h"
 
 
 namespace GASS
@@ -223,8 +224,8 @@ namespace GASS
 			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
 
 
-			IPhysicsGeometryComponent* physics_geom1 = dynamic_cast<IPhysicsGeometryComponent*>(geom1);
-			IPhysicsGeometryComponent* physics_geom2 = dynamic_cast<IPhysicsGeometryComponent*>(geom2);
+			IODEGeometryComponent* physics_geom1 = dynamic_cast<IODEGeometryComponent*>(geom1);
+			IODEGeometryComponent* physics_geom2 = dynamic_cast<IODEGeometryComponent*>(geom2);
 
 
 			dContact contact;

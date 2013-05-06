@@ -53,8 +53,8 @@ namespace GASS
 	{
 		if(!m_Body)
 			return NULL;
+
 		//Create shape
-		
 		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
@@ -65,21 +65,11 @@ namespace GASS
 			}
 		}
 		Float  rad = GetRadius();
-		
-		
+	
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(		physx::PxVec3(0,0,0)));
-		
-		physx::PxFilterData collFilterData;
-		collFilterData.word0=COLLISION_FLAG_CHASSIS;
-		collFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
-		shape->setSimulationFilterData(collFilterData);
-		
-		//physx::PxReal mass = m_Body->GetMass();
-		//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
-			
-
+		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
+	
 		return shape;
 	}
 

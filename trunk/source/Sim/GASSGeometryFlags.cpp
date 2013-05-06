@@ -19,9 +19,64 @@
 *****************************************************************************/
 #include "GASSGeometryFlags.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSLogManager.h"
+#include <tinyxml.h>
 
 namespace GASS
 {
-	
+	std::map<GeometryFlags, GeometryFlags> GeometryFlagManager::m_CollisionMaskMap;
+
+	GeometryFlags GeometryFlagManager::GetMask(GeometryFlags geom_flag)
+	{
+		std::map<GeometryFlags, GeometryFlags>::iterator iter = m_CollisionMaskMap.find(geom_flag);
+		if(iter != m_CollisionMaskMap.end())
+		{
+			return iter->second;
+		}
+		else
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find collision mask", "GeometryFlagManager::GetMask");
+		
+	}
+
+	void GeometryFlagManager::LoadGeometryFlagsFile(const std::string &file)
+	{
+		
+		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
+		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
+		if (!xmlDoc->LoadFile())
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "GeometryFlagManager::LoadMaterialFile");
+		
+		TiXmlElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		if(xml_geom_list)
+		{
+			TiXmlElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
+			while(xml_geom)
+			{
+				std::string geom_name;
+				if(xml_geom->Attribute("Name"))
+					geom_name = xml_geom->Attribute("Name");
+				else
+					GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "GeometryFlagManager::LoadMaterialFile");
+				
+				GeometryFlagsBinder gf;
+				std::stringstream ss_gf(geom_name);
+				ss_gf >> gf;
+				
+				std::string value = xml_geom->Attribute("CollisionMask");
+				//parse mask
+				GeometryFlagsBinder gf_mask;
+				std::stringstream ss_gf_mask(value);
+				ss_gf_mask >> gf_mask;
+
+				m_CollisionMaskMap[gf.GetValue()] = gf_mask.GetValue();
+
+				int mask = static_cast<int> (gf_mask.GetValue());
+				
+				xml_geom = xml_geom->NextSiblingElement("Geometry");
+				
+			}
+		}
+		delete xmlDoc;
+	}
 	
 }

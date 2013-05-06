@@ -293,7 +293,7 @@ namespace GASS
 
 		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
 		PxFilterData wheelCollFilterData;
-		wheelCollFilterData.word0=COLLISION_FLAG_WHEEL;
+		wheelCollFilterData.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
 		wheelCollFilterData.word1=COLLISION_FLAG_WHEEL_AGAINST;
 
 		//Create a query filter data for the car to ensure that cars
@@ -317,7 +317,7 @@ namespace GASS
 		chassisShape->setQueryFilterData(vehQryFilterData);
 
 		PxFilterData chassisCollFilterData;
-		chassisCollFilterData.word0=COLLISION_FLAG_CHASSIS;
+		chassisCollFilterData.word0=GEOMETRY_FLAG_VEHICLE_CHASSIS;
 		chassisCollFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
 		chassisShape->setSimulationFilterData(chassisCollFilterData);
 

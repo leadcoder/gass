@@ -31,6 +31,7 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
 #include "ODEBaseGeometryComponent.h"
+#include "IODEGeometryComponent.h"
 
 
 namespace GASS
@@ -44,7 +45,7 @@ namespace GASS
 	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 	
 
-	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
+	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:

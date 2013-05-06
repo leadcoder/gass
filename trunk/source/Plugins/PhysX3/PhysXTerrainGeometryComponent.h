@@ -47,12 +47,6 @@ namespace GASS
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		void SetFriction(float value){m_Friction = value;}
-		float GetFriction() const {return m_Friction;}
-		unsigned long GetCollisionBits() const;
-		void SetCollisionBits(unsigned long value);
-		unsigned long GetCollisionCategory() const;
-		void SetCollisionCategory(unsigned long value);
 		void Disable();
 		void Enable();
 		void Reset();
@@ -63,10 +57,7 @@ namespace GASS
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		IHeightmapTerrainComponent* m_TerrainGeom;
-		unsigned long m_CollisionCategory;
-		unsigned long m_CollisionBits;
 		std::string m_GeometryTemplate;
-		float m_Friction;
 		bool m_Debug;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxShape* m_Shape;

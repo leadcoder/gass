@@ -28,6 +28,5 @@ namespace GASS
 	{
 	public:
 		virtual ~IPhysicsGeometryComponent(){}
-		virtual float GetFriction() const =0;
 	};
 }
