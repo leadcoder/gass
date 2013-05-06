@@ -133,7 +133,8 @@ int main(int argc, char* argv[])
 			vehicle_template->AddComponent("ManualMeshComponent");
 			GASS::BaseComponentPtr body_comp = vehicle_template->AddComponent("PhysicsBodyComponent");
 			body_comp->SetPropertyByType("Mass",1.0f);
-			vehicle_template->AddComponent("PhysicsBoxGeometryComponent");
+			GASS::BaseComponentPtr geom_comp = vehicle_template->AddComponent("PhysicsBoxGeometryComponent");
+			geom_comp->SetPropertyByType("Offset",GASS::Vec3(0,-0.9,0));
 			GASS::BaseComponentPtr box_comp  = DYNAMIC_PTR_CAST<GASS::BaseComponent>(vehicle_template->AddComponent("BoxGeometryComponent"));
 			box_comp->SetPropertyByType("Size",GASS::Vec3(2,1,4));
 			box_comp->SetPropertyByType("Lines",false);
