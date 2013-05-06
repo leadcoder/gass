@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MaterialList>
-	<Material Name="DEFAULT" DynamicFriction="0.5" StaticFriction="0.5" Restitution="0.5"/>
+	<Material Name="DEFAULT" DynamicFriction="1" StaticFriction="1" Restitution="0.5"/>
 	<Material Name="GRASS" DynamicFriction="0.5" StaticFriction="0.5" Restitution="0.5"/>
 	<Material Name="TARMAC" DynamicFriction="0.5" StaticFriction="0.5" Restitution="0.5"/>
 </MaterialList>
