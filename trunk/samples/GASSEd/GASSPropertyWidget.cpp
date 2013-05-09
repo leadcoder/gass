@@ -234,9 +234,18 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
 				GASS::FilePathPropertyMetaDataPtr file_path_data = DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data);
-				std::string filter = file_path_data->GetFilter();
+				std::vector<std::string> exts = file_path_data->GetExtensions();
 				GASS::FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
 
+				std::string filter;
+				for(size_t i = 0;  i < exts.size(); i++)
+				{
+					if(i != 0)
+						filter += " ";
+					filter += "*.";
+					filter += exts[i];
+				}
+				
 				std::string filename = prop_value;
 				filename = GASS::Misc::Replace(filename,"/","\\");
 				
