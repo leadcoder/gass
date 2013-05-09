@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <OgreSceneNode.h>
 #include <OgreConfigFile.h>
+#include <OgreRoot.h>
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -54,7 +55,7 @@ namespace GASS
 		m_TilingLayer2(5),
 		m_TilingLayer3(5),
 		m_TilingLayer4(5),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_GeomFlags(GEOMETRY_FLAG_GROUND),
 		m_Pos(0,0,0),
 		m_RenderQueue(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1)
 	{
@@ -175,6 +176,14 @@ namespace GASS
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
+
+				while (m_TerrainGroup->isDerivedDataUpdateInProgress())
+				{
+					// we need to wait for this to finish
+					OGRE_THREAD_SLEEP(50);
+					Ogre::Root::getSingleton().getWorkQueue()->processResponses();
+				}				
+								
 				
 				if(m_HeightMapFile.Valid()) //import height map
 					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
@@ -183,9 +192,11 @@ namespace GASS
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 	
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
+				
 				if(m_Pos != Vec3(0,0,0))
 					SetPosition(m_Pos);
 				UpdatePosition();
+
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource()->Path());
 
@@ -238,6 +249,8 @@ namespace GASS
 
 				if(m_TilingLayer4)
 					SetTilingLayer4(m_TilingLayer4);
+
+				
 				
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
@@ -245,6 +258,7 @@ namespace GASS
 				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
 				//std::string name = ptr->getName();	
 				//Terrain page created
+				
 			}
 		}
 	}
@@ -348,7 +362,7 @@ namespace GASS
 
 				Ogre::Rect drect(0, 0, m_Terrain->getSize(), m_Terrain->getSize());
 				m_Terrain->dirtyRect(drect);
-				m_Terrain->update();
+				m_Terrain->update(true);
 				GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			}
 		}

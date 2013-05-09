@@ -62,7 +62,7 @@ namespace GASS
 		,m_EnableLayerSpecular(true)
 		,m_EnableLayerNormal(true)
 		,m_TerrainScale(10)
-		,m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		,m_GeomFlags(GEOMETRY_FLAG_GROUND)
 	{
 		m_TerrainResource.SetName("OgrePagedTerrain");
 
