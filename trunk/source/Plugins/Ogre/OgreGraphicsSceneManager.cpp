@@ -45,9 +45,7 @@
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
-
-/*#include <OgreOverlayManager.h>
-#include <OgreOverlayContainer.h>*/
+#include <Overlay/OgreOverlaySystem.h>
 #include <OgreShadowCameraSetupLiSPSM.h>
 #include <OgreShadowCameraSetupPlaneOptimal.h>
 
@@ -67,7 +65,7 @@ namespace GASS
 		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),
 		m_TextureShadowProjection(LISPSM),
 		m_TextureShadowSize(1024),
-		m_NumShadowTextures(1),
+		m_NumShadowTextures(4),
 		m_SelfShadowing (false),
 		m_UseAggressiveFocusRegion(true),
 		m_OptimalAdjustFactor(1),
@@ -162,6 +160,83 @@ namespace GASS
 		m_DebugDrawer = new DebugDrawer(m_SceneMgr, 0.5f);
 
 		Ogre::Root::getSingletonPtr()->addFrameListener(this);
+
+		m_SceneMgr->addRenderQueueListener(system->GetOverlaySystem());
+
+		
+		
+		/*Ogre::Entity *ent;
+		Ogre::SceneNode *node;
+		ent = m_SceneMgr->createEntity ("MyCube", Ogre::SceneManager::PT_CUBE);
+		MeshPtr mesh  = ent->getMesh();
+		
+		unsigned short src, dest;
+            if (!mesh->suggestTangentVectorBuildParams(VES_TANGENT, src, dest))
+            {
+                mesh->buildTangentVectors(VES_TANGENT, src, dest);
+			}
+			
+		ent->setMaterialName ("test_PerPixelBaseMap");
+
+		node = m_SceneMgr->getRootSceneNode();
+		node = node->createChildSceneNode("MyCubeNode", Ogre::Vector3 (0,-50,0));
+		
+		//node->scale (0.01, 0.01, 0.01);
+		node->attachObject (ent);
+
+		/////new
+		ent = m_SceneMgr->createEntity ("MySphere1", Ogre::SceneManager::PT_SPHERE);
+		ent->setCastShadows(true);
+		mesh  = ent->getMesh();
+		
+		    if (!mesh->suggestTangentVectorBuildParams(VES_TANGENT, src, dest))
+            {
+                mesh->buildTangentVectors(VES_TANGENT, src, dest);
+			}
+			
+		ent->setMaterialName ("test_PerPixelBaseAndNormalMap");
+		node = m_SceneMgr->getRootSceneNode();
+		node = node->createChildSceneNode("MySphereNode1", Ogre::Vector3 (0,6,0));
+		
+		node->scale (0.05, 0.05, 0.05);
+		node->attachObject (ent);
+
+		/////new
+		ent = m_SceneMgr->createEntity ("MySphere2", Ogre::SceneManager::PT_SPHERE);
+		ent->setCastShadows(true);
+		mesh  = ent->getMesh();
+		
+		    if (!mesh->suggestTangentVectorBuildParams(VES_TANGENT, src, dest))
+            {
+                mesh->buildTangentVectors(VES_TANGENT, src, dest);
+			}
+			
+		ent->setMaterialName ("test_PerPixel");
+
+		node = m_SceneMgr->getRootSceneNode();
+		node = node->createChildSceneNode("MySphereNode2", Ogre::Vector3 (10,6,0));
+		
+		node->scale (0.05, 0.05, 0.05);
+		node->attachObject (ent);
+		
+		/////new
+
+		ent = m_SceneMgr->createEntity ("MySphere3", Ogre::SceneManager::PT_SPHERE);
+		ent->setCastShadows(true);
+		mesh  = ent->getMesh();
+		
+		    if (!mesh->suggestTangentVectorBuildParams(VES_TANGENT, src, dest))
+            {
+                mesh->buildTangentVectors(VES_TANGENT, src, dest);
+			}
+			
+		ent->setMaterialName ("test_PerPixelBaseAndParallaxMap");
+		node = m_SceneMgr->getRootSceneNode();
+		node = node->createChildSceneNode("MySphereNode3", Ogre::Vector3 (18,6,0));
+		
+		node->scale (0.05, 0.05, 0.05);
+		node->attachObject (ent);*/
+		
 	}
 
 
@@ -325,11 +400,13 @@ namespace GASS
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
-		m_SceneMgr->setShowDebugShadows(true);
+		//
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
-
 		
-		/*if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))
+		//m_SceneMgr->setShadowTextureSelfShadow(true);
+		
+		/*m_SceneMgr->setShowDebugShadows(true);
+		if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))
 		{
 
 			MaterialPtr debugMat = 	MaterialManager::getSingleton().getByName("Ogre/DebugShadowMap0");

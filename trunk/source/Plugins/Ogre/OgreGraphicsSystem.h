@@ -35,6 +35,7 @@ namespace Ogre
 	class SceneManager;
 	class ColourValue;
 	class Viewport;
+	class OverlaySystem;
 }
 
 namespace GASS
@@ -71,6 +72,7 @@ namespace GASS
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
+		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 	protected:
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 
@@ -107,6 +109,7 @@ namespace GASS
 		bool m_ShowStats;
 		OgrePostProcessPtr m_PostProcess;
 		OgreResourceManagerPtr m_ResourceManager;
+		Ogre::OverlaySystem* m_OverlaySystem;
 	};
 	typedef SPTR<OgreGraphicsSystem> OgreGraphicsSystemPtr;
 	

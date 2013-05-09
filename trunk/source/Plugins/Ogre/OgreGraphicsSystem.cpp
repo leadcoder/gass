@@ -119,7 +119,7 @@ namespace GASS
 		//Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 
 		#ifdef OGRE_19
-			Ogre::OverlaySystem* m_OverlaySystem = new Ogre::OverlaySystem();
+			m_OverlaySystem = new Ogre::OverlaySystem();
 		#endif
 
 
