@@ -36,6 +36,7 @@
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+		<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 	</ResourceGroup>
 	<ResourceGroup name="GASS_VEGETATION_MATERIALS">
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
