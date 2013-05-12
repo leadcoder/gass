@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{F635E9F9-8457-9746-B729-F29EDE2CA362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{C9D4D8C8-2C57-3A4C-98C1-E9553101A1DA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Script">
+      <UniqueIdentifier>{62865833-CD4C-E443-9848-566B03F7523A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Script\interface">
+      <UniqueIdentifier>{784072D1-A801-A447-AC08-D6D27C9C462D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Script\LuaScriptComponent.h">
+      <Filter>source\Plugins\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Script\LuaScriptManager.h">
+      <Filter>source\Plugins\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Script\LuaScriptSceneObject.h">
+      <Filter>source\Plugins\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Script\LuaScriptSystem.h">
+      <Filter>source\Plugins\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Script\swigluarun.h">
+      <Filter>source\Plugins\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Script\interface\swigluarun.h">
+      <Filter>source\Plugins\Script\interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Script\LuaScriptComponent.cpp">
+      <Filter>source\Plugins\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Script\LuaScriptManager.cpp">
+      <Filter>source\Plugins\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Script\LuaScriptSceneObject.cpp">
+      <Filter>source\Plugins\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Script\LuaScriptSystem.cpp">
+      <Filter>source\Plugins\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Script\GASS_wrap.cxx">
+      <Filter>source\Plugins\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Script\interface\GASS_wrap.cxx">
+      <Filter>source\Plugins\Script\interface</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

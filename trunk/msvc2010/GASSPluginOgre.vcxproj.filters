@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{7AEED856-FCB2-244D-B66B-70CBE6DC4889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{85C6B0BA-0360-7B46-96D6-1016FFAEF8CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Ogre">
+      <UniqueIdentifier>{C567A203-65EE-BC41-8033-C01F8AD57EAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Ogre\Components">
+      <UniqueIdentifier>{62386210-5560-F542-B203-B097004B063A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Ogre\Helpers">
+      <UniqueIdentifier>{E6BCC3E1-FC35-834E-B76C-0254219DE874}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Ogre\IOgreCameraProxy.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreConvert.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreDebugTextOutput.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreGraphicsSceneManager.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreGraphicsSystem.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgrePolygonMode.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgrePostProcess.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreBillboardComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreCameraComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreGASSTerrainMaterialGenerator.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreInstancedMeshComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreLightComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreLocationComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreManualMeshComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreMeshComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreParticleSystemComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreSceneNodeSource.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreStaticMeshComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTerrainGroupComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTerrainPageComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTextComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DebugDrawer.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DynamicLines.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DynamicRenderable.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\MovableTextOverlay.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorB.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreText.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\RectLayoutManager.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreRenderQueueBinder.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreRenderWindow.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreViewport.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreResourceManager.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\OgreMaterial.h">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorC.h">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreRoadComponent.h">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreDebugTextOutput.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreGraphicsSceneManager.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreGraphicsSystem.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgrePolygonMode.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgrePostProcess.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreBillboardComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreCameraComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreGASSTerrainMaterialGenerator.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreInstancedMeshComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreLightComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreLocationComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreManualMeshComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreMeshComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreParticleSystemComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreStaticMeshComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTerrainGroupComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTerrainPageComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTextComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DebugDrawer.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DynamicLines.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DynamicRenderable.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\MovableTextOverlay.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorB.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreText.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\RectLayoutManager.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreRenderWindow.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreViewport.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreResourceManager.cpp">
+      <Filter>source\Plugins\Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorC.cpp">
+      <Filter>source\Plugins\Ogre\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreRoadComponent.cpp">
+      <Filter>source\Plugins\Ogre\Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8742EBBD-B583-A94E-AC53-B12AAF9CABB8}</ProjectGuid>
+    <RootNamespace>GASSEditorModule</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\GASSEditorModule\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GASSEditorModule_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\x64\Debug\GASSEditorModule\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GASSEditorModule_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\Release\GASSEditorModule\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GASSEditorModule</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\x64\Release\GASSEditorModule\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GASSEditorModule</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSEditorModule_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSEditorModule_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES);$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSEditorModule_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSEditorModule_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSEditorModule_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES);$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSEditorModule_d.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSEditorModule.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES);$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSEditorModule.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EDITOR_MODULE_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSEditorModule.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES);$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSEditorModule.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Modules\Editor\EditorApplication.h" />
+    <ClInclude Include="..\source\Modules\Editor\EditorCommon.h" />
+    <ClInclude Include="..\source\Modules\Editor\EditorMessages.h" />
+    <ClInclude Include="..\source\Modules\Editor\EditorSceneManager.h" />
+    <ClInclude Include="..\source\Modules\Editor\EditorSystem.h" />
+    <ClInclude Include="..\source\Modules\Editor\GUISchemaLoader.h" />
+    <ClInclude Include="..\source\Modules\Editor\Components\DistanceScaleComponent.h" />
+    <ClInclude Include="..\source\Modules\Editor\Components\EditorComponent.h" />
+    <ClInclude Include="..\source\Modules\Editor\Components\GizmoComponent.h" />
+    <ClInclude Include="..\source\Modules\Editor\Components\PaintGizmoComponent.h" />
+    <ClInclude Include="..\source\Modules\Editor\Components\SelectionComponent.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\CreateTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\CursorInfo.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\EditPositionTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\GoToPositionTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\IMouseTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MeasurementTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MouseToolController.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MoveTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\PaintTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\RotateTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\SelectTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\TerrainDeformTool.h" />
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\VerticalMoveTool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Modules\Editor\EditorApplication.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\EditorSceneManager.cpp" />
+    <ClCompile Include="..\source\Modules\Editor\EditorSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\GUISchemaLoader.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\DistanceScaleComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\EditorComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\GizmoComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\PaintGizmoComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\SelectionComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\CreateTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\EditPositionTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\GoToPositionTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\ITool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MeasurementTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MouseToolController.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MoveTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\PaintTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\RotateTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\SelectTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\TerrainDeformTool.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\VerticalMoveTool.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

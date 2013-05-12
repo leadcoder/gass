@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{9ABACA10-5F57-764B-BD26-B01393B82C39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{EFA0D0EC-A415-D643-8BB5-08404E7083B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game">
+      <UniqueIdentifier>{5C6B4AF2-F09B-8445-AB20-48B97789D79D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Components">
+      <UniqueIdentifier>{E097445F-8971-5F48-A8E7-997FC2613D1D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Components\Input">
+      <UniqueIdentifier>{4CA28292-0983-1E40-BB50-63265113F292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Components\Sensor">
+      <UniqueIdentifier>{5BFD5ADE-ED7B-DE48-9CBC-0FE4A15C4B5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Components\Vehicle">
+      <UniqueIdentifier>{C698E6AB-8222-9C4D-A6CC-EB383D3A9FDF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Components\Weapon">
+      <UniqueIdentifier>{27306483-9FAC-BA42-BAC2-A815E255DD24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\Game\Utils">
+      <UniqueIdentifier>{EB7420F4-B18F-6140-9128-AEC8933E7D41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Game\DetectionData.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\GameMessages.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\GameSceneManager.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\GameSystem.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\PlatformTeam.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\PlatformType.h">
+      <Filter>source\Plugins\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\InputHandlerComponent.h">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\InputProxyComponent.h">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\PlayerInputComponent.h">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Sensor\SensorComponent.h">
+      <Filter>source\Plugins\Game\Components\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Sensor\SignatureComponent.h">
+      <Filter>source\Plugins\Game\Components\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\AdaptiveSteerComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\ArmorComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\BoneModifierComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\FollowWaypointListComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\LODComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\SoundVolumeComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\SteerComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TankAutopilotComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TrackComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TurretComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleCameraComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleDebugComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleEngineComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\AutoAimComponent.h">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\HUDComponent.h">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\ProjectileComponent.h">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\SightComponent.h">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\WeaponSystemComponent.h">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Utils\PIDControl.h">
+      <Filter>source\Plugins\Game\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Game\GameSceneManager.cpp">
+      <Filter>source\Plugins\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\GameSystem.cpp">
+      <Filter>source\Plugins\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\PlatformTeam.cpp">
+      <Filter>source\Plugins\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\PlatformType.cpp">
+      <Filter>source\Plugins\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\InputHandlerComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\InputProxyComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\PlayerInputComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Sensor\SensorComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Sensor\SignatureComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\AdaptiveSteerComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\ArmorComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\BoneModifierComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\FollowWaypointListComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\LODComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\SoundVolumeComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\SteerComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TankAutopilotComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TrackComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TurretComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleCameraComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleDebugComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleEngineComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\AutoAimComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\HUDComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\ProjectileComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\SightComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\WeaponSystemComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Utils\PIDControl.cpp">
+      <Filter>source\Plugins\Game\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

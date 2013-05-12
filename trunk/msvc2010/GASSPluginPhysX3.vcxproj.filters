@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{0C42FBBE-090F-9844-818A-1F9ACDB02F73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{56060E40-51E5-1641-988D-387C26CD2F27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\PhysX3">
+      <UniqueIdentifier>{EA74FC59-6009-9442-9A37-A203FF657DC6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXBaseGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXBodyComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXBoxGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXCommon.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXConvert.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXHingeComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXPhysicsSceneManager.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXPhysicsSystem.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXSphereGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXSuspensionComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXTerrainGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXPlaneGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXConvexGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXVehicleSceneQuery.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXWheelComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXCarComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXStream.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PhysX3\PhysXMeshGeometryComponent.h">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXBaseGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXBodyComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXBoxGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXHingeComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXPhysicsSceneManager.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXPhysicsSystem.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXSphereGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXSuspensionComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXTerrainGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXPlaneGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXConvexGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXVehicleSceneQuery.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXWheelComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXCarComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXStream.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PhysX3\PhysXMeshGeometryComponent.cpp">
+      <Filter>source\Plugins\PhysX3</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

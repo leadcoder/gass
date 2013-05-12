@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{E9713DA3-4F41-CC4E-9C54-1E5226CED88D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{D1A85781-A7D5-C74F-AF5A-6AA3DAA32688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\OIS">
+      <UniqueIdentifier>{504F85F4-551A-9C4F-BCE2-3BD6DEADEDF0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\OIS\OISInputSystem.h">
+      <Filter>source\Plugins\OIS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\OIS\OISInputSystem.cpp">
+      <Filter>source\Plugins\OIS</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

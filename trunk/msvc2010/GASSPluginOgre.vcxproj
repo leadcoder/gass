@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{251AB781-D7C5-C544-969A-CC2FE75554B3}</ProjectGuid>
+    <RootNamespace>GASSPluginOgre</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\GASSPluginOgre\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GASSPluginOgre_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\x64\Debug\GASSPluginOgre\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GASSPluginOgre_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\Release\GASSPluginOgre\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GASSPluginOgre</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\x64\Release\GASSPluginOgre\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GASSPluginOgre</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSPluginOgre_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;OgreMain_d.lib;Plugin_OctreeSceneManager_d.lib;OgreTerrain_d.lib;OgrePaging_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginOgre_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\ogre\lib\debug;$(GASS_DEPENDENCIES)\ogre\lib\debug\opt;$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSPluginOgre_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;GASS_PLUGIN_EXPORTS;DEBUG;OGRE_19;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSPluginOgre_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;OgreMain_d.lib;OgreOverlay_d.lib;Plugin_OctreeSceneManager_d.lib;OgreTerrain_d.lib;OgrePaging_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginOgre_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\ogre\lib\debug;$(GASS_DEPENDENCIES)\ogre\lib\debug\opt;$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSPluginOgre_d.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;OgreMain.lib;Plugin_OctreeSceneManager.lib;OgreTerrain.lib;OgrePaging.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginOgre.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\ogre\lib\release;$(GASS_DEPENDENCIES)\ogre\lib\release\opt;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSPluginOgre.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;GASS_PLUGIN_EXPORTS;NDEBUG;OGRE_19;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;OgreMain.lib;Plugin_OctreeSceneManager.lib;OgreTerrain.lib;OgrePaging.lib;OgreOverlay.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginOgre.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\ogre\lib\release;$(GASS_DEPENDENCIES)\ogre\lib\release\opt;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSPluginOgre.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreRoadComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorC.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\IOgreCameraProxy.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreConvert.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreDebugTextOutput.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreGraphicsSceneManager.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreGraphicsSystem.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreMaterial.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgrePolygonMode.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgrePostProcess.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreRenderQueueBinder.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreRenderWindow.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreBillboardComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreCameraComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreGASSTerrainMaterialGenerator.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreInstancedMeshComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreLightComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreLocationComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreManualMeshComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreMeshComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreParticleSystemComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreSceneNodeSource.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreStaticMeshComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTerrainGroupComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTerrainPageComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Components\OgreTextComponent.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DebugDrawer.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DynamicLines.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\DynamicRenderable.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\MovableTextOverlay.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorB.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\OgreText.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\Helpers\RectLayoutManager.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreResourceManager.h" />
+    <ClInclude Include="..\source\Plugins\Ogre\OgreViewport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreRoadComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorC.cpp" />
+    <ClCompile Include="..\source\Plugins\Ogre\OgreDebugTextOutput.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreGraphicsSceneManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreGraphicsSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgrePolygonMode.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgrePostProcess.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreRenderWindow.cpp" />
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreBillboardComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreCameraComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreGASSTerrainMaterialGenerator.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreInstancedMeshComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreLightComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreLocationComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreManualMeshComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreMeshComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreParticleSystemComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreStaticMeshComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTerrainGroupComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTerrainPageComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Components\OgreTextComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DebugDrawer.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DynamicLines.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\DynamicRenderable.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\MovableTextOverlay.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreTerrainMaterialGeneratorB.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\OgreText.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\Helpers\RectLayoutManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Ogre\OgreResourceManager.cpp" />
+    <ClCompile Include="..\source\Plugins\Ogre\OgreViewport.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

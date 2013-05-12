@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4594C7BC-2449-0F45-9AA6-89A91EC73560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{7C99A790-60C4-4245-94CA-60BEF57F66AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\PagedGeometry">
+      <UniqueIdentifier>{BF7D47E1-6503-F942-839F-0A9A798867B5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\DensityMapComponent.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\GrassGeometryComponent.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\GrassLayerComponent.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\GrassLoaderComponent.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\PGMessages.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\PagedGeometry\TreeGeometryComponent.h">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\DensityMapComponent.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\GrassGeometryComponent.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\GrassLayerComponent.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\GrassLoaderComponent.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\PGMessages.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\PagedGeometry\TreeGeometryComponent.cpp">
+      <Filter>source\Plugins\PagedGeometry</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

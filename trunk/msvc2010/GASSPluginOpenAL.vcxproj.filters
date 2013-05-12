@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{A9F17311-3936-C545-B6CD-16D60A8778E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins">
+      <UniqueIdentifier>{571C83F3-BFDD-F241-B622-9CC970D71DDA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\OpenAL">
+      <UniqueIdentifier>{1B3F19EB-B6A6-7549-A73E-B3F1750BE684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Plugins\OpenAL\Framework">
+      <UniqueIdentifier>{9B051600-6E7B-8D43-97CB-AC5A99842917}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\OpenAL\OpenALSoundComponent.h">
+      <Filter>source\Plugins\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\OpenAL\OpenALSoundSystem.h">
+      <Filter>source\Plugins\OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\OpenAL\Framework\aldlist.h">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\OpenAL\Framework\CWaves.h">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\OpenAL\Framework\Framework.h">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Plugins\OpenAL\Framework\LoadOAL.h">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\OpenAL\OpenALSoundComponent.cpp">
+      <Filter>source\Plugins\OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\OpenAL\OpenALSoundSystem.cpp">
+      <Filter>source\Plugins\OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\OpenAL\Framework\aldlist.cpp">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\OpenAL\Framework\CWaves.cpp">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\OpenAL\Framework\Framework.cpp">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\OpenAL\Framework\LoadOAL.cpp">
+      <Filter>source\Plugins\OpenAL\Framework</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

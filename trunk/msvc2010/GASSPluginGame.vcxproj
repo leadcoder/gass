@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{54F05B22-26C1-1748-9A35-091B5EE3E48B}</ProjectGuid>
+    <RootNamespace>GASSPluginGame</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\GASSPluginGame\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GASSPluginGame_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\x64\Debug\GASSPluginGame\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GASSPluginGame_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\Release\GASSPluginGame\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GASSPluginGame</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\x64\Release\GASSPluginGame\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GASSPluginGame</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSPluginGame_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginGame_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSPluginGame_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSPluginGame_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginGame_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSPluginGame_d.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginGame.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSPluginGame.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source\Plugins\Game;..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSPluginGame.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSPluginGame.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Game\DetectionData.h" />
+    <ClInclude Include="..\source\Plugins\Game\GameMessages.h" />
+    <ClInclude Include="..\source\Plugins\Game\GameSceneManager.h" />
+    <ClInclude Include="..\source\Plugins\Game\GameSystem.h" />
+    <ClInclude Include="..\source\Plugins\Game\PlatformTeam.h" />
+    <ClInclude Include="..\source\Plugins\Game\PlatformType.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\InputHandlerComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\InputProxyComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Input\PlayerInputComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Sensor\SensorComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Sensor\SignatureComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\AdaptiveSteerComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\ArmorComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\BoneModifierComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\FollowWaypointListComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\LODComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\SoundVolumeComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\SteerComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TankAutopilotComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TrackComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\TurretComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleCameraComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleDebugComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\VehicleEngineComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\AutoAimComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\HUDComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\ProjectileComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\SightComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Components\Weapon\WeaponSystemComponent.h" />
+    <ClInclude Include="..\source\Plugins\Game\Utils\PIDControl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Game\GameSceneManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\GameSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\PlatformTeam.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\PlatformType.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\InputHandlerComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\InputProxyComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Input\PlayerInputComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Sensor\SensorComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Sensor\SignatureComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\AdaptiveSteerComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\ArmorComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\BoneModifierComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\FollowWaypointListComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\LODComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\SoundVolumeComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\SteerComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TankAutopilotComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TrackComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\TurretComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleCameraComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleDebugComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\VehicleEngineComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\AutoAimComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\HUDComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\ProjectileComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\SightComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Weapon\WeaponSystemComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Utils\PIDControl.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

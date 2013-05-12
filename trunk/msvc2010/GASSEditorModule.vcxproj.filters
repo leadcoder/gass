@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{F62CCC7B-6E0B-404F-A191-F2FA56ABD104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Modules">
+      <UniqueIdentifier>{43F0EB82-585A-2D4E-9BCA-B6FDC26C30BF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Modules\Editor">
+      <UniqueIdentifier>{58850554-B569-2940-B188-D1521542792B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Modules\Editor\Components">
+      <UniqueIdentifier>{D682A8BA-5763-054A-8BC7-35E793B9030E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Modules\Editor\ToolSystem">
+      <UniqueIdentifier>{A008EBC9-3DAF-FD4A-874C-331401CF59D4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Modules\Editor\EditorApplication.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\EditorCommon.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\EditorMessages.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\EditorSystem.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\GUISchemaLoader.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\Components\DistanceScaleComponent.h">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\Components\EditorComponent.h">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\Components\GizmoComponent.h">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\Components\PaintGizmoComponent.h">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\Components\SelectionComponent.h">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\CreateTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\CursorInfo.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\EditPositionTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\GoToPositionTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\IMouseTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MeasurementTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MouseToolController.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\MoveTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\PaintTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\RotateTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\SelectTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\TerrainDeformTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\ToolSystem\VerticalMoveTool.h">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Modules\Editor\EditorSceneManager.h">
+      <Filter>source\Modules\Editor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Modules\Editor\EditorApplication.cpp">
+      <Filter>source\Modules\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\EditorSystem.cpp">
+      <Filter>source\Modules\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\GUISchemaLoader.cpp">
+      <Filter>source\Modules\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\DistanceScaleComponent.cpp">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\EditorComponent.cpp">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\GizmoComponent.cpp">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\PaintGizmoComponent.cpp">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\Components\SelectionComponent.cpp">
+      <Filter>source\Modules\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\CreateTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\EditPositionTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\GoToPositionTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\ITool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MeasurementTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MouseToolController.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\MoveTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\PaintTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\RotateTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\SelectTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\TerrainDeformTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\ToolSystem\VerticalMoveTool.cpp">
+      <Filter>source\Modules\Editor\ToolSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Modules\Editor\EditorSceneManager.cpp">
+      <Filter>source\Modules\Editor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

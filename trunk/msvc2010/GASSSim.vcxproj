@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E54F5611-CCC1-184A-BDE6-69484FA352EF}</ProjectGuid>
+    <RootNamespace>GASSSim</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\GASSSim\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GASSSim_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj\x64\Debug\GASSSim\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GASSSim_d</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\Release\GASSSim\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GASSSim</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj\x64\Release\GASSSim\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GASSSim</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSSim_d.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSSim_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSSim_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)GASSSim_d.pdb</ProgramDataBaseFileName>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>GASSCore_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSSim_d.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>..\lib\GASSSim_d.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSSim.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSSim.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GASS_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>..\lib\GASSCore.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GASSSim.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\GASSSim.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\Core\Utils\GASSColorRGB.h" />
+    <ClInclude Include="..\source\Sim\GASS.h" />
+    <ClInclude Include="..\source\Sim\GASSBaseSceneComponent.h" />
+    <ClInclude Include="..\source\Sim\GASSBaseSceneManager.h" />
+    <ClInclude Include="..\source\Sim\GASSCommon.h" />
+    <ClInclude Include="..\source\Sim\GASSGeometryFlags.h" />
+    <ClInclude Include="..\source\Sim\GASSMaterialData.h" />
+    <ClInclude Include="..\source\Sim\GASSMeshData.h" />
+    <ClInclude Include="..\source\Sim\GASSResource.h" />
+    <ClInclude Include="..\source\Sim\GASSResourceGroup.h" />
+    <ClInclude Include="..\source\Sim\GASSResourceHandle.h" />
+    <ClInclude Include="..\source\Sim\GASSResourceLocation.h" />
+    <ClInclude Include="..\source\Sim\GASSResourceManager.h" />
+    <ClInclude Include="..\source\Sim\GASSRunTimeController.h" />
+    <ClInclude Include="..\source\Sim\GASSScene.h" />
+    <ClInclude Include="..\source\Sim\GASSSceneManagerFactory.h" />
+    <ClInclude Include="..\source\Sim\GASSSceneObject.h" />
+    <ClInclude Include="..\source\Sim\GASSSceneObjectLink.h" />
+    <ClInclude Include="..\source\Sim\GASSSceneObjectRef.h" />
+    <ClInclude Include="..\source\Sim\GASSSceneObjectTemplate.h" />
+    <ClInclude Include="..\source\Sim\GASSSimEngine.h" />
+    <ClInclude Include="..\source\Sim\GASSSimSystem.h" />
+    <ClInclude Include="..\source\Sim\GASSSimSystemManager.h" />
+    <ClInclude Include="..\source\Sim\GASSTaskNode.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSICameraComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSICollisionSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIControlSettingsSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIGeometryComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIGraphicsSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIInputSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSILightComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSILocationComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIMaterialSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIMeshComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSINetworkComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIPhysicsGeometryComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIPhysicsSystem.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIRenderWindow.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIResourceComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSISceneManager.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIShape.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSITerrainComponent.h" />
+    <ClInclude Include="..\source\Sim\Interface\GASSIWaypointListComponent.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSCoreSceneMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSCoreSceneObjectMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSCoreSystemMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSGraphicsSceneMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSGraphicsSceneObjectMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSGraphicsSystemMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSNetworkSceneObjectMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSNetworkSystemMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSPhysicsSystemMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSPhysicsSceneObjectMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSScriptSystemMessages.h" />
+    <ClInclude Include="..\source\Sim\Messages\GASSSoundSceneObjectMessages.h" />
+    <ClInclude Include="..\source\Sim\Utils\GASSEnumBinder.h" />
+    <ClInclude Include="..\source\Sim\Utils\GASSProfiler.h" />
+    <ClInclude Include="..\source\Sim\Utils\GASSProfileRuntimeHandler.h" />
+    <ClInclude Include="..\source\Sim\Utils\GASSSimpleProfile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Sim\GASSBaseSceneComponent.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSBaseSceneManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSGeometryFlags.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSResource .cpp" />
+    <ClCompile Include="..\source\Sim\GASSResourceGroup.cpp" />
+    <ClCompile Include="..\source\Sim\GASSResourceHandle.cpp" />
+    <ClCompile Include="..\source\Sim\GASSResourceLocation.cpp" />
+    <ClCompile Include="..\source\Sim\GASSResourceManager.cpp" />
+    <ClCompile Include="..\source\Sim\GASSRunTimeController.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSScene.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSceneManagerFactory.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSceneObject.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSceneObjectLink.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSceneObjectRef.cpp" />
+    <ClCompile Include="..\source\Sim\GASSSceneObjectTemplate.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSimEngine.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSimSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSSimSystemManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\GASSTaskNode.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Interface\GASSIGraphicsSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Interface\GASSIInputSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Interface\GASSIPhysicsSystem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Interface\GASSISceneManager.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Utils\GASSProfiler.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Utils\GASSProfileRuntimeHandler.cpp">
+    </ClCompile>
+    <ClCompile Include="..\source\Sim\Utils\GASSSimpleProfile.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
