@@ -61,7 +61,7 @@ namespace GASS
 			A system is specified by a name tag and att type attribute that 
 			specify the class implementing the system.
 		*/
-		void Load(const std::string &filename);
+		void Load(TiXmlElement *systems_elem);
 
 		//ISystemInterface
 

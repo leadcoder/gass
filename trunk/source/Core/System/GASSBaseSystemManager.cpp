@@ -38,47 +38,26 @@ namespace GASS
 
 	}
 
-	/*bool SystemBucketSortPredicate(const int &lhs, const int &rhs)
+	void BaseSystemManager::Load(TiXmlElement *systems_elem)
 	{
-		return lhs < rhs;
-	}*/
-	
-	void BaseSystemManager::Load(const std::string &filename)
-	{
-		if(filename =="")
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "BaseSystemManager::Load");
-		
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		if(systems_elem)
 		{
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"BaseSystemManager::Load");
-		}
-		
-		TiXmlElement *systems = xmlDoc->FirstChildElement("Systems");
-
-		if(systems)
-		{
-			systems= systems->FirstChildElement();
+			TiXmlElement *sys_elm = systems_elem->FirstChildElement();
 			//Loop through each template
-			while(systems)
+			while(sys_elm)
 			{
-				SystemPtr system = LoadSystem(systems);
+				SystemPtr system = LoadSystem(sys_elm);
 				if(system)
 				{
 					system->OnCreate(shared_from_this());
 					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
-					
-					
 					m_Systems.push_back(system);
-					
 				}
-				systems  = systems->NextSiblingElement();
+				sys_elm  = sys_elm->NextSiblingElement();
 			}
 		}
-		xmlDoc->Clear();
-		// Delete our allocated document and return success ;)
-		delete xmlDoc;
 	}
+
 
 	SystemPtr BaseSystemManager::LoadSystem(TiXmlElement *system_elem)
 	{
@@ -97,6 +76,4 @@ namespace GASS
 	{
 	
 	}	
-
-	
 }

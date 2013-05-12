@@ -134,7 +134,8 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SimSystemManager::Load");
 		}
 		
-		TiXmlElement *systems = xmlDoc->FirstChildElement("Systems");
+		TiXmlElement *systems = xmlDoc->FirstChildElement("GASS");
+		systems = systems->FirstChildElement("Systems");
 
 		if(systems)
 		{

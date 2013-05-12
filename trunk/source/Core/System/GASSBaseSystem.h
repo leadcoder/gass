@@ -67,8 +67,6 @@ namespace GASS
 		//IXMLSerialize interface
 		virtual void LoadXML(TiXmlElement *xml_elem);
 		virtual void SaveXML(TiXmlElement *xml_elem);
-		virtual int GetUpdateBucket() const;
-		virtual void SetUpdateBucket(int priority);
 	protected:
 		SystemManagerWeakPtr m_Owner;
 	};

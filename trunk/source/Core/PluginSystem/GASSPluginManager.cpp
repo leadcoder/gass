@@ -48,7 +48,9 @@ namespace GASS
 		if (!xmlDoc->LoadFile())
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
 		
-		TiXmlElement *plugins = xmlDoc->FirstChildElement("Plugins");
+
+		TiXmlElement *plugins = xmlDoc->FirstChildElement("GASS");
+		plugins = plugins->FirstChildElement("Plugins");
 
 		if(plugins)
 		{

@@ -50,10 +50,8 @@ namespace GASS
 
 		//load keyboard config!
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
-		if(css)
-		{
-			css->Load(config_path +  "GASSControlSettings.xml");
-		}
+		css->Load(config_path +  "GASSControlSettings.xml");
+		
 
 		/*EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if(!es)

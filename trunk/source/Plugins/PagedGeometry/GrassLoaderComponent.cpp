@@ -359,7 +359,7 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp && m_SceneMan == vp->getCamera()->getSceneManager())
+		if(vp && vp->getCamera() && m_SceneMan == vp->getCamera()->getSceneManager())
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
@@ -392,6 +392,7 @@ namespace GASS
 	void GrassLoaderComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
 	{
 
+		int denmap_width = 0;
 		std::vector<Ogre::uchar*> layer_data;
 		IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
@@ -404,6 +405,7 @@ namespace GASS
 			{
 				Ogre::PixelBox pbox = dmap->getPixelBox();
 				Ogre::uchar *l_data = static_cast<Ogre::uchar*>(dmap->getPixelBox().data);
+				denmap_width = static_cast<int>(pbox.getWidth()-1);
 				layer_data.push_back(l_data );
 			}
 		}
@@ -430,7 +432,9 @@ namespace GASS
 		endy = std::min(endy, (long)wsize-1);
 		for (long y = starty; y <= endy; ++y)
 		{
-			int tmploc = y * (wsize+1);
+			int texture_loc = y * (wsize+1);
+			int denmap_loc = y * (denmap_width+1);
+			
 			for (long x = startx; x <= endx; ++x)
 			{
 
@@ -444,7 +448,7 @@ namespace GASS
 				weight = 1.0 - (weight * weight);
 				//weight = 1;
 
-				float val = float(data[((tmploc+ x)*4)])/255.0f;
+				float val = float(data[((texture_loc + x)*4)])/255.0f;
 				val += weight*intensity;
 				//val = std::min(val, 255.0f);
 				//val = std::max(val, 0.0f);
@@ -453,13 +457,13 @@ namespace GASS
 				if(val < 0.0)
 					val = 0;
 			
-				data[((tmploc+ x)*4)] = val*255;
+				data[((texture_loc + x)*4)] = val*255;
 
 				//also update all layers!
 				for(int i = 0; i < layer_data.size(); i++)
 				{
 					Ogre::uchar *l_data = layer_data[i];
-					l_data [tmploc+ x] = val*255;
+					l_data [denmap_loc+ x] = val*255;
 				}
 			}
 		}

@@ -49,17 +49,6 @@ namespace GASS
 		xml_elem->LinkEndChild( this_elem );  
 		SaveProperties(this_elem);
 	}
-
-	int BaseSystem::GetUpdateBucket() const
-	{
-		return 0;
-	}
-
-	void BaseSystem::SetUpdateBucket(int priority)
-	{
-
-	}
-
 }
 
 

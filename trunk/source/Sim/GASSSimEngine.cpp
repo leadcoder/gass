@@ -144,10 +144,7 @@ namespace GASS
 				}
 			}
 		}
-
-		//Create scene object		
-		//m_Scene->Create();
-
+		
 		//intilize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
@@ -162,8 +159,11 @@ namespace GASS
 		if (!xmlDoc->LoadFile())
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		
-		//add top tag!
-		TiXmlDocument *xml_settings = xmlDoc;
+		
+		TiXmlElement *xml_settings = xmlDoc->FirstChildElement("GASS");
+		if (!xml_settings)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
+		
 
 		TiXmlElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if(xml_data_path)
@@ -200,25 +200,6 @@ namespace GASS
 			
 			std::string sufix = Misc::ReadString(xml_sotm,"ObjectIDSufix");
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
-
-			/*TiXmlElement *xml_load = xml_sotm->FirstChildElement("Load");
-			if(xml_load)
-			{
-				TiXmlElement *xml_temp = xml_load->FirstChildElement("Template");
-				while(xml_temp)
-				{
-					std::string file_path = xml_temp->Attribute("value");
-					GASS::FilePath fp;
-					fp.SetPath(file_path);
-					file_path = fp.GetFullPath();
-					if(Misc::GetExtension(file_path) == "xml")
-						GetSceneObjectTemplateManager()->Load(file_path);
-					else
-						GetSceneObjectTemplateManager()->LoadFromPath(file_path);
-
-					xml_temp = xml_temp->NextSiblingElement("Template");
-				}
-			}*/
 		}
 
 		TiXmlElement *xml_rtc = xml_settings->FirstChildElement("RTC");
