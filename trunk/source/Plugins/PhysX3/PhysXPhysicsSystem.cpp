@@ -115,11 +115,24 @@ namespace GASS
 			iter++;
 		}
 		
+
+
+			//Initialise the sdk.
+		PxInitVehicleSDK(*m_PhysicsSDK);
+
+		//Set the basis vectors.
+		PxVec3 up(0,1,0);
+		PxVec3 forward(0,0,1);
+		PxVehicleSetBasisVectors(up, forward);
+
+		//Set the vehicle update mode to be immediate velocity changes.
+		PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
+
 		//load vehicle settings
-	/*	FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
+		FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
 		
 		LoadTires(path.GetFullPath());
-		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
+		
 		for(size_t i=0; i< m_DrivableMaterialNames.size() ; i++) 
 		{
 			//Create a new material.
@@ -148,7 +161,7 @@ namespace GASS
 					m_SurfaceTirePairs->setTypePairFriction(i,j,1.0);
 				}
 			}
-		}*/
+		}
 
 		//physx::PxExtensionVisualDebugger::connect(mSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 10, true,physx::PxGetDefaultDebuggerFlags());
 	}
