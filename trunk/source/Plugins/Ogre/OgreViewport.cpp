@@ -34,7 +34,7 @@ namespace GASS
 		m_OgreViewport(vp), 
 		m_Window(window)
 	{
-		
+		//vp->setMaterialScheme("PPLHigh");
 	}
 
 	OgreViewport::~OgreViewport()
