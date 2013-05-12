@@ -240,7 +240,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	{
 		for(size_t i = 0; i < m_Geom->getConvexVolumeCount();i++)
 		{
-			m_Geom->deleteConvexVolume(i);
+			m_Geom->deleteConvexVolume(static_cast<int>(i));
 		}
 		IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastConvexVolumeComponent>(components,true);
@@ -310,7 +310,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	{
 		for(size_t i = 0; i < m_Geom->getOffMeshConnectionCount();i++)
 		{
-			m_Geom->deleteOffMeshConnection(i);
+			m_Geom->deleteOffMeshConnection(static_cast<int>(i));
 		}
 
 		const unsigned char area = SAMPLE_POLYAREA_JUMP;

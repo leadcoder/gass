@@ -174,7 +174,6 @@ namespace GASS
 			GraphicsSystemPtr gs = GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 			if(gs)
 			{
-				unsigned int width, height;
 				RenderWindowPtr window = gs->GetMainRenderWindow();
 				const OIS::MouseState &ms = m_Mouse->getMouseState();
 				ms.width = window->GetWidth();

@@ -174,7 +174,7 @@ namespace GASS
 		std::vector<SceneObjectPtr> objects;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildrenByID(objects,id,false,true);
 
-		unsigned int num_locations = objects.size();
+		unsigned int num_locations = static_cast<unsigned int> (objects.size());
 		if(num_locations > 0)
 		{
 			int index = rand()%num_locations;

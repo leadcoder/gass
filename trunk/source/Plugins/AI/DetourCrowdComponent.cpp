@@ -270,7 +270,7 @@ namespace GASS
 				wander++;
 		}
 
-		unsigned int num_agents = m_Agents.size();
+		unsigned int num_agents = static_cast<unsigned int>(m_Agents.size());
 		std::stringstream sstream;
 		sstream << "ACTIVE AGENTS:" << num_agents << "\n" <<
 			"DEAD: " << dead << "\n"
