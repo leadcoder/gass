@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="PxCar"/>
+		<ID value="CHASSIS"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="car.3ds"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysXCarComponent>
+				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
+				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
+				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
+				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
+			</PhysXCarComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="TankInputSettings"/>
+			</InputHandlerComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="TankWheel"/>
+				<ID value="FRONT_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 -1.10 1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="wheel.3ds"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TankWheel"/>
+				<ID value="FRONT_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 -1.10 1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="wheel.3ds"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TankWheel"/>
+				<ID value="REAR_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 -1.10 -1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="wheel.3ds"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TankWheel"/>
+				<ID value="REAR_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 -1.10 -1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="wheel.3ds"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>
