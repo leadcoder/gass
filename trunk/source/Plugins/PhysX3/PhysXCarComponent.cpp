@@ -30,7 +30,11 @@ namespace GASS
 	PhysXCarComponent::PhysXCarComponent(): m_Actor(NULL),
 		m_ThrottleInput(0),
 		m_SteerInput(0),
-		m_Vehicle(NULL)
+		m_Vehicle(NULL),
+		m_DigAccelInput(false),
+		m_DigBrakeInput(false),
+		m_IsMovingForwardSlowly(false),
+		m_InReverseMode(false)
 	{
 		m_ChassisData.mMass = 1500;
 	}
@@ -294,8 +298,9 @@ namespace GASS
 		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
 		PxFilterData wheelCollFilterData;
 		wheelCollFilterData.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
-		wheelCollFilterData.word1=COLLISION_FLAG_WHEEL_AGAINST;
-
+		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_RAY_CAST_WHEEL);
+		wheelCollFilterData.word1=against;
+		
 		//Create a query filter data for the car to ensure that cars
 		//do not attempt to drive on themselves.
 		PxFilterData vehQryFilterData;
@@ -318,7 +323,8 @@ namespace GASS
 
 		PxFilterData chassisCollFilterData;
 		chassisCollFilterData.word0=GEOMETRY_FLAG_VEHICLE_CHASSIS;
-		chassisCollFilterData.word1=COLLISION_FLAG_CHASSIS_AGAINST;
+		against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_VEHICLE_CHASSIS);
+		chassisCollFilterData.word1=against;
 		chassisShape->setSimulationFilterData(chassisCollFilterData);
 
 		chassisShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
@@ -330,6 +336,13 @@ namespace GASS
 
 		m_Vehicle = PxVehicleDrive4W::allocate(4);
 		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,0);
+
+
+		m_Vehicle->setWheelShapeMapping(0,0);
+		m_Vehicle->setWheelShapeMapping(1,1);
+		m_Vehicle->setWheelShapeMapping(2,2);
+		m_Vehicle->setWheelShapeMapping(3,3);
+
 
 		//Free the sim data because we don't need that any more.
 		wheelsSimData->free();
@@ -459,21 +472,23 @@ namespace GASS
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
 		m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
+
 		for(int i = 0; i < numShapes-1; i++)
 		{
-			Vec3 pos = PxConvert::ToGASS(carShapes[i]->getLocalPose().p);
-
+			//Vec3 pos = PxConvert::ToGASS(carShapes[i]->getLocalPose().p);
+			Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
 			MessagePtr pos_msg(new PositionMessage(pos,from_id));
 			wheels[i]->PostMessage(pos_msg);
 
-			Quaternion rot = PxConvert::ToGASS(carShapes[i]->getLocalPose().q);
+			Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
+			//Quaternion rot = PxConvert::ToGASS(carShapes[i]->getLocalPose().q);
 			MessagePtr rot_msg(new RotationMessage(rot,from_id));
 			wheels[i]->PostMessage(rot_msg);
 		}
 
 		PxVehicleDrive4WRawInputData rawInputData;
-		rawInputData.setDigitalAccel(m_ThrottleInput);
-		rawInputData.setDigitalBrake(0);
+		rawInputData.setDigitalAccel(m_DigAccelInput);
+		rawInputData.setDigitalBrake(m_DigBrakeInput);
 		rawInputData.setDigitalHandbrake(0);
 		if(m_SteerInput < 0)
 		{
@@ -488,10 +503,46 @@ namespace GASS
 		rawInputData.setGearDown(false);
 		rawInputData.setGearUp(false);
 
+		PxVehicleDriveDynData& driveDynData=m_Vehicle->mDriveDynData;
+
+		//Work out if the car is to flip from reverse to forward gear or from forward gear to reverse.
+		//Store if the car is moving slowly to help decide if the car is to toggle from reverse to forward in the next update.
+		bool toggleAutoReverse = false;
+		bool newIsMovingForwardSlowly = false;
+		ProcessAutoReverse(*m_Vehicle, driveDynData, rawInputData, toggleAutoReverse, newIsMovingForwardSlowly);
+		m_IsMovingForwardSlowly = newIsMovingForwardSlowly;
+
+
+		//If the car is to flip gear direction then switch gear as appropriate.
+		if(toggleAutoReverse)
+		{
+			m_InReverseMode = !m_InReverseMode;
+
+			if(m_InReverseMode)
+			{
+				driveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			}
+			else
+			{
+				driveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+			}
+		}
+
+		//If in reverse mode then swap the accel and brake.
+		if(m_InReverseMode)
+		{
+			const bool accel=rawInputData.getDigitalAccel();
+			const bool brake=rawInputData.getDigitalBrake();
+			rawInputData.setDigitalAccel(brake);
+			rawInputData.setDigitalBrake(accel);
+
+		}
+
+
 		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData,gSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);
 
 
-		PxVehicleDriveDynData& driveDynData=m_Vehicle->mDriveDynData;
+
 		const PxF32 forwardSpeed = m_Vehicle->computeForwardSpeed();
 		const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);
 		const PxF32 sidewaysSpeedAbs = PxAbs(m_Vehicle->computeSidewaysSpeed());
@@ -499,11 +550,113 @@ namespace GASS
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
-		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
+		std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
+		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
 
 		//	MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
+	}
+
+
+	#define THRESHOLD_FORWARD_SPEED (0.1f) 
+#define THRESHOLD_SIDEWAYS_SPEED (0.2f)
+#define THRESHOLD_ROLLING_BACKWARDS_SPEED (0.1f)
+
+
+	void PhysXCarComponent::ProcessAutoReverse(const physx::PxVehicleWheels& focusVehicle, 
+		const physx::PxVehicleDriveDynData& driveDynData, 
+		const physx::PxVehicleDrive4WRawInputData& carRawInputs,
+		bool& toggleAutoReverse, 
+		bool& newIsMovingForwardSlowly) const
+	{
+		newIsMovingForwardSlowly = false;
+		toggleAutoReverse = false;
+
+		if(driveDynData.getUseAutoGears())
+		{
+			//If the car is travelling very slowly in forward gear without player input and the player subsequently presses the brake then we want the car to go into reverse gear
+			//If the car is travelling very slowly in reverse gear without player input and the player subsequently presses the accel then we want the car to go into forward gear
+			//If the car is in forward gear and is travelling backwards then we want to automatically put the car into reverse gear.
+			//If the car is in reverse gear and is travelling forwards then we want to automatically put the car into forward gear.
+			//(If the player brings the car to rest with the brake the player needs to release the brake then reapply it 
+			//to indicate they want to toggle between forward and reverse.)
+
+			const bool prevIsMovingForwardSlowly=m_IsMovingForwardSlowly;
+			bool isMovingForwardSlowly=false;
+			bool isMovingBackwards=false;
+			const bool isInAir = focusVehicle.isInAir();
+			if(!isInAir)
+			{
+				bool accelRaw,brakeRaw,handbrakeRaw;
+				//if(mUseKeyInputs)
+				{
+					accelRaw=carRawInputs.getDigitalAccel();
+					brakeRaw=carRawInputs.getDigitalBrake();
+					handbrakeRaw=carRawInputs.getDigitalHandbrake();
+				}
+				/*else
+				{
+					accelRaw=carRawInputs.getAnalogAccel() > 0 ? true : false;
+					brakeRaw=carRawInputs.getAnalogBrake() > 0 ? true : false;
+					handbrakeRaw=carRawInputs.getAnalogHandbrake() > 0 ? true : false;
+				}*/
+
+				const PxF32 forwardSpeed = focusVehicle.computeForwardSpeed();
+				const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);
+				const PxF32 sidewaysSpeedAbs = PxAbs(focusVehicle.computeSidewaysSpeed());
+				const PxU32 currentGear = driveDynData.getCurrentGear();
+				const PxU32 targetGear = driveDynData.getTargetGear();
+
+				//Check if the car is rolling against the gear (backwards in forward gear or forwards in reverse gear).
+				if(PxVehicleGearsData::eFIRST == currentGear  && forwardSpeed < -THRESHOLD_ROLLING_BACKWARDS_SPEED)
+				{
+					isMovingBackwards = true;
+				}
+				else if(PxVehicleGearsData::eREVERSE == currentGear && forwardSpeed > THRESHOLD_ROLLING_BACKWARDS_SPEED)
+				{
+					isMovingBackwards = true;
+				}
+
+				//Check if the car is moving slowly.
+				if(forwardSpeedAbs < THRESHOLD_FORWARD_SPEED && sidewaysSpeedAbs < THRESHOLD_SIDEWAYS_SPEED)
+				{
+					isMovingForwardSlowly=true;
+				}
+
+				//Now work if we need to toggle from forwards gear to reverse gear or vice versa.
+				if(isMovingBackwards)
+				{
+					if(!accelRaw && !brakeRaw && !handbrakeRaw && (currentGear == targetGear))			
+					{
+						//The car is rolling against the gear and the player is doing nothing to stop this.
+						toggleAutoReverse = true;
+					}
+				}
+				else if(prevIsMovingForwardSlowly && isMovingForwardSlowly)
+				{
+					if((currentGear > PxVehicleGearsData::eNEUTRAL) && brakeRaw && !accelRaw && (currentGear == targetGear))
+					{
+						//The car was moving slowly in forward gear without player input and is now moving slowly with player input that indicates the 
+						//player wants to switch to reverse gear.
+						toggleAutoReverse = true;
+					}
+					else if(currentGear == PxVehicleGearsData::eREVERSE && accelRaw && !brakeRaw && (currentGear == targetGear))
+					{
+						//The car was moving slowly in reverse gear without player input and is now moving slowly with player input that indicates the 
+						//player wants to switch to forward gear.
+						toggleAutoReverse = true;
+					}
+				}
+
+				//If the car was brought to rest through braking then the player needs to release the brake then reapply
+				//to indicate that the gears should toggle between reverse and forward.
+				if(isMovingForwardSlowly && !brakeRaw && !accelRaw && !handbrakeRaw)
+				{
+					newIsMovingForwardSlowly = true;
+				}
+			}
+		}
 	}
 
 	void PhysXCarComponent::SetMass(float mass)
@@ -555,6 +708,21 @@ namespace GASS
 
 		if (name == "Throttle")
 		{
+			if(value > 0)
+			{
+				m_DigAccelInput = true;
+				m_DigBrakeInput = false;
+			}
+			else if(value < 0)
+			{
+				m_DigAccelInput = false;
+				m_DigBrakeInput = true;
+			}
+			else
+			{
+				m_DigAccelInput = false;
+				m_DigBrakeInput = false;
+			}
 			m_ThrottleInput = value;
 		}
 		else if (name == "Steer")

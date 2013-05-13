@@ -125,7 +125,7 @@ namespace GASS
 		if(m_GrassLayer)
 		{
 			UpdateSway();
-			m_GrassLayer->setLightingEnabled(false); //do lit in fp
+			m_GrassLayer->setLightingEnabled(true); //do lit in fp
 		}
 	}
 

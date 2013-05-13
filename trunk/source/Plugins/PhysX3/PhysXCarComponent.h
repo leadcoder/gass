@@ -58,6 +58,11 @@ namespace GASS
 		//helpers
 		void Reset();
 		physx::PxVec3 ComputeDim(const physx::PxConvexMesh* cm);
+		void ProcessAutoReverse(const physx::PxVehicleWheels& focusVehicle, 
+		const physx::PxVehicleDriveDynData& driveDynData, 
+		const physx::PxVehicleDrive4WRawInputData& carRawInputs,
+		bool& toggleAutoReverse, 
+		bool& newIsMovingForwardSlowly) const;
 	protected:
 		ADD_ATTRIBUTE(SceneObjectRef,FrontLeftWheel);
 		ADD_ATTRIBUTE(SceneObjectRef,FrontRightWheel);
@@ -71,6 +76,13 @@ namespace GASS
 		float m_ThrottleInput;
 		float m_SteerInput;
 		physx::PxVehicleChassisData m_ChassisData;
+		bool m_DigBrakeInput;
+		bool m_DigAccelInput;
+
+
+		bool m_IsMovingForwardSlowly;
+		bool m_InReverseMode;
+	
 	};
 	typedef SPTR<PhysXCarComponent> PhysXCarComponentPtr;
 }

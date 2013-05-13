@@ -339,7 +339,7 @@ namespace GASS
 		m_DynamicImpostorLighting  = value;
 		if(value)
 		{
-			StaticBillboardSet::setDynamicLighting(value);
+	//		StaticBillboardSet::setDynamicLighting(value);
 		}
 	}
 

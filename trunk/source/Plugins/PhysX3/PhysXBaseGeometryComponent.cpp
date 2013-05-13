@@ -47,6 +47,8 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
+	//	RegisterProperty<>("Material", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
+		
 		//RegisterProperty<bool>("Debug", &GASS::PhysXBaseGeometryComponent::GetDebug, &GASS::PhysXBaseGeometryComponent::SetDebug);
 	}
 
