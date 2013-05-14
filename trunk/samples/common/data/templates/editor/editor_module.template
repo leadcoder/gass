@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="SelectionObject"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<SelectionComponent>
+				<Type value="solid"/>
+				<Color value="0.8 0.8 0.8 0.8"/>
+			</SelectionComponent>
+			<EditorComponent>
+				<Visible value="true" />
+				<Lock value="0"/>
+				<IconFile value="icon_camera"/>
+				<ShowInTree value ="false"/>
+				<AllowRemove value="false"/>
+				<AllowDragAndDrop value="false"/>
+				<ChangeMaterialWhenSelected value="0"/>
+				<ShowBBWhenSelected value="0"/>
+			</EditorComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="GizmoMoveObject"/>
+		<Serialize value="false"/>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="GizmoMoveGrid"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_GRID"/>
+						<Color value="0.8 0.8 0.8 0.8"/>
+						<Size value ="30"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMoveAxisX"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="0 1 0 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMoveAxisY"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 90"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="1 0 0 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMoveAxisZ"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="90 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="0 0 1 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMovePlaneXZ"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_PLANE"/>
+						<Color value="0 1 0 0.5"/>
+						<Size value ="0.5"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMovePlaneYZ"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 90"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_PLANE"/>
+						<Color value="0 0 1 0.5"/>
+						<Size value ="0.5"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoMovePlaneXY"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 90 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_PLANE"/>
+						<Color value="1 0 0 0.5"/>
+						<Size value ="0.5"/>
+					</GizmoComponent>
+					<PhysicsBoxGeometryComponent>
+						<Offset value="0 0 0" />
+						<CollisionBits value="2"/>
+						<CollisionCategory value="2"/>
+					</PhysicsBoxGeometryComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="GizmoRotateObject"/>
+		<Serialize value="false"/>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="GizmoRotateAxisX"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="0 1 0 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoRotateAxisY"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="0 0 90"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="1 0 0 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GizmoRotateAxisZ"/>
+				<Serialize value="false"/>
+				<Components>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<LocationComponent>
+						<Position value="0 0 0"/>
+						<Rotation value="90 0 0"/>
+					</LocationComponent>
+					<GizmoComponent>
+						<Type value="GT_AXIS"/>
+						<Color value="0 0 1 1"/>
+						<Size value ="2"/>
+					</GizmoComponent>
+					<EditorComponent>
+						<Visible value="true" />
+						<Lock value="0"/>
+						<IconFile value="icon_camera"/>
+						<ShowInTree value ="false"/>
+						<AllowRemove value="false"/>
+						<AllowDragAndDrop value="false"/>
+						<ChangeMaterialWhenSelected value="0"/>
+						<ShowBBWhenSelected value="0"/>
+					</EditorComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PaintGizmo"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<PaintGizmoComponent>
+				<Type value="test"/>
+				<Color value="1 1 1 1"/>
+				<Size value ="6"/>
+			</PaintGizmoComponent>
+			<EditorComponent>
+				<Visible value="true" />
+				<Lock value="0"/>
+				<IconFile value="icon_camera"/>
+				<ShowInTree value ="false"/>
+				<AllowRemove value="false"/>
+				<AllowDragAndDrop value="false"/>
+				<ChangeMaterialWhenSelected value="0"/>
+				<ShowBBWhenSelected value="0"/>
+			</EditorComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="RulerObject"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<TextComponent>
+				<Text value=""/>
+				<Offset value="0 0 0"/>
+			</TextComponent>
+			<EditorComponent>
+				<Visible value="true" />
+				<Lock value="0"/>
+				<IconFile value="icon_camera"/>
+				<ShowInTree value ="false"/>
+				<AllowRemove value="false"/>
+				<AllowDragAndDrop value="false"/>
+				<ChangeMaterialWhenSelected value="0"/>
+				<ShowBBWhenSelected value="0"/>
+			</EditorComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PointerObject"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PaintGizmo"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<PaintGizmoComponent>
+				<Type value="test"/>
+				<Color value="1 1 1 1"/>
+				<Size value ="6"/>
+			</PaintGizmoComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

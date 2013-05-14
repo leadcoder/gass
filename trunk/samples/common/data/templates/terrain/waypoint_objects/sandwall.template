@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="SandwallObject"/>
+		<Instantiable value="true"/>
+		<Components>
+			<WaypointListComponent>
+				<Radius value ="0"/>
+				<WaypointTemplate value="SandwallWaypoint"/>
+			</WaypointListComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<OgreRoadComponent>
+				<Material value ="RoadWall"/>
+				<RoadWidth value="1"/>
+				<RoadOffset value="1.6"/>
+				<DitchWidth value="0"/>
+				<TileScale value="1 2"/>
+				<CustomDitchTexturePercent value="0.25"/>
+			</OgreRoadComponent>
+		</Components>
+	</SceneObjectTemplate>
+	
+
+	<SceneObjectTemplate>
+		<Name value="SandwallWaypoint"/>
+		<Components>
+			<WaypointComponent>
+			</WaypointComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="1"/>
+			</LocationComponent>
+			<!--<BoxGeometryComponent>
+		<Size value="0.2 0.2 0.2"/>
+	  </BoxGeometryComponent>-->
+			<BillboardComponent>
+				<Name value="NodeGeom"/>
+				<Material value="node.dds"/>
+				<Width value="0.4"/>
+				<Height value="0.4"/>
+			</BillboardComponent>
+			<ManualMeshComponent>
+				<Name value="TangentGeom"/>
+			</ManualMeshComponent>
+			<PhysicsBoxGeometryComponent/>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="Tangent"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0 2"/>
+						<Rotation value="0 0 0"/>
+						<AttachToParent value="1"/>
+					</LocationComponent>
+					<BoxGeometryComponent>
+						<Size value="0.1 0.1 0.1"/>
+					</BoxGeometryComponent>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<PhysicsBoxGeometryComponent/>
+				</Components>
+				<ComponentContainers>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

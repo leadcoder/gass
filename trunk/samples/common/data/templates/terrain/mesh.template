@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="CustomMeshObject"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<MeshComponent>
+				<Filename value="default.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<LocationComponent/>
+			<PhysicsMeshGeometryComponent>
+			</PhysicsMeshGeometryComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

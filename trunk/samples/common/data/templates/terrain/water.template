@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="HydraxWater"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<HydraxWaterComponent>
+				<ConfigurationFile value=""/>
+				<ResourceLocation value="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax"/>
+			</HydraxWaterComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>
