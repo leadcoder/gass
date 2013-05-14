@@ -50,6 +50,9 @@ namespace GASS
 		
 
 		TiXmlElement *plugins = xmlDoc->FirstChildElement("GASS");
+		if (!plugins)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Couldn't find GASS tag in:" + filename, "PluginManager::LoadFromFile");
+
 		plugins = plugins->FirstChildElement("Plugins");
 
 		if(plugins)
