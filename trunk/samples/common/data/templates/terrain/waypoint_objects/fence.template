@@ -17,11 +17,13 @@
 			</ManualMeshComponent>
 			<OgreRoadComponent>
 				<Material value ="RoadFence"/>
-				<RoadWidth value="1"/>
-				<RoadOffset value="1.6"/>
+				<RoadWidth value="0"/>
+				<RoadOffset value="2.5"/>
 				<DitchWidth value="0"/>
-				<TileScale value="1 2"/>
+				<TileScale value="1 4"/>
 				<CustomDitchTexturePercent value="0.25"/>
+				<CAP value="false"/>
+				<ClampToTerrain value="false"/>
 			</OgreRoadComponent>
 		</Components>
 	</SceneObjectTemplate>
