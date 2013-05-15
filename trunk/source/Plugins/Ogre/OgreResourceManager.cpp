@@ -92,7 +92,7 @@ namespace GASS
 	{
 		Ogre::ResourceGroupManager *rsm = Ogre::ResourceGroupManager::getSingletonPtr();
 		if(location->GetType() == RLT_FILESYSTEM)
-			rsm->addResourceLocation(location->GetPath().GetFullPath(),"FileSystem", location->GetGroup()->GetName(),false);
+			rsm->addResourceLocation(location->GetPath().GetFullPath(),"FileSystem", location->GetGroup()->GetName(),false,false);
 		else if(location->GetType() == RLT_ZIP)
 			rsm->addResourceLocation(location->GetPath().GetFullPath(),"Zip", location->GetGroup()->GetName(),false);
 	}

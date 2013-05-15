@@ -306,7 +306,7 @@ namespace GASS
 	{
 		Ogre::Viewport *vp = evt.source;
 		m_PagedGeometry->update();
-		if(vp && m_SceneMan == vp->getCamera()->getSceneManager())
+		if(vp && vp->getCamera() && m_SceneMan == vp->getCamera()->getSceneManager())
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
