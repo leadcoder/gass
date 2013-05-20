@@ -121,16 +121,27 @@ namespace GASS
 	void EnvironmentManagerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("EnvironmentManagerComponent",new Creator<EnvironmentManagerComponent, IComponent>);
-		RegisterVectorProperty<Vec3>("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient);
-		RegisterVectorProperty<float>("WaterGradientWeights", &EnvironmentManagerComponent::GetWaterGradientWeights, &EnvironmentManagerComponent::SetWaterGradientWeights);
-		RegisterVectorProperty<Vec3>("SunGradient", &EnvironmentManagerComponent::GetSunGradient, &EnvironmentManagerComponent::SetSunGradient);
-		RegisterVectorProperty<float>("SunGradientWeights", &EnvironmentManagerComponent::GetSunGradientWeights, &EnvironmentManagerComponent::SetSunGradientWeights);
-		RegisterVectorProperty<Vec3>("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient);
-		RegisterVectorProperty<float>("AmbientGradientWeights", &EnvironmentManagerComponent::GetAmbientGradientWeights, &EnvironmentManagerComponent::SetAmbientGradientWeights);
-		RegisterVectorProperty<Vec3>("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("EnvironmentManagerComponent", OF_VISIBLE )));
+		
+		RegisterVectorProperty<Vec3>("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<float>("WaterGradientWeights", &EnvironmentManagerComponent::GetWaterGradientWeights, &EnvironmentManagerComponent::SetWaterGradientWeights,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<Vec3>("SunGradient", &EnvironmentManagerComponent::GetSunGradient, &EnvironmentManagerComponent::SetSunGradient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<float>("SunGradientWeights", &EnvironmentManagerComponent::GetSunGradientWeights, &EnvironmentManagerComponent::SetSunGradientWeights,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<Vec3>("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<float>("AmbientGradientWeights", &EnvironmentManagerComponent::GetAmbientGradientWeights, &EnvironmentManagerComponent::SetAmbientGradientWeights,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<Vec3>("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		//RegisterVectorProperty<float>("FogDistance", &EnvironmentManagerComponent::GetFogDistance, &EnvironmentManagerComponent::SetFogDistance);
-		RegisterVectorProperty<float>("FogGradientWeights", &EnvironmentManagerComponent::GetFogGradientWeights, &EnvironmentManagerComponent::SetFogGradientWeights);
-		RegisterProperty<float>("SpecularWeight", &EnvironmentManagerComponent::GetSpecularWeight, &EnvironmentManagerComponent::SetSpecularWeight);
+		RegisterVectorProperty<float>("FogGradientWeights", &EnvironmentManagerComponent::GetFogGradientWeights, &EnvironmentManagerComponent::SetFogGradientWeights,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("SpecularWeight", &EnvironmentManagerComponent::GetSpecularWeight, &EnvironmentManagerComponent::SetSpecularWeight,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void EnvironmentManagerComponent::OnInitialize()
