@@ -273,6 +273,24 @@ int main(int argc, char* argv[])
 	body_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(bdrige_seg_obj2->GetComponent("PhysicsBodyComponent"));
 	body_comp->SetPropertyByType("Kinematic",true);
 
+	
+	GASS::SceneObjectPtr intersection1;
+	GASS::SceneObjectPtr intersection2  = scene->LoadObjectFromTemplate("TestInter",scene->GetRootSceneObject());
+	intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,0))));
+	
+	for(int i = 1 ; i < 11 ; i++)
+	{
+		intersection1 = intersection2;
+		intersection2  = scene->LoadObjectFromTemplate("TestInter",scene->GetRootSceneObject());
+		intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,i*50))));
+		
+		GASS::SceneObjectPtr road_seg = scene->LoadObjectFromTemplate("TestRoad",scene->GetRootSceneObject());
+		GASS::BaseComponentPtr rs_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(road_seg->GetFirstComponentByClass("RoadSegmentComponent"));
+		rs_comp->SetPropertyByType("StartNode",GASS::SceneObjectRef(intersection1->GetGUID()));
+		rs_comp->SetPropertyByType("EndNode",GASS::SceneObjectRef(intersection2->GetGUID()));
+	}
+
+
 	/*GASS::SceneObjectPtr mesh_obj = scene->LoadObjectFromTemplate("MeshObject",scene->GetRootSceneObject());
 	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
 	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,5,1))));
@@ -290,8 +308,11 @@ int main(int argc, char* argv[])
 	box_obj2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(10,0.6,20))));
 
 		
-	GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
-	vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,3,0))));
+	//GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
+	//vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,3,5))));
+	
+	//GASS::SceneObjectPtr car_obj = scene->LoadObjectFromTemplate("PxCar",scene->GetRootSceneObject());
+	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,3,0))));
 	
 
 	//create free camera and set start pos
@@ -385,7 +406,7 @@ int main(int argc, char* argv[])
 
 		if(wheel_vel > 200)
 			wheel_vel = 200;
-		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
+	/*	GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
 		rr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
 			
 		GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
@@ -396,7 +417,7 @@ int main(int argc, char* argv[])
 			
 		GASS::SceneObjectPtr fl_wheel = vehicle_obj->GetChildByID("FL_WHEEL");
 		fl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionSteerVelocityRequest(steer_vel)));
-
+		*/
 	}
 	return 0;
 }
