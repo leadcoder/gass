@@ -82,6 +82,7 @@ namespace GASS
 
 		bool m_IsMovingForwardSlowly;
 		bool m_InReverseMode;
+		bool m_UseDigitalInputs;
 	
 	};
 	typedef SPTR<PhysXCarComponent> PhysXCarComponentPtr;

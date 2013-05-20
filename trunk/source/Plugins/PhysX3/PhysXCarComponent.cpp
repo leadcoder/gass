@@ -34,7 +34,8 @@ namespace GASS
 		m_DigAccelInput(false),
 		m_DigBrakeInput(false),
 		m_IsMovingForwardSlowly(false),
-		m_InReverseMode(false)
+		m_InReverseMode(false),
+		m_UseDigitalInputs(false)
 	{
 		m_ChassisData.mMass = 1500;
 	}
@@ -278,9 +279,9 @@ namespace GASS
 		//Ackermann steer accuracy
 		PxVehicleAckermannGeometryData ackermann;
 		ackermann.mAccuracy=1.0f;
-		ackermann.mAxleSeparation=wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].z - wheelCentreOffsets4[PxVehicleDrive4W::eREAR_LEFT_WHEEL].z;
-		ackermann.mFrontWidth=wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].x-wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].x;
-		ackermann.mRearWidth=wheelCentreOffsets4[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].x-wheelCentreOffsets4[PxVehicleDrive4W::eREAR_LEFT_WHEEL].x;
+		ackermann.mAxleSeparation= fabs(wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].z - wheelCentreOffsets4[PxVehicleDrive4W::eREAR_LEFT_WHEEL].z);
+		ackermann.mFrontWidth=fabs(wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].x-wheelCentreOffsets4[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].x);
+		ackermann.mRearWidth=fabs(wheelCentreOffsets4[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].x-wheelCentreOffsets4[PxVehicleDrive4W::eREAR_LEFT_WHEEL].x);
 		driveSimData.setAckermannGeometryData(ackermann);
 
 		//////////////
@@ -487,18 +488,39 @@ namespace GASS
 		}
 
 		PxVehicleDrive4WRawInputData rawInputData;
-		rawInputData.setDigitalAccel(m_DigAccelInput);
-		rawInputData.setDigitalBrake(m_DigBrakeInput);
-		rawInputData.setDigitalHandbrake(0);
-		if(m_SteerInput < 0)
+
+		if(m_UseDigitalInputs)
 		{
-			rawInputData.setDigitalSteerLeft(fabs(m_SteerInput));
-			rawInputData.setDigitalSteerRight(0);
+			rawInputData.setDigitalAccel(m_DigAccelInput);
+			rawInputData.setDigitalBrake(m_DigBrakeInput);
+			rawInputData.setDigitalHandbrake(0);
+			if(m_SteerInput > 0)
+			{
+				rawInputData.setDigitalSteerLeft(fabs(m_SteerInput));
+				rawInputData.setDigitalSteerRight(0);
+				rawInputData.setDigitalSteerLeft(fabs(m_SteerInput));
+			
+			}
+			else
+			{
+				rawInputData.setDigitalSteerLeft(0);
+				rawInputData.setDigitalSteerRight(m_SteerInput);
+			}
 		}
 		else
 		{
-			rawInputData.setDigitalSteerLeft(0);
-			rawInputData.setDigitalSteerRight(m_SteerInput);
+			if(m_ThrottleInput < 0)
+			{
+				rawInputData.setAnalogBrake(fabs(m_ThrottleInput));
+				rawInputData.setAnalogAccel(0);
+			}
+			else
+			{
+				rawInputData.setAnalogAccel(fabs(m_ThrottleInput));
+				rawInputData.setAnalogBrake(0);
+			}
+			rawInputData.setAnalogHandbrake(0);
+			rawInputData.setAnalogSteer(m_SteerInput);
 		}
 		rawInputData.setGearDown(false);
 		rawInputData.setGearUp(false);
@@ -531,15 +553,34 @@ namespace GASS
 		//If in reverse mode then swap the accel and brake.
 		if(m_InReverseMode)
 		{
+			if(m_UseDigitalInputs)
+			{
 			const bool accel=rawInputData.getDigitalAccel();
 			const bool brake=rawInputData.getDigitalBrake();
 			rawInputData.setDigitalAccel(brake);
 			rawInputData.setDigitalBrake(accel);
-
+			}
+			else
+			{
+				const PxF32 accel=rawInputData.getAnalogAccel();
+				const PxF32 brake=rawInputData.getAnalogBrake();
+				rawInputData.setAnalogAccel(brake);
+				rawInputData.setAnalogBrake(accel);
+			}
 		}
 
 
-		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData,gSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);
+		
+		// Now filter the raw input values and apply them to focus vehicle
+	// as floats for brake,accel,handbrake,steer and bools for gearup,geardown.
+		if(m_UseDigitalInputs)
+		{
+			PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData,gSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);
+		}
+		else
+		{
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gCarPadSmoothingData,gSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);
+		}
 
 
 
@@ -550,9 +591,15 @@ namespace GASS
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
-		std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
+		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,forwardSpeed),Vec3(0,0,0),from_id));
+		GetSceneObject()->PostMessage(physics_msg);
+
+		
+
+		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
+		std::cout << "Steer:" << m_SteerInput << "\n";
 
 		//	MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
@@ -589,18 +636,18 @@ namespace GASS
 			if(!isInAir)
 			{
 				bool accelRaw,brakeRaw,handbrakeRaw;
-				//if(mUseKeyInputs)
+				if(m_UseDigitalInputs)
 				{
 					accelRaw=carRawInputs.getDigitalAccel();
 					brakeRaw=carRawInputs.getDigitalBrake();
 					handbrakeRaw=carRawInputs.getDigitalHandbrake();
 				}
-				/*else
+				else
 				{
 					accelRaw=carRawInputs.getAnalogAccel() > 0 ? true : false;
 					brakeRaw=carRawInputs.getAnalogBrake() > 0 ? true : false;
 					handbrakeRaw=carRawInputs.getAnalogHandbrake() > 0 ? true : false;
-				}*/
+				}
 
 				const PxF32 forwardSpeed = focusVehicle.computeForwardSpeed();
 				const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);

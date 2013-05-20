@@ -17,10 +17,12 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <boost/bind.hpp>
+
+
+#include "Sim/GASS.h"
 #include "AISceneManager.h"
 #include "AISystem.h"
-#include "Sim/GASS.h"
+
 
 
 namespace GASS

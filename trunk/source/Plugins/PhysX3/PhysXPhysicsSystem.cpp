@@ -122,7 +122,7 @@ namespace GASS
 
 		//Set the basis vectors.
 		PxVec3 up(0,1,0);
-		PxVec3 forward(0,0,1);
+		PxVec3 forward(0,0,-1);
 		PxVehicleSetBasisVectors(up, forward);
 
 		//Set the vehicle update mode to be immediate velocity changes.
