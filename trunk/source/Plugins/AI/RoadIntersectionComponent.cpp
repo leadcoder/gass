@@ -21,13 +21,19 @@ namespace GASS
 	void RoadIntersectionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("RoadIntersectionComponent",new Creator<RoadIntersectionComponent, IComponent>);
-		//REG_ATTRIBUTE(Vec2,RandomVelocity,RoadIntersectionComponent)
+		//RegisterVectorProperty<SceneObjectRef>("RoadSegments", &RoadIntersectionComponent::GetRoadSegments, &RoadIntersectionComponent::SetRoadSegments);
 	}
 
 	void RoadIntersectionComponent::OnInitialize()
 	{
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(RoadIntersectionComponent::OnTriggerEnter,TriggerEnterMessage,0));
+		
 		m_Initialized = true;
 	}
-	
+
+	/*void RoadIntersectionComponent::SetRoadSegments(const std::vector<SceneObjectRef> &connections)
+	{
+	//	m_Connections = connections;
+		UpdateRoads();
+	}*/
 }

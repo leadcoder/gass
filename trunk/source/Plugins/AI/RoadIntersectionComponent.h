@@ -21,7 +21,8 @@ namespace GASS
 		virtual void OnInitialize();
 	private:
 		bool m_Initialized;
-		std::vector<RoadSegmentComponentPtr> m_Connections;
+		//std::vector<RoadSegmentComponentPtr> m_Connections;
+		std::vector<SceneObjectRef> m_Connections;
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 }

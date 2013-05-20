@@ -2,8 +2,8 @@
 #ifndef AI_TARGET__COMPONENT
 #define AI_TARGET__COMPONENT
 
-#include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASS.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
 #include <set>
@@ -23,13 +23,22 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		//ADD_ATTRIBUTE(Vec2,RandomDelay)
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void SetStartNode(SceneObjectRef node);
+		SceneObjectRef GetStartNode() const;
+		void SetEndNode(SceneObjectRef node);
+		SceneObjectRef GetEndNode() const;
+
+		SceneObjectRef m_StartNode;
+		SceneObjectRef m_EndNode;
 		//ADD_ATTRIBUTE(Vec2,RandomVelocity)
 		//ADD_ATTRIBUTE(bool,Enable)
 		bool m_Initialized;
+		void UpdateMesh();
+	
 		//next instersection in right line
-		RoadIntersectionComponentPtr m_RightIntersection;
-		RoadIntersectionComponentPtr m_LeftIntersection;
+		//RoadIntersectionComponentPtr m_RightIntersection;
+		//RoadIntersectionComponentPtr m_LeftIntersection;
 	};
 
 	typedef SPTR<RoadSegmentComponent> RoadSegmentComponentPtr;
