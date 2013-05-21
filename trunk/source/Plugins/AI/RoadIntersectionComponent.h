@@ -1,6 +1,6 @@
 
-#ifndef AI_TARGET__COMPONENT
-#define AI_TARGET__COMPONENT
+#ifndef AI_ROAD_INTER_COMPONENT
+#define AI_ROAD_INTER_COMPONENT
 
 #include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASS.h"
@@ -19,10 +19,13 @@ namespace GASS
 		~RoadIntersectionComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		void AddRoad(RoadSegmentComponentPtr road);
+		void RemoveRoad(RoadSegmentComponentPtr road);
+		RoadSegmentComponentPtr GetRandomRoad(RoadSegmentComponentPtr road);
 	private:
 		bool m_Initialized;
-		//std::vector<RoadSegmentComponentPtr> m_Connections;
-		std::vector<SceneObjectRef> m_Connections;
+		std::vector<RoadSegmentComponentPtr> m_Connections;
+		//std::vector<SceneObjectRef> m_Connections;
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 }

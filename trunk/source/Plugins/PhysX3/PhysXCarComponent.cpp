@@ -591,7 +591,7 @@ namespace GASS
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
-		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,forwardSpeed),Vec3(0,0,0),from_id));
+		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 
 		
@@ -599,7 +599,7 @@ namespace GASS
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
-		std::cout << "Steer:" << m_SteerInput << "\n";
+		//std::cout << "Steer:" << m_SteerInput << "\n";
 
 		//	MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);

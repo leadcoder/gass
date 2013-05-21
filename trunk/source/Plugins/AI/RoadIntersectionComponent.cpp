@@ -31,9 +31,37 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	/*void RoadIntersectionComponent::SetRoadSegments(const std::vector<SceneObjectRef> &connections)
+	void RoadIntersectionComponent::AddRoad(RoadSegmentComponentPtr road)
 	{
-	//	m_Connections = connections;
-		UpdateRoads();
-	}*/
+		m_Connections.push_back(road);
+	}
+
+	void RoadIntersectionComponent::RemoveRoad(RoadSegmentComponentPtr road)
+	{
+		std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+		while(iter != m_Connections.end())
+		{
+			if(*iter == road )
+				iter = m_Connections.erase(iter);
+			else
+				iter++;
+		}
+	}
+
+	RoadSegmentComponentPtr RoadIntersectionComponent::GetRandomRoad(RoadSegmentComponentPtr road)
+	{
+		std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+		std::vector<RoadSegmentComponentPtr> roads;
+		while(iter != m_Connections.end())
+		{
+			if(*iter != road)
+				roads.push_back(*iter);
+			iter++;
+		}
+		if(roads.size() == 0)
+			return road;
+		else
+			return roads[rand()%roads.size()];
+	}
+	
 }

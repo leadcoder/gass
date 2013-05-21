@@ -1,6 +1,6 @@
 
-#ifndef AI_TARGET__COMPONENT
-#define AI_TARGET__COMPONENT
+#ifndef AI_ROAD_SEG_COMPONENT
+#define AI_ROAD_SEG_COMPONENT
 
 #include "Sim/GASS.h"
 #include "Core/Utils/GASSFilePath.h"
@@ -22,12 +22,17 @@ namespace GASS
 		~RoadSegmentComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-	private:
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		double GetDistanceToIntersection(const Vec3 &source_pos);
+		RoadIntersectionComponentPtr GetNextIntersection(RoadIntersectionComponentPtr current);
+		bool StartInIntersection(RoadIntersectionComponentPtr from);
+		std::vector<Vec3> GetWaypointList(bool invert_dir);
 		void SetStartNode(SceneObjectRef node);
 		SceneObjectRef GetStartNode() const;
 		void SetEndNode(SceneObjectRef node);
 		SceneObjectRef GetEndNode() const;
+	private:
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		
 
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;
