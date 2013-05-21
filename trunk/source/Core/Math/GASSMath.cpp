@@ -19,9 +19,12 @@
 *****************************************************************************/
 
 #include <math.h>
+#include <limits>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPolygon.h"
 
+#undef min
+#undef max
 namespace GASS
 {
 	Float Math::Rad2Deg(Float rad )
@@ -517,6 +520,40 @@ namespace GASS
 
 		return (result);
 	}
+
+
+	bool Math::GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps, int &segment_index, Vec3& point )
+	{
+		double shortest_dist = std::numeric_limits<double>::max();
+		if(wps.size() > 1)
+		{
+			for(size_t i = 0; i < wps.size()-1; i++)
+			{
+				Vec3 wp1 = wps[i];
+				Vec3 wp2 = wps[i+1];
+
+				Vec3 line_dir = wp2 -wp1; 
+				line_dir.Normalize();
+
+				Vec3 closest_point_on_line = Math::ClosestPointOnLine(wp1,wp2, source_pos);
+				closest_point_on_line.y = 0;
+				//add look_ahead
+				closest_point_on_line = closest_point_on_line + line_dir*look_ahead;
+				double dist = (source_pos  - closest_point_on_line).FastLength();
+				if(dist < shortest_dist)
+				{
+					point = closest_point_on_line;
+					shortest_dist = dist;
+					segment_index = i;
+				}
+			}
+		}
+		else
+			return false;
+		return true;
+	}
+
+	
 
 
 	Vec3 Math::ClosestPointOnLine(const Vec3 &a, const Vec3 &b, const Vec3 &p)
