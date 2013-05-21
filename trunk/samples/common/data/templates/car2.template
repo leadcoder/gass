@@ -8,7 +8,7 @@
 				<AttachToParent value="0"/>
 			</LocationComponent>
 			<MeshComponent>
-				<Filename value="car.3ds"/>
+				<Filename value="tlc_chassis.3ds"/>
 				<CastShadow value="1"/>
 			</MeshComponent>
 			<PhysXCarComponent>
@@ -20,6 +20,12 @@
 			<InputHandlerComponent>
 				<ControlSetting value ="TankInputSettings"/>
 			</InputHandlerComponent>
+			<TankAutopilotComponent>
+				<DesiredSpeed value="6.0"/>
+				<Enable value="true"/>
+				<TurnPID value="0.031 0.001 1e-006"/>
+			</TankAutopilotComponent>
+			<FollowRoadComponent/>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
@@ -27,11 +33,11 @@
 				<ID value="FRONT_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-1 -1.10 1.6"/>
+						<Position value="-1 -0.22 -1.6"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="wheel.3ds"/>
+						<Filename value="tlc_wheel.3ds"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 					<PhysXWheelComponent/>
@@ -43,11 +49,11 @@
 				<ID value="FRONT_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="1 -1.10 1.6"/>
+						<Position value="1 -0.22 -1.6"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="wheel.3ds"/>
+						<Filename value="tlc_wheel.3ds"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 					<PhysXWheelComponent/>
@@ -59,11 +65,11 @@
 				<ID value="REAR_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-1 -1.10 -1.6"/>
+						<Position value="-1 -0.22 1.6"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="wheel.3ds"/>
+						<Filename value="tlc_wheel.3ds"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 					<PhysXWheelComponent/>
@@ -75,16 +81,32 @@
 				<ID value="REAR_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="1 -1.10 -1.6"/>
+						<Position value="1 -0.22 1.6"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="wheel.3ds"/>
+						<Filename value="tlc_wheel.3ds"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 					<PhysXWheelComponent/>
 					<PhysicsConvexGeometryComponent/>
 				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="DebugAim"/>
+				<ID value="AIM_POINT"/>
+				<Components>
+					<LocationComponent>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<SphereGeometryComponent>
+						<Radius value="0.3"/>
+					</SphereGeometryComponent>
+				</Components>
+				<ComponentContainers>
+				</ComponentContainers>
 			</SceneObjectTemplate>
 		</ComponentContainers>
 	</SceneObjectTemplate>
