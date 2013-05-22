@@ -522,7 +522,7 @@ namespace GASS
 	}
 
 
-	bool Math::GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps, int &segment_index, Vec3& point )
+	bool Math::GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point )
 	{
 		double shortest_dist = std::numeric_limits<double>::max();
 		if(wps.size() > 1)
@@ -531,14 +531,7 @@ namespace GASS
 			{
 				Vec3 wp1 = wps[i];
 				Vec3 wp2 = wps[i+1];
-
-				Vec3 line_dir = wp2 -wp1; 
-				line_dir.Normalize();
-
 				Vec3 closest_point_on_line = Math::ClosestPointOnLine(wp1,wp2, source_pos);
-				closest_point_on_line.y = 0;
-				//add look_ahead
-				closest_point_on_line = closest_point_on_line + line_dir*look_ahead;
 				double dist = (source_pos  - closest_point_on_line).FastLength();
 				if(dist < shortest_dist)
 				{
@@ -553,8 +546,85 @@ namespace GASS
 		return true;
 	}
 
-	
+	// ----------------------------------------------------------------------------
+	// given a distance along the path, convert it to a point on the path
+	Vec3 Math::GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic, int &index)
+	{
+		Float  totalPathLength  = 0;
+		std::vector<Float> lengths;
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			lengths.push_back(segmentLength);
+			totalPathLength += segmentLength; 
+		}
 
+		// clip or wrap given path distance according to cyclic flag
+		Float remaining = pathDistance;
+		if (cyclic)
+		{
+			remaining = (Float) fmod(pathDistance, totalPathLength);
+		}
+		else
+		{
+			if (pathDistance < 0) 
+			{
+				index = 0;
+				return wps[0];
+			}
+			if (pathDistance >= totalPathLength) 
+			{
+				index = wps.size()-1;
+				return wps[wps.size()-1];
+			}
+		}
+
+		// step through segments, subtracting off segment lengths until
+		// locating the segment that contains the original pathDistance.
+		// Interpolate along that segment to find 3d point value to return.
+		Vec3 result;
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			Float segmentLength = lengths[i-1];
+			if (segmentLength < remaining)
+			{
+				remaining -= segmentLength;
+			}
+			else
+			{
+				Float ratio = remaining / segmentLength;
+				result = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
+				index = i-1;
+				break;
+			}
+		}
+	    return result;
+	}
+
+
+
+	Float Math::GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index)
+	{
+		Float shortest_dist = std::numeric_limits<Float>::max();
+		Float segmentLengthTotal = 0;
+		Float pathDistance = 0;
+
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			Float segmentLength = (wps[i] - wps[i-1]).FastLength();
+			Vec3 closest_point_on_line = Math::ClosestPointOnLine(wps[i-1],wps[i], point);
+			double dist = (point  - closest_point_on_line).FastLength();
+			if(dist < shortest_dist)
+			{
+				shortest_dist = dist;
+				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).FastLength();
+				index = i-1;
+			}
+			segmentLengthTotal += segmentLength;
+		}
+		// return distance along path of onPath point
+		return pathDistance;
+	}
 
 	Vec3 Math::ClosestPointOnLine(const Vec3 &a, const Vec3 &b, const Vec3 &p)
 	{

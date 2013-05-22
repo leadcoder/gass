@@ -93,7 +93,7 @@ namespace GASS
 		static bool ClosestPointOnTriangle(const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &p, Vec3 &closest, Float radius);
 		static Vec3 ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
 		static Vec3 ClosestPointOnLine(const Vec3 &a, const Vec3 &b, const Vec3 &p);
-		static bool GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
+		
 		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
 		static int CheckPointInTriangle3(const Vec3& point, const Vec3& pa,const Vec3& pb, const Vec3& pc);
 		static bool GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root);
@@ -102,6 +102,11 @@ namespace GASS
 		static Float Min(const Float &v1,const Float &v2);
 		static Float Max(const Float &v1,const Float &v2);
 
+		
+		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
+		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
+		static Float GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index);
+		
 		static inline float InvSqrt(float x)
 		{
 			float xhalf = 0.5f*x;
