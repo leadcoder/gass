@@ -33,7 +33,24 @@ namespace GASS
 
 	void RoadIntersectionComponent::AddRoad(RoadSegmentComponentPtr road)
 	{
+		//sort clockwise?
 		m_Connections.push_back(road);
+
+		/*Vec3 start_pos = GetCeneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		Vec3 end_pos;
+		bool start = road->StartInIntersection();
+		if(start)
+		{
+			end_pos = road->GetEndNode()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		}
+		else
+		{
+			end_pos = road->GetStartNode()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		}
+		
+		Vec3 dir = end_pos - start_pos;
+		dir.Normalize();*/
+
 	}
 
 	void RoadIntersectionComponent::RemoveRoad(RoadSegmentComponentPtr road)
@@ -62,6 +79,19 @@ namespace GASS
 			return road;
 		else
 			return roads[rand()%roads.size()];
+	}
+
+	bool RoadIntersectionComponent::CheckIfRedLight(RoadSegmentComponentPtr road)
+	{
+		std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+		std::vector<RoadSegmentComponentPtr> roads;
+		while(iter != m_Connections.end())
+		{
+			if(*iter == road)
+			{
+
+			}
+		}
 	}
 	
 }
