@@ -10,9 +10,21 @@
 
 namespace GASS
 {
+
+	
+
 	class RoadSegmentComponent;
 	typedef SPTR<RoadSegmentComponent>  RoadSegmentComponentPtr;
- 	class RoadIntersectionComponent :  public Reflection<RoadIntersectionComponent,BaseSceneComponent> 
+ 	
+	class TrafficLight
+	{
+	public:
+		TrafficLight(){}
+		~TrafficLight(){}
+		std::vector<RoadSegmentComponentPtr> m_Roads;
+	};
+
+	class RoadIntersectionComponent :  public Reflection<RoadIntersectionComponent,BaseSceneComponent> 
 	{
 	public:
 		RoadIntersectionComponent(void);
@@ -22,9 +34,12 @@ namespace GASS
 		void AddRoad(RoadSegmentComponentPtr road);
 		void RemoveRoad(RoadSegmentComponentPtr road);
 		RoadSegmentComponentPtr GetRandomRoad(RoadSegmentComponentPtr road);
+		void AddLight(const TrafficLight &light);
 	private:
+		Vec3  GetRoadDir(RoadSegmentComponentPtr road);
 		bool m_Initialized;
 		std::vector<RoadSegmentComponentPtr> m_Connections;
+		std::vector<TrafficLight> m_Lights;
 		//std::vector<SceneObjectRef> m_Connections;
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
