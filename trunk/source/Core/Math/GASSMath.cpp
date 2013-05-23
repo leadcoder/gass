@@ -537,7 +537,7 @@ namespace GASS
 				{
 					point = closest_point_on_line;
 					shortest_dist = dist;
-					segment_index = i;
+					segment_index = (int)i;
 				}
 			}
 		}
@@ -574,7 +574,7 @@ namespace GASS
 			}
 			if (pathDistance >= totalPathLength) 
 			{
-				index = wps.size()-1;
+				index = (int) wps.size()-1;
 				return wps[wps.size()-1];
 			}
 		}
