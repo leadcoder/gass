@@ -223,7 +223,8 @@ namespace GASS
 				turn *=-1;
 			}*/
 
-			
+			// damp speed if we have to turn sharp
+			desired_speed = desired_speed * 0.2 + 0.8 * (desired_speed * fabs(cos_angle)); 
 			m_TrottlePID.set(desired_speed);
 			float throttle = m_TrottlePID.update(current_speed,time);
 
@@ -248,7 +249,7 @@ namespace GASS
 			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
 			GetSceneObject()->SendImmediate(throttle_message);
 
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,turn,CT_AXIS));
+			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
 			GetSceneObject()->SendImmediate(steering_message);
 
 		}
