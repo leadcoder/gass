@@ -26,6 +26,13 @@ namespace GASS
 		bool m_Stop;
 	};
 
+	enum TurnDir
+	{
+		TURN_NONE,
+		TURN_LEFT,
+		TURN_RIGHT
+	};
+
 	class RoadIntersectionComponent :  public Reflection<RoadIntersectionComponent,BaseSceneComponent> 
 	{
 	public:
@@ -38,7 +45,7 @@ namespace GASS
 		RoadSegmentComponentPtr GetRandomRoad(RoadSegmentComponentPtr road);
 		void AddLight(const TrafficLight &light);
 		bool GetTrafficLight(RoadSegmentComponentPtr road, TrafficLight &light);
-		bool CheckLeftTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road);
+		TurnDir CheckTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road);
 	private:
 		
 		void OnToggleTrafficLight(ToggleTrafficLightMessagePtr message);

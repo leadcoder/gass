@@ -122,12 +122,20 @@ namespace GASS
 
 				m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 
-				m_LeftTurn = m_CurrentIntersection->CheckLeftTurn(m_CurrentRoad,m_NextRoad);
+				m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
 			}
 		}
 		else
 		{
-			double look_ahead = 5;
+			const Float current_speed = -m_VehicleSpeed.z;
+			double look_ahead = current_speed;
+			
+			//clamp
+			if(look_ahead < 4)
+				look_ahead = 4;
+			if(look_ahead > 20)
+				look_ahead = 20;
+
 			//get target position on current path
 			//merge waypoint lists
 			std::vector<Vec3> wps1 = m_CurrentRoad->GetLane(0,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
@@ -142,7 +150,15 @@ namespace GASS
 			int index = 0;
 			Float now_distance = Math::GetPathDistance(m_CurrentPos,wps3,index);
 
-			const Float current_speed = -m_VehicleSpeed.z;
+			
+			const Float friction = 0.6;
+			Float stop_distance = current_speed*current_speed/(2 * friction *9.81);
+			//add some safty margin
+			stop_distance *= 2;
+
+			if(stop_distance < 10)
+				stop_distance = 10;
+
 			Float desired_speed = 14;
 			//Check light
 			TrafficLight light;
@@ -155,13 +171,14 @@ namespace GASS
 					{
 						d += (wps1[i] - wps1[i-1]).FastLength();
 					}
+
 					Float light_distance = d - now_distance;
 
-					
-					
-					if(light_distance < desired_speed*1.5 &&  light_distance > -1)
+					if(light_distance < stop_distance &&  light_distance > -1)
 					{
 						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+						
+						//slam on brakes!
 						desired_speed  = 0;
 						//look_ahead = light_distance;
 						//if(look_ahead < 1)
@@ -169,11 +186,23 @@ namespace GASS
 					}
 					else
 					{
+						
 						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 					}
 				}
-				else
+				else if(m_Turn == TURN_LEFT)
 				{
+					for(size_t i = 0; i < light.m_Roads.size(); i++)
+					{
+						if(light.m_Roads[i] != m_CurrentRoad)
+						{
+							bool up_stream = light.m_Roads[i]->StartInIntersection(m_CurrentIntersection);
+							if(!light.m_Roads[i]->IsRoadFree(up_stream, 40))
+							{
+								//desired_speed  = 0;
+							}
+						}
+					}
 					//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 				}
 			}
@@ -188,15 +217,35 @@ namespace GASS
 			//Check lane
 			
 			LaneVehicle* closest = m_CurrentRoad->GetClosest(m_CurrentRoad->StartInIntersection(m_CurrentIntersection), m_RoadVehicle);
-			Float height = 20;
+			
+			if(closest && desired_speed > 0)
+			{
+				const Float speed_diff = current_speed - closest->m_Speed;
+				if(speed_diff > 0)
+				{
+					const Float distance_to_next = closest->m_Distance - now_distance;
+					
+					Float stop_distance_to_next = speed_diff*speed_diff/(2 * friction *9.81);
+					//add some safty margin
+					stop_distance_to_next *= 2;
 
-			if(desired_speed > 0 && closest && (closest->m_Distance - now_distance) < 20)
+					if(stop_distance_to_next < 15)
+						stop_distance_to_next = 15;
+
+					if(distance_to_next < stop_distance_to_next)
+					{
+						desired_speed = 0;
+					}
+				}
+			}
+
+			/*if(desired_speed > 0 && closest && (closest->m_Distance - now_distance) < 20)
 			{
 				height = closest->m_Distance - now_distance;
 				desired_speed = closest->m_Speed;
-				
-			}
-			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+			}*/
+
+			
 			
 
 			if(index >= wps1.size()) //get new road!
@@ -207,7 +256,7 @@ namespace GASS
 				m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
 				m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 				//Check if left turn!
-				m_LeftTurn = m_CurrentIntersection->CheckLeftTurn(m_CurrentRoad,m_NextRoad);
+				m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
 			}
 			
 			
@@ -216,6 +265,19 @@ namespace GASS
 			
 			Vec3 target_point = Math::GetPointOnPath(new_distance, wps3, false, index);
 
+			//Check if inside intersection
+			if(index == wps1.size()-1)
+			{
+				if(desired_speed > 0)
+				{
+					if(m_Turn == TURN_LEFT)
+						desired_speed = 5;
+					else if(m_Turn == TURN_RIGHT)
+						desired_speed = 10;
+				}
+			}
+			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+			
 			//if(m_LeftTurn)
 				target_point.y = desired_speed;
 

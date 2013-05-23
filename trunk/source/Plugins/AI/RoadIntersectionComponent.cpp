@@ -188,8 +188,9 @@ namespace GASS
 	}
 
 
-	bool RoadIntersectionComponent::CheckLeftTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road)
+	TurnDir RoadIntersectionComponent::CheckTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road)
 	{
+		TurnDir turn_dir;
 		Vec3  dir1 = GetRoadDir(in_road);
 		Vec3  dir2 = GetRoadDir(out_road);
 
@@ -198,10 +199,14 @@ namespace GASS
 		{
 			Vec3 cross = Math::Cross(dir1,dir2);
 			if(cross.y < 0)
-				return true;
+				turn_dir = TURN_RIGHT;
+			else
+				turn_dir = TURN_LEFT;
 		}
+		else
+			turn_dir = TURN_NONE;
 
-		return false;
+		return turn_dir;
 	}
 
 	void RoadIntersectionComponent::RemoveRoad(RoadSegmentComponentPtr road)

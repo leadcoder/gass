@@ -301,6 +301,32 @@ namespace GASS
 	}
 
 
+	bool RoadSegmentComponent::IsRoadFree(bool up_stream, double in_distance)
+	{
+		std::vector<Vec3> wps = GetLane(0, up_stream);
+		double d = 0;
+		for(size_t i = 1 ; i < wps.size() ; i++)
+		{
+			d += (wps[i] - wps[i-1]).FastLength();
+		}
+
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		std::vector<LaneVehicle*> *vehicles;
+		if(up_stream) 
+			vehicles = &m_UpStreamLaneVehicles;
+		else 
+			vehicles =  &m_DownStreamLaneVehicles;
+		
+		for(size_t i = 0 ; i < vehicles->size() ; i++)
+		{
+			if((d - vehicles->at(i)->m_Distance) < in_distance)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	LaneVehicle* RoadSegmentComponent::GetClosest(bool up_stream, LaneVehicle* source)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);

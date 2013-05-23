@@ -31,14 +31,11 @@
 
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Base/CoreMessages.h"
-
+#include "RoadIntersectionComponent.h"
 
 namespace GASS
 {
-	class RoadIntersectionComponent;
 	class RoadSegmentComponent;
-
-	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 	typedef SPTR<RoadSegmentComponent> RoadSegmentComponentPtr;
 
 	class LaneVehicle;
@@ -77,7 +74,7 @@ namespace GASS
 		RoadSegmentComponentPtr m_CurrentRoad;
 		RoadSegmentComponentPtr m_NextRoad;
 
-		bool m_LeftTurn;
+		TurnDir m_Turn;
 
 		LaneVehicle* m_RoadVehicle;
 
