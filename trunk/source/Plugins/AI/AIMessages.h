@@ -66,5 +66,18 @@ namespace GASS
 		int m_Stance;
 	};
 	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;
+
+
+	class ToggleTrafficLightMessage : public BaseMessage
+	{
+	public:
+		ToggleTrafficLightMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) 
+		  {
+
+		  }
+	private:
+	};
+	typedef SPTR<ToggleTrafficLightMessage> ToggleTrafficLightMessagePtr;
 }
 #endif

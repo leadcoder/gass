@@ -6,10 +6,23 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "tbb/spin_mutex.h"
 #include <set>
+#include "tbb/atomic.h"
 
 namespace GASS
 {
+
+
+	class LaneVehicle
+	{
+	public:
+		LaneVehicle()
+		{}
+		~LaneVehicle(){}
+		tbb::atomic<double> m_Speed;
+		tbb::atomic<double> m_Distance;
+	};
 
 	class RoadIntersectionComponent;
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
@@ -32,26 +45,36 @@ namespace GASS
 		SceneObjectRef GetEndNode() const;
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		std::vector<Vec3> GetLane(int lane, bool upstream);
+		void UpdateMesh();
+		void RegisterVehicle(LaneVehicle* vehicle, bool up_stream);
+		void UnregisterVehicle(LaneVehicle* vehicle, bool up_stream);
+		std::vector<LaneVehicle*> GetLaneVehicles(bool up_stream) const 
+		{
+			if(up_stream) return m_UpStreamLaneVehicles;
+			else m_DownStreamLaneVehicles;
+		}
+		LaneVehicle* GetClosest(bool up_stream, LaneVehicle* source);
 	private:
 		void UpdateLanes();
 		std::vector<Vec3> RoadSegmentComponent::GenerateLane(std::vector<Vec3> wps, bool upstream);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		
 
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;
-		//ADD_ATTRIBUTE(Vec2,RandomVelocity)
-		//ADD_ATTRIBUTE(bool,Enable)
 		bool m_Initialized;
-		void UpdateMesh();
+		
 
 		typedef std::vector<Vec3> Lane;
 		std::vector<Lane> m_UpStreamLanes;
 		std::vector<Lane> m_DownStreamLanes;
+
+		std::vector<LaneVehicle*> m_DownStreamLaneVehicles;
+		std::vector<LaneVehicle*> m_UpStreamLaneVehicles;
 	
 		//next instersection in right line
 		//RoadIntersectionComponentPtr m_RightIntersection;
 		//RoadIntersectionComponentPtr m_LeftIntersection;
+		tbb::spin_mutex m_RoadMutex;
 	};
 
 	typedef SPTR<RoadSegmentComponent> RoadSegmentComponentPtr;

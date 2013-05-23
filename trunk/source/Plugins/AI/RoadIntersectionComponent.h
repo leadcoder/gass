@@ -6,6 +6,7 @@
 #include "Sim/GASS.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Plugins/AI/AIMessages.h"
 #include <set>
 
 namespace GASS
@@ -19,9 +20,10 @@ namespace GASS
 	class TrafficLight
 	{
 	public:
-		TrafficLight(){}
+		TrafficLight(): m_Stop(true){}
 		~TrafficLight(){}
 		std::vector<RoadSegmentComponentPtr> m_Roads;
+		bool m_Stop;
 	};
 
 	class RoadIntersectionComponent :  public Reflection<RoadIntersectionComponent,BaseSceneComponent> 
@@ -35,12 +37,17 @@ namespace GASS
 		void RemoveRoad(RoadSegmentComponentPtr road);
 		RoadSegmentComponentPtr GetRandomRoad(RoadSegmentComponentPtr road);
 		void AddLight(const TrafficLight &light);
+		bool GetTrafficLight(RoadSegmentComponentPtr road, TrafficLight &light);
+		bool CheckLeftTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road);
 	private:
+		
+		void OnToggleTrafficLight(ToggleTrafficLightMessagePtr message);
 		Vec3  GetRoadDir(RoadSegmentComponentPtr road);
 		bool m_Initialized;
 		std::vector<RoadSegmentComponentPtr> m_Connections;
 		std::vector<TrafficLight> m_Lights;
-		//std::vector<SceneObjectRef> m_Connections;
+		unsigned int m_CurrentGreen;
+		
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 }

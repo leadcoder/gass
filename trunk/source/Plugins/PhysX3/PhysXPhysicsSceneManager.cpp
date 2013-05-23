@@ -257,15 +257,15 @@ namespace GASS
 		{
 			angular_vel -= 1.7;
 		}
-		m_RollJoint->setDriveVelocity(angular_vel);
+		m_RollJoint->setDriveVelocity(angular_vel);*/
 
 
-		/*if(delta_time > 0.1)
+		if(delta_time > 0.1)
 			m_PxScene->simulate(0.1);
 		else
 			m_PxScene->simulate(delta_time);
-			*/
-		m_PxScene->simulate(0.016666660f);
+			
+		//m_PxScene->simulate(0.016666660f);
 
 		while(!m_PxScene->fetchResults())
 		{

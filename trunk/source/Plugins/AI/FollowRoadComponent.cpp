@@ -46,7 +46,11 @@ namespace GASS
 		m_CurrentWaypoint(-1),
 		m_Direction(1),
 		//m_Mode(PFM_LOOP_TO_START),
-		m_InvertDirection(false)
+		m_InvertDirection(false),
+		m_RoadVehicle(new LaneVehicle()),
+		m_CurrentPos(0,0,0),
+		m_AngularVelocity(0,0,0),
+		m_VehicleSpeed(0,0,0)
 	{
 
 	}
@@ -85,8 +89,10 @@ namespace GASS
 	void FollowRoadComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
+		//std::cout << "Init:" << GetSceneObject()->GetName() <<  "\n";
 		//SetWaypointList(m_WaypointListName);
 	}
 
@@ -106,11 +112,17 @@ namespace GASS
 		if(!m_CurrentRoad)
 		{
 			//Initialize:)
+			
 			m_CurrentRoad = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<RoadSegmentComponent>(true);
 			if(m_CurrentRoad)
 			{
 				m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
+
 				m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
+
+				m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
+
+				m_LeftTurn = m_CurrentIntersection->CheckLeftTurn(m_CurrentRoad,m_NextRoad);
 			}
 		}
 		else
@@ -130,20 +142,84 @@ namespace GASS
 			int index = 0;
 			Float now_distance = Math::GetPathDistance(m_CurrentPos,wps3,index);
 
+			const Float current_speed = -m_VehicleSpeed.z;
+			Float desired_speed = 14;
+			//Check light
+			TrafficLight light;
+			if(m_CurrentIntersection->GetTrafficLight(m_CurrentRoad,light))
+			{
+				if(light.m_Stop) // check distance to light
+				{
+					double d = 0;
+					for(size_t i =  1 ;  i < wps1.size(); i++)
+					{
+						d += (wps1[i] - wps1[i-1]).FastLength();
+					}
+					Float light_distance = d - now_distance;
+
+					
+					
+					if(light_distance < desired_speed*1.5 &&  light_distance > -1)
+					{
+						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+						desired_speed  = 0;
+						//look_ahead = light_distance;
+						//if(look_ahead < 1)
+						//	look_ahead  = 0;
+					}
+					else
+					{
+						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+					}
+				}
+				else
+				{
+					//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+				}
+			}
+			else
+			{
+				//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+			}
+			
+			m_RoadVehicle->m_Distance = now_distance;
+			m_RoadVehicle->m_Speed = current_speed;
+
+			//Check lane
+			
+			LaneVehicle* closest = m_CurrentRoad->GetClosest(m_CurrentRoad->StartInIntersection(m_CurrentIntersection), m_RoadVehicle);
+			Float height = 20;
+
+			if(desired_speed > 0 && closest && (closest->m_Distance - now_distance) < 20)
+			{
+				height = closest->m_Distance - now_distance;
+				desired_speed = closest->m_Speed;
+				
+			}
+			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
+			
+
 			if(index >= wps1.size()) //get new road!
 			{
+				m_CurrentRoad->UnregisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 				m_CurrentRoad = m_NextRoad;
 				m_CurrentIntersection = m_CurrentRoad->GetNextIntersection(m_CurrentIntersection);
 				m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
+				m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
+				//Check if left turn!
+				m_LeftTurn = m_CurrentIntersection->CheckLeftTurn(m_CurrentRoad,m_NextRoad);
 			}
-
-			Float new_distance = now_distance + look_ahead;
-
+			
+			
 		
+			Float new_distance = now_distance + look_ahead;
 			
 			Vec3 target_point = Math::GetPointOnPath(new_distance, wps3, false, index);
 
-				std::cout << "now_distance" << now_distance << " pos:" << target_point << "\n";
+			//if(m_LeftTurn)
+				target_point.y = desired_speed;
+
+			//std::cout << "now_distance" << now_distance << " pos:" << target_point << "\n";
 			//Get aim point on path
 			//if(Math::GetClosestPointOnPath(m_CurrentPos,wps3,index,point))
 			{
@@ -154,6 +230,13 @@ namespace GASS
 			}
 			
 		}
+	}
+
+
+	void FollowRoadComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	{
+		m_AngularVelocity  = message->GetAngularVelocity();
+		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
 	void FollowRoadComponent::OnWaypointListUpdated(WaypointListUpdatedMessagePtr message)

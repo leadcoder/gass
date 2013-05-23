@@ -140,8 +140,13 @@ namespace GASS
 	{
 		if(m_StartNode.IsValid() && m_EndNode.IsValid())
 		{
+
 			Vec3 start_pos = m_StartNode->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			Vec3 end_pos = m_EndNode->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+
+
+			RoadIntersectionComponentPtr start_ric = m_StartNode->GetFirstComponentByClass<RoadIntersectionComponent>();
+			RoadIntersectionComponentPtr end_ric = m_EndNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 			
 			ManualMeshDataPtr mesh_data(new  ManualMeshData());
 			mesh_data->Type = LINE_LIST;
@@ -155,6 +160,8 @@ namespace GASS
 			mesh_data->VertexVector.push_back(vertex);
 			vertex.Pos = end_pos;
 			mesh_data->VertexVector.push_back(vertex);
+
+			
 
 			for(size_t i = 0; i < m_DownStreamLanes.size(); i++)
 			{
@@ -178,6 +185,33 @@ namespace GASS
 				}
 			}
 
+			TrafficLight light;
+			if(start_ric->GetTrafficLight(DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this()),light))
+			{
+				if(light.m_Stop)
+					vertex.Color.Set(1,0,0,1);
+				else
+					vertex.Color.Set(0,1,0,1);
+				Vec3 pos = m_UpStreamLanes[0][m_UpStreamLanes.size()-1];
+				vertex.Pos = pos;
+				mesh_data->VertexVector.push_back(vertex);
+				vertex.Pos = pos + Vec3(0,2,0);
+				mesh_data->VertexVector.push_back(vertex);
+			}
+
+			if(end_ric->GetTrafficLight(DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this()),light))
+			{
+				if(light.m_Stop)
+					vertex.Color.Set(1,0,0,1);
+				else
+					vertex.Color.Set(0,1,0,1);
+				Vec3 pos = m_DownStreamLanes[0][m_DownStreamLanes.size()-1];
+				vertex.Pos = pos;
+				mesh_data->VertexVector.push_back(vertex);
+				vertex.Pos = pos + Vec3(0,2,0);
+				mesh_data->VertexVector.push_back(vertex);
+			}
+
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			GetSceneObject()->PostMessage(mesh_message);
 		}
@@ -185,6 +219,7 @@ namespace GASS
 
 	RoadIntersectionComponentPtr RoadSegmentComponent::GetNextIntersection(RoadIntersectionComponentPtr current)
 	{
+
 		RoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 		if(current == intersection)
 		{
@@ -230,6 +265,69 @@ namespace GASS
 		else
 			return m_DownStreamLanes[lane];
 	}
+
+	void RoadSegmentComponent::RegisterVehicle(LaneVehicle* vehicle, bool up_stream)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		if(up_stream)
+			m_UpStreamLaneVehicles.push_back(vehicle);
+		else
+			m_DownStreamLaneVehicles.push_back(vehicle);
+	}
+
+	void RoadSegmentComponent::UnregisterVehicle(LaneVehicle* vehicle, bool up_stream)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		if(up_stream)
+		{
+			std::vector<LaneVehicle*>::iterator iter = m_UpStreamLaneVehicles.begin();
+			while(m_UpStreamLaneVehicles.end() != iter)
+			{
+				if(*iter == vehicle)
+					iter = m_UpStreamLaneVehicles.erase(iter);
+				else iter++;
+			}
+		}
+		else
+		{
+			std::vector<LaneVehicle*>::iterator iter = m_DownStreamLaneVehicles.begin();
+			while(m_DownStreamLaneVehicles.end() != iter)
+			{
+				if(*iter == vehicle)
+					iter = m_DownStreamLaneVehicles.erase(iter);
+				else iter++;
+			}
+		}
+	}
+
+
+	LaneVehicle* RoadSegmentComponent::GetClosest(bool up_stream, LaneVehicle* source)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		std::vector<LaneVehicle*> *vehicles;
+		if(up_stream) vehicles = &m_UpStreamLaneVehicles;
+		else vehicles =  &m_DownStreamLaneVehicles;
+
+		LaneVehicle* closest = NULL;
+		double min_dist = 0;
+		for(size_t i = 0 ; i < vehicles->size() ; i++)
+		{
+			if(vehicles->at(i) != source)
+			{
+				if(source->m_Distance < vehicles->at(i)->m_Distance)
+				{
+					double dist = vehicles->at(i)->m_Distance - source->m_Distance;
+					if(closest == NULL || dist < min_dist)
+					{
+						closest = vehicles->at(i);
+						min_dist = dist; 
+					}
+				}
+			}
+		}
+		return closest;
+	}
+
 
 	std::vector<Vec3> RoadSegmentComponent::GenerateOffset(std::vector<Vec3> wps, Float offset)
 	{

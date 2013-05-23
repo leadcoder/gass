@@ -37,8 +37,13 @@ namespace GASS
 {
 	class RoadIntersectionComponent;
 	class RoadSegmentComponent;
+
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 	typedef SPTR<RoadSegmentComponent> RoadSegmentComponentPtr;
+
+	class LaneVehicle;
+
+	
 
 	class FollowRoadComponent :  public Reflection<FollowRoadComponent,BaseSceneComponent>
 	{
@@ -54,6 +59,7 @@ namespace GASS
 		Vec3 GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps);
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
+		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		ADD_ATTRIBUTE(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
@@ -70,6 +76,14 @@ namespace GASS
 		RoadIntersectionComponentPtr m_CurrentIntersection;
 		RoadSegmentComponentPtr m_CurrentRoad;
 		RoadSegmentComponentPtr m_NextRoad;
+
+		bool m_LeftTurn;
+
+		LaneVehicle* m_RoadVehicle;
+
+		Vec3 m_AngularVelocity;
+		Vec3 m_VehicleSpeed;
+
 	};
 }
 #endif

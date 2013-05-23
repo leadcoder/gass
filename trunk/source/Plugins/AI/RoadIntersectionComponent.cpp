@@ -9,7 +9,8 @@
 namespace GASS
 {
 	RoadIntersectionComponent::RoadIntersectionComponent(void) :
-		m_Initialized(false)
+		m_Initialized(false),
+		m_CurrentGreen(0)
 	{
 		
 	}	
@@ -27,13 +28,45 @@ namespace GASS
 
 	void RoadIntersectionComponent::OnInitialize()
 	{
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(RoadIntersectionComponent::OnTriggerEnter,TriggerEnterMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadIntersectionComponent::OnToggleTrafficLight,ToggleTrafficLightMessage,0));
+	
+		float start_toggle = 2 + float(rand()%10);
+
+		GetSceneObject()->PostMessage(MessagePtr(new ToggleTrafficLightMessage(-1,start_toggle)));
 		m_Initialized = true;
 	}
 
 	void RoadIntersectionComponent::AddLight(const TrafficLight &light)
 	{
 		m_Lights.push_back(light);
+	}
+
+
+	void RoadIntersectionComponent::OnToggleTrafficLight(ToggleTrafficLightMessagePtr message)
+	{
+		
+		GetSceneObject()->PostMessage(MessagePtr(new ToggleTrafficLightMessage(-1,10)));
+		if(m_Lights.size() > 1)
+		{
+			
+			TrafficLight* light = &m_Lights[m_CurrentGreen];
+			light->m_Stop = true;
+
+			m_CurrentGreen++;
+			m_CurrentGreen = m_CurrentGreen % m_Lights.size();
+
+			light = &m_Lights[m_CurrentGreen];
+			light->m_Stop = false;
+
+
+			std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+			while(iter != m_Connections.end())
+			{
+				(*iter)->UpdateMesh();
+				iter++;
+			}
+		}
+		//update all meshes?
 	}
 
 	void RoadIntersectionComponent::AddRoad(RoadSegmentComponentPtr road)
@@ -51,7 +84,7 @@ namespace GASS
 			Float a2 = Math::Dot(dir1,dir3);
 			Float a3 = Math::Dot(dir2,dir3);
 
-			if(a1 < 0.1)
+			if(fabs(a1) > 0.5)
 			{
 				TrafficLight light1;
 				light1.m_Roads.push_back(road);
@@ -61,7 +94,7 @@ namespace GASS
 				light2.m_Roads.push_back(m_Connections[1]);
 				m_Lights.push_back(light2);
 			}
-			else if(a2 < 0.1)
+			else if(fabs(a2) > 0.5)
 			{
 				TrafficLight light1;
 				light1.m_Roads.push_back(road);
@@ -97,7 +130,7 @@ namespace GASS
 			Float a2 = Math::Dot(dir1,dir3);
 			Float a3 = Math::Dot(dir1,dir4);
 
-			if(a1 < 0.1)
+			if(fabs(a1) > 0.5)
 			{
 				TrafficLight light1;
 				light1.m_Roads.push_back(road);
@@ -108,7 +141,7 @@ namespace GASS
 				light2.m_Roads.push_back(m_Connections[2]);
 				m_Lights.push_back(light2);
 			}
-			else if(a2 < 0.1)
+			else if(fabs(a2) > 0.5)
 			{
 				TrafficLight light1;
 				light1.m_Roads.push_back(road);
@@ -154,6 +187,23 @@ namespace GASS
 		return dir;
 	}
 
+
+	bool RoadIntersectionComponent::CheckLeftTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road)
+	{
+		Vec3  dir1 = GetRoadDir(in_road);
+		Vec3  dir2 = GetRoadDir(out_road);
+
+		Float a = Math::Dot(dir1,dir2);
+		if(fabs(a) < 0.5)
+		{
+			Vec3 cross = Math::Cross(dir1,dir2);
+			if(cross.y < 0)
+				return true;
+		}
+
+		return false;
+	}
+
 	void RoadIntersectionComponent::RemoveRoad(RoadSegmentComponentPtr road)
 	{
 		std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
@@ -182,18 +232,22 @@ namespace GASS
 			return roads[rand()%roads.size()];
 	}
 
-	/*bool RoadIntersectionComponent::CheckIfRedLight(RoadSegmentComponentPtr road)
+	bool RoadIntersectionComponent::GetTrafficLight(RoadSegmentComponentPtr road, TrafficLight &light)
 	{
-		StopLight light = m_Lights.find(road);
-		std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
-		std::vector<RoadSegmentComponentPtr> roads;
-		while(iter != m_Connections.end())
+		for(size_t i = 0; i < m_Lights.size();i++)
 		{
-			if(*iter == road)
+			for(size_t j = 0; j < m_Lights[i].m_Roads.size();j++)
 			{
-
+				if(m_Lights[i].m_Roads[j] == road)
+				{
+					light=m_Lights[i];
+					return true;
+				}
 			}
 		}
-	}*/
+		return false;
+	}
+
+
 	
 }
