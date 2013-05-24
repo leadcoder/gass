@@ -159,22 +159,25 @@ namespace GASS
 			if(stop_distance < 10)
 				stop_distance = 10;
 
+			double d = 0;
+			for(size_t i =  1 ;  i < wps1.size(); i++)
+				{
+				d += (wps1[i] - wps1[i-1]).FastLength();
+			}
+
+			Float intersection_distance = d - now_distance;
+
+
 			Float desired_speed = 14;
 			//Check light
+
+			
 			TrafficLight light;
 			if(m_CurrentIntersection->GetTrafficLight(m_CurrentRoad,light))
 			{
 				if(light.m_Stop) // check distance to light
 				{
-					double d = 0;
-					for(size_t i =  1 ;  i < wps1.size(); i++)
-					{
-						d += (wps1[i] - wps1[i-1]).FastLength();
-					}
-
-					Float light_distance = d - now_distance;
-
-					if(light_distance < stop_distance &&  light_distance > -1)
+					if(intersection_distance < stop_distance &&  intersection_distance > -1)
 					{
 						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
 						
@@ -190,7 +193,7 @@ namespace GASS
 						//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 					}
 				}
-				else if(m_Turn == TURN_LEFT)
+				/*else if(m_Turn == TURN_LEFT)
 				{
 					for(size_t i = 0; i < light.m_Roads.size(); i++)
 					{
@@ -199,23 +202,28 @@ namespace GASS
 							bool up_stream = light.m_Roads[i]->StartInIntersection(m_CurrentIntersection);
 							if(!light.m_Roads[i]->IsRoadFree(up_stream, 40))
 							{
-								//desired_speed  = 0;
+								desired_speed  = 0;
 							}
 						}
 					}
-					//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
-				}
+				}*/
 			}
 			else
 			{
 				//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 			}
+
+			//Check that next road is free!
+			if(intersection_distance < stop_distance && !m_NextRoad->IsStartOfRoadFree(!m_NextRoad->StartInIntersection(m_CurrentIntersection), 10))
+			{
+				desired_speed  = 0;
+			}
+
 			
 			m_RoadVehicle->m_Distance = now_distance;
 			m_RoadVehicle->m_Speed = current_speed;
 
 			//Check lane
-			
 			LaneVehicle* closest = m_CurrentRoad->GetClosest(m_CurrentRoad->StartInIntersection(m_CurrentIntersection), m_RoadVehicle);
 			
 			if(closest && desired_speed > 0)
@@ -239,12 +247,8 @@ namespace GASS
 				}
 			}
 
-			/*if(desired_speed > 0 && closest && (closest->m_Distance - now_distance) < 20)
-			{
-				height = closest->m_Distance - now_distance;
-				desired_speed = closest->m_Speed;
-			}*/
 
+			
 			
 			
 
@@ -258,11 +262,8 @@ namespace GASS
 				//Check if left turn!
 				m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
 			}
-			
-			
 		
 			Float new_distance = now_distance + look_ahead;
-			
 			Vec3 target_point = Math::GetPointOnPath(new_distance, wps3, false, index);
 
 			//Check if inside intersection
@@ -270,9 +271,9 @@ namespace GASS
 			{
 				if(desired_speed > 0)
 				{
-					if(m_Turn == TURN_LEFT)
+					if(m_Turn == TURN_RIGHT)
 						desired_speed = 5;
-					else if(m_Turn == TURN_RIGHT)
+					else if(m_Turn == TURN_LEFT)
 						desired_speed = 10;
 				}
 			}

@@ -55,6 +55,7 @@ namespace GASS
 		}
 		LaneVehicle* GetClosest(bool up_stream, LaneVehicle* source);
 		bool IsRoadFree(bool up_stream, double in_distance);
+		bool IsStartOfRoadFree(bool up_stream, double in_distance);
 	private:
 		void UpdateLanes();
 		std::vector<Vec3> GenerateLane(std::vector<Vec3> wps, bool upstream);

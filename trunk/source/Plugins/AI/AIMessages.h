@@ -68,15 +68,23 @@ namespace GASS
 	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;
 
 
+	enum TrafficLightMode
+	{
+		TLM_TOGGLE,
+		TLM_PAUSE,
+	};
+
 	class ToggleTrafficLightMessage : public BaseMessage
 	{
 	public:
-		ToggleTrafficLightMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) 
+		ToggleTrafficLightMessage(TrafficLightMode mode, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_Mode(mode)
 		  {
 
 		  }
+		  TrafficLightMode  GetMode() const {return m_Mode;}
 	private:
+		TrafficLightMode  m_Mode;
 	};
 	typedef SPTR<ToggleTrafficLightMessage> ToggleTrafficLightMessagePtr;
 }

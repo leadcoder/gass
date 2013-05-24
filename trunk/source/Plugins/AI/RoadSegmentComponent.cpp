@@ -327,6 +327,27 @@ namespace GASS
 		return true;
 	}
 
+
+	bool RoadSegmentComponent::IsStartOfRoadFree(bool up_stream, double in_distance)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		std::vector<LaneVehicle*> *vehicles;
+		if(up_stream) 
+			vehicles = &m_UpStreamLaneVehicles;
+		else 
+			vehicles =  &m_DownStreamLaneVehicles;
+		
+		for(size_t i = 0 ; i < vehicles->size() ; i++)
+		{
+			if(vehicles->at(i)->m_Distance < in_distance)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	LaneVehicle* RoadSegmentComponent::GetClosest(bool up_stream, LaneVehicle* source)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
