@@ -1249,12 +1249,19 @@ static int convexhull(const float* pts, int npts, int* out)
 		m_NavVisLineMesh->Type = LINE_LIST;
 		for(int i = 0; i < nav_tris.size(); i += 3)
 		{
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i]);
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i+1]);
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i+1]);
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i+2]);
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i+2]);
-			m_NavVisLineMesh->VertexVector.push_back(nav_tris[i]);
+			MeshVertex v1 = nav_tris[i];
+			MeshVertex v2 = nav_tris[i+1];
+			MeshVertex v3 = nav_tris[i+2];
+			v1.Color.Set(0,0,1,1);
+			v2.Color.Set(0,0,1,1);
+			v3.Color.Set(0,0,1,1);
+
+			m_NavVisLineMesh->VertexVector.push_back(v1);
+			m_NavVisLineMesh->VertexVector.push_back(v2);
+			m_NavVisLineMesh->VertexVector.push_back(v2);
+			m_NavVisLineMesh->VertexVector.push_back(v3);
+			m_NavVisLineMesh->VertexVector.push_back(v3);
+			m_NavVisLineMesh->VertexVector.push_back(v1);
 		}
 
 		//vertex.Color.Set(0,0.7,0,float(m_Transparency)/100.0f);
@@ -1306,8 +1313,8 @@ static int convexhull(const float* pts, int npts, int* out)
 				{
 					MessagePtr mesh_message(new ManualMeshDataMessage(m_NavVisTriMesh,-1,0.1));
 					obj->PostMessage(mesh_message);
-					//MessagePtr material_message(new MaterialMessage(Vec4(0,1,0,float(m_Transparency)/100.0f),Vec3(1,1,1)));
-					//obj->PostMessage(material_message);
+					MessagePtr material_message(new MaterialMessage(Vec4(0,0,1,float(m_Transparency)/100.0f),Vec3(1,1,1)));
+					obj->PostMessage(material_message);
 				}
 				else
 				{

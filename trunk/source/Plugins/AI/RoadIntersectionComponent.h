@@ -55,6 +55,7 @@ namespace GASS
 		std::vector<TrafficLight> m_Lights;
 		unsigned int m_CurrentGreen;
 		bool m_AllowLeftTurn;
+		bool m_DisableTrafficLight;
 		
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;

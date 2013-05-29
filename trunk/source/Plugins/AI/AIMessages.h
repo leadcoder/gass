@@ -72,6 +72,8 @@ namespace GASS
 	{
 		TLM_TOGGLE,
 		TLM_PAUSE,
+		TLM_ENABLE,
+		TLM_DISABLE,
 	};
 
 	class ToggleTrafficLightMessage : public BaseMessage
@@ -87,5 +89,20 @@ namespace GASS
 		TrafficLightMode  m_Mode;
 	};
 	typedef SPTR<ToggleTrafficLightMessage> ToggleTrafficLightMessagePtr;
+
+
+	class SpawnOnRoadMessage : public BaseMessage
+	{
+	public:
+		SpawnOnRoadMessage(SceneObjectPtr road_object, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_RoadObject(road_object)
+		  {
+
+		  }
+		  SceneObjectPtr m_RoadObject;
+	private:
+	};
+	typedef SPTR<SpawnOnRoadMessage> SpawnOnRoadMessagePtr;
+
 }
 #endif

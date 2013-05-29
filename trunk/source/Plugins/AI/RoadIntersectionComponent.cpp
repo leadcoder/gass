@@ -10,7 +10,8 @@ namespace GASS
 {
 	RoadIntersectionComponent::RoadIntersectionComponent(void) : m_Initialized(false),
 		m_CurrentGreen(0),
-		m_AllowLeftTurn(false)
+		m_AllowLeftTurn(false),
+		m_DisableTrafficLight(false)
 	{
 
 	}	
@@ -46,6 +47,9 @@ namespace GASS
 	}
 
 
+	
+
+
 	void RoadIntersectionComponent::OnToggleTrafficLight(ToggleTrafficLightMessagePtr message)
 	{
 		TrafficLightMode mode = message->GetMode();
@@ -58,9 +62,41 @@ namespace GASS
 		case TLM_PAUSE:
 			GetSceneObject()->PostMessage(MessagePtr(new ToggleTrafficLightMessage(TLM_TOGGLE,-1,5)));
 			break;
+		case TLM_DISABLE:
+			{
+				m_DisableTrafficLight = true;
+				for(size_t i = 0 ; i < m_Lights.size();i++)
+				{
+					TrafficLight* light = &m_Lights[i];
+					light->m_Stop = false;
+				}
+				std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+				while(iter != m_Connections.end())
+				{
+					(*iter)->UpdateMesh();
+					iter++;
+				}
+			}
+			break;
+		case TLM_ENABLE:
+			{
+				m_DisableTrafficLight = false;
+				for(size_t i = 0 ; i < m_Lights.size();i++)
+				{
+					TrafficLight* light = &m_Lights[i];
+					light->m_Stop = true;
+				}
+				std::vector<RoadSegmentComponentPtr>::iterator iter = m_Connections.begin();
+				while(iter != m_Connections.end())
+				{
+					(*iter)->UpdateMesh();
+					iter++;
+				}
+			}
+			break;
 		}
 
-		if(m_Lights.size() > 1)
+		if(!m_DisableTrafficLight && m_Lights.size() > 1)
 		{
 
 			if(mode == TLM_TOGGLE)
@@ -237,7 +273,6 @@ namespace GASS
 		dir.Normalize();
 		return dir;
 	}
-
 
 	TurnDir RoadIntersectionComponent::CheckTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road)
 	{

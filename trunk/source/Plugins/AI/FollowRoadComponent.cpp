@@ -90,6 +90,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnTransMessage,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnSpawnOnRoad,SpawnOnRoadMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 		//std::cout << "Init:" << GetSceneObject()->GetName() <<  "\n";
@@ -106,9 +107,34 @@ namespace GASS
 		m_CurrentPos = message->GetPosition();
 	}
 
+
+	void FollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
+	{
+		m_CurrentRoad = message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true);
+		m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
+		m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
+		m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
+		m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
+
+		Vec3 pos;
+		Quaternion rot;
+		double distance;
+		if(m_CurrentRoad && m_CurrentRoad->FirstFreeLocation(m_CurrentRoad->StartInIntersection(m_CurrentIntersection),pos,rot,distance,10))
+		{
+			pos.y += 3;
+			m_RoadVehicle->m_Distance = distance;
+			m_RoadVehicle->m_Speed = 0;
+			m_RoadVehicle->m_DistanceToPath = 0;
+			m_CurrentPos = pos;
+			GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
+			GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+		}
+		else
+			m_CurrentRoad.reset();
+	}
+
 	void FollowRoadComponent::SceneManagerTick(double delta)
 	{
-		
 		if(!m_CurrentRoad)
 		{
 			//Initialize:)
@@ -148,7 +174,8 @@ namespace GASS
 			}
 
 			int index = 0;
-			Float now_distance = Math::GetPathDistance(m_CurrentPos,wps3,index);
+			Float path_dist;
+			Float now_distance = Math::GetPathDistance(m_CurrentPos,wps3,index,path_dist);
 
 			
 			const Float friction = 0.6;
@@ -222,6 +249,7 @@ namespace GASS
 			
 			m_RoadVehicle->m_Distance = now_distance;
 			m_RoadVehicle->m_Speed = current_speed;
+			m_RoadVehicle->m_DistanceToPath = path_dist;
 
 			//Check lane
 			LaneVehicle* closest = m_CurrentRoad->GetClosest(m_CurrentRoad->StartInIntersection(m_CurrentIntersection), m_RoadVehicle);

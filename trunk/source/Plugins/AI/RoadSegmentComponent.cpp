@@ -50,6 +50,11 @@ namespace GASS
 			new_intersection->AddRoad(this_ptr);
 			m_StartNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 		}
+
+		if(m_StartNode.IsValid() && m_EndNode.IsValid())
+		{
+			UpdateLanes();
+		}
 	}
 
 	SceneObjectRef RoadSegmentComponent::GetStartNode() const
@@ -80,6 +85,11 @@ namespace GASS
 			RoadSegmentComponentPtr this_ptr = DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this());
 			new_intersection->AddRoad(this_ptr);
 			m_EndNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+		}
+
+		if(m_StartNode.IsValid() && m_EndNode.IsValid())
+		{
+			UpdateLanes();
 		}
 	}
 
@@ -135,6 +145,64 @@ namespace GASS
 			}
 		}
 	}
+
+
+	bool RoadSegmentComponent::FirstFreeLocation(bool up_stream, Vec3 &pos,Quaternion &rot, Float &distance, Float vehicle_separation)
+	{
+
+		tbb::spin_mutex::scoped_lock lock(m_RoadMutex);
+		//if(m_UpStreamLanes.size() == 0 && m_DownStreamLanes.size() == 0)		
+		//	UpdateLanes();
+		std::vector<LaneVehicle*> *vehicles;
+		if(up_stream) 
+			vehicles = &m_UpStreamLaneVehicles;
+		else 
+			vehicles =  &m_DownStreamLaneVehicles;
+
+		std::vector<Vec3> wps = GetLane(0, up_stream);
+		double d = 0;
+		double tot_dist = 0;
+		for(size_t i = 1 ; i < wps.size() ; i++)
+		{
+			Vec3 dir = (wps[i] - wps[i-1]);
+			d = dir.Length();
+			
+			dir.Normalize();
+			Float dist = vehicle_separation;
+			while(dist < d)
+			{
+				bool free = true;
+				for(size_t j = 0 ; j < vehicles->size() ; j++)
+				{
+					if(((tot_dist + dist) - vehicles->at(j)->m_Distance) < vehicle_separation)
+					{
+						free = false;
+						break;
+					}
+				}
+				if(free)
+				{
+					pos = wps[i-1] + (dir*dist);
+					
+					Mat4 rot_mat;
+					rot_mat.Identity();
+					Vec3 up(0,1,0);
+					rot_mat.SetUpVector(up);
+					rot_mat.SetViewDirVector(-dir);
+					Vec3 right = -Math::Cross(-dir,up);
+					rot_mat.SetRightVector(right);
+					rot.FromRotationMatrix(rot_mat);
+
+					distance = tot_dist + dist;
+					return true;
+				}
+				dist += vehicle_separation;
+			}
+			tot_dist += d; 
+		}
+		return false;
+	}
+
 
 	void RoadSegmentComponent::UpdateMesh()
 	{

@@ -52,6 +52,7 @@ namespace GASS
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 	private:
+		void OnSpawnOnRoad(SpawnOnRoadMessagePtr message);
 		void GoToIntersection(RoadIntersectionComponentPtr inter);
 		Vec3 GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps);
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
