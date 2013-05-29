@@ -25,6 +25,8 @@ namespace GASS
 		SceneObjectRef GetEndNode() const;
 		void UpdateMesh();
 		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
+		ADD_ATTRIBUTE(SceneObjectRef ,LaneSectionsObject);
+		
 	private:
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);

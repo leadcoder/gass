@@ -23,8 +23,10 @@ namespace GASS
 		Float GetWidth() const;
 		void UpdateLane();
 	private:
+		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		ADD_ATTRIBUTE(SceneObjectID,NextLane);
 		ADD_ATTRIBUTE(SceneObjectID,PrevLane);
+		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		Float m_Width;
 		bool m_Initialized;
