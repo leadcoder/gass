@@ -110,6 +110,13 @@ namespace GASS
 
 	void FollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 	{
+		bool acticve = false;
+		if(m_CurrentRoad)
+		{
+			acticve = true;
+			m_CurrentRoad->UnregisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
+		}
+
 		m_CurrentRoad = message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true);
 		m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
 		m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
@@ -126,8 +133,16 @@ namespace GASS
 			m_RoadVehicle->m_Speed = 0;
 			m_RoadVehicle->m_DistanceToPath = 0;
 			m_CurrentPos = pos;
-			GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-			GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+			if(acticve)
+			{
+				GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
+				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+			}
+			else
+			{
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+			}
 		}
 		else
 			m_CurrentRoad.reset();
@@ -254,7 +269,7 @@ namespace GASS
 			//Check lane
 			LaneVehicle* closest = m_CurrentRoad->GetClosest(m_CurrentRoad->StartInIntersection(m_CurrentIntersection), m_RoadVehicle);
 			
-			if(closest && desired_speed > 0)
+			if(closest && desired_speed > 0 && closest->m_DistanceToPath < 2)
 			{
 				const Float speed_diff = current_speed - closest->m_Speed;
 				if(speed_diff > 0)

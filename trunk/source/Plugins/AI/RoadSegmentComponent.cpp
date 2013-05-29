@@ -407,7 +407,7 @@ namespace GASS
 		
 		for(size_t i = 0 ; i < vehicles->size() ; i++)
 		{
-			if(vehicles->at(i)->m_Distance < in_distance)
+			if(vehicles->at(i)->m_Distance < in_distance && vehicles->at(i)->m_DistanceToPath < 10)
 			{
 				return false;
 			}
