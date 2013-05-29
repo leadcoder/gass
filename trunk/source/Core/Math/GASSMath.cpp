@@ -603,7 +603,7 @@ namespace GASS
 
 
 
-	Float Math::GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index)
+	Float Math::GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index, Float &distance_to_path)
 	{
 		Float shortest_dist = std::numeric_limits<Float>::max();
 		Float segmentLengthTotal = 0;
@@ -617,6 +617,7 @@ namespace GASS
 			if(dist < shortest_dist)
 			{
 				shortest_dist = dist;
+				distance_to_path = dist;
 				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).FastLength();
 				index = i-1;
 			}
