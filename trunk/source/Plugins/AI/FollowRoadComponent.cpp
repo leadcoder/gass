@@ -117,7 +117,11 @@ namespace GASS
 			m_CurrentRoad->UnregisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 		}
 
+
+		
 		m_CurrentRoad = message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true);
+		
+		
 		m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
 		m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
 		m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
@@ -256,7 +260,7 @@ namespace GASS
 			}
 
 			//Check that next road is free!
-			if(intersection_distance < stop_distance && !m_NextRoad->IsStartOfRoadFree(!m_NextRoad->StartInIntersection(m_CurrentIntersection), 10))
+			if(intersection_distance < stop_distance && !m_NextRoad->IsStartOfRoadFree(!m_NextRoad->StartInIntersection(m_CurrentIntersection), 2))
 			{
 				desired_speed  = 0;
 			}
