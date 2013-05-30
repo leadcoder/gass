@@ -627,6 +627,59 @@ namespace GASS
 		return pathDistance;
 	}
 
+	std::vector<Vec3> Math::ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps)
+	{
+		Float  totalPathLength  = 0;
+		std::vector<Float> lengths;
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			lengths.push_back(segmentLength);
+			totalPathLength += segmentLength; 
+		}
+
+		Float remaining = start_distance;
+		std::vector<Vec3> path;
+		bool found_start = false;
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			Float segmentLength = lengths[i-1];
+			if(!found_start)
+			{
+				if (segmentLength < remaining)
+				{
+					remaining -= segmentLength;
+				}
+				else
+				{
+					Float ratio = remaining / segmentLength;
+					Vec3 start_point = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
+					found_start = true;
+					remaining = end_distance-start_distance;
+					path.push_back(start_point);
+				}
+			}
+			else
+			{
+				path.push_back(wps[i-1]);
+				if (segmentLength < remaining)
+				{
+					remaining -= segmentLength;
+				}
+				else
+				{
+					Float ratio = remaining / segmentLength;
+					Vec3 end_distance = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
+					path.push_back(end_distance);
+					return path;
+				}
+			}
+		}
+		path.push_back(*wps.end());
+	    return path;
+	}
+
+
 	Vec3 Math::ClosestPointOnLine(const Vec3 &a, const Vec3 &b, const Vec3 &p)
 	{
 		// Determine t (the length of the vector from a to p)
