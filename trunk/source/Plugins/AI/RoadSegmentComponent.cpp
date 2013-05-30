@@ -174,7 +174,7 @@ namespace GASS
 				bool free = true;
 				for(size_t j = 0 ; j < vehicles->size() ; j++)
 				{
-					if(((tot_dist + dist) - vehicles->at(j)->m_Distance) < vehicle_separation)
+					if( fabs((tot_dist + dist) - vehicles->at(j)->m_Distance) < vehicle_separation)
 					{
 						free = false;
 						break;

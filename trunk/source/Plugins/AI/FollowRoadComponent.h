@@ -61,10 +61,11 @@ namespace GASS
 		ADD_ATTRIBUTE(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
+		RoadSegmentComponentPtr GetFreeRoad(RoadSegmentComponentPtr road);
 		
 		
 		Vec3  m_CurrentPos;
-		std::vector<Vec3> m_Waypoints;
+		//std::vector<Vec3> m_Waypoints;
 
 		float m_Direction;
 		bool m_InvertDirection;
@@ -81,6 +82,8 @@ namespace GASS
 
 		Vec3 m_AngularVelocity;
 		Vec3 m_VehicleSpeed;
+
+		int m_DebugReset;
 
 	};
 }

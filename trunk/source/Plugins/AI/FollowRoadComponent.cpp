@@ -50,7 +50,8 @@ namespace GASS
 		m_RoadVehicle(new LaneVehicle()),
 		m_CurrentPos(0,0,0),
 		m_AngularVelocity(0,0,0),
-		m_VehicleSpeed(0,0,0)
+		m_VehicleSpeed(0,0,0),
+		m_DebugReset(0)
 	{
 
 	}
@@ -105,6 +106,14 @@ namespace GASS
 	void FollowRoadComponent::OnTransMessage(TransformationNotifyMessagePtr message)
 	{
 		m_CurrentPos = message->GetPosition();
+
+		/*if(m_DebugReset)
+		{
+			std::cout << "New Position:" << m_CurrentPos  << "\n";
+			m_DebugReset++;
+			if(m_DebugReset > 10)
+				m_DebugReset = 0;
+		}*/
 	}
 
 
@@ -119,28 +128,37 @@ namespace GASS
 
 
 		
-		m_CurrentRoad = message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true);
+		m_CurrentRoad = GetFreeRoad(message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true));
 		
 		
 		m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
 		m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
-		m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
+		m_CurrentRoad->RegisterVehicle(m_RoadVehicle,false);
 		m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
+
+		m_RoadVehicle->m_Distance = -10;
+		m_RoadVehicle->m_Speed = 0;
+		m_RoadVehicle->m_DistanceToPath = 0;
 
 		Vec3 pos;
 		Quaternion rot;
 		double distance;
-		if(m_CurrentRoad && m_CurrentRoad->FirstFreeLocation(m_CurrentRoad->StartInIntersection(m_CurrentIntersection),pos,rot,distance,10))
+		if(m_CurrentRoad && m_CurrentRoad->FirstFreeLocation(false,pos,rot,distance,10))
 		{
-			pos.y += 3;
+			pos.y += 1;
 			m_RoadVehicle->m_Distance = distance;
 			m_RoadVehicle->m_Speed = 0;
 			m_RoadVehicle->m_DistanceToPath = 0;
 			m_CurrentPos = pos;
 			if(acticve)
 			{
-				GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
-				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+				//Clear messages
+				GetSceneObject()->ClearMessages();
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+				//std::cout << "Spawn Position:" << m_CurrentPos  << "\n";
+				m_DebugReset = 1;
+				//GetSceneObject()->PostMessage(MessagePtr(new VehicleStateMessage(CS_RUN,1)));
 			}
 			else
 			{
@@ -150,6 +168,29 @@ namespace GASS
 		}
 		else
 			m_CurrentRoad.reset();
+	}
+
+	RoadSegmentComponentPtr FollowRoadComponent::GetFreeRoad(RoadSegmentComponentPtr road)
+	{
+		Vec3 pos;
+		Quaternion rot;
+		double distance;
+		if(road->FirstFreeLocation(false,pos,rot,distance,10))
+		{
+			return road;
+		}
+		else
+		{
+			int end = rand() % 2;
+			RoadIntersectionComponentPtr inter;
+			if(end)
+				inter = road->GetEndNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
+			else
+				inter = road->GetStartNode()->GetFirstComponentByClass<RoadIntersectionComponent>();
+
+			road = inter->GetRandomRoad(road);
+			return GetFreeRoad(road);
+		}
 	}
 
 	void FollowRoadComponent::SceneManagerTick(double delta)
@@ -308,6 +349,8 @@ namespace GASS
 				m_CurrentRoad->RegisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 				//Check if left turn!
 				m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
+
+				//std::cout << "Change Position:" << m_CurrentPos << "\n";
 			}
 		
 			Float new_distance = now_distance + look_ahead;
@@ -327,7 +370,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 			
 			//if(m_LeftTurn)
-				target_point.y = desired_speed;
+				//target_point.y = desired_speed;
 
 			//std::cout << "now_distance" << now_distance << " pos:" << target_point << "\n";
 			//Get aim point on path
@@ -338,7 +381,15 @@ namespace GASS
 				//check if index is in next road!
 				
 			}
-			
+
+
+
+			std::stringstream ss;
+			ss  <<  GetSceneObject()->GetName();
+			ss  <<  "\nSpeed:" << desired_speed;
+			ss  <<  "\nDist along Path:" << now_distance;
+			ss  <<  "\nDist to Path:" << path_dist;
+			//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
 		}
 	}
 
