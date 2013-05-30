@@ -1,11 +1,10 @@
 #include "AIRoadLaneComponent.h"
 #include "AIRoadComponent.h"
+#include "AIRoadLaneSectionComponent.h"
 #include "AISceneManager.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
-#include "RoadIntersectionComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-
 
 namespace GASS
 {
@@ -68,6 +67,8 @@ namespace GASS
 		for(size_t i = 0; i < wps.size(); i++)
 		{
 			Vec3 side; //= wps[i+1] - wps[i];
+			
+			Float width_mult = 1.0;
 
 			if( i== 0)
 			{
@@ -81,6 +82,11 @@ namespace GASS
 				d1.Normalize();
 				d2.Normalize();
 				side = d1 + d2;
+				side.Normalize();
+				width_mult = Math::Dot(d1,side);
+				if(width_mult > 0)
+					width_mult = 1.0/width_mult;
+
 			}
 			else
 			{
@@ -89,7 +95,7 @@ namespace GASS
 			side.Normalize();
 			side = Math::Cross(side,Vec3(0,1,0)); 
 			side.Normalize();
-			lane.push_back(wps[i] + side*offset);
+			lane.push_back(wps[i] + side*offset*width_mult);
 		}
 		return lane;
 	}
@@ -99,11 +105,21 @@ namespace GASS
 		AIRoadComponentPtr road = GetSceneObject()->GetFirstParentComponentByClass<AIRoadComponent>();
 		if(!road)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadComponent", "AIRoadLaneComponent::UpdateLane");
+		
+		
+		AIRoadLaneSectionComponentPtr lane_section = GetSceneObject()->GetFirstParentComponentByClass<AIRoadLaneSectionComponent>();
+		if(!lane_section)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadLaneSectionComponent", "AIRoadLaneComponent::UpdateLane");
+		
 		SceneObjectRef road_wps_object = road->GetWaypointsObject();
 		std::vector<Vec3> road_wps = road_wps_object->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
 
 		std::vector<Vec3> lane_wps = GenerateOffset(road_wps,m_Width);
 
+		 lane_wps = Math::ClipPath(lane_section->GetDistance(), 30,lane_wps);
+
+		
+		
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		mesh_data->Type = LINE_LIST;
 		mesh_data->Material = "WhiteTransparentNoLighting";
@@ -120,7 +136,6 @@ namespace GASS
 			vertex.Pos = lane_wps[i-1];
 			mesh_data->VertexVector.push_back(vertex );
 		}
-
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
