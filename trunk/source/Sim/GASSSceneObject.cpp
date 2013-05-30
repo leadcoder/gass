@@ -355,6 +355,11 @@ namespace GASS
 		return num;
 	}
 
+	void SceneObject::ClearMessages() const
+	{
+		m_MessageManager->Clear();
+	}
+
 	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive)
 	{
 		//Check all components

@@ -246,6 +246,7 @@ namespace GASS
 		void LoadFromFile(const std::string &filename);
 		void SaveToFile(const std::string &filename);
 		size_t GetQueuedMessages() const;
+		void ClearMessages() const;
 
 		/**Create a copy of this scene object include all components and optional ascendants. 
 			The copy will not be initialized or added to the scene, its up to the user to add 
