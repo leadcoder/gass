@@ -1,80 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates>
 	<SceneObjectTemplate>
-    <Name value="AIRoadObject"/>
-	<Instantiable value="true"/>
-    <Components>
-    </Components>
-	<ComponentContainers>
-		 <SceneObjectTemplate>
-			<Inheritance value="AIRoadCenterLine"/>
-			<Name value="AIRoadCenterLine"/>
-			<Components/>
-		</SceneObjectTemplate>
-	</ComponentContainers>
-  </SceneObjectTemplate>
-  
-  <SceneObjectTemplate>
-    <Name value="AIRoadCenterLine"/>
-	<Instantiable value="false"/>
-    <Components>
-      <WaypointListComponent>
-        <Radius value ="0"/>
-		<WaypointTemplate value="AIRoadWaypoint"/>
-		<ShowPathLine value="true"/>
-      </WaypointListComponent>
-      <LocationComponent>
-        <Position value="0 0 0"/>
-        <Rotation value="0 0 0"/>
-        <AttachToParent value="0"/>
-      </LocationComponent>
-      <ManualMeshComponent>
-      </ManualMeshComponent>
-    </Components>
-  </SceneObjectTemplate>
-  <SceneObjectTemplate>
-    <Name value="AIRoadWaypoint"/>
-    <Components>
-      <WaypointComponent>
-      </WaypointComponent>
-      <LocationComponent>
-        <Position value="0 0 0"/>
-        <Rotation value="0 0 0"/>
-        <AttachToParent value="1"/>
-      </LocationComponent>
-      <!--<BoxGeometryComponent>
+		<Name value="AIRoadObject"/>
+		<Instantiable value="true"/>
+		<Components>
+			<AIRoadComponent>
+				<WaypointsObject value="CENTER_LINE"/>
+				<LaneSectionsObject value="LANE_SECTIONS"/>
+			</AIRoadComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Inheritance value="AIRoadCenterLine"/>
+				<Name value="AIRoadCenterLine"/>
+				<ID value="CENTER_LINE"/>
+				<Components/>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="AILaneSections"/>
+				<ID value="LANE_SECTIONS"/>
+				<Components/>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="AILaneSection1"/>
+						<ID value="LANE_SECTION_1"/>
+						<Components>
+							<AIRoadLaneSectionComponent>
+								<Distance value="0"/>
+							</AIRoadLaneSectionComponent>
+						</Components>
+						<ComponentContainers>
+							<SceneObjectTemplate>
+								<Name value="AILeftLanes"/>
+								<ID value="LANE_SECTIONS"/>
+								<Components/>
+								<ComponentContainers>
+									<SceneObjectTemplate>
+										<Name value="AILeftLane1"/>
+										<ID value="LEFT_LANE_1"/>
+										<Components>
+											<AIRoadLaneComponent>
+												<Width value = "4"/>
+											</AIRoadLaneComponent>
+											<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+											<ManualMeshComponent>
+											</ManualMeshComponent>
+										</Components>
+									</SceneObjectTemplate>
+								</ComponentContainers>
+							</SceneObjectTemplate>
+						</ComponentContainers>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+
+	<SceneObjectTemplate>
+		<Name value="AIRoadCenterLine"/>
+		<ID value="CENTER_LINE"/>
+		<Instantiable value="false"/>
+		<Components>
+			<WaypointListComponent>
+				<Radius value ="0"/>
+				<WaypointTemplate value="AIRoadWaypoint"/>
+				<ShowPathLine value="true"/>
+			</WaypointListComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="AIRoadWaypoint"/>
+		<Components>
+			<WaypointComponent>
+			</WaypointComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="1"/>
+			</LocationComponent>
+			<!--<BoxGeometryComponent>
 		<Size value="0.2 0.2 0.2"/>
 	  </BoxGeometryComponent>-->
-      <BillboardComponent>
-        <Name value="NodeGeom"/>
-        <Material value="node.dds"/>
-        <Width value="0.4"/>
-        <Height value="0.4"/>
-      </BillboardComponent>
-      <ManualMeshComponent>
-        <Name value="TangentGeom"/>
-      </ManualMeshComponent>
-      <PhysicsBoxGeometryComponent/>
-    </Components>
-    <ComponentContainers>
-      <SceneObjectTemplate>
-        <Name value="Tangent"/>
-        <Components>
-          <LocationComponent>
-            <Position value="0 0 2"/>
-            <Rotation value="0 0 0"/>
-            <AttachToParent value="1"/>
-          </LocationComponent>
-          <BoxGeometryComponent>
-            <Size value="0.1 0.1 0.1"/>
-          </BoxGeometryComponent>
-          <ManualMeshComponent>
-          </ManualMeshComponent>
-          <PhysicsBoxGeometryComponent/>
-        </Components>
-        <ComponentContainers>
-        </ComponentContainers>
-      </SceneObjectTemplate>
-    </ComponentContainers>
-  </SceneObjectTemplate>
- </Templates>
+			<BillboardComponent>
+				<Name value="NodeGeom"/>
+				<Material value="node.dds"/>
+				<Width value="0.4"/>
+				<Height value="0.4"/>
+			</BillboardComponent>
+			<ManualMeshComponent>
+				<Name value="TangentGeom"/>
+			</ManualMeshComponent>
+			<PhysicsBoxGeometryComponent/>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="Tangent"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0 2"/>
+						<Rotation value="0 0 0"/>
+						<AttachToParent value="1"/>
+					</LocationComponent>
+					<BoxGeometryComponent>
+						<Size value="0.1 0.1 0.1"/>
+					</BoxGeometryComponent>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<PhysicsBoxGeometryComponent/>
+				</Components>
+				<ComponentContainers>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>
