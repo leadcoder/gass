@@ -12,9 +12,10 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginEnvironment"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
 	</Plugins>
-	<!--<SetDataPath value="../../../common/data/"/>-->
-	<ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
+	<SetDataPath value="../../../common/data/"/>
+	<ScenePath value="%GASS_DATA_HOME%/sceneries/"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
@@ -29,9 +30,9 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS">
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 		</ResourceGroup>
@@ -100,6 +101,9 @@
 		<PhysXPhysicsSystem>
 			<TaskNode value="SIM"/>
 		</PhysXPhysicsSystem>
+		<AISystem>
+			<TaskNode value="SIM"/>
+		</AISystem>
 		<!--<ODEPhysicsSystem>
     <Name value = "PhysicsSystem"/>
 	<TaskNode value="2"/>

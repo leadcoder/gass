@@ -23,7 +23,7 @@ copy "%GASS_HOME%\\lib\\GASSPluginEnvironment_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginRaknet_d.dll" bin\\debug\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginOpenAL_d.dll" bin\\debug\\GASSPlugins
-
+copy "%GASS_HOME%\\lib\\GASSPluginAI_d.dll" bin\\debug\\GASSPlugins
 
 
 copy "%GASS_HOME%\\lib\\GASSCore.dll" bin\\release
@@ -39,6 +39,7 @@ copy "%GASS_HOME%\\lib\\GASSPluginEnvironment.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginRaknet.dll" bin\\release\\GASSPlugins
 copy "%GASS_HOME%\\lib\\GASSPluginOpenAL.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\lib\\GASSPluginAI.dll" bin\\release\\GASSPlugins
 
 copy "%GASS_HOME%\Dependencies\lib\tbb_debug.dll" bin\\Debug
 copy "%GASS_HOME%\Dependencies\lib\tbb.dll" bin\\Release

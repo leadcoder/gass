@@ -24,7 +24,6 @@
 #include <qdebug.h>
 
 #include "Sim/GASSScene.h"
-
 #include "GASSRenderWidget.h"
 #include "GASSSceneTreeWidget.h"
 #include "GASSResourceTreeWidget.h"
@@ -38,6 +37,7 @@
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSITemplateSourceComponent.h"
 
 
 
@@ -161,7 +161,7 @@ void GASSEd::setupMenuBar()
 	m_AddWaypointsAct->setVisible(false);
 	connect(m_AddWaypointsAct, SIGNAL(triggered()), this, SLOT(OnAddWaypoints()));
 
-	
+	m_AddTemplateMenu = m_EditMenu->addMenu(tr("&Add..."));
 }
 
 void GASSEd::saveLayout()
@@ -388,6 +388,41 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 		{
 			m_AddWaypointsAct->setEnabled(true);
 			m_AddWaypointsAct->setVisible(true);
+		}
+		m_AddTemplateMenu->clear();
+		m_AddTemplateMenu->setVisible(false);
+
+		GASS::TemplateSourceComponentPtr template_source = obj->GetFirstComponentByClass<GASS::ITemplateSourceComponent>();
+		if(template_source)
+		{
+			std::vector<std::string> templates = template_source->GetTemplates();
+			if(templates.size() > 0)
+			{
+				m_AddTemplateMenu->setVisible(true);
+				for(size_t i = 0; i < templates.size(); i++)
+				{
+					QAction * action = m_AddTemplateMenu->addAction(tr(templates[i].c_str()));
+					action->setEnabled(true);
+					connect(action, SIGNAL(triggered()), this, SLOT(OnAddTemplate()));
+				}
+				//connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(mySlot(QAction*)));
+			}
+		}
+	}
+}
+
+
+void GASSEd::OnAddTemplate()
+{
+	QAction *action= (QAction *)sender();
+
+	if(action)
+	{
+		QString name = action->text();
+		GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+		if(obj)
+		{
+			GASS::SceneObjectPtr new_object = obj->GetScene()->LoadObjectFromTemplate(name.toStdString(),obj);
 		}
 	}
 }

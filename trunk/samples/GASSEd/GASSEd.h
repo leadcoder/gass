@@ -12,8 +12,6 @@ namespace GASS
 	class EditorApplication;
 }
 	
-
-	
 class ToolBar;
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSignalMapper)
@@ -32,6 +30,8 @@ private:
 	QAction *m_PasteAct;
 	QAction *m_DeleteAct;
 	QAction *m_AddWaypointsAct;
+
+	QMenu *m_AddTemplateMenu;
     
 	GASS::SceneWeakPtr m_Scene;
 	GASS::SceneObjectWeakPtr m_SceneObjectCopyBuffer;
@@ -44,16 +44,10 @@ public:
 	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
 	GASS::ScenePtr GetScene() const {return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
 	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
-protected:
-    //void showEvent(QShowEvent *event);
 public slots:
-    //void actionTriggered(QAction *action);
     void saveLayout();
     void loadLayout();
-    //void switchLayoutDirection();
-    //void createDockWidget();
-    //void destroyDockWidget(QAction *action);
-	void OnNew();
+    void OnNew();
 	void OnSave();
 	void OnOpen();
 	void OnCopy();
@@ -61,10 +55,10 @@ public slots:
 	void OnPaste();
 	void OnDelete();
 	void OnAddWaypoints();
+	void OnAddTemplate();
 private:
     void setupToolBar();
     void setupMenuBar();
-    //void setupDockWidgets(const QMap<QString, QSize> &customSizeHints);
 };
 
 
