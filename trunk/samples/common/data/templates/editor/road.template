@@ -7,7 +7,15 @@
 			<AIRoadComponent>
 				<WaypointsObject value="CENTER_LINE"/>
 				<LaneSectionsObject value="LANE_SECTIONS"/>
+				<LaneDebugObject value="ROAD_LINE_DEBUG"/>
 			</AIRoadComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
@@ -17,49 +25,74 @@
 				<Components/>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
+				<Inheritance value="AIRoadLineDebug"/>
+				<Name value="AIRoadLineDebug"/>
+				<ID value="ROAD_LINE_DEBUG"/>
+				<Components/>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
 				<Name value="AILaneSections"/>
+				<ID value="LANE_SECTIONS"/>
+				<Components>
+					<TemplateSourceComponent>
+						<Templates value="AILaneSectionOneByOne"/>
+					</TemplateSourceComponent>
+				</Components>
+				<ComponentContainers>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+
+	<SceneObjectTemplate>
+		<Name value="AILaneSectionOneByOne"/>
+		<ID value="LANE_SECTION_1"/>
+		<Components>
+			<AIRoadLaneSectionComponent>
+				<Distance value="0"/>
+			</AIRoadLaneSectionComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="AILeftLanes"/>
 				<ID value="LANE_SECTIONS"/>
 				<Components/>
 				<ComponentContainers>
 					<SceneObjectTemplate>
-						<Name value="AILaneSection1"/>
-						<ID value="LANE_SECTION_1"/>
+						<Name value="AILeftLane1"/>
+						<ID value="LEFT_LANE_1"/>
 						<Components>
-							<AIRoadLaneSectionComponent>
-								<Distance value="0"/>
-							</AIRoadLaneSectionComponent>
+							<AIRoadLaneComponent>
+								<Width value = "4"/>
+							</AIRoadLaneComponent>
+							<LocationComponent>
+								<Position value="0 0 0"/>
+								<Rotation value="0 0 0"/>
+								<AttachToParent value="false"/>
+							</LocationComponent>
+							<ManualMeshComponent>
+							</ManualMeshComponent>
 						</Components>
-						<ComponentContainers>
-							<SceneObjectTemplate>
-								<Name value="AILeftLanes"/>
-								<ID value="LANE_SECTIONS"/>
-								<Components/>
-								<ComponentContainers>
-									<SceneObjectTemplate>
-										<Name value="AILeftLane1"/>
-										<ID value="LEFT_LANE_1"/>
-										<Components>
-											<AIRoadLaneComponent>
-												<Width value = "4"/>
-											</AIRoadLaneComponent>
-											<LocationComponent>
-				<Position value="0 0 0"/>
-				<Rotation value="0 0 0"/>
-				<AttachToParent value="false"/>
-			</LocationComponent>
-											<ManualMeshComponent>
-											</ManualMeshComponent>
-										</Components>
-									</SceneObjectTemplate>
-								</ComponentContainers>
-							</SceneObjectTemplate>
-						</ComponentContainers>
 					</SceneObjectTemplate>
 				</ComponentContainers>
 			</SceneObjectTemplate>
 		</ComponentContainers>
 	</SceneObjectTemplate>
 
+	<SceneObjectTemplate>
+		<Name value="AIRoadLineDebug"/>
+		<ID value="ROAD_LINE_DEBUG"/>
+		<Instantiable value="false"/>
+		<Components>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+		</Components>
+	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="AIRoadCenterLine"/>
 		<ID value="CENTER_LINE"/>
