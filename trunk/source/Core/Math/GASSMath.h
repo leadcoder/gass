@@ -108,6 +108,7 @@ namespace GASS
 		static Float GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index,Float &distance_to_path);
 		static std::vector<Vec3> ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps);
 		static std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
+		static std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float start_offset,Float end_offset);
 		
 		static inline float InvSqrt(float x)
 		{
