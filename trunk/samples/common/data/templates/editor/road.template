@@ -51,6 +51,19 @@
 			<AIRoadLaneSectionComponent>
 				<Distance value="0"/>
 			</AIRoadLaneSectionComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="1"/>
+			</LocationComponent>
+			<BillboardComponent>
+				<Name value="NodeGeom"/>
+				<Material value="node.dds"/>
+				<Width value="0.4"/>
+				<Height value="0.4"/>
+			</BillboardComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
@@ -134,7 +147,6 @@
 			<ManualMeshComponent>
 				<Name value="TangentGeom"/>
 			</ManualMeshComponent>
-			<PhysicsBoxGeometryComponent/>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
