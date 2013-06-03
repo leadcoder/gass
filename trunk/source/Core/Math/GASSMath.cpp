@@ -657,6 +657,13 @@ namespace GASS
 					found_start = true;
 					remaining = end_distance-start_distance;
 					path.push_back(start_point);
+					if (segmentLength >= remaining)
+					{
+						Float ratio = remaining / segmentLength;
+						Vec3 end_distance = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
+						path.push_back(end_distance);
+						return path;
+					}
 				}
 			}
 			else
@@ -675,8 +682,48 @@ namespace GASS
 				}
 			}
 		}
-		path.push_back(*wps.end());
+		path.push_back(wps[wps.size()-1]);
 	    return path;
+	}
+
+	
+	std::vector<Vec3> Math::GenerateOffset(std::vector<Vec3> wps, Float offset)
+	{
+		std::vector<Vec3> lane;
+		for(size_t i = 0; i < wps.size(); i++)
+		{
+			Vec3 side; //= wps[i+1] - wps[i];
+
+			Float width_mult = 1.0;
+
+			if( i== 0)
+			{
+				side = (wps[1] - wps[0]); 
+				side.y = 0;
+			}
+			else if(i < wps.size() - 1)
+			{
+				Vec3 d1 = (wps[i]-wps[i-1]);
+				Vec3 d2 = (wps[i+1]-wps[i]);
+				d1.Normalize();
+				d2.Normalize();
+				side = d1 + d2;
+				side.Normalize();
+				width_mult = Math::Dot(d1,side);
+				if(width_mult > 0)
+					width_mult = 1.0/width_mult;
+
+			}
+			else
+			{
+				side = wps[i]-wps[i-1];
+			}
+			side.Normalize();
+			side = Math::Cross(side,Vec3(0,1,0)); 
+			side.Normalize();
+			lane.push_back(wps[i] + side*offset*width_mult);
+		}
+		return lane;
 	}
 
 
