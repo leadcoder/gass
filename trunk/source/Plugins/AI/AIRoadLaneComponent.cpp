@@ -8,11 +8,10 @@
 
 namespace GASS
 {
-	AIRoadLaneComponent::AIRoadLaneComponent(void) :
-		m_Initialized(false),
-			m_Width(4)
+	AIRoadLaneComponent::AIRoadLaneComponent(void) : m_Initialized(false),
+		m_Width(4)
 	{
-		
+
 	}	
 
 	AIRoadLaneComponent::~AIRoadLaneComponent(void)
@@ -24,12 +23,13 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadLaneComponent",new Creator<AIRoadLaneComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadLaneSectionComponent", OF_VISIBLE)));
-			
+
 		RegisterProperty<Float>("Width", &AIRoadLaneComponent::GetWidth, &AIRoadLaneComponent::SetWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<SceneObjectID>("NextLane", &AIRoadLaneComponent::GetNextLane, &AIRoadLaneComponent::SetNextLane);
 		RegisterProperty<SceneObjectID>("PrevLane", &AIRoadLaneComponent::GetPrevLane, &AIRoadLaneComponent::SetPrevLane);
 		RegisterProperty<SceneObjectRef>("WaypointsObject", &AIRoadLaneComponent::GetWaypointsObject, &AIRoadLaneComponent::SetWaypointsObject);
+		
 	}
 
 	void AIRoadLaneComponent::SetWidth(Float width)
@@ -49,15 +49,15 @@ namespace GASS
 		wp_object->RegisterForMessage(REG_TMESS(AIRoadLaneComponent::OnWaypointsChanged,UpdateWaypointListMessage,0));
 		m_Initialized = true;
 
-		
+
 	}
 	void AIRoadLaneComponent::OnWaypointsChanged(UpdateWaypointListMessagePtr message)
 	{
 		//Update all lines
 		UpdateLane();
-		
+
 		//Update lane data
-		
+
 	}
 
 
@@ -67,7 +67,7 @@ namespace GASS
 		for(size_t i = 0; i < wps.size(); i++)
 		{
 			Vec3 side; //= wps[i+1] - wps[i];
-			
+
 			Float width_mult = 1.0;
 
 			if( i== 0)
@@ -102,24 +102,23 @@ namespace GASS
 
 	void AIRoadLaneComponent::UpdateLane()
 	{
-		AIRoadComponentPtr road = GetSceneObject()->GetFirstParentComponentByClass<AIRoadComponent>();
+	/*	AIRoadComponentPtr road = GetSceneObject()->GetFirstParentComponentByClass<AIRoadComponent>();
 		if(!road)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadComponent", "AIRoadLaneComponent::UpdateLane");
-		
-		
+
+
 		AIRoadLaneSectionComponentPtr lane_section = GetSceneObject()->GetFirstParentComponentByClass<AIRoadLaneSectionComponent>();
 		if(!lane_section)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadLaneSectionComponent", "AIRoadLaneComponent::UpdateLane");
-		
+
 		SceneObjectRef road_wps_object = road->GetWaypointsObject();
 		std::vector<Vec3> road_wps = road_wps_object->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
 
 		std::vector<Vec3> lane_wps = GenerateOffset(road_wps,m_Width);
 
-		 lane_wps = Math::ClipPath(lane_section->GetDistance(), 30,lane_wps);
+		//get previous lane
+		lane_wps = Math::ClipPath(lane_section->GetDistance(), 30,lane_wps);
 
-		
-		
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		mesh_data->Type = LINE_LIST;
 		mesh_data->Material = "WhiteTransparentNoLighting";
@@ -128,7 +127,7 @@ namespace GASS
 		vertex.TexCoord.Set(0,0);
 		vertex.Color.Set(0.2,0.2,1,1);
 		vertex.Normal = Vec3(0,1,0);
-	
+
 		for(size_t i = 1; i < lane_wps.size(); i++)
 		{
 			vertex.Pos = lane_wps[i];
@@ -137,6 +136,6 @@ namespace GASS
 			mesh_data->VertexVector.push_back(vertex );
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostMessage(mesh_message);*/
 	}
 }

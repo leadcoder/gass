@@ -12,6 +12,8 @@
 
 namespace GASS
 {
+	class AIRoadLaneSectionComponent;
+	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 	class AIRoadComponent :  public Reflection<AIRoadComponent,BaseSceneComponent> 
 	{
 	public:
@@ -26,13 +28,14 @@ namespace GASS
 		void UpdateMesh();
 		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
 		ADD_ATTRIBUTE(SceneObjectRef ,LaneSectionsObject);
+		ADD_ATTRIBUTE(SceneObjectRef ,LaneDebugObject);
 		
 	private:
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;
-		
+		std::vector<AIRoadLaneSectionComponentPtr> m_LaneSections;
 		bool m_Initialized;
 	};
 
