@@ -167,9 +167,7 @@ namespace GASS
 				for(int j = 0 ;  j < comps.size(); j++)
 				{
 					AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
-
-					std::vector<Vec3> lane_wps = Math::GenerateOffset(lane_section_wps,lane->GetWidth());
-
+					std::vector<Vec3> lane_wps = Math::GenerateOffset(lane_section_wps, lane->GetWidth());
 					for(size_t k = 1; k < lane_wps.size(); k++)
 					{
 						vertex.Pos = lane_wps[k];

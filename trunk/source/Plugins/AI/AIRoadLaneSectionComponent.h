@@ -3,12 +3,11 @@
 #define AI_ROAD_SEG_COMPONENT
 
 #include "Sim/GASS.h"
-#include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "tbb/spin_mutex.h"
-#include <set>
-#include "tbb/atomic.h"
+#include "Plugins/Game/GameMessages.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
+
 
 namespace GASS
 {
@@ -22,6 +21,8 @@ namespace GASS
 		void SetDistance(Float dist);
 		Float GetDistance() const;
 	private:
+		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
+		void UpdateGeom();
 		Float m_Distance;
 		bool m_Initialized;
 	};
