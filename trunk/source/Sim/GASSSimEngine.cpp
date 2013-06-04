@@ -51,6 +51,7 @@
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSIWorldLocationComponent.h"	
 #include "Sim/Interface/GASSIProjectionSceneManager.h"
+#include "Sim/Interface/GASSITemplateSourceComponent.h"
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"

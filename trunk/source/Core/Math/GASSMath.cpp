@@ -667,9 +667,9 @@ namespace GASS
 			if (segmentLength < end_remaining)
 			{
 				end_remaining -= segmentLength;
-				path.push_back(wps[i-1]);
-				if(index == wps.size()-1) // if last
-					path.push_back(wps[i]);
+				//path.push_back(wps[i-1]);
+				//if(index == wps.size()-1) // if last
+				path.push_back(wps[i]);
 			}
 			else
 			{

@@ -260,11 +260,12 @@ namespace GASS
 		m_RollJoint->setDriveVelocity(angular_vel);*/
 
 
-		if(delta_time > 0.1)
-			m_PxScene->simulate(0.1);
-		else
-			m_PxScene->simulate(delta_time);
+		if(delta_time > 1.0/60.0)
+			delta_time = 1.0/60.0;
+		
+		m_PxScene->simulate(delta_time);
 			
+		
 		//m_PxScene->simulate(0.016666660f);
 
 		while(!m_PxScene->fetchResults())

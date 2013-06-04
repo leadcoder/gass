@@ -2,6 +2,7 @@
 #include "AISceneManager.h"
 #include "AIRoadLaneSectionComponent.h"
 #include "AIRoadLaneComponent.h"
+#include "AIRoadIntersectionComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
 #include "RoadIntersectionComponent.h"
@@ -22,14 +23,46 @@ namespace GASS
 
 	}
 
+	std::vector<SceneObjectPtr> ConnectionEnumeration(BaseReflectionObjectPtr obj)
+	{
+		AIRoadComponentPtr road= DYNAMIC_PTR_CAST<AIRoadComponent>(obj);
+		return  road->GetConnectionSelection();
+	}
+
+	std::vector<SceneObjectPtr>  AIRoadComponent::GetConnectionSelection() const
+	{
+		std::vector<SceneObjectPtr> ret;
+		SceneObjectPtr so = GetSceneObject();
+		if(so)
+		{
+			IComponentContainer::ComponentVector comps;
+			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadIntersectionComponent>(comps);
+			for(int i = 0 ; i < comps.size();i++)
+			{
+				if(comps[i]->GetOwner() != so)
+				{
+					AIRoadIntersectionComponentPtr intersection = DYNAMIC_PTR_CAST<AIRoadIntersectionComponent>(comps[i]);
+					if(intersection)
+					{
+						ret.push_back(intersection->GetSceneObject());
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+
 	void AIRoadComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadComponent",new Creator<AIRoadComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadComponent", OF_VISIBLE)));
 		
-		
-		RegisterProperty<SceneObjectRef>("PrevNode", &AIRoadComponent::GetStartNode, &AIRoadComponent::SetStartNode);
-		RegisterProperty<SceneObjectRef>("NextNode", &AIRoadComponent::GetEndNode, &AIRoadComponent::SetEndNode);
+		RegisterProperty<SceneObjectRef>("StartNode", &AIRoadComponent::GetStartNode, &AIRoadComponent::SetStartNode,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Start Node Connection",PF_VISIBLE,ConnectionEnumeration)));
+		RegisterProperty<SceneObjectRef>("EndNode", &AIRoadComponent::GetEndNode, &AIRoadComponent::SetEndNode,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("End Node Connection",PF_VISIBLE,ConnectionEnumeration)));
+
 		RegisterProperty<SceneObjectRef>("WaypointsObject", &AIRoadComponent::GetWaypointsObject, &AIRoadComponent::SetWaypointsObject);
 		RegisterProperty<SceneObjectRef>("LaneSectionsObject", &AIRoadComponent::GetLaneSectionsObject, &AIRoadComponent::SetLaneSectionsObject);
 		RegisterProperty<SceneObjectRef>("LaneDebugObject", &AIRoadComponent::GetLaneDebugObject, &AIRoadComponent::SetLaneDebugObject);
@@ -37,26 +70,34 @@ namespace GASS
 
 	void AIRoadComponent::SetStartNode(SceneObjectRef node)
 	{
+		//remove previous connection
 		if(m_StartNode.IsValid())
 		{
 			if(m_StartNode.GetRefObject() != node.GetRefObject())
 			{
-				m_StartNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
-				//RoadIntersectionComponentPtr old_intersection = m_StartNode->GetFirstComponentByClass<RoadIntersectionComponent>();
-				//AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
-				//old_intersection->RemoveRoad(this_ptr);
+				//m_StartNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
+				AIRoadIntersectionComponentPtr old_intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+				if(old_intersection)
+				{
+					AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+					old_intersection->RemoveRoad(this_ptr);
+				}
 			}
 			else
 				return;
 		}
 		
 		m_StartNode = node;
+
 		if(m_StartNode.IsValid())
 		{
-			//RoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<RoadIntersectionComponent>();
-			//AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
-			//new_intersection->AddRoad(this_ptr);
-			m_StartNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			AIRoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(new_intersection)
+			{
+				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+				new_intersection->AddRoad(this_ptr);
+				//m_StartNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			}
 		}
 	}
 
@@ -71,11 +112,14 @@ namespace GASS
 		{
 			if(m_EndNode.GetRefObject() != node.GetRefObject())
 			{
-				m_EndNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
-				//RoadIntersectionComponentPtr old_intersection = m_EndNode->GetFirstComponentByClass<RoadIntersectionComponent>();
+				//m_EndNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
+				AIRoadIntersectionComponentPtr old_intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
 
-				//AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
-				//old_intersection->RemoveRoad(this_ptr);
+				if(old_intersection)
+				{
+					AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+					old_intersection->RemoveRoad(this_ptr);
+				}
 			}
 			else
 				return;
@@ -84,10 +128,13 @@ namespace GASS
 		m_EndNode = node;
 		if(m_EndNode.IsValid())
 		{
-			//RoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<RoadIntersectionComponent>();
-			//AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
-			//new_intersection->AddRoad(this_ptr);
-			m_EndNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			AIRoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(new_intersection)
+			{
+				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+				new_intersection->AddRoad(this_ptr);
+			}
+			//m_EndNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 		}
 	}
 
@@ -122,6 +169,12 @@ namespace GASS
 		}
 		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
 
+		//update itersection connections
+
+
+
+		
+
 		UpdateMesh();
 	}
 
@@ -130,8 +183,170 @@ namespace GASS
 		
 	}
 
+
+	bool AIRoadComponent::StartIn(SceneObjectPtr obj) const
+	{
+		if(obj == m_StartNode.GetRefObject())
+			return true;
+		return false;
+	}
+
+	Vec3 AIRoadComponent::GetStartPoint() const
+	{
+		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
+		if(road_wps.size()  > 0)
+		{
+			return road_wps[0];
+		}
+		return Vec3(0,0,0);
+	}
+	
+	Vec3 AIRoadComponent::GetEndPoint() const
+	{
+		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
+		if(road_wps.size()  > 0)
+		{
+			return road_wps.back();
+		}
+		return Vec3(0,0,0);
+	}
+
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetStartLanes() const
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		if(m_LaneSections.size() > 0)
+		{
+			IComponentContainer::ComponentVector comps;
+			m_LaneSections[0]->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+			for(size_t i =  0; i < comps.size(); i++)
+			{
+				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+				lanes.push_back(lane);
+			}
+		}
+		return lanes;
+	}
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetEndLanes() const
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		if(m_LaneSections.size() > 0)
+		{
+			IComponentContainer::ComponentVector comps;
+			m_LaneSections.back()->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+			for(size_t i =  0; i < comps.size(); i++)
+			{
+				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+				lanes.push_back(lane);
+			}
+		}
+		return lanes;
+	}
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetStartLanes(bool down_stream) const
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		if(m_LaneSections.size() > 0)
+		{
+			IComponentContainer::ComponentVector comps;
+			m_LaneSections[0]->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+			for(size_t i =  0; i < comps.size(); i++)
+			{
+				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+				if(down_stream)
+				{
+					if(lane->IsDownStream())
+					{
+						lanes.push_back(lane);
+					}
+				}
+				else 
+				{
+					if(!lane->IsDownStream())
+					{
+						lanes.push_back(lane);
+					}
+				}
+
+			}
+		}
+		return lanes;
+	}
+
+
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetEndLanes(bool down_stream) const
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		if(m_LaneSections.size() > 0)
+		{
+			IComponentContainer::ComponentVector comps;
+			m_LaneSections.back()->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+			for(size_t i =  0; i < comps.size(); i++)
+			{
+				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+				if(down_stream)
+				{
+					if(lane->IsDownStream())
+					{
+						lanes.push_back(lane);
+					}
+				}
+				else 
+				{
+					if(!lane->IsDownStream())
+					{
+						lanes.push_back(lane);
+					}
+				}
+
+			}
+		}
+		return lanes;
+	}
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetIncommingLanes(SceneObjectPtr connection) const
+	{
+		bool start_node = StartIn(connection);
+		if(start_node)
+			return GetStartLanes(true);
+		else
+			return GetEndLanes(false);
+	}
+	
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetOutgoingLanes(SceneObjectPtr connection) const
+	{
+
+		bool start_node = StartIn(connection);
+		if(start_node)
+			return GetStartLanes(false);
+		else
+			return GetEndLanes(true);
+
+	}
+
 	void AIRoadComponent::UpdateMesh()
 	{
+
+		if(m_StartNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->UpdateConnectionLines();
+			}
+		}
+
+		if(m_EndNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->UpdateConnectionLines();
+			}
+		}
+
 		Float start = 0;
 		Float end = 0;
 		Float prev = 0;

@@ -36,6 +36,7 @@ namespace GASS
 		m_IsMovingForwardSlowly(false),
 		m_InReverseMode(false),
 		m_UseDigitalInputs(false)
+		
 	{
 		m_ChassisData.mMass = 1500;
 	}
@@ -103,13 +104,17 @@ namespace GASS
 		m_Vehicle->setToRestState();
 		//Set the car to first gear.
 		m_Vehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		m_IsMovingForwardSlowly = false;
+		m_ThrottleInput = 0;
+		m_SteerInput = 0;
+		m_InReverseMode = false;
 	}
 
 	void PhysXCarComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
-
+		
 		//Get chassis mesh
 		std::string col_mesh_id = GetSceneObject()->GetName();
 		ResourceComponentPtr res = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
@@ -454,7 +459,11 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 
-		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));
+		Vec3 current_pos  = GetPosition();
+
+		//std::cout << "Current Px pos:"<< current_pos <<"\n";
+
+		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
@@ -594,7 +603,13 @@ namespace GASS
 		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 
-		
+		std::stringstream ss;
+			ss  <<  GetSceneObject()->GetName();
+			ss  <<  "\nGear::" << currentGear;
+			ss  <<  "\nTarget:" << targetGear;
+			ss  <<  "\nSpeed:" << forwardSpeed;
+			
+			GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
@@ -715,7 +730,9 @@ namespace GASS
 	{
 		if(m_Actor)
 		{
+			Reset();
 			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
+			
 		}
 	}
 
@@ -733,6 +750,7 @@ namespace GASS
 	{
 		if(m_Actor)
 		{
+			Reset();
 			m_Actor->setGlobalPose(physx::PxTransform(m_Actor->getGlobalPose().p,PxConvert::ToPx(rot)));
 		}
 	}

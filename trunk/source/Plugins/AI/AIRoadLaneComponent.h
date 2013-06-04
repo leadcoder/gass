@@ -22,14 +22,17 @@ namespace GASS
 		void SetWidth(Float dist);
 		Float GetWidth() const;
 		void UpdateLane();
+		bool IsDownStream() const {return m_DownStream;}
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		ADD_ATTRIBUTE(SceneObjectID,NextLane);
 		ADD_ATTRIBUTE(SceneObjectID,PrevLane);
 		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
+		ADD_ATTRIBUTE(bool ,DownStream);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		Float m_Width;
 		bool m_Initialized;
+		
 	};
 
 	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;

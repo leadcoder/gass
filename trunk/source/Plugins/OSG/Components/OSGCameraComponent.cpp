@@ -59,10 +59,17 @@ namespace GASS
 	void OSGCameraComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OSGCameraComponent, IComponent>);
-		RegisterProperty<float>("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance);
-		RegisterProperty<float>("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance);
-		RegisterProperty<float>("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov);
-		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho);
+		
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("CameraComponent", OF_VISIBLE)));
+
+		RegisterProperty<float>("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<float>("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<float>("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Field Of View in Degres",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Use orthographic projection",PF_VISIBLE  | PF_EDITABLE)));
 	}
 
 	void OSGCameraComponent::OnInitialize()

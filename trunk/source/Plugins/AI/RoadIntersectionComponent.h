@@ -47,7 +47,6 @@ namespace GASS
 		bool GetTrafficLight(RoadSegmentComponentPtr road, TrafficLight &light);
 		TurnDir CheckTurn(RoadSegmentComponentPtr in_road,RoadSegmentComponentPtr out_road);
 	private:
-		
 		void OnToggleTrafficLight(ToggleTrafficLightMessagePtr message);
 		Vec3  GetRoadDir(RoadSegmentComponentPtr road);
 		bool m_Initialized;
@@ -56,7 +55,6 @@ namespace GASS
 		unsigned int m_CurrentGreen;
 		bool m_AllowLeftTurn;
 		bool m_DisableTrafficLight;
-		
 	};
 	typedef SPTR<RoadIntersectionComponent> RoadIntersectionComponentPtr;
 }

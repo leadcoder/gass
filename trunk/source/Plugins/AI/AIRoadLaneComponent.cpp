@@ -9,7 +9,8 @@
 namespace GASS
 {
 	AIRoadLaneComponent::AIRoadLaneComponent(void) : m_Initialized(false),
-		m_Width(4)
+		m_Width(4),
+		m_DownStream(true)
 	{
 
 	}	
@@ -29,6 +30,9 @@ namespace GASS
 		RegisterProperty<SceneObjectID>("NextLane", &AIRoadLaneComponent::GetNextLane, &AIRoadLaneComponent::SetNextLane);
 		RegisterProperty<SceneObjectID>("PrevLane", &AIRoadLaneComponent::GetPrevLane, &AIRoadLaneComponent::SetPrevLane);
 		RegisterProperty<SceneObjectRef>("WaypointsObject", &AIRoadLaneComponent::GetWaypointsObject, &AIRoadLaneComponent::SetWaypointsObject);
+
+		RegisterProperty<bool>("DownStream", &AIRoadLaneComponent::GetDownStream, &AIRoadLaneComponent::SetDownStream,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		
 	}
 
@@ -57,6 +61,16 @@ namespace GASS
 		UpdateLane();
 
 		//Update lane data
+
+	}
+
+	Vec3 AIRoadLaneComponent::GetEndPos() const
+	{
+
+	}
+
+	Vec3 AIRoadLaneComponent::GetStartPos() const
+	{
 
 	}
 

@@ -13,7 +13,9 @@
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
+	class AIRoadLaneComponent;
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
+	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;
 	class AIRoadComponent :  public Reflection<AIRoadComponent,BaseSceneComponent> 
 	{
 	public:
@@ -29,8 +31,19 @@ namespace GASS
 		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
 		ADD_ATTRIBUTE(SceneObjectRef ,LaneSectionsObject);
 		ADD_ATTRIBUTE(SceneObjectRef ,LaneDebugObject);
-		
+		std::vector<SceneObjectPtr>  GetConnectionSelection() const;
+		Vec3 GetStartPoint() const;
+		Vec3 GetEndPoint() const;
+		bool StartIn(SceneObjectPtr obj) const;
+		std::vector<AIRoadLaneComponentPtr> GetStartLanes() const;
+		std::vector<AIRoadLaneComponentPtr> GetEndLanes() const;
+		std::vector<AIRoadLaneComponentPtr> GetStartLanes(bool down_stream) const;
+		std::vector<AIRoadLaneComponentPtr> GetEndLanes(bool down_stream) const;
+
+		std::vector<AIRoadLaneComponentPtr> GetIncommingLanes(SceneObjectPtr connection) const;
+		std::vector<AIRoadLaneComponentPtr> GetOutgoingLanes(SceneObjectPtr connection) const;
 	private:
+		
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;
