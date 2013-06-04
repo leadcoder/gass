@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates>
 	<SceneObjectTemplate>
+		<Name value="AIIntersectionObject"/>
+		<Instantiable value="true"/>
+		<Components>
+			<AIRoadIntersectionComponent>
+				<ConnectionDebugObject value="ROAD_CONNECTIONS_DEBUG"/>
+			</AIRoadIntersectionComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<BoxGeometryComponent>
+				<Size value="0.2 0.2 0.2"/>
+			</BoxGeometryComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="AIConnectionDebug"/>
+				<Inheritance value="AIManualMeshObject"/>
+				<ID value="ROAD_CONNECTIONS_DEBUG"/>
+				<Components/>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
 		<Name value="AIRoadObject"/>
 		<Instantiable value="true"/>
 		<Components>
@@ -9,13 +36,13 @@
 				<LaneSectionsObject value="LANE_SECTIONS"/>
 				<LaneDebugObject value="ROAD_LINE_DEBUG"/>
 			</AIRoadComponent>
-			<LocationComponent>
+			<!--<LocationComponent>
 				<Position value="0 0 0"/>
 				<Rotation value="0 0 0"/>
 				<AttachToParent value="false"/>
 			</LocationComponent>
 			<ManualMeshComponent>
-			</ManualMeshComponent>
+			</ManualMeshComponent>-->
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
@@ -25,7 +52,7 @@
 				<Components/>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
-				<Inheritance value="AIRoadLineDebug"/>
+				<Inheritance value="AIManualMeshObject"/>
 				<Name value="AIRoadLineDebug"/>
 				<ID value="ROAD_LINE_DEBUG"/>
 				<Components/>
@@ -93,14 +120,14 @@
 	</SceneObjectTemplate>
 
 	<SceneObjectTemplate>
-		<Name value="AIRoadLineDebug"/>
+		<Name value="AIManualMeshObject"/>
 		<ID value="ROAD_LINE_DEBUG"/>
 		<Instantiable value="false"/>
 		<Components>
 			<LocationComponent>
 				<Position value="0 0 0"/>
 				<Rotation value="0 0 0"/>
-				<AttachToParent value="0"/>
+				<AttachToParent value="false"/>
 			</LocationComponent>
 			<ManualMeshComponent>
 			</ManualMeshComponent>
