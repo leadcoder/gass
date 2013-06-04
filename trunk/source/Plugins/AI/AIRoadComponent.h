@@ -43,13 +43,14 @@ namespace GASS
 		std::vector<AIRoadLaneComponentPtr> GetIncommingLanes(SceneObjectPtr connection) const;
 		std::vector<AIRoadLaneComponentPtr> GetOutgoingLanes(SceneObjectPtr connection) const;
 	private:
-		
+		void UpdateLanes();
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;
 		std::vector<AIRoadLaneSectionComponentPtr> m_LaneSections;
 		bool m_Initialized;
+		
 	};
 
 	typedef SPTR<AIRoadComponent> AIRoadComponentPtr;

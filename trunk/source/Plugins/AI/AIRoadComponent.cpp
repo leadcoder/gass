@@ -170,11 +170,7 @@ namespace GASS
 		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
 
 		//update itersection connections
-
-
-
-		
-
+		UpdateLanes();
 		UpdateMesh();
 	}
 
@@ -274,8 +270,6 @@ namespace GASS
 		return lanes;
 	}
 
-
-
 	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetEndLanes(bool down_stream) const
 	{
 		std::vector<AIRoadLaneComponentPtr> lanes;
@@ -326,43 +320,13 @@ namespace GASS
 
 	}
 
-	void AIRoadComponent::UpdateMesh()
+	void AIRoadComponent::UpdateLanes()
 	{
-
-		if(m_StartNode.IsValid())
-		{
-			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-			if(intersection)
-			{
-				intersection->UpdateConnectionLines();
-			}
-		}
-
-		if(m_EndNode.IsValid())
-		{
-			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-			if(intersection)
-			{
-				intersection->UpdateConnectionLines();
-			}
-		}
-
 		Float start = 0;
 		Float end = 0;
 		Float prev = 0;
-
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		mesh_data->Type = LINE_LIST;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(0.2,0.2,1,1);
-		vertex.Normal = Vec3(0,1,0);
-
+		
 		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
-
-
 		if(road_wps.size() > 1)
 		{
 			for(size_t i =  0; i < m_LaneSections.size(); i++)
@@ -381,20 +345,62 @@ namespace GASS
 				m_LaneSections[i]->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
 				for(int j = 0 ;  j < comps.size(); j++)
 				{
-					AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
+					AIRoadLaneComponentPtr lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
 					std::vector<Vec3> lane_wps = Math::GenerateOffset(lane_section_wps, lane->GetWidth());
-					for(size_t k = 1; k < lane_wps.size(); k++)
-					{
-						vertex.Pos = lane_wps[k];
-						mesh_data->VertexVector.push_back(vertex );
-						vertex.Pos = lane_wps[k-1];
-						mesh_data->VertexVector.push_back(vertex );
-					}
+					lane->SetWaypoints(lane_wps);
 				}
 			}
-
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			m_LaneDebugObject->PostMessage(mesh_message);
 		}
+	}
+
+	void AIRoadComponent::UpdateMesh()
+	{
+		if(m_StartNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->UpdateConnectionLines();
+			}
+		}
+
+		if(m_EndNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->UpdateConnectionLines();
+			}
+		}
+
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		mesh_data->Type = LINE_LIST;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+
+		MeshVertex vertex;
+		vertex.TexCoord.Set(0,0);
+		vertex.Color.Set(0.2,0.2,1,1);
+		vertex.Normal = Vec3(0,1,0);
+
+		for(size_t i =  0; i < m_LaneSections.size(); i++)
+		{
+			IComponentContainer::ComponentVector comps;
+			m_LaneSections[i]->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+			for(int j = 0 ;  j < comps.size(); j++)
+			{
+				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
+				std::vector<Vec3>* lane_wps = lane->GetWaypointsPtr();
+				for(size_t k = 1; k < lane_wps->size(); k++)
+				{
+						vertex.Pos = lane_wps->at(k);
+						mesh_data->VertexVector.push_back(vertex );
+						vertex.Pos = lane_wps->at(k-1);
+						mesh_data->VertexVector.push_back(vertex );
+				}
+			}
+			
+		}
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		m_LaneDebugObject->PostMessage(mesh_message);
 	}
 }

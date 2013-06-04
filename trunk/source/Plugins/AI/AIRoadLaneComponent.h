@@ -23,6 +23,9 @@ namespace GASS
 		Float GetWidth() const;
 		void UpdateLane();
 		bool IsDownStream() const {return m_DownStream;}
+		void SetWaypoints(const std::vector<Vec3> &lane_wps) {m_Waypoints = lane_wps;}
+		std::vector<Vec3> GetWaypoints() const {return m_Waypoints;}
+		std::vector<Vec3> * GetWaypointsPtr() {return &m_Waypoints;}
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		ADD_ATTRIBUTE(SceneObjectID,NextLane);
@@ -32,6 +35,7 @@ namespace GASS
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		Float m_Width;
 		bool m_Initialized;
+		std::vector<Vec3> m_Waypoints;
 		
 	};
 

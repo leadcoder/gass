@@ -64,17 +64,6 @@ namespace GASS
 
 	}
 
-	Vec3 AIRoadLaneComponent::GetEndPos() const
-	{
-
-	}
-
-	Vec3 AIRoadLaneComponent::GetStartPos() const
-	{
-
-	}
-
-
 	std::vector<Vec3> AIRoadLaneComponent::GenerateOffset(std::vector<Vec3> wps, Float offset)
 	{
 		std::vector<Vec3> lane;
