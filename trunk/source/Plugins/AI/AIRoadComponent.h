@@ -6,6 +6,7 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Plugins/AI/AIRoadLaneComponent.h"
 #include "tbb/spin_mutex.h"
 #include <set>
 #include "tbb/atomic.h"
@@ -13,9 +14,15 @@
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
-	class AIRoadLaneComponent;
+
+	/*struct NodeLink
+	{
+		Vec3 Pos;
+		AIRoadComponent *Road;
+	};*/
+	
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
-	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;
+	
 	class AIRoadComponent :  public Reflection<AIRoadComponent,BaseSceneComponent> 
 	{
 	public:
@@ -37,19 +44,23 @@ namespace GASS
 		bool StartIn(SceneObjectPtr obj) const;
 		std::vector<AIRoadLaneComponentPtr> GetStartLanes() const;
 		std::vector<AIRoadLaneComponentPtr> GetEndLanes() const;
-		std::vector<AIRoadLaneComponentPtr> GetStartLanes(bool down_stream) const;
-		std::vector<AIRoadLaneComponentPtr> GetEndLanes(bool down_stream) const;
+		std::vector<AIRoadLaneComponentPtr> GetStartLanes(LaneDirection lane_dir) const;
+		std::vector<AIRoadLaneComponentPtr> GetEndLanes(LaneDirection lane_dir) const;
 
 		std::vector<AIRoadLaneComponentPtr> GetIncommingLanes(SceneObjectPtr connection) const;
 		std::vector<AIRoadLaneComponentPtr> GetOutgoingLanes(SceneObjectPtr connection) const;
 	private:
 		void UpdateLanes();
+		void AutConnect();
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;
 		std::vector<AIRoadLaneSectionComponentPtr> m_LaneSections;
 		bool m_Initialized;
+
+		//NodeLink* m_EndLink;
+		//NodeLink* m_StartLink;
 		
 	};
 

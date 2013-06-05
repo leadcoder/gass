@@ -30,6 +30,7 @@ namespace GASS
 
 	void AIRoadIntersectionComponent::OnInitialize()
 	{
+		BaseSceneComponent::InitializeSceneObjectRef();
 		m_Initialized = true;
 	}
 
@@ -75,7 +76,7 @@ namespace GASS
 			{
 				if(m_Connections[i] != m_Connections[j])
 				{
-					std::vector<AIRoadLaneComponentPtr> outgoing_lanes = m_Connections[i]->GetOutgoingLanes(GetSceneObject());
+					std::vector<AIRoadLaneComponentPtr> outgoing_lanes = m_Connections[j]->GetOutgoingLanes(GetSceneObject());
 					for(size_t k =  0; k < incomming_lanes.size(); k++)
 					{
 						if(k < outgoing_lanes.size())
@@ -87,11 +88,11 @@ namespace GASS
 								std::vector<Vec3>* out_wps = outgoing_lanes[k]->GetWaypointsPtr();
 								if(out_wps->size() >0)
 								{
-									Vec3 end = out_wps->at(0);
+									Vec3 end = out_wps->back();
 									vertex.Pos = start;
-									mesh_data->VertexVector.push_back(vertex );
+									mesh_data->VertexVector.push_back(vertex);
 									vertex.Pos = end;
-									mesh_data->VertexVector.push_back(vertex );
+									mesh_data->VertexVector.push_back(vertex);
 								}
 							}
 						}

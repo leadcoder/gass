@@ -10,7 +10,7 @@ namespace GASS
 {
 	AIRoadLaneComponent::AIRoadLaneComponent(void) : m_Initialized(false),
 		m_Width(4),
-		m_DownStream(true)
+		m_Direction(LD_DOWNSTREAM)
 	{
 
 	}	
@@ -31,9 +31,8 @@ namespace GASS
 		RegisterProperty<SceneObjectID>("PrevLane", &AIRoadLaneComponent::GetPrevLane, &AIRoadLaneComponent::SetPrevLane);
 		RegisterProperty<SceneObjectRef>("WaypointsObject", &AIRoadLaneComponent::GetWaypointsObject, &AIRoadLaneComponent::SetWaypointsObject);
 
-		RegisterProperty<bool>("DownStream", &AIRoadLaneComponent::GetDownStream, &AIRoadLaneComponent::SetDownStream,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		
+		RegisterProperty<LaneDirectionBinder>("Direction", &AIRoadLaneComponent::GetDirection, &AIRoadLaneComponent::SetDirection,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Direction",PF_VISIBLE,&LaneDirectionBinder::GetStringEnumeration)));
 	}
 
 	void AIRoadLaneComponent::SetWidth(Float width)

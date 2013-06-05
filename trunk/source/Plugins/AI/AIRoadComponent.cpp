@@ -145,6 +145,29 @@ namespace GASS
 
 	void AIRoadComponent::OnInitialize()
 	{
+		BaseSceneComponent::InitializeSceneObjectRef();
+
+
+		if(m_StartNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+				intersection->AddRoad(this_ptr);
+			}
+		}
+
+		if(m_EndNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
+				intersection->AddRoad(this_ptr);
+			}
+		}
+		
 		m_WaypointsObject->RegisterForMessage(REG_TMESS(AIRoadComponent::OnWaypointsChanged,UpdateWaypointListMessage,0));
 		m_Initialized = true;
 	}
@@ -172,13 +195,14 @@ namespace GASS
 		//update itersection connections
 		UpdateLanes();
 		UpdateMesh();
+
+		
 	}
 
 	void AIRoadComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
 	{
 		
 	}
-
 
 	bool AIRoadComponent::StartIn(SceneObjectPtr obj) const
 	{
@@ -189,6 +213,8 @@ namespace GASS
 
 	Vec3 AIRoadComponent::GetStartPoint() const
 	{
+		if(!GetWaypointsObject().IsValid())
+			return Vec3(0,0,0);
 		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
 		if(road_wps.size()  > 0)
 		{
@@ -199,6 +225,9 @@ namespace GASS
 	
 	Vec3 AIRoadComponent::GetEndPoint() const
 	{
+		if(!GetWaypointsObject().IsValid())
+			return Vec3(0,0,0);
+
 		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
 		if(road_wps.size()  > 0)
 		{
@@ -240,7 +269,7 @@ namespace GASS
 		return lanes;
 	}
 
-	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetStartLanes(bool down_stream) const
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetStartLanes(LaneDirection lane_dir) const
 	{
 		std::vector<AIRoadLaneComponentPtr> lanes;
 		if(m_LaneSections.size() > 0)
@@ -250,27 +279,16 @@ namespace GASS
 			for(size_t i =  0; i < comps.size(); i++)
 			{
 				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
-				if(down_stream)
+				if(lane_dir == lane->GetDirection().GetValue())
 				{
-					if(lane->IsDownStream())
-					{
-						lanes.push_back(lane);
-					}
+					lanes.push_back(lane);
 				}
-				else 
-				{
-					if(!lane->IsDownStream())
-					{
-						lanes.push_back(lane);
-					}
-				}
-
 			}
 		}
 		return lanes;
 	}
 
-	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetEndLanes(bool down_stream) const
+	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetEndLanes(LaneDirection lane_dir) const
 	{
 		std::vector<AIRoadLaneComponentPtr> lanes;
 		if(m_LaneSections.size() > 0)
@@ -280,21 +298,10 @@ namespace GASS
 			for(size_t i =  0; i < comps.size(); i++)
 			{
 				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
-				if(down_stream)
+				if(lane_dir == lane->GetDirection().GetValue())
 				{
-					if(lane->IsDownStream())
-					{
-						lanes.push_back(lane);
-					}
+					lanes.push_back(lane);
 				}
-				else 
-				{
-					if(!lane->IsDownStream())
-					{
-						lanes.push_back(lane);
-					}
-				}
-
 			}
 		}
 		return lanes;
@@ -304,9 +311,9 @@ namespace GASS
 	{
 		bool start_node = StartIn(connection);
 		if(start_node)
-			return GetStartLanes(true);
+			return GetStartLanes(LD_DOWNSTREAM);
 		else
-			return GetEndLanes(false);
+			return GetEndLanes(LD_UPSTREAM);
 	}
 	
 	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetOutgoingLanes(SceneObjectPtr connection) const
@@ -314,9 +321,9 @@ namespace GASS
 
 		bool start_node = StartIn(connection);
 		if(start_node)
-			return GetStartLanes(false);
+			return GetStartLanes(LD_UPSTREAM);
 		else
-			return GetEndLanes(true);
+			return GetEndLanes(LD_DOWNSTREAM);
 
 	}
 
@@ -347,10 +354,77 @@ namespace GASS
 				{
 					AIRoadLaneComponentPtr lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
 					std::vector<Vec3> lane_wps = Math::GenerateOffset(lane_section_wps, lane->GetWidth());
+					if(lane->GetDirection().GetValue() == LD_UPSTREAM) 
+					{
+						std::reverse(lane_wps.begin(),lane_wps.end());
+					}
 					lane->SetWaypoints(lane_wps);
 				}
 			}
 		}
+	}
+
+
+	void AIRoadComponent::AutConnect()
+	{
+		//Auto connect to cloese roads?
+		//get all roads
+		
+
+	/*	m_StartConnections.clear();
+		m_EndConnections.clear();
+		Vec3 start_wp = GetStartPoint();
+		Vec3 end_wp = GetEndPoint();
+
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass<AIRoadComponent>(comps,true);
+		for(int j = 0 ;  j < comps.size(); j++)
+		{
+			AIRoadComponentPtr road= DYNAMIC_PTR_CAST<AIRoadComponent>(comps[j]);
+			
+			if(road != shared_from_this()) 
+			{
+				// Check edge distance			
+				Vec3 connect_start_wp = road->GetStartPoint();
+				Vec3 connect_end_wp = road->GetEndPoint();
+
+				Float dist = 10;
+				if((connect_start_wp - start_wp).Length() < dist)
+				{
+					vertex.Pos = connect_start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					//Connect!
+					m_StartConnections.push_back(road);
+				}
+
+				else if((connect_start_wp - end_wp).Length() < dist)
+				{
+					vertex.Pos = connect_start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_EndConnections.push_back(road);
+				}
+				else if((connect_end_wp - start_wp).Length() < dist)
+				{
+					vertex.Pos = connect_end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_StartConnections.push_back(road);
+				}
+				else if((connect_end_wp - end_wp).Length() < dist)
+				{
+					vertex.Pos = connect_end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_EndConnections.push_back(road->GetEndNode());
+				}
+			}
+		}*/
 	}
 
 	void AIRoadComponent::UpdateMesh()
@@ -389,6 +463,11 @@ namespace GASS
 			for(int j = 0 ;  j < comps.size(); j++)
 			{
 				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
+				if(lane->GetDirection().GetValue() == LD_UPSTREAM) 
+					vertex.Color.Set(0.2,1,0.2,1);	
+				else
+					vertex.Color.Set(0.2,0.2,1,1);
+
 				std::vector<Vec3>* lane_wps = lane->GetWaypointsPtr();
 				for(size_t k = 1; k < lane_wps->size(); k++)
 				{
@@ -398,8 +477,68 @@ namespace GASS
 						mesh_data->VertexVector.push_back(vertex );
 				}
 			}
-			
 		}
+
+
+		//Auto connect to cloese roads?
+		//get all roads
+		
+
+	/*	m_StartConnections.clear();
+		m_EndConnections.clear();
+		Vec3 start_wp = GetStartPoint();
+		Vec3 end_wp = GetEndPoint();
+
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass<AIRoadComponent>(comps,true);
+		for(int j = 0 ;  j < comps.size(); j++)
+		{
+			AIRoadComponentPtr road= DYNAMIC_PTR_CAST<AIRoadComponent>(comps[j]);
+			
+			if(road != shared_from_this()) 
+			{
+				// Check edge distance			
+				Vec3 connect_start_wp = road->GetStartPoint();
+				Vec3 connect_end_wp = road->GetEndPoint();
+
+				Float dist = 10;
+				if((connect_start_wp - start_wp).Length() < dist)
+				{
+					vertex.Pos = connect_start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					//Connect!
+					m_StartConnections.push_back(road);
+				}
+
+				else if((connect_start_wp - end_wp).Length() < dist)
+				{
+					vertex.Pos = connect_start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_EndConnections.push_back(road);
+				}
+				else if((connect_end_wp - start_wp).Length() < dist)
+				{
+					vertex.Pos = connect_end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = start_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_StartConnections.push_back(road);
+				}
+				else if((connect_end_wp - end_wp).Length() < dist)
+				{
+					vertex.Pos = connect_end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					vertex.Pos = end_wp;
+					mesh_data->VertexVector.push_back(vertex );
+					m_EndConnections.push_back(road->GetEndNode());
+				}
+			}
+		}*/
+
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		m_LaneDebugObject->PostMessage(mesh_message);
 	}
