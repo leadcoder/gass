@@ -51,7 +51,8 @@ namespace GASS
 		std::vector<AIRoadLaneComponentPtr> GetOutgoingLanes(SceneObjectPtr connection) const;
 	private:
 		void UpdateLanes();
-		void AutConnect();
+		void AutoConnectToRoads();
+		void AutoConnectToIntersection();
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;

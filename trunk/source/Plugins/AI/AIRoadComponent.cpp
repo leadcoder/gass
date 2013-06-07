@@ -193,7 +193,9 @@ namespace GASS
 		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
 
 		//update itersection connections
+
 		UpdateLanes();
+		AutoConnectToIntersection();
 		UpdateMesh();
 
 		
@@ -365,7 +367,58 @@ namespace GASS
 	}
 
 
-	void AIRoadComponent::AutConnect()
+	void AIRoadComponent::AutoConnectToIntersection()
+	{
+		Vec3 start_wp = GetStartPoint();
+		Vec3 end_wp = GetEndPoint();
+		Float connnect_dist = 2;
+		Float disconnnect_dist = 6;
+			
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass<AIRoadIntersectionComponent>(comps,true);
+		for(int j = 0 ;  j < comps.size(); j++)
+		{
+			AIRoadIntersectionComponentPtr intersection = DYNAMIC_PTR_CAST<AIRoadIntersectionComponent>(comps[j]);
+			Vec3 inter_pos = intersection->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			if(intersection->GetSceneObject() == GetStartNode().GetRefObject())
+			{
+				//already connected
+				if((inter_pos - start_wp).Length() > disconnnect_dist)
+				{
+					//disconnect
+					SetStartNode(SceneObjectRef());
+				}
+			}
+			else
+			{
+				if((inter_pos - start_wp).Length() < connnect_dist)
+				{
+					SetStartNode(SceneObjectRef(intersection->GetSceneObject()));
+				}
+			}
+
+			if(intersection->GetSceneObject() == GetEndNode().GetRefObject())
+			{
+				//already connected
+				if((inter_pos - end_wp).Length() > disconnnect_dist)
+				{
+					//disconnect
+					SetEndNode(SceneObjectRef());
+				}
+			}
+			else
+			{
+				if((inter_pos - end_wp).Length() < connnect_dist)
+				{
+					SetEndNode(SceneObjectRef(intersection->GetSceneObject()));
+				}
+			}
+		}
+	}
+
+
+
+	void AIRoadComponent::AutoConnectToRoads()
 	{
 		//Auto connect to cloese roads?
 		//get all roads
