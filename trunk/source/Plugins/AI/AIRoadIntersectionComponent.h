@@ -23,6 +23,7 @@ namespace GASS
 		void AddRoad(AIRoadComponentPtr road);
 		void RemoveRoad(AIRoadComponentPtr road);
 		void UpdateConnectionLines();
+		void AutoLineConnection();
 	private:
 		ADD_ATTRIBUTE(SceneObjectRef ,ConnectionDebugObject);
 		

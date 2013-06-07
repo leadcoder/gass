@@ -11,6 +11,8 @@
 
 namespace GASS
 {
+	class AIRoadLaneComponent;
+	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;
 	class AIRoadLaneSectionComponent :  public Reflection<AIRoadLaneSectionComponent,BaseSceneComponent> 
 	{
 	public:
@@ -20,6 +22,8 @@ namespace GASS
 		virtual void OnInitialize();
 		void SetDistance(Float dist);
 		Float GetDistance() const;
+		std::vector<AIRoadLaneComponentPtr> GetLanesByID(int id);
+		std::vector<AIRoadLaneComponentPtr> GetLanes();
 	private:
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		void UpdateGeom();

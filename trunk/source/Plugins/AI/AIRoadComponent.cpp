@@ -193,9 +193,8 @@ namespace GASS
 		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
 
 		//update itersection connections
-
 		UpdateLanes();
-		AutoConnectToIntersection();
+		//AutoConnectToIntersection();
 		UpdateMesh();
 
 		
@@ -331,11 +330,55 @@ namespace GASS
 
 	void AIRoadComponent::UpdateLanes()
 	{
+		//update lane pointers!
+		for(size_t i =  0; i < m_LaneSections.size()-1; i++)
+		{
+			std::vector<AIRoadLaneComponentPtr> lanes = m_LaneSections[i]->GetLanes();
+			for(int j = 0 ;  j < lanes.size(); j++)
+			{ 
+				if(lanes[i]->GetDirection().GetValue() == LD_DOWNSTREAM) 
+				{
+					std::vector<AIRoadLaneComponentPtr> next_lanes = m_LaneSections[i+1]->GetLanesByID(lanes[i]->GetLaneID());
+					std::vector<AIRoadLaneComponentPtr>* connections = lanes[i]->GetNextLanesPtr();
+					connections->clear();
+					for(int k = 0 ;  k < next_lanes.size(); k++)
+					{
+						if(next_lanes[i]->GetDirection() == lanes[i]->GetDirection())
+						{
+							connections->push_back(next_lanes[k]);
+						}
+					}
+				}
+			}
+		}
+
+		for(size_t i =  1; i < m_LaneSections.size(); i++)
+		{
+			std::vector<AIRoadLaneComponentPtr> lanes = m_LaneSections[i]->GetLanes();
+			for(int j = 0 ;  j < lanes.size(); j++)
+			{ 
+				if(lanes[i]->GetDirection().GetValue() == LD_UPSTREAM) 
+				{
+					std::vector<AIRoadLaneComponentPtr> next_lanes = m_LaneSections[i-1]->GetLanesByID(lanes[i]->GetLaneID());
+					std::vector<AIRoadLaneComponentPtr>* connections = lanes[i]->GetNextLanesPtr();
+					connections->clear();
+					for(int k = 0 ;  k < next_lanes.size(); k++)
+					{
+						if(next_lanes[i]->GetDirection() == lanes[i]->GetDirection())
+						{
+							connections->push_back(next_lanes[k]);
+						}
+					}
+				}
+			}
+		}
+
+
 		Float start = 0;
 		Float end = 0;
 		Float prev = 0;
-		
 		std::vector<Vec3> road_wps = GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
+	
 		if(road_wps.size() > 1)
 		{
 			for(size_t i =  0; i < m_LaneSections.size(); i++)
@@ -352,9 +395,11 @@ namespace GASS
 
 				IComponentContainer::ComponentVector comps;
 				m_LaneSections[i]->GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+				
 				for(int j = 0 ;  j < comps.size(); j++)
 				{
 					AIRoadLaneComponentPtr lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
+					
 					std::vector<Vec3> lane_wps = Math::GenerateOffset(lane_section_wps, lane->GetWidth());
 					if(lane->GetDirection().GetValue() == LD_UPSTREAM) 
 					{
@@ -364,8 +409,27 @@ namespace GASS
 				}
 			}
 		}
-	}
 
+		if(m_StartNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->AutoLineConnection();
+				intersection->UpdateConnectionLines();
+			}
+		}
+
+		if(m_EndNode.IsValid())
+		{
+			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+			if(intersection)
+			{
+				intersection->AutoLineConnection();
+				intersection->UpdateConnectionLines();
+			}
+		}
+	}
 
 	void AIRoadComponent::AutoConnectToIntersection()
 	{
@@ -482,24 +546,7 @@ namespace GASS
 
 	void AIRoadComponent::UpdateMesh()
 	{
-		if(m_StartNode.IsValid())
-		{
-			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-			if(intersection)
-			{
-				intersection->UpdateConnectionLines();
-			}
-		}
-
-		if(m_EndNode.IsValid())
-		{
-			AIRoadIntersectionComponentPtr intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-			if(intersection)
-			{
-				intersection->UpdateConnectionLines();
-			}
-		}
-
+	
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		mesh_data->Type = LINE_LIST;
 		mesh_data->Material = "WhiteTransparentNoLighting";

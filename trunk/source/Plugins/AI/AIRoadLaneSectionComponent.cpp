@@ -70,4 +70,35 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
 		}
 	}
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadLaneSectionComponent::GetLanesByID(int id)
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+		for(size_t i =  0; i < comps.size(); i++)
+		{
+			AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+			if(lane->GetLaneID() == id)
+			{
+				lanes.push_back(lane);
+			}
+		}
+		return lanes;
+	}
+
+	std::vector<AIRoadLaneComponentPtr> AIRoadLaneSectionComponent::GetLanes()
+	{
+		std::vector<AIRoadLaneComponentPtr> lanes;
+		
+		IComponentContainer::ComponentVector comps;
+		GetSceneObject()->GetComponentsByClass<AIRoadLaneComponent>(comps);
+		for(size_t i =  0; i < comps.size(); i++)
+		{
+			AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[i]);
+			lanes.push_back(lane);
+		}
+		return lanes;
+	}
 }

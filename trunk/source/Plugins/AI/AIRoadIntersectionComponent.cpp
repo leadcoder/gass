@@ -37,6 +37,7 @@ namespace GASS
 	void AIRoadIntersectionComponent::AddRoad(AIRoadComponentPtr road)
 	{
 		m_Connections.push_back(road);
+		AutoLineConnection();
 		UpdateConnectionLines();
 	}
 
@@ -50,7 +51,36 @@ namespace GASS
 			else
 				iter++;
 		}
+		AutoLineConnection();
 		UpdateConnectionLines();
+	}
+
+	void AIRoadIntersectionComponent::AutoLineConnection()
+	{
+		//do auto lane connections
+		for(size_t i =  0; i < m_Connections.size(); i++)
+		{
+			std::vector<AIRoadLaneComponentPtr> incomming_lanes = m_Connections[i]->GetIncommingLanes(GetSceneObject());
+			for(size_t k =  0; k < incomming_lanes.size(); k++)
+			{
+				std::vector<AIRoadLaneComponentPtr>* connections = incomming_lanes[k]->GetNextLanesPtr();
+				connections->clear();
+				for(size_t j =  0; j < m_Connections.size(); j++)
+				{
+					if(m_Connections[i] != m_Connections[j]) //don't allow u-turns
+					{
+						std::vector<AIRoadLaneComponentPtr> outgoing_lanes = m_Connections[j]->GetOutgoingLanes(GetSceneObject());
+
+						for(size_t l =  0; l < outgoing_lanes.size(); l++)
+						{
+							//restrict by ID in intersection?
+							if(incomming_lanes[k]->GetLaneID() == outgoing_lanes[l]->GetLaneID())
+								connections->push_back(outgoing_lanes[l]);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	void AIRoadIntersectionComponent::UpdateConnectionLines()
@@ -68,39 +98,36 @@ namespace GASS
 		vertex.Normal = Vec3(0,1,0);
 
 
-		//do auto lane connections?
+		//draw lane connections
 		for(size_t i =  0; i < m_Connections.size(); i++)
 		{
 			std::vector<AIRoadLaneComponentPtr> incomming_lanes = m_Connections[i]->GetIncommingLanes(GetSceneObject());
-			for(size_t j =  0; j < m_Connections.size(); j++)
+			for(size_t j =  0; j < incomming_lanes.size(); j++)
 			{
-				if(m_Connections[i] != m_Connections[j])
+				std::vector<AIRoadLaneComponentPtr>* connections = incomming_lanes[j]->GetNextLanesPtr();
+				std::vector<Vec3>* in_wps = incomming_lanes[j]->GetWaypointsPtr();
+				if(in_wps->size() > 0)
 				{
-					std::vector<AIRoadLaneComponentPtr> outgoing_lanes = m_Connections[j]->GetOutgoingLanes(GetSceneObject());
-					for(size_t k =  0; k < incomming_lanes.size(); k++)
+					Vec3 start = in_wps->at(0);
+
+					for(size_t k =  0; k < connections->size(); k++)
 					{
-						if(k < outgoing_lanes.size())
+						std::vector<Vec3>* out_wps = connections->at(k)->GetWaypointsPtr();
+						if(out_wps->size() > 0)
 						{
-							std::vector<Vec3>* in_wps = incomming_lanes[k]->GetWaypointsPtr();
-							if(in_wps->size() > 0)
-							{
-								Vec3 start = in_wps->at(0);
-								std::vector<Vec3>* out_wps = outgoing_lanes[k]->GetWaypointsPtr();
-								if(out_wps->size() >0)
-								{
-									Vec3 end = out_wps->back();
-									vertex.Pos = start;
-									mesh_data->VertexVector.push_back(vertex);
-									vertex.Pos = end;
-									mesh_data->VertexVector.push_back(vertex);
-								}
-							}
+							Vec3 end = out_wps->back();
+							vertex.Color.Set(0.2,0.2,0.3,1);
+							vertex.Pos = start;
+							mesh_data->VertexVector.push_back(vertex);
+							vertex.Pos = end;
+							mesh_data->VertexVector.push_back(vertex);
 						}
 					}
 				}
 			}
 		}
-		
+
+		vertex.Color.Set(0.2,1,1,1);
 		Vec3 inter_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
 		if(m_Connections.size() > 0)

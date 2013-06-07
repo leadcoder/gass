@@ -10,7 +10,8 @@ namespace GASS
 {
 	AIRoadLaneComponent::AIRoadLaneComponent(void) : m_Initialized(false),
 		m_Width(4),
-		m_Direction(LD_DOWNSTREAM)
+		m_Direction(LD_DOWNSTREAM),
+		m_LaneID(0)
 	{
 
 	}	
@@ -27,8 +28,12 @@ namespace GASS
 
 		RegisterProperty<Float>("Width", &AIRoadLaneComponent::GetWidth, &AIRoadLaneComponent::SetWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<SceneObjectID>("NextLane", &AIRoadLaneComponent::GetNextLane, &AIRoadLaneComponent::SetNextLane);
-		RegisterProperty<SceneObjectID>("PrevLane", &AIRoadLaneComponent::GetPrevLane, &AIRoadLaneComponent::SetPrevLane);
+
+		RegisterProperty<int>("LaneID", &AIRoadLaneComponent::GetLaneID, &AIRoadLaneComponent::SetLaneID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		//RegisterProperty<SceneObjectID>("NextLane", &AIRoadLaneComponent::GetNextLane, &AIRoadLaneComponent::SetNextLane);
+		//RegisterProperty<SceneObjectID>("PrevLane", &AIRoadLaneComponent::GetPrevLane, &AIRoadLaneComponent::SetPrevLane);
 		RegisterProperty<SceneObjectRef>("WaypointsObject", &AIRoadLaneComponent::GetWaypointsObject, &AIRoadLaneComponent::SetWaypointsObject);
 
 		RegisterProperty<LaneDirectionBinder>("Direction", &AIRoadLaneComponent::GetDirection, &AIRoadLaneComponent::SetDirection,
@@ -51,16 +56,12 @@ namespace GASS
 		SceneObjectRef wp_object = road->GetWaypointsObject();
 		wp_object->RegisterForMessage(REG_TMESS(AIRoadLaneComponent::OnWaypointsChanged,UpdateWaypointListMessage,0));
 		m_Initialized = true;
-
-
 	}
 	void AIRoadLaneComponent::OnWaypointsChanged(UpdateWaypointListMessagePtr message)
 	{
 		//Update all lines
 		UpdateLane();
-
 		//Update lane data
-
 	}
 
 	std::vector<Vec3> AIRoadLaneComponent::GenerateOffset(std::vector<Vec3> wps, Float offset)

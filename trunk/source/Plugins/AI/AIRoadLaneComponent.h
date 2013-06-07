@@ -26,6 +26,10 @@ namespace GASS
 		BIND(LD_BIDIR)
 	END_ENUM_BINDER(LaneDirection,LaneDirectionBinder)
 
+
+	class AIRoadLaneComponent;
+	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;
+
 	class AIRoadLaneComponent :  public Reflection<AIRoadLaneComponent,BaseSceneComponent> 
 	{
 	public:
@@ -40,22 +44,23 @@ namespace GASS
 		void SetWaypoints(const std::vector<Vec3> &lane_wps) {m_Waypoints = lane_wps;}
 		std::vector<Vec3> GetWaypoints() const {return m_Waypoints;}
 		std::vector<Vec3> * GetWaypointsPtr() {return &m_Waypoints;}
+		std::vector<AIRoadLaneComponentPtr>* GetNextLanesPtr() {return &m_NextLanes;}
 		ADD_ATTRIBUTE(LaneDirectionBinder,Direction);
+		ADD_ATTRIBUTE(int ,LaneID);
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
-		ADD_ATTRIBUTE(SceneObjectID,NextLane);
-		ADD_ATTRIBUTE(SceneObjectID,PrevLane);
+		//ADD_ATTRIBUTE(SceneObjectID,NextLane);
+		//ADD_ATTRIBUTE(SceneObjectID,PrevLane);
 		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
-		
+	
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		Float m_Width;
 		bool m_Initialized;
 		std::vector<Vec3> m_Waypoints;
-
-		
+		std::vector<AIRoadLaneComponentPtr> m_NextLanes;
 		
 	};
 
-	typedef SPTR<AIRoadLaneComponent> AIRoadLaneComponentPtr;
+	
 }
 #endif

@@ -336,10 +336,6 @@ namespace GASS
 			}
 
 
-			
-			
-			
-
 			if(index >= wps1.size()) //get new road!
 			{
 				m_CurrentRoad->UnregisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));

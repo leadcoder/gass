@@ -106,6 +106,9 @@ namespace GASS
 
 	void AIFollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 	{
+		//AIRoadSegmentComponentPtr road = message->m_RoadObject->GetFirstComponentByClass<AIRoadSegmentComponent>(true);
+		//road->
+		//m_LaneBuffer.push_back();
 		/*bool acticve = false;
 		if(m_CurrentLane)
 		{
@@ -181,6 +184,8 @@ namespace GASS
 
 	void AIFollowRoadComponent::UpdateLaneBuffer()
 	{
+		if(m_LaneBuffer.size()   == 0)
+			return;
 		//update lane buffer
 		while(m_LaneBuffer.size() < 4)
 		{
