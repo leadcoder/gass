@@ -105,40 +105,73 @@ namespace GASS
 
 	void AIRoadLaneComponent::UpdateLane()
 	{
-	/*	AIRoadComponentPtr road = GetSceneObject()->GetFirstParentComponentByClass<AIRoadComponent>();
-		if(!road)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadComponent", "AIRoadLaneComponent::UpdateLane");
-
-
-		AIRoadLaneSectionComponentPtr lane_section = GetSceneObject()->GetFirstParentComponentByClass<AIRoadLaneSectionComponent>();
-		if(!lane_section)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find AIRoadLaneSectionComponent", "AIRoadLaneComponent::UpdateLane");
-
-		SceneObjectRef road_wps_object = road->GetWaypointsObject();
-		std::vector<Vec3> road_wps = road_wps_object->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
-
-		std::vector<Vec3> lane_wps = GenerateOffset(road_wps,m_Width);
-
-		//get previous lane
-		lane_wps = Math::ClipPath(lane_section->GetDistance(), 30,lane_wps);
-
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		mesh_data->Type = LINE_LIST;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(0.2,0.2,1,1);
-		vertex.Normal = Vec3(0,1,0);
-
-		for(size_t i = 1; i < lane_wps.size(); i++)
-		{
-			vertex.Pos = lane_wps[i];
-			mesh_data->VertexVector.push_back(vertex );
-			vertex.Pos = lane_wps[i-1];
-			mesh_data->VertexVector.push_back(vertex );
-		}
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);*/
 	}
+
+	void AIRoadLaneComponent::RegisterLaneObject(LaneObject* object)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_LaneMutex);
+		m_LaneObjects.push_back(object);
+	}
+
+	void AIRoadLaneComponent::UnregisterLaneObject(LaneObject* object)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_LaneMutex);
+		std::vector<LaneObject*>::iterator iter = m_LaneObjects.begin();
+		while(m_LaneObjects.end() != iter)
+		{
+			if(*iter == object)
+				iter = m_LaneObjects.erase(iter);
+			else iter++;
+		}
+	}
+
+
+
+	bool AIRoadLaneComponent::FirstFreeLocation(Vec3 &pos,Quaternion &rot, Float &distance, Float vehicle_separation)
+	{
+		tbb::spin_mutex::scoped_lock lock(m_LaneMutex);
+		double d = 0;
+		double tot_dist = 0;
+		for(size_t i = 1 ; i < m_Waypoints.size() ; i++)
+		{
+			Vec3 dir = (m_Waypoints[i] - m_Waypoints[i-1]);
+			d = dir.Length();
+			
+			dir.Normalize();
+			Float dist = vehicle_separation;
+			while(dist < d)
+			{
+				bool free = true;
+				for(size_t j = 0 ; j < m_LaneObjects.size() ; j++)
+				{
+					if( fabs((tot_dist + dist) - m_LaneObjects.at(j)->m_Distance) < vehicle_separation)
+					{
+						free = false;
+						break;
+					}
+				}
+				if(free)
+				{
+					pos = m_Waypoints[i-1] + (dir*dist);
+					
+					Mat4 rot_mat;
+					rot_mat.Identity();
+					Vec3 up(0,1,0);
+					rot_mat.SetUpVector(up);
+					rot_mat.SetViewDirVector(-dir);
+					Vec3 right = -Math::Cross(-dir,up);
+					rot_mat.SetRightVector(right);
+					rot.FromRotationMatrix(rot_mat);
+
+					distance = tot_dist + dist;
+					return true;
+				}
+				dist += vehicle_separation;
+			}
+			tot_dist += d; 
+		}
+		return false;
+	}
+
+
 }

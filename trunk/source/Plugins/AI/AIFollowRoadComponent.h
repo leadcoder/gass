@@ -83,7 +83,7 @@ namespace GASS
 		std::vector<Vec3> m_CurrentPath;
 		Float m_CurrentDistanceOnPath;
 		Float m_CurrentDistanceToPath;
-
+		LaneObject* m_LaneObject;
 	};
 }
 #endif

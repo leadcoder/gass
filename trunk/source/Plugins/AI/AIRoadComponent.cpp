@@ -169,6 +169,7 @@ namespace GASS
 		}
 		
 		m_WaypointsObject->RegisterForMessage(REG_TMESS(AIRoadComponent::OnWaypointsChanged,UpdateWaypointListMessage,0));
+		UpdateLanes();
 		m_Initialized = true;
 	}
 
@@ -179,19 +180,7 @@ namespace GASS
 
 	void AIRoadComponent::OnWaypointsChanged(UpdateWaypointListMessagePtr message)
 	{
-		//get all lane sections
-		IComponentContainer::ComponentVector comps;
-		m_LaneSectionsObject->GetComponentsByClass<AIRoadLaneSectionComponent>(comps);
 		
-		//get component and sort by distance
-		m_LaneSections.clear();
-		for(int i = 0 ;  i < comps.size(); i++)
-		{
-			AIRoadLaneSectionComponentPtr lane_section = DYNAMIC_PTR_CAST<AIRoadLaneSectionComponent>(comps[i]);
-			m_LaneSections.push_back(lane_section);
-		}
-		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
-
 		//update itersection connections
 		UpdateLanes();
 		//AutoConnectToIntersection();
@@ -312,24 +301,37 @@ namespace GASS
 	{
 		bool start_node = StartIn(connection);
 		if(start_node)
-			return GetStartLanes(LD_DOWNSTREAM);
+			return GetStartLanes(LD_UPSTREAM);
 		else
-			return GetEndLanes(LD_UPSTREAM);
+			return GetEndLanes(LD_DOWNSTREAM);
 	}
 	
 	std::vector<AIRoadLaneComponentPtr> AIRoadComponent::GetOutgoingLanes(SceneObjectPtr connection) const
 	{
-
 		bool start_node = StartIn(connection);
 		if(start_node)
-			return GetStartLanes(LD_UPSTREAM);
+			return GetStartLanes(LD_DOWNSTREAM);
 		else
-			return GetEndLanes(LD_DOWNSTREAM);
+			return GetEndLanes(LD_UPSTREAM);
 
 	}
 
 	void AIRoadComponent::UpdateLanes()
 	{
+		//get all lane sections
+		IComponentContainer::ComponentVector comps;
+		m_LaneSectionsObject->GetComponentsByClass<AIRoadLaneSectionComponent>(comps);
+		
+		//get component and sort by distance
+		m_LaneSections.clear();
+		for(int i = 0 ;  i < comps.size(); i++)
+		{
+			AIRoadLaneSectionComponentPtr lane_section = DYNAMIC_PTR_CAST<AIRoadLaneSectionComponent>(comps[i]);
+			m_LaneSections.push_back(lane_section);
+		}
+		std::sort(m_LaneSections.begin(), m_LaneSections.end(), LaneSectionSort);
+
+
 		//update lane pointers!
 		for(size_t i =  0; i < m_LaneSections.size()-1; i++)
 		{

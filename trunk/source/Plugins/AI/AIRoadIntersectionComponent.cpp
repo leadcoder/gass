@@ -108,14 +108,14 @@ namespace GASS
 				std::vector<Vec3>* in_wps = incomming_lanes[j]->GetWaypointsPtr();
 				if(in_wps->size() > 0)
 				{
-					Vec3 start = in_wps->at(0);
+					Vec3 start = in_wps->back();
 
 					for(size_t k =  0; k < connections->size(); k++)
 					{
 						std::vector<Vec3>* out_wps = connections->at(k)->GetWaypointsPtr();
 						if(out_wps->size() > 0)
 						{
-							Vec3 end = out_wps->back();
+							Vec3 end = out_wps->front();
 							vertex.Color.Set(0.2,0.2,0.3,1);
 							vertex.Pos = start;
 							mesh_data->VertexVector.push_back(vertex);

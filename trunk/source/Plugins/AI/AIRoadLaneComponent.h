@@ -13,6 +13,18 @@
 namespace GASS
 {
 
+	class LaneObject
+	{
+	public:
+		LaneObject()
+		{}
+		~LaneObject(){}
+		tbb::atomic<double> m_Speed;
+		tbb::atomic<double> m_Distance;
+		tbb::atomic<double> m_DistanceToPath;
+	};
+
+
 	enum LaneDirection
 	{
 		LD_UPSTREAM,
@@ -47,6 +59,17 @@ namespace GASS
 		std::vector<AIRoadLaneComponentPtr>* GetNextLanesPtr() {return &m_NextLanes;}
 		ADD_ATTRIBUTE(LaneDirectionBinder,Direction);
 		ADD_ATTRIBUTE(int ,LaneID);
+		void RegisterLaneObject(LaneObject* object);
+		void UnregisterLaneObject(LaneObject* object);
+
+		std::vector<LaneObject*>* GetLaneObjectsPtr()
+		{
+			return &m_LaneObjects;
+		}
+		LaneObject* GetClosest(LaneObject* source);
+		//bool IsRoadFree(double in_distance);
+		//bool IsStartOfRoadFree(double in_distance);
+		bool FirstFreeLocation(Vec3 &pos, Quaternion &rot, Float &distance, Float vehicle_separation);
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		//ADD_ATTRIBUTE(SceneObjectID,NextLane);
@@ -58,7 +81,8 @@ namespace GASS
 		bool m_Initialized;
 		std::vector<Vec3> m_Waypoints;
 		std::vector<AIRoadLaneComponentPtr> m_NextLanes;
-		
+		tbb::spin_mutex m_LaneMutex;
+		std::vector<LaneObject*> m_LaneObjects;
 	};
 
 	
