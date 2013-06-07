@@ -66,11 +66,14 @@
 					</TemplateSourceComponent>
 				</Components>
 				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Inheritance value="AILaneSectionOneByOne"/>
+						<Components/>
+					</SceneObjectTemplate>
 				</ComponentContainers>
 			</SceneObjectTemplate>
 		</ComponentContainers>
 	</SceneObjectTemplate>
-
 	<SceneObjectTemplate>
 		<Name value="AILaneSectionOneByOne"/>
 		<ID value="LANE_SECTION_1"/>
@@ -95,7 +98,6 @@
 		<ComponentContainers>
 			<SceneObjectTemplate>
 				<Name value="AILeftLanes"/>
-				<ID value="LANE_SECTIONS"/>
 				<Components/>
 				<ComponentContainers>
 					<SceneObjectTemplate>
@@ -104,6 +106,32 @@
 						<Components>
 							<AIRoadLaneComponent>
 								<Width value = "4"/>
+								<Direction value="LD_DOWNSTREAM"/>
+								<LaneID value = "0"/>
+							</AIRoadLaneComponent>
+							<LocationComponent>
+								<Position value="0 0 0"/>
+								<Rotation value="0 0 0"/>
+								<AttachToParent value="false"/>
+							</LocationComponent>
+							<ManualMeshComponent>
+							</ManualMeshComponent>
+						</Components>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="AIRightLanes"/>
+				<Components/>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="AIRightLane1"/>
+						<ID value="RIGHT_LANE_1"/>
+						<Components>
+							<AIRoadLaneComponent>
+								<Width value = "-4"/>
+								<Direction value="LD_UPSTREAM"/>
+								<LaneID value = "0"/>
 							</AIRoadLaneComponent>
 							<LocationComponent>
 								<Position value="0 0 0"/>
@@ -189,7 +217,6 @@
 					</BoxGeometryComponent>
 					<ManualMeshComponent>
 					</ManualMeshComponent>
-					<PhysicsBoxGeometryComponent/>
 				</Components>
 				<ComponentContainers>
 				</ComponentContainers>

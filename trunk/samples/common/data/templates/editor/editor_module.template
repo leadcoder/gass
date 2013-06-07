@@ -209,8 +209,6 @@
 					</GizmoComponent>
 					<PhysicsBoxGeometryComponent>
 						<Offset value="0 0 0" />
-						<CollisionBits value="2"/>
-						<CollisionCategory value="2"/>
 					</PhysicsBoxGeometryComponent>
 					<EditorComponent>
 						<Visible value="true" />
@@ -351,7 +349,6 @@
 				<Rotation value="0 0 0"/>
 			</LocationComponent>
 			<TextComponent>
-				<Text value=""/>
 				<Offset value="0 0 0"/>
 			</TextComponent>
 			<EditorComponent>
