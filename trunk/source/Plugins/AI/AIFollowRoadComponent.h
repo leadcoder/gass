@@ -49,6 +49,7 @@ namespace GASS
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 	private:
+		AIRoadLaneComponentPtr GetFreeLane(AIRoadLaneComponentPtr lane);
 		void UpdateLaneBuffer();
 		void OnSpawnOnRoad(SpawnOnRoadMessagePtr message);
 		void GoToIntersection(AIRoadIntersectionComponentPtr inter);
@@ -84,6 +85,7 @@ namespace GASS
 		Float m_CurrentDistanceOnPath;
 		Float m_CurrentDistanceToPath;
 		LaneObject* m_LaneObject;
+		Float m_TargetSpeed;
 	};
 }
 #endif

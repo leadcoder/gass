@@ -52,7 +52,8 @@ m_WaypointRadius( 4),
 	m_AngularVelocity(0,0,0),
 	m_VehicleSpeed(0,0,0),
 	m_DebugReset(0),
-	m_LaneObject(new LaneObject())
+	m_LaneObject(new LaneObject()),
+	m_TargetSpeed(0)
 {
 
 }
@@ -92,6 +93,9 @@ void AIFollowRoadComponent::OnInitialize()
 	GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnSpawnOnRoad,SpawnOnRoadMessage,0));
 	SceneManagerListenerPtr listener = shared_from_this();
 	GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
+
+	int speed_span = rand()%10;
+	m_TargetSpeed = 2 + speed_span;
 }
 
 void AIFollowRoadComponent::OnDelete()
@@ -116,9 +120,9 @@ void AIFollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 
 	AIRoadComponentPtr road = message->m_RoadObject->GetFirstComponentByClass<AIRoadComponent>(true);
 	m_LaneBuffer.clear();
-	m_LaneBuffer.push_back(road->GetStartLanes().back());
-	
-	m_CurrentLane = m_LaneBuffer.front();
+	m_CurrentLane = AIFollowRoadComponent::GetFreeLane(road->GetStartLanes().back());
+	m_CurrentLane->RegisterLaneObject(m_LaneObject);
+	m_LaneBuffer.push_back(m_CurrentLane);
 
 	m_LaneObject->m_Distance = -10;
 	m_LaneObject->m_Speed = 0;
@@ -143,6 +147,7 @@ void AIFollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 		}
 		else
 		{
+
 			GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
 			GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
 		}
@@ -151,28 +156,27 @@ void AIFollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 	//m_CurrentLane.reset();
 }
 
-/*RoadSegmentComponentPtr AIFollowRoadComponent::GetFreeRoad(RoadSegmentComponentPtr road)
+AIRoadLaneComponentPtr AIFollowRoadComponent::GetFreeLane(AIRoadLaneComponentPtr lane)
 {
-Vec3 pos;
-Quaternion rot;
-double distance;
-if(road->FirstFreeLocation(false,pos,rot,distance,10))
-{
-return road;
+	Vec3 pos;
+	Quaternion rot;
+	double distance;
+	if(lane->FirstFreeLocation(pos,rot,distance,10))
+	{
+		return lane;
+	}
+	else
+	{
+		std::vector<AIRoadLaneComponentPtr>* lanes = lane->GetNextLanesPtr();
+		if(lanes->size() > 0)
+		{
+			int next = rand() % lanes->size();
+			return GetFreeLane(lanes->at(next));
+		}
+		else 
+			return lane;
+	}
 }
-else
-{
-int end = rand() % 2;
-AIRoadIntersectionComponentPtr inter;
-if(end)
-inter = road->GetEndNode()->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-else
-inter = road->GetStartNode()->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-
-road = inter->GetRandomRoad(road);
-return GetFreeRoad(road);
-}
-}*/
 
 
 void AIFollowRoadComponent::UpdateLaneBuffer()
@@ -213,7 +217,6 @@ void AIFollowRoadComponent::UpdateLaneBuffer()
 	{
 		int index = 0;
 		m_CurrentDistanceOnPath = Math::GetPathDistance(m_CurrentPos,m_CurrentPath,index,m_CurrentDistanceToPath);
-
 		m_CurrentLane = m_LaneBuffer.front();
 		size_t num_wps = m_CurrentLane->GetWaypointsPtr()->size();
 		if(index >= num_wps) //remove first lane from buffer
@@ -222,6 +225,8 @@ void AIFollowRoadComponent::UpdateLaneBuffer()
 			m_LaneBuffer.erase(m_LaneBuffer.begin());
 			m_LaneBuffer.front()->RegisterLaneObject(m_LaneObject);
 		}
+
+		
 		// check if passed last lane
 	}
 }
@@ -248,13 +253,48 @@ void AIFollowRoadComponent::SceneManagerTick(double delta)
 
 	if(m_CurrentLane)
 	{
+
+		
+
 		const Float current_speed = -m_VehicleSpeed.z;
+		
+		m_LaneObject->m_Distance = m_CurrentDistanceOnPath;
+		m_LaneObject->m_Speed = current_speed;
+		m_LaneObject->m_DistanceToPath = m_CurrentDistanceToPath;
+
+
+
+
 		double look_ahead = current_speed;
 		Float new_distance = m_CurrentDistanceOnPath + look_ahead;
 		int index;
 		Vec3 target_point = Math::GetPointOnPath(new_distance, m_CurrentPath, false, index);
 
-		Float desired_speed =15;
+		
+		Float desired_speed =m_TargetSpeed;
+		const Float friction = 0.6;
+		//Check lane for objects
+		LaneObject* closest = m_CurrentLane->GetClosest(m_LaneObject);
+		if(closest && desired_speed > 0 && closest->m_DistanceToPath < 2)
+		{
+			const Float speed_diff = current_speed - closest->m_Speed;
+			if(speed_diff > 0)
+			{
+				const Float distance_to_next = closest->m_Distance - m_CurrentDistanceOnPath;
+				Float stop_distance_to_next = speed_diff*speed_diff/(2 * friction *9.81);
+				//add some safty margin
+				stop_distance_to_next *= 2;
+				
+				if(stop_distance_to_next < 15)
+					stop_distance_to_next = 15;
+
+				if(distance_to_next < stop_distance_to_next)
+				{
+					desired_speed = 0;
+				}
+			}
+		}
+
 		GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
 
 		//if(m_LeftTurn)
