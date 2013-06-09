@@ -69,9 +69,12 @@ namespace GASS
 		}
 		else
 			std::cout << "Failed to find tangent in waypoint compoenent\n";
-		//notify parent
+	
+
 		m_Initialized = true;
-		NotifyUpdate();
+		//notify parent
+		GetSceneObject()->GetParentSceneObject()->SendImmediate(MessagePtr(new UpdateWaypointListMessage()));
+	
 	}
 
 	void WaypointComponent::OnDelete()
