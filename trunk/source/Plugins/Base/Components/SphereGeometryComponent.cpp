@@ -36,7 +36,8 @@
 
 namespace GASS
 {
-	SphereGeometryComponent::SphereGeometryComponent(void) : m_Radius(1)
+	SphereGeometryComponent::SphereGeometryComponent(void) : m_Radius(1), 
+		m_Wireframe(true)
 	{
 
 	}
@@ -51,6 +52,7 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("SphereGeometryComponent",new GASS::Creator<SphereGeometryComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("SphereGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
+		RegisterProperty<bool>("Wireframe", &GASS::SphereGeometryComponent::GetWireframe, &GASS::SphereGeometryComponent::SetWireframe);
 	}
 
 	void SphereGeometryComponent::OnInitialize()
@@ -77,7 +79,10 @@ namespace GASS
 
 	void SphereGeometryComponent::UpdateMesh()
 	{
-		DrawWireframe();
+		if(m_Wireframe)
+			DrawWireframe();
+		else
+			DrawSolid(10,10);
 	}
 
 	void SphereGeometryComponent::DrawWireframe()
