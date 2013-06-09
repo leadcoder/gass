@@ -548,7 +548,6 @@ namespace GASS
 
 	void AIRoadComponent::UpdateMesh()
 	{
-	
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		mesh_data->Type = LINE_LIST;
 		mesh_data->Material = "WhiteTransparentNoLighting";
@@ -580,67 +579,7 @@ namespace GASS
 				}
 			}
 		}
-
-
-		//Auto connect to cloese roads?
-		//get all roads
-		
-
-	/*	m_StartConnections.clear();
-		m_EndConnections.clear();
-		Vec3 start_wp = GetStartPoint();
-		Vec3 end_wp = GetEndPoint();
-
-		IComponentContainer::ComponentVector comps;
-		GetSceneObject()->GetParentSceneObject()->GetComponentsByClass<AIRoadComponent>(comps,true);
-		for(int j = 0 ;  j < comps.size(); j++)
-		{
-			AIRoadComponentPtr road= DYNAMIC_PTR_CAST<AIRoadComponent>(comps[j]);
-			
-			if(road != shared_from_this()) 
-			{
-				// Check edge distance			
-				Vec3 connect_start_wp = road->GetStartPoint();
-				Vec3 connect_end_wp = road->GetEndPoint();
-
-				Float dist = 10;
-				if((connect_start_wp - start_wp).Length() < dist)
-				{
-					vertex.Pos = connect_start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					//Connect!
-					m_StartConnections.push_back(road);
-				}
-
-				else if((connect_start_wp - end_wp).Length() < dist)
-				{
-					vertex.Pos = connect_start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					m_EndConnections.push_back(road);
-				}
-				else if((connect_end_wp - start_wp).Length() < dist)
-				{
-					vertex.Pos = connect_end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					m_StartConnections.push_back(road);
-				}
-				else if((connect_end_wp - end_wp).Length() < dist)
-				{
-					vertex.Pos = connect_end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					m_EndConnections.push_back(road->GetEndNode());
-				}
-			}
-		}*/
-
+	
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		m_LaneDebugObject->PostMessage(mesh_message);
 	}

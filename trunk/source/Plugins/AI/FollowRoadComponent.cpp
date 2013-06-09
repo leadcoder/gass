@@ -126,8 +126,6 @@ namespace GASS
 			m_CurrentRoad->UnregisterVehicle(m_RoadVehicle,m_CurrentRoad->StartInIntersection(m_CurrentIntersection));
 		}
 
-
-		
 		m_CurrentRoad = GetFreeRoad(message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true));
 		
 		

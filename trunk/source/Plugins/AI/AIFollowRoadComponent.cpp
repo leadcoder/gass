@@ -107,58 +107,48 @@ void AIFollowRoadComponent::OnTransMessage(TransformationNotifyMessagePtr messag
 
 void AIFollowRoadComponent::OnSpawnOnRoad(SpawnOnRoadMessagePtr message)
 {
-	AIRoadComponentPtr road = message->m_RoadObject->GetFirstComponentByClass<AIRoadComponent>(true);
-	m_LaneBuffer.push_back(road->GetStartLanes().back());
-	//AIRoadSegmentComponentPtr road = message->m_RoadObject->GetFirstComponentByClass<AIRoadSegmentComponent>(true);
-	//road->
-	//m_LaneBuffer.push_back();	
-	/*bool acticve = false;
+	bool acticve = false;
 	if(m_CurrentLane)
 	{
-	acticve = true;
-	m_CurrentLane->UnregisterVehicle(m_CurrentLane);
+		acticve = true;
+		m_CurrentLane->UnregisterLaneObject(m_LaneObject);
 	}
 
-	m_CurrentRoad = GetFreeRoad(message->m_RoadObject->GetFirstComponentByClass<RoadSegmentComponent>(true));
+	AIRoadComponentPtr road = message->m_RoadObject->GetFirstComponentByClass<AIRoadComponent>(true);
+	m_LaneBuffer.clear();
+	m_LaneBuffer.push_back(road->GetStartLanes().back());
+	
+	m_CurrentLane = m_LaneBuffer.front();
 
-
-	m_CurrentIntersection = m_CurrentRoad->GetEndNode()->GetFirstComponentByClass<AIRoadIntersectionComponent>();
-	m_NextRoad = m_CurrentIntersection->GetRandomRoad(m_CurrentRoad);
-	m_CurrentRoad->RegisterVehicle(m_RoadVehicle,false);
-	m_Turn = m_CurrentIntersection->CheckTurn(m_CurrentRoad,m_NextRoad);
-
-	m_RoadVehicle->m_Distance = -10;
-	m_RoadVehicle->m_Speed = 0;
-	m_RoadVehicle->m_DistanceToPath = 0;
+	m_LaneObject->m_Distance = -10;
+	m_LaneObject->m_Speed = 0;
+	m_LaneObject->m_DistanceToPath = 0;
 
 	Vec3 pos;
 	Quaternion rot;
 	double distance;
-	if(m_CurrentRoad && m_CurrentRoad->FirstFreeLocation(false,pos,rot,distance,10))
+	if(m_CurrentLane && m_CurrentLane->FirstFreeLocation(pos,rot,distance,10))
 	{
-	pos.y += 1;
-	m_RoadVehicle->m_Distance = distance;
-	m_RoadVehicle->m_Speed = 0;
-	m_RoadVehicle->m_DistanceToPath = 0;
-	m_CurrentPos = pos;
-	if(acticve)
-	{
-	//Clear messages
-	GetSceneObject()->ClearMessages();
-	GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-	GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
-	//std::cout << "Spawn Position:" << m_CurrentPos  << "\n";
-	m_DebugReset = 1;
-	//GetSceneObject()->PostMessage(MessagePtr(new VehicleStateMessage(CS_RUN,1)));
+		pos.y += 1;
+		m_LaneObject->m_Distance = distance;
+		m_LaneObject->m_Speed = 0;
+		m_LaneObject->m_DistanceToPath = 0;
+		m_CurrentPos = pos;
+		if(acticve)
+		{
+			//Clear messages
+			GetSceneObject()->ClearMessages();
+			GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
+			GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+		}
+		else
+		{
+			GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
+			GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+		}
 	}
-	else
-	{
-	GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-	GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
-	}
-	}
-	else
-	m_CurrentRoad.reset();*/
+	//else
+	//m_CurrentLane.reset();
 }
 
 /*RoadSegmentComponentPtr AIFollowRoadComponent::GetFreeRoad(RoadSegmentComponentPtr road)
