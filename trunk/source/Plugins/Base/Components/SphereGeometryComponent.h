@@ -40,6 +40,8 @@ namespace GASS
 		virtual Vec3 GetRandomPoint() const;
 		Float GetRadius() const;
 	protected:
+		void DrawSolid(int nSlice, int nStack);
+		void DrawWireframe();
 		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();

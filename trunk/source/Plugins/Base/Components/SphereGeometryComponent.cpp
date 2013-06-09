@@ -77,6 +77,11 @@ namespace GASS
 
 	void SphereGeometryComponent::UpdateMesh()
 	{
+		DrawWireframe();
+	}
+
+	void SphereGeometryComponent::DrawWireframe()
+	{
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
 		mesh_data->Material = "WhiteTransparentNoLighting";
@@ -121,6 +126,99 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
+
+	void SphereGeometryComponent::DrawSolid(int nSlice, int nStack)
+	{
+		int i, j;
+		double phi; //
+		double theta; //long
+		Float p[31][31][3]; //Vertex
+		Float *p1,*p2,*p3,*p4;
+
+		if(nSlice > 30) nSlice = 30;
+		if(nStack > 30) nStack = 30;
+
+		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		MeshVertex vertex;
+		mesh_data->Material = "WhiteTransparentNoLighting";
+
+		vertex.TexCoord.Set(0,0);
+		vertex.Color = Vec4(0,0,1,1);
+		vertex.Normal = Vec3(0,1,0);
+		mesh_data->Type = TRIANGLE_LIST;
+		
+	
+		
+
+		//Vertex
+		for(i = 0;i <= nSlice;i++)
+		{   
+			phi = 2.0 * MY_PI * (double)i / (double)nSlice;
+			for(j = 0;j <= nStack;j++)
+			{   
+				theta = MY_PI * (double)j / (double)nStack;
+				p[i][j][0] = (m_Radius * sin(theta) * cos(phi));//x
+				p[i][j][1] = (m_Radius * sin(theta) * sin(phi));//y
+				p[i][j][2] = (m_Radius * cos(theta));           //z
+			}
+		}
+
+		//Top(j=0)
+		for(i = 0;i < nSlice; i++)
+		{
+			p1 = p[i][0];     p2 = p[i][1];
+			p3 = p[i+1][1]; 
+
+			vertex.Pos.Set(p1[0],p1[1],p1[2]);
+			mesh_data->VertexVector.push_back(vertex);
+
+			vertex.Pos.Set(p2[0],p2[1],p2[2]);
+			mesh_data->VertexVector.push_back(vertex);
+
+			vertex.Pos.Set(p3[0],p3[1],p3[2]);
+			mesh_data->VertexVector.push_back(vertex);
+			
+		}
+		//Bottom
+		j=nStack-1;
+		for(i = 0;i < nSlice; i++)
+		{
+			p1 = p[i][j];     p2 = p[i][j+1];
+			p3 = p[i+1][j]; 
+
+			vertex.Pos.Set(p1[0],p1[1],p1[2]);
+			mesh_data->VertexVector.push_back(vertex);
+
+			vertex.Pos.Set(p2[0],p2[1],p2[2]);
+			mesh_data->VertexVector.push_back(vertex);
+
+			vertex.Pos.Set(p3[0],p3[1],p3[2]);
+			mesh_data->VertexVector.push_back(vertex);
+		}
+
+		for(i = 0;i < nSlice;i++)
+		{
+			for(j = 1;j < nStack-1; j++)
+			{
+				p1 = p[i][j];     p2 = p[i][j+1];
+				p3 = p[i+1][j+1]; p4 = p[i+1][j];
+				
+				
+				vertex.Pos.Set(p1[0],p1[1],p1[2]);
+				mesh_data->VertexVector.push_back(vertex);
+
+				vertex.Pos.Set(p2[0],p2[1],p2[2]);
+				mesh_data->VertexVector.push_back(vertex);
+
+				vertex.Pos.Set(p3[0],p3[1],p3[2]);
+				mesh_data->VertexVector.push_back(vertex);
+				
+			}
+		}
+		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		GetSceneObject()->PostMessage(mesh_message);
+	}
+
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const
 	{
 
