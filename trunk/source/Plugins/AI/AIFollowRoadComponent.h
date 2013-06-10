@@ -75,9 +75,6 @@ namespace GASS
 
 		std::vector<AIRoadLaneComponentPtr> m_LaneBuffer;
 
-		//TurnDir m_Turn;
-
-		LaneVehicle* m_RoadVehicle;
 		Vec3 m_AngularVelocity;
 		Vec3 m_VehicleSpeed;
 		int m_DebugReset;

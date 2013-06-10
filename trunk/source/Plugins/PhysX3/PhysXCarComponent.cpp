@@ -35,7 +35,8 @@ namespace GASS
 		m_DigBrakeInput(false),
 		m_IsMovingForwardSlowly(false),
 		m_InReverseMode(false),
-		m_UseDigitalInputs(false)
+		m_UseDigitalInputs(false),
+		m_UseAutoReverse(false)
 		
 	{
 		m_ChassisData.mMass = 1500;
@@ -108,6 +109,14 @@ namespace GASS
 		m_ThrottleInput = 0;
 		m_SteerInput = 0;
 		m_InReverseMode = false;
+
+
+		m_Vehicle->setWheelShapeMapping(0,0);
+		m_Vehicle->setWheelShapeMapping(1,1);
+		m_Vehicle->setWheelShapeMapping(2,2);
+		m_Vehicle->setWheelShapeMapping(3,3);
+
+
 	}
 
 	void PhysXCarComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
@@ -538,50 +547,55 @@ namespace GASS
 
 		//Work out if the car is to flip from reverse to forward gear or from forward gear to reverse.
 		//Store if the car is moving slowly to help decide if the car is to toggle from reverse to forward in the next update.
-		bool toggleAutoReverse = false;
-		bool newIsMovingForwardSlowly = false;
-		ProcessAutoReverse(*m_Vehicle, driveDynData, rawInputData, toggleAutoReverse, newIsMovingForwardSlowly);
-		m_IsMovingForwardSlowly = newIsMovingForwardSlowly;
-
-
-		//If the car is to flip gear direction then switch gear as appropriate.
-		if(toggleAutoReverse)
+		
+		if(m_UseAutoReverse)
 		{
-			m_InReverseMode = !m_InReverseMode;
+			bool toggleAutoReverse = false;
+			bool newIsMovingForwardSlowly = false;
 
+			ProcessAutoReverse(*m_Vehicle, driveDynData, rawInputData, toggleAutoReverse, newIsMovingForwardSlowly);
+
+			m_IsMovingForwardSlowly = newIsMovingForwardSlowly;
+
+
+			//If the car is to flip gear direction then switch gear as appropriate.
+			if(toggleAutoReverse)
+			{
+				m_InReverseMode = !m_InReverseMode;
+
+				if(m_InReverseMode)
+				{
+					driveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+				}
+				else
+				{
+					driveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+				}
+			}
+
+			//If in reverse mode then swap the accel and brake.
 			if(m_InReverseMode)
 			{
-				driveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-			}
-			else
-			{
-				driveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-			}
-		}
-
-		//If in reverse mode then swap the accel and brake.
-		if(m_InReverseMode)
-		{
-			if(m_UseDigitalInputs)
-			{
-			const bool accel=rawInputData.getDigitalAccel();
-			const bool brake=rawInputData.getDigitalBrake();
-			rawInputData.setDigitalAccel(brake);
-			rawInputData.setDigitalBrake(accel);
-			}
-			else
-			{
-				const PxF32 accel=rawInputData.getAnalogAccel();
-				const PxF32 brake=rawInputData.getAnalogBrake();
-				rawInputData.setAnalogAccel(brake);
-				rawInputData.setAnalogBrake(accel);
+				if(m_UseDigitalInputs)
+				{
+					const bool accel=rawInputData.getDigitalAccel();
+					const bool brake=rawInputData.getDigitalBrake();
+					rawInputData.setDigitalAccel(brake);
+					rawInputData.setDigitalBrake(accel);
+				}
+				else
+				{
+					const PxF32 accel=rawInputData.getAnalogAccel();
+					const PxF32 brake=rawInputData.getAnalogBrake();
+					rawInputData.setAnalogAccel(brake);
+					rawInputData.setAnalogBrake(accel);
+				}
 			}
 		}
 
 
-		
 		// Now filter the raw input values and apply them to focus vehicle
-	// as floats for brake,accel,handbrake,steer and bools for gearup,geardown.
+		// as floats for brake,accel,handbrake,steer and bools for gearup,geardown.
 		if(m_UseDigitalInputs)
 		{
 			PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData,gSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);

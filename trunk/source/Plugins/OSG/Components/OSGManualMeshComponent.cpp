@@ -19,7 +19,6 @@
 *****************************************************************************/
 
 
-#include <boost/bind.hpp>
 
 #include "OSGManualMeshComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
@@ -65,6 +64,31 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+
+
+		m_OSGGeometry = new osg::Geometry();
+		m_GeoNode = new osg::Geode();
+
+		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
+		//ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
+		osg::CullFace* cull = new osg::CullFace();
+		cull->setMode(osg::CullFace::BACK);
+		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
+
+
+		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
+		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
+
+		m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
+		m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
+		
+		m_GeoNode->addDrawable(m_OSGGeometry.get());
+
+		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		m_GeoNode->setUserData(node_data);
+		SetGeometryFlags(m_GeomFlags);
+
+
 		BaseSceneComponent::OnInitialize();
 	}
 
@@ -84,41 +108,24 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
 	{
-		if(message->EnableCollision())
-			OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_GeoNode.get());
-		else
-			OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_GeoNode.get());
+		if(m_GeoNode)
+		{
+			if(message->EnableCollision())
+				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_GeoNode.get());
+			else
+				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_GeoNode.get());
+		}
 	}
 
 	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
 
-		m_OSGGeometry = new osg::Geometry();
-		m_GeoNode = new osg::Geode();
-
-		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		//ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF); 
-		osg::CullFace* cull = new osg::CullFace();
-		cull->setMode(osg::CullFace::BACK);
-		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
-
-
-		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
-		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
-
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
 
-		m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
-		m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
-		
-		m_GeoNode->addDrawable(m_OSGGeometry.get());
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
-		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
-		m_GeoNode->setUserData(node_data);
-		SetGeometryFlags(m_GeomFlags);
-
+		
 	}
 
 	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)

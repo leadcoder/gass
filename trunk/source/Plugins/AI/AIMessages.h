@@ -91,6 +91,29 @@ namespace GASS
 	typedef SPTR<ToggleTrafficLightMessage> ToggleTrafficLightMessagePtr;
 
 
+	
+	enum LightState
+	{
+		LS_GREEN,
+		LS_YELLOW,
+		LS_RED
+	};
+
+	class TrafficLightStateMessage : public BaseMessage
+	{
+	public:
+		TrafficLightStateMessage(LightState state, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay) , m_State(state)
+		  {
+
+		  }
+		  LightState  GetState() const {return m_State;}
+	private:
+		LightState  m_State;
+	};
+	typedef SPTR<TrafficLightStateMessage> TrafficLightStateMessagePtr;
+
+
 	class SpawnOnRoadMessage : public BaseMessage
 	{
 	public:

@@ -23,6 +23,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -46,8 +47,12 @@ namespace GASS
 		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();
+		void SetColor(const ColorRGBA  &value);
+		ColorRGBA GetColor() const {return m_Color;}
 	private:
 		Float m_Radius;
+		ColorRGBA m_Color;
+		
 	};
 }
 #endif

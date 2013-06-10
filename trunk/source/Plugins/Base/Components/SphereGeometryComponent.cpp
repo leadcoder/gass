@@ -37,7 +37,8 @@
 namespace GASS
 {
 	SphereGeometryComponent::SphereGeometryComponent(void) : m_Radius(1), 
-		m_Wireframe(true)
+		m_Wireframe(true),
+		m_Color(0,0,1,1)
 	{
 
 	}
@@ -53,6 +54,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("SphereGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
 		RegisterProperty<bool>("Wireframe", &GASS::SphereGeometryComponent::GetWireframe, &GASS::SphereGeometryComponent::SetWireframe);
+		RegisterProperty<ColorRGBA>("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
 	}
 
 	void SphereGeometryComponent::OnInitialize()
@@ -77,6 +79,14 @@ namespace GASS
 			UpdateMesh();
 	}
 
+
+	void SphereGeometryComponent::SetColor(const ColorRGBA &value)
+	{
+		m_Color = value;
+		if(GetSceneObject())
+			UpdateMesh();
+	}
+
 	void SphereGeometryComponent::UpdateMesh()
 	{
 		if(m_Wireframe)
@@ -92,10 +102,9 @@ namespace GASS
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
 		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(0,0,1,1);
+		vertex.Color = Vec4(m_Color.r,m_Color.g,m_Color.b,m_Color.a);
 		vertex.Normal = Vec3(0,1,0);
 		mesh_data->Type = LINE_LIST;
-		
 
 		//Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScene()->GetSceneUp();
 		float samples = 30;
@@ -148,13 +157,10 @@ namespace GASS
 		mesh_data->Material = "WhiteTransparentNoLighting";
 
 		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(0,0,1,1);
+		vertex.Color = Vec4(m_Color.r,m_Color.g,m_Color.b,m_Color.a);
 		vertex.Normal = Vec3(0,1,0);
 		mesh_data->Type = TRIANGLE_LIST;
 		
-	
-		
-
 		//Vertex
 		for(i = 0;i <= nSlice;i++)
 		{   
@@ -216,6 +222,16 @@ namespace GASS
 				mesh_data->VertexVector.push_back(vertex);
 
 				vertex.Pos.Set(p3[0],p3[1],p3[2]);
+				mesh_data->VertexVector.push_back(vertex);
+
+
+				vertex.Pos.Set(p1[0],p1[1],p1[2]);
+				mesh_data->VertexVector.push_back(vertex);
+
+				vertex.Pos.Set(p3[0],p3[1],p3[2]);
+				mesh_data->VertexVector.push_back(vertex);
+
+				vertex.Pos.Set(p4[0],p4[1],p4[2]);
 				mesh_data->VertexVector.push_back(vertex);
 				
 			}

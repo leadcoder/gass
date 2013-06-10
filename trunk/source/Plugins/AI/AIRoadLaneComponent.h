@@ -16,12 +16,13 @@ namespace GASS
 	class LaneObject
 	{
 	public:
-		LaneObject()
+		LaneObject() : m_Static(false)
 		{}
 		~LaneObject(){}
 		tbb::atomic<double> m_Speed;
 		tbb::atomic<double> m_Distance;
 		tbb::atomic<double> m_DistanceToPath;
+		bool m_Static;
 	};
 
 
