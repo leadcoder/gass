@@ -51,7 +51,8 @@ namespace GASS
 		m_VehicleSpeed(0,0,0),
 		m_DebugReset(0),
 		m_LaneObject(new LaneObject()),
-		m_TargetSpeed(0)
+		m_TargetSpeed(0),
+		m_LaneBufferSize(4)
 	{
 
 	}
@@ -68,8 +69,9 @@ namespace GASS
 	void AIFollowRoadComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIFollowRoadComponent",new Creator<AIFollowRoadComponent, IComponent>);
-		RegisterProperty<Float>("WaypointRadius", &AIFollowRoadComponent::GetWaypointRadius, &AIFollowRoadComponent::SetWaypointRadius);
-		RegisterProperty<bool>("InvertDirection", &AIFollowRoadComponent::GetInvertDirection, &AIFollowRoadComponent::SetInvertDirection);
+		//RegisterProperty<Float>("WaypointRadius", &AIFollowRoadComponent::GetWaypointRadius, &AIFollowRoadComponent::SetWaypointRadius);
+		//RegisterProperty<bool>("InvertDirection", &AIFollowRoadComponent::GetInvertDirection, &AIFollowRoadComponent::SetInvertDirection);
+		RegisterProperty<int>("LaneBufferSize", &AIFollowRoadComponent::GetLaneBufferSize, &AIFollowRoadComponent::SetLaneBufferSize);
 	}
 
 	void AIFollowRoadComponent::GoToIntersection(AIRoadIntersectionComponentPtr inter)
@@ -186,7 +188,7 @@ namespace GASS
 		if(m_LaneBuffer.size()   == 0)
 			return;
 		//update lane buffer
-		while(m_LaneBuffer.size() < 4)
+		while(m_LaneBuffer.size() < m_LaneBufferSize)
 		{
 			AIRoadLaneComponentPtr lane = m_LaneBuffer.back();
 			std::vector<AIRoadLaneComponentPtr>* lanes = lane->GetNextLanesPtr();

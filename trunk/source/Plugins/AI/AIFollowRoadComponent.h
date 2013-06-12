@@ -49,6 +49,7 @@ namespace GASS
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 	private:
+		ADD_ATTRIBUTE(int,LaneBufferSize);
 		AIRoadLaneComponentPtr GetFreeLane(AIRoadLaneComponentPtr lane);
 		void UpdateLaneBuffer();
 		void OnSpawnOnRoad(SpawnOnRoadMessagePtr message);

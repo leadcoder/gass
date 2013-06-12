@@ -34,9 +34,9 @@ namespace GASS
 		RegisterProperty<Float>("Distance", &AIRoadTrafficLightComponent::GetDistance, &AIRoadTrafficLightComponent::SetDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<SceneObjectRef>("RedLight", &AIRoadTrafficLightComponent::GetRedLight, &AIRoadTrafficLightComponent::SetRedLight);
-		RegisterProperty<SceneObjectRef>("YellowLight", &AIRoadTrafficLightComponent::GetYellowLight, &AIRoadTrafficLightComponent::SetYellowLight);
-		RegisterProperty<SceneObjectRef>("GreenLight", &AIRoadTrafficLightComponent::GetGreenLight, &AIRoadTrafficLightComponent::SetGreenLight);
+		//RegisterProperty<SceneObjectRef>("RedLight", &AIRoadTrafficLightComponent::GetRedLight, &AIRoadTrafficLightComponent::SetRedLight);
+		//RegisterProperty<SceneObjectRef>("YellowLight", &AIRoadTrafficLightComponent::GetYellowLight, &AIRoadTrafficLightComponent::SetYellowLight);
+		//RegisterProperty<SceneObjectRef>("GreenLight", &AIRoadTrafficLightComponent::GetGreenLight, &AIRoadTrafficLightComponent::SetGreenLight);
 	}
 
 	void AIRoadTrafficLightComponent::SetDistance(Float distance)
@@ -85,7 +85,15 @@ namespace GASS
 				lane->RegisterLaneObject(m_LaneObject);
 
 		}
-		UpdateGeom();
+		//relay message to children
+		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		while(children.hasMoreElements())
+		{
+			SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
+			child_obj->SendImmediate(message);
+		}
+
+		//UpdateGeom();
 	}
 
 	void AIRoadTrafficLightComponent::UpdateGeom()
@@ -127,7 +135,7 @@ namespace GASS
 				Vec3(0,0,0),
 					Vec3(green_color.x,green_color.y,green_color.z),
 					0,
-					false));
+					true));
 				m_GreenLight->PostMessage(mat_mess);
 			}
 
@@ -139,7 +147,7 @@ namespace GASS
 				Vec3(0,0,0),
 					Vec3(yellow_color.x,yellow_color.y,yellow_color.z),
 					0,
-					false));
+					true));
 				m_YellowLight->PostMessage(mat_mess);
 			}
 
@@ -150,10 +158,9 @@ namespace GASS
 				Vec3(0,0,0),
 					Vec3(red_color.x,red_color.y,red_color.z),
 					0,
-					false));
+					true));
 				m_RedLight->PostMessage(mat_mess);
 			}
-			
 			
 			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
 		}
