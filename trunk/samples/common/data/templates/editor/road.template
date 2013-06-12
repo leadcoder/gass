@@ -1,6 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates>
 	<SceneObjectTemplate>
+		<Name value="AITrafficLightObject"/>
+		<Instantiable value="true"/>
+		<Components>
+			<AIRoadTrafficLightComponent>
+				<!--<GreenLight value="GREEN_LIGHT"/>
+				<YellowLight value="YELLOW_LIGHT"/>
+				<RedLight value="RED_LIGHT"/>-->
+			</AIRoadTrafficLightComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="TrafficLight01.flt"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<!--<ManualMeshComponent>
+			</ManualMeshComponent>
+			<SphereGeometryComponent>
+				<Radius value="1"/>
+				<Wireframe value="false"/>
+				<Color value="1 1 1 1"/>
+			</SphereGeometryComponent>-->
+			<!--<BoxGeometryComponent>
+				<Size value="0.2 2 0.2"/>
+			</BoxGeometryComponent>-->
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="AITrafficSignalObject"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 2.55 0.1"/>
+						<Rotation value="0 0 0"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<AIRoadSignalComponent>
+							<GreenLight value="GREEN_LIGHT"/>
+							<YellowLight value="YELLOW_LIGHT"/>
+							<RedLight value="RED_LIGHT"/>
+					</AIRoadSignalComponent>
+				</Components>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="AILightObject"/>
+						<Instantiable value="false"/>
+						<ID value="GREEN_LIGHT"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0 0.29 0"/>
+								<Rotation value="0 0 0"/>
+								<AttachToParent value="true"/>
+							</LocationComponent>
+							<ManualMeshComponent>
+							</ManualMeshComponent>
+							<SphereGeometryComponent>
+								<Radius value="0.08"/>
+								<Wireframe value="false"/>
+								<Color value="1 1 1 1"/>
+							</SphereGeometryComponent>
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="AILightObject"/>
+						<Instantiable value="false"/>
+						<ID value="YELLOW_LIGHT"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0 0 0"/>
+								<Rotation value="0 0 0"/>
+								<AttachToParent value="true"/>
+							</LocationComponent>
+							<ManualMeshComponent>
+							</ManualMeshComponent>
+							<SphereGeometryComponent>
+								<Radius value="0.08"/>
+								<Wireframe value="false"/>
+								<Color value="1 1 1 1"/>
+							</SphereGeometryComponent>
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="AILightObject"/>
+						<Instantiable value="false"/>
+						<ID value="RED_LIGHT"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0 -0.32 0"/>
+								<Rotation value="0 0 0"/>
+								<AttachToParent value="true"/>
+							</LocationComponent>
+							<ManualMeshComponent>
+							</ManualMeshComponent>
+							<SphereGeometryComponent>
+								<Radius value="0.08"/>
+								<Wireframe value="false"/>
+								<Color value="1 1 1 1"/>
+							</SphereGeometryComponent>
+						</Components>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
 		<Name value="AIIntersectionObject"/>
 		<Instantiable value="true"/>
 		<Components>
@@ -45,6 +151,8 @@
 			</ManualMeshComponent>-->
 		</Components>
 		<ComponentContainers>
+
+
 			<SceneObjectTemplate>
 				<Inheritance value="AIRoadCenterLine"/>
 				<Name value="AIRoadCenterLine"/>
@@ -72,6 +180,7 @@
 					</SceneObjectTemplate>
 				</ComponentContainers>
 			</SceneObjectTemplate>
+
 		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
@@ -105,7 +214,7 @@
 						<ID value="LEFT_LANE_1"/>
 						<Components>
 							<AIRoadLaneComponent>
-								<Width value = "4"/>
+								<Width value = "3"/>
 								<Direction value="LD_DOWNSTREAM"/>
 								<LaneID value = "0"/>
 							</AIRoadLaneComponent>
@@ -129,7 +238,7 @@
 						<ID value="RIGHT_LANE_1"/>
 						<Components>
 							<AIRoadLaneComponent>
-								<Width value = "-4"/>
+								<Width value = "-3"/>
 								<Direction value="LD_UPSTREAM"/>
 								<LaneID value = "0"/>
 							</AIRoadLaneComponent>
