@@ -195,10 +195,13 @@ namespace GASS
 			Vec3 cross = Math::Cross(hull_dir,drive_dir);
 			float cos_angle = Math::Dot(hull_dir,drive_dir);
 
-			if(cos_angle > 1) cos_angle = 1;
-			if(cos_angle < -1) cos_angle = -1;
+			if(cos_angle > 1) 
+				cos_angle = 1;
+			if(cos_angle < -1) 
+				cos_angle = -1;
 			float angle_to_drive_dir = Math::Rad2Deg(acos(cos_angle));
-			if(cross.y < 0) angle_to_drive_dir *= -1;
+			if(cross.y < 0) 
+				angle_to_drive_dir *= -1;
 
 			
 			m_TurnPID.set(0);
