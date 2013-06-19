@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -86,13 +86,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)GASSPluginAI_d.pdb</ProgramDataBaseFileName>
@@ -114,13 +115,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)GASSPluginAI_d.pdb</ProgramDataBaseFileName>
@@ -142,15 +144,17 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -171,15 +175,17 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\source;..\source\Plugins\AI\Detour;..\source\Plugins\AI\DetourCrowd;..\source\Plugins\AI\Recast;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\boost;$(DXSDK_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;GASS_PLUGIN_EXPORTS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -198,8 +204,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\Plugins\AI\AIFollowRoadComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\AIMessages.h" />
     <ClInclude Include="..\source\Plugins\AI\AIMovingPlatformComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\AIRoadComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\AIRoadIntersectionComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\AIRoadLaneComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\AIRoadLaneSectionComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\AIRoadTrafficLightComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\AISceneManager.h" />
     <ClInclude Include="..\source\Plugins\AI\AISystem.h" />
     <ClInclude Include="..\source\Plugins\AI\AITargetComponent.h" />
@@ -208,6 +220,7 @@
     <ClInclude Include="..\source\Plugins\AI\ChunkyTriMesh.h" />
     <ClInclude Include="..\source\Plugins\AI\DetourCrowdAgentComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\DetourCrowdComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\FollowRoadComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\InputGeom.h" />
     <ClInclude Include="..\source\Plugins\AI\KeyframeAnimationComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\MeshLoaderObj.h" />
@@ -216,6 +229,8 @@
     <ClInclude Include="..\source\Plugins\AI\RecastDoorComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\RecastNavigationMeshComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\RecastOffmeshMeshConnectionComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\RoadIntersectionComponent.h" />
+    <ClInclude Include="..\source\Plugins\AI\RoadSegmentComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\TriggerComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\VelocityTriggerComponent.h" />
     <ClInclude Include="..\source\Plugins\AI\Detour\DetourAlloc.h" />
@@ -239,8 +254,14 @@
     <ClInclude Include="..\source\Plugins\AI\Recast\RecastAssert.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\Plugins\AI\AIFollowRoadComponent.cpp" />
     <ClCompile Include="..\source\Plugins\AI\AIMovingPlatformComponent.cpp">
     </ClCompile>
+    <ClCompile Include="..\source\Plugins\AI\AIRoadComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\AI\AIRoadIntersectionComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\AI\AIRoadLaneComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\AI\AIRoadLaneSectionComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\AI\AIRoadTrafficLightComponent.cpp" />
     <ClCompile Include="..\source\Plugins\AI\AISceneManager.cpp">
     </ClCompile>
     <ClCompile Include="..\source\Plugins\AI\AISystem.cpp">
@@ -257,6 +278,7 @@
     </ClCompile>
     <ClCompile Include="..\source\Plugins\AI\DetourCrowdComponent.cpp">
     </ClCompile>
+    <ClCompile Include="..\source\Plugins\AI\FollowRoadComponent.cpp" />
     <ClCompile Include="..\source\Plugins\AI\InputGeom.cpp">
     </ClCompile>
     <ClCompile Include="..\source\Plugins\AI\KeyframeAnimationComponent.cpp">
@@ -273,6 +295,8 @@
     </ClCompile>
     <ClCompile Include="..\source\Plugins\AI\RecastOffmeshMeshConnectionComponent.cpp">
     </ClCompile>
+    <ClCompile Include="..\source\Plugins\AI\RoadIntersectionComponent.cpp" />
+    <ClCompile Include="..\source\Plugins\AI\RoadSegmentComponent.cpp" />
     <ClCompile Include="..\source\Plugins\AI\TriggerComponent.cpp">
     </ClCompile>
     <ClCompile Include="..\source\Plugins\AI\VelocityTriggerComponent.cpp">

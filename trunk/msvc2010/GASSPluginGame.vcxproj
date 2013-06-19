@@ -204,6 +204,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\CarAutopilotComponent.h" />
     <ClInclude Include="..\source\Plugins\Game\DetectionData.h" />
     <ClInclude Include="..\source\Plugins\Game\GameMessages.h" />
     <ClInclude Include="..\source\Plugins\Game\GameSceneManager.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="..\source\Plugins\Game\Utils\PIDControl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\CarAutopilotComponent.cpp" />
     <ClCompile Include="..\source\Plugins\Game\GameSceneManager.cpp">
     </ClCompile>
     <ClCompile Include="..\source\Plugins\Game\GameSystem.cpp">

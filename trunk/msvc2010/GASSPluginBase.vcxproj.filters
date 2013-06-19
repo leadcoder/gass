@@ -66,6 +66,9 @@
     <ClInclude Include="..\source\Plugins\Base\GASSMaterialSystem.h">
       <Filter>source\Plugins\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\Plugins\Base\Components\TemplateSourceComponent.h">
+      <Filter>source\Plugins\Base\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\Plugins\Base\GASSController.cpp">
@@ -115,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="..\source\Plugins\Base\GASSMaterialSystem.cpp">
       <Filter>source\Plugins\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Base\Components\TemplateSourceComponent.cpp">
+      <Filter>source\Plugins\Base\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

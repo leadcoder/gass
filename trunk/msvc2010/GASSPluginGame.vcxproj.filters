@@ -120,6 +120,9 @@
     <ClInclude Include="..\source\Plugins\Game\Utils\PIDControl.h">
       <Filter>source\Plugins\Game\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\Plugins\Game\Components\Vehicle\CarAutopilotComponent.h">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\Plugins\Game\GameSceneManager.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\source\Plugins\Game\Utils\PIDControl.cpp">
       <Filter>source\Plugins\Game\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Plugins\Game\Components\Vehicle\CarAutopilotComponent.cpp">
+      <Filter>source\Plugins\Game\Components\Vehicle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

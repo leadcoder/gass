@@ -204,6 +204,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\Plugins\Base\Components\TemplateSourceComponent.h" />
     <ClInclude Include="..\source\Plugins\Base\CoreMessages.h" />
     <ClInclude Include="..\source\Plugins\Base\GASSController.h" />
     <ClInclude Include="..\source\Plugins\Base\GASSControlSetting.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\source\Plugins\Base\GASSMaterialSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\Plugins\Base\Components\TemplateSourceComponent.cpp" />
     <ClCompile Include="..\source\Plugins\Base\GASSController.cpp">
     </ClCompile>
     <ClCompile Include="..\source\Plugins\Base\GASSControlSetting.cpp">
