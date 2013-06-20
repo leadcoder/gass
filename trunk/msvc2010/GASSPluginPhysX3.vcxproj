@@ -103,9 +103,9 @@
       <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;$(PHYSX_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;tbb_debug.lib;PhysX3CommonCHECKED_x64.lib;PhysX3CHECKED_x64.lib;PhysX3CookingCHECKED_x64.lib;PhysX3CharacterKinematicCHECKED_x64.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;RepX3CHECKED.lib;RepXUpgrader3CHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PxTaskCHECKED.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;tinyxml_d.lib;tbb_debug.lib;PhysX3CommonCHECKED_x86.lib;PhysX3CHECKED_x86.lib;PhysX3CookingCHECKED_x86.lib;PhysX3CharacterKinematicCHECKED_x86.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;RepX3CHECKED.lib;RepXUpgrader3CHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PxTaskCHECKED.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GASSPluginPhysX_d.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;$(PHYSX_HOME)\Lib\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\boost\lib;$(PHYSX_HOME)\Lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>..\lib\GASSPluginPhysX_d.lib</ImportLibrary>
@@ -161,9 +161,9 @@
       <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\boost;$(GASS_DEPENDENCIES)\tbb\include;$(PHYSX_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;tbb.lib;PhysX3Common_x64.lib;PhysX3_x64.lib;PhysX3Cooking_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;RepX3.lib;RepXUpgrader3.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PxTask.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;tinyxml.lib;tbb.lib;PhysX3Common_x86.lib;PhysX3_x86.lib;PhysX3Cooking_x86.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;RepX3.lib;RepXUpgrader3.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PxTask.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GASSPluginPhysX.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(PHYSX_HOME)\lib\win64;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(PHYSX_HOME)\lib\win32;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>

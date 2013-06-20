@@ -86,12 +86,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginPhysX3", "GASSPlu
 		{E54F5611-CCC1-184A-BDE6-69484FA352EF} = {E54F5611-CCC1-184A-BDE6-69484FA352EF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GASSPluginMyGUI", "GASSPluginMyGUI.vcxproj", "{4F38713C-6944-BD40-8D02-DDF9F7497958}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FF02BD70-19CA-2141-BF34-C17D46BED96A} = {FF02BD70-19CA-2141-BF34-C17D46BED96A}
-		{E54F5611-CCC1-184A-BDE6-69484FA352EF} = {E54F5611-CCC1-184A-BDE6-69484FA352EF}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -220,14 +214,6 @@ Global
 		{3F143011-64C4-A84D-A89B-4FD534433B9A}.Release|Win32.Build.0 = Release|Win32
 		{3F143011-64C4-A84D-A89B-4FD534433B9A}.Release|x64.ActiveCfg = Release|x64
 		{3F143011-64C4-A84D-A89B-4FD534433B9A}.Release|x64.Build.0 = Release|x64
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Debug|Win32.Build.0 = Debug|Win32
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Debug|x64.ActiveCfg = Debug|x64
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Debug|x64.Build.0 = Debug|x64
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Release|Win32.ActiveCfg = Release|Win32
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Release|Win32.Build.0 = Release|Win32
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Release|x64.ActiveCfg = Release|x64
-		{4F38713C-6944-BD40-8D02-DDF9F7497958}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -103,7 +103,7 @@
       <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;OgreMain_d.lib;Plugin_OctreeSceneManager_d.lib;OgreTerrain_d.lib;OgrePaging_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GASSCore_d.lib;GASSSim_d.lib;OgreMain_d.lib;OgreOverlay_d.lib;Plugin_OctreeSceneManager_d.lib;OgreTerrain_d.lib;OgrePaging_d.lib;tinyxml_d.lib;tbb_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GASSPluginOgre_d.dll</OutputFile>
       <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\ogre\lib\debug;$(GASS_DEPENDENCIES)\ogre\lib\debug\opt;$(GASS_DEPENDENCIES)\boost\lib;$(GASS_DEPENDENCIES)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
@@ -161,7 +161,7 @@
       <AdditionalIncludeDirectories>..\source;$(GASS_DEPENDENCIES)\tinyxml;$(GASS_DEPENDENCIES)\tbb\include;$(GASS_DEPENDENCIES)\ogre\include\OGRE;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Plugins\OctreeSceneManager;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Terrain;$(GASS_DEPENDENCIES)\ogre\include\OGRE\Paging;$(GASS_DEPENDENCIES)\ogre\OGREMain\include;$(GASS_DEPENDENCIES)\ogre\PlugIns\OctreeSceneManager\include;$(GASS_DEPENDENCIES)\ogre\Components\Terrain\include;$(GASS_DEPENDENCIES)\ogre\Components\Paging\include;$(GASS_DEPENDENCIES)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;OgreMain.lib;Plugin_OctreeSceneManager.lib;OgreTerrain.lib;OgrePaging.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\lib\GASSCore.lib;..\lib\GASSSim.lib;OgreMain.lib;Plugin_OctreeSceneManager.lib;OgreTerrain.lib;OgrePaging.lib;OgreOverlay.lib;tinyxml.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GASSPluginOgre.dll</OutputFile>
       <AdditionalLibraryDirectories>..\lib;$(GASS_DEPENDENCIES)\lib;$(GASS_DEPENDENCIES)\ogre\lib\release;$(GASS_DEPENDENCIES)\ogre\lib\release\opt;$(GASS_DEPENDENCIES)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
