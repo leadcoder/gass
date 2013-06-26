@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<GASS>
 <Plugins>
   <!-- load all from path-->
   <!--<Directory Path = "GASSPlugins"/>-->
@@ -8,6 +9,7 @@
   <Plugin PluginFile = "GASSPluginODE"/>
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>
+  <Plugin PluginFile = "GASSPluginEnvironment"/>
   <Plugin PluginFile = "GASSPluginEnvironment"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPluginGame"/>
@@ -36,7 +38,7 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
-	
+	<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
   </ResourceGroup>
   <ResourceGroup name="GASS_VEGETATION_MATERIALS">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
@@ -60,7 +62,9 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI_Media" type="FileSystem" recursive="true"/>
   </ResourceGroup>
   <ResourceGroup name="GASS_TEMPLATES">
-    <ResourceLocation  path="%GASS_DATA_HOME%/templates/" type="FileSystem" recursive="true"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles" type="FileSystem" recursive="true"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
   </ResourceGroup>
 </ResourceManager>
 <SceneObjectTemplateManager>
@@ -131,3 +135,4 @@
     <TaskNode name="POST_SIM" mode="SEQUENCE"/>
   </TaskNode>
 </RTC>
+</GASS>
