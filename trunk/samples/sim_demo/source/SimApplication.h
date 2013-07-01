@@ -87,7 +87,7 @@ public:
 		{
 			GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate(m_Objects[i],scene->GetRootSceneObject());
 			GASS::Vec3 pos = scene->GetStartPos();
-			pos.x += 10*i;
+			pos.z -= 10*(i+1);
 
 			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 			if(object)

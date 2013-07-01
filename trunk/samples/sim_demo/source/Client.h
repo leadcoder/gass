@@ -16,8 +16,6 @@ public:
 		//Connect to server?
 		//try to connect
 		GASS::SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::ConnectToServerRequest(mess->GetServerName(),2005)));
-
-
 		m_IsConnected = true;
 	}
 
@@ -51,8 +49,6 @@ public:
 		win->CreateViewport("MainViewport", 0, 0, 1, 1);
 		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 		input_system->SetMainWindowHandle(win->GetHWND());
-		
-	
 
 		for(int i = 0; i <  m_Templates.size();i++)
 		{
@@ -83,6 +79,4 @@ public:
 private:
 	bool m_IsConnected;
 };
-
-
 

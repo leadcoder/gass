@@ -1,6 +1,7 @@
 copy "%OGRE_HOME%\bin\debug\OgreMain_d.dll" ..\bin\Debug\
 copy "%OGRE_HOME%\bin\debug\OgreTerrain_d.dll" ..\bin\Debug\
 copy "%OGRE_HOME%\bin\debug\OgrePaging_d.dll" ..\bin\Debug\
+copy "%OGRE_HOME%\bin\debug\OgreOverlay_d.dll" ..\bin\Debug\
 copy "%OGRE_HOME%\bin\debug\Plugin_BSPSceneManager_d.dll" ..\bin\Debug\
 copy "%OGRE_HOME%\bin\debug\Plugin_CgProgramManager_d.dll" ..\bin\Debug\
 copy "%OGRE_HOME%\bin\debug\Plugin_OctreeSceneManager_d.dll" ..\bin\Debug\

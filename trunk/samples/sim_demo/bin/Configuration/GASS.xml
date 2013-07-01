@@ -10,7 +10,6 @@
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPluginEnvironment"/>
-  <Plugin PluginFile = "GASSPluginEnvironment"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPluginGame"/>
   <Plugin PluginFile = "GASSPluginBase"/>
