@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <Scene>
     <Properties>
-        <StartPosition value="0 0 0" />
+        <StartPosition value="-557.1054077 7.137255192 606.3955688" />
         <StartRotation value="0 0 0" />
     </Properties>
     <SceneManagerSettings>
@@ -11,7 +11,7 @@
             <FogEnd value="2000" />
             <FogDensity value="0.01" />
             <FogColor value="1 1 1" />
-            <AmbientColor value="0.8980392157 0.8980392157 0.8980392157" />
+            <AmbientColor value="0.4196078431 0.4196078431 0.4196078431" />
             <SceneManagerType value="OctreeSceneManager" />
             <UseSkybox value="false" />
             <SkyboxMaterial value="CTSkybox" />
