@@ -14,7 +14,9 @@ material PGGrassTemplate
     set $Shininess "128"
 	//set $AlphaRejection "always_pass"
 	set $AlphaRejection "greater 128"
-
+	set $DepthWrite "on"
+	set $SceneBlend "one zero"
+	
 	technique HIGH_DETAIL_2_LIGHT
 	{ 
 		pass SINGLE_PASS_2_LIGHT
@@ -22,7 +24,9 @@ material PGGrassTemplate
 			ambient $AmbientColor
 			diffuse $DiffuseColor
 			specular $SpecularColor $Shininess
-			alpha_rejection $AlphaRejection 
+			alpha_rejection $AlphaRejection
+			depth_write $DepthWrite
+			scene_blend $SceneBlend			
 			
 			//vertex program is assigned by paged geometry
 			
