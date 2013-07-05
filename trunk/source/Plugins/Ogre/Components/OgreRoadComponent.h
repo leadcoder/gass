@@ -56,6 +56,9 @@ namespace GASS
 	protected:
 		ADD_ATTRIBUTE(float,CustomDitchTexturePercent)
 		ADD_ATTRIBUTE(bool,CAP)
+		ADD_ATTRIBUTE(bool,FadeStart)
+		ADD_ATTRIBUTE(bool,FadeEnd)
+		
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;
 

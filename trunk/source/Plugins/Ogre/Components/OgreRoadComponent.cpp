@@ -55,6 +55,8 @@ namespace GASS
 		m_ClampToTerrain(true),
 		m_TileScale(1,10),
 		m_CAP(false),
+		m_FadeStart(false),
+		m_FadeEnd(false),
 		m_CustomDitchTexturePercent(0)
 	{
 
@@ -99,6 +101,10 @@ namespace GASS
 		RegisterProperty<float>("CustomDitchTexturePercent", &GASS::OgreRoadComponent::GetCustomDitchTexturePercent, &GASS::OgreRoadComponent::SetCustomDitchTexturePercent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("CAP", &GASS::OgreRoadComponent::GetCAP, &GASS::OgreRoadComponent::SetCAP,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("FadeStart", &GASS::OgreRoadComponent::GetFadeStart, &GASS::OgreRoadComponent::SetFadeStart,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("FadeEnd", &GASS::OgreRoadComponent::GetFadeEnd, &GASS::OgreRoadComponent::SetFadeEnd,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
@@ -268,11 +274,14 @@ namespace GASS
 
 			last_pos.y = vertex.y = 0; 
 			Float width_mult = 1.0;
+			Float vertex_alpha = 1;
 			// positive is left vector 
 			if( i== 0 && points.size() > 1)
 			{
 				front = (points[1] - vertex); 
 				front.y = 0;
+				if(m_FadeStart)
+					vertex_alpha = 0;
 			}
 			else if(i < points.size() - 1)
 			{
@@ -290,6 +299,8 @@ namespace GASS
 			else
 			{
 				front = (vertex-last_pos);
+				if(m_FadeEnd)
+					vertex_alpha = 0;
 			}
 			front.Normalize();
 			lr_vector = Math::Cross(front,Vec3(0,1,0)); 
@@ -345,14 +356,14 @@ namespace GASS
 				MeshVertex mesh_vertex;
 				mesh_vertex.Pos = curr_vertices[j-1];
 				mesh_vertex.Normal.Set(0,1,0);
-				mesh_vertex.Color.Set(1,1,1,1);
+				mesh_vertex.Color.Set(1,1,1,vertex_alpha);
 				mesh_vertex.TexCoord.x = u_coord[j-1]*m_TileScale.x;
 				mesh_vertex.TexCoord.y = v_coord;
 				mesh_data->VertexVector.push_back(mesh_vertex);
 
 				mesh_vertex.Pos = curr_vertices[j];
 				mesh_vertex.Normal.Set(0,1,0);
-				mesh_vertex.Color.Set(1,1,1,1);
+				mesh_vertex.Color.Set(1,1,1,vertex_alpha);
 				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
 				mesh_vertex.TexCoord.y = v_coord;
 				mesh_data->VertexVector.push_back(mesh_vertex);
@@ -381,6 +392,12 @@ namespace GASS
 			MeshVertex* v2 = &mesh_data->VertexVector[mesh_data->IndexVector[i+1]];
 			MeshVertex* v3 = &mesh_data->VertexVector[mesh_data->IndexVector[i+2]];
 			Vec3 normal = Math::GetNormal(v1->Pos,v2->Pos,v3->Pos);
+			Vec3 tangent = v3->Pos - v1->Pos;
+			tangent.Normalize();
+
+			v1->Tangent = tangent;
+			v2->Tangent = tangent;
+			v3->Tangent = tangent;
 
 			v1->Normal = normal;
 			v2->Normal = normal;
@@ -389,6 +406,10 @@ namespace GASS
 			(&mesh_data->VertexVector[mesh_data->IndexVector[i+3]])->Normal = normal;
 			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Normal = normal;
 			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Normal = normal;
+
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+3]])->Tangent = tangent;
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Tangent = tangent;
+			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Tangent = tangent;
 		}
 
 		
