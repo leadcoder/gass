@@ -617,13 +617,13 @@ namespace GASS
 		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 
-		std::stringstream ss;
+		/*std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
 			
-			GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+			GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));*/
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";

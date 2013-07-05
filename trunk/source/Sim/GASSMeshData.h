@@ -40,6 +40,7 @@ namespace GASS
 	{
 		Vec3 Pos;
 		Vec3 Normal;
+		Vec3 Tangent;
 		Vec4 Color;
 		Vec2 TexCoord;
 	};
