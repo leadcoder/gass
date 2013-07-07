@@ -18,6 +18,13 @@ else()
 	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
 endif()
 
-SET(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
+set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
+set(GASS_INSTALL_LIB_DIR "lib")
+set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
+set(GASS_INSTALL_INCLUDE_DIR  "include")
 
+set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${PROJECT_SOURCE_DIR}/Source" 	"${GASS_DEPENDENCIES_DIR}/tinyxml"	"${GASS_DEPENDENCIES_DIR}/tbb/include")
+set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/")
+set(GASS_COMMON_LINK_LIBRARIES optimized tinyxml debug tinyxml_d)
+	
 add_subdirectory( Source )
