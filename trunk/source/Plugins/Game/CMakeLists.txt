@@ -1,12 +1,11 @@
 #set lib name here!
-set(LIB_NAME "GASSPluginBase")
+set(LIB_NAME "GASSPluginGame")
 
 #Set include directiores
-include_directories(${GASS_COMMON_INCLUDE_DIRS})
+include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Source/Plugins/Game")
 
 #add all source files from current directory (recursively)
 add_source_from_current_dir()
-
 
 #Add some foldets where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
