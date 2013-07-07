@@ -1,5 +1,5 @@
 
-#ifdef OGRE_19
+#ifndef OGRE_18
 	#include <Overlay/OgreFontManager.h>
 	#include <Overlay/OgreOverlayManager.h>
 	#include <Overlay/OgreOverlayContainer.h>

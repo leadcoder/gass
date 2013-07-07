@@ -3,7 +3,7 @@
 
 #include <Ogre.h>
 
-#ifdef OGRE_19
+#ifndef OGRE_18
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 #include <Overlay/OgreOverlayManager.h>

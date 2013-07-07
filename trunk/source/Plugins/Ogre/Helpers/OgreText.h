@@ -1,6 +1,6 @@
 #include <Ogre.h>
 #include <OgreSingleton.h>
-#ifdef OGRE_19
+#ifndef OGRE_18
 #include <Overlay/OgreOverlay.h>
 #endif
 

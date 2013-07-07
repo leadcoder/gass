@@ -45,7 +45,7 @@
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
 #include <OgreLogManager.h>
-#ifdef OGRE_19
+#ifndef OGRE_18
 #include <Overlay/OgreOverlaySystem.h>
 #endif
 
@@ -118,7 +118,7 @@ namespace GASS
 
 		//Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 
-		#ifdef OGRE_19
+		#ifndef OGRE_18
 			m_OverlaySystem = new Ogre::OverlaySystem();
 		#endif
 
