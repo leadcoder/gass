@@ -25,7 +25,7 @@ link_directories(${GASS_COMMON_LIB_DIRS} "${OGRE_DIR}/lib")
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 #Add project dependency libs
-set(OGRE_LINK_LIBRARIES optimized OgreMain 
+set(PROJ_LINK_LIBRARIES optimized OgreMain 
 	optimized OgrePaging 
 	optimized Hydrax
 	optimized SkyX
@@ -35,7 +35,7 @@ set(OGRE_LINK_LIBRARIES optimized OgreMain
 	)
 
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
-target_link_libraries(${LIB_NAME} ${OGRE_LINK_LIBRARIES})
+target_link_libraries(${LIB_NAME} ${PROJ_LINK_LIBRARIES})
 
 install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_PLUGIN_LIB_DIR})		
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/plugins FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
