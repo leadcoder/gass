@@ -32,3 +32,33 @@ material CampWall : GASS_BaseMap
 }  
 
 
+material Road01 : GASS_BaseAndNormalMap
+{ 
+	set_texture_alias BaseTexture road_01.dds
+	set_texture_alias NormalTexture road_01_normal.dds
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+	
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+	
+} 
+
+material Road02 : GASS_BaseAndNormalMap
+{ 
+	set_texture_alias BaseTexture road_02.dds
+	set_texture_alias NormalTexture road_02_normal.dds
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+	
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+	
+} 
+

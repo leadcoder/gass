@@ -43,9 +43,9 @@
 function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
 		#dont know why but foreach skip first element if we use ARGN
 		set(my_files ${ARGN})
-		MESSAGE(${my_files})
+		
 		FOREACH(currentSourceFile ${my_files})
-		    MESSAGE(${currentSourceFile})
+		   
 			FILE(RELATIVE_PATH folder ${relativeSourcePath} ${currentSourceFile})
             get_filename_component(filename ${folder} NAME)
 			
