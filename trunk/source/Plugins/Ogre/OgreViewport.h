@@ -23,6 +23,7 @@
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Plugins/Ogre/OgreRenderWindow.h"
+#include "Plugins/Ogre/OgrePostProcess.h"
 #include <string>
 
 namespace Ogre
@@ -51,6 +52,7 @@ namespace GASS
 		std::string m_Name;
 		OgreRenderWindow* m_Window;
 		CameraComponentWeakPtr m_Camera;
+		OgrePostProcessPtr m_PostProcess;
 	};
 	typedef SPTR<OgreViewport> OgreViewportPtr;
 }

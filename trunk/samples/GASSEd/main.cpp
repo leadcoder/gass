@@ -11,6 +11,9 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
  //   QMap<QString, QSize> customSizeHints = parseCustomSizeHints(argc, argv);
     GASSEd gass_win;
+
+	if(argc > 1)
+		gass_win.SetConfigPrefix(argv[1]);
     gass_win.resize(800, 600);
     try
 	{

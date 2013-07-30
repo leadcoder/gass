@@ -71,13 +71,7 @@ namespace GASS
 		m_Viewports.push_back(vp_wrapper);
 		return vp_wrapper;
 
-		//add post process to all windows, change this to camera effect instead?
-		/*if(m_PostProcess)
-		{
-			m_PostProcess.reset();
-		}*/
-		//m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(vp));
-		//m_PostProcess->SetActiveCompositors(GetPostFilters());
+		
 	}
 
 }
