@@ -99,7 +99,7 @@ namespace GASS
 		// add some OSG handlers, maybee only in first view?
 		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 		stats->setKeyEventTogglesOnScreenStats('y');
-		stats->setKeyEventPrintsOutStats(0);
+		stats->setKeyEventPrintsOutStats('¤');
 
 		view->addEventHandler(stats);
 		view->addEventHandler(new osgViewer::WindowSizeHandler());

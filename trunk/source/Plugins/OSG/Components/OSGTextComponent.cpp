@@ -71,7 +71,8 @@ namespace GASS
 	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionMessagePtr message)
 	{
 		std::string caption = message->GetCaption();
-		m_OSGText->setText(caption.c_str());
+		if(m_OSGText)
+			m_OSGText->setText(caption.c_str());
 	}
 
 	void OSGTextComponent::OnLocationLoaded(LocationLoadedMessagePtr message)

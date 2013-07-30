@@ -58,7 +58,21 @@ namespace GASS
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OSGBillboardComponent::GetHeight, &GASS::OSGBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OSGBillboardComponent::GetWidth, &GASS::OSGBillboardComponent::SetWidth);
+
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+
 	}
+
+	void OSGBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
+	{
+		SetGeometryFlags(value.GetValue());
+	}
+	GeometryFlagsBinder OSGBillboardComponent::GetGeometryFlagsBinder() const
+	{
+		return GeometryFlagsBinder(GetGeometryFlags());
+	}
+
 
 	void OSGBillboardComponent::OnInitialize()
 	{
@@ -113,6 +127,7 @@ namespace GASS
 		
 		//make offset
 		Vec3 corner = -east*0.5;
+		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options("dds_flip");
 
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
@@ -120,7 +135,7 @@ namespace GASS
 			CreateSquare(osg::Vec3(corner.x,corner.y,corner.z),
 			osg::Vec3(east.x,east.y,east.z),
 			osg::Vec3(up.x,up.y,up.z),
-			osgDB::readImageFile(full_path)).get(),
+			osgDB::readImageFile(full_path,options)).get(),
 			osg::Vec3(0.0f,0.0f,0.0f));
 
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());

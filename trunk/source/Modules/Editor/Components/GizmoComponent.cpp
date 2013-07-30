@@ -593,7 +593,7 @@ namespace GASS
 					Vec3(0,0,0),
 					Vec3(m_Color.x,m_Color.y,m_Color.z),
 					0,
-					grid));
+					false));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = true;
@@ -609,7 +609,7 @@ namespace GASS
 					Vec3(0,0,0),
 					color,
 					0,
-					grid));
+					false));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = false;

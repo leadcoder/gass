@@ -25,7 +25,7 @@
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
-
+#include "Sim/GASSResourceManager.h"
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
 #include <osg/MatrixTransform>
@@ -220,49 +220,28 @@ namespace GASS
 		if(!filename.Valid()) //not loaded
 			return;
 
-		//check if extension exist?
-		FilePath file_path = filename.GetResource()->Path();
-		const std::string extension =  file_path.GetExtension();
-		std::string  mod_file_path = file_path.GetFullPath();
-		//hack to convert ogre meshes
+		FilePath temp_file_path(filename.Name());
+		const std::string extension =  temp_file_path.GetExtension();
+		std::string  mod_file_name = filename.Name();
+
+		//hack to support ogre templates
 		if(extension == "mesh") //this is ogre model, try to load 3ds instead
 		{
-			mod_file_path = Misc::Replace(mod_file_path,".mesh",".3ds");
+			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+			std::string file_name_3ds = Misc::Replace(mod_file_name,".mesh",".3ds");
+			std::string file_name_obj = Misc::Replace(mod_file_name,".mesh",".obj");
+			std::string file_name_flt = Misc::Replace(mod_file_name,".mesh",".flt");
+			if(rm->HasResource(file_name_3ds))
+				mod_file_name = file_name_3ds;
+			else if(rm->HasResource(file_name_obj))
+				mod_file_name = file_name_obj;
+			else if(rm->HasResource(file_name_flt))
+				mod_file_name = file_name_flt;
 		}
 
-		LoadMesh(mod_file_path);
-
-		/*if(m_MeshNode.valid())
-		{
-			lc->GetOSGNode()->removeChild(m_MeshNode.get());
-			m_MeshNode.release();
-		}
-
-		m_MeshNode = (osg::Group*) osgDB::readNodeFile((mod_file_path));
-
-		if( ! m_MeshNode)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + mod_file_path,"OSGMeshComponent::SetFilename");
-		}
-
-		osgUtil::Optimizer optimizer;
-		optimizer.optimize(m_MeshNode.get());
-
-		OSGNodeData* data = new OSGNodeData(shared_from_this());
-		m_MeshNode->setUserData(data);
-
-		SetLighting(m_Lighting);
-		SetCastShadow(m_CastShadow);
-		SetReceiveShadow(m_ReceiveShadow);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-
-		//expand children
-		if(m_Expand)
-			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
-	
-		lc->GetOSGNode()->addChild(m_MeshNode.get());
-		//update mask!
-		SetGeometryFlags(m_GeomFlags);*/
+		ResourceHandle new_res(mod_file_name);
+		FilePath file_path = new_res.GetResource()->Path();
+		LoadMesh(file_path.GetFullPath());
 	}
 
 

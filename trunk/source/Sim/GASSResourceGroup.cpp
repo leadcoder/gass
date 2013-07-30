@@ -124,25 +124,15 @@ namespace GASS
 	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		const std::string lower_name = Misc::ToLower(resource_name);
 		while(iter != m_ResourceLocations.end())
 		{
-			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().find(resource_name);
+			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().find(lower_name);
 			if(c_iter != (*iter)->GetResources().end())
 			{
 				resources.push_back(c_iter->second);
 			}
 			++iter;
-
-			/*ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
-			while(c_iter != (*iter)->GetResources().end())
-			{
-				if(c_iter->second->Name() == resource_name)
-				{
-					resources.push_back(c_iter->second);
-				}
-				c_iter++;
-			}
-			++iter;*/
 		}
 	}
 }

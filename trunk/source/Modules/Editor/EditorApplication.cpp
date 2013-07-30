@@ -38,26 +38,19 @@ namespace GASS
 		delete SimEngine::GetPtr();
 	}
 
-	void EditorApplication::Init(const FilePath &working_folder, const std::string &render_system, void* main_win_handle, void *render_win_handle)
+	void EditorApplication::Init(const FilePath &working_folder, const std::string &gass_configuration, void* main_win_handle, void *render_win_handle)
 	{	
 		const std::string config_path = working_folder.GetFullPath() + "../configuration/";
 		//app settings
 		LoadSettings(config_path + "EditorApplication.xml");
 		SimEngine *se = SimEngine::GetPtr();
 
-		const std::string gass_config_file = config_path + "GASS" + render_system + ".xml";
+		const std::string gass_config_file = config_path + gass_configuration;
 		se->Init(gass_config_file,m_LogFolder);
 
 		//load keyboard config!
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		css->Load(config_path +  "GASSControlSettings.xml");
-		
-
-		/*EditorSystemPtr es = se->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
-		if(!es)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get EditorSystem", "EditorApplication::Init");
-		es->SetPaths(working_folder,appdata_folder_path,mydocuments_folder_path);*/
-
 		//Start client or server?
 		if(Misc::ToLower(m_Mode) == "server")
 		{

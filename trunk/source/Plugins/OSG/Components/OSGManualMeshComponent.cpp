@@ -339,7 +339,11 @@ namespace GASS
 		if(message->GetDepthTest())
 			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 		else
+		{
 			nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+			//after transparent bin
+			nodess->setRenderBinDetails(11,"RenderBin");
+		}
 		
 		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
         // Turn on blending
