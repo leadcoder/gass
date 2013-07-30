@@ -52,8 +52,8 @@ namespace GASS
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
 		static void UpdateStateSet(osg::ref_ptr<osg::StateSet> state, const GraphicsMaterial &material);
 	protected:
+		ADD_ATTRIBUTE(bool,FlipDSS);
 		void LoadXML(TiXmlElement *elem);
-	
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);

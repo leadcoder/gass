@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSResourceHandle.h"
+#include "Sim/GASSSceneObject.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
@@ -319,6 +320,21 @@ namespace GASS
 		CameraParameterType m_Parameter;
 	};
 	typedef SPTR<CameraParameterMessage> CameraParameterMessagePtr;
+
+
+	/**
+		Request camera to track scene object
+	*/
+	class CameraTrackObjectRequest : public BaseMessage
+	{
+	public:
+		CameraTrackObjectRequest(SceneObjectPtr track_object, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Track(track_object){}
+		  SceneObjectPtr GetTrackObject()const {return m_Track;}
+	private:
+		SceneObjectPtr m_Track;
+	};
+	typedef SPTR<CameraTrackObjectRequest> CameraTrackObjectRequestPtr;
 
 
 	class BoundingInfoMessage : public BaseMessage
@@ -660,6 +676,8 @@ namespace GASS
 	};
 	typedef SPTR<RoadMessage> RoadMessagePtr;
 
+
+	
 
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS

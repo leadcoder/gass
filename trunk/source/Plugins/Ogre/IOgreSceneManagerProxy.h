@@ -31,5 +31,5 @@ namespace GASS
 		virtual ~IOgreSceneManagerProxy(){}
 		virtual Ogre::SceneManager* GetOgreSceneManager() const = 0;
 	};
-	typedef boost::shared_ptr<IOgreSceneManagerProxy> OgreSceneManagerProxyPtr;
+	typedef SPTR<IOgreSceneManagerProxy> OgreSceneManagerProxyPtr;
 }

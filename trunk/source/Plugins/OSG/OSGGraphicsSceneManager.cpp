@@ -70,6 +70,7 @@ namespace GASS
 	void OSGGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OSGGraphicsSceneManager",new GASS::Creator<OSGGraphicsSceneManager, ISceneManager>);
+		RegisterProperty<std::string>( "FogMode", &GetFogMode, &SetFogMode);
 		RegisterProperty<float>( "FogStart", &GetFogStart, &SetFogStart);
 		RegisterProperty<float>( "FogEnd", &GetFogEnd, &SetFogEnd);
 		RegisterProperty<float>( "FogDensity", &GetFogDensity, &SetFogDensity);
@@ -148,13 +149,16 @@ namespace GASS
 			m_ShadowedScene->setShadowTechnique(st);
 			m_RootNode->addChild(m_ShadowedScene);
 		}
-		UpdateFogSettings();
-		//add and enable fog
+
 		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
 		state->setAttributeAndModes(m_Fog.get());
-		short attr = osg::StateAttribute::ON;
+
+		UpdateFogSettings();
+		//add and enable fog
+		
+		/*short attr = osg::StateAttribute::ON;
 		state->setMode(GL_FOG, attr);
-		GetOSGShadowRootNode()->setStateSet(state);
+		GetOSGShadowRootNode()->setStateSet(state);*/
 	}
 
 	void OSGGraphicsSceneManager::OnInit()
@@ -195,13 +199,40 @@ namespace GASS
 		m_Fog->setDensity(m_FogDensity);
 		m_Fog->setEnd(m_FogEnd);
 		m_Fog->setStart(m_FogStart);
+
+		if(m_RootNode)
+		{
+			osg::StateSet* state = m_RootNode->getOrCreateStateSet();
+			short attr = osg::StateAttribute::OFF;
+			state->setMode(GL_FOG, attr);
+		}
+
 		if(m_FogMode == "Linear")
+		{
 			m_Fog->setMode(osg::Fog::LINEAR);
+		}
 		else if(m_FogMode == "Exp")
+		{
 			m_Fog->setMode(osg::Fog::EXP);
+		}
 		else if(m_FogMode == "Exp2")
+		{
 			m_Fog->setMode(osg::Fog::EXP2);
+		}
+		else if(m_FogMode == "None")
+		{
+			if(m_RootNode)
+			{
+				osg::StateSet* state = m_RootNode->getOrCreateStateSet();
+				short attr = osg::StateAttribute::OFF;
+				state->setMode(GL_FOG, attr);
+				m_RootNode->setStateSet(state);
+			}
+		}
+			
 	}
+
+	
 
 
 	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()

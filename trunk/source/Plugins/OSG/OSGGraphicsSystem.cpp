@@ -79,7 +79,10 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASS.xml"), m_DebugTextBox(new TextBox()),m_Viewer(NULL)
+	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASS.xml"), 
+		m_DebugTextBox(new TextBox()),
+		m_Viewer(NULL),
+		m_FlipDSS(false)
 	{
 
 	}
@@ -102,6 +105,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
 		//RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OSGGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OSGGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
+		RegisterProperty<bool>("FlipDSS", &GASS::OSGGraphicsSystem::GetFlipDSS, &GASS::OSGGraphicsSystem::SetFlipDSS);
 	}
 
 	void OSGGraphicsSystem::LoadXML(TiXmlElement *elem)
@@ -191,9 +195,12 @@ namespace GASS
 			opt = new osgDB::ReaderWriter::Options(); 
 		} 
 
-		const std::string options = opt->getOptionString();
-		opt->setOptionString("dds_flip"); 
-		osgDB::Registry::instance()->setOptions(opt); 
+		if(m_FlipDSS)
+		{
+			const std::string options = opt->getOptionString();
+			opt->setOptionString("dds_flip"); 
+			osgDB::Registry::instance()->setOptions(opt); 
+		}
 
 		//opt->setObjectCacheHint(osgDB::ReaderWriter::Options::CACHE_ALL); 
 		//osgDB::Registry::instance()->setOptions(opt); 
