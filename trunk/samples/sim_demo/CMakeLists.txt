@@ -7,33 +7,143 @@ include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/s
 set(CPP_FILES "source/SimDemo.cpp")
 set(H_FILES "source/Client.h" "source/Server.h" "source/SimApplication.h")
 
+
+#change output folder to local project folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/samples_output/${LIB_NAME}) #dlls and exe
+
 #Add some foldets where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
+
+
+
 add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
+set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
+
 
 #Add project dependency libs
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
-install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin)
-#install config files
-FILE(GLOB GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/bin/Configuration/*.xml")
-install(FILES ${GASS_CONFIG} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/Configuration)
-install(DIRECTORY ../common DESTINATION ${GASS_INSTALL_SAMPLES_DIR} FILES_MATCHING PATTERN "*.*" PATTERN ".svn" EXCLUDE)
-#ADD_CUSTOM_COMMAND(TARGET SimDemo
- #         POST_BUILD
-         # COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}
-	 
- #         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_INSTALL_PREFIX}/${GASS_INSTALL_LIB_DIR}/*.dll ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin/.)
-#install shared files if windows
-if(${WIN32})
-	set(DEP_DLLS 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
+target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_COMMON_LINK_LIBRARIES})
+
+add_dependencies(${LIB_NAME} GASSCore 
+		GASSSim 
+		GASSPluginODE 
+		GASSPluginOgre
+		GASSPluginOIS
+		GASSPluginODE
+		GASSPluginPagedGeometry
+		GASSPluginEnvironment
+		GASSPluginOpenAL
+		GASSPluginGame
+		GASSPluginBase
+		GASSPluginRakNet)
+
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
+	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
+else()
+	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
+endif()
+
+
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+
+	set(DEP_DLL_FILES 
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll 
 	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
+	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
+	${OGRE_DIR}/bin/debug/OgreMain_d.dll
+	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
+	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
+	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
+	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
+	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
+	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
+	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
+	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
+	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
+	${OGRE_DIR}/bin/release/cg.dll)
+	
+	set(GASS_DLL_FILES 
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll
+	)
+	
+ENDIF (CMAKE_BUILD_TYPE MATCHES DEBUG)
+
+IF (CMAKE_BUILD_TYPE MATCHES RELEASE)
+	set(DEP_DLL_FILES 
+	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
+	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
 	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll)
-	install (FILES  ${DEP_DLLS} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin)
-	#install GASS files, maybe applications can share this?
-	#FILE(GLOB GASS_DLLS "${CMAKE_INSTALL_PREFIX}/${GASS_INSTALL_LIB_DIR}/*.dll")
-	#MESSAGE(${GASS_DLLS})
-	#install(FILES ${GASS_DLLS} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin)
-endif()
+	${OGRE_DIR}/bin/release/OgreMain.dll
+	${OGRE_DIR}/bin/release/OgreTerrain.dll
+	${OGRE_DIR}/bin/release/OgrePaging.dll
+	${OGRE_DIR}/bin/release/OgreOverlay.dll
+	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
+	${OGRE_DIR}/bin/release/OgreOverlay.dll
+	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
+	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
+	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
+	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
+	${OGRE_DIR}/bin/release/cg.dll)
+	set(GASS_DLL_FILES 
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSCore.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSSim.dll 
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
+	${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll)
+ENDIF ( CMAKE_BUILD_TYPE MATCHES RELEASE )
+
+
+	
+#FILE(GLOB dll_files 
+#		${GASS_DEPENDENCIES_DIR}/lib/*.dll 
+#		${OGRE_DIR}/bin/release/*.dll
+#		${OGRE_DIR}/bin/debug/*.dll)
+
+set(ALL_DLL_FILES 
+	${DEP_DLL_FILES}
+	${GASS_DLL_FILES})
+
+
+#add dll files to out dir to enable debugging from IDE without install step
+foreach(DLL_FILE ${ALL_DLL_FILES})
+
+	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
+endforeach()
+
+	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configuration
+			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/bin/configuration ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configuration
+			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data
+			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../common/data ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data)
+
+			
+#install exe			
+install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin)
+
+#install config
+FILE(GLOB GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/bin/Configuration/*.xml")
+install(FILES ${GASS_CONFIG} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/Configuration)
+
+#install data
+install(DIRECTORY ../common/data DESTINATION ${GASS_INSTALL_SAMPLES_DIR} FILES_MATCHING PATTERN "*.*" PATTERN ".svn" EXCLUDE)
+
+#install dlls
+install (FILES  ${ALL_DLL_FILES} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin)

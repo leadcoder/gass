@@ -1,8 +1,8 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginOgre")
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre" CACHE PATH "Ogre 3D folder")
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
+	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
 else()
 	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
 endif()

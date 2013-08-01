@@ -1,8 +1,8 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginPhysX3")
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/physx")
-	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/physx" CACHE PATH "PhysX folder")
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4")
+	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
 else()
 	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
 endif()

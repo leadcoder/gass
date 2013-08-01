@@ -7,7 +7,7 @@
     <Template Name="../Configuration/app_templates.xml"/>
   </Templates>-->
   <Objects>
-   <Object Name="JimTank"/>
+   <!--<Object Name="JimTank"/>-->
    <!--<Object Name="MyBox"/>-->
     <!--<Object Name="JimTank"/>
     <Object Name="JimTank"/>

@@ -1,8 +1,8 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginOSG")
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/osg")
-	set(OSG_DIR  "${GASS_DEPENDENCIES_DIR}/osg" CACHE PATH "OSG folder")
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/OpenSceneGraph-v3.0.1")
+	set(OSG_DIR  "${GASS_DEPENDENCIES_DIR}/OpenSceneGraph-v3.0.1" CACHE PATH "OSG folder")
 else()
 	set(OSG_DIR $ENV{OSG_HOME} CACHE PATH "OSG folder")
 endif()
