@@ -55,7 +55,8 @@ namespace GASS
 		m_SceneMgr(NULL),
 		m_UpdateMessagePump(true),
 		m_DebugTextBox (new OgreDebugTextOutput()),
-		m_ResourceManager(OgreResourceManagerPtr(new OgreResourceManager))
+		m_ResourceManager(OgreResourceManagerPtr(new OgreResourceManager)),
+		m_ShowStats(true)
 	{
 	}
 
