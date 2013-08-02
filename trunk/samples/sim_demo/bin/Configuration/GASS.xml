@@ -16,8 +16,8 @@
   <Plugin PluginFile = "GASSPluginRakNet"/>
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
 </Plugins>
-<SetDataPath value="../data/"/>
-<ScenePath value="../data/sceneries"/>
+<SetDataPath value="../../data/"/>
+<ScenePath value="../../data/sceneries"/>
 <ResourceManager>
   <ResourceGroup name="Bootstrap">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
