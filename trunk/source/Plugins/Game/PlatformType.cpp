@@ -1,4 +1,3 @@
-#include <boost/bind.hpp>
 #include "Plugins/Game/PlatformType.h"
 
 namespace GASS

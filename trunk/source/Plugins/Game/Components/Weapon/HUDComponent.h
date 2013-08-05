@@ -21,6 +21,7 @@
 #ifndef HUD_COMPONENT_H
 #define HUD_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -28,7 +29,6 @@
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Plugins/Game/GameMessages.h"
 

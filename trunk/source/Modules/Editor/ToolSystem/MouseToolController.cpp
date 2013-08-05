@@ -1,6 +1,6 @@
 
 
-#include <boost/bind.hpp>
+
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Sim/GASSCommon.h"
 #include "../EditorCommon.h"
 #include <set>
 #include "IMouseTool.h"

@@ -19,11 +19,17 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
+#include <osg/ref_ptr>
 //#include "Sim/GASSResourceHandle.h"
-class osg::Billboard;
-class osg::Image;
-class osg::Drawable;
-class osgText::Text;
+
+#include <osgText/Text>
+namespace osg
+{
+	class Billboard;
+	class Image;
+	class Drawable;
+	class Text;
+}
 
 namespace GASS
 {

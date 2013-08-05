@@ -21,6 +21,7 @@
 #ifndef RAK_NET_INPUT_TRANSFER_COMPONENT_H
 #define RAK_NET_INPUT_TRANSFER_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"

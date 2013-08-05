@@ -20,6 +20,7 @@
 
 #pragma once
 
+
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"

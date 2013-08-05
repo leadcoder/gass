@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
 
+#include "Plugins/Ogre/Components/OgreInstancedMeshComponent.h"
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
@@ -36,7 +36,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Plugins/Ogre/Components/OgreInstancedMeshComponent.h"
+
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 

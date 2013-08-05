@@ -1,4 +1,5 @@
 #pragma once
+#include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"

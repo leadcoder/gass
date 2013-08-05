@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"

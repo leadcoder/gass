@@ -20,16 +20,13 @@
 
 #pragma once
 
-#include <map>
+#include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-
-
 #include "Plugins/RakNet/RakNetMessages.h"
-
 
 namespace GASS
 {

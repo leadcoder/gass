@@ -20,6 +20,7 @@
 
 #pragma once 
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -28,7 +29,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
-//#include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
+
 
 namespace GASS
 {

@@ -20,8 +20,8 @@
 #ifndef I_TEMPLATE_SOURCE_COMPONENT_H
 #define I_TEMPLATE_SOURCE_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 

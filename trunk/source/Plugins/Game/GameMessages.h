@@ -20,6 +20,8 @@
 
 #ifndef GAME_MESSAGES_H
 #define GAME_MESSAGES_H
+
+#include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Game/DetectionData.h"

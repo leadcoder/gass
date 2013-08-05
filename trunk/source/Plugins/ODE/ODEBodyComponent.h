@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Sim/GASSCommon.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
 

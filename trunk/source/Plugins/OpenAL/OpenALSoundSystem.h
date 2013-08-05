@@ -1,6 +1,6 @@
 #ifndef OPENAL_SOUND_SYSTEM_H
 #define OPENAL_SOUND_SYSTEM_H
-
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSQuaternion.h"

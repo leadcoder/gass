@@ -18,17 +18,14 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/RakNet/RakNetNetworkSystem.h"
-//#include "Plugins/RakNet/RakNetBase.h"
-#include "RakNetMessageTransferComponent.h"
 
+
+#include "RakNetMessageTransferComponent.h"
+#include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkChildComponent.h"
 #include "RakNetMasterReplica.h"
 #include "RakNetChildReplica.h"
-
-
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -36,12 +33,8 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"

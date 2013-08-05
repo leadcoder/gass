@@ -21,6 +21,7 @@
 #ifndef ODE_LINE_COLLISION
 #define ODE_LINE_COLLISION
 
+#include "Sim/GASSCommon.h"
 #include <ode/ode.h>
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 

@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
 #include "OgreLightComponent.h"
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>

@@ -20,10 +20,10 @@
 #ifndef BOX_GEOMETRY_COMPONENT_H
 #define BOX_GEOMETRY_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSIShape.h"
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSIShape.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS

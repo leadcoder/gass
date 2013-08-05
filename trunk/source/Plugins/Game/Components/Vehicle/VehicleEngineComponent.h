@@ -21,6 +21,7 @@
 #ifndef VEHICLE_ENGINE_COMPONENT_H
 #define VEHICLE_ENGINE_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -29,8 +30,6 @@
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-
-#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 

@@ -37,7 +37,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-#include <boost/bind.hpp>
+
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>

@@ -17,13 +17,15 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
+#include "Plugins/OSG/OSGViewport.h"
 #include <osgViewer/Viewer>
 
 
 #include "Core/Common.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Plugins/OSG/OSGViewport.h"
+
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"

@@ -20,6 +20,7 @@
 #ifndef SKY_X_COMPONENT_H
 #define SKY_X_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"

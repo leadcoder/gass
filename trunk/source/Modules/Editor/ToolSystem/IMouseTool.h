@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Sim/GASSCommon.h"
 #include "../EditorCommon.h"
 #include "CursorInfo.h"
 #include "Core/MessageSystem/GASSIMessage.h"

@@ -18,11 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+
+#include "RakNetLocationTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
-//#include "Plugins/RakNet/RakNetBase.h"
-#include "RakNetLocationTransferComponent.h"
-
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"

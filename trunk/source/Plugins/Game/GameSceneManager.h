@@ -21,9 +21,8 @@
 #ifndef GAME_SCENE_MANAGER_H
 #define GAME_SCENE_MANAGER_H
 
-#include <map>
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSCommon.h"
+#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
 
 

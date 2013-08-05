@@ -20,6 +20,8 @@
 
 #pragma once 
 
+#include "Core/Common.h"
+
 #include "PhysXPhysicsSceneManager.h"
 #include "PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"

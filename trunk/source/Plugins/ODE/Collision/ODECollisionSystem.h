@@ -20,7 +20,7 @@
 
 #pragma once
 
-
+#include "Sim/GASSCommon.h"
 #include <ode/ode.h>
 #include <map>
 #include "Sim/Interface/GASSICollisionSystem.h"

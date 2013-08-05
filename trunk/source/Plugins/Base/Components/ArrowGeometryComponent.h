@@ -20,8 +20,8 @@
 #ifndef ARROW_GEOMETRY_COMPONENT_H
 #define ARROW_GEOMETRY_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSResourceHandle.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 

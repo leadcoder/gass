@@ -19,11 +19,15 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
-
-class osg::Billboard;
-class osg::Image;
-class osg::Drawable;
-class osg::Geometry;
+#include <osg/ref_ptr>
+#include <osg/vec3>
+namespace osg
+{
+class Billboard;
+class Image;
+class Drawable;
+class Geometry;
+}
 
 namespace GASS
 {

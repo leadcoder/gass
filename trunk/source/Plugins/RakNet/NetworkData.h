@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "Sim/GASSCommon.h"
 namespace GASS
 {
 	struct ServerData

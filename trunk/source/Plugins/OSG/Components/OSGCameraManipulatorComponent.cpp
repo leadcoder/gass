@@ -17,8 +17,7 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#include <boost/bind.hpp>
+#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgGA/NodeTrackerManipulator>
@@ -29,7 +28,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
+
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/Utils/MyTrackballManipulator.h"
 #include "Plugins/OSG/OSGNodeMasks.h"

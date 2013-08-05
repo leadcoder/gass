@@ -20,7 +20,7 @@
 
 /* FIXME Fading doesn't work with multiple grass layers */
 
-#include <boost/bind.hpp>
+
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
 #include "GrassGeometryComponent.h"

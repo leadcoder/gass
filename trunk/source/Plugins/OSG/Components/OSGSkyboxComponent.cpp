@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+#include "Plugins/OSG/Components/OSGSkyboxComponent.h"
 #include <osgDB/ReadFile>
 #include <osg/Texture2D>
 #include <osg/AlphaFunc>
@@ -38,7 +38,7 @@
 #include <osgShadow/ShadowTechnique>
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/Components/OSGSkyboxComponent.h"
+
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"

@@ -21,7 +21,10 @@
 #ifndef RAKNET_NETWORK_SYSTEM_H
 #define RAKNET_NETWORK_SYSTEM_H
 
-#include <map>
+
+
+#include "Sim/GASSCommon.h"
+
 //Raknet includes
 #include "MessageIdentifiers.h"
 #include "NetworkIDManager.h"

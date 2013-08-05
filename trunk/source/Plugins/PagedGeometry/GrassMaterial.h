@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-
+#include "Sim/GASSCommon.h"
 #include <string>
 #include <OgreMaterialManager.h>
 

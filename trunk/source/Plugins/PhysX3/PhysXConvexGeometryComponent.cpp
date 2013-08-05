@@ -18,11 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifdef WIN32
-#define NOMINMAX
-#include <algorithm>
-#endif
-
 #include "Plugins/PhysX3/PhysXConvexGeometryComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
@@ -43,7 +38,7 @@
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include <boost/bind.hpp>
+
 
 using namespace physx;
 

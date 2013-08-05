@@ -125,6 +125,10 @@ namespace GASS
 #include <vector>
 #include <map>
 #include <list>
+
+#ifdef WIN32
+	#define NOMINMAX
+#endif
 #include <algorithm>
 #include <xutility>
 

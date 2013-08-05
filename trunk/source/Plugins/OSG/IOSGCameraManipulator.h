@@ -21,6 +21,8 @@
 #pragma once
 #include "Sim/GASS.h"
 #include <osg/Camera>
+#include <osg/ref_ptr>
+#include <osgGA/CameraManipulator>
 
 namespace GASS
 {

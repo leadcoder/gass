@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-//#include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
-#include <boost/bind.hpp>
+#include "OgreManualMeshComponent.h"
+
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
@@ -28,7 +28,6 @@
 #include <OgreManualObject.h>
 #include <OgreCommon.h>
 
-#include "OgreManualMeshComponent.h"
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSVector.h"

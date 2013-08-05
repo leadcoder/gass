@@ -18,11 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifdef WIN32
-#define NOMINMAX
-#include <algorithm>
-#endif
-
 #include "Plugins/ODE/ODEMeshGeometryComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
@@ -41,7 +36,6 @@
 #include "Sim/Interface/GASSIResourceComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include <boost/bind.hpp>
 
 namespace GASS
 {

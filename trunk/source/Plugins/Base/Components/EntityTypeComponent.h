@@ -13,10 +13,11 @@
 *****************************************************************************/ 
 
 #pragma once
+
+#include "Sim/GASSCommon.h"
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"

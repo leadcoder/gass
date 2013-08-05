@@ -20,7 +20,7 @@
 
 #ifndef GUI_SCEHMA_LOADER_H
 #define GUI_SCEHMA_LOADER_H
-
+#include "Sim/GASSCommon.h"
 #include "EditorCommon.h"
 #include <Core/Common.h>
 #include "Core/Reflection/GASSBaseReflectionObject.h"

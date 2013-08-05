@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+#include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgGA/NodeTrackerManipulator>
@@ -28,7 +28,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "Plugins/OSG/Components/OSGCameraComponent.h"
+
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"

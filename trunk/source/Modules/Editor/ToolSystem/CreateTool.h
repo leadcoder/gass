@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Sim/GASSCommon.h"
 #include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"

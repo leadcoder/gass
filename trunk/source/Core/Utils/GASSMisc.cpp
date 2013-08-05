@@ -126,7 +126,7 @@ namespace GASS
 
 
 
-	int Misc::ReadOneLine(FILE *f,char *string)
+	/*int Misc::ReadOneLine(FILE *f,char *string)
 	{
 		do
 		{
@@ -195,7 +195,7 @@ namespace GASS
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 
 	std::string Misc::ToUpper(const std::string&str)

@@ -2,8 +2,8 @@
 #ifndef SENSOR_COMPONENT
 #define SENSOR_COMPONENT
 
-#include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASS.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include <set>
 

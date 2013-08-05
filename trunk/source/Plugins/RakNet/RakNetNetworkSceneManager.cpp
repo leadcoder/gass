@@ -17,7 +17,9 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <boost/bind.hpp>
+
+
+#include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -27,14 +29,9 @@
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
 #include "Sim/GASSSimEngine.h"
-
-
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"

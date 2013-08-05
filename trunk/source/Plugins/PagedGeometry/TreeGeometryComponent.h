@@ -19,7 +19,7 @@
 *****************************************************************************/
 #ifndef TREE_GEOMETRY_COMPONENT_H
 #define TREE_GEOMETRY_COMPONENT_H
-
+#include "Sim/GASSCommon.h"
 #include "PagedGeometry.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"

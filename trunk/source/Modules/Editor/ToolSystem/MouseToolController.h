@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Sim/GASSGeometryFlags.h"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <math.h>
-#include <string>
 #include "Sim/GASS.h"
 #include "EditorCommon.h"
 

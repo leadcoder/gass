@@ -20,10 +20,12 @@
 #ifndef OGRE_TEXT_COMPONENT_H
 #define OGRE_TEXT_COMPONENT_H
 
+
+#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/GASSCommon.h"
+
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 

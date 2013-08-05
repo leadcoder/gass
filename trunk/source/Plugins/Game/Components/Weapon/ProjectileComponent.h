@@ -21,12 +21,12 @@
 #ifndef PROJECTILE_COMPONENT_H
 #define PROJECTILE_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Plugins/Game/GameMessages.h"
-#include "Sim/GASSCommon.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"

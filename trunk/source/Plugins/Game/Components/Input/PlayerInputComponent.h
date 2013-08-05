@@ -21,13 +21,14 @@
 #ifndef PLAYER_INPUT_COMPONENT_H
 #define PLAYER_INPUT_COMPONENT_H
 
+
+#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 

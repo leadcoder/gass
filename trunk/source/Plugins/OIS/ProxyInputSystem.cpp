@@ -21,7 +21,6 @@
 
 #include "Plugins/OIS/ProxyInputSystem.h"
 #include "Sim/GASSSimEngine.h"
-
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/System/GASSSystemFactory.h"

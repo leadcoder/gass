@@ -12,7 +12,7 @@
 *                                                                           *
 *****************************************************************************/ 
 
-#include <boost/bind.hpp>
+
 #include "OgreRoadComponent.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSQuaternion.h"

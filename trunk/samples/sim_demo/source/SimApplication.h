@@ -3,7 +3,7 @@
 
 #ifndef SIM_APPLICATION_H
 #define SIM_APPLICATION_H
-#include <boost/bind.hpp>
+
 
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"

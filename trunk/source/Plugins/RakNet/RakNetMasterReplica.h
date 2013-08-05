@@ -40,6 +40,7 @@ class ReplicaManager;
 namespace GASS
 {
 	class SceneObject;
+	class IProperty;
 	typedef SPTR<SceneObject> SceneObjectPtr;
 
 	class RakNetMasterReplica  : public RakNetBaseReplica
@@ -73,7 +74,6 @@ namespace GASS
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *str, RakNet::AutoRPC* networkCaller);
 	protected:
 		IProperty* GetProperty(const std::string &prop_name);
-		
 		std::string m_TemplateName;
 		bool m_AllowRemoteOwner;
 	private:

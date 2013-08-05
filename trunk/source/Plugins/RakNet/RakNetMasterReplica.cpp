@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
+#include "RakNetMasterReplica.h"
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
@@ -32,7 +32,7 @@
 #include "Sim/GASSScene.h"
 
 
-#include "RakNetMasterReplica.h"
+
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 #include "Plugins/Game/GameMessages.h"

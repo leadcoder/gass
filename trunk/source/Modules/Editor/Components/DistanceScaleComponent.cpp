@@ -1,9 +1,8 @@
+#include "DistanceScaleComponent.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
-
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
-#include "DistanceScaleComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -24,8 +23,9 @@
 
 namespace GASS
 {
-
-	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000), m_MinDistance(0.1),m_ScaleLocation(false)
+	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000), 
+		m_MinDistance(0.1),
+		m_ScaleLocation(false)
 	{
 
 	}

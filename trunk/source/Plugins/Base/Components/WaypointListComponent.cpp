@@ -12,7 +12,6 @@
 *                                                                           *
 *****************************************************************************/ 
 
-#include <boost/bind.hpp>
 #include "WaypointListComponent.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSQuaternion.h"

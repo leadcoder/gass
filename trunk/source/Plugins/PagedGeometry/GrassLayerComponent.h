@@ -23,7 +23,7 @@
 #ifndef GRASS_GEOMETRY_COMPONENT_H
 #define GRASS_GEOMETRY_COMPONENT_H
 
-
+#include "Sim/GASSCommon.h"
 #include <PagedGeometry.h>
 #include <GrassLoader.h>
 #include <OgreRenderTargetListener.h>

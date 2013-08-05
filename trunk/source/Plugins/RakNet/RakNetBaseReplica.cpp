@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 
+#include "RakNetBaseReplica.h"
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
@@ -31,8 +32,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSScene.h"
 
-
-#include "RakNetBaseReplica.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 #include "RakNetInputTransferComponent.h"

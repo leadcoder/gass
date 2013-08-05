@@ -2,8 +2,8 @@
 #ifndef AI_ROAD_INTER_COMPONENT
 #define AI_ROAD_INTER_COMPONENT
 
-#include "Core/Utils/GASSFilePath.h"
 #include "Sim/GASS.h"
+#include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/AI/AIMessages.h"

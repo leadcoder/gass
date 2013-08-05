@@ -18,16 +18,15 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+#include "Plugins/OSG/Components/OSGTextComponent.h"
 #include <osg/Billboard>
 #include <osgDB/ReadFile>
 #include <osg/Texture2D>
 #include <osg/AlphaFunc>
-#include <osgText/Text>
+
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-#include "Plugins/OSG/Components/OSGTextComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"

@@ -20,12 +20,15 @@
 #pragma once
 #include "Sim/GASS.h"
 
-
-class osg::Billboard;
-class osg::Image;
-class osg::Drawable;
-class osg::Geometry;
-class osg::TextureCubeMap;
+namespace osg
+{
+	class Billboard;
+	class Image;
+	class Drawable;
+	class Geometry;
+	class TextureCubeMap;
+	class Node;
+}
 
 namespace GASS
 {

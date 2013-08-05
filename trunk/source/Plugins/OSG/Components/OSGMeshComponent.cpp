@@ -18,9 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+
+#include "Plugins/OSG/Components/OSGMeshComponent.h"
+#include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-#include "Plugins/OSG/Components/OSGLocationComponent.h"
+
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"

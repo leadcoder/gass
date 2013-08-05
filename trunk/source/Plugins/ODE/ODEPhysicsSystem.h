@@ -19,9 +19,8 @@
 *****************************************************************************/
 
 #pragma once
-
+#include "Sim/GASSCommon.h"
 #include <ode/ode.h>
-#include <map>
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/GASSSimSystem.h"

@@ -20,6 +20,8 @@
 
 #ifndef RAKNET_BASE_REPLICA_H
 #define RAKNET_BASE_REPLICA_H
+
+#include "Sim/GASSCommon.h"
 #include "AutoRPC.h"
 #include "PacketPriority.h"
 #include "Replica.h"

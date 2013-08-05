@@ -21,12 +21,12 @@
 #ifndef LOD_COMPONENT_H
 #define LOD_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 

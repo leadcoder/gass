@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"

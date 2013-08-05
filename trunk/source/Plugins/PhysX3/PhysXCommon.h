@@ -21,8 +21,8 @@
 
 #if !defined PHYSX_COMMON_H
 #define PHYSX_COMMON_H
-//#define  _ITERATOR_DEBUG_LEVEL 0
 
+#include "Sim/GASSCommon.h"
 #include <PxPhysicsAPI.h> 
 #include <PxPhysics.h>
 #include <PxRigidActor.h>
@@ -68,7 +68,6 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Sim/GASSCommon.h"
 #include "Plugins/PhysX3/PhysXConvert.h"
 
 #endif 

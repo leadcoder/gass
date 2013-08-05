@@ -1,8 +1,9 @@
 #pragma once
+
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSMeshData.h"
-#include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 

@@ -20,6 +20,8 @@
 
 #ifndef RAKNET_CHILD_REPLICA_H
 #define RAKNET_CHILD_REPLICA_H
+
+#include "Sim/GASSCommon.h"
 #include "PacketPriority.h"
 #include "Replica.h"
 #include "StringTable.h"
@@ -34,6 +36,8 @@ class ReplicaManager;
 namespace GASS
 {
 	class SceneObject;
+	class BaseReflectionObject;
+	class IProperty;
 	typedef SPTR<SceneObject> SceneObjectPtr;
 
 	class RakNetChildReplica  : public RakNetBaseReplica

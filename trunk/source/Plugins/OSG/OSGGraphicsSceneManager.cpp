@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 
-
+#include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgViewer/ViewerEventHandlers>
@@ -38,7 +38,7 @@
 #include <osgGA/GUIEventHandler>
 
 
-#include "Plugins/OSG/OSGGraphicsSceneManager.h"
+
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/OSGConvert.h"

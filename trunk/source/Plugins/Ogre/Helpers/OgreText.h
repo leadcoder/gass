@@ -1,3 +1,4 @@
+#include "Sim/GASSCommon.h"
 #include <Ogre.h>
 #include <OgreSingleton.h>
 #ifndef OGRE_18

@@ -19,12 +19,8 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
-
 #include "Sim/GASSCommon.h"
-
 #include "Core/Utils/GASSLogManager.h"
-
-
 #include <Ogre.h>
 #ifndef OGRE_18
 #include <Overlay/OgreOverlayElement.h>

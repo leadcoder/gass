@@ -21,8 +21,8 @@
 #ifndef ARMOR_COMPONENT_H
 #define ARMOR_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Plugins/Game/GameMessages.h"

@@ -18,11 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifdef WIN32
-#define NOMINMAX
-#include <algorithm>
-#endif
-
 #include "Plugins/ODE/ODECylinderGeometryComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
@@ -41,7 +36,7 @@
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include <boost/bind.hpp>
+
 
 namespace GASS
 {
@@ -67,7 +62,7 @@ namespace GASS
 	{
 		ODEBaseGeometryComponent::OnInitialize();
 	}
-
+	
 	void ODECylinderGeometryComponent::SetSizeFromMesh(bool value)
 	{
 		m_SizeFromMesh = value;
@@ -78,7 +73,7 @@ namespace GASS
 			{
 				AABox aabox = geom->GetBoundingBox();
 				Vec3 size = aabox.GetSize();
-				float radius=std::max(size.x/2.f,size.y/2.f);
+				float radius=std::max<Float>(size.x/2.f,size.y/2.f);
 				float length=size.z-radius;
 				SetRadius(radius);
 				SetLength(length);

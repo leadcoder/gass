@@ -20,8 +20,10 @@
 
 #ifndef RAK_NET_MESSAGES_H
 #define RAK_NET_MESSAGES_H
+
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/Math/GASSVector.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 
 namespace GASS
 {

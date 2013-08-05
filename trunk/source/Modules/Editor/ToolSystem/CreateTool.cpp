@@ -1,4 +1,4 @@
-#include <boost/bind.hpp>
+
 #include "CreateTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"

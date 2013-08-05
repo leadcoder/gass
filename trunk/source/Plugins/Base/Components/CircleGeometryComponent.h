@@ -20,9 +20,9 @@
 #ifndef CIRCLE_GEOMETRY_COMPONENT_H
 #define CIRCLE_GEOMETRY_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
-#include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS

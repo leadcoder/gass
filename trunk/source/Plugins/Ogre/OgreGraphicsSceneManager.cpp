@@ -41,7 +41,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include <boost/bind.hpp>
+
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>

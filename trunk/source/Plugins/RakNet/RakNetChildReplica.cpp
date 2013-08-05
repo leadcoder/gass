@@ -18,9 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-#include "RakPeerInterface.h"
-#include "ReplicaManager.h"
+#include "RakNetChildReplica.h"
+#include <RakPeerInterface.h>
+#include <ReplicaManager.h>
 
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
@@ -32,7 +32,7 @@
 #include "Sim/GASSScene.h"
 
 
-#include "RakNetChildReplica.h"
+
 #include "RakNetMasterReplica.h"
 
 #include "RakNetNetworkChildComponent.h"

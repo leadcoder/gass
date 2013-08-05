@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include "Plugins/Ogre/Components/OgreGASSTerrainMaterialGenerator.h"
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
@@ -28,7 +29,7 @@
 #include <OgreManualObject.h>
 #include <OgreCommon.h>
 #include <OgreUTFString.h>
-#include "Plugins/Ogre/Components/OgreGASSTerrainMaterialGenerator.h"
+
 
 
 namespace GASS

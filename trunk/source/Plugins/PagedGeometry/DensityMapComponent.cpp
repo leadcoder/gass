@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+
 #include <OgreEntity.h>
 #include <Ogre.h>
 #include <OgreSceneManager.h>

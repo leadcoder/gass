@@ -20,8 +20,8 @@
 #ifndef DEBUG_COMPONENT_H
 #define DEBUG_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS

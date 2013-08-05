@@ -20,6 +20,7 @@
 #ifndef HYDRAX_RTT_LISTENER_H
 #define HYDRAX_RTT_LISTENER_H
 
+#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"

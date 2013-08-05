@@ -20,6 +20,7 @@
 #ifndef DENSITY_MAP_COMPONENT_H
 #define DENSITY_MAP_COMPONENT_H
 
+#include "Sim/GASSCommon.h"
 #include "PagedGeometry.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"

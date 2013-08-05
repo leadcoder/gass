@@ -74,10 +74,10 @@ namespace GASS
 		static std::string RemoveQuotation(const std::string &str);
 		static std::string Replace(const std::string &str, const std::string &find, const std::string &replacement);
 		static std::string GetExtension(const std::string &file_name);
-		static int ReadOneLine(FILE *f,char *string);
+		//static int ReadOneLine(FILE *f,char *string);
 		static std::string GetFilename(const std::string &path);
 		static std::string RemoveFilename(const std::string &path);
-		static bool FindTexture(std::string &name);
+		//static bool FindTexture(std::string &name);
 		inline static std::string ToLower(const std::string &str)
 		{
 			std::string new_str = str;

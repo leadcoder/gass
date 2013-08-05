@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <boost/bind.hpp>
+#include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
@@ -38,7 +38,6 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 
 #include "Plugins/Ogre/OgreConvert.h"

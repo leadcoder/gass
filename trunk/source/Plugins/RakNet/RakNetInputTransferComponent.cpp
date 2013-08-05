@@ -18,9 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+
+#include "RakNetInputTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 //#include "Plugins/RakNet/RakNetBase.h"
-#include "RakNetInputTransferComponent.h"
+
 
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkChildComponent.h"

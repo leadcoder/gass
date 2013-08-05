@@ -30,10 +30,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include <boost/bind.hpp>
-//#include "Main/SceneNodes/BaseObject.h"
-//#include "Main/SceneNodes/TransformationNode.h"
-//#include "Main/Helpers/Font.h"
+
 
 namespace GASS
 {

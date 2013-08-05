@@ -19,12 +19,14 @@
 *****************************************************************************/
 
 #pragma once
+
+#include "Sim/GASSCommon.h"
 #ifdef WIN32
 #include <OIS.h>
 #else
 #include <OIS/OIS.h>
 #endif
-#include "Sim/GASSCommon.h"
+
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Sim/Interface/GASSIInputSystem.h"

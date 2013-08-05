@@ -35,7 +35,7 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include <boost/bind.hpp>
+
 
 namespace GASS
 {

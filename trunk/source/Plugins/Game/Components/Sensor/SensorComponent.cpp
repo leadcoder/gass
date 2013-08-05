@@ -1,5 +1,4 @@
 #include "SensorComponent.h"
-#include <boost/bind.hpp>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"

@@ -21,12 +21,13 @@
 #ifndef VEHICLE_CAMERA_COMPONENT_H
 #define VEHICLE_CAMERA_COMPONENT_H
 
+
+#include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "Sim/GASSCommon.h"
 #include "Plugins/Game/GameMessages.h"
 
 

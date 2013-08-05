@@ -18,11 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/GASSCommon.h"
-
 //common Core includes
-
-
+#include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSMatrix.h"

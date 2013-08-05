@@ -28,7 +28,6 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSceneObject.h"
-#include <boost/bind.hpp>
 
 
 namespace GASS

@@ -21,9 +21,9 @@
 #ifndef ODE_SCENE_MANAGER_H
 #define ODE_SCENE_MANAGER_H
 
+#include "Sim/GASSCommon.h"
 #include <ode/ode.h>
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"

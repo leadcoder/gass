@@ -12,7 +12,7 @@
 *                                                                           *
 *****************************************************************************/ 
 
-#include <boost/bind.hpp>
+
 #include "WaypointComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"

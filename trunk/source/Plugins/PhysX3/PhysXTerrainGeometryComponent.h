@@ -20,9 +20,10 @@
 
 #pragma once 
 
+#include "PhysXCommon.h"
 #include "PhysXPhysicsSceneManager.h"
 #include "PhysXBaseGeometryComponent.h"
-#include "PhysXCommon.h"
+
 
 namespace GASS
 {
