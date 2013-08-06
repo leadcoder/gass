@@ -135,6 +135,9 @@ namespace GASS
 
 		RegisterProperty<FilePath>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, color_ext)));
+	
+		RegisterProperty<FilePath>("ExportDetailMask", &GASS::OgreTerrainPageComponent::GetExportDetailMask, &GASS::OgreTerrainPageComponent::ExportDetailMask,
+			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE, color_ext)));
 	}
 
 	void OgreTerrainPageComponent::SetRenderQueue(const RenderQueueBinder &rq) 
@@ -175,15 +178,6 @@ namespace GASS
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 			
-				m_Terrain->update(true);
-
-				while (m_TerrainGroup->isDerivedDataUpdateInProgress())
-				{
-					// we need to wait for this to finish
-					OGRE_THREAD_SLEEP(50);
-					Ogre::Root::getSingleton().getWorkQueue()->processResponses();
-				}
-
 				if(m_HeightMapFile.Valid()) //import height map
 					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
 
@@ -199,19 +193,17 @@ namespace GASS
 					SetPosition(m_Pos);
 				UpdatePosition();
 
+				//WaitWhileLoading();
+
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource()->Path());
 
-				m_Terrain->update(true);
-				while (m_TerrainGroup->isDerivedDataUpdateInProgress())
-				{
-					// we need to wait for this to finish
-					OGRE_THREAD_SLEEP(50);
-					Ogre::Root::getSingleton().getWorkQueue()->processResponses();
-				}
+				//WaitWhileLoading();
 
 				if(m_Mask.Valid()) 
 					ImportDetailMask(m_Mask.GetResource()->Path());
+
+				//WaitWhileLoading();
 
 				if(m_DiffuseLayer0.Valid())
 					SetDiffuseLayer0(m_DiffuseLayer0);
@@ -271,6 +263,35 @@ namespace GASS
 				
 			}
 		}
+	}
+
+	void OgreTerrainPageComponent::WaitWhileLoading()
+	{
+		m_TerrainGroup->loadAllTerrains(true);
+		m_Terrain->update(true);
+		while (m_Terrain->isDerivedDataUpdateInProgress() || !m_Terrain->isLoaded())
+		{
+			m_Terrain->update(true);
+			// we need to wait for this to finish
+			OGRE_THREAD_SLEEP(50);
+			Ogre::Root::getSingleton().getWorkQueue()->processResponses();
+		}
+		
+		/*m_TerrainGroup->update(true);
+		bool bAllTerrainsLoaded;
+		do
+		{
+			bAllTerrainsLoaded = true;
+			Ogre::TerrainGroup::TerrainIterator ti = m_TerrainGroup->getTerrainIterator();
+			while(ti.hasMoreElements())
+			{
+				Ogre::Terrain* t = ti.getNext()->instance;
+				bAllTerrainsLoaded &= t->isLoaded() & !t->isModified() & !t->isDerivedDataUpdateInProgress();
+			}
+			OGRE_THREAD_SLEEP(50);
+			Ogre::Root::getSingleton().getWorkQueue()->processResponses();
+		} while(!bAllTerrainsLoaded);*/
+
 	}
 
 	void OgreTerrainPageComponent::OnDelete()
@@ -619,6 +640,41 @@ namespace GASS
 			m_Terrain->getLayerBlendMap(3)->update();
 		}
 	}
+
+
+	void OgreTerrainPageComponent::ExportDetailMask(const FilePath &mask)
+	{
+		if(m_Terrain && mask.GetFullPath() != "")
+		{
+			Ogre::Image img;
+			Ogre::ColourValue cval;
+
+			float *blend_data_1 = m_Terrain->getLayerBlendMap(1)->getBlendPointer();
+			float *blend_data_2 = m_Terrain->getLayerBlendMap(2)->getBlendPointer();
+			float *blend_data_3 = m_Terrain->getLayerBlendMap(3)->getBlendPointer();
+
+			int size = m_Terrain->getLayerBlendMapSize() * m_Terrain->getLayerBlendMapSize();
+			Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, size * 3, Ogre::MEMCATEGORY_GENERAL);
+			memset(data, 0, size * 3);
+
+			img.loadDynamicImage(data, m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize(), 1, Ogre::PF_R8G8B8, true);
+			for(int y = 0;y < m_Terrain->getLayerBlendMapSize();y++)
+			{
+				for(int x = 0;x < m_Terrain->getLayerBlendMapSize();x++)
+				{
+					cval.r = *blend_data_1;
+					cval.g = *blend_data_2;
+					cval.b = *blend_data_3;
+					++blend_data_1;
+					++blend_data_2;
+					++blend_data_3;
+					img.setColourAt(cval,x, y, 0);
+				}
+			}
+			img.save(mask.GetFullPath());
+		}
+	}
+
 
 	ResourceHandle OgreTerrainPageComponent::GetMask() const
 	{

@@ -67,6 +67,7 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
+		void WaitWhileLoading();
 		void LoadFromFile();
 		ResourceHandle GetHeightMap()const {return m_HeightMapFile;}
 		void SetHeightMap(const ResourceHandle &filename);
@@ -127,6 +128,10 @@ namespace GASS
 		FilePath GetImportColorMap() const {return "";}
 		void ImportDetailMask(const FilePath &mask);
 		FilePath GetImportDetailMask() const {return FilePath("");}
+
+		void ExportDetailMask(const FilePath &mask);
+		FilePath GetExportDetailMask() const {return FilePath("");}
+
 		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
 
 		RenderQueueBinder GetRenderQueue() const {return m_RenderQueue;}
