@@ -174,17 +174,21 @@ namespace GASS
 				}
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
+			
+				m_Terrain->update(true);
 
 				while (m_TerrainGroup->isDerivedDataUpdateInProgress())
 				{
 					// we need to wait for this to finish
 					OGRE_THREAD_SLEEP(50);
 					Ogre::Root::getSingleton().getWorkQueue()->processResponses();
-				}				
-								
-				
+				}
+
 				if(m_HeightMapFile.Valid()) //import height map
 					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
+
+				
+				
 
 				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
@@ -197,6 +201,14 @@ namespace GASS
 
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource()->Path());
+
+				m_Terrain->update(true);
+				while (m_TerrainGroup->isDerivedDataUpdateInProgress())
+				{
+					// we need to wait for this to finish
+					OGRE_THREAD_SLEEP(50);
+					Ogre::Root::getSingleton().getWorkQueue()->processResponses();
+				}
 
 				if(m_Mask.Valid()) 
 					ImportDetailMask(m_Mask.GetResource()->Path());

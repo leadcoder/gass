@@ -45,7 +45,7 @@
 Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 
 GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
-    : QMainWindow(parent, flags), m_GASSApp(NULL)
+    : QMainWindow(parent, flags), m_GASSApp(NULL), m_Config("GASS.xml")
 {
     setObjectName("GASSEd");
     setWindowTitle("GASSEd");
@@ -85,7 +85,7 @@ void GASSEd::Initialize(void* render_win_handle)
 {
 	GASS::FilePath working_folder("./");
 	void* main_win_handle = winId();
-	m_GASSApp->Init(working_folder, m_ConfigPrefix, main_win_handle, render_win_handle);
+	m_GASSApp->Init(working_folder, m_Config, main_win_handle, render_win_handle);
 	OnNew();
 }
 

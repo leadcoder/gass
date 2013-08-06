@@ -32,7 +32,7 @@ private:
 	QAction *m_AddWaypointsAct;
 
 	QMenu *m_AddTemplateMenu;
-    std::string m_ConfigPrefix;
+    std::string m_Config;
 	GASS::SceneWeakPtr m_Scene;
 	GASS::SceneObjectWeakPtr m_SceneObjectCopyBuffer;
 	GASS::SceneObjectWeakPtr m_SceneObjectCutBuffer;
@@ -44,7 +44,7 @@ public:
 	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
 	GASS::ScenePtr GetScene() const {return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
 	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
-	void SetConfigPrefix(const std::string &prefix) {m_ConfigPrefix = prefix;}
+	void SetConfigFile(const std::string &name) {m_Config = name;}
 public slots:
     void saveLayout();
     void loadLayout();
