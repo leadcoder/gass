@@ -26,7 +26,7 @@
                     <FadeDetail value="true" />
                     <DetailFadeDist value="100" />
                     <FadeOutColor value="false" />
-                    <NearColorWeight value="0.1" />
+                    <NearColorWeight value="0.5" />
                     <EnableLayerNormal value="true" />
                     <EnableLayerSpecular value="true" />
                     <EnableLayerParallax value="true" />
@@ -46,20 +46,20 @@
                     <Serialize value="true" />
                     <Components>
                         <OgreTerrainPageComponent>
-                            <HeightMap value="terrain_hm.png" />
-                            <ColorMap value="terrain_color.png" />
+                            <HeightMap value="" />
+                            <ColorMap value="" />
                             <DetailMask value="" />
-                            <DiffuseLayer0 value="grass_green-01_diffusespecular.dds" />
+                            <DiffuseLayer0 value="detail_default.dds" />
                             <NormalLayer0 value="detail_default_n.dds" />
-                            <DiffuseLayer1 value="" />
-                            <NormalLayer1 value="" />
-                            <DiffuseLayer2 value="" />
-                            <NormalLayer2 value="" />
-                            <DiffuseLayer3 value="" />
-                            <NormalLayer3 value="" />
-                            <DiffuseLayer4 value="" />
-                            <NormalLayer4 value="" />
-                            <TilingLayer0 value="5" />
+                            <DiffuseLayer1 value="detail_default.dds" />
+                            <NormalLayer1 value="detail_default_n.dds" />
+                            <DiffuseLayer2 value="detail_default.dds" />
+                            <NormalLayer2 value="detail_default_n.dds" />
+                            <DiffuseLayer3 value="detail_default.dds" />
+                            <NormalLayer3 value="detail_default_n.dds" />
+                            <DiffuseLayer4 value="detail_default.dds" />
+                            <NormalLayer4 value="detail_default_n.dds" />
+                            <TilingLayer0 value="1" />
                             <TilingLayer1 value="5" />
                             <TilingLayer2 value="5" />
                             <TilingLayer3 value="5" />
@@ -77,7 +77,6 @@
                             <Type value="TERRAIN" />
                             <Name value="" />
                         </ODECollisionGeometryComponent>
-						<PhysicsTerrainGeometryComponent/>
                     </Components>
                     <ComponentContainers />
                 </SceneObject>
@@ -125,9 +124,10 @@
             <Components>
                 <MeshComponent>
                     <Filename value="fir06_30.mesh" />
+                    <EnumerationResourceGroup value="" />
                     <CastShadow value="true" />
                     <RenderQueue value="RENDER_QUEUE_MAIN" />
-                    <GeometryFlags value="GEOMETRY_FLAG_UNKOWN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_ALL GEOMETRY_FLAG_DYNAMIC_OBJECT GEOMETRY_FLAG_EDITOR GEOMETRY_FLAG_GIZMO GEOMETRY_FLAG_GROUND GEOMETRY_FLAG_SCENE_OBJECTS GEOMETRY_FLAG_STATIC_OBJECT GEOMETRY_FLAG_TRANSPARENT_OBJECT GEOMETRY_FLAG_UNKOWN" />
                     <Name value="MeshComponent" />
                 </MeshComponent>
                 <LocationComponent>
@@ -154,9 +154,10 @@
             <Components>
                 <MeshComponent>
                     <Filename value="JIM_TANK_hull.mesh" />
+                    <EnumerationResourceGroup value="" />
                     <CastShadow value="true" />
                     <RenderQueue value="RENDER_QUEUE_MAIN" />
-                    <GeometryFlags value="GEOMETRY_FLAG_UNKOWN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_ALL GEOMETRY_FLAG_DYNAMIC_OBJECT GEOMETRY_FLAG_EDITOR GEOMETRY_FLAG_GIZMO GEOMETRY_FLAG_GROUND GEOMETRY_FLAG_SCENE_OBJECTS GEOMETRY_FLAG_STATIC_OBJECT GEOMETRY_FLAG_TRANSPARENT_OBJECT GEOMETRY_FLAG_UNKOWN" />
                     <Name value="MeshComponent" />
                 </MeshComponent>
                 <LocationComponent>
