@@ -16,6 +16,7 @@
 #include "Sim/GASS.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorMessages.h"
+#include "LandCoverType.h"
 
 class dtNavMesh;
 class dtTileCache;
@@ -36,7 +37,7 @@ namespace GASS
 		float* BMax;
 	};
 
-	enum SamplePolyAreas
+	/*enum SamplePolyAreas
 	{
 		SAMPLE_POLYAREA_OBSTACLE,
 		SAMPLE_POLYAREA_GROUND,
@@ -45,7 +46,7 @@ namespace GASS
 		SAMPLE_POLYAREA_DOOR,
 		SAMPLE_POLYAREA_GRASS,
 		SAMPLE_POLYAREA_JUMP,
-	};
+	};*/
 
 	enum SamplePolyFlags
 	{
@@ -58,15 +59,15 @@ namespace GASS
 	};
 
 
-	START_ENUM_BINDER(SamplePolyAreas,SamplePolyAreasBinder)
-		BIND(SAMPLE_POLYAREA_OBSTACLE)
-		BIND(SAMPLE_POLYAREA_GROUND)
-		BIND(SAMPLE_POLYAREA_WATER)
-		BIND(SAMPLE_POLYAREA_ROAD)
-		BIND(SAMPLE_POLYAREA_DOOR)
-		BIND(SAMPLE_POLYAREA_GRASS)
-		BIND(SAMPLE_POLYAREA_JUMP)
-	END_ENUM_BINDER(SamplePolyAreas,SamplePolyAreasBinder)
+	START_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
+		BIND(LAND_COVER_OBSTACLE)
+		BIND(LAND_COVER_DEFAULT)
+		BIND(LAND_COVER_WATER_C1)
+		BIND(LAND_COVER_ROAD_C1)
+		BIND(LAND_COVER_FOREST_C1)
+		BIND(LAND_COVER_GRASS_C1)
+		BIND(LAND_COVER_URBAN_C1)
+	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
 	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape
 	{

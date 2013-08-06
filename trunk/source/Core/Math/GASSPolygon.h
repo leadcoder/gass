@@ -32,9 +32,8 @@ namespace GASS
 	public:
 		Polygon();
 		~Polygon();
-		void Clear();
 		Vec3 Center() const;
-		void HelpSphereSprite(Vec3 &pos);
+		
 		/**\var vector<Vec3> m_VertexVector;
 		* \brief Contains the vertices of the polygon.
 		*/

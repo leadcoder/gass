@@ -251,7 +251,7 @@ static int convexhull(const float* pts, int npts, int* out)
 			GeometryComponentPtr geom = comp->GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 			if(geom)
 			{
-				SamplePolyAreas area = comp->GetAreaType().GetValue();
+				LandCoverType area = comp->GetLandCoverType().GetValue();
 
 				AABox box = geom->GetBoundingBox();
 				std::vector<Vec3> corners = box.GetCorners();
@@ -313,7 +313,7 @@ static int convexhull(const float* pts, int npts, int* out)
 			m_Geom->deleteOffMeshConnection(static_cast<int>(i));
 		}
 
-		const unsigned char area = SAMPLE_POLYAREA_JUMP;
+		const unsigned char area = LAND_COVER_JUMP;
 		const unsigned short flags = SAMPLE_POLYFLAGS_JUMP; 
 		float p1[3];
 		float p2[3];
@@ -748,19 +748,19 @@ static int convexhull(const float* pts, int npts, int* out)
 			for (int i = 0; i < pmesh->npolys; ++i)
 			{
 				if (pmesh->areas[i] == RC_WALKABLE_AREA)
-					pmesh->areas[i] = SAMPLE_POLYAREA_GROUND;
+					pmesh->areas[i] = LAND_COVER_DEFAULT;
 
-				if (pmesh->areas[i] == SAMPLE_POLYAREA_GROUND ||
-					pmesh->areas[i] == SAMPLE_POLYAREA_GRASS ||
-					pmesh->areas[i] == SAMPLE_POLYAREA_ROAD)
+				if (pmesh->areas[i] == LAND_COVER_DEFAULT ||
+					pmesh->areas[i] == LAND_COVER_GRASS_C1 ||
+					pmesh->areas[i] == LAND_COVER_ROAD_C1)
 				{
 					pmesh->flags[i] = SAMPLE_POLYFLAGS_WALK;
 				}
-				else if (pmesh->areas[i] == SAMPLE_POLYAREA_WATER)
+				else if (pmesh->areas[i] == LAND_COVER_WATER_C1)
 				{
 					pmesh->flags[i] = SAMPLE_POLYFLAGS_SWIM;
 				}
-				else if (pmesh->areas[i] == SAMPLE_POLYAREA_DOOR)
+				else if (pmesh->areas[i] == LAND_COVER_DOOR)
 				{
 					pmesh->flags[i] = SAMPLE_POLYFLAGS_WALK | SAMPLE_POLYFLAGS_DOOR;
 				}

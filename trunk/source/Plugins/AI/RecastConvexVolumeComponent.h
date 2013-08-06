@@ -29,7 +29,7 @@ namespace GASS
 		virtual ~RecastConvexVolumeComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		ADD_ATTRIBUTE(SamplePolyAreasBinder,AreaType)
+		ADD_ATTRIBUTE(LandCoverTypeBinder,LandCoverType)
 	protected:
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);

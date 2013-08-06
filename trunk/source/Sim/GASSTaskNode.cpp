@@ -18,14 +18,16 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSRuntimeController.h"
 
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSMisc.h"
-#include "tbb/blocked_range.h"
-#include "tbb/parallel_for.h"
+
 #include <tinyxml.h>
 
 namespace GASS

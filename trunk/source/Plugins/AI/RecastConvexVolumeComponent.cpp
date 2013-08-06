@@ -22,7 +22,7 @@
 namespace GASS
 {
 	RecastConvexVolumeComponent::RecastConvexVolumeComponent() : m_Initialized(false), 
-		m_AreaType(SAMPLE_POLYAREA_GROUND)
+		m_LandCoverType(LAND_COVER_DEFAULT)
 	{
 
 	}
@@ -36,8 +36,8 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("RecastConvexVolumeComponent",new Creator<RecastConvexVolumeComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("RecastConvexVolumeComponent", OF_VISIBLE)));
-		RegisterProperty<SamplePolyAreasBinder>("AreaType", &RecastConvexVolumeComponent::GetAreaType, &RecastConvexVolumeComponent::SetAreaType,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Area Type",PF_VISIBLE,&SamplePolyAreasBinder::GetStringEnumeration)));
+		RegisterProperty<LandCoverTypeBinder>("LandCoverType", &RecastConvexVolumeComponent::GetLandCoverType, &RecastConvexVolumeComponent::SetLandCoverType,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Land Cover Type",PF_VISIBLE,&LandCoverTypeBinder::GetStringEnumeration)));
 	}
 
 	/*void RecastConvexVolumeComponent::SetAreaType(const std::string value)
