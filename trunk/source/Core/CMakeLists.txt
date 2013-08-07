@@ -18,8 +18,8 @@ add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} Winmm ${GASS_COMMON_LINK_LIBRARIES})
 
-#install section
-install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_LIB_DIR})		
+#Install section
+gass_install_target()
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
 
 

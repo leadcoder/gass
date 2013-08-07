@@ -10,36 +10,36 @@ md GASSPlugins
 cd..
 cd..
 
-copy "%GASS_HOME%\\lib\\GASSCore_d.dll" bin\\debug
-copy "%GASS_HOME%\\lib\\GASSSim_d.dll" bin\\debug
-copy "%GASS_HOME%\\lib\\GASSEditorModule_d.dll" bin\\debug
-copy "%GASS_HOME%\\lib\\GASSPluginOgre_d.dll" bin\\debug\\GASSPlugins
-rem copy "%GASS_HOME%\\lib\\GASSPluginOSG_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginOIS_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginODE_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginGame_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginBase_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginEnvironment_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginRaknet_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginOpenAL_d.dll" bin\\debug\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginAI_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\GASSCore_d.dll" bin\\debug
+copy "%GASS_HOME%\\bin\\debug\\GASSSim_d.dll" bin\\debug
+copy "%GASS_HOME%\\bin\\debug\\GASSEditorModule_d.dll" bin\\debug
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginOgre_d.dll" bin\\debug\\GASSPlugins
+rem copy "%GASS_HOME%\\bin\\GASSPluginOSG_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginOIS_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginODE_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginGame_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginBase_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginEnvironment_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginPagedGeometry_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginRaknet_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginOpenAL_d.dll" bin\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\plugins\\GASSPluginAI_d.dll" bin\\debug\\GASSPlugins
 
 
-copy "%GASS_HOME%\\lib\\GASSCore.dll" bin\\release
-copy "%GASS_HOME%\\lib\\GASSSim.dll" bin\\release
-copy "%GASS_HOME%\\lib\\GASSEditorModule.dll" bin\\release
-copy "%GASS_HOME%\\lib\\GASSPluginOgre.dll" bin\\release\\GASSPlugins
-rem copy "%GASS_HOME%\\lib\\GASSPluginOSG.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginOIS.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginODE.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginGame.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginBase.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginEnvironment.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginPagedGeometry.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginRaknet.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginOpenAL.dll" bin\\release\\GASSPlugins
-copy "%GASS_HOME%\\lib\\GASSPluginAI.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\GASSCore.dll" bin\\release
+copy "%GASS_HOME%\\bin\\release\\GASSSim.dll" bin\\release
+copy "%GASS_HOME%\\bin\\release\\GASSEditorModule.dll" bin\\release
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginOgre.dll" bin\\release\\GASSPlugins
+rem copy "%GASS_HOME%\\bin\\GASSPluginOSG.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginOIS.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginODE.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginGame.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginBase.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginEnvironment.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginPagedGeometry.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginRaknet.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginOpenAL.dll" bin\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\plugins\\GASSPluginAI.dll" bin\\release\\GASSPlugins
 
 copy "%GASS_DEPENDENCIES%\lib\tbb_debug.dll" bin\\Debug
 copy "%GASS_DEPENDENCIES%\lib\tbb.dll" bin\\Release

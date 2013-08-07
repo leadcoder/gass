@@ -113,7 +113,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\QtGuid4.lib;$(QTDIR)\lib\QtCored4.lib;QtSolutions_PropertyBrowser-2.5d.lib;GASSCore_d.lib;GASSSim_d.lib;GASSEditorModule_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -161,7 +161,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\QtGuid4.lib;$(QTDIR)\lib\QtCored4.lib;QtSolutions_PropertyBrowser-2.5d.lib;GASSCore_d.lib;GASSSim_d.lib;GASSEditorModule_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -215,7 +215,7 @@ copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;$(QTDIR)\lib\QtGui4.lib;$(QTDIR)\lib\QtCore4.lib;QtSolutions_PropertyBrowser-2.5.lib;GASSCore.lib;GASSSim.lib;GASSEditorModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -262,7 +262,7 @@ copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;$(QTDIR)\lib\QtGui4.lib;$(QTDIR)\lib\QtCore4.lib;QtSolutions_PropertyBrowser-2.5.lib;GASSCore.lib;GASSSim.lib;GASSEditorModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>

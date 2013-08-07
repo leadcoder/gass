@@ -15,7 +15,5 @@ add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
 
-install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_PLUGIN_LIB_DIR})		
-#install(FILES ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/plugins FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
+gass_install_plugin_target()
 install(FILES  ${CMAKE_CURRENT_SOURCE_DIR}/CoreMessages.h DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/plugins/Base)
-

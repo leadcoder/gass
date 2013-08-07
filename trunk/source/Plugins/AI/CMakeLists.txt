@@ -18,6 +18,6 @@ add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
 
-install (TARGETS ${LIB_NAME} DESTINATION ${GASS_INSTALL_PLUGIN_LIB_DIR})		
+gass_install_plugin_target()	
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/plugins FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
 
