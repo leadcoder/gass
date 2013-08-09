@@ -49,7 +49,6 @@ namespace GASS
 		ControlSettingsSystem();
 		virtual ~ControlSettingsSystem();
 		virtual void Load(const std::string &filename);
-		//virtual void Update(double delta_time);
 		virtual std::string GetSystemName() const {return "ControlSettingsSystem";}
 		virtual std::string GetNameFromIndex(const std::string &settings, int index);
 		virtual int GetIndexFromName(const std::string &settings, const std::string &name);

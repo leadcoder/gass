@@ -33,8 +33,6 @@
 
 namespace GASS
 {
-
-
 	ControlSettingsSystem::ControlSettingsSystem()
 	{
 		m_InputStringTable = new EnumLookup();
