@@ -7,18 +7,19 @@ include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/s
 set(CPP_FILES "source/SimDemo.cpp")
 set(H_FILES "source/Client.h" "source/Server.h" "source/SimApplication.h")
 
-
 #change output folder to local project folder
+
+
+
+set(GASS_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/samples_output/${LIB_NAME}) #dlls and exe
 
-#Add some foldets where to search for dependency libraries
+#Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
-
-
 
 add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
-
 
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_COMMON_LINK_LIBRARIES})
@@ -72,29 +73,29 @@ endif()
 	
 	
 	set(GASS_RELEASE_DLL_FILES 
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll)
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll)
 	set(GASS_DEBUG_DLL_FILES 
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll)
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll)
 
 
 #set(ALL_DLL_FILES 
@@ -111,7 +112,7 @@ endif()
 
 add_custom_command(TARGET ${LIB_NAME}
             POST_BUILD
-            COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_gass_dlls.bat $<CONFIGURATION> ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} $<TARGET_FILE_DIR:${LIB_NAME}>)
+            COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_gass_dlls.bat $<CONFIGURATION> ${GASS_RUNTIME_OUTPUT_DIRECTORY} $<TARGET_FILE_DIR:${LIB_NAME}>)
 			
 add_custom_command(TARGET ${LIB_NAME}
             POST_BUILD
