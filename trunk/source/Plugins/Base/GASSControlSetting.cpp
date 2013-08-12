@@ -36,7 +36,13 @@ namespace GASS
 
 	ControlSetting::~ControlSetting(void)
 	{
-
+		ControllerMap::const_iterator iter = m_ControllerMap.begin();
+		while(iter != m_ControllerMap.end())
+		{
+			delete iter->second;
+			iter++;
+		}
+		m_ControllerMap.clear();
 	}
 
 	void ControlSetting::AddController(Controller *controller, const std::string &name,int action)

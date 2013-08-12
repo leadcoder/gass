@@ -55,6 +55,7 @@ namespace GASS
 		virtual void Init();
 		static void RegisterReflection();
 	private:
+		void Free();
 		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
 		int GetDevice(std::string device) const;

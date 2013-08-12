@@ -19,7 +19,6 @@
 *****************************************************************************/
 
 #include "OgreManualMeshComponent.h"
-
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>

@@ -23,11 +23,13 @@
 #include "GASSController.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSResourceHandle.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSMisc.h"
 #include "Core/Utils/GASSEnumLookup.h"
 #include "Core/Utils/GASSException.h"
+
 #include <tinyxml.h>
 
 
@@ -248,7 +250,21 @@ namespace GASS
 	ControlSettingsSystem::~ControlSettingsSystem()
 	{
 		delete m_InputStringTable;
+		Free();
 	}
+
+	void ControlSettingsSystem::Free()
+	{
+		ControlSettingMap::const_iterator iter = m_ControlSettingMap.begin();
+		while(iter != m_ControlSettingMap.end())
+		{
+			delete iter->second;
+			iter++;
+		}
+		m_ControlSettingMap.clear();
+	}
+	
+
 	
 
 	void ControlSettingsSystem::RegisterReflection()
@@ -260,6 +276,10 @@ namespace GASS
 	{
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+
+		//load default settings
+		ResourceHandle res("default_control_settings.xml");
+		Load(res.GetResource()->Path().GetFullPath());
 	}
 
 	ControlSetting* ControlSettingsSystem::GetControlSetting(const std::string &name) const
@@ -293,7 +313,8 @@ namespace GASS
 		int nInputCount = 0;
 		control_settings = control_settings->FirstChildElement();
 	
-		
+		//remove previous settings
+		Free();
 
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 
