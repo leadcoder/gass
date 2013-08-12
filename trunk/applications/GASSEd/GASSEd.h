@@ -30,6 +30,7 @@ private:
 	QAction *m_PasteAct;
 	QAction *m_DeleteAct;
 	QAction *m_AddWaypointsAct;
+	QAction *m_ChangeSiteAct;
 
 	QMenu *m_AddTemplateMenu;
     std::string m_Config;
@@ -57,6 +58,7 @@ public slots:
 	void OnDelete();
 	void OnAddWaypoints();
 	void OnAddTemplate();
+	void OnSetAsSite();
 private:
     void setupToolBar();
     void setupMenuBar();

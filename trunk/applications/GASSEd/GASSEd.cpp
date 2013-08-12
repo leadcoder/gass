@@ -155,6 +155,12 @@ void GASSEd::setupMenuBar()
 	m_AddWaypointsAct->setVisible(false);
 	connect(m_AddWaypointsAct, SIGNAL(triggered()), this, SLOT(OnAddWaypoints()));
 
+
+	m_ChangeSiteAct = m_EditMenu->addAction(tr("&Make root for new objects"));
+	m_ChangeSiteAct->setEnabled(false);
+	m_ChangeSiteAct->setVisible(false);
+	connect(m_ChangeSiteAct, SIGNAL(triggered()), this, SLOT(OnSetAsSite()));
+
 	m_AddTemplateMenu = m_EditMenu->addMenu(tr("&Add..."));
 }
 
@@ -327,6 +333,17 @@ void GASSEd::OnCut()
 	m_SceneObjectCutBuffer = m_SelectedObject;
 }
 
+void GASSEd::OnSetAsSite()
+{
+	GASS::SceneObjectPtr current_object = GASS::SceneObjectPtr(m_SelectedObject);
+	if(current_object)
+	{
+		GASS::EditorSceneManagerPtr sm = current_object->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+		sm->SetObjectSite(current_object);
+	}
+}
+
+
 void GASSEd::OnPaste()
 {
 	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
@@ -358,6 +375,9 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 	m_CutAct->setEnabled(false);
 	m_DeleteAct->setEnabled(false);
 
+	m_ChangeSiteAct->setEnabled(false);
+	m_ChangeSiteAct->setVisible(false);
+	
 	m_AddWaypointsAct->setEnabled(false);
 	m_AddWaypointsAct->setVisible(false);
 
@@ -367,10 +387,14 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 		m_DeleteAct->setEnabled(true);
 		m_CopyAct->setEnabled(true);
 		m_CutAct->setEnabled(true);
+
 		if(GASS::SceneObjectPtr(m_SceneObjectCopyBuffer, NO_THROW))
 		{
 			m_PasteAct->setEnabled(true);
 		}
+
+		m_ChangeSiteAct->setEnabled(true);
+		m_ChangeSiteAct->setVisible(true);
 
 		if(GASS::SceneObjectPtr(m_SceneObjectCutBuffer, NO_THROW))
 		{
