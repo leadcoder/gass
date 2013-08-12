@@ -36,6 +36,7 @@
 #include <osg/Material>
 #include <osg/BlendFunc>
 #include <osg/CullFace>
+#include <osgDB/ReadFile> 
 
 
 
@@ -148,6 +149,8 @@ namespace GASS
 		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
+		osg::Vec2Array* tex_coords_0 = static_cast<osg::Vec2Array*>( m_OSGGeometry->getTexCoordArray(0));
+		
 		if(vertices)
 			vertices->clear();
 		if(colors)
@@ -155,6 +158,9 @@ namespace GASS
 
 		if(normals)
 			normals->clear();
+
+		if(tex_coords_0)
+			tex_coords_0->clear();
 		
 
 
@@ -171,6 +177,19 @@ namespace GASS
 
 	void OSGManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
 	{
+		if(data->Material != "") //try loading material
+		{
+			data->Material = "test.osg";
+			ResourceHandle res(data->Material);
+			osg::ref_ptr<osg::Group> material = (osg::Group*) osgDB::readNodeFile(res.GetResource()->Path().GetFullPath());
+			osg::ref_ptr<osg::Node> node = material->getChild(0);
+			osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
+			osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
+			m_OSGGeometry->setStateSet(state_set);
+			//osg::StateSet* state_copy =  static_cast<osg::StateSet*> (state_set->clone(osg::CopyOp::DEEP_COPY_STATESETS));
+			//m_OSGGeometry->setStateSet(state_copy);
+		}
+
 		if(m_OSGGeometry == NULL)
 			return;
 		osg::PrimitiveSet::Mode op;
@@ -201,6 +220,7 @@ namespace GASS
 		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
 		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
 		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
+		osg::Vec2Array* tex_coords_0 = static_cast<osg::Vec2Array*>( m_OSGGeometry->getTexCoordArray(0));
 		
 		if(vertices)
 			vertices->clear();
@@ -217,11 +237,18 @@ namespace GASS
 		else
 			normals = new osg::Vec3Array;
 
+		if(tex_coords_0)
+			tex_coords_0->clear();
+		else
+			tex_coords_0 = new osg::Vec2Array;
+
 		
 
 		vertices->resize(data->VertexVector.size());
 		colors->resize(data->VertexVector.size());
 		normals->resize(data->VertexVector.size());
+		tex_coords_0->resize(data->VertexVector.size());
+		
 
 //CopyOp::SHALLOW_COPY
 
@@ -250,6 +277,8 @@ namespace GASS
 		osg::Vec3Array::iterator vitr = vertices->begin();
 		osg::Vec4Array::iterator citr = colors->begin();
 		osg::Vec3Array::iterator nitr = normals->begin();
+		osg::Vec2Array::iterator titr = tex_coords_0->begin();
+		
 
 		for(int i = 0; i < data->VertexVector.size(); i++)
 		{
@@ -260,14 +289,22 @@ namespace GASS
 
 			osg::Vec3 o_pos = OSGConvert::Get().ToOSG(pos); 
 			osg::Vec3 o_normal = OSGConvert::Get().ToOSG(normal); 
+			osg::Vec2 o_tex_coord;
+			o_tex_coord.set(tex_coord.x,tex_coord.y); 
+
 
 			(vitr++)->set(o_pos.x(), o_pos.y(), o_pos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
 			(nitr++)->set(o_normal.x(), o_normal.y(), o_normal.z());
+			(titr++)->set(o_tex_coord.x(), o_tex_coord.y());
+			
+			
 		}
 
 		m_OSGGeometry->setVertexArray(vertices);
 		m_OSGGeometry->setColorArray(colors);
+		m_OSGGeometry->setTexCoordArray(0,tex_coords_0);
+		
 
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 		m_OSGGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
@@ -315,6 +352,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
+		return;
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();

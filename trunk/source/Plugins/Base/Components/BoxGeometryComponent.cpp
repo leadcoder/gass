@@ -84,6 +84,7 @@ namespace GASS
 		vertex.Normal = Vec3(0,1,0);
 
 		std::vector<Vec3> conrners;
+		std::vector<Vec3> tex_coords;
 
 		conrners.push_back(Vec3( size.x ,size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,size.y , size.z));
@@ -126,39 +127,99 @@ namespace GASS
 			std::vector<Vec3> postions;
 
 		
+			/*
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Top Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Top Left Of The Texture and Quad
+			// Back Face
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Bottom Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Bottom Left Of The Texture and Quad
+			// Top Face
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f));  // Top Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
+			// Bottom Face
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Top Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Top Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
+			// Right face
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Bottom Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Top Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
+			// Left Face
+			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Bottom Left Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Top Right Of The Texture and Quad
+			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f)); 
+			*/
+
+
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
 
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+
 
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
 
 			
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
 
 
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec3( 1, 0 , 0));
+
 
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec3( 0, 0 , 0));
 
 			postions.push_back(Vec3( size.x ,size.y , size.z));
 			postions.push_back(Vec3( size.x ,size.y , size.z));
 			postions.push_back(Vec3( size.x ,size.y , size.z));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec3( 0, 1 , 0));
+
 
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec3( 1, 1 , 0));
 
 			//bottom
 			mesh_data->IndexVector.push_back(0);
@@ -255,10 +316,11 @@ namespace GASS
 			{
 				vertex.Pos = postions[i];
 				vertex.Normal = normals[normal_indcies[i]]; 
+				vertex.TexCoord.Set(tex_coords[i].x,tex_coords[i].y);
 				mesh_data->VertexVector.push_back(vertex);
 			}
 		}
-
+		
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}

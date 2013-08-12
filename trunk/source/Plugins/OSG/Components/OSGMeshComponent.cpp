@@ -262,9 +262,6 @@ namespace GASS
 			m_MeshNode.release();
 		}
 
-		//osgDB::Registry::instance()->getOptions()->setDatabasePath(path);
-		//osgUtil::Optimizer optimizer;
-		//optimizer.optimize(loadedModel.get());
 		m_MeshNode = (osg::Group*) osgDB::readNodeFile((file_name));
 
 		if( ! m_MeshNode)
