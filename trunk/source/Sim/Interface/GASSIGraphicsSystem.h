@@ -74,7 +74,13 @@ namespace GASS
 		*/
 //		virtual void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height) = 0;
 
-		
+		/**
+			Get material names from rendersystem. This function can be used by external components that want to enumerate materials inside the rendersytem. 
+			Resource Manager can only handle files and not file content, one material file can contain many materials and thats why we need this function
+			@param resource_group ResourceGroup
+		*/
+
+		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const = 0;
 	protected:
 	};
 	typedef SPTR<IGraphicsSystem> GraphicsSystemPtr;

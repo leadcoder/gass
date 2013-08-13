@@ -22,6 +22,11 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Reflection/GASSPropertyData.h"
+
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 
 namespace GASS
 {
@@ -60,4 +65,27 @@ namespace GASS
 		bool m_DepthTest;
 	};
 	typedef SPTR<GraphicsMaterial> GraphicsMaterialPtr;
+
+
+	class GraphicsMaterialPropertyMetaData : public EnumerationPropertyMetaData
+	{
+	public:
+		GraphicsMaterialPropertyMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group = ""): EnumerationPropertyMetaData(annotation,flags,false),
+			m_ResourceGroup(res_group)
+		{
+
+		}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const 
+		{
+			GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+			std::vector<std::string> content = gfx_system->GetMaterialNames(m_ResourceGroup);
+			return content;
+		}
+	private:
+		std::string m_ResourceGroup;
+	};
+	typedef SPTR<GraphicsMaterialPropertyMetaData> GraphicsMaterialPropertyMetaDataPtr;
+
+
+
 }
