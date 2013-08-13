@@ -63,19 +63,18 @@ namespace GASS
 		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
 		virtual void Update(double time);
 		//IGraphicsSystem
-
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;
-
-		//void GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const;
-		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
+		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
+		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
+		
+	public: //ogre specific
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 	protected:
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
-
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);

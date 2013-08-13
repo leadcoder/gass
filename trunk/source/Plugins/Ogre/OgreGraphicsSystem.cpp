@@ -342,6 +342,22 @@ namespace GASS
 	{
 		m_ResourceManager->RemoveResourceLocation(message->GetLocation());
 	}
+
+
+	std::vector<std::string> OgreGraphicsSystem::GetMaterialNames(std::string resource_group) const
+	{
+		std::vector<std::string> content;
+		Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
+		while(iter.hasMoreElements())
+		{
+			Ogre::MaterialPtr ptr = iter.getNext();
+			if(resource_group == "" ||  ptr->getGroup() == resource_group)
+			{
+				content.push_back(ptr->getName());
+			}
+		}
+		return content;
+	}
 }
 
 
