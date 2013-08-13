@@ -177,15 +177,21 @@ namespace GASS
 
 	void OSGManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
 	{
-		if(data->Material != "") //try loading material
+		if(data->Material != m_CurrentMaterial) //try loading material
 		{
-			data->Material = "test.osg";
-			ResourceHandle res(data->Material);
-			osg::ref_ptr<osg::Group> material = (osg::Group*) osgDB::readNodeFile(res.GetResource()->Path().GetFullPath());
-			osg::ref_ptr<osg::Node> node = material->getChild(0);
-			osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
-			osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
-			m_OSGGeometry->setStateSet(state_set);
+			m_CurrentMaterial = data->Material;
+
+			const std::string osg_mat = data->Material + ".osg";
+			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+			if(rm->HasResource(osg_mat))
+			{
+				ResourceHandle res(osg_mat);
+				osg::ref_ptr<osg::Group> material = (osg::Group*) osgDB::readNodeFile(res.GetResource()->Path().GetFullPath());
+				osg::ref_ptr<osg::Node> node = material->getChild(0);
+				osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
+				osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
+				m_OSGGeometry->setStateSet(state_set);
+			}
 			//osg::StateSet* state_copy =  static_cast<osg::StateSet*> (state_set->clone(osg::CopyOp::DEEP_COPY_STATESETS));
 			//m_OSGGeometry->setStateSet(state_copy);
 		}

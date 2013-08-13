@@ -49,6 +49,10 @@ namespace GASS
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
+		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const;
+
+	public:
+		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
 		static void UpdateStateSet(osg::ref_ptr<osg::StateSet> state, const GraphicsMaterial &material);
 	protected:

@@ -676,6 +676,14 @@ namespace GASS
 
 		}
 	}
+
+
+	std::vector<std::string> OSGGraphicsSystem::GetMaterialNames(std::string resource_group) const
+	{
+		std::vector<std::string> content;
+		return content;
+	}
+
 }
 
 

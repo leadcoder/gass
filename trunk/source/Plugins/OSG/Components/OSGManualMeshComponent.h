@@ -49,6 +49,7 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<MeshData> m_MeshData;
 		GeometryFlags m_GeomFlags;
+		std::string m_CurrentMaterial; //book keep current material file
 	};
 }
 
