@@ -1,4 +1,4 @@
-call "%VS110COMNTOOLS%vsvars32.bat"
+
 
 call setup_dep %1
 
