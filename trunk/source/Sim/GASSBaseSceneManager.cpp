@@ -26,8 +26,8 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "tinyxml.h"
-#include "tbb/blocked_range.h"
-#include "tbb/parallel_for.h"
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 
 namespace GASS
 {

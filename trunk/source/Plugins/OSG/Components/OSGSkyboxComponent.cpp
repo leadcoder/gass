@@ -237,12 +237,12 @@ namespace GASS
 		depth->setRange(1.0,1.0);   
 		stateset->setAttributeAndModes(depth, osg::StateAttribute::ON );
 
-		/*osg::ref_ptr<osg::Material> matirial = new osg::Material;
-		matirial->setColorMode(osg::Material::DIFFUSE);
-        matirial->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
-        matirial->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
-        matirial->setShininess(osg::Material::FRONT_AND_BACK, 64.0f);
-        stateset->setAttributeAndModes(matirial.get(), osg::StateAttribute::ON);*/
+		osg::ref_ptr<osg::Material> material = new osg::Material;
+		material->setColorMode(osg::Material::DIFFUSE);
+        material->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
+        material->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
+        material->setShininess(osg::Material::FRONT_AND_BACK, 64.0f);
+        stateset->setAttributeAndModes(material.get(), osg::StateAttribute::ON);
 
 
 		stateset->setRenderBinDetails(-1,"RenderBin");

@@ -20,22 +20,14 @@
 #ifndef TASK_NODE_H
 #define TASK_NODE_H
 #include "Sim/GASSCommon.h"
-//#include "tbb/task.h"
 class TiXmlElement;
+
 namespace tbb
 {
 	class task;
 }
 namespace GASS
 {
-
-	/*class TaskTree
-	{
-	public:
-		TaskTree();
-		virtual ~TaskTree();
-	private:
-	};*/
 	class TaskNode;
 	typedef SPTR<TaskNode> TaskNodePtr;
 	class ITaskNodeListener
@@ -44,7 +36,6 @@ namespace GASS
 		virtual ~ITaskNodeListener(){}
 		virtual void Update(double delta_time) = 0;
 	};
-	
 
 	typedef WPTR<ITaskNodeListener> TaskNodeListenerWeakPtr;
 	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
@@ -71,12 +62,9 @@ namespace GASS
 		
 		void Register(TaskNodeListenerPtr listener);
 		void Unregister(TaskNodeListenerPtr listener);
-		//static void Invoke(double delta_time, TaskNode* node);
 	private:
 		TaskNodeVector m_Children;
 		std::string m_Name;
-		//UpdateMode m_ListenerMode;
-		//UpdateMode m_ChildrenMode;
 		UpdateMode m_NodeMode;
 		Listeners m_Listeners;
 		bool m_OnlyUpdateOnRequest;

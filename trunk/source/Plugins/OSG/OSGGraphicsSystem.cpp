@@ -103,7 +103,6 @@ namespace GASS
 	void OSGGraphicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
-		//RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OSGGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OSGGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterProperty<bool>("FlipDSS", &GASS::OSGGraphicsSystem::GetFlipDSS, &GASS::OSGGraphicsSystem::SetFlipDSS);
 	}
@@ -148,21 +147,6 @@ namespace GASS
 		m_DebugTextBox->setPosition(osg::Vec3d(0, 5, 0));
 		m_DebugTextBox->setFont(font_res->Path().GetFullPath());
 		m_DebugTextBox->setTextSize(12);
-
-
-		/*if(m_CreateMainWindowOnInit)
-		{
-		osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
-		if (!wsi) 
-		{
-		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No WindowSystemInterface available, cannot create windows","OSGGraphicsSystem::OnInit");
-		//osg::notify(osg::NOTICE)<<"Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
-		return;
-		}
-
-		CreateRenderWindow("MainWindow",800, 600,0);
-		CreateViewport("MainViewport","MainWindow", 0, 0, 800, 600);
-		}*/
 
 
 		//Load shadow settings
@@ -224,19 +208,6 @@ namespace GASS
 		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
 	}
 
-	/*void OSGGraphicsSystem::SetActiveData(osg::Group* root)
-	{
-		osgViewer::ViewerBase::Views views;
-		m_Viewer->getViews(views);
-		root->addChild(&m_DebugTextBox->getGroup());
-		//set same scene in all viewports for the moment
-		for(int i = 0; i < views.size(); i++)
-		{
-			views[i]->setSceneData(root);
-		}
-		//m_Viewer->realize();
-	}*/
-
 
 	RenderWindowPtr OSGGraphicsSystem::GetMainRenderWindow() const
 	{
@@ -258,14 +229,9 @@ namespace GASS
 	    }
 
 		osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
-
-		
-		
-
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(ds);
 
 		traits->readDISPLAY();
-
 		traits->screenNum = 0;
 		traits->x = 50;
 		traits->y = 50;
@@ -312,65 +278,9 @@ namespace GASS
 		OSGRenderWindowPtr win(new  OSGRenderWindow(this,graphics_context));
 		m_Windows.push_back(win);
 		return win;
-
-		//if(m_Windows.size() == 1) //first window created?
-		/*{
-		if(win_handle == 0) //internal window
-		{
-		#if defined(WIN32) && !defined(__CYGWIN__) 	
-		osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(graphics_context.get());
-		win_handle = (void*) win32_window->getHWND();
-		#endif
-		}
-		SystemMessagePtr window_msg(new RenderWindowCreatedEvent(win_handle));
-		GetSimSystemManager()->SendImmediate(window_msg);
-		}*/
 	}
 
-	/*void OSGGraphicsSystem::CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height)
-	{
-	if(m_Windows.find(render_window) != m_Windows.end())
-	{
-	//
-	osgViewer::View* view = new osgViewer::View;
-	view->setName(name);
 
-	int win_w = m_Windows[render_window]->getTraits()->width;
-	int win_h = m_Windows[render_window]->getTraits()->height;
-
-	int p_left = win_w*left;
-	int p_top = win_h*top;
-
-	int p_width = win_w*width;
-	int p_height = win_h*height;
-
-	m_Viewer->addView(view);
-	view->getCamera()->setViewport(new osg::Viewport(p_left, p_top, p_width,p_height));
-	view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-	view->setLightingMode(osg::View::SKY_LIGHT); 
-	view->getDatabasePager()->setDoPreCompile( true );
-	view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
-	// add some stock OSG handlers:
-
-	osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
-	stats->setKeyEventTogglesOnScreenStats('y');
-	stats->setKeyEventPrintsOutStats(0);
-
-	view->addEventHandler(stats);
-
-	view->addEventHandler(new osgViewer::WindowSizeHandler());
-	view->addEventHandler(new osgViewer::ThreadingHandler());
-	view->addEventHandler(new osgViewer::LODScaleHandler());
-
-	osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
-	ssm->setKeyEventCyclePolygonMode('p');
-	ssm->setKeyEventToggleTexturing('o');
-	view->addEventHandler(ssm);
-	//    view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
-	view->getCamera()->setGraphicsContext(m_Windows[render_window]);
-	view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-	}
-	}*/
 
 	void OSGGraphicsSystem::ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp)
 	{
@@ -391,20 +301,6 @@ namespace GASS
 			}
 		}
 	}
-
-
-	/*void OSGGraphicsSystem::GetMainWindowInfo(unsigned int &width, unsigned int &height, int &left, int &top) const
-	{
-	if(m_Windows.size() > 0)
-	{
-	const osg::GraphicsContext::Traits* traits = m_Windows.begin()->second->getTraits();
-	width = traits->width;
-	height = traits->height;
-	left = traits->x;
-	top = traits->y;
-	}
-	}*/
-
 
 	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
@@ -613,12 +509,7 @@ namespace GASS
 					"{                                                                      \n"
 					"    return shadow2DProj( shadowTexture, gl_TexCoord[1] ).r;            \n"
 					"} \n" );*/
-
-
 					m_ShadowTechnique = sm;
-
-
-
 				} 
 			}
 		}
@@ -681,6 +572,29 @@ namespace GASS
 	std::vector<std::string> OSGGraphicsSystem::GetMaterialNames(std::string resource_group) const
 	{
 		std::vector<std::string> content;
+
+		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+		ResourceGroupVector groups = rm->GetResourceGroups();
+		for(size_t i = 0; i < groups.size();i++)
+		{
+			ResourceGroupPtr group = groups[i];
+			if(group->GetName() == resource_group)
+			{
+				ResourceLocationVector locations = group->GetResourceLocations();
+				for(size_t j = 0; j < locations.size(); j++)
+				{
+					ResourceLocation::ResourceMap resources = locations[j]->GetResources();
+					ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
+					while(iter != resources.end())
+					{
+						//remove extenstion?
+						std::string mat_name = Misc::RemoveExtension(iter->second->Name());
+						content.push_back(mat_name);
+						iter++;
+					}
+				}
+			}
+		}
 		return content;
 	}
 

@@ -191,6 +191,7 @@ namespace GASS
 				osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
 				osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
 				m_OSGGeometry->setStateSet(state_set);
+				//mat->setColorMode(osg::Material::ColorMode::DIFFUSE)
 			}
 			//osg::StateSet* state_copy =  static_cast<osg::StateSet*> (state_set->clone(osg::CopyOp::DEEP_COPY_STATESETS));
 			//m_OSGGeometry->setStateSet(state_copy);
@@ -255,11 +256,6 @@ namespace GASS
 		normals->resize(data->VertexVector.size());
 		tex_coords_0->resize(data->VertexVector.size());
 		
-
-//CopyOp::SHALLOW_COPY
-
-		
-
 		if(data->IndexVector.size() > 0)
 		{
 			osg::DrawElementsUInt* de = new osg::DrawElementsUInt(op);
@@ -298,13 +294,10 @@ namespace GASS
 			osg::Vec2 o_tex_coord;
 			o_tex_coord.set(tex_coord.x,tex_coord.y); 
 
-
 			(vitr++)->set(o_pos.x(), o_pos.y(), o_pos.z());
 			(citr++)->set(color.x, color.y, color.z,color.w);
 			(nitr++)->set(o_normal.x(), o_normal.y(), o_normal.z());
 			(titr++)->set(o_tex_coord.x(), o_tex_coord.y());
-			
-			
 		}
 
 		m_OSGGeometry->setVertexArray(vertices);

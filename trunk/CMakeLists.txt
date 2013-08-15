@@ -12,8 +12,8 @@ include (Common)
 
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/boost-v1.53")
-	set(BOOST_DIR  "${GASS_DEPENDENCIES_DIR}/boost-v1.53" CACHE PATH "BOOST folder")
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/boost-v1.54")
+	set(BOOST_DIR  "${GASS_DEPENDENCIES_DIR}/boost-v1.54" CACHE PATH "BOOST folder")
 else()
 	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
 endif()

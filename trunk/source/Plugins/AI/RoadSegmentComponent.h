@@ -6,9 +6,9 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "tbb/spin_mutex.h"
+#include <tbb/spin_mutex.h>
 #include <set>
-#include "tbb/atomic.h"
+#include <tbb/atomic.h>
 
 namespace GASS
 {

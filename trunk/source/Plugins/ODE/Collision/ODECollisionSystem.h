@@ -33,7 +33,7 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/System/GASSBaseSystem.h"
-#include "tbb/spin_mutex.h"
+#include <tbb/spin_mutex.h>
 
 namespace GASS
 {

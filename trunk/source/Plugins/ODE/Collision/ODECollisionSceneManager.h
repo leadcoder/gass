@@ -27,7 +27,7 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "tbb/spin_mutex.h"
+#include <tbb/spin_mutex.h>
 
 namespace GASS
 {

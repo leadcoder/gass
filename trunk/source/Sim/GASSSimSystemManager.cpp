@@ -33,7 +33,7 @@
 #include "Sim/Utils/GASSSimpleProfile.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "tinyxml.h"
-#include "tbb/parallel_for_each.h"
+#include <tbb/parallel_for_each.h>
 
 
 namespace GASS
