@@ -14,8 +14,8 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginEnvironment"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
 	</Plugins>
-	<SetDataPath value="../../../../samples/common/data/"/>
-	<ScenePath value="%GASS_DATA_HOME%/sceneries/"/>
+	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
+	<ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
@@ -35,6 +35,7 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS_VEGETATION_MATERIALS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
@@ -42,7 +43,7 @@
 		</ResourceGroup>
 		<ResourceGroup name="GASS_ROAD_MATERIALS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/road" type="FileSystem" recursive="false"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/road" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/road" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS_SKYBOX_MATERIALS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/sky" type="FileSystem" recursive="false"/>
