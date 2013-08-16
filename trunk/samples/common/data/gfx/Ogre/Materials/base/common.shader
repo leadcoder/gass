@@ -1,3 +1,7 @@
+#ifndef DISABLE_VC
+	//#define VERTEX_COLOR 
+#endif
+
 float3 expand(float3 v)
 {
 	return (v - 0.5) * 2;

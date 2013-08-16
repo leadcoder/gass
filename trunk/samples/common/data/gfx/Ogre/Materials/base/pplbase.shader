@@ -36,10 +36,13 @@
 	#endif
 #endif
 
-
 void PerPixelVert(float4 position : POSITION 
-                    ,float3 normal   : NORMAL
-                    ,uniform float4x4 worldviewproj
+                    ,float3 normal: NORMAL
+#ifdef VERTEX_COLOR					
+					,float4 color : COLOR
+					,out float4 out_color : COLOR
+#endif
+					,uniform float4x4 worldviewproj
 					,uniform float4x4 worldMat
 					,uniform float4   lightPosition					
                     ,out float4 oPosition   : POSITION
@@ -89,6 +92,11 @@ void PerPixelVert(float4 position : POSITION
 	oShadowUV.z = (oShadowUV.z - shadowDepthRange.x) * shadowDepthRange.w;
 #endif
 #endif 
+
+#ifdef VERTEX_COLOR					
+	out_color = color;
+#endif
+
 } 
 
 void PerPixelFrag(float4 position   : TEXCOORD1,
@@ -98,10 +106,13 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
                           uniform float4   lightDiffuse,
                           uniform float4   lightSpecular,
                           uniform float    exponent,
-                          //uniform float4   ambient,
+                          uniform float4   diffuseMat,
 						  uniform float4 lightAtt,
                           uniform float4 spotParams,
 						  uniform float3 spotDirection,
+#ifdef VERTEX_COLOR					
+						  float4 vertex_color : COLOR,
+#endif
 						  float lightDist      : TEXCOORD5,
 #ifdef BASE_MAP
 						  uniform sampler2D baseMap : register(BASE_MAP_REG),
@@ -121,7 +132,7 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 						  float4 shadowUV : TEXCOORD4,
 						  uniform sampler2D shadowMap : register(SHADOW_MAP_REG),
 #endif
-#if DETAIL_SPLATTING
+#ifdef DETAIL_SPLATTING
 						  uniform float4 splatScales,
 						  uniform sampler2D coverageMap: register(DETAIL1_REG),
 						  uniform sampler2D splat1Map: register(DETAIL2_REG),
@@ -178,15 +189,19 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 #ifdef BASE_MAP
 	float4 base_map = tex2D(baseMap, texCoord);
 	lightDiffuse.xyz = lightDiffuse.xyz * base_map.xyz;
-	float alpha	 = base_map.a;
+	float alpha	 = base_map.a * lightDiffuse.a;
 #else
 	float alpha	 = 1.0;
 #endif
 
-#if DETAIL_SPLATTING
+#ifdef DETAIL_SPLATTING
 	lightDiffuse.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,texCoord,splatScales,lightDiffuse.xyz);
+//#elif VERTEX_COLOR	 //don't support vertex color for terrain splatting, no control over vertex color here				
 #endif
-	
+#ifdef VERTEX_COLOR
+   lightDiffuse.xyz = lightDiffuse.xyz* vertex_color.xyz;
+   alpha = alpha*vertex_color.w;
+#endif 
    float3 halfAngle =  normalize(eyeDir + lightDir);
    float4 lightColor =  calcSpotlight(N, lightDir,halfAngle, lightDiffuse,lightSpecular,  exponent, spotParams, spotDirection,lightAtt,lightDist);
 

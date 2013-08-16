@@ -1,36 +1,48 @@
 #include "common.shader"
 
+
 void AmbientVert(float4 position : POSITION,
 						  float2 uv		  : TEXCOORD0,
-						  
+#ifdef VERTEX_COLOR					
+						  float4 color : COLOR,
+#endif						
 						  out float4 oPosition : POSITION,
-						  out float4 colour    : COLOR,
+						  out float4 out_color    : COLOR,
 
 						  uniform float4x4 worldViewProj,
 						  uniform float4 ambient)
 {
 	oPosition = mul(worldViewProj, position);
-	colour = ambient;
+	
+#ifdef VERTEX_COLOR					
+	ambient = ambient*color;
+#endif
+	out_color = ambient;
 }
 
 
 void AmbientTextureVert(float4 position : POSITION,
                           float2 uv          : TEXCOORD0,
- 
+#ifdef VERTEX_COLOR					
+						  float4 color : COLOR,
+#endif
                           out float4 oPosition : POSITION,
                           out float2 oUv       : TEXCOORD0,
 #ifdef STD_FOG
 						  uniform float3 eyePosition, 
 						  out float2 oEyeDist       : TEXCOORD1,
 #endif	
-                          out float4 colour    : COLOR,
+                          out float4 out_color    : COLOR,
  
                           uniform float4x4 worldViewProj,
                           uniform float4 ambient)
 {
     oPosition = mul(worldViewProj, position);
     oUv = uv;
-    colour = ambient;
+#ifdef VERTEX_COLOR					
+	ambient = ambient*color;
+#endif
+	out_color = ambient;
 #ifdef STD_FOG
    float3 eyeDir = eyePosition.xyz - position.xyz; 
    oEyeDist.x =  length(eyeDir);
@@ -63,12 +75,10 @@ void AmbientFrag(float4 ambient : COLOR,
 #endif
 				out float4 oColor : COLOR)
 {
-	float alpha = 1.0;
 #if BASE_MAP
     float4 base_tex = tex2D(baseMap, uv);
-	alpha = base_tex.a;
+	ambient.a = base_tex.a*ambient.a;
 	ambient.xyz = base_tex.xyz * ambient.xyz;
-	ambient.a = alpha;
 #endif	
 #if DETAIL_SPLATTING
     ambient.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,uv,splatScales,ambient.xyz);
