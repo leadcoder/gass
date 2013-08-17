@@ -4,7 +4,7 @@
 		<!-- load all from path-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>
+		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
@@ -69,9 +69,9 @@
 		<AISystem>
 			<TaskNode value="SIM"/>
 		</AISystem>
-		<ODECollisionSystem>
+		<OSGCollisionSystem>
 			<TaskNode value="PRE_SIM"/>
-		</ODECollisionSystem>
+		</OSGCollisionSystem>
 		<OSGGraphicsSystem>
 			
 			<TaskNode value="POST_SIM"/>
