@@ -105,6 +105,33 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterProperty<bool>("FlipDSS", &GASS::OSGGraphicsSystem::GetFlipDSS, &GASS::OSGGraphicsSystem::SetFlipDSS);
+
+
+
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		ResourceType mesh_type;
+		mesh_type.Name = "MESH";
+		mesh_type.Extensions.push_back("3ds");
+		mesh_type.Extensions.push_back("obj");
+		mesh_type.Extensions.push_back("flt");
+		mesh_type.Extensions.push_back("ive");
+		mesh_type.Extensions.push_back("osg");
+		mesh_type.Extensions.push_back("osgt");
+		//mesh_type.Extensions.push_back("osgt");
+		rm->RegisterResourceType(mesh_type);
+
+
+		
+		ResourceType texture_type;
+		texture_type.Name = "TEXTURE";
+		texture_type.Extensions.push_back("dds");
+		texture_type.Extensions.push_back("png");
+		texture_type.Extensions.push_back("bmp");
+		texture_type.Extensions.push_back("tga");
+		texture_type.Extensions.push_back("gif");
+		texture_type.Extensions.push_back("jpg");
+		rm->RegisterResourceType(texture_type);
+
 	}
 
 	void OSGGraphicsSystem::LoadXML(TiXmlElement *elem)

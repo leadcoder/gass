@@ -41,6 +41,18 @@
 namespace GASS
 {
 
+	std::vector<std::string> OSGMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
+	{
+		std::vector<std::string> content;
+		OSGMeshComponentPtr mesh = DYNAMIC_PTR_CAST<OSGMeshComponent>(object);
+		if(mesh)
+		{
+			content = mesh->GetAvailableMeshFiles();
+		}
+		return content;
+	}
+
+
 	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
@@ -61,8 +73,10 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("MeshComponent", OF_VISIBLE)));
 
-		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource);
-			//OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource,
+			OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		RegisterProperty<std::string>("EnumerationResourceGroup", &OSGMeshComponent::GetEnumerationResourceGroup, &OSGMeshComponent::SetEnumerationResourceGroup,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow,
@@ -83,6 +97,42 @@ namespace GASS
 		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
 	}
+
+
+	std::vector<std::string> OSGMeshComponent::GetAvailableMeshFiles() const
+	{
+		std::vector<std::string> content;
+		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+		ResourceGroupVector groups = rm->GetResourceGroups();
+		std::vector<std::string> values;
+		for(size_t i = 0; i < groups.size();i++)
+		{
+			ResourceGroupPtr group = groups[i];
+			if(m_EnumerationResourceGroup == "" || group->GetName() == m_EnumerationResourceGroup)
+			{
+				ResourceVector res_vec;
+				group->GetResourcesByType(res_vec,"MESH");
+				for(size_t j = 0; j < res_vec.size();j++)
+				{
+					content.push_back(res_vec[j]->Name());
+				}
+
+				/*ResourceLocationVector locations = group->GetResourceLocations();
+				for(size_t j = 0; j < locations.size(); j++)
+				{
+					ResourceLocation::ResourceMap resources = locations[j]->GetResources();
+					ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
+					while(iter != resources.end())
+					{
+						content.push_back(iter->second->Name());
+						iter++;
+					}
+				}*/
+			}
+		}
+		return content;
+	}
+
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
 	{

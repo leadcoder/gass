@@ -152,6 +152,14 @@ namespace GASS
 		}
 	};
 	
+	class OSGMeshEnumerationMetaData : public EnumerationPropertyMetaData
+	{
+	public:
+		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+	private:
+	};
+	typedef SPTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
 
 	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
@@ -176,8 +184,10 @@ namespace GASS
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
 		osg::ref_ptr<osg::Node> GetMeshNode() const {return m_MeshNode ;}
+
+		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
-		
+		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
