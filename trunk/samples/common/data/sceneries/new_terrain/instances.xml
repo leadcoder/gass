@@ -77,6 +77,8 @@
                             <Type value="TERRAIN" />
                             <Name value="" />
                         </ODECollisionGeometryComponent>
+						<PhysicsTerrainGeometryComponent>
+						</PhysicsTerrainGeometryComponent>
                     </Components>
                     <ComponentContainers />
                 </SceneObject>
