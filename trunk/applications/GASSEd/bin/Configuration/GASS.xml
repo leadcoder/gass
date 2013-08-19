@@ -53,7 +53,7 @@
 		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
     </ResourceGroup>-->
 		<ResourceGroup name="GASS_DETAIL_TEXTURES">
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS_TEMPLATES">
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>

@@ -56,7 +56,8 @@ namespace GASS
 		m_UpdateMessagePump(true),
 		m_DebugTextBox (new OgreDebugTextOutput()),
 		m_ResourceManager(OgreResourceManagerPtr(new OgreResourceManager)),
-		m_ShowStats(true)
+		m_ShowStats(true),
+		m_UseShaderCache(false)
 	{
 	}
 
@@ -73,7 +74,7 @@ namespace GASS
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
-
+		RegisterProperty<bool>("UseShaderCache", &GASS::OgreGraphicsSystem::GetUseShaderCache, &GASS::OgreGraphicsSystem::SetUseShaderCache);
 
 		//we need to register resource types here, if we wait to ::Init() ResourceManager is already initialized
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
@@ -166,10 +167,27 @@ namespace GASS
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
 		//wait that first render window is created before send message that graphic system is initialized
 
+		if(m_UseShaderCache)
+			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(true);
+
+		// load
+		
+	
+		
+
 		m_ResourceManager->Init(); 
 
+		
+		
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
+
+		
+
+	
+
+ 
+      
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -272,7 +290,32 @@ namespace GASS
 		{
 			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
 
+
+			
+			const std::string file = "shader_cache.bin";
+			
+			if(m_UseShaderCache)
+			{
+				std::ifstream test(file.c_str());
+				if(!test.fail())
+				{
+					std::ifstream inp;
+					inp.open(file.c_str(), std::ios::in | std::ios::binary);
+					Ogre::DataStreamPtr shaderCache(OGRE_NEW Ogre::FileStreamDataStream(file, &inp, false));
+					Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(shaderCache);
+				}
+			}
+
 			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+			if(m_UseShaderCache)
+			{
+				std::fstream output;
+				output.open(file.c_str(), std::ios::out | std::ios::binary);
+				Ogre::DataStreamPtr shaderCache (OGRE_NEW Ogre::FileStreamDataStream(file, &output, false));
+				Ogre::GpuProgramManager::getSingleton().saveMicrocodeCache(shaderCache);
+			}
+
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 		}
 		return win;

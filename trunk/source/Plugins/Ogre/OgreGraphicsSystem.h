@@ -75,6 +75,7 @@ namespace GASS
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 	protected:
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
+		ADD_ATTRIBUTE(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
