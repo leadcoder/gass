@@ -1,4 +1,5 @@
 
+import * from "base.material"
 
 material JIM_TANK_hatches 
 {
@@ -21,23 +22,17 @@ material JIM_TANK_hatches
 }
 
 
-material JIM_TANK_hull 
-{
-	technique light
-	{
-		pass
-		{
-			ambient 0 0 0
-			diffuse 1 1 1
-			specular 1 1 1 10
-			emissive 0 0 0 
 
-			texture_unit diffuse_map
-			{
-				texture JIM_TANK_hull.jpg
-			}
-		}
-	}
+
+
+material JIM_TANK_hull   : GASS_BaseMap
+{
+	set_texture_alias BaseTexture JIM_TANK_hull.jpg
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+	
 }
 
 
