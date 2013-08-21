@@ -73,8 +73,8 @@
 			<TaskNode value="PRE_SIM"/>
 		</OSGCollisionSystem>
 		<OSGGraphicsSystem>
-			
 			<TaskNode value="POST_SIM"/>
+			<FlipDDS value="false"/>
 		</OSGGraphicsSystem>
 	</Systems>
 	<RTC>

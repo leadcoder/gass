@@ -82,7 +82,7 @@ namespace GASS
 	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASS.xml"), 
 		m_DebugTextBox(new TextBox()),
 		m_Viewer(NULL),
-		m_FlipDSS(false)
+		m_FlipDDS(false)
 	{
 
 	}
@@ -104,7 +104,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
-		RegisterProperty<bool>("FlipDSS", &GASS::OSGGraphicsSystem::GetFlipDSS, &GASS::OSGGraphicsSystem::SetFlipDSS);
+		RegisterProperty<bool>("FlipDDS", &GASS::OSGGraphicsSystem::GetFlipDDS, &GASS::OSGGraphicsSystem::SetFlipDDS);
 
 
 
@@ -206,7 +206,7 @@ namespace GASS
 			opt = new osgDB::ReaderWriter::Options(); 
 		} 
 
-		if(m_FlipDSS)
+		if(m_FlipDDS)
 		{
 			const std::string options = opt->getOptionString();
 			opt->setOptionString("dds_flip"); 

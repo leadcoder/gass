@@ -52,13 +52,13 @@ namespace GASS
 		virtual void SetWorldRotation(const Quaternion &value);
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale() const {return m_Scale;}
+		
 		//IOSGNode interface
+		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
 
-		osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
-
+		//move this to private
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
-		
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 		bool GetAttachToParent() const;
 	protected:
@@ -69,33 +69,22 @@ namespace GASS
 		void OnWorldRotationMessage(WorldRotationMessagePtr message);
 		void OnParentChangedMessage(ParentChangedMessagePtr message);
 		void OnAttachToParent(AttachToParentMessagePtr message);
-
 		void SetAttachToParent(bool value);
-		
-
 		//helper
 		OSGLocationComponentPtr GetParentLocation();
-		
-		
 		void OnVisibilityMessage(VisibilityMessagePtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
-		//Vec3 m_LastPos;
-
+	
 		//! relative rotation of the scene node.
 		Vec3 m_Rot;
-		//Vec3 m_LastRot;
-
+		Quaternion m_QRot;
 		bool m_AttachToParent;
-
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
-		//osg::ref_ptr<osg::PositionAttitudeTransform> m_RotTransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-
 		int m_NodeMask;
-		
 	};
 
 	typedef WPTR<OSGLocationComponent> OSGLocationComponentWeakPtr;

@@ -20,6 +20,7 @@
 
 
 #include "WaypointComponent.h"
+#include "WaypointListComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
@@ -30,6 +31,7 @@
 #include "Sim/GASSSceneManagerFactory.h"
 
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSMeshData.h"
@@ -79,7 +81,23 @@ namespace GASS
 
 		m_Initialized = true;
 		//notify parent
+
 		GetSceneObject()->GetParentSceneObject()->SendImmediate(MessagePtr(new UpdateWaypointListMessage()));
+
+		SPTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		if(list)
+		{
+			bool show = list->GetShowWaypoints();
+			GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(show)));
+			GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(show)));
+
+			SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
+			if(tangent)
+			{
+				tangent->PostMessage(MessagePtr(new VisibilityMessage(show)));
+				tangent->PostMessage(MessagePtr(new CollisionSettingsMessage(show)));
+			}
+		}
 	
 	}
 

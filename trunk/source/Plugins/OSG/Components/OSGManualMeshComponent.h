@@ -37,6 +37,8 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:
+		void SetCastShadow(bool value);
+		bool GetCastShadow() const {return m_CastShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
@@ -50,6 +52,7 @@ namespace GASS
 		std::vector<MeshData> m_MeshData;
 		GeometryFlags m_GeomFlags;
 		std::string m_CurrentMaterial; //book keep current material file
+		bool m_CastShadow;
 	};
 }
 

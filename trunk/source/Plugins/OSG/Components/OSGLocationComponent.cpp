@@ -29,8 +29,6 @@ namespace GASS
 	OSGLocationComponent::OSGLocationComponent() :
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
-		//m_LastRot(0,0,0),
-		//m_LastPos(0,0,0), 
 		m_Scale(1,1,1),
 		m_AttachToParent(false),
 		m_NodeMask(0)
@@ -39,9 +37,7 @@ namespace GASS
 
 	OSGLocationComponent::~OSGLocationComponent()
 	{
-		//m_TransformNode.release();
-		//m_RotTransformNode.release();
-
+		
 		if(m_TransformNode.valid() && m_TransformNode->getParent(0))
 		{
 			osg::Group* parent = m_TransformNode->getParent(0);
@@ -58,6 +54,10 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<Quaternion>("Quaternion", &GASS::OSGLocationComponent::GetRotation, &GASS::OSGLocationComponent::SetRotation,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion",PF_VISIBLE)));
+
 		RegisterProperty<Vec3>("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent,
@@ -104,18 +104,20 @@ namespace GASS
 			std::string name = GetSceneObject()->GetName();
 			m_TransformNode->setName(name);
 		}
-
-
 		LocationComponentPtr location = DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
 		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
 
 		MessagePtr pos_msg(new PositionMessage(m_Pos));
-		MessagePtr rot_msg(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		MessagePtr rot_msg;//(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+
+		if(m_Rot != Vec3(0,0,0))
+			rot_msg =MessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		else //use 
+			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
+
 		GetSceneObject()->PostMessage(pos_msg);
 		GetSceneObject()->PostMessage(rot_msg);
 		GetSceneObject()->PostMessage(MessagePtr (new ScaleMessage(m_Scale)));
-		
-		
 	}
 
 
@@ -302,8 +304,10 @@ namespace GASS
 
 	void OSGLocationComponent::SetRotation(const Quaternion &value)
 	{
+		m_QRot = value;
 		if(m_TransformNode.valid())
 		{
+			
 			MessagePtr rot_msg(new RotationMessage(Quaternion(value)));
 			GetSceneObject()->PostMessage(rot_msg);
 		}
@@ -327,7 +331,7 @@ namespace GASS
 	
 	Quaternion OSGLocationComponent::GetRotation() const
 	{
-		Quaternion q = Quaternion::IDENTITY;
+		Quaternion q = m_QRot;
 		if(m_TransformNode.valid())
 		{
 			q = OSGConvert::Get().ToGASS(m_TransformNode->getAttitude());

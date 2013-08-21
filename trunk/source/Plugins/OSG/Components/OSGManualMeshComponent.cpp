@@ -42,7 +42,8 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_CastShadow(false)
 	{
 
 	}
@@ -55,9 +56,11 @@ namespace GASS
 	void OSGManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, IComponent>);
+		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		//RegisterProperty<GeometryFlags>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlags, &OSGManualMeshComponent::SetGeometryFlags);
 	}
-
+	
 	void OSGManualMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
@@ -91,6 +94,17 @@ namespace GASS
 
 
 		BaseSceneComponent::OnInitialize();
+	}
+
+	void OSGManualMeshComponent::SetCastShadow(bool value)
+	{
+		m_CastShadow = value;
+		if(m_CastShadow && m_GeoNode.valid())
+			m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
+		else if(m_GeoNode.valid())
+		{
+			m_GeoNode->setNodeMask(~NM_CAST_SHADOWS & m_GeoNode->getNodeMask());
+		}
 	}
 
 	void OSGManualMeshComponent::SetGeometryFlags(GeometryFlags value)

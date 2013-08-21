@@ -58,7 +58,9 @@ namespace GASS
 		m_Initlized(false),
 		m_Lighting(true),
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
-		m_Expand(false)
+		m_Expand(false),
+		m_FlipDDS(true)
+		
 	{
 
 	}
@@ -87,6 +89,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
+		RegisterProperty<bool>("FlipDDS", &GASS::OSGMeshComponent::GetFlipDDS, &GASS::OSGMeshComponent::SetFlipDDS);
 
 		std::vector<std::string> ext;
 		ext.push_back("3ds");
@@ -311,8 +314,17 @@ namespace GASS
 			lc->GetOSGNode()->removeChild(m_MeshNode.get());
 			m_MeshNode.release();
 		}
+		
+		
+		
+		const osg::ref_ptr<osgDB::ReaderWriter::Options> options = new osgDB::ReaderWriter::Options(); 
 
-		m_MeshNode = (osg::Group*) osgDB::readNodeFile((file_name));
+		if(m_FlipDDS)
+		{
+			options->setOptionString("dds_flip");
+		}
+
+		m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name,options);
 
 		if( ! m_MeshNode)
 		{

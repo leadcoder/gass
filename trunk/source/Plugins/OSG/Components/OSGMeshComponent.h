@@ -188,6 +188,7 @@ namespace GASS
 		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
 		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)
+		ADD_ATTRIBUTE(bool,FlipDDS)
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
