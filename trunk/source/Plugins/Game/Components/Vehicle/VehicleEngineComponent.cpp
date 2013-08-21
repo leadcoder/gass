@@ -623,9 +623,10 @@ namespace GASS
 		//send physics data to wheels and update mean wheel rpm
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
+		
+		MessagePtr force_msg(new PhysicsSuspensionJointDriveForceRequest(wheel_torque+brake_torque));
+		MessagePtr vel_msg(new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
 
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS2_FORCE,wheel_torque+brake_torque));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS2_VELOCITY,wheel_vel));
 
 		m_WheelRPM = 0;
 		for(int i = 0; i < m_VehicleWheels.size(); i++)

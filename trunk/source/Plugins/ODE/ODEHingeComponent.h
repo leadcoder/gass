@@ -26,7 +26,6 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-//#include "Core/Reflection/GASSReflection.h"
 
 namespace GASS
 {
@@ -42,13 +41,12 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnParameterMessage(PhysicsJointMessagePtr message);
+		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
+		void OnForceRequest(PhysicsHingeJointForceRequestPtr message);
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
 		void SetAxisVel(float velocity);
 		float GetAxisForce()const {return m_JointForce;}
 		void SetAxisForce(float value);
-		
-
 		//Helpers
 
 		void CreateJoint();

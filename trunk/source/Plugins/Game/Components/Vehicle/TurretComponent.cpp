@@ -80,16 +80,11 @@ namespace GASS
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
 	
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-		MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
-		GetSceneObject()->PostMessage(force_msg);
-		GetSceneObject()->PostMessage(vel_msg);
-
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
+		
+		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
+		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -193,14 +188,9 @@ namespace GASS
 			//m_DesiredDir = turret_dir;
 			m_RotValue = 0;
 			m_RelTrans = m_ParentTransformation;
-			MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,0));
-			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-			GetSceneObject()->PostMessage(vel_msg);
-			GetSceneObject()->PostMessage(volume_msg);
-
-			MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,m_SteerForce));
-			GetSceneObject()->PostMessage(force_msg);
-		
+			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
+			GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 			return;
 		}
 
@@ -408,14 +398,14 @@ namespace GASS
 		float turn_velocity = m_TurnPID.update(angle_to_aim_dir,delta_time);
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
 
-		MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,0));//m_SteerForce));
-		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
-
-		GetSceneObject()->PostMessage(force_msg);
 		
+
+		//MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,0));//m_SteerForce));
+		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
+		//GetSceneObject()->PostMessage(force_msg);
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		
+		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(0)));
 		
 
 		if(m_Controller == "Pitch")

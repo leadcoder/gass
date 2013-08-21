@@ -41,7 +41,9 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnParameterMessage(PhysicsJointMessagePtr message);
+		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
+		void OnForceRequest(PhysicsHingeJointForceRequestPtr message);
+
 		void OnBody1Loaded(BodyLoadedMessagePtr message);
 		void OnBody2Loaded(BodyLoadedMessagePtr message);
 		

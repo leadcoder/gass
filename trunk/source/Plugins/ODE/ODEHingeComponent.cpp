@@ -62,33 +62,25 @@ namespace GASS
 	void ODEHingeComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnForceRequest,PhysicsHingeJointForceRequest,0));
 	}
 
-
-	void ODEHingeComponent::OnParameterMessage(PhysicsJointMessagePtr message)
+	void ODEHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
 	{
-		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
-
-		float value = message->GetValue();
-
-		//wake body!!
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			switch(type)
-			{
-			case PhysicsJointMessage::AXIS1_VELOCITY:
-				{
-					SetAxisVel(value);
-				}
-				break;
-			case PhysicsJointMessage::AXIS1_FORCE:
-				{
-					SetAxisForce(value);
-				}
-				break;
-			}
+			SetAxisVel(message->GetVelocity());
+		}
+	}
+
+	void ODEHingeComponent::OnForceRequest(PhysicsHingeJointForceRequestPtr message)
+	{
+		if(m_Body1)
+		{
+			m_Body1->Wake();
+			SetAxisForce(message->GetForce());
 		}
 	}
 

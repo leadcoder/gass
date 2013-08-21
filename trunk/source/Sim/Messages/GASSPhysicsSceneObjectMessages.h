@@ -87,7 +87,7 @@ namespace GASS
 	for now we use enums to specify what parameter we want to change.
 	*/
 
-	class PhysicsJointMessage : public BaseMessage
+	/*class PhysicsJointMessage : public BaseMessage
 	{
 	public:
 		enum PhysicsJointParameterType
@@ -110,7 +110,100 @@ namespace GASS
 		PhysicsJointParameterType m_Parameter;
 		float m_Value;
 	};
-	typedef SPTR<PhysicsJointMessage> PhysicsJointMessagePtr;
+	typedef SPTR<PhysicsJointMessage> PhysicsJointMessagePtr;*/
+
+
+	/**
+	Messages used to request velocity for hinge joint. 
+	*/
+	class PhysicsHingeJointVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsHingeJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsHingeJointVelocityRequest> PhysicsHingeJointVelocityRequestPtr;
+
+	class PhysicsHingeJointForceRequest : public BaseMessage
+	{
+	public:
+		PhysicsHingeJointForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Force(force)
+		  {
+
+		  }
+		  Float GetForce()const {return m_Force;}
+	private:
+		Float m_Force;
+	};
+	typedef SPTR<PhysicsHingeJointForceRequest> PhysicsHingeJointForceRequestPtr;
+
+
+	class PhysicsSuspensionJointDriveVelocityRequest: public BaseMessage
+	{
+	public:
+		PhysicsSuspensionJointDriveVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsSuspensionJointDriveVelocityRequest> PhysicsSuspensionJointDriveVelocityRequestPtr;
+
+	class PhysicsSuspensionJointDriveForceRequest : public BaseMessage
+	{
+	public:
+		PhysicsSuspensionJointDriveForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Force(force)
+		  {
+
+		  }
+		  Float GetForce()const {return m_Force;}
+	private:
+		Float m_Force;
+	};
+	typedef SPTR<PhysicsSuspensionJointDriveForceRequest> PhysicsSuspensionJointDriveForceRequestPtr;
+	
+
+	class PhysicsSuspensionJointSteerForceRequest : public BaseMessage
+	{
+	public:
+		PhysicsSuspensionJointSteerForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Force(force)
+		  {
+
+		  }
+		  Float GetForce()const {return m_Force;}
+	private:
+		Float m_Force;
+	};
+	typedef SPTR<PhysicsSuspensionJointSteerForceRequest> PhysicsSuspensionJointSteerForceRequestPtr;
+
+
+	class PhysicsSuspensionJointSteerVelocityRequest: public BaseMessage
+	{
+	public:
+		PhysicsSuspensionJointSteerVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsSuspensionJointSteerVelocityRequest> PhysicsSuspensionJointSteerVelocityRequestPtr;
+
+
 
 	/**
 	Message used to interact with physics bodies.

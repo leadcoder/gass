@@ -67,11 +67,14 @@ namespace GASS
 	}
 
 
+
+
 	void PhysXHingeComponent::OnInitialize()
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnParameterMessage,PhysicsJointMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnForceRequest,PhysicsHingeJointForceRequest,0));
 
 		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
 		{
@@ -113,6 +116,26 @@ namespace GASS
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnPositionChanged,PositionMessage,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnWorldPositionChanged,WorldPositionMessage,0));
+	}
+
+
+	
+	void PhysXHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
+	{
+		if(m_Body2.IsValid())
+		{
+			m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->WakeUp();
+			SetDriveTargetVelocity(message->GetVelocity());
+		}
+	}
+
+	void PhysXHingeComponent::OnForceRequest(PhysicsHingeJointForceRequestPtr message)
+	{
+		if(m_Body2.IsValid())
+		{
+			m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->WakeUp();
+			SetDriveForceLimit(message->GetForce());
+		}
 	}
 
 	void PhysXHingeComponent::CreateJoint()
@@ -176,29 +199,6 @@ namespace GASS
 		 }
 		 else
 			m_Body2Loaded = false;
-	}
-
-	
-
-	void PhysXHingeComponent::OnParameterMessage(PhysicsJointMessagePtr message)
-	{
-		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
-		float value = message->GetValue();
-		//wake body!!
-		m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->WakeUp();
-		switch(type)
-		{
-		case PhysicsJointMessage::AXIS1_VELOCITY:
-			break;
-		case PhysicsJointMessage::AXIS2_VELOCITY:
-			SetDriveTargetVelocity(value);
-			break;
-		case PhysicsJointMessage::AXIS1_FORCE:
-			break;
-		case PhysicsJointMessage::AXIS2_FORCE:
-				SetDriveForceLimit(value);
-			break;
-		}
 	}
 
 	void PhysXHingeComponent::OnBody1Loaded(BodyLoadedMessagePtr message)

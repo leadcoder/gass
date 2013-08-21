@@ -34,7 +34,6 @@ namespace GASS
 	class ODEBodyComponent;
 	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 
-
 	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>
 	{
 	public:
@@ -43,15 +42,20 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnParameterMessage(PhysicsJointMessagePtr message);
+		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
+		void OnDriveForceRequest(PhysicsSuspensionJointDriveForceRequestPtr message);
+		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
+		void OnSteerForceRequest(PhysicsSuspensionJointSteerForceRequestPtr message);
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
 
-		void SetAxis1Vel(float velocity);
-		void SetAxis2Vel(float value);
-		float GetAxis1Force()const {return m_JointForce;}
-		void SetAxis1Force(float value);
-		void SetAxis2Force(float value);
-		float GetAxis2Force()const;
+		void SetSteerVelocity(float velocity);
+		void SetDriveVelocity(float value);
+		
+		void SetSteerForce(float value);
+		float GetSteerForce()const;
+
+		void SetDriveForce(float value);
+		float GetDriveForce()const;
 		
 		//Helpers
 
@@ -89,7 +93,6 @@ namespace GASS
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
 		
-		float m_JointForce;
 		float m_SwayForce;
 		float m_Strength;
 		float m_Damping;
@@ -98,8 +101,9 @@ namespace GASS
 		float m_LowStop;
 
 		Vec3 m_Anchor; 
-		Vec3 m_Axis1;
-		Vec3 m_Axis2;
+		Vec3 m_Axis1; //remove?
+		Vec3 m_Axis2; //remove?
+
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 }

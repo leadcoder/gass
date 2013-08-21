@@ -41,7 +41,6 @@ namespace GASS
 {
 	ODESuspensionComponent::ODESuspensionComponent() : m_Body1 (NULL),
 		m_Body2 (NULL),
-		m_JointForce (0),
 		m_SwayForce  (0),
 		m_Strength(1),
 		m_Damping(2),
@@ -52,6 +51,7 @@ namespace GASS
 		m_HighStop(0),
 		m_LowStop(0)
 	{
+
 	}
 
 	ODESuspensionComponent::~ODESuspensionComponent()
@@ -61,8 +61,8 @@ namespace GASS
 
 	void ODESuspensionComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("Axis1Force", &GASS::ODESuspensionComponent::GetAxis1Force, &GASS::ODESuspensionComponent::SetAxis1Force);
-		RegisterProperty<float>("Axis2Force", &GASS::ODESuspensionComponent::GetAxis2Force, &GASS::ODESuspensionComponent::SetAxis2Force);
+		RegisterProperty<float>("SteerForce", &GASS::ODESuspensionComponent::GetSteerForce, &GASS::ODESuspensionComponent::SetSteerForce);
+		RegisterProperty<float>("DriveForce", &GASS::ODESuspensionComponent::GetDriveForce, &GASS::ODESuspensionComponent::SetDriveForce);
 		RegisterProperty<float>("Damping", &GASS::ODESuspensionComponent::GetDamping, &GASS::ODESuspensionComponent::SetDamping);
 		RegisterProperty<float>("Strength", &GASS::ODESuspensionComponent::GetStrength, &GASS::ODESuspensionComponent::SetStrength);
 		RegisterProperty<float>("HighStop", &GASS::ODESuspensionComponent::GetHighStop, &GASS::ODESuspensionComponent::SetHighStop);
@@ -76,45 +76,48 @@ namespace GASS
 	void ODESuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,BodyLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnParameterMessage,PhysicsJointMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveForceRequest,PhysicsSuspensionJointDriveForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerForceRequest,PhysicsSuspensionJointSteerForceRequest,0));
 	}
 
-
-	void ODESuspensionComponent::OnParameterMessage(PhysicsJointMessagePtr message)
+	void ODESuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
 	{
-		PhysicsJointMessage::PhysicsJointParameterType type = message->GetParameter();
-
-		float value = message->GetValue();
-
-		//wake body!!
-
-		m_Body1->Wake();
-		switch(type)
+		if(m_Body1)
 		{
-		case PhysicsJointMessage::AXIS1_VELOCITY:
-			{
-				SetAxis1Vel(value);
-			}
-			break;
-		case PhysicsJointMessage::AXIS2_VELOCITY:
-			{
-				SetAxis2Vel(value);
-			}
-			break;
-		case PhysicsJointMessage::AXIS1_FORCE:
-			{
-				SetAxis1Force(value);
-
-			}
-			break;
-		case PhysicsJointMessage::AXIS2_FORCE:
-			{
-				SetAxis2Force(value);
-			}
-			break;
+			m_Body1->Wake();
+			SetDriveVelocity(message->GetVelocity());
 		}
 	}
 
+	void ODESuspensionComponent::OnDriveForceRequest(PhysicsSuspensionJointDriveForceRequestPtr message)
+	{
+		if(m_Body1)
+		{
+			m_Body1->Wake();
+			SetDriveForce(message->GetForce());
+		}
+	}
+
+	void ODESuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message)
+	{
+		if(m_Body1)
+		{
+			m_Body1->Wake();
+			
+			SetSteerVelocity(message->GetVelocity());
+		}
+	}
+
+	void ODESuspensionComponent::OnSteerForceRequest(PhysicsSuspensionJointSteerForceRequestPtr message)
+	{
+		if(m_Body1)
+		{
+			m_Body1->Wake();
+			SetSteerForce(message->GetForce());
+		}
+	}
 	
 	void ODESuspensionComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
 	{
@@ -150,10 +153,10 @@ namespace GASS
 			UpdateAnchor();
 			UpdateJointAxis();
 			UpdateLimits();
-			SetAxis1Force(m_JointForce);
-			SetAxis2Force(m_JointForce);
-			SetAxis1Vel(0);
-			SetAxis2Vel(0);
+			//SetSteerForce(m_JointForce);
+			//SetDriveForce(m_JointForce);
+			SetDriveVelocity(0);
+			SetSteerVelocity(0);
 			UpdateSuspension();
 		}
 	}
@@ -175,8 +178,6 @@ namespace GASS
 	void ODESuspensionComponent::UpdateJointAxis()
 	{
 		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		//LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-
 		Quaternion rot = location1->GetRotation();
 
 		dReal ode_rot_mat[12];
@@ -185,15 +186,11 @@ namespace GASS
 		rot.ToRotationMatrix(rot_mat);
 		ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 
-		//Vec3 pos_b1 = location1->GetPosition();
-		//Vec3 pos_b2 = location2->GetPosition();
-
-			if (m_Axis1.Length() != 0)
-				dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
-			else
-				//dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[6],ode_rot_mat[5]);
-				dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
-			dJointSetHinge2Axis2(m_ODEJoint,    ode_rot_mat[0],    ode_rot_mat[1],    ode_rot_mat[2]);
+		if (m_Axis1.Length() != 0)
+			dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
+		else
+			dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
+		dJointSetHinge2Axis2(m_ODEJoint,    ode_rot_mat[0],    ode_rot_mat[1],    ode_rot_mat[2]);
 	}
 
 	void ODESuspensionComponent::SetAnchor(const Vec3 &value)
@@ -243,7 +240,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::SetAxis1Vel(float velocity)
+	void ODESuspensionComponent::SetSteerVelocity(float velocity)
 	{
 		if(m_ODEJoint)
 		{
@@ -251,7 +248,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::SetAxis2Vel(float value)
+	void ODESuspensionComponent::SetDriveVelocity(float value)
 	{
 		if(m_ODEJoint)
 		{
@@ -259,7 +256,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::SetAxis2Force(float value)
+	void ODESuspensionComponent::SetDriveForce(float value)
 	{
 		if(m_ODEJoint)
 		{
@@ -268,7 +265,7 @@ namespace GASS
 	}
 
 
-	float ODESuspensionComponent::GetAxis2Force() const
+	float ODESuspensionComponent::GetDriveForce() const
 	{
 		if(m_ODEJoint)
 		{
@@ -277,15 +274,22 @@ namespace GASS
 		return 0;
 	}
 
-	void ODESuspensionComponent::SetAxis1Force(float value)
+	void ODESuspensionComponent::SetSteerForce(float value)
 	{
-		m_JointForce = value;
 		if(m_ODEJoint)
 		{
 			dJointSetHinge2Param(m_ODEJoint, dParamFMax,value);
 		}
 	}
 
+
+	float ODESuspensionComponent::GetSteerForce() const 
+	{
+		if(m_ODEJoint)
+		{
+			return dJointGetHinge2Param(m_ODEJoint,dParamFMax);
+		}
+	}
 
 	void ODESuspensionComponent::SetDamping(float value)
 	{
