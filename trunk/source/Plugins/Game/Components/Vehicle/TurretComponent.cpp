@@ -81,7 +81,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
 	
 		
-		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
@@ -188,7 +188,7 @@ namespace GASS
 			//m_DesiredDir = turret_dir;
 			m_RotValue = 0;
 			m_RelTrans = m_ParentTransformation;
-			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 			GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 			return;
@@ -405,7 +405,7 @@ namespace GASS
 		//GetSceneObject()->PostMessage(force_msg);
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(0)));
+		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(0)));
 		
 
 		if(m_Controller == "Pitch")

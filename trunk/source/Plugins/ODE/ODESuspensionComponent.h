@@ -43,19 +43,19 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
-		void OnDriveForceRequest(PhysicsSuspensionJointDriveForceRequestPtr message);
+		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
 		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
-		void OnSteerForceRequest(PhysicsSuspensionJointSteerForceRequestPtr message);
+		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
 
 		void SetSteerVelocity(float velocity);
 		void SetDriveVelocity(float value);
 		
-		void SetSteerForce(float value);
-		float GetSteerForce()const;
+		void SetMaxSteerTorque(float value);
+		float GetMaxSteerTorque()const;
 
-		void SetDriveForce(float value);
-		float GetDriveForce()const;
+		void SetMaxDriveTorque(float value);
+		float GetMaxDriveTorque()const;
 		
 		//Helpers
 

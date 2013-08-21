@@ -123,7 +123,7 @@ namespace GASS
 		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
 		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
 
-		MessagePtr force_msg(new PhysicsSuspensionJointSteerForceRequest(m_SteerForce));
+		MessagePtr force_msg(new PhysicsSuspensionJointMaxSteerTorqueRequest(m_SteerForce));
 		MessagePtr vel_msg(new PhysicsSuspensionJointSteerVelocityRequest(angular_vel));
 
 		GetSceneObject()->PostMessage(force_msg);

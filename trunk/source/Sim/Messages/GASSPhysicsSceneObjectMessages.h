@@ -81,40 +81,7 @@ namespace GASS
 	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
 	/**
-	Messages used to interact with joint components usually found in
-	the physics system. This message should probably be divided into
-	separate messages (one for force, one for velocity ec.) but
-	for now we use enums to specify what parameter we want to change.
-	*/
-
-	/*class PhysicsJointMessage : public BaseMessage
-	{
-	public:
-		enum PhysicsJointParameterType
-		{
-			AXIS1_VELOCITY,
-			AXIS2_VELOCITY,
-			AXIS1_FORCE,
-			AXIS2_FORCE,
-			AXIS1_DESIRED_ANGLE
-		};
-	public:
-		PhysicsJointMessage(PhysicsJointParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
-		  {
-
-		  }
-		  float GetValue()const {return m_Value;}
-		  PhysicsJointParameterType GetParameter()const {return m_Parameter;}
-	private:
-		PhysicsJointParameterType m_Parameter;
-		float m_Value;
-	};
-	typedef SPTR<PhysicsJointMessage> PhysicsJointMessagePtr;*/
-
-
-	/**
-	Messages used to request velocity for hinge joint. 
+	Set desired angular velocity for hinge joint. 
 	*/
 	class PhysicsHingeJointVelocityRequest : public BaseMessage
 	{
@@ -130,21 +97,26 @@ namespace GASS
 	};
 	typedef SPTR<PhysicsHingeJointVelocityRequest> PhysicsHingeJointVelocityRequestPtr;
 
-	class PhysicsHingeJointForceRequest : public BaseMessage
+	/**
+	Set max torque used by a hinge joint to get to i'ts desired velocity 
+	*/
+	class PhysicsHingeJointMaxTorqueRequest : public BaseMessage
 	{
 	public:
-		PhysicsHingeJointForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Force(force)
+		PhysicsHingeJointMaxTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_MaxTorque(max_torque)
 		  {
 
 		  }
-		  Float GetForce()const {return m_Force;}
+		  Float GetMaxTorque()const {return m_MaxTorque;}
 	private:
-		Float m_Force;
+		Float m_MaxTorque;
 	};
-	typedef SPTR<PhysicsHingeJointForceRequest> PhysicsHingeJointForceRequestPtr;
+	typedef SPTR<PhysicsHingeJointMaxTorqueRequest> PhysicsHingeJointMaxTorqueRequestPtr;
 
-
+	/**
+	Set desired angular velocity of the suspension joints drive axis
+	*/
 	class PhysicsSuspensionJointDriveVelocityRequest: public BaseMessage
 	{
 	public:
@@ -159,25 +131,31 @@ namespace GASS
 	};
 	typedef SPTR<PhysicsSuspensionJointDriveVelocityRequest> PhysicsSuspensionJointDriveVelocityRequestPtr;
 
-	class PhysicsSuspensionJointDriveForceRequest : public BaseMessage
+
+	/**
+	Set max torque used by the suspension joints drive axis to get to i'ts desired velocity 
+	*/
+	class PhysicsSuspensionJointMaxDriveTorqueRequest : public BaseMessage
 	{
 	public:
-		PhysicsSuspensionJointDriveForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Force(force)
+		PhysicsSuspensionJointMaxDriveTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_MaxTorque(max_torque)
 		  {
 
 		  }
-		  Float GetForce()const {return m_Force;}
+		  Float GetMaxTorque()const {return m_MaxTorque;}
 	private:
-		Float m_Force;
+		Float m_MaxTorque;
 	};
-	typedef SPTR<PhysicsSuspensionJointDriveForceRequest> PhysicsSuspensionJointDriveForceRequestPtr;
+	typedef SPTR<PhysicsSuspensionJointMaxDriveTorqueRequest> PhysicsSuspensionJointMaxDriveTorqueRequestPtr;
 	
-
-	class PhysicsSuspensionJointSteerForceRequest : public BaseMessage
+	/**
+	Set max torque used by the suspension joints steer axis to get to i'ts desired velocity 
+	*/
+	class PhysicsSuspensionJointMaxSteerTorqueRequest : public BaseMessage
 	{
 	public:
-		PhysicsSuspensionJointSteerForceRequest(Float force, SenderID sender_id = -1, double delay= 0) :
+		PhysicsSuspensionJointMaxSteerTorqueRequest(Float force, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Force(force)
 		  {
 
@@ -186,9 +164,12 @@ namespace GASS
 	private:
 		Float m_Force;
 	};
-	typedef SPTR<PhysicsSuspensionJointSteerForceRequest> PhysicsSuspensionJointSteerForceRequestPtr;
+	typedef SPTR<PhysicsSuspensionJointMaxSteerTorqueRequest> PhysicsSuspensionJointMaxSteerTorqueRequestPtr;
 
-
+	/**
+	Set desired angular velocity of the suspension joints steer axis
+	*/
+	
 	class PhysicsSuspensionJointSteerVelocityRequest: public BaseMessage
 	{
 	public:

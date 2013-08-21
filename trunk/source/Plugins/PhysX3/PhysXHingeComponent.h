@@ -42,7 +42,7 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
-		void OnForceRequest(PhysicsHingeJointForceRequestPtr message);
+		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
 
 		void OnBody1Loaded(BodyLoadedMessagePtr message);
 		void OnBody2Loaded(BodyLoadedMessagePtr message);

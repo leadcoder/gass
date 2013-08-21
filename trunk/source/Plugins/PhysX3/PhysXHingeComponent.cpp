@@ -74,7 +74,7 @@ namespace GASS
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnForceRequest,PhysicsHingeJointForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnForceRequest,PhysicsHingeJointMaxTorqueRequest,0));
 
 		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
 		{
@@ -129,7 +129,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXHingeComponent::OnForceRequest(PhysicsHingeJointForceRequestPtr message)
+	void PhysXHingeComponent::OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message)
 	{
 		if(m_Body2.IsValid())
 		{

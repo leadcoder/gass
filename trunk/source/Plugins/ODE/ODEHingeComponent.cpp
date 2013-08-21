@@ -36,7 +36,7 @@ namespace GASS
 {
 	ODEHingeComponent::ODEHingeComponent() : m_Body1 (NULL),
 		m_Body2 (NULL),
-		m_JointForce (0),
+		m_MaxTorque (0),
 		m_Anchor (0,0,0),
 		m_Axis (0,0,0),
 		m_ODEJoint (0),
@@ -52,7 +52,7 @@ namespace GASS
 
 	void ODEHingeComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("AxisForce", &GASS::ODEHingeComponent::GetAxisForce, &GASS::ODEHingeComponent::SetAxisForce);
+		RegisterProperty<float>("MaxTorque", &GASS::ODEHingeComponent::GetMaxTorque, &GASS::ODEHingeComponent::SetMaxTorque);
 		RegisterProperty<float>("HighStop", &GASS::ODEHingeComponent::GetHighStop, &GASS::ODEHingeComponent::SetHighStop);
 		RegisterProperty<float>("LowStop", &GASS::ODEHingeComponent::GetLowStop, &GASS::ODEHingeComponent::SetLowStop);
 		RegisterProperty<Vec3>("Axis", &GASS::ODEHingeComponent::GetAxis, &GASS::ODEHingeComponent::SetAxis);
@@ -63,7 +63,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnForceRequest,PhysicsHingeJointForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnMaxTorqueRequest,PhysicsHingeJointMaxTorqueRequest,0));
 	}
 
 	void ODEHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
@@ -75,12 +75,12 @@ namespace GASS
 		}
 	}
 
-	void ODEHingeComponent::OnForceRequest(PhysicsHingeJointForceRequestPtr message)
+	void ODEHingeComponent::OnMaxTorqueRequest(PhysicsHingeJointMaxTorqueRequestPtr message)
 	{
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			SetAxisForce(message->GetForce());
+			SetMaxTorque(message->GetMaxTorque());
 		}
 	}
 
@@ -119,7 +119,7 @@ namespace GASS
 			UpdateAnchor();
 			UpdateJointAxis();
 			UpdateLimits();
-			SetAxisForce(m_JointForce);
+			SetMaxTorque(m_MaxTorque);
 			SetAxisVel(0);
 		}
 	}
@@ -209,9 +209,9 @@ namespace GASS
 		}
 	}
 
-	void ODEHingeComponent::SetAxisForce(float value)
+	void ODEHingeComponent::SetMaxTorque(float value)
 	{
-		m_JointForce = value;
+		m_MaxTorque = value;
 		if(m_ODEJoint)
 		{
 			dJointSetHingeParam(m_ODEJoint, dParamFMax,value);

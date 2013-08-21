@@ -624,7 +624,7 @@ namespace GASS
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
 		
-		MessagePtr force_msg(new PhysicsSuspensionJointDriveForceRequest(wheel_torque+brake_torque));
+		MessagePtr force_msg(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
 		MessagePtr vel_msg(new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
 
 

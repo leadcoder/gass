@@ -111,13 +111,13 @@ namespace GASS
 		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationNotifyMessage,0));
 		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretHingeUpdate,HingeJointNotifyMessage,0));
 	
-		m_TurretObject->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+		m_TurretObject->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		m_TurretObject->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 
 		
 		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationNotifyMessage,0));
 		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelHingeUpdate,HingeJointNotifyMessage,0));
-		m_BarrelObject->PostMessage(MessagePtr(new PhysicsHingeJointForceRequest(m_SteerForce)));
+		m_BarrelObject->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		m_BarrelObject->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 		
 	}
@@ -217,7 +217,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 
 
-			MessagePtr force_msg(new PhysicsHingeJointForceRequest(m_SteerForce));
+			MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce));
 			m_TurretObject->PostMessage(force_msg);
 			m_BarrelObject->PostMessage(force_msg);
 			return;
@@ -300,7 +300,7 @@ namespace GASS
 		
 		DEBUG_PRINT(ss.str());*/
 
-		MessagePtr force_msg(new PhysicsHingeJointForceRequest(0));//m_SteerForce));
+		MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(0));//m_SteerForce));
 		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
 		m_TurretObject->PostMessage(force_msg);
 		m_BarrelObject->PostMessage(force_msg);

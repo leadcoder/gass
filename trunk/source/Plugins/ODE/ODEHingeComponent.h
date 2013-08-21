@@ -42,11 +42,11 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
-		void OnForceRequest(PhysicsHingeJointForceRequestPtr message);
+		void OnMaxTorqueRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
 		void SetAxisVel(float velocity);
-		float GetAxisForce()const {return m_JointForce;}
-		void SetAxisForce(float value);
+		float GetMaxTorque()const {return m_MaxTorque;}
+		void SetMaxTorque(float value);
 		//Helpers
 
 		void CreateJoint();
@@ -74,7 +74,7 @@ namespace GASS
 		ODEBodyComponent* m_Body1;
 		ODEBodyComponent* m_Body2;
 		
-		float m_JointForce;
+		float m_MaxTorque;
 		float m_SwayForce;
 		float m_Strength;
 		float m_Damping;

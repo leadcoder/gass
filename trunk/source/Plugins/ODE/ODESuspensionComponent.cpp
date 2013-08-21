@@ -61,8 +61,8 @@ namespace GASS
 
 	void ODESuspensionComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("SteerForce", &GASS::ODESuspensionComponent::GetSteerForce, &GASS::ODESuspensionComponent::SetSteerForce);
-		RegisterProperty<float>("DriveForce", &GASS::ODESuspensionComponent::GetDriveForce, &GASS::ODESuspensionComponent::SetDriveForce);
+		RegisterProperty<float>("MaxSteerTorque", &GASS::ODESuspensionComponent::GetMaxSteerTorque, &GASS::ODESuspensionComponent::SetMaxSteerTorque);
+		RegisterProperty<float>("MaxDriveTorque", &GASS::ODESuspensionComponent::GetMaxDriveTorque, &GASS::ODESuspensionComponent::SetMaxDriveTorque);
 		RegisterProperty<float>("Damping", &GASS::ODESuspensionComponent::GetDamping, &GASS::ODESuspensionComponent::SetDamping);
 		RegisterProperty<float>("Strength", &GASS::ODESuspensionComponent::GetStrength, &GASS::ODESuspensionComponent::SetStrength);
 		RegisterProperty<float>("HighStop", &GASS::ODESuspensionComponent::GetHighStop, &GASS::ODESuspensionComponent::SetHighStop);
@@ -78,8 +78,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,BodyLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveForceRequest,PhysicsSuspensionJointDriveForceRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerForceRequest,PhysicsSuspensionJointSteerForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnMaxSteerTorqueRequest,PhysicsSuspensionJointMaxSteerTorqueRequest,0));
 	}
 
 	void ODESuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
@@ -91,12 +91,12 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::OnDriveForceRequest(PhysicsSuspensionJointDriveForceRequestPtr message)
+	void ODESuspensionComponent::OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message)
 	{
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			SetDriveForce(message->GetForce());
+			SetMaxDriveTorque(message->GetMaxTorque());
 		}
 	}
 
@@ -110,12 +110,12 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::OnSteerForceRequest(PhysicsSuspensionJointSteerForceRequestPtr message)
+	void ODESuspensionComponent::OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message)
 	{
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			SetSteerForce(message->GetForce());
+			SetMaxSteerTorque(message->GetForce());
 		}
 	}
 	
@@ -256,7 +256,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::SetDriveForce(float value)
+	void ODESuspensionComponent::SetMaxDriveTorque(float value)
 	{
 		if(m_ODEJoint)
 		{
@@ -265,7 +265,7 @@ namespace GASS
 	}
 
 
-	float ODESuspensionComponent::GetDriveForce() const
+	float ODESuspensionComponent::GetMaxDriveTorque() const
 	{
 		if(m_ODEJoint)
 		{
@@ -274,7 +274,7 @@ namespace GASS
 		return 0;
 	}
 
-	void ODESuspensionComponent::SetSteerForce(float value)
+	void ODESuspensionComponent::SetMaxSteerTorque(float value)
 	{
 		if(m_ODEJoint)
 		{
@@ -283,12 +283,13 @@ namespace GASS
 	}
 
 
-	float ODESuspensionComponent::GetSteerForce() const 
+	float ODESuspensionComponent::GetMaxSteerTorque() const 
 	{
 		if(m_ODEJoint)
 		{
 			return dJointGetHinge2Param(m_ODEJoint,dParamFMax);
 		}
+		return 0;
 	}
 
 	void ODESuspensionComponent::SetDamping(float value)
