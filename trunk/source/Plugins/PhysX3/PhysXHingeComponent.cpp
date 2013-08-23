@@ -134,7 +134,7 @@ namespace GASS
 		if(m_Body2.IsValid())
 		{
 			m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->WakeUp();
-			SetDriveForceLimit(message->GetForce());
+			SetDriveForceLimit(message->GetMaxTorque());
 		}
 	}
 
