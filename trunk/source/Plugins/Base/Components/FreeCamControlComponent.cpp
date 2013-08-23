@@ -77,9 +77,12 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("FreeCamControlComponent",new Creator<FreeCamControlComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("FreeCamControlComponent", OF_VISIBLE)));
-		RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed);
-		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed);
-		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed);
+		RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Alternative Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Regular Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Float>("TurnSpeed", &GASS::FreeCamControlComponent::GetTurnSpeed, &GASS::FreeCamControlComponent::SetTurnSpeed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Angular Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<MotionModeBinder>("Mode", &GASS::FreeCamControlComponent::GetMode, &GASS::FreeCamControlComponent::SetMode,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Motion Mode",PF_VISIBLE,&MotionModeBinder::GetStringEnumeration)));
 		RegisterProperty<bool>("Debug", &GASS::FreeCamControlComponent::GetDebug, &GASS::FreeCamControlComponent::SetDebug);
