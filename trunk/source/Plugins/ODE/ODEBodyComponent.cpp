@@ -71,8 +71,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsMassMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
 	}
 
 	void ODEBodyComponent::OnPositionChanged(PositionMessagePtr message)
@@ -122,7 +125,7 @@ namespace GASS
 			SetActive(true);
 	}
 
-	void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
+	/*void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
 		//wake body!!
@@ -158,9 +161,33 @@ namespace GASS
 				break;
 			}
 		}
+	}*/
+
+
+	void ODEBodyComponent::OnVelocity(PhysicsBodyVelocityRequestPtr message)
+	{
+		SetVelocity(message->GetVelocity(),true);
 	}
 
-	void ODEBodyComponent::OnMassMessage(PhysicsMassMessagePtr message)
+	void ODEBodyComponent::OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message)
+	{
+		SetAngularVelocity(message->GetAngularVelocity());
+	}
+
+	void ODEBodyComponent::OnAddForce(PhysicsBodyAddForceRequestPtr message)
+	{
+		Wake();
+		AddForce(message->GetForce(),true);
+	}
+
+	void ODEBodyComponent::OnAddTorque(PhysicsBodyAddTorqueRequestPtr message)
+	{
+		Wake();
+		AddTorque(message->GetTorque(),true);
+	}
+
+
+	void ODEBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
 		SetMass(message->GetMass());
 	}

@@ -42,18 +42,21 @@ namespace GASS
 	protected:
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		void OnWheelVelocityRequest(PhysicsSuspensionWheelVelocityRequestPtr message);
-		void OnSteerVelocityRequest(PhysicsSuspensionSteerVelocityRequestPtr message);
+		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
+		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
+		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
+		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
+
 		void OnLoad(BodyLoadedMessagePtr message);
 
 		float GetRollAngle();
 		float GetRollAngleRate();
-		void SetWheelJointVelocity(float velocity);
-		float GetWheelJointMaxForce()const {return m_WheelJointMaxForce;}
-		void SetWheelJointMaxForce(float value);
-		void SetSteerVelocity(float value);
-		void SetSteerJointMaxForce(float value);
-		float GetSteerJointMaxForce() const {return m_SteerJointMaxForce;}
+		void SetDriveVelocity(float velocity);
+		float GetDriveMaxTorque()const {return m_DriveMaxTorque;}
+		void SetDriveMaxTorque(float value);
+		void SetAngularSteerVelocity(float value);
+		void SetMaxSteerTorque(float value);
+		float GetMaxSteerTorque() const {return m_MaxSteerTorque;}
 		
 		//Helpers
 		void CreateJoint();
@@ -68,20 +71,19 @@ namespace GASS
 		void SetSteerLimit(float value);
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
 	private:
-		float m_WheelJointMaxForce;
-		//float m_WheelJointSpring;
+		float m_DriveMaxTorque;
 		float m_WheelJointDamping;
 
 		float m_SpringJointMaxForce;
 		float m_Strength;
 		float m_Damping;
 
-		float m_SteerJointMaxForce;
+		float m_MaxSteerTorque;
 		float m_SteerJointSpring;
 		float m_SteerJointDamping;
 		float m_SteerLimit;
 		float m_WheelAngularVelocity;
-		float m_SteerVelocity;
+		float m_AngularSteerVelocity;
 
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic *m_SuspensionActor;

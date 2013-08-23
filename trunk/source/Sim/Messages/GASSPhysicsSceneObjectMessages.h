@@ -155,14 +155,14 @@ namespace GASS
 	class PhysicsSuspensionJointMaxSteerTorqueRequest : public BaseMessage
 	{
 	public:
-		PhysicsSuspensionJointMaxSteerTorqueRequest(Float force, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Force(force)
+		PhysicsSuspensionJointMaxSteerTorqueRequest(Float torque, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_MaxTorque(torque)
 		  {
 
 		  }
-		  Float GetForce()const {return m_Force;}
+		  Float GetMaxTorque()const {return m_MaxTorque;}
 	private:
-		Float m_Force;
+		Float m_MaxTorque;
 	};
 	typedef SPTR<PhysicsSuspensionJointMaxSteerTorqueRequest> PhysicsSuspensionJointMaxSteerTorqueRequestPtr;
 
@@ -187,40 +187,39 @@ namespace GASS
 
 
 	/**
-	Message used to interact with physics bodies.
-	The user provide a paramerter type and a
-	value for that type. Physics body implementations
-	are responsible to suscribe to this message.
+	Request to change the state of a physics bodies.
 	*/
-	class PhysicsBodyMessage : public BaseMessage
+	class PhysicsBodyStateRequest : public BaseMessage
 	{
+
 	public:
-		enum PhysicsBodyParameterType
+		enum PhysicsBodyState
 		{
-			TORQUE,
-			FORCE,
-			VELOCITY,
 			ENABLE,
 			DISABLE
 		};
-	public:
-		PhysicsBodyMessage(PhysicsBodyParameterType parameter, Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
+
+		PhysicsBodyStateRequest(PhysicsBodyState state, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Value(state)
 		  {
 
 		  }
-		  Vec3 GetValue()const {return m_Value;}
-		  PhysicsBodyParameterType GetParameter()const {return m_Parameter;}
+		  PhysicsBodyState GetState()const {return m_Value;}
 	private:
-		PhysicsBodyParameterType m_Parameter;
-		Vec3 m_Value;
+		PhysicsBodyState m_Value;
 	};
-	typedef SPTR<PhysicsBodyMessage> PhysicsBodyMessagePtr;
+	typedef SPTR<PhysicsBodyStateRequest> PhysicsBodyStateRequestPtr;
 
-	class PhysicsVelocityRequest : public BaseMessage
+
+
+	/**
+	Request to change the velocity of physics bodies.
+	*/
+
+	class PhysicsBodyVelocityRequest : public BaseMessage
 	{
 	public:
-		PhysicsVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value)
 		  {
 
@@ -229,12 +228,17 @@ namespace GASS
 	private:
 		Vec3 m_Value;
 	};
-	typedef SPTR<PhysicsVelocityRequest> PhysicsVelocityRequestPtr;
+	typedef SPTR<PhysicsBodyVelocityRequest> PhysicsBodyVelocityRequestPtr;
 	
-	class PhysicsAngularVelocityRequest : public BaseMessage
+
+	/**
+	Request to change the angular velocity of physics bodies.
+	*/
+
+	class PhysicsBodyAngularVelocityRequest : public BaseMessage
 	{
 	public:
-		PhysicsAngularVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyAngularVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value)
 		  {
 
@@ -243,13 +247,16 @@ namespace GASS
 	private:
 		Vec3 m_Value;
 	};
-	typedef SPTR<PhysicsAngularVelocityRequest> PhysicsAngularVelocityRequestPtr;
+	typedef SPTR<PhysicsBodyAngularVelocityRequest> PhysicsBodyAngularVelocityRequestPtr;
 
-	
-	class PhysicsForceRequest : public BaseMessage
+	/**
+	Request to add force to physics bodies.
+	*/
+
+	class PhysicsBodyAddForceRequest : public BaseMessage
 	{
 	public:
-		PhysicsForceRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyAddForceRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value)
 		  {
 
@@ -258,12 +265,18 @@ namespace GASS
 	private:
 		Vec3 m_Value;
 	};
-	typedef SPTR<PhysicsForceRequest> PhysicsForceRequestPtr;
+	typedef SPTR<PhysicsBodyAddForceRequest> PhysicsBodyAddForceRequestPtr;
 
-	class PhysicsTorqueRequest : public BaseMessage
+
+
+	/**
+	Request to add torque to physics bodies.
+	*/
+
+	class PhysicsBodyAddTorqueRequest : public BaseMessage
 	{
 	public:
-		PhysicsTorqueRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyAddTorqueRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(value)
 		  {
 
@@ -272,15 +285,15 @@ namespace GASS
 	private:
 		Vec3 m_Value;
 	};
-	typedef SPTR<PhysicsTorqueRequest> PhysicsTorqueRequestPtr;
+	typedef SPTR<PhysicsBodyAddTorqueRequest> PhysicsBodyAddTorqueRequestPtr;
 
 	/**
 	Message used to change mass of physics bodies.
 	*/
-	class PhysicsMassMessage : public BaseMessage
+	class PhysicsBodyMassRequest : public BaseMessage
 	{
 	public:
-		PhysicsMassMessage(Float mass, SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyMassRequest(Float mass, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Value(mass)
 		  {
 
@@ -290,9 +303,9 @@ namespace GASS
 		Float m_Value;
 	};
 
-	typedef SPTR<PhysicsMassMessage> PhysicsMassMessagePtr;
+	typedef SPTR<PhysicsBodyMassRequest> PhysicsBodyMassRequestPtr;
 
-	class PhysicsSuspensionWheelVelocityRequest : public BaseMessage
+	/*class PhysicsSuspensionWheelVelocityRequest : public BaseMessage
 	{
 	public:
 		PhysicsSuspensionWheelVelocityRequest(float target_velocity, float max_force = -1, SenderID sender_id = -1, double delay= 0) :
@@ -322,7 +335,7 @@ namespace GASS
 		float m_TargetVel;
 		float m_MaxForce;
 	};
-	typedef SPTR<PhysicsSuspensionSteerVelocityRequest> PhysicsSuspensionSteerVelocityRequestPtr;
+	typedef SPTR<PhysicsSuspensionSteerVelocityRequest> PhysicsSuspensionSteerVelocityRequestPtr;*/
 
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS

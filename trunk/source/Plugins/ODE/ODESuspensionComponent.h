@@ -48,7 +48,7 @@ namespace GASS
 		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
 
-		void SetSteerVelocity(float velocity);
+		void SetAngularSteerVelocity(float velocity);
 		void SetDriveVelocity(float value);
 		
 		void SetMaxSteerTorque(float value);

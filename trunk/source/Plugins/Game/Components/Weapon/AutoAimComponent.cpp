@@ -307,10 +307,10 @@ namespace GASS
 
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		MessagePtr barrel_torque_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(pitch_torque,0,0)));
+		MessagePtr barrel_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(pitch_torque,0,0)));
 		m_BarrelObject->PostMessage(barrel_torque_msg);
 
-		MessagePtr yaw_torque_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,yaw_torque,0)));
+		MessagePtr yaw_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,yaw_torque,0)));
 		m_TurretObject->PostMessage(yaw_torque_msg);
 
 		

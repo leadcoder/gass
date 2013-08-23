@@ -104,7 +104,7 @@ namespace GASS
 				if(m_OutOfArmorForce > 0)
 				{
 					Vec3 force = Vec3(0,1,0)*m_OutOfArmorForce;
-					MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,force));
+					MessagePtr force_msg(new PhysicsBodyAddForceRequest(force));
 					GetSceneObject()->PostMessage(force_msg);
 				}
 			}

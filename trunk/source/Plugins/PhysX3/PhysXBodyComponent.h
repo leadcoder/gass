@@ -53,12 +53,12 @@ namespace GASS
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);
-		void OnVelocity(PhysicsVelocityRequestPtr message);
-		void OnAngularVelocity(PhysicsAngularVelocityRequestPtr message);
-		void OnAddForce(PhysicsForceRequestPtr message);
-		void OnAddTorque(PhysicsTorqueRequestPtr message);
-		void OnParameterMessage(PhysicsBodyMessagePtr message);
-		void OnMassMessage(PhysicsMassMessagePtr message);
+		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
+		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
+		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
+		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
+		//void OnParameterMessage(PhysicsBodyMessagePtr message);
+		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;

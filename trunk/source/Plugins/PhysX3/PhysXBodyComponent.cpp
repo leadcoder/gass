@@ -57,11 +57,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsForceRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsTorqueRequest,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 	}
 
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -135,33 +135,33 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::OnMassMessage(PhysicsMassMessagePtr message)
+	void PhysXBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
 		SetMass(message->GetMass());
 	}
 
-	void PhysXBodyComponent::OnVelocity(PhysicsVelocityRequestPtr message)
+	void PhysXBodyComponent::OnVelocity(PhysicsBodyVelocityRequestPtr message)
 	{
 		SetVelocity(message->GetVelocity());
 	}
 
 
-	void PhysXBodyComponent::OnAngularVelocity(PhysicsAngularVelocityRequestPtr message)
+	void PhysXBodyComponent::OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message)
 	{
 		SetAngularVelocity(message->GetAngularVelocity());
 	}
 
-	void PhysXBodyComponent::OnAddForce(PhysicsForceRequestPtr message)
+	void PhysXBodyComponent::OnAddForce(PhysicsBodyAddForceRequestPtr message)
 	{
 		AddForce(message->GetForce(),false);
 	}
 
-	void PhysXBodyComponent::OnAddTorque(PhysicsTorqueRequestPtr message)
+	void PhysXBodyComponent::OnAddTorque(PhysicsBodyAddTorqueRequestPtr message)
 	{
 		AddTorque(message->GetTorque());
 	}
 
-	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
+/*	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
 		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
 		Vec3 value = message->GetValue();
@@ -186,7 +186,7 @@ namespace GASS
 				break;
 			}
 		}
-	}
+	}*/
 
 	Vec3 PhysXBodyComponent::GetPosition() const
 	{

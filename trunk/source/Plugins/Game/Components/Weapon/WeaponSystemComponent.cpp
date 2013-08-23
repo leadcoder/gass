@@ -247,9 +247,8 @@ namespace GASS
 		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 
 		//recoil
-		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,m_RecoilForce));
+		MessagePtr force_msg(new PhysicsBodyAddForceRequest(m_RecoilForce));
 		GetSceneObject()->PostMessage(force_msg);
-
 
 		//effect
 		if(m_FireEffectTemplate != "")

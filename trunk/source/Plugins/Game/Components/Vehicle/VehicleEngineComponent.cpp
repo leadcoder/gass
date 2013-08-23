@@ -490,7 +490,7 @@ namespace GASS
 		if(fabs(m_DesiredSteer) < 0.1)
 			m_DesiredSteer = m_DesiredSteer*0.9;
 
-		MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_torque,0)));
+		MessagePtr force_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
 
 

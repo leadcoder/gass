@@ -47,7 +47,7 @@ namespace GASS
 
 	}
 
-	void PhysXCarComponent::OnMassMessage(PhysicsMassMessagePtr message)
+	void PhysXCarComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
 		SetMass(message->GetMass());
 	}
@@ -87,7 +87,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnRotationChanged,RotationMessage,0 ));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnMassMessage,PhysicsMassMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCarComponent::OnInput,InputControllerMessage,0));
 
 

@@ -410,7 +410,7 @@ namespace GASS
 
 		if(m_Controller == "Pitch")
 		{
-			MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(turn_velocity,0,0)));
+			MessagePtr body_force_msg(new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0)));
 			GetSceneObject()->PostMessage(body_force_msg);
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir <<"\n";;
@@ -419,12 +419,9 @@ namespace GASS
 		}
 		else if (m_Controller == "Yaw")
 		{
-			MessagePtr body_force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::TORQUE,Vec3(0,turn_velocity,0)));
+			MessagePtr body_force_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0)));
 			GetSceneObject()->PostMessage(body_force_msg);
 			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
-			
-			
-			
 		}
 
 		

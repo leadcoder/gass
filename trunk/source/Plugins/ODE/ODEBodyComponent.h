@@ -58,6 +58,11 @@ namespace GASS
 		void SetMass(float mass);
 		void SetODEMass(dMass mass);
 	protected:
+		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
+		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
+		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
+		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
+
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
 		void SetVelocity(const Vec3 &vel, bool rel = false);
@@ -92,8 +97,8 @@ namespace GASS
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);
 		void OnRotationChanged(RotationMessagePtr message);
 		void OnWorldRotationChanged(WorldRotationMessagePtr message);
-		void OnParameterMessage(PhysicsBodyMessagePtr message);
-		void OnMassMessage(PhysicsMassMessagePtr message);
+		//void OnParameterMessage(PhysicsBodyMessagePtr message);
+		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void DampenBody( dBodyID body, float vScale, float aScale );
 		dSpaceID GetSecondarySpace();
 	protected:

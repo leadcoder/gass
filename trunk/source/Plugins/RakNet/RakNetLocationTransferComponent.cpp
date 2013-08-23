@@ -111,7 +111,7 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
 
-			MessagePtr disable_msg(new PhysicsBodyMessage(PhysicsBodyMessage::DISABLE,Vec3(0,0,0)));
+			MessagePtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::PhysicsBodyState::DISABLE));
 			GetSceneObject()->PostMessage(disable_msg);
 
 			IComponentContainerTemplate::ComponentVector components;

@@ -363,7 +363,7 @@ namespace GASS
 
 			MessagePtr pos_msg(new PositionMessage(pos,sender_id));
 			MessagePtr rot_msg(new RotationMessage(rot,sender_id));
-			MessagePtr vel_msg(new PhysicsBodyMessage(PhysicsBodyMessage::VELOCITY,vel,sender_id));
+			MessagePtr vel_msg(new PhysicsBodyVelocityRequest(vel,sender_id));
 
 			so->SendImmediate(pos_msg);
 			so->SendImmediate(rot_msg);

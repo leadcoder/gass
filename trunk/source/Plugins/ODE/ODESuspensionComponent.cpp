@@ -106,7 +106,7 @@ namespace GASS
 		{
 			m_Body1->Wake();
 			
-			SetSteerVelocity(message->GetVelocity());
+			SetAngularSteerVelocity(message->GetVelocity());
 		}
 	}
 
@@ -115,7 +115,7 @@ namespace GASS
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			SetMaxSteerTorque(message->GetForce());
+			SetMaxSteerTorque(message->GetMaxTorque());
 		}
 	}
 	
@@ -156,7 +156,7 @@ namespace GASS
 			//SetSteerForce(m_JointForce);
 			//SetDriveForce(m_JointForce);
 			SetDriveVelocity(0);
-			SetSteerVelocity(0);
+			SetAngularSteerVelocity(0);
 			UpdateSuspension();
 		}
 	}
@@ -240,7 +240,7 @@ namespace GASS
 		}
 	}
 
-	void ODESuspensionComponent::SetSteerVelocity(float velocity)
+	void ODESuspensionComponent::SetAngularSteerVelocity(float velocity)
 	{
 		if(m_ODEJoint)
 		{

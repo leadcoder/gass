@@ -49,8 +49,7 @@ namespace GASS
 	private:
 		void OnPositionMessage(PositionMessagePtr message);
 		void OnRotationMessage(RotationMessagePtr message);
-		void OnPhysicsParameterMessage(PhysicsBodyMessagePtr message);
-
+		void OnVelocityRequest(PhysicsBodyVelocityRequestPtr message);
 		void StepPhysics(double time);
 		void SpawnEffect(const std::string &effect);
 		void SetEndEffectTemplateName(const std::string &effect);

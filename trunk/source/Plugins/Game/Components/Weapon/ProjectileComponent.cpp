@@ -69,7 +69,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPhysicsParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnVelocityRequest,PhysicsBodyVelocityRequest,0));
 
 		m_TimeLeft = m_TimeToLive;
 		//save for fast access
@@ -83,26 +83,9 @@ namespace GASS
 		
 	}
 
-	void ProjectileComponent::OnPhysicsParameterMessage(PhysicsBodyMessagePtr message)
+	void ProjectileComponent::OnVelocityRequest(PhysicsBodyVelocityRequestPtr message)
 	{
-		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
-		Vec3 value = message->GetValue();
-		switch(type)
-		{
-		case PhysicsBodyMessage::FORCE:
-			{
-				//what to do?
-			}
-			break;
-		case PhysicsBodyMessage::TORQUE:
-			{
-				//what to do?
-			}
-		case PhysicsBodyMessage::VELOCITY:
-			{
-				m_Velocity = value;
-			}
-		}
+		m_Velocity = message->GetVelocity();
 	}
 
 
@@ -255,7 +238,7 @@ namespace GASS
 
 				//Send force message to indicate hit
 				Vec3 force = proj_dir*m_ImpactForce;
-				MessagePtr force_msg(new PhysicsBodyMessage(PhysicsBodyMessage::FORCE,force));
+				MessagePtr force_msg(new PhysicsBodyAddForceRequest(force));
 				SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
 			}
 			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
