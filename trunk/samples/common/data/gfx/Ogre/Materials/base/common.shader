@@ -127,3 +127,32 @@ float3 calcSplatting(sampler2D coverageMap, sampler2D splat1Map, sampler2D splat
 	lightDiffuse  = lightDiffuse*detail3*2;
 	return lightDiffuse;
 }
+
+
+float3 calcFadeSplatting(sampler2D coverageMap, 
+sampler2D splat1Map, 
+sampler2D splat2Map, 
+sampler2D splat3Map,
+float2 texCoord,
+float4 splatScales,
+float3 global_color, 
+float near_color_weight, 
+float detail_fade_dist,
+float eye_dist)
+{
+	float3 coverage = tex2D(coverageMap, texCoord);
+	float3 inv_coverage = (1 - coverage.xyz)*0.5;
+    float3 detail1  =   tex2D(splat1Map, texCoord* splatScales.x).xyz;
+    detail1 = detail1*coverage.x + inv_coverage.x;
+    float3 detail2  =  tex2D(splat2Map, texCoord* splatScales.y).xyz;
+   	detail2 = detail2*coverage.y + inv_coverage.y;
+   	float3 detail3  =   tex2D(splat3Map, texCoord* splatScales.z).xyz;
+	detail3 = detail3*coverage.z + inv_coverage.z;
+	
+	float fade_val = saturate((eye_dist - detail_fade_dist) /  detail_fade_dist);
+	//lightDiffuse  = lightDiffuse*detail3*2;
+	float final_color  = lerp(lerp(detail1*detail2*detail3,global_color, near_color_weight), global_color.xyz, fade_val);
+	return final_color;
+}
+
+			
