@@ -190,9 +190,9 @@
                 <MaxPitchVelocity value="0.6"/>
                 <YawMaxMinAngle value="1000 -1000"/>
                 <PitchMaxMinAngle value="20 -20"/>
-                <AutoAimObject value="BARREL"/>
+                <AutoAimObject value="TURRET"/>
                 <AutoAimPriority value="0"/>
-          
+				<Debug value="true"/>
               </SightComponent>
               <InputProxyComponent>
                   <InputHandlerObject value="CHASSIS"/>
