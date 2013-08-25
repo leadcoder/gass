@@ -29,9 +29,10 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 namespace GASS
 {
-	//class SceneObject;
 	
-	//typedef SPTR<SceneObject> SceneObjectPtr;
+	/**
+	Base class for all gass components
+	*/
 
 	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
 	{
@@ -55,4 +56,4 @@ namespace GASS
 	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef WPTR<BaseSceneComponent> BaseSceneComponentWeakPtr;
 }
-#endif // #ifndef BASESCENECOMPONENT_HH
+#endif 
