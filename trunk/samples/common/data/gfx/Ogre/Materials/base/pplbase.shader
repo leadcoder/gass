@@ -143,9 +143,10 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 {
 	float3 N = normalize(normal);
 	float3 eyeDir = eyePosition - position.xyz;
-#ifdef STD_FOG
 	float eyeDistance = length(eyeDir);
-#endif
+//#ifdef STD_FOG
+//	float eyeDistance = length(eyeDir);
+//#endif
 	eyeDir = normalize(eyeDir);
 	float3 lightDir = lightPosition.xyz -  (position.xyz * lightPosition.w);
 	lightDir = normalize(lightDir);
@@ -188,16 +189,21 @@ void PerPixelFrag(float4 position   : TEXCOORD1,
 #endif
 #ifdef BASE_MAP
 	float4 base_map = tex2D(baseMap, texCoord);
+	
+	#ifdef DETAIL_SPLATTING
+		base_map.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,texCoord,splatScales,base_map.xyz);
+		//base_map.xyz = calcFadeSplatting(coverageMap, splat1Map, splat2Map, splat3Map, texCoord, splatScales, base_map.xyz,  0,  10, eyeDistance);
+	#endif
+
 	lightDiffuse.xyz = lightDiffuse.xyz * base_map.xyz;
 	float alpha	 = base_map.a * lightDiffuse.a;
 #else
 	float alpha	 = 1.0;
 #endif
 
-#ifdef DETAIL_SPLATTING
-	lightDiffuse.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,texCoord,splatScales,lightDiffuse.xyz);
-//#elif VERTEX_COLOR	 //don't support vertex color for terrain splatting, no control over vertex color here				
-#endif
+//#ifdef DETAIL_SPLATTING
+//	lightDiffuse.xyz = calcSplatting(coverageMap,splat1Map,splat2Map,splat3Map,texCoord,splatScales,lightDiffuse.xyz);
+//#endif
 #ifdef VERTEX_COLOR
    lightDiffuse.xyz = lightDiffuse.xyz* vertex_color.xyz;
    alpha = alpha*vertex_color.w;

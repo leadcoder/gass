@@ -143,15 +143,18 @@ float eye_dist)
 	float3 coverage = tex2D(coverageMap, texCoord);
 	float3 inv_coverage = (1 - coverage.xyz)*0.5;
     float3 detail1  =   tex2D(splat1Map, texCoord* splatScales.x).xyz;
-    detail1 = detail1*coverage.x + inv_coverage.x;
+    detail1 = detail1*coverage.x;// + inv_coverage.x;
+	//float3 lightDiffuse  = global_color*detail1;
     float3 detail2  =  tex2D(splat2Map, texCoord* splatScales.y).xyz;
-   	detail2 = detail2*coverage.y + inv_coverage.y;
+   	detail2 = detail2*coverage.y;// + inv_coverage.y;
+	//lightDiffuse  = lightDiffuse*detail2*2;
    	float3 detail3  =   tex2D(splat3Map, texCoord* splatScales.z).xyz;
-	detail3 = detail3*coverage.z + inv_coverage.z;
+	detail3 = detail3*coverage.z;// + inv_coverage.z;
+	//lightDiffuse  = lightDiffuse*detail3*2;
 	
 	float fade_val = saturate((eye_dist - detail_fade_dist) /  detail_fade_dist);
-	//lightDiffuse  = lightDiffuse*detail3*2;
-	float final_color  = lerp(lerp(detail1*detail2*detail3,global_color, near_color_weight), global_color.xyz, fade_val);
+	//float3 final_color  = lerp(detail1 + detail2 + detail3, global_color, fade_val);
+	float3 final_color  = lerp(lerp((detail1 + detail2 + detail3)*global_color,global_color*0.5, near_color_weight), global_color*0.5, fade_val);
 	return final_color;
 }
 
