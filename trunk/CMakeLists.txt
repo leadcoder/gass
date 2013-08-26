@@ -62,7 +62,7 @@ endif()
 
 
 #-- Add an Option to toggle the generation of the API documentation
-option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
+option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" ON)
 if(BUILD_DOCUMENTATION)
   FIND_PACKAGE(Doxygen)
   if (NOT DOXYGEN_FOUND)
