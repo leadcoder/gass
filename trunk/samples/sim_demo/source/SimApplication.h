@@ -45,16 +45,6 @@ public:
 		m_Engine = new GASS::SimEngine();
 		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
 		
-		
-		//load keyboard config!
-		/*GASS::ControlSettingsSystemPtr css = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IControlSettingsSystem>();
-		if(css)
-		{
-			//Load from gass data path
-			css->Load("../Configuration/control_settings.xml");
-		}*/
-		//m_Engine->GetSimSystemManager()->SetPauseSimulation(false);
-		
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 		
 		GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
@@ -62,8 +52,6 @@ public:
 
 		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 		input_system->SetMainWindowHandle(win->GetHWND());
-		
-	
 
 		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scene:" <<  m_SceneName;
 		m_Scene = m_Engine->CreateScene("NewScene");

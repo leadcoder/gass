@@ -238,7 +238,7 @@ namespace GASS
 			const double target_update_time = 1.0/m_MaxUpdateFreq;
 			if(delta_time > target_update_time)
 			{
-				if(delta_time > 1.0/600.0)
+				//if(delta_time > 1.0/600.0)
 				{
 					prev_time = current_time;
 					Tick(delta_time);

@@ -48,7 +48,7 @@
 
 namespace GASS
 {
-	VehicleCameraComponent::VehicleCameraComponent() : m_PreferredViewport("ALL")
+	VehicleCameraComponent::VehicleCameraComponent() : m_PreferredViewport("")
 	{
 
 	}
@@ -97,8 +97,8 @@ namespace GASS
 	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
 		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
-		MessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
-		//SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
+		SystemRequestMessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)

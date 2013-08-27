@@ -227,8 +227,8 @@ namespace GASS
 			return;
 		}
 		//damp input values every frame if we use mouse input
-		//m_YawInput = m_YawInput* 0.9;
-		//m_PitchInput = m_PitchInput *0.9; 
+		m_YawInput = m_YawInput* 0.9;
+		m_PitchInput = m_PitchInput *0.9; 
 
 		std::stringstream ss;
 		ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
@@ -327,11 +327,13 @@ namespace GASS
 			}
 			
 		}
-		if (!m_RemoteSim && m_Active && name == m_SendDesiredPointController)
+		if (!m_RemoteSim && name == m_SendDesiredPointController)
 		{
 			m_AimAtPos = false;
 			if(value > 0)
 				m_AimAtPos = true;
+			else
+				m_AimAtPos = false;
 
 			m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(m_AimAtPos,m_AutoAimPriority,id)));
 		}
@@ -371,10 +373,7 @@ namespace GASS
 			{
 				UpdateTargetDistance();
 			}
-
 			//Move target object 
-
-			
 		}
 
 		if (m_Active && name == m_YawController)

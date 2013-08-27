@@ -84,7 +84,7 @@ namespace GASS
 		m_MaxTurnForce(200),
 		m_SmoothRPMOutput(true),
 		m_InputToThrottle("Throttle"),
-		m_InputToSteer("Steering"),
+		m_InputToSteer("Steer"),
 		m_NeutralGear(1),
 		m_Gear (2),
 		m_Clutch (1),
@@ -383,7 +383,7 @@ namespace GASS
 			//if(fabs(m_DesiredThrottle) < 0.1)
 			//m_DesiredThrottle = 0;
 		}
-		else if (name == "Steer")
+		else if (name == m_InputToSteer)
 		{
 			//let there be a dead span in input
 			m_DesiredSteer = value;
@@ -487,8 +487,8 @@ namespace GASS
 		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
 
 		//damp
-		if(fabs(m_DesiredSteer) < 0.1)
-			m_DesiredSteer = m_DesiredSteer*0.9;
+		//if(fabs(m_DesiredSteer) < 0.1)
+		//	m_DesiredSteer = m_DesiredSteer*0.9;
 
 		MessagePtr force_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_torque,0)));
 		GetSceneObject()->PostMessage(force_msg);
