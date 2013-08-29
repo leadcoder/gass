@@ -1,7 +1,7 @@
 #set lib name here!
 set(LIB_NAME "SimDemo")
 
-#Set include directiores
+#Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
 
 set(CPP_FILES "source/SimDemo.cpp")
