@@ -1,14 +1,14 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginBase")
 
-#Set include directiores
+#Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS})
 
 #add all source files from current directory (recursively)
 add_source_from_current_dir()
 
 
-#Add some foldets where to search for dependency libraries
+#Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 

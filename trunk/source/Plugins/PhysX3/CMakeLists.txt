@@ -25,7 +25,7 @@ else()
 endif()
 
 
-#Add some foldets where to search for dependency libraries
+#Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS} ${PHYSX_LINK_DIR})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 

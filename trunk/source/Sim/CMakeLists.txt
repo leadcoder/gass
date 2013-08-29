@@ -1,7 +1,7 @@
 #set lib name here!
 set(LIB_NAME "GASSSim")
 
-#Set include directiores
+#Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS})
 
 #add all source files from current directory (recursively)
@@ -10,7 +10,7 @@ add_source_from_current_dir()
 #Enable class export 
 add_definitions( -DGASS_EXPORTS )
 
-#Add some foldets where to search for dependency libraries
+#Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
 
 #only support shared lib for now
