@@ -365,7 +365,6 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-		return;
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();

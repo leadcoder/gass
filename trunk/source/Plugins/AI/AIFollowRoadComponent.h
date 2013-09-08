@@ -52,6 +52,8 @@ namespace GASS
 		void SceneManagerTick(double delta);
 	private:
 		ADD_ATTRIBUTE(int,LaneBufferSize);
+		ADD_ATTRIBUTE(Vec2,RandomSpeed);
+		
 		AIRoadLaneComponentPtr GetFreeLane(AIRoadLaneComponentPtr lane);
 		void UpdateLaneBuffer();
 		void OnSpawnOnRoad(SpawnOnRoadMessagePtr message);

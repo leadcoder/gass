@@ -52,7 +52,8 @@ namespace GASS
 		m_DebugReset(0),
 		m_LaneObject(new LaneObject()),
 		m_TargetSpeed(0),
-		m_LaneBufferSize(4)
+		m_LaneBufferSize(4),
+		m_RandomSpeed(10,20)
 	{
 
 	}
@@ -72,6 +73,7 @@ namespace GASS
 		//RegisterProperty<Float>("WaypointRadius", &AIFollowRoadComponent::GetWaypointRadius, &AIFollowRoadComponent::SetWaypointRadius);
 		//RegisterProperty<bool>("InvertDirection", &AIFollowRoadComponent::GetInvertDirection, &AIFollowRoadComponent::SetInvertDirection);
 		RegisterProperty<int>("LaneBufferSize", &AIFollowRoadComponent::GetLaneBufferSize, &AIFollowRoadComponent::SetLaneBufferSize);
+		RegisterProperty<Vec2>("RandomSpeed", &AIFollowRoadComponent::GetRandomSpeed, &AIFollowRoadComponent::SetRandomSpeed);
 	}
 
 	void AIFollowRoadComponent::GoToIntersection(AIRoadIntersectionComponentPtr inter)
@@ -98,8 +100,9 @@ namespace GASS
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 
-		int speed_span = rand()%10;
-		m_TargetSpeed = 10 + speed_span;
+		Float speed_span = m_RandomSpeed.y - m_RandomSpeed.x;
+		Float norm_rand = (Float)rand()/(Float)RAND_MAX;
+		m_TargetSpeed = m_RandomSpeed.x + norm_rand * speed_span;
 	}
 
 	void AIFollowRoadComponent::OnDelete()
@@ -301,7 +304,7 @@ namespace GASS
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_CurrentPath, false, index);
 
 
-			Float desired_speed =m_TargetSpeed;
+			Float desired_speed = m_TargetSpeed;
 			const Float friction = 0.6;
 			//Check lane for objects
 			LaneObject* closest = m_CurrentLane->GetClosest(m_LaneObject);
@@ -313,7 +316,7 @@ namespace GASS
 					const Float distance_to_next = closest->m_Distance - m_CurrentDistanceOnPath;
 					Float stop_distance_to_next = speed_diff*speed_diff/(2 * friction *9.81);
 					//add some safty margin
-					stop_distance_to_next *= 2;
+					stop_distance_to_next *= 3;
 
 					if(stop_distance_to_next < 15)
 						stop_distance_to_next = 15;

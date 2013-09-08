@@ -57,7 +57,8 @@ namespace GASS
 		m_ShowWaypoints(true),
 		m_ShowPathLine(false),
 		m_LineColor(0,0,1,1),
-		m_WaypointTemplate("Waypoint")
+		m_WaypointTemplate("Waypoint"),
+		m_Closed(false)
 	{
 
 	}
@@ -90,6 +91,8 @@ namespace GASS
 		RegisterProperty<FilePath>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export this path to text file",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE,ext)));
 		RegisterProperty<std::string>("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<bool>("Closed", &WaypointListComponent::GetClosed, &WaypointListComponent::SetClosed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		
 	}
@@ -255,6 +258,11 @@ namespace GASS
 				wp_vec.push_back(comp);
 			}
 		}
+		if(m_Closed && pos_vec.size() > 2)
+		{
+			pos_vec.push_back(pos_vec[0]);
+		}
+
 
 		
 		const double steps = m_SplineSteps;

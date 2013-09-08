@@ -47,6 +47,8 @@ namespace GASS
 		float GetRadius()const;
 	protected:
 		ADD_ATTRIBUTE(bool,ShowPathLine);
+		ADD_ATTRIBUTE(bool,Closed);
+		
 		
 		void SetRadius(float radius);
 		int GetSplineSteps()const;
@@ -63,6 +65,9 @@ namespace GASS
 
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
+
+		
+		
 
 		void SetExport(const FilePath &filename);
 		FilePath GetExport() const;

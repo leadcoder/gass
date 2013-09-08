@@ -207,8 +207,8 @@ namespace GASS
 			m_TurnPID.set(0);
 			float turn = m_TurnPID.update(angle_to_drive_dir,time);
 			
-			float m_TurnRadius = 3.0;
-			float m_BrakeDist= 10.0;
+			//float m_TurnRadius = 3.0;
+			//float m_BrakeDist= 10.0;
 
 			//std::cout << "Drive dir angle:" << angle_to_drive_dir << "turn:" << turn << std::endl;
 
@@ -265,7 +265,14 @@ namespace GASS
 		}
 		else
 		{
-			std::cout << "Dist 0\n";
+			//std::cout << "Dist 0\n";
+
+			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
+			GetSceneObject()->SendImmediate(throttle_message);
+
+			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,0,CT_AXIS));
+			GetSceneObject()->SendImmediate(steering_message);
+
 		}
 	}
 

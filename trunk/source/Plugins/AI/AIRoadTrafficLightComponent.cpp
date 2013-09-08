@@ -131,7 +131,7 @@ namespace GASS
 			if(m_GreenLight.IsValid())
 			{
 				MessagePtr mat_mess(new MaterialMessage(green_color,
-				Vec3(0,0,0),
+				Vec3(green_color.x,green_color.y,green_color.z),
 				Vec3(0,0,0),
 					Vec3(green_color.x,green_color.y,green_color.z),
 					0,
@@ -143,7 +143,7 @@ namespace GASS
 			if(m_YellowLight.IsValid())
 			{
 				MessagePtr mat_mess(new MaterialMessage(yellow_color,
-				Vec3(0,0,0),
+				Vec3(yellow_color.x,yellow_color.y,yellow_color.z),
 				Vec3(0,0,0),
 					Vec3(yellow_color.x,yellow_color.y,yellow_color.z),
 					0,
@@ -154,7 +154,7 @@ namespace GASS
 			if(m_RedLight.IsValid())
 			{
 				MessagePtr mat_mess(new MaterialMessage(red_color,
-				Vec3(0,0,0),
+				Vec3(red_color.x,red_color.y,red_color.z),
 				Vec3(0,0,0),
 					Vec3(red_color.x,red_color.y,red_color.z),
 					0,
