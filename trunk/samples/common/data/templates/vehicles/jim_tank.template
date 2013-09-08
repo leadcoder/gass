@@ -3,7 +3,11 @@
 	<SceneObjectTemplate>
 		<Name value="JimTank"/>
 		<ID value="CHASSIS"/>
+		<Instantiable value="true"/>
 		<Components>
+			<GroupComponent>
+				
+			</GroupComponent>
 			<LocationComponent>
 				<AttachToParent value="false"/>
 			</LocationComponent>
@@ -19,7 +23,7 @@
 			</PhysicsBodyComponent>
 			<OpenALSoundComponent>
 				<Name value="EngineSound"/>
-				<SoundFile value="sounds/vehicles/tank/engine.wav"/>
+				<SoundFile value="engine.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
@@ -109,7 +113,7 @@
 								<Position value="-0.05 0.4 -0.45"/>
 							</LocationComponent>
 							<OpenALSoundComponent>
-								<SoundFile value="sounds/vehicles/tank/cannon.wav"/>
+								<SoundFile value="cannon.wav"/>
 								<Loop value="0"/>
 								<MinDistance value="5"/>
 								<RolloffFactor value="1"/>
@@ -123,7 +127,7 @@
 						<Components>
 							<LocationComponent>
 								<AttachToParent value ="true"/>
-								<Position value="0.0 2 3.0"/>
+								<Position value="0.0 1 -3.0"/>
 								<Rotation value="0 0 0"/>
 							</LocationComponent>
 							<SightComponent>
@@ -132,18 +136,16 @@
 								<PitchController value="Pitch"/>
 								<SendDesiredPointController value="ActivateTurret"/>
 								<ResetToBarrelController value="ResetSight"/>
-								<ZoomValues value="10 20" />
-                <MaxYawVelocity value="0.6" />
-                <MaxPitchVelocity value="0.3" />
-                <YawMaxMinAngle value="1000 -1000" />
-                <PitchMaxMinAngle value="20 -20" />
-                <AutoAimObject value="BARREL" />
-                <AutoAimPriority value="1" />
-							<ResetToBarrelWhileInactive value="false"/>
+								<ZoomValues value="40 60" />
+								<MaxYawVelocity value="0.6" />
+								<MaxPitchVelocity value="0.3" />
+								<YawMaxMinAngle value="1000 -1000" />
+								<PitchMaxMinAngle value="20 -20" />
+								<AutoAimObject value="BARREL" />
+								<AutoAimPriority value="1" />
+								<ResetToBarrelWhileInactive value="false"/>
 								<TurnInputExp value="2"/>
-				
-								
-								<Debug value="false"/>
+								<Debug value="true"/>
 							</SightComponent>
 							<InputProxyComponent>
 								<InputHandlerObject value="CHASSIS"/>
@@ -157,6 +159,7 @@
 							<VehicleCameraComponent>
 								<InputHandlerObject value="CHASSIS"/>
 							</VehicleCameraComponent>
+							
 						</Components>
 					</SceneObjectTemplate>
 					<SceneObjectTemplate>
@@ -210,15 +213,25 @@
 								<TurretObject value="TURRET"/>
 								<!--<MaxSteerVelocity value="1"/>-->
 								<SteerForce value ="100"/>
-								<YawPID value="0.03 0.0001 0.009"/>
-								<PitchPID value="0.0032 0.0001 0.001"/>
+								<YawPID value="0.2 0 0"/>
+								<PitchPID value="0.025 0 0"/>
+								<MaxYawVelocity value="1"/>
+								<MaxPitchVelocity value="1"/>
 							</AutoAimComponent>
+							<!--<CameraComponent>
+								<ClipToFog value="0"/>
+
+								<Fov value="45"/>
+							</CameraComponent>
+							<VehicleCameraComponent>
+								<InputHandlerObject value="CHASSIS"/>
+							</VehicleCameraComponent>-->
 						</Components>
 						<ComponentContainers>
 
 						</ComponentContainers>
 					</SceneObjectTemplate>
-					
+
 				</ComponentContainers>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>

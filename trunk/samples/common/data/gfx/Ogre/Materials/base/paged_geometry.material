@@ -26,7 +26,10 @@ material PGGrassTemplate
 			specular $SpecularColor $Shininess
 			alpha_rejection $AlphaRejection
 			depth_write $DepthWrite
-			scene_blend $SceneBlend			
+			scene_blend $SceneBlend		
+
+			cull_hardware none
+			cull_software none			
 			
 			//vertex program is assigned by paged geometry
 			

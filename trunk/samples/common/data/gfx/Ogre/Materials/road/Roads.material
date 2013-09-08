@@ -11,6 +11,20 @@ material DefaultRoad : GASS_BaseMap
 } 
 
 
+material DirtRoad : GASS_BaseMap
+{ 
+	//receive_shadows off 
+	set_texture_alias BaseTexture road_dirt2.dds
+    set	$AmbientColor "0.1 0.1 0.1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+	
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+} 
+
 material CampFence : GASS_BaseMap
 { 
 	//receive_shadows off 

@@ -8,3 +8,51 @@ material DefaultGrass : PGGrassTemplate
     set $Shininess "128"
 	set $AlphaRejection "greater 128"
 } 
+
+
+material VegGrass01 : PGGrassTemplate
+{ 
+
+	set_texture_alias BaseTexture veg_grass02.dds
+	set	$AmbientColor "1 1 1 1"
+	set $DiffuseColor "1 1 1 1"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+}
+
+material VegPlant01 : PGGrassTemplate
+{ 
+	set_texture_alias BaseTexture veg_plant01.dds
+	set	$AmbientColor "0.5 0.55 0.5 1"
+	set $DiffuseColor "0.5 0.55 0.5 1"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
+	set $AlphaRejection "greater 128"
+}  
+
+material VegPlant02 : PGGrassTemplate
+{ 
+	set_texture_alias BaseTexture veg_plant02.dds
+	set	$AmbientColor "0.5 0.55 0.5 1"
+	set $DiffuseColor "0.5 0.55 0.5 1"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+}
+
+material VegPlant03 : PGGrassTemplate
+{ 
+	set_texture_alias BaseTexture veg_plant03.dds
+	set	$AmbientColor "0.5 0.55 0.5 1"
+	set $DiffuseColor "0.5 0.55 0.5 1"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
+	set $AlphaRejection "greater 1"
+	set $DepthWrite "off"
+	set $SceneBlend "alpha_blend"
+}
