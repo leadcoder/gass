@@ -130,13 +130,27 @@ void GASSRenderWidget::mouseMoveEvent(QMouseEvent *e)
 	QWidget::mouseMoveEvent(e);
 }
 
+
+static float MouseSpeed = 20;
+float NormalizeMouseDelta(float value)
+{
+		float ret = 0;
+	if (value > MouseSpeed)
+			ret = 1;
+		else if (value < -MouseSpeed)
+			ret = -1;
+		else
+			ret = value / MouseSpeed;
+		return ret;
+}
+
 GASS::MouseData GASSRenderWidget::GetMouseData(QMouseEvent *e) const 
 {
 	GASS::MouseData md;
 	md.XAbs = e->x();
 	md.YAbs = e->y();
-	md.XRel = float (e->x()-m_LastData.XAbs)/10.0;
-	md.YRel = float (e->y()-m_LastData.YAbs)/10.0;
+	md.XRel = NormalizeMouseDelta(float (e->x()-m_LastData.XAbs));///10.0;
+	md.YRel = NormalizeMouseDelta(float (e->y()-m_LastData.YAbs));///10.0;
 	md.XAbsNorm = (float) e->x() / (float) m_Size.width();
 	md.YAbsNorm = (float) e->y() / (float) m_Size.height();
 	return md;	
