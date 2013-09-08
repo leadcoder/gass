@@ -82,8 +82,8 @@ namespace GASS
 		//debug?
 		if(m_Debug)
 		{
-			SystemMessagePtr message(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
-			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+			SceneMessagePtr message(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
+			GetSceneObject()->PostMessage(message);
 		}
 
 		//update sensor data at x hz 

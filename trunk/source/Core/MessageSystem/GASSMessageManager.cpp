@@ -251,11 +251,11 @@ namespace GASS
 		//lock and add unprocessed messages back to queue due to delayed delivery
 		{
 			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
-			MessageQueue::iterator iter = work_queue.begin();
-			while (iter !=  work_queue.end())
+			MessageQueue::iterator work_iter = work_queue.begin();
+			while (work_iter !=  work_queue.end())
 			{
-				m_MessageQueue.push_back(*iter);
-				++iter;
+				m_MessageQueue.push_back(*work_iter);
+				++work_iter;
 			}
 		}
 	}

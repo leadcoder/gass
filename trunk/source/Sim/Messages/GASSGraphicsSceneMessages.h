@@ -110,6 +110,81 @@ namespace GASS
 	};
 	typedef SPTR<WeatherRequest> WeatherRequestPtr;
 
+	//debug messages
+	class DrawLineRequest : public SceneRequestMessage
+	{
+	public:
+		DrawLineRequest(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) : SceneRequestMessage(sender_id , delay) ,
+			m_Start(start),
+			m_End(end),
+			m_Color(color)
+		{
+		}
+
+		Vec3 GetStart()const {return m_Start;}
+		Vec3 GetEnd()const {return m_End;}
+		Vec4 GetColor()const {return m_Color;}
+	private:
+		Vec3 m_Start,m_End;
+		Vec4 m_Color;
+	};
+	typedef SPTR<DrawLineRequest> DrawLineRequestPtr;
+
+
+	class DrawCircleRequest : public SceneRequestMessage
+	{
+	public:
+		DrawCircleRequest(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
+		  m_Center(center),
+			  m_Radius(radius),
+			  m_Color(color),
+			  m_Segments(segments),
+			  m_Filled(filled),
+			  SceneRequestMessage(sender_id , delay)  
+		  {
+
+		  }
+		  Vec3 GetCenter()const {return m_Center;}
+		  Float GetRadius() const {return m_Radius;}
+		  Vec4 GetColor()const {return m_Color;}
+		  int  GetSegments() const {return m_Segments;}
+		  bool GetFilled() const {return m_Filled;}
+	private:
+		Vec3 m_Center;
+		Float m_Radius;
+		Vec4 m_Color;
+		int m_Segments;
+		bool m_Filled;
+	};
+	typedef SPTR<DrawCircleRequest> DrawCircleRequestPtr;
+
+	class CreateTextBoxRequest : public SceneRequestMessage
+	{
+	public:
+		CreateTextBoxRequest(const std::string &text_area_id, const std::string &text ,const Vec4 &color, float pos_x,float pos_y, float width, float height, SenderID sender_id = -1, double delay= 0) :
+		  m_BoxID(text_area_id),
+			  m_Text(text),
+			  m_Color(color),
+			  m_PosX(pos_x),
+			  m_PosY(pos_y),
+			  m_Width(width),
+			  m_Height(height),
+
+			  SceneRequestMessage(sender_id , delay)  
+		  {
+
+		  }
+
+		  std::string m_BoxID;
+		  std::string m_Text;
+		  Vec4 m_Color;
+		  float m_PosX;
+		  float m_PosY;
+		  float m_Width;
+		  float m_Height;
+	};
+	typedef SPTR<CreateTextBoxRequest> CreateTextBoxRequestPtr;
+
 
 
 }

@@ -51,8 +51,8 @@ namespace GASS
 		m_BarrelAngle(0),
 		m_Active(false),
 		//m_AngularVelocity(0),
-		m_MaxYawTorque(10),
-		m_MaxPitchTorque(10),
+		m_MaxYawVelocity(5),
+		m_MaxPitchVelocity(10),
 		m_AimPoint(0,0,0),
 		m_GotNewAimPoint(false),
 		m_CurrentAimPriority(0)
@@ -70,16 +70,29 @@ namespace GASS
 	void AutoAimComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AutoAimComponent",new Creator<AutoAimComponent, IComponent>);
-		//RegisterProperty<float>("MaxSteerVelocity", &AutoAimComponent::GetMaxSteerVelocity, &AutoAimComponent::SetMaxSteerVelocity);
-//		RegisterProperty<float>("MaxSteerAngle", &AutoAimComponent::GetMaxSteerAngle, &AutoAimComponent::SetMaxSteerAngle);
-		RegisterProperty<float>("SteerForce", &AutoAimComponent::GetSteerForce, &AutoAimComponent::SetSteerForce);
-		RegisterProperty<Vec2>("TurretMaxMinAngle", &AutoAimComponent::GetTurretMaxMinAngle, &AutoAimComponent::SetTurretMaxMinAngle);
-		RegisterProperty<Vec2>("BarrelMaxMinAngle", &AutoAimComponent::GetBarrelMaxMinAngle, &AutoAimComponent::SetBarrelMaxMinAngle);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AutoAimComponent", OF_VISIBLE)));
+		RegisterProperty<float>("SteerForce", &AutoAimComponent::GetSteerForce, &AutoAimComponent::SetSteerForce,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec2>("TurretMaxMinAngle", &AutoAimComponent::GetTurretMaxMinAngle, &AutoAimComponent::SetTurretMaxMinAngle,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max and min angles that the turret can rotate, zero means free rotation",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec2>("BarrelMaxMinAngle", &AutoAimComponent::GetBarrelMaxMinAngle, &AutoAimComponent::SetBarrelMaxMinAngle,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max and min angles that the barrel can pitch, zero means free rotation",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<SceneObjectRef>("BarrelObject", &AutoAimComponent::GetBarrelObject, &AutoAimComponent::SetBarrelObject);
-		RegisterProperty<SceneObjectRef>("TurretObject", &AutoAimComponent::GetTurretObject, &AutoAimComponent::SetTurretObject);
-		RegisterProperty<PIDControl>("YawPID", &AutoAimComponent::GetYawPID, &AutoAimComponent::SetYawPID);
-		RegisterProperty<PIDControl>("PitchPID", &AutoAimComponent::GetPitchPID, &AutoAimComponent::SetPitchPID);
+		RegisterProperty<SceneObjectRef>("BarrelObject", &AutoAimComponent::GetBarrelObject, &AutoAimComponent::SetBarrelObject,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("ID of the barrel to control",PF_VISIBLE)));
+		RegisterProperty<SceneObjectRef>("TurretObject", &AutoAimComponent::GetTurretObject, &AutoAimComponent::SetTurretObject,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("ID of the turret to control",PF_VISIBLE)));
+		RegisterProperty<PIDControl>("YawPID", &AutoAimComponent::GetYawPID, &AutoAimComponent::SetYawPID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("PID values for turret rotation",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<PIDControl>("PitchPID", &AutoAimComponent::GetPitchPID, &AutoAimComponent::SetPitchPID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("PID values for barrel pitch",PF_VISIBLE | PF_EDITABLE)));
+
+
+		RegisterProperty<Float>("MaxYawVelocity", &AutoAimComponent::GetMaxYawVelocity, &AutoAimComponent::SetMaxYawVelocity,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max velocity for turret rotation",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<Float>("MaxPitchVelocity", &AutoAimComponent::GetMaxPitchVelocity, &AutoAimComponent::SetMaxPitchVelocity,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max velocity for barel pitch",PF_VISIBLE | PF_EDITABLE)));
 		
 	}
 
@@ -189,8 +202,8 @@ namespace GASS
 		//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}*/
 
-#define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DrawLineRequest(start,end,color)))
-#define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr(new DebugPrintRequest(text)))
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)))
+#define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemRequestMessagePtr(new DebugPrintRequest(text)))
 
 	Float AutoAimComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
 	{
@@ -214,12 +227,18 @@ namespace GASS
 		{
 			//reset
 			m_CurrentAimPriority = 0; 
-			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
-
-
+			//GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
 			MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce));
 			m_TurretObject->PostMessage(force_msg);
 			m_BarrelObject->PostMessage(force_msg);
+			//m_BarrelObject->PostMessage(force_msg);
+			
+			MessagePtr yaw_vel_msg(new PhysicsHingeJointVelocityRequest(0));
+			m_TurretObject->PostMessage(yaw_vel_msg);
+
+			MessagePtr pitch_vel_msg(new PhysicsHingeJointVelocityRequest(0));
+			m_BarrelObject->PostMessage(pitch_vel_msg);
+
 			return;
 		}
 		m_GotNewAimPoint = false;
@@ -278,42 +297,51 @@ namespace GASS
 		end = start + projected_aim*4;
 		DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1));*/
 
-		m_YawPID.setOutputLimit(m_MaxYawTorque);
+		m_YawPID.setOutputLimit(m_MaxYawVelocity);
 		//set desired yaw angle difference to 0 degrees
 		m_YawPID.set(0);
 		float yaw_torque = m_YawPID.update(yaw_angle_to_aim_dir,delta_time);
 		//std::cout << "yaw_angle_to_aim_dir:" << yaw_angle_to_aim_dir << "\n";
-		m_PitchPID.setOutputLimit(m_MaxPitchTorque);
+		m_PitchPID.setOutputLimit(m_MaxPitchVelocity);
 		//m_PitchPID.setGain(0.0032,0.0001,0.001);
 		//set desired pitch angle difference to 0 degrees
 		m_PitchPID.set(0);
 		float pitch_torque = m_PitchPID.update(pitch_angle_to_aim_dir,delta_time);
 		
-	/*	std::stringstream ss;
+		std::stringstream ss;
 		ss << "pitch_angle_to_aim_dir:" << pitch_angle_to_aim_dir << "\n"
 			<< "aimpoint:" << m_AimPoint << "\n"
 		<< "pitch_torque:" << pitch_torque << "\n"
 		<< "yaw_angle_to_aim_dir:" << yaw_angle_to_aim_dir << "\n"
-		<< "yaw_torque:" << pitch_torque << "\n"
+		<< "yaw_torque:" << yaw_torque << "\n"
 		<< "BarrelAngle:" << Math::Rad2Deg(m_BarrelAngle) << " MaxMin"  << m_BarrelMaxAngle << m_BarrelMinAngle << "\n"
 		<< "TurretAngle:" << Math::Rad2Deg(m_TurretAngle) << "\n"; 
 		
-		DEBUG_PRINT(ss.str());*/
+		DEBUG_PRINT(ss.str());
 
-		MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(0));//m_SteerForce));
+		//MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(0));//m_SteerForce));
+	
 		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
-		m_TurretObject->PostMessage(force_msg);
-		m_BarrelObject->PostMessage(force_msg);
+		
+
+		//m_TurretObject->PostMessage(force_msg);
+		//m_BarrelObject->PostMessage(force_msg);
 
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		MessagePtr barrel_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(pitch_torque,0,0)));
-		m_BarrelObject->PostMessage(barrel_torque_msg);
+		//MessagePtr barrel_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(pitch_torque,0,0)));
+		//m_BarrelObject->PostMessage(barrel_torque_msg);
 
-		MessagePtr yaw_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,yaw_torque,0)));
-		m_TurretObject->PostMessage(yaw_torque_msg);
 
+		//MessagePtr yaw_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,yaw_torque,0)));
 		
+		//m_TurretObject->PostMessage(yaw_torque_msg);
+		MessagePtr yaw_vel_msg(new PhysicsHingeJointVelocityRequest(-yaw_torque));
+		m_TurretObject->PostMessage(yaw_vel_msg);
+		
+
+		MessagePtr pitch_vel_msg(new PhysicsHingeJointVelocityRequest(-pitch_torque));
+		m_BarrelObject->PostMessage(pitch_vel_msg);
 		
 	}
 

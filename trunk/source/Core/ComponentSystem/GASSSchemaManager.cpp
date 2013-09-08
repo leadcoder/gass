@@ -218,6 +218,7 @@ namespace GASS
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "SchemaManager::Load");
 		}
 

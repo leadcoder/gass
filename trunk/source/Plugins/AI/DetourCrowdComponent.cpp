@@ -283,8 +283,8 @@ namespace GASS
 			"FLEE: " << flee << "\n"
 			"WANDER: " << wander << "\n";
 
-		SystemMessagePtr message = SystemMessagePtr(new CreateTextBoxRequest("CROWD_STATS",sstream.str(),Vec4(1,1,1,1),0,50,100,100));
-		SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+		SceneMessagePtr message = SceneMessagePtr(new CreateTextBoxRequest("CROWD_STATS",sstream.str(),Vec4(1,1,1,1),0,50,100,100));
+		GetSceneObject()->PostMessage(message);
 	}
 
 	void DetourCrowdComponent::OnMoved(PositionMessagePtr message)

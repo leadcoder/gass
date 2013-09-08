@@ -31,6 +31,7 @@
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
@@ -113,7 +114,7 @@ namespace GASS
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DrawLineRequest(start,end,color)));
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)));
 
 
 /*	Float pitch TurretComponent::GetPitch(Mat4 &transform, Vec3 &dir)

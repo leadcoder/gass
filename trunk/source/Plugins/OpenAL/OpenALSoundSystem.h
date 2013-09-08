@@ -11,13 +11,11 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #ifdef WIN32
-#include "al.h"
-#include "alc.h"
-//#include "alut.h"
-#else 
-#include "AL/al.h"
-#include "AL/alc.h"
-//#include "AL/alut.h"
+	#include "al.h"
+	#include "alc.h"
+#else //diffrent location
+	#include "AL/al.h"
+	#include "AL/alc.h"
 #endif
 #include <string>
 
@@ -50,16 +48,19 @@ namespace GASS
 		virtual void Init();
 
 		// OpenAL-specific functions
+		
 		void LoadWaveSound(const std::string &filePath,ALuint &buffer,ALsizei &freq, ALenum &format);
-		bool CheckAlError( void );
-		bool CheckAlError( std::string pMsg );
+		/**
+			Check or OpenAL error, will cast exception if error present
+			@param what_class Provide class and function to exception
+		*/
+		static void CheckAlError(const std::string &what_class);
+		//bool CheckAlError( void );
+		//bool CheckAlError( std::string pMsg );
 		std::string GetSystemName() const {return "OpenALSoundSystem";}
 	protected:
-		/** See http://www.openal.org/windows_enumeration.html for installing other
-		*   devices. You should at least have "Generic Hardware".
-		*/
 		std::string ListAvailableDevices( void );
-
+		
 		void OnInit(MessagePtr message);
 		void OnSceneLoaded(PreSceneCreateEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);

@@ -186,13 +186,16 @@ namespace GASS
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
 		if(!xmlDoc->LoadFile())
 		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
 		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
 		if(scene == NULL)
+		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
-
+		}
 		LoadXML(scene);
 		xmlDoc->Clear();
 		//Delete our allocated document

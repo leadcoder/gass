@@ -51,6 +51,8 @@ namespace GASS
 	void PlayerInputComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("PlayerInputComponent", OF_VISIBLE)));
+		
 		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 
@@ -79,8 +81,29 @@ namespace GASS
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
-			IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildren();
-			while(objects.hasMoreElements())
+			//IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
+			IComponentContainer::ComponentVector comps;
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>(comps);
+			for(int i = 0 ; i < comps.size();i++)
+			{
+				InputHandlerComponentPtr ihc = DYNAMIC_PTR_CAST<InputHandlerComponent>(comps[i]);
+				LocationComponentPtr location = ihc->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+				Vec3 obj_pos = location->GetWorldPosition();
+					Float dist = (my_pos-obj_pos).FastLength();
+					if(dist < 5)
+					{
+						//enter and return
+						MessagePtr enter_msg(new EnterVehicleMessage());
+						ihc->GetSceneObject()->PostMessage(enter_msg);
+						m_CurrentVehicle = ihc->GetSceneObject();
+						m_CurrentSeat = ihc->GetSceneObject();
+						seat = 0;
+						return;
+					}	
+				
+			}
+
+			/*while(objects.hasMoreElements())
 			{
 				ComponentContainerPtr cc = objects.getNext();
 				SceneObjectPtr so = STATIC_PTR_CAST<SceneObject>(cc);
@@ -101,25 +124,8 @@ namespace GASS
 						return;
 					}
 				}
-				/*IComponentContainerTemplate::ComponentVector components;
-				so->GetComponentsByClass(components,"InputHandlerComponent");
-				seat = seat % components.size();
-				if(components.size() > 0)
-				{
-					InputHandlerComponentPtr ih = DYNAMIC_PTR_CAST<InputHandlerComponent>(components[seat]);
-					LocationComponentPtr location = ih->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-					Vec3 obj_pos = location->GetWorldPosition();
-					Float dist = (my_pos-obj_pos).FastLength();
-					if(dist < 5)
-					{
-						//enter and return
-						MessagePtr enter_msg(new AnyMessage((SceneObjectMessage)OBJECT_RM_ENTER_VEHICLE));
-						ih->GetSceneObject()->PostMessage(enter_msg);
-						seat++;
-						return;
-					}
-				}*/
-			}
+			
+			}*/
 		}
 		else if(name == "CycleVehicle" && value > 0)
 		{

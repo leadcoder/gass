@@ -141,6 +141,10 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawLine,DrawLineRequest ,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle,DrawCircleRequest ,0));
+
+
 		//create unique name
 		static unsigned int scene_man_id = 0;
 		std::stringstream ss;
@@ -165,6 +169,23 @@ namespace GASS
 		
 	}
 
+	void OgreGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
+	{
+		Vec4 color = message->GetColor();
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		if(m_DebugDrawer)
+			m_DebugDrawer->drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
+	}
+
+	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)
+	{
+		Vec4 color = message->GetColor();
+		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		if(m_DebugDrawer)
+		{
+			m_DebugDrawer->drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
+		}
+	}
 
 	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color)
 	{

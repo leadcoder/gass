@@ -77,8 +77,7 @@ namespace GASS
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 		ADD_ATTRIBUTE(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
-		void OnDrawLine(DrawLineRequestPtr message);
-		void OnDrawCircle(DrawCircleRequestPtr message);
+		
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 
 		//Resource listeners
@@ -86,8 +85,9 @@ namespace GASS
 		void OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message);
 		void OnResourceLocationAdded(ResourceLocationAddedEventPtr message);
 		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
-
-		void SetActiveSceneManger(Ogre::SceneManager *sm);
+		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
+		
+		//void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
@@ -96,7 +96,7 @@ namespace GASS
 		
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
-		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
+		void ReloadMaterials();
 		
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;

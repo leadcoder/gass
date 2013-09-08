@@ -674,8 +674,8 @@ namespace GASS
 			else
 			{
 				Float ratio = end_remaining / segmentLength;
-				Vec3 end_distance = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
-				path.push_back(end_distance);
+				Vec3 end_wp = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
+				path.push_back(end_wp);
 				break;
 			}
 		}

@@ -52,6 +52,7 @@
 #include "Sim/Interface/GASSIWorldLocationComponent.h"	
 #include "Sim/Interface/GASSIProjectionSceneManager.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
+#include "Sim/Interface/GASSIGroupComponent.h"
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"
@@ -130,12 +131,12 @@ namespace GASS
 			for(size_t j = 0; j < locations.size(); j++)
 			{
 				ResourceLocation::ResourceMap resources = locations[j]->GetResources();
-				FileResourcePtr res;
+				FileResourcePtr res_ptr;
 				ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
 				while(iter != resources.end())
 				{
-					res = iter->second;
-					const FilePath file_path = res->Path();
+					res_ptr = iter->second;
+					const FilePath file_path = res_ptr->Path();
 					if(Misc::ToLower(file_path.GetExtension()) == "template")
 					{
 						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
@@ -158,13 +159,17 @@ namespace GASS
 		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(configuration_file.GetFullPath().c_str());
 		if (!xmlDoc->LoadFile())
+		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		
+		}
 		
 		TiXmlElement *xml_settings = xmlDoc->FirstChildElement("GASS");
 		if (!xml_settings)
+		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		
+		}
 
 		TiXmlElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if(xml_data_path)

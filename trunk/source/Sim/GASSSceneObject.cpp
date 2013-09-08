@@ -50,6 +50,14 @@ namespace GASS
 		
 	}
 
+	void SceneObject::RegisterReflection()
+	{
+		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Container for all components", OF_VISIBLE)));
+		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
+		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Globally Unique IDentifier",PF_VISIBLE)));
+	}
 
 
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
@@ -138,14 +146,7 @@ namespace GASS
 		}
 	}
 
-	void SceneObject::RegisterReflection()
-	{
-		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Container for all components", OF_VISIBLE)));
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
-		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Globally Unique IDentifier",PF_VISIBLE)));
-	}
+	
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
@@ -290,6 +291,25 @@ namespace GASS
 		}
 		return  STATIC_PTR_CAST<SceneObject>(container);
 	}
+
+
+	/*SceneObjectPtr SceneObject::GetFirstInstantiable() const
+	{
+		 SceneObjectPtr inst;
+		 SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(shared_from_this());
+		 if(so->GetInstantiable())
+		 {
+			 inst = so;
+		 }
+
+		 while(!inst && so->GetParentSceneObject())
+		 {
+			 so = so->GetParentSceneObject();
+			 if(so->GetInstantiable())
+				inst = so;
+		 }
+		 return inst;
+	}*/
 
 	struct MessageSyncExecutor
 	{
@@ -490,15 +510,15 @@ namespace GASS
 		}
 		if(recursive)
 		{
-			ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
+			ComponentContainerVector::const_iterator cc_iter =  m_ComponentContainerVector.begin();
 			
-			while(iter != m_ComponentContainerVector.end())
+			while(cc_iter  != m_ComponentContainerVector.end())
 			{
-				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(*iter);
+				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(*cc_iter );
 				SceneObjectPtr ret = child->GetFirstChildByName(name,exact_math,recursive);
 				if(ret)
 					return ret;
-				iter++;
+				cc_iter ++;
 			}
 		}
 		return SceneObjectPtr();
@@ -595,6 +615,7 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
+			delete xmlDoc;
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
@@ -602,6 +623,7 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 		
 		if(!so_elem)
 		{
+			delete xmlDoc;
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"cant find SceneObject tag in: " + filename , "SceneObject::LoadXML");
 		}

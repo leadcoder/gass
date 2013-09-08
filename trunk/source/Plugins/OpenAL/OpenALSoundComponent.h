@@ -14,11 +14,11 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #ifdef WIN32
-#include "al.h"
-#include "alc.h"
+	#include "al.h"
+	#include "alc.h"
 #else 
-#include "AL/al.h"
-#include "AL/alc.h"
+	#include "AL/al.h"
+	#include "AL/alc.h"
 #endif
 
 namespace GASS
@@ -48,16 +48,14 @@ namespace GASS
 		void SetMaxDistance(float max_dist);
 		float GetVolume() const;
 		void SetVolume(float volume);
-		bool GetStereo() const;
-		void SetStereo(bool stereo);
 		bool GetLoop() const;
 		void SetLoop(bool loop);
 		void SetPitch(float pitch);
 		float GetPitch() const;
 		void SetRolloff(float rolloff);
 		float GetRolloff() const;
-		std::string GetSoundFile() const;
-		void SetSoundFile(const std::string &file);
+		ResourceHandle GetSoundFile() const;
+		void SetSoundFile(const ResourceHandle &file);
 
 		void SetPosition(const Vec3 &pos);
 		void SetVelocity(const Vec3 &vel);
@@ -66,28 +64,16 @@ namespace GASS
 		void OnPositionChanged(TransformationNotifyMessagePtr message);
 		void OnPhysicsUpdate(VelocityNotifyMessagePtr message);
 		void OnParameterMessage(SoundParameterMessagePtr message);
-
-		ALvoid DisplayALError(ALchar *szText, ALint errorcode);
-
-		//void ImplementRelease();
-		//void ImplementStart();
-		//void testSound( const char* wavFile );	 // for debug
-
-		//
-		ALuint		m_Buffer;
-		// Source for current sound, allocated when sample is to be played, 0 otherwise
-		ALuint m_Source;
-
-		std::string m_Filename;
+		
+		ALuint m_Buffer;
+		ALuint m_Source; // Source for current sound, allocated when sample is to be played, 0 otherwise
+		ResourceHandle m_SoundResource;
 		float m_Pitch;
 		int m_Frequency;
-
 		float m_MinDistance;
 		float m_MaxDistance;
 		float m_Rolloff;
-		int m_Stereo;
 		bool m_Loop;
-		//int m_Priority;
 		float m_Volume;
 	};
 }

@@ -99,8 +99,7 @@ namespace GASS
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawLine,DrawLineRequest ,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDrawCircle,DrawCircleRequest ,0));
+		
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
 		
@@ -334,25 +333,6 @@ namespace GASS
 		return windows;
 	}
 
-	void OgreGraphicsSystem::OnDrawLine(DrawLineRequestPtr message)
-	{
-		Vec4 color = message->GetColor();
-		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
-		//if(DebugDrawer::getSingletonPtr())
-		//	DebugDrawer::getSingleton().drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
-	}
-
-	void OgreGraphicsSystem::OnDrawCircle(DrawCircleRequestPtr message)
-	{
-		Vec4 color = message->GetColor();
-		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
-		//if(DebugDrawer::getSingletonPtr())
-		{
-
-			//DebugDrawer::getSingleton().drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
-		}
-	}
-
 	void OgreGraphicsSystem::OnInitializeTextBox(CreateTextBoxRequestPtr message)
 	{
 		/*Vec4 color = message->m_Color;
@@ -401,6 +381,90 @@ namespace GASS
 		}
 		return content;
 	}
+
+	void OgreGraphicsSystem::ReloadMaterials()
+	{
+		// This is optional if you don't need textures to update
+		Ogre::TextureManager::getSingletonPtr()->reloadAll();
+
+		Ogre::GpuProgramManager* gpm = Ogre::GpuProgramManager::getSingletonPtr();
+		Ogre::HighLevelGpuProgramManager* hlgpm = Ogre::HighLevelGpuProgramManager::getSingletonPtr();
+		Ogre::MaterialManager* mm = Ogre::MaterialManager::getSingletonPtr();
+		Ogre::ResourceGroupManager* rgm = Ogre::ResourceGroupManager::getSingletonPtr();
+
+		// This is optional if you don't want to update low level GPU programs
+		Ogre::ResourceManager::ResourceMapIterator i = gpm->getResourceIterator();
+		while (i.hasMoreElements())
+		{
+			Ogre::ResourcePtr r = i.getNext();
+			Ogre::String name = r->getName();
+			Ogre::String origin = r->getOrigin();
+			Ogre::String group = r->getGroup();
+			Ogre::GpuProgramType type = ((Ogre::GpuProgramPtr)r)->getType();
+			Ogre::String syntax = ((Ogre::GpuProgramPtr)r)->getSyntaxCode();
+
+			if (!origin.empty())
+			{
+				gpm->remove(r);
+				gpm->load(name, group, origin, type, syntax);
+			}
+		}
+
+		// This is optional if you don't want to update high level GPU programs (most shaders)
+		i = hlgpm->getResourceIterator();
+		while (i.hasMoreElements())
+		{
+			Ogre::ResourcePtr r = i.getNext();
+			Ogre::String origin = r->getOrigin();
+			Ogre::String group = r->getGroup();
+
+			if (!origin.empty())
+			{
+				hlgpm->remove(r);
+				hlgpm->parseScript(rgm->openResource(origin, group), group);
+				hlgpm->load(r->getName(), group);
+			}
+		}
+
+		// This is where we reload the actual material scripts
+		i = mm->getResourceIterator();
+		while (i.hasMoreElements())
+		{
+			Ogre::ResourcePtr r = i.getNext();
+			Ogre::String origin = r->getOrigin();
+			Ogre::String group = r->getGroup();
+
+			if (!origin.empty())
+			{
+				mm->remove(r);
+				mm->parseScript(rgm->openResource(origin, group), group);
+				mm->load(r->getName(), group);
+			}
+		}
+
+		// Here, you reset the materials on all entities in the scene
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		Ogre::SceneManager::MovableObjectIterator j = sm->getMovableObjectIterator("Entity");
+		while (j.hasMoreElements())
+		{
+			Ogre::Entity* e = (Ogre::Entity*)j.getNext();
+			for (int k = 0; k < e->getNumSubEntities(); k++)
+			{
+				Ogre::SubEntity* se = e->getSubEntity(k);
+				se->setMaterial(se->getMaterial());
+			}
+		}
+
+		// Here, you reset the materials on all particle systems in the scene
+		j = sm->getMovableObjectIterator("ParticleSystem");
+		while (j.hasMoreElements())
+		{
+			Ogre::ParticleSystem* ps = (Ogre::ParticleSystem*)j.getNext();
+			ps->setMaterialName(ps->getMaterialName());
+		}
+		// Do this for the rest of the objects in your scene you want to update materials for
+	}
+
 }
 
 

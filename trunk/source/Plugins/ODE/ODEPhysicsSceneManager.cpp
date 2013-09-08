@@ -33,6 +33,7 @@
 //#include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
+#include "Sim/Interface/GASSIGroupComponent.h"
 #include "Plugins/ODE/IODEGeometryComponent.h"
 
 
@@ -167,6 +168,10 @@ namespace GASS
 	}
 
 
+
+	
+
+
 	
 
 #define MAX_CONTACTS 25		// maximum number of contact points per body
@@ -210,8 +215,10 @@ namespace GASS
 			*/
 
 			// check if part of same object
-
-			if(geom1->GetSceneObject()->GetObjectUnderRoot() == geom2->GetSceneObject()->GetObjectUnderRoot())
+			//get top body!
+			GroupComponentPtr group_1 = geom1->GetSceneObject()->GetFirstParentComponentByClass<IGroupComponent>();
+			GroupComponentPtr group_2 = geom2->GetSceneObject()->GetFirstParentComponentByClass<IGroupComponent>();
+			if(group_1 && group_2 &&( group_1 == group_2))
 			{
 				return;
 			}

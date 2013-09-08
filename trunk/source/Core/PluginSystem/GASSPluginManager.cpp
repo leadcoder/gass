@@ -46,7 +46,10 @@ namespace GASS
 		LogManager::getSingleton().stream() << "Start loading plugins from " << filename;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
+		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
+		}
 		
 
 		TiXmlElement *plugins = xmlDoc->FirstChildElement("GASS");

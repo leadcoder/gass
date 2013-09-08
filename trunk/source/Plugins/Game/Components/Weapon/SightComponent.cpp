@@ -35,6 +35,7 @@
 
 
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -127,6 +128,7 @@ namespace GASS
 		{
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnAimAtPosition,AimAtPositionMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
 		}
 
 		//set start zoom
@@ -166,7 +168,7 @@ namespace GASS
 		m_BarrelTransformation = message->GetTransformation();
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DrawLineRequest(start,end,color)))
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)))
 #define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(text)))
 
 	void SightComponent::UpdateAimTransformation(double delta_time)
@@ -206,7 +208,6 @@ namespace GASS
 
 	void SightComponent::SceneManagerTick(double delta_time)
 	{
-		
 		if(!m_Active)
 		{
 			m_YawValue = 0;
@@ -230,9 +231,14 @@ namespace GASS
 		m_YawInput = m_YawInput* 0.9;
 		m_PitchInput = m_PitchInput *0.9; 
 
+		
 		std::stringstream ss;
-		ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
-		//DEBUG_PRINT(ss.str());
+		//ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
+		ss << "yaw input:" << m_YawInput << "\n";
+		ss << "pitch input:" << m_PitchInput << "\n";
+		
+		DEBUG_PRINT(ss.str());
+		
 		if(m_RemoteSim)
 			return;
 
@@ -249,7 +255,7 @@ namespace GASS
 		//Send message to auto aim system to control weapon system
 
 		//Create point in terrain to aim at, here we can take lead and distance into consideration
-		//but for now we just extrude the aim direction 1000 m
+		//but for now we just extrude the aim direction 
 
 		
 		
@@ -266,7 +272,7 @@ namespace GASS
 		}
 
 		if(m_Debug)
-			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(),aim_point,Vec4(0,1,1,1));
+			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(), aim_point, Vec4(0,1,1,1) );
 		
 		/*Vec3 desired_aim_direction = -m_AimRotation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();

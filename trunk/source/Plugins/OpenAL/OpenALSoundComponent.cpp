@@ -11,29 +11,22 @@
 
 namespace GASS
 {
-	OpenALSoundComponent::OpenALSoundComponent()
+	OpenALSoundComponent::OpenALSoundComponent(): m_Buffer(0),
+		m_Source(0),
+		m_Volume(1),
+		m_Pitch(1),
+		m_Loop(false),
+		m_MinDistance(1), //meters
+		m_MaxDistance(200),//meters
+		m_Rolloff(1)
 	{
-		m_Buffer = 0;
-		m_Source = 0;
-		m_Volume = 1;
-		m_Pitch = 1;
-		m_Loop = false;
-		m_Stereo = 0;
-		m_MinDistance = 1; //meter
-		m_MaxDistance = 200;//meter
-		m_Rolloff = 1;
+		
 
 	}
 
 	OpenALSoundComponent::~OpenALSoundComponent(void)
 	{
 		
-	}
-
-	ALvoid OpenALSoundComponent::DisplayALError(ALchar *szText, ALint errorcode)
-	{
-		LogManager::getSingleton().stream() << "WARNING:" << szText << " ERRORCODE:" << alGetString(errorcode);
-		return;
 	}
 
 	void OpenALSoundComponent::RegisterReflection()
@@ -43,9 +36,8 @@ namespace GASS
 		RegisterProperty<float>("MaxDistance", &OpenALSoundComponent::GetMaxDistance, &OpenALSoundComponent::SetMaxDistance);
 		RegisterProperty<float>("RolloffFactor", &OpenALSoundComponent::GetRolloff, &OpenALSoundComponent::SetRolloff);
 		RegisterProperty<float>("Volume", &OpenALSoundComponent::GetVolume, &OpenALSoundComponent::SetVolume);
-		//RegisterProperty<bool>("Stereo", &OpenALSoundComponent::GetStereo, &OpenALSoundComponent::SetStereo);
 		RegisterProperty<bool>("Loop", &OpenALSoundComponent::GetLoop, &OpenALSoundComponent::SetLoop);
-		RegisterProperty<std::string>("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
+		RegisterProperty<ResourceHandle>("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
 	}
 
 	void OpenALSoundComponent::OnInitialize()
@@ -55,7 +47,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
 
-		LoadWaveSound(m_Filename);//, 0);
+		LoadWaveSound(m_SoundResource.GetResource()->Path().GetFullPath());//, 0);
 		//sound loaded, update sound settings
 		SetLoop(m_Loop);
 		SetMaxDistance(m_MaxDistance);
@@ -200,17 +192,6 @@ namespace GASS
 		return m_Pitch;
 	}
 
-	bool OpenALSoundComponent::GetStereo() const
-	{
-		return m_Stereo;
-	}
-
-	void OpenALSoundComponent::SetStereo(bool stereo)
-	{
-		m_Stereo = stereo;
-	}
-
-
 	bool OpenALSoundComponent::GetLoop() const
 	{
 		return m_Loop;
@@ -232,14 +213,14 @@ namespace GASS
 
 	}
 
-	std::string OpenALSoundComponent::GetSoundFile() const
+	ResourceHandle OpenALSoundComponent::GetSoundFile() const
 	{
-		return m_Filename;
+		return m_SoundResource;
 	}
 
-	void OpenALSoundComponent::SetSoundFile(const std::string &file)
+	void OpenALSoundComponent::SetSoundFile(const ResourceHandle &file)
 	{
-		m_Filename = file;
+		m_SoundResource = file;
 	}
 
 	
@@ -279,7 +260,6 @@ namespace GASS
 
 	bool OpenALSoundComponent::IsPlaying()
 	{
-		ALint	error;
 		ALint iVal;
 		alGetError();
 
@@ -289,9 +269,7 @@ namespace GASS
 		}
 
 		alGetSourcei(m_Source, AL_SOURCE_STATE, &iVal);
-		if ((error = alGetError()) != AL_NO_ERROR)
-			DisplayALError((ALchar *) "OpenALSoundComponent::IsPlaying(): : ", error);
-
+		OpenALSoundSystem::CheckAlError("OpenALSoundComponent::IsPlaying");
 		return (iVal == AL_PLAYING);
 	}
 

@@ -46,6 +46,8 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
+		ADD_ATTRIBUTE(Float, MaxYawVelocity)
+		ADD_ATTRIBUTE(Float, MaxPitchVelocity)
 		void SetBarrelObject(const SceneObjectRef &value);
 		SceneObjectRef GetBarrelObject() const;
 		void SetTurretObject(const SceneObjectRef &value);
@@ -78,8 +80,6 @@ namespace GASS
 		void OnActivateAutoAim(ActivateAutoAimMessagePtr message);
 		void SceneManagerTick(double delta_time);
 		float m_SteerForce;
-		float m_MaxYawTorque;
-		float m_MaxPitchTorque;
 		float m_TurretAngle;
 		float m_BarrelAngle;
 		float m_TurretMinAngle;

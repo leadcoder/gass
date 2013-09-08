@@ -44,8 +44,11 @@ namespace GASS
 		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
 		if (!xmlDoc->LoadFile())
+		{
+			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "GeometryFlagManager::LoadMaterialFile");
-		
+		}
+
 		TiXmlElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
 		if(xml_geom_list)
 		{
@@ -56,8 +59,10 @@ namespace GASS
 				if(xml_geom->Attribute("Name"))
 					geom_name = xml_geom->Attribute("Name");
 				else
+				{
+					delete xmlDoc;
 					GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "GeometryFlagManager::LoadMaterialFile");
-				
+				}
 				GeometryFlagsBinder gf;
 				std::stringstream ss_gf(geom_name);
 				ss_gf >> gf;
