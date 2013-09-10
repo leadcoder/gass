@@ -181,6 +181,30 @@ namespace GASS
 	typedef SPTR<ChangeCameraRequest> ChangeCameraRequestPtr;
 
 
+	/**
+	Message used for reloading materials. 
+	This message can be sent by user.
+	*/
+	class ReloadMaterial : public SystemRequestMessage
+	{
+	public:
+		/**
+		Constructor
+		@param name The name of the material to reload 
+		*/
+		ReloadMaterial(const std::string &mat_name="", SenderID sender_id = -1, double delay= 0) : 
+		  SystemRequestMessage(sender_id , delay), m_MaterialName(mat_name)
+		  {
+
+		  }
+		  
+		  std::string GetMaterialName() const {return m_MaterialName;}
+	private:
+		std::string m_MaterialName;
+	};
+	typedef SPTR<ReloadMaterial> ReloadMaterialPtr;
+
+
 	
 }
 

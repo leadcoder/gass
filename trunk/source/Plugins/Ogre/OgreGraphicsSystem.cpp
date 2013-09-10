@@ -37,7 +37,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-
+#include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -48,6 +48,9 @@
 #ifndef OGRE_18
 #include <Overlay/OgreOverlaySystem.h>
 #endif
+
+ResourceGroupHelper resourceGrouphelper;
+
 
 namespace GASS
 {
@@ -108,6 +111,9 @@ namespace GASS
 
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationAdded,ResourceLocationAddedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnReloadMaterial,ReloadMaterial,0));
+
+		
 
 		
 		
@@ -380,6 +386,23 @@ namespace GASS
 			}
 		}
 		return content;
+	}
+
+	void OgreGraphicsSystem::OnReloadMaterial(ReloadMaterialPtr message)
+	{
+		//resourceGrouphelper.reloadAResourceGroupWithoutDestroyingIt("GASS");
+		//resourceGrouphelper.updateOnEveryRenderable();
+		std::string errorMessages;
+		Ogre::ResourceGroupManager& rgm = Ogre::ResourceGroupManager::getSingleton();
+		Ogre::StringVector all_resource_groups = rgm.getResourceGroups();
+		Ogre::StringVector::iterator iter = all_resource_groups.begin();
+		Ogre::StringVector::iterator iter_end = all_resource_groups.end();
+		for(;iter!=iter_end;iter++)
+		{
+			resourceGrouphelper.checkTimeAndReloadIfNeeded((*iter),errorMessages,false);
+		}
+		//resourceGrouphelper.checkTimeAndReloadIfNeeded("GASS",errorMessages,false);
+		//ReloadMaterials();
 	}
 
 	void OgreGraphicsSystem::ReloadMaterials()

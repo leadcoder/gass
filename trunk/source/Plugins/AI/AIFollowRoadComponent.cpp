@@ -53,7 +53,9 @@ namespace GASS
 		m_LaneObject(new LaneObject()),
 		m_TargetSpeed(0),
 		m_LaneBufferSize(4),
-		m_RandomSpeed(10,20)
+		m_RandomSpeed(10,20),
+		m_CurrentDistanceOnPath(0),
+		m_Debug(false)
 	{
 
 	}
@@ -70,10 +72,10 @@ namespace GASS
 	void AIFollowRoadComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIFollowRoadComponent",new Creator<AIFollowRoadComponent, IComponent>);
-		//RegisterProperty<Float>("WaypointRadius", &AIFollowRoadComponent::GetWaypointRadius, &AIFollowRoadComponent::SetWaypointRadius);
-		//RegisterProperty<bool>("InvertDirection", &AIFollowRoadComponent::GetInvertDirection, &AIFollowRoadComponent::SetInvertDirection);
 		RegisterProperty<int>("LaneBufferSize", &AIFollowRoadComponent::GetLaneBufferSize, &AIFollowRoadComponent::SetLaneBufferSize);
 		RegisterProperty<Vec2>("RandomSpeed", &AIFollowRoadComponent::GetRandomSpeed, &AIFollowRoadComponent::SetRandomSpeed);
+		RegisterProperty<bool>("Debug", &AIFollowRoadComponent::GetDebug, &AIFollowRoadComponent::SetDebug);
+		
 	}
 
 	void AIFollowRoadComponent::GoToIntersection(AIRoadIntersectionComponentPtr inter)
@@ -336,10 +338,15 @@ namespace GASS
 			//std::cout << "now_distance" << now_distance << " pos:" << target_point << "\n";
 			//Get aim point on path
 			//if(Math::GetClosestPointOnPath(m_CurrentPos,wps3,index,point))
-			{
-				GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionMessage(target_point)));
-				GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+			
+			GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+			
+			
 
+			if(m_Debug)
+			{
+				if(GetSceneObject()->GetChildByID("AIM_POINT"))
+					GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionMessage(target_point)));
 
 				ManualMeshDataPtr mesh_data(new ManualMeshData());
 				mesh_data->Type = LINE_LIST;
@@ -362,12 +369,18 @@ namespace GASS
 				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 				GetSceneObject()->GetChildByID("CPATH")->PostMessage(mesh_message);
 
-				std::stringstream ss;
-				ss  <<  GetSceneObject()->GetName();
-				ss  <<  "\nSpeed:" << desired_speed;
-				ss  <<  "\nDist along Path:" << m_CurrentDistanceOnPath;
-				ss  <<  "\nDist to Path:" << m_CurrentDistanceToPath;
-				//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+				//if(m_Debug)
+				{
+					std::stringstream ss;
+					ss  <<  GetSceneObject()->GetName();
+					if(closest)
+						ss  <<  "\nclosest:" << closest->m_Distance - m_CurrentDistanceOnPath;
+					ss  <<  "\nDist along Path:" << m_CurrentDistanceOnPath;
+					ss  <<  "\nSpeed:" << desired_speed;
+
+					ss  <<  "\nDist to Path:" << m_CurrentDistanceToPath;
+					GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+				}
 			}
 		}
 	}

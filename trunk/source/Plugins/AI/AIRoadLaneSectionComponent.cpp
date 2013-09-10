@@ -34,7 +34,7 @@ namespace GASS
 		m_Distance = distance;
 		if(m_Initialized)
 		{
-			}
+		}
 	}
 
 	Float AIRoadLaneSectionComponent::GetDistance() const

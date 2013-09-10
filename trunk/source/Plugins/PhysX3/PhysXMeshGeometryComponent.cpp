@@ -45,7 +45,8 @@ using namespace physx;
 
 namespace GASS
 {
-	PhysXMeshGeometryComponent::PhysXMeshGeometryComponent()
+	PhysXMeshGeometryComponent::PhysXMeshGeometryComponent() : m_Actor(NULL),
+		m_Shape(NULL)
 	{
 
 	}
@@ -63,6 +64,7 @@ namespace GASS
 	void PhysXMeshGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnTransformationChanged,TransformationNotifyMessage, 0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 	}
 
@@ -92,22 +94,56 @@ namespace GASS
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
-		physx::PxRigidStatic* pxActor = system->GetPxSDK()->createRigidStatic(pose);
+		m_Actor = system->GetPxSDK()->createRigidStatic(pose);
 
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxTriangleMeshGeometry geometry = physx::PxTriangleMeshGeometry(m_TriangleMesh.m_TriangleMesh);
-		physx::PxShape* shape = pxActor->createShape(geometry, *material);
+		m_Shape = m_Actor->createShape(geometry, *material);
 		
 		//physx::PxFilterData collFilterData;
 		//collFilterData.word0=COLLISION_FLAG_GROUND_AGAINST;
 		//collFilterData.word1=COLLISION_FLAG_DRIVABLE_OBSTACLE_AGAINST;
 		//shape->setSimulationFilterData(collFilterData);
 		
+		
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
-		shape->setQueryFilterData(queryFilterData);
-		scene_manager->GetPxScene()->addActor(*pxActor);
+		m_Shape->setQueryFilterData(queryFilterData);
+	
+		physx::PxFilterData collFilterData;
+		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
+		collFilterData.word0 = GEOMETRY_FLAG_GROUND;
+		collFilterData.word1 = against;
+		m_Shape->setSimulationFilterData(collFilterData);
+		scene_manager->GetPxScene()->addActor(*m_Actor);
 	}
+
+
+	void PhysXMeshGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	{
+		Vec3 pos = message->GetPosition();
+		SetPosition(pos);
+		Quaternion rot = message->GetRotation();
+		SetRotation(rot);
+	}
+
+
+	void PhysXMeshGeometryComponent::SetPosition(const Vec3 &pos)
+	{
+		if(m_Actor)
+		{
+			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos), m_Actor->getGlobalPose().q));
+		}
+	}
+
+	void PhysXMeshGeometryComponent::SetRotation(const Quaternion &rot)
+	{
+		if(m_Actor)
+		{
+			m_Actor->setGlobalPose(physx::PxTransform(m_Actor->getGlobalPose().p,PxConvert::ToPx(rot)));
+		}
+	}
+
 }
 

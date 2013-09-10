@@ -53,7 +53,9 @@ namespace GASS
 	private:
 		ADD_ATTRIBUTE(int,LaneBufferSize);
 		ADD_ATTRIBUTE(Vec2,RandomSpeed);
-		
+		ADD_ATTRIBUTE(bool, Debug);
+		ADD_ATTRIBUTE(Float,WaypointRadius);
+
 		AIRoadLaneComponentPtr GetFreeLane(AIRoadLaneComponentPtr lane);
 		void UpdateLaneBuffer();
 		void OnSpawnOnRoad(SpawnOnRoadMessagePtr message);
@@ -62,7 +64,7 @@ namespace GASS
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		ADD_ATTRIBUTE(Float,WaypointRadius);
+		
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
 		AIRoadComponentPtr GetFreeRoad(AIRoadComponentPtr road);

@@ -79,7 +79,7 @@ namespace GASS
 			}
 		}
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 	}
 

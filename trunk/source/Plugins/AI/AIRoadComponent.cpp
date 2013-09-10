@@ -548,6 +548,9 @@ namespace GASS
 
 	void AIRoadComponent::UpdateMesh()
 	{
+		if(!m_LaneDebugObject.GetRefObject())
+			return;
+
 		ManualMeshDataPtr mesh_data(new ManualMeshData());
 		mesh_data->Type = LINE_LIST;
 		mesh_data->Material = "WhiteTransparentNoLighting";

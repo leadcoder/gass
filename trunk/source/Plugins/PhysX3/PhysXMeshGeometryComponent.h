@@ -42,9 +42,16 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	protected:
+		//Message section
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+
+		void SetPosition(const Vec3 &pos);
+		void SetRotation(const Quaternion &rot);
 	protected:
 		PhysXTriangleMesh m_TriangleMesh;
+		physx::PxRigidStatic* m_Actor;
+		physx::PxShape* m_Shape;
 	};
 	typedef SPTR<PhysXMeshGeometryComponent> PhysXMeshGeometryComponentPtr;
 }

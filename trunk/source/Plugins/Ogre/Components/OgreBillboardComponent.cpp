@@ -135,7 +135,7 @@ namespace GASS
 		if(Ogre::MaterialManager::getSingleton().resourceExists(material_name)) material = Ogre::MaterialManager::getSingleton().getByName(material_name);
 		else
 		{
-			material = Ogre::MaterialManager::getSingleton().create(material_name, "GASS",false, 0); // Manual, loader
+			material = Ogre::MaterialManager::getSingleton().create(material_name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,false, 0); // Manual, loader
 			// Remove pre-created technique from defaults
 			material->removeAllTechniques();
 			// Create a techinique and a pass and a texture unit

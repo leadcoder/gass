@@ -77,7 +77,7 @@ namespace GASS
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 		ADD_ATTRIBUTE(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
-		
+		void OnReloadMaterial(ReloadMaterialPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 
 		//Resource listeners
