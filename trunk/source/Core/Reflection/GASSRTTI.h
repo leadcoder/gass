@@ -122,16 +122,7 @@ namespace GASS
 			return m_ClassName;
 		}
 
-		/**
-		Gets class factory  used to create class instances for this specific RTTI.
-		*/
-		/*ClassFactoryFunc GetClassFactory()
-		{
-			return m_ObjectFactory;
-		}*/
-
-
-
+	
 		/**
 		Gets access to property iterator.
 		*/
@@ -161,6 +152,12 @@ namespace GASS
 			return (m_MetaData != NULL);
 			
 		}
+
+
+		/**
+		Gets meta data for this property, meta data can hold 
+		information about the property like documentation, max min values etc.
+		*/
 		
 		ObjectMetaDataPtr GetMetaData() const
 		{
@@ -171,7 +168,9 @@ namespace GASS
 			else
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "RTTI::GetMetaData");
 		}
-
+		/**
+			Set meta data for this property
+		*/
 		void SetMetaData(ObjectMetaDataPtr data)
 		{
 			m_MetaData = data;
@@ -180,7 +179,6 @@ namespace GASS
 	private:
 		std::string m_ClassName;		// Class name
 		RTTI* m_BaseRTTI;			// Base class RTTI structure
-		//ClassFactoryFunc m_ObjectFactory;	 // Factory function
 		std::list<IProperty*> m_Properties;	 // Property list
 		ObjectMetaDataPtr m_MetaData;
 	};

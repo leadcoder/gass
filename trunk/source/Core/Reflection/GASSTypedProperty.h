@@ -100,7 +100,7 @@ namespace GASS
 	template <class T>
 	std::string TypedProperty<T>::GetTypeName() const
 	{
-		return Misc::Demangle(std::string(typeid(T).name()));
+		return StringUtils::Demangle(std::string(typeid(T).name()));
 	}
 
 	

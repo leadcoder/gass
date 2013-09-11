@@ -27,6 +27,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFilePath.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "tinyxml.h"
 
 #include <iostream>
@@ -145,10 +146,10 @@ namespace GASS
 	void BaseComponentContainerTemplateManager::LoadFromPath(const std::string &path, bool recursive)
 	{
 		std::vector<std::string> files;
-		Misc::GetFilesFromPath(files, path, recursive, true);
+		FileUtils::GetFilesFromPath(files, path, recursive, true);
 		for(size_t i = 0; i< files.size(); i++)
 		{
-			if(Misc::GetExtension(files[i]) == "xml")
+			if(FileUtils::GetExtension(files[i]) == "xml")
 				Load(files[i]);
 		}
 	}

@@ -18,49 +18,37 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "GASSEnumLookup.h"
-#include "GASSStringUtils.h"
+#ifndef FILE_UTILS_HH
+#define FILE_UTILS_HH
 
+#include "Core/Common.h"
+#include "Core/Math/GASSVector.h"
 namespace GASS
 {
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Utility
+	*  @{
+	*/
 
-	EnumLookup::EnumLookup()
+	/**
+	Class used for file operations
+	*/
+
+	class GASSCoreExport FileUtils
 	{
-		m_NumConstants = 0;
-	}
-
-	EnumLookup::~EnumLookup()
-	{
-
-	}
-
-	void EnumLookup::Add(std::string name, int value)
-	{
-		m_ConstantMap[StringUtils::ToLower(name)] = value;
-		m_NumConstants++;
-	}
-
-	void EnumLookup::Add(std::string name)
-	{
-		m_ConstantMap[StringUtils::ToLower(name)] = m_NumConstants;
-		m_NumConstants++;
-	}
-
-	int EnumLookup::Get(const std::string &name)
-	{
-		ConstantMap::iterator pos;
-		std::string lower_name = StringUtils::ToLower(name);
-		pos = m_ConstantMap.find(lower_name);
-
-		if (pos != m_ConstantMap.end()) //in map.
-		{
-			return m_ConstantMap[lower_name];
-		}
-		else
-		{
-			return -1;
-		}
-	}
-
-
+	public:
+		FileUtils();
+		virtual ~FileUtils();
+		static std::string GetExtension(const std::string &file_name);
+		static std::string GetFilename(const std::string &path);
+		static std::string RemoveFilename(const std::string &path);
+		static std::string RemoveExtension(const std::string &path);
+		
+		static void GetFilesFromPath(std::vector<std::string> &files, const std::string &path,  bool recursive = false, bool full_path = false);
+	};
 }
+
+#endif 
+

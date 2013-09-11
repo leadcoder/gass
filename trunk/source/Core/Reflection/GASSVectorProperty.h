@@ -37,15 +37,30 @@ namespace GASS
 {
 
 
-
+	/**
+		Interface for properties based on the std::vector class
+	*/
 	class IVectorProperty
 	{
 	public:
 		virtual ~IVectorProperty(){}
+		/**
+		Set values by string
+		*/
 		virtual void SetValueByStringVector(BaseReflectionObject* object, const std::vector<std::string> &value) = 0;
+		/**
+		Get values by string
+		*/
 		virtual std::vector<std::string> GetValueAsStringVector(const BaseReflectionObject* object) const = 0;
 	};
 
+
+	/**
+	Template class used to define a vector property of a specific type.
+	@param OwnerType class that has the getter and setter functions
+	@param T Poperty type
+	*/
+	
 	template <class OwnerType, class T>
 	class VectorProperty : public TypedProperty<std::vector<T> > , public IVectorProperty
 	{

@@ -35,6 +35,17 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
+
+	/** \addtogroup GASSCore
+	*  @{
+	*/
+	/** \addtogroup Reflection
+	*  @{
+	*/
+	/**
+		Property flags indicating if the property mode
+		that can be used by editor applications
+	*/
 	enum PropertyFlags 
 	{
 		PF_RESET  = 0,
@@ -47,6 +58,10 @@ namespace GASS
 	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
 	{return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));}
 
+
+	/**
+		Interface for all property meta data
+	*/
 	class IPropertyMetaData
 	{
 	public:
@@ -55,9 +70,15 @@ namespace GASS
 	typedef SPTR<IPropertyMetaData> PropertyMetaDataPtr;
 
 
+	/**
+		Base implementation of the property meta data interface
+		Property meta data can hold information about properties such as documenetaion, max	min values, 
+		flags that indicate if its readonly, visisble etc inside editor environment
+		This base class is a convenience class that implements anotation and flags
+	*/
+
 	class BasePropertyMetaData : public IPropertyMetaData
 	{
-		
 	public:
 		BasePropertyMetaData(const std::string &annotation, PropertyFlags flags): m_Annotation(annotation), m_Flags(flags) {}
 		std::string GetAnnotation() const {return m_Annotation;}
@@ -70,6 +91,10 @@ namespace GASS
 	};
 	typedef SPTR<BasePropertyMetaData> BasePropertyMetaDataPtr;
 
+
+	/**
+		Meta data class that can be used for enumeration properties
+	*/
 
 	class EnumerationPropertyMetaData : public BasePropertyMetaData
 	{
@@ -85,6 +110,10 @@ namespace GASS
 	};
 	typedef SPTR<EnumerationPropertyMetaData> EnumerationPropertyMetaDataPtr;
 	
+	/**
+		Meta data class that can be used for static enumeration properties, 
+		ie enumeration is kown when property is registred
+	*/
 
 	class StaticEnumerationPropertyMetaData : public EnumerationPropertyMetaData
 	{
@@ -101,6 +130,11 @@ namespace GASS
 	typedef SPTR<StaticEnumerationPropertyMetaData> StaticEnumerationPropertyMetaDataPtr;
 
 
+	/**
+		Meta data class that can be used for enumeration properties 
+		that want to delegate the enumeration request to other class 
+		
+	*/
 	typedef std::vector<std::string> EnumerationFunc(void);
 	class EnumerationProxyPropertyMetaData : public EnumerationPropertyMetaData
 	{
@@ -118,6 +152,10 @@ namespace GASS
 	typedef SPTR<EnumerationProxyPropertyMetaData > EnumerationProxyPropertyMetaDataPtr;
 
 
+	/**
+		Meta data class for floating point properties that want to support max min values
+	*/
+
 	class FloatMaxMinPropertyMetaData : public BasePropertyMetaData
 	{
 	public:
@@ -132,6 +170,11 @@ namespace GASS
 		Float m_Min;
 	};
 	typedef SPTR<FloatMaxMinPropertyMetaData> FloatMaxMinPropertyMetaDataPtr;
+
+
+	/**
+		Meta data class for integer properties that want to support max min values
+	*/
 
 	class IntMaxMinPropertyMetaData : public BasePropertyMetaData
 	{
@@ -148,6 +191,10 @@ namespace GASS
 	};
 	typedef SPTR<IntMaxMinPropertyMetaData> IntMaxMinPropertyMetaDataPtr;
 
+
+	/**
+		Meta data class for file path properties that want to support extenstion filters ect
+	*/
 
 	class FilePathPropertyMetaData : public BasePropertyMetaData
 	{

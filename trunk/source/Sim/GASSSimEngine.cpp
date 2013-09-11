@@ -29,6 +29,7 @@
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSXMLUtils.h"
 //include to ensure interface export
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
@@ -137,7 +138,7 @@ namespace GASS
 				{
 					res_ptr = iter->second;
 					const FilePath file_path = res_ptr->Path();
-					if(Misc::ToLower(file_path.GetExtension()) == "template")
+					if(StringUtils::ToLower(file_path.GetExtension()) == "template")
 					{
 						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
 						GetSceneObjectTemplateManager()->Load(file_path.GetFullPath());
@@ -174,7 +175,7 @@ namespace GASS
 		TiXmlElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if(xml_data_path)
 		{
-			std::string env_data_path = Misc::ReadString((TiXmlElement *)xml_settings,"SetDataPath");
+			std::string env_data_path = XMLUtils::ReadString((TiXmlElement *)xml_settings,"SetDataPath");
 			if(boost::filesystem::exists(boost::filesystem::path(env_data_path)))
 			{
 				env_data_path = "GASS_DATA_HOME=" + env_data_path;
@@ -185,7 +186,7 @@ namespace GASS
 
 		TiXmlElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if(xml_scene_path)
-			m_ScenePath.SetPath(Misc::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
+			m_ScenePath.SetPath(XMLUtils::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
 
 
 		TiXmlElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
@@ -198,24 +199,24 @@ namespace GASS
 		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
 		if(xml_sotm)
 		{
-			bool add_object_id = Misc::ReadBool(xml_sotm,"AddObjectIDToName");
+			bool add_object_id = XMLUtils::ReadBool(xml_sotm,"AddObjectIDToName");
 			GetSceneObjectTemplateManager()->SetAddObjectIDToName(add_object_id);
 
-			std::string prefix = Misc::ReadString(xml_sotm,"ObjectIDPrefix");
+			std::string prefix = XMLUtils::ReadString(xml_sotm,"ObjectIDPrefix");
 			GetSceneObjectTemplateManager()->SetObjectIDPrefix(prefix);
 			
-			std::string sufix = Misc::ReadString(xml_sotm,"ObjectIDSufix");
+			std::string sufix = XMLUtils::ReadString(xml_sotm,"ObjectIDSufix");
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 		}
 
 		TiXmlElement *xml_rtc = xml_settings->FirstChildElement("RTC");
 		if(xml_rtc)
 		{
-			int num_threads = Misc::ReadInt(xml_rtc,"NumberOfThreads");
+			int num_threads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
 			m_RTC->Init(num_threads);
-			int update_freq = Misc::ReadInt(xml_rtc,"MaxUpdateFreqency");
+			int update_freq = XMLUtils::ReadInt(xml_rtc,"MaxUpdateFreqency");
 			m_MaxUpdateFreq = static_cast<double>(update_freq);
-			//bool external_update = Misc::ReadBool(xml_rtc,"ExternalSimulationUpdate");
+			//bool external_update = XMLUtils::ReadBool(xml_rtc,"ExternalSimulationUpdate");
 			//GetSimSystemManager()->SetPauseSimulation(external_update);
 
 			TiXmlElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");

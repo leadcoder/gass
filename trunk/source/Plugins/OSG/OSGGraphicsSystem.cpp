@@ -71,7 +71,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Sim/GASS.h"
-
+#include "Core/Utils/GASSFileUtils.h"
 #include <osgDB/ReadFile> 
 #include "tinyxml.h"
 
@@ -615,7 +615,7 @@ namespace GASS
 					while(iter != resources.end())
 					{
 						//remove extenstion?
-						std::string mat_name = Misc::RemoveExtension(iter->second->Name());
+						std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
 						content.push_back(mat_name);
 						iter++;
 					}

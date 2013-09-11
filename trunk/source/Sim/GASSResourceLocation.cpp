@@ -22,7 +22,7 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
 
 namespace GASS
 {
@@ -48,7 +48,7 @@ namespace GASS
 		{
 			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 			const std::string res_type = rm->GetResourceTypeByExtension(files[i].GetExtension());
-			const std::string name = Misc::ToLower(files[i].GetFilename());
+			const std::string name = StringUtils::ToLower(files[i].GetFilename());
 			FileResourcePtr res(new FileResource(files[i],shared_from_this(),res_type));
 			m_Resources[name] = res;
 		}
@@ -57,7 +57,7 @@ namespace GASS
 	FileResourcePtr ResourceLocation::GetResourceByName(const std::string &name) const
 	{
 		FileResourcePtr res;
-		const std::string lower_name = Misc::ToLower(name);
+		const std::string lower_name = StringUtils::ToLower(name);
 		ResourceMap::const_iterator iter = m_Resources.find(lower_name);
 		if(iter != m_Resources.end())
 		{
@@ -68,7 +68,7 @@ namespace GASS
 
 	bool ResourceLocation::HasResource(const std::string &name) const
 	{
-		const std::string lower_name = Misc::ToLower(name);
+		const std::string lower_name = StringUtils::ToLower(name);
 		ResourceMap::const_iterator iter = m_Resources.find(lower_name);
 		if(iter != m_Resources.end())
 		{

@@ -26,6 +26,7 @@
 #include "tinyxml.h"
 #include "Core/Reflection/GASSPropertyTypes.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSFileUtils.h"
 
 namespace GASS
 {
@@ -205,10 +206,10 @@ namespace GASS
 	void SchemaManager::LoadAllFromPath(const std::string filepath)
 	{
 		std::vector<std::string> files;
-		Misc::GetFilesFromPath(files, filepath, true, true);
+		FileUtils::GetFilesFromPath(files, filepath, true, true);
 		for(size_t i = 0;  i < files.size(); i++)
 		{
-			if(Misc::GetExtension(files[i]) == "xsd")
+			if(FileUtils::GetExtension(files[i]) == "xsd")
 				Load(files[i]);
 		}
 	}

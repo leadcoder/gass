@@ -31,7 +31,7 @@ This code is based on the Game Programming Gems 5 article
 #include "Core/Reflection/GASSProperty.h"
 #include "Core/Reflection/GASSVectorProperty.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
 class TiXmlElement;
 
 namespace GASS
@@ -156,7 +156,7 @@ namespace GASS
 
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(Misc::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
+		(StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
 		(RegisterReflectionFunc)T::RegisterReflection );
 }
 #endif

@@ -20,6 +20,7 @@
 #include "GASSMaterialSystem.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSGeometryFlags.h"
 #include <tinyxml.h>
 
@@ -46,12 +47,12 @@ namespace GASS
 		//Load all material files from gass data path
 		std::vector<std::string> files;
 		FilePath path("%GASS_DATA_HOME%/physics");
-		Misc::GetFilesFromPath(files,path.GetFullPath(),true,true);
+		FileUtils::GetFilesFromPath(files,path.GetFullPath(),true,true);
 		for(size_t i = 0; i< files.size(); i++)
 		{
-			if(Misc::GetExtension(files[i]) == "gassmat")
+			if(FileUtils::GetExtension(files[i]) == "gassmat")
 				LoadMaterialFile(files[i]);
-			//else if(Misc::GetExtension(files[i]) == "gassgeom")
+			//else if(FileUtils::GetExtension(files[i]) == "gassgeom")
 			//	LoadGeometryFlagsFile(files[i]);
 		}
 	}

@@ -18,48 +18,81 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "GASSEnumLookup.h"
+
+#include "Core/Common.h"
 #include "GASSStringUtils.h"
+#include "GASSLogManager.h"
+#include "GASSException.h"
 
 namespace GASS
 {
-
-	EnumLookup::EnumLookup()
-	{
-		m_NumConstants = 0;
-	}
-
-	EnumLookup::~EnumLookup()
+	StringUtils::StringUtils()
 	{
 
 	}
 
-	void EnumLookup::Add(std::string name, int value)
+	StringUtils::~StringUtils()
 	{
-		m_ConstantMap[StringUtils::ToLower(name)] = value;
-		m_NumConstants++;
+
 	}
 
-	void EnumLookup::Add(std::string name)
+
+	std::string StringUtils::RemoveQuotation(char* str)
 	{
-		m_ConstantMap[StringUtils::ToLower(name)] = m_NumConstants;
-		m_NumConstants++;
+		std::string ret = str;
+		ret = ret.substr(1,ret.length()-2);
+		return ret;
 	}
 
-	int EnumLookup::Get(const std::string &name)
+	std::string StringUtils::RemoveQuotation(const std::string &str)
 	{
-		ConstantMap::iterator pos;
-		std::string lower_name = StringUtils::ToLower(name);
-		pos = m_ConstantMap.find(lower_name);
+		std::string ret = str;
+		ret = ret.substr(1,ret.length()-2);
+		return ret;
+	}
 
-		if (pos != m_ConstantMap.end()) //in map.
+	
+	std::string StringUtils::ToUpper(const std::string&str)
+	{
+		std::string new_str = str;
+		std::transform(str.begin(), str.end(), new_str.begin(),::toupper);
+		return new_str;
+	}
+
+
+	std::string StringUtils::Replace(const std::string &str, const std::string &find, const std::string &replacement)
+	{
+		std::string::size_type  pos = 0;
+		std::string::size_type  look_here = 0;
+		std::string new_str = str;
+
+		//if(find.find(replacement)) // what we are going to replace already exist replecement string -> infinite while
+		while ((pos = new_str.find(find,look_here)) != std::string::npos)
 		{
-			return m_ConstantMap[lower_name];
+			new_str.replace(pos, find.size(), replacement);
+			look_here = pos + replacement.size();
 		}
-		else
+		return new_str;
+	}
+
+	
+	std::string StringUtils::Demangle(const std::string &name)
+	{
+#ifdef WIN32
+		if(std::string::npos == name.find("class"))
+			return name;
+		std::string ret = name.substr(6);
+#else
+		int status;
+		std::string ret = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
+#endif
+		//remove namespace
+		size_t pos = ret.find("::");
+		if(pos != -1)
 		{
-			return -1;
+			ret =  ret.substr(pos+2);
 		}
+		return ret;
 	}
 
 

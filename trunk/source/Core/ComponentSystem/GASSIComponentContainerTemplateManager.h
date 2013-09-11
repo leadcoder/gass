@@ -22,8 +22,6 @@
 #define ICOMPONENTCONTAINERTEMPLATEMANAGER_HH
 
 #include "Core/Common.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 namespace GASS
 {

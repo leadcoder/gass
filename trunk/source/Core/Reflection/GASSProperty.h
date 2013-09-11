@@ -37,7 +37,6 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-
 	template <class type>
 	bool GetValueFromString(type &res,const std::string &s)
 	{
@@ -233,7 +232,5 @@ namespace GASS
 #define ADD_ATTRIBUTE(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \
 	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}
-	//void Set ## NAME ( TYPE value) {m_ ## NAME = value;}
-
 }
 #endif

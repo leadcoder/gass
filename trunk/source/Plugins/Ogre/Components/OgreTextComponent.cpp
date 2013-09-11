@@ -115,8 +115,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0));
 	
-		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
-		m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
+		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\r", "\r");
+		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\n", "\n");
 
 		
 		
@@ -206,8 +206,8 @@ namespace GASS
 		if(m_TextObject)
 		{
 
-			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\r", "\r");
-			m_TextToDisplay = Misc::Replace(m_TextToDisplay, "\\n", "\n");
+			m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\r", "\r");
+			m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\n", "\n");
 			if(m_TextToDisplay != "")
 			{
 				m_TextObject->enable(true);

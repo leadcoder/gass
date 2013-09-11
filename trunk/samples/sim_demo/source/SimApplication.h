@@ -17,22 +17,19 @@
 class SimApplication : public GASS::IMessageListener, public boost::enable_shared_from_this<SimApplication> 
 {
 protected:
-	std::string m_SystemConfig;
-	std::string m_ControlSettings;
-	std::string m_Plugins;
 	std::string m_SceneName;
-	std::string m_Instances;
-	std::vector<std::string> m_Templates;
-	std::vector<std::string> m_Objects;
 	GASS::SimEngine* m_Engine;
 	GASS::SceneWeakPtr m_Scene;
 	GASS::Timer* m_Timer;
 	double m_UpdateFreq;
 public:
-	SimApplication(const std::string configuration)
+	SimApplication() :
+	  m_SceneName("new_terrain"),
+	  m_Timer(new GASS::Timer()),
+	  m_UpdateFreq(60)
+
 	{
-		LoadConfig(configuration);
-		m_Timer =  new GASS::Timer();
+		
 
 	}
 	virtual ~SimApplication()
@@ -43,7 +40,7 @@ public:
 	virtual bool Init()
 	{
 		m_Engine = new GASS::SimEngine();
-		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
+		m_Engine->Init(GASS::FilePath("GASSSimDemo.xml"));
 		
 		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 		
@@ -71,7 +68,7 @@ public:
 			m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 		}
 
-		for(int i = 0; i <  m_Objects.size();i++)
+		/*for(int i = 0; i <  m_Objects.size();i++)
 		{
 			GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate(m_Objects[i],scene->GetRootSceneObject());
 			GASS::Vec3 pos = scene->GetStartPos();
@@ -80,13 +77,13 @@ public:
 			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
 			if(object)
 				object->SendImmediate(pos_msg);
-		}
+		}*/
 		m_Engine->GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::GUIScriptRequest("GUI.xml")));
 		return true;
 	}
 
 
-	virtual bool LoadConfig(const std::string filename)
+	/*virtual bool LoadConfig(const std::string filename)
 	{
 		if(filename =="") return false;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
@@ -118,7 +115,7 @@ public:
 		}
 		return true;
 		//TiXmlElement *sys_config =  app_settings->FirstChildElement("SystemConfig();
-	}
+	}*/
 
 	virtual bool Update()
 	{

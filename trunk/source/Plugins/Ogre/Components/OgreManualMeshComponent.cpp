@@ -29,8 +29,10 @@
 
 
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSIComponent.h"
 
@@ -241,7 +243,7 @@ namespace GASS
 
 					if(texture_name != "")
 					{
-						const std::string stripped_name = Misc::GetFilename(texture_name);
+						const std::string stripped_name = FileUtils::GetFilename(texture_name);
 						textureUnit->setTextureName(stripped_name);
 					}
 				}

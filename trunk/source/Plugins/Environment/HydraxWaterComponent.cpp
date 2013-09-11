@@ -27,6 +27,7 @@
 #include "Core/ComponentSystem/GASSIComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -172,8 +173,8 @@ namespace GASS
 		if(m_Hydrax)
 		{
 			m_ConfigurationFile = value;
-			std::string filename = Misc::GetFilename(value);
-			std::string path = Misc::RemoveFilename(value);
+			std::string filename = FileUtils::GetFilename(value);
+			std::string path = FileUtils::RemoveFilename(value);
 
 			m_Hydrax->saveCfg(filename, path);
 		}
@@ -840,8 +841,8 @@ namespace GASS
 	{
 		m_ConfigurationFile = cfg_file;
 		
-		std::string filename = Misc::GetFilename(cfg_file);
-		std::string path = Misc::RemoveFilename(cfg_file);
+		std::string filename = FileUtils::GetFilename(cfg_file);
+		std::string path = FileUtils::RemoveFilename(cfg_file);
 
 		if(m_Hydrax && m_ConfigurationFile != "")
 		{

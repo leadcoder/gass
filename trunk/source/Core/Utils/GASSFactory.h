@@ -24,7 +24,7 @@
 #include "Core/Common.h"
 #include <map>
 #include <string>
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSLogManager.h"
 
 namespace GASS
@@ -59,7 +59,7 @@ namespace GASS
 		typedef SPTR<Product> ProductPtr;
 		Creator()
 		{
-			m_ClassName = Misc::Demangle(typeid(Product).name());
+			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
 		virtual BasePtr Create() const

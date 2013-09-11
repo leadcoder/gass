@@ -280,7 +280,7 @@ namespace GASS
 
 	void GrassLoaderComponent::SetColorMap(const std::string &name)
 	{
-		m_ColorMapFilename = name;//Misc::GetFilename(name);
+		m_ColorMapFilename = name;//FileUtils::GetFilename(name);
 	}
 
 	float GrassLoaderComponent::GetViewDistance() const

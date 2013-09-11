@@ -20,7 +20,7 @@
 
 #include "GASSFilePath.h"
 #include "GASSLogManager.h"
-#include "GASSMisc.h"
+#include "GASSStringUtils.h"
 #include <stdarg.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -129,8 +129,8 @@ namespace GASS
 			}
 		}
 
-		curStr = Misc::Replace(curStr, "\\", "/");
-		curStr = Misc::Replace(curStr, "//", "/");
+		curStr = StringUtils::Replace(curStr, "\\", "/");
+		curStr = StringUtils::Replace(curStr, "//", "/");
 		return curStr;
 	}
 
@@ -238,7 +238,7 @@ namespace GASS
 						bool find_ext = false;
 						for(size_t i = 0; i < extenstion_filters.size(); i++)
 						{
-							if(Misc::ToLower(exstension) == extenstion_filters[i])
+							if(StringUtils::ToLower(exstension) == extenstion_filters[i])
 							{
 								find_ext = true;
 								break;

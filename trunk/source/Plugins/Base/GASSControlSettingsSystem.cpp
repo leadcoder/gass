@@ -26,7 +26,7 @@
 #include "Sim/GASSResourceHandle.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSEnumLookup.h"
 #include "Core/Utils/GASSException.h"
 
@@ -285,7 +285,7 @@ namespace GASS
 	ControlSetting* ControlSettingsSystem::GetControlSetting(const std::string &name) const
 	{
 		ControlSettingMap::const_iterator pos;
-		//	name = Misc::ToLower(name);
+		//	name = StringUtils::ToLower(name);
 		pos = m_ControlSettingMap.find(name);
 
 		if (pos != m_ControlSettingMap.end()) // not in map.

@@ -22,7 +22,8 @@
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
+#include "Core/Utils/GASSXMLUtils.h"
 #include <tinyxml.h>
 
 namespace GASS
@@ -46,23 +47,23 @@ namespace GASS
 			if(elem_name == "ResourceGroup")
 			{
 				TiXmlElement *group_elem = prop_elem->FirstChildElement();
-				const std::string group_name = Misc::ReadStringAttribute(prop_elem,"name");
+				const std::string group_name = XMLUtils::ReadStringAttribute(prop_elem,"name");
 				ResourceGroupPtr group(new ResourceGroup(group_name));
 				while(group_elem)
 				{
 					const std::string group_elem_name = group_elem->Value();
 					if(group_elem_name == "ResourceLocation")
 					{
-						const FilePath path = Misc::ReadStringAttribute(group_elem,"path");
-						const std::string type = Misc::ReadStringAttribute(group_elem,"type");
-						const std::string rec = Misc::ReadStringAttribute(group_elem,"recursive");
+						const FilePath path = XMLUtils::ReadStringAttribute(group_elem,"path");
+						const std::string type = XMLUtils::ReadStringAttribute(group_elem,"type");
+						const std::string rec = XMLUtils::ReadStringAttribute(group_elem,"recursive");
 						bool recursive = false;
-						if(Misc::ToLower(rec) == "true")
+						if(StringUtils::ToLower(rec) == "true")
 							recursive = true;
 
-						if(Misc::ToLower(type) == "filesystem")
+						if(StringUtils::ToLower(type) == "filesystem")
 							group->AddResourceLocation(path,RLT_FILESYSTEM,recursive);
-						else if(Misc::ToLower(type) == "zip")
+						else if(StringUtils::ToLower(type) == "zip")
 							group->AddResourceLocation(path,RLT_ZIP,recursive);
 						//CreateResourceLocation();
 					}
@@ -118,13 +119,13 @@ namespace GASS
 	
 	std::string ResourceManager::GetResourceTypeByExtension(const std::string &extension) const
 	{
-		std::string ext = Misc::ToLower(extension);
+		std::string ext = StringUtils::ToLower(extension);
 	
 		for(size_t i = 0; i < m_ResourceTypes.size();i++)
 		{
 			for(size_t j = 0; j < m_ResourceTypes[i].Extensions.size(); j++)
 			{
-				if(ext == Misc::ToLower(m_ResourceTypes[i].Extensions[j]))
+				if(ext == StringUtils::ToLower(m_ResourceTypes[i].Extensions[j]))
 				{
 					return m_ResourceTypes[i].Name;
 				}

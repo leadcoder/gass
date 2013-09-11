@@ -455,7 +455,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer0(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer0 = diffuse;//Misc::GetFilename(diffuse);
+		m_DiffuseLayer0 = diffuse;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer0.Valid())
 		{
 			m_Terrain->setLayerTextureName(0,0,m_DiffuseLayer0.Name());
@@ -469,7 +469,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer0(const ResourceHandle &normal)
 	{
-		m_NormalLayer0 = normal;//Misc::GetFilename(diffuse);
+		m_NormalLayer0 = normal;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer0.Valid())
 		{
 			m_Terrain->setLayerTextureName(0,1,m_NormalLayer0.Name());
@@ -483,7 +483,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer1(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer1 = diffuse;//Misc::GetFilename(diffuse);
+		m_DiffuseLayer1 = diffuse;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer1.Valid())
 		{
 			m_Terrain->setLayerTextureName(1,0,m_DiffuseLayer1.Name());
@@ -497,7 +497,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer1(const ResourceHandle &normal)
 	{
-		m_NormalLayer1 = normal;//Misc::GetFilename(diffuse);
+		m_NormalLayer1 = normal;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer1.Valid())
 		{
 			m_Terrain->setLayerTextureName(1,1,m_NormalLayer1.Name());
@@ -511,7 +511,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer2(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer2 = diffuse;//Misc::GetFilename(diffuse);
+		m_DiffuseLayer2 = diffuse;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_DiffuseLayer2.Valid())
 		{
 			m_Terrain->setLayerTextureName(2,0,m_DiffuseLayer2.Name());
@@ -525,7 +525,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer2(const ResourceHandle &normal)
 	{
-		m_NormalLayer2 = normal;//Misc::GetFilename(diffuse);
+		m_NormalLayer2 = normal;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer2.Valid())
 		{
 			m_Terrain->setLayerTextureName(2,1,m_NormalLayer2.Name());
@@ -554,7 +554,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer3(const ResourceHandle &normal)
 	{
-		m_NormalLayer3 = normal;//Misc::GetFilename(diffuse);
+		m_NormalLayer3 = normal;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer3.Valid())
 		{
 			m_Terrain->setLayerTextureName(3,1,m_NormalLayer3.Name());
@@ -582,7 +582,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer4(const ResourceHandle &normal)
 	{
-		m_NormalLayer4 = normal;//Misc::GetFilename(diffuse);
+		m_NormalLayer4 = normal;//FileUtils::GetFilename(diffuse);
 		if(m_Terrain && m_NormalLayer4.Valid())
 		{
 			m_Terrain->setLayerTextureName(4,1,m_NormalLayer4.Name());
@@ -683,7 +683,7 @@ namespace GASS
 
 	/*void OgreTerrainPageComponent::SetMaskLayer1(const FilePath &mask)
 	{
-		m_MaskLayer1 = Misc::GetFilename(mask);
+		m_MaskLayer1 = FileUtils::GetFilename(mask);
 		if(m_Terrain && m_MaskLayer1 != "")
 		{
 			std::fstream fstr(mask.c_str(), std::ios::in|std::ios::binary);
@@ -720,7 +720,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetMaskLayer2(const std::string &mask)
 	{
-		m_MaskLayer2 = Misc::GetFilename(mask);
+		m_MaskLayer2 = FileUtils::GetFilename(mask);
 		if(m_Terrain && m_MaskLayer2 != "")
 		{
 			//m_Terrain->getLayerBlendMap(1)->loadImage(m_MaskLayer1,Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);

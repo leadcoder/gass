@@ -32,6 +32,7 @@
 #include "RecastConvexVolumeComponent.h"
 #include "InputGeom.h"
 #include "tinyxml.h"
+#include "Core/Utils/GASSFileUtils.h"
 
 namespace GASS
 {
@@ -983,7 +984,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	void RecastNavigationMeshComponent::SaveXML(TiXmlElement *obj_elem)
 	{
 		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
-		m_NavMeshFilePath = Misc::RemoveFilename(m_NavMeshFilePath);
+		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		if(m_NavMesh)
 		{
 			std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
@@ -995,7 +996,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	void RecastNavigationMeshComponent::LoadXML(TiXmlElement *obj_elem)
 	{
 		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
-		m_NavMeshFilePath = Misc::RemoveFilename(m_NavMeshFilePath);
+		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		BaseComponent::LoadXML(obj_elem);
 	}
 

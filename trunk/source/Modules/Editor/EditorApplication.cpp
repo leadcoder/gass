@@ -52,12 +52,12 @@ namespace GASS
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		css->Load(config_path +  "GASSControlSettings.xml");
 		//Start client or server?
-		if(Misc::ToLower(m_Mode) == "server")
+		if(StringUtils::ToLower(m_Mode) == "server")
 		{
 			SystemMessagePtr server_mess(new StartServerRequest(m_ServerName, m_ServerPort));
 			se->GetSimSystemManager()->PostMessage(server_mess);
 		}
-		else if (Misc::ToLower(m_Mode) == "client")
+		else if (StringUtils::ToLower(m_Mode) == "client")
 		{
 			se->GetSimSystemManager()->SendImmediate(SystemMessagePtr(new StartClientRequest(m_ClientName, m_ClientPort,m_ServerPort)));
 			SystemMessagePtr connect_message(new ConnectToServerRequest(m_ServerName, m_ServerPort,8888, 2));

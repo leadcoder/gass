@@ -284,9 +284,9 @@ namespace GASS
 		if(extension == "mesh") //this is ogre model, try to load 3ds instead
 		{
 			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-			std::string file_name_3ds = Misc::Replace(mod_file_name,".mesh",".3ds");
-			std::string file_name_obj = Misc::Replace(mod_file_name,".mesh",".obj");
-			std::string file_name_flt = Misc::Replace(mod_file_name,".mesh",".flt");
+			std::string file_name_3ds = StringUtils::Replace(mod_file_name,".mesh",".3ds");
+			std::string file_name_obj = StringUtils::Replace(mod_file_name,".mesh",".obj");
+			std::string file_name_flt = StringUtils::Replace(mod_file_name,".mesh",".flt");
 			if(rm->HasResource(file_name_3ds))
 				mod_file_name = file_name_3ds;
 			else if(rm->HasResource(file_name_obj))

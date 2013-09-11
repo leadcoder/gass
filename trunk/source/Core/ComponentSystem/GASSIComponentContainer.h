@@ -21,8 +21,6 @@
 #ifndef ICOMPONENTCONTAINER_HH
 #define ICOMPONENTCONTAINER_HH
 
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include "Core/Common.h"
 #include "Core/Utils/GASSIterators.h"
 

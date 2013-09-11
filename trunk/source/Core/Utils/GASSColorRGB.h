@@ -36,7 +36,7 @@ namespace GASS
 	*/
 
 	/**
-	* Class that holds color values.
+	* Class that holds RGB color values.
 	*/
 	class GASSCoreExport ColorRGB
 	{
@@ -73,6 +73,10 @@ namespace GASS
 		}
 	};
 
+
+	/**
+	* Class that holds RGBA color values.
+	*/
 
 	class GASSCoreExport ColorRGBA
 	{

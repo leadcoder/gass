@@ -247,7 +247,7 @@ namespace GASS
 
 	void GrassGeometryComponent::SetDensityMap(const std::string &dm)
 	{
-		m_DensityMapFilename = dm;//Misc::GetFilename(dm);
+		m_DensityMapFilename = dm;//FileUtils::GetFilename(dm);
 		if(m_GrassLayer)
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 	}
@@ -320,7 +320,7 @@ namespace GASS
 
 	void GrassGeometryComponent::SetColorMap(const std::string &name)
 	{
-		m_ColorMapFilename = name;//Misc::GetFilename(name);
+		m_ColorMapFilename = name;//FileUtils::GetFilename(name);
 		if(m_GrassLayer)
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
 	}

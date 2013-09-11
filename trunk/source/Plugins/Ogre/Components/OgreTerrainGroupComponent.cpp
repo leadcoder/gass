@@ -27,6 +27,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 
@@ -399,7 +400,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetSaveTerrain(const std::string &filename)
 	{
-		m_TerrainResource.SetName(Misc::GetFilename(filename));
+		m_TerrainResource.SetName(FileUtils::GetFilename(filename));
 		if(m_TerrainGroup)
 		{
 			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");

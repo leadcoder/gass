@@ -42,6 +42,7 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
+#include "Core/Utils/GASSFileUtils.h"
 
 
 
@@ -77,8 +78,8 @@ namespace GASS
 	
 	std::string OSGSkyboxComponent::GetTexturePath(const std::string &side) const
 	{
-		std::string extension = Misc::GetExtension(m_Material);
-		std::string name = Misc::RemoveExtension(m_Material);
+		std::string extension = FileUtils::GetExtension(m_Material);
+		std::string name = FileUtils::RemoveExtension(m_Material);
 		
 		std::string full_path = name + side;
 		full_path += ".";

@@ -23,6 +23,7 @@
 
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "tinyxml.h"
 #include "Core/Reflection/GASSPropertyTypes.h"
 #include "Core/Utils/GASSException.h"
@@ -42,10 +43,10 @@ namespace GASS
 	void GUISchemaLoader::LoadAllFromPath(const std::string filepath)
 	{
 		std::vector<std::string> files;
-		Misc::GetFilesFromPath(files, filepath, true, true);
+		FileUtils::GetFilesFromPath(files, filepath, true, true);
 		for(size_t i = 0;  i < files.size(); i++)
 		{
-			if(Misc::GetExtension(files[i]) == "xsd")
+			if(FileUtils::GetExtension(files[i]) == "xsd")
 				Load(files[i]);
 		}
 	}
@@ -240,7 +241,7 @@ namespace GASS
 		bool ret  = false;
 		if(elem && elem->Attribute(name.c_str()))
 		{
-				const std::string value = GASS::Misc::ToLower(elem->Attribute(name.c_str()));
+				const std::string value = GASS::StringUtils::ToLower(elem->Attribute(name.c_str()));
 				if(value == "true")
 					ret  = true;
 				else

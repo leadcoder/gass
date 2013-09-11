@@ -24,7 +24,7 @@
 #include "Sim/GASSRuntimeController.h"
 
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSMisc.h"
+#include "Core/Utils/GASSStringUtils.h"
 #include <tinyxml.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -55,7 +55,7 @@ namespace GASS
 
 		if(xml_elem->Attribute("mode"))
 		{
-			std::string type = Misc::ToUpper(xml_elem->Attribute("mode"));
+			std::string type = StringUtils::ToUpper(xml_elem->Attribute("mode"));
 			if(type == "PARALLEL")
 			{
 				m_NodeMode = PARALLEL;

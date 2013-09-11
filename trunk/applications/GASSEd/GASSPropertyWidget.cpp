@@ -247,7 +247,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				}
 				
 				std::string filename = prop_value;
-				filename = GASS::Misc::Replace(filename,"/","\\");
+				filename = GASS::StringUtils::Replace(filename,"/","\\");
 				
 				//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
 				switch(type)
@@ -285,7 +285,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				{
 					//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
 					std::string filename = prop_value;
-					filename = GASS::Misc::Replace(filename,"/","\\");
+					filename = GASS::StringUtils::Replace(filename,"/","\\");
 					item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());
 					item->setValue(filename.c_str());
 					//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));

@@ -21,9 +21,10 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
+#include "SimApplication.h"
 
-#include "Client.h"
-#include "Server.h"
+//#include "Client.h"
+//#include "Server.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -58,7 +59,7 @@ typedef boost::shared_ptr<SimApplication> SimApplicationPtr;
 
 int main(int argc, char* argv[])
 {
-	std::string config = "../Configuration/app_config.xml";
+	/*std::string config = "../Configuration/app_config.xml";
 	int index = 1;
 	while(index < argc)
 	{
@@ -68,7 +69,7 @@ int main(int argc, char* argv[])
 			config = argv[index+1];
 		}
 		index += 2;
-	}
+	}*/
 	/*
 	std::cout << "Server, client or standalone? Press [S] ,[C] or [A]:";
 	char key = _getch();
@@ -88,7 +89,7 @@ int main(int argc, char* argv[])
 		app = SimApplicationPtr(new SimApplication(config));*/
 
 	SimApplicationPtr app;
-	app = SimApplicationPtr(new SimApplication(config));
+	app = SimApplicationPtr(new SimApplication());
 	app->Init();
 	while(app->Update())
 	{
