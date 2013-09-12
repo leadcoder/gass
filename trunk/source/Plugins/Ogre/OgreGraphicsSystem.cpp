@@ -390,8 +390,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnReloadMaterial(ReloadMaterialPtr message)
 	{
-		//resourceGrouphelper.reloadAResourceGroupWithoutDestroyingIt("GASS");
-		//resourceGrouphelper.updateOnEveryRenderable();
+		
 		std::string errorMessages;
 		Ogre::ResourceGroupManager& rgm = Ogre::ResourceGroupManager::getSingleton();
 		Ogre::StringVector all_resource_groups = rgm.getResourceGroups();
