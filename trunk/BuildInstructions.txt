@@ -1,13 +1,18 @@
 Build GASS
 
-Download boost 1.47, ogre3d 1.7 SDK and Directx SDK
+1. Dependencies
+Download boost, ogre3d 1.9 SDK and Directx SDK
 Create DXSDK_DIR env-var and set it your DirectX SDK installation dir, ie c:\dxsdk\
 Create BOOST_HOME env-var and set it  your boost installation dir, ie c:\boost_1.47\
 Create OGRE_HOME env-var and set it  your ogre installation dir, ie c:\ogre3d\
 Download the latest (if you use the trunk) gass-depdendencies from http://code.google.com/p/gass/downloads/list
-place your dependencies inside your gass folder (same level as this file) and open dependencies.sln in side the dependencies folder and build both release and debug
-Goto the gass build dir and run generate_build_files_premake4.bat
-open GASSSim.sln and build
+Open dependencies.sln in side the dependencies folder and build both release and debug
+
+
+2. GASS
+
+Generate GASS.sln with cmake (after configuring depedencies and GASS) 
+Open GASSSim.sln and build
 
 
 
