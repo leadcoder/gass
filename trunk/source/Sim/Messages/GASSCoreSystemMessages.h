@@ -136,7 +136,7 @@ namespace GASS
 	typedef SPTR<PreSceneCreateEvent> PreSceneCreateEventPtr;
 
 	/**
-		This message is posted by the Scene class after a scene is loaded.
+		This message is posted by the Scene class after a scene is created.
 	*/
 	class PostSceneCreateEvent : public SystemEventMessage
 	{
@@ -150,6 +150,25 @@ namespace GASS
 		ScenePtr m_Scene;
 	};
 	typedef SPTR<PostSceneCreateEvent> PostSceneCreateEventPtr;
+
+
+	/**
+		This message is posted by the Scene class after a scene is loaded from file.
+		This event is always posted after PostSceneCreateEvent (you must have a scene 
+		instance before you can call the load function on the scene...).
+	*/
+	class PostSceneLoadEvent : public SystemEventMessage
+	{
+	public:
+		PostSceneLoadEvent(ScenePtr scene,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
+			  m_Scene(scene){}
+
+		  ScenePtr GetScene() const {return m_Scene;}
+	private:
+		ScenePtr m_Scene;
+	};
+	typedef SPTR<PostSceneLoadEvent> PostSceneLoadEventPtr;
 
 
 	class SceneUnloadedEvent : public SystemEventMessage

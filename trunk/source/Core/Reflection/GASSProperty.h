@@ -184,7 +184,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 

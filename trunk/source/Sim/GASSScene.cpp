@@ -211,6 +211,10 @@ namespace GASS
 		m_TerrainObjects = scenery;
 		scenery->LoadFromFile(GetSceneFolder().GetFullPath() + "/instances.xml");
 		m_Root->AddChildSceneObject(scenery,true);
+
+		//scene loaded!
+		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 	}
 	
 	FilePath Scene::GetSceneFolder() const

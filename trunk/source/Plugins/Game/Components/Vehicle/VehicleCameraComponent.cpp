@@ -69,6 +69,9 @@ namespace GASS
 	{
 		BaseSceneComponent::OnInitialize();
 		
+		if(!m_InputHandlerObject.IsValid())
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " VehicleCameraComponent::OnInitialize");
+
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
 		//GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();

@@ -177,7 +177,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed set poperty:" + m_Name + " With value:" + value,"VectorProperty::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"VectorProperty::SetValueByString");
 			}
 		}
 
