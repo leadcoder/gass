@@ -43,29 +43,47 @@ namespace GASS
 		SystemFactory::GetPtr()->Register("MyGUISystem",new GASS::Creator<MyGUISystem, ISystem>);
 	}
 
-	void MyGUISystem::OnCreate(SystemManagerPtr owner)
-	{
-		SimSystem::OnCreate(owner);
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedEvent,0));
-	}
-
 	void MyGUISystem::Init()
 	{
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedEvent,0));
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+	
 	}
 
+	diagnostic::StatisticInfo* mInfo =NULL;
 	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedEventPtr message)
 	{
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddKeyListener(this);
 		input_system->AddMouseListener(this);
+
+
+		MyGUI::OgrePlatform* mPlatform = new MyGUI::OgrePlatform();
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		mPlatform->initialise((Ogre::RenderWindow*)target, sm,"MyGUI");
+		mGUI = new MyGUI::Gui();
+		mGUI->initialise("MyGUI_Core.xml");
+
+		MyGUI::ResourceManager::getInstance().load("MyGUI_BlackOrangeTheme.xml");
+
+		mInfo = new diagnostic::StatisticInfo();
+		mInfo->setVisible(true);
+
+		MainMenu* menu = new MainMenu(NULL);
+		menu->Init();
+	
 	}
 
-	diagnostic::StatisticInfo* mInfo =NULL;
+	
 
 	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)
 	{
+		return;
 		//CEGUI::System::getSingleton().executeScriptFile(message->GetFilename());
 		MyGUI::OgrePlatform* mPlatform = new MyGUI::OgrePlatform();
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
@@ -81,7 +99,7 @@ namespace GASS
 
 		MainMenu* menu = new MainMenu(NULL);
 		menu->Init();
-		
+
 
 		//load main menu from layout
 
@@ -111,11 +129,11 @@ namespace GASS
 		if(mInfo )
 		{
 			mInfo->change("FPS", 10);
-		mInfo->change("triangle", 10);
-		mInfo->change("batch", 10);
-		mInfo->change("batch gui", 10);
-		mInfo->update();
-	}
+			mInfo->change("triangle", 10);
+			mInfo->change("batch", 10);
+			mInfo->change("batch gui", 10);
+			mInfo->update();
+		}
 	}
 
 	bool MyGUISystem::MouseMoved(const MouseData &data)

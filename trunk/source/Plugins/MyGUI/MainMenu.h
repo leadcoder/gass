@@ -18,6 +18,7 @@ namespace GASS
 		void Init();
 		void notifyMenuCtrlAccept(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
 		void notifyFileMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
+		void notifyResourceMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
 	private:
 		MyGUI::MenuBar* m_MenuBar;
 		
