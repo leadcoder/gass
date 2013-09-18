@@ -28,6 +28,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
 
 #include "Plugins/Game/GameMessages.h"
 #include "Plugins/Base/CoreMessages.h"
@@ -50,23 +51,24 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
+		std::vector<SceneObjectPtr>  GetWaypointListEnumeration() const;
 	private:
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
-
+		
 
 		ADD_ATTRIBUTE(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
-		void SetWaypointList(const std::string &waypointlist);
-		std::string GetWaypointList() const;
+		void SetWaypointList(SceneObjectRef waypointlist);
+		SceneObjectRef GetWaypointList() const;
 		std::string GetMode() const;
 		void SetMode(const std::string &mode);
 		int GetCloesetWaypoint();
 		
 		Vec3  m_CurrentPos;
 		std::vector<Vec3> m_Waypoints;
-		std::string m_WaypointListName;
+		SceneObjectRef m_WaypointList;
 		float m_Direction;
 		bool m_InvertDirection;
 		bool m_HasWaypoints;

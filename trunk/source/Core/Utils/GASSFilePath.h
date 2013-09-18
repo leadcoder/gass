@@ -46,6 +46,7 @@ namespace GASS
 		FilePath(const std::string &path,bool expand = true);
 		FilePath();
 		~FilePath();
+		
 		std::string GetFullPath() const;
 		std::string GetRawPath() const;
 		void SetPath(const std::string &path);
@@ -55,7 +56,7 @@ namespace GASS
 		std::string GetFilename() const;
 		static void GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive = false, const std::vector<std::string> extenstion_filters = std::vector<std::string>());
 		static void GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive = false);
-
+		bool Exist() const;
 		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
 		{
 			os.unsetf(std::ios::skipws);

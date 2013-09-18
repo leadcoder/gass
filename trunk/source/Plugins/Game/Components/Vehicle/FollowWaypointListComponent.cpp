@@ -29,12 +29,11 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 
 
 namespace GASS
@@ -55,13 +54,50 @@ namespace GASS
 
 	}
 
+	std::vector<SceneObjectPtr> WaypointListEnumeration(BaseReflectionObjectPtr obj)
+	{
+		SPTR<FollowWaypointListComponent> wpl= DYNAMIC_PTR_CAST<FollowWaypointListComponent>(obj);
+		return  wpl->GetWaypointListEnumeration();
+	}
+
+	std::vector<SceneObjectPtr>  FollowWaypointListComponent::GetWaypointListEnumeration() const
+	{
+		std::vector<SceneObjectPtr> ret;
+		SceneObjectPtr so = GetSceneObject();
+		if(so)
+		{
+			IComponentContainer::ComponentVector comps;
+			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<IWaypointListComponent>(comps);
+			for(int i = 0 ; i < comps.size();i++)
+			{
+				if(comps[i]->GetOwner() != so)
+				{
+					WaypointListComponentPtr wpl = DYNAMIC_PTR_CAST<IWaypointListComponent>(comps[i]);
+					if(wpl)
+					{
+						SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						ret.push_back(so);
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+
 	void FollowWaypointListComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("FollowWaypointListComponent",new Creator<FollowWaypointListComponent, IComponent>);
-		RegisterProperty<std::string>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList);
-		RegisterProperty<Float>("WaypointRadius", &FollowWaypointListComponent::GetWaypointRadius, &FollowWaypointListComponent::SetWaypointRadius);
-		RegisterProperty<std::string>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode);
-		RegisterProperty<bool>("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection);
+		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
+			//BasePropertyMetaDataPtr(new BasePropertyMetaData("Waypoint list that we should follow",PF_VISIBLE | PF_EDITABLE)));
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration)));
+		RegisterProperty<Float>("WaypointRadius", &FollowWaypointListComponent::GetWaypointRadius, &FollowWaypointListComponent::SetWaypointRadius,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Radius that should be used to consider a waypoint reached",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<std::string>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Follow mode",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Invert direction",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void FollowWaypointListComponent::SetInvertDirection(bool value)
@@ -80,7 +116,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationNotifyMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-		SetWaypointList(m_WaypointListName);
+		//update
+		SetWaypointList(m_WaypointList);
 	}
 
 	void FollowWaypointListComponent::OnDelete()
@@ -207,42 +244,32 @@ namespace GASS
 		}
 		else
 			m_HasWaypoints = false;
-
-		
 	}
 
-	void FollowWaypointListComponent::SetWaypointList(const std::string &waypointlist)
+	void FollowWaypointListComponent::SetWaypointList(SceneObjectRef waypointlist)
 	{
-		
 		if(GetSceneObject())
 		{
 			//first unregister from previous waypointlist
-			if(m_WaypointListName != "" && m_WaypointListName != "RefNotSet")
+			if(m_WaypointList.IsValid())
 			{
-				SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject()->GetFirstChildByName(m_WaypointListName,true);
-				if(obj) 
-				{
-					obj->UnregisterForMessage(UNREG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage));
-				}
+				m_WaypointList->UnregisterForMessage(UNREG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage));
 			}
-			if(waypointlist != "" && waypointlist != "RefNotSet")
+			if(waypointlist.IsValid())
 			{
-				SceneObjectPtr obj = GetSceneObject()->GetObjectUnderRoot()->GetParentSceneObject()->GetFirstChildByName(waypointlist,true);
-				if(obj) 
-				{
-					m_CurrentWaypoint = 0;
-
-					obj->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
-					//force update				
-					obj->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
-				}
+				m_CurrentWaypoint = 0;
+				waypointlist->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
+				//force update				
+				waypointlist->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
 			}
 		}
-		m_WaypointListName = waypointlist; 
+		m_WaypointList = waypointlist; 
 	}
-	std::string FollowWaypointListComponent::GetWaypointList() const
+
+
+	SceneObjectRef FollowWaypointListComponent::GetWaypointList() const
 	{
-		return m_WaypointListName;
+		return m_WaypointList;
 	}
 
 	void FollowWaypointListComponent::SetMode(const std::string &mode)
