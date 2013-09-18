@@ -137,6 +137,12 @@ namespace GASS
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 
+		/**
+			Reload all templates in resource group GASS_TEMPLATES
+		*/
+
+		void ReloadTemplates();
+
 		void DestroyScene(SceneWeakPtr scene);
 		SceneWeakPtr CreateScene(const std::string &name);
 		ConstSceneIterator GetScenes() const;
@@ -153,6 +159,7 @@ namespace GASS
 		void SyncMessages(double delta_time);
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 	private:
+		
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;

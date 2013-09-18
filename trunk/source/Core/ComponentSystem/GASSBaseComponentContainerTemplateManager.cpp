@@ -103,6 +103,12 @@ namespace GASS
 	}
 
 
+	void BaseComponentContainerTemplateManager::Clear()
+	{
+		m_TemplateMap.clear();
+	}
+
+
 	void BaseComponentContainerTemplateManager::Load(const std::string &filename)
 	{
 		if(filename =="")

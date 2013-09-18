@@ -98,6 +98,11 @@ namespace GASS
 			Set unique name suffix
 		*/
 		virtual void SetObjectIDSuffix(const std::string &suffix) = 0;
+
+		/**
+			remove all templates
+		*/
+		virtual void Clear() = 0;
 	protected:
 
 	};

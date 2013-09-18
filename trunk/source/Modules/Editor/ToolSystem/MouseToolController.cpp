@@ -506,6 +506,18 @@ namespace GASS
 				SetEditMode(GM_LOCAL);
 			
 		}
+
+		if(key == KEY_F5 && m_CtrlDown)
+		{
+			//send reload message
+			GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::ReloadMaterial()));
+		}
+
+		if(key == KEY_F6 && m_CtrlDown)
+		{
+			GASS::SimEngine::Get().ReloadTemplates();
+		}
+
 		return true;
 	}
 

@@ -124,8 +124,23 @@ namespace GASS
 		ResourceHandle res("collision_settings.xml");
 		GeometryFlagManager::LoadGeometryFlagsFile(res.GetResource()->Path().GetFullPath());
 
+		ReloadTemplates();
+		
+		//intilize profiler
+		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
+		ProfileSample::ResetAll();
+
+		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
+	}
+
+
+	void SimEngine::ReloadTemplates()
+	{
 		//load all templates
 		ResourceGroupVector groups = m_ResourceManager->GetResourceGroups();
+
+		//remove previous templates
+		GetSceneObjectTemplateManager()->Clear();
 		for(size_t i = 0; i < groups.size(); i++)
 		{
 			ResourceLocationVector locations = groups[i]->GetResourceLocations();
@@ -147,12 +162,6 @@ namespace GASS
 				}
 			}
 		}
-		
-		//intilize profiler
-		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
-		ProfileSample::ResetAll();
-
-		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}
 
 	void SimEngine::LoadSettings(const FilePath &configuration_file)

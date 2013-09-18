@@ -74,6 +74,7 @@ namespace GASS
 		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 	protected:
+
 		ADD_ATTRIBUTE(bool,UpdateMessagePump);
 		ADD_ATTRIBUTE(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
@@ -97,6 +98,7 @@ namespace GASS
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void ReloadMaterials();
+		void ReloadResources();
 		
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;

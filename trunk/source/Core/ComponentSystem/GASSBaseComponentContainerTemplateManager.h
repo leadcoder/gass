@@ -123,6 +123,11 @@ namespace GASS
 		Get a vector of all templates hold by this manager
 		*/
 		std::vector<std::string> GetTemplateNames() const;
+
+		/**
+			Remove all templates
+		*/
+		void Clear();
 	protected:
 		//void AddRecursive(IComponentContainer* ct);
 		bool m_AddObjectIDToName;
