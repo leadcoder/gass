@@ -34,18 +34,20 @@
 namespace GASS
 {
 	class IMeshComponent;
-	struct MeshData;
+	class PhysicsMesh;
 	typedef SPTR<IMeshComponent> MeshComponentPtr;
-	struct ODECollisionMesh
+	typedef SPTR<PhysicsMesh> PhysicsMeshPtr;
+	
+	struct ODEPhysicsCollisionMesh
 	{
-		MeshData* Mesh;
+		PhysicsMeshPtr Mesh;
 		dTriMeshDataID ID;
 	};
 
 	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager> 
 	{
 	public:
-		typedef std::map<std::string,ODECollisionMesh> CollisionMeshMap;
+		typedef std::map<std::string,ODEPhysicsCollisionMesh> CollisionMeshMap;
 	public:
 		ODEPhysicsSceneManager();
 		virtual ~ODEPhysicsSceneManager();
@@ -62,17 +64,14 @@ namespace GASS
 
 		dSpaceID GetPhysicsSpace(){return m_Space;}
 		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
-		ODECollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
+		ODEPhysicsCollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
 		bool HasCollisionMesh(const std::string &name);
 		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
-		
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
 		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
 	protected:
-	
-		
 		static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 		void ProcessCollision(dGeomID o1, dGeomID o2);
 	private:

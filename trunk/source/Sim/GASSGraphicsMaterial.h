@@ -55,12 +55,13 @@ namespace GASS
 		  ColorRGB GetSelfIllumination()const {return m_SelfIllumination;}
 		  float GetShininess()const {return m_Shininess;}
 		  bool GetDepthTest()const {return m_DepthTest;}
+		  std::vector<std::string> Textures;
 	private:
 		ColorRGBA m_Diffuse;
 		ColorRGB m_Ambient;
 		ColorRGB m_Specular;
 		ColorRGB m_SelfIllumination;
-		std::vector<std::string> m_Textures;
+		
 		float m_Shininess;
 		bool m_DepthTest;
 	};

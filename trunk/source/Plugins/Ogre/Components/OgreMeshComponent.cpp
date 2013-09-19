@@ -229,124 +229,214 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
+	MeshData  OgreMeshComponent::GetMeshData() const
 	{
-		mesh_data->NumVertex = 0;
-		mesh_data->VertexVector = NULL;
-		mesh_data->NumFaces = 0;
-		mesh_data->FaceVector = NULL;
-
-
+		MeshData mesh_data;
 		if(m_OgreEntity == NULL)
-			return;
-
+			return mesh_data;
 
 		Ogre::MeshPtr mesh = m_OgreEntity->getMesh();
 
-		if(mesh->sharedVertexData)
+		/*if(mesh->sharedVertexData)
 		{
-			AddVertexData(mesh->sharedVertexData,mesh_data);
-		}
-
+			AddVertexData(mesh->sharedVertexData , mesh_data);
+		}*/
+		
 		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
 		{
+			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			mesh_data.SubMeshVector.push_back(sub_mesh_data);
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
+
+			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
+			Ogre::Technique* tech = mat->getBestTechnique();
+
+
+
+			//Get last pass and save materials
+			if(tech->getNumPasses() > 0)
+			{
+				Ogre::Pass*  pass = tech->getPass(tech->getNumPasses()-1);
+
+				Ogre::ColourValue ambient =  pass->getAmbient();
+				const Ogre::ColourValue diffuse = pass->getDiffuse();
+				const Ogre::ColourValue specular = pass->getSpecular();
+				const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
+				const Ogre::ColourValue emissive = pass->getEmissive();
+				GraphicsMaterial gfx_mat(ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
+					ColorRGB(ambient.r,ambient.g,ambient.b),
+					ColorRGB(specular.r,specular.g,specular.b));
+
+				sub_mesh_data->Material = gfx_mat;
+				//	const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : m_Diffuse(diffuse),
+				//sub_mesh->Material.
+
+				for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
+				{
+					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
+					std::string texture_name = textureUnit->getTextureName();
+					sub_mesh_data->Material.Textures.push_back(texture_name);
+				}
+			}
 
 			if (!sub_mesh->useSharedVertices)
 			{
-				AddIndexData(sub_mesh->indexData,mesh_data->NumVertex,mesh_data);
-				AddVertexData(sub_mesh->vertexData,mesh_data);
+				AddIndexData(sub_mesh->indexData,0,sub_mesh_data);
+				AddVertexData(sub_mesh->vertexData,sub_mesh_data);
 			}
 			else
 			{
-				AddIndexData(sub_mesh->indexData,0,mesh_data);
+				AddIndexData(sub_mesh->indexData,0,sub_mesh_data);
+				AddVertexData(mesh->sharedVertexData , sub_mesh_data);
 			}
 		}
-		mesh_data->NumFaces = mesh_data->NumFaces/3.0;
+		return mesh_data;
+		//mesh_data->NumFaces = mesh_data->NumFaces/3.0;
 	}
 
-	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const
+	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh) 
 	{
 		if (!vertex_data)
 			return;
 
-		const VertexData *data = vertex_data;
-
-		const unsigned int prev_size = mesh->NumVertex;
-		mesh->NumVertex += (unsigned int)data->vertexCount;
-
-		Vec3* tmp_vert = new Vec3[mesh->NumVertex];
-		if (mesh->VertexVector)
-		{
-			memcpy(tmp_vert,mesh->VertexVector,sizeof(Vec3) * prev_size);
-			delete[] mesh->VertexVector;
-		}
-		mesh->VertexVector = tmp_vert;
-
 		// Get the positional buffer element
+		const Ogre::VertexElement* posElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
+		if(posElem)
 		{
-			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
-			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
-			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
-
-			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-			float* pReal;
-			Vec3 * curVertices = &mesh->VertexVector[prev_size];
-			const unsigned int vertexCount = (unsigned int)data->vertexCount;
-			for(unsigned int j = 0; j < vertexCount; ++j)
+			/*Vec3* tmp_pos_vec = new Vec3[mesh->NumVertex];
+			if (mesh->VertexVector)
 			{
-				posElem->baseVertexPointerToElement(vertex, &pReal);
-				vertex += vSize;
+				memcpy(tmp_pos_vec,mesh->VertexVector,sizeof(Vec3) * prev_size);
+				delete[] mesh->VertexVector;
+			}
+			mesh->VertexVector = tmp_pos_vec;*/
 
-				curVertices->x = (*pReal++);
-				curVertices->y = (*pReal++);
-				curVertices->z = (*pReal++);
+
+			Ogre::HardwareVertexBufferSharedPtr pbuf = vertex_data->vertexBufferBinding->getBuffer(posElem->getSource());
+			const unsigned int vSize = (unsigned int)pbuf->getVertexSize();
+
+			unsigned char* pos_ptr = static_cast<unsigned char*>(pbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			float* pReal;
+			//Vec3 * curPositions = &mesh->VertexVector[prev_size];
+			const unsigned int posCount = (unsigned int)vertex_data->vertexCount;
+			Vec3 pos;
+			for(unsigned int j = 0; j < posCount; ++j)
+			{
+				posElem->baseVertexPointerToElement(pos_ptr, &pReal);
+				pos_ptr += vSize;
+				
+				pos.x = (*pReal++);
+				pos.y = (*pReal++);
+				pos.z= (*pReal++);
+
+				mesh->PositionVector.push_back(pos);
+				//*curVertices = _transform * (*curVertices);
+				//curPositions++;
+			}
+			pbuf->unlock();
+		}
+
+
+
+		const Ogre::VertexElement* normElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_NORMAL);
+		if(normElem)
+		{
+			Ogre::HardwareVertexBufferSharedPtr nbuf = vertex_data->vertexBufferBinding->getBuffer(normElem->getSource());
+			const unsigned int vSize = (unsigned int)nbuf->getVertexSize();
+			unsigned char* normal_ptr = static_cast<unsigned char*>(nbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			float* pReal;
+			const unsigned int normalCount = (unsigned int)vertex_data->vertexCount;
+			Vec3 normal;
+			for(unsigned int j = 0; j < normalCount; ++j)
+			{
+				normElem->baseVertexPointerToElement(normal_ptr, &pReal);
+				normal_ptr += vSize;
+
+				normal.x = (*pReal++);
+				normal.y = (*pReal++);
+				normal.z = (*pReal++);
+				mesh->NormalVector.push_back(normal);
+				//*curVertices = _transform * (*curVertices);
+				//curNormals++;
+			}
+			nbuf->unlock();
+
+		}
+		const Ogre::VertexElement* textureElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_TEXTURE_COORDINATES);
+
+		if(textureElem)
+		{
+			//TODO: support more channels 
+			Ogre::HardwareVertexBufferSharedPtr tbuf = vertex_data->vertexBufferBinding->getBuffer(textureElem->getSource());
+			const unsigned int tSize = (unsigned int)tbuf->getVertexSize();
+			unsigned char* texture_ptr = static_cast<unsigned char*>(tbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			float* pReal;
+			Vec4 tex_coord(0,0,0,0);
+			std::vector<Vec4>* tex_coord_vec;
+			if(mesh->TexCoordsVector.size() > 0)
+				tex_coord_vec = &mesh->TexCoordsVector[0];
+			else
+			{
+				std::vector<Vec4> empty_tex_coord_vec;
+				mesh->TexCoordsVector.push_back(empty_tex_coord_vec);
+				tex_coord_vec = &mesh->TexCoordsVector[0];
+			}
+			
+			const unsigned int textureCount = (unsigned int)vertex_data->vertexCount;
+			for(unsigned int j = 0; j < textureCount; ++j)
+			{
+				textureElem->baseVertexPointerToElement(texture_ptr, &pReal);
+				texture_ptr += tSize;
+
+				tex_coord.x = (*pReal++);
+				tex_coord.y = (*pReal++);
+				//curTexture->z = (*pReal++);
+				//curTexture->w = (*pReal++);
+				tex_coord_vec->push_back(tex_coord);
 
 				//*curVertices = _transform * (*curVertices);
-
-				curVertices++;
+				//curTexture++;
 			}
-			vbuf->unlock();
+			
+			tbuf->unlock();
 		}
+
 	}
 
-	void OgreMeshComponent::AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const
+	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,SubMeshDataPtr mesh) 
 	{
-		const unsigned int prev_size = mesh->NumFaces;
-		mesh->NumFaces += (unsigned int)data->indexCount;
+		//const unsigned int prev_size = mesh->NumFaces;
+		//mesh->NumFaces += (unsigned int)data->indexCount;
 
-		unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
+		/*unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
 		if (mesh->FaceVector)
 		{
 			memcpy (tmp_ind, mesh->FaceVector, sizeof(unsigned int) * prev_size);
 			delete[] mesh->FaceVector;
 		}
-		mesh->FaceVector = tmp_ind;
-
-		const unsigned int numTris = (unsigned int) data->indexCount / 3;
-		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
+		mesh->FaceVector = tmp_ind;*/
+		
+		HardwareIndexBufferSharedPtr ibuf = index_data->indexBuffer;
 		const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
-		unsigned int index_offset = prev_size;
+		//unsigned int index_offset = mesh->FaceVector.size();
 
 		if (use32bitindexes)
 		{
 			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < numTris; ++k)
+			for(unsigned int k = 0; k < index_data->indexCount; ++k)
 			{
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
-				mesh->FaceVector[index_offset ++] = offset + *pInt++;
+				unsigned int index = pInt[k];
+				mesh->FaceVector.push_back(index + offset);
 			}
 			ibuf->unlock();
 		}
 		else
 		{
 			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < numTris; ++k)
+			for(unsigned int k = 0; k < index_data->indexCount; ++k)
 			{
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-				mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
+				unsigned int index = static_cast<unsigned int> (pShort[k]);
+				mesh->FaceVector.push_back(index + offset);
 			}
 			ibuf->unlock();
 		}

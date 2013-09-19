@@ -71,16 +71,16 @@ namespace GASS
 	/**
 	 * A strided vertex for the ODE triangle mesh collision geometry.
 	 */
-	struct StridedVertex {
-		Vec3 Vertex;
-	};
+	//struct StridedVertex {
+//		Vec3 Vertex;
+	//};
 	
 	/**
 	 * A strided triangle for the ODE triangle mesh collision geometry.
 	 */
-	struct StridedTriangle {
-		unsigned int Indices[3];
-	};
+	//struct StridedTriangle {
+//		unsigned int Indices[3];
+	//};
 	
 	/**
 	 * Records visited triangles into an array suitable for passing
@@ -89,9 +89,8 @@ namespace GASS
 	class TriangleRecorder {
 	public:
 		
-		std::vector<StridedVertex> mVertices;
-		
-		std::vector<StridedTriangle> mTriangles;
+		std::vector<Vec3> mVertices;
+		std::vector<unsigned int> mTriangles;
 		
 		osg::Matrixd mMatrix;
 		
@@ -116,36 +115,18 @@ namespace GASS
 			osg::Vec3d tv1 = v1*mMatrix;
 			osg::Vec3d tv2 = v2*mMatrix;
 			osg::Vec3d tv3 = v3*mMatrix;
+			
+			Vec3 sv1, sv2, sv3;
+			unsigned int index = mVertices.size();
 
-			//osg::Vec3 tv1 = v1;
-			//osg::Vec3 tv2 = v2;
-			//osg::Vec3 tv3 = v3;
+			mTriangles.push_back(index+0);
+			mTriangles.push_back(index+1);
+			mTriangles.push_back(index+2);
 			
-			StridedVertex sv1, sv2, sv3;
-			StridedTriangle t;
+			sv1 = OSGConvert::Get().ToGASS(tv1);
+			sv2 = OSGConvert::Get().ToGASS(tv2);
+			sv3 = OSGConvert::Get().ToGASS(tv3);
 			
-			t.Indices[0] = mVertices.size();
-			t.Indices[1] = mVertices.size() + 1;
-			t.Indices[2] = mVertices.size() + 2;
-			
-			mTriangles.push_back(t);
-			
-			sv1.Vertex = OSGConvert::Get().ToGASS(tv1);
-			sv2.Vertex = OSGConvert::Get().ToGASS(tv2);
-			sv3.Vertex = OSGConvert::Get().ToGASS(tv3);
-			/*sv1.Vertex.x = tv1[0];
-			sv1.Vertex.y = tv1[1];
-			sv1.Vertex.z = tv1[2];
-			
-			sv2.Vertex.x = tv2[0];
-			sv2.Vertex.y = tv2[1];
-			sv2.Vertex.z = tv2[2];
-			
-			sv3.Vertex.x = tv3[0];
-			sv3.Vertex.y = tv3[1];
-			sv3.Vertex.z = tv3[2];*/
-			
-			//Changed winding order
 			mVertices.push_back(sv1);
 			mVertices.push_back(sv2);
 			mVertices.push_back(sv3);
@@ -179,7 +160,7 @@ namespace GASS
 		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual MeshData GetMeshData() const;
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);

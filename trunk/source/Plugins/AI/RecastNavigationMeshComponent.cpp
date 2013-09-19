@@ -1125,17 +1125,19 @@ static int convexhull(const float* pts, int npts, int* out)
 	{
 		if(m_SelectedMeshes.size()>0)
 		{
-			std::vector<MeshDataPtr> mesh_data_vec;
+			std::vector<PhysicsMeshPtr> mesh_data_vec;
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
 				{
 					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
-						MeshDataPtr mesh_data = new MeshData;
+						 
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 
-						mesh->GetMeshData(mesh_data);
+						MeshData gfx_mesh_data = mesh->GetMeshData();
+						PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
 						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 						if(lc)
@@ -1148,14 +1150,12 @@ static int convexhull(const float* pts, int npts, int* out)
 							//world_rot.ToRotationMatrix(trans_mat);
 							//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
 							trans_mat.SetTransformation(world_pos,world_rot,scale);
-							
-
-							for(int j = 0 ; j < mesh_data->NumVertex; j++)
+							for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
 							{
-								mesh_data->VertexVector[j] = trans_mat*mesh_data->VertexVector[j];
+								physics_mesh->PositionVector[j] = trans_mat*physics_mesh->PositionVector[j];
 							}
 						}
-						mesh_data_vec.push_back(mesh_data);
+						mesh_data_vec.push_back(physics_mesh);
 					}
 				}
 			}
@@ -1163,8 +1163,8 @@ static int convexhull(const float* pts, int npts, int* out)
 			int tot_faces = 0;
 			for(int i = 0; i < mesh_data_vec.size() ; i++)
 			{
-				tot_verts += mesh_data_vec[i]->NumVertex;
-				tot_faces  += mesh_data_vec[i]->NumFaces;
+				tot_verts += mesh_data_vec[i]->PositionVector.size();
+				tot_faces  += mesh_data_vec[i]->IndexVector.size()/3;
 			}
 			if(tot_verts > 0 && tot_faces > 0 && sizeof(Float) == 8) //double precision
 			{
@@ -1183,23 +1183,23 @@ static int convexhull(const float* pts, int npts, int* out)
 				for(int i = 0; i < mesh_data_vec.size() ; i++)
 				{
 					int base_index = vert_index/3;
-					for(int j = 0 ; j < mesh_data_vec[i]->NumVertex; j++)
+					for(int j = 0 ; j < mesh_data_vec[i]->PositionVector.size(); j++)
 					{
-						verts[vert_index++] = mesh_data_vec[i]->VertexVector[j].x;
-						verts[vert_index++] = mesh_data_vec[i]->VertexVector[j].y;
-						verts[vert_index++] = mesh_data_vec[i]->VertexVector[j].z;
+						verts[vert_index++] = mesh_data_vec[i]->PositionVector[j].x;
+						verts[vert_index++] = mesh_data_vec[i]->PositionVector[j].y;
+						verts[vert_index++] = mesh_data_vec[i]->PositionVector[j].z;
 					}
 
-					for(int j = 0 ; j < mesh_data_vec[i]->NumFaces*3; j++)
+					for(int j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j++)
 					{
-						tris[face_index++] = mesh_data_vec[i]->FaceVector[j]+base_index;
+						tris[face_index++] = mesh_data_vec[i]->IndexVector[j]+base_index;
 					}
 
-					for(int j = 0 ; j < mesh_data_vec[i]->NumFaces*3; j += 3)
+					for(int j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j += 3)
 					{
-						Vec3 p1 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j]];
-						Vec3 p2 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j+1]];
-						Vec3 p3 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j+2]];;
+						Vec3 p1 = mesh_data_vec[i]->PositionVector[mesh_data_vec[i]->IndexVector[j]];
+						Vec3 p2 = mesh_data_vec[i]->PositionVector[mesh_data_vec[i]->IndexVector[j+1]];
+						Vec3 p3 = mesh_data_vec[i]->PositionVector[mesh_data_vec[i]->IndexVector[j+2]];;
 						Vec3 v1 = p1 - p3;
 						Vec3 v2 = p2 - p3;
 						Vec3 norm = Math::Cross(v1,v2);
@@ -1208,12 +1208,11 @@ static int convexhull(const float* pts, int npts, int* out)
 						trinorms[norm_index++]=norm.x;
 						trinorms[norm_index++]=norm.y;
 						trinorms[norm_index++]=norm.z;
-
 					}
-					delete[] mesh_data_vec[i]->FaceVector;
-					delete[] mesh_data_vec[i]->VertexVector;
-					delete mesh_data_vec[i];
-					mesh_data_vec[i] = NULL;
+					//delete[] mesh_data_vec[i]->FaceVector;
+					//delete[] mesh_data_vec[i]->VertexVector;
+					//delete mesh_data_vec[i];
+					//mesh_data_vec[i] = NULL;
 				}
 				bmin[0] = m_MeshBounding.m_Min.x;
 				bmin[1] = m_MeshBounding.m_Min.y;

@@ -655,26 +655,30 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::GetMeshData(MeshDataPtr mesh_data) const
+	MeshData OSGMeshComponent::GetMeshData() const
 	{
-		mesh_data->NumVertex = 0;
-		mesh_data->VertexVector = NULL;
-		mesh_data->NumFaces = 0;
-		mesh_data->FaceVector = NULL;
-
+		MeshData  mesh_data;
 		if(!m_MeshNode.valid())
 		{
 			LogManager::getSingleton().stream() << "WARNING:You have to load mesh before trying to fetch mesh data. Mesh name: " << GetName();
-			return;
+			return mesh_data;
 		}
 		DrawableVisitor<TriangleRecorder> mv;	
 		m_MeshNode->accept(mv);
 
-		mesh_data->NumVertex = mv.mFunctor.mVertices.size();
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data.SubMeshVector.push_back(sub_mesh_data);
+
+		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;
+		sub_mesh_data->FaceVector = mv.mFunctor.mTriangles;
+
+		//TODO: support materials
+		/*sub_mesh_data->NumVertex = mv.mFunctor.mVertices.size();
 		mesh_data->VertexVector = new Vec3[mv.mFunctor.mVertices.size()];
 		mesh_data->NumFaces = mv.mFunctor.mTriangles.size();
 		mesh_data->FaceVector = new unsigned int[mv.mFunctor.mTriangles.size()*3];
 
+		
 		if( !mv.mFunctor.mVertices.empty() ) 
 		{
 			memcpy(  mesh_data->VertexVector,
@@ -687,7 +691,7 @@ namespace GASS
 			memcpy(  mesh_data->FaceVector,
 				&mv.mFunctor.mTriangles[0],
 				mv.mFunctor.mTriangles.size()*sizeof(StridedTriangle) );
-		}
+		}*/
 	}
 
 	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)

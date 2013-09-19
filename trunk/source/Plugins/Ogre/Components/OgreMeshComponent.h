@@ -69,12 +69,16 @@ namespace GASS
 		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual MeshData GetMeshData() const;
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 
 		//used by enumeration class
 		std::vector<std::string> GetAvailableMeshFiles() const;
+
+		static void AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh);
+		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,SubMeshDataPtr mesh);
+
 	protected:
 		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)
 		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
@@ -86,8 +90,7 @@ namespace GASS
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh) const;
-		void AddIndexData(Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
+		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDelete();
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);

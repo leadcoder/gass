@@ -48,16 +48,8 @@ namespace GASS
 		virtual void OnDelete();
 		
 		//IMeshComponent
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual MeshData GetMeshData() const;
 	
-		//ITerrainComponent
-		/*virtual Float GetHeight(Float x, Float z) const;
-		virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const {}
-		virtual unsigned int GetSamplesX() const;
-		virtual unsigned int GetSamplesZ() const;
-		virtual float* GetHeightData() const {return NULL;}
-		virtual Float GetHeightAtPoint(int x, int y) const {return 0;}
-		*/
 		//IGeometryComponent
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);

@@ -53,7 +53,7 @@ namespace GASS
 		
 		virtual ResourceHandle GetTerrainResource() const;
 		//IMeshComponent interface
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual MeshData GetMeshData() const;
 
 		//IHeightmapTerrainComponent
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;

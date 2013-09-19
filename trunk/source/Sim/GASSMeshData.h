@@ -22,18 +22,70 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
+#include "Sim/GASSGraphicsMaterial.h"
 
 namespace GASS
 {
-	struct GASSExport MeshData
+
+	
+	class GASSExport SubMeshData
+	{
+	public:
+		SubMeshData() 
+		{
+
+		}
+		virtual ~SubMeshData()
+		{
+
+		}
+		std::vector<Vec3> PositionVector;
+		std::vector<Vec3> NormalVector;
+		std::vector< std::vector<Vec4> > TexCoordsVector;
+		//unsigned int NumFaces;
+		std::vector<unsigned int> FaceVector;
+		//unsigned int MaterialID;
+		GraphicsMaterial Material;
+	};
+	typedef SPTR<SubMeshData> SubMeshDataPtr;
+	
+	class GASSExport MeshData
+	{
+	public:
+		MeshData();
+		virtual ~MeshData();
+		void Transform(const Mat4 &transformation );
+		std::vector<SubMeshDataPtr> SubMeshVector;
+		//std::vector<GraphicsMaterial> MaterialVector;
+	};
+
+	typedef SPTR<MeshData> MeshDataPtr;
+
+
+	class GASSExport PhysicsMesh
+	{
+		public:
+		PhysicsMesh();
+		PhysicsMesh(const MeshData &mesh);
+		virtual ~PhysicsMesh();
+		void AddMesh(const MeshData &mesh);
+		std::vector<Vec3> PositionVector;
+		std::vector<unsigned int> IndexVector;
+		std::vector<unsigned int> MaterialIDVector;
+	};
+	typedef SPTR<PhysicsMesh> PhysicsMeshPtr;
+
+	/*struct GASSExport MeshData
 	{
 		unsigned int NumVertex;
 		Vec3 *VertexVector;
+		Vec3 *NormalVector;
+		Vec4 *TexCoordVector;
 		unsigned int NumFaces;
 		unsigned int *FaceVector;
 		unsigned int *FaceMaterialIDVector;
 	};
-	typedef MeshData* MeshDataPtr;
+	typedef MeshData* MeshDataPtr;*/
 
 
 	struct MeshVertex

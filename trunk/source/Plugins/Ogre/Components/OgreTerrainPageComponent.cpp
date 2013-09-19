@@ -866,39 +866,43 @@ namespace GASS
 	}
 
 
-	void OgreTerrainPageComponent::GetMeshData(MeshDataPtr mesh_data) const
+	MeshData OgreTerrainPageComponent::GetMeshData() const
 	{
 
+		MeshData mesh_data;
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data.SubMeshVector.push_back(sub_mesh_data);
+
 		if(!m_Terrain)
-			return;
+			return mesh_data;
 		unsigned int tWidth = m_Terrain->getSize();
 		unsigned int tHeight = m_Terrain->getSize();
 
 		//Create indices
 		unsigned int index_size = (tWidth - 1) * (tHeight - 1) * 6;
-		mesh_data->FaceVector = new unsigned int[index_size];
-		mesh_data->NumFaces = static_cast<unsigned int>(index_size/3);
+		//mesh_data->FaceVector = new unsigned int[index_size];
+		sub_mesh_data->FaceVector.resize(index_size);
+		//mesh_data->NumFaces = static_cast<unsigned int>(index_size/3);
 		for( unsigned int x = 0; x < tWidth - 1; x++)
 		{
 			for( unsigned int y=0; y < tHeight - 1; y++)
 			{
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = x+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6] = (x+1)+(y+1) * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = x+y * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6] = (x+1)+(y+1) * tWidth;
 				
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = x+(y+1) * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
-				mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = (x+1)+(y+1) * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = x+(y+1) * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
+				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = (x+1)+(y+1) * tWidth;
 
 			}
 		}
 
 		// Create vertices
 		unsigned int vertex_size = tWidth * tHeight;
-		mesh_data->VertexVector = new Vec3[vertex_size];
-		mesh_data->NumVertex = vertex_size;
+		//mesh_data->VertexVector = new Vec3[vertex_size];
+		sub_mesh_data->PositionVector.resize(vertex_size);
 		size_t index = 0;
-		
 		Vec3 center = Convert::ToGASS(m_Terrain->getPosition());
 		Vec3 offset = center - Vec3(m_Terrain->getWorldSize()/2.0,0,-m_Terrain->getWorldSize()/2.0);
 
@@ -918,10 +922,11 @@ namespace GASS
 				//Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset;
 				Float fx = x;
 				Float fz = z;
-				mesh_data->VertexVector[index] = Vec3(fx*scale, m_Terrain->getHeightAtPoint(x,z),-fz * scale) + offset;
+				sub_mesh_data->PositionVector[index] = Vec3(fx*scale, m_Terrain->getHeightAtPoint(x,z),-fz * scale) + offset;
 				index++;
 			}
 		}
+		return mesh_data;
 	}
 
 

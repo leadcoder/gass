@@ -31,7 +31,7 @@ namespace physx
 namespace GASS
 {
 	class IMeshComponent;
-	struct MeshData;
+	class PhysicsMesh;
 
 	struct TireData
 	{

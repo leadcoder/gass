@@ -231,16 +231,16 @@ namespace GASS
 
 	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{
-		if(HasCollisionMesh(col_mesh_id))
+		if(HasCollisionMesh(col_mesh_id)) //check cache
 		{
 			return m_ColMeshMap[col_mesh_id];
 		}
+
 		//not loaded, load it!
+		MeshData gfx_mesh_data = mesh->GetMeshData();
+		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-
-		if(mesh_data->NumVertex < 1 || mesh_data->NumFaces < 1)
+		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No vertex or face data for mesh", "ODECollisionSystem::CreateCollisionMesh");
 		}
@@ -253,28 +253,28 @@ namespace GASS
 		{
 			
 			dGeomTriMeshDataBuildDouble(id,
-			&(mesh_data->VertexVector[0]),
+			&(physics_mesh->PositionVector[0]),
 			sizeof(Float)*3,
-			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0],
-			mesh_data->NumFaces*3,
+			physics_mesh->PositionVector.size(),
+			(unsigned int*)&physics_mesh->IndexVector[0],
+			physics_mesh->IndexVector.size(),
 			3 * sizeof(unsigned int));
 		}
 		else
 		{
 			dGeomTriMeshDataBuildSingle(id,
-			&(mesh_data->VertexVector[0]),
+			&(physics_mesh->PositionVector[0]),
 			sizeof(Float)*3,
-			mesh_data->NumVertex,
-			(unsigned int*)&mesh_data->FaceVector[0],
-			mesh_data->NumFaces*3,
+			physics_mesh->PositionVector.size(),
+			(unsigned int*)&physics_mesh->IndexVector[0],
+			physics_mesh->IndexVector.size(),
 			3 * sizeof(unsigned int));
 		}
 		//Save id for this collision mesh
 
 		ODECollisionMeshInfo col_mesh;
 		col_mesh.ID = id;
-		col_mesh.Mesh = mesh_data;
+		col_mesh.Mesh = physics_mesh;
 		m_ColMeshMap[col_mesh_id] = col_mesh;
 		return col_mesh;
 	}

@@ -58,9 +58,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
+		virtual MeshData GetMeshData() const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
@@ -69,18 +68,11 @@ namespace GASS
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void SetRegionSize(Float size) {m_RegionSize = size;}
 		Float GetRegionSize() const {return m_RegionSize;}
-
 		void SetGlobalScale(const Vec3 &scale) {m_GlobalScale = scale;}
 		Vec3 GetGlobalScale() const {return m_GlobalScale;}
-
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset);
-		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh);
-	
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDelete();
-
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
-	
 		void setupInstancedMaterialToEntity(Ogre::Entity*ent);
 		Ogre::String buildInstancedMaterial(const Ogre::String &originalMaterialName);
 	

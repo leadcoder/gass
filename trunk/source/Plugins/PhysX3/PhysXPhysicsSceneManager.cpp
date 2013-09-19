@@ -345,21 +345,22 @@ namespace GASS
 		{
 			return m_ConvexMeshMap[col_mesh_id];
 		}
-		//not loaded, load it!
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-		int float_size = sizeof(Float);
-		if(float_size == 8) //double precision
+		
+		MeshData gfx_mesh_data = mesh->GetMeshData();
+		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+
+		//int float_size = sizeof(Float);
+		//if(float_size == 8) //double precision
 		{
 			std::vector<physx::PxVec3> verts;
-			for(int i =0 ;i < mesh_data->NumVertex;i++)
+			for(int i =0 ;i < physics_mesh->PositionVector.size();i++)
 			{
-				physx::PxVec3 pos(mesh_data->VertexVector[i].x,mesh_data->VertexVector[i].y,mesh_data->VertexVector[i].z);
+				physx::PxVec3 pos(physics_mesh->PositionVector[i].x,physics_mesh->PositionVector[i].y,physics_mesh->PositionVector[i].z);
 				verts.push_back(pos);
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateConvexMesh");
-			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
+			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], physics_mesh->PositionVector.size(), *system->GetPxSDK(), *system->GetPxCooking());
 			return m_ConvexMeshMap[col_mesh_id];
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
@@ -373,20 +374,21 @@ namespace GASS
 			return m_TriangleMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
-		MeshDataPtr mesh_data = new MeshData;
-		mesh->GetMeshData(mesh_data);
-		int float_size = sizeof(Float);
-		if(float_size == 8) //double precision
+		MeshData gfx_mesh_data = mesh->GetMeshData();
+		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+
+		//int float_size = sizeof(Float);
+		//if(float_size == 8) //double precision
 		{
 			std::vector<physx::PxVec3> verts;
-			for(int i =0 ;i < mesh_data->NumVertex;i++)
+			for(int i =0 ;i < physics_mesh->PositionVector.size();i++)
 			{
-				physx::PxVec3 pos(mesh_data->VertexVector[i].x,mesh_data->VertexVector[i].y,mesh_data->VertexVector[i].z);
+				physx::PxVec3 pos(physics_mesh->PositionVector[i].x,physics_mesh->PositionVector[i].y,physics_mesh->PositionVector[i].z);
 				verts.push_back(pos);
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateTriangleMesh");
-			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], mesh_data->NumVertex, *system->GetPxSDK(), *system->GetPxCooking());
+			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], physics_mesh->PositionVector.size() , *system->GetPxSDK(), *system->GetPxCooking());
 			return m_TriangleMeshMap[col_mesh_id];
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");

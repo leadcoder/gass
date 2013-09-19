@@ -461,9 +461,10 @@ namespace GASS
 	}
 
 	
-	void OgreTerrainGroupComponent::GetMeshData(MeshDataPtr mesh_data) const
+	MeshData OgreTerrainGroupComponent::GetMeshData() const
 	{
-
+		MeshData data;
+		return data;
 	}
 
 	void OgreTerrainGroupComponent::OnTerrainLayerPaint(TerrainPaintMessagePtr message)

@@ -33,10 +33,12 @@ namespace GASS
 {
 	class IMeshComponent;
 	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
-	struct MeshData;
+	class PhysicsMesh;
+	typedef SPTR<PhysicsMesh> PhysicsMeshPtr;
+
 	struct ODECollisionMeshInfo
 	{
-		MeshData* Mesh;
+		PhysicsMeshPtr Mesh;
 		dTriMeshDataID ID;
 	};
 

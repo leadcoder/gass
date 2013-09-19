@@ -74,79 +74,86 @@ public:
 
 		  if(comps.size()>0)
 		  {
-			  std::vector<MeshDataPtr> mesh_data_vec;
+			  std::vector<MeshData> mesh_data_vec;
 			  for(int i = 0;  i <  comps.size(); i++)
 			  {
 				  SceneObjectPtr obj = (DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
-				  MeshDataPtr mesh_data = new MeshData;
-				  mesh_data->NumVertex = 0;
 				  MeshComponentPtr mesh =  DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
-				  mesh->GetMeshData(mesh_data);
-				  if(mesh_data->NumVertex > 0)
+				  MeshData  mesh_data = mesh->GetMeshData();
+
+				  //Transform to world coordinates!
+				  GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
+				  LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+				  if(lc)
 				  {
-					  GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-					  LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-					  if(lc)
-					  {
-						  Vec3 world_pos = lc->GetWorldPosition();
-						  Vec3 scale = lc->GetScale();
-						  Quaternion world_rot = lc->GetWorldRotation();
-						  Mat4 trans_mat;
-						  trans_mat.Identity();
-						  trans_mat.SetTransformation(world_pos,world_rot,scale);
-						  for(int j = 0 ; j < mesh_data->NumVertex; j++)
-						  {
-							  mesh_data->VertexVector[j] = trans_mat*mesh_data->VertexVector[j];
-						  }
-						  mesh_data_vec.push_back(mesh_data);
-					  }
-					  //mesh_data_vec.push_back(mesh_data);
+					  Vec3 world_pos = lc->GetWorldPosition();
+					  Vec3 scale = lc->GetScale();
+					  Quaternion world_rot = lc->GetWorldRotation();
+					  Mat4 trans_mat;
+					  trans_mat.Identity();
+					  trans_mat.SetTransformation(world_pos,world_rot,scale);
+					  mesh_data.Transform(trans_mat);
+					  mesh_data_vec.push_back(mesh_data);  
 				  }
 			  }
-			  /*unsigned int tot_verts = 0;
-			  unsigned int tot_faces = 0;
-			  for(size_t i = 0; i < mesh_data_vec.size() ; i++)
-			  {
-			  tot_verts += mesh_data_vec[i]->NumVertex;
-			  tot_faces  += mesh_data_vec[i]->NumFaces;
-			  }*/
 
 			  ManualMeshData final_mesh_data;
-
 			  std::vector<Vec3> VertexVector;
+			  std::vector<Vec3> NormalVector;
+			  std::vector<Vec4> TexCoordVector;
 			  std::vector<unsigned int > FaceVector;
 
 			  for(size_t i = 0; i < mesh_data_vec.size() ; i++)
 			  {
-				  unsigned int base_index = VertexVector.size();
-				  for(int j = 0 ; j < mesh_data_vec[i]->NumVertex; j++)
+				  for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				  {
-					  VertexVector.push_back(mesh_data_vec[i]->VertexVector[j]);
-				  }
+					  SubMeshDataPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
+					  unsigned int base_index = VertexVector.size();
 
-				  for(int j = 0 ; j < mesh_data_vec[i]->NumFaces*3; j++)
-				  {
-					  FaceVector.push_back(mesh_data_vec[i]->FaceVector[j]+base_index+1);
-				  }
+					  for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
+					  {
+						  VertexVector.push_back(sub_mesh->PositionVector[j]);
+					  }
 
-				  /*for(int j = 0 ; j < mesh_data_vec[i]->NumFaces*3; j += 3)
-				  {
-				  Vec3 p1 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j]];
-				  Vec3 p2 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j+1]];
-				  Vec3 p3 = mesh_data_vec[i]->VertexVector[mesh_data_vec[i]->FaceVector[j+2]];;
-				  Vec3 v1 = p1 - p3;
-				  Vec3 v2 = p2 - p3;
-				  Vec3 norm = Math::Cross(v1,v2);
-				  norm.FastNormalize();
-				  trinorms[norm_index++]=norm.x;
-				  trinorms[norm_index++]=norm.y;
-				  trinorms[norm_index++]=norm.z;
-				  }*/
-				  //serlize
-				  delete[] mesh_data_vec[i]->FaceVector;
-				  delete[] mesh_data_vec[i]->VertexVector;
-				  delete mesh_data_vec[i];
-				  mesh_data_vec[i] = NULL;
+					  if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
+					  {
+						  for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+						  {
+							  TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
+						  }
+					  }
+					  else
+					  {
+						  for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
+						  {
+							  TexCoordVector.push_back(Vec4(1,0,0,0));
+						  }
+					  }
+
+
+					  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j++)
+					  {
+						  FaceVector.push_back(sub_mesh->FaceVector[j]+base_index);
+					  }
+
+					  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
+					  {
+						  Vec3 p1 = sub_mesh->PositionVector[sub_mesh->FaceVector[j]];
+						  Vec3 p2 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+1]];
+						  Vec3 p3 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+2]];
+						  Vec3 v1 = p1 - p3;
+						  Vec3 v2 = p2 - p3;
+						  Vec3 norm = Math::Cross(v1,v2);
+						  norm.FastNormalize();
+						  NormalVector.push_back(norm);
+					  }
+
+					  //serlize
+					  //delete[] mesh_data_vec[i]->FaceVector;
+					  //delete[] mesh_data_vec[i]->VertexVector;
+					  //delete mesh_data_vec[i];
+					  //mesh_data_vec[i] = NULL;
+				  }
 			  }
 
 
@@ -163,14 +170,14 @@ public:
 			  for(size_t i = 0; i < VertexVector.size() ; i++)
 				  ss << "v " << VertexVector[i] << "\n";
 			  ss << "\n";
-			  for(size_t i = 0; i < VertexVector.size() ; i++)
-				  ss << "vt " << "0.1 1.0" << "\n";
+			  for(size_t i = 0; i < TexCoordVector.size() ; i++)
+				  ss << "vt " << TexCoordVector[i].x  << " " << TexCoordVector[i].y << "\n";
 			  ss << "\n";
-			  for(size_t i = 0; i < VertexVector.size() ; i++)
-				  ss << "vn " << Vec3(0.707,0.000,0.707) << "\n";
+			  for(size_t i = 0; i < NormalVector.size() ; i++)
+				  ss << "vn " << NormalVector[i] << "\n";
 
 			  ss << "\n";
-			  
+
 			  ss << "g " << "root" << "\n";
 
 			  ss << "usemtl " << "ExportMat1" << "\n";
@@ -178,11 +185,11 @@ public:
 
 			  ss << "#num faces" << (FaceVector.size()/3) << "\n";
 
-			
+
 			  for(size_t i = 0; i < FaceVector.size() ; i += 3)
-				  ss << "f " << FaceVector[i] << "/" << FaceVector[i] << "/" << FaceVector[i] << " "
-				  << FaceVector[i+1] << "/" << FaceVector[i+1] << "/" << FaceVector[i+1] << " "
-				  << FaceVector[i+2] << "/" << FaceVector[i+2] << "/" << FaceVector[i+2] << "\n";
+				  ss << "f " << FaceVector[i]+1 << "/" << FaceVector[i]+1 << "/" << i/3+1 << " "
+				  << FaceVector[i+1]+1 << "/" << FaceVector[i+1]+1 << "/" << i/3+1 << " "
+				  << FaceVector[i+2]+1 << "/" << FaceVector[i+2]+1 << "/" << i/3+1 << "\n";
 
 			  ss << "\n";
 			  file_ptr << ss.str().c_str();     
@@ -192,6 +199,12 @@ public:
 		  }
 
 
+
+		  /*		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
+		  GASS::Vec3 pos = scene->GetStartPos();
+		  GASS::MessagePtr pos_msg2(new GASS::WorldPositionMessage(pos));
+		  if(object)
+		  object->SendImmediate(pos_msg2);*/
 
 		  /*for(int i = 0; i <  m_Objects.size();i++)
 		  {

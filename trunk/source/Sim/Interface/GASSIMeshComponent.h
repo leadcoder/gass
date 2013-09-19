@@ -41,7 +41,7 @@ namespace GASS
 		/**
 		Should return actual mesh data (polygons), see MeshData for more info
 		*/
-		virtual void GetMeshData(MeshDataPtr mesh_data) const =0;
+		virtual MeshData GetMeshData() const =0;
 	};
 	typedef SPTR<IMeshComponent> MeshComponentPtr;
 }

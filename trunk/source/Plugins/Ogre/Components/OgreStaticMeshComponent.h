@@ -63,8 +63,7 @@ namespace GASS
 
 		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual void GetMeshData(MeshDataPtr mesh_data) const;
-
+		virtual MeshData  GetMeshData() const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
