@@ -25,7 +25,7 @@
                     <Origin value="0 0 0" />
                     <FadeDetail value="true" />
                     <DetailFadeDist value="100" />
-                    <FadeOutColor value="false" />
+                    <FadeOutColor value="true" />
                     <NearColorWeight value="0.5" />
                     <EnableLayerNormal value="true" />
                     <EnableLayerSpecular value="true" />
@@ -71,14 +71,13 @@
                             <ImportHeightMap value="" />
                             <ImportColorMap value="" />
                             <ImportDetailMask value="" />
+                            <ExportDetailMask value="" />
                             <Name value="OgreTerrainPageComponent" />
                         </OgreTerrainPageComponent>
                         <ODECollisionGeometryComponent>
                             <Type value="TERRAIN" />
                             <Name value="" />
                         </ODECollisionGeometryComponent>
-						<PhysicsTerrainGeometryComponent>
-						</PhysicsTerrainGeometryComponent>
                     </Components>
                     <ComponentContainers />
                 </SceneObject>
@@ -129,7 +128,7 @@
                     <EnumerationResourceGroup value="" />
                     <CastShadow value="true" />
                     <RenderQueue value="RENDER_QUEUE_MAIN" />
-                    <GeometryFlags value="GEOMETRY_FLAG_ALL GEOMETRY_FLAG_DYNAMIC_OBJECT GEOMETRY_FLAG_EDITOR GEOMETRY_FLAG_GIZMO GEOMETRY_FLAG_GROUND GEOMETRY_FLAG_SCENE_OBJECTS GEOMETRY_FLAG_STATIC_OBJECT GEOMETRY_FLAG_TRANSPARENT_OBJECT GEOMETRY_FLAG_UNKOWN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_STATIC_OBJECT" />
                     <Name value="MeshComponent" />
                 </MeshComponent>
                 <LocationComponent>
@@ -159,7 +158,7 @@
                     <EnumerationResourceGroup value="" />
                     <CastShadow value="true" />
                     <RenderQueue value="RENDER_QUEUE_MAIN" />
-                    <GeometryFlags value="GEOMETRY_FLAG_ALL GEOMETRY_FLAG_DYNAMIC_OBJECT GEOMETRY_FLAG_EDITOR GEOMETRY_FLAG_GIZMO GEOMETRY_FLAG_GROUND GEOMETRY_FLAG_SCENE_OBJECTS GEOMETRY_FLAG_STATIC_OBJECT GEOMETRY_FLAG_TRANSPARENT_OBJECT GEOMETRY_FLAG_UNKOWN" />
+                    <GeometryFlags value="GEOMETRY_FLAG_STATIC_OBJECT" />
                     <Name value="MeshComponent" />
                 </MeshComponent>
                 <LocationComponent>
