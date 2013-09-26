@@ -672,6 +672,8 @@ namespace GASS
 		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;
 		sub_mesh_data->FaceVector = mv.mFunctor.mTriangles;
 
+		return mesh_data;
+
 		//TODO: support materials
 		/*sub_mesh_data->NumVertex = mv.mFunctor.mVertices.size();
 		mesh_data->VertexVector = new Vec3[mv.mFunctor.mVertices.size()];

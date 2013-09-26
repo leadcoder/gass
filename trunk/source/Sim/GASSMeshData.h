@@ -46,6 +46,7 @@ namespace GASS
 		std::vector<unsigned int> FaceVector;
 		//unsigned int MaterialID;
 		GraphicsMaterial Material;
+		std::string MaterialName;
 	};
 	typedef SPTR<SubMeshData> SubMeshDataPtr;
 	

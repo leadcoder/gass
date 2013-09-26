@@ -247,7 +247,7 @@ namespace GASS
 			SubMeshDataPtr sub_mesh_data(new SubMeshData());
 			mesh_data.SubMeshVector.push_back(sub_mesh_data);
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
-
+			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
 			Ogre::Technique* tech = mat->getBestTechnique();
 
