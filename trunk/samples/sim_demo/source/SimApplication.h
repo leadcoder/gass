@@ -93,33 +93,84 @@ public:
 					  trans_mat.Identity();
 					  trans_mat.SetTransformation(world_pos,world_rot,scale);
 					  mesh_data.Transform(trans_mat);
-					  mesh_data_vec.push_back(mesh_data);  
+					 
 				  }
+				   mesh_data_vec.push_back(mesh_data);  
 			  }
 
-			  ManualMeshData final_mesh_data;
-			  std::vector<Vec3> VertexVector;
+			  //ManualMeshData final_mesh_data;
+			  std::vector<Vec3> PositionVector;
 			  std::vector<Vec3> NormalVector;
 			  std::vector<Vec4> TexCoordVector;
 			  std::vector<unsigned int > FaceVector;
+			  std::map<std::string,GraphicsMaterial> Materials;
+
+			  GraphicsMaterial def_mat;
+			  Materials["DefaultMat"] = def_mat;
 
 			  for(size_t i = 0; i < mesh_data_vec.size() ; i++)
 			  {
 				  for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				  {
 					  SubMeshDataPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
-					  unsigned int base_index = VertexVector.size();
+					  //unsigned int base_index = PositionVector.size();
 
+					  if(sub_mesh->MaterialName != "")
+						Materials[sub_mesh->MaterialName] = sub_mesh->Material;
+					  else 
+					  {
+						  sub_mesh->MaterialName = "DefaultMat";
+						  sub_mesh->Material = def_mat;
+					  }
 					  for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
 					  {
-						  VertexVector.push_back(sub_mesh->PositionVector[j]);
+						  PositionVector.push_back(sub_mesh->PositionVector[j]);
+					  }
+
+					  //generate normals if not present
+					  if(sub_mesh->NormalVector.size() == 0)
+					  {
+						  sub_mesh->NormalVector.resize(sub_mesh->PositionVector.size());
+						  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
+						  {
+							  Vec3 p1 = sub_mesh->PositionVector[sub_mesh->FaceVector[j]];
+							  Vec3 p2 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+1]];
+							  Vec3 p3 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+2]];
+							  Vec3 v1 = p1 - p3;
+							  Vec3 v2 = p2 - p3;
+							  Vec3 norm = Math::Cross(v1,v2);
+							  norm.FastNormalize();
+							  sub_mesh->NormalVector[sub_mesh->FaceVector[j]] = norm;
+							  sub_mesh->NormalVector[sub_mesh->FaceVector[j+1]] = norm;
+							  sub_mesh->NormalVector[sub_mesh->FaceVector[j+2]] = norm;
+						  }
+					  }
+
+					  for(int j = 0 ; j < sub_mesh->NormalVector.size(); j++)
+					  {
+						  NormalVector.push_back(sub_mesh->NormalVector[j]);
+					  }
+
+					  bool flip_tex = false;
+					  if(sub_mesh->Material.Textures.size() > 0)
+					  {
+						  std::string ext = StringUtils::ToLower(FileUtils::GetExtension(sub_mesh->Material.Textures[0]));
+						   if(ext == "dds") 
+							   flip_tex = true;
 					  }
 
 					  if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
 					  {
 						  for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
 						  {
-							  TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
+							  if(flip_tex)
+								TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
+							  else
+							  {
+								 Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
+								 tc.y = -tc.y;
+								 TexCoordVector.push_back(tc);
+							  }
 						  }
 					  }
 					  else
@@ -130,23 +181,12 @@ public:
 						  }
 					  }
 
-
-					  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j++)
+					  /* for(int j = 0 ; j < sub_mesh->FaceVector.size(); j++)
 					  {
-						  FaceVector.push_back(sub_mesh->FaceVector[j]+base_index);
-					  }
+					  FaceVector.push_back(sub_mesh->FaceVector[j]+base_index);
+					  }*/
 
-					  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
-					  {
-						  Vec3 p1 = sub_mesh->PositionVector[sub_mesh->FaceVector[j]];
-						  Vec3 p2 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+1]];
-						  Vec3 p3 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+2]];
-						  Vec3 v1 = p1 - p3;
-						  Vec3 v2 = p2 - p3;
-						  Vec3 norm = Math::Cross(v1,v2);
-						  norm.FastNormalize();
-						  NormalVector.push_back(norm);
-					  }
+					  
 
 					  //serlize
 					  //delete[] mesh_data_vec[i]->FaceVector;
@@ -156,7 +196,6 @@ public:
 				  }
 			  }
 
-
 			  std::stringstream ss;
 			  std::ofstream file_ptr;   
 			  file_ptr.open("test.obj");      
@@ -165,39 +204,110 @@ public:
 			  ss << "mtllib " << "test.mtl" << "\n";
 			  ss << "\n";
 
-			  ss << "#num verts" << VertexVector.size() << "\n";
+			  ss << "#num verts" << PositionVector.size() << "\n";
 			  //Serialize mesh data to obj format!
-			  for(size_t i = 0; i < VertexVector.size() ; i++)
-				  ss << "v " << VertexVector[i] << "\n";
+			  for(size_t i = 0; i < PositionVector.size() ; i++)
+				  ss << "v " << PositionVector[i] << "\n";
 			  ss << "\n";
 			  for(size_t i = 0; i < TexCoordVector.size() ; i++)
 				  ss << "vt " << TexCoordVector[i].x  << " " << TexCoordVector[i].y << "\n";
 			  ss << "\n";
 			  for(size_t i = 0; i < NormalVector.size() ; i++)
 				  ss << "vn " << NormalVector[i] << "\n";
-
 			  ss << "\n";
 
-			  ss << "g " << "root" << "\n";
+			  int sub_mesh_index = 0;
+			  unsigned int base_index = 1;//VertexVector.size();
+			  for(size_t i = 0; i < mesh_data_vec.size() ; i++)
+			  {
+				  for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
+				  {
+					  SubMeshDataPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
+					  ss << "g " << "submesh" << sub_mesh_index << "\n";
+					  sub_mesh_index++;
+					  
+					  ss << "usemtl " << sub_mesh->MaterialName << "\n";
+					  
+
+					  ss << "#num faces" << (sub_mesh->FaceVector.size()/3) << "\n";
+
+
+					  for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
+					  {
+						  unsigned int v_index_1 = sub_mesh->FaceVector[j] + base_index;
+						  unsigned int v_index_2 = sub_mesh->FaceVector[j+1] + base_index;
+						  unsigned int v_index_3 = sub_mesh->FaceVector[j+2] + base_index;
+						  ss << "f " << v_index_1 << "/" << v_index_1 << "/" << v_index_1 << " "
+							  << v_index_2 << "/" << v_index_2 << "/" << v_index_2 << " "
+							  << v_index_3 << "/" << v_index_3 << "/" << v_index_3 << "\n";
+					  }
+					  base_index += sub_mesh->PositionVector.size();
+				  }
+			  }
+
+			  /*ss << "g " << "root" << "\n";
 
 			  ss << "usemtl " << "ExportMat1" << "\n";
-
 
 			  ss << "#num faces" << (FaceVector.size()/3) << "\n";
 
 
 			  for(size_t i = 0; i < FaceVector.size() ; i += 3)
-				  ss << "f " << FaceVector[i]+1 << "/" << FaceVector[i]+1 << "/" << i/3+1 << " "
-				  << FaceVector[i+1]+1 << "/" << FaceVector[i+1]+1 << "/" << i/3+1 << " "
-				  << FaceVector[i+2]+1 << "/" << FaceVector[i+2]+1 << "/" << i/3+1 << "\n";
-
+			  ss << "f " << FaceVector[i]+1 << "/" << FaceVector[i]+1 << "/" << i/3+1 << " "
+			  << FaceVector[i+1]+1 << "/" << FaceVector[i+1]+1 << "/" << i/3+1 << " "
+			  << FaceVector[i+2]+1 << "/" << FaceVector[i+2]+1 << "/" << i/3+1 << "\n";
+			  */
 			  ss << "\n";
 			  file_ptr << ss.str().c_str();     
 			  file_ptr.close(); 
 
+			  {
+				  std::stringstream ss;
+				  std::ofstream file_ptr;   
+				  file_ptr.open("test.mtl");
 
+				  std::map<std::string,GraphicsMaterial>::iterator iter = Materials.begin();
+				  while(iter != Materials.end())
+				  {
+					  GraphicsMaterial mat = iter->second;
+					  ss << "\n";
+					  ss << "newmtl " << iter->first << "\n";
+					  ss << "Kd " << mat.GetDiffuse() << "\n";
+					  ss << "Ka " << mat.GetAmbient() << "\n";
+					  ss << "illum " << "1" << "\n";
+					  if(mat.Textures.size() > 0)
+						  ss << "map_Kd " << mat.Textures[0] << "\n";
+					  ss << "\n";
+					  iter++;
+				  }
+				  file_ptr << ss.str().c_str();     
+				  file_ptr.close(); 
+
+				  //copy textures
+				  iter = Materials.begin();
+				  while(iter != Materials.end())
+				  {
+					  GraphicsMaterial mat = iter->second;
+					  if(mat.Textures.size() > 0)
+					  {
+						  std::string texture_name =  mat.Textures[0];
+						  GASS::ResourceHandle res(texture_name);
+						  std::string full_path = StringUtils::Replace(res.GetResource()->Path().GetFullPath(),"\\","/");
+						  //std::string base_path = "C:/dev/gassbuild/data";
+						  //full_path = StringUtils::Replace(full_path,"../../data",base_path);
+						  try
+						  {
+							  boost::filesystem::copy_file(boost::filesystem::path(full_path),boost::filesystem::path("./" + texture_name),boost::filesystem::copy_option::overwrite_if_exists);
+						  } 
+						  catch (const boost::filesystem::filesystem_error& e)
+						  {
+							  std::cerr << "Error: " << e.what() << std::endl;
+						  }
+					  }
+					  iter++;
+				  }
+			  }
 		  }
-
 
 
 		  /*		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
