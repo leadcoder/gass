@@ -35,13 +35,22 @@ namespace GASS
 
 	void MeshData::Transform(const Mat4 &transformation )
 	{
+		Mat4 rot_mat = transformation;
+		rot_mat.SetTranslation(0,0,0);
 		for(size_t i = 0; i < SubMeshVector.size() ;i++)
 		{
 			for(size_t j = 0; j < SubMeshVector[i]->PositionVector.size() ; j++)
 			{
 				SubMeshVector[i]->PositionVector[j] = transformation * SubMeshVector[i]->PositionVector[j];
 			}
+
+			for(size_t j = 0; j < SubMeshVector[i]->NormalVector.size() ; j++)
+			{
+				SubMeshVector[i]->NormalVector[j] = rot_mat * SubMeshVector[i]->NormalVector[j];
+			}
 		}
+
+		//Transform all normals, only rotation
 	}
 
 	PhysicsMesh::PhysicsMesh(const MeshData &mesh)

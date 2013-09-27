@@ -163,14 +163,17 @@ namespace GASS
 		case CGT_PLANE:
 			m_GeomID = CreatePlaneGeometry();
 		}
-		dGeomSetBody(m_GeomID , NULL);
-		dGeomSetData(m_GeomID , (void*)this);
-
+		if(m_GeomID)
+		{
+			dGeomSetBody(m_GeomID , NULL);
+			dGeomSetData(m_GeomID , (void*)this);
+		}
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(geom)
 		{
 			SetFlags(geom->GetGeometryFlags());
 		}
+		
 	}
 	
 	void ODECollisionGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -277,8 +280,15 @@ namespace GASS
 			{
 				col_mesh_id = res->GetResource().Name();
 			}
-			ODECollisionMeshInfo col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(col_mesh_id,mesh);
-			geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
+			try
+			{
+				ODECollisionMeshInfo col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(col_mesh_id,mesh);
+				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
+			}
+			catch(...)
+			{
+				return 0;
+			}
 		}
 		else
 		{

@@ -229,19 +229,21 @@ namespace GASS
 	}
 
 
-	MeshData  OgreMeshComponent::GetMeshData() const
+
+	
+
+	MeshData OgreMeshComponent::GetMeshData() const
 	{
 		MeshData mesh_data;
 		if(m_OgreEntity == NULL)
 			return mesh_data;
-
 		Ogre::MeshPtr mesh = m_OgreEntity->getMesh();
+		CopyMeshToMeshData(mesh, mesh_data);
+		return mesh_data;
+	}
 
-		/*if(mesh->sharedVertexData)
-		{
-			AddVertexData(mesh->sharedVertexData , mesh_data);
-		}*/
-		
+	void OgreMeshComponent::CopyMeshToMeshData(Ogre::MeshPtr mesh, MeshData &mesh_data)
+	{
 		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
 		{
 			SubMeshDataPtr sub_mesh_data(new SubMeshData());
@@ -290,8 +292,6 @@ namespace GASS
 				AddVertexData(mesh->sharedVertexData , sub_mesh_data);
 			}
 		}
-		return mesh_data;
-		//mesh_data->NumFaces = mesh_data->NumFaces/3.0;
 	}
 
 	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh) 

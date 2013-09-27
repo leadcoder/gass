@@ -22,9 +22,11 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSMeshData.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include <OgreManualObject.h>
 
 namespace Ogre
 {
@@ -34,7 +36,7 @@ namespace Ogre
 namespace GASS
 {
 	
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IGeometryComponent
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IMeshComponent, public IGeometryComponent
 	{
 	public:
 		OgreManualMeshComponent(void);
@@ -46,6 +48,9 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
+
+		//IMeshComponent
+		virtual MeshData GetMeshData() const;
 	protected:
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
@@ -63,6 +68,7 @@ namespace GASS
 		bool m_UniqueMaterialCreated;
 		bool m_CastShadows;
 		GeometryFlags m_GeomFlags;
+		Ogre::RenderOperation::OperationType m_CurrentOP;
 	};
 }
 

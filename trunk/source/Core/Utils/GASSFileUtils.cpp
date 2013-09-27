@@ -23,6 +23,7 @@
 #include "GASSFileUtils.h"
 #include "GASSLogManager.h"
 #include "GASSException.h"
+#include "GASSStringUtils.h"
 #include <boost/filesystem.hpp>
 
 namespace GASS
@@ -68,36 +69,23 @@ namespace GASS
 
 	std::string FileUtils::GetFilename(const std::string &path)
 	{
-		std::string ret = path;
-		
-		std::string::size_type pos = ret.find("/",0);
-		while(pos != std::string::npos)
+		std::string ret = StringUtils::Replace(path,"\\","/");;
+		std::string::size_type pos = ret.find_last_of("/",0);
+		if(pos != std::string::npos)
 		{
 			ret = ret.substr(pos+1);
-			pos = ret.find("/",0);
-		}
-		pos = ret.find("\\",0);
-
-		while(pos != std::string::npos)
-		{
-			ret = ret.substr(pos+1);
-			pos = ret.find("\\",0);
 		}
 		return ret;
 	}
 
 	std::string FileUtils::RemoveFilename(const std::string &path)
 	{
-		std::string ret = path;
-		std::string::size_type pos1 = ret.find_last_of("/",ret.size());
-		std::string::size_type pos2 = ret.find_last_of("\\",ret.size());
-		if(pos1 > pos2 && pos1 != std::string::npos)
+		std::string ret = StringUtils::Replace(path,"\\","/");
+		std::string::size_type pos = ret.find_last_of("/",ret.size());
+		
+		if(pos != std::string::npos)
 		{
-			ret = ret.substr(0,pos1+1);
-		}
-		else if(pos2  != std::string::npos)
-		{
-			ret = ret.substr(0,pos2+1);
+			ret = ret.substr(0,pos+1);
 		}
 		else
 			return "";

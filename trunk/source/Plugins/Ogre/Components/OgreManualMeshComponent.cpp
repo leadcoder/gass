@@ -19,7 +19,11 @@
 *****************************************************************************/
 
 #include "OgreManualMeshComponent.h"
+#include "OgreMeshComponent.h"
+
 #include <OgreSceneNode.h>
+#include <OgreMeshManager.h>
+
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
 #include <OgreTextureUnitState.h>
@@ -103,7 +107,6 @@ namespace GASS
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 	}
 
-
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
 	{
 		m_CastShadows = castShadow;
@@ -154,6 +157,7 @@ namespace GASS
 			}
 
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
+			
 			switch(data->Type)
 			{
 			case LINE_LIST:
@@ -175,7 +179,7 @@ namespace GASS
 				op = Ogre::RenderOperation::OT_TRIANGLE_STRIP;
 				break;
 			}
-
+			m_CurrentOP = op;
 			m_MeshObject->begin(data->Material, op);
 			for(int i = 0; i < data->VertexVector.size(); i++)
 			{
@@ -202,9 +206,7 @@ namespace GASS
 			{
 				m_MeshObject->index(data->IndexVector[i]);
 			}
-
 			m_MeshObject->end();
-
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
@@ -337,5 +339,21 @@ namespace GASS
 	void OgreManualMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+
+	MeshData OgreManualMeshComponent::GetMeshData() const
+	{
+		MeshData mesh_data;
+			
+		if(m_MeshObject == NULL || m_CurrentOP != TRIANGLE_LIST)
+			return mesh_data;
+		Ogre::MeshPtr mesh = m_MeshObject->convertToMesh("ConvertedTempMesh");
+		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);
+		//remove mesh!
+		Ogre::MeshManager::getSingleton().remove("ConvertedTempMesh");
+		
+
+		return mesh_data;
 	}
 }

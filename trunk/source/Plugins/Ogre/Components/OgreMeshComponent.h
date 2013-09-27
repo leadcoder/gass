@@ -76,6 +76,7 @@ namespace GASS
 		//used by enumeration class
 		std::vector<std::string> GetAvailableMeshFiles() const;
 
+		static void CopyMeshToMeshData(Ogre::MeshPtr mesh, MeshData &mesh_data);
 		static void AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh);
 		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,SubMeshDataPtr mesh);
 
