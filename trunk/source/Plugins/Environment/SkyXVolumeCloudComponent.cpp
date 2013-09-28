@@ -103,7 +103,7 @@ namespace GASS
 	{
 		m_LightResponse = value;
 		if(m_CloudManager)
-			m_CloudManager->getVClouds()->setLightResponse(Convert::ToOgre(value));
+			m_CloudManager->getVClouds()->setLightResponse(OgreConvert::ToOgre(value));
 	}
 
 	Vec4 SkyXVolumeCloudComponent::GetLightResponse() const 
@@ -221,7 +221,7 @@ namespace GASS
 			skyx->GetSkyX()->getCamera()->setFarClipDistance(m_Radius);
 			m_CloudManager = skyx->GetSkyX()->getVCloudsManager();
 			// Volumetric clouds
-			m_CloudManager->setHeight(Convert::ToOgre(m_Height));
+			m_CloudManager->setHeight(OgreConvert::ToOgre(m_Height));
 			m_CloudManager->create();
 			skyx->GetSkyX()->getCamera()->setFarClipDistance(save_clip );
 

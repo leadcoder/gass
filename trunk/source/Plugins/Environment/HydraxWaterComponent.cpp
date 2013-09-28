@@ -372,13 +372,13 @@ namespace GASS
 	void HydraxWaterComponent::SetPosition(const Vec3 &value)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setPosition(Convert::ToOgre(value));
+			m_Hydrax->setPosition(OgreConvert::ToOgre(value));
 	}
 
 	Vec3 HydraxWaterComponent::GetPosition() const
 	{
 		if(m_Hydrax)
-			return Convert::ToGASS(m_Hydrax->getPosition());
+			return OgreConvert::ToGASS(m_Hydrax->getPosition());
 		return Vec3(0,0,0);
 	}
 
@@ -386,7 +386,7 @@ namespace GASS
 	{
 		m_Rot = value;
 		if(m_Hydrax)
-			m_Hydrax->rotate(Convert::ToOgre(Quaternion(value)));
+			m_Hydrax->rotate(OgreConvert::ToOgre(Quaternion(value)));
 	}
 
 	Vec3 HydraxWaterComponent::GetRotation() const
@@ -422,12 +422,12 @@ namespace GASS
 	void HydraxWaterComponent::SetWaterColor(const Vec3& value)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setWaterColor(Convert::ToOgre(value));
+			m_Hydrax->setWaterColor(OgreConvert::ToOgre(value));
 	}
 	Vec3 HydraxWaterComponent::GetWaterColor() const
 	{
 		if(m_Hydrax)
-			return Convert::ToGASS(m_Hydrax->getWaterColor());			
+			return OgreConvert::ToGASS(m_Hydrax->getWaterColor());			
 		return Vec3(0,0,0);
 	}
 	void HydraxWaterComponent::SetNormalDistortion(Float value)
@@ -446,13 +446,13 @@ namespace GASS
 	void HydraxWaterComponent::SetSunPosition(const Vec3 & value)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setSunPosition(Convert::ToOgre(value));
+			m_Hydrax->setSunPosition(OgreConvert::ToOgre(value));
 	}
 
 	Vec3 HydraxWaterComponent::GetSunPosition() const
 	{
 		if(m_Hydrax)
-			return Convert::ToGASS(m_Hydrax->getSunPosition());			
+			return OgreConvert::ToGASS(m_Hydrax->getSunPosition());			
 		return Vec3(0,0,0);
 
 	}
@@ -487,14 +487,14 @@ namespace GASS
 	void HydraxWaterComponent::SetSunColor(const Vec3 &value)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setSunColor(Convert::ToOgre(value));
+			m_Hydrax->setSunColor(OgreConvert::ToOgre(value));
 
 	}
 
 	Vec3 HydraxWaterComponent::GetSunColor() const
 	{
 		if(m_Hydrax)
-			return Convert::ToGASS(m_Hydrax->getSunColor());			
+			return OgreConvert::ToGASS(m_Hydrax->getSunColor());			
 		return Vec3(0,0,0);
 	}
 
@@ -559,7 +559,7 @@ namespace GASS
 	void HydraxWaterComponent::SetGodRaysExposure(const Vec3 &value)
 	{
 		if(m_Hydrax)
-			m_Hydrax->setGodRaysExposure(Convert::ToOgre(value));
+			m_Hydrax->setGodRaysExposure(OgreConvert::ToOgre(value));
 	}
 
 
@@ -640,7 +640,7 @@ namespace GASS
 	Vec3 HydraxWaterComponent::GetGodRaysExposure() const
 	{
 		if(m_Hydrax)
-			return Convert::ToGASS(m_Hydrax->getGodRaysExposure());
+			return OgreConvert::ToGASS(m_Hydrax->getGodRaysExposure());
 		return Vec3(0,0,0);
 	}
 

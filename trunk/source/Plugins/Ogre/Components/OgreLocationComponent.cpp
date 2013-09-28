@@ -181,7 +181,7 @@ namespace GASS
 		m_Pos = message->GetPosition();
 		if(m_OgreNode)
 		{
-			m_OgreNode->setPosition(Convert::ToOgre(m_Pos));
+			m_OgreNode->setPosition(OgreConvert::ToOgre(m_Pos));
 		}
 	}
 
@@ -200,7 +200,7 @@ namespace GASS
 	{
 		if(m_OgreNode)
 		{
-			Ogre::Vector3 opos = Convert::ToOgre(pos);
+			Ogre::Vector3 opos = OgreConvert::ToOgre(pos);
 			Ogre::Node* op = m_OgreNode->getParent();
 			if(op) //check that we dont have sm root node?
 			{
@@ -209,7 +209,7 @@ namespace GASS
 				opos = inv_trans*opos;
 			}
 			m_OgreNode->setPosition(opos);
-			m_Pos = Convert::ToGASS(opos);
+			m_Pos = OgreConvert::ToGASS(opos);
 		}
 	}
 
@@ -223,7 +223,7 @@ namespace GASS
 	{
 		if(m_OgreNode)
 		{
-			Ogre::Quaternion orot = Convert::ToOgre(rot);
+			Ogre::Quaternion orot = OgreConvert::ToOgre(rot);
 			Ogre::Node* op = m_OgreNode->getParent();
 			if(op) //check that we dont have sm root node?
 			{
@@ -237,7 +237,7 @@ namespace GASS
 				orot.FromRotationMatrix(rot_mat);
 			}
 			m_OgreNode->setOrientation(orot);
-			m_QRot = Convert::ToGASS(orot);
+			m_QRot = OgreConvert::ToGASS(orot);
 		}
 	}
 
@@ -259,7 +259,7 @@ namespace GASS
 	void OgreLocationComponent::SetScale(const Vec3 &value)
 	{
 		m_Scale = value;
-		if(m_OgreNode) m_OgreNode->setScale(Convert::ToOgre(value));
+		if(m_OgreNode) m_OgreNode->setScale(OgreConvert::ToOgre(value));
 	}
 
 	void OgreLocationComponent::SetPosition(const Vec3 &value)
@@ -284,7 +284,7 @@ namespace GASS
 		Vec3 pos = m_Pos;
 		if(m_OgreNode)
 		{
-			pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
+			pos = OgreConvert::ToGASS(m_OgreNode->_getDerivedPosition());
 		}
 		return pos;
 	}
@@ -311,7 +311,7 @@ namespace GASS
 		m_QRot = value;
 		if(m_OgreNode)
 		{
-			m_OgreNode->setOrientation(Convert::ToOgre(value));
+			m_OgreNode->setOrientation(OgreConvert::ToOgre(value));
 		}
 	}
 
@@ -321,7 +321,7 @@ namespace GASS
 		/*Quaternion q;
 		if(m_OgreNode)
 		{
-			q = Convert::ToGASS(m_OgreNode->getOrientation());
+			q = OgreConvert::ToGASS(m_OgreNode->getOrientation());
 		}
 		return q;*/
 	}
@@ -331,7 +331,7 @@ namespace GASS
 		Quaternion q;
 		if(m_OgreNode)
 		{
-			q = Convert::ToGASS(m_OgreNode->_getDerivedOrientation());
+			q = OgreConvert::ToGASS(m_OgreNode->_getDerivedOrientation());
 		}
 		return q;
 	}
@@ -341,7 +341,7 @@ namespace GASS
 		Quaternion q;
 		if(m_OgreNode)
 		{
-			q = Convert::ToGASS(m_OgreNode->getOrientation());
+			q = OgreConvert::ToGASS(m_OgreNode->getOrientation());
 			Mat4 rot_mat;
 			q.ToRotationMatrix(rot_mat);
 			m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerHeading());
@@ -396,9 +396,9 @@ namespace GASS
 	void OgreLocationComponent::nodeUpdated(const Ogre::Node* node)
 	{
 		//send transformation message
-		Vec3 pos = Convert::ToGASS(m_OgreNode->_getDerivedPosition());
-		Vec3 scale = Convert::ToGASS(m_OgreNode->_getDerivedScale());
-		Quaternion rot = Convert::ToGASS(m_OgreNode->_getDerivedOrientation());
+		Vec3 pos = OgreConvert::ToGASS(m_OgreNode->_getDerivedPosition());
+		Vec3 scale = OgreConvert::ToGASS(m_OgreNode->_getDerivedScale());
+		Quaternion rot = OgreConvert::ToGASS(m_OgreNode->_getDerivedOrientation());
 
 		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
 		GetSceneObject()->PostMessage(trans_msg);

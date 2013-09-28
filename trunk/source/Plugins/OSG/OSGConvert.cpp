@@ -26,11 +26,6 @@ namespace GASS
 	
 	OSGConvert::OSGConvert() :m_FlipYZ (true)
 	{
-		m_Tranform.Identity();
-		m_Tranform.SetUpVector(Vec3(0,0,1));
-		m_Tranform.SetRightVector(Vec3(1,0,0));
-		m_Tranform.SetViewDirVector(Vec3(0,-1,0));
-		m_InvTranform = m_Tranform.Invert();
 		
 	}
 
@@ -66,7 +61,7 @@ namespace GASS
 			return osg::Vec3d(v.x,v.y,v.z);
 	}
 
-	Vec3 OSGConvert::ToGASS(const osg::Vec3 &v) const
+	Vec3 OSGOgreConvert::ToGASS(const osg::Vec3 &v) const
 	{
 		if(m_FlipYZ)
 			return Vec3(v.x(),v.z(),-v.y());
@@ -75,7 +70,7 @@ namespace GASS
 
 	}
 
-	Vec3 OSGConvert::ToGASS(const osg::Vec3d &v) const
+	Vec3 OSGOgreConvert::ToGASS(const osg::Vec3d &v) const
 	{
 		if(m_FlipYZ)
 			return Vec3(v.x(),v.z(),-v.y());
@@ -83,7 +78,7 @@ namespace GASS
 			return Vec3(v.x(),v.y(),v.z());
 	}
 
-	Quaternion OSGConvert::ToGASS(const osg::Quat &value) const
+	Quaternion OSGOgreConvert::ToGASS(const osg::Quat &value) const
 	{
 		if(m_FlipYZ)
 			return Quaternion(value.w(),-value.x(),-value.z(),value.y());
@@ -135,49 +130,6 @@ namespace GASS
 			return  osg::Quat(-value.x,value.z,-value.y,value.w);
 		else
 			return  osg::Quat(value.x,value.y,value.z,-value.w);
-
-		/*Mat4 rot_mat;
-		Quaternion rot = value;
-		rot.ToRotationMatrix(rot_mat);
-		rot_mat = m_Tranform*rot_mat;
-		rot.FromRotationMatrix(rot_mat);
-		return osg::Quat(rot.x,rot.y,rot.z,-rot.w);*/
-
-		//return  osg::Quat(value.x,value.y,value.z,-value.w);
-		Mat4 rot_mat;
-		value.ToRotationMatrix(rot_mat);
-
-		osg::Vec3 view = -ToOSG(rot_mat.GetViewDirVector());
-		osg::Vec3 up = ToOSG(rot_mat.GetUpVector());
-		osg::Vec3 right = ToOSG(rot_mat.GetRightVector());
-
-		osg::Matrixf osg_matrix;
-		osg_matrix.makeIdentity();
-
-		//right_dir
-		osg_matrix(0,0) = right.x();
-		osg_matrix(0,1) = right.y();
-		osg_matrix(0,2) = right.z();
-
-		//view_dir
-		osg_matrix(1,0) = view.x();
-		osg_matrix(1,1) = view.y();
-		osg_matrix(1,2) = view.z();
-
-		//up_dir
-		osg_matrix(2,0) = up.x();
-		osg_matrix(2,1) = up.y();
-		osg_matrix(2,2) = up.z();
-
-		osg::Quat rot;
-		rot = osg_matrix.getRotate();
-
-
-		//std::cout << value.w << " " << -value.x << " " << value.z << " " << -value.y << "\n";
-		//std::cout << rot.w() << " " << rot.x() << " " << rot.y() << " " << rot.z() << "\n";
-
-		return rot;
-
 	}
 
 	int OSGConvert::ToOSGNodeMask(GeometryFlags flag) const

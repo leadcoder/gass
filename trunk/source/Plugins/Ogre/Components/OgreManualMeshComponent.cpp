@@ -141,7 +141,7 @@ namespace GASS
 			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
 			{
 				SubMeshDataPtr sub_mesh =   data->SubMeshVector[i];
-				Ogre::RenderOperation::OperationType op = Convert::ToOgre(sub_mesh->Type);
+				Ogre::RenderOperation::OperationType op = OgreConvert::ToOgre(sub_mesh->Type);
 				//use material name or create new material?
 				m_MeshObject->begin(sub_mesh->MaterialName, op);
 
@@ -163,13 +163,13 @@ namespace GASS
 
 				for(size_t j = 0; j < sub_mesh->PositionVector.size() ; j++)
 				{
-					m_MeshObject->position(Convert::ToOgre(sub_mesh->PositionVector[j]));
+					m_MeshObject->position(OgreConvert::ToOgre(sub_mesh->PositionVector[j]));
 					if(has_normals)
-						m_MeshObject->normal(Convert::ToOgre(sub_mesh->NormalVector[j]));
+						m_MeshObject->normal(OgreConvert::ToOgre(sub_mesh->NormalVector[j]));
 					if(has_tangents)
-						m_MeshObject->tangent(Convert::ToOgre(sub_mesh->TangentVector[j]));
+						m_MeshObject->tangent(OgreConvert::ToOgre(sub_mesh->TangentVector[j]));
 					if(has_colors)
-						m_MeshObject->colour(Convert::ToOgre(sub_mesh->ColorVector[j]));
+						m_MeshObject->colour(OgreConvert::ToOgre(sub_mesh->ColorVector[j]));
 					if(has_tex_coords)
 					{
 						Vec4 tex_coord = sub_mesh->TexCoordsVector[0].at(j);
@@ -212,7 +212,7 @@ namespace GASS
 
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
 
-			op = Convert::ToOgre(data->Type);
+			op = OgreConvert::ToOgre(data->Type);
 			/*{
 			case LINE_LIST:
 				op = Ogre::RenderOperation::OT_LINE_LIST;
@@ -360,11 +360,11 @@ namespace GASS
 		AABox box;
 		//return box;
 		assert(m_MeshObject);
-		box = Convert::ToGASS(m_MeshObject->getBoundingBox());
+		box = OgreConvert::ToGASS(m_MeshObject->getBoundingBox());
 
 		if(m_MeshObject->getParentSceneNode())
 		{
-			Vec3 scale = Convert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
+			Vec3 scale = OgreConvert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
 			box.m_Max = box.m_Max*scale;
 			box.m_Min = box.m_Min*scale;
 		}
@@ -379,7 +379,7 @@ namespace GASS
 		sphere.m_Radius = m_MeshObject->getBoundingRadius();
 		if(m_MeshObject->getParentSceneNode())
 		{
-			Vec3 scale = Convert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
+			Vec3 scale = OgreConvert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
 			sphere.m_Radius = sphere.m_Radius*Math::Max(scale.x,scale.y,scale.z);
 		}
 		return sphere;

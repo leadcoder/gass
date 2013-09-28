@@ -184,8 +184,8 @@ namespace GASS
 			{
 				Ogre::Bone* bone_cand = bone_iter.getNext();
 				//Ogre::Vector3 bone_pos = bone->getWorldPosition();
-				//Vec3 bone_pos = Convert::ToGASS(bone_cand->getWorldPosition());
-				Vec3 bone_pos = Convert::ToGASS(bone_cand->getPosition());
+				//Vec3 bone_pos = OgreConvert::ToGASS(bone_cand->getWorldPosition());
+				Vec3 bone_pos = OgreConvert::ToGASS(bone_cand->getPosition());
 				//add node pos?
 				float  dist = (pos - bone_pos).SquaredLength();
 				if(dist < min_dist || bone == NULL)
@@ -209,7 +209,7 @@ namespace GASS
 	AABox OgreMeshComponent::GetBoundingBox() const
 	{
 		if(m_OgreEntity)
-			return Convert::ToGASS(m_OgreEntity->getBoundingBox());
+			return OgreConvert::ToGASS(m_OgreEntity->getBoundingBox());
 		else
 			return AABox(Vec3(-1,-1,-1),Vec3(1,1,1));
 	}
@@ -246,7 +246,7 @@ namespace GASS
 			SubMeshDataPtr sub_mesh_data(new SubMeshData());
 			mesh_data.SubMeshVector.push_back(sub_mesh_data);
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
-			sub_mesh_data->Type = Convert::ToGASS(sub_mesh->operationType);
+			sub_mesh_data->Type = OgreConvert::ToGASS(sub_mesh->operationType);
 			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
 			
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());

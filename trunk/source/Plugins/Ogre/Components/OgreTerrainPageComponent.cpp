@@ -834,7 +834,7 @@ namespace GASS
 		AABox aabox;
 		if(m_TerrainGroup)
 		{
-			aabox = Convert::ToGASS(m_Terrain->getAABB());
+			aabox = OgreConvert::ToGASS(m_Terrain->getAABB());
 			//Hack to get terrain size before loaded
 			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
 			Vec3 pos = GetPosition();
@@ -849,7 +849,7 @@ namespace GASS
 		Sphere sphere;
 		if(m_Terrain)
 		{
-			sphere.m_Pos = Convert::ToGASS(m_Terrain->getPosition()) + GetPosition();
+			sphere.m_Pos = OgreConvert::ToGASS(m_Terrain->getPosition()) + GetPosition();
 			sphere.m_Radius = m_Terrain->getBoundingRadius();
 		}
 		return sphere;
@@ -903,7 +903,7 @@ namespace GASS
 		//mesh_data->VertexVector = new Vec3[vertex_size];
 		sub_mesh_data->PositionVector.resize(vertex_size);
 		size_t index = 0;
-		Vec3 center = Convert::ToGASS(m_Terrain->getPosition());
+		Vec3 center = OgreConvert::ToGASS(m_Terrain->getPosition());
 		Vec3 offset = center - Vec3(m_Terrain->getWorldSize()/2.0,0,-m_Terrain->getWorldSize()/2.0);
 
 		Float scale = m_Terrain->getWorldSize()/(m_Terrain->getSize()-1);
@@ -965,7 +965,7 @@ namespace GASS
 		m_Pos = pos;
 		if(m_Terrain)
 		{
-			m_Terrain->setPosition(Convert::ToOgre(pos));
+			m_Terrain->setPosition(OgreConvert::ToOgre(pos));
 			//GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
@@ -975,7 +975,7 @@ namespace GASS
 		return m_Pos;
 		/*Vec3 pos(0,0,0);
 		if(m_TerrainGroup)
-			pos= Convert::ToGASS(m_TerrainGroup->getOrigin());
+			pos= OgreConvert::ToGASS(m_TerrainGroup->getOrigin());
 		return pos;*/
 	}
 

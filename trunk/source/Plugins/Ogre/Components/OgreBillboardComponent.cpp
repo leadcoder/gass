@@ -154,8 +154,8 @@ namespace GASS
 
 		Vec3 pos = Vec3(0,m_Height/2.0,0);
 		Ogre::ColourValue color = Ogre::ColourValue::White;
-		Ogre::Billboard* billboard = m_BillboardSet->createBillboard(Convert::ToOgre(pos),color);
-		billboard->mPosition = Convert::ToOgre(pos);
+		Ogre::Billboard* billboard = m_BillboardSet->createBillboard(OgreConvert::ToOgre(pos),color);
+		billboard->mPosition = OgreConvert::ToOgre(pos);
 		billboard->setColour(color);
 		billboard->setDimensions(m_Width,m_Height);
 		billboard->setTexcoordRect(0, 0,1, 1);

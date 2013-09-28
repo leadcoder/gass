@@ -174,7 +174,7 @@ namespace GASS
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(Convert::ToOgre(message->GetStart()),Convert::ToOgre(message->GetEnd()),ogre_color);		
+			m_DebugDrawer->drawLine(OgreConvert::ToOgre(message->GetStart()),OgreConvert::ToOgre(message->GetEnd()),ogre_color);		
 	}
 
 	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)
@@ -183,7 +183,7 @@ namespace GASS
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
 		{
-			m_DebugDrawer->drawCircle(Convert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
+			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
 		}
 	}
 
@@ -191,7 +191,7 @@ namespace GASS
 	{
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(Convert::ToOgre(start),Convert::ToOgre(end),ogre_color);		
+			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start),OgreConvert::ToOgre(end),ogre_color);		
 	}
 
 	void OgreGraphicsSceneManager::OnInit()

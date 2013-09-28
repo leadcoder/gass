@@ -145,13 +145,13 @@ namespace GASS
 
 	void SkyXCloudLayerComponent::SetWindDirection(const Vec2 &value)
 	{
-		m_Options.WindDirection = Convert::ToOgre(value);
+		m_Options.WindDirection = OgreConvert::ToOgre(value);
 		UpdateOptions();
 	}
 
 	Vec2 SkyXCloudLayerComponent::GetWindDirection() const 
 	{
-		return Convert::ToGASS(m_Options.WindDirection);
+		return OgreConvert::ToGASS(m_Options.WindDirection);
 	}
 
 

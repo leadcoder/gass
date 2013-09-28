@@ -143,7 +143,7 @@ namespace GASS
 		m_Origin = pos;
 		if(m_TerrainGroup)
 		{
-			m_TerrainGroup->setOrigin(Convert::ToOgre(pos));
+			m_TerrainGroup->setOrigin(OgreConvert::ToOgre(pos));
 
 			//update page positions
 			BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
@@ -475,7 +475,7 @@ namespace GASS
 		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5;
 		if(inner_radius > brush_size*0.5)
 			inner_radius = brush_size*0.5;
-		Ogre::Vector3 position = Convert::ToOgre(message->GetPosition());
+		Ogre::Vector3 position = OgreConvert::ToOgre(message->GetPosition());
 		float intensity = message->GetIntensity();
 		Ogre::Sphere sphere(position, brush_size);
 		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
@@ -496,7 +496,7 @@ namespace GASS
 		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5;
 		if(inner_radius > brush_size*0.5)
 			inner_radius = brush_size*0.5;
-		Ogre::Vector3 position = Convert::ToOgre(message->GetPosition());
+		Ogre::Vector3 position = OgreConvert::ToOgre(message->GetPosition());
 		float intensity = message->GetIntensity();
 		Ogre::Sphere sphere(position, brush_size);
 		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
@@ -541,7 +541,7 @@ namespace GASS
 				dist += step_size;
 
 				Ogre::TerrainGroup::TerrainList terrainList;
-				Ogre::Vector3 position = Convert::ToOgre(pos);
+				Ogre::Vector3 position = OgreConvert::ToOgre(pos);
 				Ogre::Sphere sphere(position, brush_size);
 				m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 				for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)

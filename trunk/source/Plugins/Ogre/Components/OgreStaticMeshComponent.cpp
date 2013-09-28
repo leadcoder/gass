@@ -107,9 +107,9 @@ namespace GASS
 			Ogre::Entity* entity = ogsm->GetOgreSceneManager()->createEntity(iter->first,iter->first);
 			for(size_t i = 0;  i < iter->second.size(); i++)
 			{
-				Ogre::Vector3  pos = Convert::ToOgre(iter->second.at(i).m_Position);
-				Ogre::Quaternion orientation = Convert::ToOgre(iter->second.at(i).m_Rotation);
-				Ogre::Vector3  scale = Convert::ToOgre(iter->second.at(i).m_Scale);
+				Ogre::Vector3  pos = OgreConvert::ToOgre(iter->second.at(i).m_Position);
+				Ogre::Quaternion orientation = OgreConvert::ToOgre(iter->second.at(i).m_Rotation);
+				Ogre::Vector3  scale = OgreConvert::ToOgre(iter->second.at(i).m_Scale);
 				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
 			}
 			++iter;
@@ -194,8 +194,8 @@ namespace GASS
 		while (regIt.hasMoreElements())
 		{
 			StaticGeometry::Region* region = regIt.getNext();
-			Vec3 center = Convert::ToGASS(region->getCentre());
-			AABox box = Convert::ToGASS(region->getBoundingBox());
+			Vec3 center = OgreConvert::ToGASS(region->getCentre());
+			AABox box = OgreConvert::ToGASS(region->getBoundingBox());
 			final_box.Union(box);
 		}
 		return final_box;
@@ -217,7 +217,7 @@ namespace GASS
 
 
 			sphere.m_Radius = region->getBoundingRadius();
-			sphere.m_Pos = Convert::ToGASS(region->getCentre());
+			sphere.m_Pos = OgreConvert::ToGASS(region->getCentre());
 			if(first_loop)
 			{
 				final_sphere = sphere;

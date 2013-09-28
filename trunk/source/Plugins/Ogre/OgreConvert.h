@@ -40,7 +40,7 @@
 #include "Sim/GASSMeshData.h"
 namespace GASS
 {
-	class Convert
+	class OgreConvert
 	{
 	public:
 		static inline Ogre::Vector2				ToOgre(const Vec2 &v) {return Ogre::Vector2(v.x,v.y);}

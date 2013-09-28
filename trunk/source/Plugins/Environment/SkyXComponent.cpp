@@ -250,12 +250,12 @@ namespace GASS
 
 	Vec3 SkyXComponent::GetTime() const 
 	{
-		return Convert::ToGASS(m_SkyXOptions.Time);
+		return OgreConvert::ToGASS(m_SkyXOptions.Time);
 	}
 
 	void SkyXComponent::SetTime(const Vec3 &value)
 	{
-		m_SkyXOptions.Time = Convert::ToOgre(value);
+		m_SkyXOptions.Time = OgreConvert::ToOgre(value);
 		UpdateOptions();
 	}
 

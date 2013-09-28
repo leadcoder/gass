@@ -123,7 +123,7 @@ namespace GASS
 	AABox OgreParticleSystemComponent::GetBoundingBox() const
 	{
 		assert(m_ParticleSystem);
-		return Convert::ToGASS(m_ParticleSystem->getBoundingBox());
+		return OgreConvert::ToGASS(m_ParticleSystem->getBoundingBox());
 	}
 
 	Sphere OgreParticleSystemComponent::GetBoundingSphere() const

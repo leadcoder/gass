@@ -173,8 +173,8 @@ namespace GASS
 		if(m_Camera)
 		{
 			Ogre::Ray ray = m_Camera->getCameraToViewportRay(screenx, screeny);
-			ray_start = Convert::ToGASS(ray.getOrigin());
-			ray_dir = Convert::ToGASS(ray.getDirection());
+			ray_start = OgreConvert::ToGASS(ray.getOrigin());
+			ray_dir = OgreConvert::ToGASS(ray.getDirection());
 			return true;
 		}
 		else 
