@@ -193,7 +193,7 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			pos = PxOgreConvert::ToGASS(m_Actor->getGlobalPose().p);
+			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
 		}
 		return pos;
 	}
@@ -286,7 +286,7 @@ namespace GASS
 
 		if(m_Actor)
 		{
-			q = PxOgreConvert::ToGASS(m_Actor->getGlobalPose().q);
+			q = PxConvert::ToGASS(m_Actor->getGlobalPose().q);
 		}
 		return q;
 	}
@@ -395,9 +395,9 @@ namespace GASS
 		if (m_Actor) 
 		{
 			//if (rel) 
-			//	vel = PxOgreConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
+			//	vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
 			//else
-			vel = PxOgreConvert::ToGASS(m_Actor->getLinearVelocity());
+			vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
 		}
 		return vel;
 	}

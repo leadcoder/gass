@@ -24,7 +24,7 @@
 namespace GASS
 {
 	
-	OSGConvert::OSGConvert() :m_FlipYZ (true)
+	OSGConvert::OSGConvert()
 	{
 		
 	}
@@ -53,83 +53,27 @@ namespace GASS
 
 	osg::Vec3d OSGConvert::ToOSG(const Vec3 &v) const
 	{
-		//Vec3 osg_v = m_Tranform*v;
-		//return osg::Vec3(osg_v.x,osg_v.y,osg_v.z);
-		if(m_FlipYZ)
-			return osg::Vec3d(v.x,-v.z,v.y);
-		else
-			return osg::Vec3d(v.x,v.y,v.z);
+		return osg::Vec3d(v.x,-v.z,v.y);
 	}
 
-	Vec3 OSGOgreConvert::ToGASS(const osg::Vec3 &v) const
+	Vec3 OSGConvert::ToGASS(const osg::Vec3 &v) const
 	{
-		if(m_FlipYZ)
-			return Vec3(v.x(),v.z(),-v.y());
-		else
-			return Vec3(v.x(),v.y(),v.z());
-
+		return Vec3(v.x(),v.z(),-v.y());
 	}
 
-	Vec3 OSGOgreConvert::ToGASS(const osg::Vec3d &v) const
+	Vec3 OSGConvert::ToGASS(const osg::Vec3d &v) const
 	{
-		if(m_FlipYZ)
-			return Vec3(v.x(),v.z(),-v.y());
-		else
-			return Vec3(v.x(),v.y(),v.z());
+		return Vec3(v.x(),v.z(),-v.y());
 	}
 
-	Quaternion OSGOgreConvert::ToGASS(const osg::Quat &value) const
+	Quaternion OSGConvert::ToGASS(const osg::Quat &value) const
 	{
-		if(m_FlipYZ)
-			return Quaternion(value.w(),-value.x(),-value.z(),value.y());
-		else
-			return Quaternion(-value.w(),value.x(), value.y(), value.z());
-		
-	/*	Mat4 rot_mat;
-		rot_mat.Identity();
-		Quaternion rot(-value.w(),value.x(),value.y(),value.z());
-		
-		rot.ToRotationMatrix(rot_mat);
-
-		Vec3 view = rot_mat.GetViewDirVector();
-		Vec3 up = rot_mat.GetUpVector();
-		Vec3 right = rot_mat.GetRightVector();
-
-		rot_mat = m_InvTranform*rot_mat;
-
-		view = rot_mat.GetViewDirVector();
-		up = rot_mat.GetUpVector();
-		right = rot_mat.GetRightVector();
-
-		rot.FromRotationMatrix(rot_mat);
-		return rot;*/
-
-		//return Quaternion(-value.w(),value.x(),value.y(),value.z());
-		osg::Matrixf osg_matrix;
-		value.get(osg_matrix);
-		float test = osg_matrix(0,0);
-	
-		Vec3 right_dir = ToGASS(osg::Vec3(osg_matrix(0,0),osg_matrix(0,1),osg_matrix(0,2)));
-		Vec3 view_dir = ToGASS(osg::Vec3(osg_matrix(1,0),osg_matrix(1,1),osg_matrix(1,2)));
-		Vec3 up_dir = ToGASS(osg::Vec3(osg_matrix(2,0),osg_matrix(2,1),osg_matrix(2,2)));
-		
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		rot_mat.SetViewDirVector(-view_dir);
-		rot_mat.SetUpVector(up_dir);
-		rot_mat.SetRightVector(right_dir);
-		
-		Quaternion rot;
-		rot.FromRotationMatrix(rot_mat);
-		return rot;
+		return Quaternion(value.w(),-value.x(),-value.z(),value.y());
 	}
 
 	osg::Quat OSGConvert::ToOSG(const Quaternion &value) const
 	{
-		if(m_FlipYZ)
-			return  osg::Quat(-value.x,value.z,-value.y,value.w);
-		else
-			return  osg::Quat(value.x,value.y,value.z,-value.w);
+		return  osg::Quat(-value.x,value.z,-value.y,value.w);
 	}
 
 	int OSGConvert::ToOSGNodeMask(GeometryFlags flag) const

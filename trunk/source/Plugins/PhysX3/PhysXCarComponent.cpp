@@ -494,13 +494,13 @@ namespace GASS
 
 		for(int i = 0; i < numShapes-1; i++)
 		{
-			//Vec3 pos = PxOgreConvert::ToGASS(carShapes[i]->getLocalPose().p);
-			Vec3 pos = PxOgreConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
+			//Vec3 pos = PxConvert::ToGASS(carShapes[i]->getLocalPose().p);
+			Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
 			MessagePtr pos_msg(new PositionMessage(pos,from_id));
 			wheels[i]->PostMessage(pos_msg);
 
-			Quaternion rot = PxOgreConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
-			//Quaternion rot = PxOgreConvert::ToGASS(carShapes[i]->getLocalPose().q);
+			Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
+			//Quaternion rot = PxConvert::ToGASS(carShapes[i]->getLocalPose().q);
 			MessagePtr rot_msg(new RotationMessage(rot,from_id));
 			wheels[i]->PostMessage(rot_msg);
 		}
@@ -755,7 +755,7 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			pos = PxOgreConvert::ToGASS(m_Actor->getGlobalPose().p);
+			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
 		}
 		return pos;
 	}
@@ -775,7 +775,7 @@ namespace GASS
 
 		if(m_Actor)
 		{
-			q = PxOgreConvert::ToGASS(m_Actor->getGlobalPose().q);
+			q = PxConvert::ToGASS(m_Actor->getGlobalPose().q);
 		}
 		return q;
 	}

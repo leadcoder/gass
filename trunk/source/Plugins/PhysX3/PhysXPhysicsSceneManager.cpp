@@ -225,8 +225,8 @@ namespace GASS
 		{
 			body = GetScene()->LoadObjectFromTemplate("TestBody",GetScene()->GetRootSceneObject());
 		}
-		Vec3 pos = PxOgreConvert::ToGASS(m_Body->getGlobalPose().p);
-		Quaternion q = PxOgreConvert::ToGASS(m_Body->getGlobalPose().q);
+		Vec3 pos = PxConvert::ToGASS(m_Body->getGlobalPose().p);
+		Quaternion q = PxConvert::ToGASS(m_Body->getGlobalPose().q);
 
 		MessagePtr pos_msg(new WorldPositionMessage(pos));
 		body->PostMessage(pos_msg);
@@ -238,8 +238,8 @@ namespace GASS
 		{
 			wheel = GetScene()->LoadObjectFromTemplate("TestWheel",GetScene()->GetRootSceneObject());
 		}
-		pos = PxOgreConvert::ToGASS(m_Wheel->getGlobalPose().p);
-		q = PxOgreConvert::ToGASS(m_Wheel->getGlobalPose().q);
+		pos = PxConvert::ToGASS(m_Wheel->getGlobalPose().p);
+		q = PxConvert::ToGASS(m_Wheel->getGlobalPose().q);
 
 		 pos_msg = MessagePtr(new WorldPositionMessage(pos));
 		wheel->PostMessage(pos_msg);

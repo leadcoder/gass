@@ -255,8 +255,8 @@ namespace GASS
 				direction.normalize(); 
 				origin = cameramatrix.getTrans(); 
 
-				ray_start = OSGOgreConvert::ToGASS(origin);
-				ray_dir = OSGOgreConvert::ToGASS(direction);
+				ray_start = OSGConvert::ToGASS(origin);
+				ray_dir = OSGConvert::ToGASS(direction);
 				ray_dir.Normalize();
 			}
 			else*/
