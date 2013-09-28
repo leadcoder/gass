@@ -68,9 +68,9 @@ namespace GASS
 		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)
 		{
 			unsigned int offset = PositionVector.size();
-			for(size_t j = 0; j < mesh.SubMeshVector[i]->FaceVector.size() ; j++)
+			for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
 			{
-				IndexVector.push_back(mesh.SubMeshVector[i]->FaceVector[j] + offset);
+				IndexVector.push_back(mesh.SubMeshVector[i]->IndexVector[j] + offset);
 			}
 
 			for(size_t j = 0; j < mesh.SubMeshVector[i]->PositionVector.size() ; j++)
@@ -78,7 +78,7 @@ namespace GASS
 				PositionVector.push_back(mesh.SubMeshVector[i]->PositionVector[j]);
 			}
 
-			for(size_t j = 0; j < mesh.SubMeshVector[i]->FaceVector.size()/3 ; j++)
+			for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size()/3 ; j++)
 			{
 				MaterialIDVector.push_back(0);
 			}

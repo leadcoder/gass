@@ -70,19 +70,23 @@ namespace GASS
 		Vec3 text_pos = end;//(start + end)* 0.5; 
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-		mesh_data->Type = LINE_STRIP;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,0,0,1);
-		vertex.Normal = Vec3(0,1,0);
-		vertex.Pos = start - text_pos;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos = end - text_pos;
-		mesh_data->VertexVector.push_back(vertex);
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(1);
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+	
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->Type = LINE_STRIP;
+		ColorRGBA color(1,0,0,1);
+		
+		Vec3 pos = start - text_pos;
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
+		pos = end - text_pos;
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
+		
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(1);
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		ruler->PostMessage(mesh_message);

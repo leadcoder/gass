@@ -238,19 +238,17 @@ namespace GASS
 
 		//collect all children and update path
 		//const double line_steps = 115;
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
-		vertex.Pos = Vec3(0,0,0);
-		mesh_data->VertexVector.push_back(vertex);
+		sub_mesh_data->Type = LINE_LIST;
+		Vec3 pos(0,0,0);
+		sub_mesh_data->PositionVector.push_back(pos);
 
-		vertex.Pos = t_pos;
-		mesh_data->VertexVector.push_back(vertex);
+		pos = t_pos;
+		sub_mesh_data->PositionVector.push_back(pos);
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);

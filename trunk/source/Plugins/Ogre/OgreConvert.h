@@ -28,6 +28,7 @@
 #include <OgreQuaternion.h>
 #include <OgreSphere.h>
 #include <OgreAxisAlignedBox.h>
+#include <OgreRenderOperation.h>
 #include <iostream>
 
 #include "Core/Math/GASSMatrix.h"
@@ -35,7 +36,8 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSphere.h"
 #include "Core/Math/GASSAABox.h"
-
+#include "Core/Utils/GASSColorRGB.h"
+#include "Sim/GASSMeshData.h"
 namespace GASS
 {
 	class Convert
@@ -48,6 +50,33 @@ namespace GASS
 		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.m_Min),ToOgre(b.m_Max));}
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(-q.w,q.x,q.y,q.z);}
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
+		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(color.r, color.g, color.b, color.a);}
+		static inline Ogre::RenderOperation::OperationType ToOgre(MeshType mt)
+		{
+			Ogre::RenderOperation::OperationType op;
+			switch(mt)
+			{
+			case LINE_LIST:
+				op = Ogre::RenderOperation::OT_LINE_LIST;
+				break;
+			case POINT_LIST:
+				op = Ogre::RenderOperation::OT_POINT_LIST;
+				break;
+			case LINE_STRIP:
+				op = Ogre::RenderOperation::OT_LINE_STRIP;
+				break;
+			case TRIANGLE_FAN:
+				op = Ogre::RenderOperation::OT_TRIANGLE_FAN;
+				break;
+			case TRIANGLE_LIST:
+				op = Ogre::RenderOperation::OT_TRIANGLE_LIST;
+				break;
+			case TRIANGLE_STRIP:
+				op = Ogre::RenderOperation::OT_TRIANGLE_STRIP;
+				break;
+			}
+			return op;
+		}
 
 		static inline Vec2						ToGASS(const Ogre::Vector2 &v) {return Vec2(v.x,v.y);}
 		static inline Vec3						ToGASS(const Ogre::Vector3 &v) {return Vec3(v.x,v.y,v.z);}
@@ -55,6 +84,33 @@ namespace GASS
 		static inline AABox						ToGASS(const Ogre::AxisAlignedBox &b) {return AABox(ToGASS(b.getMinimum()),ToGASS(b.getMaximum()));}
 		static inline Quaternion				ToGASS(const Ogre::Quaternion &q) {return Quaternion(-q.w,q.x,q.y,q.z);}
 		static inline Sphere					ToGASS(const Ogre::Sphere &s){return Sphere(ToGASS(s.getCenter()),s.getRadius());}
+		static inline ColorRGBA					ToGASS(const Ogre::ColourValue &c){return ColorRGBA(c.r, c.g, c.b, c.a);}
+		static inline MeshType					ToGASS(Ogre::RenderOperation::OperationType ot)
+		{
+			MeshType mt;
+			switch(ot)
+			{
+			case Ogre::RenderOperation::OT_LINE_LIST:
+				mt = LINE_LIST;
+				break;
+			case Ogre::RenderOperation::OT_POINT_LIST:
+				mt = POINT_LIST;
+				break;
+			case Ogre::RenderOperation::OT_LINE_STRIP:
+				mt = LINE_STRIP;
+				break;
+			case Ogre::RenderOperation::OT_TRIANGLE_FAN:
+				mt = TRIANGLE_FAN;
+				break;
+			case Ogre::RenderOperation::OT_TRIANGLE_LIST:
+				mt = TRIANGLE_LIST;
+				break;
+			case Ogre::RenderOperation::OT_TRIANGLE_STRIP:
+				mt = TRIANGLE_STRIP;
+				break;
+			}
+			return mt;
+		}
 	};
 }
 

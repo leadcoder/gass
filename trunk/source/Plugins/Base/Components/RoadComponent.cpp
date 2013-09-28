@@ -230,10 +230,14 @@ namespace GASS
 	
 		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
+	
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+	
 
-		mesh_data->Material = m_Material;
-		mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->MaterialName = m_Material;
+		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		std::vector<Vec3> points = wpl->GetWaypoints();
 
@@ -271,7 +275,6 @@ namespace GASS
 			uv_new_pos = points[i]; 
 			v_coord += (uv_new_pos - uv_old_pos).Length()/m_TileScale.y; 
 			uv_old_pos = uv_new_pos; 
-
 			// move left or right 
 			// calc lrVector 
 			vertex = points[i];   // vertex is being used as a temporary variable 
@@ -320,7 +323,6 @@ namespace GASS
 				curr_vertices[j] += lr_vector*lr_vector_multiplier[j]*width_mult; 
 			} 
 
-
 			if(terrain && m_ClampToTerrain)
 			{
 				for (int j = 1; j < num_horizontal_pts-1; j++) 
@@ -344,38 +346,30 @@ namespace GASS
 				}
 			}
 			last_pos = curr_vertices[2]; 
-			// finally add vertices 
-			/*for (int j = 0; j < num_horizontal_pts; j++) 
-			{ 
-				MeshVertex mesh_vertex;
-				mesh_vertex.Pos = curr_vertices[j];
-				//mesh_vertex.Normal.Set(0,1,0);
-				mesh_vertex.Color.Set(1,1,1,1);
-				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
-				mesh_vertex.TexCoord.y = v_coord;
-				mesh_data->VertexVector.push_back(mesh_vertex);
-			}*/
-
-
+		
+			std::vector<Vec4> tex_coords;
 			for (int j = 1; j < num_horizontal_pts; j++) 
 			{ 
 				MeshVertex mesh_vertex;
-				mesh_vertex.Pos = curr_vertices[j-1];
-				mesh_vertex.Normal.Set(0,1,0);
-				mesh_vertex.Color.Set(1,1,1,vertex_alpha);
-				mesh_vertex.TexCoord.x = u_coord[j-1]*m_TileScale.x;
-				mesh_vertex.TexCoord.y = v_coord;
-				mesh_data->VertexVector.push_back(mesh_vertex);
+				Vec3 pos = curr_vertices[j-1];
+				//mesh_vertex.Normal.Set(0,1,0);
+				ColorRGBA color(1,1,1,vertex_alpha);
+				Vec4 tex_coord(u_coord[j-1]*m_TileScale.x,v_coord,0,0);
+				
+				tex_coords.push_back(tex_coord);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
 
-				mesh_vertex.Pos = curr_vertices[j];
-				mesh_vertex.Normal.Set(0,1,0);
-				mesh_vertex.Color.Set(1,1,1,vertex_alpha);
-				mesh_vertex.TexCoord.x = u_coord[j]*m_TileScale.x;
-				mesh_vertex.TexCoord.y = v_coord;
-				mesh_data->VertexVector.push_back(mesh_vertex);
+				pos =curr_vertices[j];
+				tex_coord.Set(u_coord[j]*m_TileScale.x,v_coord,0,0);
+				
+				tex_coords.push_back(tex_coord);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
+
 			}
+			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 		} 
-
 
 		for (int n = 0; n < points.size()-1; n++) 
 		{
@@ -387,35 +381,30 @@ namespace GASS
 					vertex_offset + 0,vertex_offset + num_horizontal_vertex,vertex_offset + num_horizontal_vertex+1}; 
 
 				for (int j=0; j<6; j++)
-					mesh_data->IndexVector.push_back(face[j]);
+					sub_mesh_data->IndexVector.push_back(face[j]);
 			} 
 		}
 
+		sub_mesh_data->NormalVector.resize(sub_mesh_data->PositionVector.size());
+		sub_mesh_data->TangentVector.resize(sub_mesh_data->PositionVector.size());
+
 		//Do normals
-		for(size_t i = 0 ;  i < mesh_data->IndexVector.size(); i+=6)
+		for(size_t i = 0 ;  i < sub_mesh_data->IndexVector.size(); i+=6)
 		{
-			MeshVertex* v1 = &mesh_data->VertexVector[mesh_data->IndexVector[i]];
-			MeshVertex* v2 = &mesh_data->VertexVector[mesh_data->IndexVector[i+1]];
-			MeshVertex* v3 = &mesh_data->VertexVector[mesh_data->IndexVector[i+2]];
-			Vec3 normal = Math::GetNormal(v1->Pos,v2->Pos,v3->Pos);
-			Vec3 tangent = v3->Pos - v1->Pos;
+			Vec3* v1 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i]];
+			Vec3* v2 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i+1]];
+			Vec3* v3 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i+2]];
+			Vec3 normal = Math::GetNormal(*v1,*v2,*v3);
+			Vec3 tangent = *v3 - *v1;
 			tangent.Normalize();
 
-			v1->Tangent = tangent;
-			v2->Tangent = tangent;
-			v3->Tangent = tangent;
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+3]]) = normal;
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+4]]) = normal;
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+5]]) = normal;
 
-			v1->Normal = normal;
-			v2->Normal = normal;
-			v3->Normal = normal;
-
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+3]])->Normal = normal;
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Normal = normal;
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Normal = normal;
-
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+3]])->Tangent = tangent;
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+4]])->Tangent = tangent;
-			(&mesh_data->VertexVector[mesh_data->IndexVector[i+5]])->Tangent = tangent;
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+3]]) = tangent;
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+4]]) = tangent;
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
 
 		
@@ -426,13 +415,13 @@ namespace GASS
 			for (int n = 0; n < points.size()-1; n++) 
 			{
 				vertex_offset = n*num_horizontal_vertex;
-				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex - 1 );
-				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1 );
-				mesh_data->IndexVector.push_back(vertex_offset);
+				sub_mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex - 1 );
+				sub_mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1 );
+				sub_mesh_data->IndexVector.push_back(vertex_offset);
 
-				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1);
-				mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex);
-				mesh_data->IndexVector.push_back(vertex_offset);
+				sub_mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex + num_horizontal_vertex - 1);
+				sub_mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex);
+				sub_mesh_data->IndexVector.push_back(vertex_offset);
 			}
 
 			//CAP START and END
@@ -440,70 +429,97 @@ namespace GASS
 			for (int i = 0; i < num_horizontal_vertex-1 ; i++ ) 
 			{
 				//start cap
-				MeshVertex m0 = mesh_data->VertexVector[0];
-				MeshVertex m1 = mesh_data->VertexVector[i];
-				MeshVertex m2 = mesh_data->VertexVector[i+1];
+				Vec3 pos0 = sub_mesh_data->PositionVector[0];
+				Vec3 pos1 = sub_mesh_data->PositionVector[i];
+				Vec3 pos2 = sub_mesh_data->PositionVector[i+1];
 				
-				Vec3 normal = Math::GetNormal(m0.Pos,m1.Pos,m2.Pos);
+				Vec3 normal = Math::GetNormal(pos0,pos1,pos2);
 				
-				m0.Normal = normal;
-				m1.Normal = normal;
-				m2.Normal = normal;
-				Vec3 t1 = m1.Pos - m0.Pos;
-				Vec3 t2 = m2.Pos - m0.Pos;
-				
-
-				m0.TexCoord.x = 0;
-				m0.TexCoord.y = 0;
-
-				m1.TexCoord.y = t1.y;
+				Vec3 t1 = pos1 - pos0;
+				Vec3 t2 = pos2 - pos0;
+		
+				Vec4 tex0(0,0,0,0);
+				Vec4 tex1(0,0,0,0);
+				Vec4 tex2(0,0,0,0);
+			
+				tex1.y = t1.y;
 				t1.y = 0;
-				m1.TexCoord.x = t1.Length();
+				tex1.x = t1.Length();
 
-				m2.TexCoord.y = t2.y;
+				tex2.y = t2.y;
 				t2.y = 0;
-				m2.TexCoord.x = t2.Length();
+				tex2.x = t2.Length();
 
-				int start_ind = mesh_data->VertexVector.size();
-				mesh_data->IndexVector.push_back(start_ind);
-				mesh_data->IndexVector.push_back(start_ind+1);
-				mesh_data->IndexVector.push_back(start_ind+2);
-				mesh_data->VertexVector.push_back(m0);
-				mesh_data->VertexVector.push_back(m1);
-				mesh_data->VertexVector.push_back(m2);
+				ColorRGBA color(1,1,1,1);
+				int start_ind = sub_mesh_data->PositionVector.size();
+				sub_mesh_data->IndexVector.push_back(start_ind);
+				sub_mesh_data->IndexVector.push_back(start_ind+1);
+				sub_mesh_data->IndexVector.push_back(start_ind+2);
+
+				sub_mesh_data->PositionVector.push_back(pos0);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex0);
+				
+				sub_mesh_data->PositionVector.push_back(pos1);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex1);
+
+				sub_mesh_data->PositionVector.push_back(pos2);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex2);
 
 				//end cap
 
 				
-				m0 = mesh_data->VertexVector[offset];
-				m1 = mesh_data->VertexVector[offset + i];
-				m2 = mesh_data->VertexVector[offset +i+1];
-				normal = Math::GetNormal(m0.Pos,m1.Pos,m2.Pos);
+				pos0 = sub_mesh_data->PositionVector[offset];
+				pos1 = sub_mesh_data->PositionVector[offset + i];
+				pos2 = sub_mesh_data->PositionVector[offset +i+1];
+				normal = Math::GetNormal(pos0,pos1,pos2);
 				
-				m0.Normal = normal;
-				m1.Normal = normal;
-				m2.Normal = normal;
-				t1 = m1.Pos - m0.Pos;
-				t2 = m2.Pos - m0.Pos;
+				t1 = pos1 - pos0;
+				t2 = pos2 - pos0;
 				
-				m0.TexCoord.x = 0;
-				m0.TexCoord.y = 0;
+				tex0.x = 0;
+				tex0.y = 0;
 
-				m1.TexCoord.y = t1.y;
+				tex0.y = t1.y;
 				t1.y = 0;
-				m1.TexCoord.x = t1.Length();
+				tex1.x = t1.Length();
 
-				m2.TexCoord.y = t2.y;
+				tex2.y = t2.y;
 				t2.y = 0;
-				m2.TexCoord.x = t2.Length();
+				tex2.x = t2.Length();
 
-				start_ind = mesh_data->VertexVector.size();
-				mesh_data->IndexVector.push_back(start_ind);
-				mesh_data->IndexVector.push_back(start_ind+1);
-				mesh_data->IndexVector.push_back(start_ind+2);
-				mesh_data->VertexVector.push_back(m2);
-				mesh_data->VertexVector.push_back(m1);
-				mesh_data->VertexVector.push_back(m0);
+				start_ind = sub_mesh_data->PositionVector.size();
+				sub_mesh_data->IndexVector.push_back(start_ind);
+				sub_mesh_data->IndexVector.push_back(start_ind+1);
+				sub_mesh_data->IndexVector.push_back(start_ind+2);
+				
+				sub_mesh_data->PositionVector.push_back(pos0);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex0);
+				
+				sub_mesh_data->PositionVector.push_back(pos1);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex1);
+
+				sub_mesh_data->PositionVector.push_back(pos2);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+				sub_mesh_data->TexCoordsVector[0].push_back(tex2);
+
+
 			} 
 		}
 
@@ -519,7 +535,7 @@ namespace GASS
 					vertex_offset + 0,vertex_offset + num_horizontal_pts,vertex_offset + num_horizontal_pts+1}; 
 
 				for (int j=0; j<6; j++) 
-					mesh_data->IndexVector.push_back(face[j]);
+					sub_mesh_data->IndexVector.push_back(face[j]);
 				
 			} 
 		} */

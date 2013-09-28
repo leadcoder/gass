@@ -20,7 +20,7 @@
 namespace GASS
 {
 
-	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new ManualMeshData), m_Color(0,1,0,1),
+	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new MeshData), m_Color(0,1,0,1),
 		m_Size(30),
 		m_InnerSize(20),
 		m_Type("follow_height"),
@@ -39,7 +39,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PaintGizmoComponent",new Creator<PaintGizmoComponent, IComponent>);
 		RegisterProperty<float>("Size",&PaintGizmoComponent::GetSize, &PaintGizmoComponent::SetSize);
-		RegisterProperty<Vec4>("Color",&PaintGizmoComponent::GetColor, &PaintGizmoComponent::SetColor);
+		RegisterProperty<ColorRGBA>("Color",&PaintGizmoComponent::GetColor, &PaintGizmoComponent::SetColor);
 		RegisterProperty<std::string>("Type",&PaintGizmoComponent::GetType, &PaintGizmoComponent::SetType);
 	}
 
@@ -69,16 +69,15 @@ namespace GASS
 		if(!m_HMTerrain)
 			m_HMTerrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 
-		m_MeshData->VertexVector.clear();
-		m_MeshData->IndexVector.clear();
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		m_MeshData->SubMeshVector.clear();
+		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
 
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Normal = Vec3(0,1,0);
-		vertex.Color = m_Color;
-		m_MeshData->Type = LINE_STRIP;
-		m_MeshData->Material = "PaintGizmoMat";
+		//vertex.Color = m_Color;
+		sub_mesh_data->Type = LINE_STRIP;
+		sub_mesh_data->MaterialName = "PaintGizmoMat";
 
+		Vec3 pos(0,0,0);
 		const float samples = 60;
 		const float rad = 2*MY_PI/samples;
 		float x,y;
@@ -92,10 +91,12 @@ namespace GASS
 				h = m_HMTerrain->GetHeightAtWorldLocation(x+m_Pos.x,y+m_Pos.z)-m_Pos.y + 0.1;
 			}
 
-			vertex.Pos.Set(x,h,y);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos.Set(x,h,y);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		m_MeshData->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(m_Color);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
@@ -106,10 +107,13 @@ namespace GASS
 			{
 				h = m_HMTerrain->GetHeightAtWorldLocation(x+m_Pos.x,y+m_Pos.z)-m_Pos.y + 0.1;
 			}
-			vertex.Pos.Set(x,h,y);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos.Set(x,h,y);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		m_MeshData->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(m_Color);
+		
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);
 	}

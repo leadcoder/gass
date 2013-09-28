@@ -44,8 +44,8 @@ namespace GASS
 
 
 	typedef SPTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
-	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new ManualMeshData()),
-		m_NavVisLineMesh(new ManualMeshData()),
+	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new MeshData()),
+		m_NavVisLineMesh(new MeshData()),
 		m_NavMesh(NULL),
 		m_ShowMeshLines(false),
 		m_ShowMeshSolid(false),
@@ -1238,45 +1238,56 @@ static int convexhull(const float* pts, int npts, int* out)
 	void RecastNavigationMeshComponent::UpdateNavMeshVis()
 	{
 		std::vector<MeshVertex> nav_tris =  GetVisualNavMesh();
-
 		
-		m_NavVisLineMesh->VertexVector.clear();
-		m_NavVisLineMesh->IndexVector.clear();
-		m_NavVisTriMesh->VertexVector.clear();
-		m_NavVisTriMesh->IndexVector.clear();
+		m_NavVisLineMesh->SubMeshVector.clear();
+		m_NavVisTriMesh->SubMeshVector.clear();
+		
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		m_NavVisLineMesh->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		ColorRGBA color(0,0,1,1);
 
-		m_NavVisLineMesh->Material = "WhiteTransparentNoLighting";
-		m_NavVisTriMesh->Material = "WhiteTransparentNoLighting";
-
-		/*MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(1,1,1,1);*/
-
-		m_NavVisLineMesh->Type = LINE_LIST;
 		for(int i = 0; i < nav_tris.size(); i += 3)
 		{
 			MeshVertex v1 = nav_tris[i];
 			MeshVertex v2 = nav_tris[i+1];
 			MeshVertex v3 = nav_tris[i+2];
-			v1.Color.Set(0,0,1,1);
-			v2.Color.Set(0,0,1,1);
-			v3.Color.Set(0,0,1,1);
+			
+			sub_mesh_data->PositionVector.push_back(v1.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
+			
+			sub_mesh_data->PositionVector.push_back(v2.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
 
-			m_NavVisLineMesh->VertexVector.push_back(v1);
-			m_NavVisLineMesh->VertexVector.push_back(v2);
-			m_NavVisLineMesh->VertexVector.push_back(v2);
-			m_NavVisLineMesh->VertexVector.push_back(v3);
-			m_NavVisLineMesh->VertexVector.push_back(v3);
-			m_NavVisLineMesh->VertexVector.push_back(v1);
+			sub_mesh_data->PositionVector.push_back(v2.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
+			
+			sub_mesh_data->PositionVector.push_back(v3.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
+
+			sub_mesh_data->PositionVector.push_back(v3.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
+			
+			sub_mesh_data->PositionVector.push_back(v1.Pos);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
-
-		//vertex.Color.Set(0,0.7,0,float(m_Transparency)/100.0f);
-		m_NavVisTriMesh->Type = TRIANGLE_LIST;
-
-		m_NavVisTriMesh->VertexVector = nav_tris;
+		
+		sub_mesh_data = SubMeshDataPtr(new SubMeshData());
+		m_NavVisTriMesh->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		
 		for(int i = 0; i < nav_tris.size(); i++)
 		{
-			m_NavVisTriMesh->IndexVector.push_back(i);
+			sub_mesh_data->PositionVector.push_back(nav_tris[i].Pos);
+			Vec4 c = nav_tris[i].Color;
+			sub_mesh_data->ColorVector.push_back(ColorRGBA(c.x, c.y, c.z, c.w));
+		}
+
+		for(int i = 0; i < nav_tris.size(); i++)
+		{
+			sub_mesh_data->IndexVector.push_back(i);
 		}
 
 		SetShowMeshLines(m_ShowMeshLines);

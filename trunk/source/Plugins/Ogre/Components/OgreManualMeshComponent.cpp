@@ -71,7 +71,7 @@ namespace GASS
 	void OgreManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, IComponent>);
-		
+
 		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 	}
@@ -83,8 +83,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
-		
-		
+
+
 	}
 
 	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -117,7 +117,7 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{
-		ManualMeshDataPtr data = message->GetData();
+		MeshDataPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
@@ -132,6 +132,61 @@ namespace GASS
 			m_MeshObject->clear();
 	}
 
+
+	void OgreManualMeshComponent::CreateMesh(MeshDataPtr data)
+	{
+		if(m_MeshObject)
+		{
+			m_MeshObject->clear();
+
+			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
+			{
+				SubMeshDataPtr sub_mesh =   data->SubMeshVector[i];
+				Ogre::RenderOperation::OperationType op = Convert::ToOgre(sub_mesh->Type);
+				//use material name or create new material?
+				m_MeshObject->begin(sub_mesh->MaterialName, op);
+
+				size_t num_pos = sub_mesh->PositionVector.size();
+
+				bool has_normals = false;
+				bool has_tangents = false;
+				bool has_colors = false;
+				bool has_tex_coords = false;
+
+				if(sub_mesh->NormalVector.size() ==  num_pos)
+					has_normals = true;
+				if(sub_mesh->TangentVector.size() ==  num_pos)
+					has_tangents = true;
+				if(sub_mesh->ColorVector.size() ==  num_pos)
+					has_colors = true;
+				if(sub_mesh->TexCoordsVector.size() > 0 &&  sub_mesh->TexCoordsVector[0].size() ==  num_pos)
+					has_tex_coords = true;
+
+				for(size_t j = 0; j < sub_mesh->PositionVector.size() ; j++)
+				{
+					m_MeshObject->position(Convert::ToOgre(sub_mesh->PositionVector[j]));
+					if(has_normals)
+						m_MeshObject->normal(Convert::ToOgre(sub_mesh->NormalVector[j]));
+					if(has_tangents)
+						m_MeshObject->tangent(Convert::ToOgre(sub_mesh->TangentVector[j]));
+					if(has_colors)
+						m_MeshObject->colour(Convert::ToOgre(sub_mesh->ColorVector[j]));
+					if(has_tex_coords)
+					{
+						Vec4 tex_coord = sub_mesh->TexCoordsVector[0].at(j);
+						m_MeshObject->textureCoord(tex_coord.x,tex_coord.y);
+					}
+				}
+				for(size_t j = 0; j < sub_mesh->IndexVector.size();j++)
+				{
+					m_MeshObject->index(sub_mesh->IndexVector[j]);
+				}
+				m_MeshObject->end();
+			}
+		}
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+	}
+
 	void OgreManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
 	{
 		if(m_MeshObject)
@@ -141,8 +196,8 @@ namespace GASS
 			if(data->ScreenSpace)
 			{
 				// Use identity view/projection matrices
-			   m_MeshObject->setUseIdentityProjection(true);
-			   m_MeshObject->setUseIdentityView(true);
+				m_MeshObject->setUseIdentityProjection(true);
+				m_MeshObject->setUseIdentityView(true);
 
 				// Use infinite AAB to always stay visible
 				Ogre::AxisAlignedBox aabInf;
@@ -157,7 +212,7 @@ namespace GASS
 			}
 
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
-			
+
 			switch(data->Type)
 			{
 			case LINE_LIST:
@@ -188,8 +243,8 @@ namespace GASS
 				Vec3 tangent  = data->VertexVector[i].Tangent;
 				Vec2 tex_coord  = data->VertexVector[i].TexCoord;
 				Vec4 color  = data->VertexVector[i].Color;
-				
-				
+
+
 				m_MeshObject->position(pos.x, pos.y, pos.z);
 				m_MeshObject->normal(normal.x,normal.y,normal.z);
 				m_MeshObject->tangent(tangent.x,tangent.y,tangent.z);
@@ -256,7 +311,7 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-		
+
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
 		if(!m_UniqueMaterialCreated) 
@@ -269,15 +324,15 @@ namespace GASS
 			m_MeshObject->getSection(0)->setMaterialName(mat_name);
 			m_UniqueMaterialCreated = true;
 		}
-		
+
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();
 		Vec3 si = message->GetSelfIllumination();
 		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
 		if(mat.isNull()) 
-				return;
-		
+			return;
+
 		if(diffuse.w >= 0)
 			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
 		if(ambient.x >= 0)
@@ -291,13 +346,13 @@ namespace GASS
 
 		/*if(diffuse.w < 1.0)
 		{
-			mat->setDepthCheckEnabled(false);
-			mat->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+		mat->setDepthCheckEnabled(false);
+		mat->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 		}
 		else
 		{
-			//mat->setDepthCheckEnabled(true);
-			mat->setSceneBlending(Ogre::SBT_REPLACE);
+		//mat->setDepthCheckEnabled(true);
+		mat->setSceneBlending(Ogre::SBT_REPLACE);
 		}*/
 	}
 
@@ -307,7 +362,7 @@ namespace GASS
 		//return box;
 		assert(m_MeshObject);
 		box = Convert::ToGASS(m_MeshObject->getBoundingBox());
-		
+
 		if(m_MeshObject->getParentSceneNode())
 		{
 			Vec3 scale = Convert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
@@ -345,14 +400,14 @@ namespace GASS
 	MeshData OgreManualMeshComponent::GetMeshData() const
 	{
 		MeshData mesh_data;
-			
+
 		if(m_MeshObject == NULL || m_CurrentOP != TRIANGLE_LIST)
 			return mesh_data;
 		Ogre::MeshPtr mesh = m_MeshObject->convertToMesh("ConvertedTempMesh");
 		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);
 		//remove mesh!
 		Ogre::MeshManager::getSingleton().remove("ConvertedTempMesh");
-		
+
 
 		return mesh_data;
 	}

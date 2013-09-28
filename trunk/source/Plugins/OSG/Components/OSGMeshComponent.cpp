@@ -670,7 +670,7 @@ namespace GASS
 		mesh_data.SubMeshVector.push_back(sub_mesh_data);
 
 		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;
-		sub_mesh_data->FaceVector = mv.mFunctor.mTriangles;
+		sub_mesh_data->IndexVector = mv.mFunctor.mTriangles;
 
 		return mesh_data;
 

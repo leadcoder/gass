@@ -7,7 +7,7 @@
 
 namespace GASS
 {
-	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new ManualMeshData()), 
+	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new MeshData()), 
 		m_Radius(0.5),
 		m_Group("BLUE"),
 		m_Agent(NULL),
@@ -396,38 +396,41 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::UpdateGeometry()
 	{
-		m_MeshData->VertexVector.clear();
-		m_MeshData->IndexVector.clear();
-		m_MeshData->Material = "WhiteTransparentNoLighting";
-		m_MeshData->Type = LINE_STRIP;
 
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(1,0,0,1);
-		vertex.Normal = Vec3(0,1,0);
+		m_MeshData->SubMeshVector.clear();
+
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_STRIP;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		ColorRGBA color(1,0,0,1);
 
 		float samples = 24;
 		float rad = 2*MY_PI/samples;
 		float x,y;
-		vertex.Pos = Vec3(0,0,0);
-		m_MeshData->VertexVector.push_back(vertex);
+		Vec3 pos(0,0,0);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			vertex.Pos.Set(x,0,y);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos.Set(x,0,y);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			vertex.Pos.Set(x,m_Height,y);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos.Set(x,m_Height,y);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		m_MeshData->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);

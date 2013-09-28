@@ -80,18 +80,18 @@ namespace GASS
 					if(sub_mesh->NormalVector.size() == 0)
 					{
 						sub_mesh->NormalVector.resize(sub_mesh->PositionVector.size());
-						for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
+						for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
 						{
-							Vec3 p1 = sub_mesh->PositionVector[sub_mesh->FaceVector[j]];
-							Vec3 p2 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+1]];
-							Vec3 p3 = sub_mesh->PositionVector[sub_mesh->FaceVector[j+2]];
+							Vec3 p1 = sub_mesh->PositionVector[sub_mesh->IndexVector[j]];
+							Vec3 p2 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+1]];
+							Vec3 p3 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+2]];
 							Vec3 v1 = p1 - p3;
 							Vec3 v2 = p2 - p3;
 							Vec3 norm = Math::Cross(v1,v2);
 							norm.FastNormalize();
-							sub_mesh->NormalVector[sub_mesh->FaceVector[j]] = norm;
-							sub_mesh->NormalVector[sub_mesh->FaceVector[j+1]] = norm;
-							sub_mesh->NormalVector[sub_mesh->FaceVector[j+2]] = norm;
+							sub_mesh->NormalVector[sub_mesh->IndexVector[j]] = norm;
+							sub_mesh->NormalVector[sub_mesh->IndexVector[j+1]] = norm;
+							sub_mesh->NormalVector[sub_mesh->IndexVector[j+2]] = norm;
 						}
 					}
 
@@ -136,9 +136,9 @@ namespace GASS
 						}
 					}
 
-					/* for(int j = 0 ; j < sub_mesh->FaceVector.size(); j++)
+					/* for(int j = 0 ; j < sub_mesh->IndexVector.size(); j++)
 					{
-					FaceVector.push_back(sub_mesh->FaceVector[j]+base_index);
+					FaceVector.push_back(sub_mesh->IndexVector[j]+base_index);
 					}*/
 
 
@@ -186,14 +186,14 @@ namespace GASS
 					ss << "usemtl " << sub_mesh->MaterialName << "\n";
 
 
-					ss << "#num faces" << (sub_mesh->FaceVector.size()/3) << "\n";
+					ss << "#num faces" << (sub_mesh->IndexVector.size()/3) << "\n";
 
 
-					for(int j = 0 ; j < sub_mesh->FaceVector.size(); j += 3)
+					for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
 					{
-						unsigned int v_index_1 = sub_mesh->FaceVector[j] + base_index;
-						unsigned int v_index_2 = sub_mesh->FaceVector[j+1] + base_index;
-						unsigned int v_index_3 = sub_mesh->FaceVector[j+2] + base_index;
+						unsigned int v_index_1 = sub_mesh->IndexVector[j] + base_index;
+						unsigned int v_index_2 = sub_mesh->IndexVector[j+1] + base_index;
+						unsigned int v_index_3 = sub_mesh->IndexVector[j+2] + base_index;
 						ss << "f " << v_index_1 << "/" << v_index_1 << "/" << v_index_1 << " "
 							<< v_index_2 << "/" << v_index_2 << "/" << v_index_2 << " "
 							<< v_index_3 << "/" << v_index_3 << "/" << v_index_3 << "\n";

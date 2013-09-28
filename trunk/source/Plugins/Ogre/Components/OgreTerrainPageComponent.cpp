@@ -881,19 +881,19 @@ namespace GASS
 		//Create indices
 		unsigned int index_size = (tWidth - 1) * (tHeight - 1) * 6;
 		//mesh_data->FaceVector = new unsigned int[index_size];
-		sub_mesh_data->FaceVector.resize(index_size);
+		sub_mesh_data->IndexVector.resize(index_size);
 		//mesh_data->NumFaces = static_cast<unsigned int>(index_size/3);
 		for( unsigned int x = 0; x < tWidth - 1; x++)
 		{
 			for( unsigned int y=0; y < tHeight - 1; y++)
 			{
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+2] = x+y * tWidth;
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6] = (x+1)+(y+1) * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6+2] = x+y * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6+1] = (x+1)+y * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6] = (x+1)+(y+1) * tWidth;
 				
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+5] = x+(y+1) * tWidth;
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
-				sub_mesh_data->FaceVector[(x+y*(tWidth-1))*6+3] = (x+1)+(y+1) * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6+5] = x+(y+1) * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6+4] = x+y * tWidth;
+				sub_mesh_data->IndexVector[(x+y*(tWidth-1))*6+3] = (x+1)+(y+1) * tWidth;
 
 			}
 		}

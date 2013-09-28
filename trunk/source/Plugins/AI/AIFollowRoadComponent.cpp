@@ -348,23 +348,24 @@ namespace GASS
 				if(GetSceneObject()->GetChildByID("AIM_POINT"))
 					GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionMessage(target_point)));
 
-				ManualMeshDataPtr mesh_data(new ManualMeshData());
-				mesh_data->Type = LINE_LIST;
-				mesh_data->Material = "WhiteTransparentNoLighting";
+				MeshDataPtr mesh_data(new MeshData());
+				SubMeshDataPtr sub_mesh_data(new SubMeshData());
+				mesh_data->SubMeshVector.push_back(sub_mesh_data);
+				sub_mesh_data->Type = LINE_LIST;
+				sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 
-				MeshVertex vertex;
-				vertex.TexCoord.Set(0,0);
-				vertex.Color.Set(1,0.2,0,1);
-				vertex.Normal = Vec3(0,1,0);
-
+				ColorRGBA color(1,0.2,0,1);
+			
 				for(size_t i =  1; i < m_CurrentPath.size(); i++)
 				{
-					vertex.Pos = m_CurrentPath[i-1];
-					vertex.Pos.y += 1;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = m_CurrentPath[i];
-					vertex.Pos.y += 1;
-					mesh_data->VertexVector.push_back(vertex );
+					Vec3 pos =m_CurrentPath[i-1];
+					pos.y += 1;
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
+					pos = m_CurrentPath[i];
+					pos.y += 1;
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
 				}
 				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 				GetSceneObject()->GetChildByID("CPATH")->PostMessage(mesh_message);

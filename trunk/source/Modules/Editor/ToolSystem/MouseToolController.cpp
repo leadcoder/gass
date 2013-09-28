@@ -341,40 +341,38 @@ namespace GASS
 			m_PointerObject = scene_object;
 			pointer = scene_object;
 
-			ManualMeshDataPtr mesh_data(new ManualMeshData);
+			MeshDataPtr mesh_data(new MeshData());
+			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			mesh_data->SubMeshVector.push_back(sub_mesh_data);
+	
 
-			MeshVertex vertex;
+			
 			float box_volume = 1;
 
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = Vec4(1,1,1,1);
-			vertex.Normal = Vec3(0,1,0);
+			
+			Vec3 pos = Vec3(0,0,-1);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,0,1);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(1);
 
-			vertex.Pos = Vec3(0,0,-1);
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,0,1);
-			mesh_data->VertexVector.push_back(vertex);
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(1);
+			pos = Vec3(-1,0,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(1,0,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(3);
 
-			vertex.Pos = Vec3(-1,0,0);
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(1,0,0);
-			mesh_data->VertexVector.push_back(vertex);
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(3);
+			pos = Vec3(0,-1,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,1,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(5);
 
-			vertex.Pos = Vec3(0,-1,0);
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,1,0);
-			mesh_data->VertexVector.push_back(vertex);
-			mesh_data->IndexVector.push_back(4);
-			mesh_data->IndexVector.push_back(5);
-
-			mesh_data->Material = "WhiteNoLighting";
-			mesh_data->Type = LINE_LIST;
-
-
+			sub_mesh_data->MaterialName = "WhiteNoLighting";
+			sub_mesh_data->Type = LINE_LIST;
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			scene_object->PostMessage(mesh_message);
 		}

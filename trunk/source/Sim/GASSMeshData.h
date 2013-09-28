@@ -26,7 +26,15 @@
 
 namespace GASS
 {
-
+	enum MeshType
+	{
+		LINE_LIST,
+		POINT_LIST,
+		LINE_STRIP,
+		TRIANGLE_FAN,
+		TRIANGLE_LIST,
+		TRIANGLE_STRIP,
+	};
 	
 	class GASSExport SubMeshData
 	{
@@ -41,12 +49,15 @@ namespace GASS
 		}
 		std::vector<Vec3> PositionVector;
 		std::vector<Vec3> NormalVector;
+		std::vector<Vec3> TangentVector;
+		std::vector<ColorRGBA> ColorVector;
 		std::vector< std::vector<Vec4> > TexCoordsVector;
 		//unsigned int NumFaces;
-		std::vector<unsigned int> FaceVector;
+		std::vector<unsigned int> IndexVector;
 		//unsigned int MaterialID;
 		GraphicsMaterial Material;
 		std::string MaterialName;
+		MeshType Type;
 	};
 	typedef SPTR<SubMeshData> SubMeshDataPtr;
 	
@@ -98,15 +109,7 @@ namespace GASS
 		Vec2 TexCoord;
 	};
 
-	enum MeshType
-	{
-		LINE_LIST,
-		POINT_LIST,
-		LINE_STRIP,
-		TRIANGLE_FAN,
-		TRIANGLE_LIST,
-		TRIANGLE_STRIP,
-	};
+
 
 	/**
 	Used by manual mesh

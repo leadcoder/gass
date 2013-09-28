@@ -115,53 +115,50 @@ namespace GASS
 		}
 	}
 
-
 	void ODESphereGeometryComponent::CreateDebugSphere(Float size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
-
+		MeshDataPtr mesh_data(new MeshData());
+		
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->Type = LINE_LIST;
+	
 		const float samples = 24;
 		const float rad = 2*MY_PI/samples;
-
+		Vec3 pos(0,0,0);
 		float x,y,z;
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*size;
 			y = sin(rad*i)*size;
-			vertex.Pos.Set(x,y,0);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(x,y,0);
+			sub_mesh_data->PositionVector.push_back(pos);
 			if(i > 0 && i < samples)
-				mesh_data->VertexVector.push_back(vertex);
+				sub_mesh_data->PositionVector.push_back(pos);
 		}
-		//mesh_data->VertexVector.push_back(vertex);
+		//sub_mesh_data->PositionVector.push_back(pos);
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*size;
 			z = sin(rad*i)*size;
-			vertex.Pos.Set(x,0,z);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(x,0,z);
+			sub_mesh_data->PositionVector.push_back(pos);
 			if(i > 0 && i < samples)
-				mesh_data->VertexVector.push_back(vertex);
+				sub_mesh_data->PositionVector.push_back(pos);
 		}
-		//mesh_data->VertexVector.push_back(vertex);
+		//sub_mesh_data->PositionVector.push_back(pos);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			y = cos(rad*i)*size;
 			z = sin(rad*i)*size;
-			vertex.Pos.Set(0,y,z);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(0,y,z);
+			sub_mesh_data->PositionVector.push_back(pos);
 			if(i > 0 && i < samples)
-				mesh_data->VertexVector.push_back(vertex);
+				sub_mesh_data->PositionVector.push_back(pos);
 		}
-		//mesh_data->VertexVector.push_back(vertex);
+		//sub_mesh_data->PositionVector.push_back(pos);
 
 
 		SceneObjectPtr scene_object = GetDebugObject();

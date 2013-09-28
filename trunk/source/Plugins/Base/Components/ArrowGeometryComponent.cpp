@@ -79,126 +79,121 @@ namespace GASS
 
 	void ArrowGeometryComponent::GenerateMesh()
 	{
-		//Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-
-
-		MeshVertex vertex;
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+	
 		float box_volume = m_Size.x;
 
-		vertex.TexCoord.Set(0,0);
-		vertex.Color  = Vec4(1,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
 		Vec3 offset(-box_volume,box_volume,0);
 
-		vertex.Pos = Vec3(box_volume,box_volume,0)  + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos = Vec3(box_volume,-box_volume,0) + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos = Vec3(-box_volume,-box_volume,0)+ offset;;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos = Vec3(-box_volume,box_volume,0) + offset;
-		mesh_data->VertexVector.push_back(vertex);
+		Vec3 pos = Vec3(box_volume,box_volume,0)  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(box_volume,-box_volume,0) + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,-box_volume,0)+ offset;;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,box_volume,0) + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
 
-		vertex.Pos = Vec3(box_volume,box_volume,-m_Size.y) + offset;;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(box_volume,-box_volume,-m_Size.y)  + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(-box_volume,-box_volume,-m_Size.y) + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(-box_volume,box_volume,-m_Size.y)  + offset;
-		mesh_data->VertexVector.push_back(vertex);
-
-
-
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(4);
-		mesh_data->IndexVector.push_back(5);
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(5);
-		mesh_data->IndexVector.push_back(1);
+		pos = Vec3(box_volume,box_volume,-m_Size.y) + offset;;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(box_volume,-box_volume,-m_Size.y)  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,-box_volume,-m_Size.y) + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,box_volume,-m_Size.y)  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
 
 
-		mesh_data->IndexVector.push_back(1);
-		mesh_data->IndexVector.push_back(5);
-		mesh_data->IndexVector.push_back(6);
-		mesh_data->IndexVector.push_back(1);
-		mesh_data->IndexVector.push_back(6);
-		mesh_data->IndexVector.push_back(2);
+
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(4);
+		sub_mesh_data->IndexVector.push_back(5);
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(5);
+		sub_mesh_data->IndexVector.push_back(1);
 
 
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(6);
-		mesh_data->IndexVector.push_back(7);
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(7);
-		mesh_data->IndexVector.push_back(3);
-
-		mesh_data->IndexVector.push_back(3);
-		mesh_data->IndexVector.push_back(7);
-		mesh_data->IndexVector.push_back(4);
-		mesh_data->IndexVector.push_back(3);
-		mesh_data->IndexVector.push_back(4);
-		mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(1);
+		sub_mesh_data->IndexVector.push_back(5);
+		sub_mesh_data->IndexVector.push_back(6);
+		sub_mesh_data->IndexVector.push_back(1);
+		sub_mesh_data->IndexVector.push_back(6);
+		sub_mesh_data->IndexVector.push_back(2);
 
 
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(1);
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(3);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(6);
+		sub_mesh_data->IndexVector.push_back(7);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(7);
+		sub_mesh_data->IndexVector.push_back(3);
+
+		sub_mesh_data->IndexVector.push_back(3);
+		sub_mesh_data->IndexVector.push_back(7);
+		sub_mesh_data->IndexVector.push_back(4);
+		sub_mesh_data->IndexVector.push_back(3);
+		sub_mesh_data->IndexVector.push_back(4);
+		sub_mesh_data->IndexVector.push_back(0);
+
+
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(1);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(3);
 
 
 
 		//hat
 		box_volume = box_volume*4;
-		vertex.Pos = Vec3(box_volume,box_volume,-m_Size.y) + offset;;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(box_volume,-box_volume,-m_Size.y)  + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(-box_volume,-box_volume,-m_Size.y) + offset;
-		mesh_data->VertexVector.push_back(vertex);
-		vertex.Pos= Vec3(-box_volume,box_volume,-m_Size.y)  + offset;
-		mesh_data->VertexVector.push_back(vertex);
+		pos = Vec3(box_volume,box_volume,-m_Size.y) + offset;;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(box_volume,-box_volume,-m_Size.y)  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,-box_volume,-m_Size.y) + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
+		pos = Vec3(-box_volume,box_volume,-m_Size.y)  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
 
-		vertex.Pos= Vec3(0,0,-(m_Size.y + box_volume*5))  + offset;
-		mesh_data->VertexVector.push_back(vertex);
-
-
-		mesh_data->IndexVector.push_back(8);
-		mesh_data->IndexVector.push_back(9);
-		mesh_data->IndexVector.push_back(10);
-		mesh_data->IndexVector.push_back(8);
-		mesh_data->IndexVector.push_back(10);
-		mesh_data->IndexVector.push_back(11);
+		pos = Vec3(0,0,-(m_Size.y + box_volume*5))  + offset;
+		sub_mesh_data->PositionVector.push_back(pos);
 
 
-
-		mesh_data->IndexVector.push_back(8);
-		mesh_data->IndexVector.push_back(12);
-		mesh_data->IndexVector.push_back(9);
-
-		mesh_data->IndexVector.push_back(9);
-		mesh_data->IndexVector.push_back(12);
-		mesh_data->IndexVector.push_back(10);
+		sub_mesh_data->IndexVector.push_back(8);
+		sub_mesh_data->IndexVector.push_back(9);
+		sub_mesh_data->IndexVector.push_back(10);
+		sub_mesh_data->IndexVector.push_back(8);
+		sub_mesh_data->IndexVector.push_back(10);
+		sub_mesh_data->IndexVector.push_back(11);
 
 
-		mesh_data->IndexVector.push_back(10);
-		mesh_data->IndexVector.push_back(12);
-		mesh_data->IndexVector.push_back(11);
 
-		mesh_data->IndexVector.push_back(11);
-		mesh_data->IndexVector.push_back(12);
-		mesh_data->IndexVector.push_back(8);
+		sub_mesh_data->IndexVector.push_back(8);
+		sub_mesh_data->IndexVector.push_back(12);
+		sub_mesh_data->IndexVector.push_back(9);
+
+		sub_mesh_data->IndexVector.push_back(9);
+		sub_mesh_data->IndexVector.push_back(12);
+		sub_mesh_data->IndexVector.push_back(10);
 
 
-		mesh_data->Material = "GizmoArrowMat";
-		mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->IndexVector.push_back(10);
+		sub_mesh_data->IndexVector.push_back(12);
+		sub_mesh_data->IndexVector.push_back(11);
+
+		sub_mesh_data->IndexVector.push_back(11);
+		sub_mesh_data->IndexVector.push_back(12);
+		sub_mesh_data->IndexVector.push_back(8);
+
+
+		sub_mesh_data->MaterialName = "GizmoArrowMat";
+		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
-
 
 		MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),

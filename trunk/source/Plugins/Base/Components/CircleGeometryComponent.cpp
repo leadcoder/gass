@@ -24,6 +24,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -83,16 +84,15 @@ namespace GASS
 
 	void CircleGeometryComponent::UpdateMesh()
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(m_Color.x,m_Color.y,m_Color.z,1);
-		vertex.Normal = Vec3(0,1,0);
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		
 		if(m_Dashed)
-			mesh_data->Type = LINE_LIST;
+			sub_mesh_data->Type = LINE_LIST;
 		else
-			mesh_data->Type = LINE_STRIP;
+			sub_mesh_data->Type = LINE_STRIP;
 
 		float samples = 30;
 		float rad = 2*MY_PI/samples;
@@ -101,12 +101,11 @@ namespace GASS
 		{
 			x = cos(rad*i)*m_Radius;
 			z = sin(rad*i)*m_Radius;
-			vertex.Pos.Set(x,0,z);
-			mesh_data->VertexVector.push_back(vertex);
+			Vec3 pos(x,0,z);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(ColorRGBA(m_Color.x,m_Color.y,m_Color.z,1));
+		
 		}
-
-		//if(!m_Dashed)
-		//	mesh_data->VertexVector.push_back(Vec3);
 		int id = -1;
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data,id, 0.1));
 		GetSceneObject()->PostMessage(mesh_message);

@@ -62,6 +62,7 @@ namespace GASS
 		void OnTextureMessage(TextureMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
+		void CreateMesh(MeshDataPtr data);
 		void Clear();
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<MeshData> m_MeshData;

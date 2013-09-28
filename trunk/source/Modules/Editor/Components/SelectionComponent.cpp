@@ -38,7 +38,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("SelectionComponent",new Creator<SelectionComponent, IComponent>);
 		//RegisterProperty<float>("Size",&SelectionComponent::GetSize, &SelectionComponent::SetSize);
-		RegisterProperty<Vec4>("Color",&SelectionComponent::GetColor, &SelectionComponent::SetColor);
+		RegisterProperty<ColorRGBA>("Color",&SelectionComponent::GetColor, &SelectionComponent::SetColor);
 		RegisterProperty<std::string>("Type",&SelectionComponent::GetType, &SelectionComponent::SetType);
 	}
 
@@ -135,14 +135,16 @@ namespace GASS
 	{
 		const Vec3 size= m_BBox.GetSize()*0.5;
 		const Vec3 offset = (m_BBox.m_Max + m_BBox.m_Min)*0.5;
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
+		
+		
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		Vec3 pos(0,0,0);
 
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = m_Color;
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+
+		sub_mesh_data->Type = LINE_LIST;
 		std::vector<Vec3> conrners;
 
 		conrners.push_back(Vec3( size.x ,size.y , size.z)+offset);
@@ -157,23 +159,29 @@ namespace GASS
 
 		for(int i = 0; i < 4; i++)
 		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
+			pos = conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
+			pos = conrners[(i+1)%4];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
-			mesh_data->VertexVector.push_back(vertex);
+			pos = conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
+			pos = conrners[i+4];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
 
 		for(int i = 0; i < 4; i++)
 		{
-			vertex.Pos = conrners[4 + i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
-			mesh_data->VertexVector.push_back(vertex);
+			pos = conrners[4 + i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
+			pos = conrners[4 + ((i+1)%4)];
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);

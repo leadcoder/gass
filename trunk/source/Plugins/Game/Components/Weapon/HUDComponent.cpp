@@ -92,15 +92,13 @@ namespace GASS
 
 	void HUDComponent::UpdateHUD()
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		//mesh_data->Material = "WhiteTransparentNoLighting";
-		
-		mesh_data->Material = m_Material;
-		mesh_data->ScreenSpace = true;
+		//mesh_data->ScreenSpace = true;
 
-		//mesh_data->Type = LINE_LIST;
-		mesh_data->Type = TRIANGLE_LIST;
-
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->MaterialName = m_Material;
+		sub_mesh_data->Type = TRIANGLE_LIST;
 		MeshVertex vertex;
 
 		Vec2 size;
@@ -108,34 +106,35 @@ namespace GASS
 		size.y = 1;
 
 		
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
-		vertex.Pos.Set( size.x ,size.y, 0);
-		mesh_data->VertexVector.push_back(vertex);
+		Vec4 t1(0,0,0,0);
+		Vec3 p1( size.x ,size.y, 0);
 
-		vertex.TexCoord.Set(1,0);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Pos.Set( -size.x ,size.y, 0);
-		mesh_data->VertexVector.push_back(vertex);
+		Vec4 t2(1,0,0,0);
+		Vec3 p2( -size.x ,size.y, 0);
 
-		vertex.TexCoord.Set(1,1);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Pos.Set( -size.x ,-size.y, 0);
-		mesh_data->VertexVector.push_back(vertex);
+		Vec4 t3(1,1,0,0);
+		Vec3 p3( -size.x ,-size.y, 0);
 
-		vertex.TexCoord.Set(0,1);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Pos.Set( size.x ,-size.y, 0);
-		mesh_data->VertexVector.push_back(vertex);
+		Vec4 t4(0,1,0,0);
+		Vec3 p4( size.x ,-size.y, 0);
 
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(1);
-		mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->PositionVector.push_back(p1);
+		sub_mesh_data->PositionVector.push_back(p2);
+		sub_mesh_data->PositionVector.push_back(p3);
+		sub_mesh_data->PositionVector.push_back(p4);
 
-		mesh_data->IndexVector.push_back(0);
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(3);
+		std::vector<Vec4> tex_coords;
+		tex_coords.push_back(t1);
+		tex_coords.push_back(t2);
+		tex_coords.push_back(t3);
+		tex_coords.push_back(t4);
+
+		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
+
+
+		sub_mesh_data->IndexVector.push_back(0);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(3);
 		
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);

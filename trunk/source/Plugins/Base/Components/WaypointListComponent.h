@@ -22,6 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
@@ -84,7 +85,7 @@ namespace GASS
 		bool m_Initialized;
 		bool m_AutoUpdateTangents;
 		bool m_ShowWaypoints;
-		Vec4 m_LineColor;
+		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
 	};
 

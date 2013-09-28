@@ -97,46 +97,51 @@ namespace GASS
 
 	void SphereGeometryComponent::DrawWireframe()
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(m_Color.r,m_Color.g,m_Color.b,m_Color.a);
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
-
-		//Vec3 up = GetSceneObject()->GetSceneObjectManager()->GetScene()->GetSceneUp();
 		float samples = 30;
 		float rad = 2*MY_PI/samples;
 
+		Vec3 pos(0,0,0);
 		float x,y,z;
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*m_Radius;
 			y = sin(rad*i)*m_Radius;
-			vertex.Pos.Set(x,y,0);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(x,y,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		mesh_data->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(m_Color);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*m_Radius;
 			z = sin(rad*i)*m_Radius;
-			vertex.Pos.Set(x,0,z);
-			mesh_data->VertexVector.push_back(vertex);
+
+			pos.Set(x,0,z);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		mesh_data->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(m_Color);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			y = cos(rad*i)*m_Radius;
 			z = sin(rad*i)*m_Radius;
-			vertex.Pos.Set(0,y,z);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(0,y,z);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		mesh_data->VertexVector.push_back(vertex);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(m_Color);
+
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
@@ -152,15 +157,12 @@ namespace GASS
 		if(nSlice > 30) nSlice = 30;
 		if(nStack > 30) nStack = 30;
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(m_Color.r,m_Color.g,m_Color.b,m_Color.a);
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = TRIANGLE_LIST;
-		
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		Vec3 pos(0,0,0);
 		//Vertex
 		for(i = 0;i <= nSlice;i++)
 		{   
@@ -180,15 +182,17 @@ namespace GASS
 			p1 = p[i][0];     p2 = p[i][1];
 			p3 = p[i+1][1]; 
 
-			vertex.Pos.Set(p1[0],p1[1],p1[2]);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(p1[0],p1[1],p1[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 
-			vertex.Pos.Set(p2[0],p2[1],p2[2]);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(p2[0],p2[1],p2[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 
-			vertex.Pos.Set(p3[0],p3[1],p3[2]);
-			mesh_data->VertexVector.push_back(vertex);
-			
+			pos.Set(p3[0],p3[1],p3[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
 		//Bottom
 		j=nStack-1;
@@ -197,14 +201,17 @@ namespace GASS
 			p1 = p[i][j];     p2 = p[i][j+1];
 			p3 = p[i+1][j]; 
 
-			vertex.Pos.Set(p1[0],p1[1],p1[2]);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(p1[0],p1[1],p1[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 
-			vertex.Pos.Set(p2[0],p2[1],p2[2]);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(p2[0],p2[1],p2[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 
-			vertex.Pos.Set(p3[0],p3[1],p3[2]);
-			mesh_data->VertexVector.push_back(vertex);
+			pos.Set(p3[0],p3[1],p3[2]);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
 
 		for(i = 0;i < nSlice;i++)
@@ -215,24 +222,30 @@ namespace GASS
 				p3 = p[i+1][j+1]; p4 = p[i+1][j];
 				
 				
-				vertex.Pos.Set(p1[0],p1[1],p1[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p1[0],p1[1],p1[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				vertex.Pos.Set(p2[0],p2[1],p2[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p2[0],p2[1],p2[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				vertex.Pos.Set(p3[0],p3[1],p3[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p3[0],p3[1],p3[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 
 
-				vertex.Pos.Set(p1[0],p1[1],p1[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p1[0],p1[1],p1[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				vertex.Pos.Set(p3[0],p3[1],p3[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p3[0],p3[1],p3[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				vertex.Pos.Set(p4[0],p4[1],p4[2]);
-				mesh_data->VertexVector.push_back(vertex);
+				pos.Set(p4[0],p4[1],p4[2]);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
 				
 			}
 		}

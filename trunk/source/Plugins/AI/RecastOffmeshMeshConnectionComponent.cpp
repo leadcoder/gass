@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	RecastOffmeshMeshConnectionComponent::RecastOffmeshMeshConnectionComponent() : m_ConnectionLine(new ManualMeshData()),
+	RecastOffmeshMeshConnectionComponent::RecastOffmeshMeshConnectionComponent() : m_ConnectionLine(new MeshData()),
 		m_Initialized(false),
 		m_Visible(true),
 		m_Radius(1.0),
@@ -111,47 +111,49 @@ namespace GASS
 
 	void RecastOffmeshMeshConnectionComponent::UpdateConnectionLine()
 	{
-		m_ConnectionLine->VertexVector.clear();
-		m_ConnectionLine->IndexVector.clear();
+		m_ConnectionLine->SubMeshVector.clear();
+
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		m_ConnectionLine->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+	
+		ColorRGBA color(0.2,0.2,1,1);
 		
-		m_ConnectionLine->Material = "WhiteTransparentNoLighting";
-
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(0.2,0.2,1,1);
-		vertex.Normal = Vec3(0,1,0);
-
-		m_ConnectionLine->Type = LINE_LIST;
 		//draw circles
 		const float samples = 24;
 		const float rad = 2*MY_PI/samples;
 		float x,y;
-		vertex.Pos = Vec3(0,0,0);
-		m_ConnectionLine->VertexVector.push_back(vertex);
+		Vec3 pos(0,0,0);
+		sub_mesh_data->PositionVector.push_back(pos);
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			vertex.Pos.Set(x,0,y);
-			m_ConnectionLine->VertexVector.push_back(vertex);
+			Vec3 pos(x,0,y);
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
-		vertex.Pos = Vec3(0,0,0);
-		m_ConnectionLine->VertexVector.push_back(vertex);
+		pos = Vec3(0,0,0);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
 
 		//draw circles
 		Vec3 end_center = m_EndPos - m_StartPos;
-		vertex.Pos = end_center;
-		m_ConnectionLine->VertexVector.push_back(vertex);
-		m_ConnectionLine->VertexVector.push_back(vertex);
+		pos = end_center;
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
+		sub_mesh_data->PositionVector.push_back(pos);
+		sub_mesh_data->ColorVector.push_back(color);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			vertex.Pos.Set(x,0,y);
-			vertex.Pos += end_center;
-			m_ConnectionLine->VertexVector.push_back(vertex);
-
+			pos.Set(x,0,y);
+			pos += end_center;
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
 
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_ConnectionLine));

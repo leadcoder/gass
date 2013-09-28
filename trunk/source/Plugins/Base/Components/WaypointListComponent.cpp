@@ -197,23 +197,21 @@ namespace GASS
 
 		if(m_ShowPathLine)
 		{
-			ManualMeshDataPtr mesh_data(new ManualMeshData());
-			MeshVertex vertex;
-			mesh_data->Material = "WhiteTransparentNoLighting";
-
-			vertex.TexCoord.Set(0,0);
-			vertex.Normal = Vec3(0,1,0);
-			vertex.Color = m_LineColor;
-			mesh_data->Type = LINE_STRIP;
+			MeshDataPtr mesh_data(new MeshData());
+			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			mesh_data->SubMeshVector.push_back(sub_mesh_data);
+			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+			sub_mesh_data->Type = LINE_STRIP;
 			
 			for(size_t i = 0; i < wps.size(); i++)
 			{
-				vertex.Pos = wps[i];
-				mesh_data->VertexVector.push_back(vertex);
+				Vec3 pos =wps[i];
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_LineColor);
 			}
 
 
-			if(mesh_data->VertexVector.size() > 0)
+			if(sub_mesh_data->PositionVector.size() > 0)
 			{
 				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 				GetSceneObject()->PostMessage(mesh_message);

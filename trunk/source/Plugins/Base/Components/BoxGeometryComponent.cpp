@@ -75,13 +75,11 @@ namespace GASS
 	void BoxGeometryComponent::UpdateMesh()
 	{
 		Vec3 size= m_Size*0.5;
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(0,0,1,1);
-		vertex.Normal = Vec3(0,1,0);
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+	
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 
 		std::vector<Vec3> conrners;
 		std::vector<Vec3> tex_coords;
@@ -98,67 +96,33 @@ namespace GASS
 
 		if(m_Lines)
 		{
-			mesh_data->Type = LINE_LIST;
+			sub_mesh_data->Type = LINE_LIST;
 
 			for(int i = 0; i < 4; i++)
 			{
-				vertex.Pos = conrners[i];
-				mesh_data->VertexVector.push_back(vertex);
-				vertex.Pos = conrners[(i+1)%4];
-				mesh_data->VertexVector.push_back(vertex);
+				Vec3 pos =conrners[i];
+				sub_mesh_data->PositionVector.push_back(pos);
+				pos =conrners[(i+1)%4];
+				sub_mesh_data->PositionVector.push_back(pos);
 
-				vertex.Pos = conrners[i];
-				mesh_data->VertexVector.push_back(vertex);
-				vertex.Pos = conrners[i+4];
-				mesh_data->VertexVector.push_back(vertex);
+				pos =conrners[i];
+				sub_mesh_data->PositionVector.push_back(pos);
+				pos =conrners[i+4];
+				sub_mesh_data->PositionVector.push_back(pos);
 			}
 
 			for(int i = 0; i < 4; i++)
 			{
-				vertex.Pos = conrners[4 + i];
-				mesh_data->VertexVector.push_back(vertex);
-				vertex.Pos = conrners[4 + ((i+1)%4)];
-				mesh_data->VertexVector.push_back(vertex);
+				Vec3 pos = conrners[4 + i];
+				sub_mesh_data->PositionVector.push_back(pos);
+				pos =conrners[4 + ((i+1)%4)];
+				sub_mesh_data->PositionVector.push_back(pos);
 			}
 		}
 		else
 		{
-			mesh_data->Type = TRIANGLE_LIST;
+			sub_mesh_data->Type = TRIANGLE_LIST;
 			std::vector<Vec3> postions;
-
-		
-			/*
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Top Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Top Left Of The Texture and Quad
-			// Back Face
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Bottom Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Bottom Left Of The Texture and Quad
-			// Top Face
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f));  // Top Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
-			// Bottom Face
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Top Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Top Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
-			// Right face
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f, -1.0f));  // Bottom Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f, -1.0f));  // Top Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3( 1.0f,  1.0f,  1.0f));  // Top Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3( 1.0f, -1.0f,  1.0f));  // Bottom Left Of The Texture and Quad
-			// Left Face
-			tex_coords.push_back(Vec2(0.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f, -1.0f));  // Bottom Left Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 0.0f)); postions.push_back(Vec3(-1.0f, -1.0f,  1.0f));  // Bottom Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(1.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f,  1.0f));  // Top Right Of The Texture and Quad
-			tex_coords.push_back(Vec2(0.0f, 1.0f)); postions.push_back(Vec3(-1.0f,  1.0f, -1.0f)); 
-			*/
-
 
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
@@ -222,48 +186,48 @@ namespace GASS
 			tex_coords.push_back(Vec3( 1, 1 , 0));
 
 			//bottom
-			mesh_data->IndexVector.push_back(0);
-			mesh_data->IndexVector.push_back(9);
-			mesh_data->IndexVector.push_back(3);
-			mesh_data->IndexVector.push_back(9);
-			mesh_data->IndexVector.push_back(6);
-			mesh_data->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(9);
+			sub_mesh_data->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(9);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(3);
 
 			// top
-			mesh_data->IndexVector.push_back(21);  //face 3
-			mesh_data->IndexVector.push_back(12);
-			mesh_data->IndexVector.push_back(18);
-			mesh_data->IndexVector.push_back(12);  //face 4
-			mesh_data->IndexVector.push_back(15);
-			mesh_data->IndexVector.push_back(18);
+			sub_mesh_data->IndexVector.push_back(21);  //face 3
+			sub_mesh_data->IndexVector.push_back(12);
+			sub_mesh_data->IndexVector.push_back(18);
+			sub_mesh_data->IndexVector.push_back(12);  //face 4
+			sub_mesh_data->IndexVector.push_back(15);
+			sub_mesh_data->IndexVector.push_back(18);
 			// left
-			mesh_data->IndexVector.push_back(22);  //face 5
-			mesh_data->IndexVector.push_back(10);
-			mesh_data->IndexVector.push_back(13);
-			mesh_data->IndexVector.push_back(10);  //face 6
-			mesh_data->IndexVector.push_back(1);
-			mesh_data->IndexVector.push_back(13);
+			sub_mesh_data->IndexVector.push_back(22);  //face 5
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(13);
+			sub_mesh_data->IndexVector.push_back(10);  //face 6
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(13);
 			// right
-			mesh_data->IndexVector.push_back(16);  //face 7
-			mesh_data->IndexVector.push_back(4);
-			mesh_data->IndexVector.push_back(19);
-			mesh_data->IndexVector.push_back(4);  //face 8
-			mesh_data->IndexVector.push_back(7);
-			mesh_data->IndexVector.push_back(19);
+			sub_mesh_data->IndexVector.push_back(16);  //face 7
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(19);
+			sub_mesh_data->IndexVector.push_back(4);  //face 8
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(19);
 			// front
-			mesh_data->IndexVector.push_back(14);  //face 9
-			mesh_data->IndexVector.push_back(2);
-			mesh_data->IndexVector.push_back(17);
-			mesh_data->IndexVector.push_back(2);   //face 10
-			mesh_data->IndexVector.push_back(5);
-			mesh_data->IndexVector.push_back(17);
+			sub_mesh_data->IndexVector.push_back(14);  //face 9
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(17);
+			sub_mesh_data->IndexVector.push_back(2);   //face 10
+			sub_mesh_data->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(17);
 			// back
-			mesh_data->IndexVector.push_back(20);  //face 11
-			mesh_data->IndexVector.push_back(8);
-			mesh_data->IndexVector.push_back(23);
-			mesh_data->IndexVector.push_back(8);   //face 12
-			mesh_data->IndexVector.push_back(11);
-			mesh_data->IndexVector.push_back(23);
+			sub_mesh_data->IndexVector.push_back(20);  //face 11
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(23);
+			sub_mesh_data->IndexVector.push_back(8);   //face 12
+			sub_mesh_data->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(23);
 
 
 			std::vector<Vec3> normals;
@@ -311,14 +275,16 @@ namespace GASS
 			normal_indcies.push_back(3);
 			normal_indcies.push_back(1);
 
-
+			std::vector<Vec4> tex_coords;
 			for(int i = 0; i < postions.size(); i++)
 			{
-				vertex.Pos = postions[i];
-				vertex.Normal = normals[normal_indcies[i]]; 
-				vertex.TexCoord.Set(tex_coords[i].x,tex_coords[i].y);
-				mesh_data->VertexVector.push_back(vertex);
+				Vec3 normal = normals[normal_indcies[i]]; 
+				Vec4 tex_coord(tex_coords[i].x,tex_coords[i].y,0,0);
+				sub_mesh_data->PositionVector.push_back(postions[i]);
+				sub_mesh_data->NormalVector.push_back(normal);
+				tex_coords.push_back(tex_coord);
 			}
+			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 		}
 		
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));

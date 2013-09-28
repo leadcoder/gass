@@ -50,15 +50,15 @@ namespace GASS
 		void SetType(const std::string &value) {m_Type = value;}
 		float GetSize() const{return m_Size;}
 		void SetSize(float value){m_Size =value;}
-		Vec4 GetColor() const{return m_Color;}
-		void SetColor(const Vec4 &value){m_Color =value;}
+		ColorRGBA GetColor() const{return m_Color;}
+		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void UpdateScale();
 		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
 		Float GizmoComponent::SnapValue(Float value, Float snap);
 	
 		Quaternion m_BaseRot;
-		ManualMeshDataPtr m_MeshData;	
-		Vec4 m_Color;
+		MeshDataPtr m_MeshData;	
+		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;
 

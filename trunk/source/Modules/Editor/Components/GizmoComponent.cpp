@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	GizmoComponent::GizmoComponent() : m_MeshData(new ManualMeshData), m_Color(1,0,0,1),
+	GizmoComponent::GizmoComponent() : m_MeshData(new MeshData), m_Color(1,0,0,1),
 		m_Size(5),
 		m_Type(GT_AXIS),
 		m_Highlight(true),
@@ -45,7 +45,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GizmoComponent",new Creator<GizmoComponent, IComponent>);
 		RegisterProperty<float>("Size",&GizmoComponent::GetSize, &GizmoComponent::SetSize);
-		RegisterProperty<Vec4>("Color",&GizmoComponent::GetColor, &GizmoComponent::SetColor);
+		RegisterProperty<ColorRGBA>("Color",&GizmoComponent::GetColor, &GizmoComponent::SetColor);
 		RegisterProperty<std::string>("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
 	}
 
@@ -312,235 +312,181 @@ namespace GASS
 
 	void GizmoComponent::BuildMesh()
 	{
-		m_MeshData->VertexVector.clear();
-		m_MeshData->IndexVector.clear();
-
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		m_MeshData->SubMeshVector.clear();
+		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
+		
 		//Arrow
 		if(m_Type == GT_AXIS)
 		{
-
-			MeshVertex vertex;
 			float box_volume = m_Size * 0.01;
-
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = Vec4(1,1,1,1);
-			vertex.Normal = Vec3(0,1,0);
 			Vec3 offset(0,-box_volume,box_volume);
+			Vec3 pos = Vec3(0,box_volume,box_volume)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,box_volume,-box_volume) + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,-box_volume,-box_volume)+ offset;;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,-box_volume,box_volume) + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos = Vec3(0,box_volume,box_volume)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,box_volume,-box_volume) + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,-box_volume,-box_volume)+ offset;;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,-box_volume,box_volume) + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-
-			vertex.Pos = Vec3(m_Size ,box_volume,box_volume) + offset;;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,box_volume,-box_volume)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,-box_volume,-box_volume) + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,-box_volume,box_volume)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-
+			pos = Vec3(m_Size ,box_volume,box_volume) + offset;;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,box_volume,-box_volume)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,-box_volume,-box_volume) + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,-box_volume,box_volume)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
 
 
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(5);
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(5);
-			m_MeshData->IndexVector.push_back(1);
+
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(1);
 
 
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(5);
-			m_MeshData->IndexVector.push_back(6);
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(6);
-			m_MeshData->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(2);
 
 
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(6);
-			m_MeshData->IndexVector.push_back(7);
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(7);
-			m_MeshData->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(3);
 
-			m_MeshData->IndexVector.push_back(3);
-			m_MeshData->IndexVector.push_back(7);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(3);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(0);
 
-
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(3);
-
-
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(3);
 
 			//hat
 			box_volume = box_volume*4;
-			vertex.Pos = Vec3(m_Size ,box_volume,box_volume) + offset;;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,box_volume,-box_volume)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,-box_volume,-box_volume) + offset;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos= Vec3(m_Size ,-box_volume,box_volume)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
+			pos = Vec3(m_Size ,box_volume,box_volume) + offset;;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,box_volume,-box_volume)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,-box_volume,-box_volume) + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size ,-box_volume,box_volume)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos= Vec3(m_Size + box_volume*5,0,0)  + offset;
-			m_MeshData->VertexVector.push_back(vertex);
+			pos= Vec3(m_Size + box_volume*5,0,0)  + offset;
+			sub_mesh_data->PositionVector.push_back(pos);
 
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(9);
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(11);
 
-			m_MeshData->IndexVector.push_back(8);
-			m_MeshData->IndexVector.push_back(9);
-			m_MeshData->IndexVector.push_back(10);
-			m_MeshData->IndexVector.push_back(8);
-			m_MeshData->IndexVector.push_back(10);
-			m_MeshData->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(12);
+			sub_mesh_data->IndexVector.push_back(9);
 
-
-
-			m_MeshData->IndexVector.push_back(8);
-			m_MeshData->IndexVector.push_back(12);
-			m_MeshData->IndexVector.push_back(9);
-
-			m_MeshData->IndexVector.push_back(9);
-			m_MeshData->IndexVector.push_back(12);
-			m_MeshData->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(9);
+			sub_mesh_data->IndexVector.push_back(12);
+			sub_mesh_data->IndexVector.push_back(10);
 
 
-			m_MeshData->IndexVector.push_back(10);
-			m_MeshData->IndexVector.push_back(12);
-			m_MeshData->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(12);
+			sub_mesh_data->IndexVector.push_back(11);
 
-			m_MeshData->IndexVector.push_back(11);
-			m_MeshData->IndexVector.push_back(12);
-			m_MeshData->IndexVector.push_back(8);
-
-
-			m_MeshData->Material = "GizmoArrowMat";
-			m_MeshData->Type = TRIANGLE_LIST;
-
-			/*MeshVertex vertex;
-			vertex.Pos = Vec3(0,0,0);
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = m_Color;
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,0,0);
-			m_MeshData->VertexVector.push_back(vertex);
-
-			m_MeshData->VertexVector.push_back(vertex);
-
-			vertex.Pos = Vec3(m_Size*0.9,0.1,m_Size*0.1);
-			m_MeshData->VertexVector.push_back(vertex);
-
-			vertex.Pos = Vec3(m_Size,0,0);
-			m_MeshData->VertexVector.push_back(vertex);
-
-			vertex.Pos = Vec3(m_Size*0.9,0.1,-m_Size*0.1);
-			m_MeshData->VertexVector.push_back(vertex);
-
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(3);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(5);
-			m_MeshData->Material = "WhiteTransparentNoLighting";
-			m_MeshData->Type = LINE_LIST;*/
+			sub_mesh_data->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(12);
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->MaterialName = "GizmoArrowMat";
+			sub_mesh_data->Type = TRIANGLE_LIST;
 		}
 		else if(m_Type == GT_PLANE)
 		{
 			float thickness = 0.01;
-			MeshVertex vertex;
-			vertex.Pos = Vec3(0,-thickness,0);
-			vertex.Normal = Vec3(0,1,0);
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = Vec4(1,1,1,1);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,-thickness,0);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,-thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
+			
+			Vec3 pos = Vec3(0,-thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,-thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,-thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos = Vec3(0,-thickness,0);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,-thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,-thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos = Vec3(0,-thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,-thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,-thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(3);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(5);
 
-			m_MeshData->IndexVector.push_back(2);
-			m_MeshData->IndexVector.push_back(1);
-			m_MeshData->IndexVector.push_back(0);
-			m_MeshData->IndexVector.push_back(5);
-			m_MeshData->IndexVector.push_back(4);
-			m_MeshData->IndexVector.push_back(3);
+			sub_mesh_data->IndexVector.push_back(2);
+			sub_mesh_data->IndexVector.push_back(1);
+			sub_mesh_data->IndexVector.push_back(0);
+			sub_mesh_data->IndexVector.push_back(5);
+			sub_mesh_data->IndexVector.push_back(4);
+			sub_mesh_data->IndexVector.push_back(3);
 
+			pos = Vec3(0,thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos = Vec3(0,thickness,0);
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = Vec4(1,1,1,1);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,thickness,0);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
+			pos = Vec3(0,-thickness,0);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(m_Size,thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = Vec3(0,thickness,-m_Size);
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos = Vec3(0,-thickness,0);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(m_Size,thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
-			vertex.Pos = Vec3(0,thickness,-m_Size);
-			m_MeshData->VertexVector.push_back(vertex);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(9);
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(11);
 
-			m_MeshData->IndexVector.push_back(6);
-			m_MeshData->IndexVector.push_back(7);
-			m_MeshData->IndexVector.push_back(8);
-			m_MeshData->IndexVector.push_back(9);
-			m_MeshData->IndexVector.push_back(10);
-			m_MeshData->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(8);
+			sub_mesh_data->IndexVector.push_back(7);
+			sub_mesh_data->IndexVector.push_back(6);
+			sub_mesh_data->IndexVector.push_back(11);
+			sub_mesh_data->IndexVector.push_back(10);
+			sub_mesh_data->IndexVector.push_back(9);
 
-			m_MeshData->IndexVector.push_back(8);
-			m_MeshData->IndexVector.push_back(7);
-			m_MeshData->IndexVector.push_back(6);
-			m_MeshData->IndexVector.push_back(11);
-			m_MeshData->IndexVector.push_back(10);
-			m_MeshData->IndexVector.push_back(9);
-
-
-			m_MeshData->Material = "GizmoArrowMat";
-			m_MeshData->Type = TRIANGLE_LIST;
+			sub_mesh_data->MaterialName = "GizmoArrowMat";
+			sub_mesh_data->Type = TRIANGLE_LIST;
 		}
 
 
 		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 		{
-			MeshVertex vertex;
-
-			vertex.Pos = Vec3(0,0,0);
-			vertex.Normal = Vec3(0,1,0);
-			vertex.TexCoord.Set(0,0);
-			vertex.Color  = m_Color;
-
+			Vec3 pos(0,0,0);
+			
 			float grid_size = 0;
 			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
@@ -552,24 +498,28 @@ namespace GASS
 			int index = 0;
 			for(int i = -n ;  i <= n; i++)
 			{
-				vertex.Pos = Vec3(-half_grid_size,0,i*grid_spacing);
-				m_MeshData->VertexVector.push_back(vertex);
-				vertex.Pos = Vec3(half_grid_size,0,i*grid_spacing);
-				m_MeshData->VertexVector.push_back(vertex);
-				m_MeshData->IndexVector.push_back(index++);
-				m_MeshData->IndexVector.push_back(index++);
+				pos = Vec3(-half_grid_size,0,i*grid_spacing);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+				pos = Vec3(half_grid_size,0,i*grid_spacing);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->IndexVector.push_back(index++);
+				sub_mesh_data->IndexVector.push_back(index++);
 			}
 			for(int i = -n ;  i <= n; i++)
 			{
-				vertex.Pos = Vec3(i*grid_spacing,0,-half_grid_size);
-				m_MeshData->VertexVector.push_back(vertex);
-				vertex.Pos = Vec3(i*grid_spacing,0,half_grid_size);
-				m_MeshData->VertexVector.push_back(vertex);
-				m_MeshData->IndexVector.push_back(index++);
-				m_MeshData->IndexVector.push_back(index++);
+				pos = Vec3(i*grid_spacing,0,-half_grid_size);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+				pos = Vec3(i*grid_spacing,0,half_grid_size);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->IndexVector.push_back(index++);
+				sub_mesh_data->IndexVector.push_back(index++);
 			}
-			m_MeshData->Material = "PlaneGeometry";
-			m_MeshData->Type = LINE_LIST;
+			sub_mesh_data->MaterialName = "PlaneGeometry";
+			sub_mesh_data->Type = LINE_LIST;
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);
@@ -588,10 +538,10 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
+				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.a),
 					Vec3(0,0,0),
 					Vec3(0,0,0),
-					Vec3(m_Color.x,m_Color.y,m_Color.z),
+					Vec3(m_Color.r,m_Color.g,m_Color.b),
 					0,
 					false));
 				GetSceneObject()->PostMessage(mat_mess);
@@ -602,9 +552,9 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				Vec3 color(m_Color.x*0.5, m_Color.y*0.5,m_Color.z*0.5);
+				Vec3 color(m_Color.r*0.5, m_Color.g*0.5,m_Color.b*0.5);
 
-				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
+				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.a),
 					Vec3(0,0,0),
 					Vec3(0,0,0),
 					color,

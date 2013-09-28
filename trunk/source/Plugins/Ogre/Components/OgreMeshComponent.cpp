@@ -229,9 +229,6 @@ namespace GASS
 	}
 
 
-
-	
-
 	MeshData OgreMeshComponent::GetMeshData() const
 	{
 		MeshData mesh_data;
@@ -249,11 +246,10 @@ namespace GASS
 			SubMeshDataPtr sub_mesh_data(new SubMeshData());
 			mesh_data.SubMeshVector.push_back(sub_mesh_data);
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
+			sub_mesh_data->Type = Convert::ToGASS(sub_mesh->operationType);
 			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
 			Ogre::Technique* tech = mat->getBestTechnique();
-
-
 
 			//Get last pass and save materials
 			if(tech->getNumPasses() > 0)
@@ -270,9 +266,7 @@ namespace GASS
 					ColorRGB(specular.r,specular.g,specular.b));
 
 				sub_mesh_data->Material = gfx_mat;
-				//	const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : m_Diffuse(diffuse),
-				//sub_mesh->Material.
-
+				
 				for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
 				{
 					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
@@ -426,7 +420,7 @@ namespace GASS
 			for(unsigned int k = 0; k < index_data->indexCount; ++k)
 			{
 				unsigned int index = pInt[k];
-				mesh->FaceVector.push_back(index + offset);
+				mesh->IndexVector.push_back(index + offset);
 			}
 			ibuf->unlock();
 		}
@@ -436,7 +430,7 @@ namespace GASS
 			for(unsigned int k = 0; k < index_data->indexCount; ++k)
 			{
 				unsigned int index = static_cast<unsigned int> (pShort[k]);
-				mesh->FaceVector.push_back(index + offset);
+				mesh->IndexVector.push_back(index + offset);
 			}
 			ibuf->unlock();
 		}

@@ -117,14 +117,11 @@ namespace GASS
 	
 	void ODEBoxGeometryComponent::CreateDebugBox(const Vec3 &size,const Vec3 &offset)
 	{
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		vertex.TexCoord.Set(0,0);
-		vertex.Color = Vec4(1,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
-		mesh_data->Type = LINE_LIST;
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->Type = LINE_LIST;
 		std::vector<Vec3> conrners;
 
 		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
@@ -137,25 +134,26 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
 		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
 
+		Vec3 pos(0,0,0);
 		for(int i = 0; i < 4; i++)
 		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[(i+1)%4];
-			mesh_data->VertexVector.push_back(vertex);
+			pos =conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = conrners[(i+1)%4];
+			sub_mesh_data->PositionVector.push_back(pos);
 
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i+4];
-			mesh_data->VertexVector.push_back(vertex);
+			pos = conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = conrners[i+4];
+			sub_mesh_data->PositionVector.push_back(pos);
 		}
 
 		for(int i = 0; i < 4; i++)
 		{
-			vertex.Pos = conrners[4 + i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[4 + ((i+1)%4)];
-			mesh_data->VertexVector.push_back(vertex);
+			pos = conrners[4 + i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos = conrners[4 + ((i+1)%4)];
+			sub_mesh_data->PositionVector.push_back(pos);
 		}
 
 		SceneObjectPtr scene_object = GetDebugObject();

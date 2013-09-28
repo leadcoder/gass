@@ -44,7 +44,7 @@ namespace GASS
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void CreateMesh(ManualMeshDataPtr data);
+		void CreateMesh(MeshDataPtr data);
 		void Clear();
 		
 		osg::ref_ptr<osg::Geometry> m_OSGGeometry;

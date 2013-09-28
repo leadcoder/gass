@@ -97,46 +97,50 @@ namespace GASS
 	void PlaneGeometryComponent::GenerateMesh()
 	{
 		Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		MeshVertex v1,v2,v3,v4;
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 
+		Vec3 p1,p2,p3,p4;
+		Vec3 n1,n2,n3,n4;
+
+		sub_mesh_data->MaterialName = "PlaneGeometry";//"WhiteTransparentNoLighting";
 		
-		mesh_data->Material = "PlaneGeometry";//"WhiteTransparentNoLighting";
+		ColorRGBA color(1,1,1,m_Transparency);
+		sub_mesh_data->Type = TRIANGLE_LIST;
+
+		std::vector<Vec4> tex_coords;
 		
-		Vec4 color(1,1,1,m_Transparency);
-		mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,0 , size.y));
+		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->ColorVector.push_back(color);
+		tex_coords.push_back(Vec4(1,1,0,0));
 		
-		v1.Pos = Vec3( size.x ,0 , size.y);
-		v1.Normal = Vec3(0,1,0);
-		v1.TexCoord.Set(1,1);
-		v1.Color = color;
-		v2.Pos = Vec3(-size.x ,0 , size.y);
-		v2.Normal = Vec3(0,1,0);
-		v2.TexCoord.Set(0,1);
-		v2.Color = color;
-		v3.Pos = Vec3(-size.x ,0 ,-size.y);
-		v3.Normal = Vec3(0,1,0);
-		v3.TexCoord.Set(0,0);
-		v3.Color = color;
-		v4.Pos = Vec3( size.x ,0 ,-size.y);
-		v4.Normal = Vec3(0,1,0);
-		v4.TexCoord.Set(1,0);
-		v4.Color = color;
+		sub_mesh_data->PositionVector.push_back(Vec3(-size.x ,0 , size.y));
+		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->ColorVector.push_back(color);
+		tex_coords.push_back(Vec4(0,1,0,0));
 
-		mesh_data->VertexVector.push_back(v1);
-		mesh_data->VertexVector.push_back(v2);
-		mesh_data->VertexVector.push_back(v3);
-		mesh_data->VertexVector.push_back(v4);
-
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(1);
-		mesh_data->IndexVector.push_back(0);
-
-		mesh_data->IndexVector.push_back(3);
-		mesh_data->IndexVector.push_back(2);
-		mesh_data->IndexVector.push_back(0);
-
+		sub_mesh_data->PositionVector.push_back(Vec3(-size.x ,0 , -size.y));
+		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->ColorVector.push_back(color);
+		tex_coords.push_back(Vec4(0,0,0,0));
 		
+		sub_mesh_data->PositionVector.push_back(Vec3(size.x ,0 , -size.y));
+		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->ColorVector.push_back(color);
+		tex_coords.push_back(Vec4(1,0,0,0));
+		
+		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
+
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(1);
+		sub_mesh_data->IndexVector.push_back(0);
+
+		sub_mesh_data->IndexVector.push_back(3);
+		sub_mesh_data->IndexVector.push_back(2);
+		sub_mesh_data->IndexVector.push_back(0);
+
 		
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);

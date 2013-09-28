@@ -79,7 +79,6 @@ namespace GASS
 		cull->setMode(osg::CullFace::BACK);
 		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
 
-
 		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
 
@@ -145,7 +144,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{
-		ManualMeshDataPtr data = message->GetData();
+		MeshDataPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
@@ -189,9 +188,9 @@ namespace GASS
 		
 	}
 
-	void OSGManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
+	void OSGManualMeshComponent::CreateMesh(MeshDataPtr data)
 	{
-		if(data->Material != m_CurrentMaterial) //try loading material
+	/*	if(data->Material != m_CurrentMaterial) //try loading material
 		{
 			m_CurrentMaterial = data->Material;
 
@@ -322,10 +321,8 @@ namespace GASS
 		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 		m_OSGGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-		
-		m_OSGGeometry->dirtyBound();
+		m_OSGGeometry->dirtyBound();*/
 	}
-
 
 	AABox OSGManualMeshComponent::GetBoundingBox() const
 	{

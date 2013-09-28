@@ -27,7 +27,6 @@
 #include <math.h>
 namespace GASS
 {
-
 	/** \addtogroup GASSCore
 	*  @{
 	*/

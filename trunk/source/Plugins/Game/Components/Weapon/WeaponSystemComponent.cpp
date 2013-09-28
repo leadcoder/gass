@@ -110,9 +110,10 @@ namespace GASS
 
 		m_CurrentMagSize = m_MagazineSize;
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
+		//cross hair?
+		/*ManualMeshDataPtr mesh_data(new ManualMeshData());
 		MeshVertex vertex;
-		mesh_data->Material = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 		mesh_data->ScreenSpace = true;
 
 		vertex.TexCoord.Set(0,0);
@@ -131,13 +132,13 @@ namespace GASS
 		
 		for(int i = 0; i < 4; i++)
 		{
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = conrners[i];
-			mesh_data->VertexVector.push_back(vertex);
+			Vec3 pos =conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
+			pos =conrners[i];
+			sub_mesh_data->PositionVector.push_back(pos);
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostMessage(mesh_message);*/
 	}
 
 	void WeaponSystemComponent::OnLODChange(LODMessagePtr message)

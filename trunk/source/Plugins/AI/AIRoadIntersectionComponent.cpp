@@ -88,16 +88,13 @@ namespace GASS
 		if(!GetConnectionDebugObject().GetRefObject())
 			return;
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		mesh_data->Type = LINE_LIST;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(0.2,1,1,1);
-		vertex.Normal = Vec3(0,1,0);
-
-
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		ColorRGBA color(0.2,1,1,1);
+	
 		//draw lane connections
 		for(size_t i =  0; i < m_Connections.size(); i++)
 		{
@@ -116,18 +113,20 @@ namespace GASS
 						if(out_wps->size() > 0)
 						{
 							Vec3 end = out_wps->front();
-							vertex.Color.Set(0.2,0.2,0.3,1);
-							vertex.Pos = start;
-							mesh_data->VertexVector.push_back(vertex);
-							vertex.Pos = end;
-							mesh_data->VertexVector.push_back(vertex);
+							color = ColorRGBA(0.2,0.2,0.3,1);
+							Vec3 pos = start;
+							sub_mesh_data->PositionVector.push_back(pos);
+							sub_mesh_data->ColorVector.push_back(color);
+							pos =end;
+							sub_mesh_data->PositionVector.push_back(pos);
+							sub_mesh_data->ColorVector.push_back(color);
 						}
 					}
 				}
 			}
 		}
 
-		vertex.Color.Set(0.2,1,1,1);
+		color = ColorRGBA(0.2,1,1,1);
 		Vec3 inter_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
 		if(m_Connections.size() > 0)
@@ -139,10 +138,12 @@ namespace GASS
 					connection_pos = m_Connections[i]->GetStartPoint();
 				else
 					connection_pos = m_Connections[i]->GetEndPoint();
-				vertex.Pos = inter_pos;
-				mesh_data->VertexVector.push_back(vertex );
-				vertex.Pos = connection_pos;
-				mesh_data->VertexVector.push_back(vertex );
+				Vec3 pos = inter_pos;
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
+				pos = connection_pos;
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
 			}
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			GetConnectionDebugObject()->PostMessage(mesh_message);

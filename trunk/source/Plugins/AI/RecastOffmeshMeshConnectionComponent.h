@@ -44,7 +44,7 @@ namespace GASS
 		bool GetVisible() const;
 		void SetRadius(float value);
 		
-		ManualMeshDataPtr m_ConnectionLine;
+		MeshDataPtr m_ConnectionLine;
 		bool m_Visible;
 		bool m_Initialized;
 		float m_Radius;

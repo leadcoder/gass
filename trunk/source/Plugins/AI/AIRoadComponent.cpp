@@ -510,36 +510,36 @@ namespace GASS
 				Float dist = 10;
 				if((connect_start_wp - start_wp).Length() < dist)
 				{
-					vertex.Pos = connect_start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = start_wp;
-					mesh_data->VertexVector.push_back(vertex );
+					pos =connect_start_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
+					pos =start_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
 					//Connect!
 					m_StartConnections.push_back(road);
 				}
 
 				else if((connect_start_wp - end_wp).Length() < dist)
 				{
-					vertex.Pos = connect_start_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = end_wp;
-					mesh_data->VertexVector.push_back(vertex );
+					pos =connect_start_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
+					pos =end_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
 					m_EndConnections.push_back(road);
 				}
 				else if((connect_end_wp - start_wp).Length() < dist)
 				{
-					vertex.Pos = connect_end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = start_wp;
-					mesh_data->VertexVector.push_back(vertex );
+					pos =connect_end_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
+					pos =start_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
 					m_StartConnections.push_back(road);
 				}
 				else if((connect_end_wp - end_wp).Length() < dist)
 				{
-					vertex.Pos = connect_end_wp;
-					mesh_data->VertexVector.push_back(vertex );
-					vertex.Pos = end_wp;
-					mesh_data->VertexVector.push_back(vertex );
+					pos =connect_end_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
+					pos =end_wp;
+					sub_mesh_data->PositionVector.push_back(pos);
 					m_EndConnections.push_back(road->GetEndNode());
 				}
 			}
@@ -551,15 +551,13 @@ namespace GASS
 		if(!m_LaneDebugObject.GetRefObject())
 			return;
 
-		ManualMeshDataPtr mesh_data(new ManualMeshData());
-		mesh_data->Type = LINE_LIST;
-		mesh_data->Material = "WhiteTransparentNoLighting";
-
-		MeshVertex vertex;
-		vertex.TexCoord.Set(0,0);
-		vertex.Color.Set(0.2,0.2,1,1);
-		vertex.Normal = Vec3(0,1,0);
-
+		MeshDataPtr mesh_data(new MeshData());
+		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		ColorRGBA color(0.2,0.2,1,1);
+	
 		for(size_t i =  0; i < m_LaneSections.size(); i++)
 		{
 			IComponentContainer::ComponentVector comps;
@@ -568,17 +566,19 @@ namespace GASS
 			{
 				AIRoadLaneComponentPtr  lane = DYNAMIC_PTR_CAST<AIRoadLaneComponent>(comps[j]);
 				if(lane->GetDirection().GetValue() == LD_UPSTREAM) 
-					vertex.Color.Set(0.2,1,0.2,1);	
+					color.Set(0.2,1,0.2,1);	
 				else
-					vertex.Color.Set(0.2,0.2,1,1);
+					color.Set(0.2,0.2,1,1);
 
 				std::vector<Vec3>* lane_wps = lane->GetWaypointsPtr();
 				for(size_t k = 1; k < lane_wps->size(); k++)
 				{
-						vertex.Pos = lane_wps->at(k);
-						mesh_data->VertexVector.push_back(vertex );
-						vertex.Pos = lane_wps->at(k-1);
-						mesh_data->VertexVector.push_back(vertex );
+						Vec3 pos =lane_wps->at(k);
+						sub_mesh_data->PositionVector.push_back(pos);
+						sub_mesh_data->ColorVector.push_back(color);
+						pos =lane_wps->at(k-1);
+						sub_mesh_data->PositionVector.push_back(pos);
+						sub_mesh_data->ColorVector.push_back(color);
 				}
 			}
 		}

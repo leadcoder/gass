@@ -216,29 +216,31 @@ namespace GASS
 			RoadIntersectionComponentPtr start_ric = m_StartNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 			RoadIntersectionComponentPtr end_ric = m_EndNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 			
-			ManualMeshDataPtr mesh_data(new  ManualMeshData());
-			mesh_data->Type = LINE_LIST;
-			mesh_data->Material = "WhiteTransparentNoLighting";
-
-			MeshVertex vertex;
-			vertex.TexCoord.Set(0,0);
-			vertex.Color.Set(0.2,0.2,1,1);
-			vertex.Normal = Vec3(0,1,0);
-			vertex.Pos = start_pos;
-			mesh_data->VertexVector.push_back(vertex);
-			vertex.Pos = end_pos;
-			mesh_data->VertexVector.push_back(vertex);
-
+			MeshDataPtr mesh_data(new MeshData());
+			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			mesh_data->SubMeshVector.push_back(sub_mesh_data);
+			sub_mesh_data->Type = LINE_LIST;
+			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 			
+			ColorRGBA color(0.2,0.2,1,1);
+			Vec3 pos = start_pos;
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
+			
+			pos =end_pos;
+			sub_mesh_data->PositionVector.push_back(pos);
+			sub_mesh_data->ColorVector.push_back(color);
 
 			for(size_t i = 0; i < m_DownStreamLanes.size(); i++)
 			{
 				for(size_t j = 1; j < m_DownStreamLanes[i].size(); j++)
 				{
-					vertex.Pos = m_DownStreamLanes[i][j-1];
-					mesh_data->VertexVector.push_back(vertex);
-					vertex.Pos = m_DownStreamLanes[i][j];
-					mesh_data->VertexVector.push_back(vertex);
+					pos =m_DownStreamLanes[i][j-1];
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
+					pos =m_DownStreamLanes[i][j];
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
 				}
 			}
 
@@ -246,10 +248,12 @@ namespace GASS
 			{
 				for(size_t j = 1; j < m_UpStreamLanes[i].size(); j++)
 				{
-					vertex.Pos = m_UpStreamLanes[i][j-1];
-					mesh_data->VertexVector.push_back(vertex);
-					vertex.Pos = m_UpStreamLanes[i][j];
-					mesh_data->VertexVector.push_back(vertex);
+					pos =m_UpStreamLanes[i][j-1];
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
+					pos =m_UpStreamLanes[i][j];
+					sub_mesh_data->PositionVector.push_back(pos);
+					sub_mesh_data->ColorVector.push_back(color);
 				}
 			}
 
@@ -257,27 +261,29 @@ namespace GASS
 			if(start_ric->GetTrafficLight(DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this()),light))
 			{
 				if(light.m_Stop)
-					vertex.Color.Set(1,0,0,1);
+					color= ColorRGBA(1,0,0,1);
 				else
-					vertex.Color.Set(0,1,0,1);
+					color =ColorRGBA(0,1,0,1);
 				Vec3 pos = m_UpStreamLanes[0][m_UpStreamLanes.size()-1];
-				vertex.Pos = pos;
-				mesh_data->VertexVector.push_back(vertex);
-				vertex.Pos = pos + Vec3(0,2,0);
-				mesh_data->VertexVector.push_back(vertex);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
+				pos = pos + Vec3(0,2,0);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
 			}
 
 			if(end_ric->GetTrafficLight(DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this()),light))
 			{
 				if(light.m_Stop)
-					vertex.Color.Set(1,0,0,1);
+					color= ColorRGBA(1,0,0,1);
 				else
-					vertex.Color.Set(0,1,0,1);
+					color = ColorRGBA(0,1,0,1);
 				Vec3 pos = m_DownStreamLanes[0][m_DownStreamLanes.size()-1];
-				vertex.Pos = pos;
-				mesh_data->VertexVector.push_back(vertex);
-				vertex.Pos = pos + Vec3(0,2,0);
-				mesh_data->VertexVector.push_back(vertex);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
+				pos = pos + Vec3(0,2,0);
+				sub_mesh_data->PositionVector.push_back(pos);
+				sub_mesh_data->ColorVector.push_back(color);
 			}
 
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
