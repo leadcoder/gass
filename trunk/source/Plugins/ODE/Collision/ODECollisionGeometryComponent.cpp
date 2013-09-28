@@ -163,11 +163,13 @@ namespace GASS
 		case CGT_PLANE:
 			m_GeomID = CreatePlaneGeometry();
 		}
+
 		if(m_GeomID)
 		{
 			dGeomSetBody(m_GeomID , NULL);
 			dGeomSetData(m_GeomID , (void*)this);
 		}
+
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(geom)
 		{
@@ -274,21 +276,42 @@ namespace GASS
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
 		{
-			std::string col_mesh_id = GetSceneObject()->GetName();
+			//first check cache!
 			ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
+			ODECollisionMeshInfo col_mesh;
+			bool has_col_mesh = false;
+			std::string col_mesh_id; 
 			if(res)
 			{
-				col_mesh_id = res->GetResource().Name();
-			}
-			try
-			{
-				ODECollisionMeshInfo col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(col_mesh_id,mesh);
+				std::string col_mesh_id = res->GetResource().Name();
+				if(GetCollisionSceneManager()->HasCollisionMesh(col_mesh_id)) //check cache
+				{
+					col_mesh = GetCollisionSceneManager()->GetCollisionMesh(col_mesh_id);
+					has_col_mesh = true;
+				}
+				else
+				{
+					MeshData gfx_mesh_data = mesh->GetMeshData();
+					PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
+				}
 				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
 			}
-			catch(...)
+
+			/*MeshData gfx_mesh_data = mesh->GetMeshData();
+			PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+
+			if(physics_mesh->PositionVector.size() > 0)
 			{
-				return 0;
-			}
+				if(!has_col_mesh)
+				{
+					if(res)
+						col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
+					else
+						col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(physics_mesh);
+				}
+				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
+			}*/
 		}
 		else
 		{

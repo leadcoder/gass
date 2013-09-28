@@ -48,6 +48,11 @@ namespace GASS
 			{
 				SubMeshVector[i]->NormalVector[j] = rot_mat * SubMeshVector[i]->NormalVector[j];
 			}
+
+			for(size_t j = 0; j < SubMeshVector[i]->TangentVector.size() ; j++)
+			{
+				SubMeshVector[i]->TangentVector[j] = rot_mat * SubMeshVector[i]->TangentVector[j];
+			}
 		}
 
 		//Transform all normals, only rotation
@@ -67,20 +72,25 @@ namespace GASS
 	{
 		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)
 		{
-			unsigned int offset = PositionVector.size();
-			for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
+			//only support triangle data
+			if(mesh.SubMeshVector[i]->Type == TRIANGLE_LIST)
 			{
-				IndexVector.push_back(mesh.SubMeshVector[i]->IndexVector[j] + offset);
-			}
+				unsigned int offset = PositionVector.size();
 
-			for(size_t j = 0; j < mesh.SubMeshVector[i]->PositionVector.size() ; j++)
-			{
-				PositionVector.push_back(mesh.SubMeshVector[i]->PositionVector[j]);
-			}
+				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
+				{
+					IndexVector.push_back(mesh.SubMeshVector[i]->IndexVector[j] + offset);
+				}
 
-			for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size()/3 ; j++)
-			{
-				MaterialIDVector.push_back(0);
+				for(size_t j = 0; j < mesh.SubMeshVector[i]->PositionVector.size() ; j++)
+				{
+					PositionVector.push_back(mesh.SubMeshVector[i]->PositionVector[j]);
+				}
+
+				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size()/3 ; j++)
+				{
+					MaterialIDVector.push_back(0);
+				}
 			}
 		}
 	}

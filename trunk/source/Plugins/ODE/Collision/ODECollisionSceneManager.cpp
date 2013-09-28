@@ -87,19 +87,18 @@ namespace GASS
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
 				object->AddComponent(comp);
 			}
-
-			else if(object->GetFirstComponentByClass<IMeshComponent>())
-			{
-				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
-				comp->SetType(ODECollisionGeometryComponent::CGT_MESH);
-				object->AddComponent(comp);
-			}
 			else if(object->GetFirstComponentByClass("OgreBillboardComponent",false) || 
 				object->GetFirstComponentByClass("OSGBillboardComponent",false) || 
 				object->GetFirstComponentByClass("GizmoComponent",false))
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_BOX);
+				object->AddComponent(comp);
+			}
+			else if(object->GetFirstComponentByClass<IMeshComponent>())// && !object->GetFirstComponentByClass("OgreManualMeshComponent",false))
+			{
+				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
+				comp->SetType(ODECollisionGeometryComponent::CGT_MESH);
 				object->AddComponent(comp);
 			}
 		}
@@ -229,17 +228,21 @@ namespace GASS
 		return 0;
 	}
 
-	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
+	//use cache
+	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr physics_mesh)
 	{
-		if(HasCollisionMesh(col_mesh_id)) //check cache
+		if(HasCollisionMesh(cache_id)) //check cache
 		{
-			return m_ColMeshMap[col_mesh_id];
+			return m_ColMeshMap[cache_id];
 		}
+		ODECollisionMeshInfo id = CreateCollisionMesh(physics_mesh);
+		//save to cache
+		m_ColMeshMap[cache_id] = id;
+		return id;
+	}
 
-		//not loaded, load it!
-		MeshData gfx_mesh_data = mesh->GetMeshData();
-		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-
+	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(PhysicsMeshPtr physics_mesh)
+	{
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No vertex or face data for mesh", "ODECollisionSystem::CreateCollisionMesh");
@@ -275,7 +278,6 @@ namespace GASS
 		ODECollisionMeshInfo col_mesh;
 		col_mesh.ID = id;
 		col_mesh.Mesh = physics_mesh;
-		m_ColMeshMap[col_mesh_id] = col_mesh;
 		return col_mesh;
 	}
 
@@ -288,5 +290,11 @@ namespace GASS
 			return true;
 		}
 		return false;
+	}
+
+
+	ODECollisionMeshInfo ODECollisionSceneManager::GetCollisionMesh(const std::string &name)
+	{
+		return m_ColMeshMap[name];
 	}
 }

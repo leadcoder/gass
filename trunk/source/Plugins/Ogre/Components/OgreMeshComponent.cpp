@@ -248,30 +248,33 @@ namespace GASS
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
 			sub_mesh_data->Type = Convert::ToGASS(sub_mesh->operationType);
 			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
+			
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
-			Ogre::Technique* tech = mat->getBestTechnique();
-
-			//Get last pass and save materials
-			if(tech->getNumPasses() > 0)
+			if (!mat.isNull()) 
 			{
-				Ogre::Pass*  pass = tech->getPass(tech->getNumPasses()-1);
-
-				Ogre::ColourValue ambient =  pass->getAmbient();
-				const Ogre::ColourValue diffuse = pass->getDiffuse();
-				const Ogre::ColourValue specular = pass->getSpecular();
-				const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
-				const Ogre::ColourValue emissive = pass->getEmissive();
-				GraphicsMaterial gfx_mat(ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
-					ColorRGB(ambient.r,ambient.g,ambient.b),
-					ColorRGB(specular.r,specular.g,specular.b));
-
-				sub_mesh_data->Material = gfx_mat;
-				
-				for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
+				Ogre::Technique* tech = mat->getBestTechnique();
+				//Get last pass and save materials
+				if(tech->getNumPasses() > 0)
 				{
-					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
-					std::string texture_name = textureUnit->getTextureName();
-					sub_mesh_data->Material.Textures.push_back(texture_name);
+					Ogre::Pass*  pass = tech->getPass(tech->getNumPasses()-1);
+
+					Ogre::ColourValue ambient =  pass->getAmbient();
+					const Ogre::ColourValue diffuse = pass->getDiffuse();
+					const Ogre::ColourValue specular = pass->getSpecular();
+					const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
+					const Ogre::ColourValue emissive = pass->getEmissive();
+					GraphicsMaterial gfx_mat(ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
+						ColorRGB(ambient.r,ambient.g,ambient.b),
+						ColorRGB(specular.r,specular.g,specular.b));
+
+					sub_mesh_data->Material = gfx_mat;
+
+					for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
+					{
+						Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
+						std::string texture_name = textureUnit->getTextureName();
+						sub_mesh_data->Material.Textures.push_back(texture_name);
+					}
 				}
 			}
 
@@ -409,30 +412,35 @@ namespace GASS
 			delete[] mesh->FaceVector;
 		}
 		mesh->FaceVector = tmp_ind;*/
-		
-		HardwareIndexBufferSharedPtr ibuf = index_data->indexBuffer;
-		const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
-		//unsigned int index_offset = mesh->FaceVector.size();
 
-		if (use32bitindexes)
+		if(index_data->indexCount > 0)
 		{
-			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < index_data->indexCount; ++k)
+
+			HardwareIndexBufferSharedPtr ibuf = index_data->indexBuffer;
+
+			const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
+			//unsigned int index_offset = mesh->FaceVector.size();
+
+			if (use32bitindexes)
 			{
-				unsigned int index = pInt[k];
-				mesh->IndexVector.push_back(index + offset);
+				const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+				for(unsigned int k = 0; k < index_data->indexCount; ++k)
+				{
+					unsigned int index = pInt[k];
+					mesh->IndexVector.push_back(index + offset);
+				}
+				ibuf->unlock();
 			}
-			ibuf->unlock();
-		}
-		else
-		{
-			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-			for(unsigned int k = 0; k < index_data->indexCount; ++k)
+			else
 			{
-				unsigned int index = static_cast<unsigned int> (pShort[k]);
-				mesh->IndexVector.push_back(index + offset);
+				const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+				for(unsigned int k = 0; k < index_data->indexCount; ++k)
+				{
+					unsigned int index = static_cast<unsigned int> (pShort[k]);
+					mesh->IndexVector.push_back(index + offset);
+				}
+				ibuf->unlock();
 			}
-			ibuf->unlock();
 		}
 	}
 

@@ -67,8 +67,10 @@ namespace GASS
 	protected:
 		void Process();
 		//used by collision geometry
-		ODECollisionMeshInfo CreateCollisionMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
+		ODECollisionMeshInfo CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr mesh);
+		ODECollisionMeshInfo CreateCollisionMesh(PhysicsMeshPtr mesh);
 		dSpaceID GetSpace() const;
+		ODECollisionMeshInfo GetCollisionMesh(const std::string &name);
 		bool HasCollisionMesh(const std::string &name);
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 	private:

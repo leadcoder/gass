@@ -69,7 +69,6 @@ namespace GASS
 		bool m_UniqueMaterialCreated;
 		bool m_CastShadows;
 		GeometryFlags m_GeomFlags;
-		Ogre::RenderOperation::OperationType m_CurrentOP;
 	};
 }
 

@@ -138,7 +138,6 @@ namespace GASS
 		if(m_MeshObject)
 		{
 			m_MeshObject->clear();
-
 			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
 			{
 				SubMeshDataPtr sub_mesh =   data->SubMeshVector[i];
@@ -213,8 +212,8 @@ namespace GASS
 
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
 
-			switch(data->Type)
-			{
+			op = Convert::ToOgre(data->Type);
+			/*{
 			case LINE_LIST:
 				op = Ogre::RenderOperation::OT_LINE_LIST;
 				break;
@@ -234,7 +233,7 @@ namespace GASS
 				op = Ogre::RenderOperation::OT_TRIANGLE_STRIP;
 				break;
 			}
-			m_CurrentOP = op;
+			m_CurrentOP = op;*/
 			m_MeshObject->begin(data->Material, op);
 			for(int i = 0; i < data->VertexVector.size(); i++)
 			{
@@ -401,7 +400,7 @@ namespace GASS
 	{
 		MeshData mesh_data;
 
-		if(m_MeshObject == NULL || m_CurrentOP != TRIANGLE_LIST)
+		if(m_MeshObject == NULL)
 			return mesh_data;
 		Ogre::MeshPtr mesh = m_MeshObject->convertToMesh("ConvertedTempMesh");
 		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);

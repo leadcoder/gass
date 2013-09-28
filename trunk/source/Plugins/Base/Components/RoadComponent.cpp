@@ -234,6 +234,8 @@ namespace GASS
 		MeshDataPtr mesh_data(new MeshData());
 		SubMeshDataPtr sub_mesh_data(new SubMeshData());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
+
+		std::vector<Vec4> tex_coords;
 	
 
 		sub_mesh_data->MaterialName = m_Material;
@@ -346,8 +348,7 @@ namespace GASS
 				}
 			}
 			last_pos = curr_vertices[2]; 
-		
-			std::vector<Vec4> tex_coords;
+			
 			for (int j = 1; j < num_horizontal_pts; j++) 
 			{ 
 				MeshVertex mesh_vertex;
@@ -368,7 +369,7 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(color);
 
 			}
-			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
+			
 		} 
 
 		for (int n = 0; n < points.size()-1; n++) 
@@ -460,19 +461,19 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex0);
+				tex_coords.push_back(tex0);
 				
 				sub_mesh_data->PositionVector.push_back(pos1);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex1);
+				tex_coords.push_back(tex1);
 
 				sub_mesh_data->PositionVector.push_back(pos2);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex2);
+				tex_coords.push_back(tex2);
 
 				//end cap
 
@@ -505,24 +506,25 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex0);
+				tex_coords.push_back(tex0);
 				
 				sub_mesh_data->PositionVector.push_back(pos1);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex1);
+				tex_coords.push_back(tex1);
 
 				sub_mesh_data->PositionVector.push_back(pos2);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				sub_mesh_data->TexCoordsVector[0].push_back(tex2);
+				tex_coords.push_back(tex2);
 
 
 			} 
 		}
 
+		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 
 		
 
