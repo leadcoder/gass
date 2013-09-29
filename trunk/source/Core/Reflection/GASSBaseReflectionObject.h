@@ -66,35 +66,49 @@ namespace GASS
 		*/
 		bool GetPropertyByString(const std::string &property_name, std::string &value) const;
 
-		/**Set property by using boost::any
+		/**Set property by value using boost::any
 		    @param property_name Name of the property to get
             @param value The value provided as boost::any
             @return true if property found and set
 		*/
 		void SetPropertyByType(const std::string &property_name, boost::any value);
 
-		/**Get property value
+		/**Check if property exist
 		    @param property_name Name of the property to get
-            @param value The value provided as boost::any
             @return true if property found
 		*/
-
 		bool HasProperty(const std::string &property_name) const;
+
+
+		/**Get property by value using boost::any 
+		    @param property_name Name of the property to get
+            @param value The returned value provided as boost::any argument
+            @return true if property found
+		*/
 		bool GetPropertyByType(const std::string &property_name, boost::any &value);
-
-		void LoadProperties(TiXmlElement *elem);
-		void SaveProperties(TiXmlElement *parent);
-
-		bool SerializeProperties(ISerializer* serializer);
-		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
 
 		/**
 		Get all properties from this object
 		*/
 		PropertyVector GetProperties() const;
 
+
+		/**
+			Check if this property has meta data
+		*/
 		bool HasMetaData() const;
+
+		/**
+			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
+		*/
 		ObjectMetaDataPtr GetMetaData() const;
+
+		//internal stuff
+		void LoadProperties(TiXmlElement *elem);
+		void SaveProperties(TiXmlElement *parent);
+
+		bool SerializeProperties(ISerializer* serializer);
+		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
 	private:
 	};
 

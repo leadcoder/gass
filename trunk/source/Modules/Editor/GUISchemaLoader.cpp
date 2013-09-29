@@ -20,13 +20,11 @@
 #include "Core/Common.h"
 #include "GUISchemaLoader.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSFileUtils.h"
-#include "tinyxml.h"
-#include "Core/Reflection/GASSPropertyTypes.h"
 #include "Core/Utils/GASSException.h"
+#include "tinyxml.h"
 
 namespace GASS
 {
@@ -219,20 +217,7 @@ namespace GASS
 					ps.Documentation = doc_elem->GetText();
 			}
 		}
-		/*TiXmlElement *complex_elem =  elem->FirstChildElement("xs:complexType");
-		if(complex_elem)
-		{
-			TiXmlElement * attrib_elem=  complex_elem->FirstChildElement("xs:attribute");
-			if(attrib_elem)
-			{
-				if(attrib_elem->Attribute("type"))
-				{
-					std::string attrib_type = attrib_elem->Attribute("type");
-					//Check if attrib type exist
-					GetDataTypeRestrictions(attrib_type);
-				}
-			}
-		}*/
+	
 		return ps;
 	}
 

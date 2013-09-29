@@ -38,7 +38,6 @@
 namespace GASS
 {
 	ArrowGeometryComponent::ArrowGeometryComponent(void) : m_Size(0.01,1),
-		//m_Transparency(1),
 		m_Color(1,1,1,1)
 	{
 
@@ -73,7 +72,6 @@ namespace GASS
 		if(GetSceneObject()) //initlized
 		{
 			GenerateMesh();
-			//SetTexture(m_Texture);
 		}
 	}
 
@@ -207,7 +205,6 @@ namespace GASS
 	void ArrowGeometryComponent::OnLoad(MessagePtr message)
 	{
 		
-		//SetTexture(m_Texture);
 	}
 
 	void ArrowGeometryComponent::SetTexture(const ResourceHandle &texture_name)

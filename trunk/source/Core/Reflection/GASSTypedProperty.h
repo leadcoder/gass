@@ -28,7 +28,6 @@ This class is based on the Game Programming Gems 5 article
 #define GASS_TYPED_PROPERTY_H
 
 #include "Core/Reflection/GASSIProperty.h"
-#include "Core/Reflection/GASSPropertyTypes.h"
 
 namespace GASS
 {
@@ -41,8 +40,8 @@ namespace GASS
 	*  @{
 	*/
 
-	/** TypedProperty This intermediate class defines a property that is typed, but not bound as a member of a particular
-	 class.
+	/** TypedProperty This intermediate class defines a property that is typed, 
+	but not bound as a member of a particular class.
 	*/
 	template <class T>
 	class TypedProperty: public IProperty

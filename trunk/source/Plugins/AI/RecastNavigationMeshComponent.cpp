@@ -1237,7 +1237,7 @@ static int convexhull(const float* pts, int npts, int* out)
 
 	void RecastNavigationMeshComponent::UpdateNavMeshVis()
 	{
-		std::vector<MeshVertex> nav_tris =  GetVisualNavMesh();
+		std::vector<Vec3> nav_tris =  GetVisualNavMesh();
 		
 		m_NavVisLineMesh->SubMeshVector.clear();
 		m_NavVisTriMesh->SubMeshVector.clear();
@@ -1246,30 +1246,32 @@ static int convexhull(const float* pts, int npts, int* out)
 		m_NavVisLineMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
-		ColorRGBA color(0,0,1,1);
+		//ColorRGBA color(0,0,1,1);
+
+		ColorRGBA color(0.4,0.4,1,float(m_Transparency)/100.0f);
 
 		for(int i = 0; i < nav_tris.size(); i += 3)
 		{
-			MeshVertex v1 = nav_tris[i];
-			MeshVertex v2 = nav_tris[i+1];
-			MeshVertex v3 = nav_tris[i+2];
+			Vec3 v1 = nav_tris[i];
+			Vec3 v2 = nav_tris[i+1];
+			Vec3 v3 = nav_tris[i+2];
 			
-			sub_mesh_data->PositionVector.push_back(v1.Pos);
+			sub_mesh_data->PositionVector.push_back(v1);
 			sub_mesh_data->ColorVector.push_back(color);
 			
-			sub_mesh_data->PositionVector.push_back(v2.Pos);
+			sub_mesh_data->PositionVector.push_back(v2);
 			sub_mesh_data->ColorVector.push_back(color);
 
-			sub_mesh_data->PositionVector.push_back(v2.Pos);
+			sub_mesh_data->PositionVector.push_back(v2);
 			sub_mesh_data->ColorVector.push_back(color);
 			
-			sub_mesh_data->PositionVector.push_back(v3.Pos);
+			sub_mesh_data->PositionVector.push_back(v3);
 			sub_mesh_data->ColorVector.push_back(color);
 
-			sub_mesh_data->PositionVector.push_back(v3.Pos);
+			sub_mesh_data->PositionVector.push_back(v3);
 			sub_mesh_data->ColorVector.push_back(color);
 			
-			sub_mesh_data->PositionVector.push_back(v1.Pos);
+			sub_mesh_data->PositionVector.push_back(v1);
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 		
@@ -1280,9 +1282,8 @@ static int convexhull(const float* pts, int npts, int* out)
 		
 		for(int i = 0; i < nav_tris.size(); i++)
 		{
-			sub_mesh_data->PositionVector.push_back(nav_tris[i].Pos);
-			Vec4 c = nav_tris[i].Color;
-			sub_mesh_data->ColorVector.push_back(ColorRGBA(c.x, c.y, c.z, c.w));
+			sub_mesh_data->PositionVector.push_back(nav_tris[i]);
+			sub_mesh_data->ColorVector.push_back(color);
 		}
 
 		for(int i = 0; i < nav_tris.size(); i++)
@@ -1505,9 +1506,9 @@ static int convexhull(const float* pts, int npts, int* out)
 	}
 
 
-	std::vector<MeshVertex> RecastNavigationMeshComponent::GetVisualNavMesh()
+	std::vector<Vec3> RecastNavigationMeshComponent::GetVisualNavMesh()
 	{
-		std::vector<MeshVertex> tris;
+		std::vector<Vec3> tris;
 		if(!m_NavMesh)
 			return tris;
 
@@ -1522,17 +1523,15 @@ static int convexhull(const float* pts, int npts, int* out)
 				const dtPoly* p = &tile->polys[j];
 				if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
 					continue;
-
-
-				Vec4 color(0.4,0.4,1,float(m_Transparency)/100.0f);
-				if (p->flags & SAMPLE_POLYFLAGS_DISABLED)
+				
+				/*if (p->flags & SAMPLE_POLYFLAGS_DISABLED)
 				{
 					color.Set(1,0,0,float(m_Transparency)/100.0f);
 				}
 				else if (p->flags & SAMPLE_POLYFLAGS_DOOR)
 				{
 					color.Set(0,1,0,float(m_Transparency)/100.0f);
-				}
+				}*/
 
 				const dtPolyDetail* pd = &tile->detailMeshes[j];
 				//if (p->getArea() == 0) // Treat zero area type as default.
@@ -1551,12 +1550,8 @@ static int convexhull(const float* pts, int npts, int* out)
 						{
 							pos = &tile->detailVerts[(pd->vertBase+t[l]-p->vertCount)*3];
 						}
-						MeshVertex vertex;
-						vertex.Pos  = Vec3(pos[0],pos[1],pos[2]);
-						vertex.Color = color;
-						vertex.TexCoord.Set(0,0);
-						vertex.Normal = Vec3(0,1,0);
-						tris.push_back(vertex);
+						
+						tris.push_back(Vec3(pos[0],pos[1],pos[2]));
 					}
 				}
 			}

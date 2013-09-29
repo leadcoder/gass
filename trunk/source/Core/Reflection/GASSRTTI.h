@@ -30,6 +30,7 @@ This class is based on the Game Programming Gems 5 article
 #include "Core/Common.h"
 #include "Core/Reflection/GASSIProperty.h"
 #include "Core/Reflection/GASSObjectMetaData.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {

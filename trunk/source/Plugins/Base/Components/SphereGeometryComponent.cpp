@@ -30,9 +30,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSMeshData.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
 
 namespace GASS
 {

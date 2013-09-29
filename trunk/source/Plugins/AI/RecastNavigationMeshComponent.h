@@ -20,6 +20,7 @@
 
 #pragma once
 #include "Sim/GASS.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "LandCoverType.h"
@@ -146,7 +147,7 @@ namespace GASS
 
 		void SaveAllTiles(const char* path, const dtNavMesh* mesh);
 		dtNavMesh* LoadAll(const char* path);
-		std::vector<MeshVertex> GetVisualNavMesh();
+		std::vector<Vec3> GetVisualNavMesh();
 		bool GetRawMeshData(RawNavMeshData &nm_data);
 		bool GenerateTiles();
 		void BuildAllTiles();

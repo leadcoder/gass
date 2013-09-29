@@ -797,7 +797,7 @@ namespace GASS
 		return (a + V);
 	}
 
-	bool Math::GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root) 
+	/*bool Math::GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root) 
 	{
 		// Check if a solution exists
 		Float determinant = b*b - 4.0f*a*c;
@@ -827,40 +827,9 @@ namespace GASS
 		}
 		// No (valid) solutions
 		return false;
-	}
-
-
-	
-
-
-
-/*	Mat4 Math::BuildReflectionMatrix(const Vec3& origin,const Vec3& normal )
-	{
-		Float d = -Math::Dot(normal,origin);
-		Mat4 ret;
-
-		ret.m_Data[0][0] = -2 * normal.x * normal.x + 1;
-		ret.m_Data[1][0] = -2 * normal.x * normal.y;
-		ret.m_Data[2][0] =-2 * normal.x * normal.z;
-		ret.m_Data[3][0] =-2 * normal.x * d;
-		ret.m_Data[0][1] =-2 * normal.y * normal.x;
-		ret.m_Data[1][1] =-2 * normal.y * normal.y + 1;
-		ret.m_Data[2][1] =-2 * normal.y * normal.z;
-		ret.m_Data[3][1] =-2 * normal.y * d;
-		ret.m_Data[0][2] =-2 * normal.z * normal.x;
-		ret.m_Data[1][2] =-2 * normal.z * normal.y;
-		ret.m_Data[2][2] =-2 * normal.z * normal.z + 1;
-		ret.m_Data[3][2] =-2 * normal.z * d;
-		ret.m_Data[0][3] =0;
-		ret.m_Data[1][3] =0;
-		ret.m_Data[2][3] =0;
-		ret.m_Data[3][3] =1;
-
-		return ret;
 	}*/
 
-
-	Float Math::GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2)
+	/*Float Math::GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2)
 	{
 		Vec3 v1_xz = v1;
 		Vec3 v2_xz = v2;
@@ -880,7 +849,7 @@ namespace GASS
 			//if(angle_to_dir < angle) angle_to_dir = 2*MY_PI+angle_to_dir;
 		}
 		return angle;
-	}
+	}*/
 }
 
 

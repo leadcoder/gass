@@ -99,7 +99,7 @@ namespace GASS
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->MaterialName = m_Material;
 		sub_mesh_data->Type = TRIANGLE_LIST;
-		MeshVertex vertex;
+//		MeshVertex vertex;
 
 		Vec2 size;
 		size.x = 1;

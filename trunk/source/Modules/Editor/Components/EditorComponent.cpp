@@ -116,8 +116,6 @@ namespace GASS
 	{
 		if(message->GetSceneObject() == GetSceneObject())
 		{
-			
-			
 			m_Visible = message->GetVisible();
 			GetSceneObject()->PostMessage(MessagePtr(new MeshVisibilityMessage(m_Visible)));
 			GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(m_Visible)));

@@ -37,7 +37,6 @@ namespace GASS
 	void SelectionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SelectionComponent",new Creator<SelectionComponent, IComponent>);
-		//RegisterProperty<float>("Size",&SelectionComponent::GetSize, &SelectionComponent::SetSize);
 		RegisterProperty<ColorRGBA>("Color",&SelectionComponent::GetColor, &SelectionComponent::SetColor);
 		RegisterProperty<std::string>("Type",&SelectionComponent::GetType, &SelectionComponent::SetType);
 	}
@@ -50,13 +49,6 @@ namespace GASS
 	void SelectionComponent::OnDelete()
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
-		
-		//SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
-		//if(selected)
-		{
-			//selected->UnregisterForMessage(UNREG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage));
-			
-		}
 	}
 
 	void SelectionComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)

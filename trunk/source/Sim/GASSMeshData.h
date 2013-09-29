@@ -100,7 +100,7 @@ namespace GASS
 	typedef MeshData* MeshDataPtr;*/
 
 
-	struct MeshVertex
+	/*struct MeshVertex
 	{
 		Vec3 Pos;
 		Vec3 Normal;
@@ -108,13 +108,13 @@ namespace GASS
 		Vec4 Color;
 		Vec2 TexCoord;
 	};
-
+	*/
 
 
 	/**
 	Used by manual mesh
 	*/
-	struct GASSExport ManualMeshData
+	/*struct GASSExport ManualMeshData
 	{
 		std::vector<MeshVertex> VertexVector;
 		std::vector<unsigned int> IndexVector;
@@ -128,5 +128,5 @@ namespace GASS
 			Type =LINE_LIST;
 		}
 	};
-	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
+	typedef SPTR<ManualMeshData> ManualMeshDataPtr;*/
 }

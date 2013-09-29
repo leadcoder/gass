@@ -186,7 +186,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
-	void OgreManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
+	/*void OgreManualMeshComponent::CreateMesh(ManualMeshDataPtr data)
 	{
 		if(m_MeshObject)
 		{
@@ -213,7 +213,7 @@ namespace GASS
 			Ogre::RenderOperation::OperationType op = Ogre::RenderOperation::OT_LINE_LIST;
 
 			op = OgreConvert::ToOgre(data->Type);
-			/*{
+			{
 			case LINE_LIST:
 				op = Ogre::RenderOperation::OT_LINE_LIST;
 				break;
@@ -233,7 +233,7 @@ namespace GASS
 				op = Ogre::RenderOperation::OT_TRIANGLE_STRIP;
 				break;
 			}
-			m_CurrentOP = op;*/
+			m_CurrentOP = op;
 			m_MeshObject->begin(data->Material, op);
 			for(int i = 0; i < data->VertexVector.size(); i++)
 			{
@@ -264,6 +264,7 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
+	*/
 
 	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
 	{

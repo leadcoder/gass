@@ -27,9 +27,6 @@
 #define PLANE_BACK 1
 #define ON_PLANE 2
 
-//#include "Core/Math/GASSVector.h"
-//#include "Core/Math/Polygon.h"
-
 namespace GASS
 {
 	class Polygon;
@@ -83,26 +80,69 @@ namespace GASS
 		* \return The dot product.
 		*/
 		static Float Dot(const Vec3 &v1,const Vec3 &v2);
+
+		/**
+		* \brief Calculate the cross product of two vectors.
+		* \param v1 First vector, as a Vec3.
+		* \param v2 Second vector, as a Vec3.
+		* \return The cross product.
+		*/
 		static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
-	//	static Vec3 GetTangent(const Vec3 &pos1,const  Vec3 &pos2,const  Vec3 &pos3, const Vec3 &texc1, const Vec3 &texc2, const Vec3 &texc3);
-	//	static void GetTangentAndBinormal(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2, const Vec3 &t0, const Vec3 &t1, const Vec3 &t2,const Vec3 &tangent,const Vec3 &binormal);
+		
+		
+		/**
+		* \brief Calculate the distance (along the ray) where a infinit 
+		   ray instersect a infinit plane.
+		* \param start Start of ray, as a Vec3.
+		* \param dir Normalized direction of the ray , as a Vec3.
+		* \param dir Plane origin , as a Vec3.
+		* \param dir Plane normal, as a Vec3.
+		* \return The cross product.
+		*/
 		static Float IsectRayPlane(const Vec3 &start, const Vec3 &dir, const Vec3 &origin,const Vec3 &normal);
+		
+		
+		/**
+		* \brief Calculate if a line instersect a triangle and if so provide intersection point.
+		* \param start Start of line, as a Vec3.
+		* \param end  End of line.
+		* \param p1 First point in triangle , as a Vec3.
+		* \param p2 Second point in triangle , as a Vec3.
+		* \param p2 Third point in triangle , as a Vec3.
+		* \param isect_point Possible intersection point, as a Vec3.
+		* \return True i line instersect triangle.
+		*/
 		static bool RayIsectTriangle(const Vec3 &start,const Vec3 &end,const Vec3 &p1,const Vec3 &p2,const Vec3 &p3,Vec3 &isect_point);
+
+		/**
+			Get Min value of v1, v2,v3
+		*/
 		static Float Min(const Float &v1,const Float &v2,const Float &v3);
+		
+		/**
+			Get Max value of v1, v2,v3
+		*/
 		static Float Max(const Float &v1,const Float &v2,const Float &v3);
 		static bool ClosestPointOnTriangle(const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &p, Vec3 &closest, Float radius);
-		static Vec3 ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
+		
 		static Vec3 ClosestPointOnLine(const Vec3 &a, const Vec3 &b, const Vec3 &p);
 		
-		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
-		static int CheckPointInTriangle3(const Vec3& point, const Vec3& pa,const Vec3& pb, const Vec3& pc);
-		static bool GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root);
+		/**
+			Get normal of triangle based on p1,p2,p3
+		*/
 		static Vec3 GetNormal(const Vec3 &p1,const Vec3 &p2,const Vec3 &p3);
+		
+		
+		/**
+			Check if two triangles intersect
+		*/
 		static bool TriangleIsectTriangle(const Vec3 &t1_v1,const Vec3 &t1_v2,const Vec3 &t1_v3,const Vec3 &t2_v1,const Vec3 &t2_v2,const Vec3 &t2_v3,Vec3 &isect_point);
 		static Float Min(const Float &v1,const Float &v2);
 		static Float Max(const Float &v1,const Float &v2);
+				
 
-		
+
+		// path utilities, to be moved to path class?
 		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
 		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
 		static Float GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index,Float &distance_to_path);
@@ -110,6 +150,9 @@ namespace GASS
 		static std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		static std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float start_offset,Float end_offset);
 		
+		/**
+			Fast invert root square function, (maybe not so fast anymore)
+		*/
 		static inline float InvSqrt(float x)
 		{
 			float xhalf = 0.5f*x;
@@ -119,10 +162,25 @@ namespace GASS
 			x = x*(1.5f - xhalf*x*x); // repeat this statement for a better approximation
 			return x;
 		}
-		static Float GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2);
+
+		/**
+			Project vectors on horizontal plane (normal == UNIT_Y) and return angle between projected angles
+			
+		*/
+		//Should be removed and placed in some other utility function!
+		//static Float GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2);
+		
+		/**
+			Project vector on plane
+		*/
 		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
 #define MY_PI 3.14159265358
 	private:
+		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
+		static int CheckPointInTriangle3(const Vec3& point, const Vec3& pa,const Vec3& pb, const Vec3& pc);
+		//static bool GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root);
+
+		static Vec3 ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
 		static int	ClassifyPoint(const Vec3 &point, const Polygon &poly);
 		static int	ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);
 		static char	GetMaxCoord(const Vec3 &coord);

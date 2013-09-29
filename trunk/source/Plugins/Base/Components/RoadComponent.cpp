@@ -351,9 +351,7 @@ namespace GASS
 			
 			for (int j = 1; j < num_horizontal_pts; j++) 
 			{ 
-				MeshVertex mesh_vertex;
 				Vec3 pos = curr_vertices[j-1];
-				//mesh_vertex.Normal.Set(0,1,0);
 				ColorRGBA color(1,1,1,vertex_alpha);
 				Vec4 tex_coord(u_coord[j-1]*m_TileScale.x,v_coord,0,0);
 				

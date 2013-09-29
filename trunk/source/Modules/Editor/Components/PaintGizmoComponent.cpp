@@ -56,7 +56,7 @@ namespace GASS
 
 	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		//rebulid each frame
+		//rebulid if moved
 		if(m_Pos != message->GetPosition())
 		{
 			m_Pos = message->GetPosition();

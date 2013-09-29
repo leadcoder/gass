@@ -20,14 +20,11 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSSchemaManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-
 #include "Core/ComponentSystem/GASSBaseComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "tinyxml.h"
-#include "Core/Reflection/GASSPropertyTypes.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
-
+#include "tinyxml.h"
 namespace GASS
 {
 

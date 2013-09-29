@@ -4,6 +4,7 @@
 
 #include "Sim/GASS.h"
 #include "Core/Utils/GASSFilePath.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
 #include <tbb/spin_mutex.h>

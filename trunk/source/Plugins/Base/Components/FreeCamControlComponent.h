@@ -23,6 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"

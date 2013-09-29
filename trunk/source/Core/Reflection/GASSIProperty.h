@@ -27,7 +27,6 @@ This class is based on the Game Programming Gems 5 article
 #define GASS_I_PROPERTY_H
 
 #include "Core/Common.h"
-#include "Core/Reflection/GASSPropertyTypes.h"
 #include "Core/Reflection/GASSPropertyData.h"
 
 namespace GASS
@@ -97,6 +96,7 @@ namespace GASS
             @param value Value wrapped in the boost::any class
         */
 		virtual void SetValue(BaseReflectionObject* object, boost::any &value) = 0;
+
 		/**
             Get the value of this property, retured by the boost::any class
             @param object The object that is owner of this property
@@ -104,7 +104,14 @@ namespace GASS
         */
 		virtual void GetValue(const BaseReflectionObject* object, boost::any &value) const = 0;
 
+		/**
+			Check if this property has meta data
+		*/
 		virtual bool HasMetaData() const = 0;
+		
+		/**
+			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
+		*/
 		virtual PropertyMetaDataPtr GetMetaData() const = 0;
 
 	protected :

@@ -27,6 +27,7 @@
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include "IOgreSceneManagerProxy.h"
 #include "OgreMaterial.h"
 #include <string>

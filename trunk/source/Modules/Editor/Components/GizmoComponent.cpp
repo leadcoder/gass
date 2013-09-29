@@ -579,16 +579,6 @@ namespace GASS
 		Vec3 v_vec = rot_mat.GetViewDirVector();
 		Vec3 up_vec = rot_mat.GetUpVector();
 
-		//check all planes
-
-
-
-		//float value = Math::IsectRayPlane(ray_start,ray_dir,c_pos,up_vec);
-		//float value2 = Math::IsectRayPlane(ray_start,ray_dir,c_pos,v_vec);
-		//if(value2 < value)
-		//	value = value2;
-
-
 
 		//select projection plane
 		if(m_Type == GT_AXIS)
@@ -624,7 +614,7 @@ namespace GASS
 
 				return ret;
 			}
-			//return isect_pos;
+		
 		}
 		return c_pos;
 	}
@@ -675,7 +665,7 @@ namespace GASS
 		{
 			t = m_EditorSceneManager->GetMouseToolController()->SnapPosition(t);
 		}
-		//t = SnapValue(t,m_MovmentSnap);
+	
 		Vec3 point_on_axis = axis_dir*t;
 
 		Vec3 res = (axis_origin + point_on_axis);

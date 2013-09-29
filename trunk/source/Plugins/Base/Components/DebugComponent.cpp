@@ -100,7 +100,6 @@ namespace GASS
 		}
 	}
 
-
 	void DebugComponent::OnSettings(GASS::MessagePtr message)
 	{
 		DebugComponentSettingsMessagePtr settings_mess = DYNAMIC_PTR_CAST<DebugComponentSettingsMessage>(message);

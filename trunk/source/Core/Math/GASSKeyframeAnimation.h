@@ -34,6 +34,7 @@ namespace GASS
 		IM_LINEAR,
 		IM_SPLINE
 	};
+
 	class GASSCoreExport Key
 	{
 	public:

@@ -37,9 +37,6 @@ namespace GASS
 		return true;
 	}
 
-
-	
-
 	template <>
 	bool GetValueFromString<bool>(bool &res,const std::string &s)
 	{

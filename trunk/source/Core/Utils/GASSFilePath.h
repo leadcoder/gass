@@ -46,7 +46,6 @@ namespace GASS
 		FilePath(const std::string &path,bool expand = true);
 		FilePath();
 		~FilePath();
-		
 		std::string GetFullPath() const;
 		std::string GetRawPath() const;
 		void SetPath(const std::string &path);
