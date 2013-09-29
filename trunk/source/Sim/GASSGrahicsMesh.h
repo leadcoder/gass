@@ -26,7 +26,10 @@
 
 namespace GASS
 {
-	enum MeshType
+	/**
+		Sub mesh type enumeration
+	*/
+	enum GraphicsSubMeshType
 	{
 		LINE_LIST,
 		POINT_LIST,
@@ -36,6 +39,14 @@ namespace GASS
 		TRIANGLE_STRIP,
 	};
 	
+
+	/**
+		\brief Class holding Sub Meshe data.
+		A Mesh is separated in submeshes, each sub mesh share 
+		the same material and same rendering/data mode, ie triangles, lines, points etc.
+		The submesh class hold vertex data separetes into diffrent vectors,
+		position vector, normal vector ect. This reflects how data is stored in many scene graoh sysstems
+	*/
 	class GASSExport GraphicsSubMesh
 	{
 	public:
@@ -47,86 +58,68 @@ namespace GASS
 		{
 
 		}
+		/**
+			Vector holding all positions
+		*/
 		std::vector<Vec3> PositionVector;
+
+		/**
+			Vector holding all normal data
+		*/
 		std::vector<Vec3> NormalVector;
+		
+		/**
+			Vector holding all tangent data
+		*/
 		std::vector<Vec3> TangentVector;
+		
+		/**
+			Vector holding all color data
+		*/
 		std::vector<ColorRGBA> ColorVector;
+		
+		/**
+			Vector holding texture coordinates. A sub mesh can have multiples
+			texture coordinates for each vertex
+		*/
 		std::vector< std::vector<Vec4> > TexCoordsVector;
-		//unsigned int NumFaces;
+
+		/**
+			Index vector that specify how vertex data should be  interpreted
+		*/
 		std::vector<unsigned int> IndexVector;
-		//unsigned int MaterialID;
+
+		/**
+			Material of used by this sub mesh, this just a shallow
+			material representation that only support som basic 
+			fixed function rendering material properties.
+		*/
 		GraphicsMaterial Material;
+
+		/**
+			The material name used in the scene graph system,
+		*/
 		std::string MaterialName;
-		MeshType Type;
+
+		/**
+			Sub mesh type
+		*/
+		GraphicsSubMeshType Type;
 	};
-	typedef SPTR<GraphicsSubMesh> GraphicsSubMeshPtr;
+	typedef SPTR<GraphicsSubMeshData> GraphicsSubMeshPtr;
 	
+
+	/**
+		Class that hold graphic mesh data used by scene graph systems.
+		This class is used to send data to and from rendering/scene graph systems.
+	*/
 	class GASSExport GraphicsMesh
 	{
 	public:
 		GraphicsMesh();
 		virtual ~GraphicsMesh();
 		void Transform(const Mat4 &transformation );
-		std::vector<GraphicsSubMeshPtr> SubMeshVector;
-		//std::vector<GraphicsMaterial> MaterialVector;
+		std::vector<SubMeshDataPtr> SubMeshVector;
 	};
-
 	typedef SPTR<GraphicsMesh> GraphicsMeshPtr;
-
-
-	class GASSExport PhysicsMesh
-	{
-		public:
-		PhysicsMesh();
-		PhysicsMesh(const GraphicsMesh &mesh);
-		virtual ~PhysicsMesh();
-		void AddMesh(const GraphicsMesh &mesh);
-		std::vector<Vec3> PositionVector;
-		std::vector<unsigned int> IndexVector;
-		std::vector<unsigned int> MaterialIDVector;
-	};
-	typedef SPTR<PhysicsMesh> PhysicsMeshPtr;
-
-	/*struct GASSExport MeshData
-	{
-		unsigned int NumVertex;
-		Vec3 *VertexVector;
-		Vec3 *NormalVector;
-		Vec4 *TexCoordVector;
-		unsigned int NumFaces;
-		unsigned int *FaceVector;
-		unsigned int *FaceMaterialIDVector;
-	};
-	typedef MeshData* MeshDataPtr;*/
-
-
-	/*struct MeshVertex
-	{
-		Vec3 Pos;
-		Vec3 Normal;
-		Vec3 Tangent;
-		Vec4 Color;
-		Vec2 TexCoord;
-	};
-	*/
-
-
-	/**
-	Used by manual mesh
-	*/
-	/*struct GASSExport ManualMeshData
-	{
-		std::vector<MeshVertex> VertexVector;
-		std::vector<unsigned int> IndexVector;
-		std::string Material;
-		MeshType Type;
-		bool ScreenSpace;
-
-		ManualMeshData()
-		{
-			ScreenSpace = false; 
-			Type =LINE_LIST;
-		}
-	};
-	typedef SPTR<ManualMeshData> ManualMeshDataPtr;*/
 }
