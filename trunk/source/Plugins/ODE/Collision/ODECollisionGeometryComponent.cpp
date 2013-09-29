@@ -39,6 +39,8 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSGraphicsMesh.h"
+#include "Sim/GASSPhysicsMesh.h"
 #ifdef WIN32
 #define NOMINMAX
 #include <algorithm>

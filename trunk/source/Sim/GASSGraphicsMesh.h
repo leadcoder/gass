@@ -106,7 +106,7 @@ namespace GASS
 		*/
 		GraphicsSubMeshType Type;
 	};
-	typedef SPTR<GraphicsSubMeshData> GraphicsSubMeshPtr;
+	typedef SPTR<GraphicsSubMesh> GraphicsSubMeshPtr;
 	
 
 	/**
@@ -119,7 +119,7 @@ namespace GASS
 		GraphicsMesh();
 		virtual ~GraphicsMesh();
 		void Transform(const Mat4 &transformation );
-		std::vector<SubMeshDataPtr> SubMeshVector;
+		std::vector<GraphicsSubMeshPtr> SubMeshVector;
 	};
 	typedef SPTR<GraphicsMesh> GraphicsMeshPtr;
 }

@@ -51,7 +51,7 @@ namespace GASS
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(-q.w,q.x,q.y,q.z);}
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
 		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(color.r, color.g, color.b, color.a);}
-		static inline Ogre::RenderOperation::OperationType ToOgre(MeshType mt)
+		static inline Ogre::RenderOperation::OperationType ToOgre(GraphicsSubMeshType mt)
 		{
 			Ogre::RenderOperation::OperationType op;
 			switch(mt)
@@ -85,9 +85,9 @@ namespace GASS
 		static inline Quaternion				ToGASS(const Ogre::Quaternion &q) {return Quaternion(-q.w,q.x,q.y,q.z);}
 		static inline Sphere					ToGASS(const Ogre::Sphere &s){return Sphere(ToGASS(s.getCenter()),s.getRadius());}
 		static inline ColorRGBA					ToGASS(const Ogre::ColourValue &c){return ColorRGBA(c.r, c.g, c.b, c.a);}
-		static inline MeshType					ToGASS(Ogre::RenderOperation::OperationType ot)
+		static inline GraphicsSubMeshType					ToGASS(Ogre::RenderOperation::OperationType ot)
 		{
-			MeshType mt;
+			GraphicsSubMeshType mt;
 			switch(ot)
 			{
 			case Ogre::RenderOperation::OT_LINE_LIST:

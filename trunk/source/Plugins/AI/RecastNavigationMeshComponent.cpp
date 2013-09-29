@@ -33,6 +33,7 @@
 #include "InputGeom.h"
 #include "tinyxml.h"
 #include "Core/Utils/GASSFileUtils.h"
+#include "Sim/GASSPhysicsMesh.h"
 
 namespace GASS
 {

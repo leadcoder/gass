@@ -58,40 +58,4 @@ namespace GASS
 		//Transform all normals, only rotation
 	}
 
-	PhysicsMesh::PhysicsMesh(const GraphicsMesh &mesh)
-	{
-		AddMesh(mesh);
-	}
-
-	PhysicsMesh::~PhysicsMesh()
-	{
-
-	}
-
-	void PhysicsMesh::AddMesh(const GraphicsMesh &mesh)
-	{
-		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)
-		{
-			//only support triangle data
-			if(mesh.SubMeshVector[i]->Type == TRIANGLE_LIST)
-			{
-				unsigned int offset = PositionVector.size();
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
-				{
-					IndexVector.push_back(mesh.SubMeshVector[i]->IndexVector[j] + offset);
-				}
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->PositionVector.size() ; j++)
-				{
-					PositionVector.push_back(mesh.SubMeshVector[i]->PositionVector[j]);
-				}
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size()/3 ; j++)
-				{
-					MaterialIDVector.push_back(0);
-				}
-			}
-		}
-	}
 }

@@ -18,11 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/GASSPhysicsData.h"
+#include "Sim/GASSPhysicsMesh.h"
 
 namespace GASS
 {
-	PhysicsMesh::PhysicsMesh(const MeshData &mesh)
+	PhysicsMesh::PhysicsMesh(const GraphicsMesh &mesh)
 	{
 		AddMesh(mesh);
 	}
@@ -32,7 +32,7 @@ namespace GASS
 
 	}
 
-	void PhysicsMesh::AddMesh(const MeshData &mesh)
+	void PhysicsMesh::AddMesh(const GraphicsMesh &mesh)
 	{
 		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)
 		{

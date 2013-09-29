@@ -26,6 +26,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/GASSPhysicsMesh.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
@@ -35,6 +36,7 @@
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 #include "Sim/Interface/GASSIGroupComponent.h"
 #include "Plugins/ODE/IODEGeometryComponent.h"
+
 
 
 namespace GASS
