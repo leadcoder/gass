@@ -7,7 +7,7 @@
 
 namespace GASS
 {
-	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new MeshData()), 
+	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new GraphicsMesh()), 
 		m_Radius(0.5),
 		m_Group("BLUE"),
 		m_Agent(NULL),
@@ -399,7 +399,7 @@ namespace GASS
 
 		m_MeshData->SubMeshVector.clear();
 
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_STRIP;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";

@@ -44,8 +44,8 @@ namespace GASS
 
 
 	typedef SPTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
-	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new MeshData()),
-		m_NavVisLineMesh(new MeshData()),
+	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new GraphicsMesh()),
+		m_NavVisLineMesh(new GraphicsMesh()),
 		m_NavMesh(NULL),
 		m_ShowMeshLines(false),
 		m_ShowMeshSolid(false),
@@ -1135,7 +1135,7 @@ static int convexhull(const float* pts, int npts, int* out)
 						 
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 
-						MeshData gfx_mesh_data = mesh->GetMeshData();
+						GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 						PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
@@ -1242,7 +1242,7 @@ static int convexhull(const float* pts, int npts, int* out)
 		m_NavVisLineMesh->SubMeshVector.clear();
 		m_NavVisTriMesh->SubMeshVector.clear();
 		
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_NavVisLineMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
@@ -1275,7 +1275,7 @@ static int convexhull(const float* pts, int npts, int* out)
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 		
-		sub_mesh_data = SubMeshDataPtr(new SubMeshData());
+		sub_mesh_data = GraphicsSubMeshPtr(new GraphicsSubMesh());
 		m_NavVisTriMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = TRIANGLE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";

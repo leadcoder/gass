@@ -144,7 +144,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{
-		MeshDataPtr data = message->GetData();
+		GraphicsMeshPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
@@ -188,7 +188,7 @@ namespace GASS
 		
 	}
 
-	void OSGManualMeshComponent::CreateMesh(MeshDataPtr data)
+	void OSGManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
 	{
 	/*	if(data->Material != m_CurrentMaterial) //try loading material
 		{

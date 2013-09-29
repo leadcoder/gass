@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	RecastOffmeshMeshConnectionComponent::RecastOffmeshMeshConnectionComponent() : m_ConnectionLine(new MeshData()),
+	RecastOffmeshMeshConnectionComponent::RecastOffmeshMeshConnectionComponent() : m_ConnectionLine(new GraphicsMesh()),
 		m_Initialized(false),
 		m_Visible(true),
 		m_Radius(1.0),
@@ -113,7 +113,7 @@ namespace GASS
 	{
 		m_ConnectionLine->SubMeshVector.clear();
 
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_ConnectionLine->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";

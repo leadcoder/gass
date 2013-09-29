@@ -24,7 +24,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include <OgreManualObject.h>
 
@@ -50,7 +50,7 @@ namespace GASS
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 
 		//IMeshComponent
-		virtual MeshData GetMeshData() const;
+		virtual GraphicsMesh GetMeshData() const;
 	protected:
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
@@ -62,10 +62,10 @@ namespace GASS
 		void OnTextureMessage(TextureMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
-		void CreateMesh(MeshDataPtr data);
+		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 		Ogre::ManualObject* m_MeshObject;
-		std::vector<MeshData> m_MeshData;
+		std::vector<GraphicsMesh> m_MeshData;
 		bool m_UniqueMaterialCreated;
 		bool m_CastShadows;
 		GeometryFlags m_GeomFlags;

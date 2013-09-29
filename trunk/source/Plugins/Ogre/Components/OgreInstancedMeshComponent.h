@@ -59,7 +59,7 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual MeshData GetMeshData() const;
+		virtual GraphicsMesh GetMeshData() const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}

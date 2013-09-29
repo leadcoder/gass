@@ -229,9 +229,9 @@ namespace GASS
 	}
 
 
-	MeshData OgreMeshComponent::GetMeshData() const
+	GraphicsMesh OgreMeshComponent::GetMeshData() const
 	{
-		MeshData mesh_data;
+		GraphicsMesh mesh_data;
 		if(m_OgreEntity == NULL)
 			return mesh_data;
 		Ogre::MeshPtr mesh = m_OgreEntity->getMesh();
@@ -239,11 +239,11 @@ namespace GASS
 		return mesh_data;
 	}
 
-	void OgreMeshComponent::CopyMeshToMeshData(Ogre::MeshPtr mesh, MeshData &mesh_data)
+	void OgreMeshComponent::CopyMeshToMeshData(Ogre::MeshPtr mesh, GraphicsMesh &mesh_data)
 	{
 		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
 		{
-			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data.SubMeshVector.push_back(sub_mesh_data);
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
 			sub_mesh_data->Type = OgreConvert::ToGASS(sub_mesh->operationType);
@@ -291,7 +291,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh) 
+	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,GraphicsSubMeshPtr mesh) 
 	{
 		if (!vertex_data)
 			return;
@@ -400,7 +400,7 @@ namespace GASS
 
 	}
 
-	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,SubMeshDataPtr mesh) 
+	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh) 
 	{
 		//const unsigned int prev_size = mesh->NumFaces;
 		//mesh->NumFaces += (unsigned int)data->indexCount;

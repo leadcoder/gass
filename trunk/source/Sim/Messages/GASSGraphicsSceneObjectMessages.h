@@ -47,8 +47,8 @@ namespace GASS
 	class ISceneManager;
 	class IGeometryComponent;
 	class ILocationComponent;
-	class MeshData;
-	typedef SPTR<MeshData> MeshDataPtr;
+	class GraphicsMesh;
+	typedef SPTR<GraphicsMesh> GraphicsMeshPtr;
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 	typedef SPTR<ILocationComponent> LocationComponentPtr;
@@ -470,11 +470,11 @@ namespace GASS
 	class ManualMeshDataMessage : public BaseMessage
 	{
 	public:
-		ManualMeshDataMessage(MeshDataPtr data, SenderID sender_id = -1, double delay= 0) :
+		ManualMeshDataMessage(GraphicsMeshPtr data, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Data(data){}
-		  MeshDataPtr GetData()const {return m_Data;}
+		  GraphicsMeshPtr GetData()const {return m_Data;}
 	private:
-		MeshDataPtr m_Data;
+		GraphicsMeshPtr m_Data;
 
 	};
 	typedef SPTR<ManualMeshDataMessage> ManualMeshDataMessagePtr;

@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	GizmoComponent::GizmoComponent() : m_MeshData(new MeshData), m_Color(1,0,0,1),
+	GizmoComponent::GizmoComponent() : m_MeshData(new GraphicsMesh), m_Color(1,0,0,1),
 		m_Size(5),
 		m_Type(GT_AXIS),
 		m_Highlight(true),
@@ -312,7 +312,7 @@ namespace GASS
 
 	void GizmoComponent::BuildMesh()
 	{
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.clear();
 		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
 		

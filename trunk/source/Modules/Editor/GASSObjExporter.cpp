@@ -23,12 +23,12 @@ namespace GASS
 
 		if(comps.size()>0)
 		{
-			std::vector<MeshData> mesh_data_vec;
+			std::vector<GraphicsMesh> mesh_data_vec;
 			for(int i = 0;  i <  comps.size(); i++)
 			{
 				SceneObjectPtr obj = (DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
 				MeshComponentPtr mesh =  DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
-				MeshData  mesh_data = mesh->GetMeshData();
+				GraphicsMesh  mesh_data = mesh->GetMeshData();
 
 				//Transform to world coordinates!
 				GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
@@ -61,7 +61,7 @@ namespace GASS
 			{
 				for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				{
-					SubMeshDataPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
+					GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
 					//unsigned int base_index = PositionVector.size();
 
 					if(sub_mesh->MaterialName != "")
@@ -179,7 +179,7 @@ namespace GASS
 			{
 				for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				{
-					SubMeshDataPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
+					GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
 					ss << "g " << "submesh" << sub_mesh_index << "\n";
 					sub_mesh_index++;
 

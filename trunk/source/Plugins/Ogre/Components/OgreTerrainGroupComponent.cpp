@@ -461,9 +461,9 @@ namespace GASS
 	}
 
 	
-	MeshData OgreTerrainGroupComponent::GetMeshData() const
+	GraphicsMesh OgreTerrainGroupComponent::GetMeshData() const
 	{
-		MeshData data;
+		GraphicsMesh data;
 		return data;
 	}
 

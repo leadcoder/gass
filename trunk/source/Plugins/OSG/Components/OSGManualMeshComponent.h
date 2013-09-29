@@ -44,12 +44,12 @@ namespace GASS
 		void OnClearMessage(ClearManualMeshMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void CreateMesh(MeshDataPtr data);
+		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 		
 		osg::ref_ptr<osg::Geometry> m_OSGGeometry;
 		osg::ref_ptr<osg::Geode> m_GeoNode;
-		std::vector<MeshData> m_MeshData;
+		std::vector<GraphicsMesh> m_MeshData;
 		GeometryFlags m_GeomFlags;
 		std::string m_CurrentMaterial; //book keep current material file
 		bool m_CastShadow;

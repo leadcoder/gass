@@ -48,7 +48,7 @@ namespace GASS
 		virtual void OnDelete();
 		
 		//IMeshComponent
-		virtual MeshData GetMeshData() const;
+		virtual GraphicsMesh GetMeshData() const;
 	
 		//IGeometryComponent
 		virtual GeometryFlags GetGeometryFlags() const;

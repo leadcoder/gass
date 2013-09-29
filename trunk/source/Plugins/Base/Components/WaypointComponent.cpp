@@ -34,7 +34,7 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 
 
 namespace GASS
@@ -238,8 +238,8 @@ namespace GASS
 
 		//collect all children and update path
 		//const double line_steps = 115;
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 

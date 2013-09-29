@@ -34,7 +34,7 @@
 
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 
 namespace GASS
 {

@@ -155,7 +155,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OSGTextComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OSGTextComponent::GetMeshData(GraphicsMeshPtr mesh_data)
 	{
 
 	}

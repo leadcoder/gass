@@ -177,7 +177,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OSGBillboardComponent::GetMeshData(MeshDataPtr mesh_data)
+	void OSGBillboardComponent::GetMeshData(GraphicsMeshPtr mesh_data)
 	{
 
 	}

@@ -291,7 +291,7 @@ namespace GASS
 				}
 				else
 				{
-					MeshData gfx_mesh_data = mesh->GetMeshData();
+					GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 					PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
 				}

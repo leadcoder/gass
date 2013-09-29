@@ -40,7 +40,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 	protected:

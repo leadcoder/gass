@@ -30,7 +30,7 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -77,8 +77,8 @@ namespace GASS
 
 	void ArrowGeometryComponent::GenerateMesh()
 	{
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
 		float box_volume = m_Size.x;

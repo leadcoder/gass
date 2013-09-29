@@ -229,9 +229,9 @@ namespace GASS
 		return final_sphere;
 	}
 
-	MeshData  OgreStaticMeshComponent::GetMeshData() const
+	GraphicsMesh  OgreStaticMeshComponent::GetMeshData() const
 	{
-		MeshData mesh_data;
+		GraphicsMesh mesh_data;
 
 		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
 		while (regIt.hasMoreElements())
@@ -264,7 +264,7 @@ namespace GASS
 					StaticGeometry::MaterialBucket* mat = matIt.getNext();
 					StaticGeometry::MaterialBucket::GeometryIterator geomIt = mat->getGeometryIterator();
 
-					SubMeshDataPtr sub_mesh_data(new SubMeshData());
+					GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 					mesh_data.SubMeshVector.push_back(sub_mesh_data);
 
 					while (geomIt.hasMoreElements())

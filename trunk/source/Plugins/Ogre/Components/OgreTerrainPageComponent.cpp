@@ -866,11 +866,11 @@ namespace GASS
 	}
 
 
-	MeshData OgreTerrainPageComponent::GetMeshData() const
+	GraphicsMesh OgreTerrainPageComponent::GetMeshData() const
 	{
 
-		MeshData mesh_data;
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMesh mesh_data;
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data.SubMeshVector.push_back(sub_mesh_data);
 
 		if(!m_Terrain)

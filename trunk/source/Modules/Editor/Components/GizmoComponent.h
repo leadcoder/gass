@@ -5,7 +5,7 @@
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
@@ -57,7 +57,7 @@ namespace GASS
 		Float GizmoComponent::SnapValue(Float value, Float snap);
 	
 		Quaternion m_BaseRot;
-		MeshDataPtr m_MeshData;	
+		GraphicsMeshPtr m_MeshData;	
 		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;

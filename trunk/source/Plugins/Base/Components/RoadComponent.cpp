@@ -36,7 +36,7 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
@@ -231,8 +231,8 @@ namespace GASS
 		WaypointListComponentPtr wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 
 	
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 
 		std::vector<Vec4> tex_coords;

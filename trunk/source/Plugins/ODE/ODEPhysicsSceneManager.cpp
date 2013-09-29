@@ -327,7 +327,7 @@ namespace GASS
 			return m_ColMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
-		MeshData gfx_mesh_data = mesh->GetMeshData();
+		GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)

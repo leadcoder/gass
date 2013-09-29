@@ -3,7 +3,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -33,7 +33,7 @@ namespace GASS
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		Float GetHeight() const;
-		MeshDataPtr m_MeshData;	
+		GraphicsMeshPtr m_MeshData;	
 		ColorRGBA m_Color;
 		float m_Size;
 		float m_InnerSize;

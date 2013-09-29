@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/GASSResource.h"
 
 namespace GASS
@@ -41,7 +41,7 @@ namespace GASS
 		/**
 		Should return actual mesh data (polygons), see MeshData for more info
 		*/
-		virtual MeshData GetMeshData() const =0;
+		virtual GraphicsMesh GetMeshData() const =0;
 	};
 	typedef SPTR<IMeshComponent> MeshComponentPtr;
 }

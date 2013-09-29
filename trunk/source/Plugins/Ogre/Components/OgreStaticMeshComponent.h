@@ -63,7 +63,7 @@ namespace GASS
 
 		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual MeshData  GetMeshData() const;
+		virtual GraphicsMesh  GetMeshData() const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
@@ -74,8 +74,8 @@ namespace GASS
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void SetRegionSize(Float size) {m_RegionSize = size;}
 		Float GetRegionSize() const {return m_RegionSize;}
-		void AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset) const;
-		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const;
+		void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsMeshPtr mesh, const Ogre::Vector3 &offset) const;
+		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,GraphicsMeshPtr mesh) const;
 	
 		std::string m_RenderQueue;
 		bool m_CastShadow;

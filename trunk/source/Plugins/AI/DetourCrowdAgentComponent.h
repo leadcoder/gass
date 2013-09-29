@@ -73,7 +73,7 @@ namespace GASS
 		std::string m_Script;
 		std::string m_Group;
 		Vec3 m_LastPos;
-		MeshDataPtr m_MeshData;
+		GraphicsMeshPtr m_MeshData;
 		const dtCrowdAgent* m_Agent;
 		int m_Index;
 

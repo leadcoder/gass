@@ -30,7 +30,7 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -97,8 +97,8 @@ namespace GASS
 	void PlaneGeometryComponent::GenerateMesh()
 	{
 		Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 
 		Vec3 p1,p2,p3,p4;

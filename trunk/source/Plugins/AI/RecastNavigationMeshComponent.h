@@ -166,8 +166,8 @@ namespace GASS
 
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
-		MeshDataPtr m_NavVisTriMesh;
-		MeshDataPtr m_NavVisLineMesh;
+		GraphicsMeshPtr m_NavVisTriMesh;
+		GraphicsMeshPtr m_NavVisLineMesh;
 		std::vector<SceneObjectRef> m_SelectedMeshes;
 		bool m_ShowMeshLines;
 		bool m_ShowMeshSolid;

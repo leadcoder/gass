@@ -346,7 +346,7 @@ namespace GASS
 			return m_ConvexMeshMap[col_mesh_id];
 		}
 		
-		MeshData gfx_mesh_data = mesh->GetMeshData();
+		GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
 		//int float_size = sizeof(Float);
@@ -374,7 +374,7 @@ namespace GASS
 			return m_TriangleMeshMap[col_mesh_id];
 		}
 		//not loaded, load it!
-		MeshData gfx_mesh_data = mesh->GetMeshData();
+		GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
 		//int float_size = sizeof(Float);

@@ -655,9 +655,9 @@ namespace GASS
 		}
 	}
 
-	MeshData OSGMeshComponent::GetMeshData() const
+	GraphicsMesh OSGMeshComponent::GetMeshData() const
 	{
-		MeshData  mesh_data;
+		GraphicsMesh  mesh_data;
 		if(!m_MeshNode.valid())
 		{
 			LogManager::getSingleton().stream() << "WARNING:You have to load mesh before trying to fetch mesh data. Mesh name: " << GetName();
@@ -666,7 +666,7 @@ namespace GASS
 		DrawableVisitor<TriangleRecorder> mv;	
 		m_MeshNode->accept(mv);
 
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data.SubMeshVector.push_back(sub_mesh_data);
 
 		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;

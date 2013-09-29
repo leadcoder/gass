@@ -69,16 +69,16 @@ namespace GASS
 		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual MeshData GetMeshData() const;
+		virtual GraphicsMesh GetMeshData() const;
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 
 		//used by enumeration class
 		std::vector<std::string> GetAvailableMeshFiles() const;
 
-		static void CopyMeshToMeshData(Ogre::MeshPtr mesh, MeshData &mesh_data);
-		static void AddVertexData(const Ogre::VertexData *vertex_data,SubMeshDataPtr mesh);
-		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,SubMeshDataPtr mesh);
+		static void CopyMeshToMeshData(Ogre::MeshPtr mesh, GraphicsMesh &mesh_data);
+		static void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsSubMeshPtr mesh);
+		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh);
 
 	protected:
 		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)

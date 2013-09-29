@@ -160,7 +160,7 @@ namespace GASS
 		ResourceHandle GetResource() const {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual MeshData GetMeshData() const;
+		virtual GraphicsMesh GetMeshData() const;
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);

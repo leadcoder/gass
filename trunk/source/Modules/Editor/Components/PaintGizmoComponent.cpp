@@ -20,7 +20,7 @@
 namespace GASS
 {
 
-	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new MeshData), m_Color(0,1,0,1),
+	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new GraphicsMesh), m_Color(0,1,0,1),
 		m_Size(30),
 		m_InnerSize(20),
 		m_Type("follow_height"),
@@ -69,7 +69,7 @@ namespace GASS
 		if(!m_HMTerrain)
 			m_HMTerrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.clear();
 		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
 

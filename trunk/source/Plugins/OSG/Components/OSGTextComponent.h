@@ -42,7 +42,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
-		virtual void GetMeshData(MeshDataPtr mesh_data);
+		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);

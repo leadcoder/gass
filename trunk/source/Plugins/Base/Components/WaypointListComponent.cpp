@@ -39,7 +39,7 @@
 
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "WaypointComponent.h"
 
 #include <iostream>
@@ -197,8 +197,8 @@ namespace GASS
 
 		if(m_ShowPathLine)
 		{
-			MeshDataPtr mesh_data(new MeshData());
-			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			GraphicsMeshPtr mesh_data(new GraphicsMesh());
+			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
 			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 			sub_mesh_data->Type = LINE_STRIP;

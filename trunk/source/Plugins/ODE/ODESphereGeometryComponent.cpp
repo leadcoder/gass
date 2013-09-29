@@ -117,9 +117,9 @@ namespace GASS
 
 	void ODESphereGeometryComponent::CreateDebugSphere(Float size,const Vec3 &offset)
 	{
-		MeshDataPtr mesh_data(new MeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 		sub_mesh_data->Type = LINE_LIST;

@@ -117,7 +117,7 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
 	{
-		MeshDataPtr data = message->GetData();
+		GraphicsMeshPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
@@ -133,14 +133,14 @@ namespace GASS
 	}
 
 
-	void OgreManualMeshComponent::CreateMesh(MeshDataPtr data)
+	void OgreManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
 	{
 		if(m_MeshObject)
 		{
 			m_MeshObject->clear();
 			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
 			{
-				SubMeshDataPtr sub_mesh =   data->SubMeshVector[i];
+				GraphicsSubMeshPtr sub_mesh =   data->SubMeshVector[i];
 				Ogre::RenderOperation::OperationType op = OgreConvert::ToOgre(sub_mesh->Type);
 				//use material name or create new material?
 				m_MeshObject->begin(sub_mesh->MaterialName, op);
@@ -397,9 +397,9 @@ namespace GASS
 	}
 
 
-	MeshData OgreManualMeshComponent::GetMeshData() const
+	GraphicsMesh OgreManualMeshComponent::GetMeshData() const
 	{
-		MeshData mesh_data;
+		GraphicsMesh mesh_data;
 
 		if(m_MeshObject == NULL)
 			return mesh_data;

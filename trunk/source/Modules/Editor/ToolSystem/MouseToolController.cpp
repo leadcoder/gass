@@ -18,7 +18,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
@@ -341,8 +341,8 @@ namespace GASS
 			m_PointerObject = scene_object;
 			pointer = scene_object;
 
-			MeshDataPtr mesh_data(new MeshData());
-			SubMeshDataPtr sub_mesh_data(new SubMeshData());
+			GraphicsMeshPtr mesh_data(new GraphicsMesh());
+			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
 

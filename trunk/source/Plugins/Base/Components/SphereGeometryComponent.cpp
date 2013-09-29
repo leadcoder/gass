@@ -28,7 +28,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSMeshData.h"
+#include "Sim/GASSGrahicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -95,8 +95,8 @@ namespace GASS
 
 	void SphereGeometryComponent::DrawWireframe()
 	{
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
@@ -155,8 +155,8 @@ namespace GASS
 		if(nSlice > 30) nSlice = 30;
 		if(nStack > 30) nStack = 30;
 
-		MeshDataPtr mesh_data(new MeshData());
-		SubMeshDataPtr sub_mesh_data(new SubMeshData());
+		GraphicsMeshPtr mesh_data(new GraphicsMesh());
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = TRIANGLE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";

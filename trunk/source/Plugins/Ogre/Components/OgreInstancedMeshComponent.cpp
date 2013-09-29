@@ -348,9 +348,9 @@ namespace GASS
 		return final_sphere;
 	}
 
-	MeshData OgreInstancedMeshComponent::GetMeshData() const
+	GraphicsMesh OgreInstancedMeshComponent::GetMeshData() const
 	{
-		MeshData data;
+		GraphicsMesh data;
 		return data;
 		
 		/*	StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
