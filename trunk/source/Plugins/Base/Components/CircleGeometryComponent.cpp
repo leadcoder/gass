@@ -29,7 +29,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"

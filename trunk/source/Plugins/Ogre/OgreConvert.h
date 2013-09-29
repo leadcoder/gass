@@ -37,7 +37,7 @@
 #include "Core/Math/GASSSphere.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Utils/GASSColorRGB.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 namespace GASS
 {
 	class OgreConvert

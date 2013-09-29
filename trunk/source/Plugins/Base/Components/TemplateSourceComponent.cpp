@@ -30,7 +30,7 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 

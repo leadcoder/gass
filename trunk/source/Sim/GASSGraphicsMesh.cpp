@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 
 namespace GASS
 {

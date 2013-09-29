@@ -24,7 +24,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include <OgreManualObject.h>
 

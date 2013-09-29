@@ -36,7 +36,7 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"

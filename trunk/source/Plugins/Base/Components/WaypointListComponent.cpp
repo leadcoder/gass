@@ -39,7 +39,7 @@
 
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 #include "WaypointComponent.h"
 
 #include <iostream>

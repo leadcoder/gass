@@ -20,7 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSGrahicsMesh.h"
+#include "Sim/GASSGraphicsMesh.h"
 
 
 namespace GASS
