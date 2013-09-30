@@ -478,8 +478,8 @@ namespace GASS
 				
 				pos0 = sub_mesh_data->PositionVector[offset];
 				pos1 = sub_mesh_data->PositionVector[offset + i];
-				pos2 = sub_mesh_data->PositionVector[offset +i+1];
-				normal = Math::GetNormal(pos0,pos1,pos2);
+				pos2 = sub_mesh_data->PositionVector[offset + i+1];
+				normal = -Math::GetNormal(pos0,pos1,pos2);
 				
 				t1 = pos1 - pos0;
 				t2 = pos2 - pos0;
@@ -487,7 +487,7 @@ namespace GASS
 				tex0.x = 0;
 				tex0.y = 0;
 
-				tex0.y = t1.y;
+				tex1.y = t1.y;
 				t1.y = 0;
 				tex1.x = t1.Length();
 
@@ -496,27 +496,38 @@ namespace GASS
 				tex2.x = t2.Length();
 
 				start_ind = sub_mesh_data->PositionVector.size();
-				sub_mesh_data->IndexVector.push_back(start_ind);
-				sub_mesh_data->IndexVector.push_back(start_ind+1);
+				//Reverse order
 				sub_mesh_data->IndexVector.push_back(start_ind+2);
-				
+				sub_mesh_data->IndexVector.push_back(start_ind+1);
+				sub_mesh_data->IndexVector.push_back(start_ind);
+
+
 				sub_mesh_data->PositionVector.push_back(pos0);
-				sub_mesh_data->ColorVector.push_back(color);
-				sub_mesh_data->NormalVector.push_back(normal);
-				sub_mesh_data->TangentVector.push_back(normal);
 				tex_coords.push_back(tex0);
-				
-				sub_mesh_data->PositionVector.push_back(pos1);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
+
+
+				sub_mesh_data->PositionVector.push_back(pos1);
 				tex_coords.push_back(tex1);
+				sub_mesh_data->ColorVector.push_back(color);
+				sub_mesh_data->NormalVector.push_back(normal);
+				sub_mesh_data->TangentVector.push_back(normal);
+
 
 				sub_mesh_data->PositionVector.push_back(pos2);
+				tex_coords.push_back(tex2);
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-				tex_coords.push_back(tex2);
+
+				
+				
+				
+
+				
+				
 
 
 			} 
