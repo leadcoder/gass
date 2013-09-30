@@ -44,41 +44,52 @@
 
 Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 
-GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags)
-    : QMainWindow(parent, flags), m_GASSApp(NULL), m_Config("GASS.xml")
+	GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags), 
+	m_GASSApp(NULL), 
+	m_Config("GASS.xml"),
+	m_FileMenu(NULL),
+	m_EditMenu(NULL),
+	m_CopyAct(NULL),
+	m_CutAct(NULL),
+	m_PasteAct(NULL),
+	m_DeleteAct(NULL),
+	m_AddWaypointsAct(NULL),
+	m_ChangeSiteAct(NULL),
+	m_ExportAct(NULL),
+	m_AddTemplateMenu(NULL)
 {
-    setObjectName("GASSEd");
-    setWindowTitle("GASSEd");
-    /*center = new QTextEdit(this);
-    center->setReadOnly(true);
-    center->setMinimumSize(400, 205);
-    setCentralWidget(center);*/
+	setObjectName("GASSEd");
+	setWindowTitle("GASSEd");
+	/*center = new QTextEdit(this);
+	center->setReadOnly(true);
+	center->setMinimumSize(400, 205);
+	setCentralWidget(center);*/
 
 	m_GASSApp = new GASS::EditorApplication(GASS::FilePath(""));
 	GASSRenderWidget* main_widget = new GASSRenderWidget();
 	main_widget->m_GASSEd = this;
 	setCentralWidget(main_widget);
 
-    setupToolBar();
-    setupMenuBar();
-    statusBar()->showMessage(tr("Status Bar"));
+	SetupToolBar();
+	SetupMenuBar();
+	statusBar()->showMessage(tr("Status Bar"));
 	setDockNestingEnabled(true);
 
 	QDockWidget* res_dock = new QDockWidget("Resources");
 	res_dock->setWidget(new  GASSResourceTreeWidget());
 	res_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	addDockWidget(Qt::LeftDockWidgetArea , res_dock);
-	
+
 	QDockWidget* tree_dock = new QDockWidget("Scene");
 	tree_dock->setWidget(new  GASSSceneTreeWidget(this));
 	tree_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	addDockWidget(Qt::LeftDockWidgetArea , tree_dock);
-	
+
 	QDockWidget *prop_dock = new QDockWidget("Properties");
 	prop_dock->setWidget(new GASSPropertyWidget(this));
 	prop_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	splitDockWidget(tree_dock,prop_dock,Qt::Vertical);
-	 
+
 }
 
 void GASSEd::Initialize(void* render_win_handle)
@@ -91,18 +102,18 @@ void GASSEd::Initialize(void* render_win_handle)
 
 /*void GASSEd::actionTriggered(QAction *action)
 {
-    qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
+qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }*/
 
-void GASSEd::setupToolBar()
+void GASSEd::SetupToolBar()
 {
 	StandardToolBar *tb = new StandardToolBar("Object Tools", this);
 	addToolBar(tb);
 	BrushSettingsWidget* bsw = new BrushSettingsWidget("Brush Settings", this);
-    addToolBar(bsw);
+	addToolBar(bsw);
 }
 
-void GASSEd::setupMenuBar()
+void GASSEd::SetupMenuBar()
 {
 	m_FileMenu = menuBar()->addMenu(tr("&File"));
 
@@ -161,82 +172,93 @@ void GASSEd::setupMenuBar()
 	m_ChangeSiteAct->setVisible(false);
 	connect(m_ChangeSiteAct, SIGNAL(triggered()), this, SLOT(OnSetAsSite()));
 
+
+
+
+	m_ExportAct = m_EditMenu->addAction(tr("&Export..."));
+	m_ExportAct->setEnabled(false);
+	m_ExportAct->setVisible(false);
+	connect(m_ExportAct, SIGNAL(triggered()), this, SLOT(OnExport()));
+
+
 	m_AddTemplateMenu = m_EditMenu->addMenu(tr("&Add..."));
+
+
 }
 
 void GASSEd::saveLayout()
 {
-    QString fileName
-        = QFileDialog::getSaveFileName(this, tr("Save layout"));
-    if (fileName.isEmpty())
-        return;
-    QFile file(fileName);
-    if (!file.open(QFile::WriteOnly)) {
-        QString msg = tr("Failed to open %1\n%2")
-                        .arg(fileName)
-                        .arg(file.errorString());
-        QMessageBox::warning(this, tr("Error"), msg);
-        return;
-    }
+	QString fileName
+		= QFileDialog::getSaveFileName(this, tr("Save layout"));
+	if (fileName.isEmpty())
+		return;
+	QFile file(fileName);
+	if (!file.open(QFile::WriteOnly)) {
+		QString msg = tr("Failed to open %1\n%2")
+			.arg(fileName)
+			.arg(file.errorString());
+		QMessageBox::warning(this, tr("Error"), msg);
+		return;
+	}
 
-    QByteArray geo_data = saveGeometry();
-    QByteArray layout_data = saveState();
+	QByteArray geo_data = saveGeometry();
+	QByteArray layout_data = saveState();
 
-    bool ok = file.putChar((uchar)geo_data.size());
-    if (ok)
-        ok = file.write(geo_data) == geo_data.size();
-    if (ok)
-        ok = file.write(layout_data) == layout_data.size();
+	bool ok = file.putChar((uchar)geo_data.size());
+	if (ok)
+		ok = file.write(geo_data) == geo_data.size();
+	if (ok)
+		ok = file.write(layout_data) == layout_data.size();
 
-    if (!ok) {
-        QString msg = tr("Error writing to %1\n%2")
-                        .arg(fileName)
-                        .arg(file.errorString());
-        QMessageBox::warning(this, tr("Error"), msg);
-        return;
-    }
+	if (!ok) {
+		QString msg = tr("Error writing to %1\n%2")
+			.arg(fileName)
+			.arg(file.errorString());
+		QMessageBox::warning(this, tr("Error"), msg);
+		return;
+	}
 }
 
 void GASSEd::loadLayout()
 {
-    QString fileName
-        = QFileDialog::getOpenFileName(this, tr("Load layout"));
-    if (fileName.isEmpty())
-        return;
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly)) {
-        QString msg = tr("Failed to open %1\n%2")
-                        .arg(fileName)
-                        .arg(file.errorString());
-        QMessageBox::warning(this, tr("Error"), msg);
-        return;
-    }
+	QString fileName
+		= QFileDialog::getOpenFileName(this, tr("Load layout"));
+	if (fileName.isEmpty())
+		return;
+	QFile file(fileName);
+	if (!file.open(QFile::ReadOnly)) {
+		QString msg = tr("Failed to open %1\n%2")
+			.arg(fileName)
+			.arg(file.errorString());
+		QMessageBox::warning(this, tr("Error"), msg);
+		return;
+	}
 
-    uchar geo_size;
-    QByteArray geo_data;
-    QByteArray layout_data;
+	uchar geo_size;
+	QByteArray geo_data;
+	QByteArray layout_data;
 
-    bool ok = file.getChar((char*)&geo_size);
-    if (ok) {
-        geo_data = file.read(geo_size);
-        ok = geo_data.size() == geo_size;
-    }
-    if (ok) {
-        layout_data = file.readAll();
-        ok = layout_data.size() > 0;
-    }
+	bool ok = file.getChar((char*)&geo_size);
+	if (ok) {
+		geo_data = file.read(geo_size);
+		ok = geo_data.size() == geo_size;
+	}
+	if (ok) {
+		layout_data = file.readAll();
+		ok = layout_data.size() > 0;
+	}
 
-    if (ok)
-        ok = restoreGeometry(geo_data);
-    if (ok)
-        ok = restoreState(layout_data);
+	if (ok)
+		ok = restoreGeometry(geo_data);
+	if (ok)
+		ok = restoreState(layout_data);
 
-    if (!ok) {
-        QString msg = tr("Error reading %1")
-                        .arg(fileName);
-        QMessageBox::warning(this, tr("Error"), msg);
-        return;
-    }
+	if (!ok) {
+		QString msg = tr("Error reading %1")
+			.arg(fileName);
+		QMessageBox::warning(this, tr("Error"), msg);
+		return;
+	}
 }
 
 void GASSEd::OnNew()
@@ -262,7 +284,7 @@ void GASSEd::OnSave()
 void GASSEd::OnOpen()
 {
 	GASSSceneSelectionWidget dialog;
-    if(dialog.exec() == 0)
+	if(dialog.exec() == 0)
 		return;
 
 	std::string selected_scene = dialog.GetSelected();
@@ -271,7 +293,7 @@ void GASSEd::OnOpen()
 		if(GetScene())
 			GASS::SimEngine::Get().DestroyScene(GetScene());
 		m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
-		
+
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
@@ -283,41 +305,6 @@ void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 {
 	m_SelectedObject = obj;
 	m_EditMenu->exec(pos);
-	/*QMenu myMenu;
-	QAction*  delete_action = myMenu.addAction("Delete");
-	QAction*  copy_action = myMenu.addAction("Copy");
-	QAction*  paste_action = NULL;
-	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
-    if(copy_obj)
-		paste_action = myMenu.addAction("Paste");
-	QAction*  waypoint_action = NULL;
-	//check if this is a waypoint list object
-	SPTR<GASS::IWaypointListComponent> waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
-	if(waypointlist)
-	{
-		waypoint_action = myMenu.addAction("Add waypoints...");
-	}
-    QAction* selectedItem = myMenu.exec(pos);
-    if (selectedItem == delete_action)
-    {
-		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
-    }
-    else if(waypoint_action && selectedItem == waypoint_action)
-    {
-		GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
-		sm->GetMouseToolController()->SelectTool(TID_CREATE);
-		GASS::CreateTool* tool = static_cast<GASS::CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
-		tool->SetParentObject(obj);
-		tool->SetTemplateName(waypointlist->GetWaypointTemplate());
-    }
-	else if(selectedItem == copy_action)
-	{
-		OnCopy();
-	}
-	else if(paste_action && selectedItem == paste_action)
-	{
-		OnPaste();
-	}*/
 }
 
 void GASSEd::OnCopy()
@@ -348,14 +335,14 @@ void GASSEd::OnPaste()
 {
 	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
 	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
-    if(copy_obj && obj)
+	if(copy_obj && obj)
 	{
 		GASS::SceneObjectPtr new_obj = copy_obj->CreateCopy();
 		obj->AddChildSceneObject(new_obj,true);
 	}
 
 	GASS::SceneObjectPtr cut_obj(m_SceneObjectCutBuffer, boost::detail::sp_nothrow_tag());
-    if(cut_obj && obj)
+	if(cut_obj && obj)
 	{
 		cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
 		obj->AddChild(cut_obj);
@@ -369,7 +356,7 @@ void GASSEd::OnPaste()
 void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 {
 	m_SelectedObject = message->GetSceneObject();
-	
+
 	m_CopyAct->setEnabled(false);
 	m_PasteAct->setEnabled(false);
 	m_CutAct->setEnabled(false);
@@ -377,7 +364,7 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 
 	m_ChangeSiteAct->setEnabled(false);
 	m_ChangeSiteAct->setVisible(false);
-	
+
 	m_AddWaypointsAct->setEnabled(false);
 	m_AddWaypointsAct->setVisible(false);
 
@@ -426,6 +413,13 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 				//connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(mySlot(QAction*)));
 			}
 		}
+
+		GASS::ComponentPtr terrain_comp = obj->GetFirstComponentByClass("OgreTerrainPageComponent");
+		if(terrain_comp)
+		{
+			m_AddWaypointsAct->setEnabled(true);
+			m_AddWaypointsAct->setVisible(true);
+		}
 	}
 }
 
@@ -449,7 +443,7 @@ void GASSEd::OnAddTemplate()
 void GASSEd::OnDelete()
 {
 	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
-    if(obj)
+	if(obj)
 	{
 		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
 	}
@@ -459,7 +453,7 @@ void GASSEd::OnDelete()
 void GASSEd::OnAddWaypoints()
 {
 	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
-    if(obj)
+	if(obj)
 	{
 		GASS::WaypointListComponentPtr waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
 		if(waypointlist)
@@ -470,5 +464,13 @@ void GASSEd::OnAddWaypoints()
 			tool->SetParentObject(obj);
 			tool->SetTemplateName(waypointlist->GetWaypointTemplate());
 		}
+	}
+}
+void GASSEd::OnExport()
+{
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	if(obj)
+	{
+		///obj->GetParentSceneObject()->PostMessage(Export);
 	}
 }

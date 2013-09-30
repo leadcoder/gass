@@ -20,8 +20,8 @@ class GASSEd : public QMainWindow, public GASS::StaticMessageListener
 {
     Q_OBJECT
 private:
-    QTextEdit *center;
-    QList<ToolBar*> toolBars;
+    QTextEdit *m_Center;
+    //QList<ToolBar*> m_ToolBars;
 	QMenu *m_FileMenu;
 	QMenu *m_EditMenu;
     
@@ -31,6 +31,7 @@ private:
 	QAction *m_DeleteAct;
 	QAction *m_AddWaypointsAct;
 	QAction *m_ChangeSiteAct;
+	QAction *m_ExportAct;
 
 	QMenu *m_AddTemplateMenu;
     std::string m_Config;
@@ -59,9 +60,10 @@ public slots:
 	void OnAddWaypoints();
 	void OnAddTemplate();
 	void OnSetAsSite();
+	void OnExport();
 private:
-    void setupToolBar();
-    void setupMenuBar();
+    void SetupToolBar();
+    void SetupMenuBar();
 
 };
 
