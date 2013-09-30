@@ -48,6 +48,8 @@ namespace GASS
 		inline Ogre::Camera* GetOgreCamera() const {return m_Camera;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
+		std::string GetMaterialScheme() const {return m_MaterialScheme;}
+		void SetMaterialScheme(const std::string &value);
 	protected:
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnParameter(CameraParameterMessagePtr message);
@@ -64,6 +66,7 @@ namespace GASS
 		PolygonModeWrapper GetPolygonMode() const {return m_PolygonMode;}
 		void SetPolygonMode(PolygonModeWrapper value);
 		
+		
 		Ogre::Camera* m_Camera;
 		float m_NearClip;
 		float m_FarClip;
@@ -71,6 +74,7 @@ namespace GASS
 		bool m_Ortho;
 		bool m_ClipToFog;
 		std::vector<std::string> m_PostFilters;
+		std::string m_MaterialScheme;
 		PolygonModeWrapper m_PolygonMode;
 
 	};

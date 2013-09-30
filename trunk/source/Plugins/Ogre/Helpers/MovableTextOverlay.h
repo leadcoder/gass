@@ -1,17 +1,15 @@
 #ifndef __MovableTextOverlay_H__
 #define __MovableTextOverlay_H__
 
-#include <Ogre.h>
 
-#ifndef OGRE_18
+//TODO: Find  correct license
+
+#include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 #include <Overlay/OgreOverlayManager.h>
 #include <Overlay/OgreOverlayContainer.h>
-#else
-#include <OgreFont.h>
-#include <OgreFontManager.h>
-#endif
+
 using namespace Ogre;
 
 class MovableTextOverlayAttributes
@@ -70,10 +68,10 @@ public:
 	void update(Ogre::Real timeSincelastFrame);
 
 	// Needed for RectLayoutManager.
-	int getPixelsTop() {return Ogre::OverlayManager::getSingleton().getViewportHeight() * (mpOvContainer->getTop());}
-	int getPixelsBottom() {return Ogre::OverlayManager::getSingleton().getViewportHeight() * (mpOvContainer->getTop() + mpOvContainer->getHeight());}
-	int getPixelsLeft() {return Ogre::OverlayManager::getSingleton().getViewportWidth() * mpOvContainer->getLeft();}
-	int getPixelsRight() {return Ogre::OverlayManager::getSingleton().getViewportWidth() * (mpOvContainer->getLeft() + mpOvContainer->getWidth());}
+	int getPixelsTop() {return static_cast<int>(Ogre::OverlayManager::getSingleton().getViewportHeight() * (mpOvContainer->getTop()));}
+	int getPixelsBottom() {return static_cast<int>(Ogre::OverlayManager::getSingleton().getViewportHeight() * (mpOvContainer->getTop() + mpOvContainer->getHeight()));}
+	int getPixelsLeft() {return static_cast<int>(Ogre::OverlayManager::getSingleton().getViewportWidth() * mpOvContainer->getLeft());}
+	int getPixelsRight() {return static_cast<int>(Ogre::OverlayManager::getSingleton().getViewportWidth() * (mpOvContainer->getLeft() + mpOvContainer->getWidth()));}
 
 
 	void setPixelsTop(int px) {mpOvContainer->setTop((Ogre::Real)px / Ogre::OverlayManager::getSingleton().getViewportHeight());}

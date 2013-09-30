@@ -1,14 +1,11 @@
 
-#ifndef OGRE_18
-	#include <Overlay/OgreFontManager.h>
-	#include <Overlay/OgreOverlayManager.h>
-	#include <Overlay/OgreOverlayContainer.h>
-#else
-	#include <OgreFontManager.h>
-#endif
 
-#include <OgrePrerequisites.h>
 #include "MovableTextOverlay.h"
+#include <Overlay/OgreFontManager.h>
+#include <Overlay/OgreOverlayManager.h>
+#include <Overlay/OgreOverlayContainer.h>
+#include <OgrePrerequisites.h>
+
 
 MovableTextOverlay::MovableTextOverlay(const Ogre::String & name, const Ogre::String & caption,
 						const Ogre::MovableObject *mov, MovableTextOverlayAttributes *attrs)
@@ -19,7 +16,7 @@ MovableTextOverlay::MovableTextOverlay(const Ogre::String & name, const Ogre::St
 , mAttrs(attrs)
 , mName(name)
 , mCaption("")
-, mUpdateFrequency(0.01)
+, mUpdateFrequency(static_cast<Ogre::Real>(0.01))
 , mNeedUpdate(true)
 , mOnScreen(false)
 , mEnabled(false)
@@ -259,7 +256,7 @@ MovableTextOverlayAttributes::MovableTextOverlayAttributes(const Ogre::String & 
 , mName(name)
 , mFontName("")
 , mMaterialName("")
-, mCharHeight(charHeight)
+, mCharHeight(static_cast<Ogre::Real>(charHeight))
 , mColor(ColourValue::ZERO)
 {
 	if (fontName.length() == 0)
@@ -323,5 +320,5 @@ void MovableTextOverlayAttributes::setColor(const Ogre::ColourValue & color)
 
 void MovableTextOverlayAttributes::setCharacterHeight(unsigned int height)
 {
-        mCharHeight = height;
+        mCharHeight = static_cast<Ogre::Real>(height);
 }

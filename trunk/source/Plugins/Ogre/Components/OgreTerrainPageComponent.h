@@ -136,6 +136,10 @@ namespace GASS
 
 		RenderQueueBinder GetRenderQueue() const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
+
+		void SetDumpTextues(bool value);
+		bool GetDumpTextues() const  {return false;}
+
 		RenderQueueBinder m_RenderQueue;
 		
 		bool m_CreateCollisionMesh;

@@ -22,11 +22,9 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
 #include <Ogre.h>
-#ifndef OGRE_18
 #include <Overlay/OgreOverlayElement.h>
 #include <Overlay/OgreOverlayManager.h>
 #include <Overlay/OgreOverlayContainer.h>
-#endif
 #include <stdlib.h>
 #include <stdio.h>
 

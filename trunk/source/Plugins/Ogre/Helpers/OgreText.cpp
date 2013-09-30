@@ -1,14 +1,8 @@
 #include "OgreText.h"
- 
-#ifndef OGRE_18
-	#include <Overlay/OgreOverlayManager.h>
-	#include <Overlay/OgreOverlayContainer.h>
-#endif 
-
+#include <Overlay/OgreOverlayManager.h>
+#include <Overlay/OgreOverlayContainer.h>
 
 template<> TextRenderer* Ogre::Singleton<TextRenderer>::msSingleton = 0;
-
-
  
 TextRenderer::TextRenderer()
 {

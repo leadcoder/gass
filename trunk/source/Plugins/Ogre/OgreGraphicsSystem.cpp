@@ -23,21 +23,20 @@
 #include "Plugins/Ogre/OgreViewport.h"
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/Ogre/OgreResourceManager.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
-#include "Plugins/Ogre/OgreResourceManager.h"
+#include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
 
 #include "Core/Utils/GASSException.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-#include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -45,9 +44,7 @@
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
 #include <OgreLogManager.h>
-#ifndef OGRE_18
 #include <Overlay/OgreOverlaySystem.h>
-#endif
 
 ResourceGroupHelper resourceGrouphelper;
 
@@ -125,11 +122,7 @@ namespace GASS
 
 		//Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 
-		#ifndef OGRE_18
-			m_OverlaySystem = new Ogre::OverlaySystem();
-		#endif
-
-
+		m_OverlaySystem = new Ogre::OverlaySystem();
 
 		for(int i = 0; i < m_Plugins.size(); i++)
 		{
@@ -148,25 +141,6 @@ namespace GASS
 				m_Root->saveConfig();
 		}
 
-		/*if(m_CreateMainWindowOnInit)
-		{
-			std::string name = "MainWindow";
-			Ogre::RenderWindow *window = m_Root->initialise(true,name);
-			window->setDeactivateOnFocusChange(false);
-			void* window_hnd = 0;
-			window->getCustomAttribute("WINDOW", &window_hnd);
-			void* handle = static_cast<void*>(window_hnd);
-			void* main_handle = static_cast<void*>(window_hnd);
-			m_Windows[name] = window;
-			//We send a message when this window is cretated, usefull for other plugins to get hold of windows handle
-			SystemMessagePtr window_msg(new MainWindowCreatedEvent(handle,main_handle));
-			GetSimSystemManager()->SendImmediate(window_msg);
-		}
-		else
-		{*/
-			
-		//}
-
 		m_Root->initialise(false);
 
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
@@ -174,24 +148,12 @@ namespace GASS
 
 		if(m_UseShaderCache)
 			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(true);
-
-		// load
-		
-	
-		
-
 		m_ResourceManager->Init(); 
 
-		
-		
+
+		//TODO: Add attributes for this settings
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
-
-		
-
-	
-
- 
       
 	}
 
@@ -408,7 +370,7 @@ namespace GASS
 		//ReloadMaterials();
 	}
 
-	void OgreGraphicsSystem::ReloadMaterials()
+/*	void OgreGraphicsSystem::ReloadMaterials()
 	{
 		// This is optional if you don't need textures to update
 		Ogre::TextureManager::getSingletonPtr()->reloadAll();
@@ -489,7 +451,7 @@ namespace GASS
 			ps->setMaterialName(ps->getMaterialName());
 		}
 		// Do this for the rest of the objects in your scene you want to update materials for
-	}
+	}*/
 
 }
 

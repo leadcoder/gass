@@ -138,7 +138,20 @@ namespace GASS
 	
 		RegisterProperty<FilePath>("ExportDetailMask", &GASS::OgreTerrainPageComponent::GetExportDetailMask, &GASS::OgreTerrainPageComponent::ExportDetailMask,
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE, color_ext)));
+
+
+		RegisterProperty<bool>("DumpTextues", &GASS::OgreTerrainPageComponent::GetDumpTextues, &GASS::OgreTerrainPageComponent::SetDumpTextues,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
+
+	void OgreTerrainPageComponent::SetDumpTextues(bool value)
+	{
+		std::string prefix = "OGRE_TERRAIN";
+		std::string sufix = ".tga";
+		if(m_Terrain)
+			m_Terrain->_dumpTextures(prefix,sufix);
+	}
+
 
 	void OgreTerrainPageComponent::SetRenderQueue(const RenderQueueBinder &rq) 
 	{

@@ -74,6 +74,13 @@ namespace GASS
 		m_Camera = camera;
 		OgreCameraComponentPtr cam_comp = DYNAMIC_PTR_CAST<OgreCameraComponent>(camera);
 		m_OgreViewport->setCamera(cam_comp->GetOgreCamera());
+
+		if(cam_comp->GetMaterialScheme() != "")
+		{
+			m_OgreViewport->setMaterialScheme(cam_comp->GetMaterialScheme());
+		}
+
+		
 		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 		m_PostProcess->SetActiveCompositors(cam_comp->GetPostFilters());
 		m_PostProcess->Update(cam_comp);

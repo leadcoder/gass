@@ -676,9 +676,6 @@ namespace GASS
 	};
 	typedef SPTR<RoadMessage> RoadMessagePtr;
 
-
-	
-
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************

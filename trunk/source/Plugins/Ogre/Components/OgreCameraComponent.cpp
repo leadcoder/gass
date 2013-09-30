@@ -80,12 +80,26 @@ namespace GASS
 		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode,	
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode for this camera",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
 		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
+
+		std::vector<std::string> scheme_enumeration;
+		//hard code for now
+		scheme_enumeration.push_back("ALM_STD"); //Additive light masking 
+		scheme_enumeration.push_back("FFP_STD"); //Regular fixed function pipe line 
+		RegisterProperty<std::string>("MaterialScheme", &GASS::OgreCameraComponent::GetMaterialScheme, &GASS::OgreCameraComponent::SetMaterialScheme,	
+			StaticEnumerationPropertyMetaDataPtr(new StaticEnumerationPropertyMetaData("Material scheme for this camera",PF_VISIBLE,scheme_enumeration)));
 	}
 
 	void OgreCameraComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,0));
+	}
+
+	void OgreCameraComponent::SetMaterialScheme(const std::string &value) 
+	{
+		m_MaterialScheme = value;
+		if(m_Camera && m_Camera->getViewport()) //we are initilized and have viewport!
+			m_Camera->getViewport()->setMaterialScheme(m_MaterialScheme);
 	}
 
 	void OgreCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -238,5 +252,4 @@ namespace GASS
 				m_Camera->setProjectionType(Ogre::PT_PERSPECTIVE);
 		}
 	}
-
 }

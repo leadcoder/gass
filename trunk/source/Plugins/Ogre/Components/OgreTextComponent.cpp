@@ -38,7 +38,6 @@
 #include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
 #include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 
-
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -46,10 +45,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-
-
-
-
 
 
 namespace GASS
