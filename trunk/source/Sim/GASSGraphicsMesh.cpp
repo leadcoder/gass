@@ -39,23 +39,23 @@ namespace GASS
 		rot_mat.SetTranslation(0,0,0);
 		for(size_t i = 0; i < SubMeshVector.size() ;i++)
 		{
+			//Transform all positions
 			for(size_t j = 0; j < SubMeshVector[i]->PositionVector.size() ; j++)
 			{
 				SubMeshVector[i]->PositionVector[j] = transformation * SubMeshVector[i]->PositionVector[j];
 			}
 
+			//Transform all normals, only rotation
 			for(size_t j = 0; j < SubMeshVector[i]->NormalVector.size() ; j++)
 			{
 				SubMeshVector[i]->NormalVector[j] = rot_mat * SubMeshVector[i]->NormalVector[j];
 			}
-
+			//Transform all tangents, only rotation
 			for(size_t j = 0; j < SubMeshVector[i]->TangentVector.size() ; j++)
 			{
 				SubMeshVector[i]->TangentVector[j] = rot_mat * SubMeshVector[i]->TangentVector[j];
 			}
 		}
-
-		//Transform all normals, only rotation
 	}
 
 }
